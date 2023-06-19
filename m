@@ -2,113 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51EB2735017
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 11:29:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F34A735118
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 11:58:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231374AbjFSJ3G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 05:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
+        id S231806AbjFSJ5K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 05:57:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231562AbjFSJ2r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 05:28:47 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09C5C35B8
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 02:27:49 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-9883123260fso167734366b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 02:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687166865; x=1689758865;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=svU69Ew57Xfle/xIRnYJHjwQ/Cr4wmX9tz165FRycWs=;
-        b=wvqYuZaB5ca1vjq5S2aqa1LAEvRYnArRCq/6LebFSu1mfx1hl0d94TYjRMb2QfqnkZ
-         Q+OwX9s1IzNO60CzHgAPoOyBQyLPLtbi7XcbOz3MRWVCDzapdizxF6gNawW571nnEtrJ
-         0cfvpujETVJB2OZM9Z+0omINCTcTpIh+m9nG4WA05qWkHSjmBpbcYFJY7y4+iOIf89WR
-         oww0oS3Oybze1aBQGzFmaJLlx4bp6cAF2HUu6NqDlHVxFVbzcAeGH6fmA+scC/PoLvJ4
-         +0I4fq91EtCsRvR/3+Xi56PnJH2dIUWHkCni+yNbm+11C68IkLoAoJ6upAbtlO+hNuQp
-         jeSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687166865; x=1689758865;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=svU69Ew57Xfle/xIRnYJHjwQ/Cr4wmX9tz165FRycWs=;
-        b=Tjb2zZHr2dkJGWdlejiiBvXGeftLFwYh1yluonMDEqGFGbFV5GAaO6RUdZ6/Ye+5P6
-         +x9xvhVs2qMc8GlMT8ycBjyTDAup9qnck+NRMY2YPFFtucObZwI4cjG9xTOegqvXjyQR
-         AZnWThRuapSWPRSKIe+sNlm7+utz6O7mI0d2mkawS+uxBZURz2XHn2EMcYEXNopuVGHn
-         Pl9IhCdHOKXKe43exajyMoYFKDONPN4KFOj7SYS8SJWNbicbnCFnxMh+2Jyvg6vs4tGA
-         lNMzbQYMBlQJr5KQAGCXhHpcYkvCaxcidJuBOJJyiSjaxdGDfJKFujxB1Af55JhZYX6m
-         T9qg==
-X-Gm-Message-State: AC+VfDzypUKqDeDBjU3zQdD6mVBM2nlC+mCuRL9wfFeAD+YV/t14Vxki
-        nVPygecg3cFFA/JU8Erm6HRkbA==
-X-Google-Smtp-Source: ACHHUZ5aVA22BWULJT+mapNrH3Xpe/4h+2f+voEsc0N/o7LxeS1bDtvZ37XCqoWGgmKrE5wFMSc6fA==
-X-Received: by 2002:a17:906:6a27:b0:982:a3c8:4126 with SMTP id qw39-20020a1709066a2700b00982a3c84126mr7786798ejc.73.1687166864976;
-        Mon, 19 Jun 2023 02:27:44 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id si1-20020a170906cec100b00988c0c175c6sm857994ejb.189.2023.06.19.02.27.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jun 2023 02:27:44 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 3/3] arm64: defconfig: enable Qualcomm SM8350 LPASS pinctrl
-Date:   Mon, 19 Jun 2023 11:27:35 +0200
-Message-Id: <20230619092735.20323-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230619092735.20323-1-krzysztof.kozlowski@linaro.org>
-References: <20230619092735.20323-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S230520AbjFSJ4v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 05:56:51 -0400
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715BEE58;
+        Mon, 19 Jun 2023 02:56:46 -0700 (PDT)
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35J5L9Dq009890;
+        Mon, 19 Jun 2023 04:56:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=PODMain02222019;
+ bh=TfGrH3Uleie1Co1qiJ5GXAl8Q/ErU0G0tmVgE1EhgVI=;
+ b=fPahJfu1hiHC0O+7Ef5ILbXEx81HpcTUo+uDRypi6ALV7e9sV9AcHvnndrqgZbnAva0J
+ PD0jp0oq92RqYroI3/jc1K5oIN6Q1d8i5aP2ttrEWRoeTp3gv8p28SEC3S7GZB/gBwoA
+ EsMasIH/Cytq1ouI8WBW0NHoaNvcJSQyZ0ItzDnHKDhOfZrS7ni7743t4P1prh/3Czfd
+ QymCk75DkZJkMAcfcf5hO0c1580kAz5XlYniBh95ZdGoh+pEUFJJQU/2+QqsDe+/PaFt
+ KTIPplZM/4g/sYf8fobXPAIq2yr3o05Ajhas1g88EuAVBvKQZCYE/ZfxQ9RQdjibUQas iw== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3r9a809n3e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Jun 2023 04:56:25 -0500
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.26; Mon, 19 Jun
+ 2023 10:56:23 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Mon, 19 Jun 2023 10:56:23 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 386D246B;
+        Mon, 19 Jun 2023 09:56:23 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <broonie@kernel.org>, <lee@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
+        <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <conor+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
+        <pierre-louis.bossart@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 0/6] Add cs42l43 PC focused SoundWire CODEC
+Date:   Mon, 19 Jun 2023 10:56:17 +0100
+Message-ID: <20230619095623.1987742-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: TwJIzOos5_RoQCCaIygw3wlU1xV9vY00
+X-Proofpoint-GUID: TwJIzOos5_RoQCCaIygw3wlU1xV9vY00
+X-Proofpoint-Spam-Reason: safe
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enable the Qualcomm SM8350 LPASS TLMM pin controller driver for
-providing GPIOs/pins for audio block on SM8350 based boards (e.g.
-HDK8350).
+This patch chain adds support for the Cirrus Logic cs42l43 PC focused
+SoundWire CODEC. The chain is currently based of Lee's for-mfd-next
+branch.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks,
+Charles
 
----
+Charles Keepax (4):
+  dt-bindings: mfd: cirrus,cs42l43: Add initial DT binding
+  mfd: cs42l43: Add support for cs42l43 core driver
+  pinctrl: cs42l43: Add support for the cs42l43
+  ASoC: cs42l43: Add support for the cs42l43
 
-Changes in v2:
-1. Add Ack
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Lucas Tanure (2):
+  soundwire: bus: Allow SoundWire peripherals to register IRQ handlers
+  spi: cs42l43: Add SPI controller support
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 57c6b7bb88d4..b7b2b51a4251 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -593,6 +593,7 @@ CONFIG_PINCTRL_SM8150=y
- CONFIG_PINCTRL_SM8250=y
- CONFIG_PINCTRL_SM8250_LPASS_LPI=m
- CONFIG_PINCTRL_SM8350=y
-+CONFIG_PINCTRL_SM8350_LPASS_LPI=m
- CONFIG_PINCTRL_SM8450=y
- CONFIG_PINCTRL_SM8450_LPASS_LPI=m
- CONFIG_PINCTRL_SC8280XP_LPASS_LPI=m
+ .../bindings/sound/cirrus,cs42l43.yaml        |  313 +++
+ MAINTAINERS                                   |    4 +
+ drivers/mfd/Kconfig                           |   23 +
+ drivers/mfd/Makefile                          |    3 +
+ drivers/mfd/cs42l43-i2c.c                     |   98 +
+ drivers/mfd/cs42l43-sdw.c                     |  239 ++
+ drivers/mfd/cs42l43.c                         | 1189 +++++++++
+ drivers/mfd/cs42l43.h                         |   28 +
+ drivers/pinctrl/cirrus/Kconfig                |   11 +
+ drivers/pinctrl/cirrus/Makefile               |    2 +
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c      |  609 +++++
+ drivers/soundwire/bus.c                       |   32 +
+ drivers/soundwire/bus_type.c                  |   12 +
+ drivers/spi/Kconfig                           |    7 +
+ drivers/spi/Makefile                          |    1 +
+ drivers/spi/spi-cs42l43.c                     |  281 ++
+ include/linux/mfd/cs42l43-regs.h              | 1184 +++++++++
+ include/linux/mfd/cs42l43.h                   |  102 +
+ include/linux/soundwire/sdw.h                 |    9 +
+ include/sound/cs42l43.h                       |   17 +
+ sound/soc/codecs/Kconfig                      |   16 +
+ sound/soc/codecs/Makefile                     |    4 +
+ sound/soc/codecs/cs42l43-jack.c               |  969 +++++++
+ sound/soc/codecs/cs42l43-sdw.c                |   74 +
+ sound/soc/codecs/cs42l43.c                    | 2278 +++++++++++++++++
+ sound/soc/codecs/cs42l43.h                    |  131 +
+ 26 files changed, 7636 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42l43.yaml
+ create mode 100644 drivers/mfd/cs42l43-i2c.c
+ create mode 100644 drivers/mfd/cs42l43-sdw.c
+ create mode 100644 drivers/mfd/cs42l43.c
+ create mode 100644 drivers/mfd/cs42l43.h
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs42l43.c
+ create mode 100644 drivers/spi/spi-cs42l43.c
+ create mode 100644 include/linux/mfd/cs42l43-regs.h
+ create mode 100644 include/linux/mfd/cs42l43.h
+ create mode 100644 include/sound/cs42l43.h
+ create mode 100644 sound/soc/codecs/cs42l43-jack.c
+ create mode 100644 sound/soc/codecs/cs42l43-sdw.c
+ create mode 100644 sound/soc/codecs/cs42l43.c
+ create mode 100644 sound/soc/codecs/cs42l43.h
+
 -- 
-2.34.1
+2.30.2
 
