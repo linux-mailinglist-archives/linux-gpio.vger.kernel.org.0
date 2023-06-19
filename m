@@ -2,94 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96849734BCC
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 08:39:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 011F8734BED
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 08:54:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjFSGjQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 02:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46064 "EHLO
+        id S230101AbjFSGyt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 02:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbjFSGjN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 02:39:13 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF2B102;
-        Sun, 18 Jun 2023 23:39:11 -0700 (PDT)
+        with ESMTP id S230095AbjFSGyq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 02:54:46 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62EA713D
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Jun 2023 23:54:45 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9829a5ae978so515228366b.2
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Jun 2023 23:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1687156752; x=1718692752;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fUkVHkKZ1SlYspf4wL2JjzZTHzbRul4i8BRFPye+n6k=;
-  b=GYtNCdBitepvL5C2CU0iNcTi48j8Ppnv+xtiTE1jhVOziVuGFg698n7S
-   D1wUKMI68I7qmyIqEv/q5Wnz5ozHHt7HYg1d7joHxoyiUoOL0H/zzPxHS
-   tMuFT9bHWN3APyAbCXA/EkgqQOvLTo3gVy5eO7SRbs8esTT6mWEzcLMSM
-   VXF1mL0tlZcVLKy7Ok27YwH/G4+ZHtk5GmgLTbuJfJ3TsvoyczD9AKj01
-   NKiDmsJKi/Wl9IQ7hbdL9o6IJW4pgKtL3SNyNMYGvd49nc7zVnzGDhaJ7
-   azwPBaPByMF0pGqg2+4tCMa+hD7N/WR6iWtK/gLsEYYISL3AmL6CCCxp4
-   w==;
-X-IronPort-AV: E=Sophos;i="6.00,254,1681164000"; 
-   d="scan'208";a="31480823"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 19 Jun 2023 08:39:10 +0200
-Received: from steina-w.tq-net.de (unknown [10.123.53.21])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id DB7A128007C;
-        Mon, 19 Jun 2023 08:39:09 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        d=linaro.org; s=google; t=1687157684; x=1689749684;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a3+YFbtY8An0H9BGn2tS+970lQV7NoBq3xn34dWebHA=;
+        b=r4uda18mlUkzLD0R6iLJdwL0U+NXm7BTp1KQy8c66RGuIs5ZP28D2uVqfckHDEayyN
+         uwPXUauPQi0eV+/dJeyKh8orU+1XNZ0qeMIzjyRbQfvYui2pIxZEa6JA/KB6IlXr3c/X
+         agtJdFOVYNqWMzgsR5z/mvf6bvrhHBTBU1qxOKujz+FaBSZYc+3NalRXBRYLyu6tnXop
+         63imWcRfdrj2ZSwcbeEQDhlIdOpOytXyplEnhsrs3WJB1itNebvVHjy4aAALbh2SnGvv
+         VHAxnmqt6Onv3uYLIrHbAOpXVbYSUI20FuYfms+fJW67G5YrM0w+FwFcwaK5KW5sh8Eq
+         bT7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687157684; x=1689749684;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a3+YFbtY8An0H9BGn2tS+970lQV7NoBq3xn34dWebHA=;
+        b=ThHwSQWIi2imni+qvhDfxW3B+wcFoOuHEt3Km4tBA+8+bvBPgZRRq6Cx7ngz+VNKUc
+         ii6KzYraEe7fPNYND+YntStl7gnCSSw/JD4saElWsov9gJ0kViaePw0Ly0bOYLfcGR6O
+         4BX6wZpdhFa7vicfXOZKmBEa9Xc30z302HL5nDqyez3qnNuf8eXPTO1KcJWjSmG6wX9A
+         9BkVl3D6G0+ETVZ1mHAl3yRKeD++7BY3LL5WwjMswCovfbrOgBOkhHkV7aUobwI3q4zJ
+         oiq52dFSUzXGE6XLJclJVwBw1mVWc0eg6hW+BHMLOgHkycYUjFwjSNcw4Z5TbM1fXVZf
+         WSTw==
+X-Gm-Message-State: AC+VfDyY9os19bKLDJb3lxuetmZ0ORPYC/U2wHbc3IbZuKfQ12xWaZLW
+        7l/1bcZJi9fZcGXC3cfIrpBEOA==
+X-Google-Smtp-Source: ACHHUZ5drhx8iVHq64mSKGeVaVdBPQcz/QemgDXxSn1B9J4kPFwBHZMbT6LGmJW4CPeySipFrA3SOw==
+X-Received: by 2002:a17:907:2da4:b0:988:76ed:e563 with SMTP id gt36-20020a1709072da400b0098876ede563mr3315115ejc.50.1687157684033;
+        Sun, 18 Jun 2023 23:54:44 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id s13-20020a170906bc4d00b009887bb956e0sm1724282ejv.103.2023.06.18.23.54.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Jun 2023 23:54:43 -0700 (PDT)
+Message-ID: <c4253947-0429-3e45-7d0b-3d89dfdd9af4@linaro.org>
+Date:   Mon, 19 Jun 2023 08:54:41 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 1/1] dt-bindings: gpio: gpio-vf610: Add parsing of hogs
+Content-Language: en-US
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 1/1] dt-bindings: gpio: gpio-vf610: Add parsing of hogs
-Date:   Mon, 19 Jun 2023 08:39:07 +0200
-Message-Id: <20230619063907.128561-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+References: <20230619063907.128561-1-alexander.stein@ew.tq-group.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230619063907.128561-1-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Allow parsing GPIO controller children nodes with GPIO hogs.
+On 19/06/2023 08:39, Alexander Stein wrote:
+> Allow parsing GPIO controller children nodes with GPIO hogs.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+> Changes in v2:
+> * Narrow the pattern
+> * Remove properties covered by generic dt-schema
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-Changes in v2:
-* Narrow the pattern
-* Remove properties covered by generic dt-schema
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
- Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-index d2c39dba56add..7c2d152e86170 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-@@ -61,6 +61,13 @@ properties:
-   gpio-ranges:
-     maxItems: 1
- 
-+patternProperties:
-+  "^.+-hog(-[0-9]+)?$":
-+    type: object
-+
-+    required:
-+      - gpio-hog
-+
- required:
-   - compatible
-   - reg
--- 
-2.34.1
+Best regards,
+Krzysztof
 
