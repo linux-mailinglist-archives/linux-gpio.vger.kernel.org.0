@@ -2,110 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3C5B735734
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 14:48:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A185735753
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 14:51:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231161AbjFSMsw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 08:48:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33660 "EHLO
+        id S230222AbjFSMvl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 08:51:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjFSMso (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 08:48:44 -0400
-Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DCCC91
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:48:42 -0700 (PDT)
-Received: by mail-vk1-xa33.google.com with SMTP id 71dfb90a1353d-45739737afcso702379e0c.2
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:48:42 -0700 (PDT)
+        with ESMTP id S231375AbjFSMva (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 08:51:30 -0400
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D837D113
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:50:59 -0700 (PDT)
+Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-4716726b741so410453e0c.3
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:50:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687178921; x=1689770921;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687179057; x=1689771057;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e/AjXyhuwgoNXiF0++Wk1vrY6btEb1ynLaiD8sz29O8=;
-        b=B2G1W8R9ryOXQdtAFd8KcJqjIH8HMerk6q0Lv3ji6kKcqZ7e4AkdvCXd3mFojrCiWv
-         +S0MqOiSdBxdEMahu/MeGCR6jDhn4RoRfai1Vsejstr+vnw9wFp/vJTDZN+CZGvFFK1Z
-         CrmnCFItRT63Lr4ajPVin/QoqOxt/oJJMslPncliMQCCagnLTxo+g4qj85w1QoUhB9pZ
-         KW6otalMDJLMLxyYid3SeH+Ry9pm+vfOM0zlM+K/fC6d0szs7WVoDTkF4Sq69mkJvMOB
-         UJvIZAScWE02uBXPL6rOp3Vrg5Bl68oSggDt70MTwFe/DlAXWqIz3e6pAx3ZT+os0wBK
-         i/JA==
+        bh=gfY/cMV1kSoh4jJCVq6A3OC4e8p5nxJbjvuA8FEmXFc=;
+        b=Ik7UwrWxsZjDSy0TQ+KMYzt7Fx4Rq4vPjhEdse5A8omaW64LC6Zy/deHmre6uqc/xl
+         RWqL3JsgFLSUl7qLLTzSapl1OWWUp3TjhQKl+0UIIrLB3l3CNZUiWovTzIbE4ZkhywJy
+         3u955i/V9hpo67No6jUzKkd2y5Lba9OyprJ/mXoGDLO+Tt2BJl6xacq6X5pAkF5aCKuR
+         SBwhAWduQYTdN7m2lnz1nShjSKQFHLNIBkc7SadjqC7KrDRdW7D6O4Cj+zYFzaUGl0Pw
+         UaQmeiv2XnUBvvsen3ahsbl2QkEJw2+kmy/l0p4uA05kR1+Pkkk6oqqmFlepjgxwD3Da
+         qAtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687178921; x=1689770921;
+        d=1e100.net; s=20221208; t=1687179057; x=1689771057;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e/AjXyhuwgoNXiF0++Wk1vrY6btEb1ynLaiD8sz29O8=;
-        b=GTR7A/adVL1y4FI4+OokZEtTZ/KILVALcvEhPsseiQTPohsquvaC48S+OeUGR3iuPj
-         aL0nvqFItZQyxlJb2a+yzH1+vRNAnJMRJglEb52LviTcyWNqa9S4Y8ULLBTOvFkw4z5Y
-         AT+cpzwQ6oWXF5Q5yG64efnr+PnhKgZ72OZrCz+lcBmDHFH3dbzgOzgXDfV2E9wDRb8m
-         +Kyfof+BlE4oh+BQ5oHm1yiuNqKBMRSi1Nus0BrT0lyIuyZe0N7Q/2i7i+vN7K4AvkC6
-         yIjULgbRgWQWBa9Ml7RqBTUFD0qqOhXiJwpYzfvQkhNIuNGjWrayQUGdW4Gnfn8IUijF
-         DFwA==
-X-Gm-Message-State: AC+VfDx5xZ43NPhN1cpwGwvqkGSqSh7J80mpEy9F6k7ofi3pHkl6fG4Z
-        38fefcqR9nBrIfVTQYNHPiubSenTXjhyv0gr455eeQ==
-X-Google-Smtp-Source: ACHHUZ7JKpTnuTOb4+fedtmThaVXgxK5mM9ub5S04uBN5zlxpetYTE813z/vuxwIQJOYfRUooMjQoVmeziA5e5VBZ6A=
-X-Received: by 2002:a1f:5ecd:0:b0:46e:7c85:acb0 with SMTP id
- s196-20020a1f5ecd000000b0046e7c85acb0mr1086838vkb.14.1687178921454; Mon, 19
- Jun 2023 05:48:41 -0700 (PDT)
+        bh=gfY/cMV1kSoh4jJCVq6A3OC4e8p5nxJbjvuA8FEmXFc=;
+        b=YA0fv2NLXSQg5wc8/jMrKUL4kakK4kv8bUFZGKJDalDDV++urfLnUMD9orlR7yck70
+         5XIBKxn7vFbeXmvmZ1iZNBTyEYtgRMIdAEfEMgk5RST0zLiny3r2CNV8fXtyFBYsd4gz
+         ao8jqLYyreG5Wk+pLh3uqYu61YY/s7eY+ZVAFtvsike3DdIvjpQot1UXoDZ8eEj8qoZA
+         tTbnQEeTwrFQZXxx1J3lLIkIrdEwFSIFVoUwg00E6Uguc3IfGNWr/xykand8yTvuKK9n
+         KmhGYLJHzZX3/SHDgajGu8XrOqWYWWRgNol2/+wAVQT1hmwZ9J3EmDuiDv0MUamOv/q5
+         SAEQ==
+X-Gm-Message-State: AC+VfDzBfOFE3/booK1fgoNKXozlevV/+fV2ElFjBWtT0vzXtonw1j+n
+        8Bto1+m3QpBLK26J80Q26gWUvf0hm9M79QHsuEJv2Q==
+X-Google-Smtp-Source: ACHHUZ5NsUIDEPsYrN8wQ6Yuf4yj6GuoNAs/ilo/4wBak5PZc4UoexDuwdbuT71N24hJweq6OUX51OPpP7TaosgpbRM=
+X-Received: by 2002:a1f:c1cf:0:b0:471:4c5b:7a62 with SMTP id
+ r198-20020a1fc1cf000000b004714c5b7a62mr1390971vkf.2.1687179057467; Mon, 19
+ Jun 2023 05:50:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230619063907.128561-1-alexander.stein@ew.tq-group.com>
-In-Reply-To: <20230619063907.128561-1-alexander.stein@ew.tq-group.com>
+References: <20230616145036.3910153-1-arnd@kernel.org>
+In-Reply-To: <20230616145036.3910153-1-arnd@kernel.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 19 Jun 2023 14:48:30 +0200
-Message-ID: <CAMRc=Mf21-w93QC1B3YEfOxmLKwiPceGMZ+j8nR1-J_Dib=eAg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] dt-bindings: gpio: gpio-vf610: Add parsing of hogs
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
+Date:   Mon, 19 Jun 2023 14:50:46 +0200
+Message-ID: <CAMRc=MfVtNgRPHcceSW-ZsTuUmvGWw2tr4qD6YzwtoYO+KDvGA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: synq: remove unused zynq_gpio_irq_reqres/zynq_gpio_irq_relres
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@amd.com>,
+        Manikanta Guntupalli <manikanta.guntupalli@amd.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Srinivas Neeli <srinivas.neeli@amd.com>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 19, 2023 at 8:39=E2=80=AFAM Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
+On Fri, Jun 16, 2023 at 4:50=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
 >
-> Allow parsing GPIO controller children nodes with GPIO hogs.
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> The driver now uses the generic request/release callbacks, so the custom
+> ones are no longer called. When building with -Woverride-init, gcc produc=
+es
+> a warning about the duplicate entries:
+>
+> In file included from drivers/gpio/gpio-zynq.c:10:
+> include/linux/gpio/driver.h:621:43: error: initialized field overwritten =
+[-Werror=3Doverride-init]
+>   621 |                 .irq_request_resources  =3D gpiochip_irq_reqres, =
+         \
+>       |                                           ^~~~~~~~~~~~~~~~~~~
+> drivers/gpio/gpio-zynq.c:611:9: note: in expansion of macro 'GPIOCHIP_IRQ=
+_RESOURCE_HELPERS'
+>   611 |         GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/gpio/driver.h:621:43: note: (near initialization for 'zynq_=
+gpio_level_irqchip.irq_request_resources')
+>   621 |                 .irq_request_resources  =3D gpiochip_irq_reqres, =
+         \
+>       |                                           ^~~~~~~~~~~~~~~~~~~
+> drivers/gpio/gpio-zynq.c:625:9: note: in expansion of macro 'GPIOCHIP_IRQ=
+_RESOURCE_HELPERS'
+>   625 |         GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> include/linux/gpio/driver.h:622:43: error: initialized field overwritten =
+[-Werror=3Doverride-init]
+>   622 |                 .irq_release_resources  =3D gpiochip_irq_relres
+>       |                                           ^~~~~~~~~~~~~~~~~~~
+>
+> Removing the old ones has no effect on the driver but avoids the warnings=
+.
+>
+> Fixes: f569143935378 ("gpio: zynq: fix zynqmp_gpio not an immutable chip =
+warning")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> Changes in v2:
-> * Narrow the pattern
-> * Remove properties covered by generic dt-schema
+>  drivers/gpio/gpio-zynq.c | 24 ------------------------
+>  1 file changed, 24 deletions(-)
 >
->  Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
+> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+> index c334e46033bae..0a7264aabe488 100644
+> --- a/drivers/gpio/gpio-zynq.c
+> +++ b/drivers/gpio/gpio-zynq.c
+> @@ -575,26 +575,6 @@ static int zynq_gpio_set_wake(struct irq_data *data,=
+ unsigned int on)
+>         return 0;
+>  }
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Doc=
-umentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> index d2c39dba56add..7c2d152e86170 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> @@ -61,6 +61,13 @@ properties:
->    gpio-ranges:
->      maxItems: 1
->
-> +patternProperties:
-> +  "^.+-hog(-[0-9]+)?$":
-> +    type: object
-> +
-> +    required:
-> +      - gpio-hog
-> +
->  required:
->    - compatible
->    - reg
+> -static int zynq_gpio_irq_reqres(struct irq_data *d)
+> -{
+> -       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(d);
+> -       int ret;
+> -
+> -       ret =3D pm_runtime_resume_and_get(chip->parent);
+> -       if (ret < 0)
+> -               return ret;
+> -
+> -       return gpiochip_reqres_irq(chip, d->hwirq);
+> -}
+> -
+> -static void zynq_gpio_irq_relres(struct irq_data *d)
+> -{
+> -       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(d);
+> -
+> -       gpiochip_relres_irq(chip, d->hwirq);
+> -       pm_runtime_put(chip->parent);
+> -}
+> -
+>  /* irq chip descriptor */
+>  static const struct irq_chip zynq_gpio_level_irqchip =3D {
+>         .name           =3D DRIVER_NAME,
+> @@ -604,8 +584,6 @@ static const struct irq_chip zynq_gpio_level_irqchip =
+=3D {
+>         .irq_unmask     =3D zynq_gpio_irq_unmask,
+>         .irq_set_type   =3D zynq_gpio_set_irq_type,
+>         .irq_set_wake   =3D zynq_gpio_set_wake,
+> -       .irq_request_resources =3D zynq_gpio_irq_reqres,
+> -       .irq_release_resources =3D zynq_gpio_irq_relres,
+>         .flags          =3D IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED=
+ |
+>                           IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
+>         GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> @@ -619,8 +597,6 @@ static const struct irq_chip zynq_gpio_edge_irqchip =
+=3D {
+>         .irq_unmask     =3D zynq_gpio_irq_unmask,
+>         .irq_set_type   =3D zynq_gpio_set_irq_type,
+>         .irq_set_wake   =3D zynq_gpio_set_wake,
+> -       .irq_request_resources =3D zynq_gpio_irq_reqres,
+> -       .irq_release_resources =3D zynq_gpio_irq_relres,
+>         .flags          =3D IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
+>         GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>  };
 > --
-> 2.34.1
+> 2.39.2
 >
 
 Applied, thanks!
