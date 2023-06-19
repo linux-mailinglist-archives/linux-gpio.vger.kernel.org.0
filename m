@@ -2,88 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 935E473546F
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 12:56:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F12D73571B
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 14:44:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232422AbjFSK4T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 06:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58550 "EHLO
+        id S229647AbjFSMoQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 08:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232237AbjFSKzt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 06:55:49 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB27199F;
-        Mon, 19 Jun 2023 03:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687172032; x=1718708032;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3dNy/BukF6G6+IieCCsf48zXtI7d2qqsAxBdpNPkQeQ=;
-  b=ZVB/54FQNdsqZowm+NspIGXhvlEtWu4YMXtOOaLVeWWHm/xqJyUravKl
-   WZalBt0WTlzBIiZKKpRvqnVHvccmrIg5MTqmo8ACzHbnDYjjSzk0AFoh8
-   2vl/X+dp97a2bg7FlvNL4du3acYj+GqruYid6h0AuC1yr9gFgcHLcn7uc
-   oaG+HjTiBV1bnycamYR15L6KmH9n3GG1Qj+Bogq/aMwCpnDtwtiPsnHet
-   9G9qBMMWGXuhakugXBsLlqzEYR1TuSEosD0npCDSPHA2Yjh8bEMj3ZDF2
-   3qqiURixC4g9Td9ViMf7J+MtDgFFK9jtFZnAZZW2d0jSW/EA0Mc/G0BuX
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10745"; a="339940602"
-X-IronPort-AV: E=Sophos;i="6.00,254,1681196400"; 
-   d="scan'208";a="339940602"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2023 03:53:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10745"; a="803578386"
-X-IronPort-AV: E=Sophos;i="6.00,254,1681196400"; 
-   d="scan'208";a="803578386"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Jun 2023 03:53:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qBCW3-004yEN-19;
-        Mon, 19 Jun 2023 13:53:47 +0300
-Date:   Mon, 19 Jun 2023 13:53:47 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Raag Jadav <raag.jadav@intel.com>, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH for-next v1 0/3] Minor improvements for Baytrail pinctrl
-Message-ID: <ZJAzu9Mb7MKHvJw/@smile.fi.intel.com>
-References: <20230616203356.27343-1-raag.jadav@intel.com>
- <20230619062247.GD45886@black.fi.intel.com>
+        with ESMTP id S229542AbjFSMoO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 08:44:14 -0400
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE290E70
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:43:46 -0700 (PDT)
+Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-78cdb90aa66so1021944241.3
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687178611; x=1689770611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TO0+KaIcX1mDL3lougizkSx+E71ioKejbCq345UZmAY=;
+        b=rTRrxKQgUdRHf46Q/zRXVw3ISO83K7NzoIXhhuA58IpCaqjEmoCp2d1TKTSX4WeLzA
+         K9iD+abhpbOWCIc7VR/3AQvhTISHcKRYzbMA/daVQwbljmEUbDv0B+XQS5W6Ph+btL1C
+         x3nYMkyvonGDzRpHqlyGjODuenVSqz0AAzp25K4f+jl82qpKPZgceHHjldj/1S2tV2Sh
+         1BPaTUVrdmAIZ/13k4nfyPqHpcGsUrXldoTZJg2vl7GY8Xml3IWC3yrvkjmhaiPZ9Afh
+         km83xtp18IBE8LNnnBdKkfnO6pcmcC8uMjaUtvubuvPc5nWCbcR9qXBFb4BFVB3xyJoy
+         fjCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687178611; x=1689770611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TO0+KaIcX1mDL3lougizkSx+E71ioKejbCq345UZmAY=;
+        b=Ry2tKIDYoso6uXTAaGMdZcvDmP/16cDejqXiwNGzzEKrS+5EYjkiIMl8mH4iO/nCqz
+         zeNoRvwNAzY49TuL93IeoCqCfC5a8+AkPq0h6yAPKSAtCuFEwc9j3MpvPb8lWt0QcNuA
+         OANaNhmQerabYEFnFCVetZ6vfXz5Z1djuV5ns8ouoZqVvD3ACSG3hBMoIjh/+9V/DUXw
+         pIu9MB1maNesl7vmFIAe+CTnqiaDAMq3MgBsPxAZ77c13HtzwXavykxD/QDhVir5ZsPq
+         zMLhAf5AZhStxZSXmZ3atVVJJt5UYZ9YXVX1r3ykAcRLQ8FpqBfKXUe7MEsVA3qRw6QA
+         t5iw==
+X-Gm-Message-State: AC+VfDxJhQcIrrv+VQXUy3je23Q5bKv4btiX4bx/q2MZc0FkvzFfzgji
+        F/C3R2mlIO8srhWclq89JOVZpDa74dUnh3oCOYaTbQ==
+X-Google-Smtp-Source: ACHHUZ7HzyXt985XCyJrybc/J8a368/p10qr4hjO7GCPD2aZHB21AFCfJHrIj6ffVRyXGzXQlTUllyy+7+X7hN+n404=
+X-Received: by 2002:a67:fbd8:0:b0:440:b25f:5cab with SMTP id
+ o24-20020a67fbd8000000b00440b25f5cabmr478257vsr.15.1687178611633; Mon, 19 Jun
+ 2023 05:43:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230619062247.GD45886@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230615162514.21195-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230615162514.21195-1-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 19 Jun 2023 14:43:20 +0200
+Message-ID: <CAMRc=MfPwVLnWquVkj9wZA+NtkONO6KgcNeEAa+Z+WGooHe22w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: mpc8xxx: Remove unused of_gpio.h inclusion
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 19, 2023 at 09:22:47AM +0300, Mika Westerberg wrote:
-> On Sat, Jun 17, 2023 at 02:03:53AM +0530, Raag Jadav wrote:
-> > This series implements minor improvements for Baytrail pinctrl driver.
-> > 
-> > Raag Jadav (3):
-> >   pinctrl: baytrail: reduce scope of spinlock in ->dbg_show() hook
-> >   pinctrl: baytrail: add warning for BYT_VAL_REG retrieval failure
-> >   pinctrl: baytrail: invert if condition
-> 
-> For the series,
-> 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Thu, Jun 15, 2023 at 6:25=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> The of_gpio.h is not and shouldn't be used in the GPIO drivers.
+> Remove it.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-mpc8xxx.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+> index 3eb08cd1fdc0..35214e9de4ce 100644
+> --- a/drivers/gpio/gpio-mpc8xxx.c
+> +++ b/drivers/gpio/gpio-mpc8xxx.c
+> @@ -12,7 +12,6 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+> --
+> 2.40.0.1.gaa8946217a0b
+>
 
-Pushed to my review and testing queue, thanks!
+Applied, thanks!
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
