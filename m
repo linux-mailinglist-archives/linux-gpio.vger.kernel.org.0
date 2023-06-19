@@ -2,75 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F17A0734E9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:52:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5928734E97
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:52:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231174AbjFSIwB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 04:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53122 "EHLO
+        id S230329AbjFSIv7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 04:51:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230394AbjFSIve (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:51:34 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB831707
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:50:20 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5700b37da3fso28905297b3.1
+        with ESMTP id S230450AbjFSIvd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:51:33 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD91170A
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:50:21 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-54f73f09765so1285391a12.1
         for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1687164620; x=1689756620;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2zyWJrr4bOnwjfecsiBUExh+hZgUIH4ItLQDiGLGyn4=;
-        b=YyPdqQASpuiyNJ2du2VDB51DjNpeoz0daaWpcy0vhAxz1FKl4Qq1Dtjrsv3f8XBKP+
-         fbRbhu8XO/xkCYgSId1M8jc3EbFqfUInpu5fyBwfyXoQb6b4V8ysrzsRTCcudUkiyoZ2
-         JqTxAqEBaNYkubqHXCsX7RLjz0S5YVVdf7hDtlceYfLEdi29GLI3Ut+rxLAdALVtj1Jm
-         QgMr59dwdYax89Ef8RZu/80XJ5z7ZGkizzkhf82/tRxyVd7z7qZv893Iswvo+mBtTOvM
-         94wLibhJu0echBUj44IIDNb4yqON9xpyXw5c9L7CXQnk+bfH160AEhPmpmj4KZKMdMzo
-         X9GA==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eZXT4OapEFCw6rpREC9esQy4JP36a9HB8VK2jMJ+Uwg=;
+        b=G4FP3i6NfIl/aO/rr3qngHSYzwInOwbPdwAxZXoMilXwz4tAf7llsKX/asqd/WwZO8
+         1RbG36O6TlvGT1vbCqKbTwwSzTqw+Dl4/mxBhM+iNBxYUQq0Ic+/CcXZTbS5BN3viCLk
+         fXz9ijgohhXaSe1Lmt1b9tJoOl4vxj+Ag5nudfcuatPxfjr0pPoiE8NCFDfgsLzko61u
+         gmSwy+izc31lqOEf9NQ2ZrgnivJob9MWF5vHUlQ56DVNwQEBWhcg5ormEPUG0APfbjnk
+         iaj3o+YRMkV5LQfwCyERE8ntwtqK8VcpaQouqwnX+SvI6czBSueUgK2TSREVqy/FIM+c
+         0yaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20221208; t=1687164620; x=1689756620;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2zyWJrr4bOnwjfecsiBUExh+hZgUIH4ItLQDiGLGyn4=;
-        b=gwslvqgLF7Ycf7MGoJqCDVin61IeBpq0IjxNodFAqGJba0S6JVYqlYwdQeSInZzEvJ
-         RbZ2NKe3K1aOlcnXkM3w9EPNh6+ZfJgUcAbbgayprbZEvnPg+/5c0wcZiqjCsU4D9OMz
-         HPe+RvoTljpkmGV6ulC9pHBkl0wLNYFmkV/nTy3Sq5Ctu2Ba/fxCSEmmbgf6rE5jnmiz
-         3av5ENBKHRhH7IRn85lyV664f2tdl2tRohN9ypcujc8Udwba8rIqAZolFRNO1OFMbCuX
-         udUuy1knyOIfn6ox1oFtAix78YE0mQad2I5cJM8099StU/Fg5+ChXWkFx0aN4Ny38qx4
-         BL/w==
-X-Gm-Message-State: AC+VfDwudHT4yPXM1ICFG4hd0Myo89uTJ+6IhRZD5ns1mCd0JPZLdkL5
-        pIBQ9vk1jp4n2YgfQYV75ayEkwATF3tDvaq+gNl+sg==
-X-Google-Smtp-Source: ACHHUZ56eKFtdORrbAWDJoCJWrUSwNPczrlUQUk8NIlVDo6yY9fGLFxs8tJDYUR9AtP6ZBQ+zrXHqb1L+DXrudLj9dM=
-X-Received: by 2002:a25:6982:0:b0:ba8:1c9e:c77f with SMTP id
- e124-20020a256982000000b00ba81c9ec77fmr364234ybc.22.1687164620200; Mon, 19
- Jun 2023 01:50:20 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eZXT4OapEFCw6rpREC9esQy4JP36a9HB8VK2jMJ+Uwg=;
+        b=J4f0F4xNfD3mXpbzWkg1/lS0Nk1JtWxSKwjTCU3AnSEhDBmbxJ8kVZP8rM/RT2htYg
+         kwOxfbp1HlaVsobnPyQQedxsDSQBIj/ngecDe84ezkJoNSMvDfpq2pm1nTSOjtHv8eFO
+         vl4oI9/i1LFM/dnhebZH8JXfva+fIleh9S8lheo8Gb6Bm46RHy/PRHD3Y3WxO5LiGx8I
+         aOXM7hpHRwFTlW/FkNndOZ5mG+SyET9zUXxdajzzSlxgGty59Wl+G0oeYctJVOM7RHvW
+         SnYpeQnrYiZiCiuSEpCuzUDEjGWrnCZDXbcoFEHfTdWJF2eWmEWNJ6bz8gK2WQFAIcpD
+         mQwQ==
+X-Gm-Message-State: AC+VfDxETcjhkV85zdINdHALEfpVgBUzJI8zTWKv3baYITntPTQDbwBe
+        EpXmaYEfB6OZ2cCu5yoaLt1azw==
+X-Google-Smtp-Source: ACHHUZ7h+3D5VlsX76Xfiu3VsgKNrDMV0bAK+Vkwzs0jejkfK4KeQg7kWUao4mTLEKn6hNQo9NLu8g==
+X-Received: by 2002:a17:903:4293:b0:1a6:b971:faf6 with SMTP id ju19-20020a170903429300b001a6b971faf6mr4339302plb.35.1687164620306;
+        Mon, 19 Jun 2023 01:50:20 -0700 (PDT)
+Received: from localhost ([122.172.87.195])
+        by smtp.gmail.com with ESMTPSA id iy17-20020a170903131100b001b50b8439e0sm8449259plb.96.2023.06.19.01.50.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jun 2023 01:50:19 -0700 (PDT)
+Date:   Mon, 19 Jun 2023 14:20:17 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        brgl@bgdev.pl
+Subject: Re: [libgpiod][PATCH] bindings: rust: fix clippy lint warnings
+Message-ID: <20230619085017.lifz2hcqzi6fam2k@vireshk-i7>
+References: <20230612154055.56556-1-warthog618@gmail.com>
+ <CTC81IMWHW2L.28NQLXAIFP60L@fedora>
+ <ZIl6X8YAUHS/n5s8@sol>
+ <CTGGDNWWBD6E.FLAMJGXFKF3S@fedora>
+ <ZJAKTdRVEwZfnKb+@sol>
+ <CTGH61DGZBIQ.RVXF4UG9BYH2@fedora>
 MIME-Version: 1.0
-References: <20230616185742.2250452-1-krzysztof.kozlowski@linaro.org> <20230616185742.2250452-3-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230616185742.2250452-3-krzysztof.kozlowski@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 19 Jun 2023 10:50:08 +0200
-Message-ID: <CACRpkdYSnXDifczX-seegRdeW-6zwpxrz0cAeZaOPNcBpXYduw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: defconfig: enable Qualcomm SM8350 LPASS pinctrl
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CTGH61DGZBIQ.RVXF4UG9BYH2@fedora>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,16 +75,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 8:57=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+I missed these earlier, thanks for cc'ing me now Kent.
 
-> Enable the Qualcomm SM8350 LPASS TLMM pin controller driver for
-> providing GPIOs/pins for audio block on SM8350 based boards (e.g.
-> HDK8350).
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On 19-06-23, 10:13, Erik Schilling wrote:
+> On Mon Jun 19, 2023 at 9:57 AM CEST, Kent Gibson wrote:
+> > My reasoning was simply that building the bindings as you suggested
+> > resulted in lint warnings, which is noisy and iritating when trying to
+> > lint my own code.
+> 
+> I fully agree that we should fix them! I was just confused about the
+> explanation.
+> 
+> > But I'm just the messenger.  Your question would be better directed at
+> > Viresh - it is his code so he should be able to tell you why the casts
+> > are there.
+> > IIRC we needed the casts historically, though I don't recall the rust
+> > version we were using at the time.
+> > If we've moved beyond that then I have no problem with the casts being
+> > removedi, in fact in my initial comment I lamented the fact they were
+> > necessary.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+I don't remember the versions used at that time, but here [1] are few
+of the auto-generated FFI bindings that I used to keep in my series
+then, in case these can help.
 
-Yours,
-Linus Walleij
+IIRC, some of these were required for 32 bit builds. Don't remember
+the exact details but there were build / clippy errors / warnings
+without them.
+
+I am fine with updating code based on latest version of Rust and get
+these removed.
+
+Erik: Please build for 32 bit ARM too btw.
+
+-- 
+viresh
+
+[1] https://lore.kernel.org/all/401d9417d895b8b1b19ca577c84347d89f7e0fbd.1667815011.git.viresh.kumar@linaro.org/
