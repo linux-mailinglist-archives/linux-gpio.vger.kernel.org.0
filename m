@@ -2,68 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B25CA734EE3
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:58:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0DE1734EE9
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229896AbjFSI6y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 04:58:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57786 "EHLO
+        id S230387AbjFSI7f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 04:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230452AbjFSI6l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:58:41 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A25CE56
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:58:00 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-570282233ceso26587707b3.1
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:58:00 -0700 (PDT)
+        with ESMTP id S230157AbjFSI7V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:59:21 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059A4B1
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:59:20 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-514ab6cb529so8299408a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687165079; x=1689757079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1687165158; x=1689757158;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xLmeJWd/edsFY2ls/Yz70yLNc/eoAErRFP6oqVGaQzo=;
-        b=uIr0hcR/YywyPAn1Q9NNec4n4+nmGsa9QwL8DBaVlBbyAkaJwg20xEqKD4ly3I2aVj
-         BQyWFsp6A9kFryjQcNVsM+x32cYfVnFmDqL66ku1aFu2ZbDAwTzeu2PDry2Sq5HtQ7ZE
-         D/GcEb21bpeuRiXhhVx4B44cJGiL0tdXU/UduN4U1SvhInp2hUshVs9ec8TvARKAmuZI
-         D/CJUYRpjiJhPBty1vLybrP32uODyW51NPMX395ko6lcldvDcibUDq6/3CJtQYIqCP+D
-         eHD4MGOHPb2qMmcVE8o6OIIDznY6aOEFSdXT801SIgY4pE1lQe1IyCTJhQDM6JVHCnA8
-         Q26g==
+        bh=/llmMEuFj1eUdKb0ubg9ZQI7gcUHbEa2YR33UzfkEec=;
+        b=O+0YliB66Sx25vfgVYz4Y76ARzBSlDLrhPMTqKzUUh7SZVUxpdWM+37wec57vqMg7A
+         CftSWmGytZDniVa/pLbEpeqSJ5gO3vI5mH+wgF7Kjs7WEorRBeshhEW7sk5n+2H3zFm7
+         /94soQ3YqQT3muzRj/wwJ+slO/D4CSpam1qsk5IVWX8nx47T9JjbEPJkYzCe70B1qYqI
+         Ut+OrCNlwnzZ6slg2x3E1iv5EL17Z94yuwN6ybypaWsDdsPHf3zOhEMsnyTNTzMniJv7
+         Mz97I4dOSBTMUYJHPG97zJZxcQqiQTLR6/ykHi722U2IAneEDzYqR6EpBNVsq+uc/u7s
+         nb8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687165079; x=1689757079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xLmeJWd/edsFY2ls/Yz70yLNc/eoAErRFP6oqVGaQzo=;
-        b=Mp9JyPAjfCg1HGFt/2I9MLPJKTIubR3RgccCc0c5xj9Nhf8LeZLzmuTPfXtyu9Fk6p
-         SLv/vWd2AVIpb7/o416bSapjfVMlBjsJE5NczTrUUJ9EaF4zm/ZrwL6Edj86Phwpjczq
-         nRnCr58rjhOrlg9ASX1VwOlN9B33OUKONL2O1EQCEpyVFBEhQ5QLFZM3K5/AhD9OxNtv
-         XJTFu1Z5mJH3wgj/do5PrdfwKAByhURcz6mIHslQsKqTJj/qm1QDo0VNo33kQvy4g2WP
-         qTQYtmjYzkixhxqJblGXv+r6ViRfqQ3dQV21EXTVFwneLvZCwGygQXz3jZ6ub0USuuKB
-         VIIw==
-X-Gm-Message-State: AC+VfDz9oiyHwxRubw5EWDs43WxZuJpjfA2Z0nYmmGfa9XIFNotaVTVr
-        aACWUX8jm14xl49ySC5PpzrMnPdu1IcWlclIst9CVWRckGmZPSaE
-X-Google-Smtp-Source: ACHHUZ5+r5xud6CHZeGlG1QSWzO428im7bO5R2mp0md9VvDElGt3sdaijKYmfRcsXy0ZO73h1kU6UMMNy9w6gPMGHyg=
-X-Received: by 2002:a25:ce85:0:b0:b96:4634:146 with SMTP id
- x127-20020a25ce85000000b00b9646340146mr4203242ybe.60.1687165079656; Mon, 19
- Jun 2023 01:57:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230616145036.3910153-1-arnd@kernel.org>
-In-Reply-To: <20230616145036.3910153-1-arnd@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 19 Jun 2023 10:57:48 +0200
-Message-ID: <CACRpkdaNqELB8OtCuEbqny80OvJnxo1Ggw4kEQQ59+9BonDpeA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: synq: remove unused zynq_gpio_irq_reqres/zynq_gpio_irq_relres
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Michal Simek <michal.simek@amd.com>,
-        Manikanta Guntupalli <manikanta.guntupalli@amd.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20221208; t=1687165158; x=1689757158;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/llmMEuFj1eUdKb0ubg9ZQI7gcUHbEa2YR33UzfkEec=;
+        b=iE7kQV7Sl92zlHgrJJtrO93qmZvfjf3i1jiwZPf8rLGafolWX/dQCtTl1PGdDPBWUK
+         FHPjKi36xq9DrElG8MlvcEvrvdX7OOJT5414qnay845V9zyIAh3B23AycQ78AnUCR7vv
+         p7b1/Bd8WHPv9UJu0lGYz7L+dHHziVYy+Fy3M01sHiKkJsyKzVpA/GLwpg35GQOSr7ds
+         NHKvDgFVQ+jsupyEwYZV8gJ5NfjelMoo54F48Tn733HbAbpQ14UYpAiOYWDKeNynMkcG
+         lgGtCxMGBgcYMVKiB6N5f+aHBHBifl/dXCX7WHhOwLapyyHATnypyjznplzku936sBwW
+         ur6g==
+X-Gm-Message-State: AC+VfDy2YWGGWQnJJ0sWaanERLdzbdyNDQXaAAOApVOkEQjyLbAPpEur
+        AFXRtb/E9y0hTDBRtbuSMi0kRg==
+X-Google-Smtp-Source: ACHHUZ4SxIJXlDroI1JHQK94yBvXPZ3Ua9KQwl3/qoFlasDQUysRoMrH4qC2/KKEwZ/8CeBmj9gO5g==
+X-Received: by 2002:a17:906:974a:b0:974:5a12:546 with SMTP id o10-20020a170906974a00b009745a120546mr7892200ejy.23.1687165158511;
+        Mon, 19 Jun 2023 01:59:18 -0700 (PDT)
+Received: from localhost (i5C740111.versanet.de. [92.116.1.17])
+        by smtp.gmail.com with ESMTPSA id r26-20020a1709067fda00b0096a1ba4e0d1sm14458588ejs.32.2023.06.19.01.59.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Jun 2023 01:59:17 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 19 Jun 2023 10:59:17 +0200
+Message-Id: <CTGI4TBHMWFZ.1M1XOQ3SK26IF@fedora>
+Subject: Re: [libgpiod][PATCH] bindings: rust: fix clippy lint warnings
+Cc:     "Kent Gibson" <warthog618@gmail.com>, <linux-gpio@vger.kernel.org>,
+        <brgl@bgdev.pl>
+To:     "Viresh Kumar" <viresh.kumar@linaro.org>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+X-Mailer: aerc 0.14.0
+References: <20230612154055.56556-1-warthog618@gmail.com>
+ <CTC81IMWHW2L.28NQLXAIFP60L@fedora> <ZIl6X8YAUHS/n5s8@sol>
+ <CTGGDNWWBD6E.FLAMJGXFKF3S@fedora> <ZJAKTdRVEwZfnKb+@sol>
+ <CTGH61DGZBIQ.RVXF4UG9BYH2@fedora>
+ <20230619085017.lifz2hcqzi6fam2k@vireshk-i7>
+In-Reply-To: <20230619085017.lifz2hcqzi6fam2k@vireshk-i7>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -74,49 +76,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 4:50=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
-te:
+On Mon Jun 19, 2023 at 10:50 AM CEST, Viresh Kumar wrote:
+> I missed these earlier, thanks for cc'ing me now Kent.
+>
+> On 19-06-23, 10:13, Erik Schilling wrote:
+> > On Mon Jun 19, 2023 at 9:57 AM CEST, Kent Gibson wrote:
+> > > My reasoning was simply that building the bindings as you suggested
+> > > resulted in lint warnings, which is noisy and iritating when trying t=
+o
+> > > lint my own code.
+> >=20
+> > I fully agree that we should fix them! I was just confused about the
+> > explanation.
+> >=20
+> > > But I'm just the messenger.  Your question would be better directed a=
+t
+> > > Viresh - it is his code so he should be able to tell you why the cast=
+s
+> > > are there.
+> > > IIRC we needed the casts historically, though I don't recall the rust
+> > > version we were using at the time.
+> > > If we've moved beyond that then I have no problem with the casts bein=
+g
+> > > removedi, in fact in my initial comment I lamented the fact they were
+> > > necessary.
+>
+> I don't remember the versions used at that time, but here [1] are few
+> of the auto-generated FFI bindings that I used to keep in my series
+> then, in case these can help.
+>
+> IIRC, some of these were required for 32 bit builds. Don't remember
+> the exact details but there were build / clippy errors / warnings
+> without them.
+>
+> I am fine with updating code based on latest version of Rust and get
+> these removed.
+>
+> Erik: Please build for 32 bit ARM too btw.
 
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The driver now uses the generic request/release callbacks, so the custom
-> ones are no longer called. When building with -Woverride-init, gcc produc=
-es
-> a warning about the duplicate entries:
->
-> In file included from drivers/gpio/gpio-zynq.c:10:
-> include/linux/gpio/driver.h:621:43: error: initialized field overwritten =
-[-Werror=3Doverride-init]
->   621 |                 .irq_request_resources  =3D gpiochip_irq_reqres, =
-         \
->       |                                           ^~~~~~~~~~~~~~~~~~~
-> drivers/gpio/gpio-zynq.c:611:9: note: in expansion of macro 'GPIOCHIP_IRQ=
-_RESOURCE_HELPERS'
->   611 |         GPIOCHIP_IRQ_RESOURCE_HELPERS,
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/gpio/driver.h:621:43: note: (near initialization for 'zynq_=
-gpio_level_irqchip.irq_request_resources')
->   621 |                 .irq_request_resources  =3D gpiochip_irq_reqres, =
-         \
->       |                                           ^~~~~~~~~~~~~~~~~~~
-> drivers/gpio/gpio-zynq.c:625:9: note: in expansion of macro 'GPIOCHIP_IRQ=
-_RESOURCE_HELPERS'
->   625 |         GPIOCHIP_IRQ_RESOURCE_HELPERS,
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/gpio/driver.h:622:43: error: initialized field overwritten =
-[-Werror=3Doverride-init]
->   622 |                 .irq_release_resources  =3D gpiochip_irq_relres
->       |                                           ^~~~~~~~~~~~~~~~~~~
->
-> Removing the old ones has no effect on the driver but avoids the warnings=
-.
->
-> Fixes: f569143935378 ("gpio: zynq: fix zynqmp_gpio not an immutable chip =
-warning")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Will do. Will try to come up with some test suite that may be
+upstreamable too.
 
-Right.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> --=20
+> viresh
+>
+> [1] https://lore.kernel.org/all/401d9417d895b8b1b19ca577c84347d89f7e0fbd.=
+1667815011.git.viresh.kumar@linaro.org/
 
-Yours,
-Linus Walleij
