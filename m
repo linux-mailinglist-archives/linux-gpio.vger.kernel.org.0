@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F12D73571B
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 14:44:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE5B573571F
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 14:45:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbjFSMoQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 08:44:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58094 "EHLO
+        id S229567AbjFSMpG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 08:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjFSMoO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 08:44:14 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE290E70
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:43:46 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-78cdb90aa66so1021944241.3
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:43:46 -0700 (PDT)
+        with ESMTP id S229823AbjFSMos (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 08:44:48 -0400
+Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4451691
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:44:26 -0700 (PDT)
+Received: by mail-vs1-xe29.google.com with SMTP id ada2fe7eead31-440b4b0147bso111101137.1
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 05:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687178611; x=1689770611;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687178665; x=1689770665;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TO0+KaIcX1mDL3lougizkSx+E71ioKejbCq345UZmAY=;
-        b=rTRrxKQgUdRHf46Q/zRXVw3ISO83K7NzoIXhhuA58IpCaqjEmoCp2d1TKTSX4WeLzA
-         K9iD+abhpbOWCIc7VR/3AQvhTISHcKRYzbMA/daVQwbljmEUbDv0B+XQS5W6Ph+btL1C
-         x3nYMkyvonGDzRpHqlyGjODuenVSqz0AAzp25K4f+jl82qpKPZgceHHjldj/1S2tV2Sh
-         1BPaTUVrdmAIZ/13k4nfyPqHpcGsUrXldoTZJg2vl7GY8Xml3IWC3yrvkjmhaiPZ9Afh
-         km83xtp18IBE8LNnnBdKkfnO6pcmcC8uMjaUtvubuvPc5nWCbcR9qXBFb4BFVB3xyJoy
-         fjCw==
+        bh=R7CKBeX87YWHS9TvTpuZmP0rgiJkHHO7gYE8rYW2waw=;
+        b=LpZI7AJLhjMRHWLyGrjvb6783louHBna0u3GvsrdlRHQT6ch0ZMlFHwYrj/Vmvqbl5
+         +whNFsYRb2bkr1F9pY9CJprCxiHi8U7g19O15iCXHt7IlKl/gB4XqBck+kPOGFwZRgrZ
+         K18XvyXfSJ1zvma4KxwmEp2MQAf2WtcZcR4eZXTaB1cybAfTQiitvODJaQbe8+PrxKkk
+         o5Le82RBEKgAzAPQB1/X1fXqkPB4y01lGFYfUlLGuVNmgdEZtKwppQnJ9fyVELe8yGjk
+         9TsflDEDXf34Q2O52hoFaCmWwsqSr+yWUhlpB5P+yGL9w2wJNd2Dxo4g+WK6SJ030SHH
+         6IuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687178611; x=1689770611;
+        d=1e100.net; s=20221208; t=1687178665; x=1689770665;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TO0+KaIcX1mDL3lougizkSx+E71ioKejbCq345UZmAY=;
-        b=Ry2tKIDYoso6uXTAaGMdZcvDmP/16cDejqXiwNGzzEKrS+5EYjkiIMl8mH4iO/nCqz
-         zeNoRvwNAzY49TuL93IeoCqCfC5a8+AkPq0h6yAPKSAtCuFEwc9j3MpvPb8lWt0QcNuA
-         OANaNhmQerabYEFnFCVetZ6vfXz5Z1djuV5ns8ouoZqVvD3ACSG3hBMoIjh/+9V/DUXw
-         pIu9MB1maNesl7vmFIAe+CTnqiaDAMq3MgBsPxAZ77c13HtzwXavykxD/QDhVir5ZsPq
-         zMLhAf5AZhStxZSXmZ3atVVJJt5UYZ9YXVX1r3ykAcRLQ8FpqBfKXUe7MEsVA3qRw6QA
-         t5iw==
-X-Gm-Message-State: AC+VfDxJhQcIrrv+VQXUy3je23Q5bKv4btiX4bx/q2MZc0FkvzFfzgji
-        F/C3R2mlIO8srhWclq89JOVZpDa74dUnh3oCOYaTbQ==
-X-Google-Smtp-Source: ACHHUZ7HzyXt985XCyJrybc/J8a368/p10qr4hjO7GCPD2aZHB21AFCfJHrIj6ffVRyXGzXQlTUllyy+7+X7hN+n404=
-X-Received: by 2002:a67:fbd8:0:b0:440:b25f:5cab with SMTP id
- o24-20020a67fbd8000000b00440b25f5cabmr478257vsr.15.1687178611633; Mon, 19 Jun
- 2023 05:43:31 -0700 (PDT)
+        bh=R7CKBeX87YWHS9TvTpuZmP0rgiJkHHO7gYE8rYW2waw=;
+        b=Au+fBYVMxTYn+jSAaN66ACxmgD1eEDQmJQNZkJkcx5N/TRiyY+7PyQfH9mHniAGmgT
+         1A79+3FaRQSFM+67puEsMWwRvIlQr/M5Z2zQ7qtHTfKyDcT8Gr+0x2ypEEWWvABGf4VF
+         3ByDxRwR689/EGIDtEYX7Y2wnTBi23FOS9ADbm++fwgCbQFJ4G6lA+1EgY9G3bBsHH1c
+         WSRAEZCGPf0GEPkRR40qOwytMj440ku08yB4ml1+2mV/k3KFic8UhbC1or6Oddrzo6U3
+         XCzsqpcfLV76hEwu+SqT4cnEm9qLtXW3dwuTWxJv3mmfi6m3dI/eluOA9DLlD/0eETwo
+         vVSw==
+X-Gm-Message-State: AC+VfDzqGPA5X4hATQW2qVjybEnTdjgJ9LCUpkDMQbdo8t2gwWTL90ao
+        DRkyVZbH4PAhxsCfDfsji6JO7Z373I43+Jb/aWsjxw==
+X-Google-Smtp-Source: ACHHUZ6JLEcVfllJN+8HU3wxqopA6udVFcyfWqpvoHDy/5/SREzTJHQroaNRAnsOiiFMXjJqUO3BpfsYsXjAIL8MSDE=
+X-Received: by 2002:a67:f615:0:b0:43f:5eb2:8e9b with SMTP id
+ k21-20020a67f615000000b0043f5eb28e9bmr1100501vso.27.1687178665371; Mon, 19
+ Jun 2023 05:44:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230615162514.21195-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230615162514.21195-1-andriy.shevchenko@linux.intel.com>
+References: <20230615162612.21487-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230615162612.21487-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 19 Jun 2023 14:43:20 +0200
-Message-ID: <CAMRc=MfPwVLnWquVkj9wZA+NtkONO6KgcNeEAa+Z+WGooHe22w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: mpc8xxx: Remove unused of_gpio.h inclusion
+Date:   Mon, 19 Jun 2023 14:44:14 +0200
+Message-ID: <CAMRc=MeYmriM=2QibvAo92pgyxb15CCBbMZKFKdQwHSsu0Y4jw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: xra1403: Remove unused of_gpio.h inclusion
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nandor Han <nandor.han@ge.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -69,7 +70,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 6:25=E2=80=AFPM Andy Shevchenko
+On Thu, Jun 15, 2023 at 6:26=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
 > The of_gpio.h is not and shouldn't be used in the GPIO drivers.
@@ -77,21 +78,21 @@ On Thu, Jun 15, 2023 at 6:25=E2=80=AFPM Andy Shevchenko
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/gpio/gpio-mpc8xxx.c | 1 -
+>  drivers/gpio/gpio-xra1403.c | 1 -
 >  1 file changed, 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 3eb08cd1fdc0..35214e9de4ce 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -12,7 +12,6 @@
->  #include <linux/spinlock.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
+> diff --git a/drivers/gpio/gpio-xra1403.c b/drivers/gpio/gpio-xra1403.c
+> index 51d6119e1bb4..bbc06cdd9634 100644
+> --- a/drivers/gpio/gpio-xra1403.c
+> +++ b/drivers/gpio/gpio-xra1403.c
+> @@ -11,7 +11,6 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/of_device.h>
 > -#include <linux/of_gpio.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/regmap.h>
 > --
 > 2.40.0.1.gaa8946217a0b
 >
