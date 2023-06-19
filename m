@@ -2,90 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 751F1734D76
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28F3B734D7D
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:23:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbjFSIV0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 04:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
+        id S229931AbjFSIXM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 04:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230308AbjFSIVQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:21:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF54196;
-        Mon, 19 Jun 2023 01:21:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1AC9460B61;
-        Mon, 19 Jun 2023 08:21:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6F8DC433C0;
-        Mon, 19 Jun 2023 08:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687162869;
-        bh=0vMnUhFvqF862nKrVnqmtvKfCO2g8YSrSHAeMLeCpOE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Im1oAPjxb88I1OL9rKcUOcX6tQi7vJu2/Qiq+GWFrdcb+UDkWix0qJ7aT1+yjSXBV
-         mBjWA6fkl0bA1Xkv0WX8L4zAEUWtzzYOLXumWVILV875h9IVmLyazh6OIkL4Qp/7qX
-         jcpCBLPLsMo1HSA+tKXl4vo0SZ58F5uOytSOlq9RSPusP3vLq+EbOsPME1F5RyYN0Y
-         05tawIRBKzRUSEcPYP2UVdJ8g97rJdeQgzMJt3Eg883zUGga5tpY70xAV8m5ByA9oR
-         n00m/ps70hZxUTVK8sd9s1BWSqBtGkHOurIcyiKtPNumxq8DvDP4fShhGLJzkKL9en
-         jXhFFdeK/KdQQ==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Lee Jones <lee@kernel.org>,
-        Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: mlxbf3: remove broken Kconfig 'select'
-Date:   Mon, 19 Jun 2023 10:20:50 +0200
-Message-Id: <20230619082104.699331-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229808AbjFSIXL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:23:11 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76677196
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:23:09 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id 5614622812f47-392116ae103so2169871b6e.0
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:23:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687162989; x=1689754989;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rJ/7Kbo9gs7zs3QTF5nFKkJrBjocKGAtdax9LA/wsFg=;
+        b=NLf6vD/d4D6D+lJPXzleg9rbn2gKSMoq11CpAwhYkVIks3leekaXGsKXSdUAm4yZ1C
+         +4YF4j6TuM18yPbH9DNO/VR5i2ViUuQiSi+YkFSky4Q25QePCkbRnJh99uhVGwMwv+8D
+         GV9a1riDUUpNw0T0yAFuFDCuAu1/Hz9gD3U092Z1A3KLI+gYBs3KWHeuOFKmCk1s6O1R
+         Ll6p3AQWfan4weJOR8lP1xiPKCM/eW53tKENszJdhypPVMv/eaUIzy/GKGWuaPNs7hd6
+         P28/JvevALvVKLvH4tBTtIx2dMTLpT3QFNNOh9+IA2d5q+MhVmgOh9NcGIUFKBYu+P3M
+         xUmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687162989; x=1689754989;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rJ/7Kbo9gs7zs3QTF5nFKkJrBjocKGAtdax9LA/wsFg=;
+        b=HihW0/xBZ2qot2W8heEJK1ZUkoH9LupVUFAXTZxMNmhaJKl91S5LEgG3NJtaeAM1Fj
+         skutfNTaRrcvs2P7421aSv1kT5sKqJg5rvUXXkriufH20bVfadAgEKuxk/6xq+L+/CXX
+         icofy7mPUGXggp1nBgh6Eg/lp8osC4FflAhk/BvbxWEV8Y4+b4BsNBiy2bg3UmmOdUDL
+         8vYQBhjthtLJApQ0rsCC8OANYO61SPUkpfKVmqUlJS53PLxVNd7XxYltz6I5YQEQ1Quw
+         dN14EdIUML1afzLWs3N3F8ozmLanxzVoujlqT9qJZaKKVu7ZTV7MneX74CgN9iK5kFzl
+         YT7w==
+X-Gm-Message-State: AC+VfDxwPCwanFTvxnknzztb/NFTCvV5eJc6Ln81QiANwgoGyk7Y1FUc
+        Sg70WbnUJF0mf1aORRhQF6SwP85a9JU4gHCjlD8=
+X-Google-Smtp-Source: ACHHUZ7xXWI1tUNtP/JB2dF1+YgJ9pCGhDZ2nbjCMGY6bBUrWZGi7lemw+OtzL1PNiza9ybvjNZEOwjbA7YROhNuljY=
+X-Received: by 2002:a05:6808:179f:b0:39e:df4f:e68f with SMTP id
+ bg31-20020a056808179f00b0039edf4fe68fmr1411558oib.6.1687162988421; Mon, 19
+ Jun 2023 01:23:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a20:7a03:b0:11f:4412:fc6f with HTTP; Mon, 19 Jun 2023
+ 01:23:07 -0700 (PDT)
+From:   loan offer <skyexpressccourier@gmail.com>
+Date:   Sun, 18 Jun 2023 20:23:07 -1200
+Message-ID: <CAPmwR52j7zm-Awe-ot5fGOpMsqBUBT3=-J55ZhyWw_ET0GurJw@mail.gmail.com>
+Subject: Greetings From Saudi Arabia
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=3.6 required=5.0 tests=BAYES_50,DEAR_SOMETHING,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLY,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+Dear Sir,
 
-The new pinctrl driver selects GPIO_MLXBF3, but that can not be enabled yet because
-the MELLANOX_PLATFORM symbol does not exist in the tree:
+Need funding for your project or your business ? We are looking for
+foreign direct investment partners in any of the sectors stated below and we are
+willing to provide financing for up to US$ ten Billion to corporate
+bodies, companies, industries and entrepreneurs with profitable
+business ideas and investment projects that can generate the required
+ROI, so you can draw from this opportunity. We are currently providing
+funds in any of the sectors stated below. Energy & Power,
+construction, Agriculture, Acquisitions, Healthcare or Hospital, Real
+Estate, Oil & Gas, IT, technology, transport, mining,marine
+transportation and manufacturing, Education, hotels, etc. We are
+willing to finance your projects. We have developed a new funding
+method that does not take longer to receive funding from our
+customers. If you are seriously pursuing Foreign Direct Investment or
+Joint Venture for your projects in any of the sectors above or are you
+seeking a Loan to expand your Business or seeking funds to finance
+your business or project ? We are willing to fund your business and we
+would like you to provide us with your comprehensive business plan for
+our team of investment experts to review. Kindly contact me with below
+email: yousefahmedalgosaibi@consultant.com
 
-WARNING: unmet direct dependencies detected for GPIO_MLXBF3
-  Depends on [n]: GPIOLIB [=y] && PCI [=n] && (MELLANOX_PLATFORM [=n] && ARM64 [=y] || COMPILE_TEST [=y])
-  Selected by [y]:
-  - PINCTRL_MLXBF3 [=y] && PINCTRL [=y] && (MELLANOX_PLATFORM [=n] && ARM64 [=y] || COMPILE_TEST [=y])
-
-As it turns out, the pinctlr driver still builds fine without this, so just
-remove the select statement.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pinctrl/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 77ff9a641aebf..57d57af1f624e 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -510,7 +510,6 @@ config PINCTRL_MLXBF3
- 	select PINMUX
- 	select GPIOLIB
- 	select GPIOLIB_IRQCHIP
--	select GPIO_MLXBF3
- 	help
- 	  Say Y to select the pinctrl driver for BlueField-3 SoCs.
- 	  This pin controller allows selecting the mux function for
--- 
-2.39.2
-
+Regards
+Mr. Yousef Ahmed
