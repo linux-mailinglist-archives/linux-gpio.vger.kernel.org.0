@@ -2,69 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5928734E97
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:52:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67120734EAA
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:53:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjFSIv7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 04:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52938 "EHLO
+        id S229640AbjFSIxd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 04:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230450AbjFSIvd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:51:33 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD91170A
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:50:21 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-54f73f09765so1285391a12.1
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:50:20 -0700 (PDT)
+        with ESMTP id S229920AbjFSIxE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:53:04 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C352110EA
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:51:58 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-bc476bf5239so3489828276.2
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687164620; x=1689756620;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eZXT4OapEFCw6rpREC9esQy4JP36a9HB8VK2jMJ+Uwg=;
-        b=G4FP3i6NfIl/aO/rr3qngHSYzwInOwbPdwAxZXoMilXwz4tAf7llsKX/asqd/WwZO8
-         1RbG36O6TlvGT1vbCqKbTwwSzTqw+Dl4/mxBhM+iNBxYUQq0Ic+/CcXZTbS5BN3viCLk
-         fXz9ijgohhXaSe1Lmt1b9tJoOl4vxj+Ag5nudfcuatPxfjr0pPoiE8NCFDfgsLzko61u
-         gmSwy+izc31lqOEf9NQ2ZrgnivJob9MWF5vHUlQ56DVNwQEBWhcg5ormEPUG0APfbjnk
-         iaj3o+YRMkV5LQfwCyERE8ntwtqK8VcpaQouqwnX+SvI6czBSueUgK2TSREVqy/FIM+c
-         0yaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687164620; x=1689756620;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1687164718; x=1689756718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eZXT4OapEFCw6rpREC9esQy4JP36a9HB8VK2jMJ+Uwg=;
-        b=J4f0F4xNfD3mXpbzWkg1/lS0Nk1JtWxSKwjTCU3AnSEhDBmbxJ8kVZP8rM/RT2htYg
-         kwOxfbp1HlaVsobnPyQQedxsDSQBIj/ngecDe84ezkJoNSMvDfpq2pm1nTSOjtHv8eFO
-         vl4oI9/i1LFM/dnhebZH8JXfva+fIleh9S8lheo8Gb6Bm46RHy/PRHD3Y3WxO5LiGx8I
-         aOXM7hpHRwFTlW/FkNndOZ5mG+SyET9zUXxdajzzSlxgGty59Wl+G0oeYctJVOM7RHvW
-         SnYpeQnrYiZiCiuSEpCuzUDEjGWrnCZDXbcoFEHfTdWJF2eWmEWNJ6bz8gK2WQFAIcpD
-         mQwQ==
-X-Gm-Message-State: AC+VfDxETcjhkV85zdINdHALEfpVgBUzJI8zTWKv3baYITntPTQDbwBe
-        EpXmaYEfB6OZ2cCu5yoaLt1azw==
-X-Google-Smtp-Source: ACHHUZ7h+3D5VlsX76Xfiu3VsgKNrDMV0bAK+Vkwzs0jejkfK4KeQg7kWUao4mTLEKn6hNQo9NLu8g==
-X-Received: by 2002:a17:903:4293:b0:1a6:b971:faf6 with SMTP id ju19-20020a170903429300b001a6b971faf6mr4339302plb.35.1687164620306;
-        Mon, 19 Jun 2023 01:50:20 -0700 (PDT)
-Received: from localhost ([122.172.87.195])
-        by smtp.gmail.com with ESMTPSA id iy17-20020a170903131100b001b50b8439e0sm8449259plb.96.2023.06.19.01.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jun 2023 01:50:19 -0700 (PDT)
-Date:   Mon, 19 Jun 2023 14:20:17 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        brgl@bgdev.pl
-Subject: Re: [libgpiod][PATCH] bindings: rust: fix clippy lint warnings
-Message-ID: <20230619085017.lifz2hcqzi6fam2k@vireshk-i7>
-References: <20230612154055.56556-1-warthog618@gmail.com>
- <CTC81IMWHW2L.28NQLXAIFP60L@fedora>
- <ZIl6X8YAUHS/n5s8@sol>
- <CTGGDNWWBD6E.FLAMJGXFKF3S@fedora>
- <ZJAKTdRVEwZfnKb+@sol>
- <CTGH61DGZBIQ.RVXF4UG9BYH2@fedora>
+        bh=bBwiRtnNLuDw3VW76KF3adxsJHja6pYQXr29NX53oxw=;
+        b=sIyaQSCUAwmh0dDgqwb4R4xc5wAhkIb1kTvhyuEA25zvuId4iaFZe9EIjgsXEz+H8y
+         /kSPU3Tw2nVhXa4bZiE2uLa9BV6yyLrAxMf/i/zx/AGjw303GWfvFN6ARfEHnSqDqBYS
+         c3wrtiGTv4P497aFwtYFEnWVOj1a78s+dsc5Z4kKR2fhHnrozmZjym6249i6Bhcj7Yoi
+         jj+2mbvafAT5hZ/8ffY6scH55Qe6cA43RXwQqKClko86UsXjWWba+W3z2KgjGhKvqnrZ
+         0jFMSWEXfqvmsdN8ds2FOoqUNSs/l212ZlPl4XK0MPi00TE4tWOo03yO1WYO6l9KKd6i
+         sqzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687164718; x=1689756718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bBwiRtnNLuDw3VW76KF3adxsJHja6pYQXr29NX53oxw=;
+        b=kZ1/ocB/YWWv0w1D9wESXafnDB4LhNXGlosx2pC0Pn7FOSmf1rR4vs6JuODU61vuK6
+         2G+1CFaRa9VZMZd7rjfYbKoutaElSeBQzy7maLMjJN546xzVjyowAazEpSOjIq18eHXR
+         eoUut3X4PAcC+c7jjmq6VQ8I1zsUr2tb0v2PBKg5ON/6HstIgG8FcvrUvGe7Z859diDk
+         Og8oZ3JVYrhzEGT1deYgc9GlsS579XEhBsSeGTax6BpiV3WoY05Tq2O32Pek1hRtH4qm
+         GugFU8tm+cg//W43CIDObUoNzIJk54nzcZKO5EejUp8OA7EpiDLL7qosDhUpWjdazUA6
+         4pWA==
+X-Gm-Message-State: AC+VfDxtvQzalWxljT4HlLaD4/qvPRU3GkYyHcrPDnQicyMrz7X60iLc
+        cJblLNuchDk6JJQWcmLr4p8X4J6eNi8m2VLIS2i7uw==
+X-Google-Smtp-Source: ACHHUZ5WH1oMGiYWP5bDrggvQiakiCRNxMMXJEFaSbH+xRAAZF/DZelyjUR9nPWup9sabQt9U+GmXs87B5zfYUFDN/0=
+X-Received: by 2002:a25:9112:0:b0:bc8:cd2c:2fb with SMTP id
+ v18-20020a259112000000b00bc8cd2c02fbmr5860163ybl.9.1687164717947; Mon, 19 Jun
+ 2023 01:51:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CTGH61DGZBIQ.RVXF4UG9BYH2@fedora>
+References: <20230619082104.699331-1-arnd@kernel.org>
+In-Reply-To: <20230619082104.699331-1-arnd@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 19 Jun 2023 10:51:46 +0200
+Message-ID: <CACRpkdY3S3f7CuegyZaS+QZcF6p7OG=PB-89cmdJkPnr4o6BYg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mlxbf3: remove broken Kconfig 'select'
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Lee Jones <lee@kernel.org>,
+        Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -75,40 +72,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I missed these earlier, thanks for cc'ing me now Kent.
+On Mon, Jun 19, 2023 at 10:21=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wr=
+ote:
 
-On 19-06-23, 10:13, Erik Schilling wrote:
-> On Mon Jun 19, 2023 at 9:57 AM CEST, Kent Gibson wrote:
-> > My reasoning was simply that building the bindings as you suggested
-> > resulted in lint warnings, which is noisy and iritating when trying to
-> > lint my own code.
-> 
-> I fully agree that we should fix them! I was just confused about the
-> explanation.
-> 
-> > But I'm just the messenger.  Your question would be better directed at
-> > Viresh - it is his code so he should be able to tell you why the casts
-> > are there.
-> > IIRC we needed the casts historically, though I don't recall the rust
-> > version we were using at the time.
-> > If we've moved beyond that then I have no problem with the casts being
-> > removedi, in fact in my initial comment I lamented the fact they were
-> > necessary.
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> The new pinctrl driver selects GPIO_MLXBF3, but that can not be enabled y=
+et because
+> the MELLANOX_PLATFORM symbol does not exist in the tree:
+>
+> WARNING: unmet direct dependencies detected for GPIO_MLXBF3
+>   Depends on [n]: GPIOLIB [=3Dy] && PCI [=3Dn] && (MELLANOX_PLATFORM [=3D=
+n] && ARM64 [=3Dy] || COMPILE_TEST [=3Dy])
+>   Selected by [y]:
+>   - PINCTRL_MLXBF3 [=3Dy] && PINCTRL [=3Dy] && (MELLANOX_PLATFORM [=3Dn] =
+&& ARM64 [=3Dy] || COMPILE_TEST [=3Dy])
+>
+> As it turns out, the pinctlr driver still builds fine without this, so ju=
+st
+> remove the select statement.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I don't remember the versions used at that time, but here [1] are few
-of the auto-generated FFI bindings that I used to keep in my series
-then, in case these can help.
+Patch applied!
 
-IIRC, some of these were required for 32 bit builds. Don't remember
-the exact details but there were build / clippy errors / warnings
-without them.
-
-I am fine with updating code based on latest version of Rust and get
-these removed.
-
-Erik: Please build for 32 bit ARM too btw.
-
--- 
-viresh
-
-[1] https://lore.kernel.org/all/401d9417d895b8b1b19ca577c84347d89f7e0fbd.1667815011.git.viresh.kumar@linaro.org/
+Yours,
+Linus Walleij
