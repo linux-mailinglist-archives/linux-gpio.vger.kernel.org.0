@@ -2,131 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EAA5A734D4D
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:13:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5204F734D67
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Jun 2023 10:17:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjFSIN6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Jun 2023 04:13:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
+        id S230148AbjFSIRo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Jun 2023 04:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbjFSIN5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:13:57 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0113D3
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:13:54 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-988a2715b8cso141353766b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:13:54 -0700 (PDT)
+        with ESMTP id S229519AbjFSIRn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Jun 2023 04:17:43 -0400
+Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A46FE
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:17:41 -0700 (PDT)
+Received: by mail-vs1-xe29.google.com with SMTP id ada2fe7eead31-440bc794fa7so29497137.1
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Jun 2023 01:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687162433; x=1689754433;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687162661; x=1689754661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=htfrwTPssG2qyZTdsJjMl4v6HmKHmtTds20NAsA3i6Q=;
-        b=omV1WxhN4LJAsfE/DAx4J+YrdMnipQPnD2Z0BjjYepPSXjNx9FJDDjZwxCUKnXqRZt
-         ZsUFIkjUAFl+XKU434X4XlR8PNZUGcQOZBNxLYnwV2L84gmUUNcs7iR/puqS/tQE32g2
-         hkha89qFSbG+mcWGsKvu5eUcwzGM3Rn2XpUMV8dRZUpslA8ZvNuXVg+W60wNO3+nbJtd
-         PbN1aKRv7h/Qwo/IOvmdDdZA4ySHdtvNJHps4UYAqRH6fJSgQbglV6SrBh62HSbf+krC
-         WKAVggMORlwsPmZF13ETh/jLtOw+KHpVBPa7gAd55fpdtUKf9ofBNhgtNxZ6tR/vkTby
-         F/3Q==
+        bh=bgD4qJRBXeNfcTIUMk3f0e36MarGtS5KG2SKvwvRiek=;
+        b=zqcdk65E+RI4c3SU/gF5AJWCk6ZQK4ExtqmLrQLTiY9KhZcKtOWvB1s+KuWq+8g8d7
+         +xqDeQW05JwxvEF7dGvRdPVEAYLbiCzbOJlTiY0YluMjAsU/DMg+vYVT0TIiIivIIHWn
+         9N2GtLjF3WSxjZHpiFE9v4+WXSCOba0VU6w8iTTrtTbt6YJDhr3DZ1JgssJEHv4bbSdv
+         ImkysHqMy9vxMga2/hiXIN2FmO+YqoeXmL7xMwngy/kSsbtfGWzIwmWwKFs9SWAG8ID6
+         DJOQmF2/FO2xirXMfnJEIV4FZX0KXa9/OA02FT5gzaAWBj+L0o0/PZS4DYjiwTLSid6O
+         jK8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687162433; x=1689754433;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=htfrwTPssG2qyZTdsJjMl4v6HmKHmtTds20NAsA3i6Q=;
-        b=CUpr9YycoGpAuG9TrG9GAwhR3xDJa4gK8fqrufcgiSMc5CaaRj0F7cYHsGJjfdjVSJ
-         LZGMx3y+4aHYk2L56dh1lO1NVZkOlvoUrwbaqbMkAVqjuY24VVj5G7k8H+yh2T4OiRTL
-         KaP+4QApqWJSpnf4JdNyOFGpiU+Wxh9cdoqlzMCU2mU7ghPhS6ToOcRBLFhFgiRBYKpM
-         mDlGU69CqQGToFucQLSG8tLQEu88Gce1B3BpeMpodD3PBwLA3fU9MNrGE4Z/zjP9kaVT
-         6daNH20RgucD3LyAJvyOrIsaa9z3EeWgxT028cMkR1XwSttIYzET0DmxEAM5E3JOMunE
-         CExQ==
-X-Gm-Message-State: AC+VfDxi257UneqOORyPBNevnqSpm6rETMg+JLJLvNkFYINDZGj4Yab8
-        MawsQ0GWL3uuyfK+b8V8Fuk8NQ==
-X-Google-Smtp-Source: ACHHUZ6LHSCj/icM4N/9wbNClRiPNyLX3mC+CywpxtaNCvGhdDsy4ZN+hW7nO/LSfStKyNctLuyO+A==
-X-Received: by 2002:a17:906:6a27:b0:982:c64c:6941 with SMTP id qw39-20020a1709066a2700b00982c64c6941mr8887631ejc.25.1687162433085;
-        Mon, 19 Jun 2023 01:13:53 -0700 (PDT)
-Received: from localhost (i5C740111.versanet.de. [92.116.1.17])
-        by smtp.gmail.com with ESMTPSA id gz17-20020a170906f2d100b00988936b142bsm1486670ejb.147.2023.06.19.01.13.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jun 2023 01:13:52 -0700 (PDT)
-Mime-Version: 1.0
+        d=1e100.net; s=20221208; t=1687162661; x=1689754661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bgD4qJRBXeNfcTIUMk3f0e36MarGtS5KG2SKvwvRiek=;
+        b=MDggwH4ol/IjzMeYQbjhmj656riXE1fAMY6u2lg+cxhFZL5kKYpxBJGN4R2lJiutpP
+         FjfsnbbPX5ELefLmtKXhEXxP5KjkTkpXmxpvDCvmrhbkMTbPsTLCqGz9qoLOQfgDazjp
+         INdUQlbioBvNrHRoJzGDIi2b/UJVrOi5w5oePatTGO5K0fY8z81Jj0G0mxVQ0PoUcRv6
+         4TmwfmrzD6kfHG1O5api+X3nNpxfxvALqPiIcRYl83ZtVro/WxA06/EVN0kJdam9En7q
+         UxVJQ09jwpHOO+cFwVSUryfQxxlQ8MjfINsoZHyel3BcLRXalfs21JnovhrEE+2QCPr5
+         rMzA==
+X-Gm-Message-State: AC+VfDzzoQaXlnmx3hnXId+zyDupXxtbS//JTG0JQ7gPUliLw17wNCit
+        NCPO9y5i6XOsf3xVOWH1RRifW2p84htSHticpFXbRA==
+X-Google-Smtp-Source: ACHHUZ6iUMsN1kj6mdc3M+IpdnuRQWlmFL9i2AWXaUzS3rj6QTuKErnRFG8dtQ7egRHEoDLYOPFvT10Ehhl9lwPPIIY=
+X-Received: by 2002:a67:f817:0:b0:43b:5552:7789 with SMTP id
+ l23-20020a67f817000000b0043b55527789mr2071841vso.17.1687162660900; Mon, 19
+ Jun 2023 01:17:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230616-msrv-v1-1-1f0ca25b8222@linaro.org>
+In-Reply-To: <20230616-msrv-v1-1-1f0ca25b8222@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 19 Jun 2023 10:17:29 +0200
+Message-ID: <CAMRc=McFr7XRQDDu6ptsCY+=dxkK2chsgV3PCObiq1ykEoe1Dg@mail.gmail.com>
+Subject: Re: [PATCH RESEND libgpiod] bindings: rust: bump MSRV to 1.60
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 19 Jun 2023 10:13:52 +0200
-Message-Id: <CTGH61DGZBIQ.RVXF4UG9BYH2@fedora>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-Subject: Re: [libgpiod][PATCH] bindings: rust: fix clippy lint warnings
-Cc:     <linux-gpio@vger.kernel.org>, <brgl@bgdev.pl>,
-        <viresh.kumar@linaro.org>
-To:     "Kent Gibson" <warthog618@gmail.com>
-X-Mailer: aerc 0.14.0
-References: <20230612154055.56556-1-warthog618@gmail.com>
- <CTC81IMWHW2L.28NQLXAIFP60L@fedora> <ZIl6X8YAUHS/n5s8@sol>
- <CTGGDNWWBD6E.FLAMJGXFKF3S@fedora> <ZJAKTdRVEwZfnKb+@sol>
-In-Reply-To: <ZJAKTdRVEwZfnKb+@sol>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon Jun 19, 2023 at 9:57 AM CEST, Kent Gibson wrote:
-> On Mon, Jun 19, 2023 at 09:36:48AM +0200, Erik Schilling wrote:
-> > Sorry, got distracted while sorting out the MSRV mess that I sent a
-> > separate patch for [4].
-> >=20
-> > I do not think that this is the reason why we need the casts...
-> > bindgen generates bindings using std::os::raw::c_uint [5] which is
-> > stable since 1.1.0 (and was previously defined as u32 [6]). I think we
-> > can just drop the casts entirely? I can run cargo clippy --fix on lates=
-t
-> > stable (1.70.0), then go back to 1.60 and everything is still building.
-> > I am having trouble to execute the tests in that version due to some
-> > linkage errors, but that should not be the fault of the casts.
-> >=20
-> > Did I got this correct or am I misunderstanding your reasoning?
-> >=20
+On Fri, Jun 16, 2023 at 10:38=E2=80=AFAM Erik Schilling
+<erik.schilling@linaro.org> wrote:
 >
-> My reasoning was simply that building the bindings as you suggested
-> resulted in lint warnings, which is noisy and iritating when trying to
-> lint my own code.
-
-I fully agree that we should fix them! I was just confused about the
-explanation.
-
-> But I'm just the messenger.  Your question would be better directed at
-> Viresh - it is his code so he should be able to tell you why the casts
-> are there.
-> IIRC we needed the casts historically, though I don't recall the rust
-> version we were using at the time.
-> If we've moved beyond that then I have no problem with the casts being
-> removedi, in fact in my initial comment I lamented the fact they were
-> necessary.
-
-ACK. Not sure how the situation was when the patches came together, but
-today I would suggest to just drop the casts. Do you want to respin your
-series or shall I send the fixes?
-
-> > Note: One needs to fix a bug that cargo clippy --fix introduces since
-> > it replaces nth(0) with next() in event_buffers.rs and introduces a
-> > unconditional recursion.
-> >=20
+> Specifying MSRV (minimum supported rust version) was introduced with
+> Rust 1.56. So old versions of libraries do not have this restriction
+> spelled out in their Cargo.toml.
 >
-> Who is using --fix??
+> This means that even if we claimed a MSRV of 1.56 until now, that did
+> not mean that things were actually buildable with 1.56 practically
+> (without manually researching compatible versions and pinning them
+> down).
+>
+> `bindgen` started listing a MSRV from v0.61 (requiring Rust 1.57) [1].
+> So that may seem like an obvious choice. But if one attempts to build
+> it with such an old version one will realize that `log` only started
+> requesting a MSRV with 0.4.19 (requesting Rust 1.60) [2]. Hence, we
+> would either need to manually restrict log to an old, but compatible
+> release (which would unnecessarily restrict everyone on newer Rust
+> versions) or just also bump our MSRV to 1.60.
+>
+> Rust 1.60 was released on 2022-04-07 [3] and seems like an acceptable
+> choice if core components such as `log` started their MSRV tracking with
+> that version. If someone is determined wanting to use this with an older
+> version of Rust, thats still possible. If one has done the necessary
+> manual research and pinned their versions down, one can use
+> --ignore-rust-version (or a < 1.56 version of Rust that does not check
+> the MSRV yet).
+>
+> Thanks to Manos Pitsidianakis <manos.pitsidianakis@linaro.org> for
+> helping me out when I successfully confused myself somewhere.
+>
+> [1] https://github.com/rust-lang/rust-bindgen/blob/v0.61.0/bindgen/Cargo.=
+toml
+> [2] https://github.com/rust-lang/log/blob/0.4.19/Cargo.toml
+> [3] https://blog.rust-lang.org/2022/04/07/Rust-1.60.0.html
+>
+> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+> ---
+> While looking at the clippy fixes [1], I realized that things do not
+> actually build with the minimum supported Rust version that we claim.
+> The simplest way forward seems to be just bumping that version.
+>
+> [1] https://lore.kernel.org/r/20230612154055.56556-1-warthog618@gmail.com=
+/
+>
+> To: Linux-GPIO <linux-gpio@vger.kernel.org>
+> Cc: Kent Gibson <warthog618@gmail.com>
+> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+> Cc: Alex Benn=C3=A9e <alex.bennee@linaro.org>
+> ---
+>  bindings/rust/gpiosim-sys/Cargo.toml  | 2 +-
+>  bindings/rust/libgpiod-sys/Cargo.toml | 2 +-
+>  bindings/rust/libgpiod/Cargo.toml     | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/bindings/rust/gpiosim-sys/Cargo.toml b/bindings/rust/gpiosim=
+-sys/Cargo.toml
+> index af30748..1f44a31 100644
+> --- a/bindings/rust/gpiosim-sys/Cargo.toml
+> +++ b/bindings/rust/gpiosim-sys/Cargo.toml
+> @@ -9,7 +9,7 @@ authors =3D ["Viresh Kumar <viresh.kumar@linaro.org>"]
+>  description =3D "gpiosim header bindings"
+>  repository =3D "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.gi=
+t"
+>  categories =3D ["external-ffi-bindings", "os::linux-apis"]
+> -rust-version =3D "1.56"
+> +rust-version =3D "1.60"
+>  keywords =3D ["libgpiod", "gpio", "gpiosim"]
+>  license =3D "Apache-2.0 OR BSD-3-Clause"
+>  edition =3D "2021"
+> diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpi=
+od-sys/Cargo.toml
+> index 0c814ee..b4d26e9 100644
+> --- a/bindings/rust/libgpiod-sys/Cargo.toml
+> +++ b/bindings/rust/libgpiod-sys/Cargo.toml
+> @@ -9,7 +9,7 @@ authors =3D ["Viresh Kumar <viresh.kumar@linaro.org>"]
+>  description =3D "libgpiod public header bindings"
+>  repository =3D "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.gi=
+t"
+>  categories =3D ["external-ffi-bindings", "os::linux-apis"]
+> -rust-version =3D "1.56"
+> +rust-version =3D "1.60"
+>  keywords =3D ["libgpiod", "gpio"]
+>  license =3D "Apache-2.0 OR BSD-3-Clause"
+>  edition =3D "2021"
+> diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/C=
+argo.toml
+> index d6758be..518e5e5 100644
+> --- a/bindings/rust/libgpiod/Cargo.toml
+> +++ b/bindings/rust/libgpiod/Cargo.toml
+> @@ -9,7 +9,7 @@ authors =3D ["Viresh Kumar <viresh.kumar@linaro.org>"]
+>  description =3D "libgpiod wrappers"
+>  repository =3D "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.gi=
+t"
+>  categories =3D ["api-bindings", "hardware-support", "embedded", "os::lin=
+ux-apis"]
+> -rust-version =3D "1.56"
+> +rust-version =3D "1.60"
+>  keywords =3D ["libgpiod", "gpio"]
+>  license =3D "Apache-2.0 OR BSD-3-Clause"
+>  edition =3D "2021"
+>
+> ---
+> base-commit: 9a80247cf4a70c837055271c978afda7ef107338
+> change-id: 20230616-msrv-0f1d20f5bd09
+>
+> Best regards,
+> --
+> Erik Schilling <erik.schilling@linaro.org>
+>
 
-I do all the time (and spend the time I saved typing on reviewing)!
-(Thought mostly I use the suggested actions suggested by the LSP in
-the editor instead of the CLI tools)
+Applied, thanks!
 
-> I did put an allow in there for that one, with a comment about the
-> recursion, though I'm not sure the comment is sufficiently clear without
-> the warning in front of you - and you no longer get that with the allow
-> in place.
-
-Ah. Did not notice that... My brain was only thinking about the casts.
-
-- Erik
+Bart
