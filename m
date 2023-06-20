@@ -2,124 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61E3C737146
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jun 2023 18:16:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F5AF7371EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jun 2023 18:41:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233197AbjFTQQ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Jun 2023 12:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49448 "EHLO
+        id S229864AbjFTQlh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Jun 2023 12:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbjFTQQ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Jun 2023 12:16:56 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B40695;
-        Tue, 20 Jun 2023 09:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=AeL+ePUG2U+gtbaPVRNCeIftvITy04qZEoWPXivPMGM=; b=gSvQNHy5jmJwaB8fkE8RCWcVzk
-        awSwFgQ72MtyCwUP4Dt2Rs+U5WnsTVmsOT6G9l2RkOoIIRZO4rtnEuCKa3EhPMJ3GrVLAWZp/pasI
-        xk8m3QGZP1vUmPW1ovtBts1TiQchVrP/l2gkZjUpwaoUipbyRHWM8eroglEx3wWmT4Vk=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:49610 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1qBe29-0001IH-PZ; Tue, 20 Jun 2023 12:16:46 -0400
-Date:   Tue, 20 Jun 2023 12:16:45 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org
-Message-Id: <20230620121645.512b31a872306b43a276bbac@hugovil.com>
-In-Reply-To: <CAHp75VcieuYqxWrO7rknx2ROYz=rnWnKV6s9eXZ5Zd1BKc6YMg@mail.gmail.com>
-References: <20230602152626.284324-1-hugo@hugovil.com>
-        <20230602152626.284324-6-hugo@hugovil.com>
-        <2023060454-cotton-paramount-e33e@gregkh>
-        <CAHp75Ve6W-hcB4YAeKukgv-uOEzBY7Tx5Sdf3doTRYKzNPcVGw@mail.gmail.com>
-        <20230604134459.3c3844012e9714fa2a61e642@hugovil.com>
-        <CAHp75VeWFPBmsD8zsSAaQGNNXtfgLtQuM9AMGfLPk-6p0VW=Pg@mail.gmail.com>
-        <20230620100846.d58436efc061fb91074fa7e5@hugovil.com>
-        <CAHp75VcWSVgA8LFLo0-b5TfKWdHb2GfLpXV-V3PZvthTv1Xc4A@mail.gmail.com>
-        <20230620113312.882d8f0c7d5603b1c93f33fb@hugovil.com>
-        <CAHp75VfGm6=ULW6kMjsg2OgB1z1T0YdmzvCTa3DFXXX-q_RnfA@mail.gmail.com>
-        <20230620114209.fb5272ad8cf5c5e2895d68b1@hugovil.com>
-        <CAHp75VcieuYqxWrO7rknx2ROYz=rnWnKV6s9eXZ5Zd1BKc6YMg@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        with ESMTP id S229454AbjFTQlg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Jun 2023 12:41:36 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F8DC0;
+        Tue, 20 Jun 2023 09:41:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687279296; x=1718815296;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Ixbk6Is2biXcZua8H62STJO3xjYtt2Imiuj7LbOAMf0=;
+  b=YRidF2qtcMHUUCSDF55mqav/cTHpZyUphHHo/v5i1lNkQ+W0Eby9nHYV
+   MuVyO9pXiAT59lj23oUJt+l3Klr3XPWLJG9NQx+DXjQnpRl6/icF+cl+A
+   RS7WInxh4fwhVICYC7pMF+hmVespcrRD3f81xZGLRCfXkg+cXrM7eNteu
+   erZelrLMmHvuBtRbG2p/M4gUSuh761kb45B4gM4bGVMp4IyCHMlV9VtaF
+   mgkEOKicot/8x8umWWu0CiHcLnt4Ss3r24+upJXOGvHl0gtN0xUcKfnXb
+   BAPIla23RyxNJMqOBJoTxU/q+F1GEgDVZKhpxovHhFBIAUBqrS7aAykrL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="358785603"
+X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
+   d="scan'208";a="358785603"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 09:40:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="743838745"
+X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
+   d="scan'208";a="743838745"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008.jf.intel.com with ESMTP; 20 Jun 2023 09:40:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qBeOz-005Ikn-2E;
+        Tue, 20 Jun 2023 19:40:21 +0300
+Date:   Tue, 20 Jun 2023 19:40:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pengfei Xu <pengfei.xu@intel.com>, yi1.lai@intel.com
+Subject: Re: selftests: gpio: crash on arm64
+Message-ID: <ZJHWdcP+PDaNrw07@smile.fi.intel.com>
+References: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
+ <ZAocZRZh4FQRH3lc@smile.fi.intel.com>
+ <CA+G9fYsOttth+k3Ki8LK_ZiayvXa0bAg-DmQAaFHZeEyR=6Lrw@mail.gmail.com>
+ <CACRpkdbUYWcFiRh+Y=MOekv2RjSP4sB2t5tVrSsz54Eez6wmVg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
+In-Reply-To: <CACRpkdbUYWcFiRh+Y=MOekv2RjSP4sB2t5tVrSsz54Eez6wmVg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v7 5/9] serial: sc16is7xx: fix regression with GPIO
- configuration
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 20 Jun 2023 18:45:51 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On Tue, Apr 11, 2023 at 10:57:28AM +0200, Linus Walleij wrote:
+> On Mon, Apr 10, 2023 at 11:16 AM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
 
-> On Tue, Jun 20, 2023 at 6:42 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> > On Tue, 20 Jun 2023 18:35:48 +0300
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Tue, Jun 20, 2023 at 6:33 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> > > > On Tue, 20 Jun 2023 18:18:12 +0300
-> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > > > On Tue, Jun 20, 2023 at 5:08 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> > > > > > On Sun, 4 Jun 2023 22:31:04 +0300
-> > > > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> 
-> ...
-> 
-> > > > > > did you have a chance to look at V8 (sent two weks ago) which fixed all
-> > > > > > of what we discussed?
-> > > > >
-> > > > > The patch 6 already has my tag, anything specific you want me to do?
-> > > >
-> > > > Hi Andy,
-> > > > I forgot to remove your "Reviewed-by: Andy..." tag before sending V8
-> > > > since there were some changes involved in patch 6 and I wanted you to
-> > > > review them. Can you confirm if the changes are correct?
-> > > >
-> > > > I also added a new patch "remove obsolete out_thread label". It has no
-> > > > real impact on the code generation itself, but maybe you can review and
-> > > > confirm if tags are ok or not, based on commit message and also
-> > > > additional commit message.
-> > >
-> > > Both are fine to me.
-> >
-> > Hi,
-> > Ok, thank you for reviewing this.
-> >
-> > I guess now we are good to go with this series if the stable tags and
-> > patches order are good after Greg's review?
-> 
-> Taking into account that we are at rc7, and even with Fixes tags in
-> your series I think Greg might take this after v6.5-0rc1 is out. It's
-> up to him how to proceed with that. Note, he usually has thousands of
-> patches in backlog, you might need to respin it after the above
-> mentioned rc1.
+...
 
-Ok, understood.
+> Add a pr_info() devm_gpio_chip_release() in drivers/gpio/gpiolib-devres.c
+> and see if the callback is even called. I think this could be the
+> problem: if that isn't cleaned up, there will be dangling references.
 
-Let's wait then.
+Side note: Since we have devres tracepoints, your patch seems an overkill :-)
+Just enable devres tracepoints and filter out by the function name. I believe
+that should work.
 
-Thank you.
-Hugo.
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
