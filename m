@@ -2,136 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8897736E42
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jun 2023 16:04:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6BAA736E4F
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Jun 2023 16:09:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232919AbjFTOEP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Jun 2023 10:04:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57836 "EHLO
+        id S232969AbjFTOJG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Jun 2023 10:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232894AbjFTOEP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Jun 2023 10:04:15 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2BFA4;
-        Tue, 20 Jun 2023 07:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687269854; x=1718805854;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ca7/yI4TqjzgeDR9K0z3MtWXnd6TYta8YQAkAFDWepg=;
-  b=S2icewdk8aOdfcL/GVg0Xvpx8VYG9nWKfDxbmAG+HBPq99L0ncoBuZdb
-   K/oxb/e/ojcQLKpb22aXztZhwhO21rYubkd7nuiX9G7LwaRURogj73CP1
-   2hQhmhTU/Kl1WoZuuOS/2pIs4ScE6nt/5KP5viyUfL/+u1y041bYfhdkP
-   Mml9Shm45dxUEDbG8sLw47/DOTFv2C/lFmdsFOmixHgoOO3QG4LDCLPg/
-   eavAvk9lFYsTQRf79VYswSmHUwY8ZANfszu+Esg7p7OmbTM3+wbKczoZm
-   U1DlQs98zeGx60x6wuh7FYHf6ivRbGJwykFnwdt2ikzTFlcJesjgTU9/y
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="339478198"
-X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="339478198"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 07:03:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="784078298"
-X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="784078298"
-Received: from mylly.fi.intel.com (HELO [10.237.72.161]) ([10.237.72.161])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Jun 2023 07:03:54 -0700
-Message-ID: <32ddaa7b-53a8-d61f-d526-b545bd561337@linux.intel.com>
-Date:   Tue, 20 Jun 2023 17:03:53 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.12.0
-Subject: Re: [PATCH 1/3] counter: i8254: Introduce the Intel 8254 interface
- library module
-Content-Language: en-US
-To:     William Breathitt Gray <wbg@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, andy.shevchenko@gmail.com,
-        William Breathitt Gray <william.gray@linaro.org>
-References: <cover.1681665189.git.william.gray@linaro.org>
- <f6fe32c2db9525d816ab1a01f45abad56c081652.1681665189.git.william.gray@linaro.org>
- <ZIHpGUWZ8wE7tkJP@ishi>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-In-Reply-To: <ZIHpGUWZ8wE7tkJP@ishi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231528AbjFTOJF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Jun 2023 10:09:05 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37560E58;
+        Tue, 20 Jun 2023 07:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
+        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ekPPUQAmVVrrWr1qBlhGGDjUTFbwDIDMgk2nEuBhZRY=; b=Pttv+VUNGuJ461RzDONyDnw806
+        3P6etPgLo+dBFcM7lIC85HVrvF4fc6w8YNDyVGDJDd4ZRBCRvfkjELMfeB2A8vlZth6N6mUZff1de
+        5wAZPsiPO+EBdkG4Be0uG2WjiUtH28SSGNHd4tLUi2/Cu9h5jyKQy5504K1fBFJ2vXuE=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:48278 helo=pettiford)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1qBc2J-0000F2-9L; Tue, 20 Jun 2023 10:08:48 -0400
+Date:   Tue, 20 Jun 2023 10:08:46 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        stable@vger.kernel.org
+Message-Id: <20230620100846.d58436efc061fb91074fa7e5@hugovil.com>
+In-Reply-To: <CAHp75VeWFPBmsD8zsSAaQGNNXtfgLtQuM9AMGfLPk-6p0VW=Pg@mail.gmail.com>
+References: <20230602152626.284324-1-hugo@hugovil.com>
+        <20230602152626.284324-6-hugo@hugovil.com>
+        <2023060454-cotton-paramount-e33e@gregkh>
+        <CAHp75Ve6W-hcB4YAeKukgv-uOEzBY7Tx5Sdf3doTRYKzNPcVGw@mail.gmail.com>
+        <20230604134459.3c3844012e9714fa2a61e642@hugovil.com>
+        <CAHp75VeWFPBmsD8zsSAaQGNNXtfgLtQuM9AMGfLPk-6p0VW=Pg@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v7 5/9] serial: sc16is7xx: fix regression with GPIO
+ configuration
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi
+On Sun, 4 Jun 2023 22:31:04 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-On 6/8/23 17:43, William Breathitt Gray wrote:
-> On Sun, Apr 16, 2023 at 01:36:53PM -0400, William Breathitt Gray wrote:
->> Exposes consumer library functions providing support for interfaces
->> compatible with the venerable Intel 8254 Programmable Interval Timer
->> (PIT).
->>
->> The Intel 8254 PIT first appeared in the early 1980s and was used
->> initially in IBM PC compatibles. The popularity of the original Intel
->> 825x family of chips led to many subsequent variants and clones of the
->> interface in various chips and integrated circuits. Although still
->> popular, interfaces compatible with the Intel 8254 PIT are nowdays
->> typically found embedded in larger VLSI processing chips and FPGA
->> components rather than as discrete ICs.
->>
->> A CONFIG_I8254 Kconfig option is introduced by this patch. Modules
->> wanting access to these i8254 library functions should select this
->> Kconfig option, and import the I8254 symbol namespace.
->>
->> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> On Sun, Jun 4, 2023 at 8:45 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> >
+> > On Sun, 4 Jun 2023 14:57:31 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> >
+> > > On Sun, Jun 4, 2023 at 10:47 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > On Fri, Jun 02, 2023 at 11:26:21AM -0400, Hugo Villeneuve wrote:
+> > >
+> > > ...
+> > >
+> > > > > +static u8 sc16is7xx_setup_mctrl_ports(struct device *dev)
+> > > >
+> > > > This returns what, mctrl?  If so, please document that, it doesn't look
+> > > > obvious.
+> > >
+> > > Good suggestion. Because I also stumbled over the returned type.
+> > >
+> > > >  And as the kernel test robot reported, you do nothing with the
+> > > > return value so why compute it?
+> > >
+> > > It seems that the entire function and respective call has to be moved
+> > > under #ifdef CONFIG_GPIOLIB.
+> >
+> > Hi,
+> > it cannot. See my explanations in response to Greg's comments.
 > 
-> I've queued this patch to the counter-next branch of my Counter tree.
-> 
-> Jonathan, Bart, I've created an immutable branch with just this patch
-> for you to pull which should allow you each to merge the other patch in
-> this patchset for your respective tree.
-> 
-I noticed this patch cause in linux-next "Counter support" submenu to 
-disappear and its menu entries are listed directly in "Device Drivers" menu.
+> Then as Greg suggested, store in the structure and make this function
+> to return an error code (with int), with this amendment you don't need
+> to add a comment about the returned variable anymore.
 
-Then I wonder why the CONFIG_I8254 has the help text defined since 
-drivers should select it.
+Hi Andy,
+did you have a chance to look at V8 (sent two weks ago) which fixed all
+of what we discussed?
 
-Or was the idea something like below?
-
-diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
-index bca21df51168..80631b5b0fc6 100644
---- a/drivers/counter/Kconfig
-+++ b/drivers/counter/Kconfig
-@@ -10,9 +10,10 @@ menuconfig COUNTER
-           interface. You only need to enable this, if you also want to 
-enable
-           one or more of the counter device drivers below.
-
-+if COUNTER
-+
-  config I8254
--       tristate
--       select COUNTER
-+       tristate "i8254 interface library"
-         select REGMAP
-         help
-           Enables support for the i8254 interface library functions. 
-The i8254
-@@ -25,8 +26,6 @@ config I8254
-
-           If built as a module its name will be i8254.
-
--if COUNTER
--
-  config 104_QUAD_8
-         tristate "ACCES 104-QUAD-8 driver"
-         depends on (PC104 && X86) || COMPILE_TEST
+Thank you,
+Hugo.
