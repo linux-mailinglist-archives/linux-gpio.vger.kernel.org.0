@@ -2,98 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D846173819D
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jun 2023 13:11:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58CB37381EC
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jun 2023 13:12:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232030AbjFUJic (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jun 2023 05:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39672 "EHLO
+        id S232442AbjFUKMm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jun 2023 06:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232035AbjFUJiT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jun 2023 05:38:19 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E58E6199B
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jun 2023 02:36:32 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-668730696a4so2001059b3a.1
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jun 2023 02:36:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687340172; x=1689932172;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZshoKXSmKzXZxxIwGO9WrxWWDyNMJS5KEfgheWVKB2w=;
-        b=W5iFE+xbg6Cw/MlKsXbVvUFayEK8njtDZ4wG5acYzkM3KqrIdTTPiBX1niRIFFk4uZ
-         8baWQyT+lqE3lzei0ZsEUeeAUte88Tohye7pIbsebdoQBakrEMdst7LM0oGMJpHQUstA
-         XAr6CO/Bduvm9sx2/AcbXdxZVelTdYEyNnKg6JtZNssqDvpBevL21EY5yRHX+4oUYlMC
-         B8/3b0mSqHqYrMkIfeCXv3G4u7jfAG0qf0/hi16NCceu53qiWtH9UMMvXzF/j7OuKTIP
-         0Coa9RTfDr0aOaPNRJnQQ/tU3S0sR5UP4lZVj6ZyzHjlVVKNOIwtYaUYiWUibpxcGXoF
-         OOYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687340172; x=1689932172;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZshoKXSmKzXZxxIwGO9WrxWWDyNMJS5KEfgheWVKB2w=;
-        b=Jpt4GL308QXv6hcodGgvaDHkmk2enyWSSaZMvmi2qsdK1wehmS6tI8aHTiMGELQfF2
-         duVjx0XkU3sLL0+wXTggLGrkEzJ0LO7/xm8wCIAeBqHUQwGW/h0E9mhoEbY6QYBp9Gq1
-         ISSjGXDjaFFuizVLRAlxGm/41qULclEq4c7sN09SNRBUyZxCq7/VKuA1wElenkVZ0ck+
-         eWg6L4z5ujux27eyMlDv9HGPFBvfIuIY3lKLTOHYYestvXWzfbIfn76Xxnws/q+1ffpd
-         0LCC2iVORSWr+jwYPOwPLReGvPfArM94Su0VaY5Zbria2Jf0Gl0KkovmG1QdxtRFLLsd
-         s4Fg==
-X-Gm-Message-State: AC+VfDzIJ8H/pz+AKqoM9pUFmZmi6QY8QP9kdb3bIN1GJ+toXUkb+YrH
-        psN4GIPK8pkQEm6SZaYR4ekRHeK8JtY=
-X-Google-Smtp-Source: ACHHUZ4zhyb5CpfJpeECI/OJGRiUe0Y265nXA8ln5WQElTH6KzSZeCBRxbtWwT5uUctyKFmW2Qev0g==
-X-Received: by 2002:a05:6a20:5493:b0:122:9af9:67c with SMTP id i19-20020a056a20549300b001229af9067cmr3996884pzk.23.1687340172082;
-        Wed, 21 Jun 2023 02:36:12 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id x3-20020a170902fe8300b001b56012be2csm3037133plm.231.2023.06.21.02.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 02:36:11 -0700 (PDT)
-Date:   Wed, 21 Jun 2023 17:36:06 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Joe Slater <joe.slater@windriver.com>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 2/2] tools: tests: port tests to shunit2
-Message-ID: <ZJLEhrhn8KCH4IxW@sol>
-References: <20230621084835.114473-1-brgl@bgdev.pl>
- <20230621084835.114473-3-brgl@bgdev.pl>
+        with ESMTP id S231144AbjFUKMR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jun 2023 06:12:17 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 447E81BC8;
+        Wed, 21 Jun 2023 03:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1687342289; x=1718878289;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=r0aPIdf9vVpHAKGkxLJol5k5eFJfFNg1FF9HV5m5yD4=;
+  b=dXcaRnzE/5T/jRt3iy/NUOa/k+4Vc7dRXFxhb3QKp90jcT93QwdmfO2S
+   rEv1HDg823Wcsll5FRLetpKQk436Qd0kyNHMX8ROIg1dKEi8y3+jkvFQY
+   T8tdDUzRRBJDIINQwLIysbEOzBymGammFvdS2Bp1Qe2aO7KgtBZnTeWV/
+   iqq70olkuB5idiSjqkB3RL8HxR/NRzV3B/KbCxh4OHXW1Na25Fv8/YzZ+
+   6o9hFKbDdnCzUwV8G/GLGeIXyMA72Rnwai/pg4Db4/QAHNlL26VWwV9i/
+   +Fp8ZCpPJXff09whVVE4yaFivvsjXngroK4WjbUWg9JVQpC0VSAqTimpX
+   A==;
+X-IronPort-AV: E=Sophos;i="6.00,260,1681196400"; 
+   d="scan'208";a="157908905"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jun 2023 03:04:29 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 21 Jun 2023 03:04:29 -0700
+Received: from plexus-g.actel.com (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.21 via Frontend
+ Transport; Wed, 21 Jun 2023 03:04:26 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <linus.walleij@linaro.org>, <andriy.shevchenko@linux.intel.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Claudiu Beznea" <claudiu.beznea@microchip.com>
+Subject: [PATCH v2] pinctrl: mcp23s08: check return value of devm_kasprintf()
+Date:   Wed, 21 Jun 2023 13:04:09 +0300
+Message-ID: <20230621100409.1608395-1-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230621084835.114473-3-brgl@bgdev.pl>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 10:48:35AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> +
->  # Save the PID of coprocess - otherwise we won't be able to wait for it
->  # once it exits as the COPROC_PID will be cleared.
->  DUT_PID=""
->  
-> -# mappings from local name to system chip name, path, dev name
+devm_kasprintf() returns a pointer to dynamically allocated memory.
+Pointer could be NULL in case allocation fails. Check pointer validity.
+Identified with coccinelle (kmerr.cocci script).
 
-Minor nit - I would keep the line above - only removing the -g comment.
+Fixes: 0f04a81784fe ("pinctrl: mcp23s08: Split to three parts: core, I²C, SPI")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
 
-> -# -g required for the associative arrays, cos BATS...
-> -declare -g -A GPIOSIM_CHIP_NAME
-> -declare -g -A GPIOSIM_CHIP_PATH
+Changes in v2:
+- use independent checks for devm_kasprintf()
 
-Either way, for the series, 
+ drivers/pinctrl/pinctrl-mcp23s08_spi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08_spi.c b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
+index 9ae10318f6f3..ea059b9c5542 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08_spi.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
+@@ -91,18 +91,28 @@ static int mcp23s08_spi_regmap_init(struct mcp23s08 *mcp, struct device *dev,
+ 		mcp->reg_shift = 0;
+ 		mcp->chip.ngpio = 8;
+ 		mcp->chip.label = devm_kasprintf(dev, GFP_KERNEL, "mcp23s08.%d", addr);
++		if (!mcp->chip.label)
++			return -ENOMEM;
+ 
+ 		config = &mcp23x08_regmap;
+ 		name = devm_kasprintf(dev, GFP_KERNEL, "%d", addr);
++		if (!name)
++			return -ENOMEM;
++
+ 		break;
+ 
+ 	case MCP_TYPE_S17:
+ 		mcp->reg_shift = 1;
+ 		mcp->chip.ngpio = 16;
+ 		mcp->chip.label = devm_kasprintf(dev, GFP_KERNEL, "mcp23s17.%d", addr);
++		if (!mcp->chip.label)
++			return -ENOMEM;
+ 
+ 		config = &mcp23x17_regmap;
+ 		name = devm_kasprintf(dev, GFP_KERNEL, "%d", addr);
++		if (!name)
++			return -ENOMEM;
++
+ 		break;
+ 
+ 	case MCP_TYPE_S18:
+-- 
+2.34.1
 
-Cheers,
-Kent.
