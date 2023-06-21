@@ -2,89 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2987A737C1E
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jun 2023 09:36:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABF8F737CFB
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jun 2023 10:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231246AbjFUHSU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jun 2023 03:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
+        id S231636AbjFUHjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jun 2023 03:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231243AbjFUHST (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jun 2023 03:18:19 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA8F183
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jun 2023 00:18:17 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-be3e2d172cbso4360452276.3
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Jun 2023 00:18:17 -0700 (PDT)
+        with ESMTP id S231425AbjFUHjA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jun 2023 03:39:00 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7915D1718
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jun 2023 00:38:58 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-570114e1feaso63801007b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Jun 2023 00:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687331897; x=1689923897;
+        d=linaro.org; s=google; t=1687333137; x=1689925137;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MAOzKmP5oeuqoPZ8mGCdEqZLbk+qvPzQr7Zb3mr9TxY=;
-        b=YUNuT3Cuka98cObtbBUQDTjmWE/tBZlANmdRnPMI+WdEOUG063dg6xfMiXUdEHN3Nf
-         KR4Po5I2lVgUepBl0GHneuu7qLdda2OQrptbxlbwCH1U/WTAroLqIat7tJwdjPTw3IwA
-         VW+mazXpNwQa9q87geLhOesYquwiph38x45+ZL4ULD0zirFpSddBShdb7+Q7FyKJfJm2
-         +GL000qgd7YXT9Q9PIa5xhlsbkg2EaPDdeaQWTKKMV/qZvUEy9q6Kayv6NOL8m6U2tVv
-         HN0X88lYBJEQG6deggF9ZobqYZDQWDXp9vkaZmD4+gvbi6lWLcxESWHDlOEbIdn7pzhE
-         MYVA==
+        bh=H3NGFBQaaSMoHb7EhMmGmsuBiIuz4DhNFyHCYDGV/zA=;
+        b=YxomoDjC5NarkVIOLm/FZqRakis1QIPTTw8kgxMAbOamfXzicpm+VK+AcaUuXzm3+E
+         ukhsVM8ewzBE6vENyLxHqwl8sfvaFogE1YJ9CjNy1PuciGDzixk3Ar1vl0CRihqOilbi
+         vLC6QPel4iYiXl19IE7pfFpKV8TDtaOB9F1AAEPzTON4JLe0ktLGczanwgXykv4M30iI
+         q+5A3AGzaYlJpVSmcoaURB0ax6gpX7EDhSacUSK8VF1mkZrbaYi2vohvQq/HoOnnaeaa
+         5+L/z7k9jrev3W3Nj3jHxcfrb6becdtjnOlXxqJufNyO6gTC1W/zNGiM1mb5ShSpeVAO
+         m4OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687331897; x=1689923897;
+        d=1e100.net; s=20221208; t=1687333137; x=1689925137;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MAOzKmP5oeuqoPZ8mGCdEqZLbk+qvPzQr7Zb3mr9TxY=;
-        b=SBnoxuRXN7PhcTz6qOUgHlCcCuL1rui1WZXKMjCAZk2ej7nTP0M+iQqOADPg5kxB2V
-         YiJjUud4V67tSA+axq9f+SSUrWgZnXdiH9vcR1x7K0VsWpr7HXr5MLGgCUgfb9goAr40
-         Q/TwKlAwZ1plHAzmT6eRSQDvAkKCcd/fxYZQSrOU+pPA0QS3BaHapZOVKuLiZGw6GIVZ
-         3aVto+U7igi2U5B+aVoSC+6pmmRet/Yvdm/jn18avuCsg+MPqqqn6ucUVxezwayasjRu
-         4pJrT/I+0Np7JWOC/0/nHWTRfmRhedHW1x1iKmdQepg1sk/jcNHlSOXobEvqOizFIn4u
-         EMqg==
-X-Gm-Message-State: AC+VfDzo90PaSvLVTHp20bADYyQ/dQzf2xGH0OblT2VZH4elqh8zSY+z
-        cLoVy8fr+nj4lDUswM4ytHmK6t7v8a68adstsFbyVw==
-X-Google-Smtp-Source: ACHHUZ7x21xxT6KjFP9038FIfz1FmoHroQoN+E6LWDijzKd21UMlCjyfB1Q3cK+4JYbIYvLYb13iRyy+y0cKToHfFt8=
-X-Received: by 2002:a25:1686:0:b0:bac:f582:eefd with SMTP id
- 128-20020a251686000000b00bacf582eefdmr5430321ybw.35.1687331896900; Wed, 21
- Jun 2023 00:18:16 -0700 (PDT)
+        bh=H3NGFBQaaSMoHb7EhMmGmsuBiIuz4DhNFyHCYDGV/zA=;
+        b=cZW0BWkBC4jl3uWyVjIppfjtCrSpUhaWAWPAh3mdwtgfvLK0SN32mlnG/fLT6lWaHv
+         QuM7+GnmIQZIj9BrZX6iBcR0MSZ9przJu0O6Ti7Hs4/p6UE0Wh0dBoZjX97OqaCLgPGN
+         kGt8SyQkuSalDtgxcHOk5HRCMAMyXCyjD1EXq4/oXYQiAVKJd6xiMTOECs8rKqS6hdsn
+         zZbNQBGws5meUwiBkpDzRgH+uYoOnA6Ba56c0GVYfVjTBVMe+e7JfiGXsGvwhU3EuAGg
+         la9A+ulWnY4+VGo12Vk3nl8iGnKC334PYzNm1EtJu/3GVhxH8MN1kwNRfwjz0X2YH8Ei
+         /MCw==
+X-Gm-Message-State: AC+VfDzzB5GdsSZCLcx7G+R4fKfCzTSiPnz2UcySkCskFmYAqvXplyoL
+        KhKRljAlxKUJAEbbXiCNFTDoq/npWd3H1NyAFrj/a1VMgOjbM6oi
+X-Google-Smtp-Source: ACHHUZ4bnkFM4Wo5h+wGuc+axMlSdoHIxl2x/X7LbRKt6UqnaUmPpKlgDcKLsiKb2Uf9Hs7AayMYOJFdVKDnQTy5mOM=
+X-Received: by 2002:a0d:df16:0:b0:56d:2d82:63dc with SMTP id
+ i22-20020a0ddf16000000b0056d2d8263dcmr14410503ywe.10.1687333137648; Wed, 21
+ Jun 2023 00:38:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230620104349.834687-1-valentin.caron@foss.st.com>
-In-Reply-To: <20230620104349.834687-1-valentin.caron@foss.st.com>
+References: <ZJGtpU3049d0bnfU@black.fi.intel.com>
+In-Reply-To: <ZJGtpU3049d0bnfU@black.fi.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 21 Jun 2023 09:18:05 +0200
-Message-ID: <CACRpkdZO+_UsPUKVTG-7v=zMposGh_j-2Nf-C_BUPUUqxypxXQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: stm32: set default gpio line names using pin names
-To:     Valentin Caron <valentin.caron@foss.st.com>
-Cc:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Wed, 21 Jun 2023 09:38:46 +0200
+Message-ID: <CACRpkdZec9rukp0VvfP1Tq9vTEzhx1MdWECRB+TFN_wOVOLwjQ@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 6.5-1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 12:43=E2=80=AFPM Valentin Caron
-<valentin.caron@foss.st.com> wrote:
+On Tue, Jun 20, 2023 at 3:46=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> Add stm32_pctrl_get_desc_pin_from_gpio function to find a stm32 pin
-> descriptor which is matching with a gpio.
-> Most of the time pin number is equal to pin index in array. So the first
-> part of the function is useful to speed up.
->
-> And during gpio bank register, we set default gpio names with pin names.
->
-> Signed-off-by: Valentin Caron <valentin.caron@foss.st.com>
+> Traditional PR for Intel pin control drivers for v6.5-rc1. This time not =
+so
+> big with the most important part that fixes use of OPEN DRAIN pin mode in
+> a few drivers. That was in Linux Next for several weeks. Please pull.
 
-If I get some ACK from the STM32 pinctrl maintainers I can merge
-this, seems useful! Maybe you already reviewed it internally at ST?
-I personally don't mind if you bring over internal reviewed-by tags.
+Pulled in for v6.5, excellent work as always!
 
 Yours,
 Linus Walleij
