@@ -2,154 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 280407397F2
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jun 2023 09:14:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25399739802
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jun 2023 09:17:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbjFVHN6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Jun 2023 03:13:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38920 "EHLO
+        id S230522AbjFVHRR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Jun 2023 03:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229990AbjFVHN5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Jun 2023 03:13:57 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639C5210E
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jun 2023 00:13:30 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-bc4e41b7bc9so6661902276.2
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jun 2023 00:13:30 -0700 (PDT)
+        with ESMTP id S229732AbjFVHRR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Jun 2023 03:17:17 -0400
+Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFED8E69
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jun 2023 00:17:15 -0700 (PDT)
+Received: by mail-vs1-xe33.google.com with SMTP id ada2fe7eead31-440a495d73dso1376784137.0
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jun 2023 00:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687418008; x=1690010008;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687418234; x=1690010234;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9hUliAdRg79tlWj+30+5hplBBl2Cn5f+HdXYzO27t9Y=;
-        b=qNTC3gVZpm0/wi/DY6m/7JNtvsprwFjWaPoY8aeSbKo0pMQXRDBkgabwphkyv/1K+y
-         5PeYwsVJqamo2kgb8swMIM8kdB04eZ3zFfjcR+d7gTbhEzNV52DsGDzh5/+9btRyNc9z
-         SgWzSz9aPPqENgcDFQ8/fijEJ/MOSyttcDiW1goTd71QluBODXI9yNQazLUlEDxJ/HF3
-         FMRGxu0B5hQVRZ+wgbDohOMcixsY6AUio8dtnd3eYw60DqI8oqVuiW3fM5xAccbLoIS3
-         1edJelu136TtGxYPzp2+uv8DZqfU/X6KocG3w1tzDL9Fs57Kgt9r7YepgKmOxlI+05Xf
-         jx5g==
+        bh=OQ3K4hmXwa+uJTD4G2lbXprl2LV5HnxlsmdhRcDrjCs=;
+        b=MUqv9j0I1PvYO8Bk6u2ZzKLnhDb/VJPI4NmNIM35ujO16bv2Q4yUdaWGb5/SFcS2K8
+         DmSGUoaOt/JTwQYQofbtsqL/GR04Nb66mesJ8WSXjrsExy7burR/6xNds6BVJxkcCEaJ
+         LDAEO8VRe86g2jpWFa+FhE9afC7S51Puy/qT3MBqreSZ0mCnEUMadKf/OjbFjlLx4gsm
+         W4UJOKnBGnRBcyZjL2mZb71PAWZJj/z9Ju6zkSaD50xbAPtwGnWoUiF1o2JcIaBcwCiD
+         s/Tl6K9qRmDJGPQydmGcsksm51NydxDTodahrr0lOGVfDsKbxALbUDxuQL+yBjdRXYLu
+         dIZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687418008; x=1690010008;
+        d=1e100.net; s=20221208; t=1687418234; x=1690010234;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9hUliAdRg79tlWj+30+5hplBBl2Cn5f+HdXYzO27t9Y=;
-        b=WcjVmjEhkrlr0JVzh15ZEsLY/y5Aw9zMbK8wmt3RnFj5YRzo4e8VmHzbGI0Aitricl
-         Vwhz3cTRsfoCAtP/Dgs4VydH15Z8vYCDlTqIWTuTGp6z4ZvQ6nnWVFA+ctTP0X32mbZN
-         aGQSlDOJ56mtAV76qfJA/LprOm6nzaTYpuOharZMLT7T6+YdH/lylaMydMhGdzU7HKIu
-         0dUDKXwAPFXNz56/y7kHPNK/i+X/1GvSjP9pndQPWhszcJbnFhYR4fZQ6Bu9zO4ewsK1
-         v+nDmPEkVfXOe9Z0VdxUqbkKuXO7xf3DbzD3+8JfO0PEc/2QddpZxBcT9xhIzTvhzC8k
-         0KDw==
-X-Gm-Message-State: AC+VfDxmG6Y3c2rwWV9T3YQF7I6atz/18qvHxYTSLxoRMPWtBNJFVKyv
-        uSrhl+cwwzl9YyYlQBaqyxruHvn/cKkX+aql1N+pfA==
-X-Google-Smtp-Source: ACHHUZ7m1xfekhso1XZxAYhTE6sJ6yX2vzQVSru2a5Y/qiFLulxLEFszMWFPoi6fKq16FfYcBUHXuV+K1Ti/DAseeI4=
-X-Received: by 2002:a25:e617:0:b0:be4:d7a9:31ff with SMTP id
- d23-20020a25e617000000b00be4d7a931ffmr13516285ybh.35.1687418008582; Thu, 22
- Jun 2023 00:13:28 -0700 (PDT)
+        bh=OQ3K4hmXwa+uJTD4G2lbXprl2LV5HnxlsmdhRcDrjCs=;
+        b=kTXb56/Eh3RUYDO5CHOVQlxmdiaskomb+aWaTCafZXWqYrpLVySOZypaMWncYKv1wH
+         mdPUwe1h9KldOUPLTSOM38iQT+hX372Ucn/3BazQAZaZMky8iGhr529FcjzuiQMMv6Jm
+         3rUvyI/754Nu5DfHXUNNXQCFylTmP8F0IOM9vRXvStDXP3HyLqw8gCHlOcEnNkSGyKHH
+         adQSchVFsPUPFFryqK4SD1J6qVTap9gM0rJsEGaKDs6UvQaFHhSvtDYZgsnR4xYvr2Lx
+         QwMFa/PCnaD8YR9TVDLTmqH/PhlTPQ2Klg4NLg3fxXC5KVlj8Ol1S7xxah+nntQ6HoX5
+         E0kw==
+X-Gm-Message-State: AC+VfDyZxPNVvEWKKwuuxu2XI4sMHmMSYL/NgRQAUZg7ctTIsc3m6gpL
+        bp1VTV+vcc2B773zBOOm1ztlPSx95yYsfFWq2AalFQ==
+X-Google-Smtp-Source: ACHHUZ6rqx3MaS04wjG10lMjy22RqrIHo9pZwjckOCOTXacrkItcOXq9rVelO0kSl3xu5dlGqlJOROElTq0/6wbtTs0=
+X-Received: by 2002:a67:f70f:0:b0:43c:f613:b45d with SMTP id
+ m15-20020a67f70f000000b0043cf613b45dmr5454653vso.12.1687418234516; Thu, 22
+ Jun 2023 00:17:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230621213115.113266-1-nick.hawkins@hpe.com>
-In-Reply-To: <20230621213115.113266-1-nick.hawkins@hpe.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 22 Jun 2023 09:13:17 +0200
-Message-ID: <CACRpkdazmeFHagwkJ3s6BHRBgFoLPbj8AVnPL2f+vTi9K46Kcg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] ARM: Add GPIO support
-To:     nick.hawkins@hpe.com, Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Cc:     verdun@hpe.com, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, jdelvare@suse.com,
-        linux@roeck-us.net, andy.shevchenko@gmail.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+References: <20230621084835.114473-1-brgl@bgdev.pl> <20230621084835.114473-3-brgl@bgdev.pl>
+ <ZJLEhrhn8KCH4IxW@sol>
+In-Reply-To: <ZJLEhrhn8KCH4IxW@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 22 Jun 2023 09:17:03 +0200
+Message-ID: <CAMRc=MeQy606J1dOnjU_K_J2ck+j3keffT5yNck+EORgvCqX7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] tools: tests: port tests to shunit2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Joe Slater <joe.slater@windriver.com>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 11:35=E2=80=AFPM <nick.hawkins@hpe.com> wrote:
+On Wed, Jun 21, 2023 at 11:36=E2=80=AFAM Kent Gibson <warthog618@gmail.com>=
+ wrote:
+>
+> On Wed, Jun 21, 2023 at 10:48:35AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > +
+> >  # Save the PID of coprocess - otherwise we won't be able to wait for i=
+t
+> >  # once it exits as the COPROC_PID will be cleared.
+> >  DUT_PID=3D""
+> >
+> > -# mappings from local name to system chip name, path, dev name
+>
+> Minor nit - I would keep the line above - only removing the -g comment.
+>
 
-> The gxp-fan-ctrl driver in HWMON no longer will report fan presence
-> or fan failure states as these GPIOs providing this information will be
-> consumed by the host. It will be the hosts function to keep track of
-> fan presence and status.
+I restored the line and applied the patches.
 
-I understand the approach such that you have also constructed a
-userspace cooling daemon that will consume the fan and GPIO
-information to drive the hardware monitoring and that is what you
-mean when you say "the host" will do it.
+Bart
 
-This is a *bad idea*.
-
-While I can't stop you since these are indeed userspace interfaces we
-provide, I urge you to look into my earlier proposal to use a thermal
-zone to manage the cooling inside the kernel and get rid of all that
-custom userspace.
-
-The kernel has all that is needed to regulate the thermal zone with
-PID and on/off regulation. It will work even if the userspace crashes
-completely, which is what you want. The code is reviewed by a large
-community and very well tested.
-
-I think I showed this example before from
-arch/arm/boot/dts/gemini-dlink-dns-313.dts:
-
-        thermal-zones {
-                chassis-thermal {
-                        /* Poll every 20 seconds */
-                        polling-delay =3D <20000>;
-                        /* Poll every 2nd second when cooling */
-                        polling-delay-passive =3D <2000>;
-
-                        thermal-sensors =3D <&g751>;
-
-                        /* Tripping points from the fan.script in the rootf=
-s */
-                        trips {
-                                chassis_alert0: chassis-alert0 {
-                                        /* At 43 degrees turn on low speed =
-*/
-                                        temperature =3D <43000>;
-                                        hysteresis =3D <3000>;
-                                        type =3D "active";
-                                };
-                                chassis_alert1: chassis-alert1 {
-                                        /* At 47 degrees turn on high speed=
- */
-                                        temperature =3D <47000>;
-                                        hysteresis =3D <3000>;
-                                        type =3D "active";
-                                };
-                                chassis_crit: chassis-crit {
-                                        /* Just shut down at 60 degrees */
-                                        temperature =3D <60000>;
-                                        hysteresis =3D <2000>;
-                                        type =3D "critical";
-                                };
-                        };
-
-                        cooling-maps {
-                                map0 {
-                                        trip =3D <&chassis_alert0>;
-                                        cooling-device =3D <&fan0 1 1>;
-                                };
-                                map1 {
-                                        trip =3D <&chassis_alert1>;
-                                        cooling-device =3D <&fan0 2 2>;
-                                };
-                        };
-                };
-        };
-
-This uses a thermal sensor and a fan with two speeds.
-
-Adding a "presence" GPIO to the thermal zone core to enable and
-disable it which is what your use case needs should be pretty trivial.
-
-Yours,
-Linus Walleij
+> > -# -g required for the associative arrays, cos BATS...
+> > -declare -g -A GPIOSIM_CHIP_NAME
+> > -declare -g -A GPIOSIM_CHIP_PATH
+>
+> Either way, for the series,
+>
+> Reviewed-by: Kent Gibson <warthog618@gmail.com>
+>
+> Cheers,
+> Kent.
