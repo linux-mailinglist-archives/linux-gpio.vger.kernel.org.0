@@ -2,84 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 235D67398BB
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jun 2023 09:58:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A41CD73A2A3
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jun 2023 16:07:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230429AbjFVH6c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Jun 2023 03:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56016 "EHLO
+        id S229914AbjFVOHa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Jun 2023 10:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230453AbjFVH63 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Jun 2023 03:58:29 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC70826A1
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jun 2023 00:58:01 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3f9b627c1b8so35046705e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Jun 2023 00:58:01 -0700 (PDT)
+        with ESMTP id S229995AbjFVOH3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Jun 2023 10:07:29 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6FB1118
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jun 2023 07:07:28 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-31114b46d62so7541922f8f.3
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Jun 2023 07:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687420678; x=1690012678;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1687442847; x=1690034847;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Qwq75zYUHkn/9Dpk4owisZ27y9W8ALSN2XNSG1RSGjs=;
-        b=dXKEfAn4lDYZ779o1lNXaamSP08+9Qa/N283WOsK/wu7YL/LF/JbQ4T7kg63lKab11
-         Qs1pt41rnvonUrKzgEGX9eeETVIE21h0zLRAxuP5aDcwg9qIeqQIeZCsPpV3HqO1oaP0
-         9TkYNYWSiQ1xh0mhMqnIVs2Hht+p1bG10rA6xribKVc9yV1wdbipjPzYJlJzjy7AzwVe
-         +6Si5u5Vxcn1yTNuM6JzjEI6V5uwN5dsirdeR/5TTIKkzy1j+mCv9np3/blvDMz9q+3s
-         N6U2u7hltkPIec0fJzSVT4+T14DTJjfGtmvihpa5DM8iMfuZwZcmoHo0DmcwfsKJdDos
-         eK4A==
+        bh=IKLDJCUki6m2i2Yj8YRRmBkMsOwCFvMKQuBgaIB9Y6k=;
+        b=Vor5zOgHDgKwE57/jXhWprTJAk+7n+tObW73Uqo778zolDvkS46PVvQiOqtvx6G8Bx
+         PcTR4PEicGkiOA9macxs4Ybh7tpTNbm77Ez3Xfua9AhOoGhDF5/YrqPy2TghnVpbvZ0K
+         qmjMlhkE0bHTCwZI7671X7QBoTFVH1CpAtk3J39pPve+JGEG2gEl1u/Vvq8LSmQW3pgw
+         TYAyAbqHEVEkt9NCBxObnNAiI/J852/oPtUt6fcx+8l+HmiIx4IrXN1jRlnK3YUtFCYc
+         WKqkVN7qyxU+Q8QrQ0ziM9hIv2ct2osv7iTAouKsvZIBBaCLrLHezcrPoSngkabLnmxj
+         4DGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687420678; x=1690012678;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qwq75zYUHkn/9Dpk4owisZ27y9W8ALSN2XNSG1RSGjs=;
-        b=HJQyJcIeNKKJuUr5Nz3hGP65ZXWSy5yNBKWaZVSbDZ6ml8whFuiHVaVc9+blMgR36r
-         2krcb+gdMQOLV0QUD6jwbZq96yhAqHBrqpXFk0Z/tt8B2UNWia7ygCA7ze9lpjognRDl
-         +rsazmeNClM1eVtg+n2+M7/LYsQUxkXp40yLHv/IB+a8maFF2XIeDrcgDGiLP0sh1T9T
-         bnF2hmRphPPKNi5EfYQBXBii8Ze6sOu5PFCZDJ7ekZk09IFBne9q69/y+W0JWKZfoHZV
-         EXTTNf+tcmVdcdauSJS3gi/xdYKpalR6QLtAlDbC/N//dFmvr2luhRhmx+vOX0F3VJb5
-         StmQ==
-X-Gm-Message-State: AC+VfDzNapLkj+uP0XpbDrGKFDxqv8KKLrEIGhgBZ4ZFf4UebGYwVhev
-        8NZqtxJUWYj5p8CyhfWT0SbkDw==
-X-Google-Smtp-Source: ACHHUZ6VU14QJ9KVoogL68Wvs38IfYUvRR09TALogE5vv0xpIYmSyrfNEHbmbTNWSy5LmsqiEO6hIw==
-X-Received: by 2002:a7b:c4cc:0:b0:3f8:fed0:1c56 with SMTP id g12-20020a7bc4cc000000b003f8fed01c56mr13170797wmk.23.1687420678124;
-        Thu, 22 Jun 2023 00:57:58 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id u23-20020a05600c00d700b003f78fd2cf5esm7000683wmm.40.2023.06.22.00.57.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jun 2023 00:57:57 -0700 (PDT)
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-In-Reply-To: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
-References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
-Subject: Re: [PATCH 0/8] soc: amlogic: switch bindings to yaml and adjust
- some dtbs's
-Message-Id: <168742067695.2178283.8048572430137764480.b4-ty@linaro.org>
-Date:   Thu, 22 Jun 2023 09:57:56 +0200
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.2
+        d=1e100.net; s=20221208; t=1687442847; x=1690034847;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IKLDJCUki6m2i2Yj8YRRmBkMsOwCFvMKQuBgaIB9Y6k=;
+        b=XM/N/seYucA2stvWUHVGgGSEaW3OCp8uY+8oh6SC4dHe/9+S2iOgwajUuswRYbJmox
+         1TQ0szr9jRs3VVm9Msuss4GM2OTNTx2s+YAmbbg4MI+lhk4Cz4M0ThfCjI2MKHzfNSkY
+         EN0Vpa4+7F77M8TgvfcUvw/Gf9vYWIxcZCcf1OTVdiwtEKKwAxVslruLpQTfRaTSzDTv
+         8uO5FI9my/m8i2po/ktnxokVKrzOJ+vQ2VxBMRMYN/rHqe4x6lVggNy562hcavPE3QgN
+         xAQq+Ec3BQi/pNAXIHk5GA90pdHKHVCEV0kSRbbHz8RRnJ7VyzRQ94vkM/S87UyaAc9W
+         aZmw==
+X-Gm-Message-State: AC+VfDxy3UQMuOjXtYnuPBMNZt6I+hrki/Wr1zcjiKsXF+G1L3FF+MZu
+        eY0ljspkIVeE7+asM7vu901C1g==
+X-Google-Smtp-Source: ACHHUZ459o0Mbrl1XQeBZmwCiHZnymIi3fHP3u3bAUi8YM3OuIeNAzVjVxELTnxgfndkBzVWx1c+vw==
+X-Received: by 2002:a5d:4cc2:0:b0:30f:bea9:bf17 with SMTP id c2-20020a5d4cc2000000b0030fbea9bf17mr17683122wrt.30.1687442847181;
+        Thu, 22 Jun 2023 07:07:27 -0700 (PDT)
+Received: from localhost (i5C7405EF.versanet.de. [92.116.5.239])
+        by smtp.gmail.com with ESMTPSA id i15-20020a5d558f000000b0030647d1f34bsm7354291wrv.1.2023.06.22.07.07.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Jun 2023 07:07:26 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 22 Jun 2023 16:07:25 +0200
+Message-Id: <CTJ8KDK5038W.25ATPA3IS7C8R@fedora>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+Subject: Re: [libgpiod][PATCH] tools: tests: port tests to shunit2
+Cc:     <linux-gpio@vger.kernel.org>,
+        "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+        "Kent Gibson" <warthog618@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>,
+        "Joe Slater" <joe.slater@windriver.com>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+X-Mailer: aerc 0.14.0
+References: <20230620124130.303427-1-brgl@bgdev.pl>
+In-Reply-To: <20230620124130.303427-1-brgl@bgdev.pl>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,55 +77,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Just took a look at this since I am looking for ways to invoke the Rust
+binding tests...
 
-On Mon, 23 Jan 2023 22:22:15 +0100, Heiner Kallweit wrote:
-> At first adjust some existing dtbs's so that they pass dtbs_check
-> after switching bindings to yaml.
-> 
-> Then switch further Amlogic Meson bindings to yaml.
-> Tested with make targets dt_binding_check and dtbs_check.
-> 
-> Heiner Kallweit (8):
->   arm64: dts: meson-gx: Remove invalid pwm compatible
->   arm64: dts: amlogic: Fix non-compliant SD/SDIO node names
->   arm64: dts: meson-gx: Set only one compatible string for mmc
->   arm64: dts: amlogic: Remove invalid compatible string
->     amlogic,meson-gpio-intc
->   dt-bindings: rtc: Add Amlogic Meson vrtc controller binding
->   dt-bindings: pwm: Add Amlogic Meson PWM binding
->   dt-bindings: interrupt-controller: Add Amlogic Meson GPIO interrupt
->     controller binding
->   dt-bindings: pinctrl: Add Amlogic Meson pinctrl binding
-> 
+On Tue Jun 20, 2023 at 2:41 PM CEST, Bartosz Golaszewski wrote:
+> +# Check all required non-coreutils tools
+> +check_prog shunit2
 > [...]
+> +. shunit2
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.5/drivers)
+Hm... How does this work for you? Under Fedora shunit2 seems to be
+packaged to install into /usr/share/shunit2. The installed examples of
+the package are sourcing that. So the check_prog check fails since there
+is no binary in $PATH and the . shunit2 fails since there is no shunit2
+in $PWD.
 
-[1/1] dt-bindings: interrupt-controller: Convert Amlogic Meson GPIO interrupt controller binding
-      https://git.kernel.org/amlogic/c/6b0139b372d40bd5dafc140b6618b57d13211168
+Am I missing some necessary setup step?
 
-These changes has been applied on the intermediate git tree [1].
-
-The v6.5/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
-
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
-
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
-
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
--- 
-Neil
+- Erik
 
