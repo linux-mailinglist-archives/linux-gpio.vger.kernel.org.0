@@ -2,115 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 278C17391A1
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Jun 2023 23:35:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B1F673942A
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Jun 2023 02:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230407AbjFUVf4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Jun 2023 17:35:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51602 "EHLO
+        id S229664AbjFVA5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Jun 2023 20:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbjFUVfx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jun 2023 17:35:53 -0400
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E031996;
-        Wed, 21 Jun 2023 14:35:50 -0700 (PDT)
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35LKWEKR005742;
-        Wed, 21 Jun 2023 21:35:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=pps0720;
- bh=KbLxX+O63lrcD6heRVHuxzRyXrSY2WIVIOJqjf0/100=;
- b=o2PX9q280LddqUvdRcmw3vEXlPzwylQYvTAw9aE8dmM8HZVjxeYpurhaFO5Yfigf3kAY
- JgXq+Ss2uoBCrwjvS4+x64ilAgvct3KELlN/I72fYl+sBFEuf62yapY/LKZ+fIlSmgc6
- ALshQQgoDXbxxPTaqfXMYuoEuPJ1vj/V1zAd5ff+CIscZI/TaBeu44/St9p/1LznkIDx
- uFZ85r/ZEJBjdRddTaYX7qvRrBpIXtSla82Nk1fFZ8WcDddNCaxnHIBqHufc9/AEQ15f
- 1bgO4utTjz4Y8zIa9cFAYBKlW5idX+/MSBNoWpXI95Q9Wz3JEgBnNQpMasfPJPF8Och3 gw== 
-Received: from p1lg14880.it.hpe.com (p1lg14880.it.hpe.com [16.230.97.201])
-        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3rc024n8vt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 21:35:27 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 39266800238;
-        Wed, 21 Jun 2023 21:35:26 +0000 (UTC)
-Received: from hpe.com (unknown [16.231.227.36])
-        by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 9D3E780FEE1;
-        Wed, 21 Jun 2023 21:35:25 +0000 (UTC)
-From:   nick.hawkins@hpe.com
-To:     verdun@hpe.com, nick.hawkins@hpe.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, jdelvare@suse.com,
-        linux@roeck-us.net, andy.shevchenko@gmail.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: [PATCH v4 5/5] MAINTAINERS: hpe: Add GPIO
-Date:   Wed, 21 Jun 2023 16:31:15 -0500
-Message-Id: <20230621213115.113266-6-nick.hawkins@hpe.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230621213115.113266-1-nick.hawkins@hpe.com>
-References: <20230621213115.113266-1-nick.hawkins@hpe.com>
-X-Proofpoint-GUID: VAFUr4qepx01bMSNcCeEeOuLIWr1Wm-l
-X-Proofpoint-ORIG-GUID: VAFUr4qepx01bMSNcCeEeOuLIWr1Wm-l
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-21_12,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 spamscore=0 bulkscore=0 mlxlogscore=956
- suspectscore=0 impostorscore=0 phishscore=0 mlxscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306210181
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229605AbjFVA5Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Jun 2023 20:57:24 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7706A197;
+        Wed, 21 Jun 2023 17:57:23 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-668711086f4so84378b3a.1;
+        Wed, 21 Jun 2023 17:57:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687395443; x=1689987443;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TRHIPcIYRAsemBQXSugqu1HmfZ2F6V2nohZmaYh7iX8=;
+        b=bNJZdch2OwwbnqDEK2vJWSbZAhzVy+lJNFjojoaYtGBHQ42zzJE9uP0xQXAKcHVwJy
+         zWrH1177G7B/nu196zLwqmr4/gOwUm9R/vLT/prTcANUa4BN1xisyNtrMMQo5YUqEy+W
+         8/a8c0RrrmFyTfSfkmX4Dw9tbioOB2nPfhnowk/g6KcKhHm6R47BweJBTxVB3nQHsPt4
+         v7hd/i1tZiCVgQNRvqw859uOQbiIk02jSIJ97h+vCQokQaLhMriKc7QXpfEyh5iuK8oF
+         vSX6ofjVC1G2M9D1q1HzM0YtKHOTH3Hf4d3AbSzuFFNYZBeIGYt4HlASt9FzXuXJwO23
+         S9aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687395443; x=1689987443;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TRHIPcIYRAsemBQXSugqu1HmfZ2F6V2nohZmaYh7iX8=;
+        b=WtttNffqYv6uZRI1yf4J6idXBPda+INQwg/qlBTNP7d8iZU8noIfw62Jrc0WEnLpbT
+         4jUBlUyLlB6YIjOuNZoY9qlD89XVwpuYEINXPVPmYOprm8+lH+PYyCXZiTV1BC2XYwdl
+         xIuwRWZrMapEjDFu+7xP5GuLEv2CQll2EG2mMKCoMz6jEHmEFlUWbeDRSd2WIJXlQvTW
+         cpy0tmJMpz+Tp9psfz6KdQvKa2wxr9CVmL6ceZt9UjS3vRG8OV7TADPDGkWjGmA0yDH7
+         w9TDSRUfQnzMMUTeH7q/bAP33w4iPAcbfgnUy1mIjabuhWixvm0iK1H99s4ljCJly9h4
+         Rhng==
+X-Gm-Message-State: AC+VfDxZvamWxsZe5N2p8/cWf68RH/fqK0P3ewL6jm1QRWx6bbJEg+M1
+        tnP23LsuDt1HEbBhhlqF194=
+X-Google-Smtp-Source: ACHHUZ6iMp+OYqownUXjVdBdLJssPnWKXdDhAMDRONi/XOCG8SypV1kVE1GgB0nIJZDzI0bj35KRhw==
+X-Received: by 2002:a05:6a00:13a0:b0:668:9f95:b518 with SMTP id t32-20020a056a0013a000b006689f95b518mr9140094pfg.9.1687395442837;
+        Wed, 21 Jun 2023 17:57:22 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t12-20020a62ea0c000000b00657fbf81ffbsm1420690pfh.80.2023.06.21.17.57.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jun 2023 17:57:22 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 21 Jun 2023 17:57:20 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>, soc@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 04/10] arm64: introduce STM32 family on Armv8
+ architecture
+Message-ID: <24e9c526-4128-4e63-8d28-c4ef1647f886@roeck-us.net>
+References: <20230602132859.16442-1-alexandre.torgue@foss.st.com>
+ <20230602132859.16442-5-alexandre.torgue@foss.st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230602132859.16442-5-alexandre.torgue@foss.st.com>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Nick Hawkins <nick.hawkins@hpe.com>
+Hi,
 
-List the files added for GPIO.
+On Fri, Jun 02, 2023 at 03:28:53PM +0200, Alexandre Torgue wrote:
+> Add a dedicated ARCH_STM32 for STM32 SoCs config. First STM32 Armv8 SoC
+> family is the STM32MP25 which is composed of STM32MP251, STM32MP253,
+> STM32MP255, STM32MP257 SoCs.
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> 
 
-Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
+This patch (or patch series) results in the following build error when
+trying to build arm64:allmodconfig.
+
+Building arm64:allmodconfig ... failed
+--------------
+Error log:
+In file included from include/linux/printk.h:564,
+                 from include/asm-generic/bug.h:22,
+                 from arch/arm64/include/asm/bug.h:26,
+                 from include/linux/bug.h:5,
+                 from include/linux/fortify-string.h:5,
+                 from include/linux/string.h:254,
+                 from include/linux/dma-mapping.h:7,
+                 from drivers/remoteproc/stm32_rproc.c:9:
+drivers/remoteproc/stm32_rproc.c: In function 'stm32_rproc_mem_alloc':
+drivers/remoteproc/stm32_rproc.c:122:22: error: format '%x' expects argument of type 'unsigned int', but argument 5 has type 'size_t'
+
+Bisect log attached.
+
+Guenter
 
 ---
-
-v4:
- *No change
-v3:
- *No change
-v2:
- *Removed reference to PSU changes as they have been discarded.
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a3b14ec33830..6157d9466a58 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2239,6 +2239,7 @@ M:	Nick Hawkins <nick.hawkins@hpe.com>
- S:	Maintained
- F:	Documentation/hwmon/gxp-fan-ctrl.rst
- F:	Documentation/devicetree/bindings/arm/hpe,gxp.yaml
-+F:	Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.yaml
- F:	Documentation/devicetree/bindings/hwmon/hpe,gxp-fan-ctrl.yaml
- F:	Documentation/devicetree/bindings/i2c/hpe,gxp-i2c.yaml
- F:	Documentation/devicetree/bindings/spi/hpe,gxp-spifi.yaml
-@@ -2247,6 +2248,7 @@ F:	arch/arm/boot/dts/hpe-bmc*
- F:	arch/arm/boot/dts/hpe-gxp*
- F:	arch/arm/mach-hpe/
- F:	drivers/clocksource/timer-gxp.c
-+F:	drivers/gpio/gpio-gxp.c
- F:	drivers/hwmon/gxp-fan-ctrl.c
- F:	drivers/i2c/busses/i2c-gxp.c
- F:	drivers/spi/spi-gxp.c
--- 
-2.17.1
-
+# bad: [15e71592dbae49a674429c618a10401d7f992ac3] Add linux-next specific files for 20230621
+# good: [45a3e24f65e90a047bef86f927ebdc4c710edaa1] Linux 6.4-rc7
+git bisect start 'HEAD' 'v6.4-rc7'
+# bad: [e867e67cd55ae460c860ffd896c7fc96add2821c] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+git bisect bad e867e67cd55ae460c860ffd896c7fc96add2821c
+# bad: [57b289d5b1005a9c39d6d6567e0ef6115bd59cea] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
+git bisect bad 57b289d5b1005a9c39d6d6567e0ef6115bd59cea
+# good: [dc6399fc9ae6d2530fc38fb3ae96bcc8393bd66f] Merge branch 'for-next/perf' of git://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git
+git bisect good dc6399fc9ae6d2530fc38fb3ae96bcc8393bd66f
+# good: [5bfea833dd8f972ce3435359f12f61bdbf01b147] Merge tag 'v6.4-next-dts64' of https://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux into soc/dt
+git bisect good 5bfea833dd8f972ce3435359f12f61bdbf01b147
+# bad: [6f8f9120fd588b28edb0a9c6b9ae9ca6c261d9f6] Merge branch 'for-linux-next' of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
+git bisect bad 6f8f9120fd588b28edb0a9c6b9ae9ca6c261d9f6
+# bad: [fe16e4b5e7fa1badc2fa69d85f7b13926cce8fe2] Merge branch 'at91-next' of git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux.git
+git bisect bad fe16e4b5e7fa1badc2fa69d85f7b13926cce8fe2
+# good: [0e4ad579ef10d4e9eca86eb33fb4cd87de7c05c4] soc: document merges
+git bisect good 0e4ad579ef10d4e9eca86eb33fb4cd87de7c05c4
+# good: [d704f1fe9f4a4ae9c9f1f9fac1e4194c34dd035b] Merge tag 'arm-soc/for-6.5/devicetree-arm64' of https://github.com/Broadcom/stblinux into soc/dt
+git bisect good d704f1fe9f4a4ae9c9f1f9fac1e4194c34dd035b
+# bad: [26588df4e5a385e5b7751997d48bdeef042cf736] Merge branch 'soc/newsoc' into for-next
+git bisect bad 26588df4e5a385e5b7751997d48bdeef042cf736
+# good: [6bce45197c25c99612a3c5e0cf041d18aa28fbf3] Merge branch 'soc/dt' into for-next
+git bisect good 6bce45197c25c99612a3c5e0cf041d18aa28fbf3
+# bad: [3b170e1653c05b067ea6ef616ece961b07714f48] arm64: dts: st: introduce stm32mp25 pinctrl files
+git bisect bad 3b170e1653c05b067ea6ef616ece961b07714f48
+# good: [c3053382574a5a829c93fb5ab0bb52d20456e745] dt-bindings: stm32: add st,stm32mp25-syscfg compatible for syscon
+git bisect good c3053382574a5a829c93fb5ab0bb52d20456e745
+# bad: [5d30d03aaf78586c37100006ba271d045f730bb5] arm64: dts: st: introduce stm32mp25 SoCs family
+git bisect bad 5d30d03aaf78586c37100006ba271d045f730bb5
+# bad: [9e4e24414cc6b45bd887d746a59691e295431ddf] arm64: introduce STM32 family on Armv8 architecture
+git bisect bad 9e4e24414cc6b45bd887d746a59691e295431ddf
+# first bad commit: [9e4e24414cc6b45bd887d746a59691e295431ddf] arm64: introduce STM32 family on Armv8 architecture
