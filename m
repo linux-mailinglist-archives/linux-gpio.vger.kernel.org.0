@@ -2,83 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F38D73B22B
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jun 2023 09:58:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E907973B2B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Jun 2023 10:26:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbjFWH6M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jun 2023 03:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
+        id S230168AbjFWI0r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Jun 2023 04:26:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjFWH6L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jun 2023 03:58:11 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D588B1BE4
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 00:58:09 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3fa7eb35a13so189285e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 00:58:09 -0700 (PDT)
+        with ESMTP id S230060AbjFWI0p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jun 2023 04:26:45 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7DFB7
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 01:26:44 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-76243a787a7so29195485a.2
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 01:26:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687507088; x=1690099088;
-        h=in-reply-to:references:subject:from:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ft+LLys9aUYnl8UmBB0+3zDM4ECgwYDOFl0m+SLW2rQ=;
-        b=xTaaroFeblDKQWcGIXMDuvEqxU3IlaxjRfXpHdUZC5gFJD+hhjdhIKx+KCrMMfb8QU
-         EDWQBNwh5z1n0vsZ91J9HKUtFYxUE2gp4fyENg9npNVx0ooogJAhNpmjuTadu0t5bOWl
-         JXkhyMPiW6e+UK79ScUJy4ns1Wkl1KMtJCNJh6s9PQTkQdvevvd/Dkdqxo+acqsiMW/B
-         CptlxvnVt4k/gBimS+oa2XxbwUTnVk+pJjNRznOyfu85VrUFCAq4FkCoJCHrWgmjJjEq
-         LQhXKU6iDDkKjSGUynSvd9yW8DkvVwy3RNh9zsx2mLLcz738Cyc1l1YUmyQkSZg+TOQ4
-         j8TQ==
+        d=gmail.com; s=20221208; t=1687508803; x=1690100803;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PGMrArNTvfkboUZn/PR7PyirQfbpNb4b/kAhHCOUw8c=;
+        b=nBbVW6qjzW0KC3aXHK9rj6pFSuf/ITvfRxsns0KWZEZErlClv98nnp/d5fMKYry2XG
+         U7JydueJ8Pg/MBOJhvqFoeiDamwkqBO6GjsX1C4JjbqXa+6LjeM8W/Qi9f/7IkTXTOyA
+         ORGFjJ36B3IjVthkwB5dAMaf2tMI/ykBhUP84NaZwiLk+L2Vyzk2vT13Nn4GwtzCvCSt
+         nuwrQcwHkJ1ygMlx14X6/ODDbIgWN4+88wWpRZKJUM6UeP0/LyrScqCdbQAzYz/to+2d
+         e9SffPY6u3AHhK3/s3hQSN6xAnNbiKb938ovnmQGnGuQcFSHagk2zWZ0IyaPgCmv+g6E
+         p9Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687507088; x=1690099088;
-        h=in-reply-to:references:subject:from:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ft+LLys9aUYnl8UmBB0+3zDM4ECgwYDOFl0m+SLW2rQ=;
-        b=Uftz9LoJATHf3dOwvvUh/DhV083BEz2shpHWmFanVP8oVCBme8fcse/+IeMmSPyyQ8
-         F3W8vNUqlztCy8fiGGqTcXvHVDxfeeg1lI1yCSz8KDawqAI1g8IsE6chFpxExb6c51EY
-         SswoAaMrlKqNs2jT/0eECONuAZ+zC9tgnJPO6UXuFtMZhl5hArXDSeiJFggE6iTEfMST
-         ReUH9QjV9ERWJQgFok+LRmJolkOAss/MnFbHzeRK8AbXJAyWXIGNVvxjx8k0llNLqmhj
-         IfruQ9/yEFcPx6w3KKZO1K/Hq+FOxlJR6lVr486sw8ORGh4gQ8l6j84QdfsJxdbKlR+z
-         uXfQ==
-X-Gm-Message-State: AC+VfDxpRsACmDWdzrtv3WZvXt8zmqte69LxjSHwzkHII9r2nGU0rxWc
-        fcqpZjrFqTNWoPq4mRVinIrXww==
-X-Google-Smtp-Source: ACHHUZ635A4225j+9jaz1DTRXSTMf418i7faAmaj2m3AaysmvXx/rQKPXLdhN+Dp3T1KC8r+ft8bdA==
-X-Received: by 2002:a05:6000:151:b0:312:74a9:8267 with SMTP id r17-20020a056000015100b0031274a98267mr3217884wrx.9.1687507088463;
-        Fri, 23 Jun 2023 00:58:08 -0700 (PDT)
-Received: from localhost (i5C7405EF.versanet.de. [92.116.5.239])
-        by smtp.gmail.com with ESMTPSA id j2-20020adfe502000000b002ca864b807csm9067446wrm.0.2023.06.23.00.58.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Jun 2023 00:58:08 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 23 Jun 2023 09:58:07 +0200
-Message-Id: <CTJVC5VV5LSK.17NPK1QQ5PG0H@fedora>
-To:     "Kent Gibson" <warthog618@gmail.com>, <linux-gpio@vger.kernel.org>,
-        <brgl@bgdev.pl>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-Subject: Re: [libgpiod][PATCH 7/8] bindings: rust: examples: consistency
- cleanup
-X-Mailer: aerc 0.14.0
+        d=1e100.net; s=20221208; t=1687508803; x=1690100803;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PGMrArNTvfkboUZn/PR7PyirQfbpNb4b/kAhHCOUw8c=;
+        b=C+BlsV4ADYdFRb76s4X465fpXX83IA2yDQfPCjCmIaggKbr7rSFX62Qw7dvpCFqyie
+         QwoP7tBdyvbzH/wenSE/d6MhqemlKct01o5a4OHwzgBTY3mNujHKss9gHT1319vUhIFW
+         WGi90s0lUGg96LA94iykE/HGU/+UL68dVLppMbDbmQSPbToS52Z5VFvG1/FHsWjiw3eL
+         BJjBcTVKP3tYmrAucuJXhg+nhJ6hNcJMzAu6jXQkUXVMbPYkFLG16k3+HFTCCACl9rMs
+         z2bWak+IiHfyyYP6IdIekmvtu4aC+YsoGgcjKWa938Rkz1XXs4exMv23T1xUCcM9gyDY
+         jM4A==
+X-Gm-Message-State: AC+VfDzNaYgB6O8fgqAenjsu/5kmI2SMvrfWFYbqnSSKtX7Qqhbc9rSS
+        jdV8lHkSf7UUnLd1NH8ePleZSGqKGqc=
+X-Google-Smtp-Source: ACHHUZ5+3Ay4DoD0p8lSF2l+TVFn61OxoKMqtOzbSEaR/lRHtW20fiwW8hu9ARNs6Gr2QwJXh+nYfw==
+X-Received: by 2002:a05:6214:ca4:b0:632:def:599d with SMTP id s4-20020a0562140ca400b006320def599dmr9683410qvs.51.1687508803445;
+        Fri, 23 Jun 2023 01:26:43 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id y17-20020aa78551000000b0064d47cd116esm5612846pfn.161.2023.06.23.01.26.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jun 2023 01:26:42 -0700 (PDT)
+Date:   Fri, 23 Jun 2023 16:26:38 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Subject: Re: [libgpiod][PATCH 8/8] bindings: rust: examples: replace tools
+ examples with use case examples
+Message-ID: <ZJVXPn683fXesO/s@sol>
 References: <20230623043901.16764-1-warthog618@gmail.com>
- <20230623043901.16764-8-warthog618@gmail.com>
-In-Reply-To: <20230623043901.16764-8-warthog618@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+ <20230623043901.16764-9-warthog618@gmail.com>
+ <CTJVBIO5TY63.PUKXXIU50HDG@fedora>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CTJVBIO5TY63.PUKXXIU50HDG@fedora>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri Jun 23, 2023 at 6:39 AM CEST, Kent Gibson wrote:
-> A collection of minor changes to be more consistent with other examples:
->  - capitalize comments
->  - add line offset to value outputs
->  - drop comma from edge event outputs
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+On Fri, Jun 23, 2023 at 09:57:17AM +0200, Erik Schilling wrote:
+> On Fri Jun 23, 2023 at 6:39 AM CEST, Kent Gibson wrote:
+> > Replace tool examples with use case examples drawn from the tools,
+> > gpio_events example with buffered_event_lifetimes, and
+> > gpio_threaded_info_events with reconfigure_input_to_output.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> 
+> Reviewed-by: Erik Schilling <erik.schilling@linaro.org>
+> 
+> >     let mut buffer = libgpiod::request::Buffer::new(4)?;
+> 
+> Slightly tangential:
+> 
+> Maybe the API should provide some sensible defaults for the buffer size?
+> (Or just set a sane default and provide ways to override it)? The change
+> from 1 -> 4 for bulk operations seems reasonable, but I feel like a user
+> just getting started with all of this likely won't know what might be
+> good values to pick...
+> 
 
-Reviewed-by: Erik Schilling <erik.schilling@linaro.org>
+
+The C API does that - it defaults to 64, IIRC - if you pass in 0.
+And the Rust will do the same - read the docs:
+
+    /// Create a new edge event buffer.
+    ///
+    /// If capacity equals 0, it will be set to a default value of 64. If
+    /// capacity is larger than 1024, it will be limited to 1024.
+
+Using 64 seems excessive to me, so I explictly set more reasonable
+sizes in the examples.
+
+Btw a casual user is probably fine with 1 - the events will still be
+buffered in the kernel so the only advantages of > 1 is to reduce the
+number of reads when handling bursts, and so drain the kernel buffer
+slightly quicker.  I expect that the only users who would see an
+appreciable difference in behaviour with different userspace buffer
+sizes probably have a good idea why they want to be setting it.
+Again, would be good to document that - if it isn't already.
+
+Cheers,
+Kent.
