@@ -2,134 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 402F073C4DE
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jun 2023 01:43:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA4C673C6E5
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jun 2023 07:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231690AbjFWXnT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Jun 2023 19:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55270 "EHLO
+        id S229698AbjFXFVG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Jun 2023 01:21:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbjFWXnS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Jun 2023 19:43:18 -0400
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34EF02703;
-        Fri, 23 Jun 2023 16:43:17 -0700 (PDT)
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-78333585d28so32790139f.1;
-        Fri, 23 Jun 2023 16:43:17 -0700 (PDT)
+        with ESMTP id S229566AbjFXFVF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Jun 2023 01:21:05 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D232703
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 22:21:04 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id 6a1803df08f44-630019ff99bso12260746d6.0
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 22:21:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687584063; x=1690176063;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XpfuJPuaZ8bmPJlPUPHw+N4b0Bq9YKnaKm8vkrN114I=;
+        b=qzk8K4plLNooZaX8Y1A1GzL3f43knn8sY/d+rMBdPcry7bEw4lOa6bCCQj+1CnRU1F
+         1coh+vBbCfEMONyFEhSm04BlB8uaJS41QQ/0EvLcarMpqL7V6K+f5/DsvOBD/5//epny
+         BRsbqdA5gz+g1laxSXbQ5TTcuEQLJxb9IJvOUogfFDxwfrA/cfb8JRztj4nPf1DczCfs
+         yylpYVjnzjZgdbY9jvIzJJBCuUuBVOJna4GfooyBitAc3xTIXofJ2Eiyv8vW7rTCNdeS
+         8N3yZiqBz79a2f1Z/j1rxnseWFBqu38prLXZF70LYkmFrLD4ZT5DD4YF1jhvAWSY0wtY
+         WTYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687563796; x=1690155796;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fTiyezCl+ncjMsIOOS0sUB9bYyrGCDjIJOvndxohyZs=;
-        b=JsAIoLHPQR83cIFWCg7WWq9dOFpHwbGPHK2yoY125gC8xVqx2+ttlxJX+sxoETmQlV
-         0nzPjnhz39qU6o87QsXUo3XE8rc8xVe1tCFq0v/HUv/SqKNKfCrP1E1R7lgXcGuOx6y2
-         Ye3G6ypunxQdjQzz2ukdGGZuVQNU006TpPpL8MAHc+uIiGpnV85+2gp/WvADNQ/2sRCU
-         AoLsbcQUu6qTlfBlobD2G6x4CJs0P6/7LAU5AFlr+R6jVOZVLv1PoQKKkeOqS1a/I5G5
-         iHh6o5EBG3JC2u0sVTRVWCc72uLnf7/POT8WGjwChV0ytJvnTeM9K3NQ4zI7JypbiFa8
-         xFfg==
-X-Gm-Message-State: AC+VfDw5DExrdMCkSqQcgXx602OXDOFT2Gsg8bbCY0m4jzAMeRS+bMz2
-        HjkFdCKixSxi9ODyQ8CMJA==
-X-Google-Smtp-Source: ACHHUZ704nUo/Qe+1L5BBq/vh9K03eeZluxsw6d51akGW3mbLVGxB1UGHdSEiXEdc5xMZV7l5fDOHg==
-X-Received: by 2002:a5d:9483:0:b0:760:e308:107e with SMTP id v3-20020a5d9483000000b00760e308107emr15001057ioj.0.1687563796356;
-        Fri, 23 Jun 2023 16:43:16 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id r27-20020a02c85b000000b0041407c67451sm72416jao.165.2023.06.23.16.43.10
+        d=1e100.net; s=20221208; t=1687584063; x=1690176063;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XpfuJPuaZ8bmPJlPUPHw+N4b0Bq9YKnaKm8vkrN114I=;
+        b=Gm2KIlfGAq2giWvoBEtMdtDSYxQAUkMdYLzmdATARUoOQ/6ZECEdCZrgBhcycevesZ
+         6MwEZumbVHC9zLlxw/stwUQQdK7klAS5MSIHXJQSKZ6GTRH7kJFNfVauSdvTx+dkPGfU
+         htl+iu0JMBQStsT01Xi2yRAqyG2cQWPT0zSOXNVACgEA2phuW+NSuiFIZpt9QCS8x3Uq
+         mAekWbmlp5zTdDKCM5y2IkDhAPtmVh3AZ20JfJUPUMcehZa0FuvhJtBwLY89gm9Gbi0p
+         42+JjK8ZKv5R9Zj2N2bfYQIZ0kLjE3Qh4qr84/aJsMOzF6VQcV1pPGpGWAoGfrAnVhjc
+         TJiA==
+X-Gm-Message-State: AC+VfDzsmyAfKeqoBmywDAM9Vk2XWoTxvEpJ//iKRH11GcRgjGqJjHWA
+        T3eh+02DkPqgDjOnb6BWZg4kutINGAQ=
+X-Google-Smtp-Source: ACHHUZ66I0Y7mocV0hB2eZIMWP+txw3a1NztnCZ+ruTjnFMo213szHNqRXgsxW0VEaItE7lHGnXYsg==
+X-Received: by 2002:a05:6214:f29:b0:625:aa1a:b6d9 with SMTP id iw9-20020a0562140f2900b00625aa1ab6d9mr29408512qvb.59.1687584063044;
+        Fri, 23 Jun 2023 22:21:03 -0700 (PDT)
+Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id gf4-20020a17090ac7c400b00256dff5f8e3sm487103pjb.49.2023.06.23.22.21.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 16:43:15 -0700 (PDT)
-Received: (nullmailer pid 1606691 invoked by uid 1000);
-        Fri, 23 Jun 2023 23:43:09 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Fri, 23 Jun 2023 22:21:02 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH 0/4] python examples and comment corrections
+Date:   Sat, 24 Jun 2023 13:20:50 +0800
+Message-ID: <20230624052054.13206-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Varshini Rajendran <varshini.rajendran@microchip.com>
-Cc:     ulf.hansson@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-        edumazet@google.com, broonie@kernel.org, arnd@arndb.de,
-        maz@kernel.org, lgirdwood@gmail.com, alexandre.belloni@bootlin.com,
-        alain.volmat@foss.st.com, p.zabel@pengutronix.de,
-        mihai.sain@microchip.com, soc@kernel.org,
-        linux-mtd@lists.infradead.org, cristian.birsan@microchip.com,
-        jerry.ray@microchip.com, tudor.ambarus@linaro.org,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        balamanikandan.gunasundar@microchip.com, lee@kernel.org,
-        olivia@selenic.com, sboyd@kernel.org, mturquette@baylibre.com,
-        kuba@kernel.org, Hari.PrasathGE@microchip.com,
-        linux-kernel@vger.kernel.org, balakrishnan.s@microchip.com,
-        alsa-devel@alsa-project.org, durai.manickamkr@microchip.com,
-        sre@kernel.org, vkoul@kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, andrew@lunn.ch,
-        devicetree@vger.kernel.org, nayabbasha.sayed@microchip.com,
-        linux-gpio@vger.kernel.org, nicolas.ferre@microchip.com,
-        davem@davemloft.net, pabeni@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux@roeck-us.net,
-        wim@linux-watchdog.org, tglx@linutronix.de,
-        horatiu.vultur@microchip.com, radu_nicolae.pirea@upb.ro,
-        dharma.b@microchip.com, a.zummo@towertech.it,
-        linux-mmc@vger.kernel.org, richard.genoud@gmail.com,
-        claudiu.beznea@microchip.com, linus.walleij@linaro.org,
-        conor+dt@kernel.org, herbert@gondor.apana.org.au,
-        eugen.hristev@collabora.com, dmaengine@vger.kernel.org,
-        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux@armlinux.org.uk, linux-watchdog@vger.kernel.org,
-        linux-pm@vger.kernel.org, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-crypto@vger.kernel.org,
-        neil.armstrong@linaro.org, vigneshr@ti.com,
-        manikandan.m@microchip.com, linux-clk@vger.kernel.org,
-        olof@lixom.net
-In-Reply-To: <20230623203056.689705-32-varshini.rajendran@microchip.com>
-References: <20230623203056.689705-1-varshini.rajendran@microchip.com>
- <20230623203056.689705-32-varshini.rajendran@microchip.com>
-Message-Id: <168756378936.1606652.14221929175769628362.robh@kernel.org>
-Subject: Re: [PATCH v2 31/45] dt-bindings: atmel-classd: add sam9x7
- compatible
-Date:   Fri, 23 Jun 2023 17:43:09 -0600
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The first patch is the updated 6/8 patch from my recent series.
+The updates are as per the review comments, except for renaming gpio_chips()
+to generate_gpio_chips(), rather than get_gpio_chips(), to indicate the paths
+are being generated not returned as a list.
+Changes:
+  - rename gpio_chips()
+  - shorten reconfigure_input_to_output file comment
+  - use format style prints
 
-On Sat, 24 Jun 2023 02:00:42 +0530, Varshini Rajendran wrote:
-> Add sam9x7 compatible to DT bindings documentation.
-> 
-> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-> ---
->  .../devicetree/bindings/sound/atmel,sama5d2-classd.yaml      | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+The other patches are updates to the file comments to make them consistent
+with the updated python and to fix some cut-and-paste errors I noticed
+along the way.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Cheers,
+Kent.
 
-yamllint warnings/errors:
+Kent Gibson (4):
+  bindings: python: examples: replace tools examples with use case
+    examples
+  core: examples: fix file comments
+  cxx: examples: file comment consistency
+  rust: examples: file comment consistency
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/atmel,sama5d2-classd.example.dtb: sound@fc048000: compatible: 'oneOf' conditional failed, one must be fixed:
-	['atmel,sama5d2-classd'] is too short
-	from schema $id: http://devicetree.org/schemas/sound/atmel,sama5d2-classd.yaml#
+ .../examples/reconfigure_input_to_output.cpp  |  4 +-
+ bindings/python/examples/Makefile.am          | 18 +++----
+ bindings/python/examples/find_line_by_name.py | 37 +++++++++++++++
+ bindings/python/examples/get_chip_info.py     | 20 ++++++++
+ bindings/python/examples/get_line_info.py     | 29 ++++++++++++
+ .../examples/get_multiple_line_values.py      | 29 ++++++++++++
+ bindings/python/examples/gpiodetect.py        | 15 ------
+ bindings/python/examples/gpiofind.py          | 20 --------
+ bindings/python/examples/gpioget.py           | 29 ------------
+ bindings/python/examples/gpioinfo.py          | 28 -----------
+ bindings/python/examples/gpiomon.py           | 26 ----------
+ bindings/python/examples/gpionotify.py        | 21 ---------
+ bindings/python/examples/gpioset.py           | 36 --------------
+ bindings/python/examples/helpers.py           | 15 ------
+ .../examples/reconfigure_input_to_output.py   | 39 +++++++++++++++
+ .../examples/toggle_multiple_line_values.py   | 47 +++++++++++++++++++
+ bindings/python/examples/watch_line_info.py   | 23 +++++++++
+ bindings/python/examples/watch_line_rising.py | 31 ++++++++++++
+ .../examples/watch_multiple_line_values.py    | 42 +++++++++++++++++
+ .../examples/reconfigure_input_to_output.rs   |  2 +-
+ examples/async_watch_line_value.c             |  2 +-
+ examples/get_multiple_line_values.c           |  2 +-
+ examples/reconfigure_input_to_output.c        |  5 +-
+ examples/watch_multiple_line_values.c         |  2 +-
+ 24 files changed, 317 insertions(+), 205 deletions(-)
+ create mode 100755 bindings/python/examples/find_line_by_name.py
+ create mode 100755 bindings/python/examples/get_chip_info.py
+ create mode 100755 bindings/python/examples/get_line_info.py
+ create mode 100755 bindings/python/examples/get_multiple_line_values.py
+ delete mode 100755 bindings/python/examples/gpiodetect.py
+ delete mode 100755 bindings/python/examples/gpiofind.py
+ delete mode 100755 bindings/python/examples/gpioget.py
+ delete mode 100755 bindings/python/examples/gpioinfo.py
+ delete mode 100755 bindings/python/examples/gpiomon.py
+ delete mode 100755 bindings/python/examples/gpionotify.py
+ delete mode 100755 bindings/python/examples/gpioset.py
+ delete mode 100644 bindings/python/examples/helpers.py
+ create mode 100755 bindings/python/examples/reconfigure_input_to_output.py
+ create mode 100755 bindings/python/examples/toggle_multiple_line_values.py
+ create mode 100755 bindings/python/examples/watch_line_info.py
+ create mode 100755 bindings/python/examples/watch_line_rising.py
+ create mode 100755 bindings/python/examples/watch_multiple_line_values.py
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230623203056.689705-32-varshini.rajendran@microchip.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.41.0
 
