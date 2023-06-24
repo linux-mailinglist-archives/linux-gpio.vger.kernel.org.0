@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A6D773C7A8
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jun 2023 09:54:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D97673C7BD
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jun 2023 09:55:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232224AbjFXHy2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Jun 2023 03:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49044 "EHLO
+        id S232263AbjFXHzM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Jun 2023 03:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232237AbjFXHyV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Jun 2023 03:54:21 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2623D2733
-        for <linux-gpio@vger.kernel.org>; Sat, 24 Jun 2023 00:54:09 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9881b9d8cbdso461684666b.1
-        for <linux-gpio@vger.kernel.org>; Sat, 24 Jun 2023 00:54:08 -0700 (PDT)
+        with ESMTP id S232331AbjFXHzF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Jun 2023 03:55:05 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B8B2965
+        for <linux-gpio@vger.kernel.org>; Sat, 24 Jun 2023 00:54:58 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-986d8332f50so163843166b.0
+        for <linux-gpio@vger.kernel.org>; Sat, 24 Jun 2023 00:54:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687593247; x=1690185247;
+        d=linaro.org; s=google; t=1687593297; x=1690185297;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=0ItoFIh/55aB/e70WP466UAh+90Zeto+YBld1GOUDlc=;
-        b=EMiHkbCpoLNTFLfvE7yhuYoRmcpbWb3rg2e6rjYkrRWUkV3fMaSxN0z1o8joDvVjrF
-         DoaQ2G69xGhdivKzBpITuBI7fwDLLK3JLAuwl/I3lieCx6wNCA1RdHp6Qq3HPJK+Ch7w
-         sNFSwBWU3Pq8LyYI9RuLehCvyvt3g6zSMiO9N43sAbiPWMsMZovSFcIbcIctLXJo7W5U
-         yFWwjCxo5Twsd0ALag83G1j5rpdBHNyIdPYEu8S2miEtIY7LMieyZzlBgLJ8BwcYNZMw
-         AaV5P0qpdR5CxkyEJPN0K6gzIoiSd3OEktqDRfmjQEb4O3OEHEE+CAvUXEK4v8SxS6xC
-         Y0ug==
+        bh=soj7fUfKLSUMfNJRhcGNetkgOh1MYDCQh05RlBdkeN4=;
+        b=eD/q9ISsMCL47wOXs6De7fuRpet/07x40xn71+pyopNmpfC/leMOmohtiJNK9d+/0e
+         ILxksxb1fX6rwaa0PNl4dIKNWKQ0JE0p+6mC8Npy2RJ92zmvNc++lXF1Evombv7lLOhq
+         j0dEkeCidthf58IY6B/xewKh7UeXN34mH4Tn/G+1iZuhgJY19SkmNAEXnRUl+6Hr2Pkf
+         cSz2zRZiOrOsv0eavcQnSNRSp9hvrs6WsSE1JlocSaWw+8h6/lYnvjc7aqnaDQHYXfi2
+         MGVSEIum3iSzoq+S0mokQ5a3djEQN7ISokIkliin4UzR1LuGSZT4+Gyjp384W6jbO4Hx
+         53EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687593247; x=1690185247;
+        d=1e100.net; s=20221208; t=1687593297; x=1690185297;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ItoFIh/55aB/e70WP466UAh+90Zeto+YBld1GOUDlc=;
-        b=CHXO6IRMjouVLD4gQRxkCUDfwW7HOcigMg2GBsuBp6L+UjlyEvDrBfVYnRdzQPHDAs
-         6J6or9sXuL51UtjkVHRM3CTYdNKYt21hoJ/Q4QgbxfVnAU/UjgtC0CAro1D4s3tYsnGE
-         9iNNQBl6O3B9tCeW8ZHioHONgnbdG6dvquCRkSDHz1CTidZXkgBAWiq03z9nM6VAhkmg
-         l0zVTEhr2H8Ta8YbgqQ2RIFo8r5lmoNm2OuVI4cS2cKonu1xYK0ykFo+3+TqbZgY05xr
-         KOwapG/gYy1QIZtqJpfI8lSTrS2WkBlM21ANuS8TpdnJSz3h7aiHxOCA2mnjGJVbg50u
-         obGw==
-X-Gm-Message-State: AC+VfDw5KvOwdGh2OVsw9NMFTxGWwwuAv2oRjII1uKhUID1CRUc6xNz/
-        kxj6Af/L/jS0WyvjwuNzuDeadA==
-X-Google-Smtp-Source: ACHHUZ49jFwiXxqnSCSn4kNoVnnSW/YdtiArnK3FxalPv2kaFMQNSvBgECWFO9OcGbSuOPMw0UOLPA==
-X-Received: by 2002:a17:906:58d2:b0:988:77f0:b671 with SMTP id e18-20020a17090658d200b0098877f0b671mr14792178ejs.38.1687593246753;
-        Sat, 24 Jun 2023 00:54:06 -0700 (PDT)
+        bh=soj7fUfKLSUMfNJRhcGNetkgOh1MYDCQh05RlBdkeN4=;
+        b=iJvPUTJEoKIvsQDtVHbFiEgGJZPpb5VwhJPtBh9K2R40UIe63aWFN5stFEECPfzaaF
+         MI7n40JZbFeRGtDZQWO0S9YxtN8YrWMR9qLhzwP2UFSMIvdXuIKRzpDAXGBgASbNPF55
+         77kPsntB/NDerb/FfATl7RSGJ9fx5KfgPE8Vnthegaru2rMS8TW1exTYUrvG0GTo9L1A
+         eh/jJvHczGSs6ghp8Gj1KJJwBrkv5FZj17XSNzsI3bjt/kUIegqoVPuy2c4/5WfuxfZC
+         l/iJrfQSngRvNOkYDSAo9dNulRshxX0kcPnvsfJNEgRn+Xucvg7s3dAw+UIm+21B2XLb
+         gauQ==
+X-Gm-Message-State: AC+VfDz1QrTh6yLeJ2iTZ8SoDDgHxFLKRLOu2KlmKLSzHdIJGGj2OyZX
+        90oTBHG7nV7bx4Dcq+dc/RuW2w==
+X-Google-Smtp-Source: ACHHUZ5vmH/wKISmL4HMBTOHg32GmJjKiHm7OZvesTfDEOfAm6Koe4Xv//vNxQvMZ5IiPxQ9Ro3PoQ==
+X-Received: by 2002:a17:907:320e:b0:96f:912e:5ec4 with SMTP id xg14-20020a170907320e00b0096f912e5ec4mr19710575ejb.16.1687593296802;
+        Sat, 24 Jun 2023 00:54:56 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id u12-20020a170906068c00b0098856d1470csm592132ejb.75.2023.06.24.00.54.01
+        by smtp.gmail.com with ESMTPSA id o6-20020aa7d3c6000000b0051a5177adeasm400813edr.21.2023.06.24.00.54.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Jun 2023 00:54:06 -0700 (PDT)
-Message-ID: <4f1015bb-50d3-84c9-ca32-564a0fe204e1@linaro.org>
-Date:   Sat, 24 Jun 2023 09:54:00 +0200
+        Sat, 24 Jun 2023 00:54:56 -0700 (PDT)
+Message-ID: <428a655e-8664-0e68-7eda-8edd47a4eee7@linaro.org>
+Date:   Sat, 24 Jun 2023 09:54:50 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v2 03/45] dt-bindings: usb: generic-ehci: Document
- clock-names property
+Subject: Re: [PATCH v2 04/45] dt-bindings: net: cdns,macb: add documentation
+ for sam9x7 ethernet interface
 Content-Language: en-US
 To:     Varshini Rajendran <varshini.rajendran@microchip.com>,
         robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
@@ -92,9 +92,9 @@ Cc:     Hari.PrasathGE@microchip.com, cristian.birsan@microchip.com,
         manikandan.m@microchip.com, dharma.b@microchip.com,
         nayabbasha.sayed@microchip.com, balakrishnan.s@microchip.com
 References: <20230623203056.689705-1-varshini.rajendran@microchip.com>
- <20230623203056.689705-4-varshini.rajendran@microchip.com>
+ <20230623203056.689705-5-varshini.rajendran@microchip.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230623203056.689705-4-varshini.rajendran@microchip.com>
+In-Reply-To: <20230623203056.689705-5-varshini.rajendran@microchip.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -108,23 +108,13 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 23/06/2023 22:30, Varshini Rajendran wrote:
-> Document the property clock-names in the schema.
-> 
-> It fixes the dtbs_check warning,
-> 'clock-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+> Add documentation for sam9x7 ethernet interface.
 > 
 > Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
 > ---
->  Documentation/devicetree/bindings/usb/generic-ehci.yaml | 4 ++++
+>  Documentation/devicetree/bindings/net/cdns,macb.yaml | 1 +
 
-This is a friendly reminder during the review process.
-
-It seems my previous comments were not fully addressed. Maybe my
-feedback got lost between the quotes, maybe you just forgot to apply it.
-Please go back to the previous discussion and either implement all
-requested changes or keep discussing them.
-
-Thank you.
+So you ignored the comments and tags everywhere?
 
 Best regards,
 Krzysztof
