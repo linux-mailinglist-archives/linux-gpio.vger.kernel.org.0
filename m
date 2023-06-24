@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2554273C6E8
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jun 2023 07:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60BA873C6E9
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Jun 2023 07:21:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229975AbjFXFVg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Jun 2023 01:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
+        id S230009AbjFXFVq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Jun 2023 01:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229964AbjFXFVf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Jun 2023 01:21:35 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65438272C
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 22:21:34 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-25ecc896007so927805a91.3
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 22:21:34 -0700 (PDT)
+        with ESMTP id S229709AbjFXFVp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Jun 2023 01:21:45 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBF5E67
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 22:21:44 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id af79cd13be357-763ddc4259dso124364785a.3
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Jun 2023 22:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687584093; x=1690176093;
+        d=gmail.com; s=20221208; t=1687584103; x=1690176103;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0GLKygSoQjw70yBPG5IlT9IoMODEHnEu/LvGJFjSepg=;
-        b=mzNKlqFoXorEQUa6lD6RT+NO+g82GdJ252aQYOzFBYmhFAQH5KdvIueI269AX1j+C0
-         Rf9M/84BosMf8MPFHU1SbZ2VoGMm8D7+MXS9Yd2ICGkcsReL6lTqzYsys1NrTPcOYQJH
-         vmiQWPy4ITogGcBqrprshUSC5VrSEUOz0GSFfCI+0WY84gZ20Oro7uZvrDFAxaqJgA4X
-         zOkrdrpfKSV3NsRwqqvKKf4uAorV4uwRZbJJjrxdfb4D9Ba6utwn6AXBsEK+ieLTXb6K
-         lSmAtvnyYkmi7UHt0yDXWJz4z4Ya2f861Va3Y3yxxlTAzXJvidyUjRyE/16Wj9qViweC
-         Se+A==
+        bh=E6XBOnIPfK/D7TyWjfv848szEgbB/yUubSzUaHVR0ZQ=;
+        b=nits95aQgbKC0Uu+jDD3NVxllqc33QN/6aUoq+vnAuXPvb0bFLMr6ofdbWuy+mieK1
+         sLeATQsYU7w3m8U+HXKzA/i2hkhDu2ieJytAYTDor3dXS81eH6XVT/AQ9VSksCFvX3Wt
+         DbabpkxVOaGv6aFpXO1bVojCvxUmqkHTz/803NCkayoOiezaiEQsh32rwnr0U3UoT5rj
+         uLljxXva+UL0+/5eCT/iWR2E/OJ7tWwbKhqaTewb0MuMZrreqexrif1Nh+n5XzsFwuso
+         N3Yz2j0PuA+CDIuXZVwXLJevMtScliPDBth//wrl4HxCbiCIJb/gAikm7c6WPs5N6CVA
+         cgCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687584093; x=1690176093;
+        d=1e100.net; s=20221208; t=1687584103; x=1690176103;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0GLKygSoQjw70yBPG5IlT9IoMODEHnEu/LvGJFjSepg=;
-        b=YcS9daNqU4ilMI8SRa3co0/L61Jxr20RFf/+25PFqSeQs1ECtDL6ScWUMYaj64a520
-         4J/Xe8SniiU+PN1z3mrlUHc/CU4fgQ5E42DySBOLBBEkSSYIs/p+zfnMflZxMOFayaE4
-         yBHKBLeW6dL7b3UGTTHzaoz2/xTNtgjYjClU59XwLPMVM7zjW7Ej5Kd35O6AFARzaDuq
-         +Vn+C57YfBJcr9xwcqKAoUHDkIxS9Cxs/lZZylrlxcDzHtdpHnHxr74hHkFzXkiDcR+6
-         uOyHoaMT3pV4GkwsDl+ynge5w0cpnMF5PGoq9wqFyK5Lb50zbZdngV6B+olsjUm5th5b
-         beqA==
-X-Gm-Message-State: AC+VfDzW4huIXqKV3+yfk/ONyu5g8VgqZOwHzocsRSr/sWhqtIWfEPDV
-        nm0qZL4YN61EQRa5ua1gS44rMxbqCeM=
-X-Google-Smtp-Source: ACHHUZ42rUTUvkucTfIAJMkvvLE/i8pdEsYMLv1S+bCrdTymSQIkU4ffpwRxxYsFGwQN8681JQbKzg==
-X-Received: by 2002:a17:90a:dac5:b0:25e:9aa6:2dfc with SMTP id g5-20020a17090adac500b0025e9aa62dfcmr22106420pjx.40.1687584093505;
-        Fri, 23 Jun 2023 22:21:33 -0700 (PDT)
+        bh=E6XBOnIPfK/D7TyWjfv848szEgbB/yUubSzUaHVR0ZQ=;
+        b=LzdA08LoAP/vUHyMjOjmnt/t3EnaoQ7wnMGoVgwlY1nBNDsV+zp7CqAx842+1aaL7J
+         Nk1fW7qfpH8EKUuPE2nNXnGNQdbICJ5apVgwNMD1yTfp3xhZgK76CxCL1nLsqWGpOb9Z
+         UtUnnSMja4ddEGvBm57eQQSpgMmFzGDyRB3CXqUlCCoW/5jeHqeXjaShboOFZ3pm3Che
+         8RMC7PJLY/3/pTU4crRriX8D2Z24xVwtez0RwGFLB/B9y3ZB5eCRvPNawbFxKeH8K90j
+         TZW7TK/PwvkySRdUVcANeCtFfKNhbGy1OUVHgnPAX7rATzZMO5IhPqpXQA2ySbc7llvK
+         sJpA==
+X-Gm-Message-State: AC+VfDwjVxD4RRbI+7k/kHgHTWFQ3MV3xTy+yMs8V14f8lNGyjdr8gyc
+        eMSt/p0GciacxXm3DE+FCWN1d8CiQcc=
+X-Google-Smtp-Source: ACHHUZ4vnOiBFx9mEoIILQ4qBqgiKC3yhrgWvID4Nv39m3q8O+Cc2SdhgCLqagTsjxFJka3bvYupFw==
+X-Received: by 2002:a05:620a:8f07:b0:763:643c:d6e7 with SMTP id rh7-20020a05620a8f0700b00763643cd6e7mr6760106qkn.47.1687584103639;
+        Fri, 23 Jun 2023 22:21:43 -0700 (PDT)
 Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id gf4-20020a17090ac7c400b00256dff5f8e3sm487103pjb.49.2023.06.23.22.21.31
+        by smtp.gmail.com with ESMTPSA id gf4-20020a17090ac7c400b00256dff5f8e3sm487103pjb.49.2023.06.23.22.21.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 22:21:33 -0700 (PDT)
+        Fri, 23 Jun 2023 22:21:43 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH 3/4] cxx: examples: file comment consistency
-Date:   Sat, 24 Jun 2023 13:20:53 +0800
-Message-ID: <20230624052054.13206-4-warthog618@gmail.com>
+Subject: [libgpiod][PATCH 4/4] rust: examples: file comment consistency
+Date:   Sat, 24 Jun 2023 13:20:54 +0800
+Message-ID: <20230624052054.13206-5-warthog618@gmail.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230624052054.13206-1-warthog618@gmail.com>
 References: <20230624052054.13206-1-warthog618@gmail.com>
@@ -75,24 +75,22 @@ other language examples.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- bindings/cxx/examples/reconfigure_input_to_output.cpp | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ bindings/rust/libgpiod/examples/reconfigure_input_to_output.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/bindings/cxx/examples/reconfigure_input_to_output.cpp b/bindings/cxx/examples/reconfigure_input_to_output.cpp
-index 7b52dab..896c812 100644
---- a/bindings/cxx/examples/reconfigure_input_to_output.cpp
-+++ b/bindings/cxx/examples/reconfigure_input_to_output.cpp
-@@ -2,8 +2,8 @@
+diff --git a/bindings/rust/libgpiod/examples/reconfigure_input_to_output.rs b/bindings/rust/libgpiod/examples/reconfigure_input_to_output.rs
+index 3e2f2c7..fb5402b 100644
+--- a/bindings/rust/libgpiod/examples/reconfigure_input_to_output.rs
++++ b/bindings/rust/libgpiod/examples/reconfigure_input_to_output.rs
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
  // SPDX-FileCopyrightText: 2023 Kent Gibson <warthog618@gmail.com>
+ //
+-// Minimal example of requesting a line intended for bi-directional use as input and then switching to output.
++// Example of a bi-directional line requested as input and then switched to output.
  
- /*
-- * Minimal example of requesting a line intended for bi-directional use as
-- * input and then switching to output.
-+ * Example of a bi-directional line requested as input and then switched
-+ * to output.
-  */
+ use libgpiod::line;
  
- #include <cstdlib>
 -- 
 2.41.0
 
