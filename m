@@ -2,67 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60C3473E662
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 19:26:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7919473EE95
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jun 2023 00:20:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbjFZR0P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jun 2023 13:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59560 "EHLO
+        id S229681AbjFZWUK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jun 2023 18:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229715AbjFZR0O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 13:26:14 -0400
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5E6BB
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 10:26:13 -0700 (PDT)
-Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-3420b22365fso20248505ab.1
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 10:26:13 -0700 (PDT)
+        with ESMTP id S229780AbjFZWTr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 18:19:47 -0400
+Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F3E5122
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 15:19:44 -0700 (PDT)
+Received: by mail-vk1-xa2e.google.com with SMTP id 71dfb90a1353d-471c9f2f47aso1179227e0c.3
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 15:19:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1687800372; x=1690392372;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jAa9/qyqoIOUnYhC99LNfoissbeamAdrpMuCz28sW8s=;
-        b=H7zijVZ9COkKnC8EPRrq0SG3bgmwwD4JD/ym7AGril6FAWmKwYPiTnmRm+uTCXiYrV
-         3Cnd/INrDqhDJQToc37RsQd2bw0lUmbz+L+2LIur1mo3m0/akE1hqdtuxAyNSTPgqyD6
-         Vyh/o6lP7U5Hh0EVqcqKGizcYaT9V4qIO6tg06VvRIMpBBaEYlQwLXZfbjOGfAteYyuG
-         imlXyaxx5bK9XHbXUYCPhZsaXZri/2yMPFRMyTbKAjTGKAY4H5H5Y15qjeILlxgzn4fD
-         3QpHy9j4aDe8fF+A+ja630+GEGHBJ7Svrc4nFrTZ3ZM+Fk8bmf+kVQjFHeNEtDpFG41H
-         ViFg==
+        d=linaro.org; s=google; t=1687817983; x=1690409983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ufNVE0dQejfSX8wYNYRTMSSfw+pixc9c6G+EySlKjXU=;
+        b=s9yPfPENqAVCBS8yJ/0syiP44/PinzWCNVUgFlXiAMw2DbEOlTVhHkttkanWHHhguD
+         EfrEh4cvSbKmb/K8sVu/djsYc2swxnvVCGTXtoGlqaLPTy9aqPAfc06/hAGHB+V00tfO
+         Ar8PE1TcDlDmltieL8l3xZPDc9VSmhDAvfFvs8+Rfn8iLACXROnE33OHojXHkystwXbL
+         9Y9dv9NPa8R+Gc7HW5Qi9CP/1HVUvxj6NBjo9ceRZ7fmQj66fpkgk4jDrLCSro/UFGrs
+         B946nFvgjLy3lNOcTWrR3E4gw4LWWpB/9bubTPj7uQbIvvN+uZAzK3fOzHH1yh/N6Wy+
+         DxwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687800372; x=1690392372;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jAa9/qyqoIOUnYhC99LNfoissbeamAdrpMuCz28sW8s=;
-        b=h0ontRZhlGO86OQ7Nn8OlDpHVwIYiCFlNnQ4MR9niE7YhXzUE2u/AHMVt7jaWFoWo/
-         WfSQlub0UPIdVUgq8JZKFfTYxdZQszJmBRaFENZXZy4wsST5NElTVCOXw1CHxntesLlf
-         zHi/hnvpTjrjVuIitU2KxhWX6Ioie70Djc9ed7HkGuRM9pLai01ErKngbTMf6+zp8AdE
-         VUTedM0tL9Tn9dYiYdfuiCXmGfCRBTvwNuLnMravayRkgdr2GrrxzYWqLoTKi+AweRUA
-         1oGjm29fzViDe3Q1+DOr6l+89Zaxehrg9AVlPCE8JDnPH/W2cz1YY17RkwqUC9FfeRbb
-         fxgg==
-X-Gm-Message-State: AC+VfDw2HeQMMJtBkMDWYQFwE8KRZV+Kct4AsxpzeSi5zcaP6Ro7i4Oq
-        yAojNN8QIF1VyIaD+Sfo1yKQvw==
-X-Google-Smtp-Source: ACHHUZ6RhZwQfHzkxUhFwFFWIzRQlw5p95P6F2U2d7QYXTJkZAt/nhSYpUch6hK1aPN88nc7hZ+DmQ==
-X-Received: by 2002:a92:d30e:0:b0:340:72d1:69a with SMTP id x14-20020a92d30e000000b0034072d1069amr31425660ila.28.1687800372473;
-        Mon, 26 Jun 2023 10:26:12 -0700 (PDT)
-Received: from sw06.internal.sifive.com ([64.62.193.194])
-        by smtp.gmail.com with ESMTPSA id u15-20020aa7838f000000b0066a6059d399sm4026648pfm.116.2023.06.26.10.26.11
+        d=1e100.net; s=20221208; t=1687817983; x=1690409983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ufNVE0dQejfSX8wYNYRTMSSfw+pixc9c6G+EySlKjXU=;
+        b=aXj3imptRyIZUoNSuKZS+91mmnmQbPyQWNSnJXleFqnUwvFv7sb6XYARQYbftBETas
+         4oS/kBoidO3fSw5gkTD/hYGQupp77JYfugIhle3bj6mqoNWGUCeWlNB9tBooD01BrrBM
+         6S1ccP4+FcTX0OSeB5lsVRdEJ72h5Cw7jaWcGkffLs7zVM+F3oHtMYHTvIc1vg0cpE4h
+         nedPzqe7Ntfjx7km88+uBEnp9AL9P7pF0dK2Ry90DG2pJAo/htzjkyKXCIE/yQltwgOS
+         lq7L8A7XZjJMPz0AaLTGbWa+nUbq5JqG1qgWpdy5OXgAud6wfrSsiR1vUvQgiEF5d0An
+         yLbw==
+X-Gm-Message-State: AC+VfDwEafUSzt2sb1sv7PMtPwDRl5SjXZlNphasTx2pg/Yasa/GO8GN
+        nxSUtXDLt4y4pTwL0MCxhB6jBg==
+X-Google-Smtp-Source: ACHHUZ4qcZPYyWh1IiaQmhAJsjra9DikU+Fft13pk918If1PwcgaUHeACsrT15neJikmLTJxc8L5kg==
+X-Received: by 2002:a1f:5744:0:b0:46e:8084:92be with SMTP id l65-20020a1f5744000000b0046e808492bemr12928526vkb.6.1687817983363;
+        Mon, 26 Jun 2023 15:19:43 -0700 (PDT)
+Received: from fedora (072-189-067-006.res.spectrum.com. [72.189.67.6])
+        by smtp.gmail.com with ESMTPSA id g200-20020a1f9dd1000000b0047cdf4481f4sm753414vke.26.2023.06.26.15.19.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 10:26:11 -0700 (PDT)
-From:   Samuel Holland <samuel.holland@sifive.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     Samuel Holland <samuel.holland@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH] gpio: sifive: Support IRQ wake
-Date:   Mon, 26 Jun 2023 10:26:08 -0700
-Message-Id: <20230626172608.2978505-1-samuel.holland@sifive.com>
-X-Mailer: git-send-email 2.40.1
+        Mon, 26 Jun 2023 15:19:41 -0700 (PDT)
+Date:   Mon, 26 Jun 2023 18:19:39 -0400
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-iio@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        andy.shevchenko@gmail.com
+Subject: Re: [PATCH] counter: Fix menuconfig "Counter support" submenu
+ entries disappearance
+Message-ID: <ZJoO++gEMiDsZioz@fedora>
+References: <20230620170159.556788-1-william.gray@linaro.org>
+ <4341aa87-c3b1-b0a4-4f82-c903c3085df3@infradead.org>
+ <ZJIWLYtl6BEHfDZQ@fedora>
+ <20230625121108.63ad5e60@jic23-huawei>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="MbeZhqF2YnPwH4y0"
+Content-Disposition: inline
+In-Reply-To: <20230625121108.63ad5e60@jic23-huawei>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -73,27 +80,71 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Each pin drives a separate interrupt in the parent IRQ domain, so there
-is no need to set IRQCHIP_MASK_ON_SUSPEND.
 
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
----
+--MbeZhqF2YnPwH4y0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/gpio/gpio-sifive.c | 1 +
- 1 file changed, 1 insertion(+)
+On Sun, Jun 25, 2023 at 12:11:08PM +0100, Jonathan Cameron wrote:
+> On Tue, 20 Jun 2023 17:12:13 -0400
+> William Breathitt Gray <william.gray@linaro.org> wrote:
+>=20
+> > On Tue, Jun 20, 2023 at 02:00:37PM -0700, Randy Dunlap wrote:
+> > > Hi,
+> > >=20
+> > > On 6/20/23 10:01, William Breathitt Gray wrote: =20
+> > > > The current placement of the I8254 Kconfig entry results in the
+> > > > disappearance of the "Counter support" submenu items in menuconfig.=
+ Move
+> > > > the I8254 above the menuconfig COUNTER entry to restore the intended
+> > > > submenu behavior.
+> > > >=20
+> > > > Fixes: d428487471ba ("counter: i8254: Introduce the Intel 8254 inte=
+rface library module")
+> > > > Reported-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> > > > Closes: https://lore.kernel.org/all/32ddaa7b-53a8-d61f-d526-b545bd5=
+61337@linux.intel.com/
+> > > > Signed-off-by: William Breathitt Gray <william.gray@linaro.org> =20
+> > >=20
+> > > Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> > >=20
+> > > but why is I8254 here at all? Users cannot enable it
+> > > and nothing selects it.  Is it a WIP?
+> > >=20
+> > > Thanks. =20
+> >=20
+> > There are pending patches for two drivers to use it: 104-dio-48e[^1] and
+> > stx104[^2]. Those will be picked up in their respective subsystem trees
+> > (by Bart and Jonathan I presume).
+> >=20
+>=20
+> I missed the IIO patch in that series. Could you resend please.
+>=20
+> Jonathan
+>=20
+> > William Breathitt Gray
+> >=20
+> > [^1]: https://lore.kernel.org/all/dc4d0d5ca6ea28eda18815df114ecb21226cb=
+345.1681665189.git.william.gray@linaro.org/
+> > [^2]: https://lore.kernel.org/all/45d35b6f6e8d51df788b2bc85c456bfd45476=
+b1a.1681665189.git.william.gray@linaro.org/
 
-diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
-index 98939cd4a71e..c2653313f3a2 100644
---- a/drivers/gpio/gpio-sifive.c
-+++ b/drivers/gpio/gpio-sifive.c
-@@ -150,6 +150,7 @@ static const struct irq_chip sifive_gpio_irqchip = {
- 	.irq_disable	= sifive_gpio_irq_disable,
- 	.irq_eoi	= sifive_gpio_irq_eoi,
- 	.irq_set_affinity = sifive_gpio_irq_set_affinity,
-+	.irq_set_wake	= irq_chip_set_wake_parent,
- 	.flags		= IRQCHIP_IMMUTABLE,
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
--- 
-2.40.1
+I8254 is expected to land in 6.5 so I'll wait and resend the IIO patch
+rebased on 6.5-rc1 once it's released in a couple weeks. That'll make
+things simple for you and avoid the need for an immutable branch.
 
+William Breathitt Gray
+
+--MbeZhqF2YnPwH4y0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZJoO+wAKCRC1SFbKvhIj
+Kx9rAQDZbMBbVF2rUgePh1g5t4gCo7byAnzWS4jz2Snc2zdWfgD+MfuIWvJ0m5eL
+x8t2QKcSOHH7XkVcjbsy9XjA9WGVaAk=
+=fBt7
+-----END PGP SIGNATURE-----
+
+--MbeZhqF2YnPwH4y0--
