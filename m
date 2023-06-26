@@ -2,236 +2,218 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 688FD73E3EA
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 17:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D40473E504
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 18:29:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231520AbjFZPvX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jun 2023 11:51:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34894 "EHLO
+        id S229647AbjFZQ3l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jun 2023 12:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbjFZPvQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 11:51:16 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4F91723
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 08:50:59 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-78f36f37e36so1034000241.3
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 08:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687794658; x=1690386658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cKSMwoNCFJqjhmNluRcqz1rlJy8ndbz7M9biXkRY1fE=;
-        b=Ex+NLXbugBxxE91biOqab0q5+oecC02Mju3FVcPa80ajjv1CKbGXaMbQoJzw48I8MM
-         eci7nixWbzL81lY3MPfiEDI0DkNa5VaEWq5N7k/GtpyhrvGO0bllDrSjZbww4wTTAOma
-         63aSBwMlMvqgRKl/fWAbJjmBY83CIadtUdCxG8NDlKN1RTHFZjXL00BUtxpvHTz3+AU9
-         pnVU+41VCXVkPhJK8pzHLXD80QfYz1QoGDC18G0bsSYFnMlvkf7/wJJfvL8Knz/wTXyc
-         W+19acEP5HE+KqwieRvHRyEdwQ0TQLBmwjgk3Zf0Hht/LLYSwoP6SfdX7g09HhRs8mGw
-         wKpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687794658; x=1690386658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cKSMwoNCFJqjhmNluRcqz1rlJy8ndbz7M9biXkRY1fE=;
-        b=RinBWY1rtwTrgok+Hrpnp+qPuhNpy76zL7W9nMebE0RZYBaB43OZu1zzQMHjVm8j9i
-         rwujCVDOfpdfcLB9Z87ciuG/82G/gLGD/jth7nUYV7kYYOzVzKuNCni0sRSIwwYod8+Q
-         7xeIVHGOVTsI8zuZENSF5lp0TzLU0MVEQKFvLlyAhPc7HAS2SZhXeGoettMwqDnvZayU
-         sZSDZfTnuHGPwyYTize/clR2tWeHCTbujFlVkG5Axpgwp3su2m50F8458uEbmYh2usav
-         GyB0HJBKLQPPXhHH3TtQFGLT/Lyv4gn2VgQckon4ikBYGf8WSU5Hfn5gqGG8+0QSPJoN
-         jcyA==
-X-Gm-Message-State: AC+VfDzPENxYOJEpJ1ONw/g3xcqhQYW0fMHG8lY4zkuq03UowS05Jwf+
-        su4QDJcz5DX1ysx2zblMEoTe1qfpFJLIAkRUh1izEg==
-X-Google-Smtp-Source: ACHHUZ7sbALJnuPT/qEi+APw9K7W8y4dUHupQU1VLcTriiizK9lQv2HLZWF/wjLWtNF3CVHDmyPrgrt2gsXx+smB5tM=
-X-Received: by 2002:a67:ea8c:0:b0:43f:3f51:b804 with SMTP id
- f12-20020a67ea8c000000b0043f3f51b804mr12858094vso.32.1687794658337; Mon, 26
- Jun 2023 08:50:58 -0700 (PDT)
+        with ESMTP id S230179AbjFZQ3W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 12:29:22 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E917230E7;
+        Mon, 26 Jun 2023 09:28:16 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35QE0vr8016114;
+        Mon, 26 Jun 2023 16:28:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=71P9kkKjmHcIHJCwCMhSnLjhjtNBY9RZBfPWrRB0XN4=;
+ b=Y8dJzzBePblKSosfDQgoFn3EwEbRFkTSz407E53naa+MdPq08X07l9cXCBqq51tG2T32
+ TLNuPN5R6CNnaCeJqNknQoIoUYQc5KaC2PQaLxutqaffEF9+bQ6X9mfcrlFq7m2MMGOm
+ D3WW17mwt3zIHQ7Ag6Rxb5WI8AFS0ET/tTGPxV6BnG6ik6DJZgifNyWONmce+6FhhAno
+ xCzmD7OXZXaEzQ8HqN8TC2J9VMoSIkTY3a6kKvmUQejLA9pMViFgcFk/AfxKb2sHspw+
+ Pcoq0X5EumDsBrgdkRW+RfZUCOF8jyQ0Q5houHZwhHclQNZXbclr6MMhdAeV1QHWkbFK gw== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rdqgdcmma-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 26 Jun 2023 16:28:11 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35QGSAxI026462
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 26 Jun 2023 16:28:10 GMT
+Received: from [10.216.59.223] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Mon, 26 Jun
+ 2023 09:28:07 -0700
+Message-ID: <6d9f251e-2c1a-ed50-638e-a052404ffc64@quicinc.com>
+Date:   Mon, 26 Jun 2023 21:57:56 +0530
 MIME-Version: 1.0
-References: <TYCP286MB1188B6A0379F7928C63288DF8A21A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
- <ZJk87rWsDj7pWJIP@sol>
-In-Reply-To: <ZJk87rWsDj7pWJIP@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 26 Jun 2023 17:50:47 +0200
-Message-ID: <CAMRc=McGOV+A8ROXRinUkWG0POTe37RWphRHDW6sy7UMU-e2UA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpiolib-cdev: Fix potential &lr->wait.lock deadlock issue
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     YE Chengfeng <cyeaa@connect.ust.hk>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "andy@kernel.org" <andy@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v6 4/5] firmware: qcom_scm: Refactor code to support
+ multiple download mode
+To:     <andy.shevchenko@gmail.com>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1680076012-10785-1-git-send-email-quic_mojha@quicinc.com>
+ <1680076012-10785-5-git-send-email-quic_mojha@quicinc.com>
+ <ZHEt2mrYpSMKBuIX@surfacebook>
+Content-Language: en-US
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <ZHEt2mrYpSMKBuIX@surfacebook>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: YQjCSbztMZOiJDGeGxZzkvEGMsJNfE3-
+X-Proofpoint-GUID: YQjCSbztMZOiJDGeGxZzkvEGMsJNfE3-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-26_09,2023-06-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ suspectscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306260121
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 9:23=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Sun, Jun 25, 2023 at 02:45:12PM +0000, YE Chengfeng wrote:
-> > linereq_put_event is called from both interrupt context (e.g.,
-> > edge_irq_thread) and process context (process_hw_ts_thread).
-> > Therefore, interrupt should be disabled before acquiring lock
-> > &lr->wait.lock inside linereq_put_event to avoid deadlock when
-> > the lock is held in process context and edge_irq_thread comes.
-> >
-> > Similarly, linereq_read_unlocked running in process context
-> > also acquies the same lock. It also need to disable interrupt
-> > otherwise deadlock could happen if the irq edge_irq_thread
-> > comes to execution while the lock is held.
-> >
->
-> So, in both cases, a process context holding the lock is interrupted, on
-> the same CPU, and the edge_irq_thread() deadlocks on that lock, as the
-> interrupted process holds the lock and cannot proceed.
-> That makes sense to me, but it would be good for Bart to confirm as he
-> knows a lot more about the kfifo locking than I do.
->
 
-Yeah, I'm not sure this is correct. edge_irq_thread() runs in process
-context, so the whole premise of the patch seems to be flawed. What
-tool reported this? Can this be a false positive? Have you seen this
-happen in real life?
 
-> Note that the same problem also exists in lineevent_read_unlocked() - the
-> uAPI v1 equivalent of linereq_read_unlocked().
->
-> > Fix the two potential deadlock issues by spin_lock_irqsave.
-> >
->
-> spin_lock_bh() should be sufficient, given that edge_irq_thread() is run
-> in a softirq?  That is faster and would allow the hard irq handlers to
-> still run, and timestamp the event, but inhibit the edge_irq_thread()
-> from being called on that CPU until the lock is released.
-> (hmmm, gpio_desc_to_lineinfo() also uses spin_lock_irqsave() but it is
-> never called from hard irq context, so there is a good chance I'm missing
-> something here??)
-> More on spin_lock choice below.
+On 5/27/2023 3:38 AM, andy.shevchenko@gmail.com wrote:
+> Wed, Mar 29, 2023 at 01:16:51PM +0530, Mukesh Ojha kirjoitti:
+>> Currently on Qualcomm SoC, download_mode is enabled if
+>> CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT is selected.
+>>
+>> Refactor the code such that it supports multiple download
+>> modes and drop CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT config
+>> instead, give interface to set the download mode from
+>> module parameter.
+> 
+> ...
+> 
+>>   #include <linux/clk.h>
+>>   #include <linux/reset-controller.h>
+>>   #include <linux/arm-smccc.h>
+> 
+>> +#include <linux/kstrtox.h>
+> 
+> Can this be located after clk.h which makes (some) order in this block?
 
-Again: this is incorrect - edge_irq_thread() doesn't execute in
-softirq context which can be verified by calling in_softirq() from it.
+Sure.
 
->
-> This should have a Fixes tag.
-> For v2, it has been there since it was added, so:
->
-> 73e0341992b6 ("gpiolib: cdev: support edge detection for uAPI v2")
->
-> And it also applies to lineevent_read_unlocked() from uAPI v1, so there
-> should be a separate fix for that, or at least a separate tag.
->
-> I looks to me that it was first introduced in uAPI v1 here:
->
-> dea9c80ee672 ("gpiolib: rework the locking mechanism for lineevent kfifo"=
-)
->
-> > Signed-off-by: Chengfeng Ye <cyeaa@connect.ust.hk>
-> > ---
-> >  drivers/gpio/gpiolib-cdev.c | 16 +++++++++-------
-> >  1 file changed, 9 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> > index 0a33971c964c..714631fde9a8 100644
-> > --- a/drivers/gpio/gpiolib-cdev.c
-> > +++ b/drivers/gpio/gpiolib-cdev.c
-> > @@ -614,14 +614,15 @@ static void linereq_put_event(struct linereq *lr,
-> >                             struct gpio_v2_line_event *le)
-> >  {
-> >       bool overflow =3D false;
-> > +     unsigned long flags;
-> >
-> > -     spin_lock(&lr->wait.lock);
-> > +     spin_lock_irqsave(&lr->wait.lock, flags);
->
-> linereq_put_event() is never called from hard irq context, so
-> spin_lock_irq() or spin_lock_bh() should suffice?
->
+> 
+> ...
+> 
+>>   #define QCOM_DOWNLOAD_MODE_MASK 0x30
+>>   #define QCOM_DOWNLOAD_FULLDUMP	0x1
+>> +#define QCOM_DOWNLOAD_NODUMP	0x0
+> 
+> Okay, so you start backward ordering.
+> But see comments to the next patch.
 
-AFAICT it is only ever called from process context and so spin_lock()
-is correct here.
+Will fix this by doing it in ascending order..
 
-Bart
 
-> >       if (kfifo_is_full(&lr->events)) {
-> >               overflow =3D true;
-> >               kfifo_skip(&lr->events);
-> >       }
-> >       kfifo_in(&lr->events, le, 1);
-> > -     spin_unlock(&lr->wait.lock);
-> > +     spin_unlock_irqrestore(&lr->wait.lock, flags);
-> >       if (!overflow)
-> >               wake_up_poll(&lr->wait, EPOLLIN);
-> >       else
-> > @@ -1505,6 +1506,7 @@ static ssize_t linereq_read_unlocked(struct file =
-*file, char __user *buf,
-> >       struct linereq *lr =3D file->private_data;
-> >       struct gpio_v2_line_event le;
-> >       ssize_t bytes_read =3D 0;
-> > +     unsigned long flags;
-> >       int ret;
-> >
-> >       if (!lr->gdev->chip)
-> > @@ -1514,28 +1516,28 @@ static ssize_t linereq_read_unlocked(struct fil=
-e *file, char __user *buf,
-> >               return -EINVAL;
-> >
-> >       do {
-> > -             spin_lock(&lr->wait.lock);
-> > +             spin_lock_irqsave(&lr->wait.lock, flags);
->
-> linereq_read_unlocked() is only ever called in process context, so this
-> could be spin_lock_irq() or even spin_lock_bh()?
->
-> >               if (kfifo_is_empty(&lr->events)) {
-> >                       if (bytes_read) {
-> > -                             spin_unlock(&lr->wait.lock);
-> > +                             spin_unlock_irqrestore(&lr->wait.lock, fl=
-ags);
-> >                               return bytes_read;
-> >                       }
-> >
-> >                       if (file->f_flags & O_NONBLOCK) {
-> > -                             spin_unlock(&lr->wait.lock);
-> > +                             spin_unlock_irqrestore(&lr->wait.lock, fl=
-ags);
-> >                               return -EAGAIN;
-> >                       }
-> >
-> >                       ret =3D wait_event_interruptible_locked(lr->wait,
-> >                                       !kfifo_is_empty(&lr->events));
->
-> wait_event_interruptible_locked() works with locks that are
-> spin_lock()/spin_unlock(), so this will leave irqs disabled while
-> waiting for a new event??
->
-> And while there is a wait_event_interruptible_locked_irq(), there is
-> no wait_event_interruptible_locked_bh() form that I can see, so using
-> spin_lock_bh() would require some extra work.
->
-> >                       if (ret) {
-> > -                             spin_unlock(&lr->wait.lock);
-> > +                             spin_unlock_irqrestore(&lr->wait.lock, fl=
-ags);
-> >                               return ret;
-> >                       }
-> >               }
-> >
-> >               ret =3D kfifo_out(&lr->events, &le, 1);
-> > -             spin_unlock(&lr->wait.lock);
-> > +             spin_unlock_irqrestore(&lr->wait.lock, flags);
-> >               if (ret !=3D 1) {
-> >                       /*
-> >                        * This should never happen - we were holding the
-> > --
-> > 2.17.1
->
-> Anyway, good catch.
->
-> Cheers,
-> Kent.
+> 
+> ...
+> 
+>>   		ret = qcom_scm_io_update_field(__scm->dload_mode_addr,
+>> -				QCOM_DOWNLOAD_MODE_MASK,
+>> -				enable ? QCOM_DOWNLOAD_FULLDUMP : 0);
+>> +				QCOM_DOWNLOAD_MODE_MASK, download_mode);
+> 
+> Can ping-pong style be avoided? I.e. do the right thing in the previous patch,
+> so you won't change lines that were introduced just before.
+
+If you notice, I have just converted download mode data type from bool
+to int in this patch and hence the changing the line here. Last patch 
+was about just using the exported API, so i hope you would be fine here.
+
+> 
+> ...
+> 
+>>   }
+>>   
+>> +
+> 
+> Stray change.
+> 
+>> +static int get_download_mode(char *buffer, const struct kernel_param *kp)
+>> +{
+>> +	int len = 0;
+>> +
+>> +	if (download_mode == QCOM_DOWNLOAD_FULLDUMP)
+>> +		len = sysfs_emit(buffer, "full\n");
+>> +	else if (download_mode == QCOM_DOWNLOAD_NODUMP)
+>> +		len = sysfs_emit(buffer, "off\n");
+>> +
+>> +	return len;
+> 
+> You can return directly.
+
+Ok.
+
+>  > Also, what about download_mode that doesn't fit to the above two?
+
+return sysfs_emit(buffer, "unknown\n"); ?
+
+> 
+>> +}
+> 
+> ...
+> 
+>> +static int set_download_mode(const char *val, const struct kernel_param *kp)
+>> +{
+>> +	u32 old = download_mode;
+>> +
+>> +	if (sysfs_streq(val, "full")) {
+>> +		download_mode = QCOM_DOWNLOAD_FULLDUMP;
+>> +	} else if (sysfs_streq(val, "off")) {
+>> +		download_mode = QCOM_DOWNLOAD_NODUMP;
+> 
+> NIH sysfs_match_string().
+
+NIH ?
+
+My apology, if i did not get this..
+Do you want me to use sysfs_match_string()
+and how would that help compare to what is present now ?
+
+> 
+>> +	} else if (kstrtouint(val, 0, &download_mode) ||
+>> +		   !(download_mode == 0 || download_mode == 1)) {
+>> +		download_mode = old;
+>> +		pr_err("qcom_scm: unknown download mode: %s\n", val);
+> 
+>> +		return -EINVAL;
+> 
+> Do not shadow the error code from kstrtouint() it can be different to this one.
+
+Will fix this.
+
+> 
+>> +	}
+>> +
+>> +	if (__scm)
+>> +		qcom_scm_set_download_mode(download_mode);
+>> +
+>> +	return 0;
+>> +}
+> 
+> ...
+> 
+> Have you updated corresponding documentation about this parameter?
+> Or there is none?
+
+There is none as of yet outside this file; should that be good what i 
+have added in 5/5..
+
+> 
+
+-Mukesh
