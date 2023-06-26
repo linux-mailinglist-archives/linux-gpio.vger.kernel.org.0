@@ -2,122 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 277DB73E29B
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 16:58:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D43D073E2A5
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 17:03:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbjFZO6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jun 2023 10:58:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59674 "EHLO
+        id S230030AbjFZPDR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jun 2023 11:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229922AbjFZO6K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 10:58:10 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1545101;
-        Mon, 26 Jun 2023 07:58:08 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b7f68f1c9eso14437055ad.2;
-        Mon, 26 Jun 2023 07:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687791488; x=1690383488;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Hmh8wbv8PZygexgxnyH4qZ7wQNevvIr6Du0+ni35xCo=;
-        b=qZnXvzcd2hJ3+aXJpt7yZh25TZGXjgiAXbclTWSXY9GxefrudhkGjH3O4YrdJ57bTv
-         Q16QNuuMiSmjVZVWfCmJPzsrm2wxNiBOc/WphyZRbSz78TWdRHdlWkI77Le3b8DD0yfJ
-         Qs+rAgQJeA3zJ/6NUimnZ1gRk6hDdm95g9rZCu234V2Cx2L477PuAInbgzpLUXokIxIJ
-         ZiLhJVfFT5G4tJkvLxQMzGDZXAkDAa3ebu0IkFOyckaQLz1wqMBuO/b4goacTHrfbYp+
-         exZlcHyawxmP/068E+Q6swe+BWptcsP2Jicops8TTxYEtGwe8SNg1PIvB3xYSPLAvPkb
-         h32Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687791488; x=1690383488;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hmh8wbv8PZygexgxnyH4qZ7wQNevvIr6Du0+ni35xCo=;
-        b=Jn92gbupaQMLTvDymqHKOjFm1MkXCWe/CMPEVHlby88c4T+2klBbAebIMReKp41Mwa
-         vw1CT85Gjz2FKUMPkRe/2vNNzEQ9+qg+Zry5Xnpt6WUsLISE4fgDsnYm1AsAf1RgXvLH
-         Lpuu724kYz07F+J3gC9e3TauLTD4DSI/ZBQnpJrUIctN4gF1wWWixrznH3cEkullJENL
-         Yx/5G69Qs+FfcAZldyKlVR0o/Eu0YY8QRnfy+RTMYFWf2dmJQDYtgk8tSiiO2kOXFVar
-         sfQ+tixP217WUV9iDrPy36VC4M/guQo1rLTguVZqR41wysAPwVoI38yh4HaFXnE66JIe
-         gk/g==
-X-Gm-Message-State: AC+VfDyV4mQKtFiIRpNjd+1x4xJ4Ur2c+LxE+IcMA1YvRVsbjRvTaM1D
-        NhSQRhgsC8mGyzAWkDe6kG4=
-X-Google-Smtp-Source: ACHHUZ6+/UHdi5peXrr2q6q5paiSAe744S/gQ1FkDR6baMkvQ+7IrFOjVgV2aptlE+PekUaFm/3Yyg==
-X-Received: by 2002:a17:903:188:b0:1b2:4b28:793c with SMTP id z8-20020a170903018800b001b24b28793cmr9013547plg.29.1687791488320;
-        Mon, 26 Jun 2023 07:58:08 -0700 (PDT)
-Received: from 377044c6c369.cse.ust.hk (191host097.mobilenet.cse.ust.hk. [143.89.191.97])
-        by smtp.gmail.com with ESMTPSA id x20-20020a170902821400b001b1a2bf5277sm4313303pln.39.2023.06.26.07.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 07:58:07 -0700 (PDT)
-From:   Chengfeng Ye <dg573847474@gmail.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cyeaa@connect.ust.hk, Chengfeng Ye <dg573847474@gmail.com>
-Subject: [PATCH v2 2/2] gpiolib: cdev: Fix &le->wait.lock deadlock issue
-Date:   Mon, 26 Jun 2023 14:57:56 +0000
-Message-Id: <20230626145756.30696-2-dg573847474@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230626145756.30696-1-dg573847474@gmail.com>
-References: <20230626145756.30696-1-dg573847474@gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229573AbjFZPDO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 11:03:14 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2133.outbound.protection.outlook.com [40.107.114.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173F5130;
+        Mon, 26 Jun 2023 08:03:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GIfQrZT2XDwYohZP+Aolbs1HbaMz0l2U83HIgtQAvSrFpcROoXvSZLwk1u3iCpCnnNkY2zs2V1/oUXubYAsk+xFK2pQjTQQq04hMczE38SQd+PYKoKGD/ZqQ5jIbHJDp58lKC7JATgVkCezEAzbdoUvPZH2YpRcjBOasxbqFty/8k0jLn+A0OjhOU6uwh6b16ewaP2Fr7bdTCE4V893HIKWadz/BXB6WC9OVARvAXvxrSbn+0ec5hayNXrzpizoHcSlFd60S17ObWVvb08GjA6yvqrclg8K9z533eQduPhaGRFr8pJlrmOTfkVitcRbnxw920DWMd4Wxuk79ZXaKUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ssSiYbdaCpE/9c7aLkYBGXISPI3UKjZMGFrMqaVo5zo=;
+ b=UcRqXpvtwFvEjPKIIDUJx+ikX01LUhGc0eANG++HyONpHUxn1gfNvOkMF+YJbC/uzfKo8ssHoxQS+wEDJkztUqlKZEm7SDIwnGJXhE4hCXiUvD0IFcbqO/gHstdEvwvmrOEsErWDZhEIa8NJwh5aEoctk8X97ZPoMCpXHa0RLwNEbylSWR4A3RE5HjVwTOgMQeyg8iJdrrSSG9jJ+ueBuVakOlB8iVOa+tqac9oR1GJ5IbLPqomauetCurgUxKDc6MGyNY+WAfWVPRypr61mSpLMsaW9D8MCIdgV4IeaKq4kMmPPGx5ksxJhPnIeuEqWlM0Wf2mygNFV/wIPm16vOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=connect.ust.hk; dmarc=pass action=none
+ header.from=connect.ust.hk; dkim=pass header.d=connect.ust.hk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=connect.ust.hk;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ssSiYbdaCpE/9c7aLkYBGXISPI3UKjZMGFrMqaVo5zo=;
+ b=Mg3DpsD5qObTMz90K9eLKu3SUV1c9/shJ2takw5VolF20QkIeWPg0rhx+E/7TPOLZvI58YFHy3t8N4yo1Ci+oeJEOeoRBbbGu9oC3MkcTCzneZzg0ZbrT5+abITOmc9N2k1qAAr59KEiEGU2YS9hOSLbZ0v4lHqFU9fXQFQcOFM=
+Received: from TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:b7::8) by
+ TYWP286MB3301.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2d5::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6521.26; Mon, 26 Jun 2023 15:03:10 +0000
+Received: from TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::b429:5aa3:12f1:6b8]) by TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::b429:5aa3:12f1:6b8%4]) with mapi id 15.20.6521.026; Mon, 26 Jun 2023
+ 15:03:10 +0000
+From:   YE Chengfeng <cyeaa@connect.ust.hk>
+To:     "andy@kernel.org" <andy@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?gb2312?B?u9i4tDogu9i4tDogW1BBVENIIHYyIDEvMl0gZ3Bpb2xpYjogY2RldjogRml4?=
+ =?gb2312?Q?_&lr->wait.lock_deadlock_issue?=
+Thread-Topic: =?gb2312?B?u9i4tDogW1BBVENIIHYyIDEvMl0gZ3Bpb2xpYjogY2RldjogRml4ICZsci0+?=
+ =?gb2312?Q?wait.lock_deadlock_issue?=
+Thread-Index: AQHZqBNf7gwzAWjB50ahRCRRc44o16+c65UAgAAAWNWAAAK1gIAAPtnR
+Date:   Mon, 26 Jun 2023 15:03:10 +0000
+Message-ID: <TYCP286MB11883FA1925B0DE0030B216D8A26A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
+References: <TYCP286MB1188A94580A60F47CAF892C88A26A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
+ <ZJlwjhQT2wfO3Ukn@smile.fi.intel.com>
+ <TYCP286MB11884755575685089C1BBDC38A26A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
+ <ZJlzHc8eiHnPe+Ot@smile.fi.intel.com>
+In-Reply-To: <ZJlzHc8eiHnPe+Ot@smile.fi.intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=connect.ust.hk;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCP286MB1188:EE_|TYWP286MB3301:EE_
+x-ms-office365-filtering-correlation-id: 4ffe456a-3032-487b-db83-08db765674cb
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0a+HfpotjTvJ35ib0f4+KiNkAjV2z+yQ9vwhqoLU8jMjsz8yIUOt5C6jkFoq4ma7yJ2cfvY/ojK0cutFq2gdy4zLSOb0us+OuEJgyncpDSe6MIphwhZMcyPjyBcd7x4kj1rPRsw1QKwDfv2QftIFt1UfOtd4T1EkWNdVnfoTIX7ujzA3DeH6aijPrAlkP1E1W7aDCNoMDXMy3VjwMPS7wYjbIcGdJxJTUHInxRa1qHBMjEZJp8PJF4+fpPCvDcpZYm93mqFbNR4OVNPWgfiYUXESMM1GUJ77PUOaTIZi6D1cZoVLErD+kxrHrpwFnd6auy/2bUgbFlLlSELOfQ8cFqa3jgi5jPHBAcsMEL7V+/zS2YBDUp/yCocTiKryhvZ3TZwdaWBJntLYmTYYQTDO5vvUVcrsWt5j1WE63+Qxy7gg5w+raEKTw0cMz2+mtbODWSr4Ay3AYDMRD3wPRYpg6F0423DLvjaKhiEOg6te8hU2dASHDU4uiLFzhKtQZHvL37lgZ7DzZBbEhK1ulaGMVb7OnOyQAVfKheFCDrU6JTwewOHNVTPBOinTIrs4T5YO/GaPWeUqN6WE5YizNqf8V8SVG4NGNNhroEtBJRk9GiHia50kmVyOSjMbdQTk1L0n
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(451199021)(6506007)(478600001)(71200400001)(54906003)(7696005)(26005)(9686003)(186003)(2906002)(5660300002)(224303003)(558084003)(33656002)(52536014)(38100700002)(122000001)(66946007)(76116006)(91956017)(786003)(8936002)(316002)(86362001)(66476007)(6916009)(66556008)(55016003)(4326008)(41300700001)(66446008)(38070700005)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?gb2312?B?bFJ3Qk1aWGQ2dlY3RXZrMzZJaE9WaW94ckRCZlhvWWNtSkk4YkdYZ1R5M0RR?=
+ =?gb2312?B?Q2NCKy84YjJCVkZUQ1Qyb1JnOWdwQmVET3NXc09uOS9SYjR3ZUVPeGUwenpX?=
+ =?gb2312?B?WVkveEZnN2p0YmtMVS9XRy91ODJLTktQaS82RkQraUNva05QMGhmNE1JMXB1?=
+ =?gb2312?B?dGVMLzQwcGV2c0k1YWtoMDdXcHhFNTdNQjkrWHhudU54YitYV2tGcDM0bzNB?=
+ =?gb2312?B?d012RGNRbHlYMWRFMU5VQUZQLzVyNS84ZDJKemFSSlUydUxTd0FSa2NycnQ0?=
+ =?gb2312?B?MXFhT2tSQUVSRjRWZEVaQlF3TlovR05EbUxWL0VyY0pnVXFYbkx5YUY4UWNJ?=
+ =?gb2312?B?M3E4RE16dFFLL0UzTE9aUDU3WE04ekd5ODBacXc0eEs5amhvNWlNdDFaZ2lB?=
+ =?gb2312?B?VEVQcmFkZ292SXFrYklETWt3RWhkWnBQTzJnQUxtbkFtTXdRdnloZ2dEeTRa?=
+ =?gb2312?B?SG54SHc3UzZLcDlxZnYwN3dOMllHQUx1M2pYQWtVSVVCaHJnUlI4anpqWllz?=
+ =?gb2312?B?RjNGQVZJY3o4UTBtMTVndnl4dTR4NmVYNHdrVEVUc1gvaHJoY2lld0o1L1d2?=
+ =?gb2312?B?WVdBZjJqdVJFTU1vK2xPV3ZxU0dVU1Q2MzVqUk4wNXV0cUVQb3FBYmVlTjNX?=
+ =?gb2312?B?QVcwcGJKdXRPSndJRHVCbWdoRmVWUEhEN2pweEJQa1o0RzFxeldLWkFGQmZT?=
+ =?gb2312?B?Vk9xSWo4bWFXaHlZSHpJRVR4WDNTdTJRVy9VOW5zM08wV2k4QmxpL2RyWDZF?=
+ =?gb2312?B?TWwra0wyVDZxWlptOGJIR2JiZWVJTXNMZ2FScVhXTzRSbGtvMHVMcE5MQ0sx?=
+ =?gb2312?B?ZG9RektVUDYvc01peWlYWUk2TFdyaW13VTR2TklQTlpUYnlTMEpaM1Z2QjND?=
+ =?gb2312?B?WkpYZEp5Ynpyb2tBeWltc3IvUWZmU2h1bUpyeWlFQjdHRjdqMS9aQjg0M2Qv?=
+ =?gb2312?B?UVZNUGpoN0NTb1FQY3ZISXdxUnJ4aGgrMFkrOGFyZ2MwVFpudXBTckZHRitC?=
+ =?gb2312?B?TjIwRStkZ0dOT3pQM21zMHZEbjhBdmhGZHBQSjFETUhiTTNib0Z3MGVlWFZ3?=
+ =?gb2312?B?d2U3TFNIck13bitkSnIzakltOG5KOUlaazdxenUrby80b3BvREN6aURVQ0li?=
+ =?gb2312?B?cWdQTEVhWnFMS2NOQ1RZQlJRMkl4OUlidDl2RUNyYkZTTWNTemRYU2pLRlZ3?=
+ =?gb2312?B?U3NKenk5SzFRWllIdjJFN2dwemZ3Q2ZuK2tjZ3JUMVF6K2FLM25kT1ZNR3pl?=
+ =?gb2312?B?d0hveTZoOVJ2bXZYaW9uMEIvK2VSNzNLdi8xWUFqNGV0YzdlZE4zNkplUldy?=
+ =?gb2312?B?MUUzOThOazhNaWVIME9qWGsxaUhMVHB2eFNUZ3prVlJLTnNmUld5Szdpem1X?=
+ =?gb2312?B?b0lYL1VvU1Qzcys3LzlWKzlSU3V4UlVWbnR1ZmtKSXBESk1FYzBBWXgrZ1g4?=
+ =?gb2312?B?eUZ6YWhuVHZwc2ZvUTlkM0dIcmsrT1RrditHdEFONmpMeTVBT3gvTElmbyts?=
+ =?gb2312?B?TCs4SXppRFNtVlZieWlkMzYzK3g3RnQ1Z2RVZ3FKYzMrMHVoTXZ3em9EeXNy?=
+ =?gb2312?B?QytlVkF4OG5DMWNFTUNvN0F6aThUanJzUnRpMkFFeHlQZURMU1RpbEF5c3Rm?=
+ =?gb2312?B?bVFFUHRldUwwTHIvOGhSTkdiTHlwaWtONjJJenA0V2JBS0h5YkR0ekpyaXlu?=
+ =?gb2312?B?Y1pyTWVyNk12QWxaa0VaL1pPNjlGaGFlODZjYndOSWdLTStVYk5ZcVFXOHdU?=
+ =?gb2312?B?S3pHMFRJTEpuTVUwQmtUT1pTdVJKaWEyVjdiNVZXeUUvZXpZaXBzZkpHU1gz?=
+ =?gb2312?B?NHRBUnJIM3ZOZVlLSldvWG9ZNDhqUktYa1NiSmdJV0hzNFpIaHdjcEhkSE1t?=
+ =?gb2312?B?blZnaGxxZWVLdzhvQUJQb3I5WnY3cEFBMWNJaU1wSW5EUFg4WEZ4RmdTNk5O?=
+ =?gb2312?B?b3F4SWVzNmEyK0toL2h1MlFBMHh4d0ExRGF2Ly8xa3ZNY3k5MGpKSk9sNWZo?=
+ =?gb2312?B?U1JDMVQyamhKMTIwLy9oSUFlU2IwODZBaTFvcFgrcjF5ZXdvckpjcDRLOHkr?=
+ =?gb2312?B?K0c0eWU5cUlmSVlDZ243cmR1UjZwNi83dm9lM1d6Z0ZsNzNlaFlHaHU0aUZJ?=
+ =?gb2312?Q?hipCNDwd/rtN1hqG/Anx/VaxO?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: connect.ust.hk
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ffe456a-3032-487b-db83-08db765674cb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2023 15:03:10.1820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6c1d4152-39d0-44ca-88d9-b8d6ddca0708
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZPsiXxFhy+61GFl26jhGVgnINHeY74cg6WVs8/v5PWCfnDs35UaN7pgxkcJgPxLtRdpJH7XK9XMZTIcfor+PjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWP286MB3301
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The softirq lineevent_irq_thread() could deadlock on &le->wait.lock
-if it preempts lineevent_read_unlocked() which acquires the same
-lock but not disable irq.
-
-Fix the potential deadlock by spin_lock_irq().
-
-Fixes: dea9c80ee672 ("gpiolib: rework the locking mechanism for lineevent kfifo")
-Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index f768d46bdea7..a2c108f172f2 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1858,28 +1858,28 @@ static ssize_t lineevent_read_unlocked(struct file *file, char __user *buf,
- 		return -EINVAL;
- 
- 	do {
--		spin_lock(&le->wait.lock);
-+		spin_lock_irq(&le->wait.lock);
- 		if (kfifo_is_empty(&le->events)) {
- 			if (bytes_read) {
--				spin_unlock(&le->wait.lock);
-+				spin_unlock_irq(&le->wait.lock);
- 				return bytes_read;
- 			}
- 
- 			if (file->f_flags & O_NONBLOCK) {
--				spin_unlock(&le->wait.lock);
-+				spin_unlock_irq(&le->wait.lock);
- 				return -EAGAIN;
- 			}
- 
--			ret = wait_event_interruptible_locked(le->wait,
-+			ret = wait_event_interruptible_locked_irq(le->wait,
- 					!kfifo_is_empty(&le->events));
- 			if (ret) {
--				spin_unlock(&le->wait.lock);
-+				spin_unlock_irq(&le->wait.lock);
- 				return ret;
- 			}
- 		}
- 
- 		ret = kfifo_out(&le->events, &ge, 1);
--		spin_unlock(&le->wait.lock);
-+		spin_unlock_irq(&le->wait.lock);
- 		if (ret != 1) {
- 			/*
- 			 * This should never happen - we were holding the lock
--- 
-2.17.1
-
+VGhhbmtzIG11Y2ggZm9yIHRoZSBzdWdnZXN0aW9uIGFuZCBndWlkYW5jZS4gSSB0aGluayB0aGUg
+bmV3IHBhdGNoIHNlcmllcyBzaG91bGQgYmUgY29ycmVjdCBub3cuIE5vdGUgdGhhdCBJIHVzZSBh
+bm90aGVyIGVtYWlsIHRvIHNlbmQgdGhlIHBhdGNoZXMgc2luY2UgSSBoYXZlIHNvbWUgcHJvYmxl
+bSB0byBzZXR1cCB0aGlzIG9uZSB3aXRoIGdpdCBzZW5kLW1haWwgZHVlIHRvIDJGQS4KCkJlc3Qg
+UmVnYXJkcywKQ2hlbmdmZW5n
