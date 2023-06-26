@@ -2,64 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8EDD73E240
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 16:37:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3200B73E299
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 16:58:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbjFZOhL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jun 2023 10:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49928 "EHLO
+        id S229736AbjFZO6G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jun 2023 10:58:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229743AbjFZOhL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 10:37:11 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8369D
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 07:37:09 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-440b66adc81so964585137.1
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 07:37:09 -0700 (PDT)
+        with ESMTP id S229567AbjFZO6F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 10:58:05 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C306B6;
+        Mon, 26 Jun 2023 07:58:04 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1b7ef3e74edso6496965ad.0;
+        Mon, 26 Jun 2023 07:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687790229; x=1690382229;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1687791484; x=1690383484;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YAjtDfv9EBK6sYKtVMZC4HQ0lv/X80w5cp6eph8fC7o=;
-        b=s6qkNLckJ5Ij2sLa1IkBgNZm0rn0OFyvsUVXiyneMAVNRcCdnGO/ZdNuHbeu5eAT9J
-         A7BgV4F8WQbMjJY85YoLF8cA8uQWgY3EarViC73BK2RNHjsYyuwWg1MZ+SAF+zqJPzpJ
-         YKM7uPglUiVqKvUhg0DLLz+ayM67GRgGqUAkTbboAqB5d8glebPzyauJ83X0FsBg1giJ
-         jMDcAptWv+1A9Kh/2XR/6uekin/ddnwFfYSgDxVaRBDkB+9y1G8ANfK5/vHCjnl/EdcT
-         Hn5/2JTN40tyLe1Z4SKkVZCrLomwqhWHHP5lRyi7XTBGn1DDZ1QWgt39z61bs6i48VeI
-         F50Q==
+        bh=GIMrqRzfHWub21vEUbdFKshCviaaEWMt8gPIlJYyDLs=;
+        b=U3ungQ8fHGGcylMOOqosJmHJnlcU3sF1O5EBKBNmbK3L8gpr4hBUl2IOnXWCtVEviy
+         pzVCANghGEst5HffgmXoBrrRO/d9bU7h0g5vtpOUmWpjTcsiiPDcvSVINcBsY75/n318
+         teLsU0BIeSZtaUMn6jRwd8fbxrmH6Bez5K0joaEJ/z6VTTeu+mKXXbSmDisCMZ3fZ+DL
+         37s7aDvAYk2Bnutmna/HojmwvApTp/8BZJNqUgMnQWUg0Uky5bGFbEv8W6bhdivRZkpi
+         oEqo7PMCHNyRObqUfVLdUFTwKV4lM1rrIL5g5f4qR16Qn2uixpFZgS/fZ3yKl0yIuCil
+         l1eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687790229; x=1690382229;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1687791484; x=1690383484;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YAjtDfv9EBK6sYKtVMZC4HQ0lv/X80w5cp6eph8fC7o=;
-        b=lRTYicEY27JN0TeCOYXka54NKnp7HEnRQRrNoy50fEqSMiKlkTDcv9bH1KMvvC7JGb
-         RrmCWE/zBUGJdbZgaiiF0VfhcuUegqfzijPjS8Mc+MgdbG79XeulxxXgxzRcGLifbL6C
-         EFfmjqlqZPgdr/twVDKVeYvLXCUcYs3VmnjD3K0JenSo5BvvXKhLEs55umeFC2aEOquo
-         pI8z2ZGLTktqp0zkR4VOYF7cakY/VNUWEoWcJN6POTHxUhd77OB0W4iDKqJygQs1nxgW
-         Rjn9w/GEQsW/mRKgmt4uHwnN9nQMRFcB+DuAT2JSRbkHVYASBlANRSwoBHfn8vleF45d
-         zu9w==
-X-Gm-Message-State: AC+VfDyLyAEIEduPYdtD834RQJ4ucjKX0xBHfcQyzxES3k20Vl7p8+yo
-        PxXemwDiYVDaI49WPHa4LYofYIY9qO+O//YaZvhEpf8oubFIMykO
-X-Google-Smtp-Source: ACHHUZ6cQ5xQXbTZZ1BO7xa4IQ4idFoQXBYmp/BiU25akKWtK41G95EB1jid0pwfUzMbpYGpiDKhxTkAyLJ9Ljw9SAg=
-X-Received: by 2002:a05:6102:282a:b0:440:a79f:3b14 with SMTP id
- ba10-20020a056102282a00b00440a79f3b14mr11228707vsb.6.1687790228930; Mon, 26
- Jun 2023 07:37:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230626-datarace-v1-1-b78e2abb493b@linaro.org>
-In-Reply-To: <20230626-datarace-v1-1-b78e2abb493b@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 26 Jun 2023 16:36:58 +0200
-Message-ID: <CAMRc=Mcn9N2+nQKCW6_Yu_urHuTtEcGzdeJyRbTa9YYTFKx_gQ@mail.gmail.com>
-Subject: Re: [PATCH libgpiod] gpiosim: fix data race that corrupts heap
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        bh=GIMrqRzfHWub21vEUbdFKshCviaaEWMt8gPIlJYyDLs=;
+        b=TKkU/ODc6+5SWleKsSSRZMfvOU2gJ9WwM2eWq2m/8zH9lz9zp6d1s3P+yelN+qkSsK
+         vIfXszZMKNMscCo0/AYha0/a48+sxVfptO2WXqtNSHiPB0NfqSbxIZf4Z3pT1kCwnkO2
+         +lAs0RXEbxcphz6z5DMe2vnuby47uuiLrmuFV3aRb6H5GmsXNhK83C5dHyTDtMc7Ri1C
+         UiHskAQhqXa4KILscTSiN25W8QZXtYZAClN3VD87EZmzCJ8PNzJsLhXv+poQmhD8nRJE
+         93AAz8UrccuSIsE95JUoY0OKGrqmJwb5KYp6BMueoU47g2QUUQbd0yMnL8GTzrxoO0QK
+         iT3A==
+X-Gm-Message-State: AC+VfDxFoaaJl4uPTrQ+8WUC799pumHBPG7aYbDPbPJL60PAFqRmcm3o
+        Nro4PXVOmr4L/PfrcpYFCxY=
+X-Google-Smtp-Source: ACHHUZ6HlU8Ps9aOsuaLXOqRN3zvAGskznvY/bY5yG4B8Nuy4OmETZZA/SS3lLuefLjcBsmQgMygug==
+X-Received: by 2002:a17:902:6b4a:b0:1b7:e9e9:1004 with SMTP id g10-20020a1709026b4a00b001b7e9e91004mr2486269plt.30.1687791483643;
+        Mon, 26 Jun 2023 07:58:03 -0700 (PDT)
+Received: from 377044c6c369.cse.ust.hk (191host097.mobilenet.cse.ust.hk. [143.89.191.97])
+        by smtp.gmail.com with ESMTPSA id x20-20020a170902821400b001b1a2bf5277sm4313303pln.39.2023.06.26.07.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jun 2023 07:58:03 -0700 (PDT)
+From:   Chengfeng Ye <dg573847474@gmail.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cyeaa@connect.ust.hk, Chengfeng Ye <dg573847474@gmail.com>
+Subject: [PATCH v2 1/2] gpiolib: cdev: Fix &lr->wait.lock deadlock issue
+Date:   Mon, 26 Jun 2023 14:57:55 +0000
+Message-Id: <20230626145756.30696-1-dg573847474@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,101 +65,81 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 3:15=E2=80=AFPM Erik Schilling
-<erik.schilling@linaro.org> wrote:
->
-> Hit this while seeing some heap corruptions when running cargo test on
-> the Rust bindings.
->
-> Took a bit to track down since I first used address sanitizers, but with
-> the thread sanitizer it becomes obvious immediately (output simplified):
->
->     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->     WARNING: ThreadSanitizer: data race (pid=3D288119)
->       Write of size 8 at 0x0000018f1e78 by thread T6:
->         #0 id_free /libgpiod/tests/gpiosim/gpiosim.c:141:17
->         #1 dev_release /libgpiod/tests/gpiosim/gpiosim.c:600:2
->         #2 refcount_dec /libgpiod/tests/gpiosim/gpiosim.c:176:3
->         #3 gpiosim_dev_unref /libgpiod/tests/gpiosim/gpiosim.c:671:2
->         #4 bank_release /libgpiod/tests/gpiosim/gpiosim.c:873:2
->         #5 refcount_dec /libgpiod/tests/gpiosim/gpiosim.c:176:3
->         #6 gpiosim_bank_unref /libgpiod/tests/gpiosim/gpiosim.c:941:2
->         [...]
->
->       Previous write of size 8 at 0x0000018f1e78 by thread T1:
->         #0 id_free /libgpiod/tests/gpiosim/gpiosim.c:141:17
->         #1 bank_release /libgpiod/tests/gpiosim/gpiosim.c:878:2
->         #2 refcount_dec /libgpiod/tests/gpiosim/gpiosim.c:176:3
->         #3 gpiosim_bank_unref /libgpiod/tests/gpiosim/gpiosim.c:941:2
->         [...]
->
->       Location is global 'id_del_ctx' of size 16 at 0x0000018f1e70
->
->       Thread T6 'chip::verify::f' (tid=3D288126, running) created by main=
- thread at:
->         #7 test::run_tests::hd53a07a011bd771f /.rustup/toolchains/nightly=
--x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/test/src/lib.rs:407:=
-21
->         [...]
->
->       Thread T1 'chip::open::gpi' (tid=3D288121, finished) created by mai=
-n thread at:
->         #7 test::run_tests::hd53a07a011bd771f /.rustup/toolchains/nightly=
--x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/test/src/lib.rs:407:=
-21
->         [...]
->
->     SUMMARY: ThreadSanitizer: data race /libgpiod/tests/gpiosim/gpiosim.c=
-:141:17 in id_free
->     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> This eventually can either lead to leaks or double free's that corrupt
-> the heap and lead to crashes.
->
-> The issue got introduced when a previously local variable that did not
-> require protection was turned into a global variable.
->
-> Fixes: 5e111df2fca56d57193a1825e45e78dd8b76c0f1
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> ---
-> To: Linux-GPIO <linux-gpio@vger.kernel.org>
-> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  tests/gpiosim/gpiosim.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tests/gpiosim/gpiosim.c b/tests/gpiosim/gpiosim.c
-> index b49a61a..fca6b7f 100644
-> --- a/tests/gpiosim/gpiosim.c
-> +++ b/tests/gpiosim/gpiosim.c
-> @@ -137,11 +137,11 @@ static int id_alloc(void)
->
->  static void id_free(int id)
->  {
-> +       pthread_mutex_lock(&id_lock);
-> +
->         id_del_ctx.id =3D id;
->         id_del_ctx.idp =3D NULL;
->
-> -       pthread_mutex_lock(&id_lock);
-> -
->         twalk(id_root, id_del);
->         if (id_del_ctx.idp) {
->                 tdelete(id_del_ctx.idp, &id_root, id_compare);
->
-> ---
-> base-commit: d04639ddd11ed7d02c630e693bf07d97f53e17d3
-> change-id: 20230626-datarace-e62e9bcfa3ee
->
-> Best regards,
-> --
-> Erik Schilling <erik.schilling@linaro.org>
->
+linereq_put_event() is called from both interrupt context (e.g.,
+edge_irq_thread()) and process context (process_hw_ts_thread()).
+Therefore, interrupt should be disabled before acquiring lock
+&lr->wait.lock inside linereq_put_event() to avoid deadlock when
+the lock is held in process context and edge_irq_thread() comes.
 
-Nice catch, thanks! I applied it and just changed the Fixes tag to
-conform to the kernel style.
+Similarly, linereq_read_unlocked() running in process context
+also acquies the same lock. It also need to disable interrupt
+otherwise deadlock could happen if the irq edge_irq_thread()
+comes to execution while the lock is held.
 
-I actually saw some issues when running rust tests some time ago but
-couldn't reproduce reliably, I suspect this was it.
+Fix the two potential deadlock issues by spin_lock_bh() and
+spin_lock_irq() separately.
 
-Bart
+Fixes: 73e0341992b6 ("gpiolib: cdev: support edge detection for uAPI v2")
+Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
+---
+ drivers/gpio/gpiolib-cdev.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 0a33971c964c..f768d46bdea7 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -615,13 +615,13 @@ static void linereq_put_event(struct linereq *lr,
+ {
+ 	bool overflow = false;
+ 
+-	spin_lock(&lr->wait.lock);
++	spin_lock_bh(&lr->wait.lock);
+ 	if (kfifo_is_full(&lr->events)) {
+ 		overflow = true;
+ 		kfifo_skip(&lr->events);
+ 	}
+ 	kfifo_in(&lr->events, le, 1);
+-	spin_unlock(&lr->wait.lock);
++	spin_unlock_bh(&lr->wait.lock);
+ 	if (!overflow)
+ 		wake_up_poll(&lr->wait, EPOLLIN);
+ 	else
+@@ -1514,28 +1514,28 @@ static ssize_t linereq_read_unlocked(struct file *file, char __user *buf,
+ 		return -EINVAL;
+ 
+ 	do {
+-		spin_lock(&lr->wait.lock);
++		spin_lock_irq(&lr->wait.lock);
+ 		if (kfifo_is_empty(&lr->events)) {
+ 			if (bytes_read) {
+-				spin_unlock(&lr->wait.lock);
++				spin_unlock_irq(&lr->wait.lock);
+ 				return bytes_read;
+ 			}
+ 
+ 			if (file->f_flags & O_NONBLOCK) {
+-				spin_unlock(&lr->wait.lock);
++				spin_unlock_irq(&lr->wait.lock);
+ 				return -EAGAIN;
+ 			}
+ 
+-			ret = wait_event_interruptible_locked(lr->wait,
++			ret = wait_event_interruptible_locked_irq(lr->wait,
+ 					!kfifo_is_empty(&lr->events));
+ 			if (ret) {
+-				spin_unlock(&lr->wait.lock);
++				spin_unlock_irq(&lr->wait.lock);
+ 				return ret;
+ 			}
+ 		}
+ 
+ 		ret = kfifo_out(&lr->events, &le, 1);
+-		spin_unlock(&lr->wait.lock);
++		spin_unlock_irq(&lr->wait.lock);
+ 		if (ret != 1) {
+ 			/*
+ 			 * This should never happen - we were holding the
+-- 
+2.17.1
+
