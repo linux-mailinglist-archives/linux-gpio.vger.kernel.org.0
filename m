@@ -2,67 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 607BC73D91C
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 10:06:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D01573D921
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 10:07:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbjFZIGd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jun 2023 04:06:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48302 "EHLO
+        id S229871AbjFZIHu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jun 2023 04:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbjFZIGb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 04:06:31 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD28083
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 01:06:30 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1b7f223994fso13066405ad.3
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 01:06:30 -0700 (PDT)
+        with ESMTP id S229553AbjFZIHp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 04:07:45 -0400
+Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E1E10C1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 01:07:42 -0700 (PDT)
+Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-471658cc106so1105662e0c.0
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 01:07:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687766790; x=1690358790;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LYB2yAqrDUCRTLQHGBrxspKg8O60aDIesPBA4b6xyGI=;
-        b=WgIcW+LyKPYk6njNdvLYa6/xn0ZyAp/ZMQfY0CZDKk6wsnpmyWLGh5x32RBAy5IzSD
-         JXNxGeWdlnmGMX+K6SWSQ5uH611g03iJa7+kHdiwYLX2RoHlkDpkXvN81n+oBNKPPtXv
-         lfI6tcw0s0EDxjBAal62WCEUNODd/52L7cUlly3XFZ/Cfn27oAm1rM3HjCrWKYuXmhR+
-         1Tggqul4xyd8VOXOv/1U0QiSA2WBs5sKKfQkvfQOn6OSwAzH5up8XndLonhNp0ixqZpP
-         TLc4ajMN6GA3OfK6oZLGlE/SYmGtoi3C+XCCGbW7welT430I3hETeVuhucLViI0z9o6S
-         8aEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687766790; x=1690358790;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687766861; x=1690358861;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LYB2yAqrDUCRTLQHGBrxspKg8O60aDIesPBA4b6xyGI=;
-        b=AfUwThweDR3h9fWcWB+Jag2YTtKFz2EWSBEdVzlI0Sf3EnzuMAAbBBYvI8t7395MnH
-         5w+4y8cdQnIwp3GJKnaYKcMivjAN0LgA/h7gXO1nR7IwDL7gaBmmihIwiQYG2RrIy81l
-         4RReORHwhvCqvMrxS86kMgblqAFMNvG/xV6BxVtMuUI+xBjVNXj0ToTa7mUW05iWxf9E
-         Bw0j5LlvxBfA44DVYR20pF+uw1OVhe8V4SKKNZrWEKgjIG1fkpRDRHDkJEYl6haWLAtr
-         UeX9mypn/E/1UaRiB3gup/+Zo/v7IrG53ZAsi0Na7oUl+Cc644JHW113sGlSim4Ce7DR
-         dpqw==
-X-Gm-Message-State: AC+VfDwLCFHYkzyVuf7N1jnKqG84d9WY/T+XnR/BLYvbIAvq5pYaN+vC
-        zUrbHza9ZMfgUDZt0D17Uc81e5eskzA=
-X-Google-Smtp-Source: ACHHUZ44meafVs8rZleCwFcQD/38q85JfZK75ZECcaoWg3x3esb5NypBKsph0mDQR9yrGX+yFXmhVg==
-X-Received: by 2002:a17:903:2793:b0:1b3:f8db:6f0c with SMTP id jw19-20020a170903279300b001b3f8db6f0cmr6177903plb.58.1687766790049;
-        Mon, 26 Jun 2023 01:06:30 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id i10-20020a17090332ca00b001b8053b8e0esm1113804plr.136.2023.06.26.01.06.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 01:06:29 -0700 (PDT)
-Date:   Mon, 26 Jun 2023 16:06:25 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     "Tay Ivan (AquaEasy)" <Ivan.Tay@sg.bosch.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: Accessing Intel J4125 GPIO Pins
-Message-ID: <ZJlHATTAIek9UsSD@sol>
-References: <DU0PR10MB608373C134CD9CE8C7290DF8A826A@DU0PR10MB6083.EURPRD10.PROD.OUTLOOK.COM>
- <DU0PR10MB6083CF3B3E4B6495BA540BE0A826A@DU0PR10MB6083.EURPRD10.PROD.OUTLOOK.COM>
+        bh=oHjAPG0XEBs1xAfzALW8oOgrWDDiagbNW8HOn9NkJ4A=;
+        b=rLOjwSumm4YjdOUd7bfhOJeRhDcfxzC+jOoBi0RA3gb+jgh3f2lGHUWBXMKST7qhkY
+         TbURVy1FhoZVQhW4LB+U0IeJqR+JzLwWGWEQmZWy/FIhzgFWeeM0hs6t7UOoGqk8mFAR
+         5WfW8p2e33c1VTSJHL/F8pP/xlOszcIBw7LrF76H3pjJtkYzTiryI5SnqZ8luHdfJd7+
+         /OgvUSaT4pGrYG4kLL0TCosTgbU4apJbodWzy3TWc/7P/W03Rwo7ByVp9ezK7ftfgVo4
+         5S+UQm1M2vRjse7mg8sVhCt2EzmPbqVRXWpiXG79EVWKeSf0D1izCbBfdLSYgTMq2tfh
+         cWxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687766861; x=1690358861;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oHjAPG0XEBs1xAfzALW8oOgrWDDiagbNW8HOn9NkJ4A=;
+        b=AdmWJekW5WFy5pYFdzhYDE9qYAH9j+nw1Kl50fg9Ygg39jbmQgUlOu0UNT3Mte8tEQ
+         JTUOTCg0QzjsWAi8ShFrAdERIWRCpIt58zHqiDeQGSRy9R+7BMwdCwujpjgAYbjh8Wnu
+         5swEY3u6kz8j/Ln1OUjxZsKDGL+a6pQlS2NK59XWKgtp8AXOC3Ls5nzJvMbBrwPxFm1E
+         DseD8JP/kshA31tCUDybcZgWWxDcIxjID9DEL2UFPv6+l0Dvj8jb7ZBLVc4tECjyPSkA
+         x0QVEcdHmv+nH1WCcidde5OVMr1lGE+SyetIF1qUjidAA+zooGLA1zqLfU2ecrcrStGJ
+         RxcQ==
+X-Gm-Message-State: AC+VfDyAMUNggr1233SaFWkZ2lo/QlV59AjTn+vQgO367kKpHKczxwjV
+        8JJ5WFN4uT2TOj01fn4kAS2HzPjbx6S1opaHb7XjbpXkTqCgx+J9
+X-Google-Smtp-Source: ACHHUZ5Y3a5KSD3vmEj7AJ4yWe3Yv8KZviriIsEpbtLLNzjl6iSpHO27PKc110v74qmRcULVhGcE8vUxtJJEUUxFDvs=
+X-Received: by 2002:a1f:5e51:0:b0:471:b3f3:9bf9 with SMTP id
+ s78-20020a1f5e51000000b00471b3f39bf9mr11726102vkb.6.1687766861605; Mon, 26
+ Jun 2023 01:07:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DU0PR10MB6083CF3B3E4B6495BA540BE0A826A@DU0PR10MB6083.EURPRD10.PROD.OUTLOOK.COM>
+References: <20230624052054.13206-1-warthog618@gmail.com> <20230624052054.13206-3-warthog618@gmail.com>
+In-Reply-To: <20230624052054.13206-3-warthog618@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 26 Jun 2023 10:07:30 +0200
+Message-ID: <CAMRc=Md_teQvr-+HOWJb1Y9z1SnCDsheUX=q5Oy-z+5-s40KLA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 2/4] core: examples: fix file comments
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,39 +66,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 05:09:50AM +0000, Tay Ivan (AquaEasy) wrote:
-> Hi,
-> 
-> Does anyone knows how to access and write to the Intel J4125 board GPIO?
-> I have tried using the raspberrypi GPIO tools and it cannot detect the
-> hardware pins.
+On Sat, Jun 24, 2023 at 7:21=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> Some of the file comments are cut-and-paste errors, so replace them
+> with the correct comment.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  examples/async_watch_line_value.c      | 2 +-
+>  examples/get_multiple_line_values.c    | 2 +-
+>  examples/reconfigure_input_to_output.c | 5 ++++-
+>  examples/watch_multiple_line_values.c  | 2 +-
+>  4 files changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/examples/async_watch_line_value.c b/examples/async_watch_lin=
+e_value.c
+> index f35fb1a..8b1d643 100644
+> --- a/examples/async_watch_line_value.c
+> +++ b/examples/async_watch_line_value.c
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  // SPDX-FileCopyrightText: 2023 Kent Gibson <warthog618@gmail.com>
+>
+> -/* Minimal example of asynchronously watching for edges on a single line=
+ */
+> +/* Minimal example of asynchronously watching for edges on a single line=
+. */
+>
+>  #include <errno.h>
+>  #include <gpiod.h>
+> diff --git a/examples/get_multiple_line_values.c b/examples/get_multiple_=
+line_values.c
+> index b16c570..c6df3f6 100644
+> --- a/examples/get_multiple_line_values.c
+> +++ b/examples/get_multiple_line_values.c
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  // SPDX-FileCopyrightText: 2023 Kent Gibson <warthog618@gmail.com>
+>
+> -/* Minimal example of reading a single line. */
+> +/* Minimal example of reading multiple lines. */
+>
+>  #include <errno.h>
+>  #include <gpiod.h>
+> diff --git a/examples/reconfigure_input_to_output.c b/examples/reconfigur=
+e_input_to_output.c
+> index e8fbb1c..abfaf79 100644
+> --- a/examples/reconfigure_input_to_output.c
+> +++ b/examples/reconfigure_input_to_output.c
+> @@ -1,7 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  // SPDX-FileCopyrightText: 2023 Kent Gibson <warthog618@gmail.com>
+>
+> -/* Minimal example of reading a single line. */
+> +/*
+> + * Example of a bi-directional line requested as input and then switched
+> + * to output.
+> + */
+>
+>  #include <errno.h>
+>  #include <gpiod.h>
+> diff --git a/examples/watch_multiple_line_values.c b/examples/watch_multi=
+ple_line_values.c
+> index 8015270..e955b2c 100644
+> --- a/examples/watch_multiple_line_values.c
+> +++ b/examples/watch_multiple_line_values.c
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  // SPDX-FileCopyrightText: 2023 Kent Gibson <warthog618@gmail.com>
+>
+> -/* Minimal example of watching for edges on a single line. */
+> +/* Minimal example of watching for edges on multiple lines. */
+>
+>  #include <errno.h>
+>  #include <gpiod.h>
+> --
+> 2.41.0
+>
 
-You mean the raspberrypi GPIO tools that use /dev/gpiomem to access the
-pi hardware directly??  I would be horrified if it did.
+I applied this and patches 3 and 4 as well. I fixed the whitespace
+error reported by git in this one.
 
-> I have tired to load the gpio-it87 module and the gpiochip0 shows up
-> (using gpiodetect) but I am unable to change the pin values, meaning
-> using gpioset (gpioset 0 0=0 or gpioset 0 0=1) writing a 1 or 0 changes
-> nothing because the read (gpioget 0 0) always return 1.
-
-Note that by default gpioget changes the line direction to an input and
-then reads it, so that whatever you set using gpioset will be lost.
-You need to physically check the pin, or use the libgpiod v2 version of
-gpioget that supports the --as-is option to read the line without changing
-its direction.
-
-And even then, and depending on the device driver, when gpioset exits the
-line may be set back to its default value.  So you need to keep gpioset
-running (the libgpiod v1 gpioset exits by default, whereas the v2 gpioset
-will not).
-You are almost certainly using v1 gpioset, so try `gpioset -m wait 0 0=1`
-and then check the pin.
-
-Alternatively, externally pull a line and use gpioget to check the value
-read with gpioget is correct.  Just be sure you have the correct pin.
-
-TL;DR As gpiochip0 is recognised by gpiodetect, there is a very good
-chance it IS working, but the other tools have convinced you otherwise.
-
-Cheers,
-Kent.
+Bart
