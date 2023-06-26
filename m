@@ -2,137 +2,236 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D43D073E2A5
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 17:03:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 688FD73E3EA
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Jun 2023 17:51:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230030AbjFZPDR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Jun 2023 11:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33084 "EHLO
+        id S231520AbjFZPvX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Jun 2023 11:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjFZPDO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 11:03:14 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2133.outbound.protection.outlook.com [40.107.114.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173F5130;
-        Mon, 26 Jun 2023 08:03:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GIfQrZT2XDwYohZP+Aolbs1HbaMz0l2U83HIgtQAvSrFpcROoXvSZLwk1u3iCpCnnNkY2zs2V1/oUXubYAsk+xFK2pQjTQQq04hMczE38SQd+PYKoKGD/ZqQ5jIbHJDp58lKC7JATgVkCezEAzbdoUvPZH2YpRcjBOasxbqFty/8k0jLn+A0OjhOU6uwh6b16ewaP2Fr7bdTCE4V893HIKWadz/BXB6WC9OVARvAXvxrSbn+0ec5hayNXrzpizoHcSlFd60S17ObWVvb08GjA6yvqrclg8K9z533eQduPhaGRFr8pJlrmOTfkVitcRbnxw920DWMd4Wxuk79ZXaKUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ssSiYbdaCpE/9c7aLkYBGXISPI3UKjZMGFrMqaVo5zo=;
- b=UcRqXpvtwFvEjPKIIDUJx+ikX01LUhGc0eANG++HyONpHUxn1gfNvOkMF+YJbC/uzfKo8ssHoxQS+wEDJkztUqlKZEm7SDIwnGJXhE4hCXiUvD0IFcbqO/gHstdEvwvmrOEsErWDZhEIa8NJwh5aEoctk8X97ZPoMCpXHa0RLwNEbylSWR4A3RE5HjVwTOgMQeyg8iJdrrSSG9jJ+ueBuVakOlB8iVOa+tqac9oR1GJ5IbLPqomauetCurgUxKDc6MGyNY+WAfWVPRypr61mSpLMsaW9D8MCIdgV4IeaKq4kMmPPGx5ksxJhPnIeuEqWlM0Wf2mygNFV/wIPm16vOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=connect.ust.hk; dmarc=pass action=none
- header.from=connect.ust.hk; dkim=pass header.d=connect.ust.hk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=connect.ust.hk;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ssSiYbdaCpE/9c7aLkYBGXISPI3UKjZMGFrMqaVo5zo=;
- b=Mg3DpsD5qObTMz90K9eLKu3SUV1c9/shJ2takw5VolF20QkIeWPg0rhx+E/7TPOLZvI58YFHy3t8N4yo1Ci+oeJEOeoRBbbGu9oC3MkcTCzneZzg0ZbrT5+abITOmc9N2k1qAAr59KEiEGU2YS9hOSLbZ0v4lHqFU9fXQFQcOFM=
-Received: from TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:b7::8) by
- TYWP286MB3301.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:2d5::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6521.26; Mon, 26 Jun 2023 15:03:10 +0000
-Received: from TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM
- ([fe80::b429:5aa3:12f1:6b8]) by TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM
- ([fe80::b429:5aa3:12f1:6b8%4]) with mapi id 15.20.6521.026; Mon, 26 Jun 2023
- 15:03:10 +0000
-From:   YE Chengfeng <cyeaa@connect.ust.hk>
-To:     "andy@kernel.org" <andy@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+        with ESMTP id S229653AbjFZPvQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Jun 2023 11:51:16 -0400
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4F91723
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 08:50:59 -0700 (PDT)
+Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-78f36f37e36so1034000241.3
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Jun 2023 08:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687794658; x=1690386658;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cKSMwoNCFJqjhmNluRcqz1rlJy8ndbz7M9biXkRY1fE=;
+        b=Ex+NLXbugBxxE91biOqab0q5+oecC02Mju3FVcPa80ajjv1CKbGXaMbQoJzw48I8MM
+         eci7nixWbzL81lY3MPfiEDI0DkNa5VaEWq5N7k/GtpyhrvGO0bllDrSjZbww4wTTAOma
+         63aSBwMlMvqgRKl/fWAbJjmBY83CIadtUdCxG8NDlKN1RTHFZjXL00BUtxpvHTz3+AU9
+         pnVU+41VCXVkPhJK8pzHLXD80QfYz1QoGDC18G0bsSYFnMlvkf7/wJJfvL8Knz/wTXyc
+         W+19acEP5HE+KqwieRvHRyEdwQ0TQLBmwjgk3Zf0Hht/LLYSwoP6SfdX7g09HhRs8mGw
+         wKpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687794658; x=1690386658;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cKSMwoNCFJqjhmNluRcqz1rlJy8ndbz7M9biXkRY1fE=;
+        b=RinBWY1rtwTrgok+Hrpnp+qPuhNpy76zL7W9nMebE0RZYBaB43OZu1zzQMHjVm8j9i
+         rwujCVDOfpdfcLB9Z87ciuG/82G/gLGD/jth7nUYV7kYYOzVzKuNCni0sRSIwwYod8+Q
+         7xeIVHGOVTsI8zuZENSF5lp0TzLU0MVEQKFvLlyAhPc7HAS2SZhXeGoettMwqDnvZayU
+         sZSDZfTnuHGPwyYTize/clR2tWeHCTbujFlVkG5Axpgwp3su2m50F8458uEbmYh2usav
+         GyB0HJBKLQPPXhHH3TtQFGLT/Lyv4gn2VgQckon4ikBYGf8WSU5Hfn5gqGG8+0QSPJoN
+         jcyA==
+X-Gm-Message-State: AC+VfDzPENxYOJEpJ1ONw/g3xcqhQYW0fMHG8lY4zkuq03UowS05Jwf+
+        su4QDJcz5DX1ysx2zblMEoTe1qfpFJLIAkRUh1izEg==
+X-Google-Smtp-Source: ACHHUZ7sbALJnuPT/qEi+APw9K7W8y4dUHupQU1VLcTriiizK9lQv2HLZWF/wjLWtNF3CVHDmyPrgrt2gsXx+smB5tM=
+X-Received: by 2002:a67:ea8c:0:b0:43f:3f51:b804 with SMTP id
+ f12-20020a67ea8c000000b0043f3f51b804mr12858094vso.32.1687794658337; Mon, 26
+ Jun 2023 08:50:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <TYCP286MB1188B6A0379F7928C63288DF8A21A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
+ <ZJk87rWsDj7pWJIP@sol>
+In-Reply-To: <ZJk87rWsDj7pWJIP@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 26 Jun 2023 17:50:47 +0200
+Message-ID: <CAMRc=McGOV+A8ROXRinUkWG0POTe37RWphRHDW6sy7UMU-e2UA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpiolib-cdev: Fix potential &lr->wait.lock deadlock issue
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     YE Chengfeng <cyeaa@connect.ust.hk>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "andy@kernel.org" <andy@kernel.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?gb2312?B?u9i4tDogu9i4tDogW1BBVENIIHYyIDEvMl0gZ3Bpb2xpYjogY2RldjogRml4?=
- =?gb2312?Q?_&lr->wait.lock_deadlock_issue?=
-Thread-Topic: =?gb2312?B?u9i4tDogW1BBVENIIHYyIDEvMl0gZ3Bpb2xpYjogY2RldjogRml4ICZsci0+?=
- =?gb2312?Q?wait.lock_deadlock_issue?=
-Thread-Index: AQHZqBNf7gwzAWjB50ahRCRRc44o16+c65UAgAAAWNWAAAK1gIAAPtnR
-Date:   Mon, 26 Jun 2023 15:03:10 +0000
-Message-ID: <TYCP286MB11883FA1925B0DE0030B216D8A26A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
-References: <TYCP286MB1188A94580A60F47CAF892C88A26A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
- <ZJlwjhQT2wfO3Ukn@smile.fi.intel.com>
- <TYCP286MB11884755575685089C1BBDC38A26A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
- <ZJlzHc8eiHnPe+Ot@smile.fi.intel.com>
-In-Reply-To: <ZJlzHc8eiHnPe+Ot@smile.fi.intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=connect.ust.hk;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCP286MB1188:EE_|TYWP286MB3301:EE_
-x-ms-office365-filtering-correlation-id: 4ffe456a-3032-487b-db83-08db765674cb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0a+HfpotjTvJ35ib0f4+KiNkAjV2z+yQ9vwhqoLU8jMjsz8yIUOt5C6jkFoq4ma7yJ2cfvY/ojK0cutFq2gdy4zLSOb0us+OuEJgyncpDSe6MIphwhZMcyPjyBcd7x4kj1rPRsw1QKwDfv2QftIFt1UfOtd4T1EkWNdVnfoTIX7ujzA3DeH6aijPrAlkP1E1W7aDCNoMDXMy3VjwMPS7wYjbIcGdJxJTUHInxRa1qHBMjEZJp8PJF4+fpPCvDcpZYm93mqFbNR4OVNPWgfiYUXESMM1GUJ77PUOaTIZi6D1cZoVLErD+kxrHrpwFnd6auy/2bUgbFlLlSELOfQ8cFqa3jgi5jPHBAcsMEL7V+/zS2YBDUp/yCocTiKryhvZ3TZwdaWBJntLYmTYYQTDO5vvUVcrsWt5j1WE63+Qxy7gg5w+raEKTw0cMz2+mtbODWSr4Ay3AYDMRD3wPRYpg6F0423DLvjaKhiEOg6te8hU2dASHDU4uiLFzhKtQZHvL37lgZ7DzZBbEhK1ulaGMVb7OnOyQAVfKheFCDrU6JTwewOHNVTPBOinTIrs4T5YO/GaPWeUqN6WE5YizNqf8V8SVG4NGNNhroEtBJRk9GiHia50kmVyOSjMbdQTk1L0n
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(451199021)(6506007)(478600001)(71200400001)(54906003)(7696005)(26005)(9686003)(186003)(2906002)(5660300002)(224303003)(558084003)(33656002)(52536014)(38100700002)(122000001)(66946007)(76116006)(91956017)(786003)(8936002)(316002)(86362001)(66476007)(6916009)(66556008)(55016003)(4326008)(41300700001)(66446008)(38070700005)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?gb2312?B?bFJ3Qk1aWGQ2dlY3RXZrMzZJaE9WaW94ckRCZlhvWWNtSkk4YkdYZ1R5M0RR?=
- =?gb2312?B?Q2NCKy84YjJCVkZUQ1Qyb1JnOWdwQmVET3NXc09uOS9SYjR3ZUVPeGUwenpX?=
- =?gb2312?B?WVkveEZnN2p0YmtMVS9XRy91ODJLTktQaS82RkQraUNva05QMGhmNE1JMXB1?=
- =?gb2312?B?dGVMLzQwcGV2c0k1YWtoMDdXcHhFNTdNQjkrWHhudU54YitYV2tGcDM0bzNB?=
- =?gb2312?B?d012RGNRbHlYMWRFMU5VQUZQLzVyNS84ZDJKemFSSlUydUxTd0FSa2NycnQ0?=
- =?gb2312?B?MXFhT2tSQUVSRjRWZEVaQlF3TlovR05EbUxWL0VyY0pnVXFYbkx5YUY4UWNJ?=
- =?gb2312?B?M3E4RE16dFFLL0UzTE9aUDU3WE04ekd5ODBacXc0eEs5amhvNWlNdDFaZ2lB?=
- =?gb2312?B?VEVQcmFkZ292SXFrYklETWt3RWhkWnBQTzJnQUxtbkFtTXdRdnloZ2dEeTRa?=
- =?gb2312?B?SG54SHc3UzZLcDlxZnYwN3dOMllHQUx1M2pYQWtVSVVCaHJnUlI4anpqWllz?=
- =?gb2312?B?RjNGQVZJY3o4UTBtMTVndnl4dTR4NmVYNHdrVEVUc1gvaHJoY2lld0o1L1d2?=
- =?gb2312?B?WVdBZjJqdVJFTU1vK2xPV3ZxU0dVU1Q2MzVqUk4wNXV0cUVQb3FBYmVlTjNX?=
- =?gb2312?B?QVcwcGJKdXRPSndJRHVCbWdoRmVWUEhEN2pweEJQa1o0RzFxeldLWkFGQmZT?=
- =?gb2312?B?Vk9xSWo4bWFXaHlZSHpJRVR4WDNTdTJRVy9VOW5zM08wV2k4QmxpL2RyWDZF?=
- =?gb2312?B?TWwra0wyVDZxWlptOGJIR2JiZWVJTXNMZ2FScVhXTzRSbGtvMHVMcE5MQ0sx?=
- =?gb2312?B?ZG9RektVUDYvc01peWlYWUk2TFdyaW13VTR2TklQTlpUYnlTMEpaM1Z2QjND?=
- =?gb2312?B?WkpYZEp5Ynpyb2tBeWltc3IvUWZmU2h1bUpyeWlFQjdHRjdqMS9aQjg0M2Qv?=
- =?gb2312?B?UVZNUGpoN0NTb1FQY3ZISXdxUnJ4aGgrMFkrOGFyZ2MwVFpudXBTckZHRitC?=
- =?gb2312?B?TjIwRStkZ0dOT3pQM21zMHZEbjhBdmhGZHBQSjFETUhiTTNib0Z3MGVlWFZ3?=
- =?gb2312?B?d2U3TFNIck13bitkSnIzakltOG5KOUlaazdxenUrby80b3BvREN6aURVQ0li?=
- =?gb2312?B?cWdQTEVhWnFMS2NOQ1RZQlJRMkl4OUlidDl2RUNyYkZTTWNTemRYU2pLRlZ3?=
- =?gb2312?B?U3NKenk5SzFRWllIdjJFN2dwemZ3Q2ZuK2tjZ3JUMVF6K2FLM25kT1ZNR3pl?=
- =?gb2312?B?d0hveTZoOVJ2bXZYaW9uMEIvK2VSNzNLdi8xWUFqNGV0YzdlZE4zNkplUldy?=
- =?gb2312?B?MUUzOThOazhNaWVIME9qWGsxaUhMVHB2eFNUZ3prVlJLTnNmUld5Szdpem1X?=
- =?gb2312?B?b0lYL1VvU1Qzcys3LzlWKzlSU3V4UlVWbnR1ZmtKSXBESk1FYzBBWXgrZ1g4?=
- =?gb2312?B?eUZ6YWhuVHZwc2ZvUTlkM0dIcmsrT1RrditHdEFONmpMeTVBT3gvTElmbyts?=
- =?gb2312?B?TCs4SXppRFNtVlZieWlkMzYzK3g3RnQ1Z2RVZ3FKYzMrMHVoTXZ3em9EeXNy?=
- =?gb2312?B?QytlVkF4OG5DMWNFTUNvN0F6aThUanJzUnRpMkFFeHlQZURMU1RpbEF5c3Rm?=
- =?gb2312?B?bVFFUHRldUwwTHIvOGhSTkdiTHlwaWtONjJJenA0V2JBS0h5YkR0ekpyaXlu?=
- =?gb2312?B?Y1pyTWVyNk12QWxaa0VaL1pPNjlGaGFlODZjYndOSWdLTStVYk5ZcVFXOHdU?=
- =?gb2312?B?S3pHMFRJTEpuTVUwQmtUT1pTdVJKaWEyVjdiNVZXeUUvZXpZaXBzZkpHU1gz?=
- =?gb2312?B?NHRBUnJIM3ZOZVlLSldvWG9ZNDhqUktYa1NiSmdJV0hzNFpIaHdjcEhkSE1t?=
- =?gb2312?B?blZnaGxxZWVLdzhvQUJQb3I5WnY3cEFBMWNJaU1wSW5EUFg4WEZ4RmdTNk5O?=
- =?gb2312?B?b3F4SWVzNmEyK0toL2h1MlFBMHh4d0ExRGF2Ly8xa3ZNY3k5MGpKSk9sNWZo?=
- =?gb2312?B?U1JDMVQyamhKMTIwLy9oSUFlU2IwODZBaTFvcFgrcjF5ZXdvckpjcDRLOHkr?=
- =?gb2312?B?K0c0eWU5cUlmSVlDZ243cmR1UjZwNi83dm9lM1d6Z0ZsNzNlaFlHaHU0aUZJ?=
- =?gb2312?Q?hipCNDwd/rtN1hqG/Anx/VaxO?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: connect.ust.hk
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ffe456a-3032-487b-db83-08db765674cb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2023 15:03:10.1820
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6c1d4152-39d0-44ca-88d9-b8d6ddca0708
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZPsiXxFhy+61GFl26jhGVgnINHeY74cg6WVs8/v5PWCfnDs35UaN7pgxkcJgPxLtRdpJH7XK9XMZTIcfor+PjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWP286MB3301
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-VGhhbmtzIG11Y2ggZm9yIHRoZSBzdWdnZXN0aW9uIGFuZCBndWlkYW5jZS4gSSB0aGluayB0aGUg
-bmV3IHBhdGNoIHNlcmllcyBzaG91bGQgYmUgY29ycmVjdCBub3cuIE5vdGUgdGhhdCBJIHVzZSBh
-bm90aGVyIGVtYWlsIHRvIHNlbmQgdGhlIHBhdGNoZXMgc2luY2UgSSBoYXZlIHNvbWUgcHJvYmxl
-bSB0byBzZXR1cCB0aGlzIG9uZSB3aXRoIGdpdCBzZW5kLW1haWwgZHVlIHRvIDJGQS4KCkJlc3Qg
-UmVnYXJkcywKQ2hlbmdmZW5n
+On Mon, Jun 26, 2023 at 9:23=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Sun, Jun 25, 2023 at 02:45:12PM +0000, YE Chengfeng wrote:
+> > linereq_put_event is called from both interrupt context (e.g.,
+> > edge_irq_thread) and process context (process_hw_ts_thread).
+> > Therefore, interrupt should be disabled before acquiring lock
+> > &lr->wait.lock inside linereq_put_event to avoid deadlock when
+> > the lock is held in process context and edge_irq_thread comes.
+> >
+> > Similarly, linereq_read_unlocked running in process context
+> > also acquies the same lock. It also need to disable interrupt
+> > otherwise deadlock could happen if the irq edge_irq_thread
+> > comes to execution while the lock is held.
+> >
+>
+> So, in both cases, a process context holding the lock is interrupted, on
+> the same CPU, and the edge_irq_thread() deadlocks on that lock, as the
+> interrupted process holds the lock and cannot proceed.
+> That makes sense to me, but it would be good for Bart to confirm as he
+> knows a lot more about the kfifo locking than I do.
+>
+
+Yeah, I'm not sure this is correct. edge_irq_thread() runs in process
+context, so the whole premise of the patch seems to be flawed. What
+tool reported this? Can this be a false positive? Have you seen this
+happen in real life?
+
+> Note that the same problem also exists in lineevent_read_unlocked() - the
+> uAPI v1 equivalent of linereq_read_unlocked().
+>
+> > Fix the two potential deadlock issues by spin_lock_irqsave.
+> >
+>
+> spin_lock_bh() should be sufficient, given that edge_irq_thread() is run
+> in a softirq?  That is faster and would allow the hard irq handlers to
+> still run, and timestamp the event, but inhibit the edge_irq_thread()
+> from being called on that CPU until the lock is released.
+> (hmmm, gpio_desc_to_lineinfo() also uses spin_lock_irqsave() but it is
+> never called from hard irq context, so there is a good chance I'm missing
+> something here??)
+> More on spin_lock choice below.
+
+Again: this is incorrect - edge_irq_thread() doesn't execute in
+softirq context which can be verified by calling in_softirq() from it.
+
+>
+> This should have a Fixes tag.
+> For v2, it has been there since it was added, so:
+>
+> 73e0341992b6 ("gpiolib: cdev: support edge detection for uAPI v2")
+>
+> And it also applies to lineevent_read_unlocked() from uAPI v1, so there
+> should be a separate fix for that, or at least a separate tag.
+>
+> I looks to me that it was first introduced in uAPI v1 here:
+>
+> dea9c80ee672 ("gpiolib: rework the locking mechanism for lineevent kfifo"=
+)
+>
+> > Signed-off-by: Chengfeng Ye <cyeaa@connect.ust.hk>
+> > ---
+> >  drivers/gpio/gpiolib-cdev.c | 16 +++++++++-------
+> >  1 file changed, 9 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > index 0a33971c964c..714631fde9a8 100644
+> > --- a/drivers/gpio/gpiolib-cdev.c
+> > +++ b/drivers/gpio/gpiolib-cdev.c
+> > @@ -614,14 +614,15 @@ static void linereq_put_event(struct linereq *lr,
+> >                             struct gpio_v2_line_event *le)
+> >  {
+> >       bool overflow =3D false;
+> > +     unsigned long flags;
+> >
+> > -     spin_lock(&lr->wait.lock);
+> > +     spin_lock_irqsave(&lr->wait.lock, flags);
+>
+> linereq_put_event() is never called from hard irq context, so
+> spin_lock_irq() or spin_lock_bh() should suffice?
+>
+
+AFAICT it is only ever called from process context and so spin_lock()
+is correct here.
+
+Bart
+
+> >       if (kfifo_is_full(&lr->events)) {
+> >               overflow =3D true;
+> >               kfifo_skip(&lr->events);
+> >       }
+> >       kfifo_in(&lr->events, le, 1);
+> > -     spin_unlock(&lr->wait.lock);
+> > +     spin_unlock_irqrestore(&lr->wait.lock, flags);
+> >       if (!overflow)
+> >               wake_up_poll(&lr->wait, EPOLLIN);
+> >       else
+> > @@ -1505,6 +1506,7 @@ static ssize_t linereq_read_unlocked(struct file =
+*file, char __user *buf,
+> >       struct linereq *lr =3D file->private_data;
+> >       struct gpio_v2_line_event le;
+> >       ssize_t bytes_read =3D 0;
+> > +     unsigned long flags;
+> >       int ret;
+> >
+> >       if (!lr->gdev->chip)
+> > @@ -1514,28 +1516,28 @@ static ssize_t linereq_read_unlocked(struct fil=
+e *file, char __user *buf,
+> >               return -EINVAL;
+> >
+> >       do {
+> > -             spin_lock(&lr->wait.lock);
+> > +             spin_lock_irqsave(&lr->wait.lock, flags);
+>
+> linereq_read_unlocked() is only ever called in process context, so this
+> could be spin_lock_irq() or even spin_lock_bh()?
+>
+> >               if (kfifo_is_empty(&lr->events)) {
+> >                       if (bytes_read) {
+> > -                             spin_unlock(&lr->wait.lock);
+> > +                             spin_unlock_irqrestore(&lr->wait.lock, fl=
+ags);
+> >                               return bytes_read;
+> >                       }
+> >
+> >                       if (file->f_flags & O_NONBLOCK) {
+> > -                             spin_unlock(&lr->wait.lock);
+> > +                             spin_unlock_irqrestore(&lr->wait.lock, fl=
+ags);
+> >                               return -EAGAIN;
+> >                       }
+> >
+> >                       ret =3D wait_event_interruptible_locked(lr->wait,
+> >                                       !kfifo_is_empty(&lr->events));
+>
+> wait_event_interruptible_locked() works with locks that are
+> spin_lock()/spin_unlock(), so this will leave irqs disabled while
+> waiting for a new event??
+>
+> And while there is a wait_event_interruptible_locked_irq(), there is
+> no wait_event_interruptible_locked_bh() form that I can see, so using
+> spin_lock_bh() would require some extra work.
+>
+> >                       if (ret) {
+> > -                             spin_unlock(&lr->wait.lock);
+> > +                             spin_unlock_irqrestore(&lr->wait.lock, fl=
+ags);
+> >                               return ret;
+> >                       }
+> >               }
+> >
+> >               ret =3D kfifo_out(&lr->events, &le, 1);
+> > -             spin_unlock(&lr->wait.lock);
+> > +             spin_unlock_irqrestore(&lr->wait.lock, flags);
+> >               if (ret !=3D 1) {
+> >                       /*
+> >                        * This should never happen - we were holding the
+> > --
+> > 2.17.1
+>
+> Anyway, good catch.
+>
+> Cheers,
+> Kent.
