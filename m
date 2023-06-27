@@ -2,584 +2,347 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 566F373FCEF
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jun 2023 15:37:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07E24740126
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jun 2023 18:29:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbjF0NhY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Jun 2023 09:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38476 "EHLO
+        id S232435AbjF0Q26 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jun 2023 12:28:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230238AbjF0NhV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jun 2023 09:37:21 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62922D54;
-        Tue, 27 Jun 2023 06:37:19 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2b69e6d324aso38120001fa.0;
-        Tue, 27 Jun 2023 06:37:19 -0700 (PDT)
+        with ESMTP id S232394AbjF0Q2f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jun 2023 12:28:35 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B3C131
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jun 2023 09:28:04 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4fa08687246so4699420e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Jun 2023 09:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687873038; x=1690465038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ETDFNDZWinpC/aFtbei5FiJnygZAXqoORMAlq5jv57w=;
-        b=aF/wQk25Iw4x8Hp43v4Ugsm5g5IKCkj/tGr+Nu1Ip1XDP1gK+N8HPrZJjzJbvoNDNW
-         9PFLLMclHiDoZz+PrnAzQgZjX+/awiQbDlF0kmDVgSxlE5pXRrCtb9eIelaPboB/hWq0
-         E0ybFkBQ1FBhL0G8Bam1fWKHfVNclXiuRKeC91dH8SfG2dZjzAhhF+tuToBU8zC8FZrg
-         z8OUc1xCVZn6ZtkUy6iwZp12/Xo3BqdqhOsSghGbL9Y66+zoBGE67BfgFR85OYbcdnH7
-         14GVqmOq+JXGKaE0nKU2zHp+o9KPOw1N/1MYH4NlihEJt7bDIDL9gV9GI6i8LfiTIAF6
-         UhAw==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687883254; x=1690475254;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y1ke3IzeKzYrQp9ZFZfhbjZDZizFxhyzfl3YrdNntaE=;
+        b=wlhHq/ZNcMSD8C4exH8YtH7Qal7cBHDV8ff84hWgJu6EhGI0dyHV5p7MNt5C7vq+PL
+         mOKG+BocjdnmgXa/5O6fB7Wucf0JJKmbzgd42OmUdCvqKGqUBTqmBbMXFhgtGqhVAL71
+         kVOimay55ys7dEYSoKiOjw8skDnesrxZJsMVYBY0/6JJJ3BDs6zTedQU2AWRdFwsDVwQ
+         xgyhQQq2EszaevpN7nFoqXgxrJgok03SREPk7/qMjaLV1X8nyeQPrKIE5ADJ6LrOyv+A
+         +sB1FjebmDVLARaHYLIlINZcNKhl4GoLlzv1fLtTQJkMGlQgp+vO76dZJHa0V7eNbrk6
+         WE7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687873038; x=1690465038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ETDFNDZWinpC/aFtbei5FiJnygZAXqoORMAlq5jv57w=;
-        b=hLd7zptyiCwYHD3LgHc6Rkzv89ilU7Sd4oj1G87QnHAcjAgd8JBzGZyzGjtLZzDblC
-         Jp7//7Z9jjUh602SciumUd5FhTnma5r5OlEJasJ6oNDzvhCuwdwNa5RPywb5BTRUgQSZ
-         5rBh3CCuIebeuXYDmPmXdhES+eBtdeSCX75oBIKGd8qYCqEAeG6448rthekyM7FN9Ei8
-         kl6TUinFJy4/6ksYhkcO6r7t0psNYveril91lcNV8/kZxMOGp7PFOcfhvPKERljqyFsH
-         uv/k3/gZm4XlXWCiRedgq3SjDUPB5NDUBTZhcBzCFFojk+vKEAGnJac1g+BZydn/yMXe
-         flvg==
-X-Gm-Message-State: AC+VfDyY1+5/gk4sZkCmJHumznQenNxoCsPT7DRo0lzg2sdlc/Ko52sr
-        CW0ZI+nHRVLdpcX6CpjHIQFrPztHe30W8PFuUc8=
-X-Google-Smtp-Source: ACHHUZ5T6CDSPttbIEtmWvCkSIE0M/q7GjjkVTjMdtmGc9ogXOiyMwkBmVe3SH0MCjrKpkMd5tRFg3jHxnwB4+FGhp4=
-X-Received: by 2002:a2e:9591:0:b0:2b6:3651:f12f with SMTP id
- w17-20020a2e9591000000b002b63651f12fmr5093226ljh.3.1687873037172; Tue, 27 Jun
- 2023 06:37:17 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1687883254; x=1690475254;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y1ke3IzeKzYrQp9ZFZfhbjZDZizFxhyzfl3YrdNntaE=;
+        b=UGlR7UzHp+KkSlirK6CHfe1JaDO930EjxsIS0CzdXBs61C5LdlLEvgrmgpBuNG9afi
+         gTEIwDUDBDc8FVkDDu1Sq5kQ/ZZqpaJ2CLhFlLgZwKwqETdurNk0D8qvKOf1w/9W6qQq
+         bULansZepQKhMNZWG2U9YPTr+b/AN17ETapOorJgf86c46zVzRxii3jCnboCHwwAEO2e
+         PpNnAstOklmT2Hzq/QcENjAA9gR6CTFWeXpck4GmKycFTlL/RjcPYlILmkcRIa6w2q3w
+         uzxViYhCn4CZLpZVIgz/owyW5I5Dm4An/eOH3a3eTpddSfaNNWUCZ/ilkjsxIQwR2M9V
+         onRg==
+X-Gm-Message-State: AC+VfDzNaTFsQPhhYe9ypkYGSvM8qeCOBrKEdoeWXnAPW55XfkA/zK7v
+        tXRJc5DAy0nTU8pZg0wBXzldzaAkrsOUBEBKJX4=
+X-Google-Smtp-Source: ACHHUZ4xw7PTpoxQOURVafDGLA8kLna/l8k6uc/Q2DzDkVzhz2tRfIsufsw2/nfFu/b+oANKRDC+pA==
+X-Received: by 2002:a19:6909:0:b0:4f8:6d54:72fb with SMTP id e9-20020a196909000000b004f86d5472fbmr14793079lfc.62.1687883254089;
+        Tue, 27 Jun 2023 09:27:34 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:fb38:10d8:d00f:89c7])
+        by smtp.gmail.com with ESMTPSA id a10-20020a05600c224a00b003faef96ee78sm5098123wmm.33.2023.06.27.09.27.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jun 2023 09:27:33 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: updates for v6.5
+Date:   Tue, 27 Jun 2023 18:27:30 +0200
+Message-Id: <20230627162730.117824-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230621213115.113266-1-nick.hawkins@hpe.com> <20230621213115.113266-2-nick.hawkins@hpe.com>
-In-Reply-To: <20230621213115.113266-2-nick.hawkins@hpe.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 27 Jun 2023 16:36:40 +0300
-Message-ID: <CAHp75Vczq+5JCFW+qi4Y7M7+JY3MPe7GAMdjMzOpVukcBybH7A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] gpio: gxp: Add HPE GXP GPIO
-To:     nick.hawkins@hpe.com
-Cc:     verdun@hpe.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        jdelvare@suse.com, linux@roeck-us.net, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 12:35=E2=80=AFAM <nick.hawkins@hpe.com> wrote:
->
-> From: Nick Hawkins <nick.hawkins@hpe.com>
->
-> The GXP SoC supports GPIO on multiple interfaces. The interfaces are
-> CPLD and Host. The GPIOs is a combination of both physical and virtual
-
-are a
-
-> I/O across the interfaces. The gpio-gxp driver specifically covers the
-> CSM(physical), FN2(virtual), and VUHC(virtual) which are the host. The
-
-A bit of elaboration what the Host interface means and what is the
-difference to the CPLD. Perhaps spell it here as "Host interface", so
-it will be clear that above you mentioned it already.
-
-> driver supports interrupts from the host.
-
-...
-
-> +#define GPIDAT         0x040
-> +#define GPODAT         0x0b0
-> +#define GPODAT2                0x0f8
-> +#define GPOOWN         0x110
-> +#define GPOOWN2                0x118
-> +#define ASR_OFS                0x05c
-> +#define VUHC_OFS       0x064
-
-Hmm... No GPIDAT2? I'm wondering if you can drop all these *2
-definitions. Let see below...
-
-...
-
-> +struct gxp_gpio_drvdata {
-> +       struct gpio_chip chip;
-> +       struct regmap *csm_map;
-
-> +       void __iomem *fn2_vbtn;
-
-Looking into the code I have no clue why this is in this driver. You
-have regmaps and a separate resource for this. Why?! Is it in the
-window of GPIO MMIO?
-
-> +       struct regmap *fn2_stat;
-> +       struct regmap *vuhc0_map;
-> +       int irq;
-> +};
-
-...
-
-> +/*
-> + * Note: Instead of definining all PINs here are the select few that
-
-defining (I have a d=C3=A9j=C3=A0 vu of already showing you typos in the co=
-mmit
-message and comments and it looks like you ignored all of that. If so,
-then why?)
-
-> + * are specifically defined in DTS and offsets are used here.
-> + */
-> +enum gxp_gpio_pn {
-> +       RESET =3D 192,
-> +       VPBTN =3D 210, /* aka POWER_OK */
-> +       PGOOD =3D 211, /* aka PS_PWROK */
-> +       PERST =3D 212, /* aka PCIERST */
-> +       POST_COMPLETE =3D 213,
-
-So, vbtn is a GPIO? Why does it need a special treatment?
-
-> +};
-
-...
-
-> +static int gxp_gpio_csm_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct gxp_gpio_drvdata *drvdata =3D dev_get_drvdata(chip->parent=
-);
-
-> +       int ret =3D 0;
-
-Seems like a weird assignment.
-
-> +       unsigned int reg_offset;
-> +       unsigned int reg_mask;
-> +
-> +       switch (offset) {
-> +       case 0 ... 31:
-> +               reg_offset =3D GPIDAT;
-> +               reg_mask =3D BIT(offset);
-> +               break;
-> +       case 32 ... 63:
-> +               reg_offset =3D GPIDAT + 0x20;
-> +               reg_mask =3D BIT(offset - 32);
-> +               break;
-
-So, here is the 0x20 offset shift...
-
-> +       case 64 ... 95:
-> +               reg_offset =3D GPODAT;
-> +               reg_mask =3D BIT(offset - 64);
-> +               break;
-> +       case 96 ... 127:
-> +               reg_offset =3D GPODAT + 0x04;
-> +               reg_mask =3D BIT(offset - 96);
-> +               break;
-
-...and here (between two groups of GPO) is 0x48. Looks a bit weird.
-Does this GPIO have more functions than simply being a GPIO? To me
-looks like a PMIC-ish one. Is there any datasheet available?
-
-> +       case 128 ...  159:
-> +               reg_offset =3D GPODAT2;
-> +               reg_mask =3D BIT(offset - 128);
-> +               break;
-> +       case 160 ... 191:
-> +               reg_offset =3D GPODAT2 + 0x04;
-> +               reg_mask =3D BIT(offset - 160);
-> +               break;
-
-These (64-192) are two groups of the sequential bits in the address
-space. Why do you do this instead of the simplest calculus with bit
-and offset?
-
-> +       case RESET:
-> +               /* SW_RESET */
-> +               reg_offset =3D ASR_OFS;
-> +               reg_mask =3D BIT(15);
-> +               break;
-
-Does it really belong to this driver? Maybe it should be an MFD with
-GPIO and special functions with valid_mask properly assigned?
-
-> +       default:
-> +               break;
-> +       }
-
-> +       regmap_read(drvdata->csm_map, reg_offset, &ret);
-> +       ret =3D (ret & reg_mask) ? 1 : 0;
-> +
-> +       return ret;
-
-
-  ret =3D regmap_read(, &value);
-  if (ret)
-    return ret;
-
-  return !!(value & mask);
-
-> +}
-> +
-> +static void gxp_gpio_csm_set(struct gpio_chip *chip, unsigned int offset=
-,
-> +                            int value)
-> +{
-> +       struct gxp_gpio_drvdata *drvdata =3D dev_get_drvdata(chip->parent=
-);
-> +       u32 tmp;
-
-> +       switch (offset) {
-
-You definitely don't need this. All bits are in the sequential addresses.
-
-> +       case 64 ... 95:
-> +               /* Keep ownership setting */
-> +               regmap_read(drvdata->csm_map, GPOOWN, &tmp);
-> +               tmp =3D (tmp & BIT(offset - 64)) ? 1 : 0;
-> +
-> +               regmap_update_bits(drvdata->csm_map, GPOOWN,
-> +                                  BIT(offset - 64), BIT(offset - 64));
-> +               regmap_update_bits(drvdata->csm_map, GPODAT,
-> +                                  BIT(offset - 64), value ? BIT(offset -=
- 64) : 0);
-> +
-> +               /* Restore ownership setting */
-> +               regmap_update_bits(drvdata->csm_map, GPOOWN,
-> +                                  BIT(offset - 64), tmp ? BIT(offset - 6=
-4) : 0);
-> +               break;
-> +       case 96 ... 127:
-> +               /* Keep ownership setting */
-> +               regmap_read(drvdata->csm_map, GPOOWN + 0x04, &tmp);
-> +               tmp =3D (tmp & BIT(offset - 96)) ? 1 : 0;
-> +
-> +               regmap_update_bits(drvdata->csm_map, GPOOWN + 0x04,
-> +                                  BIT(offset - 96), BIT(offset - 96));
-> +               regmap_update_bits(drvdata->csm_map, GPODAT + 0x04,
-> +                                  BIT(offset - 96), value ? BIT(offset -=
- 96) : 0);
-> +
-> +               /* Restore ownership setting */
-> +               regmap_update_bits(drvdata->csm_map, GPOOWN + 0x04,
-> +                                  BIT(offset - 96), tmp ? BIT(offset - 9=
-6) : 0);
-> +               break;
-> +       case 128 ... 159:
-> +               /* Keep ownership setting */
-> +               regmap_read(drvdata->csm_map, GPOOWN2, &tmp);
-> +               tmp =3D (tmp & BIT(offset - 128)) ? 1 : 0;
-> +
-> +               regmap_update_bits(drvdata->csm_map, GPOOWN2,
-> +                                  BIT(offset - 128), BIT(offset - 128));
-> +               regmap_update_bits(drvdata->csm_map, GPODAT2,
-> +                                  BIT(offset - 128), value ? BIT(offset =
-- 128) : 0);
-> +
-> +               /* Restore ownership setting */
-> +               regmap_update_bits(drvdata->csm_map, GPOOWN2,
-> +                                  BIT(offset - 128), tmp ? BIT(offset - =
-128) : 0);
-> +               break;
-> +       case 160 ... 191:
-> +               /* Keep ownership setting */
-> +               regmap_read(drvdata->csm_map, GPOOWN2 + 0x04,   &tmp);
-> +               tmp =3D (tmp & BIT(offset - 160)) ? 1 : 0;
-> +
-> +               regmap_update_bits(drvdata->csm_map, GPOOWN2 + 0x04,
-> +                                  BIT(offset - 160), BIT(offset - 160));
-> +               regmap_update_bits(drvdata->csm_map, GPODAT2 + 0x04,
-> +                                  BIT(offset - 160), value ? BIT(offset =
-- 160) : 0);
-> +
-> +               /* Restore ownership setting */
-> +               regmap_update_bits(drvdata->csm_map, GPOOWN2 + 0x04,
-> +                                  BIT(offset - 160), tmp ? BIT(offset - =
-160) : 0);
-> +               break;
-
-> +       case 192:
-> +               if (value) {
-> +                       regmap_update_bits(drvdata->csm_map, ASR_OFS,
-> +                                          BIT(0), BIT(0));
-> +                       regmap_update_bits(drvdata->csm_map, ASR_OFS,
-> +                                          BIT(15), BIT(15));
-> +               } else {
-> +                       regmap_update_bits(drvdata->csm_map, ASR_OFS,
-> +                                          BIT(15), 0);
-> +               }
-> +               break;
-
-Again, seems like a special function of GPIO that should probably have
-another driver that shares regmap with GPIO and GPIO marks this one is
-not valid for the GPIO operations.
-
-> +       default:
-> +               break;
-> +       }
-> +}
-> +
-> +static int gxp_gpio_csm_get_direction(struct gpio_chip *chip,
-> +                                     unsigned int offset)
-> +{
-> +       switch (offset) {
-
-Why do you use your custom definitions for the direction? We already
-have the generic ones for this. Please use them.
-
-> +       case 0 ... 63:
-> +               return GXP_GPIO_DIR_IN;
-> +       case 64 ... 191:
-> +               return GXP_GPIO_DIR_OUT;
-
-> +       case 192 ... 193:
-> +               return GXP_GPIO_DIR_OUT;
-> +       case 194:
-> +               return GXP_GPIO_DIR_IN;
-
-These are special cases. Not sure if it's for the GPIO, but basically
-you can check them separately and reduce switch-case to simple
-
-  type =3D offset / 64;
-  if (type)
-    return OUT;
-  return IN;
-
-Something similar to the rest of the functions.
-
-Note, that range operator in switch-case is non-standard.
-
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +}
-
-...
-
-> +static int gxp_gpio_vuhc_get(struct gpio_chip *chip, unsigned int offset=
-)
-> +{
-> +       struct gxp_gpio_drvdata *drvdata =3D dev_get_drvdata(chip->parent=
-);
-> +       unsigned int val;
-> +       int ret =3D 0;
-> +
-> +       if (offset < 8) {
-> +               regmap_read(drvdata->vuhc0_map, VUHC_OFS + 4 * offset,   =
-&val);
-> +               ret =3D (val & BIT(13)) ? 1 : 0;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static void gxp_gpio_vuhc_set(struct gpio_chip *chip, unsigned int offse=
-t,
-> +                             int value)
-> +{
-> +       /* Currently we are not supporting setting of these values yet */
-> +       switch (offset) {
-> +       default:
-> +               break;
-> +       }
-> +}
-> +
-> +static int gxp_gpio_vuhc_get_direction(struct gpio_chip *chip,
-> +                                      unsigned int offset)
-> +{
-> +       switch (offset) {
-> +       case 0:
-> +       case 1:
-> +       case 2:
-> +               return GXP_GPIO_DIR_IN;
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +}
-> +
-> +static int gxp_gpio_vuhc_direction_input(struct gpio_chip *chip,
-> +                                        unsigned int offset)
-> +{
-> +       switch (offset) {
-> +       case 0:
-> +       case 1:
-> +       case 2:
-> +               return 0;
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +}
-> +
-> +static int gxp_gpio_vuhc_direction_output(struct gpio_chip *chip,
-> +                                         unsigned int offset, int value)
-> +{
-> +       switch (offset) {
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +}
-
-I'm not sure this belongs to the GPIO driver.
-
-> +static int gxp_gpio_fn2_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct gxp_gpio_drvdata *drvdata =3D dev_get_drvdata(chip->parent=
-);
-> +       unsigned int val;
-> +       int ret =3D 0;
-> +       unsigned int reg_mask;
-> +
-> +       switch (offset) {
-> +       case PGOOD:
-> +               regmap_read(drvdata->fn2_stat, 0, &val);
-> +               reg_mask =3D BIT(24);
-> +
-> +               break;
-> +       case PERST:
-> +               regmap_read(drvdata->fn2_stat, 0, &val);
-> +               reg_mask =3D BIT(25);
-> +
-> +               break;
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +
-> +       regmap_read(drvdata->fn2_stat, 0, &val);
-> +       ret =3D (val & reg_mask);
-> +       /* Return either 1 or 0 */
-> +       return ret ? 1 : 0;
-> +}
-> +
-> +static void gxp_gpio_fn2_set(struct gpio_chip *chip, unsigned int offset=
-,
-> +                            int value)
-> +{
-> +       struct gxp_gpio_drvdata *drvdata =3D dev_get_drvdata(chip->parent=
-);
-> +
-> +       switch (offset) {
-> +       case VPBTN:
-> +               writeb(1, drvdata->fn2_vbtn);
-> +               break;
-> +       default:
-> +               break;
-> +       }
-> +}
-> +
-> +static int gxp_gpio_fn2_get_direction(struct gpio_chip *chip,
-> +                                     unsigned int offset)
-> +{
-> +       switch (offset) {
-> +       case VPBTN:
-> +               return GXP_GPIO_DIR_OUT;
-> +       default:
-> +               return GXP_GPIO_DIR_IN;
-> +       }
-> +}
-> +
-> +static int gxp_gpio_fn2_direction_input(struct gpio_chip *chip,
-> +                                       unsigned int offset)
-> +{
-> +       switch (offset) {
-> +       case PGOOD:
-> +       case PERST:
-> +       case POST_COMPLETE:
-> +               return 0;
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +}
-> +
-> +static int gxp_gpio_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       if (offset < 200)
-> +               return gxp_gpio_csm_get(chip, offset);
-> +       else if (offset >=3D 200 && offset < 210)
-> +               return gxp_gpio_vuhc_get(chip, offset - 200);
-> +       else if (offset >=3D 210)
-> +               return gxp_gpio_fn2_get(chip, offset);
-> +
-> +       return 0;
-> +}
-> +
-> +static void gxp_gpio_set(struct gpio_chip *chip,
-> +                        unsigned int offset, int value)
-> +{
-> +       if (offset < 200)
-> +               gxp_gpio_csm_set(chip, offset, value);
-> +       else if (offset >=3D 200 && offset < 210)
-> +               gxp_gpio_vuhc_set(chip, offset - 200, value);
-> +       else if (offset >=3D 210)
-> +               gxp_gpio_fn2_set(chip, offset, value);
-> +}
-> +
-> +static int gxp_gpio_get_direction(struct gpio_chip *chip,
-> +                                 unsigned int offset)
-> +{
-> +       if (offset < 200)
-> +               return gxp_gpio_csm_get_direction(chip, offset);
-> +       else if (offset >=3D 200 && offset < 210)
-> +               return gxp_gpio_vuhc_get_direction(chip, offset - 200);
-> +       else if (offset >=3D 210)
-> +               return gxp_gpio_fn2_get_direction(chip, offset);
-> +
-> +       return 0;
-> +}
-> +
-> +static int gxp_gpio_direction_input(struct gpio_chip *chip,
-> +                                   unsigned int offset)
-> +{
-> +       if (offset < 200)
-> +               return gxp_gpio_csm_direction_input(chip, offset);
-> +       else if (offset >=3D 200 && offset < 210)
-> +               return gxp_gpio_vuhc_direction_input(chip, offset - 200);
-> +       else if (offset >=3D 210)
-> +               return gxp_gpio_fn2_direction_input(chip, offset);
-> +
-> +       return 0;
-> +}
-> +
-> +static int gxp_gpio_direction_output(struct gpio_chip *chip,
-> +                                    unsigned int offset, int value)
-> +{
-> +       if (offset < 200)
-> +               return gxp_gpio_csm_direction_output(chip, offset, value)=
-;
-> +       else if (offset >=3D 200 && offset < 210)
-> +               return gxp_gpio_vuhc_direction_output(chip, offset - 200,=
- value);
-> +
-> +       return 0;
-> +}
-
-...
-
-> +       /* Clear latched interrupt */
-> +       regmap_update_bits(drvdata->fn2_stat, 0,
-> +                          GENMASK(15, 0), GENMASK(15, 0));
-
-  unsigned int mask =3D GENMASK(...);
-  unsigned int value =3D mask;
-  regmap_update_bits(..., mask, value);
-
-...
-
-> +       regmap_update_bits(drvdata->fn2_stat, FN2_SEVMASK,
-> +                          BIT(0), set ? BIT(0) : 0);
-
-Ditto.
-
-  unsigned int mask =3D BIT(0);
-  unsigned int value =3D set ? mask : 0;
-
-...
-
-So, overall it looks to me like an MFD device which should be split to
-GPIO, GPIO with IRQ (fh2), special cases and designated
-functionalities (somelike ~5 drivers all together). Without having a
-datasheet it's hard to say.
-
-
---
-With Best Regards,
-Andy Shevchenko
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Linus,
+
+Here's the pull-request with updates for this merge window from the GPIO
+subsystem. We have two new drivers, some improvements to the core code, lots
+of different updates to existing GPIO drivers and some dt-bindings on top.
+
+There's nothing controversial in here and almost everything has been in next
+for more than a week (95% a lot longer than this). The only thing that has
+spent less time in next is a new driver so no risk of regressions.
+
+The single merge pulls in changes that remove all usage of global GPIO numbers
+from arch/arm/mach-omap.
+
+Please pull.
+
+Best Regards,
+Bartosz Golaszewski
+
+The following changes since commit ac9a78681b921877518763ba0e89202254349d1b:
+
+  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.5
+
+for you to fetch changes up to 0ff9f5e57c5bb45b6b807a4d466228de39d8cd2f:
+
+  of: unittest: drop assertions for GPIO hog messages (2023-06-23 12:12:49 +0200)
+
+----------------------------------------------------------------
+gpio updates for v6.5
+
+Core GPIO library:
+- remove unused symbols
+- don't spam the kernel log with messages about hogs
+- remove old sysfs API cruft
+- improve handling of GPIO masks
+
+New drivers
+- add a driver for the BlueField-3 GPIO controller
+- add GPIO support for the TPS65219 PMIC
+
+Driver improvements:
+- extend the gpio-aggregator driver to support ramp-up/ramp-down delay
+- remove unnecessary CONFIG_OF guards from gpio-aggregator
+- readability improvements in gpio-tangier
+- switch i2c drivers back to using probe() now that it's been converted in
+  the i2c subsystem to not taking the id parameter
+- remove unused inclusions of of_gpio.h in several drivers
+- make pm ops static in gpio-davinci and fix a comment
+- use more devres in drivers to shrink and simplify the code
+- add missing include in gpio-sa1100
+- add HAS_IOPORT KConfig dependency where needed
+- add permissions checks before accessing pins in gpio-tegra186
+- convert the gpio-zynq driver to using immutable irqchips
+- preserve output settings set by the bootloader in gpio-mpc8xxx
+
+Selftests:
+- tweak the variable naming in script tests
+
+Device tree updates:
+- convert gpio-mmio and gpio-stmpe to YAML
+- add parsing of GPIO hogs to gpio-vf610
+- add bindings for the Cirrus EP93xx GPIO controller
+- add gpio-line-names property to the gpio-pca9570 bindings
+- extend the binding for x-powers,axp209 with another block
+
+----------------------------------------------------------------
+Alexander Stein (4):
+      dt-bindings: gpio: Add gpio-delay binding document
+      gpio: Add gpio delay driver
+      gpio: Fix dependency for gpio-delay
+      dt-bindings: gpio: gpio-vf610: Add parsing of hogs
+
+Andrew Davis (4):
+      gpio: tpic2810: Use devm_gpiochip_add_data() to simplify remove path
+      gpio: twl4030: Use devm_gpiochip_add_data() to simplify remove path
+      gpio: tps65086: Use devm_gpiochip_add_data() to simplify remove path
+      gpio: sch311x: Use devm_gpiochip_add_data() to simplify remove path
+
+Andy Shevchenko (15):
+      gpiolib: Kill unused GPIOF_EXPORT and Co
+      gpiolib: Kill unused GPIOF_OPEN_*
+      gpiolib: Consolidate the allocated mask freeing APIs
+      gpiolib: Unify allocation and initialization of GPIO valid mask
+      gpiolib: Do not unexport GPIO on freeing
+      gpiolib: remove unused gpio_cansleep()
+      gpio: aggregator: Remove CONFIG_OF and of_match_ptr() protections
+      gpio: aggregator: Support delay for setting up individual GPIOs
+      gpio: aggregator: Set up a parser of delay line parameters
+      gpio: delay: Remove duplicative functionality
+      selftests: gpio: gpio-sim: Use same variable name for sysfs pathname
+      gpio: mpc8xxx: Remove unused of_gpio.h inclusion
+      gpio: xra1403: Remove unused of_gpio.h inclusion
+      gpio: lpc18xx: Remove unused of_gpio.h inclusion
+      gpiolib: Drop unused domain_ops memeber of GPIO IRQ chip
+
+Arnd Bergmann (2):
+      gpio: sa1100: include <mach/generic.h>
+      gpio: synq: remove unused zynq_gpio_irq_reqres/zynq_gpio_irq_relres
+
+Asmaa Mnebhi (1):
+      gpio: mlxbf3: Add gpio driver support
+
+Bartosz Golaszewski (3):
+      Merge tag 'gpio-omap-descriptors-v6.5' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio into gpio/for-next
+      gpiolib: demote the hogging log messages to debug
+      of: unittest: drop assertions for GPIO hog messages
+
+Geert Uytterhoeven (1):
+      dt-bindings: gpio: gpio-delay: Spelling s/curcuit/circuit/
+
+Jerome Neanne (1):
+      gpio: tps65219: add GPIO support for TPS65219 PMIC
+
+Jonathan McDowell (1):
+      dt-bindings: gpio: Add GPIO3 for AXP209 GPIO binding schema
+
+Krzysztof Kozlowski (1):
+      gpio: davinci: correct non-kerneldoc comment
+
+Leonard Göhrs (1):
+      dt-bindings: gpio: pca9570: add gpio-line-names property
+
+Linus Walleij (14):
+      dt-bindings: gpio: Convert STMPE GPIO to YAML schema
+      ARM/mfd/gpio: Fixup TPS65010 regression on OMAP1 OSK1
+      ARM: omap1: Drop header on AMS Delta
+      ARM: omap1: Remove reliance on GPIO numbers from PalmTE
+      ARM: omap1: Remove reliance on GPIO numbers from SX1
+      Input: ads7846 - Convert to use software nodes
+      ARM/mmc: Convert old mmci-omap to GPIO descriptors
+      ARM: omap1: Fix up the Nokia 770 board device IRQs
+      ARM: omap1: Make serial wakeup GPIOs use descriptors
+      ARM: omap1: Exorcise the legacy GPIO header
+      ARM/gpio: Push OMAP2 quirk down into TWL4030 driver
+      ARM: omap2: Get USB hub reset GPIO from descriptor
+      ARM: omap2: Rewrite WLAN quirk to use GPIO descriptors
+      ARM/musb: omap2: Remove global GPIO numbers from TUSB6010
+
+Manikanta Guntupalli (1):
+      gpio: zynq: fix zynqmp_gpio not an immutable chip warning
+
+Michal Smulski (1):
+      gpio: mpc8xxx: latch GPIOs state on module load when configured as output
+
+Min-Hua Chen (1):
+      gpio: davinci: make davinci_gpio_dev_pm_ops static
+
+Nikita Shubin (1):
+      dt-bindings: gpio: Add Cirrus EP93xx
+
+Niklas Schnelle (1):
+      gpio: add HAS_IOPORT dependencies
+
+Prathamesh Shete (1):
+      gpio: tegra186: Check GPIO pin permission before access.
+
+Raag Jadav (1):
+      gpio: tangier: calculate number of ctx using temporary variable
+
+Sean Anderson (1):
+      dt-bindings: Convert gpio-mmio to yaml
+
+Uwe Kleine-König (1):
+      gpio: Switch i2c drivers back to use .probe()
+
+Yang Li (2):
+      gpio: ixp4xx: Use devm_platform_ioremap_resource()
+      gpio: brcmstb: Use devm_platform_get_and_ioremap_resource()
+
+ ...cm,bcm6345-gpio.yaml => brcm,bcm63xx-gpio.yaml} |  18 +-
+ .../devicetree/bindings/gpio/gpio-delay.yaml       |  79 +++++++
+ .../devicetree/bindings/gpio/gpio-ep9301.yaml      | 154 +++++++++++++
+ .../devicetree/bindings/gpio/gpio-mmio.yaml        | 117 ++++++++++
+ .../devicetree/bindings/gpio/gpio-pca9570.yaml     |   4 +
+ .../devicetree/bindings/gpio/gpio-stmpe.txt        |  17 --
+ .../devicetree/bindings/gpio/gpio-vf610.yaml       |   7 +
+ .../bindings/gpio/ni,169445-nand-gpio.txt          |  38 ----
+ .../devicetree/bindings/gpio/st,stmpe-gpio.yaml    |  53 +++++
+ .../devicetree/bindings/gpio/wd,mbl-gpio.txt       |  38 ----
+ .../bindings/gpio/x-powers,axp209-gpio.yaml        |   1 +
+ .../bindings/mfd/brcm,bcm6318-gpio-sysctl.yaml     |   4 +-
+ .../bindings/mfd/brcm,bcm63268-gpio-sysctl.yaml    |   4 +-
+ .../bindings/mfd/brcm,bcm6328-gpio-sysctl.yaml     |   4 +-
+ .../bindings/mfd/brcm,bcm6358-gpio-sysctl.yaml     |   4 +-
+ .../bindings/mfd/brcm,bcm6362-gpio-sysctl.yaml     |   4 +-
+ .../bindings/mfd/brcm,bcm6368-gpio-sysctl.yaml     |   4 +-
+ Documentation/driver-api/gpio/legacy.rst           |  31 +--
+ .../translations/zh_CN/driver-api/gpio/legacy.rst  |  31 +--
+ Documentation/translations/zh_TW/gpio.txt          |  31 +--
+ MAINTAINERS                                        |   1 +
+ arch/arm/mach-omap1/board-ams-delta.c              |   1 -
+ arch/arm/mach-omap1/board-nokia770.c               | 207 ++++++++++-------
+ arch/arm/mach-omap1/board-osk.c                    | 146 ++++++++----
+ arch/arm/mach-omap1/board-palmte.c                 |  51 +++--
+ arch/arm/mach-omap1/board-sx1-mmc.c                |   1 -
+ arch/arm/mach-omap1/board-sx1.c                    |  40 +++-
+ arch/arm/mach-omap1/devices.c                      |   1 -
+ arch/arm/mach-omap1/gpio15xx.c                     |   1 -
+ arch/arm/mach-omap1/gpio16xx.c                     |   1 -
+ arch/arm/mach-omap1/irq.c                          |   1 -
+ arch/arm/mach-omap1/serial.c                       |  30 +--
+ arch/arm/mach-omap2/board-n8x0.c                   | 156 ++++---------
+ arch/arm/mach-omap2/omap_device.c                  |   1 -
+ arch/arm/mach-omap2/pdata-quirks.c                 | 132 +++++------
+ arch/arm/mach-omap2/usb-tusb6010.c                 |  20 +-
+ arch/arm/mach-omap2/usb-tusb6010.h                 |  12 +
+ arch/arm/mach-pxa/spitz.c                          |  11 +-
+ arch/m68k/include/asm/mcfgpio.h                    |   8 -
+ arch/mips/alchemy/devboards/db1000.c               |  11 +-
+ arch/mips/include/asm/mach-au1x00/gpio-au1000.h    |   5 -
+ arch/mips/include/asm/mach-au1x00/gpio-au1300.h    |   5 -
+ drivers/gpio/Kconfig                               |  55 +++--
+ drivers/gpio/Makefile                              |   2 +
+ drivers/gpio/gpio-adnp.c                           |   2 +-
+ drivers/gpio/gpio-aggregator.c                     | 110 ++++++++-
+ drivers/gpio/gpio-brcmstb.c                        |   3 +-
+ drivers/gpio/gpio-davinci.c                        |   4 +-
+ drivers/gpio/gpio-fxl6408.c                        |   2 +-
+ drivers/gpio/gpio-gw-pld.c                         |   2 +-
+ drivers/gpio/gpio-ixp4xx.c                         |   4 +-
+ drivers/gpio/gpio-lpc18xx.c                        |   1 -
+ drivers/gpio/gpio-max7300.c                        |   2 +-
+ drivers/gpio/gpio-max732x.c                        |   2 +-
+ drivers/gpio/gpio-mlxbf3.c                         | 248 +++++++++++++++++++++
+ drivers/gpio/gpio-mpc8xxx.c                        |   7 +-
+ drivers/gpio/gpio-pca953x.c                        |   2 +-
+ drivers/gpio/gpio-pca9570.c                        |   2 +-
+ drivers/gpio/gpio-pcf857x.c                        |   2 +-
+ drivers/gpio/gpio-sa1100.c                         |   1 +
+ drivers/gpio/gpio-sch311x.c                        |  26 +--
+ drivers/gpio/gpio-tangier.c                        |   4 +-
+ drivers/gpio/gpio-tegra186.c                       |  78 +++++++
+ drivers/gpio/gpio-tpic2810.c                       |  27 +--
+ drivers/gpio/gpio-tps65086.c                       |  27 +--
+ drivers/gpio/gpio-tps65219.c                       | 185 +++++++++++++++
+ drivers/gpio/gpio-ts4900.c                         |   2 +-
+ drivers/gpio/gpio-twl4030.c                        |  64 +++---
+ drivers/gpio/gpio-xra1403.c                        |   1 -
+ drivers/gpio/gpio-zynq.c                           |  46 ++--
+ drivers/gpio/gpiolib-legacy.c                      |  12 -
+ drivers/gpio/gpiolib.c                             |  44 ++--
+ drivers/input/touchscreen/ads7846.c                | 113 ++++------
+ drivers/mfd/tps65010.c                             |  14 +-
+ drivers/mmc/host/omap.c                            |  46 +++-
+ drivers/of/unittest.c                              |  28 ---
+ drivers/usb/musb/musb_core.c                       |   1 -
+ drivers/usb/musb/musb_core.h                       |   2 -
+ drivers/usb/musb/tusb6010.c                        |  53 +++--
+ drivers/video/fbdev/omap/lcd_mipid.c               |  10 +
+ include/linux/gpio.h                               |  23 --
+ include/linux/gpio/driver.h                        |   7 -
+ include/linux/mfd/tps65010.h                       |  11 +-
+ include/linux/mfd/twl.h                            |   3 -
+ include/linux/platform_data/lcd-mipid.h            |   2 -
+ include/linux/platform_data/mmc-omap.h             |   2 -
+ include/linux/spi/ads7846.h                        |   2 -
+ include/linux/usb/musb.h                           |  13 --
+ tools/testing/selftests/gpio/gpio-sim.sh           |   4 +-
+ 89 files changed, 1798 insertions(+), 988 deletions(-)
+ rename Documentation/devicetree/bindings/gpio/{brcm,bcm6345-gpio.yaml => brcm,bcm63xx-gpio.yaml} (75%)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-delay.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-ep9301.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mmio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/wd,mbl-gpio.txt
+ create mode 100644 arch/arm/mach-omap2/usb-tusb6010.h
+ create mode 100644 drivers/gpio/gpio-mlxbf3.c
+ create mode 100644 drivers/gpio/gpio-tps65219.c
