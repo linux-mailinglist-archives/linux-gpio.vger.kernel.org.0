@@ -2,69 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D64D73FB53
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jun 2023 13:47:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CCBF73FB80
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jun 2023 13:57:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjF0Lra (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Jun 2023 07:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53000 "EHLO
+        id S229593AbjF0L5w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Jun 2023 07:57:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbjF0Lr3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jun 2023 07:47:29 -0400
-Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB5BF4
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jun 2023 04:47:28 -0700 (PDT)
-Received: by mail-ua1-x931.google.com with SMTP id a1e0cc1a2514c-791b8500a21so1123315241.2
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Jun 2023 04:47:28 -0700 (PDT)
+        with ESMTP id S229567AbjF0L5v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jun 2023 07:57:51 -0400
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A43B2E69;
+        Tue, 27 Jun 2023 04:57:50 -0700 (PDT)
+Received: by mail-oi1-x232.google.com with SMTP id 5614622812f47-39e86b3da59so3994694b6e.3;
+        Tue, 27 Jun 2023 04:57:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1687866447; x=1690458447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Jb69VzvuiNXGuyYEDdj75WrAIwBneAlG3cVR4iAIDo=;
-        b=x5tBEBlLN90IiDChEwLolJyBlswwxYzTM5iBkWGIBi8JLPk/fevmsfGnAlHWmGopgF
-         gnuyugp1XsdWtjeWiwbvDfRvB7aogLW6Xl3TWt8pKnuXbesl4WgtK06G4JnmvESrWjsa
-         Mo5H7Gc7oW4sVQI+myttVmLThDZ070Glr4TGkQmt5egtjvO8FgpwXo6IdTRqOXucIJcp
-         /QxE+3O0ud/y6uFfa15E8yCfbypNcXSOgtGK1M6EeEMtcofO/OkBFIoPQlz/TivbyHPg
-         HQaHDCLVbFoY53pSf7Bgbr2DIGIXWAa/2fn3hlQdbNcIJXvu1dVxld8mkVSr3QHYnF5F
-         F3ew==
+        d=gmail.com; s=20221208; t=1687867070; x=1690459070;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fDgEXlhTD4u8fEfAv0rtldp2XRqOyVB/WnpGR/b7zuY=;
+        b=FDNmeXnHd+jw7p8jw+HL89Z2tgcnVnU2TeHJA+En7NebFcfeLWwBwC7W4gGnqWuWL2
+         EDnwOFhdIZRlxIhITOhdSWKZq0lIRNNPsfLANcWwVCY4A+n9Ig54yZIG7XnOUAiaFrch
+         KvbZwdu2Gc22uqoix+94OU7wgCLq+Boq3qhU89Z3OUKgvj3BvmHGo2wOKjavSy7g+5y9
+         /1gCeBNYqAvsCAYOcxLOQOhcaHFuYE2D9hMdpDoZO6sGv9S/FIXAYPpisdoczKDITULq
+         LXvKeTHR2wba1RcMNidfKDLBJfVTpBFaPyeTS45zXPyLDYcUmJmjfIu2fKg0kdN0OH9X
+         rCiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687866447; x=1690458447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+Jb69VzvuiNXGuyYEDdj75WrAIwBneAlG3cVR4iAIDo=;
-        b=MR1MrcYbEOv4r0B4crvcd0VqowUqgfqRj3TdLf+Jwq18RjhGBhGh71JvmGay+lZbVu
-         XkK5SvrfgS9a1LQmOFSsuYIByUSrDV/ktsjrCOj/nJCIpc6KcixYuvaMvBtldtBhcSww
-         Flv1le1nrijxd/AjcYGkaQpTYZkpBzQmFEPmB5JgAx63bG/1+9le755UAGNd5focTcz3
-         WW51445/lvzykL07Nbbae9aHqcHasyLbCo3dXyXahrjvEfvuAFxuiC94a2k8G0TqOUBW
-         cW2sl2fcGVNq5XZmXMY1AtCCZkljteAdh3CzXMRkR3ZUPD+XoUnPP9UxTIPgHPD7+Fki
-         tyoA==
-X-Gm-Message-State: AC+VfDxCBR6kmmZa8OvJtKUC0tlmMvzyhxlGupDUPuDHAmHQHg6b+Zh5
-        Q9SDuLhqAf8loWG5r47xB8ZrbAJZauy3di3vROoj6UhXvEBZgDOB
-X-Google-Smtp-Source: ACHHUZ7AC91ntRak1vhDXqiVBt9TNQ9rq8sMr48JAcjfehZCIklNUVsHUkgyO30n9ui9NTOKXWbGIApzscMmVJux3Wk=
-X-Received: by 2002:a05:6102:527:b0:440:d3f0:b516 with SMTP id
- m7-20020a056102052700b00440d3f0b516mr6782847vsa.25.1687866447077; Tue, 27 Jun
- 2023 04:47:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <TYCP286MB1188B6A0379F7928C63288DF8A21A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
- <ZJk87rWsDj7pWJIP@sol> <CAMRc=McGOV+A8ROXRinUkWG0POTe37RWphRHDW6sy7UMU-e2UA@mail.gmail.com>
- <ZJo+wBMsyHvu/7Mj@sol>
-In-Reply-To: <ZJo+wBMsyHvu/7Mj@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 27 Jun 2023 13:47:16 +0200
-Message-ID: <CAMRc=MeyEuZpDXsZHVGdrivZbYjHr1YDiYAbu4A0--Xy9rKVUw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpiolib-cdev: Fix potential &lr->wait.lock deadlock issue
-To:     Kent Gibson <warthog618@gmail.com>
+        d=1e100.net; s=20221208; t=1687867070; x=1690459070;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fDgEXlhTD4u8fEfAv0rtldp2XRqOyVB/WnpGR/b7zuY=;
+        b=QYdRlzpXRf6JZ/QrUFNji5XTAj0YRy46dXIuh/XYuJsiTUrLmS1EcHVfscq3fA1hh8
+         Yh1hQC7zHb88yDCfM9fjZFeGZIx7FhIpx44h/RFNrRjHD8MojCZHIubosuPDoebTS6/j
+         jacR9wQuph3mEf4VrWYZVsgc1MDysPGHoTSuygZHPzV98/w54fInsxxU0W2wgc4D2AY8
+         zcB0i8wv2n/h5fd1DgXU9Kq8R9lbeluA8kOJx0EvT0lG0toNggb/ficcA1OIjJI1JT1f
+         5wmWhnawWSRO6es6GPMiNiS2fKSQ0ioEo1DNWyDvg3EoVG0MSfsPrp6F6oz3O14qHn7H
+         xVrw==
+X-Gm-Message-State: AC+VfDz75oTCswEoXmUVAQjv5CDjYTo1mUbhQNV4Gq3WovFWQnOZnbay
+        b3PStjWuWWxGoWVsdPz/RJu8JyIxG3Q=
+X-Google-Smtp-Source: ACHHUZ5BpG4SyD+0rzxN1TBdD7Q3ffvV21SE8bflOFkxl91kiSLDLPfJT5UuYbZHc0r+aOsVY2D/XA==
+X-Received: by 2002:a05:6808:2027:b0:3a1:c233:5552 with SMTP id q39-20020a056808202700b003a1c2335552mr12592457oiw.34.1687867069854;
+        Tue, 27 Jun 2023 04:57:49 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id y124-20020a636482000000b0053423447a12sm5734553pgb.73.2023.06.27.04.57.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jun 2023 04:57:49 -0700 (PDT)
+Date:   Tue, 27 Jun 2023 19:57:44 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     YE Chengfeng <cyeaa@connect.ust.hk>,
         "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
         "andy@kernel.org" <andy@kernel.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] gpio: gpiolib-cdev: Fix potential &lr->wait.lock
+ deadlock issue
+Message-ID: <ZJrOuLXmnxuRlbLL@sol>
+References: <TYCP286MB1188B6A0379F7928C63288DF8A21A@TYCP286MB1188.JPNP286.PROD.OUTLOOK.COM>
+ <ZJk87rWsDj7pWJIP@sol>
+ <CAMRc=McGOV+A8ROXRinUkWG0POTe37RWphRHDW6sy7UMU-e2UA@mail.gmail.com>
+ <ZJo+wBMsyHvu/7Mj@sol>
+ <CAMRc=MeyEuZpDXsZHVGdrivZbYjHr1YDiYAbu4A0--Xy9rKVUw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeyEuZpDXsZHVGdrivZbYjHr1YDiYAbu4A0--Xy9rKVUw@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,51 +80,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 3:43=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Mon, Jun 26, 2023 at 05:50:47PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Jun 26, 2023 at 9:23=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > >
-> > >
-> > > spin_lock_bh() should be sufficient, given that edge_irq_thread() is =
-run
-> > > in a softirq?  That is faster and would allow the hard irq handlers t=
-o
-> > > still run, and timestamp the event, but inhibit the edge_irq_thread()
-> > > from being called on that CPU until the lock is released.
-> > > (hmmm, gpio_desc_to_lineinfo() also uses spin_lock_irqsave() but it i=
-s
-> > > never called from hard irq context, so there is a good chance I'm mis=
-sing
-> > > something here??)
-> > > More on spin_lock choice below.
+On Tue, Jun 27, 2023 at 01:47:16PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Jun 27, 2023 at 3:43 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > Again: this is incorrect - edge_irq_thread() doesn't execute in
-> > softirq context which can be verified by calling in_softirq() from it.
+> > On Mon, Jun 26, 2023 at 05:50:47PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Jun 26, 2023 at 9:23 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > >
 > >
->
-> Ok, that matches what I had initially thought.  Wading through the kernel
-> doc got me thinking the secondary handler was run as a softirq.
-> But it is a threaded irq used here, so the thread handler runs in a
-> kernel thread, as does the debounce_work_func() and hte thread handler
-> process_hw_ts_thread().
-> That's a relief.
->
-> While we are on the subject of spin_locks, why does
-> gpio_desc_to_lineinfo() use spin_lock_irqsave()?
-> I assume the _irq is necessary as the desc could be updated at interrupt
-> level, but AFAICT gpio_desc_to_lineinfo() is only ever called from proces=
-s
-> context, so why not just spin_lock_irq()?
->
-> Cheers,
-> Kent.
+> > While we are on the subject of spin_locks, why does
+> > gpio_desc_to_lineinfo() use spin_lock_irqsave()?
+> > I assume the _irq is necessary as the desc could be updated at interrupt
+> > level, but AFAICT gpio_desc_to_lineinfo() is only ever called from process
+> > context, so why not just spin_lock_irq()?
+> >
+> > Cheers,
+> > Kent.
+> 
+> Didn't we use an atomic notifier before for some reason? Then it got
+> changed to blocking but the lock stayed like this? It does look like
+> spin_lock_irq() would be fine here. On the other hand - if something
+> isn't broken... :)
+> 
 
-Didn't we use an atomic notifier before for some reason? Then it got
-changed to blocking but the lock stayed like this? It does look like
-spin_lock_irq() would be fine here. On the other hand - if something
-isn't broken... :)
+Yeah, it was atomic before blocking, but that doesn't explain the need
+for the save - interrupts are always enabled in that function.
+Not a big difference either way, and irqsave is always safe, so no
+problem with leaving it as is - I just thought it odd when I noticed it,
+while spin locks and context were front of mind.
 
-Bart
+Cheers,
+Kent.
+
