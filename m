@@ -2,122 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73F9D741484
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jun 2023 17:05:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACC0A7414C6
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jun 2023 17:21:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231949AbjF1PFm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Jun 2023 11:05:42 -0400
-Received: from mx0b-0031df01.pphosted.com ([205.220.180.131]:24504 "EHLO
-        mx0b-0031df01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231886AbjF1PFk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 28 Jun 2023 11:05:40 -0400
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35SBrfTn007823;
-        Wed, 28 Jun 2023 15:05:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=OzLkR4S+T/Lq/RWUNFp92amr0KMTeZqRJceBBbmWwgc=;
- b=KOkj6Fwm61bhxNPBSSQ7haG8kPWLbTdMoqlOve4T2Y1Z3qmLDSEyLsOohyqL+j+1eErC
- KWDJZvdXHn8AvVw0U6k1Ahdq5Et4Mxjepmz622XN8JS3trRzMngXrPP/wDzSL+9QXD8C
- k5gpla27YSwCwNeuvFrl8N4SRP5PYh9dBt7Pvm7El0QbfBaO22PjfMaDoi/0bD5U9vIb
- Cnu8HWsxYOFCTVRmRNF1gk6/1PB1aq+0d8M3VN55v9IqH0ZXCUrHrkZZuYjJGzQihArP
- 381xl5ZS/wCaOwDuvXas1XRbs1PJu+xN/gLU7p9XKUownZUmpy/uwRlZbzmrayu+ZObV RQ== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rg9pb1t9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 15:05:06 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35SF55kE003112
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 15:05:05 GMT
-Received: from [10.216.26.159] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Wed, 28 Jun
- 2023 08:04:57 -0700
-Message-ID: <3f29c981-be84-99dd-7e5c-84ac32792c1f@quicinc.com>
-Date:   Wed, 28 Jun 2023 20:34:52 +0530
+        id S229736AbjF1PUp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Jun 2023 11:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230413AbjF1PUo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Jun 2023 11:20:44 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B53C2690
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Jun 2023 08:20:42 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2b69f1570b2so60697521fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Jun 2023 08:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1687965640; x=1690557640;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O1zwqe2L/ZqF+4ydv1LkIfmqL/mIwvO8jVnOWDtDmHc=;
+        b=nTxbvr+SBUiWzq9OAQX07rXCVvs2/Lbd4/KmFokAqczlvC+YDKyj96ycYBeELJHLbE
+         ZaFgdtiUoZtw3RX8I1WbSeS7pmYLkLH3BwTfE4SbvtJjFJIc6/l00moGy0eNLiRpqtVW
+         /qTk9Rsc7SV11Ua/yyvVfI9vP/ZsTZqH3cjehWmbPMPTeswMLb5fnMjwWCYZm9Pjs63F
+         TUFXM0QSSn0s7eYwyZMHVM/ybdj4OhXHYh8Pjy6eYUk0Q/vMKH+aQrhfvye8VQEAL3k9
+         7IEZqJNJ0elQNNtWnkKY7iTiqBjCgaeV8NYUO6y0ya4Bi6rb1yHm2HJnv5u2YKSTL925
+         K17Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687965640; x=1690557640;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O1zwqe2L/ZqF+4ydv1LkIfmqL/mIwvO8jVnOWDtDmHc=;
+        b=Thq9YIy58aIo+BywgehQJznVItm96bRdimtEJJTICfcb9isPEqbOAEH39cvy+5oOBv
+         hDKPUA4VDsPOMeYgv10Zk3RP4FkYifjKCiONGJytSjRvv0DG4ZhXSBjmT3Gz7K6d3A1O
+         STLunJlG3NvJqSgdz9jUY28MfeoafjbhkGjH4VKahuXXFSD/tDxH8rbt3BxCgcj470Bg
+         Ww42CPysh9lofwBzQvgkqKiBCN8Mlf2PZ7ewWSdRf9MY2Pb1f8K/0JDIH08IW7X5FDsx
+         HbaHQtMkxmRro532D7tgzGucZLnzO4pVAd0rNNMXBtu50pUPdAzhu2azSXJkS1Nfm45j
+         vmYw==
+X-Gm-Message-State: AC+VfDyNIDD2D8PXogPaljX/DexjGOJ09MZRpbDxebNyG48GHwC7fF9z
+        Zvz4ZWQ+FzHs0yHdrUBRnsMuSA==
+X-Google-Smtp-Source: ACHHUZ6JfrUGGy1kQpxW6rclkKMCtjKkk1FPM6l2RRR6pdSpC5gvG8oz7MM9jhGyN//xPLtECFBahA==
+X-Received: by 2002:a2e:8089:0:b0:2b6:b88b:6689 with SMTP id i9-20020a2e8089000000b002b6b88b6689mr2940268ljg.22.1687965640187;
+        Wed, 28 Jun 2023 08:20:40 -0700 (PDT)
+Received: from [192.168.1.101] (abyk82.neoplus.adsl.tpnet.pl. [83.9.30.82])
+        by smtp.gmail.com with ESMTPSA id x17-20020a2e8811000000b002b34f9cfc7asm2271183ljh.90.2023.06.28.08.20.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jun 2023 08:20:39 -0700 (PDT)
+Message-ID: <d5c5671f-b6a8-9e97-f917-784dffed7f90@linaro.org>
+Date:   Wed, 28 Jun 2023 17:20:37 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 02/21] kallsyms: Export kallsyms_lookup_name
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v4 19/21] firmware: scm: Modify only the download bits in
+ TCSR register
 Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
+        agross@kernel.org, andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
+        will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-3-git-send-email-quic_mojha@quicinc.com>
- <CAHp75Vcu6_Gr6Y8ThzOZdC34-sxOx9esYhpS2p22rAWjwv5Bkg@mail.gmail.com>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <CAHp75Vcu6_Gr6Y8ThzOZdC34-sxOx9esYhpS2p22rAWjwv5Bkg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: jnLRn8fp110S0Jt2xc2g4BloN4Ej1wEc
-X-Proofpoint-ORIG-GUID: jnLRn8fp110S0Jt2xc2g4BloN4Ej1wEc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-28_10,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 mlxlogscore=888 impostorscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306280134
+ <1687955688-20809-20-git-send-email-quic_mojha@quicinc.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <1687955688-20809-20-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 28.06.2023 14:34, Mukesh Ojha wrote:
+> CrashDump collection is based on the DLOAD bit of TCSR register.
+> To retain other bits, we read the register and modify only the
+> DLOAD bit as the other bits have their own significance.
+> 
+> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> ---
+>  drivers/firmware/qcom_scm.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 104d86e49b97..a9ff77d16c42 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -30,6 +30,11 @@ module_param(download_mode, bool, 0);
+>  #define SCM_HAS_IFACE_CLK	BIT(1)
+>  #define SCM_HAS_BUS_CLK		BIT(2)
+>  
+> +#define QCOM_DOWNLOAD_FULLDUMP		 0x1
+> +#define QCOM_DOWNLOAD_NODUMP		 0x0
+> +#define QCOM_DOWNLOAD_MODE_SHIFT	   4
+> +#define QCOM_DOWNLOAD_MODE_MASK		0x30
+GENMASK and then FIELD_PREP below?
 
+> +
+>  struct qcom_scm {
+>  	struct device *dev;
+>  	struct clk *core_clk;
+> @@ -440,6 +445,7 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+>  static void qcom_scm_set_download_mode(bool enable)
+>  {
+>  	bool avail;
+> +	int val;
+What's wrong with initializing it in the same line as ret?
 
-On 6/28/2023 6:54 PM, Andy Shevchenko wrote:
-> On Wed, Jun 28, 2023 at 3:35 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
->>
->> Module like minidump providing debugging support will need to
->> get the symbol information from the core kernel e.g to get
->> the linux_banner, kernel section addresses bss, data, ro etc.
->>
->> commit 0bd476e6c671 ("kallsyms: unexport kallsyms_lookup_name()
-> 
-> Commit
-> 
->>   and kallsyms_on_each_symbol()") unexports kallsyms_lookup_name
->> due to lack of in-tree user of the symbol. Now, that minidump
->> will one of its user, export it.
-> 
-> users
-> 
-> ...
-> 
-> Is it a direct revert? Then make it visible by leaving pieces from `git revert`.
-> 
+>  	int ret = 0;
+>  
+>  	avail = __qcom_scm_is_call_available(__scm->dev,
+> @@ -448,8 +454,10 @@ static void qcom_scm_set_download_mode(bool enable)
+>  	if (avail) {
+>  		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+>  	} else if (__scm->dload_mode_addr) {
+> -		ret = qcom_scm_io_writel(__scm->dload_mode_addr,
+> -				enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
+> +		val = (enable ? QCOM_DOWNLOAD_FULLDUMP : QCOM_DOWNLOAD_NODUMP);
+unnecessary braces
 
-No, it is not direct revert..
-
-> ...
-> 
->> -
-> 
-> If not, drop this stray change.
-
-ok
-
-- Mukesh
-> 
->> +EXPORT_SYMBOL_GPL(kallsyms_lookup_name);
-> 
-> 
+Konrad
+> +		val <<= QCOM_DOWNLOAD_MODE_SHIFT;
+> +		ret = qcom_scm_io_update_field(__scm->dload_mode_addr,
+> +				QCOM_DOWNLOAD_MODE_MASK, val);
+>  	} else {
+>  		dev_err(__scm->dev,
+>  			"No available mechanism for setting download mode\n");
