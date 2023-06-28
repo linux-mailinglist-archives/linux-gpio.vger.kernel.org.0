@@ -2,185 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46CF4741309
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jun 2023 15:52:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F543741312
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jun 2023 15:54:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbjF1Nvo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Jun 2023 09:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231425AbjF1Nvl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Jun 2023 09:51:41 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30DED1715;
-        Wed, 28 Jun 2023 06:51:40 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-51cb40f13f6so6523669a12.2;
-        Wed, 28 Jun 2023 06:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687960298; x=1690552298;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=47IYkdpu8yyPGp2Uw3op/mpBh+Ym1Oi6bcaaWezzn1E=;
-        b=D+yDDjaj08Lfk0gRAmdyuBFxPZwulZrHYg4rkIeU2wF3UZTlFcHeC45dj06ctGhhBa
-         eEnUTDEDK30rDE4AZ65yw4Pq42bKnsQbtWOE+lKOsDjCpQjUfv85Bkdces8k2/xNDjrB
-         orgtKf+PyUx0w3zRuOkFS5LmqNp46OajNpRNMz9lr90ivujXc7lzdPNQe30oVbOT/jna
-         MaLvv8P4G9IdW5B9lOdj/A+iF9t90xScjnrYMiSvuJ7DitMfFB+Im1FYBPmHQhUD38PT
-         SJ6i6DIP68YT6OGNbcv5zoarFd7WhefIGddqBKcxu7Lehyf4Zul11U4lm+kbIyhi00sN
-         O+2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687960298; x=1690552298;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=47IYkdpu8yyPGp2Uw3op/mpBh+Ym1Oi6bcaaWezzn1E=;
-        b=hFvAP7N0oralV0TdPJbYc2QzpIRpO4KM6vKd8YAnmFr2tCe65wUOuKx1aTx2HrUX1q
-         P4Yyao/ItWUDpuNLA7GhJts31LZfEInwYzBeBxukzJTEMuoMeb8u/mjm7e3RkavfAmCa
-         EqPNSqMg4XohcjuxjscnIlzrvHqStX7kJLwCHwi5Xhv0QeWkW+ZXY7puHko6kd5xgkRY
-         QxR/gAT2jZx/WLC1o/XvutxrtERvFazpJIWaGvhIV/uv7HMgoj6LuFqgiqZt03alF+0d
-         GYtcWS0W6R2g4t3sSJC/foTiLrz3j66s+hvRaQLcWhkHvIZlJETR+EPZ2LE83QMAy8oK
-         gT5w==
-X-Gm-Message-State: AC+VfDxiXM9BHdu0WGNQEgXcxGfT1pjyuEYB8ELfJLkancDJrlIpDM1t
-        t7nslYtPpxZSUQA0zNC1mIFjHfGnBUgxW91HNB0=
-X-Google-Smtp-Source: ACHHUZ5/aml8Qro0WjiQrCcQZmHN9izrK6AaqhR4lEJ48L/5d/n5iBniCxNMSgrvF0j73g6sDIK3dXC3q1vQIgID0AE=
-X-Received: by 2002:a50:ee96:0:b0:51a:3334:f88b with SMTP id
- f22-20020a50ee96000000b0051a3334f88bmr26148972edr.10.1687960298500; Wed, 28
- Jun 2023 06:51:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com> <1687955688-20809-6-git-send-email-quic_mojha@quicinc.com>
-In-Reply-To: <1687955688-20809-6-git-send-email-quic_mojha@quicinc.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 28 Jun 2023 16:51:02 +0300
-Message-ID: <CAHp75VcTZRdNOdgjekCMxu-GvSCiw669SnEdyL=hO0SHLkZL2g@mail.gmail.com>
-Subject: Re: [PATCH v4 05/21] soc: qcom: Add linux minidump smem backend
- driver support
+        id S229524AbjF1Ny2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Jun 2023 09:54:28 -0400
+Received: from mx0b-0031df01.pphosted.com ([205.220.180.131]:49886 "EHLO
+        mx0b-0031df01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231542AbjF1Ny1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 28 Jun 2023 09:54:27 -0400
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S8JjLR002642;
+        Wed, 28 Jun 2023 13:53:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=qcppdkim1; bh=9UCz4yEaBLsI1zCNNQCA7tKcSTDUIMBNJmFkNTE0KRI=;
+ b=C4uWvpJHh2bV9CyOLmpfN9wuIXe4M4r/Q/4Amu4o0hqwq6DUgKQkuvS4FsM1TZM8FseZ
+ vYV6o7Faur6wwj8csVoQgJFh+1cEMxMF66pewWfDDmH0O8cRCEKZfJwtE8V1BdO3/uP9
+ IIu7Kh9ijP0a1pDcBpP7+Se2TRd5dIRBU7kgABWL4FRE7cr1MN6dbiwMdhteR1q7CqV1
+ +roWNAZUpQzRYAxiUUMQkNSw3EDVkwM5ZH56Kd9/MARz4y2kq2UpE/8sxwRnf+srqtx0
+ fxb6UeR0oRtpNhDTBvcagpwvnpTz2XlJ8OA6dDda7zh3or6P6mmTdwQShZ9av64noMv3 pQ== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgetph1u6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Jun 2023 13:53:26 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35SDrOaL019508
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Jun 2023 13:53:24 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.7; Wed, 28 Jun 2023 06:53:16 -0700
+Date:   Wed, 28 Jun 2023 19:23:12 +0530
+From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
 To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        will@kernel.org, linus.walleij@linaro.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v4 02/21] kallsyms: Export kallsyms_lookup_name
+Message-ID: <a26f22d2-95a7-4143-bff5-45ef0b53b30b@quicinc.com>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-3-git-send-email-quic_mojha@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1687955688-20809-3-git-send-email-quic_mojha@quicinc.com>
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dvP17vLT4h84mAiuU6uJVhi4iE_WqiWm
+X-Proofpoint-GUID: dvP17vLT4h84mAiuU6uJVhi4iE_WqiWm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-28_09,2023-06-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ mlxlogscore=869 spamscore=0 priorityscore=1501 suspectscore=0
+ clxscore=1011 bulkscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306280123
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 3:35=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.com=
-> wrote:
->
-> Add shared memory based minidump backend driver and hook it
-> with minidump core (qcom_minidump) by registering SMEM as
-> backend device.
+On Wed, Jun 28, 2023 at 06:04:29PM +0530, Mukesh Ojha wrote:
+> Module like minidump providing debugging support will need to
+> get the symbol information from the core kernel e.g to get
+> the linux_banner, kernel section addresses bss, data, ro etc.
+> 
+One might ask why we would need such a debug driver to
+be compiled as module? What would you do if we need to capture more
+kernel data structures later? Do you plan to continue use
+kallsyms_lookup_name() to query all the symbols?
 
-...
+I have seen v3 discussion where you are asked to compile this driver
+as module but that time there was no reason why your driver needs to
+be compiled as statically, now you have a reason (linux_banner) for
+it.
 
->         help
->           Enablement of core minidump feature is controlled from boot fir=
-mware
-> -         side, and this config allow linux to query minidump segments as=
-sociated
-> -         with the remote processor and check its validity.
-> +         side, and this config allow linux to query and manages minidump
+> commit 0bd476e6c671 ("kallsyms: unexport kallsyms_lookup_name()
+>  and kallsyms_on_each_symbol()") unexports kallsyms_lookup_name
+> due to lack of in-tree user of the symbol. Now, that minidump
+> will one of its user, export it.
+> 
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
-allows
-Linux
-
-> +         table for remote processors as well as APSS.
-> +
-> +         This config should be enabled if the low level minidump is impl=
-emented
-> +         as part of SMEM.
-
-...
-
-> +#include <linux/io.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/io.h>
-
-Yeah, the result of wrong order in the initial commit. Can you fix it there=
-?
-
-...
-
-> -#define MINIDUMP_SS_ENCR_DONE  ('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' <=
-< 0)
-> -#define MINIDUMP_SS_ENABLED    ('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' <=
-< 0)
-> +
-> +#define MINIDUMP_REGION_VALID     ('V' << 24 | 'A' << 16 | 'L' << 8 | 'I=
-' << 0)
-> +#define MINIDUMP_REGION_INVALID           ('I' << 24 | 'N' << 16 | 'V' <=
-< 8 | 'A' << 0)
-> +#define MINIDUMP_REGION_INIT      ('I' << 24 | 'N' << 16 | 'I' << 8 | 'T=
-' << 0)
-> +#define MINIDUMP_REGION_NOINIT    0
-> +
-> +#define MINIDUMP_SS_ENCR_REQ      (0 << 24 | 'Y' << 16 | 'E' << 8 | 'S' =
-<< 0)
-> +#define MINIDUMP_SS_ENCR_NOTREQ           (0 << 24 | 0 << 16 | 'N' << 8 =
-| 'R' << 0)
-> +#define MINIDUMP_SS_ENCR_START    ('S' << 24 | 'T' << 16 | 'R' << 8 | 'T=
-' << 0)
-> +#define MINIDUMP_SS_ENCR_DONE     ('D' << 24 | 'O' << 16 | 'N' << 8 | 'E=
-' << 0)
-> +#define MINIDUMP_SS_ENABLED       ('E' << 24 | 'N' << 16 | 'B' << 8 | 'L=
-' << 0)
-
-For all these, please use format like
-
-#define MINIDUMP_SS_ENCR_START    0x.... // STRT
-
-...
-
-> +static int smem_md_table_exit(struct minidump *md)
-> +{
-> +       struct minidump_ss_data *mdss_data;
-> +
-> +       mdss_data =3D md->apss_data;
-> +       memset(mdss_data->md_ss_toc,
-> +              cpu_to_le32(0), sizeof(struct minidump_subsystem));
-
-Do you need cpu_to_le32() here?
-Can this be on one line?
-
-> +       return 0;
-> +}
-
-...
-
-> +
-
-Unnecessary blank line.
-
-> +module_platform_driver(qcom_minidump_smem_driver);
-
-...
-
-> +       smem->minidump =3D platform_device_register_data(&pdev->dev, "qco=
-m-minidump-smem",
-> +                                                     PLATFORM_DEVID_NONE=
-, NULL,
-> +                                                     0);
-
-Why can't room on the previous line be used?
-
-> +       if (IS_ERR(smem->minidump))
-> +               dev_dbg(&pdev->dev, "failed to register minidump device\n=
-");
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Pavan
