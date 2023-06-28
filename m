@@ -2,57 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF58F74059A
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Jun 2023 23:32:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02A437409F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jun 2023 09:55:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230054AbjF0VcM convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 27 Jun 2023 17:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjF0VcM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Jun 2023 17:32:12 -0400
-X-Greylist: delayed 1814 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 27 Jun 2023 14:32:09 PDT
-Received: from mailgw.kefri.org (mail.kefri.org [197.139.36.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADB7E187;
-        Tue, 27 Jun 2023 14:32:09 -0700 (PDT)
-Received: by mailgw.kefri.org (Postfix, from userid 1001)
-        id A3378A7B397; Tue, 27 Jun 2023 22:37:59 +0300 (EAT)
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
-X-Spam-Level: ***
-X-Spam-Status: No, score=3.3 required=5.0 tests=ADVANCE_FEE_3_NEW_MONEY,
-        BAYES_50,LOTS_OF_MONEY,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
-Received: from [45.81.39.165] (unknown [10.10.1.178])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailgw.kefri.org (Postfix) with ESMTPS id 7B9D6A459C4;
-        Tue, 27 Jun 2023 21:48:52 +0300 (EAT)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S231163AbjF1Hz5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Jun 2023 03:55:57 -0400
+Received: from mail.lokoho.com ([217.61.105.98]:38644 "EHLO mail.lokoho.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229921AbjF1HyG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 28 Jun 2023 03:54:06 -0400
+Received: by mail.lokoho.com (Postfix, from userid 1001)
+        id 57AC687B73; Wed, 28 Jun 2023 08:52:09 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lokoho.com; s=mail;
+        t=1687938732; bh=Z0N5VlX9/JlryGOL5I747Le9USomZJCRNNGRT3LbbKc=;
+        h=Date:From:To:Subject:From;
+        b=MMr007pZqKHeqM4Or89Nrka67WswdJH02pEbe8uqX3rjuI+KbQirIt3GRrgfrS11u
+         Nipv5ygznNODTLNSacaUZgXSyt6XscRtyfDcI3rPJN+dQi7TK/h0VBb58okSsF5t+C
+         JXpFO9iJfZ4JDpKNFNTdNGpmmM0PjcvirsHxHvRhDTW606ltrC5OVq8OaimoiSemty
+         oRsN+XRSXMsFjZWOpkJ0cQEPo77MBw2nrJoSHGopbHgSIN71itCtimMAaq/AlQ6r9v
+         8N3Xlhpj2c+NB8yDY0F0WjGoKXhdSv/xwrHqKXyc4nwD2TswbNsHypOMwPiVbPuqfq
+         /TuMe5HTKZ5mw==
+Received: by mail.lokoho.com for <linux-gpio@vger.kernel.org>; Wed, 28 Jun 2023 07:50:51 GMT
+Message-ID: <20230628074502-0.1.6x.2si3e.0.9m1crijac1@lokoho.com>
+Date:   Wed, 28 Jun 2023 07:50:51 GMT
+From:   "Adam Charachuta" <adam.charachuta@lokoho.com>
+To:     <linux-gpio@vger.kernel.org>
+Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
+X-Mailer: mail.lokoho.com
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: I will send you more details once you reply
-To:     Recipients <poballa@kefri.org>
-From:   "Ms. Al-Hashimi" <poballa@kefri.org>
-Date:   Tue, 27 Jun 2023 20:48:47 +0200
-Reply-To: nationalbureau@kakao.com
-Message-Id: <20230627203820.A3378A7B397@mailgw.kefri.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Friday,
+Dzie=C5=84 dobry,
 
-My name is Mrs. Reem E. Al-Hashimi, the Emirates Minister of State . I am writing to you to stand as my partner to receive Funds as my partner.
+zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
+=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
+o dalszych rozm=C3=B3w.=20
 
-I reached with the foreign companies to direct the gratifications to an open beneficiary account with a financial institution where it will be possible for me to instruct further transfer of the fund to a third party account through bank transfer or Cryptocurrency.
+Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
+=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
+=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
+strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
 
-The amount is valued at $ 47,745,533.00 with a financial institution waiting my instruction for further transfer to a destination account as soon as I have your information indicating interest and I will compensate you with 30% of the total amount and you will also benefit from the investment.
+Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
 
-Please take note that the details so explained is the condition I will work with you as a partner and also add  my  WhatsApp number: +971581890339 to enable chat more. 
 
-My details and profile is below my website. https://www.mofaic.gov.ae/en/the-ministry/the-ministers/uae-minister-of-state-for-international-cooperation/minister-of-the-state-for-international-cooperation
-
-Regards,
-Mrs. Reem
+Pozdrawiam
+Adam Charachuta
