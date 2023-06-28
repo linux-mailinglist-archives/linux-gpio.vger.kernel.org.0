@@ -2,122 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3471B74116E
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jun 2023 14:40:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A956074125C
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Jun 2023 15:27:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231478AbjF1MkZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Jun 2023 08:40:25 -0400
-Received: from mx0b-0031df01.pphosted.com ([205.220.180.131]:7312 "EHLO
-        mx0b-0031df01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232208AbjF1Mh5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 28 Jun 2023 08:37:57 -0400
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S8hwfV019656;
-        Wed, 28 Jun 2023 12:37:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=orV3xaRgOXdBv+EvZhahI6WQdstYeA90CZqOQkv6cLI=;
- b=UkwnUQPzsvBy/N+7oBJ1VdTYqGgjVAQ70vfr1gECSNgCOZRfSiS5hMP42KYlrUYylgD6
- /OJU1KE8h0ljrxHe67E7qXGcUvGotbUze+XittlcOXVHIbyodTjAwG5xNBw1rGX5dLtj
- SU9goPMK1v4ufPtn34pZDdnUxIynyeGoR00i3sfyqXYbs+Q9JPpNzkK0uZD8x2chWaqE
- jt3ZnTU3DNIuOXThieOJ+mkvbntdigmlV1B1dXZFhqKY7fqYD9EQg7SNoBBYNRaMXIW+
- ntX9fQ8bsRl0gb9jW1B5FTBle9vlctw3Sk9AlfZB7pqwcGb2ileF5QCPHd1v3N9XFdbC +Q== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rg7x3skw1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 12:37:40 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35SCbdFH010228
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 12:37:39 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Wed, 28 Jun 2023 05:37:33 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>,
-        "Mukesh Ojha" <quic_mojha@quicinc.com>
-Subject: [PATCH v4 21/21] firmware: qcom_scm: Add multiple download mode support
-Date:   Wed, 28 Jun 2023 18:04:48 +0530
-Message-ID: <1687955688-20809-22-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+        id S231968AbjF1N1e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Jun 2023 09:27:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232115AbjF1N1B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Jun 2023 09:27:01 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82EF2D63;
+        Wed, 28 Jun 2023 06:25:26 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4fb7769f15aso5061963e87.0;
+        Wed, 28 Jun 2023 06:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687958725; x=1690550725;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TWEQbN86A0uWHo7Mv0YHpWVtQH6MiF6zeRclnXOWRDQ=;
+        b=kIuz59to4JmWAP9SmF2819Scpgqe3vPA0S58LqpT08Mtg8b6YqDSMolY3qlaLqzBRq
+         gvLG7j6wRtDaAGBAHklKjZfH+0J+blLP/jkXFS8QsVCGJ1e0I/EACXFmi0JjXVPj4XzA
+         OPaqOFcgsMKK2HBjrUyRbPYvn0XuhJ5ZayHs2y95XwNMYjftFL3DzCflo4AZNKKYFOzJ
+         fVrJdfivRuDYoBZDeelb6yefdxuk25JHI5RxObWZrculOrPrfkV+mO8H11jnmOQhaHcz
+         AsYF8lIA5sf8Wq0+yopLJKmqrnsFltl8+5T7P6+IvlX7gY7Fk/+GgZ4q3YGgA6Ebns8Y
+         A6Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687958725; x=1690550725;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TWEQbN86A0uWHo7Mv0YHpWVtQH6MiF6zeRclnXOWRDQ=;
+        b=J2LDG84st+wBKPxCB+MVDf4uLQqUo0F/eftevKNznG9GEsJl4HFtBYF2XlZdJP3fjs
+         0IUkUvkiQ8C5OD2l0k95+wErHYLo9LF51+OemV8RU1MbsIgZAL34Ntj2hCfqlaI0UC7n
+         xdknrGUxxVGQUCuicS7jw7OPebisdYL5hf2r2hIUKM0f1Pmj4mapi/jUk0IyzCcdt1qN
+         FTtQK/GIg/pLs+vuyTrueXU0JN1IrwRCvA4v79fY4+BsB+ckNtVyKeQq4pIPGZ67XBTD
+         dx7duUs79PHWeYr7dRABCdyCIiwF2Vg38iSAF/xzdk1lawtKOKEDqI34NrqtKiqGrW+G
+         +FNg==
+X-Gm-Message-State: AC+VfDzcz0tt2uMhXol1W4E77On/6u99xn/nqLqH5h42fGBa4QwkD/6l
+        nG/y0h6lgxKLn8dNxzSEdnzK4Nx2nf3BYaFKIwU=
+X-Google-Smtp-Source: ACHHUZ5hjUSVG5IQFaE93brCgNksZL03omVGBIEEyvY3Gusi6WFzibws1HkoznD+ij1D6/MEVxklMwZ9hULE7BQ8Bzo=
+X-Received: by 2002:ac2:5b83:0:b0:4f8:5472:7307 with SMTP id
+ o3-20020ac25b83000000b004f854727307mr16840436lfn.31.1687958724653; Wed, 28
+ Jun 2023 06:25:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 7N0NHCXx1HtIlnlWstC82DtCdSHMY6m1
-X-Proofpoint-GUID: 7N0NHCXx1HtIlnlWstC82DtCdSHMY6m1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-28_08,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- spamscore=0 priorityscore=1501 suspectscore=0 malwarescore=0 mlxscore=0
- adultscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306280111
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com> <1687955688-20809-3-git-send-email-quic_mojha@quicinc.com>
+In-Reply-To: <1687955688-20809-3-git-send-email-quic_mojha@quicinc.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 28 Jun 2023 16:24:48 +0300
+Message-ID: <CAHp75Vcu6_Gr6Y8ThzOZdC34-sxOx9esYhpS2p22rAWjwv5Bkg@mail.gmail.com>
+Subject: Re: [PATCH v4 02/21] kallsyms: Export kallsyms_lookup_name
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
+        will@kernel.org, linus.walleij@linaro.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently, scm driver only supports full dump when download
-mode is selected. Add support to enable minidump as well as
-enable it along with fulldump.
+On Wed, Jun 28, 2023 at 3:35=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.com=
+> wrote:
+>
+> Module like minidump providing debugging support will need to
+> get the symbol information from the core kernel e.g to get
+> the linux_banner, kernel section addresses bss, data, ro etc.
+>
+> commit 0bd476e6c671 ("kallsyms: unexport kallsyms_lookup_name()
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/firmware/qcom_scm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Commit
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 946cb0f76a17..52e3b613a1af 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -31,6 +31,8 @@ static u32 download_mode;
- #define SCM_HAS_BUS_CLK		BIT(2)
- 
- #define QCOM_DOWNLOAD_FULLDUMP		 0x1
-+#define QCOM_DOWNLOAD_MINIDUMP		 0x2
-+#define QCOM_DOWNLOAD_BOTHDUMP		 (QCOM_DOWNLOAD_FULLDUMP | QCOM_DOWNLOAD_MINIDUMP)
- #define QCOM_DOWNLOAD_NODUMP		 0x0
- #define QCOM_DOWNLOAD_MODE_SHIFT	   4
- #define QCOM_DOWNLOAD_MODE_MASK		0x30
-@@ -85,6 +87,8 @@ static const char * const qcom_scm_convention_names[] = {
- static const char * const download_mode_name[] = {
- 	[QCOM_DOWNLOAD_NODUMP]	 = "off",
- 	[QCOM_DOWNLOAD_FULLDUMP] = "full",
-+	[QCOM_DOWNLOAD_MINIDUMP] = "mini",
-+	[QCOM_DOWNLOAD_BOTHDUMP] = "full,mini",
- };
- 
- static struct qcom_scm *__scm;
-@@ -1465,7 +1469,7 @@ static const struct kernel_param_ops download_mode_param_ops = {
- 
- module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
- MODULE_PARM_DESC(download_mode,
--		"download mode: off/full are acceptable values");
-+		"download mode: off/full/mini/full,mini are acceptable values");
- 
- static int qcom_scm_probe(struct platform_device *pdev)
- {
--- 
-2.7.4
+>  and kallsyms_on_each_symbol()") unexports kallsyms_lookup_name
+> due to lack of in-tree user of the symbol. Now, that minidump
+> will one of its user, export it.
 
+users
+
+...
+
+Is it a direct revert? Then make it visible by leaving pieces from `git rev=
+ert`.
+
+...
+
+> -
+
+If not, drop this stray change.
+
+> +EXPORT_SYMBOL_GPL(kallsyms_lookup_name);
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
