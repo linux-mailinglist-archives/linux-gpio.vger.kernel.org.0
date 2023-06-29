@@ -2,223 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 765B474231A
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jun 2023 11:21:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B273974235A
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jun 2023 11:39:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232132AbjF2JVI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Jun 2023 05:21:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36780 "EHLO
+        id S230456AbjF2Jja (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Jun 2023 05:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232081AbjF2JVH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jun 2023 05:21:07 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400E0107;
-        Thu, 29 Jun 2023 02:21:06 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T6rtB1017260;
-        Thu, 29 Jun 2023 09:20:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=MjdhA6zR0it5eEfUJ7/Fm6mpZWONkCOu6eACt6f/6sY=;
- b=P0Hsysd+jfP7/3EC7/PblShuoOapIjr3CLNKJWu/dyFm4jhLvT3B/AP+lP7oHHHbupao
- htPfXzE7k3DjTduzWcv8n/5uGfEvUHneETynIJE/Jk4xZlZApSwtAVoWHrgeD2VVQkQE
- SnFC+LkObLlhuVUdTIH5Eoyk7eiaU4IMdL6YSuoWajAM1IR2iwzXzJ81D1gTL0zRpHUF
- AweacokoZ70r0qPqlYGKc+Mw57dzmt5dgYJc8hlGAgMVCT9WKVXbNPn6yUybSuqx2TRx
- N5OLqRvt7TmPFN8xyvYkwPOjpHS5oAtCoVA3lH3OhWJu/a2VEgBbM1ig9YVoWxKTzhFG PA== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgetpjwp0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Jun 2023 09:20:46 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35T9KjHa004095
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Jun 2023 09:20:45 GMT
-Received: from [10.216.42.4] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 29 Jun
- 2023 02:20:37 -0700
-Message-ID: <cd4b7be5-4cfd-e330-458d-3e22019839b9@quicinc.com>
-Date:   Thu, 29 Jun 2023 14:50:34 +0530
+        with ESMTP id S229739AbjF2Jj3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jun 2023 05:39:29 -0400
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3AE6ED
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Jun 2023 02:39:27 -0700 (PDT)
+Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7918b56b1e1so166324241.2
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Jun 2023 02:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688031566; x=1690623566;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6uejqa9hDQzxJd+PZbUa/7rfuQsvj8USOoM54rTlT04=;
+        b=4YkB7jWAIOmGhE+t88u5H9meTEIRSv2d4Ru3jIGckrYI7igkDRU/EK8k3UrtdnV//F
+         bhbh+G/7t7F4M8kkNbRPGWc7IOrcz7A5uXakhXNU0OuPSbJZKQ9uhP4Y8GyI60msqKYG
+         KNd+Frryp2vBTprirhLpN/6suiFYb0j8osp4y4Jdb6EtYCflbgaFtRsxnos+16uAtd+O
+         DgZPGzj+DmWs4B0gwAQVGscbA3g2M3l1ur80b6bTzbw1MByNA54RIotqf7xUWriGKwA+
+         NJ4WMUWC7it4efkOV9azIB2ELOsYIjT1oimR41MuVLp+TC24MxLt7AjHOZ4cZAMi1EnU
+         IWLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688031566; x=1690623566;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6uejqa9hDQzxJd+PZbUa/7rfuQsvj8USOoM54rTlT04=;
+        b=JWf4kiWdOhWVDEQxJ7jq3AgpB6VnHa6L7tM84+lSr49oYfRPKYt0GgWQ+ckFhQeM4N
+         Vyf53FTZUtIDyncamkfviUD2qAzPPRYCPIXTMqAZb8AuhQCQ+HZhzwhXJpwSPfL0p0yG
+         J84u5RpzuePQc4BPAy/jQqEmIb+0PL0B1aDhYgDm6UxXheHvh4orzm73y9CJCZHOIvJ/
+         lQPFuhIBHV8znlgiwvV9khlu3vmgpwrOmpzCxJfpL+WDCleL0X8G+MovScrmGXajKI1+
+         uj4Vo7eq5zq9AOIj3fFLNuPmiMDEg7+vmGYUl6psMkNi2i3QJzXxXiA3HzSazktoMVFo
+         Qtbw==
+X-Gm-Message-State: AC+VfDzsDkxul0oMy/YMVhf8Bf6BbrUtx1cfCWBDAk5flUkBjPwDjoKy
+        T+b5jI/Q8TjGoeakAsnN0I6exVsYOP71BJshVOZXgoI9Bx40ykoj/bg=
+X-Google-Smtp-Source: ACHHUZ5ZCrVrssMe5sGEF2FVfha57KTBlvTPhqTx36NN5X4j+CLa2X1Eka5rriTA1vHZ9pad2PmC4IZt+4Umnn1nJss=
+X-Received: by 2002:a67:f24e:0:b0:443:6449:479e with SMTP id
+ y14-20020a67f24e000000b004436449479emr6733167vsm.8.1688031566597; Thu, 29 Jun
+ 2023 02:39:26 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 13/21] remoterproc: qcom: refactor to leverage exported
- minidump symbol
-Content-Language: en-US
-To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
-CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-14-git-send-email-quic_mojha@quicinc.com>
- <f1581356-97ba-4faa-8e1c-0d5c7ba994e3@quicinc.com>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <f1581356-97ba-4faa-8e1c-0d5c7ba994e3@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: YTcs0TExrbISpA_QGieGSozxYDyOmlZN
-X-Proofpoint-GUID: YTcs0TExrbISpA_QGieGSozxYDyOmlZN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-29_01,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxlogscore=981 spamscore=0 priorityscore=1501 suspectscore=0
- clxscore=1015 bulkscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306290082
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 29 Jun 2023 11:39:15 +0200
+Message-ID: <CAMRc=MczceSat_G5yO=DjDDePZ6mFSNF02-OJcBU6TzKQ+ne-g@mail.gmail.com>
+Subject: Improving the hot-unplug event handling in gpiolib
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hey Kent, Andy, Linus et al!
 
+I've been spending time looking at the gpiolib code and trying to
+figure out all that's wrong with hot-unplugging code in order to
+finally fix the issues that lead to various memory corruptions and
+crashes (or at least paper over the issues enough to make it
+semi-reliable at hot-unplug events). I did some experiments with
+promising results but before I start coding for real, I wanted to run
+this by you.
 
-On 6/28/2023 9:21 PM, Pavan Kondeti wrote:
-> On Wed, Jun 28, 2023 at 06:04:40PM +0530, Mukesh Ojha wrote:
->> -static int qcom_add_minidump_segments(struct rproc *rproc, struct minidump_subsystem *subsystem,
->> -			void (*rproc_dumpfn_t)(struct rproc *rproc, struct rproc_dump_segment *segment,
->> -				void *dest, size_t offset, size_t size))
->> +void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
->> +		void (*rproc_dumpfn_t)(struct rproc *rproc,
->> +		struct rproc_dump_segment *segment, void *dest, size_t offset,
->> +		size_t size))
->>   {
->> -	struct minidump_region __iomem *ptr;
->> -	struct minidump_region region;
->> -	int seg_cnt, i;
->>   	dma_addr_t da;
->>   	size_t size;
->> +	int seg_cnt;
->>   	char *name;
->> +	void *ptr;
->> +	int ret;
->> +	int i;
->>   
->>   	if (WARN_ON(!list_empty(&rproc->dump_segments))) {
->>   		dev_err(&rproc->dev, "dump segment list already populated\n");
->> -		return -EUCLEAN;
->> +		return;
->>   	}
->>   
->> -	seg_cnt = le32_to_cpu(subsystem->region_count);
->> -	ptr = ioremap((unsigned long)le64_to_cpu(subsystem->regions_baseptr),
->> -		      seg_cnt * sizeof(struct minidump_region));
->> +	ptr = qcom_ss_md_mapped_base(minidump_id, &seg_cnt);
->>   	if (!ptr)
->> -		return -EFAULT;
->> +		return;
->>   
->>   	for (i = 0; i < seg_cnt; i++) {
->> -		memcpy_fromio(&region, ptr + i, sizeof(region));
->> -		if (le32_to_cpu(region.valid) == MINIDUMP_REGION_VALID) {
->> -			name = kstrndup(region.name, MAX_REGION_NAME_LENGTH - 1, GFP_KERNEL);
->> -			if (!name) {
->> -				iounmap(ptr);
->> -				return -ENOMEM;
->> -			}
->> -			da = le64_to_cpu(region.address);
->> -			size = le64_to_cpu(region.size);
->> -			rproc_coredump_add_custom_segment(rproc, da, size, rproc_dumpfn_t, name);
->> +		ret = qcom_ss_valid_segment_info(ptr, i, &name, &da, &size);
->> +		if (ret < 0) {
->> +			iounmap(ptr);
->> +			dev_err(&rproc->dev,
->> +				"Failed with error: %d while adding minidump entries\n",
->> +				ret);
->> +			goto clean_minidump;
->>   		}
->> -	}
->> -
->> -	iounmap(ptr);
->> -	return 0;
->> -}
->> -
->> -void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
->> -		void (*rproc_dumpfn_t)(struct rproc *rproc,
->> -		struct rproc_dump_segment *segment, void *dest, size_t offset,
->> -		size_t size))
->> -{
->> -	int ret;
->> -	struct minidump_subsystem *subsystem;
->> -	struct minidump_global_toc *toc;
->> -
->> -	/* Get Global minidump ToC*/
->> -	toc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, NULL);
->> -
->> -	/* check if global table pointer exists and init is set */
->> -	if (IS_ERR(toc) || !toc->status) {
->> -		dev_err(&rproc->dev, "Minidump TOC not found in SMEM\n");
->> -		return;
->> -	}
->>   
->> -	/* Get subsystem table of contents using the minidump id */
->> -	subsystem = &toc->subsystems[minidump_id];
->> -
->> -	/**
->> -	 * Collect minidump if SS ToC is valid and segment table
->> -	 * is initialized in memory and encryption status is set.
->> -	 */
->> -	if (subsystem->regions_baseptr == 0 ||
->> -	    le32_to_cpu(subsystem->status) != 1 ||
->> -	    le32_to_cpu(subsystem->enabled) != MINIDUMP_SS_ENABLED ||
->> -	    le32_to_cpu(subsystem->encryption_status) != MINIDUMP_SS_ENCR_DONE) {
->> -		dev_err(&rproc->dev, "Minidump not ready, skipping\n");
->> -		return;
->> +		/* if it is a valid segment */
->> +		if (!ret)
->> +			rproc_coredump_add_custom_segment(rproc, da, size,
->> +							  rproc_dumpfn_t, name);
->>   	}
->>   
->> -	ret = qcom_add_minidump_segments(rproc, subsystem, rproc_dumpfn_t);
->> -	if (ret) {
->> -		dev_err(&rproc->dev, "Failed with error: %d while adding minidump entries\n", ret);
->> -		goto clean_minidump;
->> -	}
->> +	iounmap(ptr);
->>   	rproc_coredump_using_sections(rproc);
->> +
->>   clean_minidump:
->>   	qcom_minidump_cleanup(rproc);
->>   }
-> 
-> I like the idea of moving minidump pieces to drivers/soc/qcom/*minidump*.
-> 
-> Is it possible to accept one function callback from remoteproc and do
-> all of this in one function exported by minidump?
-> 
-> qcom_ss_valid_segment_info() seems a low level function to be exported..
+The easiest way to trigger a crash is instantiating a gpio-sim chip,
+running gpiomon or gpionotify on one of its lines, removing the chip
+from configfs (simulating an unplug event) and then killing the
+program. This will consistently show up in KASAN output as a
+use-after-free bug. The same can be achieved for a real-life example
+with the cp2112 driver which exposes a GPIO chip over USB.
 
-It was ending up with circular dependency due to
-rproc_coredump_add_custom_segment()
+There are several issues here, and I also list some possible solutions.
 
+1. Not waking up the poll when the chips disappears.
 
-rproc_coredump => qcom_common => qcom_minidump_smem => rproc_coredump
+We should call wake_up_poll() on the relevant wait queue with
+(EPOLLERR | EPOLLHUP) when the chip goes down to force a return to
+user-space from poll(). This way, the current syscall will not be
+stuck with a chip gone from under it and any sybsequent
+read()/write()/poll() will fail the gdev->chip check.
 
--Mukesh
+2. Freeing descriptors and irqs after the GPIO chip is gone.
 
-> 
-> Thanks,
-> Pavan
-> 
+The GPIO device is gone after the call to gpiochip_remove(). Meanwhile
+linereq, lineevent etc. are reference counted and are only released
+after the last reference to their owning file descriptor is gone. This
+means that userspace process needs to call close() on the relevant fd
+or exit before we start releasing the resources associated with these
+structures. This is fine for fields only used by the code in
+gpiolib-cdev.c but for system-wide resources, we need to free them
+right when gpiochip_remove() is called and "numb down" the cdev
+structs like we do with the GPIO chip.
+
+To that end I propose to reuse the blocking notifier in struct
+gpio_device: let's add a notifer block to struct linereq (I'll focus
+on this one here) and get notified when gpiochip_remove() is called.
+We can now wake up the poll and free all resources that must not be
+used anymore.
+
+3. No locking for struct linereq, lineevent etc.
+
+File operations only take the inode lock and don't protect any data
+touched by the callbacks. I think this can lead to some still hidden
+issues and especially when we start freeing resources when notified by
+core gpiolib. There's config_mutex in struct linereq but it seems to
+me that it doesn't protect all data everywhere and linereq is also
+accessed from interrupt context, for instance in edge_irq_handler().
+
+We should add spinlocks to every cdev context structure and take care
+to protect all accesses correctly.
+
+I'm sure the above list is not complete and other issues will be
+uncovered as we move but it's what I figured out so far.
+
+Let me know what you think and if any of this makes sense.
+
+Bartosz
