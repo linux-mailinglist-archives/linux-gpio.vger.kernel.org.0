@@ -2,401 +2,290 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA882742149
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jun 2023 09:47:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1A46742311
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jun 2023 11:17:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232270AbjF2Hq7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Jun 2023 03:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59452 "EHLO
+        id S232450AbjF2JRg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Jun 2023 05:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232277AbjF2Hqx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jun 2023 03:46:53 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F9402705
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Jun 2023 00:46:50 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-bc379e4c1cbso379303276.2
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Jun 2023 00:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688024809; x=1690616809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJeiGNkXR106duLLLxSKlrFrdAsgc2Z9qLi3NZqjJpI=;
-        b=RofVyWCkd2kvX/W5V15dPduNQFT66InT9jtWcnoX/axbKeY+sUS2Tj7B+aY1TygdRG
-         oXYpzADWkMW32f8Q0DgVBvao+A9HvfLqb0h7aIYpdeHoN/boOYs0txZqUj/K6fsIMtWT
-         0oBfhd4EIxg8L4vvOzNXoNlH/PwdTd03ZKQmY9h9+maZzVYPsSDzo1rzyOmrmkI+QKJT
-         evQsYC8Ov7Zjjwjmyo8oJX31aM0FAhzkBVYnmqNBS1SBQDRfYmEGX77KoaOiq203LgGt
-         BDjQ/KVFLFkttJs65wcMNWOfE3ANAa+bX51gST45AC421+j3VwF9e0A0tBAWFCb7lmUG
-         D5+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688024809; x=1690616809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RJeiGNkXR106duLLLxSKlrFrdAsgc2Z9qLi3NZqjJpI=;
-        b=WEwbsVv5ucpVhgmq92T6FgSwT3xR/8HiiSj1fCYMNV1UEC+qeVpqGW0YgS9oNDV/ZK
-         jbFx69n4FyHUX3W0SS/aLyfc13wVR8nLss8LFcJsGf5RXQAmJ8efN85PyTBgUMpRYGEM
-         QOatJg23farCmLpVTUlNHMqSwoCAIMN0UiKfYP1bL8JtoqHKYBuKt8lk/9DHpTdOdm4k
-         i/PynMdGXqPqnOiaUBCaTACZ/3uzPnrVAVZCu5mCLFW/BhA66mAx9Zn1JG4fdj3+WNGb
-         5A1irhUS7pgFJlmOnjqVmhhGd3m532YHrlAh72GWIJdDT+2rb3Qu7Un7WlFMA3Yp5VuM
-         Nt/A==
-X-Gm-Message-State: AC+VfDxohjYwzapz7cvgumUj68dZwRSf0fnJTWoyQYfLI08sG+OqE9v/
-        e2RBibGMi6s5zGGe95k0jKCrbs9G7QrhNyB7uQfGm/RRybrZGg1O8bY=
-X-Google-Smtp-Source: ACHHUZ5PKVXpt4F+XZDGAh0MXXbLQOHiUdqanKSeGsCacuQ2RAW47IcAOULlQ4hGdZshg6LcGR+qXi5dB2oqCTTgYNA=
-X-Received: by 2002:a25:4050:0:b0:bfe:9259:8f1a with SMTP id
- n77-20020a254050000000b00bfe92598f1amr25393814yba.50.1688024809647; Thu, 29
- Jun 2023 00:46:49 -0700 (PDT)
+        with ESMTP id S232464AbjF2JRS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jun 2023 05:17:18 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D28B12134;
+        Thu, 29 Jun 2023 02:17:05 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T8mXOb031688;
+        Thu, 29 Jun 2023 09:16:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=ejgo9Ha3IFB/uURLTL7ikLrQKDml9uYD+lWUNGD1J8Y=;
+ b=Q5HZqz2n2kb+NTEAkAMXSIizloKVYik7ju104y8OZn96yjHMUHE2r8UejPxDjrhEh+ps
+ cWd+wSjFgdc14K+PKEi3qq1azBZ4u8pIdlYimOLDmiz94hYg8zELLvYJKoMvoj5qSUlm
+ xiUF5h+AVna9EN8O6xmE+kS2MqM4CdpARbaD3NQkgbC4GLfavjf/FtljharaTs7g7lti
+ W5er+AR707Ti/P+vUgWcLn+r0mbJLrLF6PCLPJLahm3sSTqxYU6TXLloEYqyRTq0dHdq
+ vQaCRNeFWUgrW34kv5/90nBcHlAXjnLhsXVO/11Eb0P2sw0E9ZHOoCkdGvjaL0iDILnZ Pg== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgnxr9w8g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jun 2023 09:16:37 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35T9GZf5010847
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jun 2023 09:16:35 GMT
+Received: from [10.216.42.4] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 29 Jun
+ 2023 02:16:28 -0700
+Message-ID: <e0fef1b0-3fa1-08c1-3c0e-aca30c9da266@quicinc.com>
+Date:   Thu, 29 Jun 2023 14:46:18 +0530
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 29 Jun 2023 09:46:38 +0200
-Message-ID: <CACRpkdYdnrDJ8=76DHT3yLyCKqCRyLEObhUaKFOHSMy9y5jVHw@mail.gmail.com>
-Subject: [GIT PULL] Pin control changes for v6.5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 10/21] soc: qcom: Add qcom's pstore minidump driver
+ support
+Content-Language: en-US
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linus.walleij@linaro.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-11-git-send-email-quic_mojha@quicinc.com>
+ <CAL_Jsq+O70mnreuS1m54RKM+uZu_z1L87RT8sKBYEw5uvowGJg@mail.gmail.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <CAL_Jsq+O70mnreuS1m54RKM+uZu_z1L87RT8sKBYEw5uvowGJg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Ao0JE0wQQz6nMX3r1Yj7CGXQWb2hQpyl
+X-Proofpoint-GUID: Ao0JE0wQQz6nMX3r1Yj7CGXQWb2hQpyl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-29_01,2023-06-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 mlxscore=0 spamscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306290082
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
 
-here is the bulk of pin control changes for v6.5.
 
-There is not much to say about it: it is smaller than usual
-and it is all drivers.
+On 6/29/2023 4:27 AM, Rob Herring wrote:
+> On Wed, Jun 28, 2023 at 6:37 AM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+>>
+>> This driver was inspired from the fact pstore ram region should be
+>> fixed and boot firmware need to have awarness about this region,
+>> so that it will be persistent across boot. But, there are many
+>> QCOM SoC which does not support warm boot from hardware but they
+>> have minidump support from the software, and for them, there is
+>> no need of this pstore ram region to be fixed, but at the same
+>> time have interest in the pstore frontends data. So, this driver
+>> get the dynamic reserved region from the ram and register the
+>> ramoops platform device.
+>>
+>>   +---------+     +---------+   +--------+     +---------+
+>>   | console |     | pmsg    |   | ftrace |     | dmesg   |
+>>   +---------+     +---------+   +--------+     +---------+
+>>         |             |             |              |
+>>         |             |             |              |
+>>         +------------------------------------------+
+>>                            |
+>>                           \ /
+>>                    +----------------+
+>>              (1)   |pstore frontends|
+>>                    +----------------+
+>>                            |
+>>                           \ /
+>>                   +------------------- +
+>>              (2)  | pstore backend(ram)|
+>>                   +--------------------+
+>>                            |
+>>                           \ /
+>>                   +--------------------+
+>>              (3)  |qcom_pstore_minidump|
+>>                   +--------------------+
+>>                            |
+>>                           \ /
+>>                     +---------------+
+>>              (4)    | qcom_minidump |
+>>                     +---------------+
+>>
+>> This driver will route all the pstore front data to the stored
+>> in qcom pstore reserved region and the reason of showing an
+>> arrow from (3) to (4) as qcom_pstore_minidump driver will register
+>> all the available frontends region with qcom minidump driver
+>> in upcoming patch.
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   drivers/soc/qcom/Kconfig                | 12 +++++
+>>   drivers/soc/qcom/Makefile               |  1 +
+>>   drivers/soc/qcom/qcom_pstore_minidump.c | 85 +++++++++++++++++++++++++++++++++
+> 
+> drivers/soc/ is the dumping ground for things with no other place. As
+> this is a pstore driver, it belongs with pstore.
 
-Some lib/* functions are added, they come from Andy Shechenko
-who maintains lib/* quite a lot.
+The inspiration of this driver was taken from 
+drivers/platform/chrome/chromeos_pstore.c, do you think that is misplaced ?
 
-Please pull it in!
+> 
+>>   3 files changed, 98 insertions(+)
+>>   create mode 100644 drivers/soc/qcom/qcom_pstore_minidump.c
+>>
+>> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+>> index 1834213fd652..fbf08e30feda 100644
+>> --- a/drivers/soc/qcom/Kconfig
+>> +++ b/drivers/soc/qcom/Kconfig
+>> @@ -306,4 +306,16 @@ config QCOM_MINIDUMP_SMEM
+>>
+>>            This config should be enabled if the low level minidump is implemented
+>>            as part of SMEM.
+>> +
+>> +config QCOM_PSTORE_MINIDUMP
+>> +       tristate "Pstore support for QCOM Minidump"
+>> +       depends on ARCH_QCOM
+>> +       depends on PSTORE_RAM
+>> +       depends on QCOM_MINIDUMP
+>> +       help
+>> +         Enablement of this driver ensures that ramoops region can be anywhere
+>> +         reserved in ram instead of being fixed address which needs boot firmware
+>> +         awareness. So, this driver creates plaform device and registers available
+>> +         frontend region with the Qualcomm's minidump driver.
+>> +
+>>   endmenu
+>> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+>> index 737d868757ac..1ab59c1b364d 100644
+>> --- a/drivers/soc/qcom/Makefile
+>> +++ b/drivers/soc/qcom/Makefile
+>> @@ -36,3 +36,4 @@ qcom_ice-objs                 += ice.o
+>>   obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)        += qcom_ice.o
+>>   obj-$(CONFIG_QCOM_MINIDUMP) += qcom_minidump.o
+>>   obj-$(CONFIG_QCOM_MINIDUMP_SMEM) += qcom_minidump_smem.o
+>> +obj-$(CONFIG_QCOM_PSTORE_MINIDUMP) += qcom_pstore_minidump.o
+>> diff --git a/drivers/soc/qcom/qcom_pstore_minidump.c b/drivers/soc/qcom/qcom_pstore_minidump.c
+>> new file mode 100644
+>> index 000000000000..b07cd10340df
+>> --- /dev/null
+>> +++ b/drivers/soc/qcom/qcom_pstore_minidump.c
+>> @@ -0,0 +1,85 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +/*
+>> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+> 
+> You probably don't need this include. Use the actual includes you need
+> and don't rely on implicit includes (because I'm trying to remove
+> those).
 
-Yours,
-Linus Walleij
+Ok, will try to check..
 
-The following changes since commit ac9a78681b921877518763ba0e89202254349d1b=
-:
+- Mukesh
 
-  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.5-1
-
-for you to fetch changes up to 9f0648f13e34a01f2e1a7a0d5801988a7bca6988:
-
-  Merge tag 'intel-pinctrl-v6.5-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into devel
-(2023-06-21 09:37:43 +0200)
-
-----------------------------------------------------------------
-Pin control changes for the v6.5 kernel cycle:
-
-No core changes this time.
-
-New drivers:
-
-- Tegra234 support.
-
-- Qualcomm IPQ5018 support.
-
-- Intel Meteor Lake-S support.
-
-- Qualcomm SDX75 subdriver.
-
-- Qualcomm SPMI-based PM8953 support.
-
-Improvements:
-
-- Fix up support for GPIO3 on the AXP209.
-
-- Push-pull drive configuration support for the AT91 PIO4.
-
-- Fix misc non-urgent bugs in the AMD driver.
-
-- Misc non-urgent improved error handling.
-
-- Misc janitorial and minor improvements.
-
-----------------------------------------------------------------
-Andy Shevchenko (18):
-      pinctrl: baytrail: Unify style of error and debug messages
-      pinctrl: baytrail: Use BIT() in BYT_PULL_ASSIGN_* definitions
-      pinctrl: cherryview: Don't use IRQ core constanst for invalid IRQ
-      pinctrl: cherryview: Return correct value if pin in push-pull mode
-      pinctrl: merrifield: Fix open-drain pin mode configuration
-      pinctrl: merrifield: Use BUFCFG_PINMODE_GPIO in ->pin_dbg_show()
-      pinctrl: moorefield: Fix open-drain pin mode configuration
-      pinctrl: moorefield: Use BUFCFG_PINMODE_GPIO in ->pin_dbg_show()
-      pinctrl: intel: Add Intel Meteor Lake-S pin controller support
-      pinctrl: Duplicate user memory in one go in pinmux_select()
-      pinctrl: Relax user input size in pinmux_select()
-      lib/string_helpers: Add missing header files to MAINTAINERS database
-      lib/string_helpers: Split out string_choices.h
-      lib/string_choices: Add str_high_low() helper
-      pinctrl: baytrail: Use str_hi_lo() helper
-      pinctrl: lantiq: Remove unused of_gpio.h inclusion
-      pinctrl: spear: Remove unused of_gpio.h inclusion
-      pinctrl: cherryview: Drop goto label
-
-Arnd Bergmann (2):
-      pinctrl: mlxbf3: remove broken Kconfig 'select'
-      pinctrl: tegra: avoid duplicate field initializers
-
-Bartosz Golaszewski (1):
-      pinctrl: qcom: sa8775p: add the wakeirq map
-
-Chester Lin (1):
-      pinctrl: s32: separate const device data from struct s32_pinctrl_soc_=
-info
-
-Christophe JAILLET (1):
-      pinctrl: bcm2835: Handle gpiochip_add_pin_range() errors
-
-Claudiu Beznea (2):
-      pinctrl: microchip-sgpio: check return value of devm_kasprintf()
-      pinctrl: at91-pio4: check return value of devm_kasprintf()
-
-Dan Carpenter (1):
-      pinctrl: at91: fix a couple NULL vs IS_ERR() checks
-
-Jiasheng Jiang (1):
-      pinctrl: npcm7xx: Add missing check for ioremap
-
-Jonathan McDowell (1):
-      pinctrl: axp209: Add support for GPIO3 on the AXP209
-
-Kornel Dul=C4=99ba (1):
-      pinctrl: amd: Detect and mask spurious interrupts
-
-Krzysztof Kozlowski (14):
-      dt-bindings: pinctrl: qcom,ipq9574-tlmm: simplify with
-unevaluatedProperties
-      dt-bindings: pinctrl: qcom,sc8280xp-tlmm: simplify with
-unevaluatedProperties
-      dt-bindings: pinctrl: qcom,qcm2290-tlmm: simplify with
-unevaluatedProperties
-      dt-bindings: pinctrl: qcom,sm7150-tlmm: simplify with
-unevaluatedProperties
-      pinctrl: qcom: sc8180x: gracefully handle missing IO memory resource
-      pinctrl: qcom: qdf2xxx: drop ACPI_PTR
-      pinctrl: qcom: fix indentation in Kconfig
-      pinctrl: qcom: correct language typo (Technologies)
-      pinctrl: qcom: drop unneeded GPIOLIB dependency
-      pinctrl: qcom: mark true OF dependency - common MSM pinctrl code
-      pinctrl: qcom: allow true compile testing
-      pinctrl: qcom: organize main SoC drivers in new Kconfig.msm
-      pinctrl: qcom: organize audio drivers in menuconfig
-      dt-bindings: pinctrl: qcom,sdx65-tlmm: add pcie_clkreq function
-
-Linus Walleij (3):
-      Merge tag 'renesas-pinctrl-for-v6.5-tag1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
-into devel
-      Merge tag 'qcom-pinctrl-6.5' of
-https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt into
-devel
-      Merge tag 'intel-pinctrl-v6.5-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into devel
-
-Lizhe (1):
-      pinctrl: microchip: Remove redundant clearing of IRQ_TYPE_SENSE_MASK
-
-Lu Hongfei (1):
-      pinctrl: nxp: Fix resource leaks in for_each_child_of_node() loops
-
-Luca Weiss (2):
-      dt-bindings: pinctrl: qcom,pmic-gpio: add PM8953
-      pinctrl: qcom: spmi-gpio: Add PM8953 support
-
-Marek Vasut (1):
-      pinctrl: renesas: Fix spaces followed by tabs
-
-Mario Limonciello (3):
-      pinctrl: amd: Detect internal GPIO0 debounce handling
-      pinctrl: amd: Fix mistake in handling clearing pins at startup
-      pinctrl: amd: Revert "pinctrl: amd: disable and mask interrupts on pr=
-obe"
-
-Nishanth Menon (1):
-      dt-bindings: pinctrl: Drop k3
-
-Prathamesh Shete (3):
-      dt-bindings: pinctrl: Document Tegra234 pin controllers
-      pinctrl: tegra: Add Tegra234 pinmux driver
-      gpio: tegra186: Check PMC driver status before any request
-
-Raag Jadav (5):
-      pinctrl: intel: refine ->set_mux() hook
-      pinctrl: intel: refine ->irq_set_type() hook
-      pinctrl: baytrail: reduce scope of spinlock in ->dbg_show() hook
-      pinctrl: baytrail: add warning for BYT_VAL_REG retrieval failure
-      pinctrl: baytrail: invert if condition
-
-Rohit Agarwal (5):
-      pinctrl: qcom: Remove the msm_function struct
-      pinctrl: qcom: Refactor generic qcom pinctrl driver
-      dt-bindings: pinctrl: qcom: Add SDX75 pinctrl devicetree compatible
-      MAINTAINERS: Update the entry for pinctrl maintainers
-      pinctrl: qcom: Add SDX75 pincontrol driver
-
-Ryan Wanner (2):
-      dt-bindings: pinctrl: at91-pio4: Add push-pull support
-      pinctrl: at91-pio4: Enable Push-Pull configuration
-
-Sricharan Ramabadhran (2):
-      dt-bindings: pinctrl: qcom: Add support for ipq5018
-      pinctrl: qcom: Add IPQ5018 pinctrl driver
-
-Thierry Reding (2):
-      pinctrl: tegra: Duplicate pinmux functions table
-      pinctrl: tegra: Consistently refer to SoC data
-
-Uwe Kleine-K=C3=B6nig (1):
-      pinctrl: Switch i2c drivers back to use .probe()
-
-Wells Lu (2):
-      pinctrl: sunplus: Add check for kmalloc
-      pinctrl:sunplus: Add check for kmalloc
-
-Xiaolei Wang (1):
-      pinctrl: freescale: Fix a memory out of bounds when num_configs is 1
-
- .../bindings/pinctrl/atmel,at91-pio4-pinctrl.txt   |    3 +-
- .../pinctrl/nvidia,tegra234-pinmux-aon.yaml        |   78 +
- .../pinctrl/nvidia,tegra234-pinmux-common.yaml     |   66 +
- .../bindings/pinctrl/nvidia,tegra234-pinmux.yaml   |  139 ++
- .../bindings/pinctrl/qcom,ipq5018-tlmm.yaml        |  127 ++
- .../bindings/pinctrl/qcom,ipq9574-tlmm.yaml        |   11 +-
- .../bindings/pinctrl/qcom,pmic-gpio.yaml           |    3 +
- .../bindings/pinctrl/qcom,qcm2290-tlmm.yaml        |   11 +-
- .../bindings/pinctrl/qcom,sc8280xp-tlmm.yaml       |   12 +-
- .../bindings/pinctrl/qcom,sdx65-tlmm.yaml          |    2 +-
- .../bindings/pinctrl/qcom,sdx75-tlmm.yaml          |  137 ++
- .../bindings/pinctrl/qcom,sm7150-tlmm.yaml         |   11 +-
- MAINTAINERS                                        |    6 +-
- drivers/gpio/gpio-tegra186.c                       |   14 +-
- drivers/pinctrl/Kconfig                            |    1 -
- drivers/pinctrl/Makefile                           |    2 +-
- drivers/pinctrl/bcm/pinctrl-bcm2835.c              |    6 +-
- drivers/pinctrl/freescale/pinctrl-scu.c            |    3 +-
- drivers/pinctrl/intel/pinctrl-baytrail.c           |  104 +-
- drivers/pinctrl/intel/pinctrl-cherryview.c         |   26 +-
- drivers/pinctrl/intel/pinctrl-intel.c              |   54 +-
- drivers/pinctrl/intel/pinctrl-merrifield.c         |   16 +-
- drivers/pinctrl/intel/pinctrl-meteorlake.c         |  212 ++-
- drivers/pinctrl/intel/pinctrl-moorefield.c         |   16 +-
- drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c          |    2 +
- drivers/pinctrl/nxp/pinctrl-s32.h                  |   14 +-
- drivers/pinctrl/nxp/pinctrl-s32cc.c                |   42 +-
- drivers/pinctrl/nxp/pinctrl-s32g2.c                |   14 +-
- drivers/pinctrl/pinctrl-amd.c                      |   50 +-
- drivers/pinctrl/pinctrl-amd.h                      |    1 +
- drivers/pinctrl/pinctrl-at91-pio4.c                |   17 +-
- drivers/pinctrl/pinctrl-at91.c                     |    8 +-
- drivers/pinctrl/pinctrl-axp209.c                   |   42 +
- drivers/pinctrl/pinctrl-cy8c95x0.c                 |    2 +-
- drivers/pinctrl/pinctrl-falcon.c                   |    1 -
- drivers/pinctrl/pinctrl-mcp23s08_i2c.c             |    2 +-
- drivers/pinctrl/pinctrl-microchip-sgpio.c          |    5 +-
- drivers/pinctrl/pinctrl-sx150x.c                   |    2 +-
- drivers/pinctrl/pinctrl-xway.c                     |    2 +-
- drivers/pinctrl/pinmux.c                           |   15 +-
- drivers/pinctrl/qcom/Kconfig                       |  463 +----
- drivers/pinctrl/qcom/Kconfig.msm                   |  369 ++++
- drivers/pinctrl/qcom/Makefile                      |    4 +-
- drivers/pinctrl/qcom/pinctrl-apq8064.c             |  104 +-
- drivers/pinctrl/qcom/pinctrl-apq8084.c             |  264 ++-
- drivers/pinctrl/qcom/pinctrl-ipq4019.c             |  104 +-
- drivers/pinctrl/qcom/pinctrl-ipq5018.c             |  783 ++++++++
- drivers/pinctrl/qcom/pinctrl-ipq5332.c             |  206 +-
- drivers/pinctrl/qcom/pinctrl-ipq6018.c             |  260 ++-
- drivers/pinctrl/qcom/pinctrl-ipq8064.c             |  114 +-
- drivers/pinctrl/qcom/pinctrl-ipq8074.c             |  240 ++-
- drivers/pinctrl/qcom/pinctrl-ipq9574.c             |  176 +-
- drivers/pinctrl/qcom/pinctrl-mdm9607.c             |  276 ++-
- drivers/pinctrl/qcom/pinctrl-mdm9615.c             |   90 +-
- drivers/pinctrl/qcom/pinctrl-msm.c                 |   13 +-
- drivers/pinctrl/qcom/pinctrl-msm.h                 |   42 +-
- drivers/pinctrl/qcom/pinctrl-msm8226.c             |  156 +-
- drivers/pinctrl/qcom/pinctrl-msm8660.c             |  252 ++-
- drivers/pinctrl/qcom/pinctrl-msm8909.c             |  268 ++-
- drivers/pinctrl/qcom/pinctrl-msm8916.c             |  556 +++---
- drivers/pinctrl/qcom/pinctrl-msm8953.c             |  424 +++--
- drivers/pinctrl/qcom/pinctrl-msm8960.c             |  464 +++--
- drivers/pinctrl/qcom/pinctrl-msm8976.c             |  212 +--
- drivers/pinctrl/qcom/pinctrl-msm8994.c             |  564 +++---
- drivers/pinctrl/qcom/pinctrl-msm8996.c             |  508 +++--
- drivers/pinctrl/qcom/pinctrl-msm8998.c             |  380 ++--
- drivers/pinctrl/qcom/pinctrl-msm8x74.c             |  474 +++--
- drivers/pinctrl/qcom/pinctrl-qcm2290.c             |  230 ++-
- drivers/pinctrl/qcom/pinctrl-qcs404.c              |  388 ++--
- drivers/pinctrl/qcom/pinctrl-qdf2xxx.c             |    8 +-
- drivers/pinctrl/qcom/pinctrl-qdu1000.c             |  249 ++-
- drivers/pinctrl/qcom/pinctrl-sa8775p.c             |  327 ++--
- drivers/pinctrl/qcom/pinctrl-sc7180.c              |  254 ++-
- drivers/pinctrl/qcom/pinctrl-sc7280.c              |  322 ++--
- drivers/pinctrl/qcom/pinctrl-sc8180x.c             |  292 ++-
- drivers/pinctrl/qcom/pinctrl-sc8280xp.c            |  358 ++--
- drivers/pinctrl/qcom/pinctrl-sdm660.c              |  387 ++--
- drivers/pinctrl/qcom/pinctrl-sdm670.c              |  284 ++-
- drivers/pinctrl/qcom/pinctrl-sdm845.c              |  286 ++-
- drivers/pinctrl/qcom/pinctrl-sdx55.c               |  190 +-
- drivers/pinctrl/qcom/pinctrl-sdx65.c               |  194 +-
- drivers/pinctrl/qcom/pinctrl-sdx75.c               | 1144 ++++++++++++
- drivers/pinctrl/qcom/pinctrl-sm6115.c              |  162 +-
- drivers/pinctrl/qcom/pinctrl-sm6125.c              |  282 ++-
- drivers/pinctrl/qcom/pinctrl-sm6350.c              |  296 ++-
- drivers/pinctrl/qcom/pinctrl-sm6375.c              |  358 ++--
- drivers/pinctrl/qcom/pinctrl-sm7150.c              |  247 ++-
- drivers/pinctrl/qcom/pinctrl-sm8150.c              |  286 ++-
- drivers/pinctrl/qcom/pinctrl-sm8250.c              |  258 ++-
- drivers/pinctrl/qcom/pinctrl-sm8350.c              |  298 ++-
- drivers/pinctrl/qcom/pinctrl-sm8450.c              |  300 ++-
- drivers/pinctrl/qcom/pinctrl-sm8550.c              |  320 ++--
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    2 +
- drivers/pinctrl/renesas/pfc-r8a77970.c             |    2 +-
- drivers/pinctrl/renesas/pfc-r8a77980.c             |    6 +-
- drivers/pinctrl/spear/pinctrl-spear.c              |    1 -
- drivers/pinctrl/sunplus/sppctl.c                   |   23 +-
- drivers/pinctrl/tegra/Kconfig                      |    4 +
- drivers/pinctrl/tegra/Makefile                     |    1 +
- drivers/pinctrl/tegra/pinctrl-tegra.c              |   28 +-
- drivers/pinctrl/tegra/pinctrl-tegra.h              |    3 +-
- drivers/pinctrl/tegra/pinctrl-tegra114.c           |    7 +-
- drivers/pinctrl/tegra/pinctrl-tegra124.c           |    7 +-
- drivers/pinctrl/tegra/pinctrl-tegra194.c           |    7 +-
- drivers/pinctrl/tegra/pinctrl-tegra20.c            |    7 +-
- drivers/pinctrl/tegra/pinctrl-tegra210.c           |    7 +-
- drivers/pinctrl/tegra/pinctrl-tegra234.c           | 1960 ++++++++++++++++=
-++++
- drivers/pinctrl/tegra/pinctrl-tegra30.c            |    7 +-
- drivers/soc/tegra/Kconfig                          |    1 +
- include/dt-bindings/pinctrl/k3.h                   |   60 -
- include/linux/string_choices.h                     |   44 +
- include/linux/string_helpers.h                     |   26 +-
- 112 files changed, 11602 insertions(+), 7366 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-aon.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux-common.yam=
-l
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/nvidia,tegra234-pinmux.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,ipq5018-tlmm.yaml
- create mode 100644
-Documentation/devicetree/bindings/pinctrl/qcom,sdx75-tlmm.yaml
- create mode 100644 drivers/pinctrl/qcom/Kconfig.msm
- create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq5018.c
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sdx75.c
- create mode 100644 drivers/pinctrl/tegra/pinctrl-tegra234.c
- delete mode 100644 include/dt-bindings/pinctrl/k3.h
- create mode 100644 include/linux/string_choices.h
+> 
+>> +#include <linux/of_reserved_mem.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pstore_ram.h>
+>> +
+>> +struct qcom_ramoops_dd {
+>> +       struct ramoops_platform_data qcom_ramoops_pdata;
+>> +       struct platform_device *ramoops_pdev;
+>> +};
+>> +
+>> +static int qcom_ramoops_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device_node *of_node = pdev->dev.of_node;
+>> +       struct qcom_ramoops_dd *qcom_rdd;
+>> +       struct ramoops_platform_data *pdata;
+>> +       struct reserved_mem *rmem;
+>> +       struct device_node *node;
+>> +       long ret;
+>> +
+>> +       node = of_parse_phandle(of_node, "memory-region", 0);
+>> +       if (!node)
+>> +               return -ENODEV;
+>> +
+>> +       rmem = of_reserved_mem_lookup(node);
+>> +       of_node_put(node);
+>> +       if (!rmem) {
+>> +               dev_err(&pdev->dev, "failed to locate DT /reserved-memory resource\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       qcom_rdd = devm_kzalloc(&pdev->dev, sizeof(*qcom_rdd), GFP_KERNEL);
+>> +       if (!qcom_rdd)
+>> +               return -ENOMEM;
+>> +
+>> +       pdata = &qcom_rdd->qcom_ramoops_pdata;
+>> +       pdata->mem_size = rmem->size;
+>> +       pdata->mem_address = rmem->base;
+>> +       ramoops_parse_dt(pdev, pdata);
+>> +
+>> +       qcom_rdd->ramoops_pdev = platform_device_register_data(NULL, "ramoops", -1,
+>> +                                                              pdata, sizeof(*pdata));
+>> +       if (IS_ERR(qcom_rdd->ramoops_pdev)) {
+>> +               ret = PTR_ERR(qcom_rdd->ramoops_pdev);
+>> +               dev_err(&pdev->dev, "could not create platform device: %ld\n", ret);
+>> +               qcom_rdd->ramoops_pdev = NULL;
+>> +       }
+>> +       platform_set_drvdata(pdev, qcom_rdd);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static void qcom_ramoops_remove(struct platform_device *pdev)
+>> +{
+>> +       struct qcom_ramoops_dd *qcom_rdd = platform_get_drvdata(pdev);
+>> +
+>> +       platform_device_unregister(qcom_rdd->ramoops_pdev);
+>> +       qcom_rdd->ramoops_pdev = NULL;
+>> +}
+>> +
+>> +static const struct of_device_id qcom_ramoops_of_match[] = {
+>> +       { .compatible = "qcom,ramoops"},
+>> +       {}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, qcom_ramoops_of_match);
+>> +
+>> +static struct platform_driver qcom_ramoops_drv = {
+>> +       .driver         = {
+>> +               .name   = "qcom,ramoops",
+>> +               .of_match_table = qcom_ramoops_of_match,
+>> +       },
+>> +       .probe = qcom_ramoops_probe,
+>> +       .remove_new = qcom_ramoops_remove,
+>> +};
+>> +
+>> +module_platform_driver(qcom_ramoops_drv);
+>> +
+>> +MODULE_DESCRIPTION("Qualcomm ramoops minidump driver");
+>> +MODULE_LICENSE("GPL");
+>> --
+>> 2.7.4
+>>
