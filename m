@@ -2,59 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 666A37423CB
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jun 2023 12:15:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C55C7423CD
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jun 2023 12:16:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231778AbjF2KPr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Jun 2023 06:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49804 "EHLO
+        id S231272AbjF2KQJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Jun 2023 06:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231726AbjF2KPO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jun 2023 06:15:14 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A7ED10F
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Jun 2023 03:15:12 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1b8303cd32aso4328325ad.2
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Jun 2023 03:15:12 -0700 (PDT)
+        with ESMTP id S232063AbjF2KPU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jun 2023 06:15:20 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A83735B7
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Jun 2023 03:15:16 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b7fb02edfaso4077575ad.3
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Jun 2023 03:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688033711; x=1690625711;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfzvLhGFR2gpzEGeSCGgmzy7SXc9XSjXyD4CdFPRIpM=;
-        b=BptoxjldIipk40vmM/6b/ePeav2rHmReGrSoPjiNjEq+qa2IhI/yqNbl0yvOGRIe6Z
-         j3xrIvrXl+ycRdTQ5QbsH7loXcVAMQSyqStSy5X8OegcJ4s4dnqgkVn/FCFo/l8pOi/3
-         v4rgjNtD68BwRsn+uckbiGl3ISluS+h3VVE3JzaRTQej+/2CLfuItSewYlqG958qCZnu
-         T7R0vwq4OGm238Klnoxm4ZGDILzMtAkK7bg3fbzYeNjrL91TGl3GBLR8PprA2vyLSbRD
-         V13FLsSh+p/fgrR3b7XT9688Nb7C/snZ77IUF1cFmLFd3S+ZrFTOHf52NQ6jppDd6GcY
-         xDeQ==
+        d=gmail.com; s=20221208; t=1688033716; x=1690625716;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+NOj3wi28honUWM9RPgRICBoErJ3JqoQg5e+Jljp90c=;
+        b=OYJFindcC0N4MQ2fkduoaRK6Pi/BG5UVsn3x4UBp8wcSgqur9Hdr1MdIj/MiA2azjM
+         TG6WM/tB1TD49K3/O3/0WPI/i7WMU+QXs9tt86yz/cxgiiZHam6s8j+RTx1FeLmH9IDz
+         +u4vOb8Khma29zxPkN+Mk/SYHYRORjEA4f69um4thqOH9QnyJQN8IGAmjhdFDxZ+s6i8
+         wedtOSkdwD5prVrsYCo3WDVp4xvkqw55AnQC/QaG8UwTDmuVnmLECVEfkuk+uIM8qkTg
+         CF4yn7N/wvtzbui9YDLTXiB7HatCrqEUROR++Mv3GuvVNBxv5zYEiXJPJUFT8Qv6NJzO
+         xDzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688033711; x=1690625711;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nfzvLhGFR2gpzEGeSCGgmzy7SXc9XSjXyD4CdFPRIpM=;
-        b=ilKnrHY45LwkudyBJGWQ95/+jXMgXbwsUoHS91lExhIq3PZMt2PZThhL7M0p0Gt2rj
-         3IOAIQ9oG8yIDt3RfduefGkvfEvPQNnEemsuo9sseR8pzYsKZcvbd/uW+lx9vd2RHSib
-         30VD7CoB9VOExqMpxmxdKV9xIoCIOARANe0Arcmyn2/PORYj8c/thpZBIQBnw0fPsJPZ
-         KUu4fsrjxhlIHzlDNcpCdouMPt7nlj4v4RjuZOQFG0MZCH6X07Pxf6rhkpCVs+vGkis2
-         v9ZGsWnmmzALMlSXqnEw2bKXD0RC67ivRim2ayKQdzxsPw7mrVgNYhZNz5jT5w27LvJF
-         Lb8g==
-X-Gm-Message-State: AC+VfDyMITP5wtLTc2lraAx+cqhEAbLc2RhpZ/pnUG+AwrgBpgxMNkCa
-        fVQNNbbZo4O4GjomKrZ7jSv4jJE9izU=
-X-Google-Smtp-Source: ACHHUZ6Sy6OmRCKVEVs5M2GQobu8996nHdtkS00Tm02nJkQ8jrSimussRG1twSGZ4pvlkzQ2hO4vyQ==
-X-Received: by 2002:a17:902:8ec3:b0:1b8:3e15:46a1 with SMTP id x3-20020a1709028ec300b001b83e1546a1mr3807157plo.67.1688033710924;
-        Thu, 29 Jun 2023 03:15:10 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688033716; x=1690625716;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+NOj3wi28honUWM9RPgRICBoErJ3JqoQg5e+Jljp90c=;
+        b=XugLPtGU2+yBlzcm9ex3TADyPWvCiMH4AzFWJYp9Z6l+PfF2eVgw8YlHK/1udfNxIa
+         592Edw9+a97fKQOxPX+YNg+xXaDWEVcSZJaLvRPTxb2xd3QWboGZdbDKNdNrC05t+GnB
+         CpV3BeUV0miQWW4nYwXtaOjXXAP6t9nmAe4pabI214pU7aNcr7OTjau14yanYuBr8231
+         OpHuUkITtl+e5H81fJXFGtoJFnBGYQg3+6S7eb6S6Rwa2zNI1RJXTr8mYZwzDJ4yyhIL
+         g+RAI+6wVbivURY8P6vFaPOtQ11NioQ2Gega6eKG9vDkIHG1o49I6j92l3jumHZunT3k
+         GtnA==
+X-Gm-Message-State: AC+VfDxhdFOH5Cxj5iHex/aHywmKkKfiyDGMl+u23t++onumsbLTmtzB
+        6598UlvyAN38Emo/4oof8o0MY31MyHU=
+X-Google-Smtp-Source: ACHHUZ7h3TTO+guuZmtsc5zS/PnFbZak53kfXFqB/DXuoPn41w8gK+t6FdeEWQ7j9onI9QaK5rycvw==
+X-Received: by 2002:a17:902:b288:b0:1aa:d971:4623 with SMTP id u8-20020a170902b28800b001aad9714623mr15459872plr.38.1688033715795;
+        Thu, 29 Jun 2023 03:15:15 -0700 (PDT)
 Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id u13-20020a170902a60d00b001b7f71ec608sm7394249plq.155.2023.06.29.03.15.08
+        by smtp.gmail.com with ESMTPSA id u13-20020a170902a60d00b001b7f71ec608sm7394249plq.155.2023.06.29.03.15.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jun 2023 03:15:10 -0700 (PDT)
+        Thu, 29 Jun 2023 03:15:15 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH 0/2] minor build warning fixes
-Date:   Thu, 29 Jun 2023 18:14:53 +0800
-Message-ID: <20230629101455.127795-1-warthog618@gmail.com>
+Subject: [libgpiod][PATCH 1/2] examples: fix typo in Makefile.am
+Date:   Thu, 29 Jun 2023 18:14:54 +0800
+Message-ID: <20230629101455.127795-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230629101455.127795-1-warthog618@gmail.com>
+References: <20230629101455.127795-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -67,23 +70,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fixes for a couple of minor warnings reported when building with a fresh
-OS install.
-The first fixes another typo in the examples makefile.
-The second fixes another warning that is emitted by recent rust.
+The trailing "s" is missing from "toggle_multiple_line_values" in
+several places, so add it.
 
-I note that with a fresh/minimal OS install the rust bindings still fail
-to build due to a missing dependency on libclang and clang headers, but
-that isn't tested for by configure - it fails during the build.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ examples/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kent Gibson (2):
-  examples: fix typo in Makefile.am
-  bindings: rust: fix unclear resolver warning
-
- bindings/rust/Cargo.toml | 2 ++
- examples/Makefile.am     | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
+diff --git a/examples/Makefile.am b/examples/Makefile.am
+index daf902b..e92f303 100644
+--- a/examples/Makefile.am
++++ b/examples/Makefile.am
+@@ -37,7 +37,7 @@ reconfigure_input_to_output_SOURCES = reconfigure_input_to_output.c
+ 
+ toggle_line_value_SOURCES = toggle_line_value.c
+ 
+-toggle_multiple_line_value_SOURCES = toggle_multiple_line_value.c
++toggle_multiple_line_values_SOURCES = toggle_multiple_line_values.c
+ 
+ watch_line_info_SOURCES = watch_line_info.c
+ 
 -- 
 2.41.0
 
