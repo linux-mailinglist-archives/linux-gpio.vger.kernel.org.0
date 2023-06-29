@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84372742D39
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jun 2023 21:21:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCACB742D44
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Jun 2023 21:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233054AbjF2TGN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Jun 2023 15:06:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37102 "EHLO
+        id S233362AbjF2TGr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Jun 2023 15:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233643AbjF2TF2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jun 2023 15:05:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0918448C;
-        Thu, 29 Jun 2023 12:02:16 -0700 (PDT)
+        with ESMTP id S233699AbjF2TFg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Jun 2023 15:05:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F05944A7;
+        Thu, 29 Jun 2023 12:02:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3029661626;
-        Thu, 29 Jun 2023 19:02:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4485AC4339A;
-        Thu, 29 Jun 2023 19:02:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AE5E6615FF;
+        Thu, 29 Jun 2023 19:02:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA0D0C43391;
+        Thu, 29 Jun 2023 19:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688065334;
-        bh=g2nnAaWXoJjDMmOkoyWfPt9dEf5Fmjq1wR3BX/785SQ=;
+        s=k20201202; t=1688065341;
+        bh=fMQyK/KxYjKiGaE5UVh6qJR7VkjoaoQwF56y/BibPGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3+7hNUXgxo8kC3itjbPW3neRHgEPgHWrJ8e2cVYs9Art35MDBTK6yo2FMSSA9J82
-         4L25QEY+a1ZFT6WqGbbIznX/tz/3dy2IuatSmPJqt/A1J2DVpJgcklJR6dGWribWn9
-         Xp9hCqpbH8speoLzUaFlt0+hjIr8LdDbnyHWu9La/PhabZ7IrJtR1ApMsqdK8w+Ka8
-         mnPUUN1wqDNElV2UN9Z1YM98VuGEvUjjM1mPY2/qo2oIDOf50w7ocfeqtu5hyxYrSf
-         /1IvNQ8E0on8whBZMyan7tkogAmKu55nfiB95dH1yvZvIQXdNw1jSOy+8sU90Pqi8s
-         NrjF7edjpTWbg==
+        b=EImaIpDskFHxsnqfaWquWRJK4EshDWoGovxkK9K227XhSpUPikf3ri64Ly/LjpR9L
+         dj7qfoZRTbA0+Knay+7wpahR6UwPEWdr8T7rK/PR7IYVMeS+sHL3XK3M4ZGz6NgmaW
+         SXRQUCmY9blQzT96X94TyPpA0jofm8jB4Sp8zBbEMQiocMj+388MBo9OvfxRHO6K7C
+         VRVS+vJ2Sd+f/22YXX0gT3rHcPOLocgJbsc8z7XVNg/sljfH0ZX5V0x+kj0ZvkNOIk
+         dJ9OL+ALgqcYEw85Iy7aTS+zWfq5vJwJYHrZzdQXJOhgt6R5p6QHyYgOjqRsxGOBxq
+         x12AlFNWeZsQg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ricardo Ribalda <ribalda@chromium.org>,
@@ -42,19 +42,19 @@ Cc:     Ricardo Ribalda <ribalda@chromium.org>,
         Sasha Levin <sashal@kernel.org>, sean.wang@kernel.org,
         linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 2/5] pinctrl: meditatek: Startup with the IRQs disabled
-Date:   Thu, 29 Jun 2023 15:02:09 -0400
-Message-Id: <20230629190212.908306-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 2/5] pinctrl: meditatek: Startup with the IRQs disabled
+Date:   Thu, 29 Jun 2023 15:02:16 -0400
+Message-Id: <20230629190219.908379-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230629190212.908306-1-sashal@kernel.org>
-References: <20230629190212.908306-1-sashal@kernel.org>
+In-Reply-To: <20230629190219.908379-1-sashal@kernel.org>
+References: <20230629190219.908379-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.248
+X-stable-base: Linux 4.19.287
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -135,7 +135,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index 7e526bcf5e0b5..24502dfeb83fc 100644
+index 564cfaee129d2..55e3305ede811 100644
 --- a/drivers/pinctrl/mediatek/mtk-eint.c
 +++ b/drivers/pinctrl/mediatek/mtk-eint.c
 @@ -277,12 +277,15 @@ static struct irq_chip mtk_eint_irq_chip = {
