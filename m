@@ -2,68 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DFE4743B30
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 13:54:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5FCF743B59
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 14:01:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232862AbjF3Lyu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 07:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45588 "EHLO
+        id S232647AbjF3MBO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 08:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232858AbjF3Lyr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 07:54:47 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC391EE
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:54:42 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1b801e6ce85so11497685ad.1
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:54:42 -0700 (PDT)
+        with ESMTP id S232903AbjF3MBL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 08:01:11 -0400
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5043C0A
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:01:07 -0700 (PDT)
+Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-47e1c7c1148so302703e0c.0
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688126082; x=1690718082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7x9ANTj/Kaoj2qB8QPhHY0TQ1r2cHsLxVGC+nvMhijs=;
-        b=nlLmHxZnm1w3r+qSN0kBPy9JdyWlSdxDUM5PJxYh4Ykc9MiaOuRJTq1Ut68T4ClxpJ
-         1UtGBMrTrNycrZqCYlXP8CNWGjvRffWUfe5u0Ji8kshettU9ehmJoTkSOuHzaiBFis8k
-         lpKtCjU6gTktR1rVBr9Z4ElpgnKd+nnVLCrstpSf8we+4pJJI/1nOzu+TNrzOOmgx5Tk
-         R5MhaeOy/qTMX0m8XZLFUb8jvQ42oQBRJzg7bs8nqfbUU+d/7GqeRoK7dvKn071wpPXy
-         JS7QYhszNtVwqCs1/7QSEyiXkf99t7WFNnmZgm9IrM1PW4Pa6ta+4jssr0oPyR1287H4
-         4bFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688126082; x=1690718082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688126467; x=1690718467;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7x9ANTj/Kaoj2qB8QPhHY0TQ1r2cHsLxVGC+nvMhijs=;
-        b=keJBy0cL1/AevSJJdtD5HFNtHjdNRu27wbMhTT0lBGC027UBdlKnuRWYWo2gjO9H6l
-         cKSZx+qwNMxxfctLeRkSg6r6w8n+8xOOZ4IuSEnAY75LNbIFYgimPYI5VyDc+rYAt8EF
-         Hi2EylxpMPbNaZyWksB5HeVLYspaq695cUep7FLF7w8ZixwlmTJjdJpNoT8sE6qjPFwa
-         O45xpenuoEdlljFPC3tJYOPB1qgNCWL6kI8CUOvmIkGLq48LZ7ZFY7kPlFdbsShcIKb9
-         cgtqUXObbK+LkiY9c4KM/TAr9Mh9x9J+w3mvv/3XfokWbFHCWRV2wLZK42N5HvVDL5xT
-         9IYg==
-X-Gm-Message-State: AC+VfDyakwuqOFsnpKfevZfFYzPlfTrj4bXTGS0JAF4fKUr/p4lbGwZw
-        I9YGfKYSh1hNHPbWMccmXqD1vW6OKAs=
-X-Google-Smtp-Source: ACHHUZ7nFFQYcHRzBiSaEcMCYRUwNjSg+IPnje/mrjAywEPNlJ+Luzdx2QNIlCWPUxw0xas3xBP0OQ==
-X-Received: by 2002:a17:903:2308:b0:1b8:1636:b26 with SMTP id d8-20020a170903230800b001b816360b26mr10471308plh.3.1688126082099;
-        Fri, 30 Jun 2023 04:54:42 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id f13-20020a170902ce8d00b001b80de83b10sm7697216plg.301.2023.06.30.04.54.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 04:54:41 -0700 (PDT)
-Date:   Fri, 30 Jun 2023 19:54:37 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [libgpiod][PATCH v2 0/4] bindings: rust: clippy: fix warnings
-Message-ID: <ZJ7CfaI4n3zeVNyW@sol>
-References: <20230630-clippy-v2-0-f44447925ad6@linaro.org>
+        bh=JRepDYDrQnbTfhOGkLBDEB/AHtipHwSB8lprqXMRDG0=;
+        b=E4ubv2eQC+AnTLUI1EhaL0Cy4juszE5S5X9YRbMvCMfSeNQyxh57PzK1T3jHQbBHGz
+         1+hRDDPDtmTVsSFcpUR4FFOHnZxOG+qh5WA8zgmv/NK0AADKE1PaNow44juHFdWYUKpN
+         3hZbw9FHyKxYqcK50r22JvwZ2UrEy/rlrkwH7SZZZNKJ74w2qzbZq1nxQUCCCCjyUXxN
+         ObEutBsQCYuHpDBRKFXzrVMfKWUifct6y2zzy6qOICEYVSjtGstoLLVVQQRl3HCT31ur
+         MTtyfbRExkI4BrtmssRYPenDIPKr2ab+80VrD5p9A/k6GQkekwapma2tnTrqzjFqmdM2
+         elRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688126467; x=1690718467;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JRepDYDrQnbTfhOGkLBDEB/AHtipHwSB8lprqXMRDG0=;
+        b=lHo9sdBJaHxIZCUvZNyeE7yRm+rJL7PRRfPpF/3cu8B9OVBaWiHwKonXfBk17i2vvA
+         OOoWSNB6NFqyUN10iaRFYBNxvqjhGwXSPS43BZxT9iry7sxvjc/UDg/Uz/9HIXOfkXGd
+         +ZaFcSjMLz8IFnF/CRPpnXExoS12GsrQLstA1c4uIER3rYsEyq8rsTdJ6aklHrVJEiMO
+         zwrv4Y5z/oNBER8x8RNDj0TIcYzs1DbonpILmxyf7POmRHOcJqu5l7uw1U+X6AuUyG8c
+         ooYFbHl1Dk8nHAv9hnez2qIzdEl5BBcGBY7ooWZCi5h2KcZmmjcc/FQ69kEti53gx7Li
+         ACOw==
+X-Gm-Message-State: ABy/qLahIv9wKULbXcB1Lf7/fMSH1CHdydruN7ZvK2ly63z3vv6Ade4C
+        4dj3C62YMrklVi+TTGZi67cane/5oupQTnqqY/NjaA==
+X-Google-Smtp-Source: APBJJlGq4YkWMDsIX/TmWydHfD6qHEZqs3SyRk13XJY2JjkLPQb4OZZng1OfWMQmSsAwnzw/qRyVcHKIujfY97CNFvE=
+X-Received: by 2002:a1f:41d7:0:b0:440:4946:fac with SMTP id
+ o206-20020a1f41d7000000b0044049460facmr1140050vka.4.1688126466835; Fri, 30
+ Jun 2023 05:01:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230630-clippy-v2-0-f44447925ad6@linaro.org>
+References: <20230629101455.127795-1-warthog618@gmail.com> <20230629101455.127795-2-warthog618@gmail.com>
+In-Reply-To: <20230629101455.127795-2-warthog618@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 30 Jun 2023 14:00:56 +0200
+Message-ID: <CAMRc=MeR=cEoDamycgdZyLPP1F8gqpkagaTeXeGCK00Pb=wF7w@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 1/2] examples: fix typo in Makefile.am
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -72,83 +67,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 30, 2023 at 01:18:43PM +0200, Erik Schilling wrote:
-> This follows up on my promise on Kent's series [1] to look into whether
-> these casts are needed or not. Most are not, a few are false-positives.
-> 
-> I also explored some shunit2 based test-script to automate the testing,
-> but that became ugly with linking issue and needs me to revisit it
-> another time. So this only sends the clippy fixes for now.
-> 
-> Tested the build (lib + examples + test) and clippy report on:
-> - Fedora 38 x86_64
-> - Fedora 38 aarch64
-> - Debian 12 armv7hf
-> 
-> Test execution (cargo test) was tested on:
-> - Fedora 38 x86_64
-> - Fedora 38 aarch64
-> 
-> Could not execute tests on armv7hf due to lack of suitable test
-> environment.
-> 
-> [1] https://lore.kernel.org/r/20230612154055.56556-1-warthog618@gmail.com
-> 
-> To: Linux-GPIO <linux-gpio@vger.kernel.org>
-> Cc: Kent Gibson <warthog618@gmail.com>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
-
-for the series.
-
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-
-Not sure you need to sign-off the cover letter.
-e.g. `git format-patch --cover-letter -s` only signs off the patches,
-not the cover letter.
-Not that it matters - just for future reference.
-
-Good to see the end all those clippy warnings.
-
-Cheers,
-Kent.
-
+On Thu, Jun 29, 2023 at 12:15=E2=80=AFPM Kent Gibson <warthog618@gmail.com>=
+ wrote:
+>
+> The trailing "s" is missing from "toggle_multiple_line_values" in
+> several places, so add it.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
-> Changes in v2:
-> - Changed cover letter title to active language
-> - Improved commit messages (hopefully)
-> - Elaborated what was built and tested
-> - Resent with hacked b4 for proper [libgpiod] tag
-> - Link to v1: https://lore.kernel.org/r/20230629-clippy-v1-0-9ff088713c54@linaro.org
-> 
-> ---
-> Erik Schilling (4):
->       bindings: rust: clippy: drop unnecessary casts
->       bindings: rust: clippy: silence false-positives on casts
->       bindings: rust: clippy: drop unneeded conversions
->       bindings: rust: clippy: silence false-positive on iterator
-> 
->  bindings/rust/gpiosim-sys/src/lib.rs         | 2 +-
->  bindings/rust/gpiosim-sys/src/sim.rs         | 4 ++--
->  bindings/rust/libgpiod/src/chip.rs           | 2 +-
->  bindings/rust/libgpiod/src/edge_event.rs     | 2 +-
->  bindings/rust/libgpiod/src/event_buffer.rs   | 7 +++++--
->  bindings/rust/libgpiod/src/info_event.rs     | 2 +-
->  bindings/rust/libgpiod/src/lib.rs            | 2 +-
->  bindings/rust/libgpiod/src/line_config.rs    | 4 ++--
->  bindings/rust/libgpiod/src/line_info.rs      | 3 +++
->  bindings/rust/libgpiod/src/line_request.rs   | 8 ++++----
->  bindings/rust/libgpiod/src/line_settings.rs  | 5 ++++-
->  bindings/rust/libgpiod/src/request_config.rs | 2 +-
->  bindings/rust/libgpiod/tests/chip.rs         | 2 +-
->  13 files changed, 27 insertions(+), 18 deletions(-)
-> ---
-> base-commit: 4510231c95a087f58a155cf74164e403e1e0584f
-> change-id: 20230629-clippy-890c541c6d09
-> 
-> Best regards,
-> -- 
-> Erik Schilling <erik.schilling@linaro.org>
-> 
+>  examples/Makefile.am | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/examples/Makefile.am b/examples/Makefile.am
+> index daf902b..e92f303 100644
+> --- a/examples/Makefile.am
+> +++ b/examples/Makefile.am
+> @@ -37,7 +37,7 @@ reconfigure_input_to_output_SOURCES =3D reconfigure_inp=
+ut_to_output.c
+>
+>  toggle_line_value_SOURCES =3D toggle_line_value.c
+>
+> -toggle_multiple_line_value_SOURCES =3D toggle_multiple_line_value.c
+> +toggle_multiple_line_values_SOURCES =3D toggle_multiple_line_values.c
+>
+>  watch_line_info_SOURCES =3D watch_line_info.c
+>
+> --
+> 2.41.0
+>
+
+I'm wondering if we should just drop these as autotools will default
+to using a single source file named after the target executable if
+foobar_SOURCES is not defined. (iow: if the target is foobar and no
+foobar_SOURCES is defined, then it will try foobar.c).
+
+Bart
