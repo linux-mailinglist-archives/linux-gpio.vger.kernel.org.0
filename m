@@ -2,114 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5574C743AA9
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 13:19:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45FCE743AE7
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 13:34:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231724AbjF3LTK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 07:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60818 "EHLO
+        id S232590AbjF3LeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 07:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232449AbjF3LTG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 07:19:06 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD424358A
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:19:02 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3fbc54cab6fso9066495e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688123941; x=1690715941;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=foDn46B+pZpT2Whbht946XgZWMtJblU3mUCYvT4/IJM=;
-        b=IszdtquCF5l84t6q4IKRsBzybSI1cba4qox1aR0rGAG4gLq3ZNV9wjQArpAp+4rQO3
-         8D15kUNb7VrY8zL/HzbA9F1WthgEIdm8eLux8lxS4fWZqNANaiW+d/QflirKhGnFwRnU
-         C72ki6cjtbCAyEC/F8+WVF/1LpEzzOxF7Gr6zp7KguhQLhhezhhWexVL1rIftlhKbgOm
-         TD3uLoGJI2OyrOfg8yTNDKYBUYlzqzO/2jTJhgwpag77OBPeKdPb9FKBbZIrSyum4C+S
-         KN5++nE64Jy9kG7gUMl/psiwBJKuIH0AUDP6EjsgyM3Zdcg2nfy2QIRfduDidomOSAEu
-         PuKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688123941; x=1690715941;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=foDn46B+pZpT2Whbht946XgZWMtJblU3mUCYvT4/IJM=;
-        b=gGshm+C6/NSSUM6gIHm0VJFtKUk5UXOrcAS4PQIGKc7JYWkjm0967YwqNjpaMvsFnc
-         xN8unNJkgjm03pnaNWgU016i701Kh52e1Hf560RGi3B0XH48OZeA+PpAEL+GrAzVWyer
-         rLIfMs/Kvba5m0ICZtDnGZEMA0ig8hVVKIHTsC8sMQ+vRijcPZ0Z5eDM/LGPowwrP7T2
-         tfBtOl9wpIRLbWRB6FmD3JNQZgda6O3dc9IH3mPrbZI20SKFBI2JJtAWmVKhoGeJgWUi
-         +yA91xeGY35Y14uSbD093YmyAv6qrJi8145j+9JX+L2GZblYRoObZm20FfkaaJziAk4K
-         ffZQ==
-X-Gm-Message-State: AC+VfDx6cxIROx8qOo/r/iop2btjsURT3nlMqxQovpLfuREhSxUrQ7hs
-        nSmRFlSabViM6ZGeXHZQpvC5b2IsfXvjVlD3pTw=
-X-Google-Smtp-Source: ACHHUZ5OWOF/wU7UFBllboMbEfVLqfZrY5eneE72kjbTj9nb1B2PSmFBaPACv6wPcqRSB9po36f+qg==
-X-Received: by 2002:a1c:4c08:0:b0:3fb:b287:b0ad with SMTP id z8-20020a1c4c08000000b003fbb287b0admr1957215wmf.13.1688123941392;
-        Fri, 30 Jun 2023 04:19:01 -0700 (PDT)
-Received: from [192.168.1.127] (i5C743877.versanet.de. [92.116.56.119])
-        by smtp.gmail.com with ESMTPSA id u20-20020a05600c211400b003fbb618f7adsm4621917wml.15.2023.06.30.04.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 04:19:01 -0700 (PDT)
-From:   Erik Schilling <erik.schilling@linaro.org>
-Date:   Fri, 30 Jun 2023 13:18:47 +0200
-Subject: [libgpiod][PATCH v2 4/4] bindings: rust: clippy: silence
- false-positive on iterator
+        with ESMTP id S232513AbjF3LeF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 07:34:05 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BBF381FE4;
+        Fri, 30 Jun 2023 04:34:03 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D8F2D75;
+        Fri, 30 Jun 2023 04:34:47 -0700 (PDT)
+Received: from e120937-lin (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E91BC3F64C;
+        Fri, 30 Jun 2023 04:34:01 -0700 (PDT)
+Date:   Fri, 30 Jun 2023 12:33:59 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 1/4] firmware: arm_scmi: Add optional flags to
+ extended names helper
+Message-ID: <ZJ69pyXOSzMv8Jad@e120937-lin>
+References: <cover.1686063941.git.oleksii_moisieiev@epam.com>
+ <2ad06a5582bb31e16fe2f497e15cb41e8455e863.1686063941.git.oleksii_moisieiev@epam.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230630-clippy-v2-4-f44447925ad6@linaro.org>
-References: <20230630-clippy-v2-0-f44447925ad6@linaro.org>
-In-Reply-To: <20230630-clippy-v2-0-f44447925ad6@linaro.org>
-To:     Linux-GPIO <linux-gpio@vger.kernel.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Erik Schilling <erik.schilling@linaro.org>
-X-Mailer: b4 0.13-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1688123937; l=1136;
- i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=c74vXxa4MAhI21WLFDLO8nb3tQLt/j3LlAIZ9/MOxpk=;
- b=jo8yedh87k+2pDTwpnEkLgAqWo1Z2aEewmrX678/bCufOc2OkXl3dFxFrBJcIjuUiUaWkJbO3
- n0000zki7PTC1g4fhFEEombvscGMpAYSL+V2t9au4yhFTFR/xOnVdi4
-X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
- pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ad06a5582bb31e16fe2f497e15cb41e8455e863.1686063941.git.oleksii_moisieiev@epam.com>
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This was fixed on clippy master [1], but it is still broken on 0.1.70. So
-lets silence it until the clippy fix is widely available.
+On Tue, Jun 06, 2023 at 04:22:27PM +0000, Oleksii Moisieiev wrote:
+> Some recently added SCMI protocols needs an additional flags parameter to
+> be able to properly configure the command used to query the extended name
+> of a resource.
+> 
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 
-clippy version: clippy 0.1.70 (90c5418 2023-05-31).
+Hi,
 
-[1] https://github.com/rust-lang/rust-clippy/commit/9fa40894103e32364fdbade539d4ecb3d40f3d7f
+This patch was originally at:
 
-Reported-by: Kent Gibson <warthog618@gmail.com>
-Link: https://lore.kernel.org/r/20230612154055.56556-1-warthog618@gmail.com
-Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
----
- bindings/rust/libgpiod/src/event_buffer.rs | 3 +++
- 1 file changed, 3 insertions(+)
+https://lore.kernel.org/linux-arm-kernel/20230505201440.3196734-1-cristian.marussi@arm.com/
 
-diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
-index b79e9ea..2e4bfd3 100644
---- a/bindings/rust/libgpiod/src/event_buffer.rs
-+++ b/bindings/rust/libgpiod/src/event_buffer.rs
-@@ -54,6 +54,9 @@ impl<'a> Iterator for Events<'a> {
-     }
- 
-     fn next(&mut self) -> Option<Self::Item> {
-+        // clippy false-positive, fixed in next clippy release:
-+        // https://github.com/rust-lang/rust-clippy/issues/9820
-+        #[allow(clippy::iter_nth_zero)]
-         self.nth(0)
-     }
- }
+but after applying your series with B4 I can see this patch with you as
+Author and me as Signer :P ... not sure what has gone wrong but, in general
+you should not change Authorship of a someone else patch that you picked in
+your series unless you compeletely reworked it; if you changed it slighlty
+you should note your changes near your Signed-Off, which is, indeed the other
+thing missing here: if you post someone else patch you should add your
+Signed-Off too as last.
 
--- 
-2.41.0
+An example of this in this commit: 7885281260f9b952dc66b67182a2218b01e7859f
 
+Now, I really dont care about Authorship here (but note this also meant Andy
+shouted at you instead of me .. :P), but the Signed-Off and Author
+mismatch has to be fixed at least, like it is now wont be accepted for sure.
+
+Maybe the missing part is in your mail-client not prepending the From:
+line when the sending other people pacthes....git send-email does it
+automatically I think but others MUAs dont know.
+
+More detail here, in case you have not seen it already:
+https://www.kernel.org/doc/html/v4.10/process/email-clients.html
+
+Thanks,
+Cristian
