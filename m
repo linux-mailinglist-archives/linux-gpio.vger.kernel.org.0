@@ -2,110 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 620E9743BC1
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 14:16:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F21C5743BD6
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 14:28:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232650AbjF3MQf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 08:16:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58004 "EHLO
+        id S231765AbjF3M2J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 08:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232342AbjF3MQe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 08:16:34 -0400
-Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A44130
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:16:33 -0700 (PDT)
-Received: by mail-ua1-x931.google.com with SMTP id a1e0cc1a2514c-7943bfaed0dso664055241.0
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:16:33 -0700 (PDT)
+        with ESMTP id S230180AbjF3M2J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 08:28:09 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8068D19B5
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:28:07 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-313e12db357so2200796f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:28:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688127392; x=1690719392;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eeMgCrpN/we7UPAHvpo0KkuimuBDi2UdATuMSMjbRmM=;
-        b=g5Xfeuh70b0Y9URvUiEdoM+h7mi8zDc5+t5jsFU7+iuYvh20597wOpfoVSvEtAGcs5
-         NUGi2c2BmEw6jIeAprzN+Ztx39Ct8cYeLC+Q25u0omO21xOm6jz51Kf7c8y9ELyJWIbw
-         g2xC0tsLrXImwG56bdHtRlq7XOnBb06OLGS1rwNqxWRyd/zlrrJwfNyzeRqWSN1RKPUL
-         iKYxOp0DRJ+lg6m5af8OlNJD3brHIouqEJY9k9Zob2zbXSBvA2TQ5VPsdMAOFqFOfIKE
-         Bjj7or12Dbl3+kHH4Ix9UIkCGXy4TXThKYJIS2Y+ikm3U3HlCTsE+6J/5z5AmxNwqtAZ
-         sDbw==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688128086; x=1690720086;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R7RekjfWWo8VbnYQss2qAr2/EN4cFn8FMfZc8nSZkPQ=;
+        b=z2luj64Zp29Hfp4iarSjScSJZYo1gtXPGGt5pnrHXg+5hJDV44zamxyah22MgcadmC
+         xgXNQVeqCFYO8e8xaC6ede815KqqrwQignRAhIVLIua67pCGSmfIe8rPIBcpso+ORLtg
+         vofqvbEolyL9cvJ6F7QIl5NGoXQBLfzLxop31mcqaE7fsdl3skhY/QHPaUKu9oEg2eH/
+         xsMXjyu8h7Ah3OZjd3xxiPns0wg3u4WnwrcOkR1G7dI23J5RVEqR+07VV/HCiv+H9z5X
+         9Xn7UHWzStVCp6d1JxLXnA3uvZ6DL1zwlpf5XwY9lvCJ4k7oai0E9d4124mVnABJTsFZ
+         OWyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688127392; x=1690719392;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eeMgCrpN/we7UPAHvpo0KkuimuBDi2UdATuMSMjbRmM=;
-        b=NtjtEL0XXfYDOqGTs2q7pQSqG2ztsQ1XL0C0Et+FE5+HblrW4s/iMonpDZ6zEpPeI9
-         4b9T8SrzTIUv1Kd6JtRboC6lrSe7dho8HTCT8AbC+EExwOTCZvjiHDD9L3MaiPFCoVoo
-         3Z/57Rwd8DVhvDJMhYGIT20dge70RiX2X5mZ5TzIvcZUOFJNjzQx7/FYwKIg8vmBitsB
-         PBwAGQiYS5TpNYNRRLzLxhvaLQkRpKoQhyJG3s3SJXbLAnW3mJP3ISoBKQSdOOpNxAfL
-         XibHZJeLwM9qCuH3dA7fQlI7d4A3HmgRfap4pQEfWE7iyFBxc6rKpKAR3Rg6AEk6E6OR
-         nUow==
-X-Gm-Message-State: ABy/qLa/06I3e3S1tzqaj1IubF47ar5qnSN1IpwzsTPznkRT3XOgmN3D
-        4DkWpnyMwHiUTa60gy0FccwO35xc4FWZkO4ZEYj/l2jWD5LcGlkH
-X-Google-Smtp-Source: APBJJlEe5DXUaOsEB31bR7xIEt07mxomx6me52BMLfSYyX3xAAiBhOhz+/QHLCrLtvyEhgk4anjZwDwfj18GiraurAY=
-X-Received: by 2002:a67:f4cb:0:b0:443:8ca0:87a1 with SMTP id
- s11-20020a67f4cb000000b004438ca087a1mr1708999vsn.6.1688127392305; Fri, 30 Jun
- 2023 05:16:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230630090858.37485-1-warthog618@gmail.com>
-In-Reply-To: <20230630090858.37485-1-warthog618@gmail.com>
+        d=1e100.net; s=20221208; t=1688128086; x=1690720086;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R7RekjfWWo8VbnYQss2qAr2/EN4cFn8FMfZc8nSZkPQ=;
+        b=I6XWCMrkPsuBvJ0e05PvTCrX1aCMQLsSvKWBWVV+4cd9U+9eKxbeych1LFncf+004C
+         H9U0vlODlR99cMWgua2NvKUZo+N08mvpbyEIc5n3EzqwOZCvqk54TttOYNtZPegjFzgb
+         Z5vZf5LTaE9d90WdRwezt33Y+Kep2xK0EDZlq6CsSaxN/sJ+/K9HvOQv2GOZazyZpSoY
+         4fmSNAg+KquFcMTUgdakl+IGffkl53c6/bSJ8PfdLaxz/FIiqxNtPTVe3MM5qwm4hSpB
+         3jUxJfb11bs9SIR4ib8kP4ktKR6jTzfYC02mBRu9DJQp70nHo2xxTVBb716UyxAF5k0V
+         j3sg==
+X-Gm-Message-State: ABy/qLYxFAGg74RvyTR1TAurAgfbyxEuEYJ2LchOo1cqNBKzlQsmqvKS
+        ZKSgHcjpdnUpTcu93WUhps8E5A==
+X-Google-Smtp-Source: APBJJlHib59PJQ3tbuFKuSfmX8Qb5m9+rIY08kMJfSRQjXEpYxa0rjS3zIpxEl65nEWTu/3yrXB+Cw==
+X-Received: by 2002:adf:eccc:0:b0:313:f6fc:1f48 with SMTP id s12-20020adfeccc000000b00313f6fc1f48mr2298016wro.14.1688128085881;
+        Fri, 30 Jun 2023 05:28:05 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7302:c906:33b6:6f53])
+        by smtp.gmail.com with ESMTPSA id c1-20020a056000104100b003140039f318sm9381975wrx.69.2023.06.30.05.28.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jun 2023 05:28:05 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 30 Jun 2023 14:16:21 +0200
-Message-ID: <CAMRc=Mce6u+vUGPfGO73e8992X2m-ukfa633nmFX3dc95aQHzQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] core: examples: fix warning for u64 formatting
- on 32bit
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] build: remove redundant SOURCES assignments
+Date:   Fri, 30 Jun 2023 14:27:58 +0200
+Message-Id: <20230630122758.117871-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 30, 2023 at 11:09=E2=80=AFAM Kent Gibson <warthog618@gmail.com>=
- wrote:
->
-> The watch_line_info example prints the u64 timestamps using "%ld" which
-> produces a warning for 32bit.  Replace it with PRIu64.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  examples/watch_line_info.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/examples/watch_line_info.c b/examples/watch_line_info.c
-> index 1879a62..9df3121 100644
-> --- a/examples/watch_line_info.c
-> +++ b/examples/watch_line_info.c
-> @@ -5,6 +5,7 @@
->
->  #include <errno.h>
->  #include <gpiod.h>
-> +#include <inttypes.h>
->  #include <stdio.h>
->  #include <stdlib.h>
->  #include <string.h>
-> @@ -63,7 +64,7 @@ int main(void)
->
->                 info =3D gpiod_info_event_get_line_info(event);
->                 timestamp_ns =3D gpiod_info_event_get_timestamp_ns(event)=
-;
-> -               printf("line %3d: %-9s %ld.%ld\n",
-> +               printf("line %3d: %-9s %" PRIu64 ".%" PRIu64 "\n",
->                        gpiod_line_info_get_offset(info), event_type(event=
-),
->                        timestamp_ns / 1000000000, timestamp_ns % 10000000=
-00);
->
-> --
-> 2.41.0
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Applied, thanks!
+For any given target (let's say foobar), automake defaults to looking for
+foobar.c if foobar_SOURCES are not specified. Remove redundant assignments
+as we've seen multiple hidden typos in makefiles already.
 
-Bart
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ examples/Makefile.am      | 26 --------------------------
+ tests/gpiosim/Makefile.am |  1 -
+ tools/Makefile.am         | 12 ------------
+ 3 files changed, 39 deletions(-)
+
+diff --git a/examples/Makefile.am b/examples/Makefile.am
+index daf902b..ed01dbc 100644
+--- a/examples/Makefile.am
++++ b/examples/Makefile.am
+@@ -20,29 +20,3 @@ noinst_PROGRAMS = \
+ 	watch_line_rising \
+ 	watch_line_value \
+ 	watch_multiple_line_values
+-
+-async_watch_line_value_SOURCES = async_watch_line_value.c
+-
+-find_line_by_name_SOURCES = find_line_by_name.c
+-
+-get_chip_info_SOURCES = get_chip_info.c
+-
+-get_line_info_SOURCES = get_line_info.c
+-
+-get_line_value_SOURCES = get_line_value.c
+-
+-get_multiple_line_values_SOURCES = get_multiple_line_values.c
+-
+-reconfigure_input_to_output_SOURCES = reconfigure_input_to_output.c
+-
+-toggle_line_value_SOURCES = toggle_line_value.c
+-
+-toggle_multiple_line_value_SOURCES = toggle_multiple_line_value.c
+-
+-watch_line_info_SOURCES = watch_line_info.c
+-
+-watch_line_rising_SOURCES = watch_line_rising.c
+-
+-watch_line_value_SOURCES = watch_line_value.c
+-
+-watch_multiple_line_values_SOURCES = watch_multiple_line_values.c
+diff --git a/tests/gpiosim/Makefile.am b/tests/gpiosim/Makefile.am
+index 05dce79..5888873 100644
+--- a/tests/gpiosim/Makefile.am
++++ b/tests/gpiosim/Makefile.am
+@@ -12,5 +12,4 @@ libgpiosim_la_CFLAGS = $(AM_CFLAGS) $(KMOD_CFLAGS) $(MOUNT_CFLAGS)
+ libgpiosim_la_LDFLAGS = -version-info $(subst .,:,$(ABI_GPIOSIM_VERSION))
+ libgpiosim_la_LDFLAGS += $(KMOD_LIBS) $(MOUNT_LIBS) -pthread
+ 
+-gpiosim_selftest_SOURCES = gpiosim-selftest.c
+ gpiosim_selftest_LDADD = libgpiosim.la
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index 92a819f..40ea3a3 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -18,18 +18,6 @@ endif
+ 
+ bin_PROGRAMS = gpiodetect gpioinfo gpioget gpioset gpiomon gpionotify
+ 
+-gpiodetect_SOURCES = gpiodetect.c
+-
+-gpioinfo_SOURCES = gpioinfo.c
+-
+-gpioget_SOURCES = gpioget.c
+-
+-gpioset_SOURCES = gpioset.c
+-
+-gpiomon_SOURCES = gpiomon.c
+-
+-gpionotify_SOURCES = gpionotify.c
+-
+ if WITH_TESTS
+ 
+ noinst_SCRIPTS = gpio-tools-test.bash
+-- 
+2.39.2
+
