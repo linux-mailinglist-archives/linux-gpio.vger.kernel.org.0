@@ -2,70 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3398A743A03
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 12:53:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3833C743AA7
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 13:19:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbjF3Kxl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 06:53:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44038 "EHLO
+        id S232740AbjF3LTI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 07:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229945AbjF3Kxk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 06:53:40 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE71735A0
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 03:53:38 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fba74870abso318255e87.0
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 03:53:38 -0700 (PDT)
+        with ESMTP id S231455AbjF3LTF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 07:19:05 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58312680
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:18:59 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4fb73ba3b5dso2877696e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:18:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688122417; x=1690714417;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0SCVOclQYR4CvjHwArvk+C45vaktpQKJ5Rv353kmlsI=;
-        b=Tfulz2km05lPRakPRpg5/9vNAHeumv2pOCkFs2JWdYxz6UVHrqMEPYoY2FbsGGIBvt
-         veOiVyHenzFKuoqcYpVPG9RO4Jy01jmCzw+NQOfus8BuyCGnD4Nohg+8pNpEGFrWjUfH
-         JAQu+aNo5kQd4uIxe63unbC3XyNOGMtRDxR6Ei71feDccu6LQ/9lJOZEMw3h7q0AFAX8
-         psioEZR31mUhs/ltjzwNggQiCUMXQVrxDMfLqw6e1kmzKfgTOG/6pR6QDxBiSj95WFs1
-         XyIuD6ZkI9z/3kGHN82/neSbxKnq/eAamSpdJoAbl0ylhaOK5tELSNWfeg7QDCsZaZj5
-         QliQ==
+        d=linaro.org; s=google; t=1688123938; x=1690715938;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DvA4OsqEt8uk7N1l5EhH+khjedF3qEoCfOHJJgV6XqE=;
+        b=l0zhNUF4gpLIFyCDMpdHXhfgB02RtaDdaaRDz7wRL4SFqBIPuEPP3nqBNF7zmkEL0I
+         VgMSmLKca1mJzjHcb1lV/lTIu47Z0X8eINcrgu51pFTXWlbim9qKEPv7ej9Y3+wcQpNc
+         r7h+8VSvlHsqFuAkkaXB3lcBI8qORCQ2ipikweuTFq9lo3ISnScb0d+M01PUjwiU0cgk
+         vzvSvVF9Gz/QVAFnNBYjSm2xibvELC/ywkYjCFbg8OCBIyn0upNnmotMXWk0Qf1PYYmm
+         0P3PTndmBgUWoG/sc+AsGFUjEJIKcMDjKMv0OMSRH22f/K5/btJ0FRqve4XyT4fpoEru
+         IORg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688122417; x=1690714417;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0SCVOclQYR4CvjHwArvk+C45vaktpQKJ5Rv353kmlsI=;
-        b=ZGZXal4mSKh3hkB6cN6KAQhOfGfjcBAbY0lf0OaErZE7+ey3bibiBTAb0TMCtQdZsM
-         18y1hksPnUG4vprNHyqz4R2BR4bravDHOvWdliSUYHrFmc4liFpKAcIZ6QC+EDGDqQTO
-         wVvx/FLVX8gTjMxcKZzzqjX01W8uKDG5BQJZkCX8tRI/Vj0uJDlGSzKVf6kR0L5zNRC5
-         +s9+hDR4ypTtYOiBkcSg3hYxhd5i5ZrVrqey/Sy8YjHxeQH83GUYd+Q7S1qVQVKHDmet
-         BfH4jOuGj3DU6aoOWRhHx0BymIGkOnTzypKm4NyT4Ls/SnMToO5IWqghFoNX7G1AFKP6
-         yakg==
-X-Gm-Message-State: ABy/qLarWuNqcYaYYfhzqT/+tKsKjVXGlo7hzB6TRKbgAymxhCeUjE9p
-        ClsEfumMW4+OLUmbvqYr789onQ==
-X-Google-Smtp-Source: APBJJlGs338rVtKCpGMsyfr5kpPNUgtv9KE9w+E1mySYt19bU6kTfMhw1YRUPpSmBcGKux0KXFlidA==
-X-Received: by 2002:ac2:4e8f:0:b0:4f7:6017:8fb with SMTP id o15-20020ac24e8f000000b004f7601708fbmr1741575lfr.26.1688122417142;
-        Fri, 30 Jun 2023 03:53:37 -0700 (PDT)
-Received: from localhost (i5C743877.versanet.de. [92.116.56.119])
-        by smtp.gmail.com with ESMTPSA id v2-20020a5d6102000000b003127a21e986sm17774996wrt.104.2023.06.30.03.53.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Jun 2023 03:53:36 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 30 Jun 2023 12:53:36 +0200
-Message-Id: <CTPXGBYT71JR.290ZDBVD3EMM7@fedora>
-Subject: Re: [PATCH libgpiod 4/4] bindings: rust: clippy: silence
- false-positive on iterator
-Cc:     "Linux-GPIO" <linux-gpio@vger.kernel.org>,
-        "Viresh Kumar" <viresh.kumar@linaro.org>
-To:     "Kent Gibson" <warthog618@gmail.com>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-X-Mailer: aerc 0.14.0
-References: <20230629-clippy-v1-0-9ff088713c54@linaro.org>
- <20230629-clippy-v1-4-9ff088713c54@linaro.org> <ZJ6bd8+oDbyX06rp@sol>
- <CTPWFHFJNFFA.2SGA858S5QIJ5@fedora> <ZJ6sQYctu9mHqQP5@sol>
- <CTPXANU2HUHF.3UJIZX6CQV4UF@fedora> <ZJ6zaq2JCQvMcnTh@sol>
-In-Reply-To: <ZJ6zaq2JCQvMcnTh@sol>
+        d=1e100.net; s=20221208; t=1688123938; x=1690715938;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DvA4OsqEt8uk7N1l5EhH+khjedF3qEoCfOHJJgV6XqE=;
+        b=SOTv+nhbp7E4WQZ4WsnqJAdTO97d+D6qsNEslZqwDHMnefv2WpZqNOrVASxV70SDoU
+         2FHizGWrU+9mh/a+Bg7PLwp/oBA1iWv3TS+jjYlS79xi74MEaqtbNce3QwTXE3dBTnwo
+         S31zNUDT+yLitgXJIIU9JT7o1Ugjm1tOKWLel/8jmIsNX6xhaz8e2KjZMxbV4G6SgmGC
+         WqPQMOon2yyIKc3Wfw3alvAQyoC4cqfI4ukOFcCbeUUhnAbyyn46EHYfE5KOGGcnQWei
+         2vg+eruht8yUbp8uPMjTiKrzCTeu8Bxup8v+n8EE3eHp5SbU8tsyyfeJjhEiklWjCr9k
+         dLFQ==
+X-Gm-Message-State: ABy/qLa3lORBXhhoEqDDavrg9WcfF/nHXG4US2a7bBKwXu7hcRSyqoVU
+        ks8pOmJyGDfTv6tpXeqvC2hGhygHU0MleKVtAOk=
+X-Google-Smtp-Source: APBJJlEl259vWPcmxvP6MQWUcxkLWjjSZIgX20AvabLfrnTl1XsWL8uGnR5UXBIPiOrsmUnz/c880Q==
+X-Received: by 2002:a05:6512:3b8b:b0:4fb:774f:9a84 with SMTP id g11-20020a0565123b8b00b004fb774f9a84mr2496004lfv.13.1688123938097;
+        Fri, 30 Jun 2023 04:18:58 -0700 (PDT)
+Received: from [192.168.1.127] (i5C743877.versanet.de. [92.116.56.119])
+        by smtp.gmail.com with ESMTPSA id u20-20020a05600c211400b003fbb618f7adsm4621917wml.15.2023.06.30.04.18.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jun 2023 04:18:57 -0700 (PDT)
+From:   Erik Schilling <erik.schilling@linaro.org>
+Subject: [libgpiod][PATCH v2 0/4] bindings: rust: clippy: fix warnings
+Date:   Fri, 30 Jun 2023 13:18:43 +0200
+Message-Id: <20230630-clippy-v2-0-f44447925ad6@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABO6nmQC/12NywrDIBQFfyXcdS1q2lSz6n+ULFJfuSBRtEhD8
+ N8rLrsc5jDnhGwSmgzzcEIyBTOGvQG/DKC2dXeGoG4MnPKRTlwS5THGgwhJ1f3G1KSphDaOyVj
+ 89tALPL5dxKBhaWbD/Anp6A+Fdf8fK4xQIq2lQjzY2LpPj/uawjUkB0ut9QdHbUiHpwAAAA==
+To:     Linux-GPIO <linux-gpio@vger.kernel.org>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Erik Schilling <erik.schilling@linaro.org>
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1688123937; l=2414;
+ i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
+ bh=9d6GzmZa9rNBO4euD6w9rfxdQXv1zKo9gx9PUhqmtOE=;
+ b=Oek1QqV10ZWXSFhTHuoZYhOlGwXG2stFq2qEgjBdh44+/H+pqCpH6+2ay7ht44XldsF47XBun
+ T1KT6v04nhTCXC5oI+PMTws1HiZtSGAuVojvzoLRgjaYHpTeYfTvPGj
+X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
+ pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
@@ -76,34 +80,66 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri Jun 30, 2023 at 12:50 PM CEST, Kent Gibson wrote:
-> On Fri, Jun 30, 2023 at 12:46:11PM +0200, Erik Schilling wrote:
-> > On Fri Jun 30, 2023 at 12:19 PM CEST, Kent Gibson wrote:
-> > > >=20
-> > >
-> > > That is the only test failing out of the whole suite, so gpiosim is n=
-ot
-> > > the problem.
-> > >
-> > > That is with the latest from the Raspberry Pi rpi-6.4.y branch[1]
-> > > (a867309b7a55 so a few days old now), with CONFIG_GPIO_SIM so that I =
-can
-> > > run the tests.
-> > > Happens to be running on a Pi ZeroW, but I don't think that test is s=
-peed
-> > > sensitive.  I have done a complete rebuild - same result.
-> > >
-> > > Are there any distos enabling GPIO_SIM yet?
-> >=20
-> > Fedora does now (after I asked for it [2]). But it does not support any
-> > 32-bit ARM targets anymore :/. Can you try reproducing it without the
-> > patches? I would be surprised if this was related to the patches.
-> >=20
->
-> Tried that - same result with libgpiod master.
-> So it is not from your patches.
+This follows up on my promise on Kent's series [1] to look into whether
+these casts are needed or not. Most are not, a few are false-positives.
 
-Thanks for checking! Will try to reproduce it in the next weeks.
+I also explored some shunit2 based test-script to automate the testing,
+but that became ugly with linking issue and needs me to revisit it
+another time. So this only sends the clippy fixes for now.
 
-- Erik
+Tested the build (lib + examples + test) and clippy report on:
+- Fedora 38 x86_64
+- Fedora 38 aarch64
+- Debian 12 armv7hf
+
+Test execution (cargo test) was tested on:
+- Fedora 38 x86_64
+- Fedora 38 aarch64
+
+Could not execute tests on armv7hf due to lack of suitable test
+environment.
+
+[1] https://lore.kernel.org/r/20230612154055.56556-1-warthog618@gmail.com
+
+To: Linux-GPIO <linux-gpio@vger.kernel.org>
+Cc: Kent Gibson <warthog618@gmail.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+
+Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+---
+Changes in v2:
+- Changed cover letter title to active language
+- Improved commit messages (hopefully)
+- Elaborated what was built and tested
+- Resent with hacked b4 for proper [libgpiod] tag
+- Link to v1: https://lore.kernel.org/r/20230629-clippy-v1-0-9ff088713c54@linaro.org
+
+---
+Erik Schilling (4):
+      bindings: rust: clippy: drop unnecessary casts
+      bindings: rust: clippy: silence false-positives on casts
+      bindings: rust: clippy: drop unneeded conversions
+      bindings: rust: clippy: silence false-positive on iterator
+
+ bindings/rust/gpiosim-sys/src/lib.rs         | 2 +-
+ bindings/rust/gpiosim-sys/src/sim.rs         | 4 ++--
+ bindings/rust/libgpiod/src/chip.rs           | 2 +-
+ bindings/rust/libgpiod/src/edge_event.rs     | 2 +-
+ bindings/rust/libgpiod/src/event_buffer.rs   | 7 +++++--
+ bindings/rust/libgpiod/src/info_event.rs     | 2 +-
+ bindings/rust/libgpiod/src/lib.rs            | 2 +-
+ bindings/rust/libgpiod/src/line_config.rs    | 4 ++--
+ bindings/rust/libgpiod/src/line_info.rs      | 3 +++
+ bindings/rust/libgpiod/src/line_request.rs   | 8 ++++----
+ bindings/rust/libgpiod/src/line_settings.rs  | 5 ++++-
+ bindings/rust/libgpiod/src/request_config.rs | 2 +-
+ bindings/rust/libgpiod/tests/chip.rs         | 2 +-
+ 13 files changed, 27 insertions(+), 18 deletions(-)
+---
+base-commit: 4510231c95a087f58a155cf74164e403e1e0584f
+change-id: 20230629-clippy-890c541c6d09
+
+Best regards,
+-- 
+Erik Schilling <erik.schilling@linaro.org>
 
