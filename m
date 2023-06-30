@@ -2,66 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27E617437EC
+	by mail.lfdr.de (Postfix) with ESMTP id 6FD8A7437ED
 	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 11:11:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230427AbjF3JIQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 05:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
+        id S232725AbjF3JJW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 05:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231315AbjF3JIO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 05:08:14 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7427D10D5
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 02:08:13 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-668709767b1so1079092b3a.2
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 02:08:13 -0700 (PDT)
+        with ESMTP id S232523AbjF3JJL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 05:09:11 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AAB2D71
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 02:09:09 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-53fa455cd94so904922a12.2
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 02:09:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688116093; x=1690708093;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pb9hroM4XzjCWVRxVfHJDaXbF7nLF/hYElfqw6/m0yY=;
-        b=gtQ7ta+EgH0G4kHZBlN79gI/PTzYsuspWPHPZgredCScTGzTDLvBmhD9/CCLlG8Avv
-         5P6TXQN0UBQs51gxIA2wZEqZme9LB5jwGUshZ1eVkpdizRxWutrACPaKbtrzH0w38uzh
-         1I2gnI+dVhlJWhqjQWmFKGx7JLWYT+24Zz7zTKpU0nf7DqQxMT2lPFlbPRKeQik9UQpV
-         GgYYO2Dc0cVGpSz9ahh+0ysJekbLX9WNvza8Tcy74sJkB3aesiDP6MIvkkYoF6RIVFla
-         +cdgEpnTLrqsNZERciYGsF/haRol81AA30DLbkpNTNILjNBM8OvkpObgvDBo++3Ri4rr
-         C3+g==
+        d=gmail.com; s=20221208; t=1688116149; x=1690708149;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=86Dm02Lc1fWdVHbn2dAYzx0DA/szm4/07ip/o27pNvs=;
+        b=E06geDUAHAOe/DmbCttyNgkO+NVmvG0f+NWEoHh7i1qu9AfwTAsniVbwtu26sp7QMs
+         j3A005B0y31bnADOlKCasN+g0rUBsU/a0kz5LW8rwDUsxaAiRkHORcvakrKjykeqYccz
+         be2jNHFYJeWNCpMBy/fWVgxGrjmhUEsFsW6NMNpPwRsv67KuVbizwXnzEVmvkTr4IJ0p
+         2oIV+XGXfDB0FqnyChv1ebiMtJ9FMVAdEPw52fzqMOc4L5L+SDFMhuLEZSKm/gpI/HNV
+         3P3HDs5p6nyChV8aosAbYMI8JhC1dusHmpRnveiuEYSEIqltXsJdIcvUMv8o1bI54j7L
+         5eoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688116093; x=1690708093;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pb9hroM4XzjCWVRxVfHJDaXbF7nLF/hYElfqw6/m0yY=;
-        b=NrRlQ5WEd1EAgIxnEVPmc/Oqqvwhgtz7TpmGHN0VNJXeevDVkgRZZRkPA8Z0I8Ydmz
-         Y/NfJnETZzHo448ejceSdQjB4O2AQ8IJHnh28IKnTDTT1rNG40faX/LmKWpykqGvoDtu
-         O3TSGl/6r5/tHRFc+/2J7MxsKq0fnfEs0iKPNmZfgrBXKO3T4saNLni6r/T0q/Ym0v+v
-         emNqckJB+L7/WBIGhyfkeRBbwG4SYCQAIOSjr5iPESscLqAP11ckjIhVRCx6s6WzCDU/
-         OVNJT13v1hd9U8qrq2+AIuxPCHV3AzYOvkiQFy5JoNK1oADot6H86GOAK7MVV1qXGpby
-         LGiQ==
-X-Gm-Message-State: ABy/qLZDHyPGGZ9QvGm9QBsXlK8iXBgq0tKTFhMxS00312tQDKKIodBH
-        8Wq8tpWYgtMSWlBD2Txh0zUxe3c+PGY=
-X-Google-Smtp-Source: APBJJlE1lMmwRlr6ajb/78a6FCQ/sizl0LhxcaqIUGbAplzQCv2vYudA5MBrVMaEAbgAPjRH7xyWQA==
-X-Received: by 2002:a05:6a00:3983:b0:64f:aea5:7b49 with SMTP id fi3-20020a056a00398300b0064faea57b49mr2300227pfb.17.1688116092648;
-        Fri, 30 Jun 2023 02:08:12 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id t18-20020aa79392000000b0067e985d2526sm5085789pfe.149.2023.06.30.02.08.10
+        d=1e100.net; s=20221208; t=1688116149; x=1690708149;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=86Dm02Lc1fWdVHbn2dAYzx0DA/szm4/07ip/o27pNvs=;
+        b=YGhmtYLD228oRdslrITasUtgMJH9aVAxdFUL1pNFlYqW5gJwz0A4+xR0+kOBLNZdmC
+         DAiOiB36mjOJZqdJc9H7hOGQq0oa8TDOZFLcl+3VobOKTu2pKaH0SdU9pNufozLAdknt
+         j1Ufx2haBCLd9kXILWJb+RGl31jWzN55MTByd/5RSgIEA2PEj58h/JjAqG6zfCnhNgjK
+         O1KQ+rr1pWPaTeJAAfceypKYafAyd0sJicI70nOkejFcR+zDggYSDAPdu/tYjMBrw+Nh
+         /Hx+yPWJ+fe6E64BRaefa2PZDB3osGqGemHsxJjEHlHh5ZukD/zQQmOtQIPN1y5joErL
+         qB8Q==
+X-Gm-Message-State: AC+VfDyEHj0G0/7gOmfR3ch/M+CUdpl3IVK+qRQeZ1I/mof0zvf/1x0p
+        xHX/cPIHKcboncdfqx6pIxRLtb8HdSw=
+X-Google-Smtp-Source: ACHHUZ7EYVn42btYMllULl0sWjJsft1/HGHrymPWC2AQmitUPRcDfbv4Lr/OTwxefuUz2WcTSEwvig==
+X-Received: by 2002:a05:6a20:4986:b0:11a:2908:bb5c with SMTP id fs6-20020a056a20498600b0011a2908bb5cmr1415320pzb.28.1688116149169;
+        Fri, 30 Jun 2023 02:09:09 -0700 (PDT)
+Received: from sol.home.arpa (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id l16-20020a170902f69000b001acad86ebc5sm5709650plg.33.2023.06.30.02.09.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 02:08:12 -0700 (PDT)
-Date:   Fri, 30 Jun 2023 17:08:07 +0800
+        Fri, 30 Jun 2023 02:09:08 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH libgpiod 4/4] bindings: rust: clippy: silence
- false-positive on iterator
-Message-ID: <ZJ6bd8+oDbyX06rp@sol>
-References: <20230629-clippy-v1-0-9ff088713c54@linaro.org>
- <20230629-clippy-v1-4-9ff088713c54@linaro.org>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH] core: examples: fix warning for u64 formatting on 32bit
+Date:   Fri, 30 Jun 2023 17:08:57 +0800
+Message-ID: <20230630090858.37485-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230629-clippy-v1-4-9ff088713c54@linaro.org>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -72,71 +67,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The watch_line_info example prints the u64 timestamps using "%ld" which
+produces a warning for 32bit.  Replace it with PRIu64.
 
-For future reference, the subject line should be "[libgpiod][PATCH...",
-as per the README.
-Makes it easier to filter visually, if nothing else.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ examples/watch_line_info.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Thu, Jun 29, 2023 at 01:09:02PM +0200, Erik Schilling wrote:
-> This was fixed, but it is not in stable yet.
-> 
+diff --git a/examples/watch_line_info.c b/examples/watch_line_info.c
+index 1879a62..9df3121 100644
+--- a/examples/watch_line_info.c
++++ b/examples/watch_line_info.c
+@@ -5,6 +5,7 @@
+ 
+ #include <errno.h>
+ #include <gpiod.h>
++#include <inttypes.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -63,7 +64,7 @@ int main(void)
+ 
+ 		info = gpiod_info_event_get_line_info(event);
+ 		timestamp_ns = gpiod_info_event_get_timestamp_ns(event);
+-		printf("line %3d: %-9s %ld.%ld\n",
++		printf("line %3d: %-9s %" PRIu64 ".%" PRIu64 "\n",
+ 		       gpiod_line_info_get_offset(info), event_type(event),
+ 		       timestamp_ns / 1000000000, timestamp_ns % 1000000000);
+ 
+-- 
+2.41.0
 
-This is not a good checkin comment.
-State what the problem is and how the patch addresses it.
-
-Same applies to other patches in the series - but I have other comments
-on this one, so raising it here.
-
-> Tested build on x86_64, armv7hf, aarch64.
-> 
-
-When you say "Tested build", do you mean just compile/clippy, or have you
-actually run tests?
-
-Either way, not sure if this should go in the checkin comment - it is
-generally implied by the Signed-off that you've tested it to your
-satisfaction.
-No problem with a more detailed description of how you've tested in
-the cover letter.
-
-> Reported-by: Kent Gibson <warthog618@gmail.com>
-> Link: https://lore.kernel.org/r/20230612154055.56556-1-warthog618@gmail.com
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> ---
->  bindings/rust/libgpiod/src/event_buffer.rs | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
-> index b79e9ea..2e4bfd3 100644
-> --- a/bindings/rust/libgpiod/src/event_buffer.rs
-> +++ b/bindings/rust/libgpiod/src/event_buffer.rs
-> @@ -54,6 +54,9 @@ impl<'a> Iterator for Events<'a> {
->      }
->  
->      fn next(&mut self) -> Option<Self::Item> {
-> +        // clippy false-positive, fixed in next clippy release:
-> +        // https://github.com/rust-lang/rust-clippy/issues/9820
-> +        #[allow(clippy::iter_nth_zero)]
->          self.nth(0)
->      }
->  }
-> 
-
-Specify the release in absolute terms, not "next clippy release".
-
-Other than those nits, I'm good with the actual changes in the series
-(checked with clippy and running tests on a variety of 32 and 64bit
-platforms and compiler versions back to 1.60)
-
-(I am seeing this one test failure on arm32, but that doesn't seem to be related
-to this patch:
----- request_config::verify::default stdout ----
-thread 'main' panicked at 'assertion failed: `(left == right)`
-  left: `OperationFailed(RequestConfigGetConsumer, Errno { code: 2, description: Some("No such file or directory") })`,
- right: `OperationFailed(RequestConfigGetConsumer, Errno { code: 0, description: Some("Success") })`', libgpiod/tests/request_config.rs:18:13
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-
-Not sure if that is a genuine bug or something funky in my build.)
-
-Cheers,
-Kent.
