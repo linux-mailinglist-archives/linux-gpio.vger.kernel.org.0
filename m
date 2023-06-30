@@ -2,88 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45FCE743AE7
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 13:34:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4651B743B13
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 13:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232590AbjF3LeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 07:34:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37816 "EHLO
+        id S232213AbjF3LrN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 07:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232513AbjF3LeF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 07:34:05 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BBF381FE4;
-        Fri, 30 Jun 2023 04:34:03 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D8F2D75;
-        Fri, 30 Jun 2023 04:34:47 -0700 (PDT)
-Received: from e120937-lin (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E91BC3F64C;
-        Fri, 30 Jun 2023 04:34:01 -0700 (PDT)
-Date:   Fri, 30 Jun 2023 12:33:59 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
-Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 1/4] firmware: arm_scmi: Add optional flags to
- extended names helper
-Message-ID: <ZJ69pyXOSzMv8Jad@e120937-lin>
-References: <cover.1686063941.git.oleksii_moisieiev@epam.com>
- <2ad06a5582bb31e16fe2f497e15cb41e8455e863.1686063941.git.oleksii_moisieiev@epam.com>
+        with ESMTP id S231857AbjF3LrM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 07:47:12 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C9B1FC0
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:47:11 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-c1061f0c282so1721353276.1
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688125630; x=1690717630;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SgD41sFQsaYu8W5UCgn8kJ9blq5yagSR/C40/Pp7Pog=;
+        b=y1S+dVpso8epoiniuW/LAESmbWn1pyXabyrJYQ6WCNLASIPFEz/IBJkKhiRU8e8bsa
+         G1dkHLrY32RvJofQ1yJL7K8C4tsiu18w5+cn2IAvnnCqL9mVMp+0q4ui1WF7Q2pStzcQ
+         gTfCyz6NbHgsXccabI+KKQscKm29eKMNpVJVbKvUIxy181V91vIL1nqG/zv8nD60IFWS
+         BA3rXeAQMOFBSPCtQA0zP4ZggfdTANk4MuyZYv30w4OEu29rjRl+Z+Pxv1EmRZjBWFH1
+         yDwnRIAy0qyiJVHi74A+wGnfx4uMLDOjXwxDkLXq5gu8b7pIxVyhcVo6twI/9sHo9YCz
+         N8Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688125630; x=1690717630;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SgD41sFQsaYu8W5UCgn8kJ9blq5yagSR/C40/Pp7Pog=;
+        b=WWO/8GNRsdHI3w1d+VSpUxLjXmzDKFEuSHkgCgG2jSBQO5lWGxfgKJdLyGAxkzeDVH
+         edA3njPRshJgkCW/VmsH7F/oB0RC0MIWLn28FM5cbSJkopPbrpYiD2c9tUZKqQbpG+la
+         jzX8iVp5+DV+QvFdl/rCLX7XIXGn88yuL6x4DvLS6/d/3GwH8ULpuzQZlLymLlZTqlyy
+         A8y3kivgeSUdLXMLYsCUirvPOb2ZiKg0qKUSNvtBmSn3CsrHpEOxyiP3GIT+yDuVz7ya
+         xA9WdaIrL+/cdWtP90WIf2gcztrYsa6wgL9ayowOJqlGX15s7U9fAF8U+ZOAfMvYXfew
+         NVDA==
+X-Gm-Message-State: ABy/qLaEp01hrYYuEBIbanaM+mNs6bcmzyPiz4pjoCOBIZKnw57rR3EE
+        S6D0FKT1yFUoXEAqvF1YfxPrd3B8SGOgM9ZWtYgdeBeBafoF2bnc
+X-Google-Smtp-Source: APBJJlF4Z7YW4J7S+sxLQcF8aCNQPMUwQ0Tiz4jTY9TSgMJU7xkCyjINQvxgxi0hlNM4fzXtbXuW3zqpo5uscNpHmwQ=
+X-Received: by 2002:a25:c7cf:0:b0:bd7:545e:ab41 with SMTP id
+ w198-20020a25c7cf000000b00bd7545eab41mr2380041ybe.27.1688125630273; Fri, 30
+ Jun 2023 04:47:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ad06a5582bb31e16fe2f497e15cb41e8455e863.1686063941.git.oleksii_moisieiev@epam.com>
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230621174943.30302-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230621174943.30302-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 30 Jun 2023 13:46:59 +0200
+Message-ID: <CACRpkdaS8knozRzJbPdROPpdboVLwo093BCNd=DhydyPSho-8w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] gpiolib: Make gpiochip_hierarchy_add_domain()
+ return domain
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 06, 2023 at 04:22:27PM +0000, Oleksii Moisieiev wrote:
-> Some recently added SCMI protocols needs an additional flags parameter to
-> be able to properly configure the command used to query the extended name
-> of a resource.
-> 
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+On Wed, Jun 21, 2023 at 7:49=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Hi,
+> As a preparatory patch and for the sake of consistency, make
+> gpiochip_hierarchy_add_domain() return IRQ domain. While at it,
+> rename it to gpiochip_hierarchy_create_domain() to show
+> the change.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This patch was originally at:
+Looks good!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-https://lore.kernel.org/linux-arm-kernel/20230505201440.3196734-1-cristian.marussi@arm.com/
-
-but after applying your series with B4 I can see this patch with you as
-Author and me as Signer :P ... not sure what has gone wrong but, in general
-you should not change Authorship of a someone else patch that you picked in
-your series unless you compeletely reworked it; if you changed it slighlty
-you should note your changes near your Signed-Off, which is, indeed the other
-thing missing here: if you post someone else patch you should add your
-Signed-Off too as last.
-
-An example of this in this commit: 7885281260f9b952dc66b67182a2218b01e7859f
-
-Now, I really dont care about Authorship here (but note this also meant Andy
-shouted at you instead of me .. :P), but the Signed-Off and Author
-mismatch has to be fixed at least, like it is now wont be accepted for sure.
-
-Maybe the missing part is in your mail-client not prepending the From:
-line when the sending other people pacthes....git send-email does it
-automatically I think but others MUAs dont know.
-
-More detail here, in case you have not seen it already:
-https://www.kernel.org/doc/html/v4.10/process/email-clients.html
-
-Thanks,
-Cristian
+Yours,
+Linus Walleij
