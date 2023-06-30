@@ -2,137 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F86F744164
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 19:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB5D274418E
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 19:48:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231882AbjF3Rhf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 13:37:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50440 "EHLO
+        id S232817AbjF3Rst (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 13:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231857AbjF3Rhe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 13:37:34 -0400
+        with ESMTP id S232387AbjF3Rsr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 13:48:47 -0400
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D3DB1FE4;
-        Fri, 30 Jun 2023 10:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688146653; x=1719682653;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dm6Sl1OEMpFX+zHsfmQ4rudo1iU9mbzP0Adu+TolMaY=;
-  b=AzzEdiWKzJJNkTEf6Dd6CzhhXMAsVItlLhScmWNvrT3QjyjKhN0Tu/7E
-   u/6w7gKM9Rx8XHPrO0nlvIhI/51Qsuc82vr7CGEJt69eUlPY+eIfBUIw8
-   lr3iZRu8GHigaOnDOk8MFVXTevbNkqGM/rdhWjw/I2LGre+4/yTRnXxZo
-   0frZH3bHEkEVH6dpGY14qR6guFan5PtWLWnmFRLPvbwz3Lrin4qkw0BGS
-   w0MtrUfbpAHgznV8cwFPrvYauFMPfNDZIFhoNBzFhjR/MHpQegXEzbUfy
-   DlJuHipI1U/WZLoBxk94+g+Bx85OoaOhSYls0OxvcrxFMiBC16knBiCyG
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="352272354"
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5209F2D4A;
+        Fri, 30 Jun 2023 10:48:46 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="352275048"
 X-IronPort-AV: E=Sophos;i="6.01,171,1684825200"; 
-   d="scan'208";a="352272354"
+   d="scan'208";a="352275048"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2023 10:37:29 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2023 10:48:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="787789404"
+X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="787792137"
 X-IronPort-AV: E=Sophos;i="6.01,171,1684825200"; 
-   d="scan'208";a="787789404"
+   d="scan'208";a="787792137"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Jun 2023 10:37:23 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 30 Jun 2023 10:48:36 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qFI3d-001AR3-2g;
-        Fri, 30 Jun 2023 20:37:21 +0300
-Date:   Fri, 30 Jun 2023 20:37:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Wu, Wentong" <wentong.wu@intel.com>
-Cc:     "Ye, Xiang" <xiang.ye@intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Tyrone Ting <kfting@nuvoton.com>,
-        Mark Brown <broonie@kernel.org>,
+        (envelope-from <andy@kernel.org>)
+        id 1qFIET-001AaS-1x;
+        Fri, 30 Jun 2023 20:48:33 +0300
+Date:   Fri, 30 Jun 2023 20:48:33 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Neil Armstrong <neil.armstrong@linaro.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "Wang, Zhifeng" <zhifeng.wang@intel.com>,
-        "Zhang, Lixu" <lixu.zhang@intel.com>
-Subject: Re: [PATCH v5 1/5] usb: Add support for Intel LJCA device
-Message-ID: <ZJ8S0ds4IX4wLF9V@smile.fi.intel.com>
-References: <20230312190435.3568212-1-xiang.ye@intel.com>
- <20230312190435.3568212-2-xiang.ye@intel.com>
- <20230313170341.GV9667@google.com>
- <ZBAqTqZEDz/vAwVC@ye-NUC7i7DNHE>
- <ZBAyKQwnQ8fxHRuU@kuha.fi.intel.com>
- <ZBCU5h/A2woJLtvT@ye-NUC7i7DNHE>
- <ZBCYVNmoo2EdDY90@smile.fi.intel.com>
- <ZBGLYXxpkwokgV4R@kuha.fi.intel.com>
- <DM6PR11MB43163C9D76023777B36380B98D2AA@DM6PR11MB4316.namprd11.prod.outlook.com>
+        Sebastian Reichel <sre@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-oxnas@groups.io,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH v2 00/15] ARM: oxnas support removal
+Message-ID: <ZJ8VcZq2s5XrxJge@smile.fi.intel.com>
+References: <20230630-topic-oxnas-upstream-remove-v2-0-fb6ab3dea87c@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM6PR11MB43163C9D76023777B36380B98D2AA@DM6PR11MB4316.namprd11.prod.outlook.com>
+In-Reply-To: <20230630-topic-oxnas-upstream-remove-v2-0-fb6ab3dea87c@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_SOFTFAIL,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 30, 2023 at 07:40:48AM +0000, Wu, Wentong wrote:
-> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > Sent: Wednesday, March 15, 2023 5:10 PM
-> > On Tue, Mar 14, 2023 at 05:52:52PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Mar 14, 2023 at 11:38:14PM +0800, Ye, Xiang wrote:
-> > > > On Tue, Mar 14, 2023 at 10:36:57AM +0200, Heikki Krogerus wrote:
-> > > > > On Tue, Mar 14, 2023 at 04:03:26PM +0800, Ye, Xiang wrote:
-
-...
-
-> > > > > You don't really seem to get any benefit from MFD. Perhaps it
-> > > > > would be more appropriate and clear if you just registered
-> > > > > auxiliary devices in this driver. Check drivers/base/auxiliary.c.
-> > > > Yes, it should be a work. I have a question.
-> > > > MFD provides the ACPI binding for sub-devices through struct
-> > > > mfd_cell_acpi_match. But I didn't see this in drivers/base/auxiliary.c.
-> > > > If using auxiliary bus to implement the LJCA sub-devices, we need to
-> > > > do the sub-devices acpi binding manually in ljca.c.
-> > > >
-> > > > Something Like:
-> > > > adr = LJCA_ACPI_MATCH_GPIO
-> > > > adev = acpi_find_child_device(parent, adr, false);
-> > > > ACPI_COMPANION_SET(&pdev->dev, adev ?: parent);
-> > > >
-> > > > Is that acceptable?
+On Fri, Jun 30, 2023 at 06:58:25PM +0200, Neil Armstrong wrote:
+> With [1] removing MPCore SMP support, this makes the OX820 barely usable,
+> associated with a clear lack of maintainance, development and migration to
+> dt-schema it's clear that Linux support for OX810 and OX820 should be removed.
 > 
-> This actually doesn't work, look at the acpi_find_child_device(), it compares
-> the bus address specified by _ADR object, but there is no _ADR object in DSDT
-> for these three devices because the relationship between the parent and
-> children isn't bus type listed in ACPI spec, so it always return NULL.
+> In addition, the OX810 hasn't been booted for years and isn't even present
+> in an ARM config file.
+> 
+> For the OX820, lack of USB and SATA support makes the platform not usable
+> in the current Linux support and relies on off-tree drivers hacked from the
+> vendor (defunct for years) sources.
+> 
+> The last users are in the OpenWRT distribution, and today's removal means
+> support will still be in stable 6.1 LTS kernel until end of 2026.
+> 
+> If someone wants to take over the development even with lack of SMP, I'll
+> be happy to hand off maintainance.
+> 
+> It has been a fun time adding support for this architecture, but it's time
+> to get over!
+> 
+> Now arch/arm parts are removed, now it's time to remove the remaining stuff.
 
-If you want to have this on ACPI enabled platform, ACPI table has to have
-the necessary bits. What you are describing is a BIOS bug _or_ somebody has
-to provide the SSDT overlay depending on the real connection of the device..
+For all non-DT patches
+Acked-by: Andy Shevchenko <andy@kernel.org>
 
-> > Looks ok to me.
-> > 
-> > > Maybe you can implement this on the level of auxiliary bus.
-> > 
-> > I would actually prefer that the auxiliary bus itself does not make any
-> > assumptions regarding the whereabouts of the fwnodes at this stage. Maybe
-> > later, when(if) there are more users.
+I always like negative statistics of a magnitude order!
 
 -- 
 With Best Regards,
