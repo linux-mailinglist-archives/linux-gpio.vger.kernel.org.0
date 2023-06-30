@@ -2,71 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A52887439D6
+	by mail.lfdr.de (Postfix) with ESMTP id ED7447439D7
 	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 12:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232491AbjF3KrQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 06:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42658 "EHLO
+        id S231765AbjF3KrR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 06:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbjF3KrO (ORCPT
+        with ESMTP id S230427AbjF3KrO (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 06:47:14 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B2C5210E
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C5A2D56
         for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 03:47:11 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-51d80d81d6eso1896813a12.1
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-991da766865so207063866b.0
         for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 03:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688122029; x=1690714029;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bibwnsReqIrDgu3O7JCWzBvgPfuqRTehO2a45m9Io2U=;
-        b=vschmIS+rr7+a2CdgtmZZBe3LhAM+60ZmVIy3PCXtrOOr44+ND2Yip31AYXGK8v2ii
-         JlImusrdAdQqCgOdPyvw4w+EqXIG05/md8vGLxhoCIliqNClnf4SBgY3jqLPGVVVy3w/
-         TcuCsG3T1dWdSlsF3tcVahBA1eLFszINqAS1Rwh3+X6+4mx5PKCYNyx07gj6WYyEgoGM
-         397Enm6coxgszHPmSSqAnNxItzORgbI5K24qYgNxsANOeJKNW3uOb5KiLfEFpGL6bHFF
-         IT95UYism1RVPr4cNETr5wLIsebD0+yfxoUa2NZvKvMgntVgrXpxn0Ys0sJtTIVFKVbN
-         Evnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688122029; x=1690714029;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1688122030; x=1690714030;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bibwnsReqIrDgu3O7JCWzBvgPfuqRTehO2a45m9Io2U=;
-        b=FMJDxi0Gra1y/JQrMtsZ9kXYHEs5K3x2ZBcoGFbHTU5CECOiF0Oi9ZCUs+FVv95owC
-         mxxMZEUXakpKv+vYRP4hJbFlrrea9KxW/uxMTYG9U2WcFr6jYcorlaA3FP4hsCnUN7Gj
-         o4j6XDnSxD9FOyV/GO57MP6rY7Y8QHauKTU4XOa/i/H4nu8P/UX9UGTw6FBhHFrosEW9
-         kPBsfQFNJ/uyysI6G/OcuQ9nGCtKUaAzIpARGbobfvm559HP9WwU/oIF/wXxtm9ta8GA
-         t8K0RhLg1s8F4rlbXplMiKjQ4IY4jLwWGtNEdANFgynDt/LT097t26A04Z+t7+n6xkHC
-         JBng==
-X-Gm-Message-State: ABy/qLa+JYk0iCxSOGJ/1C0ybS/AO6IP7LBBbVv8yeZrlHK5NvFUHEX1
-        2+grUbv/20KeR71LVWzDAwci0w==
-X-Google-Smtp-Source: APBJJlEVJ2okhd9+NECAxTMST6NEbWZQwzKwFOKXwE3szmwFcNbbNiEMpa0qNdVd09MriVUxFQUMcA==
-X-Received: by 2002:a17:906:ae51:b0:98e:16b7:e024 with SMTP id lf17-20020a170906ae5100b0098e16b7e024mr1594103ejb.38.1688122029700;
-        Fri, 30 Jun 2023 03:47:09 -0700 (PDT)
+        bh=bp8pyyjjjRBBMHpCp5DXYxv37D46lCdheAvcicq4drM=;
+        b=WK0CJUe42CzTJwsTQvh7lLhI8qY5ANAKfj953ICpftBX3+g2GIkmT+6BgRVfGPAAid
+         nLGNONxSBHWBHwvUiGCORtq6uhqznYOJeo3pt+rH0lcTvbyuu879Tx9MfIzFhYa/eAGG
+         nkuajHP5UhMjS/R+Wt0vbS4o2jRoQo/YBMPB8LzaWJeSlJ/y1IiDBbw/52tnt34XImJt
+         HHq+jdy8ay7by/2s3EQu3k21w+PQFS3SAZCs0ZentjFqZ0nYobz4H/Hg4K7QAkEPDAI3
+         6yO2zoZKT1j1t+5kw3xw9KrSLLw+ch8Vxv/nsgi+myrVcJJ3DXlpCi79DNv9F9fiI6T+
+         /xGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688122030; x=1690714030;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bp8pyyjjjRBBMHpCp5DXYxv37D46lCdheAvcicq4drM=;
+        b=fNW0naLr7hUPx7Ivxzwtb6jw1qqhvJ8vpCec5OeEt0LmByilZBbfSIFnEAtKLk3EVh
+         60JIthBRqm1Q1qqJ1NDzmtlUElftnNho0HE3ZqNFYJyhWfLrE1TC74yY9eGhk9h7RFVy
+         TqgtYGmhHbVhgKaAQ6kh9Hj63q/Xfe7Tre6kRIN2N2ksfMXkguxRg+2v4ZOV0fkg3vL4
+         ydMD95K9supA841EfnaUeYclDF1JTwXG4wWTbMi1OUY0MHOO3YtPJTfNmI/rs+YInn8n
+         JMI8aVGQpX5/7qgfhZ+o88hOWletiDZyGce9fXkK9JfGRxd2ejzSKy3Z+ZhDG9Ig8wQy
+         6csQ==
+X-Gm-Message-State: ABy/qLalB3d1t/yKa5Ds/5a+W642VkMADf9lhjUx7+/xYqwvll0Vzk2K
+        rAnbJ7cWgxTeN+wm4GPtqyKnPw==
+X-Google-Smtp-Source: APBJJlHUxbPmqGslD+dBH+dhwgG3m155Z2OASTvLk1RpgdayVthjktshfadvRhHkF/0JahX0k7o+JQ==
+X-Received: by 2002:a17:906:1db:b0:977:ceab:3996 with SMTP id 27-20020a17090601db00b00977ceab3996mr1756151ejj.76.1688122030249;
+        Fri, 30 Jun 2023 03:47:10 -0700 (PDT)
 Received: from [192.168.1.127] (i5C743877.versanet.de. [92.116.56.119])
         by smtp.gmail.com with ESMTPSA id op16-20020a170906bcf000b0099251a40184sm3436001ejb.99.2023.06.30.03.47.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 30 Jun 2023 03:47:09 -0700 (PDT)
 From:   Erik Schilling <erik.schilling@linaro.org>
-Subject: [libgpiod][PATCH 0/2] bindings: rust: add README for crates.io
-Date:   Fri, 30 Jun 2023 12:46:42 +0200
-Message-Id: <20230630-rust-readme-v1-0-1ce9e6f7985c@linaro.org>
+Date:   Fri, 30 Jun 2023 12:46:43 +0200
+Subject: [libgpiod][PATCH 1/2] bindings: rust: add README.md for libgpiod
+ crate
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJKynmQC/x3MQQqAIBBA0avErBNMy6CrRAvLqQZKY6wIwrsnL
- d/i/xciMmGErniB8aZIwWdUZQHTav2Cglw2KKm0NFoKvuIpGK3bUZjGSFXXtq20g1wcjDM9/62
- HjcbloOBgSOkDhwdet2cAAAA=
+Message-Id: <20230630-rust-readme-v1-1-1ce9e6f7985c@linaro.org>
+References: <20230630-rust-readme-v1-0-1ce9e6f7985c@linaro.org>
+In-Reply-To: <20230630-rust-readme-v1-0-1ce9e6f7985c@linaro.org>
 To:     Linux-GPIO <linux-gpio@vger.kernel.org>
 Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         Erik Schilling <erik.schilling@linaro.org>
 X-Mailer: b4 0.13-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1688122029; l=744;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1688122029; l=1551;
  i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=xAKyP5teaFdpnMGbRh0X2EMvEByiJ6hw8zkJYEEghX0=;
- b=S7/DTXnxFjEoK+COsOI5em/7ZRxYwRF1Md7Si5KvIajHanrypHjjYARgIwF2Y3EIbWQJM8jzq
- sJojaEBPikQBOqMMf/scoOHUYa1lU/8NSBl4IQJgTQpcvf2fJOdtG+q
+ bh=QRd7Xnd1T1b0YY4q9kG2ifito0lkKlV2qIrmhspIJLY=;
+ b=JybKioaJfx0UWNuBdeN4dudrd470n96CKUDYdrPMpwSod2Jt5FCouo2R+4ecxDIhO1RGyMNfl
+ EMKgaXOaOTHC3TsFkzbuXp4i9Wbo8EyK5UwTJnfs6X4kjUh8lzAOO6Z
 X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
  pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -79,26 +80,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The READMEs are displayed on crates.io for published crates. This tries
-to provide a little more context there.
+crates.io treats the README as landing page for a crate [1]. Since
+we have none, it currently displays a blank page. Lets add at least a
+little bit of info here so people can figure out what they are dealing
+with.
 
-To: Linux-GPIO <linux-gpio@vger.kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
+[1] https://crates.io/crates/libgpiod
 
 Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 ---
-Erik Schilling (2):
-      bindings: rust: add README.md for libgpiod crate
-      bindings: rust: mention the libgpiod crate from libgpiod-sys
+ bindings/rust/libgpiod/README.md | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
- bindings/rust/libgpiod-sys/README.md |  3 +++
- bindings/rust/libgpiod/README.md     | 25 +++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
----
-base-commit: 4510231c95a087f58a155cf74164e403e1e0584f
-change-id: 20230630-rust-readme-6560244a713d
+diff --git a/bindings/rust/libgpiod/README.md b/bindings/rust/libgpiod/README.md
+new file mode 100644
+index 0000000..4afd3d4
+--- /dev/null
++++ b/bindings/rust/libgpiod/README.md
+@@ -0,0 +1,25 @@
++<!--
++SPDX-License-Identifier: CC0-1.0
++SPDX-FileCopyrightText: 2023 Linaro Ltd.
++SPDX-FileCopyrightText: 2023 Erik Schilling <erik.schilling@linaro.org>
++-->
++
++# Safe wrapper around Rust FFI bindings for libgpiod
++
++[libgpiod](https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/README)
++is a C library provides an easy to use abstraction over the Linux GPIO character
++driver. This crate builds on top of `libgpiod-sys` and exports a safe interface
++to the C library.
++
++## Build requirements
++
++By default, `libgpiod-sys` builds against the libgpiod version identified via
++`pkg-config`. See the `README.md` of `libgpiod-sys` for options to override
++that.
++
++## License
++
++This project is licensed under either of
++
++- [Apache License](http://www.apache.org/licenses/LICENSE-2.0), Version 2.0
++- [BSD-3-Clause License](https://opensource.org/licenses/BSD-3-Clause)
 
-Best regards,
 -- 
-Erik Schilling <erik.schilling@linaro.org>
+2.41.0
 
