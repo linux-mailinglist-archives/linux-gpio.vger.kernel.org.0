@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D51E3743B18
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 13:48:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4482B743B1B
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 13:49:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232210AbjF3Ls0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 07:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42510 "EHLO
+        id S232525AbjF3Ls7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 07:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232212AbjF3LsZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 07:48:25 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683083A89
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:48:24 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id 3f1490d57ef6-bff27026cb0so1689247276.1
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:48:24 -0700 (PDT)
+        with ESMTP id S232528AbjF3Ls6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 07:48:58 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A133AAB
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:48:56 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-c14476f8401so1721075276.3
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 04:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688125703; x=1690717703;
+        d=linaro.org; s=google; t=1688125735; x=1690717735;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n5ZqAZiSn5H7ncYmND2Mk0HDGl8wCPZgwIU7C8IqLJ4=;
-        b=eJu3hD8LV6A9O1ghoud7QTR+967Q4UY5TO/Mut++jAffD8Q9ckoNu0Q0JnDaWRbVhD
-         w74d5xSb4m8YZZsImJmvU8GpkonaTEnYXvJ9xWy2o59Slw7umVI7g5EFHpvcoCmrdJZI
-         bIsUgIDtFTUYaG4QNZkQpSrooeZ80wHOudjrIEMrFFIHo3qBVOf8CCAhmgHayq9aprAy
-         Vy4jQ1oaByHqqwLB8suCXJCe2L43qGAQ5uIFfSbbXCTr/ERAp5iRAxAWfVCWvaDJQwR8
-         WaOhu5mQci+vrhWh2/KJw3iI6qg7HlzquSK3f9vWxnFG9TgCrj3dtiApQZEjkMwPwnzo
-         RFYA==
+        bh=hhPx8Hh7M7YH2J3WFDsXt4EqPndUN6y8De0tyQm/k4E=;
+        b=LJ2jAot5pSG+gTYVJX8fDjg75kz1nugO/4ywCuOzL9SfpdNfK6+ka3mXQpCsybMvNi
+         tTh2Noxd61oD66W6L08Ur174fW7LAmmHVhwjR//RgnfFP38UfW0bYaJDMc3FlBi2H7r9
+         VhJ0Y8Fbs8ZTSF8/+pN4tsiWeipBWUQzFKRhYEpkeq8AuRDE073FkqWQVxL6S0Frlrlm
+         mS08R71iEQEBoER1u2caEDZy23H9/k1wv8UVUPB+QdBTRMiaa0BJk9oGc533kTKEn0Ng
+         H0LD2RY60hwy002Ga7PqODwprhmSoO+td5O14VZqRpI/nkWNDdNYvTmzhe7A/+CiryUF
+         hMhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688125703; x=1690717703;
+        d=1e100.net; s=20221208; t=1688125735; x=1690717735;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n5ZqAZiSn5H7ncYmND2Mk0HDGl8wCPZgwIU7C8IqLJ4=;
-        b=XQ8t8KaapE8IcKAL9uANuzVpMUv4qPsYbWsJpTo8jnVv6XR1xdvXFiKcHZo/1fNq97
-         lPo6lGVMHLUEqOA1cnD53Gl+O0HFYzFZNQo2V+NV1Ng5dV4vqGm/0lIpFKiGGXhBAbHh
-         bodv4hAaHhOq1na5IbPF6xUVO3/a5QknP44+dbvbghS5KQeJVXm89NuZIAh7hm158ldB
-         MWpxBwG136BqK6+FQ0fcL0MIBu+mrBZXncM87iaXuyGChB1HKY4wVSLVcilxa0V4VLY/
-         /ceO+vcjkwvNiZ7UMh6KdhUZnUrSfNP1ZHiS/5gUzznpTCXBMBshtJ0l8pxlD1N15wj5
-         mp3g==
-X-Gm-Message-State: ABy/qLa21nBs3JKqSnEmxQ20en2nUTYKaQ3Gk6K/LF/CKY674tQN7xIN
-        lWAd/UvjJ4WbAk9zETicbBN3t6VYvPmqwA8s+UpnWQ==
-X-Google-Smtp-Source: APBJJlEn23zpm9K2m3GcGXdyOI90JuXNMbceme7t72QCtVJK1VLTsf7axf/ddaUV4XHnxExw+9SjP+jDaXTxQSRWvDE=
-X-Received: by 2002:a25:1f54:0:b0:bca:7cd:7f32 with SMTP id
- f81-20020a251f54000000b00bca07cd7f32mr2488364ybf.48.1688125703651; Fri, 30
- Jun 2023 04:48:23 -0700 (PDT)
+        bh=hhPx8Hh7M7YH2J3WFDsXt4EqPndUN6y8De0tyQm/k4E=;
+        b=PxzEjiiMMmMqLd5b6SruSltmYSiDhUotnocteX0z2YyfmggvYL1FavmJgq6uSQZLtr
+         kffnx26U4p7uPWLRwrKYNLssdDdVbHTRAwoVqf1zJXPD+XAnRKr54fpeA5aVJmxpdGIS
+         AALhzIsqVDpX8fnaKPu0kSWOJlEeKa6biv1jqB/KHph+avei2InB7rCPuVp1nTC+3rqk
+         ldu9frDJVzeSnDqk3pKwDO63ygbxUUxgt4EJzpqfAW8sli7tUOlf6dPsaJeVhsw1XVn5
+         rOc1fkpC5WhCn2tEuSgiSHAvkIQZVZCj5Gie/QO9emYS2USV82Aei+MTaScvJBue8yqY
+         lYYg==
+X-Gm-Message-State: ABy/qLZpnpRHIC3ppMHX720CYwljcoMWavGgaC7hq4h/IHDzNXBrxJOw
+        fZPtd1BFUzPZnUfe5kPgT15L/u8pIlXsd46Qwu/6uQ==
+X-Google-Smtp-Source: APBJJlFseWNZE0jgDgce+tEtRmGuGFF56nVMUZU7MLkCT4lM7cJTLHUcM7VU1LvLY1VR7MkMNtkDKZuvDDX/VaTmcR0=
+X-Received: by 2002:a25:6884:0:b0:c39:8036:e3f9 with SMTP id
+ d126-20020a256884000000b00c398036e3f9mr2551934ybc.26.1688125735691; Fri, 30
+ Jun 2023 04:48:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230621174943.30302-1-andriy.shevchenko@linux.intel.com> <20230621174943.30302-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230621174943.30302-2-andriy.shevchenko@linux.intel.com>
+References: <20230621174943.30302-1-andriy.shevchenko@linux.intel.com> <20230621174943.30302-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230621174943.30302-3-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 30 Jun 2023 13:48:12 +0200
-Message-ID: <CACRpkdbraGC0H+axUizMXEpo=kC2L-iwfFeiWCL8x8xc9e=6sQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] gpiolib: Factor out gpiochip_simple_create_domain()
+Date:   Fri, 30 Jun 2023 13:48:44 +0200
+Message-ID: <CACRpkdY--Mg8VORij9u+ef5KJ_VGyVnP_qeSVVQ_k3WxMr4U+g@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] gpiolib: Do not assign error pointer to the GPIO
+ IRQ chip domain
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -73,11 +74,12 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Wed, Jun 21, 2023 at 7:49=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> As a preparatory patch and for the sake of consistency,
-> factor out gpiochip_simple_create_domain().
+> Check domain for being an error pointer before assigning it to
+> the GPIO IRQ chip domain.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+And this concludes patches 1,2,3, nice!
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
