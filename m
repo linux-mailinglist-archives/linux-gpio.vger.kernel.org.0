@@ -2,58 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B3B2743847
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 11:26:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40C6D743858
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 11:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232784AbjF3J0C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 05:26:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34148 "EHLO
+        id S232844AbjF3J2r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 05:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232700AbjF3J0A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 05:26:00 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6D62680;
-        Fri, 30 Jun 2023 02:25:59 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-51bece5d935so1992656a12.1;
-        Fri, 30 Jun 2023 02:25:59 -0700 (PDT)
+        with ESMTP id S232810AbjF3J2p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 05:28:45 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11FE23585;
+        Fri, 30 Jun 2023 02:28:43 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-51d9695ec29so1685569a12.1;
+        Fri, 30 Jun 2023 02:28:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688117158; x=1690709158;
+        d=gmail.com; s=20221208; t=1688117321; x=1690709321;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zQ5a2srxoFiXek9tQGwsUQjYNhzdfJ4/8ulGPIP670A=;
-        b=GOyZ/dMB/Pef4H+8d2viuxbPuaivfGZE1h3LH5ciaBA7lIbBYgmTwlOSaOAPpJmY21
-         zFqVn/AI/v05Cuy5cKu47aNJlK+2/t9mJ/HisYy4Lf8XJ+fWgY9v6XO8qZa4+YQ0mse5
-         vuj5i1byARMQT59AAaurl0nWFJuPwtrANrZlRsBhnv4gPIuw0FdEQukYw7WOsFfcl9CY
-         ErWUzU6t739/rbvzGOTkrpBGqDMksiPk6egMJogplE9dRz/GBml4OSdX+lo9oesL2hGU
-         Maw3WLNtVqz5vj4Clhx9RH+D2Bh5+hrvyY+/v6R+Wt0+Tz5KYRafJpwO6wb+7xscv+fx
-         4YJA==
+        bh=fZCBSgni0sr8gGqL9uMypHbMvj7usQCYMwxdwYXW+jA=;
+        b=QRJY4EEw4g4/61MzEr/J5K3QI0OJoUCA5DROKENJS/ku/aNTGEPqXdfTm0SMgoekR5
+         XC6xdT9A46C8ytjZyw27lTco5+zkYCQ6Sx+E8Qw/rwCZjwhBSvzNkjjR9FT/uEL1LO/Q
+         UHfiqD9hqOYgoaZ+6OSLomuOJFJvmiwpEtClVR3s0nzaw1Qo4h4XcXcrwDJNNxlvPj/n
+         NTMLJtUpoq0XFRK5ck4PqsWC7eKdKCCyRaw4w3F5vDQA/uwNgauOdYVhrKLqe7KztF1Z
+         RTzyVc2NZ0vIR2KPiHL670A6QcN0Q8aNgNpbU0Y9y65QJlNq4g4IzpSyo3vDR9Vh+1jV
+         dbjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688117158; x=1690709158;
+        d=1e100.net; s=20221208; t=1688117321; x=1690709321;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zQ5a2srxoFiXek9tQGwsUQjYNhzdfJ4/8ulGPIP670A=;
-        b=CWQCiIF+NOs0+5PINUPMLccKZzaD1k1DLopiIt3WJasT0D/9sw69/tEMg4C1H67ccJ
-         XkmzM5bYdtQAyRjPiqeCe/xxw1/UTPINC0RdCW1xlm/pgk1cXNXVUppE05Lybc1kOnUU
-         9Ef5db344XoV9bIT10fi673Gl0EJ1YDTmIsoMxWCckffy8d+wefMwBuigjB5XZJIQlpI
-         h/5n177sp/HGcJ0x59xOpMkcc7s8p9/XyVROhyud4ZdtecVfyuQgOEQ/Uu50Pe4sxptQ
-         R4XKLeuQJ4vDx8wG3fjtMK4MizaqPpv4iuhxmtW0X0o4pArgZOFM33KleynuRTFbin1m
-         JrTA==
-X-Gm-Message-State: ABy/qLYhoXdPo2925odicaO9wNcCl/niGMkxTNdRbU839cHRA4hFou05
-        JqFY60JHPz0ekxT2faeD38bKBpBLAUkMcVP/N4w=
-X-Google-Smtp-Source: APBJJlHZDcnzgrM/KBAzpI5U/RnXGz1hcEUwDSkYxFa1zNyV+9yHmM+XzpADCCHE8/o4Elsqw9waYh7UG2tuvB7WO1Y=
-X-Received: by 2002:a05:6402:3456:b0:51a:50f2:4e7a with SMTP id
- l22-20020a056402345600b0051a50f24e7amr1224188edc.13.1688117158223; Fri, 30
- Jun 2023 02:25:58 -0700 (PDT)
+        bh=fZCBSgni0sr8gGqL9uMypHbMvj7usQCYMwxdwYXW+jA=;
+        b=QIZ0mz+Ddq5qMUCTmjVo2yMi9z6Akwtx5pALBoSJeh5C4PS+cGOZsPF8bwQ6jHYRaY
+         BUh6rB1RmhK+rWVIqbbb1RNUgoIYlenbBh5fyVi0iYbgQ3kgwQaAx/rARqD4ZQTeYdfi
+         kPr8svqV2y475sL0jeZO/1fIP/PTb8wEkjYA4SF3uQMIrMqAaVX+b48TcWOxCOeaJ2A6
+         3ZY5xCLv6zxm7ZvPSmQ/XtxeDAfiaDjfYbkrsqWseuf96443W8M/eoCfxtWbUSuLzm4N
+         Yb0gINuoI5Kr1HNAfs5gHbwra9ilimkJux0sK6KkoA8t1XtYPnVQHAkdgtbzYQYoVSgq
+         TMPg==
+X-Gm-Message-State: ABy/qLZmTXSAJfTlFnVnIudlsmBX4Vqjz9N7ohjZjnhYZ4Cow6NBOU/+
+        ITaiQpRNbr7MwaVKHl6Vr/eyX9oY4+B2LiANg/8=
+X-Google-Smtp-Source: APBJJlFMq2w/PbJ55327XebcvTTEwXkX993DxpgiQLo04cpZ/EAYzg2QeasZ9plssJgPvzLr9TsHaiWzwcGwfTIgqXA=
+X-Received: by 2002:aa7:c256:0:b0:51d:9ddf:f0f3 with SMTP id
+ y22-20020aa7c256000000b0051d9ddff0f3mr1120614edo.31.1688117321377; Fri, 30
+ Jun 2023 02:28:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-12-git-send-email-quic_mojha@quicinc.com> <99c98f22-69f7-4a6a-acc9-6a6a6bdb2031@quicinc.com>
-In-Reply-To: <99c98f22-69f7-4a6a-acc9-6a6a6bdb2031@quicinc.com>
+ <1687955688-20809-21-git-send-email-quic_mojha@quicinc.com> <0ac3e4cd-485e-43a4-ae76-4c462a8145ed@quicinc.com>
+In-Reply-To: <0ac3e4cd-485e-43a4-ae76-4c462a8145ed@quicinc.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 30 Jun 2023 12:25:22 +0300
-Message-ID: <CAHp75Vd9+YHbExOQwK6bVHD016kB599yxUrj1PYFb__zENDi8g@mail.gmail.com>
-Subject: Re: [PATCH v4 11/21] soc: qcom: Register pstore frontend region with minidump
+Date:   Fri, 30 Jun 2023 12:28:05 +0300
+Message-ID: <CAHp75Vdpg8R0FtECk_bqdVMQW7Nz_EY0pacaL8PA+0Xcfkyt3Q@mail.gmail.com>
+Subject: Re: [PATCH v4 20/21] firmware: qcom_scm: Refactor code to support
+ multiple download mode
 To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
 Cc:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
         agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
@@ -77,16 +78,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 30, 2023 at 7:55=E2=80=AFAM Pavan Kondeti <quic_pkondeti@quicin=
+On Fri, Jun 30, 2023 at 8:25=E2=80=AFAM Pavan Kondeti <quic_pkondeti@quicin=
 c.com> wrote:
-> On Wed, Jun 28, 2023 at 06:04:38PM +0530, Mukesh Ojha wrote:
+> On Wed, Jun 28, 2023 at 06:04:47PM +0530, Mukesh Ojha wrote:
 
 ...
 
-> > +             scnprintf(name, sizeof(name), "KDMSG%d", i);
+> > +static int set_download_mode(const char *val, const struct kernel_para=
+m *kp)
+> > +{
+> > +     u32 old =3D download_mode;
+> > +     int ret;
+> > +
+> > +     ret =3D sysfs_match_string(download_mode_name, val);
+> > +     if (ret < 0) {
 
-Also a side note: here you use the 'c' variant of sprintf(),why bother
-with it if you don't even check the returned value?
+> > +             download_mode =3D old;
+
+Why is this old variable needed at all?
+
+> > +             pr_err("qcom_scm: unknown download mode: %s\n", val);
+> > +             return -EINVAL;
+> > +     }
+>
+> minor nit: %s/-EINVAL/ret
+>
+> > +     download_mode =3D ret;
+> > +     if (__scm)
+> > +             qcom_scm_set_download_mode(download_mode);
+> > +
+> > +     return 0;
+> > +}
+
 
 --=20
 With Best Regards,
