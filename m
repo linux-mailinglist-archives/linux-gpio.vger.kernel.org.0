@@ -2,65 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5FCF743B59
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 14:01:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B4BA743B5C
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 14:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232647AbjF3MBO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 08:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
+        id S232919AbjF3MCH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 08:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232903AbjF3MBL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 08:01:11 -0400
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5043C0A
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:01:07 -0700 (PDT)
-Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-47e1c7c1148so302703e0c.0
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:01:07 -0700 (PDT)
+        with ESMTP id S229578AbjF3MCF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 08:02:05 -0400
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE201BE9
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:02:03 -0700 (PDT)
+Received: by mail-ot1-x32b.google.com with SMTP id 46e09a7af769-6b7206f106cso1436022a34.1
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:02:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688126467; x=1690718467;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688126522; x=1690718522;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JRepDYDrQnbTfhOGkLBDEB/AHtipHwSB8lprqXMRDG0=;
-        b=E4ubv2eQC+AnTLUI1EhaL0Cy4juszE5S5X9YRbMvCMfSeNQyxh57PzK1T3jHQbBHGz
-         1+hRDDPDtmTVsSFcpUR4FFOHnZxOG+qh5WA8zgmv/NK0AADKE1PaNow44juHFdWYUKpN
-         3hZbw9FHyKxYqcK50r22JvwZ2UrEy/rlrkwH7SZZZNKJ74w2qzbZq1nxQUCCCCjyUXxN
-         ObEutBsQCYuHpDBRKFXzrVMfKWUifct6y2zzy6qOICEYVSjtGstoLLVVQQRl3HCT31ur
-         MTtyfbRExkI4BrtmssRYPenDIPKr2ab+80VrD5p9A/k6GQkekwapma2tnTrqzjFqmdM2
-         elRQ==
+        bh=2TqyqOm5qilIW7cgur6kMDvDJlw3YFoa+Fn/upSKqwI=;
+        b=Pm4PMdrp72OkTFFsudNQ1p7FOTU81rUL8ImRyMuDA4cBko1jbGEJi7YhqMwG0o9yT5
+         G+EvQDFDoqL8IuDh5G5YGdG+XRw0HUqh3eOMa/N7IR4i20xyUvZhoFVHTkAuk02KGd5H
+         EOmiqyzWc3O5ThfNjkCckEqE4so8vSD/mDlV3GcwwaMAV2O77Y0uYiV2ZVN9IWA4zyuP
+         lN04ZQRPeFnteDj76i9QuwZFzfbK0ySu2O07qnSp3mbZgzngxGCPGVMXikhXb/rx7FfM
+         YX0j9DnyZkbYFwQuVRZH3iLMgxI9qaYIH/pycB1mYLYITSue/X1qm/bWsRPp38RctHZ/
+         04mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688126467; x=1690718467;
+        d=1e100.net; s=20221208; t=1688126522; x=1690718522;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JRepDYDrQnbTfhOGkLBDEB/AHtipHwSB8lprqXMRDG0=;
-        b=lHo9sdBJaHxIZCUvZNyeE7yRm+rJL7PRRfPpF/3cu8B9OVBaWiHwKonXfBk17i2vvA
-         OOoWSNB6NFqyUN10iaRFYBNxvqjhGwXSPS43BZxT9iry7sxvjc/UDg/Uz/9HIXOfkXGd
-         +ZaFcSjMLz8IFnF/CRPpnXExoS12GsrQLstA1c4uIER3rYsEyq8rsTdJ6aklHrVJEiMO
-         zwrv4Y5z/oNBER8x8RNDj0TIcYzs1DbonpILmxyf7POmRHOcJqu5l7uw1U+X6AuUyG8c
-         ooYFbHl1Dk8nHAv9hnez2qIzdEl5BBcGBY7ooWZCi5h2KcZmmjcc/FQ69kEti53gx7Li
-         ACOw==
-X-Gm-Message-State: ABy/qLahIv9wKULbXcB1Lf7/fMSH1CHdydruN7ZvK2ly63z3vv6Ade4C
-        4dj3C62YMrklVi+TTGZi67cane/5oupQTnqqY/NjaA==
-X-Google-Smtp-Source: APBJJlGq4YkWMDsIX/TmWydHfD6qHEZqs3SyRk13XJY2JjkLPQb4OZZng1OfWMQmSsAwnzw/qRyVcHKIujfY97CNFvE=
-X-Received: by 2002:a1f:41d7:0:b0:440:4946:fac with SMTP id
- o206-20020a1f41d7000000b0044049460facmr1140050vka.4.1688126466835; Fri, 30
- Jun 2023 05:01:06 -0700 (PDT)
+        bh=2TqyqOm5qilIW7cgur6kMDvDJlw3YFoa+Fn/upSKqwI=;
+        b=iXF0UWk/Rd5ypXQA9zOXjH57tciFz8mRxhC/jwlivsx8PljzTnje0OOzH/XOdhNQBD
+         IEz53tXwwokTIwLTUfRfJmAnjVFnDV5E4CUAlz0XGVceV22Cva26tnavQH3U0SxOagBT
+         E2wHZWOA/NMYY+QKOm2/ClA1LwL1mQDmPOYPtDp099Q8fzKRVvgSyUeMzs3r7xHdg9bT
+         uUz+DlrJYRYFfb2eXjIjdT0+FVGzXrXJtw39iAT/AODRI1jdeKzb0IKMZR0KJ9TlYVP5
+         NzDbXalutpN43XZ3ce2sR2MCyqH4xv+5Lrh/gaIlCufJApuTBDxK2WSrxORzN69+nmDi
+         T5mg==
+X-Gm-Message-State: ABy/qLZKP1XGWIzf+rCoOPgegEIcpNjKgwhFa/5vcCVAkm0CEvpRkiV8
+        s2YoyIuxtiBWmsuHMb2ISxBi3uhZuexXWOmNOkmTGR6QgSJcYDbc
+X-Google-Smtp-Source: APBJJlH1F60Ol/CYDhuLl4gaGYfSqtYihj2GPxTM9JJHUJnc64G/OcK0YUXeWCzaXayDEQ09kJ7OceQBHB/aMvRM/do=
+X-Received: by 2002:a05:6359:a1f:b0:134:d45b:7dd1 with SMTP id
+ el31-20020a0563590a1f00b00134d45b7dd1mr1962608rwb.21.1688126522411; Fri, 30
+ Jun 2023 05:02:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230629101455.127795-1-warthog618@gmail.com> <20230629101455.127795-2-warthog618@gmail.com>
-In-Reply-To: <20230629101455.127795-2-warthog618@gmail.com>
+References: <20230629101455.127795-1-warthog618@gmail.com> <20230629101455.127795-3-warthog618@gmail.com>
+In-Reply-To: <20230629101455.127795-3-warthog618@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 30 Jun 2023 14:00:56 +0200
-Message-ID: <CAMRc=MeR=cEoDamycgdZyLPP1F8gqpkagaTeXeGCK00Pb=wF7w@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 1/2] examples: fix typo in Makefile.am
+Date:   Fri, 30 Jun 2023 14:01:51 +0200
+Message-ID: <CAMRc=McT=kdGur0N7Oy3Xt8xhCb4D3kLXpSyjjUsB74bdx_T2w@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 2/2] bindings: rust: fix unclear resolver warning
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -70,35 +69,33 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Thu, Jun 29, 2023 at 12:15=E2=80=AFPM Kent Gibson <warthog618@gmail.com>=
  wrote:
 >
-> The trailing "s" is missing from "toggle_multiple_line_values" in
-> several places, so add it.
+> Fix the following warning:
+>
+> "some crates are on edition 2021 which defaults to `resolver =3D "2"`,
+>  but virtual workspaces default to `resolver =3D "1"`"
+>
+> Clarify the resolver selection as the 2021 edition by setting the
+> workspace.resolver to "2".
 >
 > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->  examples/Makefile.am | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  bindings/rust/Cargo.toml | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/examples/Makefile.am b/examples/Makefile.am
-> index daf902b..e92f303 100644
-> --- a/examples/Makefile.am
-> +++ b/examples/Makefile.am
-> @@ -37,7 +37,7 @@ reconfigure_input_to_output_SOURCES =3D reconfigure_inp=
-ut_to_output.c
->
->  toggle_line_value_SOURCES =3D toggle_line_value.c
->
-> -toggle_multiple_line_value_SOURCES =3D toggle_multiple_line_value.c
-> +toggle_multiple_line_values_SOURCES =3D toggle_multiple_line_values.c
->
->  watch_line_info_SOURCES =3D watch_line_info.c
->
+> diff --git a/bindings/rust/Cargo.toml b/bindings/rust/Cargo.toml
+> index 2e026b4..e385027 100644
+> --- a/bindings/rust/Cargo.toml
+> +++ b/bindings/rust/Cargo.toml
+> @@ -9,3 +9,5 @@ members =3D [
+>      "libgpiod",
+>      "libgpiod-sys"
+>  ]
+> +
+> +resolver =3D "2"
 > --
 > 2.41.0
 >
 
-I'm wondering if we should just drop these as autotools will default
-to using a single source file named after the target executable if
-foobar_SOURCES is not defined. (iow: if the target is foobar and no
-foobar_SOURCES is defined, then it will try foobar.c).
+Applied, thanks!
 
 Bart
