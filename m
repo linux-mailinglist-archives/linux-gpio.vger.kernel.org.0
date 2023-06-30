@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F21C5743BD6
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 14:28:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F09BC743BD8
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 14:28:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231765AbjF3M2J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 08:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60164 "EHLO
+        id S230180AbjF3M2a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 08:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230180AbjF3M2J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 08:28:09 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8068D19B5
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:28:07 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-313e12db357so2200796f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:28:07 -0700 (PDT)
+        with ESMTP id S230125AbjF3M23 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 08:28:29 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C462E19B5
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:28:28 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3fbc63c2e84so7891735e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 05:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688128086; x=1690720086;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688128107; x=1690720107;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
         bh=R7RekjfWWo8VbnYQss2qAr2/EN4cFn8FMfZc8nSZkPQ=;
-        b=z2luj64Zp29Hfp4iarSjScSJZYo1gtXPGGt5pnrHXg+5hJDV44zamxyah22MgcadmC
-         xgXNQVeqCFYO8e8xaC6ede815KqqrwQignRAhIVLIua67pCGSmfIe8rPIBcpso+ORLtg
-         vofqvbEolyL9cvJ6F7QIl5NGoXQBLfzLxop31mcqaE7fsdl3skhY/QHPaUKu9oEg2eH/
-         xsMXjyu8h7Ah3OZjd3xxiPns0wg3u4WnwrcOkR1G7dI23J5RVEqR+07VV/HCiv+H9z5X
-         9Xn7UHWzStVCp6d1JxLXnA3uvZ6DL1zwlpf5XwY9lvCJ4k7oai0E9d4124mVnABJTsFZ
-         OWyQ==
+        b=xtD/rwWij28SovRHZFxG5a9r6Uuh7O6dGFvmnd1lI2k/3VTn7CeBVPYq3wYm/R9kGK
+         gjFLrvr8af57Y32t3b5D9Ol8X5VGCJBfWq+j3oCQSh48ZmFcjhb2KzGlHEH1f/cQXvEg
+         k7KCztPUf95bu2RTToe3glkPXHQhNcCTyW2YKYWzxqNC+/ghiGo6NCYUmPR5GG43OGn3
+         DXIDMYh9o0nFjqpafdcAmAtTw7uDfXFja3QJbGopGP/+HKZkGbnTInf8yAvvKCOAq7V1
+         rFCKcViFRFF+J5ByqUsgr9pMdupBVcou4JWUgvoOKYbtFSMja3HsWCXPPjQQVVSJzbeu
+         IddQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688128086; x=1690720086;
+        d=1e100.net; s=20221208; t=1688128107; x=1690720107;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
         bh=R7RekjfWWo8VbnYQss2qAr2/EN4cFn8FMfZc8nSZkPQ=;
-        b=I6XWCMrkPsuBvJ0e05PvTCrX1aCMQLsSvKWBWVV+4cd9U+9eKxbeych1LFncf+004C
-         H9U0vlODlR99cMWgua2NvKUZo+N08mvpbyEIc5n3EzqwOZCvqk54TttOYNtZPegjFzgb
-         Z5vZf5LTaE9d90WdRwezt33Y+Kep2xK0EDZlq6CsSaxN/sJ+/K9HvOQv2GOZazyZpSoY
-         4fmSNAg+KquFcMTUgdakl+IGffkl53c6/bSJ8PfdLaxz/FIiqxNtPTVe3MM5qwm4hSpB
-         3jUxJfb11bs9SIR4ib8kP4ktKR6jTzfYC02mBRu9DJQp70nHo2xxTVBb716UyxAF5k0V
-         j3sg==
-X-Gm-Message-State: ABy/qLYxFAGg74RvyTR1TAurAgfbyxEuEYJ2LchOo1cqNBKzlQsmqvKS
-        ZKSgHcjpdnUpTcu93WUhps8E5A==
-X-Google-Smtp-Source: APBJJlHib59PJQ3tbuFKuSfmX8Qb5m9+rIY08kMJfSRQjXEpYxa0rjS3zIpxEl65nEWTu/3yrXB+Cw==
-X-Received: by 2002:adf:eccc:0:b0:313:f6fc:1f48 with SMTP id s12-20020adfeccc000000b00313f6fc1f48mr2298016wro.14.1688128085881;
-        Fri, 30 Jun 2023 05:28:05 -0700 (PDT)
+        b=VEHYGdwY7l0lZUQz1EvRcNqVsPmYv2pebiDXY5a/+LynUH0VFpzjIt6GxVL4gvMKCP
+         oXrCLuNs60zTBgrtvYyvZsXGa/5GP1DsDK5WdhT2kzMeqJmFAbV2N5I/31mzznjp5+6M
+         JjfSjTIsLe6kLH2gTfGrNkMJxcUD05kd1B6ju4t6MxzzFQyybGoG5QCzCmbdSNBdxKvl
+         0xBRDdLZTsv4r91ett2o/IduF/MqNCqJEJ7RHvEwq2aCQyIUHYCFC4PvqA6uoZVzFU8a
+         vP3dhPTJ+yuDRi3fNOcbAjQ2rAw0VcO93yKwH+DI7d+iTdBD/assOkHgXKvtt7hVy/XS
+         Jttw==
+X-Gm-Message-State: AC+VfDxBWWxoU75bS0Umo1hSgnN3ZevqEuasfC9pDPfGZ0D03m0qWsFV
+        r/Vap3ZValCyd8WgkvnyTJL/iA==
+X-Google-Smtp-Source: ACHHUZ5p0kh4GnTeAZR98FncGpoCnuXz7jxNoBRUm4/Zw34bqaDIPyoGKIYwIOSvGJVSsOA2PtIjHQ==
+X-Received: by 2002:a05:600c:3655:b0:3f7:e48b:974d with SMTP id y21-20020a05600c365500b003f7e48b974dmr1929538wmq.27.1688128107208;
+        Fri, 30 Jun 2023 05:28:27 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7302:c906:33b6:6f53])
-        by smtp.gmail.com with ESMTPSA id c1-20020a056000104100b003140039f318sm9381975wrx.69.2023.06.30.05.28.05
+        by smtp.gmail.com with ESMTPSA id 24-20020a05600c229800b003fa98908014sm13588822wmf.8.2023.06.30.05.28.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 05:28:05 -0700 (PDT)
+        Fri, 30 Jun 2023 05:28:26 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -55,9 +55,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] build: remove redundant SOURCES assignments
-Date:   Fri, 30 Jun 2023 14:27:58 +0200
-Message-Id: <20230630122758.117871-1-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH] build: remove redundant SOURCES assignments
+Date:   Fri, 30 Jun 2023 14:28:25 +0200
+Message-Id: <20230630122825.117902-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
