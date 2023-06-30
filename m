@@ -2,62 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D649D743830
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 11:21:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B3B2743847
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Jun 2023 11:26:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232770AbjF3JVR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 05:21:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59498 "EHLO
+        id S232784AbjF3J0C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Jun 2023 05:26:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232788AbjF3JVA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 05:21:00 -0400
+        with ESMTP id S232700AbjF3J0A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 05:26:00 -0400
 Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D623C0C
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 02:20:10 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-51d9850ef09so1796270a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Jun 2023 02:20:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6D62680;
+        Fri, 30 Jun 2023 02:25:59 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-51bece5d935so1992656a12.1;
+        Fri, 30 Jun 2023 02:25:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688116805; x=1690708805;
+        d=gmail.com; s=20221208; t=1688117158; x=1690709158;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G18F6df4riglz+fx97D6+kt+RmpbWgrWAbSyMwVzsm0=;
-        b=ojXkqEC0msA4chNgXH2YHjLThDShIype4X1kuSDJ2o7u+csr7+UticsvL5Zy9kD1N5
-         zHj/Lq2aUIxwuJHxNZz6zgUEzNBXJTaEIXk6rYqv+7qAJQfUIv0Xvhqnf9kANF7evGEb
-         mphCrJBwz+Cd+j3s8NBpLD9HNswUzwNW+OXqHopKYctWXQV+FkDm8pY3ebD2xLDGMNa5
-         1gLz2uDpwPaGS82KXaDxg2VLVIpzIu7EfFOA/po9Zp2Qt8JktwwM02gxuuylSoff61Q6
-         XWJqSrrxHE9DxwgSeYnulgHQ2jl3uwa2tS5aqf+jN/XowCRjDX3AeE8tBofeXFyOIl+w
-         msWQ==
+        bh=zQ5a2srxoFiXek9tQGwsUQjYNhzdfJ4/8ulGPIP670A=;
+        b=GOyZ/dMB/Pef4H+8d2viuxbPuaivfGZE1h3LH5ciaBA7lIbBYgmTwlOSaOAPpJmY21
+         zFqVn/AI/v05Cuy5cKu47aNJlK+2/t9mJ/HisYy4Lf8XJ+fWgY9v6XO8qZa4+YQ0mse5
+         vuj5i1byARMQT59AAaurl0nWFJuPwtrANrZlRsBhnv4gPIuw0FdEQukYw7WOsFfcl9CY
+         ErWUzU6t739/rbvzGOTkrpBGqDMksiPk6egMJogplE9dRz/GBml4OSdX+lo9oesL2hGU
+         Maw3WLNtVqz5vj4Clhx9RH+D2Bh5+hrvyY+/v6R+Wt0+Tz5KYRafJpwO6wb+7xscv+fx
+         4YJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688116805; x=1690708805;
+        d=1e100.net; s=20221208; t=1688117158; x=1690709158;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=G18F6df4riglz+fx97D6+kt+RmpbWgrWAbSyMwVzsm0=;
-        b=TaswaVBm9Rbr9GBCUJpOEDnx/I07BEl9UcWAGJDUQUwNF4iJ3cxxmWaTBb25zAWcxk
-         CfOhQUl/vZMX0kqNS9Lg7MPb1LsYMpROJaVrFt8guVUCnHVsnB90QmfJZtWR9suEom/x
-         Ijl8YvLZ2SZD0XAM9oI7cbImie932ElG8l+p+2EQ87H4RUX+aOs5ll6+CQ7KX+2jImDg
-         tponMhaJiS1OsmPlEvAzfvsWbrB/F+F9X+D6qOZV0z5/6WC4kOcSfPnxVGZJ8WsFS7PU
-         fBdGEZki8pITtJwuBGK9ttTK7LHzwGzcYAmWe0RatQUwZNY/n6ib+K+8Q3p4xkCIcVx2
-         NDDg==
-X-Gm-Message-State: ABy/qLYqOowEt5PLr4xSOjoZKVekSb+YBOkSYpFZPTRc079GiMYUCu6C
-        p89YYUpOQUgkinAYndlabAXcG5Myj+wcbbWlvP4=
-X-Google-Smtp-Source: APBJJlHgQeCVylikI3fQ5zY8/heMfDFu2Rml+z4kI9yX7xzHJjeYASkt8h8KugK7sEkZY24oF/3TuMxrrl+0w3T4yCk=
-X-Received: by 2002:aa7:cf91:0:b0:51d:a24c:db20 with SMTP id
- z17-20020aa7cf91000000b0051da24cdb20mr1369137edx.18.1688116804567; Fri, 30
- Jun 2023 02:20:04 -0700 (PDT)
+        bh=zQ5a2srxoFiXek9tQGwsUQjYNhzdfJ4/8ulGPIP670A=;
+        b=CWQCiIF+NOs0+5PINUPMLccKZzaD1k1DLopiIt3WJasT0D/9sw69/tEMg4C1H67ccJ
+         XkmzM5bYdtQAyRjPiqeCe/xxw1/UTPINC0RdCW1xlm/pgk1cXNXVUppE05Lybc1kOnUU
+         9Ef5db344XoV9bIT10fi673Gl0EJ1YDTmIsoMxWCckffy8d+wefMwBuigjB5XZJIQlpI
+         h/5n177sp/HGcJ0x59xOpMkcc7s8p9/XyVROhyud4ZdtecVfyuQgOEQ/Uu50Pe4sxptQ
+         R4XKLeuQJ4vDx8wG3fjtMK4MizaqPpv4iuhxmtW0X0o4pArgZOFM33KleynuRTFbin1m
+         JrTA==
+X-Gm-Message-State: ABy/qLYhoXdPo2925odicaO9wNcCl/niGMkxTNdRbU839cHRA4hFou05
+        JqFY60JHPz0ekxT2faeD38bKBpBLAUkMcVP/N4w=
+X-Google-Smtp-Source: APBJJlHZDcnzgrM/KBAzpI5U/RnXGz1hcEUwDSkYxFa1zNyV+9yHmM+XzpADCCHE8/o4Elsqw9waYh7UG2tuvB7WO1Y=
+X-Received: by 2002:a05:6402:3456:b0:51a:50f2:4e7a with SMTP id
+ l22-20020a056402345600b0051a50f24e7amr1224188edc.13.1688117158223; Fri, 30
+ Jun 2023 02:25:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230629191903.2423243-1-shenwei.wang@nxp.com>
-In-Reply-To: <20230629191903.2423243-1-shenwei.wang@nxp.com>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-12-git-send-email-quic_mojha@quicinc.com> <99c98f22-69f7-4a6a-acc9-6a6a6bdb2031@quicinc.com>
+In-Reply-To: <99c98f22-69f7-4a6a-acc9-6a6a6bdb2031@quicinc.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 30 Jun 2023 12:19:27 +0300
-Message-ID: <CAHp75Vc5JFrh1HqYQca9BcYALQfVD6A-kHgmc5OpwtvcGC4beA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mxc: add runtime pm support
-To:     Shenwei Wang <shenwei.wang@nxp.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        imx@lists.linux.dev, linux-imx@nxp.com
+Date:   Fri, 30 Jun 2023 12:25:22 +0300
+Message-ID: <CAHp75Vd9+YHbExOQwK6bVHD016kB599yxUrj1PYFb__zENDi8g@mail.gmail.com>
+Subject: Re: [PATCH v4 11/21] soc: qcom: Register pstore frontend region with minidump
+To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
+Cc:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,86 +77,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 29, 2023 at 10:19=E2=80=AFPM Shenwei Wang <shenwei.wang@nxp.com=
-> wrote:
->
-> Adds runtime PM support and allow the GPIO controller to enter
-> into runtime suspend automatically when not in use to save power.
-> However, it will automatically resume and enable clocks when a
-> GPIO or IRQ is requested.
+On Fri, Jun 30, 2023 at 7:55=E2=80=AFAM Pavan Kondeti <quic_pkondeti@quicin=
+c.com> wrote:
+> On Wed, Jun 28, 2023 at 06:04:38PM +0530, Mukesh Ojha wrote:
 
 ...
 
-> +static int mxc_gpio_request(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       int ret;
-> +
-> +       ret =3D gpiochip_generic_request(chip, offset);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D pm_runtime_get_sync(chip->parent);
+> > +             scnprintf(name, sizeof(name), "KDMSG%d", i);
 
-reference count disbalance here.
-
-> +       return ret < 0 ? ret : 0;
-> +}
-> +
-> +static void mxc_gpio_free(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       gpiochip_generic_free(chip, offset);
-> +       pm_runtime_put(chip->parent);
-> +}
-
-So, you want to have this to track the amount of GPIO lines requested, righ=
-t?
-Calling PM runtime after the first request makes little sense.
-
-But here is the question: does your controller support wake from IRQ?
-
-Have you tried to see if the lines that are used for IRQ with
-gpiod_to_irq() really work with this?
-
-...
-
-> +       err =3D pm_runtime_get_sync(&pdev->dev);
-> +       if (err < 0)
-
-reference count leak here.
-
-> +               goto out_pm_dis;
-
-
-> +static int __maybe_unused mxc_gpio_runtime_suspend(struct device *dev)
-
-Please, no __maybe_unused. Use new PM macros for that.
-
-> +{
-> +       struct platform_device *pdev =3D to_platform_device(dev);
-> +       struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
-
-What's wrong with dev_get_drvdata()?
-
-> +       mxc_gpio_save_regs(port);
-> +       clk_disable_unprepare(port->clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused mxc_gpio_runtime_resume(struct device *dev)
-> +{
-
-Same comments as per above function.
-
-> +}
-
-...
-
-Personal view on this is that it makes little sense to do and is prone
-to subtle bugs with wake sources or other, not so obvious, uses of the
-GPIO lines. Can you provide the numbers of the current dissipation if
-the controller is on and no line is requested? Also is there any real
-example of hardware (existing DTS) that has no GPIO in use?
+Also a side note: here you use the 'c' variant of sprintf(),why bother
+with it if you don't even check the returned value?
 
 --=20
 With Best Regards,
