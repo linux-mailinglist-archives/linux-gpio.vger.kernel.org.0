@@ -2,75 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 359777444D3
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jul 2023 00:29:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C21D274478F
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jul 2023 09:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232568AbjF3W3b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Jun 2023 18:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54974 "EHLO
+        id S231455AbjGAHM3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Jul 2023 03:12:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232569AbjF3W3a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Jun 2023 18:29:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45093AB6;
-        Fri, 30 Jun 2023 15:29:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 83A706181E;
-        Fri, 30 Jun 2023 22:29:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DF33FC433C8;
-        Fri, 30 Jun 2023 22:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688164168;
-        bh=cDtg7/DxJ9RFpGIs8alnozRtGmdL5ZVuQwb4+eihNVw=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=rqy91jD3ODoFuNU7tXCaw11v+ZCFXALKoUMhpIMLiS+rdlzRPNgJsFyJ0b09ihvKX
-         2xeyRsUVTGFoZv5MEPGqtJzPrRaYfmNPyuw0byIkhDXiRAkYgmFgl9lJYEb8JI08dm
-         SmwDYNl/LTIimcU6DDVlULpzkoiMp+I7eahnJZmFcmiLWZeIuUqlAXj64HfiNV2Xta
-         uHeOmCFbUvjJFzTNh2Dn/fPusfkMe1LGtNthWsOC9rmBEHCukLaAoFl5ENB0z5VYvd
-         6Iq3ZjfbRJiPmbN9/KP3rAKCsdYkXUFRvV2vEsMjyBeeff51Fbe9RpbOrPVgKIlxrY
-         lzgrdh3lPwi/Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CF763C395D8;
-        Fri, 30 Jun 2023 22:29:28 +0000 (UTC)
-Subject: Re: [GIT PULL] Pin control changes for v6.5
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYdnrDJ8=76DHT3yLyCKqCRyLEObhUaKFOHSMy9y5jVHw@mail.gmail.com>
-References: <CACRpkdYdnrDJ8=76DHT3yLyCKqCRyLEObhUaKFOHSMy9y5jVHw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYdnrDJ8=76DHT3yLyCKqCRyLEObhUaKFOHSMy9y5jVHw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.5-1
-X-PR-Tracked-Commit-Id: 9f0648f13e34a01f2e1a7a0d5801988a7bca6988
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 28968f384be3c064d66954aac4c534a5e76bf973
-Message-Id: <168816416884.26572.2531265346010814686.pr-tracker-bot@kernel.org>
-Date:   Fri, 30 Jun 2023 22:29:28 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229587AbjGAHLu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jul 2023 03:11:50 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9D7449F;
+        Sat,  1 Jul 2023 00:08:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1688195286; x=1719731286;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0foLCd5FDntKJ3VTEUvPb19jE3I03iB99n4sbpf5QFk=;
+  b=m7eFuFpBFfQPWhCL7BbgO38gebNzwVycPYhCSQtgSRRPqIT0REeHd7Yf
+   g0wObe4RS2sQxkCOA/ywTX4cFNxJAPVHEVxrCh1cqPw3hm+SgnA8zi+98
+   SfJXH+fpI8BLN5a8x9HyA9VFzpr3nut3TX06IwOvS8V2T21MsaRripQP5
+   ca34OUVtIYOI1rxY4j6LtDWoC5Rn02LrD7uM7uIk7FGBvwsQQwDu7M+2x
+   HqoE8VrWuzsvR5dukQDQ+oEfhB7S4P1Nu3Rc/Pvn1Pkw5Ao8zxXpKPA5N
+   Qa3IDmUoSDygHTBYzK4rh1OBcGWjtJ5p8KUxgd2PBZ/1mTdaIstAT4q2L
+   w==;
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="159408554"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Jul 2023 00:08:04 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Sat, 1 Jul 2023 00:08:02 -0700
+Received: from CHE-LT-UNGSOFTWARE.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.21 via Frontend Transport; Sat, 1 Jul 2023 00:07:59 -0700
+From:   Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <kumaravel.thiagarajan@microchip.com>,
+        <tharunkumar.pasumarthi@microchip.com>,
+        <UNGLinuxDriver@microchip.com>, <michael@walle.cc>
+Subject: [PATCH RESEND v13 char-misc-next 0/2] Add OTP/EEPROM functionality to the PCI1XXXX switch
+Date:   Sat, 1 Jul 2023 12:38:17 +0530
+Message-ID: <20230701070819.3992094-1-kumaravel.thiagarajan@microchip.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Thu, 29 Jun 2023 09:46:38 +0200:
+From: "Vaibhaav Ram T.L" <vaibhaavram.tl@microchip.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.5-1
+Microchip's pci1xxxx is an unmanaged PCIe3.1a switch for consumer,
+industrial, and automotive applications. This switch integrates OTP and
+EEPROM to enable customization of the part in the field. This patch adds
+OTP/EEPROM functionality to the pci1xxxx switch.
+---
+v12 -> v13:
+- Moved release_sys_lock() from patch#2 to patch#1
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/28968f384be3c064d66954aac4c534a5e76bf973
+v11 -> v12:
+- EEPROM is registered for NVMEM only if EEPROM is responsive
 
-Thank you!
+v10 -> v11:
+- Fixed error handling during timouts by releasing sys_locks
+
+v9 -> v10:
+- Removed unused include header files
+- Removed null check for priv pointer
+- Removed debug messages
+- Returned error during timeouts
+- Added corner case checks for offset and count values
+
+v8 -> v9:
+- Changed architecture from sysfs bin interface to NVMEM interface
+
+v7 -> v8:
+- Fixed error handling in probe function of mchp_pci1xxxx_gp driver
+- Added bin attribute groups to eliminate userspace from racing
+- Implemented short read and write for OTP/EEPROM
+
+v6 -> v7:
+- Handled corner cases such as failure of sysfs bin creation and removal
+- Added function to check whether device is responsive
+- Removed un-necessary parenthesis
+- Added function for repetitive tasks
+
+v5 -> v6:
+- Changed architecture from Block interface to sysfs interface
+- Replaced busy loops with read_poll_timeout()
+
+v4 -> v5:
+- Used proper errno
+- Removed un-necessary prints
+
+v3 -> v4:
+- Remove extra space, tab, un-necessary casting, paranthesis,
+  do while(false) loops
+- Used read_poll_timeout for polling BUSY_BIT
+
+v2 -> v3:
+- Modified commit description to include build issues reported by Kernel
+  test robot <lkp@intel.com> which are fixed in this patch
+
+v1 -> v2:
+- Resolve build issue reported by kernel test robot <lkp@intel.com>
+
+Kumaravel Thiagarajan (2):
+  misc: microchip: pci1xxxx: Add support to read and write into PCI1XXXX
+    OTP via NVMEM sysfs
+  misc: microchip: pci1xxxx: Add support to read and write into PCI1XXXX
+    EEPROM via NVMEM sysfs
+
+ MAINTAINERS                                   |   2 +
+ drivers/misc/mchp_pci1xxxx/Kconfig            |   1 +
+ drivers/misc/mchp_pci1xxxx/Makefile           |   2 +-
+ .../misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c | 443 ++++++++++++++++++
+ 4 files changed, 447 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
