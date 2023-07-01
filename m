@@ -2,91 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE12274479B
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jul 2023 09:18:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5B9374488F
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Jul 2023 12:54:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbjGAHSK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Jul 2023 03:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58390 "EHLO
+        id S229530AbjGAKyb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Jul 2023 06:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbjGAHSJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jul 2023 03:18:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDC5136;
-        Sat,  1 Jul 2023 00:18:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A8ED860FAA;
-        Sat,  1 Jul 2023 07:18:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB01DC433C7;
-        Sat,  1 Jul 2023 07:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1688195887;
-        bh=yvU1B9CzY4SoNHJbzm1vKiLG5Gv1vNDPYNbKeP43u5I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P9sd+ds8NNXBaPzb97EyfMjwaWZSB7OX8TgcZAvmlU9S5E6OVU3GDLMWpVZ7/wH2Y
-         ySxNaRxGHUUJKG8zCQpPHX2B8PD301aXLkXDwpTP23gcap9/BodaMuITwI3LVaaGlI
-         ViPruNDtv+PvmwLQCIpRkW87GazGFUVGtVnkdujw=
-Date:   Sat, 1 Jul 2023 09:18:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     VaibhaavRam.TL@microchip.com
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        arnd@arndb.de, Kumaravel.Thiagarajan@microchip.com,
-        Tharunkumar.Pasumarthi@microchip.com, UNGLinuxDriver@microchip.com,
-        michael@walle.cc
-Subject: Re: [PATCH RESEND v13 char-misc-next 0/2] Add OTP/EEPROM
- functionality to the PCI1XXXX switch
-Message-ID: <2023070155-annually-abdominal-b61d@gregkh>
-References: <20230620143520.858-1-vaibhaavram.tl@microchip.com>
- <2023062354-rejoice-preschool-5251@gregkh>
- <DM4PR11MB623829DD125CA15D628FB4B0972BA@DM4PR11MB6238.namprd11.prod.outlook.com>
+        with ESMTP id S229507AbjGAKy3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jul 2023 06:54:29 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B753ABD
+        for <linux-gpio@vger.kernel.org>; Sat,  1 Jul 2023 03:54:28 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 5b1f17b1804b1-3fbd33a57dcso174665e9.0
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jul 2023 03:54:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688208867; x=1690800867;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yDrvwaQgdFmBVJZsBTXqxF7u2xhBw6LQghRHQtjodbM=;
+        b=NV4HsLxHgdLtDLRaGJebcaEmyq7ykpbHP+xqBfbwsLQ0UVC+DkEeRGYt1aNv3DX4O7
+         tDxoKBf8M0ZPPEcxmIaAnLEKiGU6nf9ftJB2gIRr2X9gt8y6MQ2e1AxWqG2COoglwaWh
+         NsD/se5eL5vQE7cVsQoCb7Fs1bzr3fsnmMNc53J9eLgRM0yt5ib/tv0cp6du4xlCZV5+
+         Ip6mp/KQL5Fm9nP/RfLHLaLuawVErfSqaOGRG4duLxx399+/mLodbl90e6OEWEDFAXdQ
+         EQIAu8iNnS2Czklm2oCLYPHrJP1hK6hLtFnrspIDrqUiYgAyeYqKfoeyzw6FU3+SRk/M
+         3vng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688208867; x=1690800867;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yDrvwaQgdFmBVJZsBTXqxF7u2xhBw6LQghRHQtjodbM=;
+        b=OuHGm0sB7+qpFOHKfvnPws+x39aJl9EmxwEFeWtM9DAyRFP/nCPTvp3Ow3qXK1mzd4
+         +KhWYkBJeAo5hkf7OnwbItAQLbKMFRpV2wQbnvOf3SmgaIpVToaxXbYOIDOCbBQyat16
+         99/XhFpcSNNrrTe1ObZWpb9YpJFppMCQxdasTf+zLnwE1sUrvb5aP/e/u37c5fJdVgOT
+         HOq0HirShJxrUc52SFd9nPeCmiZk3hjCRcc01D/M+tyMHn42C2vICzjnqgJ5vjvEUkH8
+         dTw86EcT4SnR0oA0DQsLn1QhWK6CGI0he3gZn2IqCGan2z9jHzsBTuURsWc/IQRiqDkv
+         CmYw==
+X-Gm-Message-State: AC+VfDzv9268fjyA7FyCa2QSk5u4iy6P+zhyCgKPDUpAoAT1L14bLIVM
+        dEZRS1LbfdCHJMDkng8QAYzBW7/ND4SRtwTgop0=
+X-Google-Smtp-Source: ACHHUZ4Pdnd0qcuGvAI4dDnID+1fdF2WsrlKF0JfrGnDPXLgrBCtjikKZpPi8sT+6v6fZs77IL6laGN7mKa9pDUX0cA=
+X-Received: by 2002:a7b:c8c5:0:b0:3fa:99d6:4798 with SMTP id
+ f5-20020a7bc8c5000000b003fa99d64798mr4123212wml.37.1688208867298; Sat, 01 Jul
+ 2023 03:54:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM4PR11MB623829DD125CA15D628FB4B0972BA@DM4PR11MB6238.namprd11.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Sender: kristalinageorgieva4909@gmail.com
+Received: by 2002:a05:6000:c5:b0:314:1d8d:da3c with HTTP; Sat, 1 Jul 2023
+ 03:54:26 -0700 (PDT)
+From:   United Nation <turkey.un.info@gmail.com>
+Date:   Sat, 1 Jul 2023 03:54:26 -0700
+X-Google-Sender-Auth: Hk5lKn90de9WDVhBMHnQTs2xcJI
+Message-ID: <CAEyhVLAO+ds6iMoftVfDiFgoi9KP9OTeV+A2OouJLmSqEJoiFA@mail.gmail.com>
+Subject: United Nation Compensation
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=6.6 required=5.0 tests=BAYES_50,DEAR_FRIEND,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:341 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [kristalinageorgieva4909[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [kristalinageorgieva4909[at]gmail.com]
+        *  2.6 DEAR_FRIEND BODY: Dear Friend? That's not very dear!
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 01, 2023 at 07:08:44AM +0000, VaibhaavRam.TL@microchip.com wrote:
-> On Tue, Jun 20, 2023 at 08:05:18PM +0530, Vaibhaav Ram T.L wrote:
-> >> Microchip's pci1xxxx is an unmanaged PCIe3.1a switch for consumer, 
-> >> industrial, and automotive applications. This switch integrates OTP 
-> >> and EEPROM to enable customization of the part in the field. This 
-> >> patch adds OTP/EEPROM functionality to the pci1xxxx switch.
-> >> ---
-> >> v12 -> v13:
-> >> - Moved release_sys_lock() from patch#2 to patch#1
-> >
-> >This series is not showing up on lore.kernel.org at all, are you sure it is getting to >the mailing lists properly?
-> >
-> >thanks,
-> >
-> >greg k-h
-> 
-> Hi Greg. I too can't find the root cause for this issue. 
-> 
-> I have used get_maintainer.pl script to get the Maintainers list and it looks like this:
-> 
-> Arnd Bergmann <arnd@arndb.de> (supporter:CHAR and MISC DRIVERS) Greg Kroah-Hartman <gregkh@linuxfoundation.org> (supporter:CHAR and MISC DRIVERS,commit_signer:2/3=67%) "Vaibhaav Ram T.L" <vaibhaavram.tl@microchip.com> (supporter:MICROCHIP PCI1XXXX GP DRIVER,commit_signer:1/3=33%) Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com> (supporter:MICROCHIP PCI1XXXX GP DRIVER,commit_signer:3/3=100%,authored:3/3=100%,added_lines:15/15=100%,removed_lines:1/1=100%,added_lines:3/3=100%,removed_lines:2/2=100%)
-> Tharun Kumar P <tharunkumar.pasumarthi@microchip.com> (commit_signer:1/3=33%) linux-kernel@vger.kernel.org (open list) linux-gpio@vger.kernel.org (open list:MICROCHIP PCI1XXXX GP DRIVER)'
-> 
-> This is the command I have used: 
-> git send-email --to "linux-kernel@vger.kernel.org" --to "linux-gpio@vger.kernel.org" --cc "arnd@arndb.de" --cc "gregkh@linuxfoundation.org" --cc "kumaravel.thiagarajan@microchip.com" --cc "tharunkumar.pasumarthi@microchip.com" --cc "UNGLinuxDriver@microchip.com" --cc "michael@walle.cc" *.patch
-> 
-> Is there anything am I missing?
-> 
-> As of now, I have sent Patch V13 from Kumar's email id. Kindly check.
-> Sorry for inconvenience
-
-This email shows up fine, and so did your new resend, thanks!
-
-greg k-h
+Dear friend congratulations there is a good news for you
+ my name is Mr. Kenny Frank. from United Nations
+ kindly get back to us as soon as possible
+official Email:(turkey.un.info@gmail.com)
