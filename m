@@ -2,201 +2,202 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16E257464B4
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jul 2023 23:10:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C46D7464D5
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jul 2023 23:27:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230010AbjGCVKu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jul 2023 17:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47650 "EHLO
+        id S230337AbjGCV1r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jul 2023 17:27:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjGCVKu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jul 2023 17:10:50 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 145BBE59;
-        Mon,  3 Jul 2023 14:10:49 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id ca18e2360f4ac-7835ae70e46so192218039f.3;
-        Mon, 03 Jul 2023 14:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688418648; x=1691010648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pzVkmEgU5WzK/Ygg1Ob57YCyS+9xMsLU8cmnnEEo+/M=;
-        b=ggNSk/H1Gu+SWvUTcFKzi52A/Nuq5OjwcnWpXPbpm5zYS5lRO/GqinQIi6LRvFf5js
-         9Ngg0qC9cVjdZcSTmjXDHFeUIRkRBls9EEhikCDCOxNawCsO8WILiqeW5+JB58sDyB69
-         29LRRFms3nDEznT2wR6Zf6+jhz3o8/NAV1fnTnUP1aWW53+ZLN0abqkjojIHkP+CEOGw
-         Ofe3cRV0hk0KI1mZrS2cIrcU4qQjvD3lLI+oahSb4kVllxLodasgApQgSGNK7iHTwW8i
-         jJ1q3whXmgGphg/X6maRg+ZWZSWrDnijv2tJCTeyhSnK3xJQQ1PvBM97VTBWWBNDuU57
-         x//A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688418648; x=1691010648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pzVkmEgU5WzK/Ygg1Ob57YCyS+9xMsLU8cmnnEEo+/M=;
-        b=laqMVwS7fH9bPv8m7JpByAFBEHDl/+hdr2SX7I2i80zbQmaivQ7lzf5YReGGT2rDt1
-         MLkqIy0+j8+Ggfq7DQ6QH4Hn2mhSLCci07fmWF79vwmx2F5yGA/ZW7CSO+ldc42WbbiV
-         BTSziVSOQByOka7e4O1Zwl5cB969hxWa1C6VIYDSOQSf8R1+93feROGh80kR2sE/oyz5
-         x0E1qQFkvZE9gv8eOVs24DNAYahLTnlDVWu5zh9HdzWo0Vu7vSmz592Qg2kUgFTJ+CWH
-         HaN1t5gNLkr1jHqLV5IjbD+bGu62DnH6XGWf5y4LJYqweVCLVBawtJZI1AODR5l2PnJU
-         9RgQ==
-X-Gm-Message-State: AC+VfDw+HpuuPr5fiMC/o/HXrbVQk3m7WC8HMhQG1YPSUh+aao8999Zy
-        PEtu41Fcei+L3bZA9NsgGuWFdVRrFUc4/BuYb4v/xEtkht2JnA==
-X-Google-Smtp-Source: ACHHUZ6FkDf1mZszo/F/op4b4PfzyWqxR/zwCVmySCW6VP4GNg/zqvWZRGF5OdMpO5oqXZ9qEIDoJKf1z4mgA7m5tJE=
-X-Received: by 2002:a6b:f10d:0:b0:783:727b:7073 with SMTP id
- e13-20020a6bf10d000000b00783727b7073mr11630255iog.20.1688418648099; Mon, 03
- Jul 2023 14:10:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230630120433.49529-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20230630120433.49529-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <OS0PR01MB592217C4028606B67B39C6858629A@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CA+V-a8sXcHP2AYYLLONLLBDVctMb=fnU=D4+6hNoHGx5Dk2O3Q@mail.gmail.com> <OS0PR01MB592285AB361A6C25CEDC21F68629A@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-In-Reply-To: <OS0PR01MB592285AB361A6C25CEDC21F68629A@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 3 Jul 2023 22:10:21 +0100
-Message-ID: <CA+V-a8tkZ8vbMPqReQ+CixQgHZWBXxzmNdjv1EL9skgaf+Mmvw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] pinctrl: renesas: rzg2l: Include pinmap in
- RZG2L_GPIO_PORT_PACK() macro
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        with ESMTP id S229535AbjGCV1r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jul 2023 17:27:47 -0400
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C79E5B
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Jul 2023 14:27:45 -0700 (PDT)
+Received: from localhost (88-113-24-87.elisa-laajakaista.fi [88.113.24.87])
+        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+        id 70b68763-19e8-11ee-abf4-005056bdd08f;
+        Tue, 04 Jul 2023 00:27:41 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Tue, 4 Jul 2023 00:27:40 +0300
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     andy.shevchenko@gmail.com,
+        Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZKM9TMHEMkMNaKt9@surfacebook>
+References: <cover.1686063941.git.oleksii_moisieiev@epam.com>
+ <d388c7af3f72fd47baffe0de8c6fec8074cb483c.1686063941.git.oleksii_moisieiev@epam.com>
+ <ZIAtdLTvM6qh4r9W@surfacebook>
+ <ZJ78hBcjAhiU+ZBO@e120937-lin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZJ78hBcjAhiU+ZBO@e120937-lin>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Biju,
+Fri, Jun 30, 2023 at 05:02:12PM +0100, Cristian Marussi kirjoitti:
+> On Wed, Jun 07, 2023 at 10:10:44AM +0300, andy.shevchenko@gmail.com wrote:
+> > Tue, Jun 06, 2023 at 04:22:27PM +0000, Oleksii Moisieiev kirjoitti:
 
-On Mon, Jul 3, 2023 at 3:13=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.com=
-> wrote:
->
-> Hi Prabhakar,
->
-> > -----Original Message-----
-> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> > Sent: Monday, July 3, 2023 1:43 PM
-> > To: Biju Das <biju.das.jz@bp.renesas.com>
-> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>; Magnus Damm
-> > <magnus.damm@gmail.com>; Rob Herring <robh+dt@kernel.org>; Krzysztof
-> > Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Linus Walleij
-> > <linus.walleij@linaro.org>; linux-renesas-soc@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-riscv@lists.infradead.org; linux-
-> > kernel@vger.kernel.org; linux-gpio@vger.kernel.org; Prabhakar Mahadev
-> > Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Subject: Re: [RFC PATCH 1/4] pinctrl: renesas: rzg2l: Include pinmap in
-> > RZG2L_GPIO_PORT_PACK() macro
-> >
-> > Hi Biju,
-> >
-> > Thank you for the review.
-> >
-> > On Mon, Jul 3, 2023 at 12:42=E2=80=AFPM Biju Das <biju.das.jz@bp.renesa=
-s.com>
-> > wrote:
-> > >
-> > > Hi Prabhakar,
-> > >
-> > > Thanks for the patch.
-> > >
-> > > > -----Original Message-----
-> > > > From: Prabhakar <prabhakar.csengg@gmail.com>
-> > > > Sent: Friday, June 30, 2023 1:05 PM
-> > > > To: Geert Uytterhoeven <geert+renesas@glider.be>; Magnus Damm
-> > > > <magnus.damm@gmail.com>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>; Krzysztof Kozlowski
-> > > > <krzysztof.kozlowski+dt@linaro.org>; Linus Walleij
-> > > > <linus.walleij@linaro.org>; linux-renesas-soc@vger.kernel.org;
-> > > > devicetree@vger.kernel.org; linux-riscv@lists.infradead.org; linux-
-> > > > kernel@vger.kernel.org; linux-gpio@vger.kernel.org; Biju Das
-> > > > <biju.das.jz@bp.renesas.com>; Prabhakar
-> > > > <prabhakar.csengg@gmail.com>; Prabhakar Mahadev Lad
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > Subject: [RFC PATCH 1/4] pinctrl: renesas: rzg2l: Include pinmap in
-> > > > RZG2L_GPIO_PORT_PACK() macro
-> > > >
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Currently we assume all the port pins are sequential ie always PX_0
-> > > > to PX_n (n=3D1..7) exist, but on RZ/Five SoC we have additional pin=
-s
-> > > > P19_1 to
-> > > > P28_5 which have holes in them, for example only one pin on port19
-> > > > is available and that is P19_1 and not P19_0.
-> > > >
-> > > > So to handle such cases include pinmap for each port which would
-> > > > indicate the pin availability on each port. With this we also get
-> > > > additional pin validation, for example on the RZ/G2L SOC P0 has two
-> > > > pins
-> > > > P0_1 and P0_0 but with DT/SYSFS could use the P0_2-P0_7.
-> > > >
-> > > > While at it, update rzg2l_validate_gpio_pin() to use the port pinma=
-p
-> > > > to validate the gpio pin.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > ---
-> > > >  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 167
-> > > > ++++++++++++------------
-> > > >  1 file changed, 86 insertions(+), 81 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > index 9511d920565e..a0c2e585e765 100644
-> > > > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > @@ -67,10 +67,12 @@
-> > > >                                        PIN_CFG_FILCLKSEL)
-> > > >
-> > > >  /*
-> > > > - * n indicates number of pins in the port, a is the register index
-> > > > - * and f is pin configuration capabilities supported.
-> > > > + * m indicates the bitmap of supported pins, n indicates number
-> > > > + * of pins in the port, a is the register index and f is pin
-> > > > + * configuration capabilities supported.
-> > > >   */
-> > > > -#define RZG2L_GPIO_PORT_PACK(n, a, f)        (((n) << 28) | ((a) <=
-<
-> > 20) |
-> > > > (f))
-> > > > +#define RZG2L_GPIO_PORT_PACK(m, n, a, f)     ((UL(m) << 32) |
-> > (UL(n) << 28)
-> > > > | ((a) << 20) | (f))
-> > >
-> > > I guess, you can still achieve RZG2L_GPIO_PORT_PACK(n, a, f) with
-> > > ((UL(PINMAP(n)) << 32) | (UL(n) << 28) | ((a) << 20) | (f))
-> > >
-> > > #define PINMAP(n) GENMASK(n,0) ?? Then you don't need to modify
-> > rzg2l_gpio_configs.
-> > >
-> > Good point, but this would work if port pins didn't have any holes.
-> > For example on RZ/Five port P19 we have P19_1 pin only and P19_0 is not
-> > available (and similarly for port P25 we have P25_1).
->
-> Maybe introduce a helper macro to address this case.
->
-> #define RZG2L_GPIO_PORT_PACK_WITH_HOLES(m, n, a, f) for these 2 cases
->
-> and use RZG2L_GPIO_PORT_PACK(n, a, f) for the one without holes.
->
-Agreed will do.
+...
 
-Cheers,
-Prabhakar
+> > > -scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o
+> > > +scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o pinctrl.o
+> > 
+> > Why not splitting it and make it ordered?
+> 
+> Maybe a good idea for a separate cleanup...not sure can fit this series
+> without causing churn with other in-flight SCMI series...I'll happily wait
+> for Sudeep to decide.
+
+Sure.
+
+...
+
+> > Missing headers:
+> > 
+> > 	bitfield.h
+> > 	bits.h
+> > 	byteorder/
+> > 	types.h
+> > 
+> > > +#include <linux/module.h>
+> > > +#include <linux/scmi_protocol.h>
+> > > +#include <linux/slab.h>
+> > 
+> > Missing
+> > 
+> > 	asm/unaligned.h
+> 
+> Most if not all of these headers are already included by the
+> 
+> 	#include "protocols.h"
+> 
+> above that introduces a lot of common other stuff needed to implement
+> a new SCMI protocol.
+
+OK!
+
+...
+
+> > > +	ret = ph->xops->do_xfer(ph, t);
+> > > +	if (!ret) {
+> > 
+> > Can you rather follow the usual pattern, i.e. checking for the errors?
+> 
+> I think Oleksii here followed the (opinable maybe) pattern we have in
+> the SCMI stack where typically you get/build/send/put an scmi message
+> (xfer) while doing a few things only if the message was sent
+> successfully (if !ret ... most of the time): checking for success avoid
+> a lot of 'goto err:' all around.
+
+If it's
+	ret = fpp();
+	if (!ret)
+		ret = bpp();
+	return ret;
+
+I would agree with you, but in some cases it involves more core and that code
+doesn't affect ret itself.
+
+> > > +	}
+
+...
+
+> > All the same, why devm_*() is in use and what are the object lifetimes?
+> 
+> This bit about alocation and devres deserves an explanation in the context
+> of the SCMI stack.
+> 
+> So, you can add support for a new SCMI protocol using the below macro
+> 
+>  DEFINE_SCMI_PROTOCOL_REGISTER_UNREGISTER
+> 
+> to register with the core SCMI stack a few things like an
+> initialization function and the protocol operations you wish this
+> protocol to expose.
+> 
+> At run-time, once the first user of your new protocol comes up (like
+> the pinctrl driver later in the series), the core SCMI will take care
+> to setup and initialize the protocol so that can be used by the SCMI
+> drivers (like pinctrl-scmi.c) via its exposed proto_operations.
+> (assuming the protocol has been also found as supported by the fw
+> serving as the SCMI server)
+> 
+> When the last user of a protocol is gone, similarly, the protocol
+> will be deinitialized (if anything is needed to be deinit really...)
+> 
+> Basically the core calls upfront the protocol_init function you provided
+> and passes to it a ph protocol_handle that embeds a number of things
+> useful for protocol implementations, like as example the xops-> needed
+> to build and send messages using the core facilities.
+> 
+> Another thing that is embedded in the ph, as you noticed, is the ph->dev
+> device reference to be optionally used for devres in your protocol: now,
+> we do NOT have per-protocol devices, so, that device lifetine is NOT bound
+> strictly to this protocol but to the whole stack... BUT the SCMI core
+> takes care to open/close a devres group around your protocol_init invocation,
+> so that you can use devres on your .protocol_init, and be assured that when
+> your protocol will be de-initialized (since no more used by anyone) all your
+> devres allocations will be freed.
+> 
+> For this see:
+> 
+>  drivers/firmware/arm_scmi/driver.c::scmi_alloc_init_protocol_instance()
+> 
+> This clearly works ONLY for allocations descending directly from the
+> .protocol_init() call (when the devres group is open) and it was working
+> fine till today for all protocols, since all existing protocols
+> allocated all what they needed during protocol_init....
+> 
+> ... Pinctrl is a differenet beast, though, since it could make sense indeed
+> (even though still under a bit of discussion..) to delay some allocations and
+> SCMI querying to the platform after the protocol_init stage...i.e. lazy allocate
+> some resources only later when the pinctrl subsystem will parse the DT and will
+> ask the pinctrl-scmi driver just for the strictly needed resources.
+> (so you avoid to query and allocate at boot time a bunch of pin stuff that you
+> will never use...)
+> 
+> These lazy allocations instead, like the ones in scmi_pinctrl_get_group_info(),
+> happen outside of the .protocol_init path so they HAVE TO to be explicitly
+> managed manually without devres; as a consequence the addition of a
+> dedicated .protocol_deinit() function and the frees on the err path: so
+> that anything non devres allocated in the protcol devres_group can be
+> freed properly when the core deinitializes the protocol.
+> 
+> What is WRONG, though, in this patch (and I missed it ... my bad) is that such
+> explicit manual alloc/dealloc need not and should not be of devres kind but just
+> plain simple kmalloc_ / kfree.
+> (even though it is not harmful in this context...the ph->dev never unbounds till
+> the end of the stack..it is certainkly not needed and confusing)
+> 
+> Hoping not to have bored you to death with all of this SCMI digression... :D
+
+Thank you for a dive into the implementation of the SCMI. Perhaps you can
+summarize that into some kernel doc aroung thouse callbacks, so people can
+clearly see when it's possible and when it's not to use devm_*() APIs.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
