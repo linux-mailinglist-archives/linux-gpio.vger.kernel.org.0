@@ -2,65 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF1107455E3
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jul 2023 09:22:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DB5B7456F0
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jul 2023 10:07:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbjGCHWT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jul 2023 03:22:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57624 "EHLO
+        id S231454AbjGCIG6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jul 2023 04:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbjGCHWR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jul 2023 03:22:17 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F173AF
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Jul 2023 00:22:16 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b88e84bfb8so9886855ad.2
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jul 2023 00:22:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688368936; x=1690960936;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v+THK0n+VGuu+4v8xQoXUWrkoYjgA2i10r9vr2UfC7Q=;
-        b=JyGQhwTiF2vl3wUVVzPnaE5Dv4qemczGIKB3V8yhJrDnZKYYE8jUq00GXC35TCaefK
-         LZVWlyUuQrydggT7+vLbM2R8KixlNobL29PdGoLF8ZA1y1I9kgo/I63a0WaKj/7OxE9t
-         eQXwNStMvMHVU7dRF+pF5fduW20/pFz5QAjbUHm/miPbg8hm6gnWQGIjps7FWC0hmy2K
-         YHItN2JEIH5Gil+p30aqrjEAVmItfoV+FLu1Az8ksSO+hNKXABLShu1c0fka8POZVbvb
-         U8vopPsxEXVqi+3cg8K5xYtgBuw/arOnXXyVXH+ExiCkNdDOFel80JUA4cUHE0w8t343
-         ovkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688368936; x=1690960936;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v+THK0n+VGuu+4v8xQoXUWrkoYjgA2i10r9vr2UfC7Q=;
-        b=e9GNvep03fAdFFdPHDjtncsXxlhpbF4f9fAVE4DE8LIVoOFAhGnEes2Or5Xz4zmz3w
-         nZS2grdP/SNCApy8dMK0YlE9Rl5ULn2W+7SDC+25qcfSvDCPRXxUv502WCgbuDFOgUdH
-         pmZ3PZGP5Z1dQTCHOOLZ3/bbHqGqjI/1nBWsIJJP4eIJ92C6mxT1/r+MXOwJi/cZHKcZ
-         zLys05siVjSjXIPXlkUdfbsiNguV+D+B36JIxGflYjT2lGVRfi9eFcPkNJDQ+r0p7+M5
-         en48w/p9dw/oc0wSwqzkmFgGjL8NOnmS/eYzwWg0Qt+mc/WxxY06DLuIkE6Kg/HmxOaS
-         V/FA==
-X-Gm-Message-State: ABy/qLaXowb+KjncaK+7uq/C10lu/qDLHTy8L2cZM+vkjDScio6EhLFF
-        Fudwn3bzvDgZHWkByxHGf94L6es2Vn4H5VgVsdQ=
-X-Google-Smtp-Source: APBJJlG9TDm9jiPGoV25wgsvTCW2Ylry/821lfzDRHvEac1okD15vW1GqPob02WmqnqIi0SRsQdGhA==
-X-Received: by 2002:a17:902:e5c1:b0:1b8:6cac:ffe8 with SMTP id u1-20020a170902e5c100b001b86cacffe8mr12127853plf.51.1688368935911;
-        Mon, 03 Jul 2023 00:22:15 -0700 (PDT)
-Received: from localhost ([122.172.87.195])
-        by smtp.gmail.com with ESMTPSA id jb13-20020a170903258d00b001b8052d58a0sm12165120plb.305.2023.07.03.00.22.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 00:22:15 -0700 (PDT)
-Date:   Mon, 3 Jul 2023 12:52:13 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod][PATCH v2 0/2] bindings: rust: add README for crates.io
-Message-ID: <20230703072213.jd73kmflbp2jvywv@vireshk-i7>
-References: <20230703-rust-readme-v2-0-ba7d7f04bed6@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230703-rust-readme-v2-0-ba7d7f04bed6@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        with ESMTP id S231352AbjGCIGs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jul 2023 04:06:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95381E72;
+        Mon,  3 Jul 2023 01:06:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 553C060CF9;
+        Mon,  3 Jul 2023 08:05:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B19BAC433C8;
+        Mon,  3 Jul 2023 08:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688371554;
+        bh=H5Ol2bCcQqFdyg09aatCLPI6rS9AzzMNSSBC2BX7O1I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oIOJhIeWjUIxznyHbsEeDY5V8fSvW8F5I5Zbpq9mqcP+T9XMyqXGDJ6dnFtL+EpBE
+         np9qw2ScLgM6bAjcqjJXKWwDm0NcSYh6kAwd3tjWQzihkTEC8PCC/wlM34zRiZ76fR
+         IH1IfE8iJIfMYy63dWPg67elzEENbAfi73ipG9gU6GCYimHHRZ5bMbi3NScPVLVY5w
+         cE2xhZG5eHjXKDxqe0iqx9hbVE1hByEZZAycdUD0Qwj32j6GACr3Opb5Kq0i1SMaUR
+         nFuHse6zHojgdslFv3lrJ3tW767gbbXbcE1hXPdxFSbAuQg+xkjaqn/ISyMbad0I9F
+         zPicWmzxLkokg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qGEZD-00A68h-Sj;
+        Mon, 03 Jul 2023 09:05:52 +0100
+Date:   Mon, 03 Jul 2023 09:05:52 +0100
+Message-ID: <875y71zafz.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Neil Armstrong <neil.armstrong@linaro.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-oxnas@groups.io,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Golle <daniel@makrotopia.org>
+Subject: Re: [PATCH v2 13/15] irqchip: irq-versatile-fpga: remove obsolete oxnas compatible
+In-Reply-To: <20230630-topic-oxnas-upstream-remove-v2-13-fb6ab3dea87c@linaro.org>
+References: <20230630-topic-oxnas-upstream-remove-v2-0-fb6ab3dea87c@linaro.org>
+        <20230630-topic-oxnas-upstream-remove-v2-13-fb6ab3dea87c@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: neil.armstrong@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de, miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com, peppe.cavallaro@st.com, alexandre.torgue@foss.st.com, joabreu@synopsys.com, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, sre@kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-oxnas@groups.io, krzysztof.kozlowski@linaro.org, arnd@arndb.de, daniel@makrotopia.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -69,16 +95,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03-07-23, 09:19, Erik Schilling wrote:
-> The READMEs are displayed on crates.io for published crates. This tries
-> to provide a little more context there.
+On Fri, 30 Jun 2023 17:58:38 +0100,
+Neil Armstrong <neil.armstrong@linaro.org> wrote:
 > 
-> To: Linux-GPIO <linux-gpio@vger.kernel.org>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Due to lack of maintenance and stall of development for a few years now,
+> and since no new features will ever be added upstream, remove support
+> for OX810 and OX820 IRQ controller.
 > 
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Daniel Golle <daniel@makrotopia.org>
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  drivers/irqchip/irq-versatile-fpga.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
+> index ba543ed9c154..5018a06060e6 100644
+> --- a/drivers/irqchip/irq-versatile-fpga.c
+> +++ b/drivers/irqchip/irq-versatile-fpga.c
+> @@ -242,5 +242,4 @@ static int __init fpga_irq_of_init(struct device_node *node,
+>  }
+>  IRQCHIP_DECLARE(arm_fpga, "arm,versatile-fpga-irq", fpga_irq_of_init);
+>  IRQCHIP_DECLARE(arm_fpga_sic, "arm,versatile-sic", fpga_irq_of_init);
+> -IRQCHIP_DECLARE(ox810se_rps, "oxsemi,ox810se-rps-irq", fpga_irq_of_init);
+>  #endif
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+Feel free to route this via the SoC tree as part of the removal
+series.
+
+Thanks,
+
+	M.
 
 -- 
-viresh
+Without deviation from the norm, progress is not possible.
