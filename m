@@ -2,77 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F42307455DC
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jul 2023 09:20:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBE6C7455E0
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jul 2023 09:20:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229671AbjGCHUV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jul 2023 03:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57014 "EHLO
+        id S230266AbjGCHUv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jul 2023 03:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbjGCHUT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jul 2023 03:20:19 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2BB4E42
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Jul 2023 00:20:16 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-51d9128494cso3661392a12.0
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jul 2023 00:20:16 -0700 (PDT)
+        with ESMTP id S229819AbjGCHUu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jul 2023 03:20:50 -0400
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9DFE49
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Jul 2023 00:20:48 -0700 (PDT)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-19fa4346498so3549363fac.1
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jul 2023 00:20:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688368815; x=1690960815;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S4QpraCEYGheli1JdGmJ9D56BwcMGJ15TekW1Vg71jw=;
-        b=yzazIzKgNHHv7woMkBTdocNmUMXZ+QkHnYWp/EUk1oF22zPdHNnmVpR7S0qSfJwClL
-         MNZWuprwtj/iYOALjXmyA85RXe8kn8ueUTyZvZl8+GnTOapRQZdtRkNnnOB55kiFLLAm
-         jn3X4FGAxqF7qTtsKGFhWfVj8s/zD/s4aB2CKUFHavHzuVd4oFvTNYJ0MADimuiYiOml
-         nW+W68qDE4cJWaKaZFBKMIxSN1UOm3HmC+w4Pj2tKkWv4J+wuN2DO09WQGhp2TxQ7F8f
-         JhktgsszG4oGdwTyrbOybI443A4BrMd3tOT2fHv1Vaw8R24Fd0l0yEyFBU+re4DHyxwe
-         MtPQ==
+        d=linaro.org; s=google; t=1688368847; x=1690960847;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5wOEeEqZxs/53QPFBAeYmLrF3X4waeqXDqE1Qr5s1oo=;
+        b=K4Fk0wgl41urJ973GedutT6AJySQVRpM7IEAeH1DL3A0K5cftuzCamKRTB9DPS99mD
+         nA2nj+JvCX7ToqPkiXrqneN0AFk6tdTwfutFdtsVKkSIPottw7M/tR3AATLz4IgyfIl5
+         3uIT+BmwDiCixsnU59nodSwDjHwYO1qhwePVV9/5uIAGIE8HgjGzSORacDRfTQN9o+A4
+         RK189ThZg7KIFV/i1sqW4r2TYZBTb/6fmGM/KM32273ABzhuloTOaX+mqNyy/elVoy8H
+         x0NV4f9dVSDnPrOCSmBeOuSYdtx92ccMK5jyz2fExYMyn5NXHnQPrd9uQwVYLUOJFjPO
+         p98w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688368815; x=1690960815;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S4QpraCEYGheli1JdGmJ9D56BwcMGJ15TekW1Vg71jw=;
-        b=hZZmAgSEROCkWHKe4yUzQ1JkH4L268Zt9D5IgILgX4iwtPThWn2681x0WyKVlDjBIj
-         b5SVEscT22Z0+NS9QOfDVDY/N1e7PAUH14y3Ue9Uy/dVzA7uN9rNrRXyLZr5sj3SgiaD
-         PPPsz57pYzzkJ920d4FgQPVV5ru2kl7wUIScKQ/598Br9JfTccmi1HeBOvCtcHJQeLEG
-         mCARoPTkUgpT+47Sqr35NgQrQ772NKu88u+O1lfGHLge5nuEKIey8HZWs7RHjNgH4YbJ
-         O59q9t2kekoZ86TLhVEQ0DunA1uZnWJIvnVoS5NzWe9owF2KY9qmZg85kJwUV7eHrsAc
-         UXqQ==
-X-Gm-Message-State: ABy/qLa+uiVNHS92NkmPaPnXCESa6n+wF+kD22CVRTaEhJR5HY9rpfLp
-        kNj52huP3LPYWjDKAPhOBme5Rw==
-X-Google-Smtp-Source: APBJJlEY1lrkzKLUJtmqG2mZN8Aa8n68Xsz4uj2Riu+bcwKyOUpgGrW68a6tiJzgI5Dsr0hL7Gw8eA==
-X-Received: by 2002:a05:6402:516a:b0:51a:468c:b46c with SMTP id d10-20020a056402516a00b0051a468cb46cmr6475773ede.30.1688368815590;
-        Mon, 03 Jul 2023 00:20:15 -0700 (PDT)
-Received: from [192.168.1.127] (i5C7438F8.versanet.de. [92.116.56.248])
-        by smtp.gmail.com with ESMTPSA id s13-20020aa7c54d000000b0051e1660a34esm391449edr.51.2023.07.03.00.20.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 00:20:15 -0700 (PDT)
-From:   Erik Schilling <erik.schilling@linaro.org>
-Date:   Mon, 03 Jul 2023 09:20:00 +0200
-Subject: [libgpiod][PATCH v2 2/2] bindings: rust: mention the libgpiod
- crate from libgpiod-sys
+        d=1e100.net; s=20221208; t=1688368847; x=1690960847;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5wOEeEqZxs/53QPFBAeYmLrF3X4waeqXDqE1Qr5s1oo=;
+        b=GpA7BbkSgqP9NOFX4FuQk3kyamBLJEFiOfYzGxuM2KJPLtyBHFAkuDjj7oseIiyBlG
+         RAFbneghyEFXG3/mc5izB9WYRFxO4DZxTl0w9aVcC4MlbDOVQB+/1slaXhQu2pJFpnNT
+         Oe4rXos00rWp6LJfxig3DVKlmWhvxQutvFyenR58L2qXynGEgj/JPcMhjbotzxsve+C2
+         WBjIhmQqGuF4Zo5f80YWOnyAGZ9wZoJ0m2i1yAxOCrsrE8T3mnwFWv3MwzAMLzYamNc7
+         iq7pgkNJvBvJB13K35rEtR8LrqmuidGSsGAZfaM15H0ZyeyvDTC0mszzaa56fWsTrKkR
+         XhPg==
+X-Gm-Message-State: ABy/qLaO+3KASkDlFyn75W3P7SuKx4MTaT6cXbn3G+8mqz1A8QSfNa+C
+        4oTqMb++sNwpg5KAgtRjWCum+/hXg4kFXv9YnNex1A==
+X-Google-Smtp-Source: APBJJlEb+AJ0CavHV/EY5o02uXm03FgkhsSGBahp5rgVjQwn4oDUf2oZLdvfrUiaO5BwJCpHYi9SurP9PwIS6yl4hW0=
+X-Received: by 2002:a05:6870:f150:b0:1b0:3771:736c with SMTP id
+ l16-20020a056870f15000b001b03771736cmr12943732oac.41.1688368847232; Mon, 03
+ Jul 2023 00:20:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230703-rust-readme-v2-2-ba7d7f04bed6@linaro.org>
-References: <20230703-rust-readme-v2-0-ba7d7f04bed6@linaro.org>
-In-Reply-To: <20230703-rust-readme-v2-0-ba7d7f04bed6@linaro.org>
-To:     Linux-GPIO <linux-gpio@vger.kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Erik Schilling <erik.schilling@linaro.org>
-X-Mailer: b4 0.13-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1688368813; l=1040;
- i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=I3Lvenf9ixcuPhSOgUdL4Ea92lnFRThego0waHda6bQ=;
- b=qrsl6drfAckZOf38lS/M14UIN/UVFUbY7+xgpkMyHdkgrZTt+X7Kl6hsc945gWsP1v3OH0ePh
- CUfdVRLmy6PCPt9rqLfZg0YAF5YOp5+NziWWYNg/Tw8bz+twSj0atj4
-X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
- pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-9-git-send-email-quic_mojha@quicinc.com>
+ <CAL_JsqJ_TTnGjjB2d8_FKHpWBRG5GHLoWnabCKjsdeZ4QFdNEg@mail.gmail.com>
+ <cacbbb02-732e-076e-50bf-292d20a4d722@quicinc.com> <58a26b9e-a48d-d567-c310-193a2c52521e@linaro.org>
+ <5447f9f8-55b4-8bed-66a6-1c9d62b02c79@quicinc.com>
+In-Reply-To: <5447f9f8-55b4-8bed-66a6-1c9d62b02c79@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date:   Mon, 3 Jul 2023 09:20:35 +0200
+Message-ID: <CAGE=qrq0CuO4J-6yC=YZ4xjL67o9QTqpei0ovX-X_8MLVeEH6g@mail.gmail.com>
+Subject: Re: [PATCH v4 08/21] dt-bindings: reserved-memory: Add qcom,ramoops binding
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, corbet@lwn.net,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,33 +78,60 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If people view this README.md on crates.io [1], they likely want to
-use the safe wrapper instead. So this hints the existence of that other
-crate.
+On Mon, 3 Jul 2023 at 08:22, Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+> On 7/2/2023 1:42 PM, Krzysztof Kozlowski wrote:
+> >>> The big difference is if firmware is not deciding where this log
+> >>> lives, then it doesn't need to be in DT. How does anything except the
+> >>> kernel that allocates the log find the logs?
+> >>
+> >> Yes, you are correct, firmware is not deciding where the logs lives
+> >> instead here, Kernel has reserved the region where the ramoops region
+> >> lives and later with the minidump registration where, physical
+> >> address/size/virtual address(for parsing) are passed and that is how
+> >> firmware is able to know and dump those region before triggering system
+> >> reset.
+> >
+> > Your explanation does not justify storing all this in DT. Kernel can
+> > allocate any memory it wishes, store there logs and pass the address to
+> > the firmware. That's it, no need for DT.
+>
+> If you go through the driver, you will know that what it does, is
 
-[1] https://crates.io/crates/libgpiod-sys
+We talk about bindings and I should not be forced to look at the
+driver to be able to understand them. Bindings should stand on their
+own.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
----
- bindings/rust/libgpiod-sys/README.md | 3 +++
- 1 file changed, 3 insertions(+)
+> just create platform device for actual ramoops driver to probe and to
 
-diff --git a/bindings/rust/libgpiod-sys/README.md b/bindings/rust/libgpiod-sys/README.md
-index f9db496..05acd9e 100644
---- a/bindings/rust/libgpiod-sys/README.md
-+++ b/bindings/rust/libgpiod-sys/README.md
-@@ -8,6 +8,9 @@ SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
- Automatically generated Rust FFI bindings via
- 	[bindgen](https://github.com/rust-lang/rust-bindgen).
- 
-+Typically, you will want to use the safe `libgpiod` wrapper crate instead of
-+these unsafe wrappers around the C lib.
-+
- ## Build requirements
- 
- A compatible variant of the C library needs to detectable using pkg-config.
+Not really justification for Devicetree anyway. Whatever your driver
+is doing, is driver's business, not bindings.
 
--- 
-2.41.0
+> provide this it needs exact set of parameters of input what original
+> ramoops DT provides, we need to keep it in DT as maintaining this in
+> driver will not scale well with different size/parameter size
+> requirement for different targets.
 
+Really? Why? I don't see a problem in scaling. At all.
+
+>
+> >
+> >>
+> >> A part of this registration code you can find in 11/21
+> >>
+> >>> I'm pretty sure I already said all this before.
+> >>
+> >> Yes, you said this before but that's the reason i came up with vendor
+> >> ramoops instead of changing traditional ramoops binding.
+> >
+> > That's unexpected conclusion. Adding more bindings is not the answer to
+> > comment that it should not be in the DTS in the first place.
+>
+> Please suggest, what is the other way being above text as requirement..
+
+I do not see any requirement for us there. Forcing me to figure out
+how to add non-hardware property to DT is not the way to convince
+reviewers. But if you insist - we have ABI for this, called sysfs. If
+it is debugging feature, then debugfs.
+
+Best regards,
+Krzysztof
