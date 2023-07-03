@@ -2,127 +2,232 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9006745F4A
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jul 2023 16:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5836E745F6B
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jul 2023 17:07:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230503AbjGCO75 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jul 2023 10:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42512 "EHLO
+        id S231478AbjGCPHP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jul 2023 11:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230197AbjGCO7z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jul 2023 10:59:55 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC16E77
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Jul 2023 07:59:49 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-4f96d680399so6881741e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jul 2023 07:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688396387; x=1690988387;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aJbV4N7RLwElD/TMXfmSwrFrJd7AnATyySwRyBz/hoQ=;
-        b=kOaT+uWHkgGk5HsBjYPxtWaMuXM6HogvNgwkhgIFSBRHBuJClwWuaLflr2ViTkbWzn
-         2SWHjIDcWmbniM/GIIZpNhJO+hmRiv8qeF52E6aMUzNIcz4hY3UaoTvoKyOFNudLmSsZ
-         MqPtoyThQLWFMDxtHLowi8cHb0nZ9P3KmTfOgw/SJGEpGT4o1P3tkrFca1/isGr2w7gW
-         EcYDNVIuH5yYlgfZ3Rmw7Kh0KL7tpTBna8+J9BEbYvJyOFY6X/ksJwzthrspvqDVL3Tp
-         S8hq6Jo7Uk6ob/UmN33PHobQ5N/WwopdAiJ4jZd+gkN67NV56ELFJI5tqFhgsfGuCNah
-         VlMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688396387; x=1690988387;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aJbV4N7RLwElD/TMXfmSwrFrJd7AnATyySwRyBz/hoQ=;
-        b=Cw3ZjyMOLQLMa+ykKj0/9hW4nA93dIQ1P8bIirAVHLfkRk9b5Hod+ijj0A+rnNaqjw
-         Jlu7QmOQU3sXP3TTd5JO11Fm4pxBig+LsanS/d06PmTnDU2Vb8D1aitBG5zgpnoBPgvC
-         ytV8leJ3/DYMKqegjMi6sGP0HC3c2lqsPOHnxOA47cFpk2ZaUl5BuVFiujmvauqESBoo
-         xiuVAzRvhWc6eWcxVTTg2KxNA2qUZCNM1CCS8v3DxdmmA8CLMOM6HuH89ZU+l3/nIlq5
-         qsexyyv01f7c9/pt7fPBg/7mUL5uhuZzWDpsZeS7uVGjyJnKhAulvSTC0lrB+LpLoOCG
-         futQ==
-X-Gm-Message-State: ABy/qLZZhlk4Tur7wxkvHfIHebomLfwLRtnTkuGjKF1FO15IC3x08kS6
-        fgsniIfAaUnRZnE5GPGNr1dwzw==
-X-Google-Smtp-Source: APBJJlG9ApmvdjqzfVKnyOdHThzxebr1CwTamo13HN9k60suQ2wP0Gn6o8umombS4pOFRzHYJohAjQ==
-X-Received: by 2002:a05:6512:31d6:b0:4fb:96ed:93b3 with SMTP id j22-20020a05651231d600b004fb96ed93b3mr9651485lfe.65.1688396387608;
-        Mon, 03 Jul 2023 07:59:47 -0700 (PDT)
-Received: from [192.168.1.101] (abyj26.neoplus.adsl.tpnet.pl. [83.9.29.26])
-        by smtp.gmail.com with ESMTPSA id y16-20020a197510000000b004fba5eb0a64sm2013958lfe.42.2023.07.03.07.59.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jul 2023 07:59:47 -0700 (PDT)
-Message-ID: <0d468d08-6410-e424-b4f3-5245cdb0334a@linaro.org>
-Date:   Mon, 3 Jul 2023 16:59:45 +0200
+        with ESMTP id S231418AbjGCPHP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jul 2023 11:07:15 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F75114
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Jul 2023 08:07:12 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed50:bc71:f024:6708:ff])
+        by baptiste.telenet-ops.be with bizsmtp
+        id Gf782A00S0kCKfg01f784p; Mon, 03 Jul 2023 17:07:09 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1qGL8t-000Rks-39;
+        Mon, 03 Jul 2023 17:07:08 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1qGL8u-0031nG-Nq;
+        Mon, 03 Jul 2023 17:07:08 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFT] pinctrl: renesas: rzv2m: Handle non-unique subnode names
+Date:   Mon,  3 Jul 2023 17:07:06 +0200
+Message-Id: <607bd6ab4905b0b1b119a06ef953fa1184505777.1688396717.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 02/10] dt-bindings: power: Add rpm power domains for SDX75
-Content-Language: en-US
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, lee@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        sboyd@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <1688395346-3126-1-git-send-email-quic_rohiagar@quicinc.com>
- <1688395346-3126-3-git-send-email-quic_rohiagar@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <1688395346-3126-3-git-send-email-quic_rohiagar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3.07.2023 16:42, Rohit Agarwal wrote:
-> Add RPM power domain bindings for the SDX75 SoC.
-> 
-> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/power/qcom,rpmpd.yaml | 1 +
->  include/dt-bindings/power/qcom-rpmpd.h                  | 8 ++++++++
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-> index afad313..58e1be8 100644
-> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-> @@ -40,6 +40,7 @@ properties:
->        - qcom,sdm845-rpmhpd
->        - qcom,sdx55-rpmhpd
->        - qcom,sdx65-rpmhpd
-> +      - qcom,sdx75-rpmhpd
->        - qcom,sm6115-rpmpd
->        - qcom,sm6125-rpmpd
->        - qcom,sm6350-rpmhpd
-> diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
-> index 1bf8e87..8092d0d 100644
-> --- a/include/dt-bindings/power/qcom-rpmpd.h
-> +++ b/include/dt-bindings/power/qcom-rpmpd.h
-> @@ -57,6 +57,14 @@
->  #define SDX65_CX_AO	4
->  #define SDX65_MXC	5
->  
-> +/* SDX75 Power Domain Indexes */
-> +#define SDX75_CX	0
-> +#define SDX75_CX_AO	1
-> +#define SDX75_MSS	2
-> +#define SDX75_MX	3
-> +#define SDX75_MX_AO	4
-> +#define SDX75_MXC	5
-Please instead introduce a set of defines without the SoC prefix
-(i.e. CX, CX_AO, MX etc.). We've been putting this off for too long
-and you're the first unlucky guy that submitted new RPMhPD support after
-we've concluded it'd be the way to go! :D Sadly, we can't replace the
-existing ones retroactively..
+The eMMC and SDHI pin control configuration nodes in DT have subnodes
+with the same names ("data" and "ctrl").  As the RZ/V2M pin control
+driver considers only the names of the subnodes, this leads to
+conflicts:
 
-Konrad
-> +
->  /* SM6350 Power Domain Indexes */
->  #define SM6350_CX	0
->  #define SM6350_GFX	1
+    pinctrl-rzv2m b6250000.pinctrl: pin P8_2 already requested by 85000000.mmc; cannot claim for 85020000.mmc
+    pinctrl-rzv2m b6250000.pinctrl: pin-130 (85020000.mmc) status -22
+    renesas_sdhi_internal_dmac 85020000.mmc: Error applying setting, reverse things back
+
+Fix this by constructing unique names from the node names of both the
+pin control configuration node and its child node, where appropriate.
+
+Reported by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Fixes: 92a9b825257614af ("pinctrl: renesas: Add RZ/V2M pin and gpio controller driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Untested on real hardware.
+The RZ/G2L pin control drivers needs a similar fix.
+
+Before:
+
+    $ cat /sys/kernel/debug/pinctrl/b6250000.pinctrl/pingroups
+    registered pin groups:
+    group: data
+    pin 130 (P8_2)
+    pin 131 (P8_3)
+    pin 132 (P8_4)
+    pin 133 (P8_5)
+
+    group: ctrl
+    pin 128 (P8_0)
+    pin 129 (P8_1)
+
+    group: cd
+    pin 135 (P8_7)
+
+    $ cat /sys/kernel/debug/pinctrl/b6250000.pinctrl/pinmux-functions
+    function 0: data, groups = [ data ]
+    function 1: ctrl, groups = [ ctrl ]
+    function 2: cd, groups = [ cd ]
+
+After:
+
+    $ cat /sys/kernel/debug/pinctrl/b6250000.pinctrl/pingroups
+    registered pin groups:
+    group: sd0.data
+    pin 130 (P8_2)
+    pin 131 (P8_3)
+    pin 132 (P8_4)
+    pin 133 (P8_5)
+
+    group: emmc.data
+    pin 0 (P0_0)
+    pin 1 (P0_1)
+    pin 2 (P0_2)
+    pin 3 (P0_3)
+    pin 4 (P0_4)
+    pin 5 (P0_5)
+    pin 6 (P0_6)
+    pin 7 (P0_7)
+
+    group: sd0.ctrl
+    pin 128 (P8_0)
+    pin 129 (P8_1)
+
+    group: emmc.ctrl
+    pin 10 (P0_10)
+    pin 11 (P0_11)
+
+    group: sd0.cd
+    pin 135 (P8_7)
+
+    group: sd0-uhs.data
+    pin 130 (P8_2)
+    pin 131 (P8_3)
+    pin 132 (P8_4)
+    pin 133 (P8_5)
+
+    group: sd0-uhs.ctrl
+    pin 128 (P8_0)
+    pin 129 (P8_1)
+
+    group: sd0-uhs.cd
+    pin 135 (P8_7)
+
+    $ cat /sys/kernel/debug/pinctrl/b6250000.pinctrl/pinmux-functions
+    function 0: sd0.data, groups = [ sd0.data ]
+    function 1: emmc.data, groups = [ emmc.data ]
+    function 2: sd0.ctrl, groups = [ sd0.ctrl ]
+    function 3: sd0.cd, groups = [ sd0.cd ]
+    function 4: emmc.ctrl, groups = [ emmc.ctrl ]
+    function 5: sd0-uhs.data, groups = [ sd0-uhs.data ]
+    function 6: sd0-uhs.ctrl, groups = [ sd0-uhs.ctrl ]
+    function 7: sd0-uhs.cd, groups = [ sd0-uhs.cd ]
+---
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c | 28 ++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzv2m.c b/drivers/pinctrl/renesas/pinctrl-rzv2m.c
+index e5472293bc7fb247..35b23c1a5684d3e4 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzv2m.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzv2m.c
+@@ -209,6 +209,7 @@ static int rzv2m_map_add_config(struct pinctrl_map *map,
+ 
+ static int rzv2m_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 				   struct device_node *np,
++				   struct device_node *parent,
+ 				   struct pinctrl_map **map,
+ 				   unsigned int *num_maps,
+ 				   unsigned int *index)
+@@ -226,6 +227,7 @@ static int rzv2m_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	struct property *prop;
+ 	int ret, gsel, fsel;
+ 	const char **pin_fn;
++	const char *name;
+ 	const char *pin;
+ 
+ 	pinmux = of_find_property(np, "pinmux", NULL);
+@@ -309,8 +311,19 @@ static int rzv2m_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		psel_val[i] = MUX_FUNC(value);
+ 	}
+ 
++	if (parent) {
++		name = devm_kasprintf(pctrl->dev, GFP_KERNEL, "%pOFn.%pOFn",
++				      parent, np);
++		if (!name) {
++			ret = -ENOMEM;
++			goto done;
++		}
++	} else {
++		name = np->name;
++	}
++
+ 	/* Register a single pin group listing all the pins we read from DT */
+-	gsel = pinctrl_generic_add_group(pctldev, np->name, pins, num_pinmux, NULL);
++	gsel = pinctrl_generic_add_group(pctldev, name, pins, num_pinmux, NULL);
+ 	if (gsel < 0) {
+ 		ret = gsel;
+ 		goto done;
+@@ -320,17 +333,16 @@ static int rzv2m_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 	 * Register a single group function where the 'data' is an array PSEL
+ 	 * register values read from DT.
+ 	 */
+-	pin_fn[0] = np->name;
+-	fsel = pinmux_generic_add_function(pctldev, np->name, pin_fn, 1,
+-					   psel_val);
++	pin_fn[0] = name;
++	fsel = pinmux_generic_add_function(pctldev, name, pin_fn, 1, psel_val);
+ 	if (fsel < 0) {
+ 		ret = fsel;
+ 		goto remove_group;
+ 	}
+ 
+ 	maps[idx].type = PIN_MAP_TYPE_MUX_GROUP;
+-	maps[idx].data.mux.group = np->name;
+-	maps[idx].data.mux.function = np->name;
++	maps[idx].data.mux.group = name;
++	maps[idx].data.mux.function = name;
+ 	idx++;
+ 
+ 	dev_dbg(pctrl->dev, "Parsed %pOF with %d pins\n", np, num_pinmux);
+@@ -377,7 +389,7 @@ static int rzv2m_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	index = 0;
+ 
+ 	for_each_child_of_node(np, child) {
+-		ret = rzv2m_dt_subnode_to_map(pctldev, child, map,
++		ret = rzv2m_dt_subnode_to_map(pctldev, child, np, map,
+ 					      num_maps, &index);
+ 		if (ret < 0) {
+ 			of_node_put(child);
+@@ -386,7 +398,7 @@ static int rzv2m_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	}
+ 
+ 	if (*num_maps == 0) {
+-		ret = rzv2m_dt_subnode_to_map(pctldev, np, map,
++		ret = rzv2m_dt_subnode_to_map(pctldev, np, NULL, map,
+ 					      num_maps, &index);
+ 		if (ret < 0)
+ 			goto done;
+-- 
+2.34.1
+
