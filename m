@@ -2,142 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12A397471BB
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jul 2023 14:50:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF7E67471C1
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jul 2023 14:51:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231179AbjGDMu1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jul 2023 08:50:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54136 "EHLO
+        id S230246AbjGDMvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jul 2023 08:51:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230232AbjGDMu0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jul 2023 08:50:26 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B7FE70
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Jul 2023 05:50:25 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-3142970df44so3908238f8f.3
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Jul 2023 05:50:24 -0700 (PDT)
+        with ESMTP id S230391AbjGDMvE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jul 2023 08:51:04 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A395E70
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Jul 2023 05:51:03 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-666e916b880so2576703b3a.2
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Jul 2023 05:51:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688475023; x=1691067023;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=khN7qL20jiNV+2YUoL2VVrDQ7HuxSVd+7myuCssgPgE=;
-        b=lhpZ5J9XdadmPSr1QR/AG8UcCx6nsBh7S96ptZWO01NVbdAD32ga6ND/rHGK/0nLeG
-         OcILfAAZH2QGjuXC0E1sxnz8ySI0riahZV4a/8Vh0qOFuPLDeYuLhNivNpQ42YBQZpR1
-         n52OFNS0gHnHJ4ORnADm7dkH4XGhkKGL6bdV3HcGb/JLkgwlITETOv6im3jy+/aeghKo
-         SoRqplSJRCRJRm91vnJY56FDVLzwhoIazir8wpfpbMjF7lfBWguiZ9/WFTsJGIwwwgsO
-         /SRYchDhQsYGOB5Pi+dm1/EQ35yHwT5u3gaFUFxuzSwiOobh/h9Vc1OIagL99AHBAmRV
-         s8SA==
+        d=gmail.com; s=20221208; t=1688475062; x=1691067062;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m3o8AeipVc0tW9U466qBIXYM7Mllx8KJqaG6LWtEsy0=;
+        b=ixOz86AWL0U3ElPCwt6esysVFJajMq/s27Cl9HBFI+NCKJ6FeaiBfY1YpF8mkMEKbW
+         VBP1whkpfj2FsnVCY3Jq3xu05zzLEtUd5XWGkAQRyrdaRM80Ic3C89sSrxIrD+5QCqbS
+         E+zhUFQokCyM76L1uUPqti3yD2lcK4gFSFWom4uafRYKa8IQcRaIHdXo0jpxsK4osXuL
+         pYzFsg1jLfnwXQ9d9fUu/PfG4Kw1NoqzemVCaCDyrFvw3nB41BePy1OtxdWflMB+u1Im
+         bEUTTz+dxQvVbOH3QS4dc/Jrg1FN2xR3Woi36nJ8RbqCej8p0j+Y00XlmSWYh4VHGrQS
+         weWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688475023; x=1691067023;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=khN7qL20jiNV+2YUoL2VVrDQ7HuxSVd+7myuCssgPgE=;
-        b=Tq1RRyVBYZ9zsvMMWUGCvvJUpTPZinHZvGVGhZe2+p8LBLttsfIDOFj2Ei9Yi7SvHn
-         Xm6M+neccio7hSY0+9MKTWy0eUuBcXLRYi61OoQDv/j4wbYsuT+jpJcMzhqdA5lKbSR/
-         c63E/9yrCYhE3PlA6iWqIgpgwAojVTJwzKLEa7wZunY8xa7Td9WC9MTmtgDoq091Uzsu
-         kNjfvKYZDenk/tZ+6qyCD5cHVUK0JUCMlUBvOvSmv0sjBzRTav9R4LSvxWIUWkYl00SZ
-         HxVHNXpEwjEQbY38RlxFRRQAxT5+gJ2Tx3BtLZkvNAEtINxBdeKTL2PQWAzFfNVFfm/x
-         Llhg==
-X-Gm-Message-State: ABy/qLZe4sCfrv2QldB/lF7NSRR2w3smFThTiqQNzgv52OM3lAN3Lzuv
-        sOM/OKC5xtNBVjn1bkwcOU0VVQ==
-X-Google-Smtp-Source: APBJJlGYnTg9Odl6AdblWp67O67QkMbjypzSdthrdvhcA+ODLfuCZz/bh+UKd6Sl1gTFpqUPb6nUyw==
-X-Received: by 2002:a5d:4203:0:b0:313:f395:f5a3 with SMTP id n3-20020a5d4203000000b00313f395f5a3mr9492911wrq.38.1688475023459;
-        Tue, 04 Jul 2023 05:50:23 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:106:cd85:84ae:7b? ([2a01:e0a:982:cbb0:106:cd85:84ae:7b])
-        by smtp.gmail.com with ESMTPSA id g5-20020adff405000000b003143cb109d5sm2634842wro.14.2023.07.04.05.50.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jul 2023 05:50:23 -0700 (PDT)
-Message-ID: <12266deb-4602-c557-fd80-689765fbf302@linaro.org>
-Date:   Tue, 4 Jul 2023 14:50:20 +0200
+        d=1e100.net; s=20221208; t=1688475062; x=1691067062;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m3o8AeipVc0tW9U466qBIXYM7Mllx8KJqaG6LWtEsy0=;
+        b=hmgbotfjN9MUSDEOJ4NddueVYWjen2PYvzbJ52EVQSTQpToDPl7tDMp3q1vgaGn4aM
+         R6QHAKZGheP5UChiZ1kcWtGNlRK2ZOvYseD8xctWZVwb/ECdwEsjmUdeVrtci8OMfVSI
+         8FK1rRH6IoZ5apDIGKLoLGG7hKH4WQc/gq/5T7YctplmTT/D3tBqdhovvkNocW2kLitA
+         wOAtyWteTKXBImWP7eBXLg7gbsabt98A0gm4FqwMExUDoogTK0Ev44TIMSmvJpFZk7zq
+         6jnTztxQgEb0wL54ujrNOFIbObEzPRa0M4XoQVhp2MPtv0KPloND4jH5Bh5RXxYYIBOg
+         sm9w==
+X-Gm-Message-State: ABy/qLb24gej60KmiIpCpoo2q0h7HQYu2BRcMcEaoLUVQG2yr2mVwBH6
+        andH7YModTz1Zjh4rrCIoz3oQzE8pqI=
+X-Google-Smtp-Source: APBJJlHiaL4cQlUxGHrpg/0T1H1dKi6E8sSP2TqnDNO10Bczok7Pt9frK2bF2mNNn9iU9aqhiFerYw==
+X-Received: by 2002:a05:6a00:2d87:b0:682:4de1:adcc with SMTP id fb7-20020a056a002d8700b006824de1adccmr13023495pfb.12.1688475062481;
+        Tue, 04 Jul 2023 05:51:02 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id j7-20020aa78d07000000b0064fa2fdfa9esm15303382pfe.81.2023.07.04.05.50.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jul 2023 05:51:01 -0700 (PDT)
+Date:   Tue, 4 Jul 2023 20:50:56 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH] tools: clarify the non-option arguments in
+ help text
+Message-ID: <ZKQVsPrhMEXwavIf@sol>
+References: <20230704121222.314617-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 06/15] dt-bindings: mtd: oxnas-nand: remove obsolete
- bindings
-Content-Language: en-US
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-oxnas@groups.io,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Daniel Golle <daniel@makrotopia.org>
-References: <20230630-topic-oxnas-upstream-remove-v2-0-fb6ab3dea87c@linaro.org>
- <20230630-topic-oxnas-upstream-remove-v2-6-fb6ab3dea87c@linaro.org>
- <20230704103026.6db56915@xps-13>
-Organization: Linaro Developer Services
-In-Reply-To: <20230704103026.6db56915@xps-13>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230704121222.314617-1-brgl@bgdev.pl>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Miquel,
-
-On 04/07/2023 10:30, Miquel Raynal wrote:
-> Hi Neil,
+On Tue, Jul 04, 2023 at 02:12:22PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> neil.armstrong@linaro.org wrote on Fri, 30 Jun 2023 18:58:31 +0200:
+> We already use [] for optional and <> for required arguments in help text
+> but let's make it clear that we can pass multiple chips/lines and in most
+> tools only the first one is required.
 > 
->> Due to lack of maintenance and stall of development for a few years now,
->> and since no new features will ever be added upstream, remove the
->> for OX810 and OX820 nand bindings.
->>
->> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
->> Acked-by: Daniel Golle <daniel@makrotopia.org>
->> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  tools/gpiodetect.c | 2 +-
+>  tools/gpioget.c    | 2 +-
+>  tools/gpioinfo.c   | 2 +-
+>  tools/gpiomon.c    | 2 +-
+>  tools/gpionotify.c | 2 +-
+>  tools/gpioset.c    | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> 
-> I assume these two mtd related patches will be picked-up through the
-> soc tree as well, if that's not the case just ping me and I'll take
-> them.
+> diff --git a/tools/gpiodetect.c b/tools/gpiodetect.c
+> index 0a3461b..569cdfe 100644
+> --- a/tools/gpiodetect.c
+> +++ b/tools/gpiodetect.c
+> @@ -12,7 +12,7 @@
+>  
+>  static void print_help(void)
+>  {
+> -	printf("Usage: %s [OPTIONS] [chip]...\n", get_prog_name());
+> +	printf("Usage: %s [OPTIONS] [chip1] [chip2] ...\n", get_prog_name());
 
-As of today, there's no strong plan, so maintainers can pick their patches
-and I'll probably funnel the remaining ones via a final SoC PR.
+I prefer the first form myself.  It can be argued that the second form is
+more confusing.  In both cases you need to parse the ellipsis, but the
+second is close to:
+    "Usage: %s [OPTIONS] <chip1> <chip2> ...\n"
 
-Thanks,
-Neil
+which means something very different.
 
-> 
-> Thanks,
-> Miquèl
+What does git do?
 
+"git log [<options>] [<revision-range>] [[--] <path>...]"
+
+"git branch (-d | -D) [-r] <branchname>..."
+
+So it uses the first form for required parameters, and a variant of the
+first form (i.e. "[<pattern>...]" where we use "[pattern]...") for
+optional parameters.
+
+Cheers,
+Kent.
