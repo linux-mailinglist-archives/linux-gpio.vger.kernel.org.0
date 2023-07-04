@@ -2,168 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A2C874709E
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jul 2023 14:14:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC05F7471AC
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jul 2023 14:48:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231462AbjGDMMh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jul 2023 08:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59700 "EHLO
+        id S230338AbjGDMsC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jul 2023 08:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231511AbjGDMMa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jul 2023 08:12:30 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F172710D0
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Jul 2023 05:12:26 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3fbc59de0e2so54769785e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Jul 2023 05:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688472745; x=1691064745;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ePBcaTYEs44NeEhwgzfSH62vnYOyN2NM+qTIlzpNLQc=;
-        b=vTXQwTaYeGu+Fnsk2AL1qeLczcq4N/ZQ+KxG09wBa1FiAf8g7Cg/e6WVOGDbM76vYs
-         gsZ0kcnhFDgapk4ozf09zuc/AWWkWYoj7oWzKZ6BDABzRkwdh436kizyMRNTMz8+fsBw
-         sYrpp02ckss5Anqq49js6KcXQipwvsbgX/SCAstWwFb5Rny4G+h60GTUaGC9J51+fdXg
-         YbUcM/Kp1KfrsmX+846W/auiUQ9C1n8qubcYS9JSdfbThx05n6SQIG460lL8Dw8h4Izd
-         zRpTUvWspryzwAbx6YOsaFo/Y/n6Wu+3x9SeYkBbPbxqxGkV+QFB1EltdvB78wNS2z59
-         RX5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688472745; x=1691064745;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ePBcaTYEs44NeEhwgzfSH62vnYOyN2NM+qTIlzpNLQc=;
-        b=bXyLwoVvBXXhLJ04oeM1qu48Gv0IOfoJQeOcVSvQwFpl1JPX+nuxCdclw9XJwhsaEH
-         EQIueRGCl87lLSPf6BQNEvAdPRuEP7B/hYTxzib/n0Mp5Kg0ox3rnpC7SICi+G4igVCD
-         WhBZuREmLRgI3r9XING3u0fl/6zBU5p5V2GggZMRYxUHKZS48ADwiGtS4fegaeCzd878
-         Lja5DkBYJRXRwGyuxRThjSo7qyQc1b9zpCnEdf19Y1oQVS7sBnYVXjaxqPhij6FEr5KS
-         DnKd7AG0KRbhXzzwIKPJYvmlNBrBmNPHmlR1RGql8WKedNos2Ak05PFupix3nYO2h2pM
-         MZ7w==
-X-Gm-Message-State: ABy/qLZ6NeR60abg7yikb+7IH1VaMMk+/OPoNjAgiLTJRpmxUaKF4LJ9
-        6E5JMxO88MUrLOkiIBwdKwHZCA==
-X-Google-Smtp-Source: APBJJlE9f6+ymnF7qyYfPLfO/zMVxpuorI/RQfS3d8bgdDnuI64536wA9SkrWRz+BJU8WbtdlhbGqg==
-X-Received: by 2002:adf:f003:0:b0:314:15b7:20a5 with SMTP id j3-20020adff003000000b0031415b720a5mr11243603wro.54.1688472745225;
-        Tue, 04 Jul 2023 05:12:25 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:3241:8e44:bb14:fdd3])
-        by smtp.gmail.com with ESMTPSA id f3-20020adff443000000b00314367cf43asm5878514wrp.106.2023.07.04.05.12.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jul 2023 05:12:24 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH] tools: clarify the non-option arguments in help text
-Date:   Tue,  4 Jul 2023 14:12:22 +0200
-Message-Id: <20230704121222.314617-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
-MIME-Version: 1.0
+        with ESMTP id S229895AbjGDMsB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jul 2023 08:48:01 -0400
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2101.outbound.protection.outlook.com [40.107.255.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53EB6B1;
+        Tue,  4 Jul 2023 05:48:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LqqBORPtkn/bkFKqXW3DqCd+t2m+u71Te4ysm4ayYiOfZVVvz3UkrBEcdqQQYb1cB1D24Y2I44EO0j7od7YNY0c6IwIGx2xoRCjGjxkRJ2p2bwdIf3NZSqmg4ySwFe5SNpxuXv99eM42r/k304FFaxGuKcZE9BeXGnIH5qlGXLN7+3eHDMy/lleMTlfwGC7HrUyuA2U/Pspk1Td4s2ArtfZTYtVcUyqXcGkIcf6jwu9JZnH93XL8hbuo/5NKeIHtwyEZS38HQKNVvEcbsnIx7NwHzrItiwIdkMqFG11e7B7DYbE+vHMb6rTU8w6Nr7TUjzuW1c1qxxCqxnudDMAlGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qkleEjFxvlKJ1geHJ6emVpUGfYaJB6Ei+AHJ3cjNRCo=;
+ b=ELQDn7Y0jjep20GJfTYqPenUFKiWIgnbeCLz73zkalSEeFSJIAjqgxFTzGm71Ag3hwK1vLb3o/jS2K1O+fbWzy3CEb+r+jMu/a6kbqo8YxtvYP0S2jaockQlhkqwnrofEZlMOFpy6K0egIsupJBQOXSkQUmEvWWaHOiqNw8qg/PebaJcZe4ZxP8HLNjE5Ksczah3wpioc2lSA9c01r31F1LNaQDAbbOPulyR4ihv71wxnFRiZYdW1hfgAltf0ykMB8fUC0aQ7boC1RP+TH96LGNcFq7gysiRQKQdwALvCDkNxP80ppIioUbb1b80fhmKGku/DZzscyGOo+WK9jki+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qkleEjFxvlKJ1geHJ6emVpUGfYaJB6Ei+AHJ3cjNRCo=;
+ b=d8yhpTKAharxCbmOk2krfClek0eXdcszjtYkkPQeaPpfDSwuqwNY1MoBOe/pENiI5JnGLS0UJExJUBr/JQ8tK5GLsVAV6QVfUS5BpckDXcgWxbhs2F4yUmtVQtgxfJsVN9CKNEI/NpijLlzELC2wPoU4RA0mJQRIDAIiySFqgu0pAA/uEl39gx5aMlpD/uQczqbIGGH83wa8a9Ri2OpdCng1R3WnVWbCRDqG+KONZX4wmb755dq1E6B7xrTSs677SJvDDIpB0DU3xAPfFHcrT+JOJuJDpq99lqfWZh0/f+FjHJpXUJghrs9fWcjxoGYaQogXbZF/hAiEaplhUH4KrQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by KL1PR0601MB5679.apcprd06.prod.outlook.com (2603:1096:820:9f::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Tue, 4 Jul
+ 2023 12:47:54 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::fa0e:6c06:7474:285c]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::fa0e:6c06:7474:285c%5]) with mapi id 15.20.6544.024; Tue, 4 Jul 2023
+ 12:47:53 +0000
+From:   Yangtao Li <frank.li@vivo.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Yangtao Li <frank.li@vivo.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] pinctrl: berlin: as370: Use devm_platform_get_and_ioremap_resource()
+Date:   Tue,  4 Jul 2023 20:47:39 +0800
+Message-Id: <20230704124742.9596-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.39.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0034.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::10) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|KL1PR0601MB5679:EE_
+X-MS-Office365-Filtering-Correlation-Id: adf15599-e367-436a-b33d-08db7c8ce1d2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Qq79U3j58DtOwkjAC5Wg2AN3/dLD+zJjn/mvsGcJHiXvKHBqbhcqddIEla3sj1YS0TQt0H+RCJCoXkqOAw6+s1K8nKx/KN8T1EA00r1H2rH80P41V0RUDQ2/KLEcAbw5lu06lpQxh5+0WE8DwrNfXcdGMTJGektCsiFMXO0vqdM8aqep7hjp+nOsr/4ge3sSK/2UtR3IK9bmOAxGLYmyL3ZPeB5ZAlFKyjONYSWu7g8zpUeskIWUhnURCNy6i4G8npASsMUMJHVNYjzI+SgiTMhOBFKkyXh57TEqeuvLmcWRszX7rZdXCZ8/21SnnuDfuQHZuT7qJ/IH24A1Kv7unPWrMQcPmPvWeexumKK7M3Ag80UHvHVOm7bvn3x2eIVe6tJl41/I6r0TVD0HB2A6/MmncJIz/npbrm/bsWpR0clyYZLGY2DR+a2ZbLnFlc34r00840ADyNcXx6XINimUJ1HNgWvBHGSQw9A2UqZcShsUcQhvsaqY/ECPBGodEMiTUid3vp9HBsI2pV/pJmVeOmWpEK+dxGOHRSQJUbUGZix5LW7C2Vl5mHP01ZbAD4Pdb2xVar3J2sQ1dGqWwdpl0th9EK9HqUNY+12cnhAa7Ufot62Guem2GqTOj97KJ8o9
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(451199021)(1076003)(6506007)(66556008)(66476007)(6916009)(4326008)(66946007)(38100700002)(478600001)(41300700001)(38350700002)(316002)(2616005)(83380400001)(186003)(26005)(6512007)(52116002)(2906002)(8936002)(5660300002)(4744005)(6486002)(86362001)(36756003)(6666004)(8676002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1+aGWESsTJ0H0FoZBjSnv6BSwm8qEaaHxf3xkDeO7fXAbFAK3BH6LPglW+jL?=
+ =?us-ascii?Q?KN0adwM/JfI9znvivZg22Rjk9VcqQ1elG4apYsZzHQrv65GaHDdwoED4ls3S?=
+ =?us-ascii?Q?cvioWGwxpkLP0RoQ5sUWKnzCVJRTi9BtbJ+Lu6wal1uiYrbxOejYU8bbY7Ik?=
+ =?us-ascii?Q?o4Iv3d0tinLV5j86j/JJFI8+0xZrR7SfXX280S1P54pQJS7sKesBPBVF/B4B?=
+ =?us-ascii?Q?SfHhkyP6Uc12q/5l7S8IFz0Lca941KwXRxIV7HZ759qCIjzXuIcjynv7lO+B?=
+ =?us-ascii?Q?EgdEDebOuRkFqlMtyPLUI2KR8Bmau5JE+HwuUx1v89yvGjDbZ4jAm95k0c04?=
+ =?us-ascii?Q?vT+XH7REZAYjBvLahlOaGBbIEghTMjxksFlzMizdNy8SljF0pQgLDi1+U0iM?=
+ =?us-ascii?Q?LyzIZAyRGxOvcnCdts5N3pmRa76I07bW/LvOLqXJolXcOy6Ha/3vuIfcGJoh?=
+ =?us-ascii?Q?wT57DD7qXBkTlh37bkOnJrx5rIi0N9PqywqDzEdlvrpy2lPU3FDGYPVoC7r/?=
+ =?us-ascii?Q?5A0cD/9jk3v9ib9h1JSdYafW6D6aU59xVndX9gNCLfaKpn8gfT8oQeJ84uKi?=
+ =?us-ascii?Q?Z4GoFMYQyCUQE5xep84htQlqsdFfcjGkNC30na6QG5LbeOT5I3Pde7pcV5oi?=
+ =?us-ascii?Q?wAiX1Seoq6mg35M1eZ8s+TnP6b6mKGd9QogwG+t4BHIevrMUQqvlnT8rRqFr?=
+ =?us-ascii?Q?AlvegiCMHh1zzpnkao5+awKHiumpI00tvGSUGGszJF+R4RFMvdspWwFQj4/u?=
+ =?us-ascii?Q?GCG32mmPXD7ALkbBJoyW27fVVAtgdnmkbqkE7tG7yq0oHMmwoW3p7F1KqUY/?=
+ =?us-ascii?Q?i2xmbyM5OSt5zt+95AAvbhLbBaS0d0bgXvcvCjhgQNLtzHHQRd69MNf2mnll?=
+ =?us-ascii?Q?DaHnHErJPUa/70qa5rygmmb0qLwbwdC94Esg7FK+18qzOEYunvI2fDyJO3hv?=
+ =?us-ascii?Q?Di/N8EDSXeO6OjistIbimbTjxN/8MtPK2KJ3P+P4kF6OOFQkkSZoaaA+VpFr?=
+ =?us-ascii?Q?z+3bTTdimEM2LgKwxjGTABU3ImRuRg1HBGIP+pPT6ZpLYNwaDO6eB1ECic1Z?=
+ =?us-ascii?Q?khp7Or3ejndxkyKg6IvlAQ+u0+zuvRzOGFNKp5V5nTyYuBEh7oZJmR9Lwyd2?=
+ =?us-ascii?Q?uqO5AVcSd0efT/W+aIIVIi7tYIJ33kJPNq+DreG/KPL5mQUtMc52JC/OIEnx?=
+ =?us-ascii?Q?SeYQCV3I6weHUERCX/o9T3krhWtfubgtu+l1rCizZiub36kgsxC77WZfhd48?=
+ =?us-ascii?Q?JU9fAEfa3ZC6QNNtcRevchV+p1+FC+SObUW+dsYT7ZgyjBLXhjLqDRQroNXF?=
+ =?us-ascii?Q?BLpPPLot3oiAoRV0Ed9DiZp16IZZwXxNlSxT/AjCbphRqBwfn3PpovttHSeW?=
+ =?us-ascii?Q?axWSnbPPshveLWqvtilpHBl16Ezza89YwBntrgZc2jo6Q3+WzrXO8WDFhlUm?=
+ =?us-ascii?Q?TQJEtWaGxd1B085dVa6+S7wb+FQchDsmWDEoRY4r9hYBN86jXD2G2uBGoh9z?=
+ =?us-ascii?Q?Q2RWTkJWjVYYQkUYsttE2s8uv1vb8gpXRHtfgQvADD1rTxBMdN1xIOIiDxvJ?=
+ =?us-ascii?Q?dtAr6/NjAsHiUat96FZdt5AiDuf4//NOAV+Z2FFg?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: adf15599-e367-436a-b33d-08db7c8ce1d2
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2023 12:47:53.1336
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TYGsL17YdfN265vucSfNGSKeOc5ooiS/fNHui4JOE6OChBhS1Ubkqvh+cieAT56w4oJoiRHv4ceVtffaiOHwvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0601MB5679
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,RCVD_IN_VALIDITY_RPBL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Convert platform_get_resource(), devm_ioremap_resource() to a single
+call to devm_platform_get_and_ioremap_resource(), as this is exactly
+what this function does.
 
-We already use [] for optional and <> for required arguments in help text
-but let's make it clear that we can pass multiple chips/lines and in most
-tools only the first one is required.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
 ---
- tools/gpiodetect.c | 2 +-
- tools/gpioget.c    | 2 +-
- tools/gpioinfo.c   | 2 +-
- tools/gpiomon.c    | 2 +-
- tools/gpionotify.c | 2 +-
- tools/gpioset.c    | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/pinctrl/berlin/pinctrl-as370.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/gpiodetect.c b/tools/gpiodetect.c
-index 0a3461b..569cdfe 100644
---- a/tools/gpiodetect.c
-+++ b/tools/gpiodetect.c
-@@ -12,7 +12,7 @@
+diff --git a/drivers/pinctrl/berlin/pinctrl-as370.c b/drivers/pinctrl/berlin/pinctrl-as370.c
+index 9dfdc275ee33..b631c14813a7 100644
+--- a/drivers/pinctrl/berlin/pinctrl-as370.c
++++ b/drivers/pinctrl/berlin/pinctrl-as370.c
+@@ -341,8 +341,7 @@ static int as370_pinctrl_probe(struct platform_device *pdev)
+ 	if (!rmconfig)
+ 		return -ENOMEM;
  
- static void print_help(void)
- {
--	printf("Usage: %s [OPTIONS] [chip]...\n", get_prog_name());
-+	printf("Usage: %s [OPTIONS] [chip1] [chip2] ...\n", get_prog_name());
- 	printf("\n");
- 	printf("List GPIO chips, print their labels and number of GPIO lines.\n");
- 	printf("\n");
-diff --git a/tools/gpioget.c b/tools/gpioget.c
-index f611737..5d3092b 100644
---- a/tools/gpioget.c
-+++ b/tools/gpioget.c
-@@ -26,7 +26,7 @@ struct config {
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
  
- static void print_help(void)
- {
--	printf("Usage: %s [OPTIONS] <line>...\n", get_prog_name());
-+	printf("Usage: %s [OPTIONS] <line1> [line2] ...\n", get_prog_name());
- 	printf("\n");
- 	printf("Read values of GPIO lines.\n");
- 	printf("\n");
-diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
-index 44d1c8c..002d631 100644
---- a/tools/gpioinfo.c
-+++ b/tools/gpioinfo.c
-@@ -20,7 +20,7 @@ struct config {
- 
- static void print_help(void)
- {
--	printf("Usage: %s [OPTIONS] [line]...\n", get_prog_name());
-+	printf("Usage: %s [OPTIONS] [line1] [line2] ...\n", get_prog_name());
- 	printf("\n");
- 	printf("Print information about GPIO lines.\n");
- 	printf("\n");
-diff --git a/tools/gpiomon.c b/tools/gpiomon.c
-index e3abb2d..cb76913 100644
---- a/tools/gpiomon.c
-+++ b/tools/gpiomon.c
-@@ -35,7 +35,7 @@ struct config {
- 
- static void print_help(void)
- {
--	printf("Usage: %s [OPTIONS] <line>...\n", get_prog_name());
-+	printf("Usage: %s [OPTIONS] <line1> [line2] ...\n", get_prog_name());
- 	printf("\n");
- 	printf("Wait for events on GPIO lines and print them to standard output.\n");
- 	printf("\n");
-diff --git a/tools/gpionotify.c b/tools/gpionotify.c
-index 2c56590..71eacbb 100644
---- a/tools/gpionotify.c
-+++ b/tools/gpionotify.c
-@@ -28,7 +28,7 @@ struct config {
- 
- static void print_help(void)
- {
--	printf("Usage: %s [OPTIONS] <line>...\n", get_prog_name());
-+	printf("Usage: %s [OPTIONS] <line1> [line2] ...\n", get_prog_name());
- 	printf("\n");
- 	printf("Wait for changes to info on GPIO lines and print them to standard output.\n");
- 	printf("\n");
-diff --git a/tools/gpioset.c b/tools/gpioset.c
-index 9dc5aeb..e0d971c 100644
---- a/tools/gpioset.c
-+++ b/tools/gpioset.c
-@@ -36,7 +36,7 @@ struct config {
- 
- static void print_help(void)
- {
--	printf("Usage: %s [OPTIONS] <line=value>...\n", get_prog_name());
-+	printf("Usage: %s [OPTIONS] <line1=value1> [line2=value2] ...\n", get_prog_name());
- 	printf("\n");
- 	printf("Set values of GPIO lines.\n");
- 	printf("\n");
 -- 
-2.39.2
+2.39.0
 
