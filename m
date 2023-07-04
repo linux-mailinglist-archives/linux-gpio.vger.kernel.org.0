@@ -2,152 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D86E67471B1
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jul 2023 14:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12A397471BB
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jul 2023 14:50:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbjGDMsH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jul 2023 08:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52222 "EHLO
+        id S231179AbjGDMu1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jul 2023 08:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231284AbjGDMsE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jul 2023 08:48:04 -0400
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2101.outbound.protection.outlook.com [40.107.255.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3A53AB;
-        Tue,  4 Jul 2023 05:48:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YtWRC9+SnmORc+G8CS3jQRKJLf50BWHG7Mgo1NPFn3xVdRZ7JgK1s8WJsHvlggyxwpHnRCFhjcrKeRhJkiqS5TufsMH5PjBWiab2bWlgtOrEEtQhf4n+Diiz1pQg+1XQP8eJEzXC31Mdb13WVaTz2/NSh1hsuYhKyzRUchbQelK719A+AEBUz9rkjzUxdo/C1R27oEdn/RJ1O7I+bJEcEJ+/V7TBCapOm6E5bXRp8pXE2uCpp1HW9F1RclTL6gRNyFjpvChoiT/CbNoBhy3UKucJg+kfdBKZFgZaoL+uzi1cPP9SZDp2YhBisBpUW1+15uICBFHBjo2SgXUrKxA3BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dhYUFsBoO/2LlZNkqFI3if/TqrnID+Q+PMGbGMqG/zI=;
- b=BEHvzc0eqTVDHN3Ozfk6VCRCAlpWdShuhQq/qotwnqz2yZIYO/5sdsS9lsnLCvhlNQkp0dMz7+GCYXTITRbRsDSdEUhPKxWXmyO93pQEtazVtUHcW2xgtRZCDp5h4fSXm8aGOn9aNlc2IIqAKlFyvWBmFCndN+4cFO1buWqU/6JskP6DmDoEqUL+xuAfYJ7166FDbzF54uY6eWqW3TJvaWvUOiySQBf5JemHI7/wgI3sJeXjM89Ip9vkBnuyKH4w65Xr0BI+po9M7EFP3vVgi7q5hnx2BnRgOfvQkNFltuuDYGLfaBG/6XG4sDpE399RfRn4ymh/T7fENrOBkLMfLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dhYUFsBoO/2LlZNkqFI3if/TqrnID+Q+PMGbGMqG/zI=;
- b=Xw1PArfx4dtkfbXEpfxar7iO0nChSgj0R7pWmOzC7gYK8AIL9gYgmxVyCu0h0csjpv8NdZVrnWNm+euWGexRYQwfLOvWUqAS76hX9le/VvFfXCl26rA8TT92nzAd98H7Ec+QOrYsgyGCxc315lAQ2G2ml9kY95HMRlQp3beXfqicVXDDfjP5DrKaLoghEmXYoF0xtPYoJNppty//kxdtnJW8eJRd9WtEAAoXhFOCP3Ye/uXK+LIr9BqteQqfAY42t2oQTUs49tq4WGRu7rmjX34SvQHbnxGP79KZOrtRloa9IjNGjieMBQ0CB9Qw8qgx0c2guIYzNNU0zsR3tyCMmA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by KL1PR0601MB5679.apcprd06.prod.outlook.com (2603:1096:820:9f::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Tue, 4 Jul
- 2023 12:47:59 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::fa0e:6c06:7474:285c]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::fa0e:6c06:7474:285c%5]) with mapi id 15.20.6544.024; Tue, 4 Jul 2023
- 12:47:59 +0000
-From:   Yangtao Li <frank.li@vivo.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Yangtao Li <frank.li@vivo.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] pinctrl: ti: Convert to devm_platform_get_and_ioremap_resource()
-Date:   Tue,  4 Jul 2023 20:47:42 +0800
-Message-Id: <20230704124742.9596-4-frank.li@vivo.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230704124742.9596-1-frank.li@vivo.com>
-References: <20230704124742.9596-1-frank.li@vivo.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0034.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::10) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+        with ESMTP id S230232AbjGDMu0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jul 2023 08:50:26 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B7FE70
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Jul 2023 05:50:25 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-3142970df44so3908238f8f.3
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Jul 2023 05:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688475023; x=1691067023;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=khN7qL20jiNV+2YUoL2VVrDQ7HuxSVd+7myuCssgPgE=;
+        b=lhpZ5J9XdadmPSr1QR/AG8UcCx6nsBh7S96ptZWO01NVbdAD32ga6ND/rHGK/0nLeG
+         OcILfAAZH2QGjuXC0E1sxnz8ySI0riahZV4a/8Vh0qOFuPLDeYuLhNivNpQ42YBQZpR1
+         n52OFNS0gHnHJ4ORnADm7dkH4XGhkKGL6bdV3HcGb/JLkgwlITETOv6im3jy+/aeghKo
+         SoRqplSJRCRJRm91vnJY56FDVLzwhoIazir8wpfpbMjF7lfBWguiZ9/WFTsJGIwwwgsO
+         /SRYchDhQsYGOB5Pi+dm1/EQ35yHwT5u3gaFUFxuzSwiOobh/h9Vc1OIagL99AHBAmRV
+         s8SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688475023; x=1691067023;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=khN7qL20jiNV+2YUoL2VVrDQ7HuxSVd+7myuCssgPgE=;
+        b=Tq1RRyVBYZ9zsvMMWUGCvvJUpTPZinHZvGVGhZe2+p8LBLttsfIDOFj2Ei9Yi7SvHn
+         Xm6M+neccio7hSY0+9MKTWy0eUuBcXLRYi61OoQDv/j4wbYsuT+jpJcMzhqdA5lKbSR/
+         c63E/9yrCYhE3PlA6iWqIgpgwAojVTJwzKLEa7wZunY8xa7Td9WC9MTmtgDoq091Uzsu
+         kNjfvKYZDenk/tZ+6qyCD5cHVUK0JUCMlUBvOvSmv0sjBzRTav9R4LSvxWIUWkYl00SZ
+         HxVHNXpEwjEQbY38RlxFRRQAxT5+gJ2Tx3BtLZkvNAEtINxBdeKTL2PQWAzFfNVFfm/x
+         Llhg==
+X-Gm-Message-State: ABy/qLZe4sCfrv2QldB/lF7NSRR2w3smFThTiqQNzgv52OM3lAN3Lzuv
+        sOM/OKC5xtNBVjn1bkwcOU0VVQ==
+X-Google-Smtp-Source: APBJJlGYnTg9Odl6AdblWp67O67QkMbjypzSdthrdvhcA+ODLfuCZz/bh+UKd6Sl1gTFpqUPb6nUyw==
+X-Received: by 2002:a5d:4203:0:b0:313:f395:f5a3 with SMTP id n3-20020a5d4203000000b00313f395f5a3mr9492911wrq.38.1688475023459;
+        Tue, 04 Jul 2023 05:50:23 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:106:cd85:84ae:7b? ([2a01:e0a:982:cbb0:106:cd85:84ae:7b])
+        by smtp.gmail.com with ESMTPSA id g5-20020adff405000000b003143cb109d5sm2634842wro.14.2023.07.04.05.50.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jul 2023 05:50:23 -0700 (PDT)
+Message-ID: <12266deb-4602-c557-fd80-689765fbf302@linaro.org>
+Date:   Tue, 4 Jul 2023 14:50:20 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|KL1PR0601MB5679:EE_
-X-MS-Office365-Filtering-Correlation-Id: b79b5435-0c94-4ad3-5b76-08db7c8ce574
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DuOSOuIjp09/6GTbYlWP+ET9i1arIVDH2EJAkCaHuGojFumfeihiaPoLV7fRpyc6BeqSMNGpMzK7JdjZVGMj9Jf+Q7U2xfU5QxFxRcdK8gk8c8K8eO3D9lxdIgWh2wuCEWRJfjxe4Xj4A3K293Ok0S9b0AZN59BPrZyJHsDIB/PvN3qszP7yjjET/fq2I4OIMjeUam7vYF9OtvRg9GfWonK02zh1enainkgiuKxf9Ygco/F54XOcxl6HMt96Y1LkAfiBfXidAFXnkSfqXAFCDqks5r9p2TSV2sMqkACMkodGIRnl3djNNXqEAgiIGXK12oV2HF5xjktpip6sKWlQGXlQEx9LKm7CY+Thpzwv4FFn1ralc74wTmMuCdCmSHRdW3nUqyyBwY05czsr3u7JRjzAzUIRfU5ah5/84oCf0RrqoAXft5AUdkDzZb66FeDOTTjDI3ZV24jlacSuvDDwloVGdOmgLKWTpi6RcIDEn8kHcVy9PGDa7m40qHM20Wu1knJP0Lq7QSe1ujauiiGUvGHqmj4b3GJTx7uYaGoLcr/ptGkBSLJSir3RRD1xxpj2eEy9JvifsiVQ1YD0z91lbGp3MekVqwp2ohVwRFNdJQe6IYIBDbYfD4HQdSi0lBgw
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(451199021)(1076003)(6506007)(66556008)(66476007)(6916009)(4326008)(66946007)(38100700002)(478600001)(41300700001)(38350700002)(316002)(2616005)(83380400001)(186003)(26005)(6512007)(52116002)(2906002)(8936002)(5660300002)(6486002)(86362001)(36756003)(6666004)(8676002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Mi3fjxQy6ANYwuhuyjTBCn4ajZcj0MEyCOsxqkgS+5Eeo0a4dW94wuNmFvuz?=
- =?us-ascii?Q?or3ezFXVELtcus2BQcn+LH5mje2HrYcCB8cDHExJEoUeLaLj4DzbQccnij5O?=
- =?us-ascii?Q?LXVIrCMPfePaDOzEKlPGLOJ9ulGIt46PDcPtIh6TgWG7AmPv53XVeKwvNB8e?=
- =?us-ascii?Q?C+wHbgghqNiksgmvBkfLYaQTjmJn1uN8VlgK3/av7x+bzIt6j6HGAbMq0mbI?=
- =?us-ascii?Q?+oEJe3Q3Lt96bqhFuzoGdjIgZ2ESwiwDecpKMaZeBlQH10Ybz2iZ3xyEkamn?=
- =?us-ascii?Q?YcBxPApyHnGLZfnqBxyIIIwkF56pL8IrVFzwHJbo2EFMWfej3jpjetXb7oUq?=
- =?us-ascii?Q?LOgQTCbTD+dQAD5n6O915mQQ7Nx9C/L1OgR0/G8WXGWBiVUYXrOCP2QfVKLK?=
- =?us-ascii?Q?Hi8+yNNz/15+n2WgfIdfMInw+Gf9bZKIEjblZBoKqCc+yRJHHbDkSnzOTDjK?=
- =?us-ascii?Q?IEN2uKhrtHnfq5ob7fEhBRQrWq9kjZ2zTH5Dn1MlaMvV+JFqibY8uoyySln9?=
- =?us-ascii?Q?o0SjRt6nAPIu33B4OQFCe+XcSpo+NFqUi+NYnPW3aG8Y7L2mz4BxFbMrTaBp?=
- =?us-ascii?Q?KSqmfOUKekkYSJUcTSK2tncGw6O9KlX5HR/RgbGeiQCBOI4Dqzcb9zpul5Zi?=
- =?us-ascii?Q?QRBs21PTsGy7eZo/b+DS6hSCjh2oUFYju4HOpYg3qcDRZ2X0DKygro/84Sgr?=
- =?us-ascii?Q?i++POp3w+2DRmIiMnDOM19TshLdzTQ15Gy9fTwgKw8TxSlEnEmoHsgmvMsR3?=
- =?us-ascii?Q?ydoei+XD74QrxdbmYVmB2hJX8KmvX+Nn51b0+M55lxyuVCWMcSYskhuAM1lp?=
- =?us-ascii?Q?ojNoKDMrq/+sWWsEm58P9tAjGeUDVl9sf3mlPxudKHD1I7EBcF6XSGX6i96z?=
- =?us-ascii?Q?rXRNugrFh8bdIjkZkI21T9DYuFHRHEpeB3/JeM3OLUe2M193ikcA3tkL/bNJ?=
- =?us-ascii?Q?L2TYxF2ybd8JJsMa2hFYMN3aaljXZ+7RLNU9Kx3y6rdIYmB2SfWPYhBoV4IR?=
- =?us-ascii?Q?7hm35ccihyJopQIagUs6MCtJRbwW0zpweh1th3w/uMflqNgdyNUR4T/beqTq?=
- =?us-ascii?Q?2d6vy+YKnHMjm6uZAvLyduLa7t+Kwk1Ws/ALy6l7DSn7reOKETefIEa4wLQw?=
- =?us-ascii?Q?qrsF/urhNLWLZKWCtpvTb8V3Qo9dVHmVzrQpPuAOG/ZVYXVmBVA+oFTT6ZzX?=
- =?us-ascii?Q?INbEzLuuA3ZlI0/0w+5SV0fINCQGNDXbH7Seq2t1olMyBUiXERIqrcNuppAJ?=
- =?us-ascii?Q?mg2wD1EEZ3mQp6YvL2utOUCdSrUvO0EwXGKOuYGVrTyCQ399tiNa0pehHINP?=
- =?us-ascii?Q?DrxHPIuQUnOwIJXsIVSRVKdfGjpvUUTOcrNNS+m1zFHNbMD/Mg0q8+DHyfVh?=
- =?us-ascii?Q?VRbr17y5ycTcR9P8WiVV46uboQ9AnJm9Fh+du77xJjpxUE9jJNEwh0AVShOV?=
- =?us-ascii?Q?wAKm/HW6MNndxb3XsWpKHY+9cter58SeHE/NxF0E5anVB5vDoFXQUom6LTBB?=
- =?us-ascii?Q?Pl2c8nhyiMTMadsCmfXgjKl3tr0nybLpsY2n56bAFRMOtWx9ujmJmHXWUy5N?=
- =?us-ascii?Q?j6A+dMbVnDjfBSHKP9gcF/z5nFozo8Qn9V6EpY0M?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b79b5435-0c94-4ad3-5b76-08db7c8ce574
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2023 12:47:59.2220
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oWKw6HRMIuylBZl9mHdz1sysIxfeZscbHLajJXMgioolPwco3M58Bj5hVKnsFIpY9AApxMNmuDyMo8+hn8xfUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0601MB5679
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,RCVD_IN_VALIDITY_RPBL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 06/15] dt-bindings: mtd: oxnas-nand: remove obsolete
+ bindings
+Content-Language: en-US
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-oxnas@groups.io,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Golle <daniel@makrotopia.org>
+References: <20230630-topic-oxnas-upstream-remove-v2-0-fb6ab3dea87c@linaro.org>
+ <20230630-topic-oxnas-upstream-remove-v2-6-fb6ab3dea87c@linaro.org>
+ <20230704103026.6db56915@xps-13>
+Organization: Linaro Developer Services
+In-Reply-To: <20230704103026.6db56915@xps-13>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert platform_get_resource(), devm_ioremap_resource() to a single
-call to devm_platform_get_and_ioremap_resource(), as this is exactly
-what this function does.
+Hi Miquel,
 
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
----
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+On 04/07/2023 10:30, Miquel Raynal wrote:
+> Hi Neil,
+> 
+> neil.armstrong@linaro.org wrote on Fri, 30 Jun 2023 18:58:31 +0200:
+> 
+>> Due to lack of maintenance and stall of development for a few years now,
+>> and since no new features will ever be added upstream, remove the
+>> for OX810 and OX820 nand bindings.
+>>
+>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>> Acked-by: Daniel Golle <daniel@makrotopia.org>
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> 
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> 
+> I assume these two mtd related patches will be picked-up through the
+> soc tree as well, if that's not the case just ping me and I'll take
+> them.
 
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index 53abddaebce1..c1477f657839 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -849,19 +849,12 @@ static int ti_iodelay_probe(struct platform_device *pdev)
- 	iod->reg_data = match->data;
- 
- 	/* So far We can assume there is only 1 bank of registers */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(dev, "Missing MEM resource\n");
--		ret = -ENODEV;
--		goto exit_out;
--	}
--
--	iod->phys_base = res->start;
--	iod->reg_base = devm_ioremap_resource(dev, res);
-+	iod->reg_base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(iod->reg_base)) {
- 		ret = PTR_ERR(iod->reg_base);
- 		goto exit_out;
- 	}
-+	iod->phys_base = res->start;
- 
- 	iod->regmap = devm_regmap_init_mmio(dev, iod->reg_base,
- 					    iod->reg_data->regmap_config);
--- 
-2.39.0
+As of today, there's no strong plan, so maintainers can pick their patches
+and I'll probably funnel the remaining ones via a final SoC PR.
+
+Thanks,
+Neil
+
+> 
+> Thanks,
+> Miquèl
 
