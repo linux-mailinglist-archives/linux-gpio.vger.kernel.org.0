@@ -2,93 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E05B748A86
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jul 2023 19:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BADB6748CAE
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jul 2023 21:02:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232855AbjGERcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jul 2023 13:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49346 "EHLO
+        id S232584AbjGETCW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jul 2023 15:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232757AbjGERcG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jul 2023 13:32:06 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25D4199D;
-        Wed,  5 Jul 2023 10:31:29 -0700 (PDT)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3658VZdo020618;
-        Wed, 5 Jul 2023 17:29:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=MlX/UZ0ZXE/72U2AV0V88Yyf3NKh+5tvQkq5oSMpx9E=;
- b=oEsYD/vvDJx9I16U5GmklPgKbnTHKeZMkb2tJer354sH217R0zTqquJ53M+OqPzsf2JZ
- 26hjQhgAyVBxQ+kkGociceDG2sxd+2HdTMFPf3apSBaqmmHMRnaikxoYD58y/QY0byrt
- rr2dPVHfrckS93szwrh9M0av/93juQes52/Liqj6XVTFZAMt0+Pb0WR5kaeJaNJglwJK
- DdOa6n07F73z9fH2EeRNH0o0yeUIWOdtQnp1KIzaiQlPFSR9VmjvZOD6UDECrACP896y
- e2Fypy4iSXxGMA6sPbidN8TOJjpYVtXUqFulpihlHX7qiExvdB50F/hNAjwUCgMw8PLZ lw== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rmhf13myy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Jul 2023 17:29:57 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 365HTu6b015191
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 5 Jul 2023 17:29:56 GMT
-Received: from [10.110.49.233] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Wed, 5 Jul
- 2023 10:29:55 -0700
-Message-ID: <355de4c7-180d-4edd-b6fd-9c8e29e40e42@quicinc.com>
-Date:   Wed, 5 Jul 2023 10:29:54 -0700
+        with ESMTP id S233393AbjGETCS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jul 2023 15:02:18 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 487CE198B
+        for <linux-gpio@vger.kernel.org>; Wed,  5 Jul 2023 12:01:57 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4fbbfaacfc1so2817876e87.1
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Jul 2023 12:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688583714; x=1691175714;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sCsGZRzf3HYCGfa3J/FwmvyZFYe1Uzq7njxx6cRcALI=;
+        b=f8rFSZhyPMufcQlj9n6Kb5YkkoNZ/Rcp9KzhozHLymYOFEBCfSxF5kNgqTGNmsM+vG
+         hnAbE9h41qXOdtKkKzWfSLq8xca7Xd3HsnGIQWzuGNqD6czhHX5RY2OluIiUkGYKGwkf
+         oqE8zbRdi/mK5wGSuDNZjk2JwoCees+DPMHLMcA8oubhdaM1cS9BA3hvqxA97vJtic7O
+         lZ0f87gTeeTTYVmKVOVcBxAxeaPfZbGCS1h4vVN2WsnJ7TMWKMF5dZWkoOEq1soFwV7B
+         PAGG+H9fvtGYI4kyaWLgFlNjGr8IGUYnh1RBZtrwHjNtyN38rucO3V4btAoaeH27l0RT
+         X4ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688583714; x=1691175714;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sCsGZRzf3HYCGfa3J/FwmvyZFYe1Uzq7njxx6cRcALI=;
+        b=ChueN7UOYAmtSxWSoBB1+P6eNlQhHq75aYUeI/TSR6/DdphApOzuqSvupQRHuWoeKy
+         //xN9fOr9AzLU07qlqf+a6LTWzPROpLdv8ZuaRcQZ/Survovt9kDgFwKFpnke22oIHMH
+         3qsaHRtszVhHW/8VGrEQMn/keoRp0RCqUQ4q67W7RGrXiJnldv7wSIEgCcGqqGXQj20i
+         k7imOFT288bMsqm+aVkE55y7w+8ZmBDMNhPs5x/4Pnbck58680uc+CJlQDcesjcNzC4q
+         wXbkk4abKPCEeqWa7FsrfXx5YwiH+rh247+EFdxLaYm3nNAymHHPHNbEApWaTegsliOl
+         tbNg==
+X-Gm-Message-State: ABy/qLY+soT3KVt5ED5WkKUBTcwxn362olu6+G+DCWvr4/Hgu0tWv12d
+        dnjhnqXelQIiiqcN7N/YirDbjSnKVHtm5jA8Vfvk6cgxNPE=
+X-Google-Smtp-Source: APBJJlHz+bGTxoBYEWa3Mx8vdec2PFYHcq0ukHiMMB4xKJI7N1m2UXzsu7l/vIgAgylbfzExbT8SGp0Gn5tJc4hBpaE=
+X-Received: by 2002:a05:6512:2821:b0:4f8:710c:e2c7 with SMTP id
+ cf33-20020a056512282100b004f8710ce2c7mr13857329lfb.33.1688583714300; Wed, 05
+ Jul 2023 12:01:54 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
- support
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <keescook@chromium.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <2023062814-chance-flounder-f002@gregkh>
- <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
- <CACRpkda3CJ7G4-wDPkWmzg6nyCoEfG+u2cQH6KXWNjbftd90ow@mail.gmail.com>
-From:   Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <CACRpkda3CJ7G4-wDPkWmzg6nyCoEfG+u2cQH6KXWNjbftd90ow@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: VZW6qNveH1EguEh4PjOv0RhaMztUvQ2V
-X-Proofpoint-ORIG-GUID: VZW6qNveH1EguEh4PjOv0RhaMztUvQ2V
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-05_09,2023-07-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 clxscore=1011 impostorscore=0 adultscore=0
- suspectscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2305260000 definitions=main-2307050159
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+References: <20230705153713.2511647-1-shenwei.wang@nxp.com>
+In-Reply-To: <20230705153713.2511647-1-shenwei.wang@nxp.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 5 Jul 2023 22:01:17 +0300
+Message-ID: <CAHp75Vf+RovRT2rYJDnizeRUwwKE_Twfd+tF5pY3XEc_xOkXYg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: mxc: add runtime pm support
+To:     Shenwei Wang <shenwei.wang@nxp.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        imx@lists.linux.dev, linux-imx@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -96,27 +70,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/4/2023 2:27 AM, Linus Walleij wrote:
-> On Thu, Jun 29, 2023 at 1:12 AM Rob Herring <robh+dt@kernel.org> wrote:
-> 
->> My bigger issue with this whole series is what would this all look
->> like if every SoC vendor upstreamed their own custom dumping
->> mechanism. That would be a mess. (I have similar opinions on the
->> $soc-vendor hypervisors.)
-> 
-> I agree with Rob's stance.
-> 
-> I think it would be useful to get input from the hwtracing developers
-> (Alexander and Mathieu) who faced this "necessarily different" issue
-> with all the hwtrace mechanisms and found a way out of it. I suspect
-> they can have an idea of how this should be abstracted.
+On Wed, Jul 5, 2023 at 6:37=E2=80=AFPM Shenwei Wang <shenwei.wang@nxp.com> =
+wrote:
+>
+> Adds runtime PM support and allow the GPIO controller to enter
+> into runtime suspend automatically when not in use to save power.
+> However, it will automatically resume and enable clocks when a
+> GPIO or IRQ is requested.
+>
+> While putting the GPIO module itself into power saving mode may not
+> have an obvious impact on current dissipation, the function is necessary
+> because the GPIO module disables its clock when idle. This enables the
+> system an opportunity to power off the parent subsystem, and this conserv=
+es
+> more power. The typical i.MX8 SoC features up to 8 GPIO controllers, but
+> most of the controllers often remain unused.
 
-Any mailing list you suggest we expand to so that we get inputs from the 
-hwtracing developers and maintainers or just look into the MAINTAINERS 
-file and start an email thread?
 
-We are fine to submit the abstract for the LPC in next two weeks, but 
-prefer to have lot of good discussion before it on the mailing list, so 
-that we have code to talk about in LPC.
+...
 
----Trilok Soni
+> +       pm_runtime_set_active(&pdev->dev);
+> +       pm_runtime_enable(&pdev->dev);
+> +       err =3D pm_runtime_resume_and_get(&pdev->dev);
+> +       if (err < 0)
+> +               goto out_pm_dis;
+
+So, after this if an error happens, you will have PM left enabled and
+the next probe won't work as expected, right?
+
+...
+
+>         platform_set_drvdata(pdev, port);
+> +       pm_runtime_put_autosuspend(&pdev->dev);
+>
+>         return 0;
+
+...something here is missing?
+
+> +out_pm_dis:
+> +       pm_runtime_disable(&pdev->dev);
+> +       clk_disable_unprepare(port->clk);
+>  out_irqdomain_remove:
+>         irq_domain_remove(port->domain);
+>  out_bgio:
+
+--=20
+With Best Regards,
+Andy Shevchenko
