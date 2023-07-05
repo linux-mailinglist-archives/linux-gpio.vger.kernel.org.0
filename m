@@ -2,66 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3088B747E69
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jul 2023 09:42:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29CF747E94
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jul 2023 09:51:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231823AbjGEHm3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jul 2023 03:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
+        id S231436AbjGEHvW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jul 2023 03:51:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjGEHm2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jul 2023 03:42:28 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78307E6B
-        for <linux-gpio@vger.kernel.org>; Wed,  5 Jul 2023 00:42:27 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-31297125334so319568f8f.0
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Jul 2023 00:42:27 -0700 (PDT)
+        with ESMTP id S232320AbjGEHvR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jul 2023 03:51:17 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC6D1738
+        for <linux-gpio@vger.kernel.org>; Wed,  5 Jul 2023 00:51:13 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-991f956fb5aso620793866b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Jul 2023 00:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688542946; x=1691134946;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7dk9ce0jXjFa0TFArGQim00ZSqvMhXbYqLFgOD0fpTU=;
-        b=cMuM8Ejwpg/67aF81APkttwEHy64RXXWTro51GWL5oJzbt2YI6kDNfqqniJ+RcUXKT
-         HlbWcqubMVkljX0RBnzJXSt4ULmTnnxnsQSKTBISL6NtmKIby6KaPBB0oZVlaN97oJhk
-         wbBC6uxYFobMDzs0jpFYu2BPlX4mGEObPEHPjYCwsuN4Xewt8IpqDrYlPfWA67kweG2U
-         NOgtrXcg/T4R1habnOAXYI2+PvXN+UxHec8m00mE6d5m/913ykZ1qfJL/iidL5VPvwev
-         6VIOUvUTuyvMXJYkl3t3GvX0Zv68W2w0LV9g0FuVXemyK2t+7av+QBJmVos5gmh9uDoa
-         4zYQ==
+        d=gmail.com; s=20221208; t=1688543471; x=1691135471;
+        h=content-transfer-encoding:subject:to:content-language:from
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aC+cCGWgN+hqK1bR6hUZHyjeD6zkoAo2b5jZR1Tcum4=;
+        b=ijyCFsH6e2+HqayGY6Iczv/mjBfh/5vxdR/+r/tA+P+RYFEh2UacG+8YPydXezKE0e
+         A1hwDRPFvU0kB4hr+L2LroCXf0lxlMV72e+dCFwv9hOMPCeuA2ehwxKD2dLLG6Sw91iH
+         UoihPG6Rvt+dXHvFhasW5l364BR5rANFE2iUqHMD6bSndjwIGSY0GMey5qhiLvfJn2fP
+         YQQuoLYGI4nUnzZdzW6vcJw1IxYKRdbvLAHct58V1yz4gqE2rkB9JMSraIIWcbWppdOH
+         0Ii4NcfEQ695479GZWGjmtSyG5J7WlkPB2VdiepnUGFKGSgv/Kt18cfx2GuCSu6Kd6Ym
+         5cyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688542946; x=1691134946;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7dk9ce0jXjFa0TFArGQim00ZSqvMhXbYqLFgOD0fpTU=;
-        b=MvLupLB483mDBBRlkRxZUBPKzdtviupiTcBZQXRq42VTK5Oye6DmpPNHV30cC/cmip
-         EzAFT3BjC/+pr/NpUKEhGi4yjWZP0nXOq5JJgJXI0SZlLB5Ozir0C01Ql+Ug47QIxRQr
-         YPsncAcPiMe6wObsy9Sn9Qhk+BQT0JRYNGMb0L4tti5qzsaMcVQtWrEq9yY+jJ7nlrdy
-         5iBTmEOdVkz7rkG23Pld32nHNDABJROpJtdMA/sFdy12FLgqKjgRW3R+wiEN5IduOtxP
-         Bj79pHpLrvsDK3Lb0JESEsIOgjkmY+vWL/cXExrN5/vkGrcaoKW4WvSVSXfEs3dD3C5y
-         j6Jg==
-X-Gm-Message-State: ABy/qLaaAiaLLfcLouz+X+t4+s9D8V+TaXSweFYU64oubQOIIyaSJ4SJ
-        /xjQ+f//ahp5TUWB2svyA8kEBb2ShsU82SB1dxI=
-X-Google-Smtp-Source: APBJJlHxXAZ5yCI9x3BSLdbfuHbEbV1vjlS2IasMhG3L3OGKzvATge8TLbhsKdmnNGRhUTc0duT/QA==
-X-Received: by 2002:adf:f589:0:b0:314:3a9a:d70e with SMTP id f9-20020adff589000000b003143a9ad70emr1350174wro.11.1688542945856;
-        Wed, 05 Jul 2023 00:42:25 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:65b1:7d95:6bda:249e])
-        by smtp.gmail.com with ESMTPSA id d13-20020a5d4f8d000000b003063db8f45bsm30254122wru.23.2023.07.05.00.42.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 00:42:25 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: add missing include
-Date:   Wed,  5 Jul 2023 09:42:19 +0200
-Message-Id: <20230705074219.8321-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20221208; t=1688543471; x=1691135471;
+        h=content-transfer-encoding:subject:to:content-language:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=aC+cCGWgN+hqK1bR6hUZHyjeD6zkoAo2b5jZR1Tcum4=;
+        b=SQ/Kq9cNHdAZ1id1pydJD0TUoMVfKEgmPYSSl+r6a0eJvTP9CNXTJK9eutHN3eaHAR
+         D1tMRkk1IQbhuBcIssgzyCXRWKqg9J/exi7wPNbg4Y//SxBBmMqaQcTE3DZfc3OIyk0g
+         eQE5TBhEKHe1L4wx5+ZWk23xwWHnYTgK5xTqyIc8QQdgDFAJmIivAF7jkBi8Q0Dlc7BA
+         zjHrMjNlXCOLdpdirMbTyfMGhJrNXj5A1wMzM8Oz2ULbj6IxW4VPLdXrP7gE7gRrb7Yj
+         zl4Eou+SnjRzhaIl6VC0ItfOh+W94eF7nYpk27LlcphXrYoIBtSXpfmrm4Zb81eMr4Oj
+         7NKQ==
+X-Gm-Message-State: ABy/qLbGNIdC73g91oY/8HqFPr7X7tVC6ivrS4P4rEwPgcaTobevAgRd
+        p6En6zVGb1XJvnaqXOa2nZXCGOjO+68=
+X-Google-Smtp-Source: APBJJlF+4gMyYwRTNjSQsZ8fRqovxfVKaeaVSjzEF93AQ/+6Aesx992CRf7dvWP4STdBHyDrpjKIQQ==
+X-Received: by 2002:a17:906:f750:b0:993:4107:7e46 with SMTP id jp16-20020a170906f75000b0099341077e46mr5684424ejb.4.1688543470799;
+        Wed, 05 Jul 2023 00:51:10 -0700 (PDT)
+Received: from ?IPV6:2003:d6:2f0e:5001:de5c:a691:328c:8423? (p200300d62f0e5001de5ca691328c8423.dip0.t-ipconnect.de. [2003:d6:2f0e:5001:de5c:a691:328c:8423])
+        by smtp.gmail.com with ESMTPSA id e14-20020a056402104e00b0051e27ebb1b3sm327628edu.34.2023.07.05.00.51.10
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jul 2023 00:51:10 -0700 (PDT)
+Message-ID: <a544afbc-5821-26d0-239e-b46a990ff0a0@gmail.com>
+Date:   Wed, 5 Jul 2023 09:51:09 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+From:   =?UTF-8?Q?Martin_Schr=c3=b6der?= <martin.schroeder78@gmail.com>
+Content-Language: de-DE
+To:     linux-gpio@vger.kernel.org
+Subject: [libgpiod] libgpiod and conan 2.0 recipe
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,27 +72,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Dear developers,
 
-gpiolib.h uses notifiers but doesn't include <linux/notifier.h>.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.h | 1 +
- 1 file changed, 1 insertion(+)
+i am trying to use the lib in my tiny project; but in conjuction with 
+conan i get the following error:
 
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index cca81375f127..1409d52487c0 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -14,6 +14,7 @@
- #include <linux/err.h>
- #include <linux/device.h>
- #include <linux/module.h>
-+#include <linux/notifier.h>
- #include <linux/cdev.h>
- #include <linux/rwsem.h>
- 
--- 
-2.39.2
+*********************************************************
+Recipe 'libgpiod/1.6.3' seems broken.
+It is possible that this recipe is not Conan 2.0 ready
+If the recipe comes from ConanCenter check: https://conan.io/cci-v2.html
+If it is your recipe, check if it is updated to 2.0
+*********************************************************
+
+ERROR: Package 'libgpiod/1.6.3' not resolved: libgpiod/1.6.3: Cannot 
+load recipe.
+Error loading conanfile at 
+'/home/martin/.conan2/p/libgpf99e3cc2c7d92/e/conanfile.py': Unable to 
+load conanfile in /home/martin/.conan2/p/libgpf99e3cc2c7d92/e/conanfile.py
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in 
+_call_with_frames_removed
+  File "/home/martin/.conan2/p/libgpf99e3cc2c7d92/e/conanfile.py", line 
+1, in <module>
+    from conans import ConanFile, tools, AutoToolsBuildEnvironment
+ImportError: cannot import name 'ConanFile' from 'conans' 
+(/home/martin/.local/lib/python3.10/site-packages/conans/__init__.py)
+.
+
+What can I do to fix this?
+
+Thanks in advance
+
+Martin
 
