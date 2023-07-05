@@ -2,119 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34BF17482C7
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jul 2023 13:15:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6A1D7482D8
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jul 2023 13:21:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231417AbjGELPS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jul 2023 07:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38322 "EHLO
+        id S231463AbjGELVF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jul 2023 07:21:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229772AbjGELPR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jul 2023 07:15:17 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18AA3FB
-        for <linux-gpio@vger.kernel.org>; Wed,  5 Jul 2023 04:15:16 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-3a37909a64eso4333019b6e.1
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Jul 2023 04:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688555715; x=1691147715;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lqAPbacPSaik4aigF+6eFaR4LK5F77tuwOAj3RW40qU=;
-        b=T7i32OfGxZ/dG2lZ5iTfuvyOUeD5QwhA53TOblrc2bvW4IOU8vF7lrC4eWSwzPTShk
-         rsVLZN8QOA98m91qD7GPnssFlTDQpfO4/8PvPoYCqv4YX7fqEXn4Nluosc1scfbfNtUZ
-         I63Jet1niV7b8iN9PYsY/u9xo5pVe44dZYg66EhPSf9CWp046x3JatPgzfGv+1f+KOcZ
-         /Kmdak0xpJfC1OTYqTlnDMD5+a3FPNNKNtkbhzbnhUcAzxeF3uDohxiUbLZzw/1fTDeE
-         BOPOcwLvlGYJQ5Dywm6sPOM799lJGhi4J08bwb4Uu3i3q6v/AiI4docpxFZzVnLjb7wn
-         EWtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688555715; x=1691147715;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lqAPbacPSaik4aigF+6eFaR4LK5F77tuwOAj3RW40qU=;
-        b=MJLWyiU+8hi4U1tXuUSwi2E7gl7UdFTJIW90AYh91GOeo6L49DFdV5yC/x0jMTRP5u
-         JZMRdBQkuSLskQK1AwsMtKLp+huI3XPJAkWOr5qpzth7UwA9HF1hwlXo6wT3SPATXKRz
-         7TE9fuJQzIp74XHApoy4WaGPTROabtmD72+0i4A5FLkQVjB9H29gEyDlQzGRkQh9ifTf
-         nj4neVMDWLT2qsqnIQrzPy+WYDecl73TPgoHAU9AQmWo4wl1Gg8CSXD0kfTCGI0Pheim
-         yIq0khzkix8W7ctKUdE5wBRnvmq/P4RyXi2AVirLC/tXMQzdBe3ykmLCQA6+yu5WdoC6
-         5N8A==
-X-Gm-Message-State: AC+VfDxMdf9YDgwaMnu/vCJoDrH+0o/9edUu9WGpOzSxpX8GGG0jDOFa
-        HBn00E5NaRPTYU/E0Dob1wQ=
-X-Google-Smtp-Source: ACHHUZ7XVgwUq2WskpYXT17ekrogsYCJK/ch2TWBSW0BiKZsML5h9PyBgQCt9YPqMM0NGnLBSXbHgA==
-X-Received: by 2002:a05:6808:209d:b0:39a:bd0e:449 with SMTP id s29-20020a056808209d00b0039abd0e0449mr18214934oiw.26.1688555715017;
-        Wed, 05 Jul 2023 04:15:15 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id y18-20020aa78552000000b0063f1a1e3003sm14376258pfn.166.2023.07.05.04.15.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 04:15:14 -0700 (PDT)
-Date:   Wed, 5 Jul 2023 19:15:10 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Martin =?iso-8859-1?Q?Schr=F6der?= <martin.schroeder78@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod] libgpiod and conan 2.0 recipe
-Message-ID: <ZKVQvl0tU6dbFvSr@sol>
-References: <a544afbc-5821-26d0-239e-b46a990ff0a0@gmail.com>
+        with ESMTP id S230126AbjGELVE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jul 2023 07:21:04 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516631996;
+        Wed,  5 Jul 2023 04:20:36 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3658dRFG016367;
+        Wed, 5 Jul 2023 11:20:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=KcOexi0Vm5W4JbwHJG0UH3/06wW8o2L6Y2Xo4Fh42Ok=;
+ b=Oc2Nzcp+jqISN5auqULXdAHC+BnOzhn5miyvXhxFQjg9pzo4jjoKPBDbgFWbaO5pJckq
+ Zbgshcc1JKPgx9lCKgjcrq6sf1ldRpie3XmlSOVR1K/FCVKD5yoKTMeYJvm/HtbXuEe0
+ udLIucCcdv4j2SmXDyskrO6BCtZNG/WWmgXarErTbMAm3301X5RhTDAqZt7LKyQfucqK
+ zA2FcxoCtAPsQbUEWoKX4AraoE78R6NVw3ARasffHosBR29qMXkhioq/OhGC2gSSoO1l
+ qgO5PE+2wky0lLiwL5voo4/LM6/SWfOf+tmEiFVvGGql5kly+yPSxuJOB+e6KBxsPONP fg== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rn2cp8knh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Jul 2023 11:20:31 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 365BKTn1010550
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 5 Jul 2023 11:20:29 GMT
+Received: from [10.214.66.58] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Wed, 5 Jul
+ 2023 04:20:24 -0700
+Message-ID: <17dc53d0-2f30-1d54-ccbe-d829a681ad06@quicinc.com>
+Date:   Wed, 5 Jul 2023 16:50:21 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH 02/10] dt-bindings: power: Add rpm power domains for SDX75
+Content-Language: en-US
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
+        <andersson@kernel.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linus.walleij@linaro.org>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <sboyd@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+References: <1688395346-3126-1-git-send-email-quic_rohiagar@quicinc.com>
+ <1688395346-3126-3-git-send-email-quic_rohiagar@quicinc.com>
+ <0d468d08-6410-e424-b4f3-5245cdb0334a@linaro.org>
+ <85456057-c4ef-68a6-4fc5-c9fd03b01b71@quicinc.com>
+ <06506ed7-f861-0bca-8b87-e2da6a6bc789@quicinc.com>
+ <553bd028-aaf3-b128-ae4c-7f938c23e889@linaro.org>
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+In-Reply-To: <553bd028-aaf3-b128-ae4c-7f938c23e889@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a544afbc-5821-26d0-239e-b46a990ff0a0@gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: V_BG9uQ6c6RhpPFu5K3vUkLH-8H6W2Nt
+X-Proofpoint-ORIG-GUID: V_BG9uQ6c6RhpPFu5K3vUkLH-8H6W2Nt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-05_02,2023-07-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 spamscore=0 clxscore=1015 bulkscore=0 mlxlogscore=644
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307050100
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 09:51:09AM +0200, Martin Schr�der wrote:
-> Dear developers,
-> 
-> 
-> i am trying to use the lib in my tiny project; but in conjuction with conan
-> i get the following error:
-> 
-> *********************************************************
-> Recipe 'libgpiod/1.6.3' seems broken.
-> It is possible that this recipe is not Conan 2.0 ready
-> If the recipe comes from ConanCenter check: https://conan.io/cci-v2.html
-> If it is your recipe, check if it is updated to 2.0
-> *********************************************************
-> 
-> ERROR: Package 'libgpiod/1.6.3' not resolved: libgpiod/1.6.3: Cannot load
-> recipe.
-> Error loading conanfile at
-> '/home/martin/.conan2/p/libgpf99e3cc2c7d92/e/conanfile.py': Unable to load
-> conanfile in /home/martin/.conan2/p/libgpf99e3cc2c7d92/e/conanfile.py
-> �File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-> �File "<frozen importlib._bootstrap>", line 241, in
-> _call_with_frames_removed
-> �File "/home/martin/.conan2/p/libgpf99e3cc2c7d92/e/conanfile.py", line 1, in
-> <module>
-> ���from conans import ConanFile, tools, AutoToolsBuildEnvironment
-> ImportError: cannot import name 'ConanFile' from 'conans'
-> (/home/martin/.local/lib/python3.10/site-packages/conans/__init__.py)
-> .
-> 
-> What can I do to fix this?
-> 
 
-Hi Martin,
+On 7/5/2023 4:13 PM, Konrad Dybcio wrote:
+> On 5.07.2023 10:54, Rohit Agarwal wrote:
+>> On 7/4/2023 11:47 AM, Rohit Agarwal wrote:
+>>> On 7/3/2023 8:29 PM, Konrad Dybcio wrote:
+>>>> On 3.07.2023 16:42, Rohit Agarwal wrote:
+>>>>> Add RPM power domain bindings for the SDX75 SoC.
+>>>>>
+>>>>> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
+>>>>> ---
+>>>>>    Documentation/devicetree/bindings/power/qcom,rpmpd.yaml | 1 +
+>>>>>    include/dt-bindings/power/qcom-rpmpd.h                  | 8 ++++++++
+>>>>>    2 files changed, 9 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+>>>>> index afad313..58e1be8 100644
+>>>>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+>>>>> @@ -40,6 +40,7 @@ properties:
+>>>>>          - qcom,sdm845-rpmhpd
+>>>>>          - qcom,sdx55-rpmhpd
+>>>>>          - qcom,sdx65-rpmhpd
+>>>>> +      - qcom,sdx75-rpmhpd
+>>>>>          - qcom,sm6115-rpmpd
+>>>>>          - qcom,sm6125-rpmpd
+>>>>>          - qcom,sm6350-rpmhpd
+>>>>> diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
+>>>>> index 1bf8e87..8092d0d 100644
+>>>>> --- a/include/dt-bindings/power/qcom-rpmpd.h
+>>>>> +++ b/include/dt-bindings/power/qcom-rpmpd.h
+>>>>> @@ -57,6 +57,14 @@
+>>>>>    #define SDX65_CX_AO    4
+>>>>>    #define SDX65_MXC    5
+>>>>>    +/* SDX75 Power Domain Indexes */
+>>>>> +#define SDX75_CX    0
+>>>>> +#define SDX75_CX_AO    1
+>>>>> +#define SDX75_MSS    2
+>>>>> +#define SDX75_MX    3
+>>>>> +#define SDX75_MX_AO    4
+>>>>> +#define SDX75_MXC    5
+>>>> Please instead introduce a set of defines without the SoC prefix
+>>>> (i.e. CX, CX_AO, MX etc.). We've been putting this off for too long
+>>>> and you're the first unlucky guy that submitted new RPMhPD support after
+>>>> we've concluded it'd be the way to go! :D Sadly, we can't replace the
+>>>> existing ones retroactively..
+>>> Surely No issues. Will update it.
+>> I have a doubt here. Cant we completely omit the #defines here and directly index this as 0,1,...
+>> because if the intention of this #defines is to understand the name of the pd then we can get
+>> it from the .name attribute in rpmhpd as well, right?
+>>
+>> The problems with a common set of #define would be, lets say if we define CX_AO as 1 and some platform
+>> doesn't have CX_AO then wouldnt it leave a null entry in the driver entry of that platform?
+> Yes.
+>
+> We already do this in the rpmh clock driver, as:
+>
+> 1. there are domains that all chips share (like CX etc.)
+> 2. wasting a couple of bytes lets us massively save on convolution
+Ok, got it. Looks cleaner.
 
-That recipe is provided by the conan project themselves, not libgpiod,
-so you should take it up with them.
-
-FWIW, it appears the recipe is in the process of being updated to support
-v2[1].
-Perhaps try their WIP recipe, and if it doesn't work then follow up in
-that issue?
-
-Cheers,
-Kent.
-
-[1] https://github.com/conan-io/conan-center-index/pull/18171
+Thanks,
+Rohit.
+>
+> Konrad
+>> Thanks,
+>> Rohit.
+>>
+>>> Thanks,
+>>> Rohit.
+>>>> Konrad
+>>>>> +
+>>>>>    /* SM6350 Power Domain Indexes */
+>>>>>    #define SM6350_CX    0
+>>>>>    #define SM6350_GFX    1
