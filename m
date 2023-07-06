@@ -2,129 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98F0D7496AF
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jul 2023 09:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC43F749814
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jul 2023 11:16:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbjGFHmf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jul 2023 03:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55222 "EHLO
+        id S229556AbjGFJQe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Jul 2023 05:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232832AbjGFHme (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jul 2023 03:42:34 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02681BDB
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Jul 2023 00:42:32 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-314172bb818so290662f8f.1
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Jul 2023 00:42:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688629351; x=1691221351;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WbxOrjdHKbXhlnZ+lfNH9KC2jI6IqoLPXw3l3BYO8wY=;
-        b=LV5oFIVWpwFHAtWyQEF9vh5vXnXRpyYR6xiAOOJ8SbAYbIHjPP7epD4KgcUrI2PEPb
-         mTJz27Bs9ZLYP4Qa/Klt3kmsPjDGMilSlAz3D0colMBTei4UxUgRArdK84Y3fAxzuXPw
-         G0tE/y94iFQH9z+Gxc2YvLWST9mL/AvDpEJYj07I0Q8rrCGkovGxqqXMo42fW+JfK0zv
-         Wgzwg9idZAKKNq+rQ5zyBA7C1GzU4Rh18U+n7huD+7GNR/fkc9e665vJkv7gXVaaryNl
-         OrHF9/CM6pMQ/hNINnQHAboEovs9o65JsbFnwQmi+mn+jhDPuaCEFRYv7rnKfPYkagly
-         3E+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688629351; x=1691221351;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WbxOrjdHKbXhlnZ+lfNH9KC2jI6IqoLPXw3l3BYO8wY=;
-        b=GZAnDMCL7LLsyX7IHD4ZqkxDNSXFxM4cM2kT5aniU5a46RUTan1Kx7OkfKYHdp3+5o
-         YaI90c6Zb1Z2NNv47ttKfh8kBsbdLhS2dBwjfUDMPBAMyt5T3r3PvzXoVBIi0f4gako6
-         2c3119aM9fwzWHAQ2RG9n5ZaNO68NiVxXHS/S4sJVabj5hKJ7GxKAj0ref+Hya9eitRl
-         UfcHZi9iFpPQROl36AOqo7gVmpx1SLScIHGcy+TXR29JnCoeOC8S3nDsyUPPx5Ry19JP
-         VyUDlRtD0gotXclnr0PJq1Cjd7kf16DVxX3cyogZuletfLWISWFPZdlaFYCWlV6NfsMs
-         Zm7A==
-X-Gm-Message-State: ABy/qLbYmoHsTDtQeZj7RusE/WEQu1gwX4oJnc+Y5zCmEvp8HOIexJ2Z
-        ZoIb9mhF0HfuggKRfzWG8zHaEw==
-X-Google-Smtp-Source: APBJJlE78Dpcot4yN05l8xxI9dJuyq1KKsR5IHRaiwqI/bl8PWsDff2pYf38Ywa82zxVmsHAVbKHPw==
-X-Received: by 2002:adf:e505:0:b0:314:1ce8:a0a1 with SMTP id j5-20020adfe505000000b003141ce8a0a1mr692157wrm.17.1688629351386;
-        Thu, 06 Jul 2023 00:42:31 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id h5-20020adffd45000000b00313f07ccca4sm1076798wrs.117.2023.07.06.00.42.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jul 2023 00:42:31 -0700 (PDT)
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Thu, 06 Jul 2023 09:42:27 +0200
-Subject: [PATCH 2/2] dt-bindings: pinctrl: amlogic,meson-pinctrl-common:
- allow gpio hogs
+        with ESMTP id S231959AbjGFJQd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jul 2023 05:16:33 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB45DAF;
+        Thu,  6 Jul 2023 02:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688634992; x=1720170992;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=faoPJTHDsIgiPgdXKYWozlz+vBxj4RZOGgol5Jaz2Q0=;
+  b=SpM0hOzrcCWUNHs6PlIT+GxUDOHtnTMFjtgCM5/Xb6tUCc9L8z/kjqMj
+   jI9fJcAkVgj301MWgICdV3AxHAAq2bWBT1fSem59IqCm6va/PGnJAej/V
+   aQQZmY9y+AMlKkOiInPkPyfjJtK0wisH6qF2HmkqmupJPwSggLhTQdfFH
+   uwtlwJQN4cVWWit5+pNNRk92V42eZyBYj53lViAfkIV9Jcjo+lNV8aKIf
+   +PiO/X85OTl4swtaZoRQSgLikZWy9KTtMFQMcr2NsJlj1m1nttpQV/2Wa
+   Gc5BjfqFv/VcAt1rG3aH4wi6gWWZxkCT04khHRwBNwK9hKIqZjoODA7VX
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10762"; a="363578832"
+X-IronPort-AV: E=Sophos;i="6.01,185,1684825200"; 
+   d="scan'208";a="363578832"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2023 02:16:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10762"; a="719523904"
+X-IronPort-AV: E=Sophos;i="6.01,185,1684825200"; 
+   d="scan'208";a="719523904"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jul 2023 02:16:27 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qHL69-000TlH-2e;
+        Thu, 06 Jul 2023 12:16:25 +0300
+Date:   Thu, 6 Jul 2023 12:16:25 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        linus.walleij@linaro.org, npliashechnikov@gmail.com,
+        nmschulte@gmail.com, friedrich.vock@gmx.de, dridri85@gmail.com,
+        Hans de Goede <hdegoede@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        open list <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] pinctrl: amd: Use amd_pinconf_set() for all
+ config options
+Message-ID: <ZKaGaVYOouPgZTSj@smile.fi.intel.com>
+References: <20230705133005.577-1-mario.limonciello@amd.com>
+ <20230705133005.577-3-mario.limonciello@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230706-topic-amlogic-upstream-pinctrl-fix-bindings-v1-2-fa442d5aae91@linaro.org>
-References: <20230706-topic-amlogic-upstream-pinctrl-fix-bindings-v1-0-fa442d5aae91@linaro.org>
-In-Reply-To: <20230706-topic-amlogic-upstream-pinctrl-fix-bindings-v1-0-fa442d5aae91@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=954;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=W+4PTPflVuY/VTPXicH0ipZFRZr1GRfAPhtre5st8GA=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBkpnBkxZQgeadpyhxnLHE7dGXL/a2+0lVvPpA4BWOU
- JGKwGOCJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZKZwZAAKCRB33NvayMhJ0ZA+D/
- 0S0mjbLMqRomWDtTETONTeNmMXhWFdiOqk2iujAavuJhICbhbBSGXgUhXEH5oOGRmzKySeDSLjBZEI
- JX4vq5OcTI19LQzLFG274URpzZXfXwE4gctZTORzPebDLjd/E3l99I5jFVZGxU8L924zd8PhLI3xei
- VbrhEuOIQupf1teWOzlgilrKUeTNipmnDiuhqlOCak7iHoM2nFN4aM5K7t0S57qk7ZIyorEJhcDVml
- ZfHdbxo81p/pl7vPP+1LxQO6YkMchSAdlAOAELBVYppuuy+udGbSwwqJkQquyRL3t5kYfng4EWVx8S
- XjZo+6E+3P3kQdrqVPGjyiygaOWB6iaARlNFhFSuog854zEPLpyk3pqALyRSHGz1TBFJIQn1tyzs/E
- X7gplFT75ytW1PyWh/tOp3x0Gw1tfVvlk/akmhUitpfCZnxTZDNxRkfc7kd1LlDrgloPiW3JTd0XFe
- wdCN8OcychuGSg8dxvKJmNl6puE0zHHENdHC2p02G2i+Bm3aPey5gZJruMdr6kpyQ0yRxRvHG7I9i6
- kXT6HRG0Wgk3jHr52ym/3H62Bh0zfVYovOp6ZSDUPitWyNCFfS/oqH1hMvbCB+1kwUN1AagsdzHN7d
- cpjd0ays2SRMU3hRJskBX/h3yd+6/g9GW9fFHNP+gpw+fmOSUkVB4lElK+PA==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230705133005.577-3-mario.limonciello@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Allow gpio hog subnodes to the gpio subnode.
+On Wed, Jul 05, 2023 at 08:30:03AM -0500, Mario Limonciello wrote:
+> On ASUS TUF A16 it is reported that the ITE5570 ACPI device connected to
+> GPIO 7 is causing an interrupt storm.  This issue doesn't happen on
+> Windows.
+> 
+> Comparing the GPIO register configuration between Windows and Linux
+> bit 20 has been configured as a pull up on Windows, but not on Linux.
+> Checking GPIO declaration from the firmware it is clear it *should* have
+> been a pull up on Linux as well.
+> 
+> ```
+> GpioInt (Level, ActiveLow, Exclusive, PullUp, 0x0000,
+> 	 "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+> {   // Pin list
+> 0x0007
+> }
+> ```
+> 
+> On Linux amd_gpio_set_config() is currently only used for programming
+> the debounce. Actually the GPIO core calls it with all the arguments
+> that are supported by a GPIO, pinctrl-amd just responds `-ENOTSUPP`.
+> 
+> To solve this issue expand amd_gpio_set_config() to support the other
+> arguments amd_pinconf_set() supports, namely `PIN_CONFIG_BIAS_PULL_DOWN`,
+> `PIN_CONFIG_BIAS_PULL_UP`, and `PIN_CONFIG_DRIVE_STRENGTH`.
 
-Fixes: 94df03a45276 ("dt-bindings: pinctrl: Convert Amlogic Meson pinctrl binding")
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- .../devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml  | 7 +++++++
- 1 file changed, 7 insertions(+)
+...
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml
-index 28659f0389a5..d9a8e12bfb7f 100644
---- a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml
-@@ -42,6 +42,13 @@ $defs:
-       gpio-ranges:
-         maxItems: 1
- 
-+    patternProperties:
-+      "^.+-hog(-[0-9]+)?$":
-+        type: object
-+
-+        required:
-+          - gpio-hog
-+
-     required:
-       - reg
-       - reg-names
+> @@ -782,7 +770,7 @@ static int amd_pinconf_get(struct pinctrl_dev *pctldev,
+>  }
+>  
+>  static int amd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+> -				unsigned long *configs, unsigned num_configs)
+> +			   unsigned long *configs, unsigned int num_configs)
+
+Seems like a stray change.
+
+>  {
+>  	int i;
+>  	u32 arg;
+
+Otherwise entire series looks good to me,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
