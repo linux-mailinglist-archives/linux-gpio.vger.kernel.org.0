@@ -2,158 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E293774A393
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jul 2023 20:07:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B411674A419
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jul 2023 21:05:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232203AbjGFSHm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jul 2023 14:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51388 "EHLO
+        id S231263AbjGFTF2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Jul 2023 15:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjGFSHl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jul 2023 14:07:41 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9221F1986;
-        Thu,  6 Jul 2023 11:07:38 -0700 (PDT)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 366Hal47003323;
-        Thu, 6 Jul 2023 18:07:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=AnBk3//qqbv6jRGecm2FdBxy7OhNyDeEajuF9tJwEds=;
- b=mtHGrztW01ckZelvZg/jz2727wr5EWlt+nG8bZdvMT5G9TvX6jalxVaq3xTR2Agv9JRE
- jlLuZVS3hthkhojmy6/IoG9HJI37pvOEISy9HBdNrQWujHxD0q8DlHT1y6cZ3HT6G8Rz
- SToS99am8/nuPAbCgXDaZDYtxYJHktlqIF6UbaSx6nWYbDUa57fXXREzzW6vKpCb4XMS
- j+Jtrs6ZtBJ0GxDeURnUWZ1AVcE6UR/OtoHWI8QtmijxV1iVz6yBgYW7xvjrDFiCRy/n
- 4iZGbyv39fpReOY7I4gpL0Z7b/mWDo6tQNsm3M8Zqvpo486yUimuzwqcZbXy49udVNYH 6g== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rn152mb92-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Jul 2023 18:07:11 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 366I7Akq032528
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 6 Jul 2023 18:07:10 GMT
-Received: from [10.110.49.233] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Thu, 6 Jul
- 2023 11:07:08 -0700
-Message-ID: <9f054246-d134-25b5-75ee-ff5b4b78d8a4@quicinc.com>
-Date:   Thu, 6 Jul 2023 11:07:08 -0700
+        with ESMTP id S231213AbjGFTF1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jul 2023 15:05:27 -0400
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EAE61BE9;
+        Thu,  6 Jul 2023 12:05:26 -0700 (PDT)
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3461053677eso2487005ab.0;
+        Thu, 06 Jul 2023 12:05:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688670326; x=1691262326;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=INiY27iokPzj3Y1hOMTtz8s7AtrmF9FaFbozx7zoZLU=;
+        b=W1c723sDPJ2oAiZR+yMJ9083t92gMcyW7hoKzk4V1xIogizAq3Ilr1I6X8kOI//oYP
+         zC3ICMq3N/qrqiMHQ7lhfUni4rEYNnK9DobgCq9ATSFT4Pk0FXTP4FSbGNA7ZLX9pneS
+         W+YqN5/OCkiHIDQjQsc8K+oJf0yl42pIzcN8/qfP+fdGnWsSBUIsaxNlC/KsyaGrO4Du
+         CoUOBtnTFdqG8mtZfBAW8xrCRB6qQ/XbpoEBibE59BygvFisElaJcehWVHRCduAc3yKM
+         ZGdGDq7wnF+qeccOnWyPPaxQetfwy8/X0YMPSFkLP150eSejyB5S1imec49yroFWOBWS
+         XdOQ==
+X-Gm-Message-State: ABy/qLZGrRXYYDwJuhMYnbRqZ+Gk19NPnfHBiYYOIZsM4M1fy9/StGaC
+        pw4OehahkwqtxEEcvHBYM8zBcb/MbA==
+X-Google-Smtp-Source: APBJJlGq+znRNSnBSPJIa8qV/04lud2M3uRgd+NToHUyy9pq7rIwA8yfqAo9o7Op8Ys7KfdCPel/7Q==
+X-Received: by 2002:a92:bd0c:0:b0:343:ef5e:8286 with SMTP id c12-20020a92bd0c000000b00343ef5e8286mr3482247ile.7.1688670325885;
+        Thu, 06 Jul 2023 12:05:25 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id a5-20020a92d345000000b0034248a56432sm698327ilh.32.2023.07.06.12.05.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jul 2023 12:05:24 -0700 (PDT)
+Received: (nullmailer pid 159125 invoked by uid 1000);
+        Thu, 06 Jul 2023 19:05:23 -0000
+Date:   Thu, 6 Jul 2023 13:05:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Hawkins, Nick" <nick.hawkins@hpe.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "Verdun, Jean-Marie" <verdun@hpe.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
+Subject: Re: [PATCH v5 1/5] dt-bindings: gpio: Add HPE GXP GPIO
+Message-ID: <20230706190523.GA155073-robh@kernel.org>
+References: <20230705194544.100370-1-nick.hawkins@hpe.com>
+ <20230705194544.100370-2-nick.hawkins@hpe.com>
+ <046d4744-9521-7b5d-759c-6dedbafd9205@linaro.org>
+ <31F41D4F-D386-48B5-B941-D5B7C691280A@hpe.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
- support
-Content-Language: en-US
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Mukesh Ojha <quic_mojha@quicinc.com>,
-        Greg KH <gregkh@linuxfoundation.org>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <keescook@chromium.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <linus.walleij@linaro.org>,
-        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, Alex Elder <elder@linaro.org>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <2023062814-chance-flounder-f002@gregkh>
- <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
- <cc30660f-dd72-aade-6346-a93c6ad4b695@quicinc.com>
- <29af84dc-7db8-0c43-07b6-eb743cf25e57@linaro.org>
- <957a3cdb-6091-8679-ddb0-296db2347291@quicinc.com>
- <CAL_JsqK7MHR09U5h01=Gf1ZLeDVCgZdN-W1hQRH3AX+E94_uUg@mail.gmail.com>
-From:   Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <CAL_JsqK7MHR09U5h01=Gf1ZLeDVCgZdN-W1hQRH3AX+E94_uUg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Zfm93BmM8TzEd0B4HaqTd4YfERv3kG6E
-X-Proofpoint-ORIG-GUID: Zfm93BmM8TzEd0B4HaqTd4YfERv3kG6E
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-06_13,2023-07-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 mlxscore=0 malwarescore=0 clxscore=1015 mlxlogscore=999
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2307060162
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <31F41D4F-D386-48B5-B941-D5B7C691280A@hpe.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/6/2023 10:40 AM, Rob Herring wrote:
-> On Mon, Jul 3, 2023 at 3:06 PM Trilok Soni <quic_tsoni@quicinc.com> wrote:
->>
->> On 7/2/2023 1:29 AM, Krzysztof Kozlowski wrote:
->>> On 30/06/2023 18:04, Mukesh Ojha wrote:
->>>>>
->>>>>> We don't add layers when they are not needed, and never when there is no
->>>>>> actual user.  If you need the extra "complexity" later, then add it
->>>>>> later when it is needed as who knows when that will ever be.
->>>>>>
->>>>>> Please redo this series based on that, thanks.
->>>>>
->>>>> My bigger issue with this whole series is what would this all look
->>>>> like if every SoC vendor upstreamed their own custom dumping
->>>>> mechanism. That would be a mess. (I have similar opinions on the
->>>>> $soc-vendor hypervisors.)
->>>
->>> Mukesh,
->>>
->>> LPC CFP is still open. There will be also Android and Kernel Debugging
->>> LPC microconference tracks. Coming with a unified solution could be a
->>> great topic for LPC. Solutions targeting only one user are quite often
->>> frowned upon.
->>
->> LPC is far out and in November. Can we not have others speak up if they
->> have the similar solution now? We can expand this to linux-kernel and
->> ask for the other SOC vendors to chime in. I am sure that we may have
->> existing solutions which came in for the one user first like Intel RDT
->> if I remember. I am sure ARM MPAM usecase was present at that time but
->> Intel RDT based solution which was x86 specific but accepted.
+On Thu, Jul 06, 2023 at 02:12:12PM +0000, Hawkins, Nick wrote:
+> Greetings Krzysztof,
 > 
-> RDT predated MPAM. resctrl is the kernel feature, and it supports
-> Intel and AMD which are not identical. resctrl is being (extensively)
-> refactored to add in MPAM support.
+> Thank you for the feedback. I see that due to a patch conflict I
+> reintroduced some of the alignment issues you had me fix in
+> a previous version. This was a mistake and I will correct this.
 > 
-> You are not the first here like Intel RDT, so I fail to see the
-> parallel with minidump. We have an existing logging to persistent
-> storage mechanism which is pstore. You should integrate into that
-> rather than grafting something on to the side or underneath.
+> > > v5:
+> > > *Removed use of gpio-gxp in favor of just supporting
+> > > hpe,gxp-gpio-pl for now as the full gpio-gxp will
+> > > require a much larger patchset
 > 
+> > Bindings describe hardware, not drivers, and should be rather complete.
+> 
+> This patch is intended to still cover the hardware interface between our
+> BMC and our CPLD which gathers GPIO for us. The part of the binding I
+> removed was a completely separate interface with different mechanisms
+> for reading GPIOs. With that said I could keep these two interfaces
+> separate in yaml files: Having a yaml for hpe,gxp-gpio and another for
+> hpe,gxp-gpio-pl. Would this be a better approach?
 
-Mukesh will chime in once he looks at the hwtracing suggested by Linus W 
-and see if it fits. Mukesh seems have already looked at pstore and 
-discussions/patches are there w/ pstore logic I believe, but it is okay 
-if they are not perfect if we are still not decided on the right 
-framework. Best to decide if the existing frameworks fits or not or we 
-need to create the new one.
+If they are independent (and it sounds like they are), then yes.
 
-I would still prefer if other SOC vendors chime in here, since I am sure 
-in the Mobile and Embedded world various SOCs may have requirements to 
-get specific portion of the ramdump only for the quick analysis and 
-meeting the storage requirements on the device for its collection.
-
-As mentioned on another patch, we are fine the submit abstract at LPC 
-debug MC, but I would like the framework discussion to continue so that 
-we can decide during the LPC that either existing frameworks fits the 
-needs or they need to be extended or new fwk is needed.
-
----Trilok Soni
+Rob
