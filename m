@@ -2,149 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51282749BB3
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jul 2023 14:30:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CBA9749DBA
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jul 2023 15:30:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230466AbjGFMaB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jul 2023 08:30:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37054 "EHLO
+        id S232233AbjGFNaz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Jul 2023 09:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230445AbjGFMaA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jul 2023 08:30:00 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A405619A0;
-        Thu,  6 Jul 2023 05:29:59 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10762"; a="353426705"
-X-IronPort-AV: E=Sophos;i="6.01,185,1684825200"; 
-   d="scan'208";a="353426705"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2023 05:29:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10762"; a="669736063"
-X-IronPort-AV: E=Sophos;i="6.01,185,1684825200"; 
-   d="scan'208";a="669736063"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP; 06 Jul 2023 05:29:54 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1qHO7M-000WDf-2I;
-        Thu, 06 Jul 2023 15:29:52 +0300
-Date:   Thu, 6 Jul 2023 15:29:52 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Huqiang Qin <huqiang.qin@amlogic.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        neil.armstrong@linaro.org, khilman@baylibre.com,
-        jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: Add driver support for Amlogic C3 SoCs
-Message-ID: <ZKazwMpmsNzBuWA7@smile.fi.intel.com>
-References: <20230706114522.2490655-1-huqiang.qin@amlogic.com>
- <20230706114522.2490655-3-huqiang.qin@amlogic.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230706114522.2490655-3-huqiang.qin@amlogic.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_SOFTFAIL,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232351AbjGFNau (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jul 2023 09:30:50 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136501BFC;
+        Thu,  6 Jul 2023 06:30:38 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 366Bk5HN022342;
+        Thu, 6 Jul 2023 13:30:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=DXJ7iCPmN8B01ER7gogfn1DNv1Gl9miavFIuJe9pjHI=;
+ b=TOr5YOF/YpHoRJktCwqbiz2jxPG28AKHrV3bZEJRjt6DmoAWFR3JY1v5BP5+fDvfdmoR
+ HTc+ae4UrRgnr7Loklaeir0oDHahKLDxuc/77P2G5pW4aC2p4xkFWiPhmDYvwg7rkSg8
+ fdTh3qnESAq8Rlk50xWVwjuPdeOdFc39o1pja3JEQAWCjD21K/tRkd+CAxu/zN7AUvPD
+ TW0FME1P06DIHikhJru/Ss33+UfW19fBijO/ptzTjRocw/t2SZsLHSk6PMI5PK6MNl2T
+ 7aSI+VAIa2zE2DvYrxDepEBMrzcH9P/YM9StNCDw6xcE/YfgDAlmakGv0xntdFvLEJRS vQ== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rn5mfu5fy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Jul 2023 13:30:21 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 366DUHvP011565;
+        Thu, 6 Jul 2023 13:30:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3rjd7kkq3m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 06 Jul 2023 13:30:17 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 366DUHOm011550;
+        Thu, 6 Jul 2023 13:30:17 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 366DUHNo011548;
+        Thu, 06 Jul 2023 13:30:17 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 9794D4E6C; Thu,  6 Jul 2023 19:00:16 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH 0/4] Add support for pinctrl in pmic chips. 
+Date:   Thu,  6 Jul 2023 19:00:05 +0530
+Message-Id: <1688650209-25119-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vFDQ6vG58U4Miq8Yw6VvhS71ofIPC5ZV
+X-Proofpoint-ORIG-GUID: vFDQ6vG58U4Miq8Yw6VvhS71ofIPC5ZV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-06_09,2023-07-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 clxscore=1015 adultscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=513 priorityscore=1501
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307060120
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 06, 2023 at 07:45:22PM +0800, Huqiang Qin wrote:
-> Add new pinctrl driver for Amlogic C3 SoCs which share the
+Hi,
 
-a new
+This series adds GPIO support for PM7550ba and PMX75 pmic.
 
-> same register layout as the previous Amloigc S4
+Thanks,
+Rohit.
 
-Missing period at the end.
+Rohit Agarwal (4):
+  dt-bindings: pinctrl: qcom-pmic-gpio: Add pm7550ba support
+  dt-bindings: pinctrl: qcom-pmic-gpio: Add pmx75 support
+  pinctrl: qcom-pmic-gpio: Add support for pm7550ba
+  pinctrl: qcom-pmic-gpio: Add support for pmx75
 
-...
-
-> +config PINCTRL_AMLOGIC_C3
-> +	tristate "Amlogic C3 SoC pinctrl driver"
-> +	depends on ARM64
-> +	select PINCTRL_MESON_AXG_PMX
-> +	default y
-
-This default seems a bad cargo cult. Why ARM64 kernel should have all them be
-opt-out, instead of opt-in? Shouldn't this be a distro problem?
-
-...
-
-> +	MESON_PIN(GPIO_TEST_N)
-
-Is it real one?
-
-> +};
-
-...
-
-> +	/* Bank A func6 */
-> +	GROUP(spi_a_mosi_a,		6),
-> +	GROUP(gen_clk_a4,		6),
-> +	GROUP(clk12_24_a,		6)
-
-Leave trailing comma here as it's not a terminator.
-
-...
-
-> +static const char * const i2c2_groups[] = {
-> +	"i2c2_sda", "i2c2_scl"
-
-Ditto.
-
-> +};
-> +
-> +static const char * const i2c3_groups[] = {
-> +	"i2c3_sda_c", "i2c3_scl_c",
-> +	"i2c3_sda_x", "i2c3_scl_x",
-> +	"i2c3_sda_d", "i2c3_scl_d"
-
-Ditto.
-
-> +};
-
-...
-
-> +#ifdef CONFIG_OF
-
-Drop this ugly ifdeffery.
-
-> +static const struct of_device_id c3_pinctrl_dt_match[] = {
-> +	{
-> +		.compatible = "amlogic,c3-periphs-pinctrl",
-> +		.data = &c3_periphs_pinctrl_data,
-> +	},
-> +	{ },
-
-No comma for the terminator.
-
-> +};
-> +MODULE_DEVICE_TABLE(of, c3_pinctrl_dt_match);
-> +#endif /* CONFIG_OF */
-> +
-> +static struct platform_driver c3_pinctrl_driver = {
-> +	.probe  = meson_pinctrl_probe,
-> +	.driver = {
-> +		.name = "amlogic-c3-pinctrl",
-
-> +		.of_match_table = of_match_ptr(c3_pinctrl_dt_match),
-
-Drop the rather problematic of_match_ptr().
-
-> +	},
-> +};
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 6 ++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                      | 2 ++
+ 2 files changed, 8 insertions(+)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.7.4
 
