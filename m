@@ -2,282 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 671D174A9C8
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jul 2023 06:12:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24F2274AA53
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jul 2023 07:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232502AbjGGEMQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jul 2023 00:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49850 "EHLO
+        id S232201AbjGGFU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jul 2023 01:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231367AbjGGELk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jul 2023 00:11:40 -0400
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2090.outbound.protection.outlook.com [40.107.117.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E617271B;
-        Thu,  6 Jul 2023 21:09:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TttV+IB56N8VMTpPADA/irKE1bu9mM7BmNQvIUlOz4dJ4kfFOzfsyPGlOVOJRxYJTP/U7HtseEqXqy1GN8p+qy/exJndfhnOw+tJU72urSEA//cXYih25H6ljoJxC1Se3DJcIe/apEF3nX0savtkfZFGWWw3jrJBAp6FjhqoUYWPal9C1D2TdFrKW1nn2+OtMqfSfKtjx9hnwvGAjs1MjfGeIdcCC05+CtwhnVoa/9OCm0DUnOzU+TO6kpO3Mw62g/gxkBIgx32A9fbTQuQ2644NEFTWP28mb2+hKoxUwO9vAXBIaA62zYcKKjiowf312X8Lod46DtC3osYU6JwwNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B66F1EcxhHk+U58MKSvVI+KwsTDmMosCkKc6mK/cpRw=;
- b=nYJT7YcYbrU9hEylJm7byXE1bm27h4yHD0rrgMaqDVZEYNcbn2TyJJ1kGXIc7yNooKExHBJjc8J3/0ouR32jL/eN/d4WhLwJTpEijEQsEzd2nqFpQ6ADOlxc50pBcYfI2s9EIo+bnmH/9W3+U2Bix4TjbNrNdkU+i9XUlAra0v+VFpjvgUvJ45eNIgOAl5vpesyp64ecTehzCQ1J9rCaYXVJ6ZArt+oOQuaKJepEJ1NojkvX590iavgVb/dp6JST9Z0O9h58VfTidU5ubqW4vvxRvWCUAOgR05LwebYes0X75faUZTVRzlL+ODx4a2VT21HwHKPDHfoSDimpO5fzCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B66F1EcxhHk+U58MKSvVI+KwsTDmMosCkKc6mK/cpRw=;
- b=WPt9AdH6aX9swMGDKiny2nnAPL7jvLwpWOxE8gNuiO+liXU959sIFx4NYnsZ1g+b7CLAOk41BdBL3plh4A533D2r8OR+BT3oO5/jfdiNMfXz94zbVvyKVxnQh2YXNKGN8ThXc0AKilt83eM2c214vRTNhgm5TqI3Kcq6z/WhYYnhq3gI/2FG2jYMGNnwqE0tf6qI4pdoD5ZUSt3ldbPSxHRHvV7r+xfxGEK7DcgK9X3QK5WjxQtjudzuIPfNDTB72OrKBvWchYuaUwtwwwX/4wfeQvoO7qFfyWEt8Pg1fZY3OCyx2MZP98gXvjdcZMY/r1mSxGqSAT1bk2rvUE9Jrg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from KL1PR03MB7221.apcprd03.prod.outlook.com (2603:1096:820:cb::11)
- by TYZPR03MB5215.apcprd03.prod.outlook.com (2603:1096:405:5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.25; Fri, 7 Jul
- 2023 04:08:07 +0000
-Received: from KL1PR03MB7221.apcprd03.prod.outlook.com
- ([fe80::66e9:429b:7b34:639a]) by KL1PR03MB7221.apcprd03.prod.outlook.com
- ([fe80::66e9:429b:7b34:639a%5]) with mapi id 15.20.6565.016; Fri, 7 Jul 2023
- 04:08:06 +0000
-Message-ID: <508344ff-6cb7-0658-89ae-c6873079e1b3@amlogic.com>
-Date:   Fri, 7 Jul 2023 12:07:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 2/2] pinctrl: Add driver support for Amlogic C3 SoCs
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        neil.armstrong@linaro.org, khilman@baylibre.com,
-        jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230706114522.2490655-1-huqiang.qin@amlogic.com>
- <20230706114522.2490655-3-huqiang.qin@amlogic.com>
- <ZKazwMpmsNzBuWA7@smile.fi.intel.com>
-Content-Language: en-US
-From:   Huqiang Qin <huqiang.qin@amlogic.com>
-In-Reply-To: <ZKazwMpmsNzBuWA7@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TY2PR04CA0012.apcprd04.prod.outlook.com
- (2603:1096:404:f6::24) To KL1PR03MB7221.apcprd03.prod.outlook.com
- (2603:1096:820:cb::11)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR03MB7221:EE_|TYZPR03MB5215:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9204bd0-7a4f-478b-601c-08db7e9fc41f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JhDhgdnkX1WvcnYUhbM+meg2S3TUh+wdh+QUC8x6vmD67ZszMltoScMoqCICBQUKoRQKFAy1FD6TzsLLGEY0bbeBNbzjNBjEtz8hz5lnPXLl6pP2NWaMbK8QhhU1NexOe5smsgj/42mDg9SQGvbIf0IOKTxolG0iW+QKeAl3RyDgSBQDQG2i4/s7U1b80K9YgsNvM986rxjnlCVAhGiDEsuKBDmmYyzDD+9A4T7EFksdAEH+H61bJ8YaigYKzO81hMViqIn2AITLAeXpAOkqoVsDm/tU/A1sYN7sn/+xqARjFJsGWazRaxP1rP6RexTtVuobU/0KKvJkBACCeRGtdWPo/+hRqwZOnTxmhxGi6NIbRRdV0nn6ZwBTX5YAUjGOwWaUu8LoypztBNlflf8jODgcY/kwHKoGnzOAkoAqJNw3cRq8C1i2LgWx72/veoahnk13KDCUmHfo1K9cxj0Xl4Ub+yxyFyaJnEPSGUg9H/LMI1nCcsCKLIZ9py7FHzuDNCzQcW8MH18ugLoDS7Fdh36ocdBkLzumaUIWAO7SqifQgNWAnre0zudFxAPfjBHX2KSZkILqs/X5kPOTT28XCiu5mp/JJVT5O4rJbXtQZd/db1lumMd1CL4linVSTJsAFUaFo6EyeV0eAuLf2Bwb9GHpPqg7qgKB+Fj5XXmNGXmZEmfkQOAxNOQeO1ANpFTfJjVZn98BxCkeoc/BWOPnk2T18K0viv08ZlIA6mnH0sE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR03MB7221.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(6029001)(4636009)(136003)(396003)(346002)(376002)(39850400004)(366004)(451199021)(2616005)(2906002)(83380400001)(66476007)(66556008)(6916009)(4326008)(6486002)(66946007)(316002)(52116002)(6666004)(478600001)(5660300002)(6512007)(26005)(6506007)(44832011)(186003)(53546011)(7416002)(41300700001)(8936002)(8676002)(38350700002)(38100700002)(36756003)(31696002)(86362001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UUxIQ3Fnc214VW93eVJjMkhJeExYNnZhWmpIWTdTRTJBdnliWjQ5R0c1TEE0?=
- =?utf-8?B?b3ZYR0Myd3pzOVF5WGNGVVRXZzB5OC9ZRWJGU1hLelBaUm1PTEg3RW16Nkxk?=
- =?utf-8?B?NVQ4OE90OHIxUndxdUs2Y2U1TFg2Q0VnNzFlcTdHSGZrTzZweE9zdWJQV0xl?=
- =?utf-8?B?TC92NW4vekU0cUZjUmQ2TWtONTNIOU83QTAxSnhYVXBKUWIxWXY5cW9kTHJE?=
- =?utf-8?B?dkQwdXNyaXh5OTk3ZnNCbWY1clRYVUxoWmNZQml5NS9Ib2x4YWFmU2FJTk9C?=
- =?utf-8?B?a0xOQVYzNTdPc0NjMzFlVnVPeVRwZlB4ZG1aWGJaVUJBQS8xZkRkbzZtUS9D?=
- =?utf-8?B?UmJXSzlmWkJ5MDZCVnE5MlkvemhYTHhCWE4yMG9Lbzh3UGROanlFRWhBRXF0?=
- =?utf-8?B?RnpTN2ZHdUc2VzNEUHpiTDhPR3hicVo0STVRcWd0MnJyaSsrTEhWcTladnd1?=
- =?utf-8?B?aVhFdk9hYjJoYjluY1dCQmdzZkhCeXlXRFJKT3AyYlRoQ21xUWxXWTRMTjNa?=
- =?utf-8?B?blJqN0VYZit2NW5WZ2MxR1RGMXZ5T3lKWGg5REovWTF1K0Nnc0dqTzVWY0R3?=
- =?utf-8?B?SXlWM2RMSUpGdU1ITi9rRms0Ync4dUpyRzNOVGJMY2xoTUZDakk2VGpFZzVR?=
- =?utf-8?B?WElVNGl4Zi9YaC9ocHYvNHRNNDJpWHJZTWx5T1loczlaa2xCYjBpYVpXdU16?=
- =?utf-8?B?RG9LQkc3ZkFReG9ldFY0cEJPdzdsQ0hpSnpxRUdvNlpPaTlsdGNCT1lqcE5X?=
- =?utf-8?B?cW55Z0JOWmJYdlIxTk5TTDNkMnorNmxDMmQ2aG9BMFVGWDF6TVdobU5SOXFa?=
- =?utf-8?B?SWNkTVNSeGtlditucVVlREZvVUFDU014cWZsSlAxNnNpMUM0d0NEaVRncVZC?=
- =?utf-8?B?dTZHeDllNkd6YzFzMnIxc0NJeStXUlU5NHFabldVSTRpd0VmNXNsTEdGdnEr?=
- =?utf-8?B?eDAzZU0wM3VQL3UvSDltWGpuZUhDR2tvUTRNSThQK1gxTkhZb1hndzllSEkr?=
- =?utf-8?B?NGMwaDI3TEo1dmdHdVV5OEU5OUw3UTgvb05QbFlTaVZyVll0UEh2TXNYSTBw?=
- =?utf-8?B?d1c5NzVuMGNqd0UzSHpobmtzbXJrUkhnbXpmMzJkK3BzN1ZzRVF2WXpUejBQ?=
- =?utf-8?B?Mkg0eVJMbGRTRlBXenhSOTFTVzZwbXE0SGZDcGdjdHR4aEhNZzgwcUcwbjhU?=
- =?utf-8?B?NG5OOXkyQkZhaVhuWjV5V3g5WkdXbTBOK3FSRE10clJySjZwT1dCNGN4Q2FD?=
- =?utf-8?B?ZTZsYnZNK05BQmdlL0xOQSsrQTk5U2s0YVJLMlYwTTdmKzNEVWFpdW1sMXQ5?=
- =?utf-8?B?SUF0VXd5MTlOTnlqdDhPR1pGTjdUWUxITzlVMUV4aGxSamdnaTIvYm8zTFl6?=
- =?utf-8?B?ejNCNFRCZkNtMFM4M04vQ1ViRyt1UVNwYnI2T0xsMlBST3IzUHREVGVZWmYv?=
- =?utf-8?B?bXUxY3orWkhOcFh2SzVtblZxQUh1bEtvcmg3NlZISk5hRlhnTEpGcWpWSFlt?=
- =?utf-8?B?TEhQZ0IrUEZvQ3ViUk85a2R1QkdZZFVWdHNLR20rS1Vud1QzaDVzUW45dXBG?=
- =?utf-8?B?L1BVcEdDOHh2eDZUUkczZHVmTktwS3lrSVd3aGlubmZZM3VFbHJXdjBrb0xT?=
- =?utf-8?B?bFc1QlFGL2ZnOFMyNHFPd2d1UnlTbGpLam00Szl3TXAvM3JTTWZudVN3RUZz?=
- =?utf-8?B?M3hQOWJKQXNwOWUwYS9MSXZNS01LNWs0cVU3WnM5Sm9uc0VGWDc4UWZXR2hu?=
- =?utf-8?B?VjRGWlRkMHNEYld0U2xDSkMrRS82REpSTGxXUVhLanVSOEVPbmxJTUR3QkpT?=
- =?utf-8?B?MEJnM014Ui9Ja2p2bGRScElrMkZ5aHN2QUVCZTN3Ym1HcGkwVmVQKytmcGxI?=
- =?utf-8?B?SG5zWTdqVjBxdmQ3UjZGZEEwcklXeFhhN2JWL0RwV1ZvblJHVUZmT1E4Vk9z?=
- =?utf-8?B?ZTdsU2E0SkRkNkU2eGFyTFNVMmJ5bktveWFBZmFkd3R6UEJQNmdUVVVLS3lF?=
- =?utf-8?B?TXc3RCtOMWRqaXNtUStYUVFrVjNWTEQvVDkydFNpM1EySi9GVkduODYrZXF2?=
- =?utf-8?B?SG1iMnN3RzJ1ZTVjRWF0bG9SdFN5Wm5PTTl3OXpNbjdqZlNZR2xheU5iQ01r?=
- =?utf-8?B?VkNHZkl5c0lBMUQrSTRKWWVFY3R6c0c2b3FNbUxadVVCN0ZHbVUvOG5wQjRD?=
- =?utf-8?B?N0E9PQ==?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9204bd0-7a4f-478b-601c-08db7e9fc41f
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR03MB7221.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2023 04:08:06.2592
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3gwKenrljWCQKMO/haa2/UnSD3VN6jZrTZ8R+p26jxldP9T2MkOL5t+7Pg5cTUHOOFu3i8W5pust+9FNzXTTCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB5215
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229529AbjGGFUZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jul 2023 01:20:25 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5351171D;
+        Thu,  6 Jul 2023 22:20:23 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3673V1H1002161;
+        Fri, 7 Jul 2023 05:20:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=Uk9qVLF1JBzwJ+a7KyImaFRK1wdkQWj32AIwwKSnDCA=;
+ b=OYCARzJz7+8aV+N28d3N4g9mtqgmo+Czk1lqWmy9vejj2SUClQGE3a7V8DngbITtT8Vo
+ 44h9eXNzGxip63jg5UCf1/t7GikS9uolErTaT69S0AWD8H0v3MMZOdbOqIbbLVMKcm4V
+ ddgwP72GWuf28U6HgsSCsKJReOTQM6pGKITZNuS09rGgBSJE3+oL0X0nFDGGaainwGkc
+ HJdOm3EYMQXN3HXymUj5pL95Caa+yPJbNQgEoxwKFLB+GEGUkTYJVIoq9U4Yv8nhVOA2
+ Bv75WgurNmxftQj89G29KsXij2tl2qPbAOPH4ZiQSfLD9ba2QCDkTmRC+62/O/UjsnJe gg== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rnb5a3wck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Jul 2023 05:20:19 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3675KG9s029553;
+        Fri, 7 Jul 2023 05:20:16 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3rjd7kp6yq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 07 Jul 2023 05:20:16 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3675KF5v029547;
+        Fri, 7 Jul 2023 05:20:15 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3675KFtS029546;
+        Fri, 07 Jul 2023 05:20:15 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 138574EF7; Fri,  7 Jul 2023 10:50:15 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH v3 0/4] Add pinctrl support for SDX75 PMICs
+Date:   Fri,  7 Jul 2023 10:50:05 +0530
+Message-Id: <1688707209-30151-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: -NwC9BIXU-lYHgKG_fpCYN8R4TAxpMAj
+X-Proofpoint-ORIG-GUID: -NwC9BIXU-lYHgKG_fpCYN8R4TAxpMAj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-07_02,2023-07-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxscore=0 impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=822
+ malwarescore=0 lowpriorityscore=0 clxscore=1015 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307070048
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy Shevchenko,
+Hi,
 
+Changes in v3:
+ - Corrected the versioing in this version of patch series.
+ - Keeping the Reviewed tag as there is no change in the patch.
+ - Updated the patch series subject.
 
-On 2023/7/6 20:29, Andy Shevchenko wrote:
-> 
-> On Thu, Jul 06, 2023 at 07:45:22PM +0800, Huqiang Qin wrote:
->> Add new pinctrl driver for Amlogic C3 SoCs which share the
-> 
-> a new
+Changes in v2:
+ - Link to v2 series [1] (Added because of versioning mismatch).
+ - Breaking the original series [2] into smaller series.
+ - Collected reviewed tag from Krzysztof.
 
-Okay
+[1] https://lore.kernel.org/all/1688650209-25119-1-git-send-email-quic_rohiagar@quicinc.com/
+[2] https://lore.kernel.org/all/1688395346-3126-1-git-send-email-quic_rohiagar@quicinc.com/
 
-> 
->> same register layout as the previous Amloigc S4
-> 
-> Missing period at the end.
+Thanks,
+Rohit.
 
-Okay
+Rohit Agarwal (4):
+  dt-bindings: pinctrl: qcom-pmic-gpio: Add pm7550ba support
+  dt-bindings: pinctrl: qcom-pmic-gpio: Add pmx75 support
+  pinctrl: qcom-pmic-gpio: Add support for pm7550ba
+  pinctrl: qcom-pmic-gpio: Add support for pmx75
 
-> 
-> ...
-> 
->> +config PINCTRL_AMLOGIC_C3
->> +     tristate "Amlogic C3 SoC pinctrl driver"
->> +     depends on ARM64
->> +     select PINCTRL_MESON_AXG_PMX
->> +     default y
-> 
-> This default seems a bad cargo cult. Why ARM64 kernel should have all them be
-> opt-out, instead of opt-in? Shouldn't this be a distro problem?
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 6 ++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                      | 2 ++
+ 2 files changed, 8 insertions(+)
 
-The Kconfig structure is as follows:
-
-menuconfig PINCTRL_MESON
-	tristate "Amlogic SoC pinctrl drivers"
-	depends on ARCH_MESON || COMPILE_TEST
-	...
-
-if PINCTRL_MESON
-...
-config PINCTRL_AMLOGIC_C3
-	tristate "Amlogic C3 SoC pinctrl driver"
-	depends on ARM64
-	select PINCTRL_MESON_AXG_PMX
-	default y
-
-endif
-
-When ARCH_MESON is not selected, all pinctrl drivers of Amlogic will not be compiled by default
-
-> 
-> ...
-> 
->> +     MESON_PIN(GPIO_TEST_N)
-> 
-> Is it real one?
-
-Yes, it's real GPIO and supports interrupts, similar to Amlogic S4 SoC
-
-> 
->> +};
-> 
-> ...
-> 
->> +     /* Bank A func6 */
->> +     GROUP(spi_a_mosi_a,             6),
->> +     GROUP(gen_clk_a4,               6),
->> +     GROUP(clk12_24_a,               6)
-> 
-> Leave trailing comma here as it's not a terminator.
-
-Okay
-
-> 
-> ...
-> 
->> +static const char * const i2c2_groups[] = {
->> +     "i2c2_sda", "i2c2_scl"
-> 
-> Ditto.
-
-Okay
-
-> 
->> +};
->> +
->> +static const char * const i2c3_groups[] = {
->> +     "i2c3_sda_c", "i2c3_scl_c",
->> +     "i2c3_sda_x", "i2c3_scl_x",
->> +     "i2c3_sda_d", "i2c3_scl_d"
-> 
-> Ditto.
-
-Okay
-
-> 
->> +};
-> 
-> ...
-> 
->> +#ifdef CONFIG_OF
-> 
-> Drop this ugly ifdeffery.
-
-Okay
-
-> 
->> +static const struct of_device_id c3_pinctrl_dt_match[] = {
->> +     {
->> +             .compatible = "amlogic,c3-periphs-pinctrl",
->> +             .data = &c3_periphs_pinctrl_data,
->> +     },
->> +     { },
-> 
-> No comma for the terminator.
-
-Okay
-
-> 
->> +};
->> +MODULE_DEVICE_TABLE(of, c3_pinctrl_dt_match);
->> +#endif /* CONFIG_OF */
->> +
->> +static struct platform_driver c3_pinctrl_driver = {
->> +     .probe  = meson_pinctrl_probe,
->> +     .driver = {
->> +             .name = "amlogic-c3-pinctrl",
-> 
->> +             .of_match_table = of_match_ptr(c3_pinctrl_dt_match),
-> 
-> Drop the rather problematic of_match_ptr().
-
-Okay
-
-> 
->> +     },
->> +};
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-> 
-
-
-Best Regards,
-Huqiang Qin
+-- 
+2.7.4
 
