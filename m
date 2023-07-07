@@ -2,75 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 027C574AB2C
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jul 2023 08:35:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 282EA74ACB5
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jul 2023 10:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232076AbjGGGfG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jul 2023 02:35:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38282 "EHLO
+        id S232896AbjGGIUz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jul 2023 04:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232079AbjGGGe7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jul 2023 02:34:59 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34B01FFB
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Jul 2023 23:34:30 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-993d1f899d7so23236266b.2
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Jul 2023 23:34:30 -0700 (PDT)
+        with ESMTP id S232795AbjGGIUy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jul 2023 04:20:54 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233F31FEA
+        for <linux-gpio@vger.kernel.org>; Fri,  7 Jul 2023 01:20:50 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-314417861b9so1633717f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jul 2023 01:20:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688711669; x=1691303669;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lo9Ybkp8C7hyjxxxAW7ckg0KRs9g3goLaPeETqx3qFc=;
-        b=roioZ0eYvwTT7tPzv5TyxFc/Ekjoo/kOdQ8i6mdJzkYNlB7+eY0d2uGCC/Hse9ujFg
-         5PMz/RRUmb2OORgU9ftSLxbqkbQbX8WHM0IdjreZyMNIz4u+g06CdggLv4FZvhVf9UDz
-         7Zsy19b8HgsiW/qYZ1aoa9xeRnBGMDYGT+E+t8NzzW3fYB4GhPEeSz10rRCakKZtPwqQ
-         eRsCfqvgQmK00hC+hAXc1HmwnxuNs61Epuegn9DMTBSeArGqbF4UcL4N+jOhb0A0j73c
-         3K9xcAriOUVxYdhpPCZyR/giaoafNyCWEN8q/Gvgcyz8c1xq7lA4hV+RzDIPb2dCZv2f
-         13sg==
+        d=linaro.org; s=google; t=1688718048; x=1691310048;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P7nX8phUtgvJlXBdE7HbRkDLu02J23oMaWSNoummNpM=;
+        b=ZvRIDUsv9vIYR3vOfIKZHZ/QP+RFnql63YTQ2nv/Djpc5JuPK9rESNbVRWm4JJB6Hw
+         kcxszPOe05wTw7dGH+e55op5+Lr9kOqpXCsbic8MTApQWi5qmCy5fQDI/Xo2MRKTRByh
+         FOhDdF54NLDI8XZDEM0Co03nzublpIdqEbZhkFNvP9vIkM4dPSASny6nALE5HEU6jsLm
+         ksl64aDAdJG5c3N9TsdmZqKF5riLzoXId8iPug1/hJaIJdM9upbbnKUZiNfOK63FHvz7
+         /KH6Ss2y7OAGJ17mySEv4H1UoCYj9Wdgdq8ouvYEXgh7vdJ+dIxAsZYU/TDqUXryYE4U
+         u4PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688711669; x=1691303669;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lo9Ybkp8C7hyjxxxAW7ckg0KRs9g3goLaPeETqx3qFc=;
-        b=VFESHfiryJmtvt6bCU5b2YwZOTUgzO22TGs3kMwziPBZdJC/2eNr+5ZuMwIhJQPG6j
-         gYxnfUH8i3UsqJr3lL/RxK25A7SqWWLrSf9+8r6trtNei/l8qGrGyEb53fb5Z5GdhT9Y
-         hhrjB2RdvrbwfFPTqO7n9iwi+jViRbm5r++3LJ56VieEg834tzMWjJBhpBwThQg3Euhp
-         i/mcGbePtOdoBKG1t1J/KlArlCVUzBl5J4MEBmkOT2VJe+A7hGILPuPvWjEtsEjOu4qZ
-         OabiZFh+IEGIsqGwQz3Xjwf3i6ZVhpNd+GVM+X4AtMTyFmkM5H/FLvZcpZyuxa2jV6jx
-         zL6g==
-X-Gm-Message-State: ABy/qLaZA6LNWj9g7jhgMG0H/PFXGSu6D4VA0bU2pXSoIJ5jm2u9EG7f
-        zaOeZRaWpsVISWT89i5t/o/4vg==
-X-Google-Smtp-Source: APBJJlF2VOmcYgfChy7bMAqvwhS2dCJYj3prVbUZDw9t+pJQ45oDeOR9Pccv8izstFNC8DH9mX8oJg==
-X-Received: by 2002:a17:906:7a08:b0:974:1ef1:81ad with SMTP id d8-20020a1709067a0800b009741ef181admr3494616ejo.4.1688711669248;
-        Thu, 06 Jul 2023 23:34:29 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id y23-20020a170906471700b00993928e4d1bsm1721167ejq.24.2023.07.06.23.34.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jul 2023 23:34:28 -0700 (PDT)
-Message-ID: <e9b0b9ea-4871-5fec-b859-aebc1a0e6372@linaro.org>
-Date:   Fri, 7 Jul 2023 08:34:26 +0200
+        d=1e100.net; s=20221208; t=1688718048; x=1691310048;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P7nX8phUtgvJlXBdE7HbRkDLu02J23oMaWSNoummNpM=;
+        b=Py/7xiRRefnnluWScoPNLmeACjsSChLFDm5OldLlJIs1NsOj1MZBzwaoxVezMpa9+A
+         svNHV18Y0PRqQKFyWuoaPbYiT6fmfCX7xcZMEym9MsnyLKekWfMTByn0I6ussmdciVJ7
+         9/xPWeLe+DNGmrfN7ZKnr/Qntgp+V0ULSV2JV1D6ACF5cMzA+2qKVeNEueD8Y3+JPaRN
+         oUfXwntm1Jfum/CjYziBenI7uzia6vqlJj5A6cS3CDAhFT9l/7CUt/ASGlFGS/4l5B2a
+         jkLwUXI2QnxWpXm+NLDns0OCLkOVIuYyorehgCXUrT4WcE2JPU1X9dGrYxhx0Oy7GXzh
+         jitg==
+X-Gm-Message-State: ABy/qLaxtPqdsgU1IwMc1h4IVA6uve9JWm9v8XnniN2GaG3wtkG7dUQR
+        6Z55Q716f3fURZTZMM7fvTdPbg==
+X-Google-Smtp-Source: APBJJlHuX5vVM/UKRZ/aziETXd4ETuHeeEBeYfXppfJI2XzCYX/DyG4sM35yPGMIok5s9ak2Lm7IHQ==
+X-Received: by 2002:adf:f711:0:b0:30e:3da5:46e5 with SMTP id r17-20020adff711000000b0030e3da546e5mr3619353wrp.59.1688718048582;
+        Fri, 07 Jul 2023 01:20:48 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id a5-20020adffb85000000b00313e4d02be8sm3824395wrr.55.2023.07.07.01.20.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jul 2023 01:20:48 -0700 (PDT)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH v2 0/2] dt-bindings: pinctrl: amlogic,meson-pinctrl-common:
+ add missing properties
+Date:   Fri, 07 Jul 2023 10:20:43 +0200
+Message-Id: <20230707-topic-amlogic-upstream-pinctrl-fix-bindings-v2-0-2160060446d7@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v3 1/4] dt-bindings: pinctrl: qcom-pmic-gpio: Add pm7550ba
- support
-Content-Language: en-US
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <1688707209-30151-1-git-send-email-quic_rohiagar@quicinc.com>
- <1688707209-30151-2-git-send-email-quic_rohiagar@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1688707209-30151-2-git-send-email-quic_rohiagar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+X-B4-Tracking: v=1; b=H4sIANvKp2QC/52NQQ6DIBREr2JY9zeIVtqueo/GBSLiTxTIh5o2h
+ ruXeoSuJm8mmbezaAhNZPdqZ2Q2jOhdAXGqmJ6VswZwLMwEFw2XvIPkA2pQ6+JtyVeIiYxaIaD
+ TiRaY8A0DuhGdjaDFIFvdNfIqBSuPgUzZD9uzLzxjTJ4+h3yrf+1/nq0GDpNqWzFelDK3+rGgU
+ +TPnizrc85fDZYshucAAAA=
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1669;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=FyjsoTudixydC0nNMdjfVMOeLJOWeJk3gdhNn8W9tE4=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBkp8revvGyh8h+u4H2kef4fC9pa+RedPwKKGzXjMPa
+ X3zF+TSJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZKfK3gAKCRB33NvayMhJ0SUdD/
+ 9MuupduiPkUIemehndLwaP/EAV+x1a1xZQnKh3dtyAmELloWg7peQif3zlirC5c1BdctZJNfUF7lWe
+ cSk3/9cFZdd+0FJ/ANgi2kadN+qJ6utMiOO9Na6SzHGnc/JHf68s9963iqzJ7wICkhMK88pz47r/ys
+ tMKZWoqiv/Fr47twhZH0fLTf7OMslDxgDrWqtCcX5o4aWE+sYwTzmQkhJbsEx03LzlVvgX6isPa1Zq
+ 4kA1WIRF1IqvMXZo/PSDWaADi3njfrRPUuEFU1a0cIYMell5xK46CGFrLaN82s9o9Gd8IwBaeK2kNt
+ xEHi4UwBMGP8IwuVca0nQG8UmWa4qbS+kQ9pDMI9nt0dlDslO840gQrh5MAmm/2udaBCsG+JdyUzLY
+ M/52rnAqJMrOPRj/xQkbeIyWOSn5BMpKFnErnU8cTXYWDbQ7bJrOqYrz+SgDIcsjfKk8iM94s3lA3E
+ N8SSJxhx63/GdkI7ztBpkmdPI0F0ouBjPJxf8C11QqDZIE/4Z+HyWdfOVxXn2D2FhU2Rf+QBaFrSOa
+ dUOB9VDTVVeyOamlUfOwIe66aErXGXFvLgsgVmM1cNmtTRMLVlGZQJPB3NICdlq56bRqk67syeG0OU
+ uLi17EtIDg+GERRxYKzcIuEJ77PFMa6hdwUzZDVTvK6IPkVBz21+lNeqIPRQ==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -79,16 +99,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07/07/2023 07:20, Rohit Agarwal wrote:
-> Add support for the pm7550ba GPIO support to the Qualcomm PMIC GPIO
-> binding.
-> 
-> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
-> ---
+The amlogic DT uses gpio-line-names and gpio-hog, add those
+to the yaml converted pinctrl bindings.
 
+This will fix the following dtschema check errors:
+arch/arm64/boot/dts/amlogic/meson-sm1-bananapi-m5.dtb: pinctrl@40: bank@40: Unevaluated properties are not allowed ('gpio-line-names', 'usb-hub-hog' were unexpected)
+arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb: pinctrl@4b0: bank@4b0: Unevaluated properties are not allowed ('gpio-line-names' was unexpected)
+..
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Changes in v2:
+- Added review tags
+- Moved line-names out of common and added min/max items for each bindings
+- Link to v1: https://lore.kernel.org/r/20230706-topic-amlogic-upstream-pinctrl-fix-bindings-v1-0-fa442d5aae91@linaro.org
+
+---
+Neil Armstrong (2):
+      dt-bindings: pinctrl: amlogic,meson-pinctrl: allow gpio-line-names
+      dt-bindings: pinctrl: amlogic,meson-pinctrl-common: allow gpio hogs
+
+ .../devicetree/bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml      | 4 ++++
+ .../devicetree/bindings/pinctrl/amlogic,meson-pinctrl-common.yaml  | 7 +++++++
+ .../bindings/pinctrl/amlogic,meson-pinctrl-g12a-aobus.yaml         | 3 +++
+ .../bindings/pinctrl/amlogic,meson-pinctrl-g12a-periphs.yaml       | 3 +++
+ .../devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-aobus.yaml  | 4 ++++
+ .../devicetree/bindings/pinctrl/amlogic,meson8-pinctrl-cbus.yaml   | 4 ++++
+ 6 files changed, 25 insertions(+)
+---
+base-commit: e1f6a8eaf1c271a0158114a03e3605f4fba059ad
+change-id: 20230706-topic-amlogic-upstream-pinctrl-fix-bindings-c2b74c637872
 
 Best regards,
-Krzysztof
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
 
