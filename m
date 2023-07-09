@@ -2,250 +2,677 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6A6074BB7D
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jul 2023 04:53:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD85D74C876
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jul 2023 23:48:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230333AbjGHCxW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jul 2023 22:53:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53538 "EHLO
+        id S229441AbjGIVsb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Jul 2023 17:48:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbjGHCxV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jul 2023 22:53:21 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8141F1999
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Jul 2023 19:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688784800; x=1720320800;
-  h=date:from:to:cc:subject:message-id;
-  bh=Yf6l7UqT4OZ88SR752ybqJWpgNGgKohiDhDsyASoYFY=;
-  b=jVTHEOd0Qo85UdyRj+3hGKyxk4qSnYsHvvDJ24L/k6GIKoINnsePEOWE
-   NeTdpGSreR6YkT95Rr/iWyHHDrEgvmAuYMoU9jM4RS3Oro3H4Aww10cFo
-   QMyL99z+Mvfk5Z9+vrMSvOIgY+eu8VtzHZomltla3aRpGYyLn740h+3ms
-   je7zoivXxt5Z6ke+x+uWsDa8PD+e2/xLm4anrirrxPZwQBzx56c8WGHBa
-   Q3n68baw2T3q4eMO8f2OVQOq0FV9RAX+XnA98Wx01dslJpsAtBlgm72B+
-   k2kt8E/pjR1FkpPokfi/hM4UzJRRPN0AbZ9p6paDiVN80XbOvwNev1hMf
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10764"; a="364061566"
-X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="364061566"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2023 19:53:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10764"; a="790175988"
-X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="790175988"
-Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 07 Jul 2023 19:53:18 -0700
-Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qHy4U-0002Vm-0c;
-        Sat, 08 Jul 2023 02:53:18 +0000
-Date:   Sat, 08 Jul 2023 10:53:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 3bc551a3007a751a53bfba5b37fa16157f4fb861
-Message-ID: <202307081008.pFNw7HBJ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230064AbjGIVsa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jul 2023 17:48:30 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCAFE120
+        for <linux-gpio@vger.kernel.org>; Sun,  9 Jul 2023 14:48:25 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2b6f97c7115so56324141fa.2
+        for <linux-gpio@vger.kernel.org>; Sun, 09 Jul 2023 14:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688939304; x=1691531304;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SBr3pmqtFJ0mBgHUUMTs1QAvH5gPXD+Zu0MIiua0TDc=;
+        b=Ykfs96UVx4AdWvx6+BrUwdWVZYn6+reTEGJZ3oNUurA7amzeluWpisy57oj5knduxO
+         vxABXSzx2F7nPyz2TBllcF28zaP+dHm8MZX84W+yKla+sXJu/Dvsh7xipikGaLEfrN9c
+         gRbY33gzooKHvPLrhhmBE4pQFSUobt2sti0veOFn2dW/U2vFxj7e/4mJ1thspD45L/Jw
+         Vn8EiNpRIo6VfaQofZkukbmdqE28zJkIbovycBdrqG7LtoeuAmD5MywvG8+BFaQISFxl
+         cd2X8ocvKze6lGy4gQ2SFoDGtTmuwQqEqgo2p1ytju0fS7TKg1GcBS+c5Sb3gWXolZWj
+         e0MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688939304; x=1691531304;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SBr3pmqtFJ0mBgHUUMTs1QAvH5gPXD+Zu0MIiua0TDc=;
+        b=g2GI/VoD2wVZDLMkZf8jesyh78RluOO+YPEX2SjJE2MmRdd2kj7B9dX8TxC0+q2gaZ
+         RcMRAmd1TuVKui4QdNWEMYMq3AfPP9DLpgjo12pWeWPWBe3IxJ1V/0+zDq5KF7zmz9ZE
+         L2bS2SH9p9sjcy91u+JrbvCpSdhQukr9yDzDcpCIDta7d1927wGnwVTHV4Rpzus/zlNV
+         pbo+Hr8VYiuzrEDQk1oFSF0AFeTs8EXUnRoLP3patKnRrzJL5B9fytUoRmSyPr/TDr/a
+         Ow9WcH8WJpeH7k2/lyBQFOM9aL43j0E7r9kZFKI32AFuk3jBk4ijYWU1Jxac3kQQxCBN
+         GLDA==
+X-Gm-Message-State: ABy/qLYS56949dFg+ickAdANXijxq/LUGOqzN/wpY1Rm+yMBDBbB/UwS
+        Aadjd6xrXr3rXSTyjRWYc1L4wQ==
+X-Google-Smtp-Source: APBJJlHrDVuZizdmq9QzcXLhbnLwg1wobW1fIyufqm+mVm/Wj/b5W0ljPEVY0LZWy49YNatg0Uu83g==
+X-Received: by 2002:a05:6512:3707:b0:4fb:8df5:8919 with SMTP id z7-20020a056512370700b004fb8df58919mr7378890lfr.23.1688939303958;
+        Sun, 09 Jul 2023 14:48:23 -0700 (PDT)
+Received: from [127.0.1.1] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id x23-20020ac25dd7000000b004faf6a87d63sm1454243lfq.38.2023.07.09.14.48.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jul 2023 14:48:23 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 09 Jul 2023 23:48:19 +0200
+Subject: [PATCH v5] dt-bindings: MFD: Convert STMPE to YAML schema
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230709-stmpe-dt-bindings-v5-1-34a3d6ee1e57@linaro.org>
+X-B4-Tracking: v=1; b=H4sIACIrq2QC/4XOzwrCMAwG8FeRnq1sbffPk+8hHrIm3QLaSTuGM
+ vbudjsIIujxS/h+ySwiBaYojrtZBJo48uBTKPY7YXvwHUnGlIXKlM6MKmUcb3eSOMqWPbLvorT
+ aVA1ilYOqReq1EEm2Abzt1+a78ITbdd3fAzl+bDfPl5R7juMQntsLk1qnv65NSmZSubqA3DlnE
+ U5X9hCGwxA6sXKT/kvoRBDYHCtdkqnrL8L8JUwidOkQC41NkzcfxLIsL8v5GSdZAQAA
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee@kernel.org>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.12.3
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 3bc551a3007a751a53bfba5b37fa16157f4fb861  pinctrl: amd: Unify debounce handling into amd_pinconf_set()
+This converts the STMPE MFD device tree bindings to the YAML
+schema.
 
-elapsed time: 769m
+Reference the existing schema for the ADC, just define the
+other subnode schemas directly in the MFD schema.
 
-configs tested: 174
-configs skipped: 5
+Add two examples so we have examples covering both the simple
+GPIO expander and the more complex with ADC and touchscreen.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Some in-tree users do not follow the naming conventions for nodes
+so these DTS files need to be augmented to use proper node names
+like "adc", "pwm", "gpio", "keyboard-controller" etc before the
+bindings take effect on them.
 
-tested configs:
-alpha                            alldefconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r004-20230707   gcc  
-alpha                randconfig-r005-20230707   gcc  
-alpha                randconfig-r024-20230707   gcc  
-alpha                randconfig-r025-20230707   gcc  
-alpha                randconfig-r033-20230707   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs103_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                            hsdk_defconfig   gcc  
-arc                 nsimosci_hs_smp_defconfig   gcc  
-arc                  randconfig-r043-20230707   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   clang
-arm                         assabet_defconfig   gcc  
-arm                         axm55xx_defconfig   gcc  
-arm                         bcm2835_defconfig   clang
-arm                                 defconfig   gcc  
-arm                           h3600_defconfig   gcc  
-arm                       multi_v4t_defconfig   gcc  
-arm                       netwinder_defconfig   clang
-arm                         nhk8815_defconfig   gcc  
-arm                       omap2plus_defconfig   gcc  
-arm                            qcom_defconfig   gcc  
-arm                  randconfig-r026-20230707   gcc  
-arm                  randconfig-r032-20230707   clang
-arm                  randconfig-r046-20230707   gcc  
-arm                    vt8500_v6_v7_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r022-20230707   clang
-arm64                randconfig-r036-20230707   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r025-20230707   gcc  
-hexagon                          alldefconfig   clang
-hexagon              randconfig-r033-20230707   clang
-hexagon              randconfig-r041-20230707   clang
-hexagon              randconfig-r045-20230707   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230707   gcc  
-i386         buildonly-randconfig-r005-20230707   gcc  
-i386         buildonly-randconfig-r006-20230707   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230707   gcc  
-i386                 randconfig-i002-20230707   gcc  
-i386                 randconfig-i003-20230707   gcc  
-i386                 randconfig-i004-20230707   gcc  
-i386                 randconfig-i005-20230707   gcc  
-i386                 randconfig-i006-20230707   gcc  
-i386                 randconfig-i011-20230707   clang
-i386                 randconfig-i012-20230707   clang
-i386                 randconfig-i013-20230707   clang
-i386                 randconfig-i014-20230707   clang
-i386                 randconfig-i015-20230707   clang
-i386                 randconfig-i016-20230707   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r013-20230707   gcc  
-loongarch            randconfig-r035-20230707   gcc  
-m68k                             alldefconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5272c3_defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
-m68k                       m5475evb_defconfig   gcc  
-m68k                 randconfig-r015-20230707   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                            ar7_defconfig   gcc  
-mips                           gcw0_defconfig   gcc  
-mips                            gpr_defconfig   gcc  
-mips                      maltaaprp_defconfig   clang
-mips                        maltaup_defconfig   clang
-mips                 randconfig-r014-20230707   gcc  
-mips                 randconfig-r015-20230707   gcc  
-mips                 randconfig-r023-20230707   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r023-20230707   gcc  
-openrisc             randconfig-r011-20230707   gcc  
-openrisc             randconfig-r012-20230707   gcc  
-openrisc                 simple_smp_defconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                     akebono_defconfig   clang
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      cm5200_defconfig   gcc  
-powerpc                       eiger_defconfig   gcc  
-powerpc                       maple_defconfig   gcc  
-powerpc                   microwatt_defconfig   clang
-powerpc                    mvme5100_defconfig   clang
-powerpc                      ppc40x_defconfig   gcc  
-powerpc                       ppc64_defconfig   gcc  
-powerpc                      ppc6xx_defconfig   gcc  
-powerpc              randconfig-r001-20230707   gcc  
-powerpc                    socrates_defconfig   clang
-powerpc                  storcenter_defconfig   gcc  
-powerpc                     tqm8540_defconfig   clang
-powerpc                     tqm8541_defconfig   gcc  
-powerpc                     tqm8560_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r003-20230707   gcc  
-riscv                randconfig-r042-20230707   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r001-20230707   gcc  
-s390                 randconfig-r013-20230707   clang
-s390                 randconfig-r014-20230707   clang
-s390                 randconfig-r022-20230707   clang
-s390                 randconfig-r044-20230707   clang
-sh                               allmodconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                   randconfig-r003-20230707   gcc  
-sh                           se7724_defconfig   gcc  
-sh                             shx3_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r002-20230707   gcc  
-sparc                       sparc32_defconfig   gcc  
-sparc64              randconfig-r006-20230707   gcc  
-sparc64              randconfig-r031-20230707   gcc  
-sparc64              randconfig-r032-20230707   gcc  
-sparc64              randconfig-r034-20230707   gcc  
-sparc64              randconfig-r035-20230707   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r016-20230707   gcc  
-um                   randconfig-r026-20230707   gcc  
-um                   randconfig-r036-20230707   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230707   gcc  
-x86_64       buildonly-randconfig-r002-20230707   gcc  
-x86_64       buildonly-randconfig-r003-20230707   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r002-20230707   gcc  
-x86_64               randconfig-r006-20230707   gcc  
-x86_64               randconfig-r021-20230707   clang
-x86_64               randconfig-x001-20230707   clang
-x86_64               randconfig-x002-20230707   clang
-x86_64               randconfig-x003-20230707   clang
-x86_64               randconfig-x004-20230707   clang
-x86_64               randconfig-x005-20230707   clang
-x86_64               randconfig-x006-20230707   clang
-x86_64               randconfig-x011-20230707   gcc  
-x86_64               randconfig-x012-20230707   gcc  
-x86_64               randconfig-x013-20230707   gcc  
-x86_64               randconfig-x014-20230707   gcc  
-x86_64               randconfig-x015-20230707   gcc  
-x86_64               randconfig-x016-20230707   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r004-20230707   gcc  
-xtensa               randconfig-r011-20230707   gcc  
-xtensa               randconfig-r016-20230707   gcc  
-xtensa               randconfig-r021-20230707   gcc  
-xtensa               randconfig-r024-20230707   gcc  
-xtensa                         virt_defconfig   gcc  
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+This adds the missing GPIO bindings for the STMPE port expander
+and converts the existing MFD binding to YAML.
 
+I suppose Lee can merge this when he's happy with it.
+---
+Changes in v5:
+- Rebase on v6.5-rc1 meaning GPIO binding is merged
+  upstream and can be dropped.
+- Link to v4: https://lore.kernel.org/r/20230426-stmpe-dt-bindings-v4-0-36fdd53d9919@linaro.org
+
+Changes in v4:
+- Make the GPIO bindings a conversion: there were some old
+  text bindings for the STMPE GPIO, we now delete them as
+  part of the patch.
+- I expect Lee or the DT binding tree to pick both patches.
+- Link to v3: https://lore.kernel.org/r/20230426-stmpe-dt-bindings-v3-0-eac1d736e488@linaro.org
+
+Changes in v3:
+- Update to review feedback
+- Collected some ack/review tags
+- Link to v2: https://lore.kernel.org/r/20230426-stmpe-dt-bindings-v2-0-2f85a1fffcda@linaro.org
+
+Changes in v2:
+- Split off a separate GPIO binding
+- Updated the MFD binding according to feedback
+---
+ChangeLog v4->v5:
+- Rebase on v6.5-rc1
+ChangeLog v3->v4:
+- No changes.
+ChangeLog v2->v3:
+- Drop the required pwm properties already required by the
+  template pwm schema.
+- Add the number of PWM cells as const.
+ChangeLog v1->v2:
+- Split off the GPIO bindings to their own schema, as the old
+  bindings didn't even have any GPIO bindings. Put the GPIO
+  schema before this schema so we can use GPIO in the examples.
+- Drop nodename and pattern as STMPE is not a generic name.
+- Add maxItems to the resets.
+- Make wakeup-source just :true, as it is a generic property.
+- Move unevaluatedProperties for subnodes right before properties
+  as requested.
+- Name devices "port-expander" in the examples.
+- Use lowercase hex in line init.
+---
+ .../devicetree/bindings/input/stmpe-keypad.txt     |  41 ---
+ .../bindings/input/touchscreen/stmpe.txt           | 108 --------
+ .../devicetree/bindings/mfd/st,stmpe.yaml          | 297 +++++++++++++++++++++
+ Documentation/devicetree/bindings/mfd/stmpe.txt    |  42 ---
+ 4 files changed, 297 insertions(+), 191 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/stmpe-keypad.txt b/Documentation/devicetree/bindings/input/stmpe-keypad.txt
+deleted file mode 100644
+index 12bb771d66d4..000000000000
+--- a/Documentation/devicetree/bindings/input/stmpe-keypad.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-* STMPE Keypad
+-
+-Required properties:
+- - compatible               : "st,stmpe-keypad"
+- - linux,keymap             : See ./matrix-keymap.txt
+-
+-Optional properties:
+- - debounce-interval        : Debouncing interval time in milliseconds
+- - st,scan-count            : Scanning cycles elapsed before key data is updated
+- - st,no-autorepeat         : If specified device will not autorepeat
+- - keypad,num-rows          : See ./matrix-keymap.txt
+- - keypad,num-columns       : See ./matrix-keymap.txt
+-
+-Example:
+-
+-	stmpe_keypad {
+-		compatible = "st,stmpe-keypad";
+-
+-		debounce-interval = <64>;
+-		st,scan-count = <8>;
+-		st,no-autorepeat;
+-
+-		linux,keymap = <0x205006b
+-				0x4010074
+-				0x3050072
+-				0x1030004
+-				0x502006a
+-				0x500000a
+-				0x5008b
+-				0x706001c
+-				0x405000b
+-				0x6070003
+-				0x3040067
+-				0x303006c
+-				0x60400e7
+-				0x602009e
+-				0x4020073
+-				0x5050002
+-				0x4030069
+-				0x3020008>;
+-	};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+deleted file mode 100644
+index 238b51555c04..000000000000
+--- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
++++ /dev/null
+@@ -1,108 +0,0 @@
+-STMPE Touchscreen
+-----------------
+-
+-Required properties:
+- - compatible: "st,stmpe-ts"
+-
+-Optional properties:
+-- st,ave-ctrl		: Sample average control
+-				0 -> 1 sample
+-				1 -> 2 samples
+-				2 -> 4 samples
+-				3 -> 8 samples
+-- st,touch-det-delay	: Touch detect interrupt delay (recommended is 3)
+-				0 -> 10 us
+-				1 -> 50 us
+-				2 -> 100 us
+-				3 -> 500 us
+-				4 -> 1 ms
+-				5 -> 5 ms
+-				6 -> 10 ms
+-				7 -> 50 ms
+-- st,settling		: Panel driver settling time (recommended is 2)
+-				0 -> 10 us
+-				1 -> 100 us
+-				2 -> 500 us
+-				3 -> 1 ms
+-				4 -> 5 ms
+-				5 -> 10 ms
+-				6 -> 50 ms
+-				7 -> 100 ms
+-- st,fraction-z		: Length of the fractional part in z (recommended is 7)
+-			  (fraction-z ([0..7]) = Count of the fractional part)
+-- st,i-drive		: current limit value of the touchscreen drivers
+-				0 -> 20 mA (typical 35mA max)
+-				1 -> 50 mA (typical 80 mA max)
+-
+-Optional properties common with MFD (deprecated):
+- - st,sample-time	: ADC conversion time in number of clock.
+-				0 -> 36 clocks
+-				1 -> 44 clocks
+-				2 -> 56 clocks
+-				3 -> 64 clocks
+-				4 -> 80 clocks (recommended)
+-				5 -> 96 clocks
+-				6 -> 124 clocks
+- - st,mod-12b		: ADC Bit mode
+-				0 -> 10bit ADC
+-				1 -> 12bit ADC
+- - st,ref-sel		: ADC reference source
+-				0 -> internal
+-				1 -> external
+- - st,adc-freq		: ADC Clock speed
+-				0 -> 1.625 MHz
+-				1 -> 3.25 MHz
+-				2 || 3 -> 6.5 MHz
+-
+-Node should be child node of stmpe node to which it belongs.
+-
+-Note that common ADC settings of stmpe_touchscreen (child) will take precedence
+-over the settings done in MFD.
+-
+-Example:
+-
+-stmpe811@41 {
+-	compatible = "st,stmpe811";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_touch_int>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	reg = <0x41>;
+-	interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
+-	interrupt-parent = <&gpio4>;
+-	interrupt-controller;
+-	id = <0>;
+-	blocks = <0x5>;
+-	irq-trigger = <0x1>;
+-	/* Common ADC settings */
+-	/* 3.25 MHz ADC clock speed */
+-	st,adc-freq = <1>;
+-	/* 12-bit ADC */
+-	st,mod-12b = <1>;
+-	/* internal ADC reference */
+-	st,ref-sel = <0>;
+-	/* ADC converstion time: 80 clocks */
+-	st,sample-time = <4>;
+-
+-	stmpe_touchscreen {
+-		compatible = "st,stmpe-ts";
+-		reg = <0>;
+-		/* 8 sample average control */
+-		st,ave-ctrl = <3>;
+-		/* 5 ms touch detect interrupt delay */
+-		st,touch-det-delay = <5>;
+-		/* 1 ms panel driver settling time */
+-		st,settling = <3>;
+-		/* 7 length fractional part in z */
+-		st,fraction-z = <7>;
+-		/*
+-		 * 50 mA typical 80 mA max touchscreen drivers
+-		 * current limit value
+-		 */
+-		st,i-drive = <1>;
+-	};
+-	stmpe_adc {
+-		compatible = "st,stmpe-adc";
+-		st,norequest-mask = <0x0F>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/mfd/st,stmpe.yaml b/Documentation/devicetree/bindings/mfd/st,stmpe.yaml
+new file mode 100644
+index 000000000000..b77cc3f3075d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/st,stmpe.yaml
+@@ -0,0 +1,297 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/st,stmpe.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectonics Port Expander (STMPE)
++
++description: STMicroelectronics Port Expander (STMPE) is a series of slow
++  bus controllers for various expanded peripherals such as GPIO, keypad,
++  touchscreen, ADC, PWM or rotator. It can contain one or several different
++  peripherals connected to SPI or I2C.
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++properties:
++  compatible:
++    enum:
++      - st,stmpe601
++      - st,stmpe801
++      - st,stmpe811
++      - st,stmpe1600
++      - st,stmpe1601
++      - st,stmpe2401
++      - st,stmpe2403
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vcc-supply: true
++
++  vio-supply: true
++
++  reset-gpios:
++    maxItems: 1
++
++  wakeup-source: true
++
++  st,autosleep-timeout:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 4, 16, 32, 64, 128, 256, 512, 1024 ]
++    description: Time idle before going to automatic sleep to save power
++
++  st,sample-time:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 0, 1, 2, 3, 4, 5, 6 ]
++    description: |
++      Sample time per iteration
++      0 = 36 clock ticks
++      1 = 44 clock ticks
++      2 = 56 clock ticks
++      3 = 64 clock ticks
++      4 = 80 clock ticks - recommended
++      5 = 96 clock ticks
++      6 = 124 clock ticks
++
++  st,mod-12b:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 0, 1 ]
++    description: ADC bit mode 0 = 10bit ADC, 1 = 12bit ADC
++
++  st,ref-sel:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 0, 1 ]
++    description: ADC reference source 0 = internal, 1 = external
++
++  st,adc-freq:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [ 0, 1, 2, 3 ]
++    description: |
++      ADC clock speed
++      0 = 1.625 MHz
++      1 = 3.25 MHz
++      2, 3 = 6.5 MHz
++
++  adc:
++    type: object
++    $ref: /schemas/iio/adc/st,stmpe-adc.yaml#
++
++  gpio:
++    type: object
++    $ref: /schemas/gpio/st,stmpe-gpio.yaml#
++
++  keyboard-controller:
++    type: object
++    $ref: /schemas/input/matrix-keymap.yaml#
++
++    unevaluatedProperties: false
++
++    properties:
++      compatible:
++        const: st,stmpe-keypad
++
++      debounce-interval:
++        description: Debouncing interval in milliseconds
++        $ref: /schemas/types.yaml#/definitions/uint32
++
++      st,no-autorepeat:
++        description: If present, the keys will not autorepeat when pressed
++        $ref: /schemas/types.yaml#/definitions/flag
++
++      st,scan-count:
++        description: Scanning cycles elapsed before key data is updated
++        $ref: /schemas/types.yaml#/definitions/uint32
++
++    required:
++      - compatible
++      - linux,keymap
++
++  pwm:
++    type: object
++    $ref: /schemas/pwm/pwm.yaml#
++
++    unevaluatedProperties: false
++
++    properties:
++      compatible:
++        const: st,stmpe-pwm
++
++      "#pwm-cells":
++        const: 2
++
++  touchscreen:
++    type: object
++    $ref: /schemas/input/touchscreen/touchscreen.yaml#
++
++    unevaluatedProperties: false
++
++    properties:
++      compatible:
++        const: st,stmpe-ts
++
++      st,ave-ctrl:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        enum: [ 0, 1, 2, 3 ]
++        description: |
++          Sample average control
++          0 = 1 sample
++          1 = 2 samples
++          2 = 4 samples
++          3 = 8 samples
++
++      st,touch-det-delay:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        enum: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
++        description: |
++          Touch detection delay
++          0 = 10 us
++          1 = 50 us
++          2 = 100 us
++          3 = 500 us - recommended
++          4 = 1 ms
++          5 = 5 ms
++          6 = 10 ms
++          7 = 50 ms
++
++      st,settling:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        enum: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
++        description: |
++          Panel driver settling time
++          0 = 10 us
++          1 = 100 us
++          2 = 500 us - recommended
++          3 = 1 ms
++          4 = 5 ms
++          5 = 10 ms
++          6 = 50 ms
++          7 = 100 ms
++
++      st,fraction-z:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        enum: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
++        description: Length of the fractional part in z, recommended is 7
++          (fraction-z ([0..7]) = Count of the fractional part)
++
++      st,i-drive:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        enum: [ 0, 1 ]
++        description: |
++          current limit value of the touchscreen drivers
++          0 = 20 mA (typical 35 mA max)
++          1 = 50 mA (typical 80 mA max)
++
++    required:
++      - compatible
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/input/input.h>
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      port-expander@43 {
++        compatible = "st,stmpe2401";
++        reg = <0x43>;
++        reset-gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
++        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
++        interrupt-parent = <&gpio>;
++        vcc-supply = <&db8500_vsmps2_reg>;
++        vio-supply = <&db8500_vsmps2_reg>;
++        wakeup-source;
++        st,autosleep-timeout = <1024>;
++
++        gpio {
++          compatible = "st,stmpe-gpio";
++          gpio-controller;
++          #gpio-cells = <2>;
++          interrupt-controller;
++          #interrupt-cells = <2>;
++          st,norequest-mask = <0xf0f002>;
++        };
++
++        keyboard-controller {
++          compatible = "st,stmpe-keypad";
++          debounce-interval = <64>;
++          st,scan-count = <8>;
++          st,no-autorepeat;
++          keypad,num-rows = <8>;
++          keypad,num-columns = <8>;
++          linux,keymap = <
++              MATRIX_KEY(0x00, 0x00, KEY_1)
++              MATRIX_KEY(0x00, 0x01, KEY_2)
++              MATRIX_KEY(0x00, 0x02, KEY_3)
++              MATRIX_KEY(0x00, 0x03, KEY_4)
++              MATRIX_KEY(0x00, 0x04, KEY_5)
++              MATRIX_KEY(0x00, 0x05, KEY_6)
++              MATRIX_KEY(0x00, 0x06, KEY_7)
++              MATRIX_KEY(0x00, 0x07, KEY_8)
++              MATRIX_KEY(0x00, 0x08, KEY_9)
++              MATRIX_KEY(0x00, 0x09, KEY_0)
++          >;
++        };
++
++        pwm {
++          compatible = "st,stmpe-pwm";
++          #pwm-cells = <2>;
++        };
++      };
++
++      port-expander@41 {
++        compatible = "st,stmpe811";
++        reg = <0x41>;
++        interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
++        interrupt-parent = <&gpio>;
++        st,adc-freq = <1>;
++        st,mod-12b = <1>;
++        st,ref-sel = <0>;
++        st,sample-time = <4>;
++
++        adc {
++          compatible = "st,stmpe-adc";
++          st,norequest-mask = <0x0f>;
++          #io-channel-cells = <1>;
++        };
++
++        gpio {
++          compatible = "st,stmpe-gpio";
++          gpio-controller;
++          #gpio-cells = <2>;
++          interrupt-controller;
++          #interrupt-cells = <2>;
++        };
++
++        pwm {
++          compatible = "st,stmpe-pwm";
++          #pwm-cells = <2>;
++        };
++
++        touchscreen {
++          compatible = "st,stmpe-ts";
++          st,ave-ctrl = <3>;
++          st,touch-det-delay = <5>;
++          st,settling = <3>;
++          st,fraction-z = <7>;
++          st,i-drive = <1>;
++        };
++      };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
+deleted file mode 100644
+index d4408a417193..000000000000
+--- a/Documentation/devicetree/bindings/mfd/stmpe.txt
++++ /dev/null
+@@ -1,42 +0,0 @@
+-* ST Microelectronics STMPE Multi-Functional Device
+-
+-STMPE is an MFD device which may expose the following inbuilt devices: gpio,
+-keypad, touchscreen, adc, pwm, rotator.
+-
+-Required properties:
+- - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
+- - reg				: I2C/SPI address of the device
+-
+-Optional properties:
+- - interrupts			: The interrupt outputs from the controller
+- - interrupt-controller		: Marks the device node as an interrupt controller
+- - wakeup-source		: Marks the input device as wakable
+- - st,autosleep-timeout		: Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
+- - irq-gpio			: If present, which GPIO to use for event IRQ
+-
+-Optional properties for devices with touch and ADC (STMPE811|STMPE610):
+- - st,sample-time		: ADC conversion time in number of clock.
+-					0 -> 36 clocks		4 -> 80 clocks (recommended)
+-					1 -> 44 clocks		5 -> 96 clocks
+-					2 -> 56 clocks		6 -> 124 clocks
+-					3 -> 64 clocks
+- - st,mod-12b			: ADC Bit mode
+-					0 -> 10bit ADC		1 -> 12bit ADC
+- - st,ref-sel			: ADC reference source
+-					0 -> internal		1 -> external
+- - st,adc-freq			: ADC Clock speed
+-					0 -> 1.625 MHz		2 || 3 -> 6.5 MHz
+-					1 -> 3.25 MHz
+-
+-Example:
+-
+-	stmpe1601: stmpe1601@40 {
+-		compatible = "st,stmpe1601";
+-		reg = <0x40>;
+-		interrupts = <26 0x4>;
+-		interrupt-parent = <&gpio6>;
+-		interrupt-controller;
+-
+-		wakeup-source;
+-		st,autosleep-timeout = <1024>;
+-	};
+
+---
+base-commit: 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5
+change-id: 20230426-stmpe-dt-bindings-c3479dd71a28
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Linus Walleij <linus.walleij@linaro.org>
+
