@@ -2,133 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4C7F74E070
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jul 2023 23:50:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0192374E1D7
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jul 2023 01:07:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229736AbjGJVun (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jul 2023 17:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46838 "EHLO
+        id S230265AbjGJXHD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jul 2023 19:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjGJVum (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jul 2023 17:50:42 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2074.outbound.protection.outlook.com [40.107.94.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17CB4F4;
-        Mon, 10 Jul 2023 14:50:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UuOBKGxXqHguSfzLCLhHqTo1bNDaWtHnbSUhrSRIWAlL51m1WuYzZ6tr8wWgQwydjnKZ5+QtNBohzyRFygmOaGYdk/kZzx4OJDrql+es7IvhOHig6uZCa1aSujrhMBVfIbYI5ghCkZYWAnwemDOh7s1UssALo7ZwQwsOCig69BZ0ZuzJPRtD8N2RTNC642JfGlSxaa90CHuxka9kZeB3MJt3C+aaIdRXeoC9g0xcGcjinQzi8KdBJunzgSbwsf+7SU27bmko1eKYTb9bJW4F9TDGrROs8IwjXNYZ05vw7TbBkD4F5w7QZ1c22K6+AOg9uD/g/xv7aCfh8EsR+Tv4FA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VxwxI3FRDYrBtr1PjrLBWHJB78rDVxOpMoI1t4n5p4Q=;
- b=NaPZ3/AioXxWiJcVLfdsofoWwoo9X1i1tgDSicUbxWxUzTyG4qgsl/omIGrlVuZMcGU2veDsRXWtB1Fqo2vxl2ONY86c4GD3f/CyOQ6koRz//NQIyg6U4YA5xD/L/TNgyUftvBetgLW0zO5gWwZB2tMIBAxh573PSkLnbj29Mnh9lECc1ES1KO9SPeK6V5Y9HhYT2F7UskGzbOCL8lMrFRxqakbAnnSZQqYO0uqF/iQ/du6QvAszcAYk5POsJvqAVmLBP31WomS37+w+fjFhFVeYVERRrFvhqFmE8HIli8rQ01DR5SvPk6Cq0VLDosbRRY7/whUHb6CL+uWOhL7QZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VxwxI3FRDYrBtr1PjrLBWHJB78rDVxOpMoI1t4n5p4Q=;
- b=lXk0q96ydqMwRyxSDkeDZAedS2j4Oa7OH0gE25LsYrM17fKWalnnNAS+GqzjhkG12pf0CBoTdraOEv9HfoDqDAc2fB1QxELphSAoH2N4X2u835Q8QsXQ5aMDn4D58goVV28jeFcXen8FrhtrR1ie/uOghNS508u4dqi0OgmW/RZuwP3itToqBhdv/LfA3ewot9f84qu3zOaFRzvhY+D5d7/5vyZDz15V3dY9OHcFAiWcVoFA2XevTRBCAC8U8mRbRuEBwO4gepZslxAvucFHzuEcJJidX83Z1vMyJ4nyI3vvnXzbqeGbhZ71RUMzZAV+kuRAN8cgkEO456xuKH4fWQ==
-Received: from BN8PR07CA0036.namprd07.prod.outlook.com (2603:10b6:408:ac::49)
- by CY5PR12MB6251.namprd12.prod.outlook.com (2603:10b6:930:21::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.29; Mon, 10 Jul
- 2023 21:50:38 +0000
-Received: from BN8NAM11FT100.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:ac:cafe::b7) by BN8PR07CA0036.outlook.office365.com
- (2603:10b6:408:ac::49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.31 via Frontend
- Transport; Mon, 10 Jul 2023 21:50:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN8NAM11FT100.mail.protection.outlook.com (10.13.177.100) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6588.18 via Frontend Transport; Mon, 10 Jul 2023 21:50:38 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 10 Jul 2023
- 14:50:27 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Mon, 10 Jul
- 2023 14:50:26 -0700
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.986.37 via Frontend Transport; Mon, 10 Jul
- 2023 14:50:25 -0700
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     <andy.shevchenko@gmail.com>, <linus.walleij@linaro.org>,
-        <bgolaszewski@baylibre.com>, <brgl@bgdev.pl>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Asmaa Mnebhi <asmaa@nvidia.com>, <davthompson@nvidia.com>
-Subject: [PATCH v2] gpio: mmio: fix calculation of bgpio_bits
-Date:   Mon, 10 Jul 2023 17:50:23 -0400
-Message-ID: <20230710215023.679-1-asmaa@nvidia.com>
-X-Mailer: git-send-email 2.30.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT100:EE_|CY5PR12MB6251:EE_
-X-MS-Office365-Filtering-Correlation-Id: be2f2d3b-2f62-4b15-de57-08db818fb2c7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dqgeZdQyK/UVUvnpNKEP+PF0rVUfSvdzUBLnngc8ZhJ/oShPn7FlThumJDWD6DsgVNpV4cgMvn2xOG+tk4Pri7Vyeeik1lPQ7tFp8tMk4wTsgHPOkaGKglmHOb46or3646KWfCBOhP4Gd1FHSg6hdhys0lNKtkL7z1ZaN1bHlSYTdgoRD/bfS9KOEnJerb0PYVFX9uIlDA59T0YmG84BBoPHTEisdCjjdYCr8ktVUVK8tz50XnfsD2LeeJso4P6AnKlc5QGgcmPFVFPcu+kpzJZc8TEhq0FdfH16dcg71cUdFdKavszqhAvaHGxexyTmEbNs3Lo1OcF6ogHLsyJ5xk19e2YLaoLz/AzBXoADBxyJg7gb0aZS2UCfOOGY9VpkdoiV25/tWoq5gnG/OjkqmCxdi88JYmWakrL0ZFGzZ6CHQJkmoGTSuL4DqtiKs/EvmMckihDLvDy+2aPvIp5kFyOB30EpmNHD3Wd2zbQNUqB7yaiS0iv6KqI8X6UZe+Oc0nhRvKN9sPhqmy/do+05HNPIZV41+0laBMvU9TQ/I02yUiicjkR7E8fLEwPMjrAYa9eRhleE2m/ushLOIGrePRqgrIGDEWRMLP6bWL41sPiA79p2f2imKlAe6yA3dY6SwYBWr0y2TxLbeH27MlpW9vTGB8+tvcQB2Qk16SOh2l9eRjUYnV/92eItrc97wk7IYiB7DngSFGp9MatQXpcjVBAdeAqPkgkiBMJMPUdn6UJRR7j4n/izvN6ISW4ugfQKTB8bYprU2RlF8bQoRhGaFQ==
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(376002)(136003)(346002)(451199021)(36840700001)(46966006)(40470700004)(40460700003)(186003)(2616005)(26005)(36860700001)(1076003)(107886003)(426003)(83380400001)(336012)(47076005)(4326008)(41300700001)(316002)(2906002)(8676002)(8936002)(5660300002)(478600001)(7696005)(110136005)(54906003)(70586007)(70206006)(40480700001)(36756003)(356005)(7636003)(82740400003)(86362001)(82310400005)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2023 21:50:38.0775
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: be2f2d3b-2f62-4b15-de57-08db818fb2c7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT100.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6251
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S230335AbjGJXHC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jul 2023 19:07:02 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8FDDE5E
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jul 2023 16:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689030392; x=1720566392;
+  h=date:from:to:cc:subject:message-id;
+  bh=eLLFlBSOT4THQVpl0tqm7duFjrGQqrtNtBcw6aGu9ag=;
+  b=Bye2POsJcO0IT7JyTH/w796r7SbzDHRHbrQsu0LwIrXmKTUtIT6D4+KJ
+   g6CcOACTDbq+OOGTYiyeQ1wt9ZnVRmC8dRawcj12NE0RhowmpSI9EnX1L
+   xynp3Pl/V0BbTfJTu8shoDKYr1oyyP0ViVdTE056x4tv3DQEhf2g9mnU5
+   Y2/7hIXmiBnoi/OBs4wb09VHVa6nCdSzorbxiKU+DHRDK6QVtf4qixD7F
+   n72ECrDQOhpXpKXG+l1S9fD+dRhQ0wdaPwV/7JvXHWTtaLPUW3wSoIR8l
+   +B1GFSk6OS4LsrQqaYOaU+B4Elorx8g3li2nfNayf7v/fq0IORN9375/T
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="450841568"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="450841568"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 16:06:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="834435498"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="834435498"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Jul 2023 16:06:31 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qIzxe-00045Q-22;
+        Mon, 10 Jul 2023 23:06:30 +0000
+Date:   Tue, 11 Jul 2023 07:05:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ d16e0b0e798700b036ad2701ce70525a6fbea8ea
+Message-ID: <202307110732.oEf1kFey-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If the "ngpios" property is specified, bgpio_bits is calculated
-as the round up value of ngpio. At the moment, the only requirement
-specified is that the round up value must be a multiple of 8 but
-it should also be a power of 2 because we provide accessors based
-on the bank size in bgpio_setup_accessors().
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: d16e0b0e798700b036ad2701ce70525a6fbea8ea  gpio: sifive: Support IRQ wake
 
-Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-mmio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+elapsed time: 724m
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index b52a3dd511ca..74fdf0d87b2c 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -623,7 +623,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
- 	if (ret)
- 		gc->ngpio = gc->bgpio_bits;
- 	else
--		gc->bgpio_bits = round_up(gc->ngpio, 8);
-+		gc->bgpio_bits = roundup_pow_of_two(round_up(gc->ngpio, 8));
- 
- 	ret = bgpio_setup_io(gc, dat, set, clr, flags);
- 	if (ret)
+configs tested: 128
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r022-20230710   gcc  
+alpha                randconfig-r034-20230710   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230710   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                          collie_defconfig   clang
+arm                                 defconfig   gcc  
+arm                         lpc18xx_defconfig   gcc  
+arm                   milbeaut_m10v_defconfig   clang
+arm                  randconfig-r046-20230710   gcc  
+arm                         s5pv210_defconfig   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r013-20230710   gcc  
+csky                 randconfig-r026-20230710   gcc  
+csky                 randconfig-r036-20230710   gcc  
+hexagon              randconfig-r041-20230710   clang
+hexagon              randconfig-r045-20230710   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230710   gcc  
+i386         buildonly-randconfig-r005-20230710   gcc  
+i386         buildonly-randconfig-r006-20230710   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230710   gcc  
+i386                 randconfig-i002-20230710   gcc  
+i386                 randconfig-i003-20230710   gcc  
+i386                 randconfig-i004-20230710   gcc  
+i386                 randconfig-i005-20230710   gcc  
+i386                 randconfig-i006-20230710   gcc  
+i386                 randconfig-i011-20230710   clang
+i386                 randconfig-i012-20230710   clang
+i386                 randconfig-i013-20230710   clang
+i386                 randconfig-i014-20230710   clang
+i386                 randconfig-i015-20230710   clang
+i386                 randconfig-i016-20230710   clang
+i386                 randconfig-r024-20230710   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5208evb_defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath25_defconfig   clang
+mips                         cobalt_defconfig   gcc  
+mips                 randconfig-r004-20230710   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r011-20230710   gcc  
+openrisc             randconfig-r002-20230710   gcc  
+openrisc             randconfig-r015-20230710   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r025-20230710   gcc  
+parisc64                            defconfig   gcc  
+powerpc                    adder875_defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                        cell_defconfig   gcc  
+powerpc                        icon_defconfig   clang
+powerpc                 mpc832x_rdb_defconfig   clang
+powerpc              randconfig-r035-20230710   gcc  
+powerpc                     sequoia_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                    nommu_virt_defconfig   clang
+riscv                randconfig-r003-20230710   gcc  
+riscv                randconfig-r031-20230710   gcc  
+riscv                randconfig-r032-20230710   gcc  
+riscv                randconfig-r042-20230710   clang
+riscv                          rv32_defconfig   gcc  
+s390                             alldefconfig   clang
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r005-20230710   gcc  
+s390                 randconfig-r044-20230710   clang
+sh                               allmodconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                   randconfig-r016-20230710   gcc  
+sh                   randconfig-r021-20230710   gcc  
+sh                   randconfig-r023-20230710   gcc  
+sh                           se7750_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r001-20230710   gcc  
+sparc                randconfig-r014-20230710   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r012-20230710   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230710   gcc  
+x86_64       buildonly-randconfig-r002-20230710   gcc  
+x86_64       buildonly-randconfig-r003-20230710   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r033-20230710   gcc  
+x86_64               randconfig-x001-20230710   clang
+x86_64               randconfig-x002-20230710   clang
+x86_64               randconfig-x003-20230710   clang
+x86_64               randconfig-x004-20230710   clang
+x86_64               randconfig-x005-20230710   clang
+x86_64               randconfig-x006-20230710   clang
+x86_64               randconfig-x011-20230710   gcc  
+x86_64               randconfig-x012-20230710   gcc  
+x86_64               randconfig-x013-20230710   gcc  
+x86_64               randconfig-x014-20230710   gcc  
+x86_64               randconfig-x015-20230710   gcc  
+x86_64               randconfig-x016-20230710   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                  audio_kc705_defconfig   gcc  
+xtensa                  nommu_kc705_defconfig   gcc  
+
 -- 
-2.30.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
