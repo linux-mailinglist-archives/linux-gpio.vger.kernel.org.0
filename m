@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ABD374DDF4
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jul 2023 21:11:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A52E74DDFB
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jul 2023 21:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231439AbjGJTLL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jul 2023 15:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60204 "EHLO
+        id S229766AbjGJTL6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jul 2023 15:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjGJTK6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jul 2023 15:10:58 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D68E1BE1
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jul 2023 12:10:26 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id ada2fe7eead31-440c368b4e2so1490350137.2
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jul 2023 12:10:26 -0700 (PDT)
+        with ESMTP id S230253AbjGJTLz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jul 2023 15:11:55 -0400
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3891DE67
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jul 2023 12:11:26 -0700 (PDT)
+Received: by mail-vs1-xe35.google.com with SMTP id ada2fe7eead31-440ad576d87so1363050137.1
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jul 2023 12:11:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689016220; x=1691608220;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689016280; x=1691608280;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AgH9bF19P9qYpMUHf3fyLYC3kSHrwYWcNQb61WkbBZM=;
-        b=Vq6UPox4lPif5+gZBUK67g6LMD1TrK55l2nw0aD1kQj6CrQU75rL3OkeKstIaTW+k3
-         g5okbcseJqWyHbjqk5tXX+SU9k/63P4kMMCvsd+cvTZ6Fjlm7S3Hl8ZBGysF+9ug85Uw
-         B+HGFKaHOkZ/xmCH3UmQoZaEQStjNdr0bdgyF13tXSsU5vKuc5xQ7P30MDukQDiAIRE6
-         yMmGOUXBqr9RIbR0weNg2MOSf0Le3kMyXf0WWfomiX5CnsQ4gpd5CsCK8DblqI89eQI7
-         0Rv11udrWvi1MQeSWav9uZ3yRvhDb31QrKCBPtSByef5zq2rHfZ0F1mPMmw/CIlFKuCm
-         ADkQ==
+        bh=WTiSrPJ68bBh1WF8NAqk+/Z9aNvMpi0XqeGrN/eMmzs=;
+        b=oSWlgOPKcLAvfEg/kmJX0zjE1F2BawjR4panXxZ5ek5rLFWZ4uHbTeuLWZ6QPxeL1H
+         bJ3W6efBET8CoR/zBeiW29tw5sXGqgcs8LO5P/qzWC+6uuTXKEEy6pDbW29jUwKsZekr
+         HolbQdX5Dn7i9Me9RPm7vfl4b7diH7qrFt4PtV4r8Gk2NtFElUOI2+94SAVfmvzEexI3
+         xFMRtQwMlZbSi7V7bAfVNmjayRvTA/DL74Aww21b08e0ZFOu2Mc6TS02lKDXR205x4xO
+         naRZSfiZwX2zI9b5zlUhK8zHSxweeZzWWQ8SGXzhndbiqapdbZUfxvImOK+P2bdGNkN4
+         TgKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689016220; x=1691608220;
+        d=1e100.net; s=20221208; t=1689016280; x=1691608280;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AgH9bF19P9qYpMUHf3fyLYC3kSHrwYWcNQb61WkbBZM=;
-        b=RWOA4mOrhGvP0pfFYnTNZucDn4wNwYKY+ZjgHrX/1iNPMad4yW3fUKKxvA4huf4ZS6
-         1OdLLT/T7Iu/xTXHb+q5S5IbCk0sTiTXoD2Rz+fNs4prRqc8iAz9nhDxxEpAlW220ipo
-         vi1127TlhzBAGZzCh28pkvOywHcPd1XEeXMjrTiFgkte1A/IvXYwn+AHNP6x7BZ8McYI
-         MNDXS+cAIEHsyqsX9iO+NRuEwvyOn4CmdsOAz6CiepnUGZEUTV81plKcnkN63XQ6g8rQ
-         V86hhWUK1583U1u6nhUzZedJFZuk6DJAEzqnGzu2U5Kgo+piAoHhClNCfZroUXzc07jc
-         HTNw==
-X-Gm-Message-State: ABy/qLbQAI+0DHSX3ripwQNM5AuNU6enkCOMWF3LXZqhjMznER8Hv9rr
-        5FDTq9scuunrZZyMAqcwcZHLbU506oyRnNgrw2OuVFjZoR1XoTlo
-X-Google-Smtp-Source: APBJJlHXLYWRAK1TBPKRFK/U6CdwCO/hIgM870hTN2HBPd2woVKEs0qGvIqr0RD5faSdTjY9gqOFBzI0QfJO5AnH+i4=
-X-Received: by 2002:a05:6102:2845:b0:443:874b:7d60 with SMTP id
- az5-20020a056102284500b00443874b7d60mr5970316vsb.26.1689016219912; Mon, 10
- Jul 2023 12:10:19 -0700 (PDT)
+        bh=WTiSrPJ68bBh1WF8NAqk+/Z9aNvMpi0XqeGrN/eMmzs=;
+        b=BjibIY6kDH87ppknftTZc+unjM5TfPVwasvo3IntKxwySoaIYjLCKAGxo4fChXOq/z
+         /HUAH/nIOhEua94qXyVBwkd95QlAUoF0fnfN9LlbIJoV1BhAt4UjbCC0ZJFTaXaeu/A2
+         FoHOneiXUohiGoUlimjGes4EsGAKtAJiBJu7RGBLUVK6LoHU7AH3EdBj/rVsfVTWs8rW
+         L7yOalKFvkrf+bMcR2SPG0CZ1ZDiX0IqJx6OiITTazQN+9KKB7FSlJ8GVicLgkdyryYA
+         RwjjH+jE0w+OWXvjjb2IuNByS5/SPmau8+ry8htTB5pUu9qKoXUVOcNn+MzK63GJqx7Q
+         2j7A==
+X-Gm-Message-State: ABy/qLY0R5NLxdxUDxBNGWuTOEK0F+9EdC5CCGbnNPKRoEwsEZStW1HI
+        y9RfAesh3KUNv4drxHoJWH0xpJ2QFeN5XzA+JVxHIzE1L7JLeu+p
+X-Google-Smtp-Source: APBJJlGY9MDuNdXLb0NkP0Z+ZlIV2XpXYshiGSQl6L2QoJSkw34aI0JVRs6XVAoQYM4fEzcTuKIqz2WTi/xPaSjA9BI=
+X-Received: by 2002:a67:f24f:0:b0:443:7e49:c023 with SMTP id
+ y15-20020a67f24f000000b004437e49c023mr6989264vsm.6.1689016280782; Mon, 10 Jul
+ 2023 12:11:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230306211237.14876-1-asmaa@nvidia.com> <ZAZrKPw38ERSbzXg@surfacebook>
- <CH2PR12MB3895877A81288A737B702129D730A@CH2PR12MB3895.namprd12.prod.outlook.com>
-In-Reply-To: <CH2PR12MB3895877A81288A737B702129D730A@CH2PR12MB3895.namprd12.prod.outlook.com>
+References: <20230323205733.20763-1-asmaa@nvidia.com> <CAHp75Vd4m79RhG-_KLRNzr0SPzphG07fOiTWwmGCfx8Lz=+6Vg@mail.gmail.com>
+ <CH2PR12MB38951D4AC0D3C373E17FDDBFD730A@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB38951D4AC0D3C373E17FDDBFD730A@CH2PR12MB3895.namprd12.prod.outlook.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 10 Jul 2023 21:10:09 +0200
-Message-ID: <CAMRc=McBXyzdCqEBi9ymVHL09xKzWOhjWKpE6xxzhVJotqnngw@mail.gmail.com>
-Subject: Re: [PATCH v4] gpio: mmio: handle "ngpios" properly in bgpio_init()
+Date:   Mon, 10 Jul 2023 21:11:09 +0200
+Message-ID: <CAMRc=Mcv+dZsJB1yO8Y3Kh+7UJDAQXZMietA2KkGYE_+Xe+c7Q@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio: mmio: fix calculation of bgpio_bits
 To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -63,7 +63,8 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -74,7 +75,7 @@ On Mon, Jul 10, 2023 at 7:26=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
 te:
 >
 > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
+> >
 > Hi Bart,
 >
 > Could you please add this patch to the tree?
@@ -82,7 +83,7 @@ te:
 > Thanks.
 > Asmaa
 
-No, because it doesn't apply to v6.5-rc1. Please rebase and resend to
-my current email address.
+You still haven't sent it to my address and it's not rebased on top of v6.5=
+-rc1.
 
-Bartosz
+Bart
