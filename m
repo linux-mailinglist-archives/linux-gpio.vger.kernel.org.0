@@ -2,71 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDFA174D8BA
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jul 2023 16:14:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 733BD74D8D2
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jul 2023 16:18:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233082AbjGJOOY convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 10 Jul 2023 10:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
+        id S232938AbjGJOSs convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 10 Jul 2023 10:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233024AbjGJOOX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jul 2023 10:14:23 -0400
+        with ESMTP id S232761AbjGJOSp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jul 2023 10:18:45 -0400
 Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56D9DF;
-        Mon, 10 Jul 2023 07:14:22 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-579ef51428eso58731147b3.2;
-        Mon, 10 Jul 2023 07:14:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075ECDF;
+        Mon, 10 Jul 2023 07:18:39 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5700b15c12fso55616957b3.1;
+        Mon, 10 Jul 2023 07:18:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688998462; x=1691590462;
+        d=1e100.net; s=20221208; t=1688998719; x=1691590719;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F1SoVYt/eXkCUju2ZrXSBXhCNBA/PkoSDQudNUVgxBk=;
-        b=c1z2zbn3OBnf/1vczT/XxCqWvTdV6D1lr+28xgEtUglq/HWORcK3Ay5Glgz3kZmc7u
-         AMZhwSFZDTwA5ffhDrq/wTSkKnQBM2mjdhGzKoqFeCWgWBmnoxgTt8s2fB6cwUHfeEMM
-         q7RREyFthliodB429vnFOFQQdCGNEr8MlFColV9u6Flj1oXAigJ1YCNBR1Ct7n5iyEvs
-         2zFZsf39owNxjQnFUui12hapvNKI+ssX1h9tXwnu3RCwJFGxBfNmwYnAdJSFvlbFf3t6
-         KcOs7vR+S2K///gCf9KNJKFCVfo91tUePGm+BhobVzoomoO6IENn/kntdHCMrs2579Xi
-         B72A==
-X-Gm-Message-State: ABy/qLZVvHZXedcftpeeIb3nf9ArFNJs9k98/rngljj79Oz+8smn9WlJ
-        pxns3OJwblka1s16/OVBGlL1rxCUVxLnTA==
-X-Google-Smtp-Source: APBJJlFh7o9jWx4DnSqYHfBCQNCZRRxzuJ4L+XjicDHfb+e/2TVk5hLjcP+XSDD6OCBzs5hCYY8f6Q==
-X-Received: by 2002:a0d:e884:0:b0:56f:ff55:2b7d with SMTP id r126-20020a0de884000000b0056fff552b7dmr15566918ywe.17.1688998461736;
-        Mon, 10 Jul 2023 07:14:21 -0700 (PDT)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
-        by smtp.gmail.com with ESMTPSA id p135-20020a0de68d000000b005707d7686ddsm3078088ywe.76.2023.07.10.07.14.21
+        bh=HqT4bbLk0Pn2au1SGKBZn9et9L/6n+652kKaxwG9w2g=;
+        b=E92vIil8mjpZ4NzMwKCUsb+Zh3PpvelXn6yPQFpqrZh3pdhENeN39PM1cr6yCycFvX
+         pwkh7/pNYWcqTbR+QkAAJXant4WzVWKTDg4WeQfMCbw7WRaTbavj+uWVYOd70v3N2uIU
+         /JxwSfqZpAj5ih2J7/dsqTAVOSDDjdlbOZhJ0Ys+fhB7OQsjjiNfrPpavqDJENK/Nbu+
+         00QLeaJUMI6MfIX7OKKfncVF3FBuz8fxiAVlUTNWfHaq8dv0KxfR5N5Mha9qEnOr3MbD
+         KZEiEbYxMqSBhu3+VYxzFJySP+aK2/P3CczfHjtuSIlc3bRg0kpGKb2V9rLsyg9NTxSK
+         GYmA==
+X-Gm-Message-State: ABy/qLbUokUwJop7NJg6Jy1Xe8DL8Jb7MPnNoDxGI+GBkx1PyLxwRDAH
+        sPH9zghejB49Ojszw37saUe0d84Axn/oWg==
+X-Google-Smtp-Source: APBJJlGRtESM/R8UHlfoGLykPDsdnD9i7zw7L7OAfWPz0Fo6cc7n4QQC2o5GEy+Zp3DVUpzliWGvLw==
+X-Received: by 2002:a0d:f181:0:b0:577:3aaf:c876 with SMTP id a123-20020a0df181000000b005773aafc876mr13300206ywf.30.1688998718877;
+        Mon, 10 Jul 2023 07:18:38 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id z7-20020a81c207000000b005703cfc23c1sm2986813ywc.104.2023.07.10.07.18.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jul 2023 07:14:21 -0700 (PDT)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-57a6df91b1eso27582177b3.1;
-        Mon, 10 Jul 2023 07:14:21 -0700 (PDT)
-X-Received: by 2002:a25:68ca:0:b0:c85:a84:d87e with SMTP id
- d193-20020a2568ca000000b00c850a84d87emr2850225ybc.10.1688998461286; Mon, 10
- Jul 2023 07:14:21 -0700 (PDT)
+        Mon, 10 Jul 2023 07:18:38 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-c6833e6e326so5547500276.1;
+        Mon, 10 Jul 2023 07:18:38 -0700 (PDT)
+X-Received: by 2002:a25:9d06:0:b0:c84:3e74:c6ed with SMTP id
+ i6-20020a259d06000000b00c843e74c6edmr501779ybp.28.1688998718162; Mon, 10 Jul
+ 2023 07:18:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230630120433.49529-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20230630120433.49529-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <OS0PR01MB592217C4028606B67B39C6858629A@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CA+V-a8sXcHP2AYYLLONLLBDVctMb=fnU=D4+6hNoHGx5Dk2O3Q@mail.gmail.com> <OS0PR01MB592285AB361A6C25CEDC21F68629A@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-In-Reply-To: <OS0PR01MB592285AB361A6C25CEDC21F68629A@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+References: <20230630120433.49529-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20230630120433.49529-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20230630120433.49529-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 10 Jul 2023 16:14:10 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVoDVMczVRt98GgimZviAHWy3c=P84+nrKOpxtaLVc4RQ@mail.gmail.com>
-Message-ID: <CAMuHMdVoDVMczVRt98GgimZviAHWy3c=P84+nrKOpxtaLVc4RQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] pinctrl: renesas: rzg2l: Include pinmap in
- RZG2L_GPIO_PORT_PACK() macro
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
+Date:   Mon, 10 Jul 2023 16:18:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXZwdQHnXqMsSz2Bqva4JELTWewCYLWJBMnmgotDxmayQ@mail.gmail.com>
+Message-ID: <CAMuHMdXZwdQHnXqMsSz2Bqva4JELTWewCYLWJBMnmgotDxmayQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] pinctrl: renesas: pinctrl-rzg2l: Add the missing
+ port pins P19 to P28
+To:     Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -79,109 +72,153 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Biju,
+Hi Prabhakar,
 
-On Mon, Jul 3, 2023 at 4:13 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> > -----Original Message-----
-> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> > Sent: Monday, July 3, 2023 1:43 PM
-> > To: Biju Das <biju.das.jz@bp.renesas.com>
-> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>; Magnus Damm
-> > <magnus.damm@gmail.com>; Rob Herring <robh+dt@kernel.org>; Krzysztof
-> > Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Linus Walleij
-> > <linus.walleij@linaro.org>; linux-renesas-soc@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-riscv@lists.infradead.org; linux-
-> > kernel@vger.kernel.org; linux-gpio@vger.kernel.org; Prabhakar Mahadev
-> > Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Subject: Re: [RFC PATCH 1/4] pinctrl: renesas: rzg2l: Include pinmap in
-> > RZG2L_GPIO_PORT_PACK() macro
-> >
-> > On Mon, Jul 3, 2023 at 12:42 PM Biju Das <biju.das.jz@bp.renesas.com>
-> > wrote:
-> > > > -----Original Message-----
-> > > > From: Prabhakar <prabhakar.csengg@gmail.com>
-> > > > Sent: Friday, June 30, 2023 1:05 PM
-> > > > To: Geert Uytterhoeven <geert+renesas@glider.be>; Magnus Damm
-> > > > <magnus.damm@gmail.com>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>; Krzysztof Kozlowski
-> > > > <krzysztof.kozlowski+dt@linaro.org>; Linus Walleij
-> > > > <linus.walleij@linaro.org>; linux-renesas-soc@vger.kernel.org;
-> > > > devicetree@vger.kernel.org; linux-riscv@lists.infradead.org; linux-
-> > > > kernel@vger.kernel.org; linux-gpio@vger.kernel.org; Biju Das
-> > > > <biju.das.jz@bp.renesas.com>; Prabhakar
-> > > > <prabhakar.csengg@gmail.com>; Prabhakar Mahadev Lad
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > Subject: [RFC PATCH 1/4] pinctrl: renesas: rzg2l: Include pinmap in
-> > > > RZG2L_GPIO_PORT_PACK() macro
-> > > >
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Currently we assume all the port pins are sequential ie always PX_0
-> > > > to PX_n (n=1..7) exist, but on RZ/Five SoC we have additional pins
-> > > > P19_1 to
-> > > > P28_5 which have holes in them, for example only one pin on port19
-> > > > is available and that is P19_1 and not P19_0.
-> > > >
-> > > > So to handle such cases include pinmap for each port which would
-> > > > indicate the pin availability on each port. With this we also get
-> > > > additional pin validation, for example on the RZ/G2L SOC P0 has two
-> > > > pins
-> > > > P0_1 and P0_0 but with DT/SYSFS could use the P0_2-P0_7.
-> > > >
-> > > > While at it, update rzg2l_validate_gpio_pin() to use the port pinmap
-> > > > to validate the gpio pin.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar
-> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > ---
-> > > >  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 167
-> > > > ++++++++++++------------
-> > > >  1 file changed, 86 insertions(+), 81 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > index 9511d920565e..a0c2e585e765 100644
-> > > > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > @@ -67,10 +67,12 @@
-> > > >                                        PIN_CFG_FILCLKSEL)
-> > > >
-> > > >  /*
-> > > > - * n indicates number of pins in the port, a is the register index
-> > > > - * and f is pin configuration capabilities supported.
-> > > > + * m indicates the bitmap of supported pins, n indicates number
-> > > > + * of pins in the port, a is the register index and f is pin
-> > > > + * configuration capabilities supported.
-> > > >   */
-> > > > -#define RZG2L_GPIO_PORT_PACK(n, a, f)        (((n) << 28) | ((a) <<
-> > 20) |
-> > > > (f))
-> > > > +#define RZG2L_GPIO_PORT_PACK(m, n, a, f)     ((UL(m) << 32) |
-> > (UL(n) << 28)
-> > > > | ((a) << 20) | (f))
-> > >
-> > > I guess, you can still achieve RZG2L_GPIO_PORT_PACK(n, a, f) with
-> > > ((UL(PINMAP(n)) << 32) | (UL(n) << 28) | ((a) << 20) | (f))
-> > >
-> > > #define PINMAP(n) GENMASK(n,0) ?? Then you don't need to modify
-> > rzg2l_gpio_configs.
-> > >
-> > Good point, but this would work if port pins didn't have any holes.
-> > For example on RZ/Five port P19 we have P19_1 pin only and P19_0 is not
-> > available (and similarly for port P25 we have P25_1).
+On Fri, Jun 30, 2023 at 2:05 PM Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Maybe introduce a helper macro to address this case.
+> Add the missing port pins P19 to P28 for RZ/Five SoC. These additional pins
+> provide expanded capabilities and are exclusive to the RZ/Five SoC.
+> Furthermore, a new variant called r9a07g043_data has been introduced
+> specifically for the RZ/Five SoC. When CONFIG_RISCV is enabled, this
+> variant replaces the previous data configuration. Additionally, a new macro
+> named PIN_CFG_NOGPIO has been implemented. This macro serves as an
+> indicator to determine whether the port pins can be utilized as GPIO pins.
 >
-> #define RZG2L_GPIO_PORT_PACK_WITH_HOLES(m, n, a, f) for these 2 cases
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-"sparse" is the terse term.
+Thanks for your patch!
 
-#define RZG2L_GPIO_PORT_PACK_SPARSE(m, a, f)
-as "n" can be derived from "m"
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/spinlock.h>
+> +#include <linux/sys_soc.h>
+>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/pinctrl/pinconf-generic.h>
+> @@ -53,6 +54,7 @@
+>  #define PIN_CFG_FILONOFF               BIT(10)
+>  #define PIN_CFG_FILNUM                 BIT(11)
+>  #define PIN_CFG_FILCLKSEL              BIT(12)
+> +#define PIN_CFG_NOGPIO                 BIT(13)
+>
+>  #define RZG2L_MPXED_PIN_FUNCS          (PIN_CFG_IOLH_A | \
+>                                          PIN_CFG_SR | \
+> @@ -101,6 +103,12 @@
+>  #define SD_CH(n)               (0x3000 + (n) * 4)
+>  #define QSPI                   (0x3008)
+>
+> +#define RZFIVE_P_EX(n)         (0x0000 + 0x06 + ((n) - 19))
+> +#define RZFIVE_PM_EX(n)                (0x0100 + 0x0c + ((n) - 19) * 2)
+> +#define RZFIVE_PMC_EX(n)       (0x0200 + 0x06 + ((n) - 19))
+> +#define RZFIVE_PFC_EX(n)       (0x0400 + 0x18 + ((n) - 19) * 4)
+> +#define RZFIVE_PIN_EX(n)       (0x0800 + 0x06 + ((n) - 19))
+> +
+>  #define PVDD_1800              1       /* I/O domain voltage <= 1.8V */
+>  #define PVDD_3300              0       /* I/O domain voltage >= 3.3V */
+>
+> @@ -160,39 +168,53 @@ struct rzg2l_pinctrl {
+>  static const unsigned int iolh_groupa_mA[] = { 2, 4, 8, 12 };
+>  static const unsigned int iolh_groupb_oi[] = { 100, 66, 50, 33 };
+>
+> +static const struct soc_device_attribute rzfive_match[] = {
+> +       { .family = "RZ/Five" },
+> +       { /* sentinel */}
+> +};
+> +
+>  static void rzg2l_pinctrl_set_pfc_mode(struct rzg2l_pinctrl *pctrl,
+>                                        u8 port, u8 pin, u8 func)
+>  {
+> +       u32 pm_offset = PM(port);
+> +       u32 pmc_offset = PMC(port);
+> +       u32 pfc_offset = PFC(port);
+>         unsigned long flags;
+>         u32 reg;
+>
+> +       if (soc_device_match(rzfive_match) && port > 18) {
 
-> and use RZG2L_GPIO_PORT_PACK(n, a, f) for the one without holes.
+Please no soc_device_match() outside .probe() callbacks.
 
-Exactly.
+> +               pm_offset = RZFIVE_PM_EX(port);
+> +               pmc_offset = RZFIVE_PMC_EX(port);
+> +               pfc_offset = RZFIVE_PFC_EX(port);
+> +       }
+> +
+>         spin_lock_irqsave(&pctrl->lock, flags);
+
+> @@ -1050,6 +1077,38 @@ static const u64 r9a07g043_gpio_configs[] = {
+>         RZG2L_GPIO_PORT_PACK(0x3f, 6, 0x22, RZG2L_MPXED_PIN_FUNCS),
+>  };
+>
+> +static const u64 r9a07g043f_gpio_configs[] = {
+> +       RZG2L_GPIO_PORT_PACK(0x0f, 4, 0x10, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x1f, 5, 0x11, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
+> +       RZG2L_GPIO_PORT_PACK(0x0f, 4, 0x12, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
+> +       RZG2L_GPIO_PORT_PACK(0x0f, 4, 0x13, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
+> +       RZG2L_GPIO_PORT_PACK(0x3f, 6, 0x14, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
+> +       RZG2L_GPIO_PORT_PACK(0x1f, 5, 0x15, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x1f, 5, 0x16, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x1f, 5, 0x17, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
+> +       RZG2L_GPIO_PORT_PACK(0x1f, 5, 0x18, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
+> +       RZG2L_GPIO_PORT_PACK(0x0f, 4, 0x19, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
+> +       RZG2L_GPIO_PORT_PACK(0x1f, 5, 0x1a, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
+> +       RZG2L_GPIO_PORT_PACK(0x0f, 4, 0x1b, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x03, 2, 0x1c, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x1f, 5, 0x1d, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x07, 3, 0x1e, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x0f, 4, 0x1f, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x03, 2, 0x20, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x0f, 4, 0x21, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x3f, 6, 0x22, RZG2L_MPXED_PIN_FUNCS),
+> +       RZG2L_GPIO_PORT_PACK(0x02, 1, 0x06, RZG2L_MPXED_PIN_FUNCS | PIN_CFG_NOGPIO),
+
+Aha, so that's where P19-P28 are hiding: in the P06-P0F registers :-(
+
+> +       RZG2L_GPIO_PORT_PACK(0xff, 8, 0x07, RZG2L_MPXED_PIN_FUNCS | PIN_CFG_NOGPIO),
+> +       RZG2L_GPIO_PORT_PACK(0x02, 1, 0x08, (PIN_CFG_IOLH_A | PIN_CFG_SR | PIN_CFG_PUPD | PIN_CFG_NOGPIO)),
+> +       RZG2L_GPIO_PORT_PACK(0x0f, 4, 0x09, (PIN_CFG_IOLH_A | PIN_CFG_SR | PIN_CFG_PUPD | PIN_CFG_NOGPIO)),
+> +       RZG2L_GPIO_PORT_PACK(0x3e, 5, 0x0a, (PIN_CFG_IOLH_A | PIN_CFG_SR | PIN_CFG_PUPD | PIN_CFG_NOGPIO)),
+> +       RZG2L_GPIO_PORT_PACK(0x3f, 6, 0x0b, RZG2L_MPXED_PIN_FUNCS | PIN_CFG_NOGPIO),
+> +       RZG2L_GPIO_PORT_PACK(0x02, 1, 0x0c, RZG2L_MPXED_PIN_FUNCS | PIN_CFG_NOGPIO),
+> +       RZG2L_GPIO_PORT_PACK(0x00, 0, 0x0d, 0x0),
+> +       RZG2L_GPIO_PORT_PACK(0x00, 0, 0x0e, 0x0),
+> +       RZG2L_GPIO_PORT_PACK(0x3f, 6, 0x0f, RZG2L_MPXED_PIN_FUNCS | PIN_CFG_NOGPIO),
+> +};
+> +
+>  static struct {
+>         struct rzg2l_dedicated_configs common[35];
+>         struct rzg2l_dedicated_configs rzg2l_pins[7];
+> @@ -1534,6 +1593,16 @@ static int rzg2l_pinctrl_probe(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_RISCV
+> +static struct rzg2l_pinctrl_data r9a07g043_data = {
+> +       .port_pins = rzg2l_gpio_names,
+> +       .port_pin_configs = r9a07g043f_gpio_configs,
+> +       .n_ports = ARRAY_SIZE(r9a07g043f_gpio_configs),
+> +       .dedicated_pins = rzg2l_dedicated_pins.common,
+> +       .n_port_pins = ARRAY_SIZE(r9a07g043f_gpio_configs) * RZG2L_PINS_PER_PORT,
+> +       .n_dedicated_pins = ARRAY_SIZE(rzg2l_dedicated_pins.common),
+> +};
+
+I can't really say I'm excited about this...
+
+> +#else
+>  static struct rzg2l_pinctrl_data r9a07g043_data = {
+>         .port_pins = rzg2l_gpio_names,
+>         .port_pin_configs = r9a07g043_gpio_configs,
+> @@ -1542,6 +1611,7 @@ static struct rzg2l_pinctrl_data r9a07g043_data = {
+>         .n_port_pins = ARRAY_SIZE(r9a07g043_gpio_configs) * RZG2L_PINS_PER_PORT,
+>         .n_dedicated_pins = ARRAY_SIZE(rzg2l_dedicated_pins.common),
+>  };
+> +#endif
+>
+>  static struct rzg2l_pinctrl_data r9a07g044_data = {
+>         .port_pins = rzg2l_gpio_names,
 
 Gr{oetje,eeting}s,
 
