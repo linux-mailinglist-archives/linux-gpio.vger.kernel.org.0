@@ -2,105 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A53D474D206
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jul 2023 11:44:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0387B74D597
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jul 2023 14:35:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233088AbjGJJoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jul 2023 05:44:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60318 "EHLO
+        id S230218AbjGJMfV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jul 2023 08:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231224AbjGJJny (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jul 2023 05:43:54 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11583A8D
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jul 2023 02:40:24 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-791a0651fa3so1223085241.0
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jul 2023 02:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1688982019; x=1691574019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nAyMQWACMiu7k7xvqQEAhqUIaKa81XxMwdWjQhOqnc0=;
-        b=W3/SmPlMMBSFJMpfBbmWrrbGV5s2XxXcD5z26av+mGtwMfYetVOdgeR5zsR4/o3mSf
-         tRxoITf6/dqCqz9dtK5ihB+46DlRhA0f/c4qAyoE4f0U3chS86j9PBaieFsS3K16v9/h
-         R7SazJIdmjsAH95TgyQ4aVztxFjE+m84vg4C5x32HGcaHMB0j33uchSGK8UTLQSUmtiV
-         b9u9I1/qSah088TeMcSD4g74khDVSoWgFGc4B50A34BW/NZMWleOqck+r1cO8CNNzNYG
-         CviC7QWzyrQont5dDDdIyoL0wEEghN/gSDK4v7qs7u0lDqoH2kmqS6xf3wpDfYEkHGC+
-         wYjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688982019; x=1691574019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nAyMQWACMiu7k7xvqQEAhqUIaKa81XxMwdWjQhOqnc0=;
-        b=aQhelVLNKHiP/g7VC2gTR9j6ZkYwONxgMo13eYqnuRO4Q2GHRI45iPAOlzyJDgkwAr
-         DFzEGoLn3is7Pjp1IEVHCVqqgV9slrJj79RL1vKR5BEOxHse1BqSU/EZsNBYO3hHAO9H
-         maxt6LUXmRwPnODp5ND1Bu4Aw4kUuNXVcNif9Bm5yoPBb2fGGyZ+VH61xzHh1dGehyGN
-         fr/CQCweEenFqIS/pnkRUBVvgOSGDPHOQZnFtCeflhvf6HSJpGAEldRK9GUycOlBxSVv
-         rKdZG/Gf+p7Ctw8EmDmjiXn8sOchirpLcYcph2FyuEcJ+CJLGSWhEpPveQrzeJSgQ4rb
-         lqoA==
-X-Gm-Message-State: ABy/qLYqmwuiffgYXF7IPaA6nJZMej/Gs5CBzijRrZ01pfs8hiGwHYTK
-        sILnUOkxdoaIvaYVfHFWKymYMS5kWiPV336KJ6PTqw==
-X-Google-Smtp-Source: APBJJlHx0SLN86EAAud2RiAr+LzT0y/R2/hQ6x5hh6eT2hO4ce0zhRokqsYDgEGjfUfQcAHKR1lxxGw/1931v+4bU3I=
-X-Received: by 2002:a05:6102:2845:b0:443:874b:7d60 with SMTP id
- az5-20020a056102284500b00443874b7d60mr4973244vsb.26.1688982018888; Mon, 10
- Jul 2023 02:40:18 -0700 (PDT)
+        with ESMTP id S229774AbjGJMfU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jul 2023 08:35:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF84B1
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jul 2023 05:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1688992474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Ck5Gvh4RiJyc5eRKDQxi0pNypruTFYlHuSr49s8/ft4=;
+        b=VC0FXuIP4GBuTnbmPLIqjAGdLMqVjPui5XKR1ZYCSqC8zRBvfw/5RDd3eUsuFQ7oeLjphM
+        3nprF+AERdss0qeNRTeQoXgm+i24ChgNBlYm1dE8hQEXdS2+uWjoYnNyzDLMyBaCyD6Yed
+        frnqpeP3/TM2ZfsL67CJxdqhMFDoxkY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-655-f84bvKgwNzimA2reK7L4Sg-1; Mon, 10 Jul 2023 08:34:30 -0400
+X-MC-Unique: f84bvKgwNzimA2reK7L4Sg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 594B11044589;
+        Mon, 10 Jul 2023 12:34:30 +0000 (UTC)
+Received: from x1.localdomain.com (unknown [10.39.195.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD391C09A09;
+        Mon, 10 Jul 2023 12:34:28 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Daniel Scally <dan.scally@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH resend v2] gpio: tps68470: Make tps68470_gpio_output() always set the initial value
+Date:   Mon, 10 Jul 2023 14:34:25 +0200
+Message-ID: <20230710123425.316943-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20230626172608.2978505-1-samuel.holland@sifive.com>
-In-Reply-To: <20230626172608.2978505-1-samuel.holland@sifive.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 10 Jul 2023 11:40:08 +0200
-Message-ID: <CAMRc=Mc6vWmvD3=Z8-eBWT5a4BF2_OoYLvOT4TwH+TAxsY17-w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sifive: Support IRQ wake
-To:     Samuel Holland <samuel.holland@sifive.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 7:26=E2=80=AFPM Samuel Holland
-<samuel.holland@sifive.com> wrote:
->
-> Each pin drives a separate interrupt in the parent IRQ domain, so there
-> is no need to set IRQCHIP_MASK_ON_SUSPEND.
->
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
->
->  drivers/gpio/gpio-sifive.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
-> index 98939cd4a71e..c2653313f3a2 100644
-> --- a/drivers/gpio/gpio-sifive.c
-> +++ b/drivers/gpio/gpio-sifive.c
-> @@ -150,6 +150,7 @@ static const struct irq_chip sifive_gpio_irqchip =3D =
-{
->         .irq_disable    =3D sifive_gpio_irq_disable,
->         .irq_eoi        =3D sifive_gpio_irq_eoi,
->         .irq_set_affinity =3D sifive_gpio_irq_set_affinity,
-> +       .irq_set_wake   =3D irq_chip_set_wake_parent,
->         .flags          =3D IRQCHIP_IMMUTABLE,
->         GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
-> --
-> 2.40.1
->
+Make tps68470_gpio_output() call tps68470_gpio_set() for output-only pins
+too, so that the initial value passed to gpiod_direction_output() is
+honored for these pins too.
 
-Applied, thanks!
+Fixes: 275b13a65547 ("gpio: Add support for TPS68470 GPIOs")
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+Tested-by: Daniel Scally <dan.scally@ideasonboard.com>
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- Add Fixes tag
+- Add Andy's Reviewed-by
+---
+ drivers/gpio/gpio-tps68470.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Bart
+diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
+index aaddcabe9b35..532deaddfd4e 100644
+--- a/drivers/gpio/gpio-tps68470.c
++++ b/drivers/gpio/gpio-tps68470.c
+@@ -91,13 +91,13 @@ static int tps68470_gpio_output(struct gpio_chip *gc, unsigned int offset,
+ 	struct tps68470_gpio_data *tps68470_gpio = gpiochip_get_data(gc);
+ 	struct regmap *regmap = tps68470_gpio->tps68470_regmap;
+ 
++	/* Set the initial value */
++	tps68470_gpio_set(gc, offset, value);
++
+ 	/* rest are always outputs */
+ 	if (offset >= TPS68470_N_REGULAR_GPIO)
+ 		return 0;
+ 
+-	/* Set the initial value */
+-	tps68470_gpio_set(gc, offset, value);
+-
+ 	return regmap_update_bits(regmap, TPS68470_GPIO_CTL_REG_A(offset),
+ 				 TPS68470_GPIO_MODE_MASK,
+ 				 TPS68470_GPIO_MODE_OUT_CMOS);
+-- 
+2.41.0
+
