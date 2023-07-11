@@ -2,118 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D721874E7CC
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jul 2023 09:21:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC55D74E99E
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jul 2023 10:59:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbjGKHVB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jul 2023 03:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41906 "EHLO
+        id S229931AbjGKI7g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jul 2023 04:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjGKHU7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jul 2023 03:20:59 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C8D7BE
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jul 2023 00:20:57 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:f087:2614:ec9d:569f])
-        by albert.telenet-ops.be with bizsmtp
-        id KjLt2A00K1w4dBK06jLuuy; Tue, 11 Jul 2023 09:20:54 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qJ7fz-0015rg-00;
-        Tue, 11 Jul 2023 09:20:53 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qJ7g5-00Bu7W-Pz;
-        Tue, 11 Jul 2023 09:20:53 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Shenwei Wang <shenwei.wang@nxp.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: mxc: Improve PM configuration
-Date:   Tue, 11 Jul 2023 09:20:53 +0200
-Message-Id: <20230711072053.2837327-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S231139AbjGKI73 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jul 2023 04:59:29 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53700E7E;
+        Tue, 11 Jul 2023 01:59:25 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-51e56749750so2841700a12.0;
+        Tue, 11 Jul 2023 01:59:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689065963; x=1691657963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WCy1RMIN6aIK9mn7wKePuH00105doEaXlrGCs4x+WdQ=;
+        b=dxlshHpmcU+/RD60BTec1K9KqP7h2H1qRUUgssAiUE3ZGj+mnndoP/7sSwX+9u73um
+         72PK2ODb+RMT9frUR4J5eG1WNCGu+t/TXnF51yfM+4lPgLAba85EMwvioAmveSlytJhV
+         swDXDm6eI78/RimikzoVgP+uj2gOf5XqkS6WFIxXrx+lmjPpPAD/7aHiGXac/58e1dVb
+         ORNd6oIKm7Lgobf85gCJ7lpwGHQon5iKAE7mTIdfkxOcX5ua0dOUQYIhscreQsIcK6ey
+         cUX38n5Wuife9T+Wz62hvOTnOhFb/TtDjJEaUPNI+SjNnrpleHx4xK+uC0hbQ5JNyLe8
+         wVfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689065963; x=1691657963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WCy1RMIN6aIK9mn7wKePuH00105doEaXlrGCs4x+WdQ=;
+        b=YhyGj2J3DO/Y4+FUgYjXFzy3h8WjVDNU6cVG1vbuRAarNH6SEk+xGXkZPFNQxncfkY
+         NE6QHPq2g+yyVzqW3OIpqVmzE9N3L998yO9kR5SiEJQe3o8oEGkY7THaqHJF1kW3Qthi
+         brr6YsIM52mfP3T1IUhcxN/Eab/4EtnyanA5HtlvrxH/BFAk7tNCRHUdUCReE3UoW9hj
+         hBdjCnz+wo/5rRzweP4MEX7KCZa3yiJvjjVcwAnTnLw/aVT+mMkj+QIqwofA3uUG8A8X
+         iEIf8nEE8VVyOPkNM1Ojm7NG6/7gu6TZjOAlkxlAi25Nfwv2EqDPwwbNV0MXnOiAgaH1
+         mAXw==
+X-Gm-Message-State: ABy/qLaDC3IIv3QcQmnBfXp0QuCsg+g/z1b/06dYcH30khZTRrqRiWrX
+        79ZYCtRSaR5LemSYQcb64CWKMJ6OC6gieDTBeO61qV/uP7o=
+X-Google-Smtp-Source: APBJJlEKr1ge3dczVpJsYSOqUXnzyXzHURhlljTZFokROyPrWeINhJ9rT77mJOwEG7Urp65ym6bQFTN0BBU9o/b1gFM=
+X-Received: by 2002:a17:906:2b51:b0:982:cfe2:32fe with SMTP id
+ b17-20020a1709062b5100b00982cfe232femr15950094ejg.63.1689065963301; Tue, 11
+ Jul 2023 01:59:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+References: <20230710215023.679-1-asmaa@nvidia.com>
+In-Reply-To: <20230710215023.679-1-asmaa@nvidia.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 11 Jul 2023 11:58:46 +0300
+Message-ID: <CAHp75Ve87oHP4P-=xHZgHuWyJJnpuARH+qzXO_vJRhUeovXMWQ@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: mmio: fix calculation of bgpio_bits
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        davthompson@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If CONFIG_PM=n (e.g. m68k/allmodconfig):
+On Tue, Jul 11, 2023 at 12:50=E2=80=AFAM Asmaa Mnebhi <asmaa@nvidia.com> wr=
+ote:
+>
+> If the "ngpios" property is specified, bgpio_bits is calculated
+> as the round up value of ngpio. At the moment, the only requirement
+> specified is that the round up value must be a multiple of 8 but
+> it should also be a power of 2 because we provide accessors based
+> on the bank size in bgpio_setup_accessors().
 
-    drivers/gpio/gpio-mxc.c:612:12: error: ‘mxc_gpio_runtime_resume’ defined but not used [-Werror=unused-function]
-      612 | static int mxc_gpio_runtime_resume(struct device *dev)
-          |            ^~~~~~~~~~~~~~~~~~~~~~~
-    drivers/gpio/gpio-mxc.c:602:12: error: ‘mxc_gpio_runtime_suspend’ defined but not used [-Werror=unused-function]
-      602 | static int mxc_gpio_runtime_suspend(struct device *dev)
-          |            ^~~~~~~~~~~~~~~~~~~~~~~~
+Is this a fixup for the other patch? If so, then why did you split them aga=
+in?
 
-Fix this by using the non-SET *_PM_OPS to configure the dev_pm_ops
-callbacks, and by wrapping the driver.pm initializer insider pm_ptr().
-
-As NOIRQ_SYSTEM_SLEEP_PM_OPS() uses pm_sleep_ptr() internally, the
-__maybe_unused annotations for the noirq callbacks are no longer needed,
-and can be removed.
-
-Fixes: 3283d820dce649ad ("gpio: mxc: add runtime pm support")
-Reported-by: noreply@ellerman.id.au
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpio/gpio-mxc.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index a9fb6bd9aa6f9645..a43df5d5006e62d3 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -623,7 +623,7 @@ static int mxc_gpio_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static int __maybe_unused mxc_gpio_noirq_suspend(struct device *dev)
-+static int mxc_gpio_noirq_suspend(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct mxc_gpio_port *port = platform_get_drvdata(pdev);
-@@ -634,7 +634,7 @@ static int __maybe_unused mxc_gpio_noirq_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev)
-+static int mxc_gpio_noirq_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct mxc_gpio_port *port = platform_get_drvdata(pdev);
-@@ -647,8 +647,8 @@ static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev)
- }
- 
- static const struct dev_pm_ops mxc_gpio_dev_pm_ops = {
--	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_noirq_resume)
--	SET_RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resume, NULL)
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_noirq_resume)
-+	RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resume, NULL)
- };
- 
- static int mxc_gpio_syscore_suspend(void)
-@@ -695,7 +695,7 @@ static struct platform_driver mxc_gpio_driver = {
- 		.name	= "gpio-mxc",
- 		.of_match_table = mxc_gpio_dt_ids,
- 		.suppress_bind_attrs = true,
--		.pm = &mxc_gpio_dev_pm_ops,
-+		.pm = pm_ptr(&mxc_gpio_dev_pm_ops),
- 	},
- 	.probe		= mxc_gpio_probe,
- };
--- 
-2.34.1
-
+--=20
+With Best Regards,
+Andy Shevchenko
