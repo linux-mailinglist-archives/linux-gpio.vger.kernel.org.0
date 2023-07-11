@@ -2,159 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F50E74E9AB
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jul 2023 11:01:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99BCB74EA68
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jul 2023 11:27:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231221AbjGKJB0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jul 2023 05:01:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
+        id S232260AbjGKJ1M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jul 2023 05:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231531AbjGKJBV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jul 2023 05:01:21 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18A8AE56;
-        Tue, 11 Jul 2023 02:01:15 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-51e99584adaso526341a12.0;
-        Tue, 11 Jul 2023 02:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689066073; x=1691658073;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4kuLGXAIsTTibzBcdPpmL9/pco03CrweKAFXxk1FsHM=;
-        b=Qr9bGvtc7beXI+iwSSFPqjiTj3S/DCd4PiO0tSP0WpDTlhm/TqmZT0vzoqq7EIX5Ez
-         EoyJFOyMORPvWQkYm5n4aFan5gd934+pHWMpiARMTE5n9vvK/Dw1UuWRnLxOMOX2sGFV
-         DwtZRvUJkDNF1U/Rnyg8iyT/jOaR4Aq8B8/EmK7pn6Cmkz/ZImheQ8AmjJHjnLDz9hkP
-         JTeVlvtxJb9lm4Fu9xV3JAQYGkfDUSUXtEEJm8y3vQ6SIkkvSygo/km7RPONd9+f6l4S
-         Mv4/i6nheSMN5hOfK45QOleDCDBlznvaVJU1awZFIklb8HSrIp6FqBc28a+Q3qzgroRX
-         fFbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689066073; x=1691658073;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4kuLGXAIsTTibzBcdPpmL9/pco03CrweKAFXxk1FsHM=;
-        b=D33zVETXaVpCeFmXLvMOYoIpsU4PoWoF6plRCCikwOcKJYfh7ynfsfE5Q214VWWuFN
-         g1WufZnroSw9aPj/9lYL1Yrj4Uoq3mySQ1h7pxfXqWn9Oi/W7rp5ncoT7sVU6oRt1pNc
-         4w+so0VJ3z2rs2/og2IxpNyLfM5ZrKA/kkOdl6hcnTII9NcZYunwLz1dCaIQ/c9oA5I3
-         9wKArJ6FPTcUUdETIjlDh83p/TL2Ty2rzyrwZ0kJgL/DOZK90y/zCONW2pyXbDYVlpEx
-         uN8sJ90nAtp5yIuhqg7DH6LPG2/sI9Yd6wU+YJatZ6rt1xMGhquuWkt3L8/goueL2O7N
-         f6Zw==
-X-Gm-Message-State: ABy/qLakCVt6oAZmpsA87zeiireReUPavdTUwgEiFCYySx8K0z6//H+N
-        9Ki+mb6kxXxQJMg6wJIVhbvj+LBorwc9JGCIJgc=
-X-Google-Smtp-Source: APBJJlGLwk0NIo3kkjukH7UnrggZhZtuplNGrknTPYOdhpAfIyV9bv6iLDKwyEp+uh6z0es3woRKuRW8eEU0PtFUm7g=
-X-Received: by 2002:a17:906:1ecf:b0:982:30e3:ddcb with SMTP id
- m15-20020a1709061ecf00b0098230e3ddcbmr11437923ejj.65.1689066073353; Tue, 11
- Jul 2023 02:01:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230711072053.2837327-1-geert+renesas@glider.be>
-In-Reply-To: <20230711072053.2837327-1-geert+renesas@glider.be>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 11 Jul 2023 12:00:37 +0300
-Message-ID: <CAHp75VfqEgysCHK9qFBSOrpQqW68LUA=i4EEYMaM8e1UeMzCMw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mxc: Improve PM configuration
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S231370AbjGKJ0q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jul 2023 05:26:46 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 297E12123;
+        Tue, 11 Jul 2023 02:23:39 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8Cx2eqaH61kr3MDAA--.4703S3;
+        Tue, 11 Jul 2023 17:23:38 +0800 (CST)
+Received: from user-pc.202.106.0.20 (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Ax3c6RH61kf3MoAA--.49398S2;
+        Tue, 11 Jul 2023 17:23:38 +0800 (CST)
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        Liu Peibao <liupeibao@loongson.cn>,
+        loongson-kernel@lists.loongnix.cn, Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH] gpio: loongson: add firmware offset parse support
+Date:   Tue, 11 Jul 2023 17:23:28 +0800
+Message-Id: <20230711092328.26598-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Ax3c6RH61kf3MoAA--.49398S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 10:21=E2=80=AFAM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> If CONFIG_PM=3Dn (e.g. m68k/allmodconfig):
->
->     drivers/gpio/gpio-mxc.c:612:12: error: =E2=80=98mxc_gpio_runtime_resu=
-me=E2=80=99 defined but not used [-Werror=3Dunused-function]
->       612 | static int mxc_gpio_runtime_resume(struct device *dev)
->           |            ^~~~~~~~~~~~~~~~~~~~~~~
->     drivers/gpio/gpio-mxc.c:602:12: error: =E2=80=98mxc_gpio_runtime_susp=
-end=E2=80=99 defined but not used [-Werror=3Dunused-function]
->       602 | static int mxc_gpio_runtime_suspend(struct device *dev)
->           |            ^~~~~~~~~~~~~~~~~~~~~~~~
->
-> Fix this by using the non-SET *_PM_OPS to configure the dev_pm_ops
-> callbacks, and by wrapping the driver.pm initializer insider pm_ptr().
->
-> As NOIRQ_SYSTEM_SLEEP_PM_OPS() uses pm_sleep_ptr() internally, the
-> __maybe_unused annotations for the noirq callbacks are no longer needed,
-> and can be removed.
+Some platforms contain multiple GPIO chips that with different offset
+addresses, if using acpi_device_id or of_device_id's data domain to
+initialize GPIO chip and different compatibles need to be added, but
+this addition is unnecessary because these GPIO chips are compatible
+with each other. Therefore, this driver adds support for parsing the
+necessary offset elements of GPIO chips from firmware to fix such
+issue.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+---
+ drivers/gpio/gpio-loongson-64bit.c | 71 +++++++++++++++++++++++++++---
+ 1 file changed, 64 insertions(+), 7 deletions(-)
 
-> Fixes: 3283d820dce649ad ("gpio: mxc: add runtime pm support")
-> Reported-by: noreply@ellerman.id.au
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/gpio/gpio-mxc.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index a9fb6bd9aa6f9645..a43df5d5006e62d3 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -623,7 +623,7 @@ static int mxc_gpio_runtime_resume(struct device *dev=
-)
->         return 0;
->  }
->
-> -static int __maybe_unused mxc_gpio_noirq_suspend(struct device *dev)
-> +static int mxc_gpio_noirq_suspend(struct device *dev)
->  {
->         struct platform_device *pdev =3D to_platform_device(dev);
->         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
-> @@ -634,7 +634,7 @@ static int __maybe_unused mxc_gpio_noirq_suspend(stru=
-ct device *dev)
->         return 0;
->  }
->
-> -static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev)
-> +static int mxc_gpio_noirq_resume(struct device *dev)
->  {
->         struct platform_device *pdev =3D to_platform_device(dev);
->         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
-> @@ -647,8 +647,8 @@ static int __maybe_unused mxc_gpio_noirq_resume(struc=
-t device *dev)
->  }
->
->  static const struct dev_pm_ops mxc_gpio_dev_pm_ops =3D {
-> -       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_no=
-irq_resume)
-> -       SET_RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_res=
-ume, NULL)
-> +       NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_noirq_=
-resume)
-> +       RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resume,=
- NULL)
->  };
->
->  static int mxc_gpio_syscore_suspend(void)
-> @@ -695,7 +695,7 @@ static struct platform_driver mxc_gpio_driver =3D {
->                 .name   =3D "gpio-mxc",
->                 .of_match_table =3D mxc_gpio_dt_ids,
->                 .suppress_bind_attrs =3D true,
-> -               .pm =3D &mxc_gpio_dev_pm_ops,
-> +               .pm =3D pm_ptr(&mxc_gpio_dev_pm_ops),
->         },
->         .probe          =3D mxc_gpio_probe,
->  };
-> --
-> 2.34.1
->
+diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
+index 06213bbfabdd..7f92cb6205b2 100644
+--- a/drivers/gpio/gpio-loongson-64bit.c
++++ b/drivers/gpio/gpio-loongson-64bit.c
+@@ -26,6 +26,7 @@ struct loongson_gpio_chip_data {
+ 	unsigned int		conf_offset;
+ 	unsigned int		out_offset;
+ 	unsigned int		in_offset;
++	unsigned int		inten_offset;
+ };
+ 
+ struct loongson_gpio_chip {
+@@ -117,7 +118,17 @@ static void loongson_gpio_set(struct gpio_chip *chip, unsigned int pin, int valu
+ 
+ static int loongson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+ {
++	unsigned int u;
+ 	struct platform_device *pdev = to_platform_device(chip->parent);
++	struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
++
++	if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
++		u = readl(lgpio->reg_base + lgpio->chip_data->inten_offset + offset / 32 * 4);
++		u |= BIT(offset % 32);
++		writel(u, lgpio->reg_base + lgpio->chip_data->inten_offset + offset / 32 * 4);
++	} else {
++		writeb(1, lgpio->reg_base + lgpio->chip_data->inten_offset + offset);
++	}
+ 
+ 	return platform_get_irq(pdev, offset);
+ }
+@@ -127,11 +138,30 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
+ {
+ 	int ret;
+ 	u32 ngpios;
++	unsigned int io_width;
+ 
+ 	lgpio->reg_base = reg_base;
++	if (device_property_read_u32(dev, "ngpios", &ngpios) || !ngpios)
++		return -EINVAL;
++
++	ret = DIV_ROUND_UP(ngpios, 8);
++	switch (ret) {
++	case 1 ... 2:
++		io_width = ret;
++		break;
++	case 3 ... 4:
++		io_width = 0x4;
++		break;
++	case 5 ... 8:
++		io_width = 0x8;
++		break;
++	default:
++		dev_err(dev, "unsupported io width\n");
++		return -EINVAL;
++	}
+ 
+ 	if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
+-		ret = bgpio_init(&lgpio->chip, dev, 8,
++		ret = bgpio_init(&lgpio->chip, dev, io_width,
+ 				lgpio->reg_base + lgpio->chip_data->in_offset,
+ 				lgpio->reg_base + lgpio->chip_data->out_offset,
+ 				NULL, NULL,
+@@ -151,16 +181,35 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
+ 		spin_lock_init(&lgpio->lock);
+ 	}
+ 
+-	device_property_read_u32(dev, "ngpios", &ngpios);
+-
+-	lgpio->chip.can_sleep = 0;
+ 	lgpio->chip.ngpio = ngpios;
+-	lgpio->chip.label = lgpio->chip_data->label;
+-	lgpio->chip.to_irq = loongson_gpio_to_irq;
++	lgpio->chip.can_sleep = 0;
++	if (lgpio->chip_data->label)
++		lgpio->chip.label = lgpio->chip_data->label;
++	else
++		lgpio->chip.label = kstrdup(to_platform_device(dev)->name, GFP_KERNEL);
++
++	if (lgpio->chip_data->inten_offset)
++		lgpio->chip.to_irq = loongson_gpio_to_irq;
+ 
+ 	return devm_gpiochip_add_data(dev, &lgpio->chip, lgpio);
+ }
+ 
++static int loongson_gpio_get_props(struct device *dev,
++				    struct loongson_gpio_chip *lgpio)
++{
++	const struct loongson_gpio_chip_data *d = lgpio->chip_data;
++
++	if (device_property_read_u32(dev, "loongson,gpio-conf-offset", (u32 *)&d->conf_offset)
++	    || device_property_read_u32(dev, "loongson,gpio-in-offset", (u32 *)&d->in_offset)
++	    || device_property_read_u32(dev, "loongson,gpio-out-offset", (u32 *)&d->out_offset)
++	    || device_property_read_u32(dev, "loongson,gpio-ctrl-mode", (u32 *)&d->mode))
++		return -EINVAL;
++
++	device_property_read_u32(dev, "loongson,gpio-inten-offset", (u32 *)&d->inten_offset);
++
++	return 0;
++}
++
+ static int loongson_gpio_probe(struct platform_device *pdev)
+ {
+ 	void __iomem *reg_base;
+@@ -172,7 +221,12 @@ static int loongson_gpio_probe(struct platform_device *pdev)
+ 	if (!lgpio)
+ 		return -ENOMEM;
+ 
+-	lgpio->chip_data = device_get_match_data(dev);
++	lgpio->chip_data = devm_kzalloc(dev, sizeof(*lgpio->chip_data), GFP_KERNEL);
++	if (!lgpio->chip_data)
++		return -ENOMEM;
++
++	if (loongson_gpio_get_props(dev, lgpio))
++		lgpio->chip_data = device_get_match_data(dev);
+ 
+ 	reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(reg_base))
+@@ -215,6 +269,9 @@ static const struct acpi_device_id loongson_gpio_acpi_match[] = {
+ 		.id = "LOON0002",
+ 		.driver_data = (kernel_ulong_t)&loongson_gpio_ls7a_data,
+ 	},
++	{
++		.id = "LOON0007",
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(acpi, loongson_gpio_acpi_match);
+-- 
+2.31.1
 
-
---=20
-With Best Regards,
-Andy Shevchenko
