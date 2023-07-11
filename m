@@ -2,62 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D33C274F7BF
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jul 2023 20:05:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 444C074F970
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jul 2023 22:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231499AbjGKSF6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jul 2023 14:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55870 "EHLO
+        id S231299AbjGKU61 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jul 2023 16:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbjGKSF5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jul 2023 14:05:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C88651716;
-        Tue, 11 Jul 2023 11:05:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6851A615B6;
-        Tue, 11 Jul 2023 18:05:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE81EC433C8;
-        Tue, 11 Jul 2023 18:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689098754;
-        bh=xIq4UPJc5cJM6QesWCRibpmblqZYNDtcrH7yYHl3oK8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mWaDSgMdD4UzMmzKqW6Lxv4GAHzx73ct8iijKJbB5W+gmcZcf1g4mTyEDxU/WBCFx
-         +3cqk+Xk6nCGHIj7hPMbJUxa8tfoGcg3xZFAJge3mW7Lo1N2kHmbPm74BHmTapWjNs
-         R5XXG4mwhC4C5ANrfJAmAFGEM3LVVGldL8dhjsbYnCY9FsHLoO9YO42nnzmI6QwrNf
-         CbOqf2IDC9lRytEtWxsvGP7/qhOCKvtB1Tp9c4svbUctXaYy8lf6xtzqYjSeF6BVr6
-         0gcweyNJH3KuERy2BcMiB93WaQycOJiT80L9nBBl9/ZsbU+AUw//GzBg9lgaeHVl/5
-         l2r+UBmUfbppw==
-Date:   Tue, 11 Jul 2023 19:05:49 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Huqiang Qin <huqiang.qin@amlogic.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        neil.armstrong@linaro.org, khilman@baylibre.com,
-        jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
-        brgl@bgdev.pl, andy@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] dt-bindings: gpio: Add a header file for Amlogic
- C3 SoCs
-Message-ID: <20230711-monthly-return-8792ce346c26@spud>
-References: <20230710042812.2007928-1-huqiang.qin@amlogic.com>
- <20230710042812.2007928-2-huqiang.qin@amlogic.com>
- <20230710-maybe-mantis-e647d94fd13a@spud>
- <424cb61a-9102-9a43-c999-36939e8d6cc0@amlogic.com>
+        with ESMTP id S231319AbjGKU60 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jul 2023 16:58:26 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F16091710
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jul 2023 13:58:24 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b8ad9eede0so46380365ad.1
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jul 2023 13:58:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689109104; x=1691701104;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g8KOiARB33Qn2eQiVXhRlyJdDsctValxz3yLwjk0g1Y=;
+        b=d0KLinwEBO85IyDrVcM2/y8PB0cmJhxtQOVyvg2twPerU70J8KrHLb4vsZ5fAE3l0N
+         Gyl5pfkZugVA2/lPDvG6hUDhcIDjgxVywglTXA8gEZnIne2JUebijAd6jPOlLXhHRe12
+         uLrm7TDexGzYePNOOryVRsVKzWV9H76hdIwuQIubI7tMwGFjZ/ZJc0trySOSQNPoV2em
+         CYmVN6R3jqKI9v3JAgyWJZQxwNompXOuFSWBtuRdeLuVOmXYjijfnRa1uvh0pT4zOA+I
+         Ne4tcR+KvxT/zW9zkNA2kCRW7fgtbrYDpaGhkkNDMSr1uENmkwHol8AbQ/3Rr0QxELIr
+         UPzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689109104; x=1691701104;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g8KOiARB33Qn2eQiVXhRlyJdDsctValxz3yLwjk0g1Y=;
+        b=Xa8PY0THVo9OaNhy5JKfiQQ/mhhIxJSLMDQ4QSJ0qIBlTiama3s1bacQVyJqxuJKPf
+         IpPaVHoACYRXiGB8jJkM1mIKsI5ZQ9Ir/1y+mvdrkeN6TeZLs4RpYRYSe4RvJAEk2ITO
+         LUH0ie3yi5XbaFebnhuTb/PKzX/hL2bafmjaD5yGNrzLXXv2LWO+59nSbhLcqyKwUN39
+         nT2LKKgM7H+WSI8nAYPCpeEZIdsL6wv0e1gdaIVLdVLXTuA6KppmjcazkEOK3iyTWR3V
+         pgNFO9NXprGCn56Ber7bx2hGuSLC/m7DLk7BGC/JA9/TiK1ry9dY26OMj/FEqvc/jYyQ
+         nvtA==
+X-Gm-Message-State: ABy/qLZCjluJYK80em6jkynoxAIIVYZHS+1KdLGuiAH5IYuPup5ZPWU6
+        OHNAbeZ5i6u/4LGWba2NBaewBQ==
+X-Google-Smtp-Source: APBJJlEWupqXJzTkSXeMkFcC11KWGbsSJzERularWZNESQhAfks4Cr0DgcD0Z/PwTbTJxN73t/trag==
+X-Received: by 2002:a17:902:daca:b0:1b8:ae8c:7d88 with SMTP id q10-20020a170902daca00b001b8ae8c7d88mr21832491plx.7.1689109104339;
+        Tue, 11 Jul 2023 13:58:24 -0700 (PDT)
+Received: from fedora (61-114-134-192.ppp.bbiq.jp. [61.114.134.192])
+        by smtp.gmail.com with ESMTPSA id bg4-20020a1709028e8400b001b53be3d942sm2350749plb.232.2023.07.11.13.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jul 2023 13:58:23 -0700 (PDT)
+Date:   Tue, 11 Jul 2023 16:58:19 -0400
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, techsupport@winsystems.com,
+        stable@vger.kernel.org,
+        Paul Demetrotion <pdemetrotion@winsystems.com>
+Subject: Re: [RESEND] gpio: ws16c48: Fix off-by-one error in WS16C48 resource
+ region extent
+Message-ID: <ZK3Ca825eTtNFL9V@fedora>
+References: <20230228081724.94786-1-william.gray@linaro.org>
+ <CAMRc=MfD3=ifo9EJf=5_HZKLXnbASi=ehYm=Zs4WQA+YxfffQw@mail.gmail.com>
+ <ZAXfZbywWOo2pg4L@fedora>
+ <ZC2J9ru1VN5fmeXZ@fedora>
+ <ZH3mxt4f5HaCCtph@fedora>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="BB6EK5uDa3jar4Xq"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0SJN+oWbDHvdTo04"
 Content-Disposition: inline
-In-Reply-To: <424cb61a-9102-9a43-c999-36939e8d6cc0@amlogic.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <ZH3mxt4f5HaCCtph@fedora>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -65,72 +79,68 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---BB6EK5uDa3jar4Xq
-Content-Type: text/plain; charset=us-ascii
+--0SJN+oWbDHvdTo04
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 11, 2023 at 10:55:40AM +0800, Huqiang Qin wrote:
-> Hi Conor,
->=20
-> On 2023/7/11 0:38, Conor Dooley wrote:
-> >> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-p=
-inctrl-a1.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pi=
-nctrl-a1.yaml
-> >> index 99080c9eaac3..e019b6aa6ca3 100644
-> >> --- a/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-=
-a1.yaml
-> >> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl-=
-a1.yaml
-> >> @@ -17,6 +17,7 @@ properties:
-> >>      enum:
-> >>        - amlogic,meson-a1-periphs-pinctrl
-> >>        - amlogic,meson-s4-periphs-pinctrl
-> >> +      - amlogic,c3-periphs-pinctrl
-> > Alphanumerical order here perhaps?
->=20
-> Okay
->=20
-> >=20
-> >> +++ b/include/dt-bindings/gpio/amlogic-c3-gpio.h
-> >> @@ -0,0 +1,72 @@
-> >> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
-> > Any reason to deviate from the usual license terms for bindings, which =
+On Mon, Jun 05, 2023 at 09:44:38AM -0400, William Breathitt Gray wrote:
+> On Wed, Apr 05, 2023 at 10:47:18AM -0400, William Breathitt Gray wrote:
+> > On Mon, Mar 06, 2023 at 07:41:09AM -0500, William Breathitt Gray wrote:
+> > > On Mon, Mar 06, 2023 at 10:23:30AM +0100, Bartosz Golaszewski wrote:
+> > > > On Thu, Mar 2, 2023 at 11:30=E2=80=AFPM William Breathitt Gray
+> > > > <william.gray@linaro.org> wrote:
+> > > > >
+> > > > > The WinSystems WS16C48 I/O address region spans offsets 0x0 throu=
+gh 0xA,
+> > > > > which is a total of 11 bytes. Fix the WS16C48_EXTENT define to the
+> > > > > correct value of 11 so that access to necessary device registers =
 is
-> > "GPL-2.0-only OR BSD-2-Clause"?
+> > > > > properly requested in the ws16c48_probe() callback by the
+> > > > > devm_request_region() function call.
+> > > > >
+> > > > > Fixes: 2c05a0f29f41 ("gpio: ws16c48: Implement and utilize regist=
+er structures")
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Cc: Paul Demetrotion <pdemetrotion@winsystems.com>
+> > > > > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> > > > > ---
+> > > >=20
+> > > > Why did you need to resend this? Anything changed?
+> > > >=20
+> > > > Bart
+> > >=20
+> > > No changes in code, just added the stable@ver.kernel.org Cc tag.
+> > >=20
+> > > William Breathitt Gray
+> >=20
+> > Hi Bart,
+> >=20
+> > Would you take this fix through the gpio tree?
+> >=20
+> > William Breathitt Gray
 >=20
-> I initially used the license commonly used by Amlogic (reference: meson-s=
-4-gpio.h):
-> ```
-> /* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> ```
+> It looks like this patch was missed. Is there anything further needed or
+> can it be queued as it is now?
 >=20
-> But when I checked the patch, some warnings appeared:
-> ```
-> WARNING: DT binding headers should be licensed (GPL-2.0-only OR .*)
-> #37: FILE: include/dt-bindings/gpio/amlogic-c3-gpio.h:1:
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> ```
-> So I followed the prompts and changed the license.
->=20
-> Can I ignore this warning and use the (GPL-2.0+ OR MIT) license?
+> William Breathitt Gray
 
-If the tools are happy then I suppose you are okay.. I'll leave that to
-Rob or Krzysztof, but if you have a reason for diverging that seems fine
-to me.
+The fix was missed again this past cycle. Are there any particular
+issues with merging this patch that I should address? WS16C48 interrupt
+handling is still broken so that's the motivation for getting this fix
+into the GPIO tree.
 
-Thanks,
-Conor.
+William Breathitt Gray
 
---BB6EK5uDa3jar4Xq
+--0SJN+oWbDHvdTo04
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZK2Z/QAKCRB4tDGHoIJi
-0gtfAP9/EXCGxkNjEP4so+mvz8Kfk7PRNhgkTxX9QnngeOPp1AD/XndZ8ks4QCwV
-IXXaGza3r7f0IgKHFv0erzhbfM1q7gY=
-=JIPw
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZK3CawAKCRC1SFbKvhIj
+K9GCAP0cO7V37RWi59bgL6jwGculR+L+HxyeBXdQXQapKRTjKAEA56Xhu/irRplu
+kiskQAWIe3GpNBquZxY2ybeDe9G+Bg4=
+=KmlC
 -----END PGP SIGNATURE-----
 
---BB6EK5uDa3jar4Xq--
+--0SJN+oWbDHvdTo04--
