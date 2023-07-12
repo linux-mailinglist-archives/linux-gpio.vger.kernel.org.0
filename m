@@ -2,65 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F3F750411
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 12:05:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F329750527
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 12:52:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231210AbjGLKFG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jul 2023 06:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37436 "EHLO
+        id S231960AbjGLKwm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jul 2023 06:52:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230361AbjGLKEl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 06:04:41 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B2410F2;
-        Wed, 12 Jul 2023 03:04:40 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-4fb8574a3a1so10530269e87.1;
-        Wed, 12 Jul 2023 03:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689156278; x=1691748278;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tg3PIZLxcmLPbTTz3barqLxpgo7A/s+2KALDE1Wf9vU=;
-        b=ooerHfqDoFsg4m/SdmiYQ0dnFloeSITdEKTng/HddATq2I/D/J6ZC+Kn/GhSINvKz1
-         KCfJUEG3kl8uPA7khfxmjtwUsaMV+pb55KaIUergK+sB2zLaQSydH31fkK9wyAZ9qPtO
-         WlaBK2gZD5sDEp2lEMZxVnsRqCUL6pKaDafT+4y59vLar23tFKSc6KMGq+R9boYvcaLn
-         WN0QOWGjlIXGG8KJl3XLKpUUtsWaRML4qu2iMmVeMFSIAen6H85GcTAKP3r9Lh2tKmoC
-         lckAQPTaAYKxNuarzDG+EzRwls+IYDQ+pDOcMadp4w582zV71e5ILwKlIEz+f4bysOlq
-         iFKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689156278; x=1691748278;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tg3PIZLxcmLPbTTz3barqLxpgo7A/s+2KALDE1Wf9vU=;
-        b=ANOTbmVRpO+KmtprdCza/q5hX//jnWGt0lp84C2xzL0J38LYkEkl+e3uNGyvqhvRRG
-         AHv9we1bLopV0HeaU8fd0uPQUKaSneJPK8hF9NLDyjEMX/55SEt6bVgIk6nCi4X5GhrK
-         R13FURqoXcKh6oUOOJYhO0xykYStNMyfOVciV23Ycu5aLbJkPyVuCK21y4kF2VyApFWL
-         Q+B2SVsIjnylmbB35m/OtFsFcVjoNFWL6+BHWGUOyorlk96/PO/sRTkoGGAzFpTZ93fu
-         rrJ1OURjNLqn/9zJucjrSUoMFvZ+pWeNITOJibTnIH3QjOZk4p+R4MOcELDrSDNiIff/
-         NHrg==
-X-Gm-Message-State: ABy/qLYA/8vAoN9rv0Talk9dNl16uskAYWy2h6F+6ozkWeGZU+WqZFGy
-        /nYtzENG7Gkkwx0nibPZrnu2z1dfZYoRzcdCgBI=
-X-Google-Smtp-Source: APBJJlHCb1OyVyj4iCM3rCz4GjPXUmdoYSdObwbNJFLAhqgHTrXSad/in6TH4twTTTCDSnlGaEVe2nIl0pINFk+BJZo=
-X-Received: by 2002:a05:6512:1108:b0:4f4:dbcc:54da with SMTP id
- l8-20020a056512110800b004f4dbcc54damr17321858lfg.27.1689156277984; Wed, 12
- Jul 2023 03:04:37 -0700 (PDT)
+        with ESMTP id S231435AbjGLKwl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 06:52:41 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A324C10C7;
+        Wed, 12 Jul 2023 03:52:39 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36C8cnfx003815;
+        Wed, 12 Jul 2023 10:52:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=9kopEKy0CzwxpGm86TYpnrg0eSGrBkWZlaQuOJ20tVI=;
+ b=W9gX/VxAwxjHpXSOHzwq5KSifC1yoeLSwDCOzUHpLESMZaDwEtJX3UTQRoET25ToLFKt
+ w7rWDpTRqzs5YH7Lbobockc+F0LjURWOo8Gx9lJbGABLc4ACUHRBdBf8SNK57yCy/+QG
+ 1uFG3VYvAsSwbe7/Z/zFBxcGaFu1ePbKDDzKTF96j+ztmJYbo7Yj0yP01+Nw0qg1H779
+ 2IolO55mN4jEMrMBL6aDkcrfFWkh4ZemIWFXs/vFhWFHkz7BUtHC6sNfQ96ZMrI+FGcQ
+ vTEgTwAUEEwjEBFs1KAtDc+uouATzhLhCqCv+fioNcJ9dhIEJvTpqTb7pyo/+CL6xPLK MQ== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rsgar93av-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jul 2023 10:52:32 +0000
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36CAqSwC012097
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 12 Jul 2023 10:52:28 GMT
+Received: from ipa-build-02.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.30; Wed, 12 Jul 2023 03:52:26 -0700
+From:   Minghao Zhang <quic_minghao@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@somainline.org>, <linus.walleij@linaro.org>
+CC:     Minghao Zhang <quic_minghao@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_satyap@quicinc.com>,
+        <quic_tsoni@quicinc.com>
+Subject: [PATCH V3] pinctrl: qcom: Add support to log pin status before suspend for TLMM
+Date:   Wed, 12 Jul 2023 18:52:00 +0800
+Message-ID: <20230712105200.26012-1-quic_minghao@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20230712094857.218105-1-alex@shruggie.ro>
-In-Reply-To: <20230712094857.218105-1-alex@shruggie.ro>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 12 Jul 2023 13:04:01 +0300
-Message-ID: <CAHp75VenLV_+LMvxRcpdRGN5eBK9+ZBoGLaOox+XpOvaUP5Csw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: 74xx-mmio: remove unneeded platform_set_drvdata() call
-To:     Alexandru Ardelean <alex@shruggie.ro>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 4459JJjMDKUGGWmlEsARCryLzwQY7sKr
+X-Proofpoint-ORIG-GUID: 4459JJjMDKUGGWmlEsARCryLzwQY7sKr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-12_06,2023-07-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ mlxlogscore=880 spamscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 clxscore=1011 adultscore=0 malwarescore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307120096
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,42 +75,215 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 12:49=E2=80=AFPM Alexandru Ardelean <alex@shruggie.=
-ro> wrote:
->
-> The platform_set_drvdata() was needed when the driver had an explicit
-> remove function.
-> That function got removed a while back, so we don't need to keep a pointe=
-r
-> (on 'dev->driver_data') for the private data of the driver anymore.
+This change supports to print pin status before device suspend
+to debug for TLMM. And expose 2 APIs to enable/disable this
+functionality.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Minghao Zhang <quic_minghao@quicinc.com>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 133 ++++++++++++++++++++++-------
+ drivers/pinctrl/qcom/pinctrl-msm.h |   4 +
+ 2 files changed, 108 insertions(+), 29 deletions(-)
 
-> Signed-off-by: Alexandru Ardelean <alex@shruggie.ro>
-> ---
->  drivers/gpio/gpio-74xx-mmio.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-74xx-mmio.c b/drivers/gpio/gpio-74xx-mmio.=
-c
-> index 0464f1ecd20d..c7ac5a9ffb1f 100644
-> --- a/drivers/gpio/gpio-74xx-mmio.c
-> +++ b/drivers/gpio/gpio-74xx-mmio.c
-> @@ -135,8 +135,6 @@ static int mmio_74xx_gpio_probe(struct platform_devic=
-e *pdev)
->         priv->gc.ngpio =3D MMIO_74XX_BIT_CNT(priv->flags);
->         priv->gc.owner =3D THIS_MODULE;
->
-> -       platform_set_drvdata(pdev, priv);
-> -
->         return devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
->  }
->
-> --
-> 2.40.1
->
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 2585ef2b2793..ed1c5b2817aa 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -82,6 +82,21 @@ struct msm_pinctrl {
+ 	u32 phys_base[MAX_NR_TILES];
+ };
+ 
++static bool pinctrl_msm_log_mask;
++
++static const char * const pulls_keeper[] = {
++	"no pull",
++	"pull down",
++	"keeper",
++	"pull up"
++};
++
++static const char * const pulls_no_keeper[] = {
++	"no pull",
++	"pull down",
++	"pull up",
++};
++
+ #define MSM_ACCESSOR(name) \
+ static u32 msm_readl_##name(struct msm_pinctrl *pctrl, \
+ 			    const struct msm_pingroup *g) \
+@@ -653,6 +668,29 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+ 
++static void msm_gpio_pin_status_get(struct msm_pinctrl *pctrl, const struct msm_pingroup *g,
++				    unsigned int offset, int *is_out, unsigned int *func,
++				    int *drive, int *pull, int *egpio_enable, int *val)
++{
++	u32 ctl_reg, io_reg;
++
++	ctl_reg = msm_readl_ctl(pctrl, g);
++	io_reg = msm_readl_io(pctrl, g);
++
++	*is_out = !!(ctl_reg & BIT(g->oe_bit));
++	*func = (ctl_reg >> g->mux_bit) & 7;
++	*drive = (ctl_reg >> g->drv_bit) & 7;
++	*pull = (ctl_reg >> g->pull_bit) & 3;
++	*egpio_enable = 0;
++	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
++		*egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
++
++	if (*is_out)
++		*val = !!(io_reg & BIT(g->out_bit));
++	else
++		*val = !!(io_reg & BIT(g->in_bit));
++}
++
+ #ifdef CONFIG_DEBUG_FS
+ 
+ static void msm_gpio_dbg_show_one(struct seq_file *s,
+@@ -669,40 +707,13 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
+ 	int pull;
+ 	int val;
+ 	int egpio_enable;
+-	u32 ctl_reg, io_reg;
+-
+-	static const char * const pulls_keeper[] = {
+-		"no pull",
+-		"pull down",
+-		"keeper",
+-		"pull up"
+-	};
+-
+-	static const char * const pulls_no_keeper[] = {
+-		"no pull",
+-		"pull down",
+-		"pull up",
+-	};
+ 
+ 	if (!gpiochip_line_is_valid(chip, offset))
+ 		return;
+ 
+ 	g = &pctrl->soc->groups[offset];
+-	ctl_reg = msm_readl_ctl(pctrl, g);
+-	io_reg = msm_readl_io(pctrl, g);
+-
+-	is_out = !!(ctl_reg & BIT(g->oe_bit));
+-	func = (ctl_reg >> g->mux_bit) & 7;
+-	drive = (ctl_reg >> g->drv_bit) & 7;
+-	pull = (ctl_reg >> g->pull_bit) & 3;
+-	egpio_enable = 0;
+-	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
+-		egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
+-
+-	if (is_out)
+-		val = !!(io_reg & BIT(g->out_bit));
+-	else
+-		val = !!(io_reg & BIT(g->in_bit));
++	msm_gpio_pin_status_get(pctrl, g, offset, &is_out, &func,
++					&drive, &pull, &egpio_enable, &val);
+ 
+ 	if (egpio_enable) {
+ 		seq_printf(s, " %-8s: egpio\n", g->grp.name);
+@@ -732,6 +743,39 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ #define msm_gpio_dbg_show NULL
+ #endif
+ 
++static void msm_gpio_log_pin_status(struct gpio_chip *chip, unsigned int offset)
++{
++	const struct msm_pingroup *g;
++	struct msm_pinctrl *pctrl = gpiochip_get_data(chip);
++	unsigned int func;
++	int is_out;
++	int drive;
++	int pull;
++	int val;
++	int egpio_enable;
++
++	if (!gpiochip_line_is_valid(chip, offset))
++		return;
++
++	g = &pctrl->soc->groups[offset];
++	msm_gpio_pin_status_get(pctrl, g, offset, &is_out, &func,
++					&drive, &pull, &egpio_enable, &val);
++
++	pr_debug("%s: %s, %s, func%d, %dmA, %s\n",
++		g->grp.name, is_out ? "out" : "in",
++		val ? "high" : "low", func,
++		msm_regval_to_drive(drive),
++		pctrl->soc->pull_no_keeper ? pulls_no_keeper[pull] : pulls_keeper[pull]);
++}
++
++static void msm_gpios_status(struct gpio_chip *chip)
++{
++	unsigned int i;
++
++	for (i = 0; i < chip->ngpio; i++)
++		msm_gpio_log_pin_status(chip, i);
++}
++
+ static int msm_gpio_init_valid_mask(struct gpio_chip *gc,
+ 				    unsigned long *valid_mask,
+ 				    unsigned int ngpios)
+@@ -1475,6 +1519,35 @@ SIMPLE_DEV_PM_OPS(msm_pinctrl_dev_pm_ops, msm_pinctrl_suspend,
+ 
+ EXPORT_SYMBOL(msm_pinctrl_dev_pm_ops);
+ 
++void debug_pintctrl_msm_enable(void)
++{
++	pinctrl_msm_log_mask = true;
++}
++EXPORT_SYMBOL(debug_pintctrl_msm_enable);
++
++void debug_pintctrl_msm_disable(void)
++{
++	pinctrl_msm_log_mask = false;
++}
++EXPORT_SYMBOL(debug_pintctrl_msm_disable);
++
++static __maybe_unused int noirq_msm_pinctrl_suspend(struct device *dev)
++{
++	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
++
++	if (pinctrl_msm_log_mask) {
++		pr_debug("%s\n", pctrl->chip.label);
++		msm_gpios_status(&pctrl->chip);
++	}
++
++	return 0;
++}
++
++const struct dev_pm_ops noirq_msm_pinctrl_dev_pm_ops = {
++	.suspend_noirq = noirq_msm_pinctrl_suspend,
++};
++EXPORT_SYMBOL(noirq_msm_pinctrl_dev_pm_ops);
++
+ int msm_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct msm_pinctrl_soc_data *soc_data)
+ {
+@@ -1536,6 +1609,8 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 	if (ret)
+ 		return ret;
+ 
++	pinctrl_msm_log_mask = false;
++
+ 	platform_set_drvdata(pdev, pctrl);
+ 
+ 	dev_dbg(&pdev->dev, "Probed Qualcomm pinctrl driver\n");
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+index 5e4410bed823..60e0257dafbf 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.h
++++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+@@ -161,6 +161,10 @@ struct msm_pinctrl_soc_data {
+ };
+ 
+ extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
++extern const struct dev_pm_ops noirq_msm_pinctrl_dev_pm_ops;
++
++void debug_pintctrl_msm_enable(void);
++void debug_pintctrl_msm_disable(void);
+ 
+ int msm_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct msm_pinctrl_soc_data *soc_data);
+-- 
+2.17.1
 
-
---=20
-With Best Regards,
-Andy Shevchenko
