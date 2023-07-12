@@ -2,67 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 342227503FD
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 12:00:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4BB5750407
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 12:01:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232056AbjGLKAE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jul 2023 06:00:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35114 "EHLO
+        id S229909AbjGLKBX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jul 2023 06:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjGLKAC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 06:00:02 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F93F1712
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 03:00:00 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-3141fa31c2bso6817491f8f.2
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 03:00:00 -0700 (PDT)
+        with ESMTP id S232761AbjGLKBJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 06:01:09 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E080E1711
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 03:01:08 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3fbdfda88f4so68816685e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 03:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689155999; x=1691747999;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689156067; x=1691748067;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LjfZQU8GBAEUxKy5KWZcG0QEkZLgJT10dbkt0QDjsWA=;
-        b=xQ4OjdWQxYn4IOlz9wzr/uRrprls5W/U9tFMRXel53luWdbbWTvhIY77eVryywk5ao
-         fhdsbdno6F7bTpBx7xv2CYO1B+Dsp/GS14BVJsqr3GhlPGkEavTjOxGlLJ0emo78bRaJ
-         KCHhEZkA6cWoTDEAu6V56qHOLLRzav9Ic+jl2s0Sjif8KJhYQ8XAOEYhYaojpUlcSAm2
-         GcnNI++uQ/RG3svSKjXLSgZrUTj2hjGIPfWJ0Wm2qoCl49NaXKUAlRnyDFVli18/cAVG
-         iXeKE6TNkbnuUZzFLbwhiG8sxM9AKOpeLaPuvw1SPvcoWCxsQjKp4ehANb8+B+XkgYjr
-         4I9w==
+        bh=scBfE2ojH74ugw2iGKwYRKybXV2n3li+bsa1KFBbvjc=;
+        b=FLLieTiYbLN4+Ij2w9wMbvafPWoLw+RQN3tWfU+ICXKRuuxyfOWC18H7VjpKfIo+sc
+         oniioZBP02FDP7IkyTN+rDNczaoVitHKeOO93KAukA9hy/VnCL6QkwQ0wpNej+UyzvQj
+         9NFQcanwXEPamCLSL1EYNPtz3qjhE60ntLcm1qZyvcpA8edBm/hiFVhNb8wYzlanFDbj
+         SSFoHg7rNnIdc5sQEKeCy8f4CeXD8qVcu/un6KJtsW1NUPKZa1xdBLfrYdX1iwd5kGZ8
+         cWEA72V2v24cQCQTGq1Ax8oZEUVrqP1k+LBGvrDWsnZhir7JWeg5vmD91su+2nBjSSpl
+         dfiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689155999; x=1691747999;
+        d=1e100.net; s=20221208; t=1689156067; x=1691748067;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LjfZQU8GBAEUxKy5KWZcG0QEkZLgJT10dbkt0QDjsWA=;
-        b=USypVpijTAS0Ld2BbxrbVppbyaZvODqNVDT8F7ctDKlCl6B1l1wsmUwRCQcFuTZP/I
-         0kQy+npxWuxduHDL/bVqpUH8vqnMgweJHcv0QmR6YGmOiOLoY+fSilENQoI8Q4Cy6Iaf
-         XdvOM0Z7nHJyWfcW/9VyQriwhqobUIUI1/IRmObdjzzzRlbzoxt/Z4ZZgYBqW2v4Lkbi
-         y0bpz201QW2yasBhXtiaPV0zdYzz/ZxvwA9yol4Yg6Dx0fX0mxDp2Ldqbwxn8U3awK1z
-         pOTqbXXJ5S31dJSdh2VbPUiCPxjaizNQ6z8OJdZflRuszl5wsXKREt1Jkz6FGHYyVrvr
-         RiAA==
-X-Gm-Message-State: ABy/qLbbeXXJCKNiTKcan3u8/ICa0ZwjLLCwFMNmjVek0F5n1+fTMCnB
-        B6Zt4xWOkosxKYFneDXqtPoI0ctu/SrqCtgc4DM=
-X-Google-Smtp-Source: APBJJlEYwdt7ptG4DpjqIKGbDBB/CDSsxnNVNiR04k8AvT9S0Nu2E9pqkAlD+7TtItabB+OOGt5qqg==
-X-Received: by 2002:a5d:538f:0:b0:313:f1c8:a968 with SMTP id d15-20020a5d538f000000b00313f1c8a968mr17597880wrv.2.1689155998834;
-        Wed, 12 Jul 2023 02:59:58 -0700 (PDT)
+        bh=scBfE2ojH74ugw2iGKwYRKybXV2n3li+bsa1KFBbvjc=;
+        b=dy/tpztvWxdO9PH8FbcH8zEkk1372TP0ik2F+9030L6jP4o9SfseNBdikOrq9Jiusk
+         Ccsw3saIb7usrZNE63Zzw2Jlo7mVFIX5/ruLI25HMg/rOrD2cNyh1NpG+PCzBnhBCS4t
+         uv0I/HAmataaIWc7Xx8o3HoZ/yAwbSacflljQkGPlbXAD9DO5954sVo2bap7Dm0LodaW
+         z3ymbcz+WFbuzcti0Ly96Tbu0hFcyZ1mhy7RlLbcKcxsT2MjcZcpQIT9mo4RYHWW7irc
+         tG3nUqWUAth/6NEur2cCGUl69llDi8Fba0EeMQUX4Znxca23/MRnIlqenSLAiVskYajU
+         WNZQ==
+X-Gm-Message-State: ABy/qLaM9WWqwkoi3PC7sVk8fLdGBmFaULo2oL/mOwH5WVrDwtVCgty1
+        nylhORq6cr2hDGnBdrSzN4UNSh0q5neuibcbFWM=
+X-Google-Smtp-Source: APBJJlEqNxTmIuqagiiktscyDP9EFVBH83ViwCSk66qZQMat5KucFCt4ROljU8qwz40q/leQXBlyvg==
+X-Received: by 2002:a05:600c:221a:b0:3fc:1bd:95a6 with SMTP id z26-20020a05600c221a00b003fc01bd95a6mr12746793wml.31.1689156067389;
+        Wed, 12 Jul 2023 03:01:07 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d866:9edc:5a2d:f498])
-        by smtp.gmail.com with ESMTPSA id m15-20020adfdc4f000000b003142ea7a661sm4623562wrj.21.2023.07.12.02.59.57
+        by smtp.gmail.com with ESMTPSA id g23-20020a7bc4d7000000b003fc02a410d0sm12816674wmk.48.2023.07.12.03.01.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 02:59:57 -0700 (PDT)
+        Wed, 12 Jul 2023 03:01:06 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: order includes alphabetically in gpiolib.h
-Date:   Wed, 12 Jul 2023 11:59:55 +0200
-Message-Id: <20230712095955.105716-1-brgl@bgdev.pl>
+Subject: [PATCH] gpio: sim: fix a typo in comment
+Date:   Wed, 12 Jul 2023 12:01:05 +0200
+Message-Id: <20230712100105.105889-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -71,37 +70,26 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-After adding the missing notifier.h header, let's order all includes
-alphabetically.
+It was supposed to say 'for' not 'fo'.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpiolib.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-sim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 1409d52487c0..7c562fbb9fb0 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -9,13 +9,13 @@
- #ifndef GPIOLIB_H
- #define GPIOLIB_H
- 
--#include <linux/gpio/driver.h>
--#include <linux/gpio/consumer.h> /* for enum gpiod_flags */
--#include <linux/err.h>
-+#include <linux/cdev.h>
- #include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h> /* for enum gpiod_flags */
-+#include <linux/gpio/driver.h>
- #include <linux/module.h>
- #include <linux/notifier.h>
--#include <linux/cdev.h>
- #include <linux/rwsem.h>
- 
- #define GPIOCHIP_NAME	"gpiochip"
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index 8b49b0abacd5..cfbdade841e8 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -488,7 +488,7 @@ struct gpio_sim_device {
+ 	 * This structure however can be modified by callbacks of different
+ 	 * attributes so we need another lock.
+ 	 *
+-	 * We use this lock fo protecting all data structures owned by this
++	 * We use this lock for protecting all data structures owned by this
+ 	 * object too.
+ 	 */
+ 	struct mutex lock;
 -- 
 2.39.2
 
