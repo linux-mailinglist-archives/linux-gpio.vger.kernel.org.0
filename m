@@ -2,387 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE87674FD03
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 04:23:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49DF674FEE8
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 07:56:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231494AbjGLCXL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jul 2023 22:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39314 "EHLO
+        id S229928AbjGLF4d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jul 2023 01:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjGLCXJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jul 2023 22:23:09 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2120.outbound.protection.outlook.com [40.107.92.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954891722;
-        Tue, 11 Jul 2023 19:23:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q1SLl8RQDUaSJIX/S/yGf11OcVDle6fuSquQqeewoanGn+s2t88xznRkg78QvFsjTT5NFkwTZmPyY+mh2S3bG/Tsd5d3/kWjuy/CBPkRN/yK9Lgf5/SBsuCXfBF1VwUrkGQf8cFolsw6hDUziHpE8TZbEqTOGJOq7ReFawItfWaoKqSq667x/8ZwpcZtG6NsIVRucbxtcXHPdpLhlR425+H0kUM3FFeG1+f9kBzXPU5ubmtlWOHs1UoVC8ae7w2+TiRToH3YFQTwxoJg48f21IvZmHUwpU6Gyt24RGAVwHHDvqaHrn9yAOTVm64AJclYA2b5QAHuUc8dObZ72AjftA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z1pIl7S3A9QKhyV2Tb5uhGibnAzkoHPXQjsumWu55+o=;
- b=a6YCOwAzVY2SfkAKSil+wILjjKtfbWwPkRg/CKaqfNz0wFkRtjdJbTwxbISToy+9QVVtPIXQLNtLJhzbGRi/UOULe1xKXuvdB5deC5OVuJUG/hF0AmMLC/BowegbHcHBSCoYjKhB/ITM8Kd9QR6kfe5BA8w6IkU4lekR/WgbOadVlPIBkPK6SGtEnshwyTTA36FVWdFWJLbZrTjpcUe2gLTdPH+f6hg42UImd24dRc5z3yYGJRmDopY41wH+0EJTeUQ+Wy6qba90w5l9INeYuj+BkfEiDb1TmX0gPkY/PImwXF3GcUo4trxsxFRpu9HxaNACW/GiPVq6+G0lfGgc3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+        with ESMTP id S231540AbjGLF4c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 01:56:32 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5C8173F
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jul 2023 22:56:30 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-51e4c868ee4so5357556a12.0
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jul 2023 22:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z1pIl7S3A9QKhyV2Tb5uhGibnAzkoHPXQjsumWu55+o=;
- b=p3SNM9VGQqQw1GKZZ0fjrM/kdGankO63mpLTcWpPXtP0QM1sH1I9Yh5HgiAFFyKtyoxkOyT0zBTQ6LMIa4X+YfAoNP2oLo/zVHoxMz73H3P+CdrC5xRWz6Cw7m27OwAarp7SZzpGQepEGJhU7A4CKm73bYWiHqNLIdPmP+ZWE8E=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by MN6PR10MB7467.namprd10.prod.outlook.com
- (2603:10b6:208:47f::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.30; Wed, 12 Jul
- 2023 02:23:04 +0000
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::f575:8f7d:c91:5078]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::f575:8f7d:c91:5078%6]) with mapi id 15.20.6565.026; Wed, 12 Jul 2023
- 02:23:04 +0000
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        UNGLinuxDriver@microchip.com,
-        Daniel Machon <daniel.machon@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Christian Marangi <ansuelsmth@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: [RFC RESEND v1 pinctrl-next 1/1] pinctrl: microchip-sgpio: add activity and blink functionality
-Date:   Tue, 11 Jul 2023 19:22:50 -0700
-Message-Id: <20230712022250.2319557-2-colin.foster@in-advantage.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230712022250.2319557-1-colin.foster@in-advantage.com>
-References: <20230712022250.2319557-1-colin.foster@in-advantage.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR16CA0034.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::47) To MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37)
+        d=linaro.org; s=google; t=1689141389; x=1691733389;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m1YbKiFqM090gUCnTTI+360ovt+fEPcs/XCL7R+ae5o=;
+        b=RDCxFd9ZchsRaClrOnejBcepkfj7xzss8D126jJveGs/1pgb91WAKSVVdZMyrFFxUD
+         /tNI5vspbCVmLxFIUcfZeNYvqqAuMKjm65jmBrZZWTCg/uvKhEwWq84Bh8Hlc+ah/ckh
+         u9wtiNUIdEam5urofKU5UoBqPpvpsbpdFOHtEWSB2h3DHMhbybwMMLukQyUA9uVOBZhW
+         LsJEVHrf24hwUJZ1ZFPadZyN5eah1h02Ue8JQBP/8xcN+EsuQgu5R1bsQyFy9f9axJ4c
+         HOsGsGPl4G/SypDFBNchG3m9ujMCgg6uQbq9nhJEW7H4Mqown6n5ShBFPknpJhCN2fGK
+         /EtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689141389; x=1691733389;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m1YbKiFqM090gUCnTTI+360ovt+fEPcs/XCL7R+ae5o=;
+        b=MFzat/dXVzOQ2cQ+GNel6I3hpFCAqPHY5begc6uqsV646t2y3BQ0XlnVq31CI2Xy7j
+         u6h+354VdoRDBnkoAATxr1YJFmMtPlZ9c5/2J8gi+jGmbTFHN1N1zU/v6gpl38nEgjlZ
+         JyeqF2UBExo72sOXfEvSnge7T5FXM/W/EkMoOjhcH33ehSO4qxWeMKoAuXs4i0hhGJtl
+         ZD9E8qAWzcK1JcQfBqECtNz1SmEpDKeDcmn7WOa+pnq3VQvSLh7sxrfjsunQ/LjqLr6R
+         E//HvUPmCJpnJ3wrbgS4H63VodtAZIFt2YN8BhoSKjxvV2K+aStuedeRnBGnxxubNNbO
+         wL+Q==
+X-Gm-Message-State: ABy/qLYjHz80e5w5vwENX8oh1KtxXFj+DAWLgbLh4tcCs2GaplLQh3Yf
+        hRROX21pYd9FTkng5XVkQxRsoQ==
+X-Google-Smtp-Source: APBJJlHv7pp920Fewie/WkiXbegNz0ErB7CfgQSjUAgUmIo1JGCMiDSiavEO+8RiVSbbpzgr+uFllg==
+X-Received: by 2002:a50:ef07:0:b0:51e:2974:f471 with SMTP id m7-20020a50ef07000000b0051e2974f471mr13156566eds.42.1689141388970;
+        Tue, 11 Jul 2023 22:56:28 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id a2-20020aa7d902000000b0051e0eba608bsm2214158edr.19.2023.07.11.22.56.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jul 2023 22:56:28 -0700 (PDT)
+Message-ID: <33bcb7c0-0bf9-e3fc-ec55-476c0cbd6105@linaro.org>
+Date:   Wed, 12 Jul 2023 07:56:26 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1001MB2351:EE_|MN6PR10MB7467:EE_
-X-MS-Office365-Filtering-Correlation-Id: c584b02f-b42b-4ae5-aab6-08db827eeb1a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cPnB+MzunOMYPCd+mmbeiiQKQCJI5E6TyRfN9hrGeWnThff5GC1wJFfRmACsYGbbF9gvIrfM8YuW5ZWZgAUz/1QE1FL51vNm6LFgzMgMTJdB+LjY2GjF+EFrf2d7VygD8G/9CHvsZiou8lI5nSPGD/+YoyJQRy2qsVEd9moVSXAPqjsiifY0hpKSF7uD2apmEyldAp6nHxOFU6NMYWaBpAMj4iXrLTH53zyMnKTtUAcFkBiQ7+xFWCtXjS6nXHCIcx/4fesY2U6ELGznsE2NwTNMPkyQqLigmSBPewp4t+7ASghr0IPJYL5zqw2iViYbLIH2WDc9ruEOVoa3JIWSkmJgb2MbnmCSY/yO9g0mXkG1ZDVb3BjS3ylJu6gbQK/eQCu7H5MK3qp/xOcBZ7NpyWga+RBd9xDbpvUTBATH3ckhIg5jJ4OFkIIg7oYXnZVaKTZr7A12RuoO0imIBtizY9hYt5uYpJ2hFDE/aUy+4U9LbQuaYECuOidld7x/GgpXyKjtXeJ/YTorfWHlUnOxsQVfe2lfZAbaEqtWftd4ZvH8AgR2m5LTlu7EbsEXcZ2fsZOswNtSLPKMBSPLLt63extQ7m5hxi3pGgxEa3Cue1Q=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(396003)(366004)(39840400004)(346002)(376002)(451199021)(38350700002)(54906003)(6666004)(6486002)(52116002)(478600001)(7416002)(8936002)(36756003)(5660300002)(2906002)(86362001)(8676002)(44832011)(4326008)(316002)(66476007)(66556008)(66946007)(38100700002)(41300700001)(26005)(186003)(6506007)(1076003)(2616005)(83380400001)(6512007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rg1noNsc8cIEkqvG2x3xKvzbkxz5WOASJPMOl0Zux+UC+x4uD/KVa0sRWnb7?=
- =?us-ascii?Q?59Bgy1f6jQkuOUeVW0Vv0hZB2nXOOVFe51xmFo1cd2xxBhYyfMC4RVaIkby3?=
- =?us-ascii?Q?rkH8WFm2Vrn1tJ+t7uGcaf+zJ3wyFJ/ZhMtiuKlIhI10YOfzFUoo5Ck5nXsU?=
- =?us-ascii?Q?YT8Jfuf9VTNg4rqu0KHl+0YuzVTcvpAiSXa/8YNmKRo66oQ+tWVKKWgTyY5d?=
- =?us-ascii?Q?NmW+eUJ1yDGQ/YpgqYdtaQXjlkJ3NEeZemcaCT9Q3Dmk8+ELIAqtcNuZ63HN?=
- =?us-ascii?Q?H8WXEJXQYEwpv1+iMbUf7BjU3Ng7ECdakhUX6NFqzY1Gmwea4FRYaF63ahr/?=
- =?us-ascii?Q?4Braxfj7wl14O+QZ/ffGPG6GrTArYSaffqTQBfA0I0xNSBGRRpMYfnZpzaZE?=
- =?us-ascii?Q?NEwLx/5s62qaU6bQHaLT4dERRTAdtt9Q1eBURzbQhMX8UuCKTJixst7hKQgJ?=
- =?us-ascii?Q?/e3F/MSvbDghz1hBeUgHw3cz6TnFYaNBZRhm9wDnz0p+GEj4Y/S/XjLHloPL?=
- =?us-ascii?Q?69oVMHeAzgU5nIA4HyzgKcH407J0S57tx51p+s6+M8zxvoNQ2FHgRy93eKBf?=
- =?us-ascii?Q?KEeDVBaIL2NpefPbjgn77SqPInkiaW4ExMBLL6G/ricqKQp0DV6EKumFjXC7?=
- =?us-ascii?Q?a91BODuKnSdE85J/muuE5uRVq6DAIXDVfkq4M3guVhcDSB26M/qlDjT8xj2j?=
- =?us-ascii?Q?CTVsnF8atOJSsvAvmYRbX0JniA9kj5L71pKS4jiBrb/3DLkj4mWkk49JwLzg?=
- =?us-ascii?Q?ZmANVIAhI9LJIV733ZVlHWbbT4hgP3VqviixY+d5zLuMkc9Tg54rAGqV2pKK?=
- =?us-ascii?Q?Lz0DwVXLTWkXvWOdXhgKapxZ/Jr8Op4DzXznPfYS0jxqJgTFw6EuisqIaDgo?=
- =?us-ascii?Q?X4AKYTYQvPu7lm/KdGy/BQqmkFpWANrAFVeYdKhuuheqaOXSDj1jjYDZ9nIX?=
- =?us-ascii?Q?vMqetO4nND7ibcLpfAm2z7+FUXK8uaJUi5xZT62mg+5UxAdJlzqAXvJlqfga?=
- =?us-ascii?Q?ImN5O+viUIRAzEVKV7Y8Y73jVnX7ArceSU0T3yL+QuVYnXXyVbjNph9CyTGm?=
- =?us-ascii?Q?zW8v97Pzk+w5+UyBpcW5ryCPjdFTJNXauzG7q6rsEyMW+P/573hVSlFr6XoJ?=
- =?us-ascii?Q?N8zZBEg1bRCvPZVf76YGAnUgRfNKpowzAY87n2nNxTY7DfbtuGNb/g6+kskn?=
- =?us-ascii?Q?uK6X6nYd5ZsZRYzzCaI7u0MTmeAt/bl+yTpwhlcJeoGXv2XVopKiZ0Sqg3UR?=
- =?us-ascii?Q?TLME6iwhh13czzRg7/9xqj/TsBqxgc0m/fwqYAdI+GAjpxzXjGAXCpCY+02u?=
- =?us-ascii?Q?c3ZZMkpPQdK67PUOBU4SAAdjKNi3hZd8SbcRYMwgIyUNW28xacJyrGkTefor?=
- =?us-ascii?Q?o8JV6g7rOb5KPeI4AUtvau7iV9t9n0/xPpmZ7VojBCFfpPAhKFVBYh952ySu?=
- =?us-ascii?Q?j0OvEMl69L3OiPnI9dUdPWOy38mfFDP8yYItA1o83Dl8tsUJk16B/71OxrSf?=
- =?us-ascii?Q?2h+7Dy5RjGrO+OLSYoWNuRwMJWDyHbZVaV/l8zHkaRJ1fRg8NbGYI/j1PbN7?=
- =?us-ascii?Q?sfGjyZfwVfA67JphzrA5x4E8DYp5MrCA9/OKrI4c1qY+ceiA6D1PAaY87Ll4?=
- =?us-ascii?Q?BoxI7u1Rgzse/sHBroMEcNk=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c584b02f-b42b-4ae5-aab6-08db827eeb1a
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2023 02:23:02.6715
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PvHKelU1huwfIQV5i8Ieo7C7EYqSB1tKJ4eZbHWwsF9ZOXuiPBN3Ljf1kCwXKwIHV3hbBJ+/NYQGBOkvY1fCi8aUhXvepQ2lf8+u1MeMmq0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR10MB7467
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH V2 1/2] dt-bindings: gpio: Add a header file for Amlogic
+ C3 SoCs
+Content-Language: en-US
+To:     Conor Dooley <conor@kernel.org>,
+        Huqiang Qin <huqiang.qin@amlogic.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        neil.armstrong@linaro.org, khilman@baylibre.com,
+        jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+        brgl@bgdev.pl, andy@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230710042812.2007928-1-huqiang.qin@amlogic.com>
+ <20230710042812.2007928-2-huqiang.qin@amlogic.com>
+ <20230710-maybe-mantis-e647d94fd13a@spud>
+ <424cb61a-9102-9a43-c999-36939e8d6cc0@amlogic.com>
+ <20230711-monthly-return-8792ce346c26@spud>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230711-monthly-return-8792ce346c26@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add additional functions - two blink and two activity, for each SGPIO
-output.
+On 11/07/2023 20:05, Conor Dooley wrote:
+>>>> +++ b/include/dt-bindings/gpio/amlogic-c3-gpio.h
+>>>> @@ -0,0 +1,72 @@
+>>>> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
+>>> Any reason to deviate from the usual license terms for bindings, which is
+>>> "GPL-2.0-only OR BSD-2-Clause"?
+>>
+>> I initially used the license commonly used by Amlogic (reference: meson-s4-gpio.h):
+>> ```
+>> /* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> ```
+>>
+>> But when I checked the patch, some warnings appeared:
+>> ```
+>> WARNING: DT binding headers should be licensed (GPL-2.0-only OR .*)
+>> #37: FILE: include/dt-bindings/gpio/amlogic-c3-gpio.h:1:
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> ```
+>> So I followed the prompts and changed the license.
+>>
+>> Can I ignore this warning and use the (GPL-2.0+ OR MIT) license?
+> 
+> If the tools are happy then I suppose you are okay.. I'll leave that to
+> Rob or Krzysztof, but if you have a reason for diverging that seems fine
+> to me.
 
-Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
----
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 135 +++++++++++++++++++++-
- 1 file changed, 130 insertions(+), 5 deletions(-)
+It is very weird that company wants GPLv3 and even weirder that it
+agrees for GPLv4 and GPLv5 (GPLv5 might force Amlogic to do some
+interesting things...). I am pretty sure company lawyers don't want it
+and just do not understand licenses or someone forgot to actually check
+it. Anyway, it's fine for Linux kernel, if you really need it.
 
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-index 8e081c90bdb2..e3230e5dedc0 100644
---- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -51,6 +51,15 @@ enum {
- 	SGPIO_FLAGS_HAS_IRQ	= BIT(0),
- };
- 
-+enum {
-+	FUNC_GPIO,
-+	FUNC_BLINK0,
-+	FUNC_BLINK1,
-+	FUNC_ACTIVITY0,
-+	FUNC_ACTIVITY1,
-+	FUNC_MAX,
-+};
-+
- struct sgpio_properties {
- 	int arch;
- 	int flags;
-@@ -60,16 +69,22 @@ struct sgpio_properties {
- #define SGPIO_LUTON_AUTO_REPEAT  BIT(5)
- #define SGPIO_LUTON_PORT_WIDTH   GENMASK(3, 2)
- #define SGPIO_LUTON_CLK_FREQ     GENMASK(11, 0)
-+#define SGPIO_LUTON_SIO_BMODE_0	 GENMASK(21, 20)
-+#define SGPIO_LUTON_SIO_BMODE_1	 GENMASK(19, 18)
- #define SGPIO_LUTON_BIT_SOURCE   GENMASK(11, 0)
- 
- #define SGPIO_OCELOT_AUTO_REPEAT BIT(10)
- #define SGPIO_OCELOT_PORT_WIDTH  GENMASK(8, 7)
- #define SGPIO_OCELOT_CLK_FREQ    GENMASK(19, 8)
-+#define SGPIO_OCELOT_SIO_BMODE_0 GENMASK(20, 19)
-+#define SGPIO_OCELOT_SIO_BMODE_1 GENMASK(22, 21)
- #define SGPIO_OCELOT_BIT_SOURCE  GENMASK(23, 12)
- 
- #define SGPIO_SPARX5_AUTO_REPEAT BIT(6)
- #define SGPIO_SPARX5_PORT_WIDTH  GENMASK(4, 3)
- #define SGPIO_SPARX5_CLK_FREQ    GENMASK(19, 8)
-+#define SGPIO_SPARX5_SIO_BMODE_0 GENMASK(16, 15)
-+#define SGPIO_SPARX5_SIO_BMODE_1 GENMASK(18, 17)
- #define SGPIO_SPARX5_BIT_SOURCE  GENMASK(23, 12)
- 
- #define SGPIO_MASTER_INTR_ENA    BIT(0)
-@@ -98,22 +113,46 @@ static const struct sgpio_properties properties_sparx5 = {
- 	.regoff = { 0x00, 0x06, 0x26, 0x04, 0x05, 0x2a, 0x32, 0x3a, 0x3e, 0x42 },
- };
- 
--static const char * const functions[] = { "gpio" };
-+static const char * const function_names[] = {
-+	[FUNC_GPIO] = "gpio",
-+	[FUNC_BLINK0] = "blink0",
-+	[FUNC_BLINK1] = "blink1",
-+	[FUNC_ACTIVITY0] = "activity0",
-+	[FUNC_ACTIVITY1] = "activity1",
-+};
-+
-+static const int function_values[] = {
-+	[FUNC_GPIO] = 0,
-+	[FUNC_BLINK0] = 2,
-+	[FUNC_BLINK1] = 3,
-+	[FUNC_ACTIVITY0] = 4,
-+	[FUNC_ACTIVITY1] = 5,
-+};
-+
-+struct sgpio_pmx_func {
-+	const char **groups;
-+	unsigned int ngroups;
-+};
- 
- struct sgpio_bank {
- 	struct sgpio_priv *priv;
- 	bool is_input;
- 	struct gpio_chip gpio;
- 	struct pinctrl_desc pctl_desc;
-+	struct sgpio_pmx_func func[FUNC_MAX];
-+	struct pinctrl_pin_desc *pins;
- };
- 
- struct sgpio_priv {
- 	struct device *dev;
- 	struct sgpio_bank in;
- 	struct sgpio_bank out;
-+	int ngpios;
- 	u32 bitcount;
- 	u32 ports;
- 	u32 clock;
-+	u32 bmode0;
-+	u32 bmode1;
- 	struct regmap *regs;
- 	const struct sgpio_properties *properties;
- };
-@@ -223,6 +262,32 @@ static inline void sgpio_configure_clock(struct sgpio_priv *priv, u32 clkfrq)
- 	sgpio_clrsetbits(priv, REG_SIO_CLOCK, 0, clr, set);
- }
- 
-+static inline void sgpio_configure_blink_modes(struct sgpio_priv *priv)
-+{
-+	u32 clr, set;
-+
-+	switch (priv->properties->arch) {
-+	case SGPIO_ARCH_LUTON:
-+		clr = SGPIO_LUTON_SIO_BMODE_0 | SGPIO_LUTON_SIO_BMODE_1;
-+		set = FIELD_PREP(SGPIO_LUTON_SIO_BMODE_0, priv->bmode0) |
-+		      FIELD_PREP(SGPIO_LUTON_SIO_BMODE_1, priv->bmode1);
-+		break;
-+	case SGPIO_ARCH_OCELOT:
-+		clr = SGPIO_OCELOT_SIO_BMODE_0 | SGPIO_OCELOT_SIO_BMODE_1;
-+		set = FIELD_PREP(SGPIO_OCELOT_SIO_BMODE_0, priv->bmode0) |
-+		      FIELD_PREP(SGPIO_OCELOT_SIO_BMODE_1, priv->bmode1);
-+		break;
-+	case SGPIO_ARCH_SPARX5:
-+		clr = SGPIO_SPARX5_SIO_BMODE_0 | SGPIO_SPARX5_SIO_BMODE_1;
-+		set = FIELD_PREP(SGPIO_SPARX5_SIO_BMODE_0, priv->bmode0) |
-+		      FIELD_PREP(SGPIO_SPARX5_SIO_BMODE_1, priv->bmode1);
-+		break;
-+	default:
-+		return;
-+	}
-+	sgpio_clrsetbits(priv, REG_SIO_CONFIG, 0, clr, set);
-+}
-+
- static void sgpio_output_set(struct sgpio_priv *priv,
- 			     struct sgpio_port_addr *addr,
- 			     int value)
-@@ -352,13 +417,18 @@ static const struct pinconf_ops sgpio_confops = {
- 
- static int sgpio_get_functions_count(struct pinctrl_dev *pctldev)
- {
--	return 1;
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+
-+	if (bank->is_input)
-+		return 1;
-+	else
-+		return ARRAY_SIZE(function_names);
- }
- 
- static const char *sgpio_get_function_name(struct pinctrl_dev *pctldev,
- 					   unsigned int function)
- {
--	return functions[0];
-+	return function_names[function];
- }
- 
- static int sgpio_get_function_groups(struct pinctrl_dev *pctldev,
-@@ -366,8 +436,10 @@ static int sgpio_get_function_groups(struct pinctrl_dev *pctldev,
- 				     const char *const **groups,
- 				     unsigned *const num_groups)
- {
--	*groups  = functions;
--	*num_groups = ARRAY_SIZE(functions);
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*groups  = bank->func[function].groups;
-+	*num_groups = bank->func[function].ngroups;
- 
- 	return 0;
- }
-@@ -375,6 +447,15 @@ static int sgpio_get_function_groups(struct pinctrl_dev *pctldev,
- static int sgpio_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 				unsigned int selector, unsigned int group)
- {
-+	struct sgpio_bank *bank = pinctrl_dev_get_drvdata(pctldev);
-+	struct sgpio_priv *priv = bank->priv;
-+	struct sgpio_port_addr addr;
-+	int f;
-+
-+	f = function_values[selector];
-+	sgpio_pin_to_addr(priv, group, &addr);
-+	sgpio_output_set(priv, &addr, f);
-+
- 	return 0;
- }
- 
-@@ -693,6 +774,30 @@ static void sgpio_irq_handler(struct irq_desc *desc)
- 	}
- }
- 
-+static int sgpio_create_group_func_map(struct device *dev,
-+				       struct sgpio_bank *bank)
-+{
-+	struct sgpio_priv *priv = bank->priv;
-+	int f, i;
-+
-+	if (bank->is_input)
-+		return 0;
-+
-+	for (f = 0; f < FUNC_MAX; f++) {
-+		bank->func[f].ngroups = priv->ngpios;
-+		bank->func[f].groups = devm_kcalloc(dev, priv->ngpios,
-+						    sizeof(char *), GFP_KERNEL);
-+
-+		if (!bank->func[f].groups)
-+			return -ENOMEM;
-+
-+		for (i = 0; i < priv->ngpios; i++)
-+			bank->func[f].groups[i] = bank->pins[i].name;
-+	}
-+
-+	return 0;
-+}
-+
- static int microchip_sgpio_register_bank(struct device *dev,
- 					 struct sgpio_priv *priv,
- 					 struct fwnode_handle *fwnode,
-@@ -716,6 +821,7 @@ static int microchip_sgpio_register_bank(struct device *dev,
- 		ngpios = 64;
- 	}
- 
-+	priv->ngpios = ngpios;
- 	priv->bitcount = ngpios / SGPIO_BITS_PER_WORD;
- 	if (priv->bitcount > SGPIO_MAX_BITS) {
- 		dev_err(dev, "Bit width exceeds maximum (%d)\n",
-@@ -738,6 +844,7 @@ static int microchip_sgpio_register_bank(struct device *dev,
- 
- 	pctl_desc->npins = ngpios;
- 	pctl_desc->pins = pins;
-+	bank->pins = pins;
- 
- 	for (i = 0; i < ngpios; i++) {
- 		struct sgpio_port_addr addr;
-@@ -753,6 +860,12 @@ static int microchip_sgpio_register_bank(struct device *dev,
- 			return -ENOMEM;
- 	}
- 
-+	ret = sgpio_create_group_func_map(dev, bank);
-+	if (ret) {
-+		dev_err(dev, "Unable to create group func map.\n");
-+		return ret;
-+	}
-+
- 	pctldev = devm_pinctrl_register(dev, pctl_desc, bank);
- 	if (IS_ERR(pctldev))
- 		return dev_err_probe(dev, PTR_ERR(pctldev), "Failed to register pinctrl\n");
-@@ -895,6 +1008,18 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
- 		sgpio_writel(priv, 0, REG_PORT_CONFIG, port);
- 	sgpio_writel(priv, priv->ports, REG_PORT_ENABLE, 0);
- 
-+	/*
-+	 * The datasheet and register definitions contradict themselves, at
-+	 * least for the VSC7512. The Datasheet Revision 4.2 describes both
-+	 * default blink modes as 20 Hz, but the registers show the default
-+	 * blink mode 0 as 5 Hz. Two identical blink modes aren't very useful,
-+	 * so override BMODE_0 here to match the 5Hz "default" described in the
-+	 * register map.
-+	 */
-+	if (priv->properties->arch == SGPIO_ARCH_OCELOT)
-+		priv->bmode0 = 2;
-+	sgpio_configure_blink_modes(priv);
-+
- 	return 0;
- }
- 
--- 
-2.25.1
+However the argument was "meson-s4-gpio.h" has it, which is not really
+correct argument or accurate. Is it derivative work that you need the
+same license? If not, why presence of something causes you to do the
+same without thinking?
+
+If Amlogic requires GPLv3 or GPL4 or GPLv2000, please confirm it here
+with your official email. Otherwise, if it is not a derivative work
+confirm that. Otherwise just go with what checkpatch asks you.
+
+Best regards,
+Krzysztof
 
