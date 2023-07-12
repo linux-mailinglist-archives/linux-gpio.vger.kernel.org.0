@@ -2,133 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07A2D75020D
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 10:52:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AECA97503CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 11:49:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232633AbjGLIwp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jul 2023 04:52:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44956 "EHLO
+        id S232238AbjGLJtI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jul 2023 05:49:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232357AbjGLIwo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 04:52:44 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA3D2DC
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 01:52:42 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-3142860734aso277296f8f.1
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 01:52:42 -0700 (PDT)
+        with ESMTP id S231145AbjGLJtH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 05:49:07 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2904C170E
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 02:49:05 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3fbd33a57b6so81363445e9.2
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 02:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1689151961; x=1691743961;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3v4UNOf4OnfSq8XVP7LewFMWvi4W/OrdiQXVKL6e3Lc=;
-        b=gUfcmiPg4rS4fTc3XWbclJkCLK94142Yok+PgMSFvS9QoQ/dEWGV6ca5v3qfeDOnTf
-         8QBOHIZQReFJ+xq5u3vEznEihYKmvcNtwBFVTEtMZjKy/0/zM3ryGxSngIyiqn61cZz9
-         farTq0Xj6zruO7R5whaOzcQyDVI9nAE3c+Mx0eg9HbY7tRgCBAsid84zLeIbMbiZjuOB
-         cT8sWILoM3rdAK99M/3b+Rfuqf/J86czQr6XGh6ZL/SkypNPL6lZZ5D8aL2DdyG+cBMt
-         IcAGxdhY+DqUDUt2OCMy4YMIGQ4414JZ9sYO8l1qByzfyvRZSob6i29Pbrnvyqn3o0pj
-         sN7g==
+        d=shruggie-ro.20221208.gappssmtp.com; s=20221208; t=1689155343; x=1691747343;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0GHv2Ft2S3kZ2O5gSuwY1F0w/gwmM+yHKS1s0Tu9JBg=;
+        b=EiY5dgwuevH0xcmwb/QV67fO+EBxdcf1gYvwsRZw+Gye7G7A0qaI+1b1VxlcnGa8cG
+         FoS7uFMN9BdJATK23qF8XksOIgUpdvmOxAXzE1i+r8o68/bOkrUAkg+/fvhb+UvZqWV6
+         U1Q5+CJ/qiA1I05kWR6L3wkqFi/4NLfGYpCbFKiTAWHXT2GknMfgSeJaM8Gi0fadI1X3
+         VgmWi0Ll5/gVUJf/1/LgH6I9Bpg838jcjkqO/fE5kf90pj4sWA9cN4U/Zihd0vf3ameP
+         3fFnNzY39lEugt8F1FdC/tJ/GIo8JdpV+YkDJ98dOLrHDqtKvGfJrjDBkPRnKrOwiEpL
+         QH/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689151961; x=1691743961;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3v4UNOf4OnfSq8XVP7LewFMWvi4W/OrdiQXVKL6e3Lc=;
-        b=cWp4IWT1kUCkvQ7QmfWul6YPmtQaqEPUXItF/etcDPIpZ1RRpL+Q9hyEj/1WXAma3a
-         JcYyw72CJMibkRQNtUI34PZkBFXZX6Mo0RgPjvPqanoMtYDqN2k8m7OOidRPawuMKU1C
-         z6TgrE7AoS15PL0WZNoDAKpLY8Aum/7yhRzL+Jr7JqjGX+awk5D01zgKECoJjbycq9NZ
-         NCXareAS9UaV5ULBzHACkfcJCtC74INK2ZVRzJxq10Ds+Bka58bPCC1g9iD4Jw+pc5Lt
-         HL1JlEldgEE8j0czQaQSKnE9P+4NQ/DVIPG8VYBz++csoRINeVvRyDegpDP1f8vpNXfb
-         fFmA==
-X-Gm-Message-State: ABy/qLZsQURPofWQXhbSXGtjpNFVNeUcYrLItcGzEIVUPKm6607AIV5Q
-        K4/fuHBGdTyCIO4STaALub54Xw==
-X-Google-Smtp-Source: APBJJlGGeF9HoB77N7GwO+Hyr+ddV1M8ABtSNq/dkr/65Ht2wVGC7PINcIdawjEEC/C8z59wqiPM6Q==
-X-Received: by 2002:adf:e651:0:b0:312:849d:acc8 with SMTP id b17-20020adfe651000000b00312849dacc8mr1202100wrn.9.1689151961390;
-        Wed, 12 Jul 2023 01:52:41 -0700 (PDT)
-Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
-        by smtp.gmail.com with ESMTPSA id t9-20020a5d5349000000b003143b7449ffsm4475140wrv.25.2023.07.12.01.52.40
+        d=1e100.net; s=20221208; t=1689155343; x=1691747343;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0GHv2Ft2S3kZ2O5gSuwY1F0w/gwmM+yHKS1s0Tu9JBg=;
+        b=hf8sj4uW45gwlHsyksj5Vz/D5ON4dWA2Ybg5TC23JS1rclfHSAiUnw28V/PxM4UTbR
+         8WeTxB2PpCq0BhmeWp/wGVfV3vPUOLbKSKLKtl7gAEGZs+SoD+1rPII2BbVVKhILVBQ5
+         Axuyjoq6tEj9211g6y27VjvhIO1T5+//zwTB/omNG+pN3Jpx75Q3K5sIvpr5Bnd6PHC8
+         +X4HmzqrZOwazXASWUqCNLpvfuoDZ/Jt5kWpEignLPEvn6ThLpzM94eq1x0xfT+aCDPD
+         6pLKcXBFnWBQ9Fi6S9IAMvShRYh8Fvc9npqX6M3u7F/OcHXWcYyeluBykVCmzOb5PiKW
+         mxBQ==
+X-Gm-Message-State: ABy/qLYaOf7+dlRNjR9ZaW6ZuYnjR9u7Vb3rmGsgekSv8zAkZKxddjfB
+        XqNvQeKZP9va1+0Ulfx9m3c7I9jyLFCaqZj1L2A=
+X-Google-Smtp-Source: APBJJlF1g3G4yZ+xXhSACC1ATsRZbDX+nWFG6yn1Wg0hxlL1S5urfARH3YE4W4J3B/TRnr+x5HyVMA==
+X-Received: by 2002:a5d:4909:0:b0:314:545b:4f3 with SMTP id x9-20020a5d4909000000b00314545b04f3mr18407939wrq.36.1689155343165;
+        Wed, 12 Jul 2023 02:49:03 -0700 (PDT)
+Received: from localhost.localdomain ([82.79.69.144])
+        by smtp.gmail.com with ESMTPSA id y18-20020adffa52000000b00313f031876esm4604608wrr.43.2023.07.12.02.49.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 01:52:41 -0700 (PDT)
-From:   Naresh Solanki <naresh.solanki@9elements.com>
-X-Google-Original-From: Naresh Solanki <Naresh.Solanki@9elements.com>
-To:     Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Naresh Solanki <Naresh.Solanki@9elements.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] pinctrl: cy8c95x0: Add reset support
-Date:   Wed, 12 Jul 2023 10:52:35 +0200
-Message-ID: <20230712085236.2496651-2-Naresh.Solanki@9elements.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230712085236.2496651-1-Naresh.Solanki@9elements.com>
-References: <20230712085236.2496651-1-Naresh.Solanki@9elements.com>
+        Wed, 12 Jul 2023 02:49:02 -0700 (PDT)
+From:   Alexandru Ardelean <alex@shruggie.ro>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+        Alexandru Ardelean <alex@shruggie.ro>
+Subject: [PATCH] gpio: 74xx-mmio: remove unneeded platform_set_drvdata() call
+Date:   Wed, 12 Jul 2023 12:48:57 +0300
+Message-Id: <20230712094857.218105-1-alex@shruggie.ro>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+The platform_set_drvdata() was needed when the driver had an explicit
+remove function.
+That function got removed a while back, so we don't need to keep a pointer
+(on 'dev->driver_data') for the private data of the driver anymore.
 
-This patch adds support for an optional "reset" GPIO pin in the cy8c95x0
-pinctrl driver. On probe, the reset pin is pulled low to bring chip out
-of reset. The reset pin has an internal pull-down and can be left
-floating if not required.
-
-The datasheet doesn't mention any timing related to the reset pin.
-
-Based on empirical tests, it was found that the chip requires a
-delay of 250 milliseconds before accepting I2C transfers after driving
-the reset pin low. Therefore, a delay of 250ms is added before
-proceeding with I2C transfers.
-
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
-Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
+Signed-off-by: Alexandru Ardelean <alex@shruggie.ro>
 ---
-Changes in V2:
-- None
----
- drivers/pinctrl/pinctrl-cy8c95x0.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/gpio/gpio-74xx-mmio.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 2ecc96691c55..58ca6fac7849 100644
---- a/drivers/pinctrl/pinctrl-cy8c95x0.c
-+++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -164,6 +164,7 @@ struct cy8c95x0_pinctrl {
- 	struct pinctrl_desc pinctrl_desc;
- 	char name[32];
- 	unsigned int tpin;
-+	struct gpio_desc *gpio_reset;
- };
+diff --git a/drivers/gpio/gpio-74xx-mmio.c b/drivers/gpio/gpio-74xx-mmio.c
+index 0464f1ecd20d..c7ac5a9ffb1f 100644
+--- a/drivers/gpio/gpio-74xx-mmio.c
++++ b/drivers/gpio/gpio-74xx-mmio.c
+@@ -135,8 +135,6 @@ static int mmio_74xx_gpio_probe(struct platform_device *pdev)
+ 	priv->gc.ngpio = MMIO_74XX_BIT_CNT(priv->flags);
+ 	priv->gc.owner = THIS_MODULE;
  
- static const struct pinctrl_pin_desc cy8c9560_pins[] = {
-@@ -1383,6 +1384,20 @@ static int cy8c95x0_probe(struct i2c_client *client)
- 		chip->regulator = reg;
- 	}
+-	platform_set_drvdata(pdev, priv);
+-
+ 	return devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
+ }
  
-+	/* bring the chip out of reset if reset pin is provided */
-+	chip->gpio_reset = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(chip->gpio_reset)) {
-+		ret = dev_err_probe(chip->dev, PTR_ERR(chip->gpio_reset),
-+				    "Failed to get GPIO 'reset'\n");
-+		goto err_exit;
-+	} else if (chip->gpio_reset) {
-+		usleep_range(1000, 2000);
-+		gpiod_set_value_cansleep(chip->gpio_reset, 0);
-+		usleep_range(250000, 300000);
-+
-+		gpiod_set_consumer_name(chip->gpio_reset, "CY8C95X0 RESET");
-+	}
-+
- 	chip->regmap = devm_regmap_init_i2c(client, &cy8c95x0_i2c_regmap);
- 	if (IS_ERR(chip->regmap)) {
- 		ret = PTR_ERR(chip->regmap);
 -- 
-2.41.0
+2.40.1
 
