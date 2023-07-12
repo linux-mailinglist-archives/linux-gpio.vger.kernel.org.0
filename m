@@ -2,81 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C988750D1A
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 17:52:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5005750E59
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 18:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231867AbjGLPv7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jul 2023 11:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33126 "EHLO
+        id S233426AbjGLQX0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jul 2023 12:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbjGLPv6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 11:51:58 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E881BDC;
-        Wed, 12 Jul 2023 08:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689177118; x=1720713118;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gsXcqS7zpVz5SCmmkuyOPmznN8IrUzyo3KHPY7vC0ho=;
-  b=KXzebGGvGOXJsVaL+R8A7gVH//FUEZrXN1sRSKV1tElF18GeY2j6zCP0
-   mkzsGVv9tq4nJeGu/XXYi9Lb1Xw6viwVhiPd8mjh7aBaUiCVy+pU3xSaB
-   SWymtHEjy89e2WG41wiW5doN/NoomUv0+HWQwXqsp46kVn4yoahHWM8mV
-   KbG4MI6Jml4IhedcffIqFfWZlWXT9SA0OMqDeIaKh7sHJzt/diuNb9Q/y
-   MgjqQIcMy7Q1hnrx1K5xQulAX1tAikS56F+5SyzQEWSYIo8FRekFcjKDj
-   TGoWTjA2Agpumsm44y4dkD0DG4JNgSGQR8ek8cA+Dv/r0y7FC1fXW8GH7
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="367546291"
-X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
-   d="scan'208";a="367546291"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 08:51:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="845703541"
-X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
-   d="scan'208";a="845703541"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP; 12 Jul 2023 08:51:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qJc7o-002AXi-2p;
-        Wed, 12 Jul 2023 18:51:32 +0300
-Date:   Wed, 12 Jul 2023 18:51:32 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        with ESMTP id S234006AbjGLQXI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 12:23:08 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36EC030E0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 09:22:25 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2b6b98ac328so112557681fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 09:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689178931; x=1691770931;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=822yCiNqjSfwRkfO3jmPGKsHeLxeECmnUFTSeOcnIiE=;
+        b=uhkgSzcr5RvXjx0/U8Vt3bAOoKxhMAr8AYhmq1yYoPTM8iinfH+ZH/c3bLlXFtoZcW
+         NqTbKpDnG5/Py82xlsqiXPF1YIUFij0h4n2P0PcaDd9CE8xt4vy78TGH0gYXtt4ul0p5
+         8Y92SUTzzsax1fBecr1sBdVEiXRFRw7xJsh+hvy/uioWkiIwNQmU8oggaCwsuVOfhdj9
+         RL92I1RaDek/EHTndEd1yvJKb8GefmD6Lwd1VJBqu+LAp47JVXA7j4xoIWcciXRCjZi/
+         WRMWs0MtbuQRiU3P8rsJhxkhMqKPHgVt4FfxnYRjO8jC50Uqh0kMvW5lUhL6pKDQSCz/
+         EuVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689178931; x=1691770931;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=822yCiNqjSfwRkfO3jmPGKsHeLxeECmnUFTSeOcnIiE=;
+        b=hi98xPLPbIR+rDnj/Ebsw8yvz1XOFAGtoBm2En75uUd8O0li0+b+BSoele1LC8hwy6
+         JTzdpr2Cv3816B8IFJzOphyxfPViKAlM5c/G8fwo4XyO+Ofwypblk0vKtxsDb0rAOHCu
+         5aLruoq1lFS/4SQX0Rovi6RTxwNezrYhuwAmELs7Cfh0W2Quwk3NsRPwSyD/oh+MJ4Sa
+         ua6Xaf+enMcvEjOZp//eLoCl2FZcxmjLxiHEvZX5udUxAUWTntSmhYJFUNgUc85NDkaZ
+         26MLsRJ3G3jbVFOL7pIrqAnPTIMujcvvxnGg3uaZ7vxgw2jM4KpQ/SirBTQShE2Bp5aa
+         Mp4Q==
+X-Gm-Message-State: ABy/qLaTReX16Hp40Lx3hwsuYb3HPQuE8Mz5c9ULiOnk52F9WxQbuxlt
+        0/uqds7JPW5x6u4xaq/F6QAHfYqqj3GJQsEUj+x9NQ==
+X-Google-Smtp-Source: APBJJlF+IVZfLNT7bNOLaB03plynXvyRL7AkXl/pQT0RIcyULWZjFlpnngkKQ8Kbmqry19r5Upla8kwXe2tYin3qG7g=
+X-Received: by 2002:a2e:8612:0:b0:2b6:a6a6:4a16 with SMTP id
+ a18-20020a2e8612000000b002b6a6a64a16mr15894975lji.3.1689178931318; Wed, 12
+ Jul 2023 09:22:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230712100105.105889-1-brgl@bgdev.pl> <ZK7L3P+U/Q9kWnA9@smile.fi.intel.com>
+In-Reply-To: <ZK7L3P+U/Q9kWnA9@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 12 Jul 2023 18:21:58 +0200
+Message-ID: <CAMRc=MfJk+HM-mksxk9AY_+JfGJL_ng+gcrBx3igX3tcJaHNQg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: fix a typo in comment
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpiolib: order includes alphabetically in gpiolib.h
-Message-ID: <ZK7MBMIHm95xVdz0@smile.fi.intel.com>
-References: <20230712095955.105716-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230712095955.105716-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 11:59:55AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> After adding the missing notifier.h header, let's order all includes
-> alphabetically.
+On Wed, Jul 12, 2023 at 5:50=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Jul 12, 2023 at 12:01:05PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > It was supposed to say 'for' not 'fo'.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> Perhaps you can you run codespell and fix all problematic places at once?
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This is the only one reported by codespell. Thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
