@@ -2,108 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 742AD750F83
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 19:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F9D7750FEB
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 19:47:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232498AbjGLRUW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jul 2023 13:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
+        id S232167AbjGLRri (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jul 2023 13:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232625AbjGLRUT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 13:20:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 913A71980;
-        Wed, 12 Jul 2023 10:20:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 235586182C;
-        Wed, 12 Jul 2023 17:20:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1086C433C8;
-        Wed, 12 Jul 2023 17:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689182417;
-        bh=3gPj2OLmTQiKQXAQaSmLuzHQbyixVTI9hSntm0pe89c=;
-        h=From:Date:Subject:To:Cc:From;
-        b=S/8oTBEQaVAolENbbe7Jf9UDWVskfQYIgG38pt/JjHUBsc5xLqN2jhbv2YJrJGuXL
-         zHII+fYTNpd5+9TSUEdAJqt132sxqFvOyLhwPfsg5NK0oEU+D9MGjIjqWLak7Bo7LO
-         +6/qU084uj6npi5eDboG6VpB214VFUxHHjQfkt0ZFfSZ0jprWmvFi22Zgk8vkxmSXJ
-         apghrB6KVousvQl/aAxNU4sWQH7U0BunuKUqchg5nOofTCBQR/mi83z0DweuG33Ip4
-         XUIcGBPV+HLTLzk+H+Cvxtvnm+JRHp1KEsAgK/M1hfFV/D9PCir67wEhCi02Sc6Bcj
-         27Gvi5xX71cnQ==
-From:   Mark Brown <broonie@kernel.org>
-Date:   Wed, 12 Jul 2023 18:19:59 +0100
-Subject: [PATCH] pinctrl: sunxi: Add some defensiveness for regulators
- array
+        with ESMTP id S231499AbjGLRrh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 13:47:37 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A17199E
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 10:47:36 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-307d58b3efbso7224926f8f.0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jul 2023 10:47:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689184054; x=1691776054;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZOaV0grZnsNI4Fl7DZBG49fG2tc/HAbGipS8Qo3wc0A=;
+        b=qqWpmjJrFuel/DHvEJJKM04xvz1Mk7oGZfhLSuUe7UHU+51lpdyKCFIUnyB1FqnWYV
+         6ZNvYeMuOoy3U24y24JMAoVZBqhVp0nFHB/Jh37up8BBuAeLy9NZmWwx7GpvPg3P8DBC
+         A6BnTuVO4XKfOtY4yTA5DZ1DaRqqChwRAsAB8oSOqYCd0Ev4oZzrL1mhpeQ2Z7HKm7XR
+         iz3hxUkgDPX385zrHQPKCDX1/9vgXcH9BkY62IeJi5i1YatDDWRNylND/EsoOylHP5Sa
+         mhNfmIzOHwP9tLztfhrXX27LoNjHhxN8NVLm3jXlqhchBhzAk8IYqtbVmztDB/zrm6JO
+         lfBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689184054; x=1691776054;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZOaV0grZnsNI4Fl7DZBG49fG2tc/HAbGipS8Qo3wc0A=;
+        b=LwhyMJrCAfCkqfxhOfq3W76pjBOudiUSX96FJRqnoEOii50mPd1X04JPxHhQYY5Ds0
+         4kV7bvvjZ0EYkDcORS94UswX11zDJOSo7kuJ4ZEYX5rAZ9+Poj9FJWsSyryk7/9icJHm
+         ieClyxd+VMHBEWu7YLZn7xCo5XAMSK+Odfv66WJiEXCXC15FSRbLOxcsQVOteqV85vof
+         YJJGNyZjT1LX6jFsgCv/NzcOM7oS7xSIHUFbbXh9VS/zHn3p0m6CdH9hJbxS/K48lN2N
+         sIutqy9OUkeRFMd4Jzn/kUBQHBD3ASMDwaFap5AogE0xZrF/rqUWrW5RGwm+/3b7XPZs
+         F1mg==
+X-Gm-Message-State: ABy/qLZQTuKJnCBBwSbxybtf7Z+WvIOyTTwIQPtZfHentfJHpEbPc505
+        M0+fi00iioQWEkygF+87MrzyJg==
+X-Google-Smtp-Source: APBJJlEJfjGeLanhi9Xmn6oDNZ6EyRFZ+2EPPqjkpGpuBEYKKYnpLHusa3fMPgQE13YQQA35khbMGQ==
+X-Received: by 2002:a5d:6e5c:0:b0:313:ef96:84c8 with SMTP id j28-20020a5d6e5c000000b00313ef9684c8mr16023951wrz.67.1689184054645;
+        Wed, 12 Jul 2023 10:47:34 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id s7-20020a1709064d8700b00993004239a4sm2802472eju.215.2023.07.12.10.47.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jul 2023 10:47:34 -0700 (PDT)
+Message-ID: <217c37be-996d-82ef-ee50-68feb341df26@linaro.org>
+Date:   Wed, 12 Jul 2023 19:47:31 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] dt-bindings: gpio: snps,dw-apb: allow gpio-line-names
+To:     Andy Shevchenko <andy@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230712074553.35907-1-krzysztof.kozlowski@linaro.org>
+ <d25vlma6vefztgggatas7ipn36rumhuodzcalfq7c6apwliy7a@ddgo3fgulv2s>
+ <ZK7GqJlXhCIcA/J2@smile.fi.intel.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <ZK7GqJlXhCIcA/J2@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230712-pinctrl-sunxi-boudns-v1-1-85f37de79b9f@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAL7grmQC/x3MMQqAMAxA0atIZgOtUopeRRzURg1IlEZFkN7d4
- viG/19QikwKbfFCpJuVd8mwZQHTOshCyCEbKlPVxluLB8t0xg31kodx3K8gio0bZxeGOhjvIKd
- HpJmff9v1KX06IFsyZgAAAA==
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-099c9
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1234; i=broonie@kernel.org;
- h=from:subject:message-id; bh=3gPj2OLmTQiKQXAQaSmLuzHQbyixVTI9hSntm0pe89c=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBkruDOruL4nOFfNlPL6CqLv3/eOKtVcuXRUpj+b72M
- ISUrRpuJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZK7gzgAKCRAk1otyXVSH0L4jB/
- wMyfEW/O45XvRvUxKZxYqTo73x4AuL9rRWlESg7ixOG3fYoEUmsKI5eW3zmfmxl0w/dxt1Tf7LjcRm
- MJBOrT9UKa4Eqcgqt8muv27avkgpnx7ZOTAJHGAu4XQ78cx7xafEYrESk3AL4rRj0D397nVhUXkclQ
- YLPyvKUxjAeOOcSjZV8721BIdc9YbQmqVqXE8odc/Qx6n5rS2ill0LfVibKAliubIarNjTN3fQIN16
- ZNedeTo17S2IMEBEz40VAnfmqVlQtLrcYrdJcHfk6Of1Sk+zvrpCXzFNGqVDz6/Rc1yKUSLwx8Gd8l
- COLL69wcEODbn5HsDoh72IpGkaq6y4
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The sunxi pinctrl has a fixed size array it uses to store regulators used
-in the driver. There is currently nothing that ensures that the number of
-elements in the array is large enough to map the regulators defined by the
-individual SoCs. While this is currently the case having an explicit check
-in there will make life easier for anyone debugging memory issues that
-manifest in the driver so let's add one.
+On 12/07/2023 17:28, Andy Shevchenko wrote:
+> On Wed, Jul 12, 2023 at 12:53:00PM +0300, Serge Semin wrote:
+>> On Wed, Jul 12, 2023 at 09:45:53AM +0200, Krzysztof Kozlowski wrote:
+>>> Allow the GPIO controller subnode to define GPIO names.
+> 
+> Are we going to do this for each GPIO controller bindings? Can it be done once
+> for all please?
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 1dc1882cbdd7..1d1cd3d6d379 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -848,6 +848,9 @@ static int sunxi_pmx_request(struct pinctrl_dev *pctldev, unsigned offset)
- 	char supply[16];
- 	int ret;
- 
-+	if (WARN_ON_ONCE(bank_offset >= ARRAY_SIZE(pctl->regulators)))
-+		return -EINVAL;
-+
- 	if (reg) {
- 		refcount_inc(&s_reg->refcount);
- 		return 0;
-
----
-base-commit: 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5
-change-id: 20230711-pinctrl-sunxi-boudns-95bf5da3d075
+No, because sizes differ. Although here the size is anyway flexible, so
+not much benefit of it, but in other GPIO controllers it is not flexible.
 
 Best regards,
--- 
-Mark Brown <broonie@kernel.org>
+Krzysztof
 
