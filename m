@@ -2,54 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42965750B76
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 16:56:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0139F750BC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jul 2023 17:06:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbjGLOz6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jul 2023 10:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46562 "EHLO
+        id S233140AbjGLPF5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jul 2023 11:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231460AbjGLOz5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 10:55:57 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF2A7BB;
-        Wed, 12 Jul 2023 07:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=BINkZ1i4PKbO0+fsSVwUWsXVzisxjT4/2QKSssOySGM=; b=QFjAs1WzTxEUF8chDYKA9DlGDT
-        sJN8HV/wvVUFJ/zD7PJtGdfq1i92ZgHRlm5fg55/irDCuSja/uKzralkXH7VLBsgLEZmnQe4zgYlU
-        lN19WBy4XwBfRdY19J53pq29mtBpk2kvNWYzpny1Epr9p1/GdmI8IsU8isimR/DqV40A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1qJbFo-0019Hu-Gx; Wed, 12 Jul 2023 16:55:44 +0200
-Date:   Wed, 12 Jul 2023 16:55:44 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Christian Marangi <ansuelsmth@gmail.com>
-Cc:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        UNGLinuxDriver@microchip.com,
-        Daniel Machon <daniel.machon@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC RESEND v1 pinctrl-next 0/1] add blink and activity
- functions to SGPIO
-Message-ID: <39b297b0-5266-4f4b-ade6-8ccb95e90411@lunn.ch>
-References: <20230712022250.2319557-1-colin.foster@in-advantage.com>
- <64ae73ce.050a0220.fe1a6.4b8a@mx.google.com>
+        with ESMTP id S233271AbjGLPFy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jul 2023 11:05:54 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE2051FEB;
+        Wed, 12 Jul 2023 08:05:45 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-9922d6f003cso907018866b.0;
+        Wed, 12 Jul 2023 08:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689174344; x=1691766344;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nkzw4GavT9IB1qJxaGP7vKRQ5uqEjDFaYd3YZ2i6avs=;
+        b=AA3fm16xA3q1uXwhEwqSLYk3iWw3+FCXqNn+OSJJWck+of8fm1LNFggo9fWLpdhnja
+         sErNNC6EIhtNHbaFuFZ6tzSUENORo8G8iMpEf5XPRYP5S8rvX4jTIHtsFWSpUKU5u35E
+         8mWjp4/XbfReIpgSkh8WPVoYPtXt8xiN5UUXjbM01yZphWtwgFZSsYNGDvai6yMuvc0v
+         ZJNnjo2CsEa4SHZvjBmMrgyraPgiqBYYsYedmeDQt0hTKCjRtuZgY1LeFPRcndcbE+8h
+         LBwnDoMWnMWlLwhTD6qYcdza6MGPzmwHztEN8v20N6jtw05fxMbwwY66RGreqz4G186Z
+         iWyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689174344; x=1691766344;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nkzw4GavT9IB1qJxaGP7vKRQ5uqEjDFaYd3YZ2i6avs=;
+        b=BMCpIb5qQhby3GmG1InA3hqQt5I6P736ocgo+UsHJquOjU3xMZdO/azYayYo/L0QHS
+         1FMHz3JHuSAS1ClOD5iUD4RkQnwt3BgBzwT3oy2FCg2otosozHbfvgD4aQ3KDLx5VQgk
+         VEdjnpsjIY3ksAVUI11iVCSrlzEtFx0VBbUka7xAWtZ6jFLWtSaCUMu9LUUUrae9Vly/
+         YXTCjtLHKz3Q+LfFC2AEbPzouZ6Te4SWM2OFXL6bJjeVt+t9v2loYbMmeLt0CwgxiXKj
+         d1fAqQSwH1dvZfK9ayiGEGiw/KAgwHXRPwihK76DzUtHpPz+hqztCYxIvzHQiBV7koUT
+         NICA==
+X-Gm-Message-State: ABy/qLbX+U5jRtE1jCwWoOyPvjTxZoDtNm+rueLZrkxf3S5fMqu1dxN2
+        KDIcH/ANOLUyAvsmGujpE+s=
+X-Google-Smtp-Source: APBJJlHg/Cz7FE5jOOJFTlHwoesfOpZ4gi/DZs4K5U557nkB8qnV4ZklPJ+8wh7lYbv+jpeYDhEIyQ==
+X-Received: by 2002:a17:907:1dc7:b0:98c:2b5c:429b with SMTP id og7-20020a1709071dc700b0098c2b5c429bmr17795695ejc.57.1689174343872;
+        Wed, 12 Jul 2023 08:05:43 -0700 (PDT)
+Received: from orome (p200300e41f4b7100f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4b:7100:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id le12-20020a170906ae0c00b009829d2e892csm2742960ejb.15.2023.07.12.08.05.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jul 2023 08:05:43 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 17:05:41 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Prathamesh Shete <pshete@nvidia.com>
+Cc:     linus.walleij@linaro.org, jonathanh@nvidia.com,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: tegra: Add support to display pin function
+Message-ID: <ZK7BRXa9geC8SAGs@orome>
+References: <20230712135553.25162-1-pshete@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2YdKNK7uOPK99Kng"
 Content-Disposition: inline
-In-Reply-To: <64ae73ce.050a0220.fe1a6.4b8a@mx.google.com>
+In-Reply-To: <20230712135553.25162-1-pshete@nvidia.com>
+User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,53 +74,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 03:59:10AM +0200, Christian Marangi wrote:
-> On Tue, Jul 11, 2023 at 07:22:49PM -0700, Colin Foster wrote:
-> > Preface (new for resend):
-> > 
-> > This is a resend of a patch I'd sent a couple years back. At that time,
-> > I was told to wait for hardware-offloaded LEDS. It looks like that time
-> > has finally come, so I've changed this from PATCH down to an RFC to make
-> > sure this is the right approach for the framework.
-> > 
-> > Ocelot chips (VSC7511, VSC7512, VSC7513, VSC7514) have support for
-> > hardware-offloaded LEDs based on network activity. This is currenty
-> > managed by way of pinctrl-microchip-sgpio (and this current patch).
-> > 
-> > The purpose of this resend is two-fold. First, to come up with an idea
-> > of how this pinctrl-microchip-sgpio module can fit in with the new
-> > hardware-offloaded netdev triggers Christian Marangi recently added. Is
-> > this something that should be in the pinctrl module itself? Or should
-> > there be a drivers/net/ethernet/mscc/ocelot_leds.c module that I should
-> > add?
-> >
-> 
-> I'm a bit out of the loop on what magic OEM did to make LED work on
-> ocelot but I feel an ocelot_leds submodule is needed.
-> 
-> To correctly supports the hw many API needs to be defined and for switch
-> I would stick with how things are done with qca8k, codewise and DT wise
-> (with how LEDs are defined in DT)
-> 
-> Ideally the feature for MAC will be generilized and added to the DSA ops
-> struct, so having things in the DSA driver would make the migration
-> easier.
 
-`ocelot` is a bit of an odd device, since it is both a DSA device for
-felix and seville and a pure switchdev device for ocelot.
+--2YdKNK7uOPK99Kng
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You need some integration with the switch driver, because i expect
-only the switch driver has the knowledge of how LEDs are mapped to
-struct netdev and ports. And in order to offload blinking you need
-that mapping.
+On Wed, Jul 12, 2023 at 07:25:53PM +0530, Prathamesh Shete wrote:
+> The current function for a given pin is not displayed via the debugfs.
+> Add support to display the current function that is set for each pin.
+>=20
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra.c | 19 +++++++++++++++++--
+>  drivers/pinctrl/tegra/pinctrl-tegra.h |  2 ++
+>  2 files changed, 19 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegr=
+a/pinctrl-tegra.c
+> index 4547cf66d03b..2752c914f628 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> @@ -96,6 +96,7 @@ static const struct cfg_param {
+>  	{"nvidia,slew-rate-falling",	TEGRA_PINCONF_PARAM_SLEW_RATE_FALLING},
+>  	{"nvidia,slew-rate-rising",	TEGRA_PINCONF_PARAM_SLEW_RATE_RISING},
+>  	{"nvidia,drive-type",		TEGRA_PINCONF_PARAM_DRIVE_TYPE},
+> +	{"nvidia,func",			TEGRA_PINCONF_PARAM_FUNCTION},
 
-I have some WIP patches to add a generalized DSA interface for LEDs,
-and support for mv88e6xxx. I would also like to move qca8k over to
-that. So it could be that felix and seville would use that. Ocelot
-would need to do it slightly different, but i expect it is just a
-layer on top of some shared code, much like the rest of ocelot.
+Device tree bindings define the "nvidia,function" property to contain
+this information, so shouldn't we use the same name here?
 
-Having pinmux in the middle is interesting. I've no idea how that will
-work, but i've not looked at it.
+Thierry
 
-      Andrew
+--2YdKNK7uOPK99Kng
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmSuwUMACgkQ3SOs138+
+s6FQDRAAoK6Esw601lrSBOA9hLHuIBHRbnjQMnKgSZdA8eiMozPTc/zNQE7y48NV
+coFrEGg5SIjmKMxcOIFsifB2VEtBd6R4CgHgvT4LD4IxMar6YhHtBW9uvpzQK4aV
+0dgdW4SaFT3nxZDvCQEttCA7a0AzvMMhx/3sWcWPpFKx7ciSNGI+cFoeEQ53eQmC
+6rzDpQvG6Wbyb8lypcCXBNyouuHTlpG6wINNpXqsZQGwsDLPRyeTTNTtXFi+ptzV
+AM/5kgeNB3Svc7zFvMdvgU0kSux+gp6vziK8qEVeHx9eefGjWxYihMMAXWFHOl2f
+Iy21wcyL3o4NK2Send2HJ/iSovJmhzAa1wgkrbYyB62kczl3HhkvAkbukRCv1WMG
+zCKoDuyb1u58cDIJ71HQPfOY9ghRWUEUpKb8epwLSMSwOb23TxxjHENTqkiKqVt7
+iXoulIqmAoQnVl7WtcD7d8o7ZYcd4kgeqMqjVgz9qJB5rh56IqxR7/a/CTuUGrhW
+2/BtfxvKPpAMaa8IrRx1A9JH1fR5SDTN8sdbSMgfQm0tcQncT7ORh8YEtT7i/coO
+XV0jqXJXm8l+kHXwgzKm0k1TK52mZjxHam4UgbVfqDm/8dsxrJJHuphnWrEcNHIZ
+ToTIa5ulqz1RikLBCfPaH4GwZ6N9imejuFXwNg+cq294c1IbRT4=
+=DFoZ
+-----END PGP SIGNATURE-----
+
+--2YdKNK7uOPK99Kng--
