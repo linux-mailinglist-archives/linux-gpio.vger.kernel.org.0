@@ -2,143 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70874752582
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jul 2023 16:50:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C05A5752B8A
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jul 2023 22:21:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231745AbjGMOuT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jul 2023 10:50:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
+        id S229976AbjGMUU7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jul 2023 16:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229682AbjGMOuT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jul 2023 10:50:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5042273A;
-        Thu, 13 Jul 2023 07:49:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3887561545;
-        Thu, 13 Jul 2023 14:49:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03A37C433C8;
-        Thu, 13 Jul 2023 14:49:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689259797;
-        bh=oUeQBue4D+P5RKuXyNTqDYmkvCRh4FYVyWtbLqAKhmA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XxKgmn1xsOU2pbWpxRsCyKp99xUi09w4uLO1jBoSotyiJJfgPbzmlDjlmVpBsS5Yx
-         ncIKrzKTaCItf5d2aokcdPa8m4ykTT8eLxOfOfaM0s0kk5LsbIPsp4OOzWcSmSj2I2
-         m2upGxLV5F+Dl4eoKKngsmTR1oinJHxiDWLERc+pK3cC2L/SLbYzEJBh6l+VzgNXy1
-         gv2T5CpLDQ/tDZKe3UfKnti5V1QizPVI3MCNRkrb5pmPRMSoOdFjbwbF5nhNvdPrzl
-         oOuAQTXH5PDOIdTy7qHbEezRIFzaPM5g7QeOP4kQaOO0fS76lgohHqzxEzRVcl5iWQ
-         /HxBJ7XGKXF9Q==
-Date:   Thu, 13 Jul 2023 15:49:50 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Stefan Agner <stefan@agner.ch>, Marek Vasut <marex@denx.de>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5] dt-bindings: MFD: Convert STMPE to YAML schema
-Message-ID: <20230713144950.GE10768@google.com>
-References: <20230709-stmpe-dt-bindings-v5-1-34a3d6ee1e57@linaro.org>
+        with ESMTP id S229815AbjGMUU6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jul 2023 16:20:58 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB02F2120;
+        Thu, 13 Jul 2023 13:20:56 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 36DKKm6F040716;
+        Thu, 13 Jul 2023 15:20:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1689279648;
+        bh=jiyf7SMZhRp6ELomw3YRQevQiYE+P8LZ/as5/ZPw2Ic=;
+        h=From:To:CC:Subject:Date;
+        b=lF1xf5dEIP08lvZ17ag3cXXXer5s9SaEzAKC5E0+xaQ9nQXA6p82J1XIjvDXkaQT9
+         oK+k6r6y4fcG5ScNypJHNUXSmEjDIQbR/f2XjCcu1fI4k5afxAiVtyslc7HO72hL99
+         Fl9KwyaGcmjnHG3GbqMrSgXLGo0/qVJvcxVsOOuo=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 36DKKmmp030526
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 13 Jul 2023 15:20:48 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
+ Jul 2023 15:20:48 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 13 Jul 2023 15:20:48 -0500
+Received: from fllv0040.itg.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 36DKKlqY020094;
+        Thu, 13 Jul 2023 15:20:48 -0500
+From:   Andrew Davis <afd@ti.com>
+To:     Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Davis <afd@ti.com>
+Subject: [PATCH v4] gpio: pisosr: Use devm_gpiochip_add_data() to simplify remove path
+Date:   Thu, 13 Jul 2023 15:20:46 -0500
+Message-ID: <20230713202046.150986-1-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230709-stmpe-dt-bindings-v5-1-34a3d6ee1e57@linaro.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 09 Jul 2023, Linus Walleij wrote:
+Use devm version of gpiochip add function to handle removal for us.
 
-> This converts the STMPE MFD device tree bindings to the YAML
-> schema.
-> 
-> Reference the existing schema for the ADC, just define the
-> other subnode schemas directly in the MFD schema.
-> 
-> Add two examples so we have examples covering both the simple
-> GPIO expander and the more complex with ADC and touchscreen.
-> 
-> Some in-tree users do not follow the naming conventions for nodes
-> so these DTS files need to be augmented to use proper node names
-> like "adc", "pwm", "gpio", "keyboard-controller" etc before the
-> bindings take effect on them.
-> 
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> This adds the missing GPIO bindings for the STMPE port expander
-> and converts the existing MFD binding to YAML.
-> 
-> I suppose Lee can merge this when he's happy with it.
-> ---
-> Changes in v5:
-> - Rebase on v6.5-rc1 meaning GPIO binding is merged
->   upstream and can be dropped.
-> - Link to v4: https://lore.kernel.org/r/20230426-stmpe-dt-bindings-v4-0-36fdd53d9919@linaro.org
-> 
-> Changes in v4:
-> - Make the GPIO bindings a conversion: there were some old
->   text bindings for the STMPE GPIO, we now delete them as
->   part of the patch.
-> - I expect Lee or the DT binding tree to pick both patches.
-> - Link to v3: https://lore.kernel.org/r/20230426-stmpe-dt-bindings-v3-0-eac1d736e488@linaro.org
-> 
-> Changes in v3:
-> - Update to review feedback
-> - Collected some ack/review tags
-> - Link to v2: https://lore.kernel.org/r/20230426-stmpe-dt-bindings-v2-0-2f85a1fffcda@linaro.org
-> 
-> Changes in v2:
-> - Split off a separate GPIO binding
-> - Updated the MFD binding according to feedback
-> ---
-> ChangeLog v4->v5:
-> - Rebase on v6.5-rc1
-> ChangeLog v3->v4:
-> - No changes.
-> ChangeLog v2->v3:
-> - Drop the required pwm properties already required by the
->   template pwm schema.
-> - Add the number of PWM cells as const.
-> ChangeLog v1->v2:
-> - Split off the GPIO bindings to their own schema, as the old
->   bindings didn't even have any GPIO bindings. Put the GPIO
->   schema before this schema so we can use GPIO in the examples.
-> - Drop nodename and pattern as STMPE is not a generic name.
-> - Add maxItems to the resets.
-> - Make wakeup-source just :true, as it is a generic property.
-> - Move unevaluatedProperties for subnodes right before properties
->   as requested.
-> - Name devices "port-expander" in the examples.
-> - Use lowercase hex in line init.
-> ---
->  .../devicetree/bindings/input/stmpe-keypad.txt     |  41 ---
->  .../bindings/input/touchscreen/stmpe.txt           | 108 --------
->  .../devicetree/bindings/mfd/st,stmpe.yaml          | 297 +++++++++++++++++++++
->  Documentation/devicetree/bindings/mfd/stmpe.txt    |  42 ---
->  4 files changed, 297 insertions(+), 191 deletions(-)
+While here update copyright and module author.
 
-Applied, thanks
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
 
+Changes from v3:
+ - Do not cast void * lock explicitly
+ - Rebase on v6.5-rc1
+
+Changes from v2:
+ - Rebase on v6.4-rc2
+
+Changes from v1:
+ - Use devm to cleanup mutex
+
+ drivers/gpio/gpio-pisosr.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pisosr.c b/drivers/gpio/gpio-pisosr.c
+index 67071bea08c26..e3013e778e151 100644
+--- a/drivers/gpio/gpio-pisosr.c
++++ b/drivers/gpio/gpio-pisosr.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
+- *	Andrew F. Davis <afd@ti.com>
++ * Copyright (C) 2015-2023 Texas Instruments Incorporated - https://www.ti.com/
++ *	Andrew Davis <afd@ti.com>
+  */
+ 
+ #include <linux/bitmap.h>
+@@ -116,6 +116,11 @@ static const struct gpio_chip template_chip = {
+ 	.can_sleep		= true,
+ };
+ 
++static void pisosr_mutex_destroy(void *lock)
++{
++	mutex_destroy(lock);
++}
++
+ static int pisosr_gpio_probe(struct spi_device *spi)
+ {
+ 	struct device *dev = &spi->dev;
+@@ -126,8 +131,6 @@ static int pisosr_gpio_probe(struct spi_device *spi)
+ 	if (!gpio)
+ 		return -ENOMEM;
+ 
+-	spi_set_drvdata(spi, gpio);
+-
+ 	gpio->chip = template_chip;
+ 	gpio->chip.parent = dev;
+ 	of_property_read_u16(dev->of_node, "ngpios", &gpio->chip.ngpio);
+@@ -145,8 +148,11 @@ static int pisosr_gpio_probe(struct spi_device *spi)
+ 				     "Unable to allocate load GPIO\n");
+ 
+ 	mutex_init(&gpio->lock);
++	ret = devm_add_action_or_reset(dev, pisosr_mutex_destroy, &gpio->lock);
++	if (ret)
++		return ret;
+ 
+-	ret = gpiochip_add_data(&gpio->chip, gpio);
++	ret = devm_gpiochip_add_data(dev, &gpio->chip, gpio);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Unable to register gpiochip\n");
+ 		return ret;
+@@ -155,15 +161,6 @@ static int pisosr_gpio_probe(struct spi_device *spi)
+ 	return 0;
+ }
+ 
+-static void pisosr_gpio_remove(struct spi_device *spi)
+-{
+-	struct pisosr_gpio *gpio = spi_get_drvdata(spi);
+-
+-	gpiochip_remove(&gpio->chip);
+-
+-	mutex_destroy(&gpio->lock);
+-}
+-
+ static const struct spi_device_id pisosr_gpio_id_table[] = {
+ 	{ "pisosr-gpio", },
+ 	{ /* sentinel */ }
+@@ -182,11 +179,10 @@ static struct spi_driver pisosr_gpio_driver = {
+ 		.of_match_table = pisosr_gpio_of_match_table,
+ 	},
+ 	.probe = pisosr_gpio_probe,
+-	.remove = pisosr_gpio_remove,
+ 	.id_table = pisosr_gpio_id_table,
+ };
+ module_spi_driver(pisosr_gpio_driver);
+ 
+-MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_AUTHOR("Andrew Davis <afd@ti.com>");
+ MODULE_DESCRIPTION("SPI Compatible PISO Shift Register GPIO Driver");
+ MODULE_LICENSE("GPL v2");
 -- 
-Lee Jones [李琼斯]
+2.39.2
+
