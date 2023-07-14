@@ -2,71 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A97F7753D83
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jul 2023 16:33:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9275F753ECD
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jul 2023 17:26:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235788AbjGNOdY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jul 2023 10:33:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
+        id S236149AbjGNP0g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jul 2023 11:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235460AbjGNOdX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jul 2023 10:33:23 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E41C030C0
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jul 2023 07:32:35 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4fd32e611e0so259576e87.0
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jul 2023 07:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689345152; x=1691937152;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s1NAGJKSZNME/ufDdSZLdTSg+2nkMD1y8BbgNjzMbFc=;
-        b=aTOWcE1zHEq2JiQ2evcaK1j562NOcJxwlxyiM1wNh/nY/Aq3L7Kycdk5ueWoDrY6Z4
-         WNqOV1tx/tunxBW1wRzGZeajlyCW1Cuc9Gw6Ll1W95Yp9GVUdtRz4iIVv/UJUEU3nu3f
-         5qA5PquwRg6IBJ8fQ/327K1Y35FQDfrXVssEDy02pgn4o1QNnBr7OoCUzW0Z8S3vQZax
-         fawycB+sRbWj28D3bzKIMzLtsbHlZsMKnTp+GKPjguOMJ3GlxEz+vBE2/ofv/o/sROxf
-         WJAkYp7SG7mKssOzZvcGFq+VycZu4jCOyiJ4YtcoqMwG2mVyocJJEEGMNTk78OMe55UC
-         74kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689345152; x=1691937152;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s1NAGJKSZNME/ufDdSZLdTSg+2nkMD1y8BbgNjzMbFc=;
-        b=hBb3m/XG38pQxkjRlv43KoP0w/FB4Pg81bWOwV9KwB3F0Jw+gRk8vcN6mDFdvQANgF
-         ZPSnF/DmqpzhJGOdS1KoMtW75Er2cmKdblQPRhkQA0YffzQACjASKpqBeMGsrZk1ic1/
-         muaGWQA++mmJ4A6dQM8eSwk0IiPGkgaOPuyIZhkRhi9p42D4RIqQ48bTJhbhbu6LcGQS
-         ekRQxfi0h+ZxqsPUKMH/WUoYNMfXDKCl2kiKjMo65liMxDFtZ6xz2OixAx58HoQYhpC2
-         b0U0/oAROBbaIeS90ihneYhAsbZxiAImYbM/ZElB0jiQUWV5u2CHEezMIMiA0nvHwAIm
-         Gihw==
-X-Gm-Message-State: ABy/qLZHeWXkco9c7CAl2SEqhGPesaSymHiMMzgLn1tD9Cdv3vOHpS0R
-        SNaotp0yOK7Bl6WR5oUoyMwqHw==
-X-Google-Smtp-Source: APBJJlGtbkPxQHR9k71996y+hIr9CmSCiybVaqnnmBBjO1lkXWyFmx/JesUalIfC2HQ1ymc4p5D39g==
-X-Received: by 2002:a05:6512:202d:b0:4f8:6253:540 with SMTP id s13-20020a056512202d00b004f862530540mr1005744lfs.19.1689345152563;
-        Fri, 14 Jul 2023 07:32:32 -0700 (PDT)
-Received: from [192.168.1.101] (abxj146.neoplus.adsl.tpnet.pl. [83.9.3.146])
-        by smtp.gmail.com with ESMTPSA id d28-20020ac244dc000000b004fba1288ab9sm1518364lfm.99.2023.07.14.07.32.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jul 2023 07:32:31 -0700 (PDT)
-Message-ID: <ebfbfdf5-2537-e3ce-8416-d80a9bd862d1@linaro.org>
-Date:   Fri, 14 Jul 2023 16:32:30 +0200
+        with ESMTP id S236019AbjGNP0f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jul 2023 11:26:35 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC42E30C0;
+        Fri, 14 Jul 2023 08:26:34 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ECbstq019424;
+        Fri, 14 Jul 2023 15:26:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=KlTyfug7EZTBZKaQpxZzWcVPGIFRszohTvpxdR5Kc6k=;
+ b=ixhfhWtHAH5MMBtVuvcB7T+CAwWuyvrqrit2WO+RxmSM4gZFUohL3Dt+SYWt6TAJbDsv
+ UqNrJNSDvfOrEPizTj27/tMO1j/KiWGurbjxu4kiCQyewmL0rHY9VQAZFe/riA9QwqJx
+ ZODC1f0JfTBrmnpyoqyh2DrjA45KDwymCTZtpl+TQ5fgLQW11OeXc+CC/l+ozDQJ0Uu6
+ oAz7PziZ5lt2fqTKTHi6GMJcq08Si80VrKvqWyrMbBOb/ynoZNJdnLpDLQvnnveZfnUv
+ glFvbv2Bf6gokOfQnvxVMNzTKK/ADJJDDfdkzsYpfQQDQWYLook+8liu+lL5Nc0NclSr TQ== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rtpts23jr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 15:26:12 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36EFQBK1031783
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 15:26:11 GMT
+Received: from [10.216.56.39] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 14 Jul
+ 2023 08:25:59 -0700
+Message-ID: <d77f5601-2b08-a7c7-1400-7ab68b8add3a@quicinc.com>
+Date:   Fri, 14 Jul 2023 20:55:26 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] pinctrl: qcom: Add intr_target_width to define
- intr_target_bit field width
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+To:     Kathiravan T <quic_kathirav@quicinc.com>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <c712597e-f870-f224-fc1b-90c6f8f19710@quicinc.com>
 Content-Language: en-US
-To:     Ninad Naik <quic_ninanaik@quicinc.com>, andersson@kernel.org,
-        agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_ppareek@quicinc.com,
-        psodagud@quicinc.com, quic_kprasan@quicinc.com
-References: <20230714061010.15817-1-quic_ninanaik@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230714061010.15817-1-quic_ninanaik@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <c712597e-f870-f224-fc1b-90c6f8f19710@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: k6kW04K-HSKuFwXlBT09sQYlyELKk4zM
+X-Proofpoint-ORIG-GUID: k6kW04K-HSKuFwXlBT09sQYlyELKk4zM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-14_06,2023-07-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307140140
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
@@ -77,101 +91,60 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14.07.2023 08:10, Ninad Naik wrote:
-> SA8775 and newer target have added support for an increased number of
-> interrupt targets. To implement this change, the intr_target field, which
-> is used to configure the interrupt target in the interrupt configuration
-> register is increased from 3 bits to 4 bits.
-> 
-> In accordance to these updates, a new intr_target_width member is
-> introduced in msm_pingroup structure. This member stores the value of
-> width of intr_target field in the interrupt configuration register. This
-> value is used to dynamically calculate and generate mask for setting the
-> intr_target field. By default, this mask is set to 3 bit wide, to ensure
-> backward compatibility with the older targets.
-> 
-> Signed-off-by: Ninad Naik <quic_ninanaik@quicinc.com>
-> ---
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-one nit below
-
->  drivers/pinctrl/qcom/pinctrl-msm.c     | 9 ++++++---
->  drivers/pinctrl/qcom/pinctrl-msm.h     | 2 ++
->  drivers/pinctrl/qcom/pinctrl-sa8775p.c | 1 +
->  3 files changed, 9 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 2585ef2b2793..6ebcaa2220af 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1038,6 +1038,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->  	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->  	const struct msm_pingroup *g;
-> +	u32 intr_target_mask = 0x7;
-This could be GENMASK(2, 0)
+> Hi Mukesh,
+> 
+> For IPQ chipsets, for the crashdump to work, we need the below patch
+> 
+> firmware: scm: Modify only the download bits in TCSR register
+> 
+> can you post the below patches separately? Looks like minidump will take 
+> some time and also I don't see any dependencies for these to go along 
+> with the minidump. Given that, will it be possible to post the below 
+> patches separately?
+> 
+>    firmware: qcom_scm: provide a read-modify-write function
+>    pinctrl: qcom: Use qcom_scm_io_update_field()
+>    firmware: scm: Modify only the download bits in TCSR register
+> 
+> Do let us know if we can take these patches and post it separately.
 
-Konrad
->  	unsigned long flags;
->  	bool was_enabled;
->  	u32 val;
-> @@ -1074,13 +1075,15 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  	 * With intr_target_use_scm interrupts are routed to
->  	 * application cpu using scm calls.
->  	 */
-> +	if (g->intr_target_width)
-> +		intr_target_mask = GENMASK(g->intr_target_width - 1, 0);
-> +
->  	if (pctrl->intr_target_use_scm) {
->  		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
->  		int ret;
->  
->  		qcom_scm_io_readl(addr, &val);
-> -
-> -		val &= ~(7 << g->intr_target_bit);
-> +		val &= ~(intr_target_mask << g->intr_target_bit);
->  		val |= g->intr_target_kpss_val << g->intr_target_bit;
->  
->  		ret = qcom_scm_io_writel(addr, val);
-> @@ -1090,7 +1093,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  				d->hwirq);
->  	} else {
->  		val = msm_readl_intr_target(pctrl, g);
-> -		val &= ~(7 << g->intr_target_bit);
-> +		val &= ~(intr_target_mask << g->intr_target_bit);
->  		val |= g->intr_target_kpss_val << g->intr_target_bit;
->  		msm_writel_intr_target(val, pctrl, g);
->  	}
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index 5e4410bed823..1d2f2e904da1 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -59,6 +59,7 @@ struct pinctrl_pin_desc;
->   * @intr_status_bit:      Offset in @intr_status_reg for reading and acking the interrupt
->   *                        status.
->   * @intr_target_bit:      Offset in @intr_target_reg for configuring the interrupt routing.
-> + * @intr_target_width:    Number of bits used for specifying interrupt routing target.
->   * @intr_target_kpss_val: Value in @intr_target_bit for specifying that the interrupt from
->   *                        this gpio should get routed to the KPSS processor.
->   * @intr_raw_status_bit:  Offset in @intr_cfg_reg for the raw status bit.
-> @@ -100,6 +101,7 @@ struct msm_pingroup {
->  	unsigned intr_ack_high:1;
->  
->  	unsigned intr_target_bit:5;
-> +	unsigned intr_target_width:5;
->  	unsigned intr_target_kpss_val:5;
->  	unsigned intr_raw_status_bit:5;
->  	unsigned intr_polarity_bit:5;
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sa8775p.c b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-> index 8a5cd15512b9..8fdea25d8d67 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sa8775p.c
-> @@ -46,6 +46,7 @@
->  		.intr_enable_bit = 0,		\
->  		.intr_status_bit = 0,		\
->  		.intr_target_bit = 5,		\
-> +		.intr_target_width = 4,		\
->  		.intr_target_kpss_val = 3,	\
->  		.intr_raw_status_bit = 4,	\
->  		.intr_polarity_bit = 1,		\
+Yes, we can post this separately.
+
+-Mukesh
+> 
+>>
+>>   Documentation/admin-guide/index.rst                |   1 +
+>>   Documentation/admin-guide/qcom_minidump.rst        | 293 +++++++++++
+>>   .../devicetree/bindings/soc/qcom/qcom,ramoops.yaml | 126 +++++
+>>   MAINTAINERS                                        |  15 +
+>>   arch/arm64/boot/dts/qcom/sm8450.dtsi               |  12 +
+>>   arch/arm64/configs/defconfig                       |   4 +
+>>   drivers/firmware/Kconfig                           |  11 -
+>>   drivers/firmware/qcom_scm.c                        |  85 ++-
+>>   drivers/pinctrl/qcom/pinctrl-msm.c                 |  12 +-
+>>   drivers/remoteproc/qcom_common.c                   | 142 +----
+>>   drivers/soc/qcom/Kconfig                           |  39 ++
+>>   drivers/soc/qcom/Makefile                          |   3 +
+>>   drivers/soc/qcom/qcom_minidump.c                   | 582 
+>> +++++++++++++++++++++
+>>   drivers/soc/qcom/qcom_minidump_internal.h          |  98 ++++
+>>   drivers/soc/qcom/qcom_minidump_smem.c              | 387 ++++++++++++++
+>>   drivers/soc/qcom/qcom_pstore_minidump.c            | 210 ++++++++
+>>   drivers/soc/qcom/smem.c                            |   9 +
+>>   fs/pstore/ram.c                                    |  26 +-
+>>   include/linux/firmware/qcom/qcom_scm.h             |   2 +
+>>   include/linux/pstore_ram.h                         |   2 +
+>>   include/soc/qcom/qcom_minidump.h                   |  64 +++
+>>   kernel/kallsyms.c                                  |   2 +-
+>>   22 files changed, 1973 insertions(+), 152 deletions(-)
+>>   create mode 100644 Documentation/admin-guide/qcom_minidump.rst
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
+>>   create mode 100644 drivers/soc/qcom/qcom_minidump.c
+>>   create mode 100644 drivers/soc/qcom/qcom_minidump_internal.h
+>>   create mode 100644 drivers/soc/qcom/qcom_minidump_smem.c
+>>   create mode 100644 drivers/soc/qcom/qcom_pstore_minidump.c
+>>   create mode 100644 include/soc/qcom/qcom_minidump.h
+>>
