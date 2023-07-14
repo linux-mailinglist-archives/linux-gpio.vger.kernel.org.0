@@ -2,89 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9275F753ECD
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jul 2023 17:26:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E134D753F8A
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jul 2023 18:10:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236149AbjGNP0g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jul 2023 11:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
+        id S235303AbjGNQKL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jul 2023 12:10:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236019AbjGNP0f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jul 2023 11:26:35 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC42E30C0;
-        Fri, 14 Jul 2023 08:26:34 -0700 (PDT)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ECbstq019424;
-        Fri, 14 Jul 2023 15:26:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=KlTyfug7EZTBZKaQpxZzWcVPGIFRszohTvpxdR5Kc6k=;
- b=ixhfhWtHAH5MMBtVuvcB7T+CAwWuyvrqrit2WO+RxmSM4gZFUohL3Dt+SYWt6TAJbDsv
- UqNrJNSDvfOrEPizTj27/tMO1j/KiWGurbjxu4kiCQyewmL0rHY9VQAZFe/riA9QwqJx
- ZODC1f0JfTBrmnpyoqyh2DrjA45KDwymCTZtpl+TQ5fgLQW11OeXc+CC/l+ozDQJ0Uu6
- oAz7PziZ5lt2fqTKTHi6GMJcq08Si80VrKvqWyrMbBOb/ynoZNJdnLpDLQvnnveZfnUv
- glFvbv2Bf6gokOfQnvxVMNzTKK/ADJJDDfdkzsYpfQQDQWYLook+8liu+lL5Nc0NclSr TQ== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rtpts23jr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Jul 2023 15:26:12 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36EFQBK1031783
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Jul 2023 15:26:11 GMT
-Received: from [10.216.56.39] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 14 Jul
- 2023 08:25:59 -0700
-Message-ID: <d77f5601-2b08-a7c7-1400-7ab68b8add3a@quicinc.com>
-Date:   Fri, 14 Jul 2023 20:55:26 +0530
+        with ESMTP id S235235AbjGNQKL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jul 2023 12:10:11 -0400
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D563585;
+        Fri, 14 Jul 2023 09:10:10 -0700 (PDT)
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-78625caa702so81878639f.1;
+        Fri, 14 Jul 2023 09:10:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689351010; x=1691943010;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2xZLrToRuYH5s+qILxxveTe7lxP6JYA2zQOdOHNzTzE=;
+        b=Md1SAF5FwbtX0/48A0qyK0H8/PKj2lGyBqJeoo91/DZ+SUstknPcGxIRYlrIgoiuj4
+         m16zwSrd4HrW25Mx8FNqK90UHBvUhUkPz35K7TmI/WB0g6y+wXdqA4ypuUimoaRFUzBz
+         hn9u0p6iI94Eb7/bbjlok2/lwJie25/CaWXWE52rMZ3AoLIouz65vwqXxuiRdt+BODrg
+         GI5cqgJUZNmLVOtcjTHapmaQZAu5XvzbVBCo9FGt5Yy0RHgF5EKeA0h6kc/wO6cpM1aV
+         q2iL3MudlwzbTlcwPH1ZrQB8kkhy9Gf9J3nGn+C95LLAHHN/3KqLu91CYyMGEyuDvKq7
+         55Nw==
+X-Gm-Message-State: ABy/qLZ3MaEjpaNbCOdoP5IS8XjlxuxuUb4zgFqPnqEf6cauSQp7KRKD
+        +w7U31WZIzll5fSSh6isOw==
+X-Google-Smtp-Source: APBJJlE4lqiGT41vGhhD+F+H2ohvXCqZtxqLf3IR+mFBE+tp8lKrKP7cDsLcs5aBVLsQ/yQnIPnMfA==
+X-Received: by 2002:a6b:d616:0:b0:783:3957:9b46 with SMTP id w22-20020a6bd616000000b0078339579b46mr4229419ioa.13.1689351009697;
+        Fri, 14 Jul 2023 09:10:09 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id q4-20020a02cf04000000b0042b6cb44429sm2645937jar.46.2023.07.14.09.10.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jul 2023 09:10:09 -0700 (PDT)
+Received: (nullmailer pid 3934677 invoked by uid 1000);
+        Fri, 14 Jul 2023 16:10:07 -0000
+Date:   Fri, 14 Jul 2023 10:10:07 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] dt-bindings: gpio: snps,dw-apb: allow gpio-line-names
+Message-ID: <168935100680.3934619.1806892417878701791.robh@kernel.org>
+References: <20230712074553.35907-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
- support
-To:     Kathiravan T <quic_kathirav@quicinc.com>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <c712597e-f870-f224-fc1b-90c6f8f19710@quicinc.com>
-Content-Language: en-US
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <c712597e-f870-f224-fc1b-90c6f8f19710@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: k6kW04K-HSKuFwXlBT09sQYlyELKk4zM
-X-Proofpoint-ORIG-GUID: k6kW04K-HSKuFwXlBT09sQYlyELKk4zM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-14_06,2023-07-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307140140
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230712074553.35907-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -92,59 +70,17 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
+On Wed, 12 Jul 2023 09:45:53 +0200, Krzysztof Kozlowski wrote:
+> Allow the GPIO controller subnode to define GPIO names.  Already used in
+> at least on DTS:
 > 
-> Hi Mukesh,
+>   bitmain/bm1880-sophon-edge.dtb: gpio@50027000: gpio-controller@0: 'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
 > 
-> For IPQ chipsets, for the crashdump to work, we need the below patch
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> firmware: scm: Modify only the download bits in TCSR register
-> 
-> can you post the below patches separately? Looks like minidump will take 
-> some time and also I don't see any dependencies for these to go along 
-> with the minidump. Given that, will it be possible to post the below 
-> patches separately?
-> 
->    firmware: qcom_scm: provide a read-modify-write function
->    pinctrl: qcom: Use qcom_scm_io_update_field()
->    firmware: scm: Modify only the download bits in TCSR register
-> 
-> Do let us know if we can take these patches and post it separately.
 
-Yes, we can post this separately.
+Acked-by: Rob Herring <robh@kernel.org>
 
--Mukesh
-> 
->>
->>   Documentation/admin-guide/index.rst                |   1 +
->>   Documentation/admin-guide/qcom_minidump.rst        | 293 +++++++++++
->>   .../devicetree/bindings/soc/qcom/qcom,ramoops.yaml | 126 +++++
->>   MAINTAINERS                                        |  15 +
->>   arch/arm64/boot/dts/qcom/sm8450.dtsi               |  12 +
->>   arch/arm64/configs/defconfig                       |   4 +
->>   drivers/firmware/Kconfig                           |  11 -
->>   drivers/firmware/qcom_scm.c                        |  85 ++-
->>   drivers/pinctrl/qcom/pinctrl-msm.c                 |  12 +-
->>   drivers/remoteproc/qcom_common.c                   | 142 +----
->>   drivers/soc/qcom/Kconfig                           |  39 ++
->>   drivers/soc/qcom/Makefile                          |   3 +
->>   drivers/soc/qcom/qcom_minidump.c                   | 582 
->> +++++++++++++++++++++
->>   drivers/soc/qcom/qcom_minidump_internal.h          |  98 ++++
->>   drivers/soc/qcom/qcom_minidump_smem.c              | 387 ++++++++++++++
->>   drivers/soc/qcom/qcom_pstore_minidump.c            | 210 ++++++++
->>   drivers/soc/qcom/smem.c                            |   9 +
->>   fs/pstore/ram.c                                    |  26 +-
->>   include/linux/firmware/qcom/qcom_scm.h             |   2 +
->>   include/linux/pstore_ram.h                         |   2 +
->>   include/soc/qcom/qcom_minidump.h                   |  64 +++
->>   kernel/kallsyms.c                                  |   2 +-
->>   22 files changed, 1973 insertions(+), 152 deletions(-)
->>   create mode 100644 Documentation/admin-guide/qcom_minidump.rst
->>   create mode 100644 
->> Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
->>   create mode 100644 drivers/soc/qcom/qcom_minidump.c
->>   create mode 100644 drivers/soc/qcom/qcom_minidump_internal.h
->>   create mode 100644 drivers/soc/qcom/qcom_minidump_smem.c
->>   create mode 100644 drivers/soc/qcom/qcom_pstore_minidump.c
->>   create mode 100644 include/soc/qcom/qcom_minidump.h
->>
