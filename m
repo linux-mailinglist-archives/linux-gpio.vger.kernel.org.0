@@ -2,83 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9565575450A
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Jul 2023 00:40:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59F60754577
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Jul 2023 01:46:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbjGNWkL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jul 2023 18:40:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34552 "EHLO
+        id S229709AbjGNXq3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jul 2023 19:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbjGNWkK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jul 2023 18:40:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5619B3A91
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jul 2023 15:39:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689374360;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=a/7QRsG7VMgpCtW8aCf88ACfGWjhwUEcpv469HHRgOI=;
-        b=JMwBmx50dd2q5hPG6sY5AIk48hzREDoTXKxb0uItvHfFFWekKlA8tKUVP13roCDr3uiH1p
-        ZnOBWeUlNFWsqFT0nDNvAq4oNFB+M21mBvgxtKnWbukyysor3E0p+nveJb+T6puHEAI7YL
-        AapEHF7GUlxmqL2LBcOwvmL1L5RqdjM=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-536-9ZCTpDSvPRy913XT5mnXHg-1; Fri, 14 Jul 2023 18:39:19 -0400
-X-MC-Unique: 9ZCTpDSvPRy913XT5mnXHg-1
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6b87d141149so3822171a34.2
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jul 2023 15:39:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689374358; x=1691966358;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a/7QRsG7VMgpCtW8aCf88ACfGWjhwUEcpv469HHRgOI=;
-        b=J3lIWaa8rcOmeFRGRSpdRYAPhcyH67Hmw9RmNjknC8OFNt6L4hyb0Ut7963Emx5TNl
-         0hYTMsRG+K4vrtU4peZymihtOPCOMzc45Zn6mWYHusxUjMNDa6BhEnCSmcTgYWDVhOE0
-         5vPEMNM6+OFLtMSxMt9+BqbKsUP79/sSXI5FyElkHxh2d+/M8JW9h6HjeSPtdJXpqLCF
-         xC8q5K9BCRVFLOj68a6nGm62CnT7wdEfqgzFEpZtd3GOzaCz5uhRLxOKnrRpMVBI5kEv
-         YRoY8MnnR1Jy7us3jNna5L5vA1BPkhDMrACw53M1WiNV97rgu/DRWxphhESJlCAwG89r
-         4bbA==
-X-Gm-Message-State: ABy/qLYZ+OPUyPj6jGED9CrgKXSxadOf52W2LRUnZXHZXZe4AZ3VDXDk
-        fMexvdoY3CZWiuItlXL6rjdQYmL8wnGfpxDHmYfKeKSePg2NR2yVZNFVrevxjTM+iUerLbU4DdC
-        LJTX6BwC+9OtKARKjmiIAWPDmGW4Pzg==
-X-Received: by 2002:a05:6870:3452:b0:1b4:7353:bba6 with SMTP id i18-20020a056870345200b001b47353bba6mr7350785oah.44.1689374358417;
-        Fri, 14 Jul 2023 15:39:18 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlGjfS8pSABZlYzgkNkVzYzDjPoSh3mvMe8xoTt6ts91yhdDqXKxDz1dEruBrVUkovoiv2RPdQ==
-X-Received: by 2002:a05:6870:3452:b0:1b4:7353:bba6 with SMTP id i18-20020a056870345200b001b47353bba6mr7350764oah.44.1689374358119;
-        Fri, 14 Jul 2023 15:39:18 -0700 (PDT)
-Received: from halaney-x13s ([2600:1700:1ff0:d0e0::22])
-        by smtp.gmail.com with ESMTPSA id ec42-20020a0568708c2a00b001b3f0afda0fsm4489026oab.30.2023.07.14.15.39.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jul 2023 15:39:17 -0700 (PDT)
-Date:   Fri, 14 Jul 2023 17:39:15 -0500
-From:   Andrew Halaney <ahalaney@redhat.com>
-To:     Prasad Sodagudi <quic_psodagud@quicinc.com>
-Cc:     "Ninad Naik (QUIC)" <quic_ninanaik@quicinc.com>,
-        andersson@kernel.org, agross@kernel.org, konrad.dybcio@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Parikshit Pareek (QUIC)" <quic_ppareek@quicinc.com>,
-        Prasad Sodagudi <psodagud@quicinc.com>,
-        "Prasanna Kumar (QUIC)" <quic_kprasan@quicinc.com>
-Subject: Re: FW: [PATCH] pinctrl: qcom: Add intr_target_width to define
- intr_target_bit field width
-Message-ID: <20230714223915.4q3pmbqxajkjtltb@halaney-x13s>
-References: <20230714061010.15817-1-quic_ninanaik@quicinc.com>
- <p5vyji2weclwgshyxbf2evzpzefckzyecjnoada7dvzbuenxsb@55abp36rrbub>
- <BY5PR02MB6339C6B8A53C5D0CB55E58B7C034A@BY5PR02MB6339.namprd02.prod.outlook.com>
- <d43a0ce0-c915-a5d2-1d01-549ae08c678e@quicinc.com>
+        with ESMTP id S229502AbjGNXq2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jul 2023 19:46:28 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24813A93;
+        Fri, 14 Jul 2023 16:46:27 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ELlPJL013025;
+        Fri, 14 Jul 2023 23:45:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : from : to : cc : references : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=wUjJXOLQQaP2ZEAprH4fQWl8uZ95OgFaQHeNSlopaBw=;
+ b=jC/Ci3XaraVH2SUoMHwH/1LRum615P+g1b1DbzCpu8GEeJWjXs/J8ix+SyPJ2TplrYxC
+ MhVHOcWoa5KRwaRsgcB3YLcQNUyHB1qRE1PW7rwWnedwQrZ/YnHEt8SmlKXYJKE/BQnz
+ GtWuHs99WiWILPkSZYGoj2HMS2YqeeEv1n7rJvqwwN3qZ6PkKbMkVwRafw99JmYaLzbb
+ 9Ha6B7t1CvrCkQuBBECDi1K7XCRId7y8rNU4peMiSr02JsRtxlFR0WvkdGVvQZjP+Ocn
+ XQlqFxjV1CzVmAETG9Z39Cni9dOcsZVJzSQTzR9sF8RAWee+nT4BfNwcBq6SXXRGGHud Kg== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rtpubb1qu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 23:45:33 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36ENjW4e001624
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 23:45:32 GMT
+Received: from [10.110.114.79] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 14 Jul
+ 2023 16:45:31 -0700
+Message-ID: <52650970-de78-764f-28e2-ee0115b7d5c6@quicinc.com>
+Date:   Fri, 14 Jul 2023 16:45:28 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d43a0ce0-c915-a5d2-1d01-549ae08c678e@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+From:   Trilok Soni <quic_tsoni@quicinc.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <2023062814-chance-flounder-f002@gregkh>
+ <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
+ <CACRpkda3CJ7G4-wDPkWmzg6nyCoEfG+u2cQH6KXWNjbftd90ow@mail.gmail.com>
+ <355de4c7-180d-4edd-b6fd-9c8e29e40e42@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <355de4c7-180d-4edd-b6fd-9c8e29e40e42@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jXG6FgGFtb_gNPqZH6g1IhhZEKBI1bZD
+X-Proofpoint-GUID: jXG6FgGFtb_gNPqZH6g1IhhZEKBI1bZD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-14_11,2023-07-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ suspectscore=0 adultscore=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307140216
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,144 +97,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 14, 2023 at 02:04:05PM -0700, Prasad Sodagudi wrote:
+On 7/5/2023 10:29 AM, Trilok Soni wrote:
+> On 7/4/2023 2:27 AM, Linus Walleij wrote:
+>> On Thu, Jun 29, 2023 at 1:12 AM Rob Herring <robh+dt@kernel.org> wrote:
+>>
+>>> My bigger issue with this whole series is what would this all look
+>>> like if every SoC vendor upstreamed their own custom dumping
+>>> mechanism. That would be a mess. (I have similar opinions on the
+>>> $soc-vendor hypervisors.)
+>>
+>> I agree with Rob's stance.
+>>
+>> I think it would be useful to get input from the hwtracing developers
+>> (Alexander and Mathieu) who faced this "necessarily different" issue
+>> with all the hwtrace mechanisms and found a way out of it. I suspect
+>> they can have an idea of how this should be abstracted.
 > 
+> Any mailing list you suggest we expand to so that we get inputs from the 
+> hwtracing developers and maintainers or just look into the MAINTAINERS 
+> file and start an email thread?
 > 
-> > -----Original Message-----
-> > From: Andrew Halaney <ahalaney@redhat.com>
-> > Sent: Friday, July 14, 2023 11:17 AM
-> > To: Ninad Naik (QUIC) <quic_ninanaik@quicinc.com>
-> > Cc: andersson@kernel.org; agross@kernel.org; konrad.dybcio@linaro.org; linux-arm-msm@vger.kernel.org; linux-gpio@vger.kernel.org; linux-kernel@vger.kernel.org; Parikshit Pareek (QUIC) <quic_ppareek@quicinc.com>; Prasad Sodagudi <psodagud@quicinc.com>; Prasanna Kumar (QUIC) <quic_kprasan@quicinc.com>
-> > Subject: Re: [PATCH] pinctrl: qcom: Add intr_target_width to define intr_target_bit field width
-> > 
-> > WARNING: This email originated from outside of Qualcomm. Please be wary of any links or attachments, and do not enable macros.
-> > 
-> > On Fri, Jul 14, 2023 at 11:40:09AM +0530, Ninad Naik wrote:
-> > > SA8775 and newer target have added support for an increased number of
-> > > interrupt targets. To implement this change, the intr_target field,
-> > > which is used to configure the interrupt target in the interrupt
-> > > configuration register is increased from 3 bits to 4 bits.
-> > > 
-> > > In accordance to these updates, a new intr_target_width member is
-> > > introduced in msm_pingroup structure. This member stores the value of
-> > > width of intr_target field in the interrupt configuration register.
-> > > This value is used to dynamically calculate and generate mask for
-> > > setting the intr_target field. By default, this mask is set to 3 bit
-> > > wide, to ensure backward compatibility with the older targets.
-> > > 
-> > > Signed-off-by: Ninad Naik <quic_ninanaik@quicinc.com>
+> We are fine to submit the abstract for the LPC in next two weeks, but 
+> prefer to have lot of good discussion before it on the mailing list, so 
+> that we have code to talk about in LPC.
 
-Tested-by: Andrew Halaney <ahalaney@redhat.com> # sa8775p-ride
+We have submitted abstract at LPC MC. Let's continue the discussion here 
+though.
 
-> > 
-> > Thanks for the patch. Naive question (without really reading the code), but what practical affect does this have?
-> > 
-> 
-> Target bits configures irq destination processor on Qualcomm SoC.
-> g->intr_target_kpss_val(0x3) routes the gpio IRQ to application process.
-> On this SoCs target bits length is changed from 3 bits to 4 bits in hw and
-> reset value of g->intr_target_reg register value is 0x1E2. So reset value of
-> target bits is 0xf.  With old logic, when writing
-> g->intr_target_kpss_val(0x3) value result is 0xb instead of 0x3 as top most
-> bit is not getting cleared out and leading to IRQ is not getting fired on
-> application processor. 0xb value is unused on current HW and IRQ would not
-> be fired.
-> 
+Mukesh, do you want to expand the lists as necessary to see if other 
+soc-vendors are having any inputs here? May be add Exynos or MTK kernel 
+mailing lists + linux-kernel? I don't know if anyone will respond or 
+not, but let's try.
 
-Thanks all for the explanations, that makes a lot of sense.
-
-Perhaps briefly summarizing that without this fix platforms using
-more than 3 bits could fail to set/clear the remaining bits, resulting in
-routing the IRQ to the wrong processor subsystem?
-
-And with that in mind.. I think this deserves a Fixes tag:
-
-    Fixes: f365be092572 ("pinctrl: Add Qualcomm TLMM driver")
-
-seems overzealous since until 8775p afaik no upstream platform would
-fall in the > 3 bits category. But, it wouldn't hurt if someone was bringing
-up such a platform on an LTS kernel that has this pinctrl driver.
-
-At the very least I think:
-
-    Fixes: 4b6b18559927 ("pinctrl: qcom: add the tlmm driver sa8775p platforms")
-
-would be a nice addition in v2.
-
-This definitely works, applying this patch to enable the IRQ for the ethernet
-phy (posting in case I get hit by a bus this weekend, I'll spin properly
-next week):
-
-    ahalaney@halaney-x13s ~/git/linux-next (git)-[remotes/ahalaney/ethernet-phy-irq] % git show                                                                                                                                            :(
-    commit c6d01507db84dcb205e2cd92fb74cdb328f6fcad (HEAD, ahalaney/ethernet-phy-irq)
-    Author: Andrew Halaney <ahalaney@redhat.com>
-    Date:   Fri Jul 14 16:07:01 2023 -0500
-
-        arm64: dts: qcom: sa8775p-ride: Describe ethernet phy irq
-
-        There's an irq hooked up, so let's describe it.
-
-        Prior to TODO UPDATE WITH FINAL PATCH NAME
-        SHA ("pinctrl: qcom: Add intr_target_width to define intr_target_bit field width")
-        one would not see the IRQ fire, despite some (invasive) debugging
-        showing that the GPIO was in fact asserted, resulting in the interface
-        staying down.
-
-        Now that the IRQ is properly routed we can describe it.
-
-        Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
-
-    diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-    index b2aa16037707..2b7ef7ad01d5 100644
-    --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-    +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
-    @@ -286,6 +286,8 @@ mdio {
-                    sgmii_phy: phy@8 {
-                            reg = <0x8>;
-                            device_type = "ethernet-phy";
-    +
-    +                       interrupts-extended = <&tlmm 7 IRQ_TYPE_EDGE_FALLING>;
-                    };
-            };
-
-
-
-Then testing without/with this pinctrl change...
-
-Without this pinctrl change:
-
-    [root@dhcp19-243-201 ~]# # Ethernet MAC of question
-    [root@dhcp19-243-201 ~]# ls -lah /sys/class/net/eth0
-    lrwxrwxrwx 1 root root 0 May 18 00:00 /sys/class/net/eth0 -> ../../devices/platform/soc@0/23040000.ethernet/net/eth0
-    [root@dhcp19-243-201 ~]# ip -s link show eth0
-    2: eth0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN mode DEFAULT group default qlen 1000
-        link/ether b2:79:1f:47:c8:45 brd ff:ff:ff:ff:ff:ff
-        RX:  bytes packets errors dropped  missed   mcast
-                 0       0      0       0       0       0
-        TX:  bytes packets errors dropped carrier collsns
-                 0       0      0       0       0       0
-    [root@dhcp19-243-201 ~]# cat /proc/interrupts | grep stmmac-0
-    238:          0          0          0          0          0          0          0          0   msmgpio   7 Edge      stmmac-0:08
-    [root@dhcp19-243-201 ~]#
-
-With it:
-
-    [root@dhcp19-243-28 ~]# ls -lah /sys/class/net/eth0
-    lrwxrwxrwx 1 root root 0 May 18 00:00 /sys/class/net/eth0 -> ../../devices/platform/soc@0/23040000.ethernet/net/eth0
-    [root@dhcp19-243-28 ~]# ip -s link show eth0
-    2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
-        link/ether ae:27:eb:55:e4:d0 brd ff:ff:ff:ff:ff:ff
-        RX:  bytes packets errors dropped  missed   mcast
-            588222    9538      0      43       0       0
-        TX:  bytes packets errors dropped carrier collsns
-             16046     181      0       0       0       0
-    [root@dhcp19-243-28 ~]# cat /proc/interrupts | grep stmmac-0
-    237:          1          0          0          0          0          0          0          0   msmgpio   7 Edge      stmmac-0:08
-    [root@dhcp19-243-28 ~]#
-
-Boy can one IRQ and bit make a difference! I spent a few days trying to
-understand why my forward port was failing, and this IRQ was the ultimate issue.
-Thanks for the fix!
-
-- Andrew
+---Trilok Soni
 
