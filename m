@@ -2,78 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB445754271
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jul 2023 20:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B14327543DE
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jul 2023 22:38:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236662AbjGNSSG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jul 2023 14:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36780 "EHLO
+        id S236433AbjGNUiW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jul 2023 16:38:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235605AbjGNSSF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jul 2023 14:18:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 571B212D
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jul 2023 11:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689358639;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hk6SCuBB1VWMrgz6HbTiscgnqy5TrgcBcKbev/PC7PQ=;
-        b=ZaosMdBWhpjLSVxqp4dHs6LdjdqxnxA6q4/Fuop23vtuKOb0oX2mFD8JMezpQUJbuMDc2Y
-        +8o/XY4Iayy6gU0VxP6yh9bZYLEwGP08PpgKcurqOSz8YcmBSMcvWTqawy5Nigp+jtpLlj
-        evBOGORbBWv5BGj2zROuy0Pi7UUJfrU=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-197-mNYPknNwOOeaOzUab_poQA-1; Fri, 14 Jul 2023 14:17:15 -0400
-X-MC-Unique: mNYPknNwOOeaOzUab_poQA-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-403c7ffd25eso24364631cf.2
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jul 2023 11:17:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689358635; x=1691950635;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hk6SCuBB1VWMrgz6HbTiscgnqy5TrgcBcKbev/PC7PQ=;
-        b=CYs3WSyo+cLHEKPuMfOiAQk8A4FZSyHjEVh0klGO9gQ8SR7A9oUA17Zfml5ItHb4SM
-         Q6FarojGj9HSr4YEJASxvKlGqAJmyYP3q8FLKyDRGqGMy5zax4CuutccwlnRUtZLRSbf
-         bh5rOd91w2K8GGYic7vQK3PjASRlQbIadej1Eq/DZNIREy9I1u6Ng/uE/KGmKYmKN0x7
-         tSX4DtfIIcY2w3d4+9lBfmAFXpeDL565z0RQTd5uLCDL3eh6r1rBA8YyojAdZ6gHIOQi
-         ywV3Cl5LhiwIP1tsjQYIA5LGBIhrzKNZkt7FiOy9WBw3TOQC1im8rIme7UW3Kpm2JBue
-         DS+w==
-X-Gm-Message-State: ABy/qLa9e0rhxVrclcsXTOo8pXaHzB+AdlmTLnEZtRBVYKs7F/A5TRo8
-        5MAG0Zq9x1tLMq/D1p/pKv5yJbR2NRf2R4VUe5ijJd3wi0LaT+JkF2iFESMN9rarvPmHYr6TxfA
-        AS82zwBHxxw3Upzr77pjOqg==
-X-Received: by 2002:ac8:598b:0:b0:403:b969:a80c with SMTP id e11-20020ac8598b000000b00403b969a80cmr8280846qte.23.1689358635440;
-        Fri, 14 Jul 2023 11:17:15 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlE0Z++4VssRRjhM9Urv92cMb5fKLeaRS4Y79rMc+mqJqlStyBpQdoJ89Vie/9RF3194St3JCQ==
-X-Received: by 2002:ac8:598b:0:b0:403:b969:a80c with SMTP id e11-20020ac8598b000000b00403b969a80cmr8280820qte.23.1689358635128;
-        Fri, 14 Jul 2023 11:17:15 -0700 (PDT)
-Received: from fedora ([2600:1700:1ff0:d0e0::17])
-        by smtp.gmail.com with ESMTPSA id a21-20020aed2795000000b004039e9199cesm4144405qtd.60.2023.07.14.11.17.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jul 2023 11:17:14 -0700 (PDT)
-Date:   Fri, 14 Jul 2023 13:17:12 -0500
-From:   Andrew Halaney <ahalaney@redhat.com>
+        with ESMTP id S236252AbjGNUiS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jul 2023 16:38:18 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBB235B0;
+        Fri, 14 Jul 2023 13:38:09 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36EJiAlY011075;
+        Fri, 14 Jul 2023 20:38:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=qcppdkim1; bh=1rET9sqygklM/Vubbk6Gg7UOv/fTy97G2Ja8MS45kQQ=;
+ b=B2Ie7kmF/aFMkWidx3nfiI0g6/5fkl0pxZ+jiBc/tTY+A7ai8zExOHRHRD52KFl3OMj0
+ gFjvZFxF2/dqWSdbx2b396d1GvpgMuatlRlEkjbofVhMiF7Dc1JJxYTe0TIapbBe08m3
+ mQVJCMka66Un2K7+ttcuh02axIJsjonVkw82KbKKAYn8mpp8jX3PRJ+nCpFZER3vr1mJ
+ NnGOAO7EQ4TxdbLxU3NyWVI9wcUYFVrJV9GCgXgFBHeNk1+u7vtOvvwU7b/6/7VFFd+B
+ 5N/8cFwZMIjfGrsL4njjISrk69mZw5oZhvaLkrdF+RKLsvdFyOD5y+B0oszdsV8MYuRb Sg== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rtpubasp4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 20:38:06 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36EKc4gc019583
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 20:38:04 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.30; Fri, 14 Jul 2023 13:38:03 -0700
+Date:   Fri, 14 Jul 2023 13:38:02 -0700
+From:   Bjorn Andersson <quic_bjorande@quicinc.com>
 To:     Ninad Naik <quic_ninanaik@quicinc.com>
-Cc:     andersson@kernel.org, agross@kernel.org, konrad.dybcio@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_ppareek@quicinc.com,
-        psodagud@quicinc.com, quic_kprasan@quicinc.com
+CC:     <andersson@kernel.org>, <agross@kernel.org>,
+        <konrad.dybcio@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_ppareek@quicinc.com>, <psodagud@quicinc.com>,
+        <quic_kprasan@quicinc.com>
 Subject: Re: [PATCH] pinctrl: qcom: Add intr_target_width to define
  intr_target_bit field width
-Message-ID: <p5vyji2weclwgshyxbf2evzpzefckzyecjnoada7dvzbuenxsb@55abp36rrbub>
+Message-ID: <20230714203802.GA3972960@hu-bjorande-lv.qualcomm.com>
 References: <20230714061010.15817-1-quic_ninanaik@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
 In-Reply-To: <20230714061010.15817-1-quic_ninanaik@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: km0LGNLvr1EcoYWenJ01xOVsmdjvxMLH
+X-Proofpoint-GUID: km0LGNLvr1EcoYWenJ01xOVsmdjvxMLH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-14_10,2023-07-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ suspectscore=0 adultscore=0 malwarescore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307140188
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -95,21 +93,29 @@ On Fri, Jul 14, 2023 at 11:40:09AM +0530, Ninad Naik wrote:
 > 
 > Signed-off-by: Ninad Naik <quic_ninanaik@quicinc.com>
 
-Thanks for the patch. Naive question (without really reading the code),
-but what practical affect does this have?
+Very nice, Ninad.
 
-i.e. does this change behavior of how IRQs were handled before this
-patch vs after on this platform?
+Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 
-To shed some light on the question, there's a GPIO IRQ for the ethernet
-phy on this platform that is purposely _not_ described because it didn't
-ever trigger, resulting in the interface staying down. Things work
-fine without the IRQ (the driver goes into polling mode).
-The explanation I got was very brief and attributed it to a "hardware issue".
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm.c     | 9 ++++++---
+>  drivers/pinctrl/qcom/pinctrl-msm.h     | 2 ++
+>  drivers/pinctrl/qcom/pinctrl-sa8775p.c | 1 +
+>  3 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 2585ef2b2793..6ebcaa2220af 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -1038,6 +1038,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>  	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+>  	const struct msm_pingroup *g;
+> +	u32 intr_target_mask = 0x7;
 
-I'm wondering if I should re-evaluate that, and if this was the
-"hardware issue".
+I like Konrad's suggestion about making this GENMASK(2, 0).
 
-Thanks,
-Andrew
+Please update that and include our R-b tags in v2.
 
+Regards,
+Bjorn
