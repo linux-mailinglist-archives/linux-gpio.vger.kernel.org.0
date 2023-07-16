@@ -2,61 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 940D4754DB1
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jul 2023 09:42:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2631754DB4
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jul 2023 09:42:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbjGPHmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Jul 2023 03:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44796 "EHLO
+        id S229575AbjGPHmy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Jul 2023 03:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjGPHmK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jul 2023 03:42:10 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B152C115
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 00:42:08 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-579de633419so31414667b3.3
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 00:42:08 -0700 (PDT)
+        with ESMTP id S229450AbjGPHmy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jul 2023 03:42:54 -0400
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD8B1A1
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 00:42:52 -0700 (PDT)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-579ef51428eso36118867b3.2
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 00:42:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689493328; x=1692085328;
+        d=linaro.org; s=google; t=1689493372; x=1692085372;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2lCMeTABFSTAL+b37i/Hfx3xbovynYtg6IKWQ/+Fnrk=;
-        b=EAp8oYmgQBedIbijp/JuWTfeC63XPjGGKP/fM0W3N7nT1AoFpUszkFBj7rF8T/j4d5
-         E/Bl5S27VHeebTnfh5RYy1ZukBfc44Agj9qmaZXW+IxRMPM45vXj3yXRMOK85dngyndQ
-         FXfbuUV3ch95eumtg6XmTaQohbA4pMgYhG7tNK0Qc5H6ZWOrCppMBKEkXgbXT7GDlLPR
-         UqQ8BBiiCIFRk/ywSmf1NNk6uYJQo0FUhcT6URtwa6FRNQpp+ikydiFOgykURWz6ECt7
-         3EU8WCcPLLAaFs+Ewcu4J9hm42bfc6PSJxzIgY3FqCOg213wfEJqihBgbVZY4WgPSbK/
-         /o4Q==
+        bh=rGyQgy1tt1PDmgJTMhtwwTX/XIugZRQbuHruVB84HcQ=;
+        b=CGsnTkxbqszhuNrcGYQ9Op7fDz9S4b26u1cpKXOssfX25p6PhYy+r+iQ0cJQ94EV1p
+         EnG2cepNfG7Mp+4strlI9XDsXNUArR/xFaA2ECSCdb9Qv1oANkIhsZkNdWNEhfInxaaG
+         T7btLQ0Lud9dgTvP530VuSj+ZIiska6fXAzzVuUdGqAViyqrtTH7Lwp/YMtNuEbAksRY
+         ufVjlfvYw9idpRdjAQ11o3PSGbgmJD0Tmh+bxJk1GH6cK5ifURCPI0eCVQS7Mnl5WKKW
+         rCumTa9Fvbm4Kqg7edj5apnu9o3P8f4YIdt3tvQ36S4hOlwi0Q7rFwiVeIe9ztYrWRcR
+         RQRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689493328; x=1692085328;
+        d=1e100.net; s=20221208; t=1689493372; x=1692085372;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2lCMeTABFSTAL+b37i/Hfx3xbovynYtg6IKWQ/+Fnrk=;
-        b=PqsL7Hy5muU0NHsAFwJQqOxJIeXUyznAQPQdGJtTvgld7TNLjUGoMKTzIiwQHwKpNy
-         IK0Mb+ELErEQr86BUv52XwUbkPJArJtQiGm6PBx0emwnWvazIR7N90X8HQXFJ7z6FBrD
-         XKhOHGyvhDAkcvLSYY+Z3wb0FF6FEmOH3OINaQgdpym8qUB32dwPQNL39qPYJE8+XloE
-         jJ26DLLTV4WwnpGud00oC05iOlIuubtknZio1VeovAdjhOqOJWModZ7ko91jzCssde4i
-         Yu6uq+uC7kyPdtmspEzU46DKdkYrhXFxmjOz9kX6C6LDOMdTe3lAYA8zy+VplkPulbva
-         0ElQ==
-X-Gm-Message-State: ABy/qLaNQzYZQtwM6m45ZEwI5y+0PPgod76vYyvxg06ay2BeKqa/Pxhc
-        6wTrfPSQR6w2zLf3raldpSYGThoY0C4mI1FREcZo9w==
-X-Google-Smtp-Source: APBJJlF5SWJQOEEjmpDacKPP/jKmMv0M8gCGTNy5qIy0jVQ+TzyysBmasZsW62CeoBGuvJZS81a04vhxrXKYrtIRUec=
-X-Received: by 2002:a81:6306:0:b0:570:899f:3a52 with SMTP id
- x6-20020a816306000000b00570899f3a52mr9002578ywb.35.1689493327968; Sun, 16 Jul
- 2023 00:42:07 -0700 (PDT)
+        bh=rGyQgy1tt1PDmgJTMhtwwTX/XIugZRQbuHruVB84HcQ=;
+        b=aHqjA0jXJfLGA0CskFTCRifLTN+zubyj2v+B4xtayHIq327K56avG3unj6R6YeyN6V
+         SSGDMKruPAZpaZADOdg8PKdcqQ0IPyY9TF4JtHQCHObKTX1Wzve9O59Zga56OBZAiBab
+         3Lxes4uPOAKQanWwEjbki/PkLgpq8aUSNbcwv6ljuFrUSb8ZCI9zm3QOSvKcqXQeK7Lu
+         HlFAo3yIkHf3GqvvTg4uWphBnNRcescnAaCoFYqtFu1nhDSE5dcFnavEuprV0tbt84Un
+         QQLHKyJ9BiC5wyWlxjA0zuKvygdkSBI7HM4fvUe1vFe6TgvTnuKtmziHFpYtfyUc/GYu
+         LcSA==
+X-Gm-Message-State: ABy/qLZdeKiBV8sxgpU3+psS6xMXcWIs3AEBeA0ZYKWqREE78jbQERIU
+        yEcDMGvUFyE9fbwUZmX0hk2AVXb4KqlLAQN03vdS+Q==
+X-Google-Smtp-Source: APBJJlEW5B0juVcELZQK6Tyys64psq8irbw1fqknZA/Oy+I+46N+O2H/Yf67kYDl0aLsROsGMQQDCtqCMiPrIKnsWqw=
+X-Received: by 2002:a0d:ca91:0:b0:56f:ff55:2b7d with SMTP id
+ m139-20020a0dca91000000b0056fff552b7dmr11520910ywd.17.1689493371826; Sun, 16
+ Jul 2023 00:42:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230711151248.4750-1-asmaa@nvidia.com>
-In-Reply-To: <20230711151248.4750-1-asmaa@nvidia.com>
+References: <20230306211237.14876-1-asmaa@nvidia.com>
+In-Reply-To: <20230306211237.14876-1-asmaa@nvidia.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 16 Jul 2023 09:41:56 +0200
-Message-ID: <CACRpkdYVg+ZshnWYTH0uzD_0bQn1yQJo6gYdmKVgg+_-RhoK7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio: mmio: handle "ngpios" properly in bgpio_init()
+Date:   Sun, 16 Jul 2023 09:42:40 +0200
+Message-ID: <CACRpkdZoVo-6BMYcuike2eC85ZGpP93_4WQVLTfjRAa1ho5xhg@mail.gmail.com>
+Subject: Re: [PATCH v4] gpio: mmio: handle "ngpios" properly in bgpio_init()
 To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davthompson@nvidia.com
+Cc:     andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,7 +68,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 5:13=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
+On Mon, Mar 6, 2023 at 10:12=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
 te:
 
 > bgpio_init() uses "sz" argument to populate ngpio, which is not
@@ -77,16 +76,7 @@ te:
 > doesn't exist, use the "sz" argument. With this change, drivers no
 > longer need to overwrite the ngpio variable after calling bgpio_init().
 >
-> If the "ngpios" property is specified, bgpio_bits is calculated
-> as the round up value of ngpio. At the moment, the only requirement
-> specified is that the round up value must be a multiple of 8 but
-> it should also be a power of 2 because we provide accessors based
-> on the bank size in bgpio_setup_accessors().
->
 > Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Still looks good! :)
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
