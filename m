@@ -2,68 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CA5C755755
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jul 2023 23:15:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57C9D75575A
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jul 2023 23:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230451AbjGPVPP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Jul 2023 17:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48050 "EHLO
+        id S229936AbjGPVUV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Jul 2023 17:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjGPVPO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jul 2023 17:15:14 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 198EC1A7
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 14:15:13 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-57d24970042so33873127b3.2
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 14:15:13 -0700 (PDT)
+        with ESMTP id S229616AbjGPVUU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jul 2023 17:20:20 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165DCFC
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 14:20:19 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-57a551ce7e9so38575197b3.3
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 14:20:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689542112; x=1692134112;
+        d=linaro.org; s=google; t=1689542418; x=1692134418;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=syZ7bfmbG9hTUEEMD0N7OeMkyMv6b2GCywnkgDB26og=;
-        b=sXL7NgE5tnn9Y0eWY08jOgmX0CpYug/RcZu2tI2IAIadZU2t2LxPm1pEZTl+3xKGqZ
-         wvbD9aShgKnXj/nh+tY1sA1AAPSX/6SWkSy0YZHjbeW+aWwu2ZE42JTXzypBf3j8zF80
-         VVVDN3tjOw6dl37NUp0rhIUEMihg/3YTqYlO1cGMzHZbRkbxKp7gERkD2P4cjwobQxz9
-         t22D4KTMH60tH5sRn2mMjtNU+bRbdR8lnU2Q1PkvhTJeiiv0veV1TbEOvNgMY2CtqpiI
-         dgWtNj0tKntU51hoJ+7/NSxNE/YTIsHnFP5ugTOg8M4yUkZaqRDyDcQDUzWfR2Sg2cJ6
-         QxCg==
+        bh=g5jVNQL7Cqqr60okI8mc7o8ZzfhGkfsuMA8PNwkU7+4=;
+        b=nZrzudf6xWNgDh9pI1qUJneWfZZ979ATLS6xoZ5hymfxndprmeWruOujesfVNEI09I
+         imgYXL5vPi+KQbDW/5KpR+WqF2IbuLxDAoGRwDZOkCSomygdREedz7TIyvPhIW4T8HEQ
+         Kt/oCml68TYo1IfQTRpYtbqyCrwWR/WX8oNl9zPPtMAWFuOH1jAK8a6w+ij5laChENWX
+         dPuuWPHSgDQ2UUK9RqRGemmyAgLUjVEBUDoVX+9MkgSZm7F3SmnWtCCstm8nltqTK+NK
+         gyVl/1WGHoIAqIanzO4RdVju//vpXy+qQfT65rYde56kb5xHqBtOWIiaWduXVrYpxINK
+         xjpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689542112; x=1692134112;
+        d=1e100.net; s=20221208; t=1689542418; x=1692134418;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=syZ7bfmbG9hTUEEMD0N7OeMkyMv6b2GCywnkgDB26og=;
-        b=W4po6LpkA2CUdEwJ1owINVOG3EnmXLgrA1ZUf2pwLlsEIlcYJeFlVtqx329UfsZY5S
-         Xchu3GYtyD+DPr4MxiJKgUnT8NHQ1V77O+jxjDlx7RzI+KEP8DTxZ3tc6KrbTmh7hxNN
-         aejHJhnVv+zeOBCQhtcOzpEWCSkOyBtJePZ0uTl0MpN7XAdxDTPqePIpqOnSxJU4yK+8
-         Rd5m18T7Zek2B6CaY3TczQIJGvooE0e9yLKHAT0YyLoOCkK/nNPWVGTjHOYQnzsjyWCF
-         1edUDmhLGOF6IGbLyyMcd/NvCwNz2P33cDjXFYbr3tyyZyAqqvX8wRs8187WNdSOmcWu
-         azMQ==
-X-Gm-Message-State: ABy/qLYJb1L+JcoR5MMSxNwxzeIZ/JPrvUqG1/gfC2bFQR5lh4LBcsXA
-        3bw3QjoDaA2sWTMWCmVSVNeUm1XcV7l52dp3tmjIaw==
-X-Google-Smtp-Source: APBJJlGyZnAGewtBuUF/Aql3jrigoDHvIMbIEpnRxYYShoyJ5AUs0mHl0XSztp5BEx545McQJfp3pSS4aLE/sSfxMQg=
-X-Received: by 2002:a81:480e:0:b0:573:9747:9a0d with SMTP id
- v14-20020a81480e000000b0057397479a0dmr8625958ywa.41.1689542112298; Sun, 16
- Jul 2023 14:15:12 -0700 (PDT)
+        bh=g5jVNQL7Cqqr60okI8mc7o8ZzfhGkfsuMA8PNwkU7+4=;
+        b=Wtqrg9QI2x/FVnye2PrIuToPO7MLBfOv0qLtP6yJdnxjPGq/ulvwQl1w3dIgpemf+h
+         Szl8dsPvuLY6uDRTlx+gmKW6dUavD/OnsC7k258TYieFZU3a5gmh3TyvehjfOoVKO/vu
+         8iRwKAk8ot26AoVGvldmDr6yJy6fjgmHVmL801RpyCdM5O/am58OO6oXU9kX18foQShv
+         JkhaLYq+Bxl3QbR1g5GiTZ2xe7ggBZnDiVCueB6NYHPeJXevkL1xlkUfeXx9MrVnwKAH
+         2YhrVTE2uav9jBt/1ZLHfTgVpffr2VG8HkzIKoldXStFiN5y+v+IfuqOOKFoAozy/LtP
+         SPRA==
+X-Gm-Message-State: ABy/qLbTt8kvh2UoQN/lIcI5WvqP7DiyCL5QN4UUrl1IxV8WoPNoMptq
+        mmPJtolhgzzvkIZt4lx2HtJPzJ6R5t4FBb9ydjWSEQ==
+X-Google-Smtp-Source: APBJJlHFulXWKieW8R5pU5+4sBV9kVYwKWI7RxXFv0PMRLSfeuSHf71kiTm/P4n/g1hxXDT2l3GQ0t6WmONXnWG1MKc=
+X-Received: by 2002:a0d:cb4a:0:b0:56d:4b45:f9e1 with SMTP id
+ n71-20020a0dcb4a000000b0056d4b45f9e1mr10803683ywd.3.1689542418359; Sun, 16
+ Jul 2023 14:20:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230707-topic-amlogic-upstream-pinctrl-fix-bindings-v2-0-2160060446d7@linaro.org>
-In-Reply-To: <20230707-topic-amlogic-upstream-pinctrl-fix-bindings-v2-0-2160060446d7@linaro.org>
+References: <20230714122441.3098337-1-huqiang.qin@amlogic.com> <20230714122441.3098337-3-huqiang.qin@amlogic.com>
+In-Reply-To: <20230714122441.3098337-3-huqiang.qin@amlogic.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 16 Jul 2023 23:15:00 +0200
-Message-ID: <CACRpkdY6LaLCh+n4rpD1Jewk+-GC6zPo-TQ75bg8qcym9wxTMg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] dt-bindings: pinctrl: amlogic,meson-pinctrl-common:
- add missing properties
-To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Date:   Sun, 16 Jul 2023 23:20:07 +0200
+Message-ID: <CACRpkdbbUga0biH=1tkCgRzUqNiDGdVf2woda5X2s43ct-na7Q@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] pinctrl: Add driver support for Amlogic C3 SoCs
+To:     Huqiang Qin <huqiang.qin@amlogic.com>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, neil.armstrong@linaro.org,
+        khilman@baylibre.com, jbrunet@baylibre.com,
+        martin.blumenstingl@googlemail.com, brgl@bgdev.pl, andy@kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -77,21 +73,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 7, 2023 at 10:20=E2=80=AFAM Neil Armstrong
-<neil.armstrong@linaro.org> wrote:
+Hi Huqiang,
 
-> The amlogic DT uses gpio-line-names and gpio-hog, add those
-> to the yaml converted pinctrl bindings.
+thanks for your patch!
+
+On Fri, Jul 14, 2023 at 2:25=E2=80=AFPM Huqiang Qin <huqiang.qin@amlogic.co=
+m> wrote:
+
+> Add a new pinctrl driver for Amlogic C3 SoCs which share
+> the same register layout as the previous Amloigc S4.
+
+How is the spelling of amlogic there in the end.
+
+> Signed-off-by: Huqiang Qin <huqiang.qin@amlogic.com>
+> ---
 >
-> This will fix the following dtschema check errors:
-> arch/arm64/boot/dts/amlogic/meson-sm1-bananapi-m5.dtb: pinctrl@40: bank@4=
-0: Unevaluated properties are not allowed ('gpio-line-names', 'usb-hub-hog'=
- were unexpected)
-> arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb: pinctrl@4b0: bank@4=
-b0: Unevaluated properties are not allowed ('gpio-line-names' was unexpecte=
-d)
+> V1 -> V2:
+>   Added a comma to the last item of the array and a period to
+>   the commit message.
 
-Patches applied, thanks for attention to detail!
+Andy had more comments about the header inclusion. Please
+include all used headers directly as requested, I think it's a good
+idea and avoids confusing compile problems.
 
 Yours,
 Linus Walleij
