@@ -2,82 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CD6A754CAF
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jul 2023 00:10:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 940D4754DB1
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jul 2023 09:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230144AbjGOWKX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 15 Jul 2023 18:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55896 "EHLO
+        id S229617AbjGPHmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Jul 2023 03:42:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230090AbjGOWKV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Jul 2023 18:10:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4282723;
-        Sat, 15 Jul 2023 15:10:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 318BF60C47;
-        Sat, 15 Jul 2023 22:10:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E0AC433C7;
-        Sat, 15 Jul 2023 22:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689459019;
-        bh=wg3gQs+CZ4wlzlacPdDFW5G/hgcmzR3RDndodc/Clrg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cq7uHBFD3h8wnQ2G1mml0l6V5nAQbhmjBMTucBTKtC1quhW1XaYL85btXRFR1xTBF
-         Fil1oxXHyrWNF9VM0NKVEaTJTPez8RxI4DXSh8tm6X+uR1rasHa1xmAIDf5CjWhlHO
-         vimFngSHJM4nUcsYxv4cK+aa/q+8oZe+dPRL3UnJ7z7dkXuHXzmrzeG/7/pgvmUIdR
-         Thr+uNpJpqKU8pFgOvUoKxQ4Iw6OJ3zXae6fTJn+iSXAKp2SHxAfw3zFIRMeOd7XGn
-         EXdLHY0UQ4rZXjrLUv4bY9HgVjkif67bvTO5XR0OxbesZtBurqC3c7BclUls4qFomQ
-         OjF/lWCzRwUww==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     agross@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org,
-        Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-Subject: Re: (subset) [PATCH v3 00/18] Add basic Minidump kernel driver support
-Date:   Sat, 15 Jul 2023 15:13:34 -0700
-Message-ID: <168945921478.1805013.7211960599963339759.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+        with ESMTP id S229449AbjGPHmK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jul 2023 03:42:10 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B152C115
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 00:42:08 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-579de633419so31414667b3.3
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 00:42:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689493328; x=1692085328;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2lCMeTABFSTAL+b37i/Hfx3xbovynYtg6IKWQ/+Fnrk=;
+        b=EAp8oYmgQBedIbijp/JuWTfeC63XPjGGKP/fM0W3N7nT1AoFpUszkFBj7rF8T/j4d5
+         E/Bl5S27VHeebTnfh5RYy1ZukBfc44Agj9qmaZXW+IxRMPM45vXj3yXRMOK85dngyndQ
+         FXfbuUV3ch95eumtg6XmTaQohbA4pMgYhG7tNK0Qc5H6ZWOrCppMBKEkXgbXT7GDlLPR
+         UqQ8BBiiCIFRk/ywSmf1NNk6uYJQo0FUhcT6URtwa6FRNQpp+ikydiFOgykURWz6ECt7
+         3EU8WCcPLLAaFs+Ewcu4J9hm42bfc6PSJxzIgY3FqCOg213wfEJqihBgbVZY4WgPSbK/
+         /o4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689493328; x=1692085328;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2lCMeTABFSTAL+b37i/Hfx3xbovynYtg6IKWQ/+Fnrk=;
+        b=PqsL7Hy5muU0NHsAFwJQqOxJIeXUyznAQPQdGJtTvgld7TNLjUGoMKTzIiwQHwKpNy
+         IK0Mb+ELErEQr86BUv52XwUbkPJArJtQiGm6PBx0emwnWvazIR7N90X8HQXFJ7z6FBrD
+         XKhOHGyvhDAkcvLSYY+Z3wb0FF6FEmOH3OINaQgdpym8qUB32dwPQNL39qPYJE8+XloE
+         jJ26DLLTV4WwnpGud00oC05iOlIuubtknZio1VeovAdjhOqOJWModZ7ko91jzCssde4i
+         Yu6uq+uC7kyPdtmspEzU46DKdkYrhXFxmjOz9kX6C6LDOMdTe3lAYA8zy+VplkPulbva
+         0ElQ==
+X-Gm-Message-State: ABy/qLaNQzYZQtwM6m45ZEwI5y+0PPgod76vYyvxg06ay2BeKqa/Pxhc
+        6wTrfPSQR6w2zLf3raldpSYGThoY0C4mI1FREcZo9w==
+X-Google-Smtp-Source: APBJJlF5SWJQOEEjmpDacKPP/jKmMv0M8gCGTNy5qIy0jVQ+TzyysBmasZsW62CeoBGuvJZS81a04vhxrXKYrtIRUec=
+X-Received: by 2002:a81:6306:0:b0:570:899f:3a52 with SMTP id
+ x6-20020a816306000000b00570899f3a52mr9002578ywb.35.1689493327968; Sun, 16 Jul
+ 2023 00:42:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230711151248.4750-1-asmaa@nvidia.com>
+In-Reply-To: <20230711151248.4750-1-asmaa@nvidia.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 16 Jul 2023 09:41:56 +0200
+Message-ID: <CACRpkdYVg+ZshnWYTH0uzD_0bQn1yQJo6gYdmKVgg+_-RhoK7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio: mmio: handle "ngpios" properly in bgpio_init()
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davthompson@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Jul 11, 2023 at 5:13=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
+te:
 
-On Wed, 03 May 2023 22:32:14 +0530, Mukesh Ojha wrote:
-> Minidump is a best effort mechanism to collect useful and predefined data
-> for first level of debugging on end user devices running on Qualcomm SoCs.
-> It is built on the premise that System on Chip (SoC) or subsystem part of
-> SoC crashes, due to a range of hardware and software bugs. Hence, the
-> ability to collect accurate data is only a best-effort. The data collected
-> could be invalid or corrupted, data collection itself could fail, and so on.
-> 
-> [...]
+> bgpio_init() uses "sz" argument to populate ngpio, which is not
+> accurate. Instead, read the "ngpios" property from the DT and if it
+> doesn't exist, use the "sz" argument. With this change, drivers no
+> longer need to overwrite the ngpio variable after calling bgpio_init().
+>
+> If the "ngpios" property is specified, bgpio_bits is calculated
+> as the round up value of ngpio. At the moment, the only requirement
+> specified is that the round up value must be a multiple of 8 but
+> it should also be a power of 2 because we provide accessors based
+> on the bank size in bgpio_setup_accessors().
+>
+> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Applied, thanks!
+Still looks good! :)
 
-[01/18] remoteproc: qcom: Expand MD_* as MINIDUMP_*
-        commit: 318da1371246fdc1806011a27138175cfb078687
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+Yours,
+Linus Walleij
