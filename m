@@ -2,137 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03F15756E08
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 22:17:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0BBA756E9D
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 22:54:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229742AbjGQURb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jul 2023 16:17:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56420 "EHLO
+        id S230187AbjGQUyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jul 2023 16:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbjGQURa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 16:17:30 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2044.outbound.protection.outlook.com [40.107.92.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF05136;
-        Mon, 17 Jul 2023 13:17:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dxbsm8urHMHV+5i99i5K6NoHIzaP3jPvuPtpnQUWrtu/zeTWR0fCAIVbRv0/36xoiJFp47ncm4uwOJQYKy4OtTLGEVp+1XinVwTeMmPBZUuV1gcVwN/9M6W2MB6HFFJxDjZGWF1H/iimqafBZDl6KULN3EjPqw2lY0GrkNoHBD/iCo44QgUqMlHEG83w/2EKENs7duYl8RS7RfZibVvsIIUyCk+cm10yilAFT14hzlOM3AuYcEXfjmBoRWQbhC9K+3Cz+LXorTZNHH2L833uNP+1Sr+dYYWsu8f4RhpCL2U3KMpRsUNi+qGDZ3gy+JSZC30Vlchx9D/XjkH74Rhgeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VE9o0hv/nbjZB1OM8aYpBrpIPBSq6QBWPXfz6KOhCi4=;
- b=UV163DQivx8c9SjnVT1G8BAQqLp+ch4Y1ql8609mqwgdMl4GO9xX+E43Vm1pV6ctmxT1SepK2TpxJ3+0bUpRBUbAimKuiCoGDQ0pW6AxPVwAoXIgE3OJNgfMArjRUuFoWPXLQqbhLaNPVQkNT6Gjoxh7KxNP2FJHFnAU1aWXgT8kU3xCWJgaBj7olxalx8eTWVOV1qR+La4epujCG3noYqYiFCdGv+FJg4Y0TE6KQ16C0spyVjTPghQcmG99jUCAcw2e3WTy2s7Z8mGuxzrgHEgHTrVER+MBcdKyXJQUqXRERC/fa1gysKxAIYWc5TMdymtckyfR8h01xqG9fpgkqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VE9o0hv/nbjZB1OM8aYpBrpIPBSq6QBWPXfz6KOhCi4=;
- b=2P++FXBcvvE7kxgBPuyF/PIewBCMboaWWkwvmLkyBHLFJn6zlhyOW8Ox3hJ6satUjChZbRWTnWdoEpy9FmB3Jqrjlu01OBqDfeTujs8PtjsrH9+pxBi63EYa96u55JHY+FkZi4q2FyO84iCcqcVIGaFuIqnY3Pjvo0Gq3zLFGy4=
-Received: from BN0PR10CA0021.namprd10.prod.outlook.com (2603:10b6:408:143::24)
- by SN7PR12MB7420.namprd12.prod.outlook.com (2603:10b6:806:2a7::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.31; Mon, 17 Jul
- 2023 20:17:23 +0000
-Received: from BN8NAM11FT112.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:143:cafe::cf) by BN0PR10CA0021.outlook.office365.com
- (2603:10b6:408:143::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.33 via Frontend
- Transport; Mon, 17 Jul 2023 20:17:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT112.mail.protection.outlook.com (10.13.176.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6588.33 via Frontend Transport; Mon, 17 Jul 2023 20:17:23 +0000
-Received: from SITE-L-T34-2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 17 Jul
- 2023 15:17:10 -0500
-From:   Mario Limonciello <mario.limonciello@amd.com>
-To:     <linus.walleij@linaro.org>
-CC:     <Basavaraj.Natikar@amd.com>, <Shyam-sundar.S-k@amd.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mario.limonciello@amd.com>
-Subject: [PATCH] pinctrl: amd: Don't show `Invalid config param` errors
-Date:   Mon, 17 Jul 2023 15:16:52 -0500
-Message-ID: <20230717201652.17168-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S231337AbjGQUyC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 16:54:02 -0400
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FC01A6
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 13:54:00 -0700 (PDT)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1b3c503af99so3391253fac.0
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 13:54:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1689627239; x=1692219239;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oyy/hqOdv+k0nTAkjs+7RYMgFYdulT0nhGoNzbzeMig=;
+        b=KJTf9YmZ+opwlSlKQtj4qmVAgcviWKLlE18bPJ9PK2xx2vbd1cglf/B19eHyMCF/iu
+         Eo/LO0A/WooxN5UAWv3ScN8m/gCHPScAd1o8ZsTnssQOVautf5+DNwlXfqz2MzgkWZ/e
+         bX5C/SPhH1uy1+IfbnoAxp108QlYMtrHQK59JmnuHeuXgWbVGu3YO42QzGuG5u7RkEdr
+         oHzNxQ4hcPd/NvOcdLGlAatT1hr1aZ0yu1Letu3MtHfILsfG72e/s4DAm48dG6rMbobc
+         NpbivKFS98tExj0Qk/X0qClcS/8nQ5Rz0KBZRGMZH8gxRbYknPYghwWTPxJqFzB+Soz4
+         MlHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689627239; x=1692219239;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Oyy/hqOdv+k0nTAkjs+7RYMgFYdulT0nhGoNzbzeMig=;
+        b=e5TLhUIUA+oc7WOepvIwbpvq5pInalagUM7aAyL+tTtbSVIrAS5n56DrbDSfEOOWrr
+         2kRfs3P7GjQ/3WbQgwfp9Q2olq6DT/18UnOamT3hgQ3lH09tzMjCIjjO1sWlS7D/w+YO
+         Oq3h3hmpX9yFHcQuCJX63S40icMh/e88mUVfMrWJ1813/01Uippqa1WINJSL7qTslJmB
+         FQ9/wca+GARIbnstSVdKeAmit8UvkLCyUlUnNadamKBK2FssX3qQVR0gougMVN5Ne81g
+         PIyhP7oty1EkWgJ9ceSu0ChuFcEockhZf4wYLf16Q64czzkCj8ELsa3PBElY/D2z/RH0
+         NP6g==
+X-Gm-Message-State: ABy/qLb2cHghs6iT6giI70RjjeBGfl9X/+4PNpsOQ0NUOk4DtrF0oGNW
+        s6J4gKsDAwjZSA1DE1bhrSmToA==
+X-Google-Smtp-Source: APBJJlFdP1Af7JGzTPtkK/vllQtffloe3sX9PaU93xyPQ8qir6P/+bH6Lv7otG/v4/4fcg4rtzqtJg==
+X-Received: by 2002:a05:6870:fba0:b0:1b4:4a2e:b698 with SMTP id kv32-20020a056870fba000b001b44a2eb698mr13093826oab.47.1689627239068;
+        Mon, 17 Jul 2023 13:53:59 -0700 (PDT)
+Received: from sw06.internal.sifive.com ([64.62.193.194])
+        by smtp.gmail.com with ESMTPSA id z8-20020a63b048000000b0053031f7a367sm206991pgo.85.2023.07.17.13.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jul 2023 13:53:58 -0700 (PDT)
+From:   Samuel Holland <samuel.holland@sifive.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Samuel Holland <samuel.holland@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: [PATCH 0/2] gpio: sifive: Module support
+Date:   Mon, 17 Jul 2023 13:53:55 -0700
+Message-Id: <20230717205357.2779473-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT112:EE_|SN7PR12MB7420:EE_
-X-MS-Office365-Filtering-Correlation-Id: 23544864-e083-437e-ec51-08db8702d4e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jmjcbGwPchXO//OGoEYYqodPvxnUU0mnyN5TANIUFzeB81pwhK380oiPrbp4JfBuZqdUYqGhz5we8T0qhQvvYm4QH7N545JVhmBcWQKHx8UyOwaJCocMv4Agr4E0p8wK/z39z5AGFoXeyG7W3NEZasNGk1QpnI5fdpWAckYcPUbY9woV+oTKvnqbSfaUYp/jYFA0aie6NFfdFOGMNf58KiLnxdim5Ik/Zbx4A0Mx3rjdRtXgGa9nJ4jRLi6rnu92UDjmSdDwD9LY5wOvf8Za4mF6IpsVStRlg0IitasgicMvkIRpb+uTelRGmqK6T0jiFCHKojVr0xbGlVChwqD5amwplYzQnwGoJpIaQaT4c3qsMhG+DxHuxak9cQqzzN9HNjWZFRbuhTsabvWQlipgiS+UsoBWVr0Ep8ktPC2dMpTouchtbWLaZ5o+genY3mB3mUSYJpALZKyn9U60uByJlXW+BBq2XGV1UE+98w3yc23PZn9tjZd2Gb8CWkwTtTBv1KLCFGYhndeqeHLa6hkk6BWxj13scmnuj+T0KGgvMabjKjBtLTasr4NBE0S/SRKwTdceEDqAK8UM5DjtuVGZRcaANW+1q95xzbPujf9C9oSt8WmByrtQOoSMhSQP/YbqKY/ZqmU38SHXfQ5T8z6Xyy2AZQet5Tf6D3TItZbtkSeRgFEg4Ul6gQ0LT6JQhFjD7GXPLJEj1GNl1kclksw9+yvGbHbLBtkcudnkqhvZUXijqxiu8odv0ePVphpeOVtUK5PfcK/SLKj9UZTKX/mfdL1Qxl2ZRgnMh/mxettzfzg=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(136003)(396003)(346002)(82310400008)(451199021)(40470700004)(36840700001)(46966006)(86362001)(2906002)(36756003)(44832011)(40460700003)(40480700001)(186003)(16526019)(336012)(36860700001)(83380400001)(426003)(47076005)(1076003)(26005)(2616005)(82740400003)(356005)(81166007)(70206006)(6666004)(7696005)(54906003)(70586007)(316002)(5660300002)(6916009)(4326008)(478600001)(41300700001)(8936002)(8676002)(81973001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2023 20:17:23.3848
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23544864-e083-437e-ec51-08db8702d4e1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT112.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7420
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On some systems amd_pinconf_set() is called with parameters
-0x8 (PIN_CONFIG_DRIVE_PUSH_PULL) or 0x14 (PIN_CONFIG_PERSIST_STATE)
-which are not supported by pinctrl-amd.
+With of_irq_count() exported, the SiFive GPIO driver can be built as a
+module. This helps to minimize the size of a multiplatform kernel, and
+is required by some downstream distributions (Android GKI).
 
-Don't show an err message when called with an invalid parameter,
-downgrade this to debug instead.
 
-Cc: stable@vger.kernel.org # 6.1
-Fixes: 635a750d958e1 ("pinctrl: amd: Use amd_pinconf_set() for all config options")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/pinctrl/pinctrl-amd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Samuel Holland (2):
+  of/irq: Export of_irq_count()
+  gpio: sifive: Allow building the driver as a module
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 4a8c1b57a90d6..20bd97a603d9c 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -748,7 +748,7 @@ static int amd_pinconf_get(struct pinctrl_dev *pctldev,
- 		break;
- 
- 	default:
--		dev_err(&gpio_dev->pdev->dev, "Invalid config param %04x\n",
-+		dev_dbg(&gpio_dev->pdev->dev, "Invalid config param %04x\n",
- 			param);
- 		return -ENOTSUPP;
- 	}
-@@ -798,7 +798,7 @@ static int amd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			break;
- 
- 		default:
--			dev_err(&gpio_dev->pdev->dev,
-+			dev_dbg(&gpio_dev->pdev->dev,
- 				"Invalid config param %04x\n", param);
- 			ret = -ENOTSUPP;
- 		}
+ drivers/gpio/Kconfig       | 2 +-
+ drivers/gpio/gpio-sifive.c | 4 +++-
+ drivers/of/irq.c           | 1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
 -- 
-2.34.1
+2.40.1
 
