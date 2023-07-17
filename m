@@ -2,97 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C922A756397
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 14:58:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71E4F7565CD
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 16:07:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230274AbjGQM55 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jul 2023 08:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
+        id S232038AbjGQOHP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jul 2023 10:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230469AbjGQM5p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 08:57:45 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC82268E;
-        Mon, 17 Jul 2023 05:57:25 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fbc0314a7bso7040247e87.2;
-        Mon, 17 Jul 2023 05:57:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689598641; x=1692190641;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FWK395aYGgWInPjVttJySpBAEbGy68xd8KX8YDrNaDc=;
-        b=LrGyFSOiV0uVL2e/JvXQL5JGZjseiobE4xUfuujpSr536bvqNcmNoU581Y7Vd6V6dV
-         Wlidoh3rlCT8wqFIzsZ0IPJLk20/btVtVtRekznfeEszXIVAL+Zzmis6UGVRfe5a05c4
-         4kCzskEMTjBFl6YehmPo+5Ra5rHzEBENFS1o40m15MoGgSFimGU7xws7S9N0/CKFTojC
-         DTp0tE0T0zY9wK86T//Gp/ymMvlaRhyLfi1Hv9RA9WQvfJGdLIczR0TtviDOMgSBrdHS
-         /RYSTwOVlpk8zNWgqAP7dfO/1Uy99psmuGe77IAYLVhW/IadN97gWFcJPe4V37R42jN9
-         M3xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689598641; x=1692190641;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FWK395aYGgWInPjVttJySpBAEbGy68xd8KX8YDrNaDc=;
-        b=TcFbYkFNEhRDbsgmW2rPotRuhzndG2aeNDzeeyKM5ifYJ8n2B1yVyUaq3jzAqXpVAx
-         vVnjSUGfs+G/yCZ1UVjw3IRT0Wk3uPAyvA9xGi8BqQrhQPsX+675SqyFt7Sels+W5OPs
-         eV5Z90DHukBbNDgcGZMWzb4my6q3xAqTxlS9ztyW8JBfNx1YK7plxtJfbnbbiLwQrpbF
-         R+G4c/1GsQqVxRnZIXieDh5602OPjqgv8wXXMyyAaNThoNtQ7a65fxr4v2qkBtu4m5t+
-         YzfmLfp0lDs5wjNP0PZG0B8VGSe4sIqUfUwCfe1BC8JHMT3F6lxOrtvlm08f7CZKkVfT
-         9IWg==
-X-Gm-Message-State: ABy/qLbEpJOTRB3QiHo9DUpYVQX89hTdCHvwFKoqpPYAWncAvIoTeCyz
-        HPt4biwFJPokiwN4aih5U6tx3o0ypkTBAA==
-X-Google-Smtp-Source: APBJJlEEMgCWumSrKpaIDRclQ2ilDK+bWokkkG/49FTSp4vR5lWV96djKq3uKJCcyAFS5wShcVwcTw==
-X-Received: by 2002:a05:6512:3489:b0:4f8:5755:5b22 with SMTP id v9-20020a056512348900b004f857555b22mr6648134lfr.27.1689598640524;
-        Mon, 17 Jul 2023 05:57:20 -0700 (PDT)
-Received: from localhost.localdomain ([92.85.190.61])
-        by smtp.gmail.com with ESMTPSA id o14-20020a5d684e000000b003145559a691sm19126811wrw.41.2023.07.17.05.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 05:57:20 -0700 (PDT)
-From:   Andrei Coardos <aboutphysycs@gmail.com>
-To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     florian.fainelli@broadcom.com, andy@kernel.org,
-        linus.walleij@linaro.org, sbranden@broadcom.com, brgl@bgdev.pl,
-        Andrei Coardos <aboutphysycs@gmail.com>,
+        with ESMTP id S232043AbjGQOHC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 10:07:02 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FEA1BE;
+        Mon, 17 Jul 2023 07:06:53 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="346243288"
+X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
+   d="scan'208";a="346243288"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 07:05:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="700504043"
+X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
+   d="scan'208";a="700504043"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP; 17 Jul 2023 07:05:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy@kernel.org>)
+        id 1qLOrJ-00HTZK-34;
+        Mon, 17 Jul 2023 17:05:53 +0300
+Date:   Mon, 17 Jul 2023 17:05:53 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Andrei Coardos <aboutphysycs@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        zhang.lyra@gmail.com, baolin.wang@linux.alibaba.com,
+        orsonzhai@gmail.com, brgl@bgdev.pl, linus.walleij@linaro.org,
         Alexandru Ardelean <alex@shruggie.ro>
-Subject: [PATCH] gpio: bcm-kona: remove unneeded platform_set_drvdata() call
-Date:   Mon, 17 Jul 2023 15:55:21 +0300
-Message-Id: <20230717125521.6369-1-aboutphysycs@gmail.com>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] gpio: eic-sprd:  remove unneeded platform_set_drvdata()
+ call
+Message-ID: <ZLVKwadaVM+0kxWw@smile.fi.intel.com>
+References: <20230717121004.5205-1-aboutphysycs@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230717121004.5205-1-aboutphysycs@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The platform_set_drvdata() call was never used, ever since the driver was
-originally added.
-It looks like this copy+paste left-over. Possibly the author copied from a
-driver that had this line, but also had a remove hook.
+On Mon, Jul 17, 2023 at 03:10:04PM +0300, Andrei Coardos wrote:
+> The platform_set_drvdata() call was never used, ever since the driver was
+> originally added.
+> It looks like this copy+paste left-over. Possibly the author copied from a
+> driver that had this line, but also had a remove hook.
 
-Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
-Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
----
- drivers/gpio/gpio-bcm-kona.c | 1 -
- 1 file changed, 1 deletion(-)
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-index 70770429ba48..2e50a07a43e6 100644
---- a/drivers/gpio/gpio-bcm-kona.c
-+++ b/drivers/gpio/gpio-bcm-kona.c
-@@ -597,7 +597,6 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	kona_gpio->pdev = pdev;
--	platform_set_drvdata(pdev, kona_gpio);
- 	chip->parent = dev;
- 	chip->ngpio = kona_gpio->num_bank * GPIO_PER_BANK;
- 
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
