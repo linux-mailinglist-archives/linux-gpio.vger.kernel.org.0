@@ -2,52 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0BBA756E9D
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 22:54:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 650D9756E9F
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 22:54:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbjGQUyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jul 2023 16:54:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44290 "EHLO
+        id S231215AbjGQUyV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jul 2023 16:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231337AbjGQUyC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 16:54:02 -0400
-Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FC01A6
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 13:54:00 -0700 (PDT)
-Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1b3c503af99so3391253fac.0
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 13:54:00 -0700 (PDT)
+        with ESMTP id S231358AbjGQUyE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 16:54:04 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132A8A4
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 13:54:02 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-55b22f82ac8so3857111a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 13:54:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1689627239; x=1692219239;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oyy/hqOdv+k0nTAkjs+7RYMgFYdulT0nhGoNzbzeMig=;
-        b=KJTf9YmZ+opwlSlKQtj4qmVAgcviWKLlE18bPJ9PK2xx2vbd1cglf/B19eHyMCF/iu
-         Eo/LO0A/WooxN5UAWv3ScN8m/gCHPScAd1o8ZsTnssQOVautf5+DNwlXfqz2MzgkWZ/e
-         bX5C/SPhH1uy1+IfbnoAxp108QlYMtrHQK59JmnuHeuXgWbVGu3YO42QzGuG5u7RkEdr
-         oHzNxQ4hcPd/NvOcdLGlAatT1hr1aZ0yu1Letu3MtHfILsfG72e/s4DAm48dG6rMbobc
-         NpbivKFS98tExj0Qk/X0qClcS/8nQ5Rz0KBZRGMZH8gxRbYknPYghwWTPxJqFzB+Soz4
-         MlHw==
+        d=sifive.com; s=google; t=1689627241; x=1692219241;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rPXSCcl7xyJKFXuJ0sfDEh5nIT26utMEmgdVi+YRduc=;
+        b=VzNOXhf+impRuQDbYHrHRlqKEi4dq4XPmar0nNzv6mvU84AiDYv9Z8hDwrbcuh/mS0
+         AgX5iAz4at+qFL9Qlc9V9bUmdwa+KLbCIrTMUe+/rwDoMrjNS01UNaZCPQPFEYNXMfGq
+         XrOpEMqW2ID2b5Kv7fLAl/V9ydXP2MBLtM4tZYZkv79U6vGznTx8gSRmlBPtNuu83jN/
+         +CZvicmJK8bHZurlYy33pU0fBP0I6KRiOPK42VmiMb77zsTfwcERc3OiLqnHUiPRx0Od
+         41lB6iSmwxSSceokNRnKYx2C1p2NehPKLu8wdS5NoDzDgEpmu7ywu/phkTrFWHNF6ApV
+         tLcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689627239; x=1692219239;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Oyy/hqOdv+k0nTAkjs+7RYMgFYdulT0nhGoNzbzeMig=;
-        b=e5TLhUIUA+oc7WOepvIwbpvq5pInalagUM7aAyL+tTtbSVIrAS5n56DrbDSfEOOWrr
-         2kRfs3P7GjQ/3WbQgwfp9Q2olq6DT/18UnOamT3hgQ3lH09tzMjCIjjO1sWlS7D/w+YO
-         Oq3h3hmpX9yFHcQuCJX63S40icMh/e88mUVfMrWJ1813/01Uippqa1WINJSL7qTslJmB
-         FQ9/wca+GARIbnstSVdKeAmit8UvkLCyUlUnNadamKBK2FssX3qQVR0gougMVN5Ne81g
-         PIyhP7oty1EkWgJ9ceSu0ChuFcEockhZf4wYLf16Q64czzkCj8ELsa3PBElY/D2z/RH0
-         NP6g==
-X-Gm-Message-State: ABy/qLb2cHghs6iT6giI70RjjeBGfl9X/+4PNpsOQ0NUOk4DtrF0oGNW
-        s6J4gKsDAwjZSA1DE1bhrSmToA==
-X-Google-Smtp-Source: APBJJlFdP1Af7JGzTPtkK/vllQtffloe3sX9PaU93xyPQ8qir6P/+bH6Lv7otG/v4/4fcg4rtzqtJg==
-X-Received: by 2002:a05:6870:fba0:b0:1b4:4a2e:b698 with SMTP id kv32-20020a056870fba000b001b44a2eb698mr13093826oab.47.1689627239068;
-        Mon, 17 Jul 2023 13:53:59 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689627241; x=1692219241;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rPXSCcl7xyJKFXuJ0sfDEh5nIT26utMEmgdVi+YRduc=;
+        b=RStzJA6aaG82MXfd4/V749NTgaFf5dp492LpcWcbGm9i2Y7bcEbHhrEsDk2UmMKnFS
+         hYdog4bh3Lx8omWLMxngQbcxOBYMUhKlWkbVeAnxNXSpH5of9JDtsruOgJP8+VB2zS+0
+         2oqSWDf7/K9oLFbCGzQKMjlRGDgbhHgiQCiUwgIg1/BhC8EVOJznUV9UTgirLL5QhIeh
+         nZPFzDOIksXARGMSG7ambNCssMb2PPxQnrA8Weutslfc/YX+qy8ThP3fxNZT88imgjlW
+         4cGVDiuGM0EkvaPLFOFP2qfU5kjLkCA1+ieZxb+yiCPJ5+UfbHRu93+I9iT56eFk6EiX
+         OKjg==
+X-Gm-Message-State: ABy/qLa3B0FH0MY+td1FxsZuB6mailP7Ompc189dkATM2wq8iFg+Cs04
+        UBpUfWzgPfm3oADK4NAMqSJ57Q==
+X-Google-Smtp-Source: APBJJlFbe5gZF2ECwUGmiCHxgLHRY+XuBGqvvTomAJ08QQZ91YYr4KT3oREW1N/N6BFQf7ttY64AMw==
+X-Received: by 2002:a17:90a:a614:b0:263:f3d0:7ea2 with SMTP id c20-20020a17090aa61400b00263f3d07ea2mr13459056pjq.8.1689627241539;
+        Mon, 17 Jul 2023 13:54:01 -0700 (PDT)
 Received: from sw06.internal.sifive.com ([64.62.193.194])
-        by smtp.gmail.com with ESMTPSA id z8-20020a63b048000000b0053031f7a367sm206991pgo.85.2023.07.17.13.53.58
+        by smtp.gmail.com with ESMTPSA id z8-20020a63b048000000b0053031f7a367sm206991pgo.85.2023.07.17.13.54.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 13:53:58 -0700 (PDT)
+        Mon, 17 Jul 2023 13:54:01 -0700 (PDT)
 From:   Samuel Holland <samuel.holland@sifive.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -57,12 +58,14 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
 Cc:     Samuel Holland <samuel.holland@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH 0/2] gpio: sifive: Module support
-Date:   Mon, 17 Jul 2023 13:53:55 -0700
-Message-Id: <20230717205357.2779473-1-samuel.holland@sifive.com>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH 2/2] gpio: sifive: Allow building the driver as a module
+Date:   Mon, 17 Jul 2023 13:53:57 -0700
+Message-Id: <20230717205357.2779473-3-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230717205357.2779473-1-samuel.holland@sifive.com>
+References: <20230717205357.2779473-1-samuel.holland@sifive.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,20 +78,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-With of_irq_count() exported, the SiFive GPIO driver can be built as a
-module. This helps to minimize the size of a multiplatform kernel, and
-is required by some downstream distributions (Android GKI).
+This can reduce the kernel image size in multiplatform configurations.
 
-
-Samuel Holland (2):
-  of/irq: Export of_irq_count()
-  gpio: sifive: Allow building the driver as a module
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+---
 
  drivers/gpio/Kconfig       | 2 +-
  drivers/gpio/gpio-sifive.c | 4 +++-
- drivers/of/irq.c           | 1 +
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index e382dfebad7c..1a8e8a8c85d6 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -564,7 +564,7 @@ config GPIO_SAMA5D2_PIOBU
+ 	  maintain their value during backup/self-refresh.
+ 
+ config GPIO_SIFIVE
+-	bool "SiFive GPIO support"
++	tristate "SiFive GPIO support"
+ 	depends on OF_GPIO
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	select GPIO_GENERIC
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index 745e5f67254e..5941a817491c 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -277,4 +277,6 @@ static struct platform_driver sifive_gpio_driver = {
+ 		.of_match_table = sifive_gpio_match,
+ 	},
+ };
+-builtin_platform_driver(sifive_gpio_driver)
++module_platform_driver(sifive_gpio_driver)
++
++MODULE_LICENSE("GPL");
 -- 
 2.40.1
 
