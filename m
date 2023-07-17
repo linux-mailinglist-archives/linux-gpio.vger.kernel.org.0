@@ -2,70 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57C9D75575A
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jul 2023 23:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A10C7558FE
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 03:16:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229936AbjGPVUV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Jul 2023 17:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49120 "EHLO
+        id S230296AbjGQBQE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Jul 2023 21:16:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbjGPVUU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jul 2023 17:20:20 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165DCFC
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 14:20:19 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-57a551ce7e9so38575197b3.3
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 14:20:19 -0700 (PDT)
+        with ESMTP id S230225AbjGQBQD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jul 2023 21:16:03 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB90E54
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 18:16:01 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-666eba6f3d6so2522012b3a.3
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jul 2023 18:16:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689542418; x=1692134418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g5jVNQL7Cqqr60okI8mc7o8ZzfhGkfsuMA8PNwkU7+4=;
-        b=nZrzudf6xWNgDh9pI1qUJneWfZZ979ATLS6xoZ5hymfxndprmeWruOujesfVNEI09I
-         imgYXL5vPi+KQbDW/5KpR+WqF2IbuLxDAoGRwDZOkCSomygdREedz7TIyvPhIW4T8HEQ
-         Kt/oCml68TYo1IfQTRpYtbqyCrwWR/WX8oNl9zPPtMAWFuOH1jAK8a6w+ij5laChENWX
-         dPuuWPHSgDQ2UUK9RqRGemmyAgLUjVEBUDoVX+9MkgSZm7F3SmnWtCCstm8nltqTK+NK
-         gyVl/1WGHoIAqIanzO4RdVju//vpXy+qQfT65rYde56kb5xHqBtOWIiaWduXVrYpxINK
-         xjpA==
+        d=linaro.org; s=google; t=1689556561; x=1692148561;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7oYHq1p/oXp0puIhFy9OrnpLdy2w5rBXDTDnolu96uM=;
+        b=lpLLCmgz30TGZmwSdUJe4tDFJz5Fcd74dvul6RV1b10GYjbMvH7ymiHWYqHYwl1XDU
+         AXvc9ttDTLXuhQDQ6AawB/CVruvT818GWrcl+rSI9CtyU4dUNshxytZ8qMbOnyt5hWo/
+         NR2IUmY18rsbM26/5zCo5bACAbL5EdbpNCDmCSeu04IKz2/F38pSlK90Ee6/pp07p8iM
+         2b312nFSgBZHusqLwvGAjAXkWhrRd+L6jTlWmn40iZ2VYBTHzaXHGEHE1QU2mvzpYcw2
+         PcFrQ4ACun+46PghhI95QzcyTb0HxTlK8n0ChaNriwetm1HejWpDgt5yc+9WRH0WWLCv
+         I4/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689542418; x=1692134418;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g5jVNQL7Cqqr60okI8mc7o8ZzfhGkfsuMA8PNwkU7+4=;
-        b=Wtqrg9QI2x/FVnye2PrIuToPO7MLBfOv0qLtP6yJdnxjPGq/ulvwQl1w3dIgpemf+h
-         Szl8dsPvuLY6uDRTlx+gmKW6dUavD/OnsC7k258TYieFZU3a5gmh3TyvehjfOoVKO/vu
-         8iRwKAk8ot26AoVGvldmDr6yJy6fjgmHVmL801RpyCdM5O/am58OO6oXU9kX18foQShv
-         JkhaLYq+Bxl3QbR1g5GiTZ2xe7ggBZnDiVCueB6NYHPeJXevkL1xlkUfeXx9MrVnwKAH
-         2YhrVTE2uav9jBt/1ZLHfTgVpffr2VG8HkzIKoldXStFiN5y+v+IfuqOOKFoAozy/LtP
-         SPRA==
-X-Gm-Message-State: ABy/qLbTt8kvh2UoQN/lIcI5WvqP7DiyCL5QN4UUrl1IxV8WoPNoMptq
-        mmPJtolhgzzvkIZt4lx2HtJPzJ6R5t4FBb9ydjWSEQ==
-X-Google-Smtp-Source: APBJJlHFulXWKieW8R5pU5+4sBV9kVYwKWI7RxXFv0PMRLSfeuSHf71kiTm/P4n/g1hxXDT2l3GQ0t6WmONXnWG1MKc=
-X-Received: by 2002:a0d:cb4a:0:b0:56d:4b45:f9e1 with SMTP id
- n71-20020a0dcb4a000000b0056d4b45f9e1mr10803683ywd.3.1689542418359; Sun, 16
- Jul 2023 14:20:18 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689556561; x=1692148561;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7oYHq1p/oXp0puIhFy9OrnpLdy2w5rBXDTDnolu96uM=;
+        b=hKpB09PwD1YXjn4wxkkqyYAq/eXZxr7mstx/lj0XThI8VLoe66KpzVezNGCxJFyFLp
+         Fwo+C7kiuk37vYnb+/PGd8XsYTZON9Q+bGmbskq5x2Hlf6Z+qZhl5BTUVhjJQcs0BLaV
+         UVvVRIgCae6A2Vo9nl2PInREdyokEo9M71Be51pqe4KYR1BzFXYSfWaAzhhVyEZbdhmL
+         9bzQBL4L0l4wRfJnBMVyEIBcviwRlTl/xhN7hyRTsytvUk5mTLKAn9+6iTmm5hwF0ube
+         j7aOI9TfUAFE47BClh28nljjRh+N17SPbeDzQ5yAcDIerJ+Jl3JqrpTAFUXwqdqPln00
+         Q/Lg==
+X-Gm-Message-State: ABy/qLZVJIx4+nalpVEldPd2bOhbFhCf/Jp5CirzU/p/dDc+rzjTBphz
+        46IgKXnmr+6XKBdjMTB4VW1wvQ==
+X-Google-Smtp-Source: APBJJlGT729jgOISi92Vcn9sb6yb8hOJik/a8kpi8tvYnR/R2ZGG42BlJaza9mC2BASDQp7lhQ53bw==
+X-Received: by 2002:a05:6a20:2451:b0:126:43f7:e271 with SMTP id t17-20020a056a20245100b0012643f7e271mr12234973pzc.39.1689556560877;
+        Sun, 16 Jul 2023 18:16:00 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:1bdd:1b8b:7a6:78d0])
+        by smtp.gmail.com with ESMTPSA id k10-20020a633d0a000000b0054fe6bae952sm11687701pga.4.2023.07.16.18.15.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Jul 2023 18:16:00 -0700 (PDT)
+Date:   Sun, 16 Jul 2023 19:15:57 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <andersson@kernel.org>
+Cc:     agross@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        srinivas.kandagatla@linaro.org,
+        Mukesh Ojha <quic_mojha@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Subject: Re: (subset) [PATCH v3 00/18] Add basic Minidump kernel driver
+ support
+Message-ID: <ZLSWTaMtr9UGmrDy@p14s>
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <168945921478.1805013.7211960599963339759.b4-ty@kernel.org>
 MIME-Version: 1.0
-References: <20230714122441.3098337-1-huqiang.qin@amlogic.com> <20230714122441.3098337-3-huqiang.qin@amlogic.com>
-In-Reply-To: <20230714122441.3098337-3-huqiang.qin@amlogic.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 16 Jul 2023 23:20:07 +0200
-Message-ID: <CACRpkdbbUga0biH=1tkCgRzUqNiDGdVf2woda5X2s43ct-na7Q@mail.gmail.com>
-Subject: Re: [PATCH V3 2/2] pinctrl: Add driver support for Amlogic C3 SoCs
-To:     Huqiang Qin <huqiang.qin@amlogic.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, neil.armstrong@linaro.org,
-        khilman@baylibre.com, jbrunet@baylibre.com,
-        martin.blumenstingl@googlemail.com, brgl@bgdev.pl, andy@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <168945921478.1805013.7211960599963339759.b4-ty@kernel.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,28 +80,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Huqiang,
-
-thanks for your patch!
-
-On Fri, Jul 14, 2023 at 2:25=E2=80=AFPM Huqiang Qin <huqiang.qin@amlogic.co=
-m> wrote:
-
-> Add a new pinctrl driver for Amlogic C3 SoCs which share
-> the same register layout as the previous Amloigc S4.
-
-How is the spelling of amlogic there in the end.
-
-> Signed-off-by: Huqiang Qin <huqiang.qin@amlogic.com>
-> ---
+On Sat, Jul 15, 2023 at 03:13:34PM -0700, Bjorn Andersson wrote:
+> 
+> On Wed, 03 May 2023 22:32:14 +0530, Mukesh Ojha wrote:
+> > Minidump is a best effort mechanism to collect useful and predefined data
+> > for first level of debugging on end user devices running on Qualcomm SoCs.
+> > It is built on the premise that System on Chip (SoC) or subsystem part of
+> > SoC crashes, due to a range of hardware and software bugs. Hence, the
+> > ability to collect accurate data is only a best-effort. The data collected
+> > could be invalid or corrupted, data collection itself could fail, and so on.
+> > 
+> > [...]
+> 
+> Applied, thanks!
+> 
+> [01/18] remoteproc: qcom: Expand MD_* as MINIDUMP_*
+>         commit: 318da1371246fdc1806011a27138175cfb078687
 >
-> V1 -> V2:
->   Added a comma to the last item of the array and a period to
->   the commit message.
 
-Andy had more comments about the header inclusion. Please
-include all used headers directly as requested, I think it's a good
-idea and avoids confusing compile problems.
+Krzysztof asked for modifications on this patch.
 
-Yours,
-Linus Walleij
+> Best regards,
+> -- 
+> Bjorn Andersson <andersson@kernel.org>
