@@ -2,82 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16E90755DB7
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 10:02:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97381755EDE
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 11:00:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231205AbjGQICX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jul 2023 04:02:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
+        id S230195AbjGQJA2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jul 2023 05:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230219AbjGQICW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 04:02:22 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5133129
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 01:02:19 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4f95bf5c493so6465746e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 01:02:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689580938; x=1692172938;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ybDWeGYh7QkWqKSuqnHy7+o3sCCASBcWk0Zen0RPF2c=;
-        b=oQS7I5usrfXc9q0gkIN9Y65z8MX729Uvxqkggz/yHgR5zI/SEHh5DYqV2rdAXHZz6S
-         xrXBD9MLtRN+12vp9l0UM+LnEfi6o3Pi+51jaJoKcnUt8mckvAdye4NiO4QMUPytFTk8
-         5VN9v1rLHdxhj1u1Gk82EsVI2IRVURW7KldC3dBbuOsVBCk8nBIV3qqIvLHSJIiH4eH+
-         Y2lOsr+kTeyQdF6QUXGRFSz6/nkz3mBMy5Xn5+uLI8OG2beLLYHveAtf0TC5lx5fuctf
-         mGhsHS38S22KiPxT4CmPMHzmrrVDQUc6snqRe0pDy8L8YgdXFDILzekGXsgw3MNM7uzn
-         eSEA==
+        with ESMTP id S230197AbjGQJA0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 05:00:26 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2BD2E4E
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 02:00:24 -0700 (PDT)
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 17A9D3F20D
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 09:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1689584423;
+        bh=JHnHS0B61qcl/Td8/lm9RDjYsfSOyiiTTr5PsC3FWaA=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=cjjX2f3GtORdVHhLvdkR6dCrcMHr2MAIBKwmMJggdDi0YC0ppg2CIOlluoaHaSTIz
+         vQGsS3jNDlod/gBW/5VbbnSgCuQ+puWs/Jl1aL61Zgy1WLCbHlSnSf10xf3kLcZksF
+         a3rXvBlKYWjUQBiV/HBZZMjjklEO/klZTs/KPxHhJW2PXw56iup6y6WD1rOkmCYZPb
+         sfBXpgI+98ReWm6tCDYMyIUQZE4IdlSLvKcFfyiYCWCfHze3APSRUtfZ6OXrDZ9mr7
+         Cykz3l3jUEmHVUzM/oF7gLS/mpBfBGDfLLwGvNHKxLhOpMO6TeIxHviEit9yL3d5Qw
+         cg9O5lPS6/zOA==
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6b757677a0aso6287616a34.2
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 02:00:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689580938; x=1692172938;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ybDWeGYh7QkWqKSuqnHy7+o3sCCASBcWk0Zen0RPF2c=;
-        b=EbkPxq51I8LFgbgbngio8hqP1/K8znXFMCoSum0CLArTiU5w+jowXC+UkmigR135dZ
-         ijh1HO5TNfahORbzY28Fvl+mSdX/cnDbJbk4qk+G3lNvbVrkZdtOHlO8P0DScH75ZDgD
-         UAuIPjtylSIX7JuNT2MHTlYRSGYVMmZ1qfU7jO1t+Ufiiy/y+UwU9XV6yffZjBneAbX3
-         NA+SHpxe6UxYMW4YvT3kYnRtbyJ0YDhABjv+rTibFTNiqgHW//GJFla45baVW99ZxoC+
-         5Ywvma3xnHuIr7o7oW+TtVDXrgHjKnG4GGxhnnQ2DDIUzG/vTN5SJkU37fe3u4vIpCqB
-         aeag==
-X-Gm-Message-State: ABy/qLY0LXBfrRP9qpNP4hnpa39f6DsX4qGdr2frUgtocDdmriwzjpY3
-        ZODpdUf3YFB99oV6tTfbMz3EwQ==
-X-Google-Smtp-Source: APBJJlGaWSnDlZyb6JY1n2wdxR3Lgs52I2miQt9O/go6p3/cQ8xCwjp0Gz89lXxwN9nZK8HZKTWn2w==
-X-Received: by 2002:a05:6512:3c92:b0:4fa:5e76:7ad4 with SMTP id h18-20020a0565123c9200b004fa5e767ad4mr9100751lfv.10.1689580937881;
-        Mon, 17 Jul 2023 01:02:17 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id n16-20020a05640206d000b0051e0bf5807bsm9518544edy.49.2023.07.17.01.02.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 01:02:17 -0700 (PDT)
-Message-ID: <128bcf0e-9b74-0df1-6366-d553475fbad7@linaro.org>
-Date:   Mon, 17 Jul 2023 10:02:14 +0200
+        d=1e100.net; s=20221208; t=1689584422; x=1692176422;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JHnHS0B61qcl/Td8/lm9RDjYsfSOyiiTTr5PsC3FWaA=;
+        b=gV4gwmjyed+OeEsxUFihcx2OJybphBSomPS5/NOn+dVwjlVyf+VUaTY1L0rbwhCkKT
+         2+/DCYHMVBda5b4qmMD8q35BOTL+a9Y0xO/YQD/lhx4Ka0lwN3mYp6k4IacLr/wM58W3
+         uD07TPn8iVvtVAahHVrFqUQLUSxqi1wBxvVnzBzTG5lMCCuVlBtWivyNKcyVbyVKa6C4
+         FKnAQbM4rdnr5L5hArjs2AyuGbOcSfbUM3eYzpz+wM6kd0O38fwUyr7D9vjYeyJaJW2d
+         Mvn6XG0rt5zo9Dh/vBCYGpPgw0s+i8OkLrhR0i9c2Q9jDigkq4sAEM1pld/Zd4t+ACvv
+         6AxA==
+X-Gm-Message-State: ABy/qLZqRHTboyws7dTqDuyczOKJQqx9HbCYilKH9kGdH5WtK8etNows
+        VEaNwyqZcQ5hW2rHqaBDx9yRm7JhHHu8oFvyLMzEyRM6q764SL2PRomEMQ2Sg8LBooFBEV6q7jN
+        XM/mZJqUwecQMY6d0YVdZQ1ygoOJ5pvLn45v4tQhO0IgdfPOtrHvhsP4=
+X-Received: by 2002:ac8:7c48:0:b0:403:2dfd:1fdf with SMTP id o8-20020ac87c48000000b004032dfd1fdfmr15892580qtv.23.1689584401509;
+        Mon, 17 Jul 2023 02:00:01 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEMazgMYki8IR1CHHFS4st+/s+/y1hah0oj0+nBQlO+NhXDM06BTdCzgvWJM4HcjDSd4KVriXj5Pmlo8MNpIrE=
+X-Received: by 2002:ac8:7c48:0:b0:403:2dfd:1fdf with SMTP id
+ o8-20020ac87c48000000b004032dfd1fdfmr15892526qtv.23.1689584401259; Mon, 17
+ Jul 2023 02:00:01 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: (subset) [PATCH v3 00/18] Add basic Minidump kernel driver
- support
-Content-Language: en-US
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>
-Cc:     agross@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org,
-        Mukesh Ojha <quic_mojha@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <168945921478.1805013.7211960599963339759.b4-ty@kernel.org>
- <ZLSWTaMtr9UGmrDy@p14s>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <ZLSWTaMtr9UGmrDy@p14s>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+References: <20230714174901.4062397-1-robh@kernel.org>
+In-Reply-To: <20230714174901.4062397-1-robh@kernel.org>
+From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Date:   Mon, 17 Jul 2023 10:59:45 +0200
+Message-ID: <CAJM55Z_Eba-LKxKAH0i0_vDM6JO_HvWgDLCLFQDave2+UFLMzA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Explicitly include correct DT includes
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Chester Lin <clin@suse.com>, NXP S32 Linux Team <s32@nxp.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Dvorkin Dmitry <dvorkin@tibbo.com>,
+        Wells Lu <wellslutw@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-oxnas@groups.io, linux-rockchip@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -86,29 +137,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/07/2023 03:15, Mathieu Poirier wrote:
-> On Sat, Jul 15, 2023 at 03:13:34PM -0700, Bjorn Andersson wrote:
->>
->> On Wed, 03 May 2023 22:32:14 +0530, Mukesh Ojha wrote:
->>> Minidump is a best effort mechanism to collect useful and predefined data
->>> for first level of debugging on end user devices running on Qualcomm SoCs.
->>> It is built on the premise that System on Chip (SoC) or subsystem part of
->>> SoC crashes, due to a range of hardware and software bugs. Hence, the
->>> ability to collect accurate data is only a best-effort. The data collected
->>> could be invalid or corrupted, data collection itself could fail, and so on.
->>>
->>> [...]
->>
->> Applied, thanks!
->>
->> [01/18] remoteproc: qcom: Expand MD_* as MINIDUMP_*
->>         commit: 318da1371246fdc1806011a27138175cfb078687
->>
-> 
-> Krzysztof asked for modifications on this patch.
+On Fri, 14 Jul 2023 at 19:52, Rob Herring <robh@kernel.org> wrote:
+>
+> The DT of_device.h and of_platform.h date back to the separate
+> of_platform_bus_type before it as merged into the regular platform bus.
+> As part of that merge prepping Arm DT support 13 years ago, they
+> "temporarily" include each other. They also include platform_device.h
+> and of.h. As a result, there's a pretty much random mix of those include
+> files used throughout the tree. In order to detangle these headers and
+> replace the implicit includes with struct declarations, users need to
+> explicitly include the correct includes.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-I guess it is fine, no big issue.
+>  drivers/pinctrl/starfive/pinctrl-starfive-jh7110-aon.c | 5 +----
+>  drivers/pinctrl/starfive/pinctrl-starfive-jh7110-sys.c | 2 --
+>  drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c     | 1 -
 
-Best regards,
-Krzysztof
+Acked-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
+Thanks,
+/Emil
