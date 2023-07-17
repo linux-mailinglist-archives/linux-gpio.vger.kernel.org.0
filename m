@@ -2,60 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6243756D81
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 21:39:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3E91756DCC
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 21:56:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbjGQTjx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jul 2023 15:39:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
+        id S231571AbjGQT4y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jul 2023 15:56:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbjGQTjx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 15:39:53 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AD39D;
-        Mon, 17 Jul 2023 12:39:52 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-992f6d7c7fbso699997966b.3;
-        Mon, 17 Jul 2023 12:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689622791; x=1692214791;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SOp2ZZ3wc36w9kvHwXp3awpd0wFGnA+hVpdKbz6GNXU=;
-        b=DheUe9jqHtnMNx6N40uCc5AiolO11iz7WAmfwD5rCkeOqGj09Sx8tR6PZERo3jKe1m
-         yaSa6GpCqRVUSf4+acnPacv2dNnsDZqeVxuPDfHw4Td6k3oLcEekxIHVL5DM7lUydvFZ
-         1yH4MXeuVnqFJR6JiFjmP4gXyjIUorYoxdLot1ekrL0gkrY6mjCO0iNwacJwU8c9fBaD
-         emJeHw+wYJaUYZTUsjKIXvMc6zD8+c9HU+BwD/q0gBAYdVVCZBwJXCBRrVJJgz75L9I3
-         qltW9FwH9S69mpWDlwv4/kUfAUFPPoUC25iZ/kMewrK0Gq+l2iI7fBTRnFlkzWzGH6za
-         OPZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689622791; x=1692214791;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SOp2ZZ3wc36w9kvHwXp3awpd0wFGnA+hVpdKbz6GNXU=;
-        b=LpEVLQMzuaPNZIYkqsyBbdWUEjPgCiKQzxPelZMtRHwzGrWi9O6wzjRGi52uZyWzGn
-         bgzf/oV6CLNetpbjuDegoJBQ3XcotvPY3LPeW1alaIcGy5HTgEwVG2VEM1Nu8K70u1AE
-         7Co+dcyvtCAsry8QMeiRNa3FMRgoqtJzUsLaeCcD0Rx1LYqwlWAyug5pO8mLgEZZZr70
-         RZCxGnjFOcP/D9e8dt3L9Y+VR0lGxmZ41+Y6iD2lkObV8b68i5Xjh9iZZ60wwStXn1pd
-         OUhhEbsuG0waJUCgcr4pUqCfW4/ICzgOLVl35hQIdeqG8830UAj/G3YTnPKyyGnJKL4X
-         4A1Q==
-X-Gm-Message-State: ABy/qLbnvYK8DHz3oug1p1BFYr1cJ+Czc2NSfaFSK+6eUw5vUKICFEMG
-        V+/NQCLk2pX9wGn4/rddNIbsUaBOVbSgxS93iuE=
-X-Google-Smtp-Source: APBJJlG66q2eVrKtgpAASjhMjhczg4W5QDeuTaoOb4zn9mrNG3umEbjvgyH7X6msZHAYfZ9gd95bh+fbUtFHCcQUtj8=
-X-Received: by 2002:a17:907:1c1a:b0:992:ef60:ab0d with SMTP id
- nc26-20020a1709071c1a00b00992ef60ab0dmr12390276ejc.69.1689622790750; Mon, 17
- Jul 2023 12:39:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230717172821.62827-1-andriy.shevchenko@linux.intel.com>
- <20230717172821.62827-11-andriy.shevchenko@linux.intel.com> <13f7153786cfcdc3c6185a3a674686f7fbf480dc.camel@crapouillou.net>
-In-Reply-To: <13f7153786cfcdc3c6185a3a674686f7fbf480dc.camel@crapouillou.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 17 Jul 2023 22:39:14 +0300
-Message-ID: <CAHp75VdVM87gbFX9sPKo-+eVRUsK8pmC_fyCQ-_6oMMm1aAQ9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 10/10] pinctrl: tegra: Switch to use
+        with ESMTP id S231352AbjGQT4r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 15:56:47 -0400
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BB2170D;
+        Mon, 17 Jul 2023 12:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1689623760;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fEo4GP83lIE+lgHyH0OgrfVUmqIaUGHnS8773OANhBk=;
+        b=l0iyJWMpe6xSAJOeof6UhbOiLwEzGtfdQOenOHe7x1WEX87oLs/sqcILqWR/6F6vYNbyxW
+        0jHoBbsL1LxSF1a8umousHQ+ObYLfz2FWrXHnM3il1OBsIaAXM+DyopoqtpVwrV8RDMkRz
+        nihLU0iVibpyCgWAkHsF50Li29isdlU=
+Message-ID: <8c66f79025ddd8388eeb9bdb3f0e789fe9f362d9.camel@crapouillou.net>
+Subject: Re: [PATCH v2 04/10] pinctrl: intel: Switch to use
  DEFINE_NOIRQ_DEV_PM_OPS() helper
-To:     Paul Cercueil <paul@crapouillou.net>
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -82,34 +55,84 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Date:   Mon, 17 Jul 2023 21:55:57 +0200
+In-Reply-To: <CAHp75Vcjq9=Q2_fsGJ9oCw=WYR3p3ot_cNLiDJV93psNcXXHLw@mail.gmail.com>
+References: <20230717172821.62827-1-andriy.shevchenko@linux.intel.com>
+         <20230717172821.62827-5-andriy.shevchenko@linux.intel.com>
+         <c47c26ba7ea5bcbdcbe1d001b6cc527cee6c7d03.camel@crapouillou.net>
+         <CAHp75Vcjq9=Q2_fsGJ9oCw=WYR3p3ot_cNLiDJV93psNcXXHLw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 17, 2023 at 10:14=E2=80=AFPM Paul Cercueil <paul@crapouillou.ne=
-t> wrote:
-> Le lundi 17 juillet 2023 =C3=A0 20:28 +0300, Andy Shevchenko a =C3=A9crit=
- :
+Le lundi 17 juillet 2023 =C3=A0 22:33 +0300, Andy Shevchenko a =C3=A9crit=
+=C2=A0:
+> On Mon, Jul 17, 2023 at 10:02=E2=80=AFPM Paul Cercueil <paul@crapouillou.=
+net>
+> wrote:
+> > Le lundi 17 juillet 2023 =C3=A0 20:28 +0300, Andy Shevchenko a =C3=A9cr=
+it :
+>=20
+> ...
+>=20
+> > Unrelated change.
+>=20
+> OK.
+>=20
+> ...
+>=20
+> > So the correct way to update this driver would be to have a
+> > conditionally-exported dev_pm_ops structure:
+> >=20
+> > EXPORT_GPL_DEV_PM_OPS(intel_pinctrl_pm_ops) =3D {
+> > =C2=A0=C2=A0=C2=A0 NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend_noir=
+q,
+> > intel_pinctrl_resume_noirq),
+> > };
+>=20
+> This looks ugly. I didn't know that EXPORT*PM_OPS designed that way,
+> but it seems pm.h in such case needs EXPORT for NOIRQ case as well.
 
-...
+It's designed so that when CONFIG_PM is disabled, the dev_pm_ops is
+garbage-collected along with all its callbacks.
 
-> Another driver where using EXPORT_GPL_DEV_PM_OPS() would make more
-> sense.
+I know it looks ugly, but we already have 4 variants (regular,
+namespace, GPL, namespace + GPL), if we start to add macros for
+specific use-cases then it will become bloated really quick.
 
-OK.
+And the "bloat" I'm trying to avoid here is the extreme expansion of
+the API which makes it hard for people not familiar to the code to
+understand what should be used and how.
 
-...
+> > Then your two callbacks can be "static" and without #ifdef guards.
+> >=20
+> > The resulting "intel_pinctrl_pm_ops" can be marked as "extern" in
+> > the
+> > pinctrl-intel.h without any guards, as long as it is only
+> > referenced
+> > with the pm_ptr() macro.
+>=20
+> I'm not sure I got this. Currently drivers do not have any guards.
+> Moreover, the correct one for noirq is pm_sleep_ptr(), isn't it?
+>=20
 
-Thank you for the review of the series!
+The EXPORT_*_DEV_PM_OPS() macros do export the "dev_pm_ops"
+conditionally depending on CONFIG_PM. We could add variants that export
+it conditionally depending on CONFIG_PM_SLEEP, but we're back at the
+problem of adding bloat.
 
---=20
-With Best Regards,
-Andy Shevchenko
+You could use pm_sleep_ptr() indeed, with the existing macros, with the
+drawback that in the case where CONFIG_PM && !CONFIG_PM_SLEEP, the
+dev_pm_ops + callbacks are compiled in but never referenced.
+
+Cheers,
+-Paul
