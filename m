@@ -2,101 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEE3875663A
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 16:21:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86059756654
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jul 2023 16:28:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbjGQOVy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jul 2023 10:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48554 "EHLO
+        id S230096AbjGQO2I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jul 2023 10:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbjGQOVw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 10:21:52 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B1B98;
-        Mon, 17 Jul 2023 07:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689603711; x=1721139711;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tQ7zOf20oE8XNZm2qF5j348lP5D/2PnIX1KMRMac/Io=;
-  b=gijx0SPIkiQgYkp/numjuFB2PMj3TjHQsqbZn9rGkGAov+apYeuF7Fhq
-   6miY7pIM6FsXfupr7zZMyLMeYMvznKmBqlnMPbBgDT9lABE9lkacNPdj1
-   d87aAACEDN3DrBYDHk2vsJ7M4erakTOETOr/5/qoIqtVk7tEB2BoF+AaT
-   uZXMBkkyXtcXX4WDT328TsLuA8xJyF50dHdpaKKRVlY9oOKGTQC1Mej8U
-   4Y7PjB1arFHEaAd28Ivnp74vPa3X5GyKBfoY+lZaeoZ1h0zuVeQutkdfC
-   Lkvhqcg9HJLFa6zCZpSV6gpNkfIW4/jbbkdQvz8hkfU0NQKRJBXV9z6BX
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="432112879"
-X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="432112879"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 07:18:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="717257685"
-X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
-   d="scan'208";a="717257685"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 17 Jul 2023 07:18:40 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3B4A7370; Mon, 17 Jul 2023 17:18:47 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S231799AbjGQO2E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jul 2023 10:28:04 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9FE3E52
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jul 2023 07:28:02 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLPCb-0003bC-SL; Mon, 17 Jul 2023 16:27:53 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLPCa-0009vu-S8; Mon, 17 Jul 2023 16:27:52 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLPCa-005cIf-5a; Mon, 17 Jul 2023 16:27:52 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Subject: [PATCH v2 3/3] gpio: bcm-kona: Drop unused pdev member in private data structure
-Date:   Mon, 17 Jul 2023 17:18:45 +0300
-Message-Id: <20230717141845.41415-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-In-Reply-To: <20230717141845.41415-1-andriy.shevchenko@linux.intel.com>
-References: <20230717141845.41415-1-andriy.shevchenko@linux.intel.com>
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH] gpio: mvebu: Make use of devm_pwmchip_add
+Date:   Mon, 17 Jul 2023 16:27:43 +0200
+Message-Id: <20230717142743.2555739-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1587; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=ejT5aQfyA6pTJ5H2R38jzRs4Yj8LSNb3pnMNxNOdQXA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBktU/cZJijdnTRp4/hOtMpOlsUGVrnLTOM0CRqU RPmgdC3RFWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZLVP3AAKCRCPgPtYfRL+ TioqB/9KNmCU+lO7rs8CcBvE1XEZZtttTPSQSkCXa5kt9mJxFeOhkcrRevOx2HEDjZqc4rQkFWJ tmafWkI0rZ6xg+AWUBFTQA2O10NVi6XuZ1EOQD27AIw3VrcpyUNDiI8vnQMPOOrAAG2wvNST92a Ir7KGEnE5HztL8rqkUhww5ZyzqGI7B4t3sMKv4MwDKhybJJCPK+fYMSYaKzmshx/751KnPVHlWL 1ct/VwDs2aTDqzd6GbSrRt4llCai+iLws6DXf2K3ugHNLHKHJdya3uSR4SdkgmujPR0Ovm7pmkV nUi9B6B9kuxFr/kYcX/xNuMLgwc0+M5CuLdl4TG3DlPQgovP
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pdev member is assigned and not used, drop it.
+This allows to get rid of a call to pwmchip_remove() in the error path. There
+is no .remove function for this driver, so this change fixes a resource leak
+when a gpio-mvebu device is unbound.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
-v2: new patch
- drivers/gpio/gpio-bcm-kona.c | 2 --
- 1 file changed, 2 deletions(-)
+Hello,
 
-diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-index 9af1549ee0df..0e3fdb42b9ed 100644
---- a/drivers/gpio/gpio-bcm-kona.c
-+++ b/drivers/gpio/gpio-bcm-kona.c
-@@ -63,7 +63,6 @@ struct bcm_kona_gpio {
- 	struct gpio_chip gpio_chip;
- 	struct irq_domain *irq_domain;
- 	struct bcm_kona_gpio_bank *banks;
--	struct platform_device *pdev;
- };
+Note that irq_domain_remove() also isn't called so there is another
+resource leak introduced by 812d47889a8e ("gpio/mvebu: Use
+irq_domain_add_linear")
+
+ drivers/gpio/gpio-mvebu.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index a68f682aec01..a35958e7adf6 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -874,7 +874,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
  
- struct bcm_kona_gpio_bank {
-@@ -590,7 +589,6 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
- 	if (!kona_gpio->banks)
- 		return -ENOMEM;
+ 	spin_lock_init(&mvpwm->lock);
  
--	kona_gpio->pdev = pdev;
- 	chip->parent = dev;
- 	chip->ngpio = kona_gpio->num_bank * GPIO_PER_BANK;
+-	return pwmchip_add(&mvpwm->chip);
++	return devm_pwmchip_add(dev, &mvpwm->chip);
+ }
  
+ #ifdef CONFIG_DEBUG_FS
+@@ -1243,8 +1243,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	if (!mvchip->domain) {
+ 		dev_err(&pdev->dev, "couldn't allocate irq domain %s (DT).\n",
+ 			mvchip->chip.label);
+-		err = -ENODEV;
+-		goto err_pwm;
++		return -ENODEV;
+ 	}
+ 
+ 	err = irq_alloc_domain_generic_chips(
+@@ -1296,9 +1295,6 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 
+ err_domain:
+ 	irq_domain_remove(mvchip->domain);
+-err_pwm:
+-	pwmchip_remove(&mvchip->mvpwm->chip);
+-
+ 	return err;
+ }
+ 
+
+base-commit: 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5
 -- 
-2.40.0.1.gaa8946217a0b
+2.39.2
 
