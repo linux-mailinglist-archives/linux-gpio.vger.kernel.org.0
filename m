@@ -2,153 +2,175 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DBC4A758012
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jul 2023 16:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F47575805C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jul 2023 17:05:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233093AbjGROtB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jul 2023 10:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
+        id S232827AbjGRPFb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jul 2023 11:05:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233408AbjGROso (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jul 2023 10:48:44 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4B7199A
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jul 2023 07:48:33 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3fbea147034so54122685e9.0
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jul 2023 07:48:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1689691711; x=1692283711;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z3PeHDGShv0/Y1SaTBcwWlp0DgIC2lqoORc+f/lyUag=;
-        b=a8ZhbREt0uH7gJ9cBW17TnUuIeY9lua9HO/AozN0hssszX/Phmw738FVOnzPEoqKPM
-         9g4ej6yAf/cuK4nEWyxjfBYtwq2t48q5q+nSJ+5OQlOzhsONtMZQnc+j6RCyZcUN1oz/
-         WJHBxQoDbrIWi0QyPl72CzT34+UDqSNvbRnQbvEHLyPBKdnn5nr3RT3iXFXMDi5NLpyh
-         FK1WZibGA4JoIsa4IL/UxG9P0jvEctbL10XGpyZRaKz+cEvrufbngxfwDfXOD15lMLC7
-         etDDOD4GaZZtjqltQf05sbbfL2Pe45hszeZCcAgOKSgMQQVmIrrOfYsXhwu4Vt/0vXQy
-         ekaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689691711; x=1692283711;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3PeHDGShv0/Y1SaTBcwWlp0DgIC2lqoORc+f/lyUag=;
-        b=N7uNH0vKY2KzwyuWzG/MUkz6Z/wYwZe5b9NeDppOzZ7AiHUb4VWcyEf3evObb4XH0Z
-         Ytj5AYjonYLPFWS7ccB3jWI3cFLlRjFN8Vdjq2pT9D3qv154D9RE2HCeCOUnrJtbufeQ
-         I8MwFlyw/IywTy/9F0XJvuk7AWTsPEVlx5cJ8hTt7HvYoZcLYqUcxY2V90HU4qLFFsxF
-         ckkm9x1qGLeCPQTfjtRn4k9+lj8Dvjdox2F28NkMjit6ak0eSXAjXKRzXgrQv3B0K+UB
-         WxH0vK0aYiRSE7a83bW7qtfue6ZIB0D29g2GJCPb8zkdBZDgsn0Ya7NBgUNu1L+/imEG
-         3tRQ==
-X-Gm-Message-State: ABy/qLYIfZmxKvUSRIdDJfH1/Iv0izmJjf4q4pBW0lwWai/oM91s6XEQ
-        9JkAvK+qFnxueWNmWTxN9d2JCw==
-X-Google-Smtp-Source: APBJJlH8FgksFnhHrYa/bYaQB7Lf3bViTB+cyeDz8GdO0wx0X43DqCQgnSsDAnuYgKuzpQVErJxIqg==
-X-Received: by 2002:a05:600c:d5:b0:3fc:5606:c246 with SMTP id u21-20020a05600c00d500b003fc5606c246mr2052029wmm.22.1689691711290;
-        Tue, 18 Jul 2023 07:48:31 -0700 (PDT)
-Received: from [10.0.2.15] ([82.78.167.79])
-        by smtp.gmail.com with ESMTPSA id f22-20020a7bc8d6000000b003fbb5142c4bsm10659329wml.18.2023.07.18.07.48.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jul 2023 07:48:30 -0700 (PDT)
-Message-ID: <b0bdccb7-e10e-8d8a-fb64-0d41248adf8a@tuxon.dev>
-Date:   Tue, 18 Jul 2023 17:48:25 +0300
+        with ESMTP id S230209AbjGRPFa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jul 2023 11:05:30 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3483510CB;
+        Tue, 18 Jul 2023 08:05:29 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36I6REAM009677;
+        Tue, 18 Jul 2023 15:03:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=l8jXQmV2PvUFWpCgMtL+9QUJ1C8Jq0rbIFdYtG4s468=;
+ b=HQ9Dgbuumrk6U3TYMHXPq+XpXX9aBMnpORf4iEOsVGRbBqub7T8X+mfRSz0DyoLXaIjn
+ xkLGBiYDNLsy00U0pnVKVirunJmzSzCLpz3rp4dAHEIqpNKSlGQ19d+FUgDiJnxxGA7i
+ nLBhulwd1tMkmF2XEFKUBXnAtLsOVY8ljQGFD7eM4JzaZ+y9RRs1U0N4gXLwkTuxbtDK
+ ALjGS3NomUPnCVtonoSLZq2+59J3WycjQbkdM3LY/4L7I/ZVFzCbJRFUhXoqexqHtiQ4
+ 0D9Q4nBsNOViMtNAXINSLB6ynVIz/koB8TI4dTE3JuAJnt+SA0str0xN8Wp62oQ1HUOA ug== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rwfj79vw4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Jul 2023 15:03:59 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36IF3wiL010970
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Jul 2023 15:03:58 GMT
+Received: from [10.216.47.173] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Tue, 18 Jul
+ 2023 08:03:49 -0700
+Message-ID: <c0284d98-4cb2-cb78-9123-54d83fc31101@quicinc.com>
+Date:   Tue, 18 Jul 2023 20:33:44 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v2 06/10] pinctrl: at91: Switch to use
- DEFINE_NOIRQ_DEV_PM_OPS() helper
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
 Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Balsam CHIHI <bchihi@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-References: <20230717172821.62827-1-andriy.shevchenko@linux.intel.com>
- <20230717172821.62827-7-andriy.shevchenko@linux.intel.com>
-From:   claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20230717172821.62827-7-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Trilok Soni <quic_tsoni@quicinc.com>
+CC:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, Alex Elder <elder@linaro.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <2023062814-chance-flounder-f002@gregkh>
+ <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
+ <cc30660f-dd72-aade-6346-a93c6ad4b695@quicinc.com>
+ <29af84dc-7db8-0c43-07b6-eb743cf25e57@linaro.org>
+ <957a3cdb-6091-8679-ddb0-296db2347291@quicinc.com> <ZKb3wz2eXS6h1yIW@p14s>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <ZKb3wz2eXS6h1yIW@p14s>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5wVB4_xXDRj5tnrwuwAq9UgRU4sEv_dd
+X-Proofpoint-ORIG-GUID: 5wVB4_xXDRj5tnrwuwAq9UgRU4sEv_dd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-18_11,2023-07-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 impostorscore=0 clxscore=1011 phishscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307180138
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17.07.2023 20:28, Andy Shevchenko wrote:
-> Since pm.h provides a helper for system no-IRQ PM callbacks,
-> switch the driver to use it instead of open coded variant.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 
-> ---
->   drivers/pinctrl/pinctrl-at91.c | 10 ++++------
->   1 file changed, 4 insertions(+), 6 deletions(-)
+On 7/6/2023 10:50 PM, Mathieu Poirier wrote:
+> On Mon, Jul 03, 2023 at 02:05:58PM -0700, Trilok Soni wrote:
+>> On 7/2/2023 1:29 AM, Krzysztof Kozlowski wrote:
+>>> On 30/06/2023 18:04, Mukesh Ojha wrote:
+>>>>>
+>>>>>> We don't add layers when they are not needed, and never when there is no
+>>>>>> actual user.  If you need the extra "complexity" later, then add it
+>>>>>> later when it is needed as who knows when that will ever be.
+>>>>>>
+>>>>>> Please redo this series based on that, thanks.
+>>>>>
+>>>>> My bigger issue with this whole series is what would this all look
+>>>>> like if every SoC vendor upstreamed their own custom dumping
+>>>>> mechanism. That would be a mess. (I have similar opinions on the
+>>>>> $soc-vendor hypervisors.)
+>>>
+>>> Mukesh,
+>>>
+>>> LPC CFP is still open. There will be also Android and Kernel Debugging
+>>> LPC microconference tracks. Coming with a unified solution could be a
+>>> great topic for LPC. Solutions targeting only one user are quite often
+>>> frowned upon.
+>>
+>> LPC is far out and in November. Can we not have others speak up if they have
+>> the similar solution now? We can expand this to linux-kernel and ask for the
+>> other SOC vendors to chime in. I am sure that we may have existing solutions
+>> which came in for the one user first like Intel RDT if I remember. I am sure
+>> ARM MPAM usecase was present at that time but Intel RDT based solution which
+>> was x86 specific but accepted.
 > 
-> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> index 39956d821ad7..608f55c5ba5f 100644
-> --- a/drivers/pinctrl/pinctrl-at91.c
-> +++ b/drivers/pinctrl/pinctrl-at91.c
-> @@ -1657,7 +1657,7 @@ static int gpio_irq_set_wake(struct irq_data *d, unsigned state)
->   	return 0;
->   }
->   
-> -static int __maybe_unused at91_gpio_suspend(struct device *dev)
-> +static int at91_gpio_suspend(struct device *dev)
->   {
->   	struct at91_gpio_chip *at91_chip = dev_get_drvdata(dev);
->   	void __iomem *pio = at91_chip->regbase;
-> @@ -1675,7 +1675,7 @@ static int __maybe_unused at91_gpio_suspend(struct device *dev)
->   	return 0;
->   }
->   
-> -static int __maybe_unused at91_gpio_resume(struct device *dev)
-> +static int at91_gpio_resume(struct device *dev)
->   {
->   	struct at91_gpio_chip *at91_chip = dev_get_drvdata(dev);
->   	void __iomem *pio = at91_chip->regbase;
-> @@ -1903,15 +1903,13 @@ static int at91_gpio_probe(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> -static const struct dev_pm_ops at91_gpio_pm_ops = {
-> -	NOIRQ_SYSTEM_SLEEP_PM_OPS(at91_gpio_suspend, at91_gpio_resume)
-> -};
-> +static DEFINE_NOIRQ_DEV_PM_OPS(at91_gpio_pm_ops, at91_gpio_suspend, at91_gpio_resume);
->   
->   static struct platform_driver at91_gpio_driver = {
->   	.driver = {
->   		.name = "gpio-at91",
->   		.of_match_table = at91_gpio_of_match,
-> -		.pm = pm_ptr(&at91_gpio_pm_ops),
-> +		.pm = pm_sleep_ptr(&at91_gpio_pm_ops),
->   	},
->   	.probe = at91_gpio_probe,
->   };
+> I am not familiar with Intel RDT and Arm MPAM but the community is always
+> improving on the way it does things.
+> 
+> LPC is indeed far out in November but it is an opportunity to cover the
+> groundwork needed to have this discussion.  It is always best to improve on
+> something then introduce something new.  Even better if something specific such
+> as Intel RDT and Arm MPAM can be made more generic.  A perfect example is
+> hwtracing Linus referred to.  The perf framework wasn't a perfect fit but it was
+> enhanced to accommodate our requirements.  I suggest to look at what is currently
+> available and come up with a strategy to be presented at LPC - event better if
+> you have a prototype.  If you can't find anything or the drawbacks inherent to
+> each avenue outweigh the benefits then we can have that conversation at LPC.
+
+I was checking hwtracing[1] and pmu interface introduction of
+address filtering[3] from analogy point of view, which i think you
+meant that perf framework was extended to accommodate this.
+
+Minidump is quite different and simple in its way to address the problem
+of debugging on end user devices with minimum data captured to debug 
+crashes and this patch series is inline with similar (core + backend)
+implementation done for stm patches[1] where stm core was developed
+and intel trace hub get hooked into it and later it got reused in [2] by 
+coresight-stm driver.
+
+I am still exploring if something available we can reuse but it seems 
+unlikely at the moment to already available something in the kernel with
+similar use case.
+
+-Mukesh
+
+[1]
+https://lwn.net/Articles/650245/
+
+[2]
+https://lwn.net/Articles/674201/
+
+[3]
+https://lore.kernel.org/lkml/1461771888-10409-1-git-send-email-alexander.shishkin@linux.intel.com/
+
+
+> 
+>>
+>> ---Trilok Soni
