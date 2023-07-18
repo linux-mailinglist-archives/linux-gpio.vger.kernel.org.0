@@ -2,63 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CD7D7575A1
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jul 2023 09:46:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE3BA7576E4
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jul 2023 10:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231366AbjGRHqT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jul 2023 03:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53120 "EHLO
+        id S232090AbjGRInL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jul 2023 04:43:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230373AbjGRHqS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jul 2023 03:46:18 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD15610DF;
-        Tue, 18 Jul 2023 00:46:15 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-992ca792065so742908966b.2;
-        Tue, 18 Jul 2023 00:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689666374; x=1692258374;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WXaT6APHJQXhpbwZ9c1qIYiSYwOvNOpb+GN5TESf5y0=;
-        b=kuUL6qubC4aVn22O15bxQLyYanj97a2vktrajCEMYVHyKka+ggyEPUfBwU6TJ1etlo
-         /le1HoC3ySgmofs9wboZlrd3lr6CNNlhWLqpzpU+b8hRrbVPfNiz2jF1BQ+XUVofm43n
-         rik5HU+yZMK2RPDKqQS9Pk8qhmThEAoDee1tesR1TMtLiQT6WT4bFijDhxFmv3WGXdU0
-         4FUT6ghKiWCkdUKVS1nMFcLsT39Cj31+5rgAmjZ6UrHGEHtGWcqyGRWnosMwRupt8M7z
-         cJD+JB0PT2uI1ncMuS9jHL619hKLBVvo8nx2MAFv3zCnbXpuSVABGv0x/hE6r04doVUB
-         E3Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689666374; x=1692258374;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WXaT6APHJQXhpbwZ9c1qIYiSYwOvNOpb+GN5TESf5y0=;
-        b=YMmkoDfKvHzEHtk7tFGCVyX7QHNfdfhcKRcaLl2UMlDtMKvTybzpiWyh1uDRTBJE4M
-         D1Xd2z07RJ3F+VRuklcv0E5N7DrqtLvLzwxN0GIrDkS3gwbpLaCU1NK9dwn7OI5KHPb6
-         678BNhC5N4a1gn347r/vtOWojU62SxeuNV6FUdKYURdh6pU0drV8EpaxNTonxKVLlGbR
-         SXc3zpnqrATUnkGXi6hJ87pm/M6x7qYkLhZqqpCpNLKeJygkdTzOHLPh0k/0wfzZzdA6
-         pVWlV2z/5ZfZsu3RrI+42WVCqvEob5nsDp5qZArINKvU2WNdzAZ947oWi/PmELSBr+E9
-         jMnA==
-X-Gm-Message-State: ABy/qLaQbmlj3HjKqLGzdT4HCAom3tmfx+G4WFKHq8K0GwVEQAiRMUpa
-        KP0vlE/4tEUu1hXi+WIQU5Ng2r4pyB8=
-X-Google-Smtp-Source: APBJJlGEfvRTZ1qi772HzYEzzIQoZO2W4jSwQ00uCNhfTuToM8Pe+1d/DyRPiG4wclpp5+j+MPeKhQ==
-X-Received: by 2002:a17:907:7704:b0:992:c8d7:b66f with SMTP id kw4-20020a170907770400b00992c8d7b66fmr11300335ejc.75.1689666374008;
-        Tue, 18 Jul 2023 00:46:14 -0700 (PDT)
-Received: from orome (p200300e41f4b7100f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4b:7100:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id o3-20020a170906860300b0099290e2c163sm638762ejx.204.2023.07.18.00.46.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 00:46:13 -0700 (PDT)
-Date:   Tue, 18 Jul 2023 09:46:11 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        with ESMTP id S232030AbjGRIm7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jul 2023 04:42:59 -0400
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77F1A6;
+        Tue, 18 Jul 2023 01:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1689669770;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lvBHRW1hX7jSHUc5Dd1yf8Vt754q3/Qv7wxhKNRg9lU=;
+        b=maEuuMJ23VwXgPP1BYNWDWH9FoDi8ssbRkcHwVHdHZ+2liVDNNtSFXoi/Ucm7tD8fFcWkz
+        Y1+1pyzlgXX8KdYt9Wa7GKYCY48VbAbD6BnoH3PHwrKdfGz5uVVGeT1MlJH1yeEkON6JDi
+        BIcoju3Ka9xM3kidK/COzZ4sCOkXIp0=
+Message-ID: <5e4b5bc23f3edb3ed30cb465420a51ffceceb53d.camel@crapouillou.net>
+Subject: Re: [PATCH v2 10/10] pinctrl: tegra: Switch to use
+ DEFINE_NOIRQ_DEV_PM_OPS() helper
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Balsam CHIHI <bchihi@baylibre.com>,
         Claudiu Beznea <claudiu.beznea@microchip.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Paul Cercueil <paul@crapouillou.net>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mediatek@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
@@ -77,20 +54,18 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 10/10] pinctrl: tegra: Switch to use
- DEFINE_NOIRQ_DEV_PM_OPS() helper
-Message-ID: <ZLZDQ64QHsNi7kra@orome>
+Date:   Tue, 18 Jul 2023 10:42:47 +0200
+In-Reply-To: <ZLZDL27zzDpY4q8E@orome>
 References: <20230717172821.62827-1-andriy.shevchenko@linux.intel.com>
- <20230717172821.62827-11-andriy.shevchenko@linux.intel.com>
+         <20230717172821.62827-11-andriy.shevchenko@linux.intel.com>
+         <13f7153786cfcdc3c6185a3a674686f7fbf480dc.camel@crapouillou.net>
+         <ZLZDL27zzDpY4q8E@orome>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xXrLK6/iTZZPHAap"
-Content-Disposition: inline
-In-Reply-To: <20230717172821.62827-11-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -98,41 +73,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Thierry,
 
---xXrLK6/iTZZPHAap
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jul 17, 2023 at 08:28:21PM +0300, Andy Shevchenko wrote:
-> Since pm.h provides a helper for system no-IRQ PM callbacks,
-> switch the driver to use it instead of open coded variant.
+Le mardi 18 juillet 2023 =C3=A0 09:45 +0200, Thierry Reding a =C3=A9crit=C2=
+=A0:
+> On Mon, Jul 17, 2023 at 09:14:12PM +0200, Paul Cercueil wrote:
+> > Hi Andy,
+> >=20
+> > Le lundi 17 juillet 2023 =C3=A0 20:28 +0300, Andy Shevchenko a =C3=A9cr=
+it=C2=A0:
+> > > Since pm.h provides a helper for system no-IRQ PM callbacks,
+> > > switch the driver to use it instead of open coded variant.
+> > >=20
+> > > Signed-off-by: Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > > =C2=A0drivers/pinctrl/tegra/pinctrl-tegra.c | 5 +----
+> > > =C2=A01 file changed, 1 insertion(+), 4 deletions(-)
+> > >=20
+> > > diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> > > b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> > > index 4547cf66d03b..734c71ef005b 100644
+> > > --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> > > +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> > > @@ -747,10 +747,7 @@ static int tegra_pinctrl_resume(struct
+> > > device
+> > > *dev)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> > > =C2=A0}
+> > > =C2=A0
+> > > -const struct dev_pm_ops tegra_pinctrl_pm =3D {
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.suspend_noirq =3D &tegra_=
+pinctrl_suspend,
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.resume_noirq =3D &tegra_p=
+inctrl_resume
+> > > -};
+> > > +DEFINE_NOIRQ_DEV_PM_OPS(tegra_pinctrl_pm, tegra_pinctrl_suspend,
+> > > tegra_pinctrl_resume);
+> > > =C2=A0
+> > > =C2=A0static bool tegra_pinctrl_gpio_node_has_range(struct tegra_pmx
+> > > *pmx)
+> > > =C2=A0{
+> >=20
+> > Another driver where using EXPORT_GPL_DEV_PM_OPS() would make more
+> > sense.
 >=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+> We don't currently export these PM ops because none of the Tegra
+> pinctrl
+> drivers can be built as a module.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+This doesn't change anything. You'd want to use EXPORT_GPL_DEV_PM_OPS
+(or better, the namespaced version) so that the PM ops can be defined
+in one file and referenced in another, while still having them garbage-
+collected when CONFIG_PM is disabled.
 
---xXrLK6/iTZZPHAap
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmS2Q0MACgkQ3SOs138+
-s6F/xA/+I0bEAIZvtYSJbWGW3odYR79tYmCu4u3Def9PnhZ4sLDjCh4N3pUGz/hc
-cmQzv/IXBSl8Z2xpnAmBCZHdz6EzsdEpaGxaykNyskzO1ABDIMw8YkkvN4vA3f+2
-g7NOaof0vdyf0n+Q6AtdJW/2KHVgwJSGqkfRVHHajwLJOZtCm1naB5wThiSCKz1a
-ytHyYiYwD4Os1zh2dD2EXJ0Ezz/+XkjwdTNoTaZZvaxvIyo3IgX9K0cXX2wzpMr+
-asMkplyryGX8LfjKcExpiPotUPGFUFwN93gA6Glg8PDdqRU9I1ARbTmlqlSld+eT
-V4xy5I4DNKeU8Zi1kN+umHEkhaZg2bC5ZFG8GHgmcTbHogmc5s3AB4nHmIr6geS4
-/zYsU7W/0wdR5fUF7Umnbe/DX0Tss27ntqbz1aEj/p+W7E0QDXvT4LtUKz5SiJjs
-8gcdP8h5ZM4Eji0+UlWlZX0JVtg3d+48FefiuaEf43gBJXrvKCZTlLNif4JEUzAZ
-cflDyd3QSeKNEXTVPKAju5++znR69t+PhlyrGqNkeEUhQ5RgM3O3CCbJuhuaycn7
-hZaNEynqbxNwQoeIXxfQ5a/i38iRosZyLhdVQt52YE8ON5Y3sl18Q4nXjvCTTQd8
-uPduIo56wHEd2064KmnQP6oWDa+ceh8kJI2/qmNH0xk15QYSVF4=
-=NQCN
------END PGP SIGNATURE-----
-
---xXrLK6/iTZZPHAap--
+Cheers,
+-Paul
