@@ -2,135 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 386F8757308
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jul 2023 07:09:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9CFD75735C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jul 2023 07:49:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbjGRFJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jul 2023 01:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60772 "EHLO
+        id S230317AbjGRFtL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jul 2023 01:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjGRFJM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jul 2023 01:09:12 -0400
+        with ESMTP id S230377AbjGRFtC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jul 2023 01:49:02 -0400
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A47012F;
-        Mon, 17 Jul 2023 22:09:11 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36I3FCU2022182;
-        Tue, 18 Jul 2023 05:09:07 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1455610E4;
+        Mon, 17 Jul 2023 22:49:00 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36I5eYYS008122;
+        Tue, 18 Jul 2023 05:47:29 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : from : subject : to : cc : references : in-reply-to :
+ mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=I1DxiGEZyd8QbRErBmMkW95iq3qQZEgJgDYHG45ZqJk=;
- b=DcelHJ+bHOLHzNtcztT678xFnsF61sBV0FnmR5rcOooiKmrhQJD2zDbbveKqdpbSw6Hm
- er+GW3ZOVWnwI5uW4sjE8s5k1miZKygnFA4q1DYbePhbH1OYFOvM3e+yfI5QBIHjPclf
- BdVxEsqDhFRBP+DHv/hQr5A75nfc/k8KJ9beyftgIPtkTZ3cn5bTOk56jGjXRZFr+7Sw
- AH+nYwBm5GmLoeadP/sHLXftQq+Lmbi5pxeA1rlqIwsCqasce5Zu80fly/wJ3sRwlmEc
- ilnuFCZu/xZ7r03SIq4QK4LHZm0OhFBdhkCSlKo/4f8HdKPYoAjRCkrafwSJYYvzsbdS dA== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rwcg6rs3d-1
+ bh=botXgHX6lvKxI//MS5qCm7ZrIXLhTHjIntqkzLlfZ7E=;
+ b=J+4F8hVZ9+BwXwycxS77FsGp/9CE9z+niHIhfkHXTTN1u1B5I4Gz8RZIfz2g9YRSZyaQ
+ 5IiMd2Ea9PRZk6tya8+iagYVyPCKHdbDI2z83Gs9Ba+CD76fhvJylaXLGJnCqNeBfKQJ
+ TMFPlfaII/AgZHC2l1sB5BXV/3ltQJs5X6IaC+VqPDuLi6bz8Q8VeDlXA/woLuHyfixM
+ jrPmvjMPTJxYoLQCz8PZH0LHT5JpIGFLF7xPcpHJj9wHDK0+kg44VLM0N1yPA8Sd+jrY
+ H5i+W5aKvBQ66myjQAIbg/pvcTFLjzepU0hhJEb+ERLTXctjzZFJdewjSntr9XPMHNkl sA== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rwfj78jh8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jul 2023 05:09:07 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36I596eP011767
+        Tue, 18 Jul 2023 05:47:29 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36I5lSOk009126
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jul 2023 05:09:06 GMT
-Received: from [10.50.15.149] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 18 Jul 2023 05:47:28 GMT
+Received: from [10.216.47.173] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Mon, 17 Jul
- 2023 22:09:03 -0700
-Message-ID: <760778dc-b0af-2adb-fa9e-4059a17a2cdf@quicinc.com>
-Date:   Tue, 18 Jul 2023 10:38:53 +0530
+ 2023 22:47:20 -0700
+Message-ID: <e4784d1c-73da-9cda-6aef-d02625e8efd2@quicinc.com>
+Date:   Tue, 18 Jul 2023 11:17:12 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From:   Ninad Naik <quic_ninanaik@quicinc.com>
-Subject: Re: [PATCH] pinctrl: qcom: Add intr_target_width to define
- intr_target_bit field width
-To:     Bjorn Andersson <quic_bjorande@quicinc.com>,
-        <konrad.dybcio@linaro.org>, <andersson@kernel.org>
-CC:     <agross@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_ppareek@quicinc.com>, <psodagud@quicinc.com>,
-        <quic_kprasan@quicinc.com>
-References: <20230714061010.15817-1-quic_ninanaik@quicinc.com>
- <20230714203802.GA3972960@hu-bjorande-lv.qualcomm.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+To:     <linux-samsung-soc@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>,
+        "Trilok Soni" <quic_tsoni@quicinc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <2023062814-chance-flounder-f002@gregkh>
+ <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
+ <CACRpkda3CJ7G4-wDPkWmzg6nyCoEfG+u2cQH6KXWNjbftd90ow@mail.gmail.com>
+ <355de4c7-180d-4edd-b6fd-9c8e29e40e42@quicinc.com>
+ <52650970-de78-764f-28e2-ee0115b7d5c6@quicinc.com>
 Content-Language: en-US
-In-Reply-To: <20230714203802.GA3972960@hu-bjorande-lv.qualcomm.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <52650970-de78-764f-28e2-ee0115b7d5c6@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Tkq62HP2qQF8XeHOFrjPa39bLqdJjfK7
-X-Proofpoint-GUID: Tkq62HP2qQF8XeHOFrjPa39bLqdJjfK7
+X-Proofpoint-GUID: 4MQCr3V3jn7NkD1q7loLspC5CvNWJFhH
+X-Proofpoint-ORIG-GUID: 4MQCr3V3jn7NkD1q7loLspC5CvNWJFhH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-07-17_15,2023-07-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0
- malwarescore=0 spamscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307180047
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 impostorscore=0 clxscore=1011 phishscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307180053
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
++ linux-samsung-soc@vger.kernel.org
++ linux-mediatek@lists.infradead.org
 
-Thank you all for the reviews.
 
-On 7/15/2023 2:08 AM, Bjorn Andersson wrote:
-> On Fri, Jul 14, 2023 at 11:40:09AM +0530, Ninad Naik wrote:
->> SA8775 and newer target have added support for an increased number of
->> interrupt targets. To implement this change, the intr_target field, which
->> is used to configure the interrupt target in the interrupt configuration
->> register is increased from 3 bits to 4 bits.
->>
->> In accordance to these updates, a new intr_target_width member is
->> introduced in msm_pingroup structure. This member stores the value of
->> width of intr_target field in the interrupt configuration register. This
->> value is used to dynamically calculate and generate mask for setting the
->> intr_target field. By default, this mask is set to 3 bit wide, to ensure
->> backward compatibility with the older targets.
->>
->> Signed-off-by: Ninad Naik <quic_ninanaik@quicinc.com>
-> 
-> Very nice, Ninad.
-> 
-> Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> 
->> ---
->>   drivers/pinctrl/qcom/pinctrl-msm.c     | 9 ++++++---
->>   drivers/pinctrl/qcom/pinctrl-msm.h     | 2 ++
->>   drivers/pinctrl/qcom/pinctrl-sa8775p.c | 1 +
->>   3 files changed, 9 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
->> index 2585ef2b2793..6ebcaa2220af 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
->> @@ -1038,6 +1038,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->>   	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>   	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->>   	const struct msm_pingroup *g;
->> +	u32 intr_target_mask = 0x7;
-> 
-> I like Konrad's suggestion about making this GENMASK(2, 0).
-> 
-> Please update that and include our R-b tags in v2.
-> 
-Sure, I'll change this to GENMASK and update all the relevant tags 
-(Fixes and R-b) as suggested in the review comments.
-> Regards,
-> Bjorn
 
-Thanks a lot!
-Regards,
-Ninad
+On 7/15/2023 5:15 AM, Trilok Soni wrote:
+> On 7/5/2023 10:29 AM, Trilok Soni wrote:
+>> On 7/4/2023 2:27 AM, Linus Walleij wrote:
+>>> On Thu, Jun 29, 2023 at 1:12 AM Rob Herring <robh+dt@kernel.org> wrote:
+>>>
+>>>> My bigger issue with this whole series is what would this all look
+>>>> like if every SoC vendor upstreamed their own custom dumping
+>>>> mechanism. That would be a mess. (I have similar opinions on the
+>>>> $soc-vendor hypervisors.)
+>>>
+>>> I agree with Rob's stance.
+>>>
+>>> I think it would be useful to get input from the hwtracing developers
+>>> (Alexander and Mathieu) who faced this "necessarily different" issue
+>>> with all the hwtrace mechanisms and found a way out of it. I suspect
+>>> they can have an idea of how this should be abstracted.
+>>
+>> Any mailing list you suggest we expand to so that we get inputs from 
+>> the hwtracing developers and maintainers or just look into the 
+>> MAINTAINERS file and start an email thread?
+>>
+>> We are fine to submit the abstract for the LPC in next two weeks, but 
+>> prefer to have lot of good discussion before it on the mailing list, 
+>> so that we have code to talk about in LPC.
+> 
+> We have submitted abstract at LPC MC. Let's continue the discussion here 
+> though.
+> 
+> Mukesh, do you want to expand the lists as necessary to see if other 
+> soc-vendors are having any inputs here? May be add Exynos or MTK kernel 
+> mailing lists + linux-kernel? I don't know if anyone will respond or 
+> not, but let's try.
+
+Sure.
+
+-Mukesh
+> 
+> ---Trilok Soni
+> 
