@@ -2,60 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E1F758536
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jul 2023 20:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC1F375853E
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jul 2023 21:00:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229552AbjGRS6x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jul 2023 14:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45040 "EHLO
+        id S229452AbjGRTAT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jul 2023 15:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbjGRS6x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jul 2023 14:58:53 -0400
-Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C979F4
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jul 2023 11:58:52 -0700 (PDT)
-Received: by mail-vk1-xa30.google.com with SMTP id 71dfb90a1353d-48159634694so2256091e0c.2
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jul 2023 11:58:52 -0700 (PDT)
+        with ESMTP id S230004AbjGRTAS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jul 2023 15:00:18 -0400
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C253AF9
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jul 2023 12:00:16 -0700 (PDT)
+Received: by mail-vs1-xe2a.google.com with SMTP id ada2fe7eead31-443628ee79dso1996541137.1
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jul 2023 12:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689706731; x=1692298731;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689706816; x=1692298816;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RCXF+3DQeZRKgnE0AHasBLJEp5/cGqaVsuwTgG7AvaA=;
-        b=Jw2vmqEg/Ahsxz82QM9peK2yVJSzgnryXnABWpTFE1snHJQN0vNF5wmdby19z9TNKk
-         3p8CpqcJ5z7BGv/tfLWwhfe3SAd6KPVmYQhyuVAMmCG4dYLVWItBdlrSO8amKjlveKR8
-         7mt3faCWaI7WZPw/AKUGzRQY/jKBGmkKlGwH0uPZ8DM4wh8Yb1hfCrJj2VFnpqRerxKv
-         ySs24bc9rXYk0YCDjqsY/j2vITWjKdlg4PZDMgRFZm4PRABFFB462Ipty1lPYiFaUtZu
-         EJJ7QbiGpOkP4WPmrc0YLmN8vWbPI9pmdnP1O60xnVJ8HYLGbkU+9CjNuYUs/BRZ6eLR
-         Ndhw==
+        bh=kr1xFECZrsAfFudB/oMaSbrGfr4I2aPgz6TBVVMxCmI=;
+        b=lz0z8BHLUK812Oe+Ep1RD8zVu2128ZCpp5rAo1gfP7CCJctHIKUIc+fgeGyFxdJFVU
+         elP/t+DmkRjTondq97Gn9hJJN8plTf+IuAowxPPXCArcP05cz65paPItRTNMnSW1zbOP
+         ZjRheORL1w6oOTnEzGi76xX3B29ujvmOxz5Xhhy9I7ouFblkfT7LZfZv7OUNL+rY7eVt
+         6l/Nd4dk1TfhFtbExXouVFRkY5eZylZbdsaItMJudxVET0Ds+nahRJKMViapYu6wlvWB
+         OccncIBy44qm5vgopJRBjoCc7DgmXsrY+nP9/KPKGljOd1kk6C9fbn/AMCwt2UFnttW9
+         UumQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689706731; x=1692298731;
+        d=1e100.net; s=20221208; t=1689706816; x=1692298816;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RCXF+3DQeZRKgnE0AHasBLJEp5/cGqaVsuwTgG7AvaA=;
-        b=RWfl2UwJcAePQAXrlr1jsRfsOn1cCWqaoOU8uxV1bXk8GX1uUV93rO/uWaFmh0LCCU
-         zLYPegvEUeA4xe7B6XDUn5eTLSze7OWMCVJnX/6Uf0D8CAQZMNA4yeZmiy7ItLsy+NwQ
-         k+w/RYbknOiHaaoNjZbMGg3YEQDPOZfwhbohr9lR4CK9Aiw3hF4HDcniAutJBICq0Y2U
-         Qd6CaIxO9Gm7DpsWpimWLJl0xLFyWwozytLnrc6Jd17tw+w9BvtK0zMep17o8QDMfkjs
-         VF9c+QD8CCE4nlZaxUl78zIgcUlLxUCAKIDaL8sheDBo/AsyMOyUADaTe1p8A1OyoZCG
-         Kmqg==
-X-Gm-Message-State: ABy/qLboDB57QhnmNWZ+EFTin6cXV7VpUbO9wf+ML+7axMUAOVb5BV12
-        yQHsEpAUxq7/iG2yUgLnFV/chk7RPuqGolh6CIqv7g==
-X-Google-Smtp-Source: APBJJlEUB7vj1yaYT8FpBTe95IuQRlr3StaRyYOUt3pqTK2OiSyJTZJQIfIRUKSvNt/euq+mvodnNAVhyeSdjhMyGDM=
-X-Received: by 2002:a1f:6dc4:0:b0:471:24c3:6cd3 with SMTP id
- i187-20020a1f6dc4000000b0047124c36cd3mr2339552vkc.11.1689706731222; Tue, 18
- Jul 2023 11:58:51 -0700 (PDT)
+        bh=kr1xFECZrsAfFudB/oMaSbrGfr4I2aPgz6TBVVMxCmI=;
+        b=H+qj1V1B3C3eM3HSTBLfhoDupnzhcPwI1wBvkmWt9mBZWSpc8abG98bIoZK97Xytji
+         ydO4sD/Bv8JTL1ubeFRCfqZogImDnUhDViaJDRZ2r9boZihAMB8sZg9498pRcCUKS6bg
+         upJSya+Ok/11uzyp3lPIHfUq8hbZUjrKg04LoLjMzRl/DloABp90J46ORXgDkz6v885E
+         iXrax9Ue9cYmAcFKmrpnGcHbmCl1CLogE2w4BtOqkepSb9e8dJlLj44zuPHecMnnvzIA
+         +YrTKS1PsCW+OA+zhFiz7hTM4WdWbeVRSGubmzXOJJFa6jruMOaCGrnOdvCM6NAcqp65
+         u6+Q==
+X-Gm-Message-State: ABy/qLaUUDD03CrsSfc0D7BZoQNDpLSREjU8kLi8Um0Ib0LUDnBEdp+2
+        WCDZ0Jj06jRyuqiVU0sQXjB7d/ezezQwwQbtDQ1Ayw==
+X-Google-Smtp-Source: APBJJlF869L4eV2yvmfEqas1IZbGxZuYy82XGdmJnwZq/4VKOwLSLa1SZV4li9TCzxLXptzfkNfFBvpE4kpjGaWjKXA=
+X-Received: by 2002:a67:ea0b:0:b0:443:4f72:fd35 with SMTP id
+ g11-20020a67ea0b000000b004434f72fd35mr7802159vso.1.1689706815872; Tue, 18 Jul
+ 2023 12:00:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230710214910.31892-1-asmaa@nvidia.com> <CAMRc=MeQBSJ8Y92VfOfiaDjDyW44RunYt-D1aFraNaR_dTRVOQ@mail.gmail.com>
- <CAHp75VcKH4ZJ7HjjY6q_Woi2wAwnhiqyyPySOpK9Amt_SHB8ow@mail.gmail.com> <CH2PR12MB38953B86B91D7529CF6DBEF5D738A@CH2PR12MB3895.namprd12.prod.outlook.com>
-In-Reply-To: <CH2PR12MB38953B86B91D7529CF6DBEF5D738A@CH2PR12MB3895.namprd12.prod.outlook.com>
+References: <20230711151248.4750-1-asmaa@nvidia.com> <CH2PR12MB389544F08A0A20AAB06123D3D738A@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB389544F08A0A20AAB06123D3D738A@CH2PR12MB3895.namprd12.prod.outlook.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 18 Jul 2023 20:58:40 +0200
-Message-ID: <CAMRc=MdCb1OzeBdQ6YxBw3FMmj7jCs=1SabYiu-+0FdVLdZe9Q@mail.gmail.com>
-Subject: Re: [PATCH v5] gpio: mmio: handle "ngpios" properly in bgpio_init()
+Date:   Tue, 18 Jul 2023 21:00:05 +0200
+Message-ID: <CAMRc=Me30rRG7GY-aZfapcNZPc3BWJBBjC4BLoaVr0CjnidiUA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio: mmio: handle "ngpios" properly in bgpio_init()
 To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
         "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
         "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
@@ -73,19 +72,227 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 18, 2023 at 8:39=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
+On Tue, Jul 18, 2023 at 8:38=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
 te:
 >
+>  > bgpio_init() uses "sz" argument to populate ngpio, which is not accura=
+te.
+> > Instead, read the "ngpios" property from the DT and if it doesn't exist=
+, use the
+> > "sz" argument. With this change, drivers no longer need to overwrite th=
+e ngpio
+> > variable after calling bgpio_init().
 > >
-> > > Applied, thanks!
+> > If the "ngpios" property is specified, bgpio_bits is calculated as the =
+round up
+> > value of ngpio. At the moment, the only requirement specified is that t=
+he round
+> > up value must be a multiple of 8 but it should also be a power of 2 bec=
+ause we
+> > provide accessors based on the bank size in bgpio_setup_accessors().
 > >
-> > This has a bug.
+> > Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > ---
+> > The following 2 patches were approved in March 2023 but didn't make it =
+into
+> > the tree:
+> > [PATCH v4] gpio: mmio: handle "ngpios" properly in bgpio_init() [PATCH =
+v1]
+> > gpio: mmio: fix calculation of bgpio_bits
 > >
-> My apologies for this inconvenience. This is not the right patch to be ap=
-plied. It was rejected by Andy. I just forwarded to you the patch to apply.
-> Its only one patch an dis named:
->  [PATCH v2 1/1] gpio: mmio: handle "ngpios" properly in bgpio_init()
+> > They needed a rebase and were combined into a single patch since
+> > "gpio: mmio: fix calculation of bgpio_bits" fixes a bug in
+> > "gpio: mmio: handle "ngpios" properly in bgpio_init()"
+> >
+> > v1->v2:
+> > - Added the tags
+> > - Updated the changelog
+> >
+> >  drivers/gpio/gpio-mmio.c |  9 +++++-
+> >  drivers/gpio/gpiolib.c   | 68 ++++++++++++++++++++++------------------
+> >  drivers/gpio/gpiolib.h   |  1 +
+> >  3 files changed, 46 insertions(+), 32 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c index
+> > d9dff3dc92ae..74fdf0d87b2c 100644
+> > --- a/drivers/gpio/gpio-mmio.c
+> > +++ b/drivers/gpio/gpio-mmio.c
+> > @@ -60,6 +60,8 @@ o        `                     ~~~~\___/~~~~    ` con=
+troller in FPGA
+> > is ,.`
+> >  #include <linux/of.h>
+> >  #include <linux/of_device.h>
+> >
+> > +#include "gpiolib.h"
+> > +
+> >  static void bgpio_write8(void __iomem *reg, unsigned long data)  {
+> >       writeb(data, reg);
+> > @@ -614,10 +616,15 @@ int bgpio_init(struct gpio_chip *gc, struct devic=
+e
+> > *dev,
+> >       gc->parent =3D dev;
+> >       gc->label =3D dev_name(dev);
+> >       gc->base =3D -1;
+> > -     gc->ngpio =3D gc->bgpio_bits;
+> >       gc->request =3D bgpio_request;
+> >       gc->be_bits =3D !!(flags & BGPIOF_BIG_ENDIAN);
+> >
+> > +     ret =3D gpiochip_get_ngpios(gc, dev);
+> > +     if (ret)
+> > +             gc->ngpio =3D gc->bgpio_bits;
+> > +     else
+> > +             gc->bgpio_bits =3D roundup_pow_of_two(round_up(gc->ngpio,
+> > 8));
+> > +
+> >       ret =3D bgpio_setup_io(gc, dat, set, clr, flags);
+> >       if (ret)
+> >               return ret;
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c index
+> > 251c875b5c34..7dac8bb9905a 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -700,6 +700,40 @@ void *gpiochip_get_data(struct gpio_chip *gc)  }
+> > EXPORT_SYMBOL_GPL(gpiochip_get_data);
+> >
+> > +int gpiochip_get_ngpios(struct gpio_chip *gc, struct device *dev) {
+> > +     u32 ngpios =3D gc->ngpio;
+> > +     int ret;
+> > +
+> > +     if (ngpios =3D=3D 0) {
+> > +             ret =3D device_property_read_u32(dev, "ngpios", &ngpios);
+> > +             if (ret =3D=3D -ENODATA)
+> > +                     /*
+> > +                      * -ENODATA means that there is no property found
+> > and
+> > +                      * we want to issue the error message to the user=
+.
+> > +                      * Besides that, we want to return different erro=
+r code
+> > +                      * to state that supplied value is not valid.
+> > +                      */
+> > +                     ngpios =3D 0;
+> > +             else if (ret)
+> > +                     return ret;
+> > +
+> > +             gc->ngpio =3D ngpios;
+> > +     }
+> > +
+> > +     if (gc->ngpio =3D=3D 0) {
+> > +             chip_err(gc, "tried to insert a GPIO chip with zero lines=
+\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (gc->ngpio > FASTPATH_NGPIO)
+> > +             chip_warn(gc, "line cnt %u is greater than fast path cnt =
+%u\n",
+> > +                     gc->ngpio, FASTPATH_NGPIO);
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(gpiochip_get_ngpios);
+> > +
+> >  int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+> >                              struct lock_class_key *lock_key,
+> >                              struct lock_class_key *request_key) @@ -70=
+7,7
+> > +741,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *da=
+ta,
+> >       struct gpio_device *gdev;
+> >       unsigned long flags;
+> >       unsigned int i;
+> > -     u32 ngpios =3D 0;
+> >       int base =3D 0;
+> >       int ret =3D 0;
+> >
+> > @@ -753,36 +786,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *g=
+c,
+> > void *data,
+> >       else
+> >               gdev->owner =3D THIS_MODULE;
+> >
+> > -     /*
+> > -      * Try the device properties if the driver didn't supply the numb=
+er
+> > -      * of GPIO lines.
+> > -      */
+> > -     ngpios =3D gc->ngpio;
+> > -     if (ngpios =3D=3D 0) {
+> > -             ret =3D device_property_read_u32(&gdev->dev, "ngpios",
+> > &ngpios);
+> > -             if (ret =3D=3D -ENODATA)
+> > -                     /*
+> > -                      * -ENODATA means that there is no property found
+> > and
+> > -                      * we want to issue the error message to the user=
+.
+> > -                      * Besides that, we want to return different erro=
+r code
+> > -                      * to state that supplied value is not valid.
+> > -                      */
+> > -                     ngpios =3D 0;
+> > -             else if (ret)
+> > -                     goto err_free_dev_name;
+> > -
+> > -             gc->ngpio =3D ngpios;
+> > -     }
+> > -
+> > -     if (gc->ngpio =3D=3D 0) {
+> > -             chip_err(gc, "tried to insert a GPIO chip with zero lines=
+\n");
+> > -             ret =3D -EINVAL;
+> > +     ret =3D gpiochip_get_ngpios(gc, &gdev->dev);
+> > +     if (ret)
+> >               goto err_free_dev_name;
+> > -     }
+> > -
+> > -     if (gc->ngpio > FASTPATH_NGPIO)
+> > -             chip_warn(gc, "line cnt %u is greater than fast path cnt =
+%u\n",
+> > -                       gc->ngpio, FASTPATH_NGPIO);
+> >
+> >       gdev->descs =3D kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERN=
+EL);
+> >       if (!gdev->descs) {
+> > @@ -947,7 +953,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc=
+,
+> > void *data,
+> >       /* failures here can mean systems won't boot... */
+> >       if (ret !=3D -EPROBE_DEFER) {
+> >               pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n",
+> > __func__,
+> > -                    base, base + (int)ngpios - 1,
+> > +                    base, base + (int)gc->ngpio - 1,
+> >                      gc->label ? : "generic", ret);
+> >       }
+> >       return ret;
+> > diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h index
+> > cca81375f127..8de748a16d13 100644
+> > --- a/drivers/gpio/gpiolib.h
+> > +++ b/drivers/gpio/gpiolib.h
+> > @@ -217,6 +217,7 @@ int gpiod_configure_flags(struct gpio_desc *desc, c=
+onst
+> > char *con_id,  int gpio_set_debounce_timeout(struct gpio_desc *desc,
+> > unsigned int debounce);  int gpiod_hog(struct gpio_desc *desc, const ch=
+ar
+> > *name,
+> >               unsigned long lflags, enum gpiod_flags dflags);
+> > +int gpiochip_get_ngpios(struct gpio_chip *gc, struct device *dev);
+> >
+> >  /*
+> >   * Return the GPIO number of the passed descriptor relative to its chi=
+p
+> > --
+> > 2.30.1
+>
+> Hi Bart,
+>
+> This is the final approved patch by both Linus and Andy. Please discard a=
+ll others.
+>
 
-Yeah, I figured and backed it out.
+Ok, I applied this one but you need to get your patch versioning in
+order next time.
 
 Bart
