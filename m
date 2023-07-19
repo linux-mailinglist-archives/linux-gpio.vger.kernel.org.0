@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ABBD759B8D
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 18:55:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47C19759BC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 19:03:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbjGSQzQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 12:55:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39368 "EHLO
+        id S230076AbjGSRDu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 13:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbjGSQzP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 12:55:15 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501741BB
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 09:55:14 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-403e7472b28so26260951cf.2
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 09:55:14 -0700 (PDT)
+        with ESMTP id S230346AbjGSRDt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 13:03:49 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0BD172D
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 10:03:48 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-403c6a0f3aaso54357031cf.2
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 10:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1689785713; x=1690390513;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1xaknZ+WQXJ6kJPUpwHcZWxBULSRjgk951uD8BaEmJU=;
-        b=aPUCeq/XP3LmF7NuRP26v0Ge989d6G7AGSAJCXIRKXQAgd1xsjUx1DAtIBfGkxmxt6
-         P24KcgnWKabeJoWjDmdO8WzrixJy45+ZWk///46bnP8O7+8IOSYXX2YQv2ge/GCKHLAR
-         vK9LYCbBmo75UvZx7pxPL5K5EXxkrHw8JXRvMdc/4lyfIPNCThSEc7lNF6wxZ+Lr8/Vm
-         MLOIYl4A0BEt20JSXblMlyFmE75sZmRpaFiBxy61LhhAarRUWEh+p7yt+uWz5mTStslZ
-         HdDdsQhADeG7HDbHzxwL28T8hUQ97MY6/WjeYue/hVljKA2HDS+qRdk306qBDcsDEalj
-         VAog==
+        d=sifive.com; s=google; t=1689786228; x=1690391028;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2Y/1slnyFOfruKLlVgzy7Oy/yzYdM3htwk1fVwDtIRk=;
+        b=mknpiap4VlzD98tl/hHtgiTz+hpghsQCUu8zc2R7FU+fC1+Nt2mEeusJNUbQixaHEX
+         uiIKyyEd4Dq3OrVDcc7xtvLRXg2G1/PaVEesjc+x9BE0fBeSn6k4N0CVePpZCXsuzvUm
+         f53gYdCf/JRwvyf8I/EUnFVVmyKz3IXYAm0WKTa8aitbsjmTaBeFMX2vpBLapTqThOg6
+         Guforr1Np1vUUXvA9/bDfmuK/YMWXTCtZgWbzOdTK2IBv28LH7MzEfBcQROcZBM4AwHv
+         mET3PbZWJqUfyPf/WEQmvJkhAzSJej7+WI+tfxMKl9I80SvyPB1YIWPKyx0ArDyCEi16
+         LoZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689785713; x=1690390513;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1689786228; x=1690391028;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1xaknZ+WQXJ6kJPUpwHcZWxBULSRjgk951uD8BaEmJU=;
-        b=SS8+2VrOaMxO7eDEp1gGVwWam5LT2wuyDqr2ZGN6rv+tIUwRY6jmxzPT50qTawtkkk
-         0CkRGCkuDP+e5p9sMu00kIV7A6nhmg83HFoc8nm+fZPfzqJHa8ftw7sqTGzfsN+CZ75z
-         hq2emwaaMrqtgv0Q5iIuMvyBPjLVDF7oZyOLiXdNAgzR4PIwCcctM5iGiK9N04PSTxD+
-         gS/jjiTYOlY4eXi1rlTY28d2VH8KIGeoQG6mladtL6Y29f8zrSbQSHaOrPDOU6p71Pp/
-         G2+mFLPbwTsJ53jjZI4r0fLkFt/d0ByQvtLBxHoOdSX/WmsjfNV6DjWJEcoLSxYO76j4
-         tkhA==
-X-Gm-Message-State: ABy/qLYhVNqtTFjy2wgX4U0A8HG+pPhSxjSSW3oJM3R0mKm6s+/VukBX
-        if4L2jJ1ufKvXwPIC8V3GrazN/lZKZR16INM7cX5+Q==
-X-Google-Smtp-Source: APBJJlEPsbeM2nGzrTcEBeX746FG7Qyy/DhvSGKqoQV2FqRjNNJfHAVrQWcpMXH6G6hSipJSYJxWVw==
-X-Received: by 2002:a05:622a:1883:b0:403:eb6a:5f5f with SMTP id v3-20020a05622a188300b00403eb6a5f5fmr11425456qtc.42.1689785713469;
-        Wed, 19 Jul 2023 09:55:13 -0700 (PDT)
+        bh=2Y/1slnyFOfruKLlVgzy7Oy/yzYdM3htwk1fVwDtIRk=;
+        b=SqgRFmLbRMxX5ey5hAlctvSAcLPBJkVF1VDeekGKs2K2Z/BSnC22IaWRCjG+00Gp5f
+         vx0Aat1oMWYuFOBtrKoEa4IwnqSY6pO+eS9ND/HmFJAQv9IAADRq+pN1d4jDsctvJ6X5
+         ZyKnIaT6NqBgzRqLktBk6fCfYsWt2NQJMf6rn5SZK14ouqUaxWDPe417i7WrucDn3iuO
+         L/QjGmK0NPN0b4Jk6F76jd/EYZla2Gt0chrc2llAgwwFr188fWuFfr0firQVrigCXDE9
+         +14PcIA8brol5EcHJaJQhLN+sYoAS3gnoAnnItEitie++fe1gCRJolTPznX+EQhDylGD
+         68dQ==
+X-Gm-Message-State: ABy/qLYtbYEBGSJ28hykvSZ/OwqEgmxWzHWoov1XbuQG5fp4d9HQwanS
+        KYa/vurhfX/LZPAtbLOczBZSUA==
+X-Google-Smtp-Source: APBJJlGo7WgU956qlMCfm5+kYjiJGtiIBkXK8Pxq+lmL3ldE9ZAtORUHqORdt2kk9hfe+8Fm+OlMYA==
+X-Received: by 2002:a0c:a801:0:b0:632:1c72:c379 with SMTP id w1-20020a0ca801000000b006321c72c379mr15842406qva.51.1689786227785;
+        Wed, 19 Jul 2023 10:03:47 -0700 (PDT)
 Received: from ?IPV6:2600:1700:2000:b002:8499:3c3c:78f6:f355? ([2600:1700:2000:b002:8499:3c3c:78f6:f355])
-        by smtp.gmail.com with ESMTPSA id g10-20020ac8774a000000b00403f0e47dd6sm1436861qtu.67.2023.07.19.09.55.12
+        by smtp.gmail.com with ESMTPSA id v14-20020ae9e30e000000b0076264532630sm1378783qkf.121.2023.07.19.10.03.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jul 2023 09:55:13 -0700 (PDT)
-Message-ID: <44c057f5-d229-86f1-adc4-5585334d3113@sifive.com>
-Date:   Wed, 19 Jul 2023 11:55:12 -0500
+        Wed, 19 Jul 2023 10:03:47 -0700 (PDT)
+Message-ID: <a3c4f1c6-444b-b3a2-c952-bdd5b0463f95@sifive.com>
+Date:   Wed, 19 Jul 2023 12:03:46 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From:   Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH v2 2/4] gpio: sifive: Look up IRQs only once during probe
+Subject: Re: [PATCH v2 3/4] gpio: sifive: Get the parent IRQ's domain from its
+ irq_data
+Content-Language: en-US
 To:     Andy Shevchenko <andy@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -66,66 +67,43 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org
 References: <20230719163446.1398961-1-samuel.holland@sifive.com>
- <20230719163446.1398961-3-samuel.holland@sifive.com>
- <ZLgTwiTzykDhCd5w@smile.fi.intel.com>
-Content-Language: en-US
-In-Reply-To: <ZLgTwiTzykDhCd5w@smile.fi.intel.com>
+ <20230719163446.1398961-4-samuel.holland@sifive.com>
+ <ZLgVPv7zdoaiUCU6@smile.fi.intel.com>
+From:   Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <ZLgVPv7zdoaiUCU6@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 2023-07-19 11:48 AM, Andy Shevchenko wrote:
-> On Wed, Jul 19, 2023 at 09:34:43AM -0700, Samuel Holland wrote:
->> of_irq_count(), or eqivalently platform_irq_count(), simply looks up
->> successively-numbered IRQs until that fails. Since this driver needs to
->> look up each IRQ anyway to get its virq number, use that existing loop
->> to count the IRQs at the same time.
+On 2023-07-19 11:54 AM, Andy Shevchenko wrote:
+> On Wed, Jul 19, 2023 at 09:34:44AM -0700, Samuel Holland wrote:
+>> Do not parse the devicetree again when the data is already available
+>> from the IRQ subsystem. This follows the example of the ThunderX and
+>> X-Gene GPIO drivers. The ngpio check is needed to avoid a possible
+>> out-of-bounds read.
 > 
 > ...
 > 
->> -	ngpio = of_irq_count(node);
->> -	if (ngpio > SIFIVE_GPIO_MAX) {
->> -		dev_err(dev, "Too many GPIO interrupts (max=%d)\n",
->> -			SIFIVE_GPIO_MAX);
->> -		return -ENXIO;
+>> -	girq->parent_domain = parent;
+>> +	girq->parent_domain = irq_get_irq_data(chip->irq_number[0])->domain;
 > 
-> Do we still need this check?
+> For the sake of readability I would like to leave parent variable
+> and assign it beforehand somewhere upper in the code.
 
-I don't think so. I think this check was only intended to prevent overflowing
-the irq_number array, and that is now handled by the loop condition.
+OK.
 
->> -	}
-> 
-> ...
-> 
->> +	for (ngpio = 0; ngpio < SIFIVE_GPIO_MAX; ngpio++) {
->> +		ret = platform_get_irq_optional(pdev, ngpio);
->>  		if (ret < 0)
->> -			return ret;
->> -		chip->irq_number[i] = ret;
->> +			break;
->> +		chip->irq_number[ngpio] = ret;
->>  	}
-> 
-> If so, here we need something like
-> 
-> 	ret = platform_get_irq_optional(pdev, ngpio);
-> 	if (ret > 0) {
-> 		dev_err(dev, "Too many GPIO interrupts (max=%d)\n",
-> 			SIFIVE_GPIO_MAX);
-> 		return -ENXIO;
-> 	}
-> 
-> Otherwise you need to mention this relaxation in the commit message.
+> Also, can irq_get_irq_data() return NULL? Needs a comment on top
+> of that assignment or an additional check.
 
-OK, I will add something to the commit message in v3.
+No, the earlier loop already verified the IRQ number was valid. I don't think it
+can later become invalid. In any case, we already dereference the result of
+irq_get_irq_data(irq_number[foo]) in sifive_gpio_child_to_parent_hwirq().
+
