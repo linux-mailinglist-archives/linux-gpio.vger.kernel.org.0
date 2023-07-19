@@ -2,139 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ED9175947C
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 13:41:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD38675951E
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 14:30:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230206AbjGSLl1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 07:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59004 "EHLO
+        id S229636AbjGSMam (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 08:30:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230035AbjGSLl0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 07:41:26 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DFD171A
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 04:41:11 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3fbef8ad9bbso67965845e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 04:41:10 -0700 (PDT)
+        with ESMTP id S229535AbjGSMam (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 08:30:42 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0273EE0;
+        Wed, 19 Jul 2023 05:30:40 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-51e590a8ab5so9379566a12.2;
+        Wed, 19 Jul 2023 05:30:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689766869; x=1690371669;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=omclyAfkGRQWS2BiKQCx7pDx212Hyui8qaS7KiVV4jA=;
-        b=asvioqTlybWzOybciqN1ksH9D2IA4G3XyJNfKHI6nskJTHwCNROLCkZIv6WQMghL9d
-         F/UumjmxH8VAADIo11xP6AFf7qgsbZqunQA6bzET8dmqqL4IdflaAbHMIxy5ZGR+ZFZt
-         81SGf3Fv6zhzOH9/ijWOwxmkAyvP+ov8dIoq/RbiHcORZfKlGc66mrGJyAYTLVDV9eML
-         7+wmoaQaKrBOeWdfBBzAJeRdmlltzIIB8wgEbKcMVpjXbth6hTgn0oXCpNiRDSmRrex+
-         wZnQT1z7EgtJtThH8crfTbBehz8pgAzYk5CERU/uHQkvthyrWInzdJQhyfi6Oc14te0m
-         ZXOA==
+        d=gmail.com; s=20221208; t=1689769838; x=1690374638;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xN2l+O6gJGRa84uZb1BsKBHRU7JKgcju1wz8yosyb6M=;
+        b=Dr9HMbIgFpXgZvjVl2cm/7LYBEgOpp+BumU0LigiIqOKShfyAP70ZYXEuLx2Nnmmai
+         l8N8kpsQeoORaNIgOL5nNgynGVpuFLliUPX7wEJeseDZh7tus6ms7exuFJwZP9Q7X4cV
+         qNqEtjzohE4MZjlrjmOguOOAUKA67tPWauK56261JZEYeZj+Nd8FpPQEw1hWiuiSArUa
+         R3McQ/aQ1/BCT3k6Cx4ug1DJP+zLIMr7K1lzSpkk1bN4NKR9mAIoNyZk5Aymh3xOsJIa
+         fi4iaPOJF5Cex7d9JUHltPu/Mt8pYuSuRmcKPDCvZV5WgabfCI8wxs8t0pmNVXI48Wjj
+         +gNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689766869; x=1690371669;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=omclyAfkGRQWS2BiKQCx7pDx212Hyui8qaS7KiVV4jA=;
-        b=ODSGI9Em6RH4bnlbRiuwprO2y/WY30BA2zraIaYyoMIAZQI8etSOfQvn6XPnbvbYtT
-         NIiZETxRUuEaYT0iE6CrOSkxmbSjQhAlotUl/MI6mMLlOXa5GaO2BPRTTqxRzsdgof52
-         Ai+Pte89m7u2hBphLyav0q+v8/weatCB3UwLiDx0NbAEjpn6Sd0HejN+Ff+Hbes4ZYF3
-         e/Cbt5+hQw030BylrvDBYWmc+EFnNuhf8B9eyERTv1yL/29d5Skkcn8bUx0cXRCEXYSj
-         rIbqlUymdTScO2xzVHO9slhKAXZwYIkMCEkWiXVsVcusRnOgMCGmtWHMDGWo3Oejnbuw
-         1DWg==
-X-Gm-Message-State: ABy/qLYKKLY0XcS9WQSRoJiLwp1m5PlCUgmZxCkrr/5wti84d5zqtpxC
-        VUtSZyzQn8YCRMEJ2GdBkqJ2eQ==
-X-Google-Smtp-Source: APBJJlEhQJz3wV0yQP9Hu5jxBZIFMZNrna3knuUJntAfNSU7Rc9Nko0UhR7OKF14/DD3JJO7/HJ80w==
-X-Received: by 2002:a7b:ce16:0:b0:3fa:9e61:19ed with SMTP id m22-20020a7bce16000000b003fa9e6119edmr1874710wmc.23.1689766869358;
-        Wed, 19 Jul 2023 04:41:09 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f884:f48d:2867:5c1d])
-        by smtp.gmail.com with ESMTPSA id o10-20020a1c750a000000b003fbb346279dsm1485644wmc.38.2023.07.19.04.41.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jul 2023 04:41:08 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: mvebu: fix irq domain leak
-Date:   Wed, 19 Jul 2023 13:41:01 +0200
-Message-Id: <20230719114101.55051-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20221208; t=1689769838; x=1690374638;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xN2l+O6gJGRa84uZb1BsKBHRU7JKgcju1wz8yosyb6M=;
+        b=OPd5NIEtVmkaWx2oymX9j1NQvIdlmsZSF+PiU/d14dh625hppSnFmUVYqccKG9lhng
+         R4re2IKp13mhelr+EaQDY0HiU+CW8prmmNguePiPhkN5zcV4Blbdq4QL5R3tkg9PJrC4
+         oBfHoE3EV4+gKqNsokmXIy9yCaFKhfu7F7F+ZA5Gx/YTyztcN5XuB0yhZnTZDvIkYv56
+         blUY0z3KlgOaosJYT74y00CHd4PkOgJD/MbhwhyvFwjDsvD6a27BWRQJZ0tfQkZxIPEo
+         iVCXNPW3te1lLOCnTJu4+VHWNeRw0epKORegw8ziNg6Z5PVzs+lFcHmG+UHM3V3aq6Km
+         3pwQ==
+X-Gm-Message-State: ABy/qLYGH7bukB85isbAtNLM8b6iwI4ynPoz2+yGY1coiGgdU9Xc2OJf
+        YoPT94IER1jz+NMOw7OQXRnVMPzn7lYjMgVcVG8=
+X-Google-Smtp-Source: APBJJlFqasK+/oeB2EkcK3d1RtcgXvs+4PEasJMm6GAJfFeOQ5eqhXf5jf7NKFl6Rw6YMA2a2SdaSKcdixrqKwwRrn8=
+X-Received: by 2002:a05:6402:12d9:b0:51d:dbf1:c825 with SMTP id
+ k25-20020a05640212d900b0051ddbf1c825mr2900612edx.1.1689769838275; Wed, 19 Jul
+ 2023 05:30:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20230719101339.18256-1-aboutphysycs@gmail.com>
+In-Reply-To: <20230719101339.18256-1-aboutphysycs@gmail.com>
+From:   Keguang Zhang <keguang.zhang@gmail.com>
+Date:   Wed, 19 Jul 2023 20:30:21 +0800
+Message-ID: <CAJhJPsUBWC6h2ZL_wcqwkd0Krih-PxErVeGFdFdPxocL1RTNcw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: loongson1 :remove unneeded platform_set_drvdata()call
+To:     Andrei Coardos <aboutphysycs@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org, andy@kernel.org, brgl@bgdev.pl,
+        linus.walleij@linaro.org, Alexandru Ardelean <alex@shruggie.ro>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Jul 19, 2023 at 6:14=E2=80=AFPM Andrei Coardos <aboutphysycs@gmail.=
+com> wrote:
+>
+> In the drivers/gpio/gpio-loongson1 the call to platform_set_drvdata was
+> removed.
+> This function call was found to be unnecesarry as the associated
+> structure is defined inside the local .c file.
+> It doesn't use any type of function either so it can be removed without
+> any complications.
 
-Uwe Kleine-König pointed out we still have one resource leak in the mvebu
-driver triggered on driver detach. Let's address it with a custom devm
-action.
+If there is a ls1x_gpio_remove(), platform_get_drvdata() will be called.
+Then platform_set_drvdata() will be necessary.
+>
+> Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
+> Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
+> ---
+>  drivers/gpio/gpio-loongson1.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-loongson1.c b/drivers/gpio/gpio-loongson1.=
+c
+> index 6ca3b969db4d..2a57ffa0548b 100644
+> --- a/drivers/gpio/gpio-loongson1.c
+> +++ b/drivers/gpio/gpio-loongson1.c
+> @@ -78,8 +78,6 @@ static int ls1x_gpio_probe(struct platform_device *pdev=
+)
+>         if (ret)
+>                 goto err;
+>
+> -       platform_set_drvdata(pdev, ls1x_gc);
+> -
+>         dev_info(dev, "GPIO controller registered with %d pins\n",
+>                  ls1x_gc->gc.ngpio);
+>
+> --
+> 2.34.1
+>
 
-Fixes: 812d47889a8e ("gpio/mvebu: Use irq_domain_add_linear")
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-mvebu.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index a35958e7adf6..67497116ce27 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -1112,6 +1112,13 @@ static int mvebu_gpio_probe_syscon(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static void mvebu_gpio_remove_irq_domain(void *data)
-+{
-+	struct irq_domain *domain = data;
-+
-+	irq_domain_remove(domain);
-+}
-+
- static int mvebu_gpio_probe(struct platform_device *pdev)
- {
- 	struct mvebu_gpio_chip *mvchip;
-@@ -1246,13 +1253,18 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	err = devm_add_action_or_reset(&pdev->dev, mvebu_gpio_remove_irq_domain,
-+				       mvchip->domain);
-+	if (err)
-+		return err;
-+
- 	err = irq_alloc_domain_generic_chips(
- 	    mvchip->domain, ngpios, 2, np->name, handle_level_irq,
- 	    IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_LEVEL, 0, 0);
- 	if (err) {
- 		dev_err(&pdev->dev, "couldn't allocate irq chips %s (DT).\n",
- 			mvchip->chip.label);
--		goto err_domain;
-+		return err;
- 	}
- 
- 	/*
-@@ -1292,10 +1304,6 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	}
- 
- 	return 0;
--
--err_domain:
--	irq_domain_remove(mvchip->domain);
--	return err;
- }
- 
- static struct platform_driver mvebu_gpio_driver = {
--- 
-2.39.2
+--=20
+Best regards,
 
+Keguang Zhang
