@@ -2,135 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0E51759E2E
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 21:05:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FBFD759E4C
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 21:14:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbjGSTF3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 15:05:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44242 "EHLO
+        id S229609AbjGSTOb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 15:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229953AbjGSTF1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 15:05:27 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B2E1BF6
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 12:05:25 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2b8390003e2so94694611fa.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 12:05:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689793523; x=1692385523;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Uxzu4bTwNO5BdcIxJkw1/nWB+CP9FwcUhHLLgewCkgw=;
-        b=bhII2Uj+TkgnIjMm9sToEM5IW39MSLgMv2SVJAXa7OF8jwzzINNd/XuigFxHQKUOGi
-         PcMsH5te8ILc8UFlgsgn1LPxw76s/7v+Kwz6nRfJmqRLmByrpsBR4DXLXPfaQ9goWtGq
-         8qATDajVQY90BOwRwW0UGOLFm8OwZ/2KVRBYZv2hDKojVbQtxFvKaidB9AOORwelCPJ1
-         VkYNVU0PqX7lysKjjmRT71I/8Fux5AERdcvGlnVZKELBP89KbrGah/2JgTAZwrlmo6ed
-         Cmmdrl7XM0KOvdPco4h+qiz0C8/Wj7WoKGEiuK0Zve4LUntVjUJGnZWwtlO2cQjqtxav
-         nXsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689793523; x=1692385523;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uxzu4bTwNO5BdcIxJkw1/nWB+CP9FwcUhHLLgewCkgw=;
-        b=PoDFdOfjT+dKVfLG/w4C5TKmvTccsF5HeG9nipZgBXe3IKSyIlFzKRyOGQ9cVh70Zt
-         1T/Cph6AJlBJY09l7NXBmvVSZLOrwqZHg4sWKeHwGBWodhpWJt/gf0TUohE7YTw4aQRX
-         7FVeqNR5iw6Ns+mBAgbJQ5+4r6qvoR99BT/HplaX6HQ8hWBgjZdA7nAzclgGIgi9YSsm
-         I1ylZxwx1eu4O55EM9u/nxIHrpdfcdwtk2P0bieRXR+EGymfAldT35Tezmu98I6IDC97
-         nJzcz78qSFgwn+EgtKfByAeiD2n3Z5jPbYcasVYRIOKq1OX3x+mm6oxutdhzMS5f23IJ
-         +Dzg==
-X-Gm-Message-State: ABy/qLaYWs9aZrJFH7b8FPBRcxL6oE2k8zdfD2g8WntgTKUksXZxeZMR
-        kXg1qef6ACAP9MFQRTvLuoqveg==
-X-Google-Smtp-Source: APBJJlHfDiWa6z/RIaWmCgcjPLMVIlHwrtDTsbKJH/hNfg/cg6myuLG7psXda3yupTjsCaobBA3dfw==
-X-Received: by 2002:a2e:99cd:0:b0:2b7:14d4:ce6d with SMTP id l13-20020a2e99cd000000b002b714d4ce6dmr613499ljj.48.1689793523679;
-        Wed, 19 Jul 2023 12:05:23 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id gx3-20020a170906f1c300b00993cc1242d4sm2692809ejb.151.2023.07.19.12.05.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jul 2023 12:05:23 -0700 (PDT)
-Message-ID: <74f81a77-6cba-37eb-54ed-e7570db47632@linaro.org>
-Date:   Wed, 19 Jul 2023 21:05:20 +0200
+        with ESMTP id S229450AbjGSTOa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 15:14:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9F5199A;
+        Wed, 19 Jul 2023 12:14:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 868EB6165E;
+        Wed, 19 Jul 2023 19:14:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65C5EC433C7;
+        Wed, 19 Jul 2023 19:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1689794069;
+        bh=wsv1tKsKI/r0aK7P/4S5R96HckL7ImIbYbQ2Pdek0XI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sSAMFAGCYwsk3SFgVFaR5zR2zX0pm28l+yPSpsFt+hrKk5xpsQBs4wB7d9qNADuuo
+         tIJhvkzhxGX1uwgx9WwL8wOJClQZq2ku8EpM6nFWAlKiXwRv1DQCbaEFIP2c+tBnOy
+         N42TsZEd3vNi70wU66uNG485nU2t+12/hTqS5QCE=
+Date:   Wed, 19 Jul 2023 21:14:23 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v7 5/9] serial: sc16is7xx: fix regression with GPIO
+ configuration
+Message-ID: <2023071922-rigor-collage-804e@gregkh>
+References: <20230604134459.3c3844012e9714fa2a61e642@hugovil.com>
+ <CAHp75VeWFPBmsD8zsSAaQGNNXtfgLtQuM9AMGfLPk-6p0VW=Pg@mail.gmail.com>
+ <20230620100846.d58436efc061fb91074fa7e5@hugovil.com>
+ <CAHp75VcWSVgA8LFLo0-b5TfKWdHb2GfLpXV-V3PZvthTv1Xc4A@mail.gmail.com>
+ <20230620113312.882d8f0c7d5603b1c93f33fb@hugovil.com>
+ <CAHp75VfGm6=ULW6kMjsg2OgB1z1T0YdmzvCTa3DFXXX-q_RnfA@mail.gmail.com>
+ <20230620114209.fb5272ad8cf5c5e2895d68b1@hugovil.com>
+ <CAHp75VcieuYqxWrO7rknx2ROYz=rnWnKV6s9eXZ5Zd1BKc6YMg@mail.gmail.com>
+ <20230620121645.512b31a872306b43a276bbac@hugovil.com>
+ <20230719144048.4f340b8aa0a29ab65a274273@hugovil.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 2/3] pinctrl: qcom: sm8350-lpass-lpi: add SM8350 LPASS
- TLMM
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230619092735.20323-1-krzysztof.kozlowski@linaro.org>
- <20230619092735.20323-2-krzysztof.kozlowski@linaro.org>
- <851790f2-f673-f754-08b8-d07cc2c809fb@linaro.org>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <851790f2-f673-f754-08b8-d07cc2c809fb@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230719144048.4f340b8aa0a29ab65a274273@hugovil.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 24/06/2023 14:12, Konrad Dybcio wrote:
-> On 19.06.2023 11:27, Krzysztof Kozlowski wrote:
->> Add driver for pin controller in Low Power Audio SubSystem (LPASS).  The
->> driver is similar to SM8250 LPASS pin controller, with difference in one
->> new pin (gpio14).
->>
-
-
-
-> <       LPI_MUX_swr_tx_data2,
-> 54d52
-> < static int gpio14_pins[] = { 14 };
-> 71d68
-> <       PINCTRL_PIN(14, "gpio14"),
-> 75c72
-> < static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio5", "gpio14" };
-> ---
->> static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio5" };
-> 111d107
-> <       LPI_PINGROUP(14, 6, swr_rx_data, _, _, _),
+On Wed, Jul 19, 2023 at 02:40:48PM -0400, Hugo Villeneuve wrote:
+> On Tue, 20 Jun 2023 12:16:45 -0400
+> Hugo Villeneuve <hugo@hugovil.com> wrote:
 > 
+> > On Tue, 20 Jun 2023 18:45:51 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > 
+> > > On Tue, Jun 20, 2023 at 6:42 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > > > On Tue, 20 Jun 2023 18:35:48 +0300
+> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > > > On Tue, Jun 20, 2023 at 6:33 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > > > > > On Tue, 20 Jun 2023 18:18:12 +0300
+> > > > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > > > > > On Tue, Jun 20, 2023 at 5:08 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > > > > > > > On Sun, 4 Jun 2023 22:31:04 +0300
+> > > > > > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > 
+> > > ...
+> > > 
+> > > > > > > > did you have a chance to look at V8 (sent two weks ago) which fixed all
+> > > > > > > > of what we discussed?
+> > > > > > >
+> > > > > > > The patch 6 already has my tag, anything specific you want me to do?
+> > > > > >
+> > > > > > Hi Andy,
+> > > > > > I forgot to remove your "Reviewed-by: Andy..." tag before sending V8
+> > > > > > since there were some changes involved in patch 6 and I wanted you to
+> > > > > > review them. Can you confirm if the changes are correct?
+> > > > > >
+> > > > > > I also added a new patch "remove obsolete out_thread label". It has no
+> > > > > > real impact on the code generation itself, but maybe you can review and
+> > > > > > confirm if tags are ok or not, based on commit message and also
+> > > > > > additional commit message.
+> > > > >
+> > > > > Both are fine to me.
+> > > >
+> > > > Hi,
+> > > > Ok, thank you for reviewing this.
+> > > >
+> > > > I guess now we are good to go with this series if the stable tags and
+> > > > patches order are good after Greg's review?
+> > > 
+> > > Taking into account that we are at rc7, and even with Fixes tags in
+> > > your series I think Greg might take this after v6.5-0rc1 is out. It's
+> > > up to him how to proceed with that. Note, he usually has thousands of
+> > > patches in backlog, you might need to respin it after the above
+> > > mentioned rc1.
+> > 
+> > Ok, understood.
+> > 
+> > Let's wait then.
 > 
+> Hi Andy/Greg,
+> we are now at v6.5-rc2 and I still do not see any of our patches in
+> linus or gregkh_tty repos.
 > 
-> I really think adding just these pin14 entries to the 8250 driver would
-> be a good idea..
-> 
+> Is there something missing from my part (or someone else) to go forward
+> with integrating these patches (v8) for v6.5?
 
+My queue is huge right now, please be patient, I want to have them all
+handled by the end of next week...
 
-I could extend arrays with gpio14 and pass array size -1 to sm8250
-variant and full size to sm8350. However the difference will be in:
+You can always help out by reviewing other patches on the mailing list
+to reduce my review load.
 
--static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio5" };
-+static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio5", "gpio14" };
+thanks,
 
-I cannot create here variant "swr_tx_data_groups_sm8350" because the
-name is used in macros. Using bigger (with gpio14) group for sm8250
-should work, because there is no gpio14, but produces difference in the
-controller:
-
--/sys/kernel/debug/pinctrl/33c0000.pinctrl/pinmux-functions:function 18: swr_tx_data, groups = [ gpio1 gpio2 gpio5 ]
-+/sys/kernel/debug/pinctrl/33c0000.pinctrl/pinmux-functions:function 18: swr_tx_data, groups = [ gpio1 gpio2 gpio5 gpio14 ]
-
-Therefore I will go with separate drivers.
-
-Best regards,
-Krzysztof
-
+greg k-h
