@@ -2,140 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85D22759A66
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 18:03:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB48A759AD8
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 18:34:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231241AbjGSQCr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 12:02:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
+        id S229874AbjGSQeu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 12:34:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjGSQCr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 12:02:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A65519A6;
-        Wed, 19 Jul 2023 09:02:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DD11D61759;
-        Wed, 19 Jul 2023 16:02:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D6AC433C8;
-        Wed, 19 Jul 2023 16:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689782556;
-        bh=sDuKV/AjKrQtJ8swPHqAanif92az3Y09omQ2JTBSqmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LWGRcfjkEO9TzC9+HtugvE4mSwxDUi90BrhwxBg18GfJmY2VVDlGEcGV1dXDXMnmB
-         zYERw9tsRqEEGC9XNcg9KEprvggdb8jtuN8DfDU4cCr7cj3xAtC17tCvje6a/uuEOy
-         3iUXcDFBMEHzsvULB2ssJGDcMCpeWFzOk5a4NREs/FA8QCo8dR+r//t/VD7odIgfM6
-         cuYPLi/QWgki7Qcw14a3R9v3JSraSzsNjRn5HMfs9d9lMXr7Dn37rx87EQN482Tv1z
-         n0AA1YEJ1XBf/usNidv0Z2IMF3NCwq6RG83Nt19e9djSEeJ2wMYVNp7PD/Q2dn1XsI
-         TR8B5RaFE0VZw==
-Date:   Wed, 19 Jul 2023 17:02:30 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     "Potthuri, Sai Krishna" <sai.krishna.potthuri@amd.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "Simek, Michal" <michal.simek@amd.com>,
+        with ESMTP id S229844AbjGSQet (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 12:34:49 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17FD2B6
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 09:34:49 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1bb119be881so49612695ad.3
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 09:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1689784488; x=1690389288;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OHD3s3Vv6K0BaM5EQ+IYYZEfsrjIJcH2yFqvTWy9ha0=;
+        b=ZCsF62F6DzCb43m0ibFaEfnlJcU8sX/vUpG+pV5DIPQVyidywfnCi1lnyoPTKPPPmK
+         LF0oBwTcENyStWLvAiUL/rJ0Hm0SO8je9WfYui6+niPD4ndOFHyDgdvMsPENOlBcOKwQ
+         j5zsB5LP7VTXIJLD2g5bKyU7kFZObPep8lrqFsEM1KAOBirKzOiRu7jXTZUnIK6KAGDX
+         5QVJxWN8s99oI3eGBVpT+w9+9LGD3wnUqFC7RzeEo2pXyvW2QKW6Qip4/MZuzf4zrqIz
+         CiZe3uCkCpN1Y1r8ShIge3v+scaAdCHSugF/ACFDa36MxfsuClkBIIB2r3ZOX9Cvk5UP
+         4DDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689784488; x=1690389288;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OHD3s3Vv6K0BaM5EQ+IYYZEfsrjIJcH2yFqvTWy9ha0=;
+        b=BvO0TGUZHq38PIJIV7ufLFeJ76n/5fuVeEPg9OZ7tERqM5VbLQN7SqOeecJxo3FuKr
+         GO7dM0XNhW8VDTEfzEWo71VzfelPC8u111d2ziXITXlOOsVdbMQfhnowOvpWyh+koj8l
+         RsRP9MPcYuDhO2KO16Y6cDKuVLsQUM9jUnG2sIXYEAOLbeTVFawx//0rOo4R11Oom/fX
+         GfejEH+k6zPQcyPhkDpcDZTMN672Nu2GB6vB+fFU6hEqcfAVs9vLo5BT8sYBbO6UtHLJ
+         BgoKvvtKpFMtLGC83Qx7PijRccl5hBrBeLIBs+X68Bqwr51w/j+4ECkr/ROyMzeUAps1
+         lsSw==
+X-Gm-Message-State: ABy/qLZ+4wMMWBDUjW4xkhAZ1ZcxigBzok7iW8wG//LZFQticdxUxKjn
+        tUS+UPA9WLQs5RAZqLOfNKdoMQ==
+X-Google-Smtp-Source: APBJJlFy35TVoZNTEgWdHT4WsoV1Tt6FWOxXOKMX8NuNrnEj2LUqFscu2j0yVJUDskROheemv4v2kA==
+X-Received: by 2002:a17:902:e88d:b0:1b0:f8:9b2d with SMTP id w13-20020a170902e88d00b001b000f89b2dmr21365359plg.29.1689784488451;
+        Wed, 19 Jul 2023 09:34:48 -0700 (PDT)
+Received: from sw06.internal.sifive.com ([64.62.193.194])
+        by smtp.gmail.com with ESMTPSA id x6-20020a1709027c0600b001b0358848b0sm4199276pll.161.2023.07.19.09.34.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jul 2023 09:34:48 -0700 (PDT)
+From:   Samuel Holland <samuel.holland@sifive.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Shah, Tanmay" <tanmay.shah@amd.com>,
-        "Levinsky, Ben" <ben.levinsky@amd.com>,
-        Marek Vasut <marex@denx.de>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "saikrishna12468@gmail.com" <saikrishna12468@gmail.com>,
-        "git (AMD-Xilinx)" <git@amd.com>
-Subject: Re: [PATCH 3/4] dt-bindings: pinctrl-zynqmp: Add output-enable
- configuration
-Message-ID: <20230719-brunette-prelaw-1c154002de1e@spud>
-References: <20230717093347.3869167-1-sai.krishna.potthuri@amd.com>
- <20230717093347.3869167-4-sai.krishna.potthuri@amd.com>
- <20230718-jitters-excretion-fe18c820c102@spud>
- <BY5PR12MB4258543534215430BC2F8FA3DB39A@BY5PR12MB4258.namprd12.prod.outlook.com>
+        Frank Rowand <frowand.list@gmail.com>,
+        Samuel Holland <samuel.holland@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v2 0/4] gpio: sifive: Module support
+Date:   Wed, 19 Jul 2023 09:34:41 -0700
+Message-Id: <20230719163446.1398961-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="BDFCLUw9LmXsQDa4"
-Content-Disposition: inline
-In-Reply-To: <BY5PR12MB4258543534215430BC2F8FA3DB39A@BY5PR12MB4258.namprd12.prod.outlook.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+With the call to of_irq_count() removed, the SiFive GPIO driver can be
+built as a module. This helps to minimize the size of a multiplatform
+kernel, and is required by some downstream distributions (Android GKI).
 
---BDFCLUw9LmXsQDa4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series removes the rest of the of_* API usage in the process.
 
-On Wed, Jul 19, 2023 at 06:49:43AM +0000, Potthuri, Sai Krishna wrote:
-> Hi Conor,
->=20
-> > -----Original Message-----
-> > From: Conor Dooley <conor@kernel.org>
-> > Sent: Tuesday, July 18, 2023 9:20 PM
-> > To: Potthuri, Sai Krishna <sai.krishna.potthuri@amd.com>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>; Simek, Michal
-> > <michal.simek@amd.com>; Rob Herring <robh+dt@kernel.org>; Krzysztof
-> > Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley
-> > <conor+dt@kernel.org>; Mathieu Poirier <mathieu.poirier@linaro.org>; Sh=
-ah,
-> > Tanmay <tanmay.shah@amd.com>; Levinsky, Ben <ben.levinsky@amd.com>;
-> > Marek Vasut <marex@denx.de>; Roman Gushchin <roman.gushchin@linux.dev>;
-> > Arnd Bergmann <arnd@arndb.de>; linux-arm-kernel@lists.infradead.org; li=
-nux-
-> > kernel@vger.kernel.org; linux-gpio@vger.kernel.org; devicetree@vger.ker=
-nel.org;
-> > saikrishna12468@gmail.com; git (AMD-Xilinx) <git@amd.com>
-> > Subject: Re: [PATCH 3/4] dt-bindings: pinctrl-zynqmp: Add output-enable
-> > configuration
-> >=20
-> > On Mon, Jul 17, 2023 at 03:03:46PM +0530, Sai Krishna Potthuri wrote:
-> > > Add 'output-enable' configuration parameter to the properties list.
-> > >
-> > > Using these pinctrl properties observed hang issues with older Xilinx
-> > > ZynqMP Platform Management Firmware, hence reverted the patch previou=
-sly.
-> > > Commit ff8356060e3a5e126abb ("Revert "dt-bindings: pinctrl-zynqmp: Add
-> > > output-enable configuration"").
-> >=20
-> > And what has changed since then that makes it okay to add?
-> > Is the old firmware not still in the wild?
-> This time when Linux firmware driver get the request for TRISTATE configu=
-ration
-> from pinctrl driver, it checks if that configuration is supported by the =
-Xilinx ZynqMP
-> Platform Management firmware. If yes, then calls will be made otherwise i=
-t returns error.
+Changes in v2:
+ - Add 3 new patches removing of_* API usage
+ - Add MODULE_AUTHOR and MODULE_DESCRIPTION
 
-Please put that information in your commit message. With that done,
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Samuel Holland (4):
+  gpio: sifive: Directly use the device's fwnode
+  gpio: sifive: Look up IRQs only once during probe
+  gpio: sifive: Get the parent IRQ's domain from its irq_data
+  gpio: sifive: Allow building the driver as a module
 
-Thanks,
-Conor.
+ drivers/gpio/Kconfig       |  2 +-
+ drivers/gpio/gpio-sifive.c | 45 +++++++++++++-------------------------
+ 2 files changed, 16 insertions(+), 31 deletions(-)
 
---BDFCLUw9LmXsQDa4
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.40.1
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZLgJFgAKCRB4tDGHoIJi
-0h0YAQDslSWYW+0mKcsLpxUx7oCTtaRONNKJV3ZkEyPKShepTwD+JfE/Cea4UZEU
-xg6tso+P6vUo1jtUS50W65hbKzJ3vA8=
-=kKBy
------END PGP SIGNATURE-----
-
---BDFCLUw9LmXsQDa4--
