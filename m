@@ -2,67 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 499AF7597D3
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 16:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DE7175988B
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 16:38:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbjGSOMw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 10:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45990 "EHLO
+        id S229932AbjGSOiD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 10:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230293AbjGSOMw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 10:12:52 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2EB8E
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 07:12:49 -0700 (PDT)
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 20D833F11C
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 14:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1689775966;
-        bh=fTUvgetUaqT3wHGPq5i4Fev7+8uAQkZMBnoHSdm3l3w=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=bywkgrySn1qYARM1u9eKGf84kdbHJU57+GgMk0C2y3THfW68HtKm+QlrCGKQpg99Q
-         Dl7H/2VLyw5vKd7LY+9RVf0jQamwPPneI8ZVUV84HmLHNkKJIYnDvxI6o8cu3FqU1w
-         3GieuNypeIl90HZTleaRLWrXsE7FlEPc8pwgpHRSDXQSeC3YBqVpJCvg/4CMbzX4N6
-         zkLjEuMNZM436JSGP2DFk/c69XqKwHrJYkpHvxewTGulB+6PXs54DmIv3A936Z+BzA
-         f0udUkNf5wu4JSXGWFxbfW+YXA7f+jQP6OecxiyrPUND3hz6MAA6/XTCF+aC5xv5k6
-         cTwXjUGFWcAxA==
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7683cdabcb7so85874585a.3
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 07:12:46 -0700 (PDT)
+        with ESMTP id S231626AbjGSOhk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 10:37:40 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A337710F5;
+        Wed, 19 Jul 2023 07:37:39 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-9939fbb7191so193718266b.0;
+        Wed, 19 Jul 2023 07:37:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689777458; x=1690382258;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oLiCt95ygV41kuZf9pX1cXwrEnN2OwQXL7Y8MwA/vjc=;
+        b=OyLcAVb026kFo928Hy3s1W+mPe+iulgMNXBvR9EpvChGg9Gydpc9dQDdcU7AEPRriL
+         ighvJf16NYasg4aV/9TjA4clHitRmHAisnla+yi5FyN6dw0wPq4bAINmZqyjhSwz5kpe
+         gZ801AHmgwGJ/iSbUpwUyBgiyhJFuR5m1DyHqkiyqFkOvrqhHaWqC6BejFbZ+pSw2ffo
+         C79R5Osz6/qKjz8y7faz8knUyBl51h9WHcLga9OEKb+y7Kt5lLYp+fCmW4trCWdYogbR
+         gqFYnb3IHsDOiU0+bCLYOKPdHLnmOQsOIWD/EVq7s1mtfap97NdLpUjH3VxLFpRT5jlk
+         lW8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689775965; x=1690380765;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fTUvgetUaqT3wHGPq5i4Fev7+8uAQkZMBnoHSdm3l3w=;
-        b=M5sw/57ZGyuRwUMZh1bUSZp1zdv5pHI5VXkdPPhk80IiasO3/V+/F4P58P7w78qlVG
-         23Kvlhti2iKxutphz/BuBYmVPG1FDrtJMJEBYOnJnqOEreilEHTVoEpk4wvGiT5aQHER
-         e61SjOoLLRup1f854AI0UOW+tKMADORb64QhnmLmdfwYmRxbp2s/eR3zDJUqmuzsa8np
-         egTjhp9XYQRsOmNa96wdLNfKj6D0Lo5vg5UiL0LcOqqggrR0AiRLN1J8JtcHoGY1AWqu
-         CkVHXlFt9WOv7iq/GTGrtt/14tTDYIwsBWWYC73XcythSJUr8asnNDR7IyAnBzvy0m0h
-         8u9g==
-X-Gm-Message-State: ABy/qLYG0wTyC2vYIP3iukgMqX6Lq7V65wPstrxLv4kPHu/JKWA94Icz
-        nc+5uu3o6j8kpyOvvY7DA+QFxKBL7Pnm9V3FSNKlmw0mudTDNQU+7yfVxs7bWam1dcDPDHGbgC4
-        X/QGD/eIKB43Bd12B/yrhbqoYiPpxbSX7OVRQFkQMHC/dc6vCxFUNMPs=
-X-Received: by 2002:ac8:5a82:0:b0:3f9:cb01:9dae with SMTP id c2-20020ac85a82000000b003f9cb019daemr21215426qtc.50.1689775965096;
-        Wed, 19 Jul 2023 07:12:45 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlEyqJAW0YcwGXzwaqtO+haPvbXa6TVCnEWDq/UNmAT5PINh4LZDlSHEpJIERRJmT2R7L69By/E3f/BC3H9q+ls=
-X-Received: by 2002:ac8:5a82:0:b0:3f9:cb01:9dae with SMTP id
- c2-20020ac85a82000000b003f9cb019daemr21215415qtc.50.1689775964905; Wed, 19
- Jul 2023 07:12:44 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689777458; x=1690382258;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oLiCt95ygV41kuZf9pX1cXwrEnN2OwQXL7Y8MwA/vjc=;
+        b=JO93dIDH/2bfF6AS+nj+BAs3lmcNsSJNQ65FnaOjfgiLs57IyncnO0/16g1HC+4UKR
+         HVIUhq5ycXYrXMVi38qOftmM1SGHDoF2tKgv05icVm3aM9xzZ9XN3lpGwiXhwo4Ya9Sv
+         1jvm9e0qAwVWHLD+oVwNMuTnO7ngKKYEnCN0Xcp7h5rMmlNL+EFNGKCKm1HLdpyYK324
+         hmV/ap9e2+DMS7nEJ3oEfCFJtCT896y+ug2sjhzkQdlid8r9tLSdTntszfdWEtY2Z2Jr
+         sIrjB3SVDgeofUCsPsTMQDijXI5CLO2/G59pzIXIA3WkUunHcpTIX1oZpMA8PfszKQpe
+         8I+Q==
+X-Gm-Message-State: ABy/qLbYn4IMYUKLVtThn1duDRrcMEH14S2QlInww6QBIfXt+M+UPouw
+        o4YVeR3SztN+WHx62M7YtAFKzvIrCXTVjgV0Mbk=
+X-Google-Smtp-Source: APBJJlHvLAd11eHo8p4btHRTHFKMuq/1+lumsya3iavDjF5xiaMW7akyP7F5aQv7cVawl2wAzQxcsVt2Jm3RMy8ClbI=
+X-Received: by 2002:a17:906:64d7:b0:993:f127:2391 with SMTP id
+ p23-20020a17090664d700b00993f1272391mr2767082ejn.32.1689777457867; Wed, 19
+ Jul 2023 07:37:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230717205357.2779473-1-samuel.holland@sifive.com> <20230717205357.2779473-3-samuel.holland@sifive.com>
-In-Reply-To: <20230717205357.2779473-3-samuel.holland@sifive.com>
-From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Date:   Wed, 19 Jul 2023 16:12:28 +0200
-Message-ID: <CAJM55Z8Q-kGFKhFc57_Ew+0VsmBqwLrBAaiaiJ5zYdu_OG-wMg@mail.gmail.com>
+References: <20230717205357.2779473-1-samuel.holland@sifive.com>
+ <20230717205357.2779473-3-samuel.holland@sifive.com> <CAJM55Z8Q-kGFKhFc57_Ew+0VsmBqwLrBAaiaiJ5zYdu_OG-wMg@mail.gmail.com>
+In-Reply-To: <CAJM55Z8Q-kGFKhFc57_Ew+0VsmBqwLrBAaiaiJ5zYdu_OG-wMg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Jul 2023 17:37:01 +0300
+Message-ID: <CAHp75VfxGP+N3KmAb2wcCZiDypsXBKxKwC9H_4WZ5ByM-Qo=5Q@mail.gmail.com>
 Subject: Re: [PATCH 2/2] gpio: sifive: Allow building the driver as a module
-To:     Samuel Holland <samuel.holland@sifive.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc:     Samuel Holland <samuel.holland@sifive.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,61 +66,29 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 19 Jul 2023 at 08:26, Samuel Holland <samuel.holland@sifive.com> wrote:
->
-> This can reduce the kernel image size in multiplatform configurations.
->
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
->
->  drivers/gpio/Kconfig       | 2 +-
->  drivers/gpio/gpio-sifive.c | 4 +++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index e382dfebad7c..1a8e8a8c85d6 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -564,7 +564,7 @@ config GPIO_SAMA5D2_PIOBU
->           maintain their value during backup/self-refresh.
->
->  config GPIO_SIFIVE
-> -       bool "SiFive GPIO support"
-> +       tristate "SiFive GPIO support"
->         depends on OF_GPIO
->         select IRQ_DOMAIN_HIERARCHY
->         select GPIO_GENERIC
-> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
-> index 745e5f67254e..5941a817491c 100644
-> --- a/drivers/gpio/gpio-sifive.c
-> +++ b/drivers/gpio/gpio-sifive.c
-> @@ -277,4 +277,6 @@ static struct platform_driver sifive_gpio_driver = {
->                 .of_match_table = sifive_gpio_match,
->         },
->  };
-> -builtin_platform_driver(sifive_gpio_driver)
-> +module_platform_driver(sifive_gpio_driver)
-> +
+On Wed, Jul 19, 2023 at 5:12=E2=80=AFPM Emil Renner Berthing
+<emil.renner.berthing@canonical.com> wrote:
+> On Wed, 19 Jul 2023 at 08:26, Samuel Holland <samuel.holland@sifive.com> =
+wrote:
 
-While you're at it maybe also add the MODULE_AUTHOR() and
-MODULE_DESCRIPTION() macros.
+...
 
-> +MODULE_LICENSE("GPL");
-> --
-> 2.40.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> While you're at it maybe also add the MODULE_AUTHOR() and
+> MODULE_DESCRIPTION() macros.
+
++1, as now we have a new warning that MODULE_DESCRIPTION() is not set.
+
+--=20
+With Best Regards,
+Andy Shevchenko
