@@ -2,73 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC670759333
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 12:37:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E33FD7593B6
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 13:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231349AbjGSKhq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 06:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57216 "EHLO
+        id S229619AbjGSLFP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 07:05:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231211AbjGSKhh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 06:37:37 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BABE4C;
-        Wed, 19 Jul 2023 03:37:35 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R5XJM4DzNz6J6X0;
-        Wed, 19 Jul 2023 18:34:59 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 19 Jul
- 2023 11:37:32 +0100
-Date:   Wed, 19 Jul 2023 11:37:31 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Balsam CHIHI <bchihi@baylibre.com>,
-        "Claudiu Beznea" <claudiu.beznea@microchip.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Len Brown" <len.brown@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v2 04/10] pinctrl: intel: Switch to use
- DEFINE_NOIRQ_DEV_PM_OPS() helper
-Message-ID: <20230719113731.00007248@Huawei.com>
-In-Reply-To: <ZLaZWcyJAnQMK87f@smile.fi.intel.com>
-References: <20230717172821.62827-1-andriy.shevchenko@linux.intel.com>
-        <20230717172821.62827-5-andriy.shevchenko@linux.intel.com>
-        <20230718110451.00001227@Huawei.com>
-        <ZLaZWcyJAnQMK87f@smile.fi.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229451AbjGSLFO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 07:05:14 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05043189;
+        Wed, 19 Jul 2023 04:05:12 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36J7FAx1008724;
+        Wed, 19 Jul 2023 11:05:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=gFYdc0ZY2kWPdUL+rCQaIfR0nZf5YnqkOS0qZJaBh68=;
+ b=IgVCwszNKDL7yQwULpIa/Sobj6+9p8CFbYxYBsoL4W7fwwHr2XnXhKKBuWAx2oFXlRB2
+ vJ1uU5J6F8X0tPCVveRpfZuJGPK3jGEIq42A8yh7+PgT9gR97hBleWI/MxjLKAncf/3x
+ wGwvJ55GWULkc/WrbuD4Aei5n5AOtIFXGs09IgaSBkVcGILNI3GF/D8vE4ne4EgMtCHL
+ KdPUOFkJwDgpm0wWEhGdNt3T9qXR3r21dk0JBipjtX7ffsHsFax9B2d5wPmpds0hBfPW
+ 860tbKZc/Y2f+uweHcu31tn/vYa7cevMHMrQ9reWvBslI/XmJactmlN1Rl/rQT3VSvwA Fg== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rx728rwu9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Jul 2023 11:05:08 +0000
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36JB4fna009749
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Jul 2023 11:04:41 GMT
+Received: from hu-shazhuss-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.30; Wed, 19 Jul 2023 04:04:13 -0700
+From:   Shazad Hussain <quic_shazhuss@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+CC:     <bartosz.golaszewski@linaro.org>,
+        Shazad Hussain <quic_shazhuss@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dt-bindings: pinctrl: qcom,sa8775p-tlmm: add gpio function constant
+Date:   Wed, 19 Jul 2023 16:33:44 +0530
+Message-ID: <20230719110344.19983-1-quic_shazhuss@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: gA0dLZc_hpTYpBOgRt3MlUNOezWcr-Vt
+X-Proofpoint-ORIG-GUID: gA0dLZc_hpTYpBOgRt3MlUNOezWcr-Vt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-19_07,2023-07-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ bulkscore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=913 impostorscore=0 spamscore=0 clxscore=1011 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307190100
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,34 +77,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 18 Jul 2023 16:53:29 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+Alternative function 'gpio' is not listed in the constants for pin
+configuration, so adding this constant to the list.
 
-> On Tue, Jul 18, 2023 at 11:04:51AM +0100, Jonathan Cameron wrote:
-> > On Mon, 17 Jul 2023 20:28:15 +0300
-> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-> 
-> ...
-> 
-> > >  EXPORT_SYMBOL_GPL(intel_pinctrl_resume_noirq);  
-> > 
-> > Can you check if this is successfully removed?  I think it won't be.
-> > Not immediately obvious how to tidy that up given these are used
-> > in a macro called from lots of drivers.  
-> 
-> That's what Paul noticed I think with his proposal to export only the ops
-> variable and make these to be static.
-> 
-> > Maybe just leaving the ifdef is best we can do here.  
-> 
-> See above.
-> 
-Ah. I noticed it was a macro, but not that all it did was
-set the name of the resulting structure (so thought you couldn't
-use the export approach).
+Fixes: 9a2aaee23c79 ("dt-bindings: pinctrl: describe sa8775p-tlmm")
+Signed-off-by: Shazad Hussain <quic_shazhuss@quicinc.com>
+---
+ .../devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml          | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Indeed that's the best option here
-
-Jonathan
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
+index e608a4f1bcae..e119a226a4b1 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
+@@ -87,7 +87,7 @@ $defs:
+                 emac0_mdc, emac0_mdio, emac0_ptp_aux, emac0_ptp_pps, emac1_mcg0,
+                 emac1_mcg1, emac1_mcg2, emac1_mcg3, emac1_mdc, emac1_mdio,
+                 emac1_ptp_aux, emac1_ptp_pps, gcc_gp1, gcc_gp2, gcc_gp3,
+-                gcc_gp4, gcc_gp5, hs0_mi2s, hs1_mi2s, hs2_mi2s, ibi_i3c,
++                gcc_gp4, gcc_gp5, gpio, hs0_mi2s, hs1_mi2s, hs2_mi2s, ibi_i3c,
+                 jitter_bist, mdp0_vsync0, mdp0_vsync1, mdp0_vsync2, mdp0_vsync3,
+                 mdp0_vsync4, mdp0_vsync5, mdp0_vsync6, mdp0_vsync7, mdp0_vsync8,
+                 mdp1_vsync0, mdp1_vsync1, mdp1_vsync2, mdp1_vsync3, mdp1_vsync4,
+-- 
+2.17.1
 
