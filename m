@@ -2,97 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC277759405
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 13:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06772759411
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 13:21:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230426AbjGSLRq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 07:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46670 "EHLO
+        id S229601AbjGSLV1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 07:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbjGSLRp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 07:17:45 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99EAA189
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 04:17:43 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4fdd515cebcso1087625e87.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 04:17:43 -0700 (PDT)
+        with ESMTP id S229613AbjGSLV1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 07:21:27 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC04DE52
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 04:21:25 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5768a7e3adbso10500557b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 04:21:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689765462; x=1692357462;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dA4XBjNreRbs/RKP90hsuoW35QaS3sIYpUWqA3D9MVo=;
-        b=eib+6ZdSavk8Cc7sMu9UiLLoRzeurRV7U17SqJAdIFseBdo83QH88dnHOpILFO0Cln
-         0IsGbyvcRl9w1gqFMOXu6ygsn+ZNxcwzWfrTXb+x6bQwtDHOXXRdkQtSBFhgMsJ5YGLv
-         m6bv7v664SZsFyXtW9kOLlL2QlyBrdsLjGHQmCoEvj4vKzL3HnMDW3G0SVkadJlWUF1t
-         EoJBekxklR+oaT/Tayym1DlLl93ebF2f1gs0w3nVaL3QzdoKjUiG5ooM38p36cBDrDJ1
-         bgdBpngvJemNnogm2kWA1g2JyfP+Ni+xP1LyxHVRNFhGNoJeDS6JKqhyJmBAkHEy/gi4
-         gGzw==
+        d=gmail.com; s=20221208; t=1689765685; x=1692357685;
+        h=to:subject:message-id:date:from:sender:reply-to:mime-version:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=kli8iJFOOLyKnRsPkSXylIDYC+vLWpxeABayx6rNSxg=;
+        b=g90UteJhZeFzS6NGQXxIenKs3DOtOf9KRk4ibMI5Xl2fW+ZuWp6W74k5KAd8f2s3RB
+         Cmyn3xQD1Y69kD01R3KJZdbvPc3KNsUUIyS/QoN9z+FqOU5bMhtgQQZzFvfeHvmzVedV
+         65mUntQhbHC2nfbppNBGL4cCpz3Cahb6pR2fQ+V8qoPbGJnsAU3FnEZyePLOOfaUH/5Y
+         Hpvpxivs0rG063jJ0eyLSyFMGWRzYVEz/p2ABsYDTmsgAU6P97nwBSQYGX7On+hVtvb2
+         AzwrdsJIlmaKe07FBuWxkrYLQ1w7umG2sgz+zw/Yi1fuGpX/2IUA9mnf4kZvP4a6KZLb
+         Gqtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689765462; x=1692357462;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1689765685; x=1692357685;
+        h=to:subject:message-id:date:from:sender:reply-to:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dA4XBjNreRbs/RKP90hsuoW35QaS3sIYpUWqA3D9MVo=;
-        b=CopCn15pj/IlpIdjZq5wuDIZMdX8/CQHFlaBCVJVt4lDKx4MBeULXDc73nsBtgX0gR
-         FtU3t5wYSEbkEJ4cX0Q0neXQ4Xpd8obzuQtpE7Nux5T54aW4FgxJp7ozUHb3jdbyQ7q2
-         GvuowNSS6LIFsj42qemugnkUQt9UVSa+vrq+r/lnLWSHlFs4oT6aVIwSCVeb1m6KGsw4
-         D8blPozKnVYXVWp0KOcn0DEvP1DHLqKI/aheb5pX1PxS1S2va8aGNQsP6ACOgtmpgwW4
-         XuH18JdmuWVXJI7cq8iZ67hASMFk05zCpdSmcsbZpoTHbxsd35Xs+VlfKpomNbCBi67j
-         c4hQ==
-X-Gm-Message-State: ABy/qLaT11AziBQdTOkKxUM0MbrOTpwjpn0S9V3c+Jzqa3avQzO8BI3u
-        bLcKx5vMz0mKTJVcKJB/xURhag==
-X-Google-Smtp-Source: APBJJlEfuMb3x/pT172dL5k+uZlxwymyIEwasIcdDQtVo1m66C7A/ws6DIO7Zn/FYWiF+K/45DMeag==
-X-Received: by 2002:a05:6512:2394:b0:4f6:2b51:2f74 with SMTP id c20-20020a056512239400b004f62b512f74mr2003719lfv.52.1689765461798;
-        Wed, 19 Jul 2023 04:17:41 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id r21-20020aa7cb95000000b0051e28d315a2sm2570977edt.78.2023.07.19.04.17.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jul 2023 04:17:41 -0700 (PDT)
-Message-ID: <7c60b8b5-ce8b-c911-043f-f916430bacc9@linaro.org>
-Date:   Wed, 19 Jul 2023 13:17:40 +0200
+        bh=kli8iJFOOLyKnRsPkSXylIDYC+vLWpxeABayx6rNSxg=;
+        b=DHBHN/Z4QfcrBsQUGZGWgbdcGDg5/2mPNQQiBV2gFfMpME8/a4LaqU462oA0lz5eMv
+         GE7yxO9HRf2Z29qEEPt2+8CmZCUv2e34EVS87N7svtJ0YwMBXAtOJiBUg2PVxb5Zlz7q
+         ktxz8voKU4HqcM2h3CPl1FSavP3NESTTSUfzUlPXiKSDK17ytvFcmzZMIzP1i6Wu8+Xa
+         U580u65uzB7BCEJxzn6wKUlQXJXhV6cH9yK5cdaPajbaUNGURWSNoayykvExPvtrpqQC
+         QkInslpcLmdmltQTJErAkgvw3MdzqBthCZZboGMT6Xr2T4w6ZZ7mZcckfbRMhv+/4clV
+         jGQA==
+X-Gm-Message-State: ABy/qLalMenkP4Lao4XVGVOujo3TluG95ZRm+mmZtbj3bD39RNCWCXp3
+        3q1JTNGxTlNIZkzdjQyXZ7JU6N5PWB98Oo/2UJs=
+X-Google-Smtp-Source: APBJJlF5eXitEU/pWgn0MzWII3OnujuKOQSz97yqyYIsrYxpxt/ksWa//gSCsAYnDc1jTPs5uuTH/F9H3lZeW1abSBs=
+X-Received: by 2002:a25:b10d:0:b0:bca:1d11:c02e with SMTP id
+ g13-20020a25b10d000000b00bca1d11c02emr2271690ybj.13.1689765685140; Wed, 19
+ Jul 2023 04:21:25 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sa8775p-tlmm: add gpio
- function constant
-Content-Language: en-US
-To:     Shazad Hussain <quic_shazhuss@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc:     bartosz.golaszewski@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230719110344.19983-1-quic_shazhuss@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230719110344.19983-1-quic_shazhuss@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Reply-To: aishagaddafi1011976@gmail.com
+Sender: ameliaalzira5658@gmail.com
+Received: by 2002:a05:7010:751c:b0:36e:7710:6406 with HTTP; Wed, 19 Jul 2023
+ 04:21:24 -0700 (PDT)
+From:   Aisha Al-Qaddafi <aishagaddafi1011976@gmail.com>
+Date:   Wed, 19 Jul 2023 04:21:24 -0700
+X-Google-Sender-Auth: 2uneGYiqAEX3frnp65Y1oLMYpN0
+Message-ID: <CAFpd-8a27+H3s68txZoydTRnzwOUsxg4wRnELNty+6RjsXdLLQ@mail.gmail.com>
+Subject: Peace be upon you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_95,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,MILLION_HUNDRED,
+        MONEY_FRAUD_5,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
+        *      DNSWL was blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [2607:f8b0:4864:20:0:0:0:112d listed in]
+        [list.dnswl.org]
+        *  3.0 BAYES_95 BODY: Bayes spam probability is 95 to 99%
+        *      [score: 0.9702]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [ameliaalzira5658[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [aishagaddafi1011976[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [ameliaalzira5658[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  1.4 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  3.1 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  0.0 MONEY_FRAUD_5 Lots of money and many fraud phrases
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19/07/2023 13:03, Shazad Hussain wrote:
-> Alternative function 'gpio' is not listed in the constants for pin
-> configuration, so adding this constant to the list.
-> 
-> Fixes: 9a2aaee23c79 ("dt-bindings: pinctrl: describe sa8775p-tlmm")
+I am by name Aisha Al-Qaddafi the only biological Daughter of Former
+President of Libya Col. Muammar Al-Qaddafi. I came across your-mail
+contact doing my private search while in need of your assistance to
+help me receive my $27.5 million.
 
-Cc: <stable@vger.kernel.org>
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand Dollar and i need a trusted Partner to help me receive the
+funds because my current refugee status, however, I am interested in
+you for investment project assistance in your country.
 
-
-> Signed-off-by: Shazad Hussain <quic_shazhuss@quicinc.com>
-
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+ I am willing to negotiate a business profit sharing ratio with you
+based on the future earning profits. If you are willing to handle this
+project on my behalf kindly reply urgently to enable me to provide you
+more information about how to receive the funds.
+Thanks and Allah bless you for your understanding.
+ Best Regards
+ Mrs Aisha Al-Qaddafi
