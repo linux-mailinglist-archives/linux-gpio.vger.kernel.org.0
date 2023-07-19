@@ -2,67 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F2517599C6
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 17:30:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85D22759A66
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 18:03:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231179AbjGSPa5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 11:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39640 "EHLO
+        id S231241AbjGSQCr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 12:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231178AbjGSPa4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 11:30:56 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBCA9E;
-        Wed, 19 Jul 2023 08:30:55 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="346800912"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="346800912"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 08:30:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="727338892"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="727338892"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 19 Jul 2023 08:30:45 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1qM98W-00GGtl-0c;
-        Wed, 19 Jul 2023 18:30:44 +0300
-Date:   Wed, 19 Jul 2023 18:30:43 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Andrei Coardos <aboutphysycs@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        brgl@bgdev.pl, linus.walleij@linaro.org,
-        Alexandru Ardelean <alex@shruggie.ro>
-Subject: Re: [PATCH] gpio: logicvc: remove unneeded platform_set_drvdata()
- call
-Message-ID: <ZLgBozzucZdLwLc+@smile.fi.intel.com>
-References: <20230719094803.17677-1-aboutphysycs@gmail.com>
+        with ESMTP id S229626AbjGSQCr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 12:02:47 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A65519A6;
+        Wed, 19 Jul 2023 09:02:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DD11D61759;
+        Wed, 19 Jul 2023 16:02:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D6AC433C8;
+        Wed, 19 Jul 2023 16:02:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689782556;
+        bh=sDuKV/AjKrQtJ8swPHqAanif92az3Y09omQ2JTBSqmg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LWGRcfjkEO9TzC9+HtugvE4mSwxDUi90BrhwxBg18GfJmY2VVDlGEcGV1dXDXMnmB
+         zYERw9tsRqEEGC9XNcg9KEprvggdb8jtuN8DfDU4cCr7cj3xAtC17tCvje6a/uuEOy
+         3iUXcDFBMEHzsvULB2ssJGDcMCpeWFzOk5a4NREs/FA8QCo8dR+r//t/VD7odIgfM6
+         cuYPLi/QWgki7Qcw14a3R9v3JSraSzsNjRn5HMfs9d9lMXr7Dn37rx87EQN482Tv1z
+         n0AA1YEJ1XBf/usNidv0Z2IMF3NCwq6RG83Nt19e9djSEeJ2wMYVNp7PD/Q2dn1XsI
+         TR8B5RaFE0VZw==
+Date:   Wed, 19 Jul 2023 17:02:30 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     "Potthuri, Sai Krishna" <sai.krishna.potthuri@amd.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Simek, Michal" <michal.simek@amd.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Shah, Tanmay" <tanmay.shah@amd.com>,
+        "Levinsky, Ben" <ben.levinsky@amd.com>,
+        Marek Vasut <marex@denx.de>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "saikrishna12468@gmail.com" <saikrishna12468@gmail.com>,
+        "git (AMD-Xilinx)" <git@amd.com>
+Subject: Re: [PATCH 3/4] dt-bindings: pinctrl-zynqmp: Add output-enable
+ configuration
+Message-ID: <20230719-brunette-prelaw-1c154002de1e@spud>
+References: <20230717093347.3869167-1-sai.krishna.potthuri@amd.com>
+ <20230717093347.3869167-4-sai.krishna.potthuri@amd.com>
+ <20230718-jitters-excretion-fe18c820c102@spud>
+ <BY5PR12MB4258543534215430BC2F8FA3DB39A@BY5PR12MB4258.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="BDFCLUw9LmXsQDa4"
 Content-Disposition: inline
-In-Reply-To: <20230719094803.17677-1-aboutphysycs@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <BY5PR12MB4258543534215430BC2F8FA3DB39A@BY5PR12MB4258.namprd12.prod.outlook.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 12:48:03PM +0300, Andrei Coardos wrote:
-> The platform_set_drvdata() isn't needed for anything. The function is a
-> simple setter that doesn't change anything in the code. That is because
-> there isn't a get function and since it has no dependencies it can be
-> removed.
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+--BDFCLUw9LmXsQDa4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Wed, Jul 19, 2023 at 06:49:43AM +0000, Potthuri, Sai Krishna wrote:
+> Hi Conor,
+>=20
+> > -----Original Message-----
+> > From: Conor Dooley <conor@kernel.org>
+> > Sent: Tuesday, July 18, 2023 9:20 PM
+> > To: Potthuri, Sai Krishna <sai.krishna.potthuri@amd.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>; Simek, Michal
+> > <michal.simek@amd.com>; Rob Herring <robh+dt@kernel.org>; Krzysztof
+> > Kozlowski <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley
+> > <conor+dt@kernel.org>; Mathieu Poirier <mathieu.poirier@linaro.org>; Sh=
+ah,
+> > Tanmay <tanmay.shah@amd.com>; Levinsky, Ben <ben.levinsky@amd.com>;
+> > Marek Vasut <marex@denx.de>; Roman Gushchin <roman.gushchin@linux.dev>;
+> > Arnd Bergmann <arnd@arndb.de>; linux-arm-kernel@lists.infradead.org; li=
+nux-
+> > kernel@vger.kernel.org; linux-gpio@vger.kernel.org; devicetree@vger.ker=
+nel.org;
+> > saikrishna12468@gmail.com; git (AMD-Xilinx) <git@amd.com>
+> > Subject: Re: [PATCH 3/4] dt-bindings: pinctrl-zynqmp: Add output-enable
+> > configuration
+> >=20
+> > On Mon, Jul 17, 2023 at 03:03:46PM +0530, Sai Krishna Potthuri wrote:
+> > > Add 'output-enable' configuration parameter to the properties list.
+> > >
+> > > Using these pinctrl properties observed hang issues with older Xilinx
+> > > ZynqMP Platform Management Firmware, hence reverted the patch previou=
+sly.
+> > > Commit ff8356060e3a5e126abb ("Revert "dt-bindings: pinctrl-zynqmp: Add
+> > > output-enable configuration"").
+> >=20
+> > And what has changed since then that makes it okay to add?
+> > Is the old firmware not still in the wild?
+> This time when Linux firmware driver get the request for TRISTATE configu=
+ration
+> from pinctrl driver, it checks if that configuration is supported by the =
+Xilinx ZynqMP
+> Platform Management firmware. If yes, then calls will be made otherwise i=
+t returns error.
 
+Please put that information in your commit message. With that done,
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
+Thanks,
+Conor.
+
+--BDFCLUw9LmXsQDa4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZLgJFgAKCRB4tDGHoIJi
+0h0YAQDslSWYW+0mKcsLpxUx7oCTtaRONNKJV3ZkEyPKShepTwD+JfE/Cea4UZEU
+xg6tso+P6vUo1jtUS50W65hbKzJ3vA8=
+=kKBy
+-----END PGP SIGNATURE-----
+
+--BDFCLUw9LmXsQDa4--
