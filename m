@@ -2,29 +2,29 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F378759F9D
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 22:23:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37EB4759F9E
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 22:23:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229776AbjGSUXR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 16:23:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
+        id S229714AbjGSUXU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 16:23:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbjGSUXR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 16:23:17 -0400
+        with ESMTP id S229809AbjGSUXU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 16:23:20 -0400
 Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B061FD5
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 13:23:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16BE4171E
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 13:23:19 -0700 (PDT)
 Received: from localhost.localdomain (178.176.79.158) by msexch01.omp.ru
  (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.986.14; Wed, 19 Jul
- 2023 23:23:08 +0300
+ 2023 23:23:14 +0300
 From:   Sergey Shtylyov <s.shtylyov@omp.ru>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         <linux-gpio@vger.kernel.org>
 CC:     <lvc-patches@linuxtesting.org>
-Subject: [PATCH 2/3] pinctrl: core: handle radix_tree_insert() errors in pinctrl_register_one_pin()
-Date:   Wed, 19 Jul 2023 23:22:52 +0300
-Message-ID: <20230719202253.13469-3-s.shtylyov@omp.ru>
+Subject: [PATCH 3/3] pinctrl: pinmux: handle radix_tree_insert() errors in pinmux_generic_add_function()
+Date:   Wed, 19 Jul 2023 23:22:53 +0300
+Message-ID: <20230719202253.13469-4-s.shtylyov@omp.ru>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <20230719202253.13469-1-s.shtylyov@omp.ru>
 References: <20230719202253.13469-1-s.shtylyov@omp.ru>
@@ -50,7 +50,7 @@ X-KSE-AntiSpam-Info: {relay has no DNS name}
 X-KSE-AntiSpam-Info: {SMTP from is not routable}
 X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.79.158 in (user)
  b.barracudacentral.org}
-X-KSE-AntiSpam-Info: omp.ru:7.1.1;178.176.79.158:7.7.3,7.4.1,7.7.1,7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2
+X-KSE-AntiSpam-Info: d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;178.176.79.158:7.4.1,7.7.3,7.1.2;omp.ru:7.1.1;127.0.0.199:7.1.2
 X-KSE-AntiSpam-Info: {iprep_blacklist}
 X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.79.158
 X-KSE-AntiSpam-Info: {DNS response errors}
@@ -77,7 +77,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pinctrl_register_one_pin() doesn't check the result of radix_tree_insert()
+pinctrl_generic_add_function() doesn't check result of radix_tree_insert()
 despite they both may return a negative error code.  Linus Walleij said he
 has copied the radix tree code from kernel/irq/ where the functions calling
 radix_tree_insert() are *void* themselves; I think it makes more sense to
@@ -88,50 +88,33 @@ analysis tool.
 
 Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 ---
- drivers/pinctrl/core.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinmux.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 3c3fc4ae0f2f..e9dc9638120a 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -205,6 +205,7 @@ static int pinctrl_register_one_pin(struct pinctrl_dev *pctldev,
- 				    const struct pinctrl_pin_desc *pin)
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 82c750a31952..2a180a5d64a4 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -872,7 +872,7 @@ int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+ 				void *data)
  {
- 	struct pin_desc *pindesc;
-+	int error;
+ 	struct function_desc *function;
+-	int selector;
++	int selector, error;
  
- 	pindesc = pin_desc_get(pctldev, pin->number);
- 	if (pindesc) {
-@@ -226,18 +227,25 @@ static int pinctrl_register_one_pin(struct pinctrl_dev *pctldev,
- 	} else {
- 		pindesc->name = kasprintf(GFP_KERNEL, "PIN%u", pin->number);
- 		if (!pindesc->name) {
--			kfree(pindesc);
--			return -ENOMEM;
-+			error = -ENOMEM;
-+			goto failed;
- 		}
- 		pindesc->dynamic_name = true;
- 	}
+ 	if (!name)
+ 		return -EINVAL;
+@@ -892,7 +892,9 @@ int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+ 	function->num_group_names = num_groups;
+ 	function->data = data;
  
- 	pindesc->drv_data = pin->drv_data;
- 
--	radix_tree_insert(&pctldev->pin_desc_tree, pin->number, pindesc);
-+	error = radix_tree_insert(&pctldev->pin_desc_tree, pin->number, pindesc);
+-	radix_tree_insert(&pctldev->pin_function_tree, selector, function);
++	error = radix_tree_insert(&pctldev->pin_function_tree, selector, function);
 +	if (error)
-+		goto failed;
-+
- 	pr_debug("registered pin %d (%s) on %s\n",
- 		 pin->number, pindesc->name, pctldev->desc->name);
- 	return 0;
-+
-+failed:
-+	kfree(pindesc);
-+	return error;
- }
++		return error;
  
- static int pinctrl_register_pins(struct pinctrl_dev *pctldev,
+ 	pctldev->num_functions++;
+ 
 -- 
 2.26.3
 
