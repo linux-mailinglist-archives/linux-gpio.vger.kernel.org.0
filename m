@@ -2,103 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E33FD7593B6
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 13:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC277759405
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jul 2023 13:17:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbjGSLFP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 07:05:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40760 "EHLO
+        id S230426AbjGSLRq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jul 2023 07:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjGSLFO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 07:05:14 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05043189;
-        Wed, 19 Jul 2023 04:05:12 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36J7FAx1008724;
-        Wed, 19 Jul 2023 11:05:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=qcppdkim1;
- bh=gFYdc0ZY2kWPdUL+rCQaIfR0nZf5YnqkOS0qZJaBh68=;
- b=IgVCwszNKDL7yQwULpIa/Sobj6+9p8CFbYxYBsoL4W7fwwHr2XnXhKKBuWAx2oFXlRB2
- vJ1uU5J6F8X0tPCVveRpfZuJGPK3jGEIq42A8yh7+PgT9gR97hBleWI/MxjLKAncf/3x
- wGwvJ55GWULkc/WrbuD4Aei5n5AOtIFXGs09IgaSBkVcGILNI3GF/D8vE4ne4EgMtCHL
- KdPUOFkJwDgpm0wWEhGdNt3T9qXR3r21dk0JBipjtX7ffsHsFax9B2d5wPmpds0hBfPW
- 860tbKZc/Y2f+uweHcu31tn/vYa7cevMHMrQ9reWvBslI/XmJactmlN1Rl/rQT3VSvwA Fg== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rx728rwu9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Jul 2023 11:05:08 +0000
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36JB4fna009749
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Jul 2023 11:04:41 GMT
-Received: from hu-shazhuss-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Wed, 19 Jul 2023 04:04:13 -0700
-From:   Shazad Hussain <quic_shazhuss@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-CC:     <bartosz.golaszewski@linaro.org>,
-        Shazad Hussain <quic_shazhuss@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: pinctrl: qcom,sa8775p-tlmm: add gpio function constant
-Date:   Wed, 19 Jul 2023 16:33:44 +0530
-Message-ID: <20230719110344.19983-1-quic_shazhuss@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S229984AbjGSLRp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 07:17:45 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99EAA189
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 04:17:43 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4fdd515cebcso1087625e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 04:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689765462; x=1692357462;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dA4XBjNreRbs/RKP90hsuoW35QaS3sIYpUWqA3D9MVo=;
+        b=eib+6ZdSavk8Cc7sMu9UiLLoRzeurRV7U17SqJAdIFseBdo83QH88dnHOpILFO0Cln
+         0IsGbyvcRl9w1gqFMOXu6ygsn+ZNxcwzWfrTXb+x6bQwtDHOXXRdkQtSBFhgMsJ5YGLv
+         m6bv7v664SZsFyXtW9kOLlL2QlyBrdsLjGHQmCoEvj4vKzL3HnMDW3G0SVkadJlWUF1t
+         EoJBekxklR+oaT/Tayym1DlLl93ebF2f1gs0w3nVaL3QzdoKjUiG5ooM38p36cBDrDJ1
+         bgdBpngvJemNnogm2kWA1g2JyfP+Ni+xP1LyxHVRNFhGNoJeDS6JKqhyJmBAkHEy/gi4
+         gGzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689765462; x=1692357462;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dA4XBjNreRbs/RKP90hsuoW35QaS3sIYpUWqA3D9MVo=;
+        b=CopCn15pj/IlpIdjZq5wuDIZMdX8/CQHFlaBCVJVt4lDKx4MBeULXDc73nsBtgX0gR
+         FtU3t5wYSEbkEJ4cX0Q0neXQ4Xpd8obzuQtpE7Nux5T54aW4FgxJp7ozUHb3jdbyQ7q2
+         GvuowNSS6LIFsj42qemugnkUQt9UVSa+vrq+r/lnLWSHlFs4oT6aVIwSCVeb1m6KGsw4
+         D8blPozKnVYXVWp0KOcn0DEvP1DHLqKI/aheb5pX1PxS1S2va8aGNQsP6ACOgtmpgwW4
+         XuH18JdmuWVXJI7cq8iZ67hASMFk05zCpdSmcsbZpoTHbxsd35Xs+VlfKpomNbCBi67j
+         c4hQ==
+X-Gm-Message-State: ABy/qLaT11AziBQdTOkKxUM0MbrOTpwjpn0S9V3c+Jzqa3avQzO8BI3u
+        bLcKx5vMz0mKTJVcKJB/xURhag==
+X-Google-Smtp-Source: APBJJlEfuMb3x/pT172dL5k+uZlxwymyIEwasIcdDQtVo1m66C7A/ws6DIO7Zn/FYWiF+K/45DMeag==
+X-Received: by 2002:a05:6512:2394:b0:4f6:2b51:2f74 with SMTP id c20-20020a056512239400b004f62b512f74mr2003719lfv.52.1689765461798;
+        Wed, 19 Jul 2023 04:17:41 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id r21-20020aa7cb95000000b0051e28d315a2sm2570977edt.78.2023.07.19.04.17.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jul 2023 04:17:41 -0700 (PDT)
+Message-ID: <7c60b8b5-ce8b-c911-043f-f916430bacc9@linaro.org>
+Date:   Wed, 19 Jul 2023 13:17:40 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: gA0dLZc_hpTYpBOgRt3MlUNOezWcr-Vt
-X-Proofpoint-ORIG-GUID: gA0dLZc_hpTYpBOgRt3MlUNOezWcr-Vt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-19_07,2023-07-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- bulkscore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=913 impostorscore=0 spamscore=0 clxscore=1011 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307190100
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sa8775p-tlmm: add gpio
+ function constant
+Content-Language: en-US
+To:     Shazad Hussain <quic_shazhuss@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc:     bartosz.golaszewski@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230719110344.19983-1-quic_shazhuss@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230719110344.19983-1-quic_shazhuss@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Alternative function 'gpio' is not listed in the constants for pin
-configuration, so adding this constant to the list.
+On 19/07/2023 13:03, Shazad Hussain wrote:
+> Alternative function 'gpio' is not listed in the constants for pin
+> configuration, so adding this constant to the list.
+> 
+> Fixes: 9a2aaee23c79 ("dt-bindings: pinctrl: describe sa8775p-tlmm")
 
-Fixes: 9a2aaee23c79 ("dt-bindings: pinctrl: describe sa8775p-tlmm")
-Signed-off-by: Shazad Hussain <quic_shazhuss@quicinc.com>
----
- .../devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml          | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cc: <stable@vger.kernel.org>
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
-index e608a4f1bcae..e119a226a4b1 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
-@@ -87,7 +87,7 @@ $defs:
-                 emac0_mdc, emac0_mdio, emac0_ptp_aux, emac0_ptp_pps, emac1_mcg0,
-                 emac1_mcg1, emac1_mcg2, emac1_mcg3, emac1_mdc, emac1_mdio,
-                 emac1_ptp_aux, emac1_ptp_pps, gcc_gp1, gcc_gp2, gcc_gp3,
--                gcc_gp4, gcc_gp5, hs0_mi2s, hs1_mi2s, hs2_mi2s, ibi_i3c,
-+                gcc_gp4, gcc_gp5, gpio, hs0_mi2s, hs1_mi2s, hs2_mi2s, ibi_i3c,
-                 jitter_bist, mdp0_vsync0, mdp0_vsync1, mdp0_vsync2, mdp0_vsync3,
-                 mdp0_vsync4, mdp0_vsync5, mdp0_vsync6, mdp0_vsync7, mdp0_vsync8,
-                 mdp1_vsync0, mdp1_vsync1, mdp1_vsync2, mdp1_vsync3, mdp1_vsync4,
--- 
-2.17.1
+
+> Signed-off-by: Shazad Hussain <quic_shazhuss@quicinc.com>
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
 
