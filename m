@@ -2,165 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E96A75B85D
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 21:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A24CF75B871
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 22:02:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231199AbjGTT46 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 15:56:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51810 "EHLO
+        id S230098AbjGTUCR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 16:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229905AbjGTT44 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 15:56:56 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB771BC1;
-        Thu, 20 Jul 2023 12:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=UHdi0ppk3HXbhJCoymxLyW1bqeamBc8EoLRaETJq4AQ=; b=N1l2h8cjGcfj24djGmGMdsVkky
-        VmxdSt1irycyZzCdaUYSGwogLNFeqbDl5ccHbT9JTQFt/o3q18lAZ2A/TPa6xNqm76+ckwyYye2qk
-        mXwEprBy4YLfAGO/7hzVyZvi+4f0rt15BzeDf3oqM+ZqIpIaZsBGC48oH7uMraOc5zuzK+MR1GTPs
-        qjW+T0tuOzCMDal7qzHNi7izVC5LxqO2oBEXrCe3DtpzoEC0vgrQimCyBbqQQIPYMQrA1ywEwdrHf
-        NiV2EJVvRyaYup/hVKSeSao7mSGBPjEsk3cMEDNXcHk2/eJlbAJEMy52DwReo237W8b3Zrm/Ytx2Z
-        BSYSpWyA==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qMZle-00C6Sk-1j;
-        Thu, 20 Jul 2023 19:56:54 +0000
-Message-ID: <f1e4938f-ddb8-1301-bd7a-f86679313eee@infradead.org>
-Date:   Thu, 20 Jul 2023 12:56:53 -0700
+        with ESMTP id S229638AbjGTUCQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 16:02:16 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2093.outbound.protection.outlook.com [40.107.220.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2462118;
+        Thu, 20 Jul 2023 13:02:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eKb7eCn/rxgbYmq3DO3PcCltqZh/eiRLvChvNZMSx9l5fjIOB4gKvxxPGsmU2wL9EKLLo8FvsKIBO88gfqx/2hJ58fE24rTWjjQ8xtVxZShlaAKWxcYHFTm5kVfoBDSurYmWjMNGqXifGi2WQLpQwQVBhXs9nUW/gRoGz5OO6CHmdwI05+SHlAK5Dx1BoJ+L2YjNhg9wq/YBFMbFVudVKANQJ3P8uUh4gZrWjKcdlTK+0hL06lzv/EavDCguKlANWE2He6/w2aLxK8l+NNa/GZJaJ7C8VNvpWJ3u4XAOyjs0LeROoQmhDE5WzhsqBvRwYKSxyVE+PF+zbOr23UH0sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ith3U+yU60y77RokBK497Aj+Dc7BoxNp6bgWuVzD+oM=;
+ b=Xa00q+GFkr0WSifQmCX5qoGyakqhxJ9Ha4C6KPYPrOOaTjzs8sptFpv69JCKTo2iGVCnk3lsfoyyYt6lHtrL2BG/KJE/Cb7dwzx7furCaL3viQw4e4qI62MKfuVOhxqRX2txUxJrVWBQJvwL+lBPJDZaRhWeVP+JENtZGtmy1pBei6Y+vldv5O9Cwt6XTnKnxnO+auRwT9n2bWlGwAWOEIm37hic8Zq31razyzb25F+CRiQW/OfCyrJxhz7nKB8AuVFHgnfK2bOG0uRNgcnm4+QRYC4p0lKHgEM0EAOfNzlcVHLnp6c5aaEWw6Uc3789JUaHC0ZD8lvXktOseqiSYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=in-advantage.com; dmarc=pass action=none
+ header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ith3U+yU60y77RokBK497Aj+Dc7BoxNp6bgWuVzD+oM=;
+ b=BJZZjbxZx/3PJjjdoa42V32IWIuJ2dJaN9ODRLMMsPUdI1Jo8QAcCsb3zGNZ5m4ohxacyKLrdhW+ONgzYejLzbQXqsKZRSn//zbMR/MfMOKWIzXuHhpRVirKuW5pyjBnnSba9cts9UzUS52PHWKhWUxpQnaZttDAVgOvO3jAcLo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=in-advantage.com;
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37) by BL3PR10MB6065.namprd10.prod.outlook.com
+ (2603:10b6:208:3b4::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.32; Thu, 20 Jul
+ 2023 20:02:10 +0000
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::5ff7:e83d:39df:dacb]) by MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::5ff7:e83d:39df:dacb%3]) with mapi id 15.20.6609.026; Thu, 20 Jul 2023
+ 20:02:10 +0000
+Date:   Thu, 20 Jul 2023 14:02:06 -0600
+From:   Colin Foster <colin.foster@in-advantage.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        UNGLinuxDriver@microchip.com,
+        Daniel Machon <daniel.machon@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Christian Marangi <ansuelsmth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [RFC RESEND v1 pinctrl-next 1/1] pinctrl: microchip-sgpio: add
+ activity and blink functionality
+Message-ID: <ZLmSvkizdykGGpv6@MSI.localdomain>
+References: <20230712022250.2319557-1-colin.foster@in-advantage.com>
+ <20230712022250.2319557-2-colin.foster@in-advantage.com>
+ <CACRpkdYXeGq2LnD+bpAXm82Aa-Czob8afQSfjfMFweBLhdr9uw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdYXeGq2LnD+bpAXm82Aa-Czob8afQSfjfMFweBLhdr9uw@mail.gmail.com>
+X-ClientProxiedBy: BYAPR11CA0053.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::30) To MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: linux-next: Tree for Jul 20 (gpio/gpio-ge)
-Content-Language: en-US
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>
-References: <20230720142243.1b463b82@canb.auug.org.au>
- <65b4ac1a-1128-6e2a-92c0-9bbcca4b760a@infradead.org>
-In-Reply-To: <65b4ac1a-1128-6e2a-92c0-9bbcca4b760a@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1001MB2351:EE_|BL3PR10MB6065:EE_
+X-MS-Office365-Filtering-Correlation-Id: daa96efc-e09b-45d6-e1c5-08db895c33eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kwU8N3cT4N/JLCPUR5H+UmokRhsJ4O0B0ci5elfTEdvbakUv6uIDA8G52k9e/gAocoLPEAEAzZCK+f6s9rX1kRx/thy7NZuacKFObEMYc2ph9xnDEROVGQxTC2RtjmJowtwhoD/TSEAJefHMdXCkAwCPNHTjFLOdGaa1VMMFRimZVVm0Om0TlzsKnxxVv2YUifHfPpaRezZ/y5wyU2UHMrDqgWDaXamnEmx58VUQLe+gUU3z4aePSYbKTcpjPMU/hrhUki7slNeZb+SOHyNLqFTo/3YW7te9CusZ7r+ljQaRPZgtk5+KSQ3JGdVo2i4r0ewhp4ebZ3y6dYGFF7dk5u+qNsDBIxZBszplnoookFwuUc27Jglj9GNRMvy7NUmlnzKpi27tZ5ItqWdY/ho0iNRGluWL4fceBa/IaBYY/b3HfCLOKhkB8Fwj+t/XDXAuBkQwec2HJCAtdkbcDq6GYmFFDymjRI/RgLQexPDmTLFdnrZp14FodwU3vLrv731Oi2ZlCetx3saOJsHnas/0NLtZP45d6xMNVdJ0X6GFRmskI6wBE83PbuDRHt/3aCAy
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(39830400003)(136003)(396003)(376002)(451199021)(54906003)(6486002)(478600001)(6666004)(6512007)(186003)(6506007)(9686003)(44832011)(6916009)(53546011)(2906002)(26005)(86362001)(4326008)(41300700001)(7416002)(8936002)(8676002)(316002)(66556008)(38100700002)(66946007)(66476007)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aTA0NTd0aDZPMzZRbEdsa2xQWXphUkFuVElhb0lKY2JUaWdXQzJKb2NJT0d0?=
+ =?utf-8?B?ZU1FLzdBQ1l4M1ArTkVWZ204QW51aU9udVdKOXV0Tnd4eU5ieUlQeVdjSDAz?=
+ =?utf-8?B?cUVvejU0QnN4bkpaU1NueHJDUTNxakpkRmpmcjNFUHlGeFk0MVhYMWtXVUdL?=
+ =?utf-8?B?VHp4bUxXMzRPOTE4RTZyUGI5RjVEL3hoZVRuc2JHbU1iK3VjenY2WTRyK3JI?=
+ =?utf-8?B?ZjJmV1pLdHF5MGFFU1VrQTZVTi9hdmFITGN2SjVvb3M3ZXdXUXdhMWZKR1Jj?=
+ =?utf-8?B?SDhuRCtCOEZic25UczMwYWcrMDRtYmE1THh5b3pjSGtYM3UyOElkSHNOMDNB?=
+ =?utf-8?B?b3BWZzVDS0Qwb0tBODI5cXZ6QWFWVkVnWHhBaGhTMWROdWdWc1JPMFN6R1Nv?=
+ =?utf-8?B?QXJYTWQ1Y2FQdkUwZGlPSzFGdTlPNEFSZzRXS1RZL1pHRWcwcElncFk3amJF?=
+ =?utf-8?B?ei9uekVUa1NMMEloOU1kU0hPeDhQTi9QQll2SGQ0Q3RYZjdzNmlpUWtGMkhD?=
+ =?utf-8?B?ZksxTTJhTEJ3cnRPODdqUTZuZUhRYzQvVzZ6RlRVMVJZVGJZQ3pBemgyckdj?=
+ =?utf-8?B?ZDIvbzhqSkw5VUtkbG1sTS9yZzlxK01VcEhNYWhkWXVDQXB6aTZqN3NCbEp3?=
+ =?utf-8?B?OHJ2UUlUdHI5SmpKRFRxQ0w3Qm5mRHlBWTBwcTFYN3BhdVRKS0lmakZrL0dK?=
+ =?utf-8?B?VDFzSEx4RW9uU1RtVzRCMkNpU0pLeVQxenNCaFlZZzRnRWVCRE45WVVmQkQy?=
+ =?utf-8?B?amo0Ui9IQmNTTmJ5WmR0RWVKOGpWVWx2b0NzZ0I4K1JtR2kzS0RJLzBFSjdu?=
+ =?utf-8?B?NXE4aUZwWXFoWmdlbngyVW9ad2w5Q0ZpRjN1TkVxT3hUbDBWZWxZRFpkWFFR?=
+ =?utf-8?B?WWZoME5BeHBqT1hQVTQrNGVteDlvZ0ZNT0dpcFBTeHVjems4MUhmS2JJSmly?=
+ =?utf-8?B?QWFacDZ5Z3N2YUxxNkxIUnllZitsMHBETU10MGhtMEU3SXpodm9CNUt2Q2Yv?=
+ =?utf-8?B?SjVaR1VKSXpjekJpVTZ2ZElBTi9MWDVLL3RvZ0pkeEJHU1BCcG9LekEwQWwy?=
+ =?utf-8?B?MjhsZHRLMG5QeGdMVFNwUTlWQW1Bb1doZFZmU0lYOTNSdkJ6bGlMWkNyOHFu?=
+ =?utf-8?B?czVlR09KTTJEb1duQytySnU3RnZhSU5QTVFPYlRpTk8rS0lxa2kyd3IzNklQ?=
+ =?utf-8?B?a3ZoYWFHZWtHeFV3N0JuQ05CZ01wdFdKSEFRalJtRmEzaW9WK1QvZi8xc0JE?=
+ =?utf-8?B?OVBNcXNjWE83dnU0Zk1zZHdHN0xqOHIvMXNycUVjY0VTRW9ZTm44ZDBSdWRo?=
+ =?utf-8?B?R0lvMWlqaWhFeDJtUzZCcTgyOHhFMjVCWGJKdUN4SjY0S3JXR3BGeFJ5QmhK?=
+ =?utf-8?B?ZzhpNTJDak5rU3dxT1lxNTdvQTBUMzh5cjBScWRSOWJOeFNFaW5mLzlDWUsv?=
+ =?utf-8?B?c2l6SEdRbklMdFNsbU9QRTlBZWtVdUYwTDJCYnBGeFJsUG1VWE1EWWkzUXN5?=
+ =?utf-8?B?VlN6ZWIrRUFiNmZtMDhiR2hrRkNDZ2UxK2RNc08vdHNrd0lQN3pULzlNR3Qw?=
+ =?utf-8?B?dkRnbnc1eXJHa1VtaUY2SDVuSlNqOVFoK2VhUnJXVE51U1hzLzh6MUltaC9X?=
+ =?utf-8?B?SzBCbVNSeWtjUTRsUFd1aFZGbk9ZbU1VN3JYMXVSUWZ5V0lOSERMWXdnM1Fv?=
+ =?utf-8?B?MjhxVWVESFBoMXBnSU1LOHhodklzd01YWXdZenpzVU9DVWQ0OEZuT2wxZmxR?=
+ =?utf-8?B?dTc3NkREcFh2RStlamk2Q1VicG10cnpWU0VvODFnVUJzNGRFcmdBMEV2U1Ny?=
+ =?utf-8?B?NGQ4b2VnM1l6R3B4dGk0RkpLR1p0Ny93eWl0blRKWDA0NWVQTkN6azRiRXNZ?=
+ =?utf-8?B?TWt1TGg1MWVHMW9TbVE2UUVrVFdOWVg1blphK3JPYVljYXh0VGM4d2o1NFow?=
+ =?utf-8?B?VUxyWlk2cTZDcWhvTTQwa2xlb0JENFliZ1NBeWMrOHM1VUowbjNKanp4NzRT?=
+ =?utf-8?B?MzVCNUwzb3NZR2VTdGd1YU95TG81VkxVQVlJcFg2OENOdnJyV3p4SWdpY3Bq?=
+ =?utf-8?B?Mk5TcDR6N1I0aVpnTWFPcW9vdnpOM0ZQSmNvRUV3MjFKV0s2Mm1UakwyT2x1?=
+ =?utf-8?B?cFdtMmRmR1ozM2p5R21RZ2IrcHJjczVIOFhaRTJuKzRSL3dyK3pzaFRsSlNx?=
+ =?utf-8?B?Nnc9PQ==?=
+X-OriginatorOrg: in-advantage.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: daa96efc-e09b-45d6-e1c5-08db895c33eb
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 20:02:10.6821
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n77pLPw5SYEaFCPt/kbtcwV34pHlGo9AOPF/+uYUVwo+WaI7QSljSliy1+DT/yJ+abAwLhnhWicsQvRu7uAaugmOWKoxiAojUM5mjthGx/s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR10MB6065
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Jul 20, 2023 at 09:25:32PM +0200, Linus Walleij wrote:
+> On Wed, Jul 12, 2023 at 4:23 AM Colin Foster
+> <colin.foster@in-advantage.com> wrote:
+> 
+> > Add additional functions - two blink and two activity, for each SGPIO
+> > output.
+> >
+> > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> 
+> Could Lars or Horatiu review this patch? You guys know the driver
+> best.
+
+Agreed. Please don't merge this without their approval and hopefully
+testing.
+
+I did demote this patch I've been dragging around since 2021 to RFC
+status because I'm more interested in making sure it will fit in with
+the work on hardware-offloaded network activity LED work that's being
+done. I took Andrew's response to the cover letter as an suggestion to
+hold off for a little while longer. I can be patient.
+
+Also, this RFC was two-fold. I don't want to duplicate efforts, and I
+know this pinctrl driver was written with this functionality in mind. If
+someone out there has a hankering to get those LEDs blinking and they
+don't want to wait around for me, feel free to use this as a starting
+point. I might not get around to the whole netdev trigger thing for
+quite some time!
 
 
-On 7/20/23 12:54, Randy Dunlap wrote:
-> 
-> 
-> On 7/19/23 21:22, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20230719:
->>
-> 
-> on ppc32:
-> when CONFIG_MODULES is not set:
-> 
-> ../drivers/gpio/gpio-ge.c:53:41: warning: 'struct platform_device' declared inside parameter list will not be visible outside of this definition or declaration
->    53 | static int __init gef_gpio_probe(struct platform_device *pdev)
->       |                                         ^~~~~~~~~~~~~~~
-> ../drivers/gpio/gpio-ge.c: In function 'gef_gpio_probe':
-> ../drivers/gpio/gpio-ge.c:59:32: error: invalid use of undefined type 'struct platform_device'
->    59 |         gc = devm_kzalloc(&pdev->dev, sizeof(*gc), GFP_KERNEL);
->       |                                ^~
-> ../drivers/gpio/gpio-ge.c:63:29: error: invalid use of undefined type 'struct platform_device'
->    63 |         regs = of_iomap(pdev->dev.of_node, 0);
->       |                             ^~
-> ../drivers/gpio/gpio-ge.c:67:35: error: invalid use of undefined type 'struct platform_device'
->    67 |         ret = bgpio_init(gc, &pdev->dev, 4, regs + GEF_GPIO_IN,
->       |                                   ^~
-> In file included from ../include/linux/device.h:15,
->                  from ../arch/powerpc/include/asm/io.h:22,
->                  from ../include/linux/io.h:13,
->                  from ../drivers/gpio/gpio-ge.c:21:
-> ../drivers/gpio/gpio-ge.c:71:30: error: invalid use of undefined type 'struct platform_device'
->    71 |                 dev_err(&pdev->dev, "bgpio_init failed\n");
->       |                              ^~
-> ../include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
->   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
->       |                         ^~~
-> ../drivers/gpio/gpio-ge.c:71:17: note: in expansion of macro 'dev_err'
->    71 |                 dev_err(&pdev->dev, "bgpio_init failed\n");
->       |                 ^~~~~~~
-> ../drivers/gpio/gpio-ge.c:76:41: error: invalid use of undefined type 'struct platform_device'
->    76 |         gc->label = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOF", pdev->dev.of_node);
->       |                                         ^~
-> ../drivers/gpio/gpio-ge.c:76:72: error: invalid use of undefined type 'struct platform_device'
->    76 |         gc->label = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOF", pdev->dev.of_node);
->       |                                                                        ^~
-> ../drivers/gpio/gpio-ge.c:83:67: error: invalid use of undefined type 'struct platform_device'
->    83 |         gc->ngpio = (u16)(uintptr_t)of_device_get_match_data(&pdev->dev);
->       |                                                                   ^~
-> In file included from ../drivers/gpio/gpio-ge.c:26:
-> ../drivers/gpio/gpio-ge.c:86:43: error: invalid use of undefined type 'struct platform_device'
->    86 |         ret = devm_gpiochip_add_data(&pdev->dev, gc, NULL);
->       |                                           ^~
-> ../include/linux/gpio/driver.h:589:49: note: in definition of macro 'devm_gpiochip_add_data'
->   589 |                 devm_gpiochip_add_data_with_key(dev, gc, data, &lock_key, \
->       |                                                 ^~~
-> In file included from ../include/linux/kernel.h:30,
->                  from ../drivers/gpio/gpio-ge.c:20:
-> ../drivers/gpio/gpio-ge.c:93:61: error: invalid use of undefined type 'struct platform_device'
->    93 |         pr_err("%pOF: GPIO chip registration failed\n", pdev->dev.of_node);
->       |                                                             ^~
-> ../include/linux/printk.h:427:33: note: in definition of macro 'printk_index_wrap'
->   427 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
->       |                                 ^~~~~~~~~~~
-> ../include/linux/printk.h:498:9: note: in expansion of macro 'printk'
->   498 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
->       |         ^~~~~~
-> ../drivers/gpio/gpio-ge.c:93:9: note: in expansion of macro 'pr_err'
->    93 |         pr_err("%pOF: GPIO chip registration failed\n", pdev->dev.of_node);
->       |         ^~~~~~
-> ../drivers/gpio/gpio-ge.c: At top level:
-> ../drivers/gpio/gpio-ge.c:97:15: error: variable 'gef_gpio_driver' has initializer but incomplete type
->    97 | static struct platform_driver gef_gpio_driver = {
->       |               ^~~~~~~~~~~~~~~
-> ../drivers/gpio/gpio-ge.c:98:10: error: 'struct platform_driver' has no member named 'driver'
->    98 |         .driver = {
->       |          ^~~~~~
-> ../drivers/gpio/gpio-ge.c:98:19: error: extra brace group at end of initializer
->    98 |         .driver = {
->       |                   ^
-> ../drivers/gpio/gpio-ge.c:98:19: note: (near initialization for 'gef_gpio_driver')
-> ../drivers/gpio/gpio-ge.c:98:19: warning: excess elements in struct initializer
-> ../drivers/gpio/gpio-ge.c:98:19: note: (near initialization for 'gef_gpio_driver')
-> ../drivers/gpio/gpio-ge.c:103:1: warning: data definition has no type or storage class
->   103 | module_platform_driver_probe(gef_gpio_driver, gef_gpio_probe);
->       | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> ../drivers/gpio/gpio-ge.c:103:1: error: type defaults to 'int' in declaration of 'module_platform_driver_probe' [-Werror=implicit-int]
-> ../drivers/gpio/gpio-ge.c:103:1: warning: parameter names (without types) in function declaration
-> ../drivers/gpio/gpio-ge.c:97:31: error: storage size of 'gef_gpio_driver' isn't known
->    97 | static struct platform_driver gef_gpio_driver = {
->       |                               ^~~~~~~~~~~~~~~
-> ../drivers/gpio/gpio-ge.c:97:31: warning: 'gef_gpio_driver' defined but not used [-Wunused-variable]
-> ../drivers/gpio/gpio-ge.c:53:19: warning: 'gef_gpio_probe' defined but not used [-Wunused-function]
->    53 | static int __init gef_gpio_probe(struct platform_device *pdev)
->       |                   ^~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
-> 
-> 
-> @Martyn:
-> Please add a trailing '>' here:
-> MODULE_AUTHOR("Martyn Welch <martyn.welch@ge.com");
-
-and email to Martyn bounced... :(
-
--- 
-~Randy
+Colin Foster
