@@ -2,66 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6728175B257
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 17:20:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E5B75B266
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 17:23:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230338AbjGTPUt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 11:20:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56948 "EHLO
+        id S232523AbjGTPXV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 11:23:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230158AbjGTPUs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 11:20:48 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5003E1FD7
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:20:47 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2b700e85950so13131471fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:20:47 -0700 (PDT)
+        with ESMTP id S232574AbjGTPXO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 11:23:14 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9059C2699
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:23:12 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b708e49059so14066531fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:23:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689866445; x=1690471245;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689866591; x=1690471391;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/ylREXqkz3fT0Pf+CqfXaE+BQjJpH6bs6sgNBPlTXhI=;
-        b=eLtIQlQmHqbxvCJnjDOWTgaHJOOwYT6srOrs0dZW1ZWqHoGrwm8XvGUBNGapJkhmEo
-         qRHi3020i91UaAeF4aM9lWpHWLSPLNcFA93AJzVXmUMGpZ8cSQ/SENE6f1sT6ANl6IUW
-         he/Zqsvc7eif7bgAdSAkiUSFL/Ib46IwGwLxw3A8nh7Q4MVt+h8GYconsoN1pUgPbMO2
-         JsXHf73zr6z1MZq9e/mKaAsA4ua0543e70maFxBcxUoXzNz3al7Cb2geIt5Yu/dUOTxg
-         37FvKICFIE3nrfIRyBPUBifW6/RacBrL0tw/osRdJ4NCcgKnFxheCocCHJYKs9vIsZbw
-         15Qw==
+        bh=sPQnrOARiDFo5sqjfjZ2rVtHE8KTAkxuOmgwA4v7Z5A=;
+        b=xuPC1yT5GRzBtJCOV0E3sv+xf43uZLpnDcJYPuKFf+eCUFcTWZfGCQYnQk6MzXITne
+         MwJ5ldTCa9NXMRFEnbR8lZzn9BdisGRYTdWwuYReJTZV+V7RG/p0Q63oTpLzQd+HO5Oc
+         g2Ozna4mxVHFG1qTPAdHJxtwVhuJMxqF8vyMWyTlR8VaVvX3VW5kzILuxb0xGbhQiLwc
+         mTWIuNpS2HZDH8wWyJdeAAaeZ24gpxthbxUMAKvXfZlPNVmP7RKJtx1LFJwnxvrfw/ta
+         cmIaNO8RVO9pV3OOGIx18MrBB/SGaYAsNVGDlDN9lkLFuv+sfD150Ul11H3CKKJyCZ9e
+         7NGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689866445; x=1690471245;
+        d=1e100.net; s=20221208; t=1689866591; x=1690471391;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/ylREXqkz3fT0Pf+CqfXaE+BQjJpH6bs6sgNBPlTXhI=;
-        b=T3NzLF/eEIo3sJB2gBD64hNjD6ntRxsqwAUF2DSLPHeBI1xWq+wCTFIEiB6N+g/lq4
-         +1l7qa7p+JQzQdP8BpT+vKA67srBzHC7UWI68if+sG96RmrrIriy0C2CjRF+LIxHPeVJ
-         F5Nnigot0bREvrIki/TxYVtetTOWs/Co1shtqD+8MfHI0fIw9LeNLHoodVaaX0uOqBx4
-         mzd1fSOkb0i8qBeYvxPSgcD8h4QKFdjZgs3tFYi5KM6g9aW2qb2xIjkPhWWyOs4l2FEB
-         eJ6eV9ni/GQ9EYdEozzr1Ft82No/oeHolsV4mas89uJBfxhfnHjz81NxFpjvAFpK8Pc0
-         VBTA==
-X-Gm-Message-State: ABy/qLao6edQKb1LlPfNMx06FOx6HNkS/TjbBueLw+7NdIW9b9caREPm
-        szPhF/K5i81O64Ozr/O8rAOd1xXPXYPP9w9ecYPIaQ==
-X-Google-Smtp-Source: APBJJlGfNUWyNpCrqPbSIXlMquubbeynlWBhna2HQB+0ToDiza9YnGsEanbvJwHqlXirOL1qasExPLPfmhAzG13Kkgo=
-X-Received: by 2002:a2e:b17b:0:b0:2b6:cbba:1307 with SMTP id
- a27-20020a2eb17b000000b002b6cbba1307mr2352594ljm.0.1689866445627; Thu, 20 Jul
- 2023 08:20:45 -0700 (PDT)
+        bh=sPQnrOARiDFo5sqjfjZ2rVtHE8KTAkxuOmgwA4v7Z5A=;
+        b=NdBWAtX94nxE1Kwl6pAUS7Luvlo/8lFfleZUH+nooouhn88VIvxctp+6HSMOPv3Jk8
+         HeDzS+S267dHZQ66z1WiTwrNgs6E1R9ne06nuhcaPS94bWRGMT9tBrvQ8WTMfsWDtEgA
+         F0dR0JJmdKWcUnWpdpMeNktFcrhOitozp4u4iqWmgZVQ3UcKk0lhOeVjbO4Es37ZRmz7
+         LvmRUMtjWd+fjNJpO2BhHIvaylnpzph3ovrwtc5ESX2Y1dpwFjdNJ+/meccBYNGUeXXZ
+         90bAgMtsU/WgxrpIZwHRp2J2J56Ynt48LPCQWZ+dbsg55idDBImBXC7kfJlKPCUaj+Fm
+         Nquw==
+X-Gm-Message-State: ABy/qLYTrGX2XW4pyj79h6CkdvGFkRdAvokSk/V9UOGpZi5h3XOj0s3A
+        nJDR/3+E1L66E7FLfBH8znMQ/6SCEWUFqvl4t2UlTYgU7eozcpeb
+X-Google-Smtp-Source: APBJJlFrjnHLPRbT8vq98J4JSA5g0Ix+9H636iwdDSzQ2q/7eIkXKBUVQqIhUeFIrh9kQh/FwAwZtQYLfzenXzIo4tE=
+X-Received: by 2002:a2e:3004:0:b0:2b6:efd0:5dd8 with SMTP id
+ w4-20020a2e3004000000b002b6efd05dd8mr2511816ljw.46.1689866590876; Thu, 20 Jul
+ 2023 08:23:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230712074553.35907-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230712074553.35907-1-krzysztof.kozlowski@linaro.org>
+References: <20230711072053.2837327-1-geert+renesas@glider.be> <CAMRc=Mef-J-WinQxphm+CU8u-PoBan1hPT2yLih4i-RFUDePBQ@mail.gmail.com>
+In-Reply-To: <CAMRc=Mef-J-WinQxphm+CU8u-PoBan1hPT2yLih4i-RFUDePBQ@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 20 Jul 2023 17:20:33 +0200
-Message-ID: <CAMRc=Mf3G1NfwZv8nDdBMA2kqyuA77e2GS_OdU8uyxvfn6NhYQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: snps,dw-apb: allow gpio-line-names
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Thu, 20 Jul 2023 17:22:59 +0200
+Message-ID: <CAMRc=MfsbngW4dor9UXX1ncyabZ=NjUFZFTarcfgOO3iMz4zgw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxc: Improve PM configuration
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -74,40 +70,95 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 9:45=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Thu, Jul 20, 2023 at 5:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
-> Allow the GPIO controller subnode to define GPIO names.  Already used in
-> at least on DTS:
+> On Tue, Jul 11, 2023 at 9:20=E2=80=AFAM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> >
+> > If CONFIG_PM=3Dn (e.g. m68k/allmodconfig):
+> >
+> >     drivers/gpio/gpio-mxc.c:612:12: error: =E2=80=98mxc_gpio_runtime_re=
+sume=E2=80=99 defined but not used [-Werror=3Dunused-function]
+> >       612 | static int mxc_gpio_runtime_resume(struct device *dev)
+> >           |            ^~~~~~~~~~~~~~~~~~~~~~~
+> >     drivers/gpio/gpio-mxc.c:602:12: error: =E2=80=98mxc_gpio_runtime_su=
+spend=E2=80=99 defined but not used [-Werror=3Dunused-function]
+> >       602 | static int mxc_gpio_runtime_suspend(struct device *dev)
+> >           |            ^~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Fix this by using the non-SET *_PM_OPS to configure the dev_pm_ops
+> > callbacks, and by wrapping the driver.pm initializer insider pm_ptr().
+> >
+> > As NOIRQ_SYSTEM_SLEEP_PM_OPS() uses pm_sleep_ptr() internally, the
+> > __maybe_unused annotations for the noirq callbacks are no longer needed=
+,
+> > and can be removed.
+> >
+> > Fixes: 3283d820dce649ad ("gpio: mxc: add runtime pm support")
+> > Reported-by: noreply@ellerman.id.au
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  drivers/gpio/gpio-mxc.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> > index a9fb6bd9aa6f9645..a43df5d5006e62d3 100644
+> > --- a/drivers/gpio/gpio-mxc.c
+> > +++ b/drivers/gpio/gpio-mxc.c
+> > @@ -623,7 +623,7 @@ static int mxc_gpio_runtime_resume(struct device *d=
+ev)
+> >         return 0;
+> >  }
+> >
+> > -static int __maybe_unused mxc_gpio_noirq_suspend(struct device *dev)
+> > +static int mxc_gpio_noirq_suspend(struct device *dev)
+> >  {
+> >         struct platform_device *pdev =3D to_platform_device(dev);
+> >         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
+> > @@ -634,7 +634,7 @@ static int __maybe_unused mxc_gpio_noirq_suspend(st=
+ruct device *dev)
+> >         return 0;
+> >  }
+> >
+> > -static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev)
+> > +static int mxc_gpio_noirq_resume(struct device *dev)
+> >  {
+> >         struct platform_device *pdev =3D to_platform_device(dev);
+> >         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
+> > @@ -647,8 +647,8 @@ static int __maybe_unused mxc_gpio_noirq_resume(str=
+uct device *dev)
+> >  }
+> >
+> >  static const struct dev_pm_ops mxc_gpio_dev_pm_ops =3D {
+> > -       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_=
+noirq_resume)
+> > -       SET_RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_r=
+esume, NULL)
+> > +       NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_noir=
+q_resume)
+> > +       RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resum=
+e, NULL)
+> >  };
+> >
+> >  static int mxc_gpio_syscore_suspend(void)
+> > @@ -695,7 +695,7 @@ static struct platform_driver mxc_gpio_driver =3D {
+> >                 .name   =3D "gpio-mxc",
+> >                 .of_match_table =3D mxc_gpio_dt_ids,
+> >                 .suppress_bind_attrs =3D true,
+> > -               .pm =3D &mxc_gpio_dev_pm_ops,
+> > +               .pm =3D pm_ptr(&mxc_gpio_dev_pm_ops),
+> >         },
+> >         .probe          =3D mxc_gpio_probe,
+> >  };
+> > --
+> > 2.34.1
+> >
 >
->   bitmain/bm1880-sophon-edge.dtb: gpio@50027000: gpio-controller@0: 'gpio=
--line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+> Applied, thanks!
 >
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml=
- b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-> index b391cc1b4590..209f03bba0a7 100644
-> --- a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-> @@ -61,6 +61,10 @@ patternProperties:
->        '#gpio-cells':
->          const: 2
->
-> +      gpio-line-names:
-> +        minItems: 1
-> +        maxItems: 32
-> +
->        ngpios:
->          default: 32
->          minimum: 1
-> --
-> 2.34.1
->
+> Bart
 
-Applied, thanks!
+Nevermind, Arnd has a better fix for that so I'll apply his change.
 
 Bart
