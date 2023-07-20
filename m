@@ -2,76 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A026975A6BA
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 08:41:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4447875A6FC
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 08:55:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230418AbjGTGl1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 02:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49722 "EHLO
+        id S231318AbjGTGzp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 02:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230464AbjGTGlI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 02:41:08 -0400
-Received: from out199-7.us.a.mail.aliyun.com (out199-7.us.a.mail.aliyun.com [47.90.199.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D562C3A87;
-        Wed, 19 Jul 2023 23:40:29 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VnottGz_1689835157;
-Received: from 30.97.48.52(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VnottGz_1689835157)
-          by smtp.aliyun-inc.com;
-          Thu, 20 Jul 2023 14:39:18 +0800
-Message-ID: <3a8b32da-0376-3633-b7da-0273da945af1@linux.alibaba.com>
-Date:   Thu, 20 Jul 2023 14:39:37 +0800
+        with ESMTP id S229757AbjGTGzo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 02:55:44 -0400
+Received: from mail.208.org (unknown [183.242.55.162])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EDCCCC
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 23:55:43 -0700 (PDT)
+Received: from mail.208.org (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTP id 4R63Nn2lpjzBRDsL
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 14:55:37 +0800 (CST)
+Authentication-Results: mail.208.org (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)" header.d=208.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=208.org; h=
+        content-transfer-encoding:content-type:message-id:user-agent
+        :references:in-reply-to:subject:to:from:date:mime-version; s=
+        dkim; t=1689836137; x=1692428138; bh=NEZ/o7/CYbI/STdiYnu78RjdMH3
+        ly697rFlKyHDjoWw=; b=Y3Cn5b2W3vn6QuInxM2KFWsA92zQ10YVH0ISCm7isGs
+        5uLAGaovhnuW8e2RMwaBw5GeGoa5IyY2bRZeaudqMuMNe6R0toetf2RSJweQSCYe
+        o3V1EQR2BYRfuvaC2g+lh/kpcfI0cP7aG74YFsBWuWG12puscYQ2OP/1yel0oujh
+        PRvimccqUWSWwwda1J67IRx5zVPm9n795vc66n4B/5MA8LbUZRoa1GHea1nYVhmp
+        bMD9bpFGbAB0+OggeUFwC/zX1C1gwU9ZLXYTpVnJDRo0Yq5RjAaRi9JrtUByFVov
+        iQn4oJj+5cZzRqwsa0gKqUlHr6l3B0KZz1FEHiXklbw==
+X-Virus-Scanned: amavisd-new at mail.208.org
+Received: from mail.208.org ([127.0.0.1])
+        by mail.208.org (mail.208.org [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 8SYOurFCiomG for <linux-gpio@vger.kernel.org>;
+        Thu, 20 Jul 2023 14:55:37 +0800 (CST)
+Received: from localhost (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTPSA id 4R63Nn0zSwzBRDsD;
+        Thu, 20 Jul 2023 14:55:37 +0800 (CST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] gpio: eic-sprd: remove unneeded platform_set_drvdata()
- call
-To:     Andrei Coardos <aboutphysycs@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     zhang.lyra@gmail.com, orsonzhai@gmail.com, andy@kernel.org,
-        brgl@bgdev.pl, linus.walleij@linaro.org,
-        Alexandru Ardelean <alex@shruggie.ro>
-References: <20230717121004.5205-1-aboutphysycs@gmail.com>
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20230717121004.5205-1-aboutphysycs@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date:   Thu, 20 Jul 2023 14:55:37 +0800
+From:   hanyu001@208suo.com
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers: gpio: Remove unnecessary spaces
+In-Reply-To: <tencent_E888A1BD4167B61E1D3EF3F8488A8B148A08@qq.com>
+References: <tencent_E888A1BD4167B61E1D3EF3F8488A8B148A08@qq.com>
+User-Agent: Roundcube Webmail
+Message-ID: <6c89e70749c462d441bd0c157d260570@208suo.com>
+X-Sender: hanyu001@208suo.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RDNS_NONE,SPF_HELO_FAIL,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Fix checkpatch warnings:
 
+./drivers/gpio/gpio-pca953x.c:1352: ERROR: space prohibited after that 
+open parenthesis '('
+./drivers/gpio/gpio-pca953x.c:1353: ERROR: space prohibited after that 
+open parenthesis '('
+./drivers/gpio/gpio-pca953x.c:1354: ERROR: space prohibited after that 
+open parenthesis '('
+./drivers/gpio/gpio-pca953x.c:1359: ERROR: space prohibited after that 
+open parenthesis '('
+./drivers/gpio/gpio-pca953x.c:1360: ERROR: space prohibited after that 
+open parenthesis '('
 
-On 7/17/2023 8:10 PM, Andrei Coardos wrote:
-> The platform_set_drvdata() call was never used, ever since the driver was
-> originally added.
-> It looks like this copy+paste left-over. Possibly the author copied from a
-> driver that had this line, but also had a remove hook.
-> 
-> Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
-> Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
+Signed-off-by: Yu Han <hanyu001@208suo.com>
+---
+  drivers/gpio/gpio-pca953x.c | 10 +++++-----
+  1 file changed, 5 insertions(+), 5 deletions(-)
 
-LGTM. Thanks.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index a806a3c..7f4f7ee 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1349,15 +1349,15 @@ static int pca953x_resume(struct device *dev)
+      { .compatible = "maxim,max7315", .data = OF_953X( 8, PCA_INT), },
+      { .compatible = "maxim,max7318", .data = OF_953X(16, PCA_INT), },
 
-> ---
->   drivers/gpio/gpio-eic-sprd.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-> index 84352a6f4973..53db88ae2a20 100644
-> --- a/drivers/gpio/gpio-eic-sprd.c
-> +++ b/drivers/gpio/gpio-eic-sprd.c
-> @@ -653,7 +653,6 @@ static int sprd_eic_probe(struct platform_device *pdev)
->   		return ret;
->   	}
->   
-> -	platform_set_drvdata(pdev, sprd_eic);
->   	return 0;
->   }
->   
+-    { .compatible = "ti,pca6107", .data = OF_953X( 8, PCA_INT), },
+-    { .compatible = "ti,pca9536", .data = OF_953X( 4, 0), },
+-    { .compatible = "ti,tca6408", .data = OF_953X( 8, PCA_INT), },
++    { .compatible = "ti,pca6107", .data = OF_953X(8, PCA_INT), },
++    { .compatible = "ti,pca9536", .data = OF_953X(4, 0), },
++    { .compatible = "ti,tca6408", .data = OF_953X(8, PCA_INT), },
+      { .compatible = "ti,tca6416", .data = OF_953X(16, PCA_INT), },
+      { .compatible = "ti,tca6424", .data = OF_953X(24, PCA_INT), },
+      { .compatible = "ti,tca9539", .data = OF_953X(16, PCA_INT), },
+
+-    { .compatible = "onnn,cat9554", .data = OF_953X( 8, PCA_INT), },
+-    { .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
++    { .compatible = "onnn,cat9554", .data = OF_953X(8, PCA_INT), },
++    { .compatible = "onnn,pca9654", .data = OF_953X(8, PCA_INT), },
+      { .compatible = "onnn,pca9655", .data = OF_953X(16, PCA_INT), },
+
+      { .compatible = "exar,xra1202", .data = OF_953X( 8, 0), },
