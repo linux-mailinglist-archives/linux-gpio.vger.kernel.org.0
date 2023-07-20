@@ -2,92 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D16275A9F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 10:57:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3631775A9E9
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 10:57:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231145AbjGTI5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 04:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37068 "EHLO
+        id S229937AbjGTI5a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 04:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230198AbjGTImp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 04:42:45 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC68C268F
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:42:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689842564; x=1721378564;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=P3AvjhB6MyoXfooexG8yXL81KcfaezGLcahB96hmSRY=;
-  b=BrgtLxiAW4fyTVPT6KYcm9aQifHcRAnBDUCjn2z3VGMcX67RM4N2iF8J
-   A32cIXCxvSkxxQAJlVVq+Q/0SgahkPdd6Imszsj6+kUeruNetX36qyJhr
-   Mj2o8JCU8Mwze6m5uazc6lYZPAbvE0AQLELhNgHyEIuUt0CHwRpgVZpz5
-   ss8GkSMiIlyy85XfUp3K69Z1dBv/VyMbu3UhV4RkxRG5Z9zl0wj3do1TJ
-   BYEZp1mttUiGjMWkvfZ4sNxXZ/VsvZSZHv0mZmrR7gUX0k8Sjp8/PHtFk
-   0KkgY2hiQ4qX/OvePCDiYG9kCsGnhpH9xR80x7oDF2WtPP3Uh5e1EXXl9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="453049919"
-X-IronPort-AV: E=Sophos;i="6.01,218,1684825200"; 
-   d="scan'208";a="453049919"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2023 01:42:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="814450439"
-X-IronPort-AV: E=Sophos;i="6.01,218,1684825200"; 
-   d="scan'208";a="814450439"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Jul 2023 01:42:42 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qMPFB-00Gutv-0o;
-        Thu, 20 Jul 2023 11:42:41 +0300
-Date:   Thu, 20 Jul 2023 11:42:41 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH 0/5] core: provide information about the parent
- chip in line requests
-Message-ID: <ZLjzgYzUG8dhKnyH@smile.fi.intel.com>
-References: <20230719192057.172560-1-brgl@bgdev.pl>
- <ZLipqIJE1Mo4oK00@sol>
- <CAMRc=Mf=Xf7KPP+9GPC6=1Gsp3XTfzrwjOK2jrqeP7QUVxtD+Q@mail.gmail.com>
+        with ESMTP id S230341AbjGTIoK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 04:44:10 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D7F26A2
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:44:08 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-99313a34b2dso84671866b.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689842647; x=1692434647;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bXmQdUSwiEfCeL+TuIOj45mHUtMHTIiqenNRIQ+67SA=;
+        b=qFVkXUqOOwTKp2x5hPUx9qm517YCGDqbSztEMSIDzBEAnSmAtIURzG3MZkyK/UNgio
+         fSVSgfYdZYKa5t49AcwqEAQJN2PL9RMivXWdoWLrqSmB8AbMwDNjhwa7/pRXv3+L8LMR
+         WTvWO7MplpSLjeX4kazfTYjPWufJkz5WXMbFwP8oz8ztOgvzcxFSqAWXA09eVZwNMW22
+         +jSgVFvMCTa96XWNdnWTLXj68vbEbEuYLwsc81CTDCr7QCDTB+MlR9PU7B4HFpMmKDrS
+         4P/jocRhTkcGjGdokjOI95C7B4mTxyCLo6UfZKyXXG0OiD/fC7oPnjphFZpVaOD4q0z3
+         E0MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689842647; x=1692434647;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bXmQdUSwiEfCeL+TuIOj45mHUtMHTIiqenNRIQ+67SA=;
+        b=EnhsqHGuX8CjUJY/USi7sm7iIhkXPLMGz+SxL26y02luGQvucthkka7aYcig/d6WQ7
+         vBmeLMckZDRLYiNjR8F3FdhdScZBD34Q2ON8WOkjfz7VwAsSRlRCIKLd1NWKLS3Q3IC4
+         tbDaMQ+0MSNOLDosqJ+7O5MZfdzz4HGj+FFkKLkajW8/MpBvRdm39xDWXMx2cyoajdM0
+         gQFZ3ZtQ/XbZPYMOT7RUz2adQQn90YAp2+xXG68DwR8qKJ3LwKEQNtaQAH0u7SuhHhvb
+         yIp4eZJy5zsJqcB5PNPi8ZsxD36eUFtjWOcHtXhdPegFMv1io0uE2Hk5FthEfzAtzpXc
+         a/Jg==
+X-Gm-Message-State: ABy/qLavBomTfNCVBlIXa1e6jjy5dj0LQ2PEc8FaSAaJDwSMHnffz1iE
+        WyQdDbN1cDt/ikHNHhGN6w4ToQ==
+X-Google-Smtp-Source: APBJJlGCXyIDr7nOu/YXOOqrS/2UxOod41KmJxihYP99aWkTW7XDf85MKrLzKtCoVvpT2DMA9KwTTg==
+X-Received: by 2002:a17:906:10d2:b0:98e:16b7:e038 with SMTP id v18-20020a17090610d200b0098e16b7e038mr4431998ejv.23.1689842646835;
+        Thu, 20 Jul 2023 01:44:06 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id rv7-20020a17090710c700b00993a9a951fasm376950ejb.11.2023.07.20.01.44.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jul 2023 01:44:06 -0700 (PDT)
+Message-ID: <53721566-2a85-76cb-a4cf-2819f08dfc85@linaro.org>
+Date:   Thu, 20 Jul 2023 10:44:03 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mf=Xf7KPP+9GPC6=1Gsp3XTfzrwjOK2jrqeP7QUVxtD+Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [v11 5/6] arm64: dts: Add ipq5018 SoC and rdp432-c2 board support
+Content-Language: en-US
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        p.zabel@pengutronix.de, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robimarko@gmail.com,
+        andy.shevchenko@gmail.com
+References: <20230616101749.2083974-1-quic_srichara@quicinc.com>
+ <20230616101749.2083974-6-quic_srichara@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230616101749.2083974-6-quic_srichara@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 09:59:00AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jul 20, 2023 at 5:27 AM Kent Gibson <warthog618@gmail.com> wrote:
+On 16/06/2023 12:17, Sricharan Ramabadhran wrote:
+> Add initial device tree support for the Qualcomm IPQ5018 SoC and
+> rdp432-c2 board.
+> 
+> Few things like 'reboot' does not work because, couple of more 'SCM'
+> APIS are needed to clear some TrustZone settings. Those will be
+> posted separately.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> Co-developed-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+> Signed-off-by: Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts |  72 +++++
+>  arch/arm64/boot/dts/qcom/ipq5018.dtsi         | 250 ++++++++++++++++++
+>  3 files changed, 323 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> 
 
-...
+NAK, please do not merge.
 
-> as it would be the one allowing the caller to reopen the same chip.
+It turns out there are some problems here (pointed out by Hariharan K).
 
-Since you do not control the lifetime of the files, the above may not be
-guaranteed. So, this path is just an arbitrary information from the past.
-It _was_ consistent with the request, but it does _not_ mean it still is.
-
-I would rely on the chip name, which is provided by the DT/driver, if
-possible.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
