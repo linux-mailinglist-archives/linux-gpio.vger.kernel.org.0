@@ -2,61 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E38075B3E0
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 18:09:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87D2E75B3E9
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 18:12:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231245AbjGTQJY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 12:09:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41714 "EHLO
+        id S229894AbjGTQMG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 12:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230282AbjGTQJJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 12:09:09 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED7E1989;
-        Thu, 20 Jul 2023 09:08:49 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-51de9c2bc77so1320331a12.3;
-        Thu, 20 Jul 2023 09:08:48 -0700 (PDT)
+        with ESMTP id S229619AbjGTQMF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 12:12:05 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA1AE44;
+        Thu, 20 Jul 2023 09:12:03 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-992b27e1c55so163038066b.2;
+        Thu, 20 Jul 2023 09:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689869326; x=1690474126;
+        d=gmail.com; s=20221208; t=1689869522; x=1690474322;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8bNQ145SD9gJUUYcs3x/fi3m9w9C++tLcggQJSP0LH0=;
-        b=reVTfqiyBw1foqbPbG2M1wDLQrA81Y2FGLbQOY87e1OWk0fXJhQRU7fpnzF54wSryW
-         Cw8GnbXcLYt8wpsNGhvI8nb1EtICGOYLVhqmthAZWVgt+rcdS941QN7Kc7C6/o/Yhe6q
-         avSKhv1REA5yDFLq361iggSXgu6fbnKgZuVqNJVqZebRq8UnnfMmd5e81faV3YJrnU5b
-         JUPBCENfkBYNdVO8I9ohbCrQMPMG/WNgTxNiGKVUQicgUFJN/6MMO1WzkGaeZSHy3r4x
-         wscURuoIGcayJIEsJ3VLEGrKAfVDpVuJ9tgHlRn0VrFKZ509O+nMRquVR4oG7My6KoWb
-         4wCA==
+        bh=h0nrbQn1sFt+hrc37Tnt0J9Wx46AspN3f8YZCBPziq4=;
+        b=p7hIaMOMHLK0Suqn6HH3aXxki2zzGmkbWsJUlNcpr2DA22XWi9uv87SMXBTs24xDuN
+         tNA8wvxpZvToGcCci2SeC4oSXs4WHzj+tN7tMkaItJE1hG85eEeLk3XLDmt1bVZwP8Cp
+         JkVe3h5rFu75qKDZWocdshcQI327qC5ykZMETMADbUEIq4QtBQTQdaQTXeT0eszld5PC
+         exJ2wwlgW23rc4ybLqutmm2n4kOOX/J/giglcQzSMeFsITJiJTRPKUZw2WSbiIrzHTd/
+         3uDKWSpmxtyKMoT68ttd8HVwMvVPCO9yI/5cd1kv7rpYafwBKU4Eq6ftgH6sy12B+sxV
+         IWDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689869326; x=1690474126;
+        d=1e100.net; s=20221208; t=1689869522; x=1690474322;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8bNQ145SD9gJUUYcs3x/fi3m9w9C++tLcggQJSP0LH0=;
-        b=LHrFx/8LfUABgrkb+/rZH4ByhI5s1bEgu7PByowylqnEdhQUGSmFJuj6KW1R8UaCP+
-         DfY5TdMGVaon8iXj2u+5xcIelWrxJEBQmaMSVuM8qR9mCLvvHo0lEu+RbxA3tdXpCTkt
-         siSz8BY6pjOKqkF5/S6S/TTkrMXWK7Cude+NeyLvcthearGo5KWwE2klArUXRR630joi
-         cXs0XRrLpuF0/5Vugqw/HnNepvixWGhUAmA//ATrFb/OwwO9mnzXdjfluON/V+WMTWJZ
-         dBsge8xTn2OOwLzvjeh0QZoHk1EhnT3yT/bE3AmhdI2AQmeLW1+TID3ZCrM0mhWuqNzj
-         tyJg==
-X-Gm-Message-State: ABy/qLYAyyXDV0M/yW7sVkOAwiNh+CUXC5Ya9ghpbZs7Vv8JCLi8q1in
-        UrirLdp/bIbd7IoL8zJxpWRy2taeNgauNLSTRLA=
-X-Google-Smtp-Source: APBJJlH//xGSHp763z8Odv8skPDp2+tx8xVpkRAd0hnNWzbsEQe0URsks1sfPx/Bl8/cClJr88jBa+C6dKPM8qehhq8=
-X-Received: by 2002:a17:907:7e8e:b0:98d:4000:1bf9 with SMTP id
- qb14-20020a1709077e8e00b0098d40001bf9mr6765289ejc.65.1689869326523; Thu, 20
- Jul 2023 09:08:46 -0700 (PDT)
+        bh=h0nrbQn1sFt+hrc37Tnt0J9Wx46AspN3f8YZCBPziq4=;
+        b=Stbl97Kov98ro1pLyCERqAMJvQFjvXh3D13oItzREjRa4wUzVNe5a/KaAKeQ6E/Iek
+         StNLLxu6uvB5AW8AfBqTzvK09+bCPBEc7cLwbwXZVPO7MeLGuwDEU8IfZpWueAGWkE3Z
+         33GARKZzuk6xIO5YcAlSK0WJQeLpHbaB2vn/pKAL6NeT5hpnFOzTDZNmIHDC6lMOpCwA
+         oURg8511kmTgdeyMPBCb9eOK0ZOqKGEHAvK0lKlJ+Oqve0GYHyQcXZeU/ppNE1MuZMEj
+         zYx+4gArAo+HmPOp8lECdT2mzDs+IFn6mj6JexAokmMSHq6h0/cqqxs2INXZNvn9YYwU
+         XgCg==
+X-Gm-Message-State: ABy/qLZdrOqPjIllegvO4miQCVlPljZ6fx9fB/RJ1DaNigZSK1+26KFO
+        FOc25C4AZ/6UeR4h58oBj8BeXmOuu2KnRnXB6Pw=
+X-Google-Smtp-Source: APBJJlEnUEKc1nZ6g4LU0MLJRu8qBi9abiNe++BWYtu6/abRbCIn/YlRMjBaWCk6kGuncCaVmTrbpS+6zKjnHlyhDA4=
+X-Received: by 2002:a17:906:d7:b0:993:d617:bdc5 with SMTP id
+ 23-20020a17090600d700b00993d617bdc5mr2870468eji.37.1689869522220; Thu, 20 Jul
+ 2023 09:12:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230720134845.23727-1-aboutphysycs@gmail.com>
-In-Reply-To: <20230720134845.23727-1-aboutphysycs@gmail.com>
+References: <cover.1686063941.git.oleksii_moisieiev@epam.com>
+ <43109a0f2f362222fca79e2afd15c46ed9a32977.1686063941.git.oleksii_moisieiev@epam.com>
+ <ZIAxLdexyKBnMOmU@surfacebook> <87sf9ihfc7.fsf@epam.com>
+In-Reply-To: <87sf9ihfc7.fsf@epam.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 20 Jul 2023 19:08:10 +0300
-Message-ID: <CAHp75VebtVNAzJBqbrf7sVmdZ2=+Oc1T+3r8vmkg3AOD_L_jPQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio :mlxbf2: remove unneeded platform_set_drvdata() call
-To:     Andrei Coardos <aboutphysycs@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        andy@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
-        Alexandru Ardelean <alex@shruggie.ro>
+Date:   Thu, 20 Jul 2023 19:11:25 +0300
+Message-ID: <CAHp75Vf+H_wnhT=2w=A9M7wFeOkf_m1M1gmL9vd8WHNid7+YBg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] pinctrl: Implementation of the generic
+ scmi-pinctrl driver
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,15 +80,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 4:49=E2=80=AFPM Andrei Coardos <aboutphysycs@gmail.=
-com> wrote:
->
-> This function call was found to be unnecessary as there is no equivalent
-> platform_get_drvdata() call to access the private data of the driver.
-> Also, the private data is defined in this driver, so there is no risk of
-> it being accessed outside of this driver file.
+On Thu, Jul 20, 2023 at 4:40=E2=80=AFPM Oleksii Moisieiev
+<Oleksii_Moisieiev@epam.com> wrote:
+> andy.shevchenko@gmail.com writes:
+> > Tue, Jun 06, 2023 at 04:22:28PM +0000, Oleksii Moisieiev kirjoitti:
 
-The Subject is broken.
+...
+
+> >> +    devm_kfree(pmx->dev, pmx->functions[selector].groups);
+> >
+> > Red Flag. Please, elaborate.
+>
+> Thank you for the review.
+> I did some research regarding this and now I'm confused. Could you
+> please explain to me why it's a red flag?
+> IIUC devm_alloc/free functions are the calls to the resource-managed
+> alloc/free command, which is bound to the device.
+> pinctrl-scmi driver does devm_pinctrl_register_and_init which does
+> devres_alloc and doesn't open devres_group like
+> scmi_alloc_init_protocol_instance (thanks to Cristian detailed
+> explanation).
+>
+> As was mentioned in Documentation/driver-api/driver-model/devres.rst:
+>
+> ```
+> No matter what, all devres entries are released on driver detach.  On
+> release, the associated release function is invoked and then the
+> devres entry is freed.
+> ```
+
+Precisely. So, why do you intervene in this?
+
+> Also there is devm_pinctrl_get call listed in the managed interfaces.
+>
+> My understanding is that all resources, bound to the particular device
+> will be freed on driver detach.
+>
+> Also I found some examples of using devm_alloc/free like from dt_node_to_=
+map
+> call in pinctrl-simple.c driver.
+>
+> I agree that I need to implement .remove callback with proper cleanup,
+> but why can't I use devm_* here?
+
+You can use devm_*(), but what's the point if you call release
+yourself? That's quite a red flag usually shows a bigger issue
+(misunderstanding of the objects lifetimes and their interaction).
+
+> Maybe I've misunderstood your point.
 
 --=20
 With Best Regards,
