@@ -2,163 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86E5B75B266
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 17:23:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D587175B269
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 17:24:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232523AbjGTPXV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 11:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
+        id S231806AbjGTPYC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 11:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232574AbjGTPXO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 11:23:14 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9059C2699
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:23:12 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b708e49059so14066531fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:23:12 -0700 (PDT)
+        with ESMTP id S231892AbjGTPYA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 11:24:00 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A7E02690
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:23:59 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b9540031acso13503751fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689866591; x=1690471391;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689866637; x=1690471437;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sPQnrOARiDFo5sqjfjZ2rVtHE8KTAkxuOmgwA4v7Z5A=;
-        b=xuPC1yT5GRzBtJCOV0E3sv+xf43uZLpnDcJYPuKFf+eCUFcTWZfGCQYnQk6MzXITne
-         MwJ5ldTCa9NXMRFEnbR8lZzn9BdisGRYTdWwuYReJTZV+V7RG/p0Q63oTpLzQd+HO5Oc
-         g2Ozna4mxVHFG1qTPAdHJxtwVhuJMxqF8vyMWyTlR8VaVvX3VW5kzILuxb0xGbhQiLwc
-         mTWIuNpS2HZDH8wWyJdeAAaeZ24gpxthbxUMAKvXfZlPNVmP7RKJtx1LFJwnxvrfw/ta
-         cmIaNO8RVO9pV3OOGIx18MrBB/SGaYAsNVGDlDN9lkLFuv+sfD150Ul11H3CKKJyCZ9e
-         7NGw==
+        bh=EH5XJadTjYUCZPX5UHJQBVA28A6Iz0OEGos6BVFZVHw=;
+        b=tSC2U4Jr5y1+wh2Mb5Bdb0MhaB0/k0NaklotQi7CQjr9fXtQoh4MnlSb8JXnxqcezs
+         kZz3e3sVkp/puKrYAFTViH9WvT5i+BHMCCXQWX1exoIxO2ICjFVl4NvzHbwAguNan0E+
+         JzzcV4zy9IfAv07PLb5IGqvvzIriOFJrvItxLUmrnMil6zR/qWTbJHknU2vO8A7c7OWe
+         cvWAP1XHGVeYlZzHSaSpfMuK1IB6NcDXSvhXAUlmMw9W5+2LVJ6GltWycftoV36Aezvs
+         9L7xBgi32/zccz98FQwvMwFHJ4LDI3+hRkspkVRygSp9cywlsvKfNuAAchQ6s9ughWoR
+         a8cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689866591; x=1690471391;
+        d=1e100.net; s=20221208; t=1689866637; x=1690471437;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sPQnrOARiDFo5sqjfjZ2rVtHE8KTAkxuOmgwA4v7Z5A=;
-        b=NdBWAtX94nxE1Kwl6pAUS7Luvlo/8lFfleZUH+nooouhn88VIvxctp+6HSMOPv3Jk8
-         HeDzS+S267dHZQ66z1WiTwrNgs6E1R9ne06nuhcaPS94bWRGMT9tBrvQ8WTMfsWDtEgA
-         F0dR0JJmdKWcUnWpdpMeNktFcrhOitozp4u4iqWmgZVQ3UcKk0lhOeVjbO4Es37ZRmz7
-         LvmRUMtjWd+fjNJpO2BhHIvaylnpzph3ovrwtc5ESX2Y1dpwFjdNJ+/meccBYNGUeXXZ
-         90bAgMtsU/WgxrpIZwHRp2J2J56Ynt48LPCQWZ+dbsg55idDBImBXC7kfJlKPCUaj+Fm
-         Nquw==
-X-Gm-Message-State: ABy/qLYTrGX2XW4pyj79h6CkdvGFkRdAvokSk/V9UOGpZi5h3XOj0s3A
-        nJDR/3+E1L66E7FLfBH8znMQ/6SCEWUFqvl4t2UlTYgU7eozcpeb
-X-Google-Smtp-Source: APBJJlFrjnHLPRbT8vq98J4JSA5g0Ix+9H636iwdDSzQ2q/7eIkXKBUVQqIhUeFIrh9kQh/FwAwZtQYLfzenXzIo4tE=
-X-Received: by 2002:a2e:3004:0:b0:2b6:efd0:5dd8 with SMTP id
- w4-20020a2e3004000000b002b6efd05dd8mr2511816ljw.46.1689866590876; Thu, 20 Jul
- 2023 08:23:10 -0700 (PDT)
+        bh=EH5XJadTjYUCZPX5UHJQBVA28A6Iz0OEGos6BVFZVHw=;
+        b=GukA+AvjmFcikbCVgMZztQZTaC4OFz3U4M85EL3VfT6aOxyzdPXSXSjFMWgJVDOSLp
+         E25Lo4Z4D0rY9nAStGpu4UZuuQMiHt9//vdlxnshGmsleZQ+oPT66ifwb4+IgWRqKE1s
+         DFSrAC//mzQ6l4jZ6ju103jnodu8ipEj7UuDsZx7n6wn080eB/GvtenX8wzeoygiaZiS
+         nBbzPGXfY5Y4H9NpXkdL7MBlTZoVpCYv5nRP89XS9BzHkkTn6Y8RmTcuHtWXk+gzifDI
+         MOO5kPVz1ZjjNxGHMhl8cyo+HPK4Gpy838m/WZzeBc8AmRQn77cgRAlLEO4e79YUNqwo
+         ZZ6g==
+X-Gm-Message-State: ABy/qLaAe1YUjw+grnOP94Zuy9TzGeH5Zf4+ngrS8ZrV9SKkdF4SfiYD
+        eimMfp/oBHEx01PVsRMhy67E8eNkiUsabJOMFSaXuQ==
+X-Google-Smtp-Source: APBJJlEOzmEtOLhlMlHkEj7ifVntBb1Vm6jU1/PVSuCDtkWGuxJDc0p/aEQORKlogSjij1Ea6FCgQdhciawX6Ab8WHc=
+X-Received: by 2002:a2e:7c12:0:b0:2b6:de59:1ba4 with SMTP id
+ x18-20020a2e7c12000000b002b6de591ba4mr2326446ljc.20.1689866637429; Thu, 20
+ Jul 2023 08:23:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230711072053.2837327-1-geert+renesas@glider.be> <CAMRc=Mef-J-WinQxphm+CU8u-PoBan1hPT2yLih4i-RFUDePBQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Mef-J-WinQxphm+CU8u-PoBan1hPT2yLih4i-RFUDePBQ@mail.gmail.com>
+References: <20230718193913.3578660-1-arnd@kernel.org>
+In-Reply-To: <20230718193913.3578660-1-arnd@kernel.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 20 Jul 2023 17:22:59 +0200
-Message-ID: <CAMRc=MfsbngW4dor9UXX1ncyabZ=NjUFZFTarcfgOO3iMz4zgw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mxc: Improve PM configuration
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Thu, 20 Jul 2023 17:23:45 +0200
+Message-ID: <CAMRc=McQ5PH-4umCDQGOiy_tZsoC5gH7h3EJm0gUEz5OBZZ6NQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxc: fix unused function warnings
+To:     Arnd Bergmann <arnd@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Shenwei Wang <shenwei.wang@nxp.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andy@kernel.org>, Marek Vasut <marex@denx.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Dan Carpenter <error27@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 5:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Tue, Jul 18, 2023 at 9:39=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
 >
-> On Tue, Jul 11, 2023 at 9:20=E2=80=AFAM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> >
-> > If CONFIG_PM=3Dn (e.g. m68k/allmodconfig):
-> >
-> >     drivers/gpio/gpio-mxc.c:612:12: error: =E2=80=98mxc_gpio_runtime_re=
-sume=E2=80=99 defined but not used [-Werror=3Dunused-function]
-> >       612 | static int mxc_gpio_runtime_resume(struct device *dev)
-> >           |            ^~~~~~~~~~~~~~~~~~~~~~~
-> >     drivers/gpio/gpio-mxc.c:602:12: error: =E2=80=98mxc_gpio_runtime_su=
-spend=E2=80=99 defined but not used [-Werror=3Dunused-function]
-> >       602 | static int mxc_gpio_runtime_suspend(struct device *dev)
-> >           |            ^~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > Fix this by using the non-SET *_PM_OPS to configure the dev_pm_ops
-> > callbacks, and by wrapping the driver.pm initializer insider pm_ptr().
-> >
-> > As NOIRQ_SYSTEM_SLEEP_PM_OPS() uses pm_sleep_ptr() internally, the
-> > __maybe_unused annotations for the noirq callbacks are no longer needed=
-,
-> > and can be removed.
-> >
-> > Fixes: 3283d820dce649ad ("gpio: mxc: add runtime pm support")
-> > Reported-by: noreply@ellerman.id.au
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  drivers/gpio/gpio-mxc.c | 10 +++++-----
-> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> > index a9fb6bd9aa6f9645..a43df5d5006e62d3 100644
-> > --- a/drivers/gpio/gpio-mxc.c
-> > +++ b/drivers/gpio/gpio-mxc.c
-> > @@ -623,7 +623,7 @@ static int mxc_gpio_runtime_resume(struct device *d=
-ev)
-> >         return 0;
-> >  }
-> >
-> > -static int __maybe_unused mxc_gpio_noirq_suspend(struct device *dev)
-> > +static int mxc_gpio_noirq_suspend(struct device *dev)
-> >  {
-> >         struct platform_device *pdev =3D to_platform_device(dev);
-> >         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
-> > @@ -634,7 +634,7 @@ static int __maybe_unused mxc_gpio_noirq_suspend(st=
-ruct device *dev)
-> >         return 0;
-> >  }
-> >
-> > -static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev)
-> > +static int mxc_gpio_noirq_resume(struct device *dev)
-> >  {
-> >         struct platform_device *pdev =3D to_platform_device(dev);
-> >         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
-> > @@ -647,8 +647,8 @@ static int __maybe_unused mxc_gpio_noirq_resume(str=
-uct device *dev)
-> >  }
-> >
-> >  static const struct dev_pm_ops mxc_gpio_dev_pm_ops =3D {
-> > -       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_=
-noirq_resume)
-> > -       SET_RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_r=
-esume, NULL)
-> > +       NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_noir=
-q_resume)
-> > +       RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resum=
-e, NULL)
-> >  };
-> >
-> >  static int mxc_gpio_syscore_suspend(void)
-> > @@ -695,7 +695,7 @@ static struct platform_driver mxc_gpio_driver =3D {
-> >                 .name   =3D "gpio-mxc",
-> >                 .of_match_table =3D mxc_gpio_dt_ids,
-> >                 .suppress_bind_attrs =3D true,
-> > -               .pm =3D &mxc_gpio_dev_pm_ops,
-> > +               .pm =3D pm_ptr(&mxc_gpio_dev_pm_ops),
-> >         },
-> >         .probe          =3D mxc_gpio_probe,
-> >  };
-> > --
-> > 2.34.1
-> >
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> Applied, thanks!
+> The new runtime PM support causes a harmless warning about
+> unused functions when runtime PM is disabled:
 >
-> Bart
+> drivers/gpio/gpio-mxc.c:612:12: error: 'mxc_gpio_runtime_resume' defined =
+but not used [-Werror=3Dunused-function]
+> drivers/gpio/gpio-mxc.c:602:12: error: 'mxc_gpio_runtime_suspend' defined=
+ but not used [-Werror=3Dunused-function]
+>
+> Change the driver to use the more modern helper macros that avoid these
+> warnings, and remove the now unnecessary __maybe_unused annotations
+>
+> Fixes: 3283d820dce64 ("gpio: mxc: add runtime pm support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpio/gpio-mxc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index a9fb6bd9aa6f9..e03fc8d375fe1 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -623,7 +623,7 @@ static int mxc_gpio_runtime_resume(struct device *dev=
+)
+>         return 0;
+>  }
+>
+> -static int __maybe_unused mxc_gpio_noirq_suspend(struct device *dev)
+> +static int mxc_gpio_noirq_suspend(struct device *dev)
+>  {
+>         struct platform_device *pdev =3D to_platform_device(dev);
+>         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
+> @@ -634,7 +634,7 @@ static int __maybe_unused mxc_gpio_noirq_suspend(stru=
+ct device *dev)
+>         return 0;
+>  }
+>
+> -static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev)
+> +static int mxc_gpio_noirq_resume(struct device *dev)
+>  {
+>         struct platform_device *pdev =3D to_platform_device(dev);
+>         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
+> @@ -647,8 +647,8 @@ static int __maybe_unused mxc_gpio_noirq_resume(struc=
+t device *dev)
+>  }
+>
+>  static const struct dev_pm_ops mxc_gpio_dev_pm_ops =3D {
+> -       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_no=
+irq_resume)
+> -       SET_RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_res=
+ume, NULL)
+> +       NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_noirq_=
+resume)
+> +       RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resume,=
+ NULL)
+>  };
+>
+>  static int mxc_gpio_syscore_suspend(void)
+> --
+> 2.39.2
+>
 
-Nevermind, Arnd has a better fix for that so I'll apply his change.
+Applied, thanks!
 
 Bart
