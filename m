@@ -2,114 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBD0775A89E
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 10:05:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73D7775A8CF
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 10:11:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbjGTIFS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 04:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47950 "EHLO
+        id S230290AbjGTILG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 04:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbjGTIFS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 04:05:18 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5295E135
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:05:17 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6687446eaccso418814b3a.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:05:17 -0700 (PDT)
+        with ESMTP id S230247AbjGTILE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 04:11:04 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C29271D
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:10:42 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fbf1b82d9cso3651045e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:10:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689840317; x=1692432317;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TVvPYEDz/7OrMZAplW1M790X/LH+R0stg1w7ZkM3xBU=;
-        b=RdGDUcqGmlVLzTfqLRgJy/x9Oz923Ocj986N1NBIdY/vl8r5/wt689AtMyi4/MbaST
-         5AKQJiUWEIXFWFlbASWzFsAww/RuiGupJdrvkXz+uVXgPVCf6fhRq0fp1FIrIG1JSgYj
-         1ivQ8aExg7B7ctOeKBmOa+CSmhkX7ohTOpKeg3kWJQefxPFRnRz88RDaDdp9EnBY3ZQl
-         5VlL4vsQLlqptvAmNKIibkCV/vgxr8zqTj0fPHj6UsDFWRPKTUEs99AVhnyJT6oMSZwp
-         s+wUuvG4ljX945jEQi9kSrRrDX/EIdQuJGgIoc229Jgmu6JkcEfwtnKj9sl8KIlDjuSi
-         q6mw==
+        d=linaro.org; s=google; t=1689840641; x=1690445441;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WN8uoQU0RzkfTnA8xg1xHLz5SFxQatZP5zYD6zcr3yo=;
+        b=G9ktw7WHw1GquR+B21+iObD3YH5ok0+4Jx3zwauFxzGt4ayZpeaKFFOsgTolJ7A0q+
+         1KP2uwg9Ja4eVdU61mJxaV1so92b+8y8HNQbiuj0X2+QSmKWiOwJKnIe/6M7yE1r7Aez
+         hUTme3O6c+CMke1VxvdsQ054hxbcGWrDoP30nBPact1JnQMPHxuCXtc9q2IrSYiN8E1J
+         IP8TutKnKlO9jfq5JdINvTe7+ANbn7ylkunaADzBKftkQmxqOgzHWn0FXEks+ZVYm9yp
+         M5N7CnlmU4oDUFTMt+FN3znH8n04+/umOP7qYDRNKpIQ1x46M9N6G/VWJ2lHwr3tpeQg
+         6hBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689840317; x=1692432317;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TVvPYEDz/7OrMZAplW1M790X/LH+R0stg1w7ZkM3xBU=;
-        b=XrMWtQ1Rh9N/6uZ/fu9E7Nztwg0BPPg4n3ndAdMxZNaDHJjuG7Nwu/8a1j5kILgDHF
-         32MNY4EUk+j6T3IBItnKGiPRJHEncaaX74d/evAil9z0yiMCob9kECZZ0JyMM1+eN3Qe
-         I/MIsBAdzSLZcqDOgRjhnI6r1O95NtK69eioiyT55N2tbIwDzcrqRGKUDH9otPkiFo30
-         SLsevnQ64crKOjny7ubKE6aBbedFBN0Vk39M4x31lVWA0/6qANb3TLgoX+zXcO7PwzSr
-         muyevK//6ZjIyKpoFhvIErDX4TJ/o81PV9rbpNBZ53XpqteCj9EO5fDFDboglZFhRW+R
-         VChw==
-X-Gm-Message-State: ABy/qLYVXUNK+z9auILtYJBE8UVqqmh0z8HE4KFVWm6pij7QEF8a1FlV
-        dWIka5SlOrAguK0rHKmEKQJNC95ox+o=
-X-Google-Smtp-Source: APBJJlEsr55vpX4y9J84lYyC8rhVZvY5BJflOXTUWZQ7q1NjhTOYm5y0qpTTatLiSeeXNxnkbQsIZw==
-X-Received: by 2002:a05:6a21:6da5:b0:133:1a76:6bab with SMTP id wl37-20020a056a216da500b001331a766babmr26634049pzb.47.1689840316219;
-        Thu, 20 Jul 2023 01:05:16 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id t26-20020aa7939a000000b00640f51801e6sm505876pfe.159.2023.07.20.01.05.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 01:05:15 -0700 (PDT)
-Date:   Thu, 20 Jul 2023 16:05:10 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH 0/5] core: provide information about the parent
- chip in line requests
-Message-ID: <ZLjqtVcTCcStYac4@sol>
+        d=1e100.net; s=20221208; t=1689840641; x=1690445441;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WN8uoQU0RzkfTnA8xg1xHLz5SFxQatZP5zYD6zcr3yo=;
+        b=icHuqnEU92jPVfpO5VJ/728tnkKCV9ITj/rnBcit/bv0H7K1wbPLzR7X9T43rprq+k
+         FeRQqIqq1tv0laBhr8nW14rFIWy9gxjwFjlNCuFdvSkrGV74C7U2bqIAAH9TXMTB3FmP
+         npLlvHQ/9bPRfKXiyVGvbJlQxBkZ9Y+8SceW7+PRWn5fx0TMh7DmjI6w8gV4SwbmbWeR
+         QJCh60Aq4btNmJlTh9/TpSjdpHKAsVFec+UZ0usRuYiXRgu4W5kqLfkJMLMOvXDpLHLQ
+         aoNhu0U665fS5irArILM2HvvfWQ7dd78cfX45rLYpKz3pTQeVggWOyc5m7OT5/riJ2mM
+         9CbA==
+X-Gm-Message-State: ABy/qLaHX84G1APNGz8TWeQ1yZk4Icy+wdMQFkeUZSqgfXB8ldNzZ6Rj
+        YjYzM9JMzFQMH2CVO75kAxWGFQ==
+X-Google-Smtp-Source: APBJJlFz13FgX5oCqnvabFXGrnWBMCaXbGNTTtWZ3Cakrftael0+9xBONU18QgOAhr/uQZQO4NQPOw==
+X-Received: by 2002:a7b:cbda:0:b0:3fb:ad5d:9568 with SMTP id n26-20020a7bcbda000000b003fbad5d9568mr3693733wmi.38.1689840641093;
+        Thu, 20 Jul 2023 01:10:41 -0700 (PDT)
+Received: from localhost (i5C7438C1.versanet.de. [92.116.56.193])
+        by smtp.gmail.com with ESMTPSA id v5-20020adfebc5000000b0031417b0d338sm539101wrn.87.2023.07.20.01.10.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jul 2023 01:10:40 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 20 Jul 2023 10:10:40 +0200
+Message-Id: <CU6UIH1XJDVM.TS19DX8K0RHQ@fedora>
+Subject: Re: [libgpiod][PATCH 5/5] bindings: rust: provide
+ LineRequest::chip_path()
+Cc:     <linux-gpio@vger.kernel.org>,
+        "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+        "Kent Gibson" <warthog618@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+X-Mailer: aerc 0.14.0
 References: <20230719192057.172560-1-brgl@bgdev.pl>
- <ZLipqIJE1Mo4oK00@sol>
- <CAMRc=Mf=Xf7KPP+9GPC6=1Gsp3XTfzrwjOK2jrqeP7QUVxtD+Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mf=Xf7KPP+9GPC6=1Gsp3XTfzrwjOK2jrqeP7QUVxtD+Q@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+ <20230719192057.172560-6-brgl@bgdev.pl> <CU6QJJUDI5D7.2GPPMGLBM6C83@fedora>
+ <CAMRc=McrhxwASt8WJ0dOrEa1NPnhtOVkNBXuiK1ejiS5P37JgA@mail.gmail.com>
+In-Reply-To: <CAMRc=McrhxwASt8WJ0dOrEa1NPnhtOVkNBXuiK1ejiS5P37JgA@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 09:59:00AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jul 20, 2023 at 5:27 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Thu Jul 20, 2023 at 10:04 AM CEST, Bartosz Golaszewski wrote:
+> On Thu, Jul 20, 2023 at 7:04=E2=80=AFAM Erik Schilling
+> <erik.schilling@linaro.org> wrote:
 > >
-> > On Wed, Jul 19, 2023 at 09:20:52PM +0200, Bartosz Golaszewski wrote:
+> > On Wed Jul 19, 2023 at 9:20 PM CEST, Bartosz Golaszewski wrote:
 > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > > >
-> > > While working on the DBus API, it occurred to me that while we can obtain
-> > > the list of requested offsets from a line request, this information lacks
-> > > context if we cannot get any information about the parent chip on which
-> > > the request was made.
+> > > Provide a wrapper around gpiod_line_request_get_chip_path() for Rust
+> > > bindings and add a test-case.
 > > >
-> > > We cannot reference the chip in any way as its lifetime is disconnected
-> > > from the request but we can at least provide the path to the character
-> > > device used to open it as a way of providing some context for the offsets.
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > ---
+> > [...]
+> > > diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/ru=
+st/libgpiod/src/line_request.rs
+> > > index 1140aa9..2caab14 100644
+> > > --- a/bindings/rust/libgpiod/src/line_request.rs
+> > > +++ b/bindings/rust/libgpiod/src/line_request.rs
+> > [...]
+> > > @@ -25,6 +26,17 @@ impl Request {
+> > >          Ok(Self { request })
+> > >      }
 > > >
+> > > +    pub fn chip_path(&self) -> Result<&str> {
+[...]
+> > More importantly, _if_ this function is returning a file path, then I
+> > would consider to return a Path [1]. The conversion from &str -> Path i=
+s
+> > "0-cost" and makes the API more explicit. `Sim::dev_path()` also return=
+s
+> > a PathBuf so the conversion in the test would become a little easier.
 > >
-> > No problem with this conceptually, the only question I have is which
-> > one of these should be stored:
-> >  - requested path e.g. 'a_symlink_to_my_favorite_chip'
-> >  - canonicalised path e.g. '/dev/gpiochip0'
-> >  - chip name e.g. 'gpiochip0'
-> >  - chip number e.g. 0
-> >
-> > In this patch we get the requested path, right?
-> >
-> 
-> Yes, I think we should just use whatever filesystem path was used to
-> create the chip as it would be the one allowing the caller to reopen
-> the same chip.
-> 
+>
+> I wanted to stay in line with chip's path() getter which also returns
+> Result<&str>. As you're saying - the user can convert it at 0 cost if
+> needed.
 
-So there are instances where those four don't map to the same thing?
+Makes sense. Did not notice that it is used as &str elsewhere.
 
-Cheers,
-Kent.
+- Erik
