@@ -2,121 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03C1E75B1BB
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 16:52:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEADC75B1BE
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 16:53:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231872AbjGTOwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 10:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40708 "EHLO
+        id S232030AbjGTOxK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 10:53:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231956AbjGTOwm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 10:52:42 -0400
-Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ADCC26BF
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 07:52:40 -0700 (PDT)
-Received: by mail-vs1-xe36.google.com with SMTP id ada2fe7eead31-443571eda4dso387004137.2
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 07:52:40 -0700 (PDT)
+        with ESMTP id S232457AbjGTOxJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 10:53:09 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F3F5C6
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 07:53:08 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-98e39784a85so438341866b.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 07:53:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689864759; x=1690469559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1689864786; x=1690469586;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0se/fiZTYQyvsUnNPmtkJSJYvLAJ5Jb+/5wZpSy5RKg=;
-        b=ECpP9SgIhGTB9F0PFkqrngjAPCnh4+RpKJS05JQJS+MmSUALFt24TNaj6WT24u/RBx
-         PzB+8Pa62aLb4qrb68NHsCJKPSQMvVQl4NzT8anLro5a5hbKsM5tKbEROgUK5jC0MHVn
-         2xibNR8f93W/aGz3IWCi7TemFn9i09rFbR9mBviMbYBpjVyGI/Z3y27mLEJVPOwUFymL
-         debaGdtTKAHVeYPW2AJHzvtovPcxuEdHp5z+ENerkutD1Jy7LXy0nrusrvZaKLKipUgj
-         9bS/SwB2biOAhZlmZ4MOliEKL6PtQQyzcFdWLgdgYK6QBlFpmpngsVsylp9ASlk3QkZ2
-         CxLg==
+        bh=jIxp0Zwjdv878XOR80dkOFsW88+csVXqnn/K1mgVbp8=;
+        b=QjfjSKrtD/LgbaOA+pbFWtNKZ7yFxIa05pwD4CN1cGRkm8pdPUh+WegxAVu82BnAdR
+         +383/NXDp4UiKuvjDIW3f3i3ah6UryKLbSyoVljNUmZIMLfEk2pd7tn2aHebI06ZV+NK
+         xZ7jAzGsj7qixaHf8sCUJFhfODliLwO+1k8cJbieVLENbUOmsWJNw3GLdg0eI0B4/9MP
+         npUHjwEMki1vU7MzZKClQvBLfsOfsPQEKWObzglxBnslOw784bGLM/3zcYcaEyK0scWQ
+         67ZXPKkntXwWdySrYXXFzmvTUC/nBuKDcytyPc9hNaXkwfERgOo/EERi//1y327Ypnda
+         t/dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689864759; x=1690469559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0se/fiZTYQyvsUnNPmtkJSJYvLAJ5Jb+/5wZpSy5RKg=;
-        b=NA6LM2vlMT4N/Xa0buHqKftN7RqPv98NAEQ/p+i3GrxGxiB0DSWPUnlKMjuU6S0rRn
-         4j0GMySa5eEqPHUkZr/Jj0Vz0/ZmX7uiFOg+bgcIiP2iF3dv6WhWl35Qodu9RD8wwE9g
-         AmlTvARUV/jiEuUnsE4F7xRYfsefSUOWjiHDBtQusJIh94DyPN1Y5mQi4b68OenkZhh9
-         QBCBc/1KKW+TPH2Li2c1/Cz/eRymvzWFpwkHi2LVAsEU61DO1taIpG4qJWxXb5TS0r/Z
-         IbYu8CmSKOEqASYubzhZubqBNJque5pzZOgOg1slA9xfPjhGJyvS5eLfOGkvj8VpsmZa
-         riNg==
-X-Gm-Message-State: ABy/qLbuV79qXcquAqpGxCWQl1DQ9NMJTxNg9UEcEgcBXL49+6dbScA2
-        L+QNwJx/BjnczshFuLBU511jWp6xuZT+wdkgA/zJS4wMPhgUsVuK
-X-Google-Smtp-Source: APBJJlEBQjWDQAcy1Rgnl2cOgFt6Q6Qzew81sNG8SyT2Z4sz6DY5xx5so3PsZTd81AmWwWnInZ7KcPEKGH3GFuhNHmI=
-X-Received: by 2002:a67:e957:0:b0:443:d94e:c50b with SMTP id
- p23-20020a67e957000000b00443d94ec50bmr13021126vso.32.1689864759276; Thu, 20
- Jul 2023 07:52:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <tencent_E888A1BD4167B61E1D3EF3F8488A8B148A08@qq.com> <6c89e70749c462d441bd0c157d260570@208suo.com>
-In-Reply-To: <6c89e70749c462d441bd0c157d260570@208suo.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 20 Jul 2023 16:52:28 +0200
-Message-ID: <CAMRc=MfJbmJ7jkcZ-hQEpNKKtLJW7iU+AeZAWTHfnfn11J+aAg@mail.gmail.com>
-Subject: Re: [PATCH] drivers: gpio: Remove unnecessary spaces
-To:     hanyu001@208suo.com
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20221208; t=1689864786; x=1690469586;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jIxp0Zwjdv878XOR80dkOFsW88+csVXqnn/K1mgVbp8=;
+        b=PdnCTeNCrwpKe1wMZDMG5SslkR2ZzV+WiuGTdAMWQb/Zv8ELWK+1TVZSbr/37piYYk
+         mABWR9FCbvyV3eUcO4RsteMzfgSfoSe7Xe9Cd+ig/KSfpcaGazAdfi2KxKqX1seaqnW3
+         k4lrjrJErf45ZI+EqmhXYnbwzBOsMJi38U4RP7TMUp1nOSrmc7MhTV4TRcCHBeBgId9q
+         6XcSlIGouYx2QDhVsyAqJB4DWftQkejcRdrezyQ9nny3/4/COcou3a4eZ8mR85x7pC/C
+         DgQO7MgKvLHiP5i24HHzfafpPklfsZ8s1ZAXT/zr1s5HKJkxNoTDhwPELZ7wurkRlPCM
+         wUuA==
+X-Gm-Message-State: ABy/qLbFrvgIK9KtGnoWzSxT+NWgvn8yOSf6KBK+Uii2EEX3XWepNOmX
+        /nax1fMezVgdwJBScO8X5yI5dA==
+X-Google-Smtp-Source: APBJJlH5orJv2amSsl6+jLfDocHbPlLg9n1j55ojG9kI0Mp3RDg38ZtBL5tW8zosv0MlxqZNNJcdCQ==
+X-Received: by 2002:a17:906:74c6:b0:993:eee4:e704 with SMTP id z6-20020a17090674c600b00993eee4e704mr5341228ejl.38.1689864786644;
+        Thu, 20 Jul 2023 07:53:06 -0700 (PDT)
+Received: from localhost (i5C7438C1.versanet.de. [92.116.56.193])
+        by smtp.gmail.com with ESMTPSA id kk1-20020a170907766100b00997bd42d210sm790463ejc.205.2023.07.20.07.53.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jul 2023 07:53:06 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 20 Jul 2023 16:53:05 +0200
+Message-Id: <CU732LF5D9PH.JX578TCYJ092@fedora>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+Subject: Re: [libgpiod][PATCH v2 5/5] bindings: rust: provide
+ LineRequest::chip_name()
+Cc:     <linux-gpio@vger.kernel.org>,
+        "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+        "Kent Gibson" <warthog618@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+X-Mailer: aerc 0.14.0
+References: <20230720144747.73276-1-brgl@bgdev.pl>
+ <20230720144747.73276-6-brgl@bgdev.pl>
+In-Reply-To: <20230720144747.73276-6-brgl@bgdev.pl>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 8:55=E2=80=AFAM <hanyu001@208suo.com> wrote:
+On Thu Jul 20, 2023 at 4:47 PM CEST, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Fix checkpatch warnings:
+> Provide a wrapper around gpiod_line_request_get_chip_name() for Rust
+> bindings and add a test-case.
 >
-> ./drivers/gpio/gpio-pca953x.c:1352: ERROR: space prohibited after that
-> open parenthesis '('
-> ./drivers/gpio/gpio-pca953x.c:1353: ERROR: space prohibited after that
-> open parenthesis '('
-> ./drivers/gpio/gpio-pca953x.c:1354: ERROR: space prohibited after that
-> open parenthesis '('
-> ./drivers/gpio/gpio-pca953x.c:1359: ERROR: space prohibited after that
-> open parenthesis '('
-> ./drivers/gpio/gpio-pca953x.c:1360: ERROR: space prohibited after that
-> open parenthesis '('
->
-> Signed-off-by: Yu Han <hanyu001@208suo.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->   drivers/gpio/gpio-pca953x.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index a806a3c..7f4f7ee 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -1349,15 +1349,15 @@ static int pca953x_resume(struct device *dev)
->       { .compatible =3D "maxim,max7315", .data =3D OF_953X( 8, PCA_INT), =
-},
->       { .compatible =3D "maxim,max7318", .data =3D OF_953X(16, PCA_INT), =
-},
->
-> -    { .compatible =3D "ti,pca6107", .data =3D OF_953X( 8, PCA_INT), },
-> -    { .compatible =3D "ti,pca9536", .data =3D OF_953X( 4, 0), },
-> -    { .compatible =3D "ti,tca6408", .data =3D OF_953X( 8, PCA_INT), },
-> +    { .compatible =3D "ti,pca6107", .data =3D OF_953X(8, PCA_INT), },
-> +    { .compatible =3D "ti,pca9536", .data =3D OF_953X(4, 0), },
-> +    { .compatible =3D "ti,tca6408", .data =3D OF_953X(8, PCA_INT), },
->       { .compatible =3D "ti,tca6416", .data =3D OF_953X(16, PCA_INT), },
->       { .compatible =3D "ti,tca6424", .data =3D OF_953X(24, PCA_INT), },
->       { .compatible =3D "ti,tca9539", .data =3D OF_953X(16, PCA_INT), },
->
-> -    { .compatible =3D "onnn,cat9554", .data =3D OF_953X( 8, PCA_INT), },
-> -    { .compatible =3D "onnn,pca9654", .data =3D OF_953X( 8, PCA_INT), },
-> +    { .compatible =3D "onnn,cat9554", .data =3D OF_953X(8, PCA_INT), },
-> +    { .compatible =3D "onnn,pca9654", .data =3D OF_953X(8, PCA_INT), },
->       { .compatible =3D "onnn,pca9655", .data =3D OF_953X(16, PCA_INT), }=
-,
->
->       { .compatible =3D "exar,xra1202", .data =3D OF_953X( 8, 0), },
+>  bindings/rust/libgpiod/src/line_request.rs   | 16 ++++++++++++++++
+>  bindings/rust/libgpiod/tests/line_request.rs | 14 ++++++++++++++
+>  2 files changed, 30 insertions(+)
 
-This doesn't apply to my for-next tree. And the commit message should
-be: "gpio: pca953x: ..."
-
-Bart
+Reviewed-by: Erik Schilling <erik.schilling@linaro.org>
