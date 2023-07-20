@@ -2,129 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73CEC75A4C0
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 05:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3175A75A552
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 07:04:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229707AbjGTD1o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jul 2023 23:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
+        id S229743AbjGTFEF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 01:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbjGTD1n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jul 2023 23:27:43 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5C41B9
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 20:27:42 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-66f3fc56ef4so1033541b3a.0
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 20:27:42 -0700 (PDT)
+        with ESMTP id S229453AbjGTFEE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 01:04:04 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D281FE1
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 22:04:02 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-992af8b3b1bso74344066b.1
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jul 2023 22:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689823662; x=1692415662;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U3ssZfkfh1KClKE8UXWHhu8yuABbR8XjCQYGzzQycv4=;
-        b=aNyLPhXNMCErjqqV00YMgKJ7oYn32fGZmdtr5vZRL3dRKZrhqv0IwIaWuB8hRm0Pn3
-         7P19nG3gpuQ971hfdk41msLrRD7AihaHf4E34M66kbcDeFHqHkF6lOCCCTlzi/BwjDiG
-         +4ZCKqaNidxR6J4hLGY/nn20JbidT2fOWdOp71Ivnp1B5EoP2wdqNP9jp4eQvYm+1Bbb
-         KAXMNR6qhg62cK1VIlWUgS5qi4uzo2szXg4WkinVuMDnwekBvAuhdFi9Bn5TknCxM+d9
-         rTjhIBcRTadQ6XV1YNYBOEpE0ut1dDb4A0egmY1Ixemy9lD5v2S8c8ygA9t9ScZ7Arra
-         oPDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689823662; x=1692415662;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1689829441; x=1690434241;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=U3ssZfkfh1KClKE8UXWHhu8yuABbR8XjCQYGzzQycv4=;
-        b=fTRgGTllNeFiXrptkhFTvNlG6eilYTBiLzEBg5KK6/+EVkBAMFYo8vb+bk6Kw9QqD+
-         bUUI6NzVtbO3/8M+XRUgOmaC5KdLSTugpUOuZ3MAoRX9GPe++f0YdY3FmcWPHFYnLYjk
-         F3Bjm6sZgAUo5amfXqFy17orIlqeHeNS6LtqM6haIMEufXFaQ8Uo/fzKIsud4jwEPgro
-         3Q6TdoK/P4I41jP6oG/RXleLpmTpXiS3/6gcV/C7Qs2XFh1pl3SmucHOKeWe3ZboS0Bl
-         QgIgUd/FEb9uhOzB9lB5pTM0c+OYqOtW5Yb1rlHZbbNxYOmuiU69z+bsHhryht2sULCe
-         YWRQ==
-X-Gm-Message-State: ABy/qLY/Tb++OhhcOA6gF5UhULX+XjojhMgb4xlWJ5mhj6y+mjVMZvRy
-        AIki914bOstrI9sZ/fdy8OE=
-X-Google-Smtp-Source: APBJJlGvbQ7zq+8Lud/lKMtoGm2S0rTE7Y2jCAKAs44EEVzeam/g5nXlw04eu6A530ggBgPHYAHj/w==
-X-Received: by 2002:a05:6a21:6da9:b0:133:38cb:2b93 with SMTP id wl41-20020a056a216da900b0013338cb2b93mr6199652pzb.9.1689823662055;
-        Wed, 19 Jul 2023 20:27:42 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id j6-20020a633c06000000b005579f12a238sm4315789pga.86.2023.07.19.20.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jul 2023 20:27:41 -0700 (PDT)
-Date:   Thu, 20 Jul 2023 11:27:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH 0/5] core: provide information about the parent
- chip in line requests
-Message-ID: <ZLipqIJE1Mo4oK00@sol>
+        bh=3z+IEXGnp7SRnYpFX7/ISaT8Ii5PNDqZql+gGPItEiY=;
+        b=gZP8/iVns3mWlv/+INscbwW+McVSadsxwp3Vwxpp1Yiff9z+xRALofeCkgAQ4qfnOr
+         +tRS5oKnSQiJSlmQv50Yyv6bDXgYUXLZv9YLIEioR4IaWWKaOB7spptdvKlUBLz2Xv1d
+         u+ZKTm27yIt7k6ntCQOG3njUEA1uQZ2MENNa7tYhq/M/3ljOOQKr+3phmfWkF8yzy3Ac
+         9ouP5CqU8Pv0cCCWoV+GJDkjgcy1pdsd920x5zLlA2s9UmJw+pOE/4jRC7tZZ8ggUJzR
+         7IKK/0CEG6sTwn6ttIv5AI1WjbNtdWSw9U+nzHWfm+yJzMVu8KWKB2dHEaOOvh/8NpwZ
+         xGoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689829441; x=1690434241;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3z+IEXGnp7SRnYpFX7/ISaT8Ii5PNDqZql+gGPItEiY=;
+        b=YocqpDoDBx0TsPQocQOF07axP12D2Pveetd9jb8SfdvclAke3ciG9nLg9liO+K9aIO
+         cFy8yCO5kwh+SL4Gh4r6+W6Wb/k7ETQw529OBmIN0hB7lFm2d9HDuaIE9mHDDJVw+dfz
+         35ezc4wIEo+LDYNaiHAts3oF1VWGpjoRCV+ivi64jPic8A/TJeWhTDLtme4tPskNIchv
+         F+BmvTFInpGQlCOw8Auk9xjCOzs/EUFRsXP3OAuSkVqE25nnxW6YJrAlzvIio+Yi5sHm
+         PvQ3CaBm+ad5v4PaJoFVihERyys0pQh6TUxLseqBxRGWc6emAgNOjYPWkJ/I/oFpyQYr
+         yoZA==
+X-Gm-Message-State: ABy/qLbwp+jHqXkZlofgpIMrdN6hixXcPtYJFgBhp0TYX4d3uqf/KnIv
+        P6Z2fFgqbzeagcD7TopqH3zGyg==
+X-Google-Smtp-Source: APBJJlElXI0ct83VFOnCkgL6EXZWUl5GQg2zWR0a9IqwLZHism/AHQWt9DG7XgQ31byK31ludgcPOw==
+X-Received: by 2002:a17:907:ea9:b0:992:be80:ab01 with SMTP id ho41-20020a1709070ea900b00992be80ab01mr5600683ejc.58.1689829440959;
+        Wed, 19 Jul 2023 22:04:00 -0700 (PDT)
+Received: from localhost (i5C7438C1.versanet.de. [92.116.56.193])
+        by smtp.gmail.com with ESMTPSA id ha17-20020a170906a89100b00988b8ff849csm100989ejb.108.2023.07.19.22.04.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jul 2023 22:04:00 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 20 Jul 2023 07:04:00 +0200
+Message-Id: <CU6QJJUDI5D7.2GPPMGLBM6C83@fedora>
+Cc:     <linux-gpio@vger.kernel.org>,
+        "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+        "Kent Gibson" <warthog618@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+Subject: Re: [libgpiod][PATCH 5/5] bindings: rust: provide
+ LineRequest::chip_path()
+X-Mailer: aerc 0.14.0
 References: <20230719192057.172560-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230719192057.172560-1-brgl@bgdev.pl>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+ <20230719192057.172560-6-brgl@bgdev.pl>
+In-Reply-To: <20230719192057.172560-6-brgl@bgdev.pl>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 09:20:52PM +0200, Bartosz Golaszewski wrote:
+On Wed Jul 19, 2023 at 9:20 PM CEST, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> While working on the DBus API, it occurred to me that while we can obtain
-> the list of requested offsets from a line request, this information lacks
-> context if we cannot get any information about the parent chip on which
-> the request was made.
-> 
-> We cannot reference the chip in any way as its lifetime is disconnected
-> from the request but we can at least provide the path to the character
-> device used to open it as a way of providing some context for the offsets.
-> 
+>
+> Provide a wrapper around gpiod_line_request_get_chip_path() for Rust
+> bindings and add a test-case.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+[...]
+> diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/l=
+ibgpiod/src/line_request.rs
+> index 1140aa9..2caab14 100644
+> --- a/bindings/rust/libgpiod/src/line_request.rs
+> +++ b/bindings/rust/libgpiod/src/line_request.rs
+[...]
+> @@ -25,6 +26,17 @@ impl Request {
+>          Ok(Self { request })
+>      }
+> =20
+> +    pub fn chip_path(&self) -> Result<&str> {
 
-No problem with this conceptually, the only question I have is which
-one of these should be stored:
- - requested path e.g. 'a_symlink_to_my_favorite_chip'
- - canonicalised path e.g. '/dev/gpiochip0'
- - chip name e.g. 'gpiochip0'
- - chip number e.g. 0
+A rustdoc comment `/// <explanation>` on the function may be helpful.
+The other functions have some (though those could probably also be a
+little longer...).
 
-In this patch we get the requested path, right?
+More importantly, _if_ this function is returning a file path, then I
+would consider to return a Path [1]. The conversion from &str -> Path is
+"0-cost" and makes the API more explicit. `Sim::dev_path()` also returns
+a PathBuf so the conversion in the test would become a little easier.
 
-Cheers,
-Kent.
+> +        // SAFETY: The string returned by libgpiod is guaranteed to live=
+ as long
+> +        // as the `struct LineRequest`.
+> +        let path =3D unsafe { gpiod::gpiod_line_request_get_chip_path(se=
+lf.request) };
 
-> This series adds a new getter for struct gpiod_line_request and wrappers
-> for it for all bindings. This will be used in the upcoming DBus GPIO
-> manager code.
-> 
-> Bartosz Golaszewski (5):
->   core: provide gpiod_line_request_get_chip_path()
->   tests: add a test-case for gpiod_line_request_get_chip_path()
->   bindings: cxx: provide line_request::chip_path()
->   bindings: python: provide the chip_path property in line_request
->   bindings: rust: provide LineRequest::chip_path()
-> 
->  bindings/cxx/gpiodcxx/line-request.hpp       |  7 +++++++
->  bindings/cxx/line-request.cpp                | 10 +++++++++-
->  bindings/cxx/tests/tests-line-request.cpp    |  6 ++++--
->  bindings/python/gpiod/chip.py                |  1 +
->  bindings/python/gpiod/line_request.py        | 12 +++++++++--
->  bindings/python/tests/tests_line_request.py  | 13 +++++++-----
->  bindings/rust/libgpiod/src/line_request.rs   | 12 +++++++++++
->  bindings/rust/libgpiod/tests/line_request.rs | 13 ++++++++++++
->  include/gpiod.h                              |  9 +++++++++
->  lib/chip.c                                   |  2 +-
->  lib/internal.h                               |  3 ++-
->  lib/line-request.c                           | 20 ++++++++++++++++++-
->  tests/tests-line-request.c                   | 21 ++++++++++++++++++++
->  13 files changed, 116 insertions(+), 13 deletions(-)
-> 
-> -- 
-> 2.39.2
-> 
+The SAFETY comment should explain why the following `unsafe` block is
+safe. For this block, the lifetime of the string does not matter for
+safety. Instead, it should explain why self.request is valid and safe
+to use.
+
+Maybe like this?
+
++        // SAFETY: The `gpiod_line_request` is guaranteed to be live as lo=
+ng
++        // as `&self`
+
+
+> +        // SAFETY: The string is guaranteed to be valid here by the C AP=
+I.
+> +        unsafe { CStr::from_ptr(path) }
+> +            .to_str()
+> +            .map_err(Error::StringNotUtf8)
+> +    }
+
+Here the lifetime of the string is important then! Checking the
+Cstr::from_ptr doc [2], one needs to ensure that:
+
+- The memory pointed to by ptr must contain a valid nul terminator at
+  the end of the string.
+- ptr must be valid for reads of bytes up to and including the null
+  terminator.
+- The memory referenced by the returned CStr must not be mutated for the
+  duration of lifetime 'a.
+
+The SAFETY comment should explain why these three requirements are
+satisfied.
+
+Suggestion:
+
++        // SAFETY: The string is guaranteed to be valid, non-null and immu=
+table
++        // by the C API for the lifetime of the `gpiod_line_request`. The
++        // `gpiod_line_request` is living as long as `&self`. The string i=
+s
++        // returned read-only with a lifetime of `&self`.
+
+[1] https://doc.rust-lang.org/stable/std/path/struct.Path.html
+[2] https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr
+
+[...]
+
+LGTM otherwise.
+
+- Erik
