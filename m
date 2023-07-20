@@ -2,64 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1579B75A874
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 09:59:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C95DC75A898
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 10:04:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230512AbjGTH7Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 03:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42284 "EHLO
+        id S229914AbjGTIEU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 04:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbjGTH7N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 03:59:13 -0400
-Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 680402128
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 00:59:12 -0700 (PDT)
-Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-799a451ca9cso188093241.2
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 00:59:12 -0700 (PDT)
+        with ESMTP id S229597AbjGTIEU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 04:04:20 -0400
+Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0540A135
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:04:19 -0700 (PDT)
+Received: by mail-vk1-xa2a.google.com with SMTP id 71dfb90a1353d-4716e4adb14so224086e0c.0
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 01:04:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689839951; x=1690444751;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689840258; x=1690445058;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dJzaZMT/kWQFyyJyf5tbR1SbrmBJGn5JRGIiOEvzcxs=;
-        b=zbzLTAB2KaHECHT3cccA931UsJg7yEiThu9uVGX14SeRtNvAOle1em0b7evnREIQQz
-         7qsmxzWWqJGdxx28+61D9sws9+yGK6pa3yHnZmn8Wm4DyjVtvIbAMSinFmT379g7C9rs
-         ofJhvExvUeuoX5yAwHwgsvnHSqi5n5Es7qZGxoED0TuUV6eWFyeoqCAf2qAvVrpss1cQ
-         CvNHlVIOH7G34gjvn8qKd5/OsO1BlpRBJpMwY7ApWRpOSEaR7bSJsuBL9ofFO3u1hD28
-         Og0tgxzzjl+LsPZU8/N6lCvRKBcn3iPDTzKH0AO7SFAJjZmABWJqAikCLMmPcdqUlnV7
-         +FEA==
+        bh=J9QMk27wP0xhG140bZcOkv9eC9yKfi0qeZCV9QjAi9w=;
+        b=wE6E81vxojE0+wIJzgEe7NQv+X56XUXENNubPgu1rQqfTHpSZuU/FB+ATNn+WryZN/
+         YbD033Xm5KOC3YZLPdeKNt2OVXVitW3KKklo4Fy95IoOHITlqfam/9Y8k1U8df9hn3qI
+         fP/5ZzR6MaLYPoa+gio8H5HKq6IYV0w/QikP5w99JQ19uYNquvJPYNpdsmWzd1agxvrV
+         8mFqKdrLknFMEJkapx2DeaZqewhVDHF3qP8kd5lFvoz4+1a6zE4G5JIRkC42histMUvh
+         eQFdeu7YiCBely7gcMEL3w8X2AIiFUwn+ovVs+QQ4dnVALoZYSp377sGzhugaPV96lJQ
+         1iSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689839951; x=1690444751;
+        d=1e100.net; s=20221208; t=1689840258; x=1690445058;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dJzaZMT/kWQFyyJyf5tbR1SbrmBJGn5JRGIiOEvzcxs=;
-        b=fosd/WmTfMiGrAvY7W+8Hf4r8NUi7EZUHBDfErx5955J2qzvw7qc3J2RY3T94udRo4
-         uGWdCfaz+wFfg06VzzFN5YUy5GJV8NdL5qynbSx8nEF1veO+ewUyF8X2C/XCqXmTAdxo
-         VJsBqaAQZFEBPKeP1HZxg/kgHDRHbLNvzzQBA/4+q2PVUejxrTWtmdqpmf4X9gjaInP2
-         jX4Qz2vTrY+zDhNhzayDyU6M0QSaWUmB86Ib8XAi+RD2M3m17ZifbNfwNloDCHg5EUGd
-         wy+tpI0IvVHYGrtFenN9S06E6V8rNWWzpInlkCoo7keU4KDY+I15Wg/PZk21r9nvI27Y
-         CwPQ==
-X-Gm-Message-State: ABy/qLZuLpFnm4OH8h0+CM7eYafub2FYc0sT7teEOoTARBtRBF8+xlfn
-        SiUImVUGcSG0CrP3FCxNz0dUhOGYIkA0ioPgNz/T1g==
-X-Google-Smtp-Source: APBJJlGRud6ac48IlnxwuRM4e7T55+/+8xn2AR0ZQ4It8K0rv1LdCmpfXUnBII9k3zGqKmLlmVKmbnPqPDvzvgg8vTk=
-X-Received: by 2002:a67:f996:0:b0:443:70bd:719f with SMTP id
- b22-20020a67f996000000b0044370bd719fmr1178929vsq.2.1689839951287; Thu, 20 Jul
- 2023 00:59:11 -0700 (PDT)
+        bh=J9QMk27wP0xhG140bZcOkv9eC9yKfi0qeZCV9QjAi9w=;
+        b=JoRnHc63PpdchXoQJ4dC9WVhiZrI+znClK2hAiu6CumOeg89tbd83NIKjp31BkOZPm
+         ma9xyrHBFSMtHMsqpVojtMcfw6/4gm1Zh6WQGr0xturU8tAkKxDtN48iWEr0MqzIbsaq
+         C2lQxpardbDD4YO2kS98Gc4MpwLyvqy8di4SGaIDZ8XEuj76S6Xe7EM3twVFREId8for
+         upTHXZN0dkXi9Z7H00JVZ7uag0bo4s9tF3mxk1c19aHgbPZf4iaz1aLqSeeMIb32PD+F
+         IN5VQceMeAeVPKFi6m/M/2aREvf5QKJcuOWt714gttURUVPGM9oNPJ0kaQi8sHHTqj3Z
+         2BxQ==
+X-Gm-Message-State: ABy/qLYw1Bgfxx0fQsaHwNc02KW+HD+jBhdFjfWch9fNYDDMlQ5br0RT
+        lO7jORzZ5G9Ycr/z3lPqiX0ixJAoMURtCRZM7SFG1Q==
+X-Google-Smtp-Source: APBJJlHchyWNLOjpCMd5SUZQnK7LZf7Wre1QcSlDMwF6FkbnbYRY/UZ/sOaftMEcg4Ct6Oc7JugPjaFFrdpVEBm/xCs=
+X-Received: by 2002:a1f:dd05:0:b0:481:2f82:fd58 with SMTP id
+ u5-20020a1fdd05000000b004812f82fd58mr4832633vkg.2.1689840258066; Thu, 20 Jul
+ 2023 01:04:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230719192057.172560-1-brgl@bgdev.pl> <ZLipqIJE1Mo4oK00@sol>
-In-Reply-To: <ZLipqIJE1Mo4oK00@sol>
+References: <20230719192057.172560-1-brgl@bgdev.pl> <20230719192057.172560-6-brgl@bgdev.pl>
+ <CU6QJJUDI5D7.2GPPMGLBM6C83@fedora>
+In-Reply-To: <CU6QJJUDI5D7.2GPPMGLBM6C83@fedora>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 20 Jul 2023 09:59:00 +0200
-Message-ID: <CAMRc=Mf=Xf7KPP+9GPC6=1Gsp3XTfzrwjOK2jrqeP7QUVxtD+Q@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 0/5] core: provide information about the parent
- chip in line requests
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Date:   Thu, 20 Jul 2023 10:04:07 +0200
+Message-ID: <CAMRc=McrhxwASt8WJ0dOrEa1NPnhtOVkNBXuiK1ejiS5P37JgA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 5/5] bindings: rust: provide LineRequest::chip_path()
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+        Viresh Kumar <viresh.kumar@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -71,71 +72,104 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 5:27=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Thu, Jul 20, 2023 at 7:04=E2=80=AFAM Erik Schilling
+<erik.schilling@linaro.org> wrote:
 >
-> On Wed, Jul 19, 2023 at 09:20:52PM +0200, Bartosz Golaszewski wrote:
+> On Wed Jul 19, 2023 at 9:20 PM CEST, Bartosz Golaszewski wrote:
 > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > While working on the DBus API, it occurred to me that while we can obta=
-in
-> > the list of requested offsets from a line request, this information lac=
-ks
-> > context if we cannot get any information about the parent chip on which
-> > the request was made.
+> > Provide a wrapper around gpiod_line_request_get_chip_path() for Rust
+> > bindings and add a test-case.
 > >
-> > We cannot reference the chip in any way as its lifetime is disconnected
-> > from the request but we can at least provide the path to the character
-> > device used to open it as a way of providing some context for the offse=
-ts.
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> [...]
+> > diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust=
+/libgpiod/src/line_request.rs
+> > index 1140aa9..2caab14 100644
+> > --- a/bindings/rust/libgpiod/src/line_request.rs
+> > +++ b/bindings/rust/libgpiod/src/line_request.rs
+> [...]
+> > @@ -25,6 +26,17 @@ impl Request {
+> >          Ok(Self { request })
+> >      }
 > >
+> > +    pub fn chip_path(&self) -> Result<&str> {
 >
-> No problem with this conceptually, the only question I have is which
-> one of these should be stored:
->  - requested path e.g. 'a_symlink_to_my_favorite_chip'
->  - canonicalised path e.g. '/dev/gpiochip0'
->  - chip name e.g. 'gpiochip0'
->  - chip number e.g. 0
+> A rustdoc comment `/// <explanation>` on the function may be helpful.
+> The other functions have some (though those could probably also be a
+> little longer...).
 >
-> In this patch we get the requested path, right?
+> More importantly, _if_ this function is returning a file path, then I
+> would consider to return a Path [1]. The conversion from &str -> Path is
+> "0-cost" and makes the API more explicit. `Sim::dev_path()` also returns
+> a PathBuf so the conversion in the test would become a little easier.
 >
 
-Yes, I think we should just use whatever filesystem path was used to
-create the chip as it would be the one allowing the caller to reopen
-the same chip.
+I wanted to stay in line with chip's path() getter which also returns
+Result<&str>. As you're saying - the user can convert it at 0 cost if
+needed.
 
 Bart
 
-> Cheers,
-> Kent.
+> > +        // SAFETY: The string returned by libgpiod is guaranteed to li=
+ve as long
+> > +        // as the `struct LineRequest`.
+> > +        let path =3D unsafe { gpiod::gpiod_line_request_get_chip_path(=
+self.request) };
 >
-> > This series adds a new getter for struct gpiod_line_request and wrapper=
-s
-> > for it for all bindings. This will be used in the upcoming DBus GPIO
-> > manager code.
-> >
-> > Bartosz Golaszewski (5):
-> >   core: provide gpiod_line_request_get_chip_path()
-> >   tests: add a test-case for gpiod_line_request_get_chip_path()
-> >   bindings: cxx: provide line_request::chip_path()
-> >   bindings: python: provide the chip_path property in line_request
-> >   bindings: rust: provide LineRequest::chip_path()
-> >
-> >  bindings/cxx/gpiodcxx/line-request.hpp       |  7 +++++++
-> >  bindings/cxx/line-request.cpp                | 10 +++++++++-
-> >  bindings/cxx/tests/tests-line-request.cpp    |  6 ++++--
-> >  bindings/python/gpiod/chip.py                |  1 +
-> >  bindings/python/gpiod/line_request.py        | 12 +++++++++--
-> >  bindings/python/tests/tests_line_request.py  | 13 +++++++-----
-> >  bindings/rust/libgpiod/src/line_request.rs   | 12 +++++++++++
-> >  bindings/rust/libgpiod/tests/line_request.rs | 13 ++++++++++++
-> >  include/gpiod.h                              |  9 +++++++++
-> >  lib/chip.c                                   |  2 +-
-> >  lib/internal.h                               |  3 ++-
-> >  lib/line-request.c                           | 20 ++++++++++++++++++-
-> >  tests/tests-line-request.c                   | 21 ++++++++++++++++++++
-> >  13 files changed, 116 insertions(+), 13 deletions(-)
-> >
-> > --
-> > 2.39.2
-> >
+> The SAFETY comment should explain why the following `unsafe` block is
+> safe. For this block, the lifetime of the string does not matter for
+> safety. Instead, it should explain why self.request is valid and safe
+> to use.
+>
+> Maybe like this?
+>
+> +        // SAFETY: The `gpiod_line_request` is guaranteed to be live as =
+long
+> +        // as `&self`
+>
+>
+> > +        // SAFETY: The string is guaranteed to be valid here by the C =
+API.
+> > +        unsafe { CStr::from_ptr(path) }
+> > +            .to_str()
+> > +            .map_err(Error::StringNotUtf8)
+> > +    }
+>
+> Here the lifetime of the string is important then! Checking the
+> Cstr::from_ptr doc [2], one needs to ensure that:
+>
+> - The memory pointed to by ptr must contain a valid nul terminator at
+>   the end of the string.
+> - ptr must be valid for reads of bytes up to and including the null
+>   terminator.
+> - The memory referenced by the returned CStr must not be mutated for the
+>   duration of lifetime 'a.
+>
+> The SAFETY comment should explain why these three requirements are
+> satisfied.
+>
+> Suggestion:
+>
+> +        // SAFETY: The string is guaranteed to be valid, non-null and im=
+mutable
+> +        // by the C API for the lifetime of the `gpiod_line_request`. Th=
+e
+> +        // `gpiod_line_request` is living as long as `&self`. The string=
+ is
+> +        // returned read-only with a lifetime of `&self`.
+>
+
+I'll take the suggestions verbatim, thanks!
+
+Bart
+
+> [1] https://doc.rust-lang.org/stable/std/path/struct.Path.html
+> [2] https://doc.rust-lang.org/std/ffi/struct.CStr.html#method.from_ptr
+>
+> [...]
+>
+> LGTM otherwise.
+>
+> - Erik
