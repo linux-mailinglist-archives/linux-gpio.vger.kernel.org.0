@@ -2,77 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87D2E75B3E9
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 18:12:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D23A575B562
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 19:17:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjGTQMG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 12:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43858 "EHLO
+        id S231210AbjGTRRS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 13:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229619AbjGTQMF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 12:12:05 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA1AE44;
-        Thu, 20 Jul 2023 09:12:03 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-992b27e1c55so163038066b.2;
-        Thu, 20 Jul 2023 09:12:03 -0700 (PDT)
+        with ESMTP id S229526AbjGTRRR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 13:17:17 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C82CB3;
+        Thu, 20 Jul 2023 10:17:16 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-666edfc50deso756139b3a.0;
+        Thu, 20 Jul 2023 10:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689869522; x=1690474322;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h0nrbQn1sFt+hrc37Tnt0J9Wx46AspN3f8YZCBPziq4=;
-        b=p7hIaMOMHLK0Suqn6HH3aXxki2zzGmkbWsJUlNcpr2DA22XWi9uv87SMXBTs24xDuN
-         tNA8wvxpZvToGcCci2SeC4oSXs4WHzj+tN7tMkaItJE1hG85eEeLk3XLDmt1bVZwP8Cp
-         JkVe3h5rFu75qKDZWocdshcQI327qC5ykZMETMADbUEIq4QtBQTQdaQTXeT0eszld5PC
-         exJ2wwlgW23rc4ybLqutmm2n4kOOX/J/giglcQzSMeFsITJiJTRPKUZw2WSbiIrzHTd/
-         3uDKWSpmxtyKMoT68ttd8HVwMvVPCO9yI/5cd1kv7rpYafwBKU4Eq6ftgH6sy12B+sxV
-         IWDg==
+        d=gmail.com; s=20221208; t=1689873435; x=1690478235;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J0uAt1FpVvgdk69DWGVo/B/WilumnjHo3ckls2wQj2c=;
+        b=MK+qmNNORXwB0I5M1ECJrML+kKdViRer5kBwEH13jqFqWPrvH9qpVwD+NCq/1d018c
+         dmHLfc1tu6kO/ikoIBoIR1krTQBsGZ3+q9u5v3XSZyYbOkyC67YXvHVlcxgsQWsqZgtm
+         4SH2TD93EzA0VP1rFamx/Cxpixhc1xvinZAjcekhOe3ngbMxphygvDdsOviDfTtnsbmZ
+         umZ7UPenNo+uzSz1TkMIjeWQt9QLKY1ACnKSlpgNnzP7MRX/LNX+PoEOdVdbQQ+Lidiy
+         cOGFq119CJN/FS7RftR/9pmwUsBDbw0jIdcDb2SJf2KjVezldwj7jUFTSW8pAI6VW6KZ
+         ONLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689869522; x=1690474322;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h0nrbQn1sFt+hrc37Tnt0J9Wx46AspN3f8YZCBPziq4=;
-        b=Stbl97Kov98ro1pLyCERqAMJvQFjvXh3D13oItzREjRa4wUzVNe5a/KaAKeQ6E/Iek
-         StNLLxu6uvB5AW8AfBqTzvK09+bCPBEc7cLwbwXZVPO7MeLGuwDEU8IfZpWueAGWkE3Z
-         33GARKZzuk6xIO5YcAlSK0WJQeLpHbaB2vn/pKAL6NeT5hpnFOzTDZNmIHDC6lMOpCwA
-         oURg8511kmTgdeyMPBCb9eOK0ZOqKGEHAvK0lKlJ+Oqve0GYHyQcXZeU/ppNE1MuZMEj
-         zYx+4gArAo+HmPOp8lECdT2mzDs+IFn6mj6JexAokmMSHq6h0/cqqxs2INXZNvn9YYwU
-         XgCg==
-X-Gm-Message-State: ABy/qLZdrOqPjIllegvO4miQCVlPljZ6fx9fB/RJ1DaNigZSK1+26KFO
-        FOc25C4AZ/6UeR4h58oBj8BeXmOuu2KnRnXB6Pw=
-X-Google-Smtp-Source: APBJJlEnUEKc1nZ6g4LU0MLJRu8qBi9abiNe++BWYtu6/abRbCIn/YlRMjBaWCk6kGuncCaVmTrbpS+6zKjnHlyhDA4=
-X-Received: by 2002:a17:906:d7:b0:993:d617:bdc5 with SMTP id
- 23-20020a17090600d700b00993d617bdc5mr2870468eji.37.1689869522220; Thu, 20 Jul
- 2023 09:12:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1686063941.git.oleksii_moisieiev@epam.com>
- <43109a0f2f362222fca79e2afd15c46ed9a32977.1686063941.git.oleksii_moisieiev@epam.com>
- <ZIAxLdexyKBnMOmU@surfacebook> <87sf9ihfc7.fsf@epam.com>
-In-Reply-To: <87sf9ihfc7.fsf@epam.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 20 Jul 2023 19:11:25 +0300
-Message-ID: <CAHp75Vf+H_wnhT=2w=A9M7wFeOkf_m1M1gmL9vd8WHNid7+YBg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] pinctrl: Implementation of the generic
- scmi-pinctrl driver
-To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
-Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
+        d=1e100.net; s=20221208; t=1689873435; x=1690478235;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J0uAt1FpVvgdk69DWGVo/B/WilumnjHo3ckls2wQj2c=;
+        b=SLm+b5tlr6idsm/Yh1OQVSEsFtlc4bsB3oIrbg7a6piuUQm/ZuPan8n2n9DoPkTLMu
+         wOouxBPgOKjtdycelh+Owyg+FDTD0XDr5FkceD9DjC2JO9ZGhEkYrn2RgXAIzMDXsPGf
+         1LYkpSfQ4zZ4qa5xSLiLDYP0dRKJZfvektyxQHUzLoAw9Qbkcx88gONRfKUEjNfWOov5
+         zF/IbP/LYpNHxyPMk3dvhisJ13icMpMyjE1vecx4ABbVH0H+VJGPWgs4YzcvcofaYH4U
+         OQMa9/VHWCtt1o/JRYPVylphSmNgbiBQ3tnl3FjdrUeiu+1sF1cbQbhq+/T36KjnLrHn
+         jaYg==
+X-Gm-Message-State: ABy/qLar+Z0aibssi6q/TIvf/KkwNyztO8QdBYkuDZzdKZQurFJJ8eFs
+        6fxfpq4tfyo3GsfUyGmvies=
+X-Google-Smtp-Source: APBJJlEkTI4A4ZrOCc+WXlC2nBipWy2JSRmd1c5HMwU8MruA6yjpC2qz2tfZemAEl4HUzSYjKYO5qQ==
+X-Received: by 2002:a05:6a00:24d1:b0:668:8ad5:778f with SMTP id d17-20020a056a0024d100b006688ad5778fmr10559001pfv.17.1689873434754;
+        Thu, 20 Jul 2023 10:17:14 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:e754:74d1:c368:67a2])
+        by smtp.gmail.com with ESMTPSA id h18-20020a62b412000000b00682a75a50e3sm1502944pfn.17.2023.07.20.10.17.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jul 2023 10:17:14 -0700 (PDT)
+Date:   Thu, 20 Jul 2023 10:17:09 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     nikita.shubin@maquefel.me
+Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
+        Lennert Buytenhek <kernel@wantstofly.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Peters <mpeters@embeddedts.com>,
+        Kris Bahnsen <kris@embeddedts.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 28/42] input: keypad: ep93xx: add DT support for
+ Cirrus EP93xx
+Message-ID: <ZLlsFTe2nvFw698l@google.com>
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+ <20230605-ep93xx-v3-28-3d63a5f1103e@maquefel.me>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230605-ep93xx-v3-28-3d63a5f1103e@maquefel.me>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FSL_HELO_FAKE,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,55 +116,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 4:40=E2=80=AFPM Oleksii Moisieiev
-<Oleksii_Moisieiev@epam.com> wrote:
-> andy.shevchenko@gmail.com writes:
-> > Tue, Jun 06, 2023 at 04:22:28PM +0000, Oleksii Moisieiev kirjoitti:
+On Thu, Jul 20, 2023 at 02:29:28PM +0300, Nikita Shubin via B4 Relay wrote:
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
+> 
+> - drop flags, they were not used anyway
+> - add OF ID match table
+> - process "autorepeat", "debounce-delay-ms", prescale from device tree
+> - drop platform data usage and it's header
+> - keymap goes from device tree now on
+> 
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 
-...
+This is awesome, thank you!
 
-> >> +    devm_kfree(pmx->dev, pmx->functions[selector].groups);
-> >
-> > Red Flag. Please, elaborate.
->
-> Thank you for the review.
-> I did some research regarding this and now I'm confused. Could you
-> please explain to me why it's a red flag?
-> IIUC devm_alloc/free functions are the calls to the resource-managed
-> alloc/free command, which is bound to the device.
-> pinctrl-scmi driver does devm_pinctrl_register_and_init which does
-> devres_alloc and doesn't open devres_group like
-> scmi_alloc_init_protocol_instance (thanks to Cristian detailed
-> explanation).
->
-> As was mentioned in Documentation/driver-api/driver-model/devres.rst:
->
-> ```
-> No matter what, all devres entries are released on driver detach.  On
-> release, the associated release function is invoked and then the
-> devres entry is freed.
-> ```
+>  
+>  #include <linux/bits.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
 
-Precisely. So, why do you intervene in this?
+Are you sure you need this? I think the only OF-specific structure that
+is being used is of_device_id, which comes from mod_devicetable.h that
+you include below.
 
-> Also there is devm_pinctrl_get call listed in the managed interfaces.
->
-> My understanding is that all resources, bound to the particular device
-> will be freed on driver detach.
->
-> Also I found some examples of using devm_alloc/free like from dt_node_to_=
-map
-> call in pinctrl-simple.c driver.
->
-> I agree that I need to implement .remove callback with proper cleanup,
-> but why can't I use devm_* here?
+Otherwise:
 
-You can use devm_*(), but what's the point if you call release
-yourself? That's quite a red flag usually shows a bigger issue
-(misunderstanding of the objects lifetimes and their interaction).
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-> Maybe I've misunderstood your point.
+Please feel free to merge with the rest of the series.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks.
+
+-- 
+Dmitry
