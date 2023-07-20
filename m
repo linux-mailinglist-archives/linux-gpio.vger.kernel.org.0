@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECDCA75B18C
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 16:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B85B675B18A
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 16:48:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230464AbjGTOsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 10:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37672 "EHLO
+        id S231303AbjGTOsF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 10:48:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231151AbjGTOsH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 10:48:07 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70D71722
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 07:48:01 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fbc54cab6fso7196555e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 07:48:01 -0700 (PDT)
+        with ESMTP id S230150AbjGTOsE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 10:48:04 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02D7510F5
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 07:48:03 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-3158a5e64b6so748558f8f.0
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 07:48:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689864480; x=1690469280;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689864481; x=1690469281;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dTZVEED0n66JzC14z8Y1dyJsVAMPVbfXgo6SBVqhOmM=;
-        b=5JzdMHLXkyEhZYg7CUm1aleIZQcSL2nkKdFNAwDHqvxdZFgoVzkRTLOj9phUk2L4DK
-         kI17XlXM6MFievJpnpXc+w9csF0WfgzcyyHKcOMvqaUBAGGMcymcavx39cND1I15+BoE
-         ZIsqHxv+Y9XNC0JvYsxRfK1OB/U7lKQtbb37G20ia+JHD6aVNZHqhKMAhEqvHrcrBwbZ
-         hkb1tbLr8zof3wexOhiEYKN6QoPG+sFSMkzqrII9De15nSlzYBkJ2l/ipI5hIzXM4DVp
-         pHr1Ymqaot84VjIQ5cYitpZd5WPUwG67VLG1fZiu3XGqDcVxUE/DkoMQTiBbdSkaAHCK
-         7wnw==
+        bh=/LN3HBqQ/z8x29O7+OLP3+jUwXpgcldLFQfrT/3tFVc=;
+        b=jCqvTaiUlgPgoCB2/54d97Hx86MIy088fPy2SoLP20rfcMgsHHTqB3ug4DXqtioXQC
+         BUx5o7l0O/MBt2SXjSAFXY3sLXaDeSZfap7j/Ov+wSNfZGcVYunOjZciDdPMJEBu+kxI
+         J0KJ4M/wrUwA5ePDXbW4fA0JP1THkoDR/iEjAbvnTmHxZz7971UM1OGuCyNmhIp7yLQO
+         dzBi9McX0BWFTtAwTsDpOuJe2OuCIK6MmCUMpJ6DKxRR6ORW8ob2rh5HUJGziMbtDShG
+         D64cpNXx9VqzSVLclqdeFCWnClYd4JkQaKhQc/VQFsPt5UfyUvof1EXq4vhvd5/ZD8uj
+         YO3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689864480; x=1690469280;
+        d=1e100.net; s=20221208; t=1689864481; x=1690469281;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dTZVEED0n66JzC14z8Y1dyJsVAMPVbfXgo6SBVqhOmM=;
-        b=bF5Tvpkwi7Jooa3NBlQJaWczf7fFkhY0EvT5QkN7UylpHZ8bFIZSrc+arrZlXkwL8D
-         u6ubuW2YtUQhGyPSn39j4VIEXrt2TwoVdGHR4L8oEM5vVt2C/BYnp1HM/sZXGTSk/GPg
-         Y/zHVTpcDWDn3pdCTVkgQzNZi/VYefzMsCuMIhvC+0B2cv/l9BYtPm4wsZB8vGFw4a6j
-         J51z7sRhwdKCsUFNusRbWbU5yj1R/f5LocqSLbQ3tFJnhd8/T7Cr68b08cJdjIcniBRb
-         3kb0W2kq8UCelxIg2wd+iakP7sjXo7qa5H4/oV3v4B1iKP4St65C0XZGRm8ENDXva14G
-         IDmw==
-X-Gm-Message-State: ABy/qLZy2/TVg3Iqg30KOc8pbCduIPvLhyahZ70jeff5Gq5EdlE4V3bj
-        ODCXtE+mWBicLvfLdfiigWHwjw==
-X-Google-Smtp-Source: APBJJlG96IaRTak/hUyKcVaF/fMszw4gQMjAsfQGailp5kkdylkrTs6by3wl71Q7gX9erq6P7MhrNw==
-X-Received: by 2002:a1c:ed16:0:b0:3fb:dd5d:76b with SMTP id l22-20020a1ced16000000b003fbdd5d076bmr1915049wmh.7.1689864480159;
-        Thu, 20 Jul 2023 07:48:00 -0700 (PDT)
+        bh=/LN3HBqQ/z8x29O7+OLP3+jUwXpgcldLFQfrT/3tFVc=;
+        b=DcOXZ0iwn1NdGjE8LCk3ak7AuSd/gF57f6BZRTTuXfayNtOCqzn1eXdBqU89iZNcX3
+         EFnJru9Mz4oackoaot1apDuecPTZW94k+UgcE4/XYjN7F0Ams4D3aBm1I6A6nGAJikS7
+         ACCIDheDElDN4SUPLlIfnBYWnQKm5d9G5KKOzYhZ/Xn9QbgA0I9WCazDh1e5nHlFBqF6
+         UmF9IS/d++x+gPwL9vRnc4wgZnrQKY0RHCoe1wPpatCpsFkgw+4L4aFZPhIU0YkdwSN3
+         Rrz5Q5FdutEcd4we5rDVxZsQxynLm+RwpvakR0+MDq5R4cZdbAjLdpmBWP4zaLoIMaGF
+         /aZw==
+X-Gm-Message-State: ABy/qLb+DSqsD0U9j4Uk+smbtrDfZyWB8UfEziSq7ipWM8kt3JOsMTpP
+        aPPN6Uew43ZUzEKhNKzkhYSj0A==
+X-Google-Smtp-Source: APBJJlG0bncmHd8kuKrcnn1teeLe7ZSoaKhNNNF1Wt5X9KzE0S/E6zvmon0Fn/c1bLGoL9IhkTGS9A==
+X-Received: by 2002:adf:d846:0:b0:315:8f4f:81b1 with SMTP id k6-20020adfd846000000b003158f4f81b1mr2116132wrl.50.1689864481222;
+        Thu, 20 Jul 2023 07:48:01 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:bd83:c166:7e2d:3d74])
-        by smtp.gmail.com with ESMTPSA id r1-20020adfce81000000b0031128382ed0sm1550906wrn.83.2023.07.20.07.47.59
+        by smtp.gmail.com with ESMTPSA id r1-20020adfce81000000b0031128382ed0sm1550906wrn.83.2023.07.20.07.48.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 07:47:59 -0700 (PDT)
+        Thu, 20 Jul 2023 07:48:00 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -57,9 +57,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Erik Schilling <erik.schilling@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH v2 2/5] tests: add a test-case for gpiod_line_request_get_chip_name()
-Date:   Thu, 20 Jul 2023 16:47:44 +0200
-Message-Id: <20230720144747.73276-3-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH v2 3/5] bindings: cxx: provide line_request::chip_name()
+Date:   Thu, 20 Jul 2023 16:47:45 +0200
+Message-Id: <20230720144747.73276-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230720144747.73276-1-brgl@bgdev.pl>
 References: <20230720144747.73276-1-brgl@bgdev.pl>
@@ -76,42 +76,84 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add a test case for the chip name getter on line-request objects.
+Provide a wrapper around gpiod_line_request_get_chip_name() for C++
+bindings and update the tests.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- tests/tests-line-request.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ bindings/cxx/gpiodcxx/line-request.hpp    |  6 ++++++
+ bindings/cxx/line-request.cpp             | 10 +++++++++-
+ bindings/cxx/tests/tests-line-request.cpp |  6 ++++--
+ 3 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/tests/tests-line-request.c b/tests/tests-line-request.c
-index 0b985e2..1a58275 100644
---- a/tests/tests-line-request.c
-+++ b/tests/tests-line-request.c
-@@ -675,3 +675,24 @@ GPIOD_TEST_CASE(get_requested_offsets_less_and_more)
- 	g_assert_cmpuint(retrieved[2], ==, 2);
- 	g_assert_cmpuint(retrieved[3], ==, 3);
+diff --git a/bindings/cxx/gpiodcxx/line-request.hpp b/bindings/cxx/gpiodcxx/line-request.hpp
+index c1e1520..8c1b474 100644
+--- a/bindings/cxx/gpiodcxx/line-request.hpp
++++ b/bindings/cxx/gpiodcxx/line-request.hpp
+@@ -75,6 +75,12 @@ public:
+ 	 */
+ 	void release();
+ 
++	/**
++	 * @brief Get the name of the chip this request was made on.
++	 * @return Name to the GPIO chip.
++	 */
++	::std::string chip_name() const;
++
+ 	/**
+ 	 * @brief Get the number of requested lines.
+ 	 * @return Number of lines in this request.
+diff --git a/bindings/cxx/line-request.cpp b/bindings/cxx/line-request.cpp
+index b0723c3..e8e0b96 100644
+--- a/bindings/cxx/line-request.cpp
++++ b/bindings/cxx/line-request.cpp
+@@ -63,6 +63,13 @@ GPIOD_CXX_API void line_request::release()
+ 	this->_m_priv->request.reset();
  }
-+
-+GPIOD_TEST_CASE(get_chip_name)
+ 
++GPIOD_CXX_API ::std::string line_request::chip_name() const
 +{
-+	static const guint offset = 4;
++	this->_m_priv->throw_if_released();
 +
-+	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
-+	g_autoptr(struct_gpiod_chip) chip = NULL;
-+	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
-+	g_autoptr(struct_gpiod_line_request) request = NULL;
-+
-+	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
-+	line_cfg = gpiod_test_create_line_config_or_fail();
-+
-+	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
-+							 NULL);
-+
-+	request = gpiod_test_chip_request_lines_or_fail(chip, NULL, line_cfg);
-+
-+	g_assert_cmpstr(g_gpiosim_chip_get_name(sim), ==,
-+			gpiod_line_request_get_chip_name(request));
++	return ::gpiod_line_request_get_chip_name(this->_m_priv->request.get());
 +}
++
+ GPIOD_CXX_API ::std::size_t line_request::num_lines() const
+ {
+ 	this->_m_priv->throw_if_released();
+@@ -222,7 +229,8 @@ GPIOD_CXX_API ::std::ostream& operator<<(::std::ostream& out, const line_request
+ 	if (!request)
+ 		out << "gpiod::line_request(released)";
+ 	else
+-		out << "gpiod::line_request(num_lines=" << request.num_lines() <<
++		out << "gpiod::line_request(chip=\"" << request.chip_name() <<
++		       "\", num_lines=" << request.num_lines() <<
+ 		       ", line_offsets=" << request.offsets() <<
+ 		       ", fd=" << request.fd() <<
+ 		       ")";
+diff --git a/bindings/cxx/tests/tests-line-request.cpp b/bindings/cxx/tests/tests-line-request.cpp
+index d1a56ae..9632ae0 100644
+--- a/bindings/cxx/tests/tests-line-request.cpp
++++ b/bindings/cxx/tests/tests-line-request.cpp
+@@ -468,14 +468,16 @@ TEST_CASE("line_request stream insertion operator works", "[line-request]")
+ 		.set_num_lines(4)
+ 		.build();
+ 
+-	auto request = ::gpiod::chip(sim.dev_path())
++	auto chip = ::gpiod::chip(sim.dev_path());
++	auto request = chip
+ 		.prepare_request()
+ 		.add_line_settings({ 3, 1, 0, 2}, ::gpiod::line_settings())
+ 		.do_request();
+ 
+ 	::std::stringstream buf, expected;
+ 
+-	expected << "gpiod::line_request(num_lines=4, line_offsets=gpiod::offsets(3, 1, 0, 2), fd=" <<
++	expected << "gpiod::line_request(chip=\"" << sim.name() <<
++		    "\", num_lines=4, line_offsets=gpiod::offsets(3, 1, 0, 2), fd=" <<
+ 		    request.fd() << ")";
+ 
+ 	SECTION("active request")
 -- 
 2.39.2
 
