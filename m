@@ -2,65 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE63A75B7FB
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 21:30:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C86A375B7FF
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 21:31:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbjGTTac (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 15:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39950 "EHLO
+        id S229726AbjGTTbb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 15:31:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjGTTac (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 15:30:32 -0400
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CC9171E
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 12:30:31 -0700 (PDT)
-Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6b9ede6195cso1000382a34.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 12:30:31 -0700 (PDT)
+        with ESMTP id S229680AbjGTTba (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 15:31:30 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF04171D
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 12:31:30 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id e9e14a558f8ab-34574eb05f4so6069125ab.0
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 12:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689881430; x=1690486230;
+        d=linaro.org; s=google; t=1689881489; x=1690486289;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8ovbilqR1AJyAKu17jhe2zKoPE+uzJ6FwMN43SkdWAo=;
-        b=ztA7KwqHjak2wfiKBerFpLdypaCN1ssviXihAe4JX+UN7frh0H4Dhxn7p/DKMZDTjq
-         6zqHhTtcgUyPzpozJ/gPmL3QTgcyIobmM8B/z6BYx546fQVflYcTUsWTeQj799KVarjB
-         FQgwrAcjc3xVODcctFcklFN9HtbH3RYyiDX/WQm7DY5/qJO5yquud7dX7Vw8kIsaMLDL
-         yRJ34RyRvUNMzGww0uRwvzSGizNiy0enbpxbeCaXY+CwgPnN9W8eyGAdOBMS3KXVF8wZ
-         qtKc00Okhtjk0epbuWgtcT8LMOuzvp0btQhCVPsdR/hMy9pjBS5T5JgxhiCc/7Mwpmtp
-         XGcA==
+        bh=gQ0Vl7Rtd5mCZnuqCwqYc2saj+VRH99piewtntRthNM=;
+        b=Wd5BI1IQviuTgH3SsvYTSArtoYoI1RkV0fFal+vtEEAm59NNnlECa1V3nw+Jq+lzP8
+         0ZpGR5wF8aR7CEVofNkr4guKRufk9l58DHnCH0+GQi8gwEEsozxzpXwtTQ6P5TXABKWG
+         uyQsewr9vuWC7lFVO3HIwwYDbZfEfpq9ZMJ4kvAr9e3sfLXqaQzehXWCXgQ55RUz63bM
+         CpPzJ4G9Bm+IwuSdWtUy64T6Muz0s2P0Ppj40GHZmh6x/osAMWehfXRZKPXayggsiaIF
+         UWhvpVhKxVrha3YYQKqMYlQpb3L0hWHDBbSbE9Grqv3iemdGi32cIfR7PcJWdUUDUsLY
+         P9nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689881430; x=1690486230;
+        d=1e100.net; s=20221208; t=1689881489; x=1690486289;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8ovbilqR1AJyAKu17jhe2zKoPE+uzJ6FwMN43SkdWAo=;
-        b=kyeQ9etRoF9ONmF7eNoprQ6PRPnkVhd2acY0F31YfeoZqQBf5RjE9ifoasR0ghhJq0
-         OUODF6uBaFuOq3bRft4ir+YOGX0JAi/6xoILSvz9LfQChLrsG1jCS9zSDKKgWBKTxSui
-         XaiQCEb+PaDi0jjmnYMfN9okHf1NoQdIike+cOw/M3wL59I47kFE0W651nFKXdL86hp1
-         o3JylYQX6/AgXv99yB3TE3P7Q2kEc56rxyYw3sMFPG9EU9374hLhW+gchgCoYJHxN6+u
-         b6DHexMwjeOYtZgLn12e2o6K7bLTope5J90kMV1ly9DYUtpK1mfVLGyibIt4M75FVVtu
-         yXnA==
-X-Gm-Message-State: ABy/qLaxiB+KN2WrhfIIVygBvUWeJvQoempBpxMnBUelzje09slC4ZdR
-        pc3u6gH3+aZu+GQPR/uHzrq0DHceHJ9yMm9suHfbQQ==
-X-Google-Smtp-Source: APBJJlGB78Ba1YxlYKSiQYQpSgP4Qc+ZwLdhrhwvZSFXNfmHxCqWZmfu4tcCCQoTcgzKVBh1qY2pfnz1Lmr5Gh5FzrA=
-X-Received: by 2002:a05:6358:990c:b0:134:d45b:7dd1 with SMTP id
- w12-20020a056358990c00b00134d45b7dd1mr20518414rwa.21.1689881430570; Thu, 20
- Jul 2023 12:30:30 -0700 (PDT)
+        bh=gQ0Vl7Rtd5mCZnuqCwqYc2saj+VRH99piewtntRthNM=;
+        b=dkD2T44K53YZQ9vMYtSwejePJUJ4+48ndlHJILwfy2aP/TuBp6/OeLJO5QMWC+drpl
+         T1nNc3RtpnlS+6EzHrSyBv2CU0V0xyHqaTIlf5eFKGObj8DbmS1mek8UkUmmqNRSgBDW
+         0n45MKes1j9hjstuBTLUbnC3T+caV67MlE7RYE/WsfMmGMv10ZAu6BUeKoza0mWkp5KL
+         6mDJLJcw+el83Vavh0c26Jtl2whzN9hGfioMrP5jErJNPN+wdlL2sT8YDOmklbqPbR8G
+         BO0bNAztcFq+dYyK7sF2ctjLiz+4Re/Bjw8t3OekMDTNPrejeKof6C+Sr5NiI4gOjcT6
+         wKxA==
+X-Gm-Message-State: ABy/qLbK6f5YR2QiVVaYzzpUeMFRq6e6Dkl217hPsempdIBTgN2PHsZ3
+        6i3zp3MMQ7Ed0bBtbCLIVBYBMn8BJX9fw3oWNkFuKQ==
+X-Google-Smtp-Source: APBJJlE+Uq+usX/08SQnqLnNnE66u8s0NJxA/J2HIXiy4tmypIIgMdJrsyMw2+KgcFgzMnhae2C9+4WlMKVz36rf+DU=
+X-Received: by 2002:a05:6e02:1153:b0:346:7502:aeaa with SMTP id
+ o19-20020a056e02115300b003467502aeaamr2602159ill.18.1689881489379; Thu, 20
+ Jul 2023 12:31:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230712094857.218105-1-alex@shruggie.ro>
-In-Reply-To: <20230712094857.218105-1-alex@shruggie.ro>
+References: <20230712095955.105716-1-brgl@bgdev.pl>
+In-Reply-To: <20230712095955.105716-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 Jul 2023 21:30:19 +0200
-Message-ID: <CACRpkdbEuXtv3OCbG3_WQguSFP=gprHP+6_80j7CU+o-JAFYkQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: 74xx-mmio: remove unneeded platform_set_drvdata() call
-To:     Alexandru Ardelean <alex@shruggie.ro>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brgl@bgdev.pl, andy@kernel.org
+Date:   Thu, 20 Jul 2023 21:31:18 +0200
+Message-ID: <CACRpkdbBTz8wD8jqKi9ZuU61kUrxRwirhLAcCj9UhXMy8ePzWQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: order includes alphabetically in gpiolib.h
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,16 +69,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 11:49=E2=80=AFAM Alexandru Ardelean <alex@shruggie.=
-ro> wrote:
+On Wed, Jul 12, 2023 at 11:59=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 
-> The platform_set_drvdata() was needed when the driver had an explicit
-> remove function.
-> That function got removed a while back, so we don't need to keep a pointe=
-r
-> (on 'dev->driver_data') for the private data of the driver anymore.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Signed-off-by: Alexandru Ardelean <alex@shruggie.ro>
+> After adding the missing notifier.h header, let's order all includes
+> alphabetically.
+>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
