@@ -2,63 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2815675B806
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 21:33:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DA5675B816
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 21:35:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230077AbjGTTda (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 15:33:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41632 "EHLO
+        id S230519AbjGTTfw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 15:35:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230049AbjGTTda (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 15:33:30 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6345A198A
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 12:33:28 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-cb19b1b9a36so1040544276.0
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 12:33:28 -0700 (PDT)
+        with ESMTP id S230148AbjGTTfq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 15:35:46 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C39270C
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 12:35:39 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id 3f1490d57ef6-cea0021d1f3so3468326276.0
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 12:35:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689881607; x=1690486407;
+        d=linaro.org; s=google; t=1689881738; x=1690486538;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KAA4YKtARNm97BR+WbnNXBQbQzkaBKgEy0iMdJmOHMA=;
-        b=USM3aXLAuUe8po5Nm7yr6OoNGynYpaik6D6wGKUsxVsg8yPFJtC3FFvYKyovC1/iwX
-         wEq15pDuUM1o3uHKp43K+ygQTuIBIp/zDuaiWRlE+twtDrXkATJ/Ln5BIP1HNGGyHsBI
-         KPUGGfGK2Yk/bDNOuBu3v2WLnqsOnuW8shrTxZngwE2gFefnS4/btqQh9rnZDPa/sEdx
-         Nrhp0eHAf9bWlyLcBO8KUmX/C+W/vY9vLqxJO1XQnkZKLaSzPyt3ffCNXPXO+N8tFXus
-         Uv8PlWh+VI1rsS43ONFZjYa3H6vL7t/7wVVsCoRxM2BBQFb8YneUyqCxKd13FFK39wDK
-         StdA==
+        bh=uLn5dsVpXlnKJaX4b9fHndbyG5UJobtzyGKE/RdETxQ=;
+        b=HSzRyFd+T9iT484cMpQnV0UnWkozan4g5bl17x81nWnNZP/LKwSEA0U2Nve193/1IY
+         0td5zx+LDDtCTle/A2p4NWE1gyjM4o/ajhursuoAZsuKlw6u2Fbtw2dVpfxrRaiz9YRi
+         9uzSvCfjIQ1bptK6r5/eoOmOTHICTZ4iW2Z6H1TWQ6EQPKa1DeewV8YRlsNVEp0UZ6Wp
+         5x7pjY60WW8gweeaEHQJOFcrOhSbbCNkAfANi1Q89R1lfv8nn3iWBOkZbehKiTnQvvsE
+         1ZHxyoa1CWMFQPOWzKLSEI3EtOe9F+B3Qgf4ckaal2VF6PBP0GS+ZC9fiSsMG7CBAegd
+         YZJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689881607; x=1690486407;
+        d=1e100.net; s=20221208; t=1689881738; x=1690486538;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KAA4YKtARNm97BR+WbnNXBQbQzkaBKgEy0iMdJmOHMA=;
-        b=OqpHEHTzUug5SzkHVhURZQbbF9jEi/b8uy4wfovJDPJ1gC5qZIeBhVAu3ne0sbjfD6
-         CsPWWfV/XkXksgvPJ2+NdECwax7fiesr9HUdI0A7lli4seqfMbjmxsIveqNXI45WWeAg
-         MqxLt8GghvsoLUvQZ8IWxK6l8OF158HKkgNSU8xqLwlRr0mHctE+moL5cExWrxYKTjP0
-         ACBkTeu/JcPwGJwfDkOmc12BDdW8W+o7TB/48+3TNyavSZunfxmASFoaoMZryYmgk9y4
-         WA5XuEhESUdNBdO9QD0FeCyk2HyU0cnMxKM1YpHr1Srb8q0nm0JHRRGPhmnKBQsW2EoO
-         eP8A==
-X-Gm-Message-State: ABy/qLagrBGwynns9iAYWKFVRp/XT1sNPahAyCa5Sj3WszW9Zq+m9Gdf
-        sylX9uCSckYYV8Nu8g572GBznkFxFTK22mZqBN4Rhw==
-X-Google-Smtp-Source: APBJJlFMyJGJYZl1X0Xl3JL/kHOPlmQzTpSeOAF+bjJ5Q+BjRCMdplnyIEg/TI+4GvKZXOIBKpca4PlArXmrwwGkwHk=
-X-Received: by 2002:a25:d453:0:b0:c61:8ddc:88db with SMTP id
- m80-20020a25d453000000b00c618ddc88dbmr6321998ybf.6.1689881607489; Thu, 20 Jul
- 2023 12:33:27 -0700 (PDT)
+        bh=uLn5dsVpXlnKJaX4b9fHndbyG5UJobtzyGKE/RdETxQ=;
+        b=eKKkum6y7tv93z3m0Lf4Ou6IYkxyEIbq0rsc6EIqsZ0zVNeigPhagrc+G9D7qlr6Hq
+         +LqOTuJIjl6wP8K3B8ooTBS/c2WDPw2PFiCgFY7r5HTQHTJGUhPoXyZhdVeDQezoLH3u
+         740htqTsA8oecmSbUF+UgPI1mfuzAZbC/5FFXlAF124OMrcTxBYJ8bicR798uKzwbsw0
+         la5O5gXv+H8xSgyIoooCx6OfFieBmcqVctaAjbnPfVohj+Ciz9aBTRoi5J7CCqIYJJqc
+         m17be1C6nS0rqI5dCcwdPBybxX5/XWiVerjAelRzElQQJNH22vCjM+zsb4Js+eTBjUtc
+         sN1w==
+X-Gm-Message-State: ABy/qLYQf9axfDNxmoVI6CJaL54SzxM/dbftjZr5D1BMNjQsSvlh37XX
+        Bn9YumEtWYi1fVYFzdEB22PnI6tunXyXyHYOWV+/Rw==
+X-Google-Smtp-Source: APBJJlEF2Q8RnAcTxqqb4EB2R0YvMEksKg+9xKZqVAQwIKbzhF7Oy4vgFMck9eBd+GfQMudZe0U0YpuOj10I2jSpYak=
+X-Received: by 2002:a25:ce06:0:b0:cb7:a41e:be58 with SMTP id
+ x6-20020a25ce06000000b00cb7a41ebe58mr7207974ybe.23.1689881738636; Thu, 20 Jul
+ 2023 12:35:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230712-pinctrl-sunxi-boudns-v1-1-85f37de79b9f@kernel.org>
-In-Reply-To: <20230712-pinctrl-sunxi-boudns-v1-1-85f37de79b9f@kernel.org>
+References: <0cf720bf-ae4b-5780-bda4-5c9bbb2d1d67@nvidia.com> <20230714113547.15384-1-pshete@nvidia.com>
+In-Reply-To: <20230714113547.15384-1-pshete@nvidia.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 Jul 2023 21:33:15 +0200
-Message-ID: <CACRpkdb6P1KjGWNnYWKoG+ZxFCLo7_06zjv_8CGMFoT9S44o1g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sunxi: Add some defensiveness for regulators array
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Date:   Thu, 20 Jul 2023 21:35:27 +0200
+Message-ID: <CACRpkdYuj35gM0sAoXgNAEVg6GdmV2cvksqqQLL22MH+HnF_yQ@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: tegra: Add support to display pin function
+To:     Prathamesh Shete <pshete@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -71,19 +69,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 7:20=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
+On Fri, Jul 14, 2023 at 1:36=E2=80=AFPM Prathamesh Shete <pshete@nvidia.com=
+> wrote:
 
-> The sunxi pinctrl has a fixed size array it uses to store regulators used
-> in the driver. There is currently nothing that ensures that the number of
-> elements in the array is large enough to map the regulators defined by th=
-e
-> individual SoCs. While this is currently the case having an explicit chec=
-k
-> in there will make life easier for anyone debugging memory issues that
-> manifest in the driver so let's add one.
+> The current function for a given pin is not displayed via the debugfs.
+> Add support to display the current function that is set for each pin.
 >
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
 Patch applied.
 
