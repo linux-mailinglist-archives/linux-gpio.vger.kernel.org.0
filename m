@@ -2,63 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22E2575B24F
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 17:19:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6728175B257
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jul 2023 17:20:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232319AbjGTPTK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 11:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55400 "EHLO
+        id S230338AbjGTPUt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 11:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231503AbjGTPTD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 11:19:03 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C294272A
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:19:02 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2b703a0453fso13719181fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:19:02 -0700 (PDT)
+        with ESMTP id S230158AbjGTPUs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 11:20:48 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5003E1FD7
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:20:47 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2b700e85950so13131471fa.3
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 08:20:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689866340; x=1690471140;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689866445; x=1690471245;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4TfiF7Qn+rHGOgsaYz2UyOUxB3qdJrasp6G+WcSeqtA=;
-        b=45fhlifF6v1d3ZyUsi1kC3ATh/3q6TqePAA258OsLMGwcYw7iA7CIikhCcu6Y3PQbl
-         7bMiw05Dd/oUUElFvFezBx485JoMM1bz8n7r5eJhfFHaLewkTMDt+Ep3gzehjjzacwKs
-         /+cbwlyX7RJ91At3389p6lg3xjBTvPRuUl6a9tKCpZX9/gm8e8BFLJWm84iMD1E/ejjT
-         bT5gp5JH/BQ+j0AiSL4txJzMkhLn0pA9nLs0qQnnddSpBaipuTYfgA0UBi9IhtorYu93
-         zsfkHjGGE2BsGsjjczhaj9Q7nyZzWGRtuPK7wdqhU0JsSQCTwviETuXpvCVmpCrO6+j6
-         +2Yg==
+        bh=/ylREXqkz3fT0Pf+CqfXaE+BQjJpH6bs6sgNBPlTXhI=;
+        b=eLtIQlQmHqbxvCJnjDOWTgaHJOOwYT6srOrs0dZW1ZWqHoGrwm8XvGUBNGapJkhmEo
+         qRHi3020i91UaAeF4aM9lWpHWLSPLNcFA93AJzVXmUMGpZ8cSQ/SENE6f1sT6ANl6IUW
+         he/Zqsvc7eif7bgAdSAkiUSFL/Ib46IwGwLxw3A8nh7Q4MVt+h8GYconsoN1pUgPbMO2
+         JsXHf73zr6z1MZq9e/mKaAsA4ua0543e70maFxBcxUoXzNz3al7Cb2geIt5Yu/dUOTxg
+         37FvKICFIE3nrfIRyBPUBifW6/RacBrL0tw/osRdJ4NCcgKnFxheCocCHJYKs9vIsZbw
+         15Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689866340; x=1690471140;
+        d=1e100.net; s=20221208; t=1689866445; x=1690471245;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4TfiF7Qn+rHGOgsaYz2UyOUxB3qdJrasp6G+WcSeqtA=;
-        b=l9Hzg650V6vFvU0c6VIIx63tFkBfY4R3lLeaM2XGZ4hklInXVSzdSI/brELPRnwlD0
-         nJ1s8BGv0EWzvdqIofrjeBzEZUtJ0nO1qb0wl8ye25TxjFyLcpARcnokT7VFweIQAugv
-         qsAuKxwoCTEo65JxOvHyZkEFGTHl5A2qSkPRPGIRIadjFXsxolk8kvybvYGrrzDhlZNN
-         IX9KRb6/9FZbGOee9YHFPTxBrwFWl+iEpJPB/mb3rST/Zhie+5nwBH9Z0tO+LXSSwht7
-         pINK+3zc/3V5f53CfJd6GkKDE9xmAz0uY9UhLyn/2/Ryoh4o3nvgEVXhhmbzSh7+XvpU
-         BccQ==
-X-Gm-Message-State: ABy/qLZT3Slp1u38lOf0Zcx22Gkc7EQ2h/x1c15RREd92ppN/GkkUYyl
-        omIP8JuMQTiIcakaZFhnVNo1bel+5ZHj/uWd0muQ6w==
-X-Google-Smtp-Source: APBJJlHf1SKa59G27cQXDIDWbUR12EsQTDOby+CG1JeQpqn8MIsSXvPGyVTklxUbOVeAw++zblRfzduN6+coAIcoGh8=
-X-Received: by 2002:a05:651c:92:b0:2b5:7fba:18ac with SMTP id
- 18-20020a05651c009200b002b57fba18acmr2598533ljq.48.1689866340520; Thu, 20 Jul
- 2023 08:19:00 -0700 (PDT)
+        bh=/ylREXqkz3fT0Pf+CqfXaE+BQjJpH6bs6sgNBPlTXhI=;
+        b=T3NzLF/eEIo3sJB2gBD64hNjD6ntRxsqwAUF2DSLPHeBI1xWq+wCTFIEiB6N+g/lq4
+         +1l7qa7p+JQzQdP8BpT+vKA67srBzHC7UWI68if+sG96RmrrIriy0C2CjRF+LIxHPeVJ
+         F5Nnigot0bREvrIki/TxYVtetTOWs/Co1shtqD+8MfHI0fIw9LeNLHoodVaaX0uOqBx4
+         mzd1fSOkb0i8qBeYvxPSgcD8h4QKFdjZgs3tFYi5KM6g9aW2qb2xIjkPhWWyOs4l2FEB
+         eJ6eV9ni/GQ9EYdEozzr1Ft82No/oeHolsV4mas89uJBfxhfnHjz81NxFpjvAFpK8Pc0
+         VBTA==
+X-Gm-Message-State: ABy/qLao6edQKb1LlPfNMx06FOx6HNkS/TjbBueLw+7NdIW9b9caREPm
+        szPhF/K5i81O64Ozr/O8rAOd1xXPXYPP9w9ecYPIaQ==
+X-Google-Smtp-Source: APBJJlGfNUWyNpCrqPbSIXlMquubbeynlWBhna2HQB+0ToDiza9YnGsEanbvJwHqlXirOL1qasExPLPfmhAzG13Kkgo=
+X-Received: by 2002:a2e:b17b:0:b0:2b6:cbba:1307 with SMTP id
+ a27-20020a2eb17b000000b002b6cbba1307mr2352594ljm.0.1689866445627; Thu, 20 Jul
+ 2023 08:20:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230713202046.150986-1-afd@ti.com>
-In-Reply-To: <20230713202046.150986-1-afd@ti.com>
+References: <20230712074553.35907-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230712074553.35907-1-krzysztof.kozlowski@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 20 Jul 2023 17:18:47 +0200
-Message-ID: <CAMRc=Mfjhn19u7R__OWpH8=iuOXKOzCvnYfCAoGQ+G2hODXrqQ@mail.gmail.com>
-Subject: Re: [PATCH v4] gpio: pisosr: Use devm_gpiochip_add_data() to simplify
- remove path
-To:     Andrew Davis <afd@ti.com>
-Cc:     Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
+Date:   Thu, 20 Jul 2023 17:20:33 +0200
+Message-ID: <CAMRc=Mf3G1NfwZv8nDdBMA2kqyuA77e2GS_OdU8uyxvfn6NhYQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: snps,dw-apb: allow gpio-line-names
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+        Andy Shevchenko <andy@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -71,14 +74,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 10:20=E2=80=AFPM Andrew Davis <afd@ti.com> wrote:
+On Wed, Jul 12, 2023 at 9:45=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> Use devm version of gpiochip add function to handle removal for us.
+> Allow the GPIO controller subnode to define GPIO names.  Already used in
+> at least on DTS:
 >
-> While here update copyright and module author.
+>   bitmain/bm1880-sophon-edge.dtb: gpio@50027000: gpio-controller@0: 'gpio=
+-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
 >
-> Signed-off-by: Andrew Davis <afd@ti.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
+>  Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml=
+ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+> index b391cc1b4590..209f03bba0a7 100644
+> --- a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+> @@ -61,6 +61,10 @@ patternProperties:
+>        '#gpio-cells':
+>          const: 2
+>
+> +      gpio-line-names:
+> +        minItems: 1
+> +        maxItems: 32
+> +
+>        ngpios:
+>          default: 32
+>          minimum: 1
+> --
+> 2.34.1
 >
 
 Applied, thanks!
