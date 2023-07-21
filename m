@@ -2,190 +2,199 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5002175BBD0
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 03:32:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69DCE75BBD9
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 03:38:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjGUBca (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jul 2023 21:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48214 "EHLO
+        id S229829AbjGUBiA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jul 2023 21:38:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbjGUBc3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 21:32:29 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A51261998
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 18:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689903148; x=1721439148;
-  h=date:from:to:cc:subject:message-id;
-  bh=opOoFOQ4KYcVbaCwsdA1laQrmxTgKrnsn6V0WxL/TxE=;
-  b=mvlnsWdqEe3AiRckJjtV5wyEk/pkCvDMGIEpOK68XFgG7/q1+zh1EAcd
-   6u17Dc+Gwhjv/VuzRBABKdGD1tG2NgOTk/5shIVT2aNIFbME5VtWgSBZk
-   eZusRQ3Pi6agMx0zZhZ2p2YkBhBSpbIqTZLUmgi/zLgFLLMTr83WmUzDg
-   lKCYW5SFUpuhw2/Um7SVVZ9zY+J2qaVyxUjtMxa/No7q+Z0tYtInhHZri
-   SWVa+tThqCDIeJfv7pXHvFUA4FVFe2+yP7maDTBYmPC+pBEuPc3XmCzL1
-   /IKUxgKTqnreqx0hZbolSXOORzyOG5YZfogNRfAYNyU6aczBePtZjr7uv
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="347212806"
-X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
-   d="scan'208";a="347212806"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2023 18:32:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="898539393"
-X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
-   d="scan'208";a="898539393"
-Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 20 Jul 2023 18:32:27 -0700
-Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qMf0F-0006iN-0W;
-        Fri, 21 Jul 2023 01:32:21 +0000
-Date:   Fri, 21 Jul 2023 09:31:50 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 644ee70267a934be27370f9aa618b29af7290544
-Message-ID: <202307210948.qwyytS4R-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229528AbjGUBh5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jul 2023 21:37:57 -0400
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1F11FED
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 18:37:55 -0700 (PDT)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1b8eb69d641so1113856fac.0
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 18:37:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689903474; x=1690508274;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KIUqnJ+k/T7m5niKH4PaGsgV261IZMmCLuPH5xRk8VM=;
+        b=P8lUq7/o74TbYkQFu1K+Jop9Cxc2fsKOpOVC0x/lBQmisyysv2jgGD0FFoGkDD7rtE
+         N//VCAkb/7gysQWC024zzWxhz5nzK+xTqsp4X6B5qON7BNLL6tGpg1y3R9FFNjk1asgL
+         cwhvy1zbluXTwUNK+8x5I24DfztNPzr86S2GqBuCmqHETQvCnOIs4dH1Az9qI+A7vsqj
+         ZeZVOXVqk2PjgHgDtLl3Q8Riay3xfUnwtr/Z98VB2tEmikUfWShRzARdHLXsDTiNzqdV
+         uHqDQJIRsQO11SfBoLXEih5RxTGD9rrUgiV/gbsvNDjBbOxdXX0pGOdIuVsDj0UFzlt+
+         K9fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689903474; x=1690508274;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KIUqnJ+k/T7m5niKH4PaGsgV261IZMmCLuPH5xRk8VM=;
+        b=DbZ0S+YX4kPqnOhTuZgCY1/+yN4C1xZ6Qfyk3KAVBoqWbwDL6mOAHIAxY2gRLC7c2W
+         JJ8LyvzAMr6/x0agxyIR5vYlFuj6I2wReGNW211+1AtY2lEo65v8kqFJP7a+9bRiDTTT
+         qDHbGGG6gtKmUYXMgMB3zIVqAjvP6idGkyKPWPa9SHp3oNJMu3ZHc3ZXYf4swEaMlmKp
+         g8armTmhidewvKJ0gBH3uLRGxxDgXMlsJ+rkmE+AKDs6yeiLX+HwgJoDzsfr7tEdZ4x+
+         JZ01VGi4cRKAre7jmm4cxduJSXLYbY8SiSpmKHs1lmtkxrv2HEz6jmSP0L3nO0deVdYV
+         hOwQ==
+X-Gm-Message-State: ABy/qLape+hjRM9Ox4V68HgEnb2iDXhGPygX9PO+1ixBGDCny3D7/QRr
+        a+MWRRZSGvbIHLG4cxcw7pevFMN4cWY=
+X-Google-Smtp-Source: APBJJlGpmWtV72qAwm01GfLHlsds4ZGfkHERqJ2QMJvkabIPCwF+m4Wcsg2JpRShOirBLd49fGo0Yw==
+X-Received: by 2002:a05:6870:a714:b0:1ad:34f5:559e with SMTP id g20-20020a056870a71400b001ad34f5559emr534420oam.25.1689903474120;
+        Thu, 20 Jul 2023 18:37:54 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id t14-20020aa7938e000000b00682b299b6besm1817310pfe.70.2023.07.20.18.37.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jul 2023 18:37:53 -0700 (PDT)
+Date:   Fri, 21 Jul 2023 09:37:48 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH 0/5] core: provide information about the parent
+ chip in line requests
+Message-ID: <ZLnhbENoYDmnN2j3@sol>
+References: <ZLjqtVcTCcStYac4@sol>
+ <CAMRc=McjEPsYOm5ZcvbtfVkyF6uGk-4bYeKitJ0QKJcNGHrCSA@mail.gmail.com>
+ <ZLjyscgZM50A/PLb@sol>
+ <CAMRc=MfGYoTmcV2DXiQtBRPu2K3J9H_CDoLXCcfu2dOjA0cEDg@mail.gmail.com>
+ <ZLj7an9hR7qy3foM@sol>
+ <CAMRc=MfCPieOH-zYyvtoqzjQYt3zW7cL2waWOQbjB0k0wXm0Jw@mail.gmail.com>
+ <ZLkD6zFp2kLsO4fA@sol>
+ <CAMRc=Md34kYQ4B8NQo2c+seJTN_24he7J5bwRD8sPy-xJyqkXw@mail.gmail.com>
+ <ZLk4kVrT45dTNSNM@sol>
+ <CAMRc=Meu9X-1hE=tPzCUfo1QeyHSR=qxWzN++FKTHnzn=1HrBQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Meu9X-1hE=tPzCUfo1QeyHSR=qxWzN++FKTHnzn=1HrBQ@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 644ee70267a934be27370f9aa618b29af7290544  gpio: mvebu: fix irq domain leak
+On Thu, Jul 20, 2023 at 05:01:09PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Jul 20, 2023 at 3:37 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Thu, Jul 20, 2023 at 02:30:45PM +0200, Bartosz Golaszewski wrote:
+> > > On Thu, Jul 20, 2023 at 11:52 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > >
+> > > > The case I was thinking of was wanting to release a line, and if you
+> > > > don't know which request you will have to walk the request objects.
+> > > >
+> > >
+> > > You cannot release a single line if it's part of a wider request though.
+> > >
+> >
+> > Of course. Unless we were to extend the uAPI to allow that.
+> >
+> > > > And what of lines that are requested directly by apps other than the
+> > > > gpio-manager?
+> > > >
+> > >
+> > > You can tell they're used but cannot request them just like with any
+> > > other user of the cdev.
+> > >
+> >
+> > This is going to be a pain point - the concept of "used" is getting
+> > muddy.
+> >
+> > Say two processes want to get a line.
+> > So both need to request it before they can get it?
+> > Or only one does the request and both can get?
+> 
+> I think I badly worded the previous answer. The GPIO manager has no
+> notion of a user. It just receives a message from the bus. It's the
+> daemon that filters the users (e.g. only users in "gpio" group can
+> request and set/get GPIOs). So the answer is: one user can in fact
+> request a line, it stays requested by the manager and then another
+> user can set it or even release it as long as it's got the permissions
+> to do so. This is similar to how sysfs works.
+> 
 
-elapsed time: 721m
+Sure.  The point I was trying to make is how does the user determine if
+they can release the line via gpio-manager?  Currently they have to walk
+the requests looking for the line - and they might not find it.
 
-configs tested: 114
-configs skipped: 7
+This is only a minor pain point - in practice the processes will most
+likely all be using gpio-manager.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> >
+> > The latter case is painful to use.
+> > The former requires request being idempotent or at least to return an
+> > error that distiguishes a line already held by gpio-manager and a line
+> > already held but not by gpio-manager.
+> >
+> 
+> This should be fine. The manager knows if it's the one controlling a
+> line. It's just a matter of distinct error codes.
+> 
+> > > > > >
+> > > > > > Where do edge events fit in there?
+> > > > > >
+> > > > >
+> > > > > It's a signal exposed by the io.gpiod1.Line interface.
+> > > >
+> > > > But separate from the PropertiesChanged?
+> > > >
+> > >
+> > > Yes. PropertiesChanged is emitted on changes in properties (direction,
+> > > edge, all reported by gpionotify) while EdgeEvent is for edges
+> > > exclusively.
+> > >
+> > > >
+> > > > I am also wondering if the tools can be extended with the option to
+> > > > perform their ops using the gpio-manager, particularly get/set/mon that
+> > > > currently require exclusive access.
+> > > >
+> > >
+> > > There's a client app already functional in my WiP branch. Think nmcli
+> > > for NetworkManager. It doesn't link against libgpiod - only uses the
+> > > DBus API.
+> > >
+> >
+> > Sure - doesn't mean other tools can't use the DBus API too.
+> > My thinking was existing users of GPIO tools could just add
+> > an option, say -D, to their scripts to switch over to gpio-manager.
+> >
+> 
+> The functionality of the DBus API doesn't have a full overlap with
+> using the library. I don't see why we would want to do this. It would
+> introduce a lot of overhead for no reason. I think a separate client
+> that doesn't use any libgpiod APIs at all is what's needed.
+> 
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r023-20230720   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230720   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r035-20230720   clang
-arm                  randconfig-r046-20230720   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r026-20230720   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r015-20230720   gcc  
-hexagon              randconfig-r036-20230720   clang
-hexagon              randconfig-r041-20230720   clang
-hexagon              randconfig-r045-20230720   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230720   gcc  
-i386         buildonly-randconfig-r005-20230720   gcc  
-i386         buildonly-randconfig-r006-20230720   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230720   gcc  
-i386                 randconfig-i002-20230720   gcc  
-i386                 randconfig-i003-20230720   gcc  
-i386                 randconfig-i004-20230720   gcc  
-i386                 randconfig-i005-20230720   gcc  
-i386                 randconfig-i006-20230720   gcc  
-i386                 randconfig-i011-20230720   clang
-i386                 randconfig-i012-20230720   clang
-i386                 randconfig-i013-20230720   clang
-i386                 randconfig-i014-20230720   clang
-i386                 randconfig-i015-20230720   clang
-i386                 randconfig-i016-20230720   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r014-20230720   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r012-20230720   gcc  
-m68k                        stmark2_defconfig   gcc  
-microblaze           randconfig-r005-20230720   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      malta_kvm_defconfig   clang
-mips                        omega2p_defconfig   clang
-mips                 randconfig-r024-20230720   gcc  
-mips                 randconfig-r025-20230720   gcc  
-nios2                               defconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r002-20230720   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                 mpc8313_rdb_defconfig   clang
-powerpc                      ppc64e_defconfig   clang
-powerpc              randconfig-r031-20230720   gcc  
-powerpc                     tqm8555_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230720   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r013-20230720   clang
-s390                 randconfig-r044-20230720   clang
-sh                               allmodconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          lboxre2_defconfig   gcc  
-sh                   randconfig-r001-20230720   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc64_defconfig   gcc  
-sparc64              randconfig-r033-20230720   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r021-20230720   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230720   gcc  
-x86_64       buildonly-randconfig-r002-20230720   gcc  
-x86_64       buildonly-randconfig-r003-20230720   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r011-20230720   clang
-x86_64               randconfig-r016-20230720   clang
-x86_64               randconfig-r032-20230720   gcc  
-x86_64               randconfig-x001-20230720   clang
-x86_64               randconfig-x002-20230720   clang
-x86_64               randconfig-x003-20230720   clang
-x86_64               randconfig-x004-20230720   clang
-x86_64               randconfig-x005-20230720   clang
-x86_64               randconfig-x006-20230720   clang
-x86_64               randconfig-x011-20230720   gcc  
-x86_64               randconfig-x012-20230720   gcc  
-x86_64               randconfig-x013-20230720   gcc  
-x86_64               randconfig-x014-20230720   gcc  
-x86_64               randconfig-x015-20230720   gcc  
-x86_64               randconfig-x016-20230720   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                          iss_defconfig   gcc  
+Fair enough. That works for me.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > > You can do something like this (not all of this is implemented yet):
+> > >
+> > > $ # Wait for a chip with a particular label to appear
+> > > $ gpiocli wait --chip="foobar" --timeout=10s
+> > > $ # Request a line for edge events
+> > > $ gpiocli request --input --rising-edge --falling-edge foo
+> > > request0
+> >
+> > Will that support multiple lines, possibly spanning multiple chips?
+> 
+> Multiple lines, sure. Spanning multiple chips: I don't think so. Why
+> would we need this?
+> 
+
+There is no need - the user can make multiple requests as they are now
+persistant.  Just wondering what the API looks like to the user.
+
+Cheers,
+Kent.
