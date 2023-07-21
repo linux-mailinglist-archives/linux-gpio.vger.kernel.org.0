@@ -2,135 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E9AB75CDAE
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 18:14:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F9F675CDDE
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 18:15:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232537AbjGUQN5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 12:13:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40000 "EHLO
+        id S231803AbjGUQP0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jul 2023 12:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbjGUQNi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 12:13:38 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1116A4234;
-        Fri, 21 Jul 2023 09:13:11 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="347350219"
+        with ESMTP id S232139AbjGUQPH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 12:15:07 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666542D7F;
+        Fri, 21 Jul 2023 09:14:36 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="453433810"
 X-IronPort-AV: E=Sophos;i="6.01,222,1684825200"; 
-   d="scan'208";a="347350219"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 09:13:04 -0700
+   d="scan'208";a="453433810"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 09:14:35 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="702103412"
+X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="815011567"
 X-IronPort-AV: E=Sophos;i="6.01,222,1684825200"; 
-   d="scan'208";a="702103412"
+   d="scan'208";a="815011567"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP; 21 Jul 2023 09:12:51 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Jul 2023 09:14:33 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andy@kernel.org>)
-        id 1qMskJ-00Bug1-0B;
-        Fri, 21 Jul 2023 19:12:47 +0300
-Date:   Fri, 21 Jul 2023 19:12:46 +0300
+        id 1qMslz-00ByRZ-2j;
+        Fri, 21 Jul 2023 19:14:31 +0300
+Date:   Fri, 21 Jul 2023 19:14:31 +0300
 From:   Andy Shevchenko <andy@kernel.org>
-To:     nikita.shubin@maquefel.me
-Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Lennert Buytenhek <kernel@wantstofly.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Lukasz Majewski <lukma@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Michael Peters <mpeters@embeddedts.com>,
-        Kris Bahnsen <kris@embeddedts.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 28/42] input: keypad: ep93xx: add DT support for
- Cirrus EP93xx
-Message-ID: <ZLqufkI07/1CQaM6@smile.fi.intel.com>
-References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
- <20230605-ep93xx-v3-28-3d63a5f1103e@maquefel.me>
+To:     Andrei Coardos <aboutphysycs@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, brgl@bgdev.pl,
+        linus.walleij@linaro.org, romain.perier@gmail.com,
+        daniel@thingy.jp, Alexandru Ardelean <alex@shruggie.ro>
+Subject: Re: [PATCH] gpio: msc313: remove unnecessary call to
+ platform_set_drvdata()
+Message-ID: <ZLqu56eHfpc0TnMw@smile.fi.intel.com>
+References: <20230721131157.26640-1-aboutphysycs@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230605-ep93xx-v3-28-3d63a5f1103e@maquefel.me>
+In-Reply-To: <20230721131157.26640-1-aboutphysycs@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 02:29:28PM +0300, Nikita Shubin via B4 Relay wrote:
-> From: Nikita Shubin <nikita.shubin@maquefel.me>
-> 
-> - drop flags, they were not used anyway
-> - add OF ID match table
-> - process "autorepeat", "debounce-delay-ms", prescale from device tree
-> - drop platform data usage and it's header
-> - keymap goes from device tree now on
+On Fri, Jul 21, 2023 at 04:11:57PM +0300, Andrei Coardos wrote:
+> This function call was found to be unnecessary as there is no equivalent
+> platform_get_drvdata() call to access the private data of the driver.
+> Also, the private data is defined in this driver, so there is no risk of
+> it being accessed outside of this driver file.
 
-...
-
->  #include <linux/bits.h>
->  #include <linux/module.h>
-
-> +#include <linux/of.h>
-
-As Dmitry told you, but I think you also need property.h.
-
->  #include <linux/platform_device.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/interrupt.h>
->  #include <linux/clk.h>
->  #include <linux/io.h>
-
-...
-
->  #include <linux/input/matrix_keypad.h>
->  #include <linux/slab.h>
->  #include <linux/soc/cirrus/ep93xx.h>
-> -#include <linux/platform_data/keypad-ep93xx.h>
->  #include <linux/pm_wakeirq.h>
-
-When adding new inclusions, try to squeeze them to most ordered part of
-the block.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
 -- 
 With Best Regards,
