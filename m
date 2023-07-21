@@ -2,120 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50EAE75D4BF
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 21:24:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30DD675D5BA
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 22:28:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232226AbjGUTYg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 15:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45632 "EHLO
+        id S229515AbjGUU2b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jul 2023 16:28:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232221AbjGUTYg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 15:24:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 199EF189;
-        Fri, 21 Jul 2023 12:24:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A974361D7F;
-        Fri, 21 Jul 2023 19:24:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF55C433CD;
-        Fri, 21 Jul 2023 19:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689967474;
-        bh=ZMDz7Ao/mXqDoOt9YqdyFYlyKXkJ8dwXgYd8bgtxMgY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dIfxhb+OVuk0F9idwdU1Nqp2ZJSc3V7WLb+EHXnU6XQPkYG9q40hu0yDpXbB2TsuU
-         bdAuA9f2LNjpYwymZvN1pi/xM0mGLO2l5qF7FzHBiKEoMDfz+64mgsjFj4fsE3RFxK
-         bSj+so11TE5+uDa40Yva/x1RPFStJ/BmxZ1Kzsz3dB9bLjk2pdPL4vI0TbKCaORAdF
-         5a30QkKOfedXkVA/oKRqnWcH9JNt+z7HNVVjIqvXNyAfphZ9VyW5zn5wzb0K7Fw823
-         vvgJj2UW829OlZxlD0DxCyuSDioG2kgNQRryeccV/INrjA5QkKEQgskCeGevIZ7XZ2
-         2fGurbgnWu8+g==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2b6f943383eso33941701fa.2;
-        Fri, 21 Jul 2023 12:24:34 -0700 (PDT)
-X-Gm-Message-State: ABy/qLYtvXbsYWWSxH4hny9KFMyDYXp9+lJwinVvzmaWvq79AWZqbeRO
-        CdlnfmajUAEhZ15HD1is5iX3E77nPewMz8byuQ==
-X-Google-Smtp-Source: APBJJlHWu7RNKa6G4OWcajuKR+v/9mO3Q4f3e14g7ypnqu1POSVv0p6PFkMlKa+yzKC3DRRdjku8L6M8Rt1M6Sw9RSQ=
-X-Received: by 2002:a2e:b70e:0:b0:2b4:45bc:7bd with SMTP id
- j14-20020a2eb70e000000b002b445bc07bdmr2350137ljo.4.1689967472029; Fri, 21 Jul
- 2023 12:24:32 -0700 (PDT)
+        with ESMTP id S229867AbjGUU1u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 16:27:50 -0400
+Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B19B3A84
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 13:27:20 -0700 (PDT)
+Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-5636ab8240cso1288920eaf.3
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 13:27:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689971237; x=1690576037;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7xPDzzCzi/QN7xILesfa0mVBVsGJvBpLORXGzKhvY7c=;
+        b=4XmoJAYz55NB/L3U+DEUVJ9ui979+6Vz0rqBHHDkliqQXOMi6F+/ITB9aD9iN37wqO
+         BgdGLtJssmT2r2CCaMdB6vTrlXmgl7CEI5eFL8Iy5qkECyULhvyVXE0OLtlJLWTWLWVe
+         ujy4f/mAiGRut+DHYbvmdkcQlKKfluhe809jNINb8G6MffFgabAZ4L8IZbqwDIs/Dzml
+         mrPigKZ7ueMy+J2wvjE1cevFAOpAnDkQ13SDfoATpvTQsVGhjDoy67xsuJDQ95pHpt0i
+         9bZdbaLpFIDoRxE4Uk1HMABabIBI7CYqt4kN1YtFNOWaLkAec3SHAFyTZ54eD0gzUJSK
+         atNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689971237; x=1690576037;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7xPDzzCzi/QN7xILesfa0mVBVsGJvBpLORXGzKhvY7c=;
+        b=DcdzgI/EyYJZUd4IRIFomKfkm+zYR7CXmYdrvAdxONmZYjQQi7ufpQprqyOQmTuhDW
+         B4f7KewB2s5MyVO49LloLerDBp5bN/f0wri8Md4Pzcwxh1rHRPtpUpaqz4Rya+SP16NP
+         Ew+Ru20rc3SmTY+YjiZl7nP11Nk4xsMYw0VCowZ8hUc2ozOvy6dvY24VQW9Paz0vtaYb
+         K4gxfChUB8o7o5v7UUZsH6VxDccRg8ulDjuOVewadRa86fkzrGoX3TtyUmoAXzLBXSdL
+         6iSUGhvjCZa2MxsCoz7zkQUHdY5w4d4lsLKQlmpzXGWK/gkPj8qysgvb8pwTWeZufDx/
+         gTvA==
+X-Gm-Message-State: ABy/qLYAloeAarY8adhJSeqD86SQVceJQL+qOJ3+ArYMoNzojupzr/OG
+        Y0PjCRFtlAuOppiaeZdDPz2J9Sh8+2sllQ6MdMrBFg==
+X-Google-Smtp-Source: APBJJlFV1pSwvieqS1OgnGFs6EJa3OMX3Q/AZhNSCm23Jd0179q/7NNdnOaSTeQWwXZbKc15/fFyeSnhcfBgqT1xvfc=
+X-Received: by 2002:a05:6870:ac2b:b0:1ba:c3a2:fb66 with SMTP id
+ kw43-20020a056870ac2b00b001bac3a2fb66mr3041987oab.5.1689971236868; Fri, 21
+ Jul 2023 13:27:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230721161840.1393996-1-hugo@hugovil.com> <20230721161840.1393996-7-hugo@hugovil.com>
-In-Reply-To: <20230721161840.1393996-7-hugo@hugovil.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 21 Jul 2023 13:24:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
-Message-ID: <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v8 06/10] serial: sc16is7xx: fix regression with
- GPIO configuration
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     gregkh@linuxfoundation.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
-        isaac.true@canonical.com, jesse.sung@canonical.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Lech Perczak <lech.perczak@camlingroup.com>
+References: <1689934361-32642-1-git-send-email-quic_srichara@quicinc.com>
+In-Reply-To: <1689934361-32642-1-git-send-email-quic_srichara@quicinc.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 21 Jul 2023 13:27:05 -0700
+Message-ID: <CAKwvOdmYC6WuapBkD+s6wYCBaUdiJxiLXwayoubTF0WCpdBoMg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: Remove the unused _groups variable build warning
+To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        linus.walleij@linaro.org, quic_varada@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 10:19=E2=80=AFAM Hugo Villeneuve <hugo@hugovil.com>=
- wrote:
+On Fri, Jul 21, 2023 at 3:13=E2=80=AFAM Sricharan Ramabadhran
+<quic_srichara@quicinc.com> wrote:
 >
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> When building with clang toolchain and arm64-randconfig-r015-20230712
+> kernel test robot reports the below warning.
 >
-> Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines"=
-)
-> and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> changed the function of the GPIOs pins to act as modem control
-> lines without any possibility of selecting GPIO function.
-
-Requiring a new DT property is not fixing a kernel regression. You
-should be returning the kernel to original behavior and then have a
-new DT property for new behavior.
-
-> As a consequence, applications that depends on GPIO lines configured
-> by default as GPIO pins no longer work as expected.
+>  drivers/pinctrl/qcom/pinctrl-ipq5018.c:244:27: warning: unused variable =
+'_groups' [-Wunused-const-variable]
+>    static const char * const _groups[] =3D {
+>                              ^
+>    1 warning generated.
 >
-> Also, the change to select modem control lines function was done only
-> for channel A of dual UART variants (752/762). This was not documented
-> in the log message.
+>      static const char * const _groups[] =3D {
+>              "gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6=
+", "gpio7",
+>              "gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "g=
+pio14",
+>              "gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", =
+"gpio21",
+>              "gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", =
+"gpio28",
+>              "gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", =
+"gpio35",
+>              "gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", =
+"gpio42",
+>              "gpio43", "gpio44", "gpio45", "gpio46",
+>    };
 >
-> Allow to specify GPIO or modem control line function in the device
-> tree, and for each of the ports (A or B).
+> Fixing it by removing the variable.
 >
-> Do so by using the new device-tree property named
-> "modem-control-line-ports" (property added in separate patch).
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202307120814.vWPY6URk-lkp@i=
+ntel.com/
+> Fixes: 725d1c891658 ("pinctrl: qcom: Add IPQ5018 pinctrl driver")
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 
-That's not the name in the patch.
+Thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-> When registering GPIO chip controller, mask-out GPIO pins declared as
-> modem control lines according to this new "modem-control-line-ports"
-> DT property.
+> ---
+>  drivers/pinctrl/qcom/pinctrl-ipq5018.c | 10 ----------
+>  1 file changed, 10 deletions(-)
 >
-> Boards that need to have GPIOS configured as modem control lines
-> should add that property to their device tree. Here is a list of
-> boards using the sc16is7xx driver in their device tree and that may
-> need to be modified:
->     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
->     mips/boot/dts/ingenic/cu1830-neo.dts
->     mips/boot/dts/ingenic/cu1000-neo.dts
+> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq5018.c b/drivers/pinctrl/qco=
+m/pinctrl-ipq5018.c
+> index ed58f75..e2951f8 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-ipq5018.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-ipq5018.c
+> @@ -241,16 +241,6 @@ static const char * const atest_char_groups[] =3D {
+>         "gpio0", "gpio1", "gpio2", "gpio3", "gpio37",
+>  };
+>
+> -static const char * const _groups[] =3D {
+> -       "gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5", "gpio6", "g=
+pio7",
+> -       "gpio8", "gpio9", "gpio10", "gpio11", "gpio12", "gpio13", "gpio14=
+",
+> -       "gpio15", "gpio16", "gpio17", "gpio18", "gpio19", "gpio20", "gpio=
+21",
+> -       "gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio=
+28",
+> -       "gpio29", "gpio30", "gpio31", "gpio32", "gpio33", "gpio34", "gpio=
+35",
+> -       "gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio=
+42",
+> -       "gpio43", "gpio44", "gpio45", "gpio46",
+> -};
+> -
+>  static const char * const wci_txd_groups[] =3D {
+>         "gpio0", "gpio1", "gpio2", "gpio3",
+>         "gpio42", "gpio43", "gpio44", "gpio45",
+> --
+> 2.7.4
+>
+>
 
-Then again, if no one cares about those boards needing a change then
-it can be okay.
 
-
-Rob
+--=20
+Thanks,
+~Nick Desaulniers
