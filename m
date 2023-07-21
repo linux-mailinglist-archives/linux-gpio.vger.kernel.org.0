@@ -2,43 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC3A675BFD3
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 09:35:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 004A175C089
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 09:56:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230246AbjGUHfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 03:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57828 "EHLO
+        id S229593AbjGUH4j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jul 2023 03:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230183AbjGUHfe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 03:35:34 -0400
-Received: from mail-sh.amlogic.com (mail-sh.amlogic.com [58.32.228.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BC4273F;
-        Fri, 21 Jul 2023 00:34:52 -0700 (PDT)
-Received: from rd02-sz.amlogic.software (10.28.11.83) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.13; Fri, 21 Jul 2023
- 15:34:33 +0800
-From:   Huqiang Qin <huqiang.qin@amlogic.com>
-To:     <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <neil.armstrong@linaro.org>,
-        <khilman@baylibre.com>, <jbrunet@baylibre.com>,
-        <martin.blumenstingl@googlemail.com>, <linus.walleij@linaro.org>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        Huqiang Qin <huqiang.qin@amlogic.com>
-Subject: [PATCH 3/3] arm64: dts: Replace the IRQ number with the IRQID macro definition
-Date:   Fri, 21 Jul 2023 15:32:14 +0800
-Message-ID: <20230721073214.1876417-4-huqiang.qin@amlogic.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230721073214.1876417-1-huqiang.qin@amlogic.com>
-References: <20230721073214.1876417-1-huqiang.qin@amlogic.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.11.83]
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        with ESMTP id S229885AbjGUH4h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 03:56:37 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3079113
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 00:56:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689926188; x=1721462188;
+  h=date:from:to:cc:subject:message-id;
+  bh=qwK1RVrkpmy++dCu3c0ugXOwA/d78gDRV8RiP29y+CU=;
+  b=g5BiDH7oEYSk3KRjKHVVL1I8Z1A9Rvc3/f+tcD1WN1OEMUb3fr/PZMh5
+   Lb1H3/hy0Pign8ku+maMouc8Sxcof5KVgqKVn7GrTLUwKED6B9/T0JDvH
+   ew4BXv3HPf5DV/dSo6SM+AXwnR8Hu5//jCvJYqckZbsDws8nJfdBlk9/A
+   XmuElWif6cGwQC0bgu8iwLHgBbhgFUfUK8DTtnjpW131wkrxju/2Scwji
+   aC5n7/Pc7BKgDQXMFivFhDrjx96S3lV5s7N5OXtidGsC/5nWt56sRDNfF
+   bmQJhS7bN1bZ+0Ev3AodWjsi3x9bjm70QXOSnXO3Fj174vlK3cIgMc0V7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="370565053"
+X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
+   d="scan'208";a="370565053"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 00:56:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="971352847"
+X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
+   d="scan'208";a="971352847"
+Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 21 Jul 2023 00:56:09 -0700
+Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qMkzg-00072L-36;
+        Fri, 21 Jul 2023 07:56:08 +0000
+Date:   Fri, 21 Jul 2023 15:55:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 060f03e95454a0f4a1deff3e5f912e461ae0f0c5
+Message-ID: <202307211531.iutlVYA1-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -46,262 +59,149 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Replacing IRQ numbers with IRQID macro definitions makes node properties
-easier to understand and also makes GPIO interrupts easier to use.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 060f03e95454a0f4a1deff3e5f912e461ae0f0c5  pinctrl: Explicitly include correct DT includes
 
-Associated platforms:
-- Amlogic Meson-G12A
-- Amlogic Meson-G12B
-- Amlogic Meson-SM1
+elapsed time: 727m
 
-Signed-off-by: Huqiang Qin <huqiang.qin@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi    |  1 +
- arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts   |  2 +-
- .../boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi    |  2 +-
- arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi |  2 +-
- .../boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts  |  4 ++--
- .../arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi |  2 +-
- arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi     |  2 +-
- .../boot/dts/amlogic/meson-sm1-a95xf3-air-gbit.dts   |  2 +-
- arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi  |  4 ++--
- arch/arm64/boot/dts/amlogic/meson-sm1-h96-max.dts    |  2 +-
- arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi    |  2 +-
- arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts     | 12 ++++++------
- .../boot/dts/amlogic/meson-sm1-x96-air-gbit.dts      |  2 +-
- 13 files changed, 20 insertions(+), 19 deletions(-)
+configs tested: 130
+configs skipped: 11
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 0c49655cc90c..0142abfc930c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/clock/g12a-aoclkc.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq-meson-g12a-gpio.h>
- #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
- #include <dt-bindings/thermal/thermal.h>
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index b2bb94981838..c79f3e8d26b7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -344,7 +344,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
-index 97e522921b06..428b35e1d79c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
-@@ -201,7 +201,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
-index 83709787eb91..c69b0f803916 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
-@@ -327,7 +327,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
-index 276e95b34022..eed2a23047ca 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
-@@ -380,7 +380,7 @@ rk818: pmic@1c {
- 		compatible = "rockchip,rk818";
- 		reg = <0x1c>;
- 		interrupt-parent = <&gpio_intc>;
--		interrupts = <7 IRQ_TYPE_LEVEL_LOW>; /* GPIOAO_7 */
-+		interrupts = <IRQID_GPIOAO_7 IRQ_TYPE_LEVEL_LOW>; /* GPIOAO_7 */
- 		#clock-cells = <1>;
- 
- 		vcc1-supply = <&vdd_sys>;
-@@ -519,7 +519,7 @@ rk817: pmic@20 {
- 		reg = <0x20>;
- 		interrupt-parent = <&gpio_intc>;
- 
--		interrupts = <5 IRQ_TYPE_LEVEL_LOW>; /* GPIOAO_5 */
-+		interrupts = <IRQID_GPIOAO_5 IRQ_TYPE_LEVEL_LOW>; /* GPIOAO_5 */
- 
- 		vcc1-supply = <&vdd_sys>;
- 		vcc2-supply = <&vdd_sys>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi
-index 24d0442dffb2..01aa970b2f8c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi
-@@ -185,7 +185,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-index b40d2c1002c9..ac8b7178257e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
-@@ -269,7 +269,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-a95xf3-air-gbit.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-a95xf3-air-gbit.dts
-index d1debccdc1c2..95e03bb02af2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-a95xf3-air-gbit.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-a95xf3-air-gbit.dts
-@@ -100,7 +100,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
-index 17045ff81c69..62404743e62d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
-@@ -45,7 +45,7 @@ key {
- 			linux,code = <BTN_1>;
- 			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
- 			interrupt-parent = <&gpio_intc>;
--			interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
-+			interrupts = <IRQID_GPIOAO_3 IRQ_TYPE_EDGE_BOTH>;
- 		};
- 	};
- 
-@@ -217,7 +217,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-h96-max.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-h96-max.dts
-index 0f6660e68e72..ebda1dd30fa6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-h96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-h96-max.dts
-@@ -100,7 +100,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
-index 2fce44939f45..86b90f44a4b3 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
-@@ -283,7 +283,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-index 9068a334ea57..4f07d6387bb1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-@@ -53,7 +53,7 @@ key-1 {
- 			linux,code = <BTN_0>;
- 			gpios = <&gpio GPIOH_6 GPIO_ACTIVE_LOW>;
- 			interrupt-parent = <&gpio_intc>;
--			interrupts = <34 IRQ_TYPE_EDGE_BOTH>;
-+			interrupts = <IRQID_GPIOH_6 IRQ_TYPE_EDGE_BOTH>;
- 		};
- 
- 		key-2 {
-@@ -61,7 +61,7 @@ key-2 {
- 			linux,code = <BTN_1>;
- 			gpios = <&gpio GPIOH_7 GPIO_ACTIVE_LOW>;
- 			interrupt-parent = <&gpio_intc>;
--			interrupts = <35 IRQ_TYPE_EDGE_BOTH>;
-+			interrupts = <IRQID_GPIOH_7 IRQ_TYPE_EDGE_BOTH>;
- 		};
- 
- 		key-3 {
-@@ -69,7 +69,7 @@ key-3 {
- 			linux,code = <BTN_2>;
- 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
- 			interrupt-parent = <&gpio_intc>;
--			interrupts = <2 IRQ_TYPE_EDGE_BOTH>;
-+			interrupts = <IRQID_GPIOAO_2 IRQ_TYPE_EDGE_BOTH>;
- 		};
- 
- 		key-mic-mute {
-@@ -78,7 +78,7 @@ key-mic-mute {
- 			linux,input-type = <EV_SW>;
- 			gpios = <&gpio_ao GPIOE_2 GPIO_ACTIVE_LOW>;
- 			interrupt-parent = <&gpio_intc>;
--			interrupts = <99 IRQ_TYPE_EDGE_BOTH>;
-+			interrupts = <IRQID_GPIOE_2 IRQ_TYPE_EDGE_BOTH>;
- 		};
- 
- 		key-power {
-@@ -86,7 +86,7 @@ key-power {
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
- 			interrupt-parent = <&gpio_intc>;
--			interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
-+			interrupts = <IRQID_GPIOAO_3 IRQ_TYPE_EDGE_BOTH>;
- 		};
- 	};
- 
-@@ -583,7 +583,7 @@ &uart_A {
- 	bluetooth {
- 		compatible = "brcm,bcm43438-bt";
- 		interrupt-parent = <&gpio_intc>;
--		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <IRQID_GPIOX_18 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "host-wakeup";
- 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
- 		max-speed = <2000000>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-gbit.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-gbit.dts
-index 7e1a74046ba5..6ee406066ee0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-gbit.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-gbit.dts
-@@ -100,7 +100,7 @@ external_phy: ethernet-phy@0 {
- 
- 		interrupt-parent = <&gpio_intc>;
- 		/* MAC_INTR on GPIOZ_14 */
--		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+		interrupts = <IRQID_GPIOZ_14 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r014-20230720   gcc  
+alpha                randconfig-r026-20230720   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r011-20230720   gcc  
+arc                  randconfig-r012-20230720   gcc  
+arc                  randconfig-r021-20230720   gcc  
+arc                  randconfig-r036-20230720   gcc  
+arc                  randconfig-r043-20230720   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r014-20230720   gcc  
+arm                  randconfig-r023-20230720   gcc  
+arm                  randconfig-r031-20230720   clang
+arm                  randconfig-r033-20230720   clang
+arm                  randconfig-r046-20230720   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r013-20230720   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r005-20230720   gcc  
+csky                 randconfig-r011-20230720   gcc  
+hexagon              randconfig-r041-20230720   clang
+hexagon              randconfig-r045-20230720   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230720   gcc  
+i386         buildonly-randconfig-r005-20230720   gcc  
+i386         buildonly-randconfig-r006-20230720   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230720   gcc  
+i386                 randconfig-i002-20230720   gcc  
+i386                 randconfig-i003-20230720   gcc  
+i386                 randconfig-i004-20230720   gcc  
+i386                 randconfig-i005-20230720   gcc  
+i386                 randconfig-i006-20230720   gcc  
+i386                 randconfig-i011-20230720   clang
+i386                 randconfig-i012-20230720   clang
+i386                 randconfig-i013-20230720   clang
+i386                 randconfig-i014-20230720   clang
+i386                 randconfig-i015-20230720   clang
+i386                 randconfig-i016-20230720   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r004-20230720   gcc  
+m68k                 randconfig-r012-20230720   gcc  
+microblaze           randconfig-r005-20230720   gcc  
+microblaze           randconfig-r016-20230720   gcc  
+microblaze           randconfig-r021-20230720   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r001-20230720   clang
+mips                 randconfig-r002-20230720   clang
+mips                 randconfig-r013-20230720   gcc  
+mips                 randconfig-r016-20230720   gcc  
+mips                 randconfig-r035-20230720   clang
+nios2                               defconfig   gcc  
+openrisc             randconfig-r004-20230720   gcc  
+openrisc             randconfig-r006-20230720   gcc  
+openrisc             randconfig-r025-20230720   gcc  
+openrisc             randconfig-r036-20230720   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r002-20230720   gcc  
+parisc               randconfig-r006-20230720   gcc  
+parisc               randconfig-r031-20230720   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                      katmai_defconfig   clang
+powerpc              randconfig-r002-20230720   gcc  
+powerpc              randconfig-r015-20230720   clang
+powerpc              randconfig-r025-20230720   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r032-20230720   gcc  
+riscv                randconfig-r042-20230720   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230720   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r001-20230720   gcc  
+sh                   randconfig-r023-20230720   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r024-20230720   gcc  
+sparc                randconfig-r034-20230720   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r003-20230720   clang
+um                   randconfig-r026-20230720   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230720   gcc  
+x86_64       buildonly-randconfig-r002-20230720   gcc  
+x86_64       buildonly-randconfig-r003-20230720   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r022-20230720   clang
+x86_64               randconfig-r033-20230720   gcc  
+x86_64               randconfig-x001-20230720   clang
+x86_64               randconfig-x002-20230720   clang
+x86_64               randconfig-x003-20230720   clang
+x86_64               randconfig-x004-20230720   clang
+x86_64               randconfig-x005-20230720   clang
+x86_64               randconfig-x006-20230720   clang
+x86_64               randconfig-x011-20230720   gcc  
+x86_64               randconfig-x012-20230720   gcc  
+x86_64               randconfig-x013-20230720   gcc  
+x86_64               randconfig-x014-20230720   gcc  
+x86_64               randconfig-x015-20230720   gcc  
+x86_64               randconfig-x016-20230720   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r001-20230720   gcc  
+xtensa               randconfig-r005-20230720   gcc  
+
 -- 
-2.37.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
