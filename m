@@ -2,69 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA46675C759
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 15:08:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1B9775C764
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 15:12:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230339AbjGUNI5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 09:08:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53846 "EHLO
+        id S229899AbjGUNMN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jul 2023 09:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230226AbjGUNIz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 09:08:55 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9F630C4;
-        Fri, 21 Jul 2023 06:08:54 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4f95bf5c493so3104437e87.3;
-        Fri, 21 Jul 2023 06:08:54 -0700 (PDT)
+        with ESMTP id S229644AbjGUNML (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 09:12:11 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394DDE68;
+        Fri, 21 Jul 2023 06:12:10 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-51d95aed33aso2560252a12.3;
+        Fri, 21 Jul 2023 06:12:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689944933; x=1690549733;
+        d=gmail.com; s=20221208; t=1689945128; x=1690549928;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CtlyWn2I3ogc2VsptqSvO9P1T5RQycoIkTmKOHueTBg=;
-        b=S8PTRVUMNu8G4Msql+QdzSAXokDbUKFUuzdDgIlBAjtRnFSD1ZQSop+HhaiOkZ33VJ
-         9cmr14AoKtGPPl7TIRE4XATfTXThA8ZmVQyPrBvZmKRd8P3vihO0ZVKQFNRfBdz/p6+p
-         FmbHdZo2zhe0WVn7XA4PyyUITo7Pu129O3HmSGMAgpdW1bupOTSkFYCSFj+FytORoElR
-         QxvIfTAw1ZNQoiscEAs0udy/ZZIAd93tGtHWlAVBWmIm7UewZjaUQ3rMK6f0HLZecFgJ
-         ugIrycFAnq0MRIMihz6GFJ8Z3J4Cye2/Sru3s6hgOg3j25nIgfaQMX+lgjPK2oTaEAw1
-         9IwA==
+        bh=FLOhJ2rJe0Qc3xeU0mPkMornHnJZ7T3VIe9SRIhazhc=;
+        b=iAYToVXi/ijdwSzHq4d+wkebjmSC99gou5UMnv6zjGjRWP5bI4WTLBhrV1DfagTJan
+         rDpCPIQDkKafttAfARGXZo3KEusmajti9zf90LyJQaP+J0S7Dg7RWFMtEASJMG153pdj
+         4WpNppMYg+TtP1WjEppm30Mfe3uE5AAJFSeWLVlMOHs6Q6AW7mUZlidmgpsF2zZwKfup
+         73h5RuuqzNROShZ18hPhOsF24CBNUdrVxZ2wF9V06+QwdnNQKu1uPIEceJZiVoxJSYHB
+         xn1VKZmpdCHP/EpMUii91RdU/Mq3seN7RQUkVvOJnuAxpMbs2aJvs5WxS2rCTivvR3TM
+         LXfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689944933; x=1690549733;
+        d=1e100.net; s=20221208; t=1689945128; x=1690549928;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CtlyWn2I3ogc2VsptqSvO9P1T5RQycoIkTmKOHueTBg=;
-        b=Qj1CZIXCjtL8f8aXPEaGJxpyfiGm3F5O9WW7C+kJmB2nom7MZZAlgI7NZUnti9Icy8
-         Qm26pvD86Im+87l3RNmWswL9n6mctDT13+MlU+BaNVNII48Ui8rTIYpW29SNs86fFapi
-         xcXUFv3neDUx/o5mdZh5H5fDUULwULdlBVEnSIn0UUKI9wihOXiI4P7AHQ2s2ZXw4sgR
-         A0IUCOVVK7GpkEH7P1btVjw94+b92D+tPikyE71J7WyqbTVCWWQGthBgTew7Yd/gIebu
-         NfoL5A+oBp7qGIEB4PTnzGzT8N6WUV5k8tyMP3JP3icIKNQCcSA5JDnJf4fcDjc8B/pD
-         3QuA==
-X-Gm-Message-State: ABy/qLaM1Y4ebIqrEvImB8TKJHm3CJZUoZgr96fld3vNow8EHhsCq54v
-        MVT8nthPW+MI/qiKQPUsHOFyKZPxOlpf6A==
-X-Google-Smtp-Source: APBJJlGWg54hXrgHwtVxHtuUFDOm84BpYP/EqgGmtO39iCY1GtfP9Z2VtWTVC8s94tfgVprnEgBW3w==
-X-Received: by 2002:a05:6512:3243:b0:4fb:7666:3bc0 with SMTP id c3-20020a056512324300b004fb76663bc0mr1141674lfr.47.1689944932468;
-        Fri, 21 Jul 2023 06:08:52 -0700 (PDT)
+        bh=FLOhJ2rJe0Qc3xeU0mPkMornHnJZ7T3VIe9SRIhazhc=;
+        b=KoeLWMamWFbzETRN0vK8jRzt+Zgv/pDVNeSij/P3MEvGfx4kMaO46ic/IvUCtbKeAp
+         fTY+QN9usAOyvdu8+8pAVYv2d89KMuKfVncHxW2nz4jBCVPJL7BUpwSdeOOO+K4PjnfQ
+         FAyB/9Tq8NC/HUX5NFLloUCX1qxe4lLeXOH6iQjOu7gSIKTz6bpAf0KtmL/jLhFDsZdT
+         0QAObBR1+bIBgQJ0Y+F4UDGwyVpg8GKoBPcaOy6jKZGajbR/pUyfZ8duN0eKd8ts+iWr
+         CtaBNlI3QkfEdyB6/CAh6bk5nXqujY7V/dYCkcwD9QK/yDVYYicV7Xq57w++jYSRLkn6
+         zb1Q==
+X-Gm-Message-State: ABy/qLaXtWhBQu46BUrSSrS9XHcTZrzYh2fxgWTBZzu72RaxE7aBH7Lf
+        PpBqiO+HJrn7VpCmo6KLPCLvOZC9c0NAIQ==
+X-Google-Smtp-Source: APBJJlGnJ2hbt7GQPk1lHcmsW/FH7OjoWu8mc2s6uhhRQv7d/aL1OvXGbjhQ3BAjZHskVuObr0dBdA==
+X-Received: by 2002:aa7:d618:0:b0:51d:b89d:9818 with SMTP id c24-20020aa7d618000000b0051db89d9818mr1412956edr.12.1689945128161;
+        Fri, 21 Jul 2023 06:12:08 -0700 (PDT)
 Received: from localhost.localdomain ([92.85.190.61])
-        by smtp.gmail.com with ESMTPSA id d17-20020aa7ce11000000b00521d42fb41asm2087154edv.67.2023.07.21.06.08.50
+        by smtp.gmail.com with ESMTPSA id t23-20020a05640203d700b0050cc4461fc5sm2104270edw.92.2023.07.21.06.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jul 2023 06:08:51 -0700 (PDT)
+        Fri, 21 Jul 2023 06:12:07 -0700 (PDT)
 From:   Andrei Coardos <aboutphysycs@gmail.com>
-To:     linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     angelogioacchino.delregno@collabora.com, matthias.bgg@gmail.com,
-        andy@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     andy@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
+        romain.perier@gmail.com, daniel@thingy.jp,
         Andrei Coardos <aboutphysycs@gmail.com>,
         Alexandru Ardelean <alex@shruggie.ro>
-Subject: [PATCH] gpio: mt7621: remove unnecessary call to platfrom_set_drvdata()
-Date:   Fri, 21 Jul 2023 16:08:38 +0300
-Message-Id: <20230721130838.26616-1-aboutphysycs@gmail.com>
+Subject: [PATCH] gpio: msc313: remove unnecessary call to platform_set_drvdata()
+Date:   Fri, 21 Jul 2023 16:11:57 +0300
+Message-Id: <20230721131157.26640-1-aboutphysycs@gmail.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,21 +79,22 @@ it being accessed outside of this driver file.
 Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
 Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
 ---
- drivers/gpio/gpio-mt7621.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpio/gpio-msc313.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
-index 93facbebb80e..c0c715167d9c 100644
---- a/drivers/gpio/gpio-mt7621.c
-+++ b/drivers/gpio/gpio-mt7621.c
-@@ -315,7 +315,6 @@ mediatek_gpio_probe(struct platform_device *pdev)
- 		return mtk->gpio_irq;
+diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
+index 036ad2324892..8e6835399d24 100644
+--- a/drivers/gpio/gpio-msc313.c
++++ b/drivers/gpio/gpio-msc313.c
+@@ -643,8 +643,6 @@ static int msc313_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(gpio->base))
+ 		return PTR_ERR(gpio->base);
  
- 	mtk->dev = dev;
--	platform_set_drvdata(pdev, mtk);
- 
- 	for (i = 0; i < MTK_BANK_CNT; i++) {
- 		ret = mediatek_gpio_bank_probe(dev, i);
+-	platform_set_drvdata(pdev, gpio);
+-
+ 	gpiochip = devm_kzalloc(dev, sizeof(*gpiochip), GFP_KERNEL);
+ 	if (!gpiochip)
+ 		return -ENOMEM;
 -- 
 2.34.1
 
