@@ -2,73 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 993BC75BF26
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 08:55:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B7A75BFD5
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 09:35:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjGUGzI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 02:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
+        id S230286AbjGUHfj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jul 2023 03:35:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjGUGzH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 02:55:07 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F06B270A
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 23:55:06 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-666e5f0d60bso1085652b3a.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jul 2023 23:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689922506; x=1690527306;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0QLQoiU7s93pdrC4791KWs0RYyFWAUOBFtgcVURl5kc=;
-        b=dZPwyA6p6aoggAZDcKj6wDu+hZgwdpw4zc8QI+gnq+jw8/ys3x1+/mHNOs1sssZEBf
-         WNA/ZmBZ0dKKUG9S22M63yb6fOsfddF9yT5i9yG7uPnCiKMNF1SqmrTfiOQK/WQUoSGe
-         7mupOzvalPPOAACnrAhVTYNpinTtXi4+aSQXpTE71fcOJxzOpuzRcoq5iU7WiBAb0l3l
-         q7aOW52ibspvYPif5Thy2JrubfkzyxtGxhrkrrrZZygArHJu/ttzefVTPx2g42D2pDbM
-         FfqcJQRS2t6h+4QFKlkhiVBrJwsSQjnZsoWFclNFk5VWeSgNgKIg4P3qM0FMU9L7QT+m
-         mJhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689922506; x=1690527306;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0QLQoiU7s93pdrC4791KWs0RYyFWAUOBFtgcVURl5kc=;
-        b=AuQ8gtDTnWPLZ2kGYEoSaKsc14Rqqqum0KTsOy2nmJqZ4Bup6yDPaFg1kQEeBCPIEE
-         8TS/iLXTqqQp5YjD5atOP0mV2G3cGOWbgFGtKLDCNmrAJLNNn/P5jDGL32NM+G7IDwDO
-         P0Vvxpe8A+Rckeqbdd2ywTnpn/fyequC0z9JGH2ds8DXa+d9tTcCaFQL9gZYKy/PRzFb
-         I/3Himaz97QrueUz2l/MXJK+kNsdjgKBCDIDuPqNT1K+cKmQq9ZHYUBD1KCU8ZAHsbqG
-         kxu3H2HOOUm7sunSrFXRzyeDwYGPVl9PX/BHQWTHnTzQW1uikvTzJMHwvXPmuDoW8AfM
-         qc6Q==
-X-Gm-Message-State: ABy/qLZ1uT/7UV1VAFp8lZHdl8YhE1fxL+/Xdv0MI+QQ6c15HexK/2VT
-        l6vwtxiCWaTNfmmfPpAQ6a5djw==
-X-Google-Smtp-Source: APBJJlHEfKPa0E3EPk52BmQKndWYA5x5eE8xNMHbbIHb0NfrW/wYgHMQiRlFoHg2CoOzp98rxgyi3g==
-X-Received: by 2002:a05:6a00:a8a:b0:65e:ec60:b019 with SMTP id b10-20020a056a000a8a00b0065eec60b019mr1103051pfl.25.1689922505678;
-        Thu, 20 Jul 2023 23:55:05 -0700 (PDT)
-Received: from localhost ([122.172.87.195])
-        by smtp.gmail.com with ESMTPSA id y12-20020aa7804c000000b0063b898b3502sm2244097pfm.153.2023.07.20.23.55.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 23:55:05 -0700 (PDT)
-Date:   Fri, 21 Jul 2023 12:25:03 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Erik Schilling <erik.schilling@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH v2 5/5] bindings: rust: provide
- LineRequest::chip_name()
-Message-ID: <20230721065503.jsktxdvugto5atxm@vireshk-i7>
-References: <20230720144747.73276-1-brgl@bgdev.pl>
- <20230720144747.73276-6-brgl@bgdev.pl>
+        with ESMTP id S230193AbjGUHfe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 03:35:34 -0400
+Received: from mail-sh.amlogic.com (mail-sh.amlogic.com [58.32.228.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C7519A1;
+        Fri, 21 Jul 2023 00:34:46 -0700 (PDT)
+Received: from rd02-sz.amlogic.software (10.28.11.83) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.13; Fri, 21 Jul 2023
+ 15:34:31 +0800
+From:   Huqiang Qin <huqiang.qin@amlogic.com>
+To:     <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <neil.armstrong@linaro.org>,
+        <khilman@baylibre.com>, <jbrunet@baylibre.com>,
+        <martin.blumenstingl@googlemail.com>, <linus.walleij@linaro.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        Huqiang Qin <huqiang.qin@amlogic.com>
+Subject: [PATCH 0/3] Add binding header file for GPIO interrupt of Amlogic Meson-G12A
+Date:   Fri, 21 Jul 2023 15:32:11 +0800
+Message-ID: <20230721073214.1876417-1-huqiang.qin@amlogic.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230720144747.73276-6-brgl@bgdev.pl>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.11.83]
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,19 +44,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 20-07-23, 16:47, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Provide a wrapper around gpiod_line_request_get_chip_name() for Rust
-> bindings and add a test-case.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  bindings/rust/libgpiod/src/line_request.rs   | 16 ++++++++++++++++
->  bindings/rust/libgpiod/tests/line_request.rs | 14 ++++++++++++++
->  2 files changed, 30 insertions(+)
+After adding this binding header file, you can intuitively find
+the interrupt number corresponding to each GPIO, and apply it
+in the format of IRQID_XXX where it needs to be used.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Associated platforms:
+- Amlogic Meson-G12A
+- Amlogic Meson-G12B
+- Amlogic Meson-SM1
 
+Huqiang Qin (3):
+  dt-bindings: interrupt-controller: Add header file for Amlogic
+    Meson-G12A SoCs
+  pinctrl: Replace the IRQ number in the driver with the IRQID macro
+    definition
+  arm64: dts: Replace the IRQ number with the IRQID macro definition
+
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |   1 +
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |   2 +-
+ .../dts/amlogic/meson-g12b-bananapi-cm4.dtsi  |   2 +-
+ .../boot/dts/amlogic/meson-g12b-bananapi.dtsi |   2 +-
+ .../amlogic/meson-g12b-odroid-go-ultra.dts    |   4 +-
+ .../dts/amlogic/meson-g12b-odroid-n2.dtsi     |   2 +-
+ .../boot/dts/amlogic/meson-g12b-w400.dtsi     |   2 +-
+ .../dts/amlogic/meson-sm1-a95xf3-air-gbit.dts |   2 +-
+ .../boot/dts/amlogic/meson-sm1-bananapi.dtsi  |   4 +-
+ .../boot/dts/amlogic/meson-sm1-h96-max.dts    |   2 +-
+ .../boot/dts/amlogic/meson-sm1-odroid.dtsi    |   2 +-
+ .../boot/dts/amlogic/meson-sm1-sei610.dts     |  12 +-
+ .../dts/amlogic/meson-sm1-x96-air-gbit.dts    |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  35 ++---
+ .../irq-meson-g12a-gpio.h                     | 126 ++++++++++++++++++
+ 15 files changed, 164 insertions(+), 36 deletions(-)
+ create mode 100644 include/dt-bindings/interrupt-controller/irq-meson-g12a-gpio.h
+
+
+base-commit: c58c49dd89324b18a812762a2bfa5a0458e4f252
 -- 
-viresh
+2.37.1
+
