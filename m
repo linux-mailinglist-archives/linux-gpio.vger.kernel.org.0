@@ -2,139 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43CC775D16E
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 20:35:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50EAE75D4BF
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 21:24:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbjGUSfX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 14:35:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40596 "EHLO
+        id S232226AbjGUTYg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jul 2023 15:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbjGUSfW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 14:35:22 -0400
-Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EC430C8
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 11:35:18 -0700 (PDT)
-Received: by mail-vk1-xa2a.google.com with SMTP id 71dfb90a1353d-4813688e561so805419e0c.1
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 11:35:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689964518; x=1690569318;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6Jb2O45b1H6vUvaypzXmbOgfKu+53jKzOSXPQ/AKAUI=;
-        b=AblTtvQbU9yyFN7LGZuFadZr3GvMfgmMbKjLBbv0kgPFjt2KWLscZy8CI53K69yaA6
-         3OAPig3jKpGsd0DoXxqDrLRJDTSZ/Q1DQJoVzEtWj0zCyuYo62smY8xyx4QxpEd3qxJ9
-         iq4+J9gUK+kn/PJluxg6UgSbKWw0cyUbVfsSGV3R3aRU5Nshn/0RCBMVuV0vmK2sVg61
-         xwGWowFDVPThUrIEqDFEbI9xUJ658TbqiAtRAK6Ux7jouF758eJl1HGiG8iIqcOuH5pb
-         9ThnMWH2s2hyRbUAOFKXEYVahwvMhyq1EsCwNDuoaD2bBtjxJF/fT2K1TJx8eBZk29Sm
-         Vsow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689964518; x=1690569318;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6Jb2O45b1H6vUvaypzXmbOgfKu+53jKzOSXPQ/AKAUI=;
-        b=PaSv04Bjm1o8myGUnFjl+gquxFBYDey2it613LKcrRoGw/Yot5o7rfxzPdWZZo+yrn
-         XUvfATcVBz2dq0NWKytWprRCY/S3h2Ssbl5uWoNqcq5/Bl+ZM1XWjCnbfRMSZUpw6V/i
-         5xMQGvr0JaZEPDP63uNnq0TGZbipYkiizWV33sisPZJj0Z0lSXdPlibope/ODR/EOWZP
-         xl5GS54NbHmt1K4bbPVHzmbp02QYrjUidzsnjvHFh6lHQLVnZKB6j2NDGyAgpvJV/evA
-         6xauNB25TRq/7kjg0PTXqUUUbFggPZCa6z/nyE0rKhzpXisyxPabOC9aovAwQXkib1rR
-         Blfg==
-X-Gm-Message-State: ABy/qLYkolI6dftQCkHUJHNKVeo3dXl5iOxS5Qe85Y+GIegllBla66kg
-        hXLL5yhhQAr2kdeThviPnjiu8mufaTI41N93zSjntRql51vrjz3h
-X-Google-Smtp-Source: APBJJlFXT6KZYddjE/Jm5G9xOJaBsNQDJXQICIhotHxp+A6wrj2Ozl/jD5sSmfVkpMWrm8rt29LOYPp5wD/ch/skKwA=
-X-Received: by 2002:a1f:bf8f:0:b0:481:2dec:c25 with SMTP id
- p137-20020a1fbf8f000000b004812dec0c25mr1316709vkf.5.1689964517895; Fri, 21
- Jul 2023 11:35:17 -0700 (PDT)
+        with ESMTP id S232221AbjGUTYg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 15:24:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 199EF189;
+        Fri, 21 Jul 2023 12:24:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A974361D7F;
+        Fri, 21 Jul 2023 19:24:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF55C433CD;
+        Fri, 21 Jul 2023 19:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689967474;
+        bh=ZMDz7Ao/mXqDoOt9YqdyFYlyKXkJ8dwXgYd8bgtxMgY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dIfxhb+OVuk0F9idwdU1Nqp2ZJSc3V7WLb+EHXnU6XQPkYG9q40hu0yDpXbB2TsuU
+         bdAuA9f2LNjpYwymZvN1pi/xM0mGLO2l5qF7FzHBiKEoMDfz+64mgsjFj4fsE3RFxK
+         bSj+so11TE5+uDa40Yva/x1RPFStJ/BmxZ1Kzsz3dB9bLjk2pdPL4vI0TbKCaORAdF
+         5a30QkKOfedXkVA/oKRqnWcH9JNt+z7HNVVjIqvXNyAfphZ9VyW5zn5wzb0K7Fw823
+         vvgJj2UW829OlZxlD0DxCyuSDioG2kgNQRryeccV/INrjA5QkKEQgskCeGevIZ7XZ2
+         2fGurbgnWu8+g==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2b6f943383eso33941701fa.2;
+        Fri, 21 Jul 2023 12:24:34 -0700 (PDT)
+X-Gm-Message-State: ABy/qLYtvXbsYWWSxH4hny9KFMyDYXp9+lJwinVvzmaWvq79AWZqbeRO
+        CdlnfmajUAEhZ15HD1is5iX3E77nPewMz8byuQ==
+X-Google-Smtp-Source: APBJJlHWu7RNKa6G4OWcajuKR+v/9mO3Q4f3e14g7ypnqu1POSVv0p6PFkMlKa+yzKC3DRRdjku8L6M8Rt1M6Sw9RSQ=
+X-Received: by 2002:a2e:b70e:0:b0:2b4:45bc:7bd with SMTP id
+ j14-20020a2eb70e000000b002b445bc07bdmr2350137ljo.4.1689967472029; Fri, 21 Jul
+ 2023 12:24:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230720144747.73276-1-brgl@bgdev.pl> <20230720144747.73276-6-brgl@bgdev.pl>
- <ZLn4V9IW0nI8djau@sol>
-In-Reply-To: <ZLn4V9IW0nI8djau@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 21 Jul 2023 20:35:07 +0200
-Message-ID: <CAMRc=MfyHqp5gWBmAtw6MhGS3p1oMt3yKTLQGOK09kccuLq+dw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 5/5] bindings: rust: provide LineRequest::chip_name()
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Erik Schilling <erik.schilling@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230721161840.1393996-1-hugo@hugovil.com> <20230721161840.1393996-7-hugo@hugovil.com>
+In-Reply-To: <20230721161840.1393996-7-hugo@hugovil.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Jul 2023 13:24:19 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
+Message-ID: <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v8 06/10] serial: sc16is7xx: fix regression with
+ GPIO configuration
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     gregkh@linuxfoundation.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
+        isaac.true@canonical.com, jesse.sung@canonical.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Lech Perczak <lech.perczak@camlingroup.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 5:15=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Fri, Jul 21, 2023 at 10:19=E2=80=AFAM Hugo Villeneuve <hugo@hugovil.com>=
+ wrote:
 >
-> On Thu, Jul 20, 2023 at 04:47:47PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Provide a wrapper around gpiod_line_request_get_chip_name() for Rust
-> > bindings and add a test-case.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  bindings/rust/libgpiod/src/line_request.rs   | 16 ++++++++++++++++
-> >  bindings/rust/libgpiod/tests/line_request.rs | 14 ++++++++++++++
-> >  2 files changed, 30 insertions(+)
-> >
-> > diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust=
-/libgpiod/src/line_request.rs
-> > index 1140aa9..737c06f 100644
-> > --- a/bindings/rust/libgpiod/src/line_request.rs
-> > +++ b/bindings/rust/libgpiod/src/line_request.rs
-> > @@ -2,6 +2,7 @@
-> >  // SPDX-FileCopyrightText: 2022 Linaro Ltd.
-> >  // SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
-> >
-> > +use std::ffi::CStr;
-> >  use std::os::unix::prelude::AsRawFd;
-> >  use std::time::Duration;
-> >
-> > @@ -25,6 +26,21 @@ impl Request {
-> >          Ok(Self { request })
-> >      }
-> >
-> > +    /// Get the name of the chip this request was made on.
-> > +    pub fn chip_name(&self) -> Result<&str> {
-> > +        // SAFETY: The `gpiod_line_request` is guaranteed to be live a=
-s long
-> > +        // as `&self`
-> > +        let name =3D unsafe { gpiod::gpiod_line_request_get_chip_name(=
-self.request) };
-> > +
-> > +        // SAFETY: The string is guaranteed to be valid, non-null and =
-immutable
-> > +        // by the C API for the lifetime of the `gpiod_line_request`. =
-The
-> > +        // `gpiod_line_request` is living as long as `&self`. The stri=
-ng is
-> > +        // returned read-only with a lifetime of `&self`.
-> > +        unsafe { CStr::from_ptr(name) }
-> > +            .to_str()
-> > +            .map_err(Error::StringNotUtf8)
-> > +    }
-> > +
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 >
-> I would drop the name temp var myself, but that is just a nit.
->
+> Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines"=
+)
+> and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
+> changed the function of the GPIOs pins to act as modem control
+> lines without any possibility of selecting GPIO function.
 
-I would too but rust was making it very difficult with borrow semantics. :)
+Requiring a new DT property is not fixing a kernel regression. You
+should be returning the kernel to original behavior and then have a
+new DT property for new behavior.
 
-Bart
+> As a consequence, applications that depends on GPIO lines configured
+> by default as GPIO pins no longer work as expected.
+>
+> Also, the change to select modem control lines function was done only
+> for channel A of dual UART variants (752/762). This was not documented
+> in the log message.
+>
+> Allow to specify GPIO or modem control line function in the device
+> tree, and for each of the ports (A or B).
+>
+> Do so by using the new device-tree property named
+> "modem-control-line-ports" (property added in separate patch).
 
-> Other than that the series looks good to me.
+That's not the name in the patch.
+
+> When registering GPIO chip controller, mask-out GPIO pins declared as
+> modem control lines according to this new "modem-control-line-ports"
+> DT property.
 >
-> Reviewed-by: Kent Gibson <warthog618@gmail.com>
->
-> Cheers,
-> Kent.
+> Boards that need to have GPIOS configured as modem control lines
+> should add that property to their device tree. Here is a list of
+> boards using the sc16is7xx driver in their device tree and that may
+> need to be modified:
+>     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+>     mips/boot/dts/ingenic/cu1830-neo.dts
+>     mips/boot/dts/ingenic/cu1000-neo.dts
+
+Then again, if no one cares about those boards needing a change then
+it can be okay.
+
+
+Rob
