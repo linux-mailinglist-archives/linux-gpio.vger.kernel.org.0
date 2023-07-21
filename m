@@ -2,106 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C3575C192
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 10:27:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4877F75C26C
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 11:06:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjGUI1x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 04:27:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
+        id S230191AbjGUJG1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jul 2023 05:06:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbjGUI1w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 04:27:52 -0400
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33ABE272D;
-        Fri, 21 Jul 2023 01:27:51 -0700 (PDT)
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 36L6lJk1006552;
-        Fri, 21 Jul 2023 03:27:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=PODMain02222019; bh=TigA1hY1Lp5dH2f
-        /AfywKcjJbfyrqtGA9PlhZpcqZG0=; b=nVL5zMcOd5WBpNgxVuyBhfKt948VOiU
-        jqxO8lP+vlbPvbPsGiXxvESXQt1eUBGWYLMcyodW4nnEQ+P4wwpNx5pFMI+ORLII
-        3iwS43SO3qOVFbTW4EJaLCt3i1JVGJSueZt85AYIgiPzUuL1ERQ7b2tWdUBBroRR
-        0rvSVVfiyfpxeIqV9dN4WF1ZklKETAKq9HEctUWZjM6sHX8IIaf4J/PjBMgJq8n9
-        eXIq2rfjUmBQaAQVX5RNvbHow+K6Afg/ax7zZp4gF81KFcXAMchZrqDCmeHy+uQd
-        dg8507KSYsaEq7IxteO4BniTXffNe822AH+n3Z0jG2IzcVGAeHuPPig==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3rus6gy9c9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jul 2023 03:27:34 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 21 Jul
- 2023 09:27:32 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.30 via Frontend
- Transport; Fri, 21 Jul 2023 09:27:32 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id C586445;
-        Fri, 21 Jul 2023 08:27:32 +0000 (UTC)
-Date:   Fri, 21 Jul 2023 08:27:32 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Lee Jones <lee@kernel.org>, <vkoul@kernel.org>
-CC:     <broonie@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <conor+dt@kernel.org>, <lgirdwood@gmail.com>,
-        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
-        <pierre-louis.bossart@linux.intel.com>,
-        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: (subset) [PATCH v5 0/6] Add cs42l43 PC focused SoundWire CODEC
-Message-ID: <20230721082732.GJ103419@ediswmail.ad.cirrus.com>
-References: <20230619095623.1987742-1-ckeepax@opensource.cirrus.com>
- <168992615492.1924396.13464534208592126033.b4-ty@kernel.org>
+        with ESMTP id S229450AbjGUJG0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 05:06:26 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55DF7E74;
+        Fri, 21 Jul 2023 02:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1689930384; x=1721466384;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=I75kCCDlibaMONLjfxO4Q2JWzzPAojEBILnYVxUnPFI=;
+  b=CfpYCLIWPJOr70ruO3KSmBLYP/LZIiLOoh0pD/g3Gv/eXQnKMYye3ZYx
+   m3oeaT0znQ7LHQiX8HKLLGeXzVNVWO+WBEARKufg3udA2Ul0wQ96VkLf2
+   9sUA2dhN/x4lahzQN9HLjQFjPl43jTp/xPVqIdeHecOhiuxkpxdc2mdNc
+   21eC2GmAptri6x534ZlYYXYgOjTrpF9iluyjFoeijdaGeXTsTLmWYysRO
+   gCiLgO29T6LuirFE63QRtAeYlAxJHJX2DicMzO9VmurHttOt4coO82G8/
+   8mbeFKfNNtJKLBlNxg97E/1Bf+Smws2h2qjg09eCZftfltcUaUYYLq3Zq
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.01,220,1684792800"; 
+   d="scan'208";a="32049643"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 21 Jul 2023 11:06:22 +0200
+Received: from steina-w.tq-net.de (unknown [10.123.53.21])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 6E89D280078;
+        Fri, 21 Jul 2023 11:06:22 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 1/2] dt-bindings: gpio: Add gpio-line-names to STMPE GPIO
+Date:   Fri, 21 Jul 2023 11:06:16 +0200
+Message-Id: <20230721090618.1211081-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <168992615492.1924396.13464534208592126033.b4-ty@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-ORIG-GUID: yt4HPd4fkRFLiLXN7DRn-CNz-muYc-e7
-X-Proofpoint-GUID: yt4HPd4fkRFLiLXN7DRn-CNz-muYc-e7
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 08:55:54AM +0100, Lee Jones wrote:
-> On Mon, 19 Jun 2023 10:56:17 +0100, Charles Keepax wrote:
-> > This patch chain adds support for the Cirrus Logic cs42l43 PC focused
-> > SoundWire CODEC. The chain is currently based of Lee's for-mfd-next
-> > branch.
-> > 
-> > Thanks,
-> > Charles
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [2/6] dt-bindings: mfd: cirrus,cs42l43: Add initial DT binding
->       commit: e62ba8443b11f12b45c61444249458a2f8c2f4ef
-> [3/6] mfd: cs42l43: Add support for cs42l43 core driver
->       commit: 843079209e1506c94fde797fc0ff914e2c9e6645
-> [4/6] pinctrl: cs42l43: Add support for the cs42l43
->       commit: 85f034dd7ff0a66aded653cc91dbc406fba7cf1a
-> 
+This is a gpio-controller, so gpio-line-names should be allowed as well.
 
-Only slight hiccup here is there is a build dependency between
-the MFD and SoundWire patch. So without the SoundWire patch
-the SoundWire part of the MFD won't build.
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+---
+ Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Vinod, would be really good if you could have a look at the
-SoundWire patch would be great to get this moving, this part is
-seeing a fair amount of deployment at the moment so getting this
-into mainline would be very helpful.
+diff --git a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
+index 22c0cae73425..b226a8892f8a 100644
+--- a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
+@@ -27,6 +27,7 @@ properties:
+     const: 2
+ 
+   gpio-controller: true
++  gpio-line-names: true
+ 
+   interrupt-controller: true
+ 
+-- 
+2.34.1
 
-Thanks,
-Charles
