@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A97DB75C923
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 16:09:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4CEB75C933
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jul 2023 16:10:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231774AbjGUOJJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 10:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
+        id S229682AbjGUOKR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jul 2023 10:10:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbjGUOI6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 10:08:58 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F2330E3
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 07:08:44 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4fb761efa7aso3306301e87.0
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 07:08:44 -0700 (PDT)
+        with ESMTP id S230347AbjGUOKP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 10:10:15 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177B930D2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 07:10:13 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fbc5d5742eso17458365e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Jul 2023 07:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689948523; x=1690553323;
+        d=linaro.org; s=google; t=1689948611; x=1690553411;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QdCDvX2ENQQi+dpK3c6L7rSwh7ZxpQvyjeSTayf+l4A=;
-        b=mKpa85MjZm0wM2/mDCVf9XYQEXqHnC0zrrCUULJJt2k97Ivcladhym49AqIJy7+Cl6
-         M68rFARHi81TAQJXWEUS1FYzNXin0hZbhFEFSIzyz0akk/YVbt8GKI7i1JU6Wbhd2lqU
-         QOxvFaJcPysmvURITXByzqQERED004zQDaoA/oKyBTElV1S52Qd2ZHxnkLx+wr7VyRv3
-         Aw8GSkEJP3SExUtN/YZgkoBVcRyf5/bJ61snewbba4LU6Pe0oAAHNa6hFgRSvTV30hyz
-         TujMWvjygIWFj2lESeXLXp5/tCCPHd4jXPTfUK933o8JRD3N8BQjMsDSwwNVnhYuu5Vs
-         LxBg==
+        bh=D5JLK7sX6TvMY9QYtE4PR7dOD/ZFiOCarXTzuRrPI5c=;
+        b=t5k3pZhoG+AYBoSzaTLpzlAUsBlHUl7lB78CDzsmHwjdVVGmyTqDM89ObvufvjSo7f
+         hpww35uNlXvCiXjR8Z3Kcy+N16aszSPxdmSW5dXU//lN8o77O3wzYas7eBkvmDyuTUT7
+         sy82OO7WlVgpwfI60hPRR6eC7iKohOsXJIAPgLYw0aB9/CoM3vvTnVBOsIhDGWbjAxE4
+         jhkNh/RncJk8+BPjG2UwVOec3N1akRHOj8/cli14A3cccbFg1vqKASTYTytAzKfrss4t
+         3mJgMR1n+1HqY3oqR8HhDhElYOwuyc2qwRsyyrmAmT2CnaWXqaPG173zYgCNrCSCs7I4
+         H4Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689948523; x=1690553323;
+        d=1e100.net; s=20221208; t=1689948611; x=1690553411;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QdCDvX2ENQQi+dpK3c6L7rSwh7ZxpQvyjeSTayf+l4A=;
-        b=b3WTUot54V4ujyASZcdkDhFQ+ViTZr3/gRoP+kGFIXJo6q3rn6prvDKiMn44NQLoTt
-         L/241XThKe0okxcyZAxvI0FRZYkASfi/NW8aZyh4DPE7glN56gz/V1bFj3jimCfdV02h
-         BDVb7mnHzz0qCV9vBkLiJlAT8QNtI3e0Qwjo5xHttUKPR4LcEjelnUTw9u0xtfVkkNf5
-         qDGPUf2XeGhyHK9kJnu5ghr6kdAZh7q7KUehAE6PGLWA0KqkwcSLwubZtZycUn8uQWJD
-         7KdxAA9rA4FPjepqDHZSj2pZY6WAQ7avwIR1gLW2/1PbYXPsLHALmqbfUcShJGSjpCU/
-         V+XA==
-X-Gm-Message-State: ABy/qLaknxGUhKrpg6NxXBSeIvidPGeVfk/vep7NLP0M/uWPpHtfuKJs
-        sEAKgpixeRaKLms+Qsb710G2tw==
-X-Google-Smtp-Source: APBJJlGitP6YdoZI8bIFpNGAsIBqr0u+J3Lfy5UXxN6m18CjoA/M+91KX09TKjqALw4XfrZGY2rXuA==
-X-Received: by 2002:a05:6512:3054:b0:4fb:b11:c99e with SMTP id b20-20020a056512305400b004fb0b11c99emr1401012lfb.56.1689948522863;
-        Fri, 21 Jul 2023 07:08:42 -0700 (PDT)
+        bh=D5JLK7sX6TvMY9QYtE4PR7dOD/ZFiOCarXTzuRrPI5c=;
+        b=H2LvYzTgbFO9CfIR5P8oPbrd5dByzmFz5EYuNqPmvufIK6e2T207IbhnpHjmpr9nnY
+         rSiiKsSj3NPZbgKMW//04AyjHRy3lO13Zya6Taa02lY1GfMptLGw3jtKohCriPfUoGB5
+         jYwUl3DD6OKepSZUY5yARJ4lv5bpV5Tza8Cc02orNUtfoLZuFgYviMIpt9s6rCo1+KhF
+         zk21g/E3JE5MI+/2OkXWJTb9CNtfpp4U5XBdoCizpvVlwZmgn+5ka8YafnsQeJlUeWmb
+         oeqxGJEuwb0A34E0MxL9FS34NkFgmk28xU5r1m+H42gga0zoJHEANRLbVbnSBCH6z24c
+         ixbg==
+X-Gm-Message-State: ABy/qLZpJoUkOcy2VQuyXe9cReKm1ZwC16dcL1W5ybaE5B8Do1MOoi4p
+        GBqdd1lhFEwluFBX0vFP0RdgGQ==
+X-Google-Smtp-Source: APBJJlFb081tRb9TVYsQzjk8z6FX0fbV9IvQdPA+a6dM+X5vTsqrlNWUMOAY9EDzlSX92P91b/1I9w==
+X-Received: by 2002:a5d:5145:0:b0:314:14ea:e2de with SMTP id u5-20020a5d5145000000b0031414eae2demr1529517wrt.0.1689948611406;
+        Fri, 21 Jul 2023 07:10:11 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id r1-20020adfce81000000b0031128382ed0sm4321269wrn.83.2023.07.21.07.08.37
+        by smtp.gmail.com with ESMTPSA id x10-20020adff0ca000000b00314367cf43asm4284464wro.106.2023.07.21.07.10.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jul 2023 07:08:41 -0700 (PDT)
-Message-ID: <22521abf-db55-aec6-fb96-fdb585ef6132@linaro.org>
-Date:   Fri, 21 Jul 2023 16:08:36 +0200
+        Fri, 21 Jul 2023 07:10:10 -0700 (PDT)
+Message-ID: <d8df7f07-ea8d-d382-d3ef-c1f1fb6ccbc8@linaro.org>
+Date:   Fri, 21 Jul 2023 16:10:06 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v3 12/42] dt-bindings: watchdog: Add Cirrus EP93x
+Subject: Re: [PATCH v3 29/42] dt-bindings: rtc: Add ST M48T86
 Content-Language: en-US
 To:     nikita.shubin@maquefel.me,
         Hartley Sweeten <hsweeten@visionengravers.com>,
@@ -105,15 +105,15 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
         linux-input@vger.kernel.org, alsa-devel@alsa-project.org
 References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
- <20230605-ep93xx-v3-12-3d63a5f1103e@maquefel.me>
+ <20230605-ep93xx-v3-29-3d63a5f1103e@maquefel.me>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230605-ep93xx-v3-12-3d63a5f1103e@maquefel.me>
+In-Reply-To: <20230605-ep93xx-v3-29-3d63a5f1103e@maquefel.me>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -123,14 +123,10 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On 20/07/2023 13:29, Nikita Shubin via B4 Relay wrote:
 > From: Nikita Shubin <nikita.shubin@maquefel.me>
 > 
-> This adds device tree bindings for the Cirrus Logic EP93xx
+> Add YAML bindings for ST M48T86 / Dallas DS12887 RTC.
+> 
 
-Every patch:
-
-Please do not use "This commit/patch", but imperative mood. See longer
-explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-
+This shouldn't really be part of this patchset. It's not part of your SoC.
 
 Best regards,
 Krzysztof
