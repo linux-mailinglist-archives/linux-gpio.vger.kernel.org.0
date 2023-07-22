@@ -2,120 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7EA75DB43
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 11:20:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94F5975DC89
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 14:30:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229890AbjGVJUU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Jul 2023 05:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52498 "EHLO
+        id S229588AbjGVMaj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Jul 2023 08:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjGVJUT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 05:20:19 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D6C2D47
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 02:20:17 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-316f9abf204so2368834f8f.1
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 02:20:17 -0700 (PDT)
+        with ESMTP id S229551AbjGVMai (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 08:30:38 -0400
+Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7204FE0
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 05:30:37 -0700 (PDT)
+Received: by mail-vk1-xa33.google.com with SMTP id 71dfb90a1353d-48133dc9820so976218e0c.3
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 05:30:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690017616; x=1690622416;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RKA/fSK1OrrWeVKEuVTJol/wBIFA9VP5bSnux5wICog=;
-        b=YjZdWI+kciadukrVxFxWcFo2aGcqrVCODXUFim3vhrf3EKtCViolaPQXjj3bfTYg+G
-         yenm0FN952WoCevkNkj5surKcradV6NMXorPKO4JVkXqFQfr24at27NvQuqFt27X8gGy
-         Mqqaa8zRwS7NdwD3h/W9HPwuQEa7/KFzsT60Ldvzin1wmpo/chkg+pO46UPJBqACBf9T
-         DkGui4jpagBiLnYG9HQTouivzJcHxmybd3V9qnwJbGQs7W/Da84rF99eUoZC06OSV4Jr
-         cBrfne5M4kj7zrNDP3p8zSH9Qr5JGQvf6GnpdTytT2MuEvO1u5ZoGIZJspRa+HdXypEs
-         B+Lg==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690029036; x=1690633836;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bAq5/Jl2kFOPPBWJ6Pf8zB2DGLud3TAf62/km0FunJ0=;
+        b=KiOM/zvlJFaOYFR81lqq/OQnA9AVYsk0MLuYUjm+xmSIOOZMGkHYaeOac+ECqmWgW0
+         05t0tButmRLJIJCAtw95mYVovBOLBPA1bFvORb31P4+ySd0gfbo4tWvRGHOhxcx4hdG/
+         hYgIVRrLnkg+Nw9FkZSMNzVnTFR835ITFKgejlxCy1Lydjq08SUdU2u5RlX+8n51j2K/
+         s1CHvGtXAs6cYuUiQox/UpuqVG9fcHE8UnKRhM1+BpR1rcCEbpJ8vFeFKEisg7Cfg03n
+         FVEQ1Fo18dKgpRRJ4NRcB9T1UGNbhB2dZvJHcRD35kmZWvsdVE2yvXuGpfIDv2SMTKIN
+         UAOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690017616; x=1690622416;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RKA/fSK1OrrWeVKEuVTJol/wBIFA9VP5bSnux5wICog=;
-        b=X+8zvhzPcpFs4eWqYqnOXOxthqLnckSuzmCmrNE/vp+CAX1BFdn/2xpZtoufabBmqD
-         iTMx/th3h2/RUv46VsD6mXdude/XkxRNzugf7Rdy0bUvBFP/q6nzWC6lTTJ0s/lhQnGH
-         v6wZ6jivoy+eGC5+A4J0kpGr1FJD9hUr0AyoerKGshD3QkeG/5Bap5S3M/PRBGYCxjW+
-         g1LhOcUhzdjLw847AT3IZ2g6zkZkkWg1zRb19Hoy9Dvlb+b0LKb0UTl2MxBiJgfN5Z2G
-         qgNQEkefD1je1YzMgvY/IGhHpTDOHUetfVIfVwLIE1fmRHa6Y+tVhlpzj/kwcxeF8rU/
-         Vp2A==
-X-Gm-Message-State: ABy/qLaGFCNsxwjDWXCoEzcK9iT9IFtYIkTmu/eRFjJAnTppY+nG7/4F
-        Eu2vGBFrja2FXJ/KHJ7P0gpF1w==
-X-Google-Smtp-Source: APBJJlGqGajANN85V+QyZ+Cb8nzGIbt9uqS2/bG27rvwKaRP64KNNFfMjaIp1YTbbwFeOP0JefmsCg==
-X-Received: by 2002:a5d:58da:0:b0:313:ef24:6feb with SMTP id o26-20020a5d58da000000b00313ef246febmr3872494wrf.3.1690017616419;
-        Sat, 22 Jul 2023 02:20:16 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id n8-20020adfe348000000b00315af025098sm6426333wrj.46.2023.07.22.02.20.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Jul 2023 02:20:15 -0700 (PDT)
-Message-ID: <a4b789ad-0505-1991-2005-c1825a1f3b60@linaro.org>
-Date:   Sat, 22 Jul 2023 11:20:13 +0200
+        d=1e100.net; s=20221208; t=1690029036; x=1690633836;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bAq5/Jl2kFOPPBWJ6Pf8zB2DGLud3TAf62/km0FunJ0=;
+        b=crz2vKoDOD+WLfUMxrJOzuuz1y5I00tMM4qsXLQIABV4RSEOIgPlQcSIMqGy9UvFJj
+         n26hW71j4Ir/X1s2/SuEAAYMo6gU4Frdh+sc74H4Zi1dOPkhQRCa/plDsc06+7LRIU+Q
+         2AFm1jZYTSmNBXXx0yxiLGseDvcxhmje1MCiWa0yJTivv5MNOcc8X35WMW0BB7mg6fkq
+         nUqED0KC834ZrcdLHuPGGQNU/zehZSkmZepo+j0CRt968RKkTbTZprAjvdzuF56eQras
+         ey7go8wEspg8MAnTCiru5UxWjPODELZfpActPwwCP5gbFeX1yVvy7ynZOTnapll+kwqe
+         pOPw==
+X-Gm-Message-State: ABy/qLbqiH+J6PwmDZ5iussWgoKIoGCWlWZde1mcnFA7DhO2tTEaLZRS
+        EZ+5HuGPh70y0/lXoP0KCzeqFXdmPHff/AIKtycIWw==
+X-Google-Smtp-Source: APBJJlEQzyjgdx1Dw03GOpQ7FGdWEczTug44/HS+RPFUVvOEejX2SDl8qTHMnsaei++CkaqiAnqvu1+8FN9m1NOHlqY=
+X-Received: by 2002:a05:6102:250:b0:446:e878:f24 with SMTP id
+ a16-20020a056102025000b00446e8780f24mr894998vsq.14.1690029036394; Sat, 22 Jul
+ 2023 05:30:36 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 3/3] arm64: defconfig: enable Qualcomm SM6115 LPASS
- pinctrl
-Content-Language: en-US
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230722-topic-6115_lpasstlmm-v1-0-32d1643d8774@linaro.org>
- <20230722-topic-6115_lpasstlmm-v1-3-32d1643d8774@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230722-topic-6115_lpasstlmm-v1-3-32d1643d8774@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230720144747.73276-1-brgl@bgdev.pl> <20230720144747.73276-6-brgl@bgdev.pl>
+ <ZLn4V9IW0nI8djau@sol> <CAMRc=MfyHqp5gWBmAtw6MhGS3p1oMt3yKTLQGOK09kccuLq+dw@mail.gmail.com>
+ <ZLs55rrghb/X3rd2@sol>
+In-Reply-To: <ZLs55rrghb/X3rd2@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 22 Jul 2023 14:30:21 +0200
+Message-ID: <CAMRc=Mdmxoxo3-e2iG8P=K4tsHkBGgkPFJCyXpSF+34ciskYMg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2 5/5] bindings: rust: provide LineRequest::chip_name()
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Erik Schilling <erik.schilling@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 22/07/2023 10:52, Konrad Dybcio wrote:
-> Enable the Qualcomm SM6115 LPASS TLMM pin controller driver for
-> providing GPIOs/pins for audio block on SM6115 based boards (e.g.
-> QTI RB2).
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 6cbf6eb59378..6911101db09e 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -587,6 +587,7 @@ CONFIG_PINCTRL_SDM660=y
->  CONFIG_PINCTRL_SDM670=y
->  CONFIG_PINCTRL_SDM845=y
->  CONFIG_PINCTRL_SM6115=y
-> +CONFIG_PINCTRL_SM6115_LPASS_LPI=m
+On Sat, Jul 22, 2023 at 4:07=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Fri, Jul 21, 2023 at 08:35:07PM +0200, Bartosz Golaszewski wrote:
+> > On Fri, Jul 21, 2023 at 5:15=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > On Thu, Jul 20, 2023 at 04:47:47PM +0200, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > Provide a wrapper around gpiod_line_request_get_chip_name() for Rus=
+t
+> > > > bindings and add a test-case.
+> > > >
+> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > ---
+> > > >  bindings/rust/libgpiod/src/line_request.rs   | 16 ++++++++++++++++
+> > > >  bindings/rust/libgpiod/tests/line_request.rs | 14 ++++++++++++++
+> > > >  2 files changed, 30 insertions(+)
+> > > >
+> > > > diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/=
+rust/libgpiod/src/line_request.rs
+> > > > index 1140aa9..737c06f 100644
+> > > > --- a/bindings/rust/libgpiod/src/line_request.rs
+> > > > +++ b/bindings/rust/libgpiod/src/line_request.rs
+> > > > @@ -2,6 +2,7 @@
+> > > >  // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+> > > >  // SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.=
+org>
+> > > >
+> > > > +use std::ffi::CStr;
+> > > >  use std::os::unix::prelude::AsRawFd;
+> > > >  use std::time::Duration;
+> > > >
+> > > > @@ -25,6 +26,21 @@ impl Request {
+> > > >          Ok(Self { request })
+> > > >      }
+> > > >
+> > > > +    /// Get the name of the chip this request was made on.
+> > > > +    pub fn chip_name(&self) -> Result<&str> {
+> > > > +        // SAFETY: The `gpiod_line_request` is guaranteed to be li=
+ve as long
+> > > > +        // as `&self`
+> > > > +        let name =3D unsafe { gpiod::gpiod_line_request_get_chip_n=
+ame(self.request) };
+> > > > +
+> > > > +        // SAFETY: The string is guaranteed to be valid, non-null =
+and immutable
+> > > > +        // by the C API for the lifetime of the `gpiod_line_reques=
+t`. The
+> > > > +        // `gpiod_line_request` is living as long as `&self`. The =
+string is
+> > > > +        // returned read-only with a lifetime of `&self`.
+> > > > +        unsafe { CStr::from_ptr(name) }
+> > > > +            .to_str()
+> > > > +            .map_err(Error::StringNotUtf8)
+> > > > +    }
+> > > > +
+> > >
+> > > I would drop the name temp var myself, but that is just a nit.
+> > >
+> >
+> > I would too but rust was making it very difficult with borrow semantics=
+. :)
+> >
+>
+> Really?  What error are you getting?
+>
+> This works for me:
+>
+>     /// Get the name of the chip this request was made on.
+>     pub fn chip_name(&self) -> Result<&str> {
+>         // SAFETY: The string is guaranteed to be valid, non-null and imm=
+utable
+>         // by the C API for the lifetime of the `gpiod_line_request`. The
+>         // `gpiod_line_request` is living as long as `&self`. The string =
+is
+>         // returned read-only with a lifetime of `&self`.
+>         unsafe { CStr::from_ptr(gpiod::gpiod_line_request_get_chip_name(s=
+elf.request)) }
+>             .to_str()
+>             .map_err(Error::StringNotUtf8)
+>     }
+>
+> And the last sentence of the SAFETY comment looks redundant to me -
+> it is just repeating what the signature already says.
+> (otherwise the return would be something like Result<&'a mut String>)
+>
+> Cheers,
+> Kent.
 
-After recent re-shuffling in Kconfig, this will be placed differently
-with savedefconfig, so maybe better to find proper (new) placement for
-this now?
+I guess it does work. This looks less obvious to me though after all,
+so I left the previous version. I removed the last part of the SAFETY
+comment though as per your suggestion.
 
-Anyway:
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+Thanks
+Bart
