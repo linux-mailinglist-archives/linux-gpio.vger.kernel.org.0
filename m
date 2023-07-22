@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA28075DB39
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 11:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 250C375DB3E
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 11:16:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjGVJQT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Jul 2023 05:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51592 "EHLO
+        id S229945AbjGVJQk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Jul 2023 05:16:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbjGVJQS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 05:16:18 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5736C2706
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 02:16:16 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-3172144c084so2293175f8f.1
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 02:16:16 -0700 (PDT)
+        with ESMTP id S229736AbjGVJQj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 05:16:39 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D26C26B5
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 02:16:37 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3fbea14700bso21544205e9.3
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 02:16:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690017374; x=1690622174;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1690017395; x=1690622195;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EAuW34j1LpOfu1y1oQ6Q+GxYpSp6L2C3sF0DCiFBaB4=;
-        b=x0fpM3KAac7oWai9fmh7KDzodX945HKjQ6F6VRgCT/fYG0Qa5OIhD8l+ruLqwBl/Mn
-         2nlH9hTW70Vofnx93fYA1U6MY/xdXSK566s8I0/wyA2681RfzYc0fjO8jYBljH/Ca6DE
-         o2k7v/NVODvOm3GS2t2q47jXpOVHN6Qn/V/kuzBMDI6lQxSf+oS0PcV1Huv8Q449qmlL
-         VR3tZX+32x/AEjX7FSj05g3GuAuXo+yP8vzhm2RIHkiTvdrs0OhNod4Wx44l7R0kbzMq
-         glsba6vwDAGkMuqFj655iVEe74vgkgtvtPCuiwV49ljKqcLB2hwjCs4i1mAgEkZNZUdn
-         sBEg==
+        bh=FjLPvi1FspgtsU+iRqfW4DGJ0DYZN+h3ZxYcSap6Nog=;
+        b=itJk4pYPMHFQaEIPQXNM5luzjbo4CeRBS1QoNluu3F10GqozIHymBxmYUFwhANRSAO
+         8YskKYPXXOOFFxWpahl/W8yzA2dAWea8pM5qguel27MZAx08NscwAFygly3MaIQTUoTd
+         m08X96v/dS2VLS+22Bql8kA9kLpQ1QSFR5Egz8OWqxxjFA98DNpxJH7jA2PE3kCDbIgq
+         oIQgKLVQA62KoY6OlqZCGQsk0F3NSNPuiECYJmJQRsK3H5M2fqYK2iiV46OkibwYK7jQ
+         nUgvpVaHktI08tLJMy4LnI4SHhmYHmW5Uqfui4NFZRFva1GRiEopKY5fvn7vbfIkCAzp
+         0fYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690017374; x=1690622174;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1690017395; x=1690622195;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EAuW34j1LpOfu1y1oQ6Q+GxYpSp6L2C3sF0DCiFBaB4=;
-        b=lr0U2db0qBow72oSNHtK9R7XjO3SJecG0bLCFzodvk9anVVWinckdPnH1h57hJvh9o
-         KLziudKXcjt8tOOlM/BpYK9quMH6YDQd/8X5cEYweNpZTTl+7UrmPflQ708OWd5MjWJy
-         U1aOmoT77hstFX19zlxLZVNhm0DRZQTAdYtHqY5OmDIBFqf0C84VBocCSGin0ch+k73V
-         0qzGVnCOqPM2JOW6oYV309WxiGYXckY5kktdlIv2T2g81c21GTJNI9wrDG64o/8YijP8
-         wnhuAJu7DY2IvgQnvpywHo+YsnKiqbRMD5f4IXH/E8yyXsG2+0vT0RBq5AjeQoTYES7F
-         0bTA==
-X-Gm-Message-State: ABy/qLZSKt87DfGwBa3dyaRYbnKinDySDQ0/BtQLn+ioGUGasOzN7E4M
-        QAg0CDyvB4dNSkRhtpzwX6kh0OqFfpHydA67R7A=
-X-Google-Smtp-Source: APBJJlHzM2jVxTiraDr9HR8MN3BXxrCi6eXMzhl24XJMPnaInvttU/AGEdRpE6vmZWF16ETKm5lL/A==
-X-Received: by 2002:adf:ef48:0:b0:314:bdb:cf71 with SMTP id c8-20020adfef48000000b003140bdbcf71mr3777363wrp.53.1690017374595;
-        Sat, 22 Jul 2023 02:16:14 -0700 (PDT)
+        bh=FjLPvi1FspgtsU+iRqfW4DGJ0DYZN+h3ZxYcSap6Nog=;
+        b=AvE6sftmkYJ959M1LOinMF4bxBudhY2Fv95Q0TWSlyYM8Pc2vnY2qToQquva5JsVYI
+         kYd/dc5Zt1cKEEYxXbyMXPiwJjgyLuzLqIv02K8nniIOfwOWlc9L1Mx92WquJeLvbAVn
+         fQmEN2zFZ+p10cILIANuNiJT/uXs4N0Q2K6WP1f/jXyeEO8jU2o9HwTphF/NCxquh+oI
+         I5O0yT5bR8osUeO6vIEbjtW4bGzqeRTr9VCIGe0IbK5DOVI0dXvAM4+6DR83a0Gbeffn
+         Mr1T9SOfq152WnoAHLP7xkpQh6Z2YGKKYEW4ajPRCbT4OnFAqJG/4IUbQaebYtv3iKI0
+         TooQ==
+X-Gm-Message-State: ABy/qLYuR2JZSMPGdvjMYurknZIZX+we++CBjb/y8WbkBz+CZj8dFeCt
+        F3JSJ02b+LEEPsNuWcYm3CI6rzK+w1ECBn9F9ks=
+X-Google-Smtp-Source: APBJJlFXH3iIQRwLN+hhKyH3mIGrTzqjtsR4q0X49L1Dn/4pdyQyURArDG7sFY43dL3Rez4xOUKN/w==
+X-Received: by 2002:a1c:f201:0:b0:3fb:ac9c:e6f with SMTP id s1-20020a1cf201000000b003fbac9c0e6fmr2914656wmc.38.1690017395287;
+        Sat, 22 Jul 2023 02:16:35 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id u18-20020a5d5152000000b00314326c91e2sm6371816wrt.28.2023.07.22.02.16.12
+        by smtp.gmail.com with ESMTPSA id g8-20020a7bc4c8000000b003fa8158135esm7748044wmk.11.2023.07.22.02.16.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Jul 2023 02:16:13 -0700 (PDT)
-Message-ID: <3ef83472-dc69-d512-424d-898716b72ac9@linaro.org>
-Date:   Sat, 22 Jul 2023 11:16:11 +0200
+        Sat, 22 Jul 2023 02:16:34 -0700 (PDT)
+Message-ID: <689eebd9-8a74-9374-ef32-da71fc03851c@linaro.org>
+Date:   Sat, 22 Jul 2023 11:16:32 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: qcom,sm6115-lpass-lpi: add
- SM6115 LPASS TLMM
+Subject: Re: [PATCH 2/3] pinctrl: qcom: Introduce SM6115 LPI pinctrl driver
+Content-Language: en-US
 To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -72,10 +72,9 @@ Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 References: <20230722-topic-6115_lpasstlmm-v1-0-32d1643d8774@linaro.org>
- <20230722-topic-6115_lpasstlmm-v1-1-32d1643d8774@linaro.org>
-Content-Language: en-US
+ <20230722-topic-6115_lpasstlmm-v1-2-32d1643d8774@linaro.org>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230722-topic-6115_lpasstlmm-v1-1-32d1643d8774@linaro.org>
+In-Reply-To: <20230722-topic-6115_lpasstlmm-v1-2-32d1643d8774@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -89,46 +88,13 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 22/07/2023 10:52, Konrad Dybcio wrote:
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          pattern: "^gpio([0-9]|1[0-9]|2[0-2])$"
-
-Narrow the pattern till 18
-
-> +
-> +      function:
-> +        enum: [ dmic01_clk, dmic01_data, dmic23_clk, dmic23_data, gpio, i2s1_clk,
-> +                i2s1_data, i2s1_ws, i2s2_clk, i2s2_data, i2s2_ws, i2s3_clk,
-> +                i2s3_data, i2s3_ws, qua_mi2s_data, qua_mi2s_sclk, qua_mi2s_ws,
-> +                swr_rx_clk, swr_rx_data, swr_tx_clk, swr_tx_data, wsa_mclk ]
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins.
-> +
-
-...
-
-> +    #include <dt-bindings/sound/qcom,q6afe.h>
-> +
-> +    lpass_tlmm: pinctrl@a7c0000 {
-> +        compatible = "qcom,sm6115-lpass-lpi-pinctrl";
-> +        reg = <0x0a7c0000 0x20000>,
-> +              <0x0a950000 0x10000>;
-> +        clocks = <&q6afecc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-> +        clock-names = "audio";
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&lpass_tlmm 0 0 15>;
-
-19?
-
-> +    };
+> Add support for the pin controller block on SM6115's Low Power Island.
 > 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
