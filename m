@@ -2,36 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38DCB75DCFE
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 16:47:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E39D75DD1B
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 17:15:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbjGVOrh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Jul 2023 10:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39666 "EHLO
+        id S229768AbjGVPPf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Jul 2023 11:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjGVOrg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 10:47:36 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7AA9B;
-        Sat, 22 Jul 2023 07:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Rlks42DJIbvbP4GaY64MedUDc2SnRkg1IXYiOZGnH9o=; b=QTeVsrHgVvhLXJc8V/qMU2F3FN
-        BRlwx7QAQGCxjbpTDdN1e7/VA1IB5XvBejJPha5nZRHL9oyojSWteb2OYG+EWNJBTAPf+GHsqulKW
-        tVncSZ5DXZqbP7pOh0FilEo0JsCJghdmrhAP7b4M4P7YWuhahUl8A04t+asyqDEdJtUk=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:57666 helo=debian-acer)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1qNDtF-000361-Jv; Sat, 22 Jul 2023 10:47:26 -0400
-Date:   Sat, 22 Jul 2023 10:47:24 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     gregkh@linuxfoundation.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
+        with ESMTP id S229456AbjGVPPf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 11:15:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0294C269D;
+        Sat, 22 Jul 2023 08:15:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8AC0A60B59;
+        Sat, 22 Jul 2023 15:15:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDC2C433C8;
+        Sat, 22 Jul 2023 15:15:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1690038930;
+        bh=D/ZQiYRXlvjSk0N3A/KXclUm5Du0x5u8jmAWMQMJ5SE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N7p7q66fUWG+3i2cmZEfxCix8UIBJ8B/CiAPOSVoACMMvvav21y6TBeePm+s9EV73
+         T2ydMqw6zZSCI+MdZyG5n7CXCp1qoQncox3qC+l9op67gKPlCa+8ZITRncZhccFwTE
+         SZ6c7heV02kWK2JRXCS4WC3gkiO74R3VJqb+tlso=
+Date:   Sat, 22 Jul 2023 17:15:26 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
         isaac.true@canonical.com, jesse.sung@canonical.com,
         tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
         linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
@@ -40,95 +43,54 @@ Cc:     gregkh@linuxfoundation.org, krzysztof.kozlowski+dt@linaro.org,
         stable@vger.kernel.org,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Lech Perczak <lech.perczak@camlingroup.com>
-Message-Id: <20230722104724.ef0c5896c239e721794b9fe9@hugovil.com>
-In-Reply-To: <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
-References: <20230721161840.1393996-1-hugo@hugovil.com>
-        <20230721161840.1393996-7-hugo@hugovil.com>
-        <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 Subject: Re: [RESEND PATCH v8 06/10] serial: sc16is7xx: fix regression with
  GPIO configuration
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+Message-ID: <2023072240-supremacy-shallot-a77f@gregkh>
+References: <20230721161840.1393996-1-hugo@hugovil.com>
+ <20230721161840.1393996-7-hugo@hugovil.com>
+ <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
+ <20230722104724.ef0c5896c239e721794b9fe9@hugovil.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230722104724.ef0c5896c239e721794b9fe9@hugovil.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 21 Jul 2023 13:24:19 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
-
-> On Fri, Jul 21, 2023 at 10:19 AM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> >
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> >
-> > Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-> > and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> > changed the function of the GPIOs pins to act as modem control
-> > lines without any possibility of selecting GPIO function.
+On Sat, Jul 22, 2023 at 10:47:24AM -0400, Hugo Villeneuve wrote:
+> On Fri, 21 Jul 2023 13:24:19 -0600
+> Rob Herring <robh+dt@kernel.org> wrote:
 > 
-> Requiring a new DT property is not fixing a kernel regression. You
-> should be returning the kernel to original behavior and then have a
-> new DT property for new behavior.
-
-Hi Rob,
-please read the entire patch history starting from V1
- and you will understand why this course of action was
- not selected.
-
- 
-> > As a consequence, applications that depends on GPIO lines configured
-> > by default as GPIO pins no longer work as expected.
-> >
-> > Also, the change to select modem control lines function was done only
-> > for channel A of dual UART variants (752/762). This was not documented
-> > in the log message.
-> >
-> > Allow to specify GPIO or modem control line function in the device
-> > tree, and for each of the ports (A or B).
-> >
-> > Do so by using the new device-tree property named
-> > "modem-control-line-ports" (property added in separate patch).
+> > On Fri, Jul 21, 2023 at 10:19 AM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > >
+> > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > >
+> > > Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
+> > > and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
+> > > changed the function of the GPIOs pins to act as modem control
+> > > lines without any possibility of selecting GPIO function.
+> > 
+> > Requiring a new DT property is not fixing a kernel regression. You
+> > should be returning the kernel to original behavior and then have a
+> > new DT property for new behavior.
 > 
-> That's not the name in the patch.
+> Hi Rob,
+> please read the entire patch history starting from V1
+>  and you will understand why this course of action was
+>  not selected.
 
-We added a "nxp," prefix at some point.
+That's not going to happen, sorry, you need to explain it here, in this
+patch series, why a specific action is being taken over another one, as
+no one has time to go dig through past history, sorry.
 
-Do you want me to send a V9 only with this change?
+thanks,
 
-Hugo.
-
-
-> > When registering GPIO chip controller, mask-out GPIO pins declared as
-> > modem control lines according to this new "modem-control-line-ports"
-> > DT property.
-> >
-> > Boards that need to have GPIOS configured as modem control lines
-> > should add that property to their device tree. Here is a list of
-> > boards using the sc16is7xx driver in their device tree and that may
-> > need to be modified:
-> >     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
-> >     mips/boot/dts/ingenic/cu1830-neo.dts
-> >     mips/boot/dts/ingenic/cu1000-neo.dts
-> 
-> Then again, if no one cares about those boards needing a change then
-> it can be okay.
-> 
-> 
-> Rob
-> 
-
-
--- 
-Hugo Villeneuve <hugo@hugovil.com>
+greg k-h
