@@ -2,62 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E39D75DD1B
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 17:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02E1A75DDEC
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 19:36:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjGVPPf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Jul 2023 11:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
+        id S229752AbjGVRge (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Jul 2023 13:36:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjGVPPf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 11:15:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0294C269D;
-        Sat, 22 Jul 2023 08:15:31 -0700 (PDT)
+        with ESMTP id S229736AbjGVRgc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 13:36:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7E7213B;
+        Sat, 22 Jul 2023 10:36:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8AC0A60B59;
-        Sat, 22 Jul 2023 15:15:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDC2C433C8;
-        Sat, 22 Jul 2023 15:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1690038930;
-        bh=D/ZQiYRXlvjSk0N3A/KXclUm5Du0x5u8jmAWMQMJ5SE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N7p7q66fUWG+3i2cmZEfxCix8UIBJ8B/CiAPOSVoACMMvvav21y6TBeePm+s9EV73
-         T2ydMqw6zZSCI+MdZyG5n7CXCp1qoQncox3qC+l9op67gKPlCa+8ZITRncZhccFwTE
-         SZ6c7heV02kWK2JRXCS4WC3gkiO74R3VJqb+tlso=
-Date:   Sat, 22 Jul 2023 17:15:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        isaac.true@canonical.com, jesse.sung@canonical.com,
-        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Lech Perczak <lech.perczak@camlingroup.com>
-Subject: Re: [RESEND PATCH v8 06/10] serial: sc16is7xx: fix regression with
- GPIO configuration
-Message-ID: <2023072240-supremacy-shallot-a77f@gregkh>
-References: <20230721161840.1393996-1-hugo@hugovil.com>
- <20230721161840.1393996-7-hugo@hugovil.com>
- <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
- <20230722104724.ef0c5896c239e721794b9fe9@hugovil.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230722104724.ef0c5896c239e721794b9fe9@hugovil.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D12EE60677;
+        Sat, 22 Jul 2023 17:36:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 41968C433C8;
+        Sat, 22 Jul 2023 17:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690047391;
+        bh=gnnN2kNFZJiCcT8hxDUsG1HZ3P33IlzeLxlGvBtDKvU=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=Hxc8U6dpen/ZGCEzG6UBFxU7q0g21q06tQoLnihnMPaJRPkYFo8lPyW5Dxm5SMAdC
+         g6yX/TVRPAXiR+gZxYOI1ghw7QWgjQfy/BGks5C1aAcDcc2xdfVTB7v1rBamMe4VKc
+         6r8q5IJTU8s21Ex6wW7SQE8Xd7vSE+lEuW4uQjosLZHIlR2WZyUJtvv2X+yqRZ8xdo
+         OUIXX5L+oDJAMTK1s3uTFIJXg2ALm5VCemnqtDMGGC30sFlnq2Ctu/aJX2SssJoKMs
+         DgL996x0AKnin8N56MvhEQ4kyLfYKlGQtzzuLmmfYvw47TGjLbz9pKfJwEbx5JKeRE
+         Mmg3hkJisLfVQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2DC63C595C0;
+        Sat, 22 Jul 2023 17:36:31 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v6.5-rc3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230721175134.186223-1-brgl@bgdev.pl>
+References: <20230721175134.186223-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230721175134.186223-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.5-rc3
+X-PR-Tracked-Commit-Id: 644ee70267a934be27370f9aa618b29af7290544
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c0842db5e52441174f347dd185bb06e841d7cfab
+Message-Id: <169004739117.21373.8005551419389127039.pr-tracker-bot@kernel.org>
+Date:   Sat, 22 Jul 2023 17:36:31 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,32 +64,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 22, 2023 at 10:47:24AM -0400, Hugo Villeneuve wrote:
-> On Fri, 21 Jul 2023 13:24:19 -0600
-> Rob Herring <robh+dt@kernel.org> wrote:
-> 
-> > On Fri, Jul 21, 2023 at 10:19 AM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> > >
-> > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > >
-> > > Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
-> > > and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> > > changed the function of the GPIOs pins to act as modem control
-> > > lines without any possibility of selecting GPIO function.
-> > 
-> > Requiring a new DT property is not fixing a kernel regression. You
-> > should be returning the kernel to original behavior and then have a
-> > new DT property for new behavior.
-> 
-> Hi Rob,
-> please read the entire patch history starting from V1
->  and you will understand why this course of action was
->  not selected.
+The pull request you sent on Fri, 21 Jul 2023 19:51:34 +0200:
 
-That's not going to happen, sorry, you need to explain it here, in this
-patch series, why a specific action is being taken over another one, as
-no one has time to go dig through past history, sorry.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.5-rc3
 
-thanks,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c0842db5e52441174f347dd185bb06e841d7cfab
 
-greg k-h
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
