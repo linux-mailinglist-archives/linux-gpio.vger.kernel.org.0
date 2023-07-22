@@ -2,119 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B82F875D94E
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 05:06:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6DCF75DB25
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jul 2023 10:52:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230062AbjGVDGj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jul 2023 23:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37696 "EHLO
+        id S229890AbjGVIw5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Jul 2023 04:52:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjGVDGh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jul 2023 23:06:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E442C1701;
-        Fri, 21 Jul 2023 20:06:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 82C0D61DC9;
-        Sat, 22 Jul 2023 03:06:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9549C433C8;
-        Sat, 22 Jul 2023 03:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689995195;
-        bh=KUTKLk5UQU1eQ3o/4T29UfkmMj56iplYzd0kU3H4bdc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=srxDZApCLCRYxXZXtnwbgCKSP1bHmf5Y046vZgL1x6wlEW/oyyCP1uFOZOT6co5sG
-         X6iY1csyuMoxV3XFbTNjgmMZZVJmePSi6mxSQVEsBC2f/SfNS1wf2ne9p6ClGYWrir
-         fY5aThnjYxoR+kdkY9/pLbNRgGbqERysM6ZAYmCbZ7ob5lSeq/jCJ9GKbbhn+byRlW
-         +UAnAM/CxHP7Yu5PUvbt+MPvdLf11I6eWKZpF/xniLXOW5Yq1i75bbLQxsieqeO94U
-         HwCD4aYEJk9aUXtVGsiKttNM8vj5Jr2sTMAnWivpex/efy0iRpwmkCg63r1NNGEoFB
-         md/JBSZUy7GyA==
-Date:   Fri, 21 Jul 2023 20:09:54 -0700
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Kathiravan T <quic_kathirav@quicinc.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Elliot Berman <quic_eberman@quicinc.com>,
-        Mukesh Ojha <quic_mojha@quicinc.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, quic_srichara@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_anusha@quicinc.com,
-        quic_saahtoma@quicinc.com
-Subject: Re: [PATCH V5 2/3] pinctrl: qcom: Use qcom_scm_io_update_field()
-Message-ID: <z2isxt5zqaawkfgfdgogkimsutlvem7weoaatulhq2tcqt44rk@em4fvztj3eox>
-References: <20230720070408.1093698-1-quic_kathirav@quicinc.com>
- <20230720070408.1093698-3-quic_kathirav@quicinc.com>
+        with ESMTP id S229640AbjGVIw4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jul 2023 04:52:56 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D2926A5
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 01:52:55 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2b8413671b9so47574431fa.1
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jul 2023 01:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690015973; x=1690620773;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mVzX507K6RPyVztrEgxtL4tdVGSqIUMR8aU2wvrKbrw=;
+        b=y+U6XMFXb+XQBgGhTEMVJj6j1cNf/PV+VRBw/rj0mgbUkodLMIbgfhJ7qBVdo/Lk4t
+         WinJDVfUtcQ1HGifggQqTr+gK7e14k3jV5Z+PsdcoP8DXIqJ+lSuYfaRLWLs4PUidhnx
+         hNOUZHpbzQ1DSoc2mNZktJsit3BlyKahMEMsNzru55qoZNq76exi0lcDtkb5IPk9fYqP
+         8ZTXSIGzWxu6772SqOKWO6r1exearFofQNzOcyrzNZKDPzl501C5Zd9PSuoYBqHSAjdK
+         mUS7Fb2XP9Fnc+PIiErh50NRxeFEEwuOV6gMYtla9oseu1/M5+oFMIFZlDNXy1TsBvyU
+         iU5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690015973; x=1690620773;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mVzX507K6RPyVztrEgxtL4tdVGSqIUMR8aU2wvrKbrw=;
+        b=B8cV+xeG6EL7BcPEN+BgMxjUTrMKgbgzTtQ4ndk2xNXhf/GVwzsAfZuEGu0LtTTHEX
+         j9wAQTbrvEEytJFQnDdCr5YhfzjtGgLL0fKfOxnKciG0Jieulh8pGj1mT+UO9JryHs60
+         UNbF+yCvUQ9MvcBAhmysPDlRSXEALrMv4RrMOp0LvwbeK0sTIW4a9Na8pQ/IdRr9uhsf
+         dhAvLYaTqLNBaoX6GrKTxA8j85fPkHyKIc6Pns6SVb3ArgjmQxCEPkoUdjvNDBU5RknJ
+         /tbE2eLl8vNN1xIAHvAkLlCAo8oyb0GacbtsowJeATR7xKuvEPedwyyXfJ8RpTbmX7KY
+         O70w==
+X-Gm-Message-State: ABy/qLazVBSTScg3TMNA1C6cEB3AP8obeRRFALU/7ggLSe58fa8QU/cp
+        sMk/cZSDccJsnggM1wbC8qwySQ==
+X-Google-Smtp-Source: APBJJlH7tsYAXNxPfGf7LgG6XjJgFOhr3KIl6Uq943DsGPwxF1cB6U+AGXIHstnqox/wO53RcQHO4Q==
+X-Received: by 2002:a19:385a:0:b0:4fd:d1b9:f835 with SMTP id d26-20020a19385a000000b004fdd1b9f835mr1334127lfj.1.1690015972664;
+        Sat, 22 Jul 2023 01:52:52 -0700 (PDT)
+Received: from [192.168.1.101] (abyj181.neoplus.adsl.tpnet.pl. [83.9.29.181])
+        by smtp.gmail.com with ESMTPSA id x9-20020ac259c9000000b004fbf5242e8bsm1107034lfn.231.2023.07.22.01.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Jul 2023 01:52:52 -0700 (PDT)
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: [PATCH 0/3] SM6115 LPASS TLMM
+Date:   Sat, 22 Jul 2023 10:52:44 +0200
+Message-Id: <20230722-topic-6115_lpasstlmm-v1-0-32d1643d8774@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230720070408.1093698-3-quic_kathirav@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANyYu2QC/x2N0QrCMAwAf2Xk2UBbp1V/ZYhkXXSBrivNNoSxf
+ 7f4eAfH7aBchBUezQ6FN1GZUwV7aiCMlD6MMlQGZ9zZeOdwmbMEvFp7ecVMqkucJuTQ+vY+3Mi
+ bADXtSRn7QimMNU5rjFXmwm/5/l/d8zh+pEV1UnsAAAA=
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1690015971; l=965;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=PRPRlwGyn/4Xttz2MNkgkck20GYS3LIFuGGj91Ldr9Y=;
+ b=Sv6SrDZfok5fxbzm37/IhmzKYcBavZUYcrWYhrJozyEiDLH2NlQ4wxmeFgGTfNp6fNZ7gdfSz
+ Jo63M6m0rAFDFBuFjNbgv4granQmX2EH7QVubJbFcKRbGhxfOW5ThZb
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 12:34:07PM +0530, Kathiravan T wrote:
-> From: Mukesh Ojha <quic_mojha@quicinc.com>
-> 
-> Use qcom_scm_io_update_field() function introduced in the commit
-> 1f899e6997bb ("firmware: qcom_scm: provide a read-modify-write function").
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> Signed-off-by: Kathiravan T <quic_kathirav@quicinc.com>
-> ---
-> Changes in V5:
-> 	- Dropped the ununecessary paranthesis
-> 	- Updated the commit message to indicate the commit ID in which
-> 	  qcom_scm_io_update_field is introduced instead of simply
-> 	  mentioning the "last commit"
-> 
->  drivers/pinctrl/qcom/pinctrl-msm.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 2585ef2b2793..5ecde5bea38b 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1040,6 +1040,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  	const struct msm_pingroup *g;
->  	unsigned long flags;
->  	bool was_enabled;
-> +	u32 mask;
->  	u32 val;
->  
->  	if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
-> @@ -1074,23 +1075,20 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  	 * With intr_target_use_scm interrupts are routed to
->  	 * application cpu using scm calls.
->  	 */
-> +	mask = GENMASK(2, 0) << g->intr_target_bit;
->  	if (pctrl->intr_target_use_scm) {
->  		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
->  		int ret;
->  
-> -		qcom_scm_io_readl(addr, &val);
-> -
-> -		val &= ~(7 << g->intr_target_bit);
-> -		val |= g->intr_target_kpss_val << g->intr_target_bit;
-> -
-> -		ret = qcom_scm_io_writel(addr, val);
-> +		val = g->intr_target_kpss_val << g->intr_target_bit;
-> +		ret = qcom_scm_io_update_field(addr, mask, val);
+This series introduces the bindings and driver for SM6115's LPI TLMM
+block and enables it as a module in the arm64 defconfig.
 
-Be aware when you resubmit that this code has changed. So please base
-your changes on linux-next.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+Konrad Dybcio (3):
+      dt-bindings: pinctrl: qcom,sm6115-lpass-lpi: add SM6115 LPASS TLMM
+      pinctrl: qcom: Introduce SM6115 LPI pinctrl driver
+      arm64: defconfig: enable Qualcomm SM6115 LPASS pinctrl
 
-Regards,
-Bjorn
+ .../pinctrl/qcom,sm6115-lpass-lpi-pinctrl.yaml     | 135 ++++++++++++++++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/pinctrl/qcom/Kconfig                       |   9 ++
+ drivers/pinctrl/qcom/Makefile                      |   1 +
+ drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c    | 175 +++++++++++++++++++++
+ 5 files changed, 321 insertions(+)
+---
+base-commit: ae867bc97b713121b2a7f5fcac68378a0774739b
+change-id: 20230722-topic-6115_lpasstlmm-ec4749d8a70c
+
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@linaro.org>
+
