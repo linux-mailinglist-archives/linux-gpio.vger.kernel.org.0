@@ -2,96 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3170E75EC30
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 09:09:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E316375EC68
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 09:23:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbjGXHJU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jul 2023 03:09:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51270 "EHLO
+        id S229693AbjGXHXQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 03:23:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjGXHJT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 03:09:19 -0400
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22C6138;
-        Mon, 24 Jul 2023 00:09:14 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6C2E524000E;
-        Mon, 24 Jul 2023 07:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1690182552;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0OTdgWQ6Vo/4tl1ZM7En0YdjITPLKGIP2IIxkkPFJRM=;
-        b=iC5ZIY44VFrCSUNoeMIdYmOyqSrlrW7N4tyY+Hq53oXBVph3jCQ5ij8fsDynsYh6NybKfF
-        47iBUwR964ggu52YB13yaU1E18wok2aDQAXdbpXfZnCVzqeybMcvNBEm04M8MJv49vz912
-        60p20TKBhztddQMV6EZbSo0vTLzFb3Ok+FWErn92iDiDFjDyPmqRh1JKdYw5xT3hwpwVlV
-        u4k2GthKUnBFuRNrRP/XoPSerupU1HIaiVySzO/QpWk35FaiLI3dwdIhQ2brWGTyOPPUCM
-        8E3/Ier83smwYkYCv/LsZ20OWFpB5I2g8A5epoX659Pa/Omr3Rckh60nqnZ+5A==
-Date:   Mon, 24 Jul 2023 09:09:02 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     nikita.shubin@maquefel.me,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Lennert Buytenhek <kernel@wantstofly.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Lukasz Majewski <lukma@denx.de>,
+        with ESMTP id S229661AbjGXHXP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 03:23:15 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69992139
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 00:23:14 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4fb77f21c63so5915561e87.2
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 00:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690183392; x=1690788192;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iy/GT69EmEf7HLTcBeb61pi/V8qLsmpFTLyrEgxiJLA=;
+        b=NzUzdVsimqx7g51FcscwcKiCc3Mz5Y2gk16jCf1ilaOHCz+ZM7PL4iotsQfc+w6QcY
+         kvMdPpDkeQPwjUw3dwzOumEY+LV7ftLHHasWdIAMDToD4J8WgqVNcK5620ZHjWOmRpcx
+         UnBvKNhYHYk/DDyzTVHwntXkG61b1vTwl5+ZVB6Se2jIFLt+MfP4cnnm2fktXFIxuvnY
+         azW0kCusM4leYHv9L4XmopYDqpanvdLcS8xXolOyQAz2kd2KibeY1JxiajW9h3617xA1
+         DiiaffjTvt2gjFXAOBZIrE0u2alH6a3mQAsYwHs+JGtkI+ALw8KgnCQ0fu5fyf1mJzzw
+         k5zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690183392; x=1690788192;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iy/GT69EmEf7HLTcBeb61pi/V8qLsmpFTLyrEgxiJLA=;
+        b=eE4R3GfbsZf14nEVuqKl7ZeyEfgx3Fn+KDNnUPGLODnou9KCLPPixfZ++VkPbu28rV
+         8y3ZrYZqQBgTDI8+PVnsmKguwV6gqMWQ1aoKvK+dlYnT6GwbzFPTYFUUZZgjsA86vldL
+         ER58b1FC7ATAV4lS9GABonjDlHq0LSgPXL9TfmbLwZv4rBdiNW8hpqgMTVlgNeZvd2zX
+         ym33TcAMT+3Dxg6F0u3cpoO1Z019r77A3VIEyTneD99Nso5sWoHLvTpLOktqFeEgQr49
+         XEKPGaomJGwGBJuEWw/zo4S2Dgs/5GU2XymeWPbt+11MPk22/VzmRafQ0NombiilKpcz
+         fJMA==
+X-Gm-Message-State: ABy/qLao7B4vnf3heFwu1fVJ95lTiZoF3sX/KvCVakUBHoUsWgsqN5sv
+        jntZe/PissJZONAQfnVsuKyQuA==
+X-Google-Smtp-Source: APBJJlGQLyiSoIC6lNFV7XBZ9Ao16PbIMbE2mihWrJXae2AzcR2E348sVKUhIKcvWsU+F7j8eKRZvw==
+X-Received: by 2002:a05:6512:3987:b0:4f8:56cd:da8c with SMTP id j7-20020a056512398700b004f856cdda8cmr5455515lfu.34.1690183392278;
+        Mon, 24 Jul 2023 00:23:12 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id u16-20020a170906951000b0099b4d86fbccsm6399525ejx.141.2023.07.24.00.23.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jul 2023 00:23:11 -0700 (PDT)
+Message-ID: <0f016242-2380-274e-c6a4-118a5872412e@linaro.org>
+Date:   Mon, 24 Jul 2023 09:23:09 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: Add gpio-line-names to STMPE
+ GPIO
+Content-Language: en-US
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Michael Peters <mpeters@embeddedts.com>,
-        Kris Bahnsen <kris@embeddedts.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 24/42] mtd: nand: add support for ts72xx
-Message-ID: <20230724090902.679ea56d@xps-13>
-In-Reply-To: <ZLqx+Osn3gcHjUph@smile.fi.intel.com>
-References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
-        <20230605-ep93xx-v3-24-3d63a5f1103e@maquefel.me>
-        <ZLqx+Osn3gcHjUph@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <20230724063520.182888-1-alexander.stein@ew.tq-group.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230724063520.182888-1-alexander.stein@ew.tq-group.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -99,53 +85,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On 24/07/2023 08:35, Alexander Stein wrote:
+> This is a gpio-controller, so gpio-line-names should be allowed as well.
+> stmpe2403 supports up to 24 GPIOs.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+> Changes in v2:
+> * Add min/maxItems
+> 
+>  Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
+> index 22c0cae73425..4555f1644a4d 100644
+> --- a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
+> @@ -28,6 +28,10 @@ properties:
+>  
+>    gpio-controller: true
+>  
+> +  gpio-line-names:
+> +    minItems: 1
+> +    maxItems: 24
+> +
 
-> > +static int ts72xx_nand_attach_chip(struct nand_chip *chip)
-> > +{
-> > +	switch (chip->ecc.engine_type) {
-> > +	case NAND_ECC_ENGINE_TYPE_SOFT:
-> > +		if (chip->ecc.algo =3D=3D NAND_ECC_ALGO_UNKNOWN)
-> > +			chip->ecc.algo =3D NAND_ECC_ALGO_HAMMING;
-> > +		break;
-> > +	case NAND_ECC_ENGINE_TYPE_ON_HOST:
-> > +		return -EINVAL;
-> > +	default: =20
->=20
-> > +		break; =20
->=20
-> Here it will return 0, is it a problem?
+I am sure there is no variant with one GPIO.
 
-Seems ok, there are two other situations: on-die ECC engine and no ECC
-engine, both do not require any specific handling on the controller
-side.
+Best regards,
+Krzysztof
 
->=20
-> > +	}
-> > +
-> > +	return 0;
-> > +} =20
->=20
-> ...
->=20
-> > +static void ts72xx_nand_remove(struct platform_device *pdev)
-> > +{
-> > +	struct ts72xx_nand_data *data =3D platform_get_drvdata(pdev);
-> > +	struct nand_chip *chip =3D &data->chip;
-> > +	int ret;
-> > +
-> > +	ret =3D mtd_device_unregister(nand_to_mtd(chip)); =20
->=20
-> > +	WARN_ON(ret); =20
->=20
-> Why?!  Is it like this in other MTD drivers?
-
-Yes, we did not yet change the internal machinery to return void, and
-we don't want people to think getting errors there is normal.
-
-> > +	nand_cleanup(chip);
-> > +} =20
->=20
-
-Thanks,
-Miqu=C3=A8l
