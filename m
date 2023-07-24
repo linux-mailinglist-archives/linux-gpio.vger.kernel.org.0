@@ -2,194 +2,258 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ED7F75F2E6
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 12:21:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 565CC75F2F2
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 12:23:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230191AbjGXKVV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jul 2023 06:21:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51166 "EHLO
+        id S231526AbjGXKXu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 06:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230349AbjGXKVF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 06:21:05 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E21EE47
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 03:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690193619; x=1721729619;
-  h=date:from:to:cc:subject:message-id;
-  bh=p6r3YWpqiFc9F++D2489VxE3CNsTZCHrGzz8bvdQSk4=;
-  b=IfjYxwCl/i9e+Hr4+Dm3opjjx9Jk1SGmmveOTMRw5PRj22TfKlRlyIWE
-   2AzRfOv2i0B8h+yhxYkN8XuQtDQWVNZUP5Ima3uEYZf1gs6UUzz6ZztjL
-   uiJhpopNXKnPwvnAZGH/mXiDBUhTBB9kruq+148QtNPMh3r+UAkrtRCGC
-   EEhIL0xVK8Y7T5UTX41KxQWkqA3Y9++usuO/hk6vCrhioF14So0TklrFX
-   iO99yYim1949Kh78DCp1ytyspQgCIOIw9k8alrnxbPEy0iiUd9goOAr06
-   yRPBcd8fCrLYgwa+ob+0zYE9EsEJ99QORaL8ym7xzulGC5MfH2Cz+4H/Z
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="367428312"
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="367428312"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 03:13:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="702819524"
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="702819524"
-Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2023 03:13:37 -0700
-Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qNsZI-0009fo-1f;
-        Mon, 24 Jul 2023 10:13:33 +0000
-Date:   Mon, 24 Jul 2023 18:13:07 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 87b549efcb0f7934b0916d2a00607a878b6f1e0f
-Message-ID: <202307241805.6USKJj0j-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233286AbjGXKWV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 06:22:21 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2075.outbound.protection.outlook.com [40.107.94.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 328965FFA;
+        Mon, 24 Jul 2023 03:15:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=idWPm+Mik/wKDvJQqtMmzo/mVLrPnZJj8Wco3OrtbvRExNwS8nh2OJzj8te07nZKCWB8esRLuPOiW2OlWTBIcHUdP55xhqLTTTpDD3GXfE4cZ3NjgalPQ1AG7hdT4iVW19Ur8CfM0EnbPf+sKOG/43kig5pW0pjK6eyHIFOPUt4n8x2YS3MAM3FOdPQytGU6FkSDxOmXHe963yL10BaqPqXwTpqsjBJcI0ZX8bQFeJyyCXcmlrZ2Wg8OZgoyqVQYjkwpUlZIwrJwNF+q4nfjcup35gON/jP+CJgjPnzkIgpavrYytxrPXUwxr32b/ss2hm3C6FyicXoVzlpPZip8gA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=onu138zrTNg/wayi/BJ5fRStsXZomHj7RrT8tcgbJpU=;
+ b=h4Jgpe6fB8NXBHe+wAIFsmPNxPWDEB1ww4HYGhka8JkDplZy+8a9ZNBfLRa2/KMJbGM9BTt95YVtr5trLODlnjCccTz2Uiw/Q4NfQF1/fsconxy1hKI/1Ncgqcbu+JbwFSzvpenPPQYWrNTc4Pcd0sA1HDMbNUYg65wM8A9/wBwTgN0xPGhFvGRRwtfv4c5BzMfBQnYdsUTaoSvU9g+biGd1qxuNh0g20jYeOD5MnaBT9XR9TFsVytHGC/Df1E5gWghB8yo6qu+pLDK5Jdm0Z11WEm1eYer+0sPC/NHGNxWCB4gACGZ6AjVMSoErR4TiB+/HaakqDcMxJDGnNAmcMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=onu138zrTNg/wayi/BJ5fRStsXZomHj7RrT8tcgbJpU=;
+ b=hMR8Z0+OVtgEaB7xSss768nnDofzH2+5mnz7CtNBJIflJFCDJjCZWnIm/dfNt1FOkpDENzUj/6HzXAe5ZvlDJ2a+gNqVCsv0doHjbxPiHoVLBl1FPGU/oCx4ZwI+zsSVGiww/8lsEcXLERivDD0vpnTubryttnHjnDolFvQhPVw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB4758.namprd12.prod.outlook.com (2603:10b6:a03:a5::28)
+ by BY5PR12MB4258.namprd12.prod.outlook.com (2603:10b6:a03:20d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.32; Mon, 24 Jul
+ 2023 10:14:35 +0000
+Received: from BYAPR12MB4758.namprd12.prod.outlook.com
+ ([fe80::be39:45a4:cd9b:4684]) by BYAPR12MB4758.namprd12.prod.outlook.com
+ ([fe80::be39:45a4:cd9b:4684%3]) with mapi id 15.20.6609.031; Mon, 24 Jul 2023
+ 10:14:34 +0000
+Message-ID: <a38e51d5-d1dd-b0cc-e02e-a531b0d1d50b@amd.com>
+Date:   Mon, 24 Jul 2023 12:14:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 1/4] firmware: xilinx: Add support to get platform
+ information
+Content-Language: en-US
+To:     Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Tanmay Shah <tanmay.shah@amd.com>,
+        Ben Levinsky <ben.levinsky@amd.com>,
+        Marek Vasut <marex@denx.de>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        saikrishna12468@gmail.com, git@amd.com
+References: <20230724084554.1924378-1-sai.krishna.potthuri@amd.com>
+ <20230724084554.1924378-2-sai.krishna.potthuri@amd.com>
+From:   Michal Simek <michal.simek@amd.com>
+In-Reply-To: <20230724084554.1924378-2-sai.krishna.potthuri@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR2P281CA0073.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9a::15) To BYAPR12MB4758.namprd12.prod.outlook.com
+ (2603:10b6:a03:a5::28)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB4758:EE_|BY5PR12MB4258:EE_
+X-MS-Office365-Filtering-Correlation-Id: ffa4e46b-1272-4f98-6767-08db8c2ec716
+X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wVu/rnS22K25wRU0iNzxwlF9DT/xPF02uyk9SZ0B57+KfGKbH7/X61kFq+TT13ntCFqEPCg3gK2IvXYSgxuAhI/9g8Kvr/BxgGJi1SaUMJ0Ik/6nVh9cGn2YwSzqrVE1bx6tFO61/KCV3RE4D8jLZSaUGbPAx0/Cbsp/zyrzeHwFCJ8LvkfZlszIJlTpXxt4cmt2wgq9qvIufTjlhOTzov9+Sd73lFVY3K0XolFoHEUmGijxOTkJhi7y2T/1UhxMrYMmNHlu7sWe5Uielo06Y2WXQnKE+R8Fybjtt1J6gTq++8o7qqslCTQgxIyqrb10hRtui7HrFYi4dseEHl8fWK2rptF6aHhfpTlkZ5jaglHJirnTNjv3b7OIhDn2DWV2V2K5u+0kXhqssRlGpQSeLVSQpE1VFovinsvxxieHMJsUxACL10NPqH6NfNZmX5g0KLCL8zLUUA+RscdwFtBwT8ehODQbmFVu4VrHTnj3JlqaBbta5CplG/ouxu4+BAII1IkywZZZ4aUOi1yJZ5u5Fi6HE6ak5WyraSJ9VwLvT7t0uB4F8v1iClPa6huaBqYLLpULwFnMKPCAEhWkhfV8jkD+bcUH5aHhoLPJ7L86l6d37yHs9p8f/efeSofBcB0unzR4nHNx2PYXEMkXCvu1kwi805ESaDetolab4K66DFU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4758.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(346002)(376002)(366004)(136003)(451199021)(86362001)(31686004)(31696002)(921005)(38100700002)(66556008)(478600001)(66476007)(41300700001)(4326008)(66946007)(110136005)(5660300002)(8936002)(44832011)(7416002)(8676002)(6486002)(6512007)(6666004)(2906002)(186003)(26005)(6506007)(316002)(53546011)(36756003)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WHcxWWFuVEdpMHkrbUdSdUVZSk9EQ01tczdPckd4MGRRVjBxdngvejY1RWJl?=
+ =?utf-8?B?T0hTTG1ONnY2SDZRbXJJMnJkbzJmWWt6c09FU1lMbjV2WDBUYXdWS05CazJl?=
+ =?utf-8?B?Z0c5c2pyNkc0aTdxZXMzWW0ra1IwekozM1BNR0pRd2NCejU4SnRUUE44TG4v?=
+ =?utf-8?B?Ym93TjVsZS9QOFZzRmJTVlA2THpyeTMrZ1B1M1VkWjIxUEpyRUxwZmtRR1Fo?=
+ =?utf-8?B?b20yQkhvcWRMYy9sRCtlVGJrRGtWZjhvbmtlTmQwMUdJcXlCUnV0dUp5NVhy?=
+ =?utf-8?B?U21sUVdBM0tsbEhkdUJ1UnJUbGV0T1MvTE9SQVVqd09JWHZxaVJMRjdyVlVJ?=
+ =?utf-8?B?RU5aREgyb2xTS3JoNzVnVno3bEJCR1dPZ3dWOWJHUnZKYTA5TXRyN284eXRI?=
+ =?utf-8?B?U1RwVEdEUFRYd1ZnMkliUUNhSkd2c29SY1VPcGJiaEQyTXI0QUYvbGpnRUZM?=
+ =?utf-8?B?eGpUSFN2WGR0QlBjN3hqZksvSUR2ZDNwaHErZUp5MWZMNGJzOGlxTWx2U1Jq?=
+ =?utf-8?B?eWpOUVdtWllPUXIrVTUzb1lqak1HaDRPTVlpV095aDZsaVpKSnZHN3QzaUZp?=
+ =?utf-8?B?eldPQlV3d0RBUDRSaFZLTEF3bkhRVHpvVld3elRTamdMV0VMbVZXR2hrNm9J?=
+ =?utf-8?B?REorbUs1RVRUYWZ4dmZSaEZvTG5rZmpPSnJENlNNS1lDZExyaW10L0phdXNw?=
+ =?utf-8?B?YzViMzlzMXJhZEdGcG5ZMnRaSnBzQjlQOHpGQzc1ZkxpVFpYdDlUZVQ2SmN5?=
+ =?utf-8?B?eG9aYzZyTUd6QlRiclNhU0I3ME8vWHR3eUJXTHFYZ0NsYzdmRm9IdE1FRU1X?=
+ =?utf-8?B?L2I2R3A1S3RtT21wcjFOVTB1UDFiNUE2MWUrUjllM3pIMEZVMXhSQmVkZGs3?=
+ =?utf-8?B?TUFkQnZlbUo1ZVAvU2ZmZG5hN3RUcG1pL21UQnVoWGpVMko4cUM1RkQ1aHE4?=
+ =?utf-8?B?OUloMVgvVm0zY0hyTklQNU9yUm5Rell3RnVaaHV5VVc3YkJHZEVMZGJoYzN2?=
+ =?utf-8?B?S08yNDR5RDhLcmhrUU1TVzdUWjh4T0hXbHFtWEFxb1FvRGQ2YjlrSFczUE00?=
+ =?utf-8?B?anJFR1IzWEYwa1JDb2VYMStFNXFZYXdxaEhHaGxxVTBwaTdZVWVhanpFOEJr?=
+ =?utf-8?B?OUJROTJsbng2SThmcURPWFg3djk1OEg5Z3I0MStiTm8vaDBMcUpVV0d2RUhu?=
+ =?utf-8?B?b1hBZ1JYbVIzZVZzSS81eHlGaU51NHBac3pxeTIzQVhXWUlwTi8yc1Q2d3Bm?=
+ =?utf-8?B?NkZydUVObWhpbDMrOTBiWUh0dTRXUFlSQ29zSGVHc2EyUTFXUmdHRGZXWVV4?=
+ =?utf-8?B?dVYvdmtMTThYRTZwaE9mQllFWG9oL2t0enBUNVBwampGays3NDRNb2pNMzBh?=
+ =?utf-8?B?OFRBQzdraWNGdXpZb2tmdVVVZTdJeEhWSWpSSVJ1UnRzN3Y2MmZCQWYyY3BL?=
+ =?utf-8?B?NEpUVUZZZS9xM3lRRlhMSDNsamxvajJ3cVdRM2RYa3RISXArZmNxSjBtSkhm?=
+ =?utf-8?B?VG5Wb2x3d2lVYTllVVZyZmZkTnF6ZjBNbTQ5OHNKSDZwTCtQaFRMM3VmbUNM?=
+ =?utf-8?B?RVh5TjJFZjRoTm1meDluSjAyTHVHNTV6RDErVHFNalE4T1Z3Q0hyMWdkVDVW?=
+ =?utf-8?B?MWJ6QnNYUml6VGlDUlgzdHFxUVpNSTFTdjhZb1E1TCtSSzA3NUp5WGQ0bnph?=
+ =?utf-8?B?bldTMkNXQ0J3ajFadXFaMmVuQmM3Tm56QXBYRzF1VnA3VUpsT2NBdm5DRS83?=
+ =?utf-8?B?czFnTVB1VFdqVEpUZWk2cVlxeXhjR1g1dk1rN2liZmM2bnRiSUxMenV2Y1k5?=
+ =?utf-8?B?TUhoUjQyL2pMTXlUeXc1OTF4eUhMaGFkSkNDbUdKUkREVE5iZTBkK1RwMkpH?=
+ =?utf-8?B?dHhudEFKZTBVUkhGSW45dXhqczV4MGoyMUJuSmFTN3YraXZkYUIydndPOG5n?=
+ =?utf-8?B?UVJDbzZrM0dWUENVbzlURFBBKytWVC9QNi9BSlpXNkxyVWlOc3pTNXJKeUoy?=
+ =?utf-8?B?VE9xcHVGM1NUbm84OWZOL0M4SzUzNlhuaGVxSStiYWxtaC9aVHlWM252SGRO?=
+ =?utf-8?B?emF0aFJnVUVOSi9TSXU1RGNCOUMvRDB2eHVWeUlmQlRnbkthTmxsOG85RmJV?=
+ =?utf-8?Q?qivfMeL+5Z8qSIq9CFZcoNvmr?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffa4e46b-1272-4f98-6767-08db8c2ec716
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4758.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2023 10:14:34.0952
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2uyvBlW6tLJN5TSPqvvCl4qKxVoJeMGh0+Pt5cmXn0F5xqBM37B+6WqUT213lCFr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4258
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 87b549efcb0f7934b0916d2a00607a878b6f1e0f  pinctrl: amd: Don't show `Invalid config param` errors
 
-elapsed time: 834m
 
-configs tested: 118
-configs skipped: 5
+On 7/24/23 10:45, Sai Krishna Potthuri wrote:
+> From: Dhaval Shah <dhaval.r.shah@amd.com>
+> 
+> Add function to get family code and sub family code from the idcode. This
+> family code and sub family code helps to identify the platform.
+> Family code of any platform is on bits 21 to 27 and Sub family code is on
+> bits 19 and 20.
+> 
+> Signed-off-by: Dhaval Shah <dhaval.r.shah@amd.com>
+> Signed-off-by: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
+> ---
+>   drivers/firmware/xilinx/zynqmp.c     | 42 ++++++++++++++++++++++++++++
+>   include/linux/firmware/xlnx-zynqmp.h | 13 +++++++++
+>   2 files changed, 55 insertions(+)
+> 
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+> index a736db4a5825..f9498e7ea694 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -339,6 +339,8 @@ int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
+>   
+>   static u32 pm_api_version;
+>   static u32 pm_tz_version;
+> +static u32 pm_family_code;
+> +static u32 pm_sub_family_code;
+>   
+>   int zynqmp_pm_register_sgi(u32 sgi_num, u32 reset)
+>   {
+> @@ -404,6 +406,41 @@ int zynqmp_pm_get_chipid(u32 *idcode, u32 *version)
+>   }
+>   EXPORT_SYMBOL_GPL(zynqmp_pm_get_chipid);
+>   
+> +/**
+> + * zynqmp_pm_get_family_info() - Get family info of platform
+> + * @family:	Returned family code value
+> + * @subfamily:	Returned sub-family code value
+> + *
+> + * Return: Returns status, either success or error+reason
+> + */
+> +static int zynqmp_pm_get_family_info(u32 *family, u32 *subfamily)
+> +{
+> +	u32 ret_payload[PAYLOAD_ARG_CNT];
+> +	u32 idcode;
+> +	int ret;
+> +
+> +	/* Check is family or sub-family code already received */
+> +	if (pm_family_code && pm_sub_family_code) {
+> +		*family = pm_family_code;
+> +		*subfamily = pm_sub_family_code;
+> +		return 0;
+> +	}
+> +
+> +	ret = zynqmp_pm_invoke_fn(PM_GET_CHIPID, 0, 0, 0, 0, ret_payload);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	idcode = ret_payload[1];
+> +	pm_family_code = FIELD_GET(GENMASK(FAMILY_CODE_MSB, FAMILY_CODE_LSB),
+> +				   idcode);
+> +	pm_sub_family_code = FIELD_GET(GENMASK(SUB_FAMILY_CODE_MSB,
+> +					       SUB_FAMILY_CODE_LSB), idcode);
+> +	*family = pm_family_code;
+> +	*subfamily = pm_sub_family_code;
+> +
+> +	return 0;
+> +}
+> +
+>   /**
+>    * zynqmp_pm_get_trustzone_version() - Get secure trustzone firmware version
+>    * @version:	Returned version value
+> @@ -1911,6 +1948,11 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
+>   	pr_info("%s Platform Management API v%d.%d\n", __func__,
+>   		pm_api_version >> 16, pm_api_version & 0xFFFF);
+>   
+> +	/* Get the Family code and sub family code of platform */
+> +	ret = zynqmp_pm_get_family_info(&pm_family_code, &pm_sub_family_code);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>   	/* Check trustzone version number */
+>   	ret = zynqmp_pm_get_trustzone_version(&pm_tz_version);
+>   	if (ret)
+> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+> index f5da51677069..d7f94b42ad4c 100644
+> --- a/include/linux/firmware/xlnx-zynqmp.h
+> +++ b/include/linux/firmware/xlnx-zynqmp.h
+> @@ -34,6 +34,19 @@
+>   /* PM API versions */
+>   #define PM_API_VERSION_2	2
+>   
+> +#define ZYNQMP_FAMILY_CODE 0x23
+> +#define VERSAL_FAMILY_CODE 0x26
+> +
+> +/* When all subfamily of platform need to support */
+> +#define ALL_SUB_FAMILY_CODE		0x00
+> +#define VERSAL_SUB_FAMILY_CODE		0x01
+> +#define VERSALNET_SUB_FAMILY_CODE	0x03
+> +
+> +#define FAMILY_CODE_LSB	21
+> +#define FAMILY_CODE_MSB	27
+> +#define SUB_FAMILY_CODE_LSB	19
+> +#define SUB_FAMILY_CODE_MSB	20
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+nit: It was likely easier to do it like below. You can avoid so many defines.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r006-20230724   gcc  
-alpha                randconfig-r015-20230724   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsim_700_defconfig   gcc  
-arc                  randconfig-r043-20230724   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                          ixp4xx_defconfig   clang
-arm                  randconfig-r046-20230724   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r001-20230724   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r011-20230724   gcc  
-hexagon              randconfig-r041-20230724   clang
-hexagon              randconfig-r045-20230724   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230724   gcc  
-i386         buildonly-randconfig-r005-20230724   gcc  
-i386         buildonly-randconfig-r006-20230724   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230724   gcc  
-i386                 randconfig-i002-20230724   gcc  
-i386                 randconfig-i003-20230724   gcc  
-i386                 randconfig-i004-20230724   gcc  
-i386                 randconfig-i005-20230724   gcc  
-i386                 randconfig-i006-20230724   gcc  
-i386                 randconfig-i011-20230724   clang
-i386                 randconfig-i012-20230724   clang
-i386                 randconfig-i013-20230724   clang
-i386                 randconfig-i014-20230724   clang
-i386                 randconfig-i015-20230724   clang
-i386                 randconfig-i016-20230724   clang
-i386                 randconfig-r033-20230724   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r014-20230724   gcc  
-microblaze           randconfig-r025-20230724   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  cavium_octeon_defconfig   clang
-mips                 decstation_r4k_defconfig   gcc  
-mips                      maltaaprp_defconfig   clang
-mips                 randconfig-r005-20230724   clang
-mips                 randconfig-r031-20230724   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r022-20230724   gcc  
-nios2                randconfig-r024-20230724   gcc  
-openrisc                    or1ksim_defconfig   gcc  
-openrisc             randconfig-r012-20230724   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r026-20230724   gcc  
-parisc               randconfig-r032-20230724   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                     mpc83xx_defconfig   gcc  
-powerpc                      ppc40x_defconfig   gcc  
-powerpc              randconfig-r021-20230724   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                    nommu_k210_defconfig   gcc  
-riscv                randconfig-r042-20230724   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r013-20230724   clang
-s390                 randconfig-r044-20230724   clang
-sh                               allmodconfig   gcc  
-sh                          r7780mp_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r003-20230724   gcc  
-sparc64              randconfig-r016-20230724   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230724   gcc  
-x86_64       buildonly-randconfig-r002-20230724   gcc  
-x86_64       buildonly-randconfig-r003-20230724   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r035-20230724   gcc  
-x86_64               randconfig-x001-20230724   clang
-x86_64               randconfig-x002-20230724   clang
-x86_64               randconfig-x003-20230724   clang
-x86_64               randconfig-x004-20230724   clang
-x86_64               randconfig-x005-20230724   clang
-x86_64               randconfig-x006-20230724   clang
-x86_64               randconfig-x011-20230724   gcc  
-x86_64               randconfig-x012-20230724   gcc  
-x86_64               randconfig-x013-20230724   gcc  
-x86_64               randconfig-x014-20230724   gcc  
-x86_64               randconfig-x015-20230724   gcc  
-x86_64               randconfig-x016-20230724   gcc  
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r004-20230724   gcc  
-xtensa               randconfig-r036-20230724   gcc  
+#define FAMILY_CODE_MASK	GENMASK(27, 21)
+#define SUB_FAMILY_CODE_MASK	GENMASK(20, 19)
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+> +
+>   /* ATF only commands */
+>   #define TF_A_PM_REGISTER_SGI		0xa04
+>   #define PM_GET_TRUSTZONE_VERSION	0xa03
+
+Reviewed-by: Michal Simek <michal.simek@amd.com>
+
+Thanks,
+Michal
