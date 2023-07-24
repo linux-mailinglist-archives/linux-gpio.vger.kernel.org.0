@@ -2,74 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 865EA75EF5E
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 11:44:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18B0F75EE93
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 11:00:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231239AbjGXJoQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jul 2023 05:44:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45506 "EHLO
+        id S232026AbjGXJAn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 05:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231874AbjGXJoL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 05:44:11 -0400
-X-Greylist: delayed 622 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 24 Jul 2023 02:44:08 PDT
-Received: from fluorez-com.cfd (fluorez-com.cfd [107.174.244.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B0DE5B
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 02:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=re1; d=fluorez-com.cfd;
- h=Reply-To:From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:
- Content-Transfer-Encoding; i=info@fluorez-com.cfd;
- bh=LqAKS0rQcqRhfS2AomqosmxOtHjI8TSd2DPxtKmN8Fo=;
- b=XG0q1sE+kgeIdGEh91ud+Movo2Lg4mwICQltLI813dwIEGsaphLasNuuIzQbheU1uvddsOiHQTab
-   egh4NE05ebDexeRHWAmrix/lXpVrWMYRMj+wP8O4z4h+WY9pGOLPTbPa4dCV9FyuTm+cEEj6JEQ5
-   WqiCWKAIBVnkE1xzvczHF1uc/SnwprDYcsjilJyJxJ1vP27ZgwTSeT4R5OK0Urf1W1JsjainB/8A
-   6mTkGLHGSe/miEFG66qb1uCwPe141gYu2QiYaR7T9BbETKAabjLK6sAAh2H7MFGW66rAHXdsFJte
-   +GCGSv+Z4aFjf6VIiFuw5x4HSNvYMDPeyo7myw==
-Reply-To: info@coinloansupport.online
-From:   Coinloan Support Center <info@fluorez-com.cfd>
-To:     linux-gpio@vger.kernel.org
-Subject: Don't miss out on our low Interest coinloan opportunity
-Date:   24 Jul 2023 10:47:00 +0200
-Message-ID: <20230724104700.E81CD4D0D04EAE22@fluorez-com.cfd>
+        with ESMTP id S231822AbjGXJAa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 05:00:30 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 941BB1721;
+        Mon, 24 Jul 2023 02:00:10 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="352285832"
+X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
+   d="scan'208";a="352285832"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 02:00:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="675755501"
+X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
+   d="scan'208";a="675755501"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2023 02:00:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy@kernel.org>)
+        id 1qNrQD-005We4-0v;
+        Mon, 24 Jul 2023 12:00:05 +0300
+Date:   Mon, 24 Jul 2023 12:00:05 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        afaerber@suse.com
+Subject: Re: [PATCH 02/10] gpio: pxa: use dynamic allocation of base
+Message-ID: <ZL49lTMPZIb5gLt4@smile.fi.intel.com>
+References: <20230721210042.21535-1-duje.mihanovic@skole.hr>
+ <20230721210042.21535-3-duje.mihanovic@skole.hr>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.1 required=5.0 tests=BAYES_60,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
-        RCVD_IN_BL_SPAMCOP_NET,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L4,
-        RCVD_IN_PSBL,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.0 RCVD_IN_MSPIKE_L4 RBL: Bad reputation (-4)
-        *      [107.174.244.118 listed in bl.mailspike.net]
-        *  2.7 RCVD_IN_PSBL RBL: Received via a relay in PSBL
-        *      [107.174.244.118 listed in psbl.surriel.com]
-        *  1.3 RCVD_IN_BL_SPAMCOP_NET RBL: Received via a relay in
-        *      bl.spamcop.net
-        *      [Blocked - see <https://www.spamcop.net/bl.shtml?107.174.244.118>]
-        *  1.5 BAYES_60 BODY: Bayes spam probability is 60 to 80%
-        *      [score: 0.6114]
-        * -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.8 FROM_FMBLA_NEWDOM28 From domain was registered in last 14-28
-        *      days
-        *  0.0 RCVD_IN_MSPIKE_BL Mailspike blocklisted
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-X-Spam-Level: ******
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230721210042.21535-3-duje.mihanovic@skole.hr>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Are you looking for a loan to either increase your activity or to=20
-carry out a project.=20
-We offer Crypto Loans at 2-7% interest rate with or without a=20
-credit check.
-Please get back to us if you are interested in more details.
+On Fri, Jul 21, 2023 at 10:37:44PM +0200, Duje Mihanović wrote:
+> Fixes the warning in dmesg that static allocation of the base is
+> deprecated.
+
+Have you checked if this might regress on the older platforms where maybe
+drivers that are looking for the specific GPIO number?
+
+Please, elaborate the answer to the above in the commit message (in case you
+have done the research, otherwise do that first).
+
+The background of this request is the OMAP breakage in the previous cycle
+due to the very similar change. We don't want to repeat our mistakes.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
