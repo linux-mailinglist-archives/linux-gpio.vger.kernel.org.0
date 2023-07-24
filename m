@@ -2,119 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EEA575EC1C
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 09:00:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3170E75EC30
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 09:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbjGXHAO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jul 2023 03:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49590 "EHLO
+        id S229486AbjGXHJU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 03:09:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjGXHAN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 03:00:13 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87E1B7;
-        Mon, 24 Jul 2023 00:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1690182013; x=1721718013;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=LNoTdkXoZT85Gpvee9QVvqttY1j+UwGAAbCzY5X4MB4=;
-  b=rV8v90PmcsPYpgXcQmokLp+4FSs7hILtZkS9UFBHq7TRzxxVe4BDLFEF
-   4w+aVosYfL/tOzZn9tpfXXlofJ+8v0/niXth291yQWBnpErMseiGztZEv
-   M/KnUYWfaAn4C0UJ2tKEu50cfgx0KSSp3Xqx6zX4zBZ3MmaRGVpbh32jN
-   DG6/pmP6NjoT+bR2y1t9YcLmqCO0BJE09hZacDUzYglERC1thzh3b8KC9
-   3OXdRh6TSFG+jZtrjpRWzjc2AaYGaG7YG48mD+1s91GUrdjK+4DH0xwki
-   mACQ0u1+rSvvhDtvkhey0lgMr6leEi+6AuF3BRPr2zP10zlxfE9Xk1GKw
-   w==;
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="221811342"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2023 00:00:11 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Sun, 23 Jul 2023 23:59:58 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.21 via Frontend
- Transport; Sun, 23 Jul 2023 23:59:58 -0700
-Date:   Mon, 24 Jul 2023 08:59:57 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Colin Foster <colin.foster@in-advantage.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <UNGLinuxDriver@microchip.com>,
-        Daniel Machon <daniel.machon@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Christian Marangi <ansuelsmth@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC RESEND v1 pinctrl-next 1/1] pinctrl: microchip-sgpio: add
- activity and blink functionality
-Message-ID: <20230724065957.a72yejua7us5e2s3@soft-dev3-1>
-References: <20230712022250.2319557-1-colin.foster@in-advantage.com>
- <20230712022250.2319557-2-colin.foster@in-advantage.com>
- <CACRpkdYXeGq2LnD+bpAXm82Aa-Czob8afQSfjfMFweBLhdr9uw@mail.gmail.com>
- <ZLmSvkizdykGGpv6@MSI.localdomain>
+        with ESMTP id S229468AbjGXHJT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 03:09:19 -0400
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22C6138;
+        Mon, 24 Jul 2023 00:09:14 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6C2E524000E;
+        Mon, 24 Jul 2023 07:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1690182552;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0OTdgWQ6Vo/4tl1ZM7En0YdjITPLKGIP2IIxkkPFJRM=;
+        b=iC5ZIY44VFrCSUNoeMIdYmOyqSrlrW7N4tyY+Hq53oXBVph3jCQ5ij8fsDynsYh6NybKfF
+        47iBUwR964ggu52YB13yaU1E18wok2aDQAXdbpXfZnCVzqeybMcvNBEm04M8MJv49vz912
+        60p20TKBhztddQMV6EZbSo0vTLzFb3Ok+FWErn92iDiDFjDyPmqRh1JKdYw5xT3hwpwVlV
+        u4k2GthKUnBFuRNrRP/XoPSerupU1HIaiVySzO/QpWk35FaiLI3dwdIhQ2brWGTyOPPUCM
+        8E3/Ier83smwYkYCv/LsZ20OWFpB5I2g8A5epoX659Pa/Omr3Rckh60nqnZ+5A==
+Date:   Mon, 24 Jul 2023 09:09:02 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     nikita.shubin@maquefel.me,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Lennert Buytenhek <kernel@wantstofly.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Michael Peters <mpeters@embeddedts.com>,
+        Kris Bahnsen <kris@embeddedts.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 24/42] mtd: nand: add support for ts72xx
+Message-ID: <20230724090902.679ea56d@xps-13>
+In-Reply-To: <ZLqx+Osn3gcHjUph@smile.fi.intel.com>
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+        <20230605-ep93xx-v3-24-3d63a5f1103e@maquefel.me>
+        <ZLqx+Osn3gcHjUph@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZLmSvkizdykGGpv6@MSI.localdomain>
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 07/20/2023 14:02, Colin Foster wrote:
+Hi Andy,
 
-Hi,
+> > +static int ts72xx_nand_attach_chip(struct nand_chip *chip)
+> > +{
+> > +	switch (chip->ecc.engine_type) {
+> > +	case NAND_ECC_ENGINE_TYPE_SOFT:
+> > +		if (chip->ecc.algo =3D=3D NAND_ECC_ALGO_UNKNOWN)
+> > +			chip->ecc.algo =3D NAND_ECC_ALGO_HAMMING;
+> > +		break;
+> > +	case NAND_ECC_ENGINE_TYPE_ON_HOST:
+> > +		return -EINVAL;
+> > +	default: =20
+>=20
+> > +		break; =20
+>=20
+> Here it will return 0, is it a problem?
 
-> 
-> On Thu, Jul 20, 2023 at 09:25:32PM +0200, Linus Walleij wrote:
-> > On Wed, Jul 12, 2023 at 4:23 AM Colin Foster
-> > <colin.foster@in-advantage.com> wrote:
-> >
-> > > Add additional functions - two blink and two activity, for each SGPIO
-> > > output.
-> > >
-> > > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> >
-> > Could Lars or Horatiu review this patch? You guys know the driver
-> > best.
-> 
-> Agreed. Please don't merge this without their approval and hopefully
-> testing.
-> 
+Seems ok, there are two other situations: on-die ECC engine and no ECC
+engine, both do not require any specific handling on the controller
+side.
 
-I have tried to apply the patch to test it, but unfortunately it doesn't
-apply.
-I have looked through the changes and they seem OK.
+>=20
+> > +	}
+> > +
+> > +	return 0;
+> > +} =20
+>=20
+> ...
+>=20
+> > +static void ts72xx_nand_remove(struct platform_device *pdev)
+> > +{
+> > +	struct ts72xx_nand_data *data =3D platform_get_drvdata(pdev);
+> > +	struct nand_chip *chip =3D &data->chip;
+> > +	int ret;
+> > +
+> > +	ret =3D mtd_device_unregister(nand_to_mtd(chip)); =20
+>=20
+> > +	WARN_ON(ret); =20
+>=20
+> Why?!  Is it like this in other MTD drivers?
 
-> I did demote this patch I've been dragging around since 2021 to RFC
-> status because I'm more interested in making sure it will fit in with
-> the work on hardware-offloaded network activity LED work that's being
-> done. I took Andrew's response to the cover letter as an suggestion to
-> hold off for a little while longer. I can be patient.
-> 
-> Also, this RFC was two-fold. I don't want to duplicate efforts, and I
-> know this pinctrl driver was written with this functionality in mind. If
-> someone out there has a hankering to get those LEDs blinking and they
-> don't want to wait around for me, feel free to use this as a starting
-> point. I might not get around to the whole netdev trigger thing for
-> quite some time!
-> 
-> 
-> Colin Foster
+Yes, we did not yet change the internal machinery to return void, and
+we don't want people to think getting errors there is normal.
 
--- 
-/Horatiu
+> > +	nand_cleanup(chip);
+> > +} =20
+>=20
+
+Thanks,
+Miqu=C3=A8l
