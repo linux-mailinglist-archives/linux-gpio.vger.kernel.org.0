@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E316375EC68
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 09:23:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 887EA75EC6C
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 09:24:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbjGXHXQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jul 2023 03:23:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
+        id S229661AbjGXHYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 03:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbjGXHXP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 03:23:15 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69992139
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 00:23:14 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4fb77f21c63so5915561e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 00:23:14 -0700 (PDT)
+        with ESMTP id S229506AbjGXHYI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 03:24:08 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3349F139
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 00:24:04 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-9923833737eso590596266b.3
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 00:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690183392; x=1690788192;
+        d=linaro.org; s=google; t=1690183442; x=1690788242;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iy/GT69EmEf7HLTcBeb61pi/V8qLsmpFTLyrEgxiJLA=;
-        b=NzUzdVsimqx7g51FcscwcKiCc3Mz5Y2gk16jCf1ilaOHCz+ZM7PL4iotsQfc+w6QcY
-         kvMdPpDkeQPwjUw3dwzOumEY+LV7ftLHHasWdIAMDToD4J8WgqVNcK5620ZHjWOmRpcx
-         UnBvKNhYHYk/DDyzTVHwntXkG61b1vTwl5+ZVB6Se2jIFLt+MfP4cnnm2fktXFIxuvnY
-         azW0kCusM4leYHv9L4XmopYDqpanvdLcS8xXolOyQAz2kd2KibeY1JxiajW9h3617xA1
-         DiiaffjTvt2gjFXAOBZIrE0u2alH6a3mQAsYwHs+JGtkI+ALw8KgnCQ0fu5fyf1mJzzw
-         k5zw==
+        bh=CBrXA3GfQqUqZF4hKq4KKQZVGsJT8J4SBU3nb0zPdIc=;
+        b=vTksFXABghnZiSOnD0bW1YzvyKrWF7RWN8q75TD+vcEq1QW/hkPGoDaXm6PZ9CO9XS
+         Gsk4NDvqLU/KRqKZ7AEiS2nq4k6510nvPjX09tbPSQ6yZUxdgMY456q4bXkn+tv8VcNz
+         uU3iKbiIrRmJNDsL9vBHFPyfbZSCq0s6Q7kJv0XqOTa6GRsSWaI/Y0PkR5+BHtJIom8C
+         ztVynBlHVoNU9hPpQm4cmB3s5xkxY1oACHXUlXcGoNX2JQRjoisleVqMm9AIolhN+2x6
+         Td3k1Qs5n4oetbi7G/MAl54+qCWmoecqJGXOuocMLaLMRp48bSgLCDunV5NMzFP9CgVw
+         BFhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690183392; x=1690788192;
+        d=1e100.net; s=20221208; t=1690183442; x=1690788242;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iy/GT69EmEf7HLTcBeb61pi/V8qLsmpFTLyrEgxiJLA=;
-        b=eE4R3GfbsZf14nEVuqKl7ZeyEfgx3Fn+KDNnUPGLODnou9KCLPPixfZ++VkPbu28rV
-         8y3ZrYZqQBgTDI8+PVnsmKguwV6gqMWQ1aoKvK+dlYnT6GwbzFPTYFUUZZgjsA86vldL
-         ER58b1FC7ATAV4lS9GABonjDlHq0LSgPXL9TfmbLwZv4rBdiNW8hpqgMTVlgNeZvd2zX
-         ym33TcAMT+3Dxg6F0u3cpoO1Z019r77A3VIEyTneD99Nso5sWoHLvTpLOktqFeEgQr49
-         XEKPGaomJGwGBJuEWw/zo4S2Dgs/5GU2XymeWPbt+11MPk22/VzmRafQ0NombiilKpcz
-         fJMA==
-X-Gm-Message-State: ABy/qLao7B4vnf3heFwu1fVJ95lTiZoF3sX/KvCVakUBHoUsWgsqN5sv
-        jntZe/PissJZONAQfnVsuKyQuA==
-X-Google-Smtp-Source: APBJJlGQLyiSoIC6lNFV7XBZ9Ao16PbIMbE2mihWrJXae2AzcR2E348sVKUhIKcvWsU+F7j8eKRZvw==
-X-Received: by 2002:a05:6512:3987:b0:4f8:56cd:da8c with SMTP id j7-20020a056512398700b004f856cdda8cmr5455515lfu.34.1690183392278;
-        Mon, 24 Jul 2023 00:23:12 -0700 (PDT)
+        bh=CBrXA3GfQqUqZF4hKq4KKQZVGsJT8J4SBU3nb0zPdIc=;
+        b=LW2DLEAlRhuVPez8i16u3dw5bupoy1GksHLg7un3cb/ey870YXykIwgAFAob2BSWrZ
+         0L6lZWDA3QxX2/y6L0bLfU6i6nHOnmnIoPoZIIsF1KBfeP6tc7lkM6FDTlvhZJmofOTA
+         hLScHIG5jPs47ShgJILkaE4JSKI0/fJbGaRtbx5OEsDRzgjxbFrD1wxySFzuIc39Jbd/
+         4gc1MlBBTm6K5QI/3n7e8Oy3/AUX9GdU/T/mpl8BsEf9Muv+iqDv5BmtUQTf1nWRFb1w
+         7j/jqGs8Hta0V9xEcD9+4Fh25NGRk2ID5xXbrxdrDEvZzyMdcKyPNNw6DEAHsGVN+XxA
+         UNnA==
+X-Gm-Message-State: ABy/qLZAUGdSgvVmt/nu4D3BADCM6wr0L9zhEA+AUy/qwcOYFsZ/GXP7
+        0BwsGIVSRNkgx16X4bAOyA3Xaw==
+X-Google-Smtp-Source: APBJJlGjYdU3iGP0Fguc6/73vVCUUIk+kJlhFXlg86MiGvd9WTlERBp8eHJaZ3yfX4z4ulPCBh/L1Q==
+X-Received: by 2002:a17:906:749a:b0:99b:4e52:da47 with SMTP id e26-20020a170906749a00b0099b4e52da47mr7387743ejl.33.1690183442711;
+        Mon, 24 Jul 2023 00:24:02 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id u16-20020a170906951000b0099b4d86fbccsm6399525ejx.141.2023.07.24.00.23.10
+        by smtp.gmail.com with ESMTPSA id v12-20020a17090606cc00b0099290e2c15esm6314315ejb.75.2023.07.24.00.24.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jul 2023 00:23:11 -0700 (PDT)
-Message-ID: <0f016242-2380-274e-c6a4-118a5872412e@linaro.org>
-Date:   Mon, 24 Jul 2023 09:23:09 +0200
+        Mon, 24 Jul 2023 00:24:02 -0700 (PDT)
+Message-ID: <97565358-d11e-459c-8bf7-adfb3aa079ed@linaro.org>
+Date:   Mon, 24 Jul 2023 09:24:00 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: Add gpio-line-names to STMPE
+Subject: Re: [PATCH v2 2/2] dt-bindings: leds: Add gpio-line-names to PCA9532
  GPIO
 Content-Language: en-US
 To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
@@ -71,8 +71,9 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com
 References: <20230724063520.182888-1-alexander.stein@ew.tq-group.com>
+ <20230724063520.182888-2-alexander.stein@ew.tq-group.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230724063520.182888-1-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20230724063520.182888-2-alexander.stein@ew.tq-group.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -87,30 +88,29 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 24/07/2023 08:35, Alexander Stein wrote:
 > This is a gpio-controller, so gpio-line-names should be allowed as well.
-> stmpe2403 supports up to 24 GPIOs.
+> pca9532 supports up to 16 GPIOs.
 > 
 > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 > ---
 > Changes in v2:
 > * Add min/maxItems
 > 
->  Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml | 4 ++++
+>  Documentation/devicetree/bindings/leds/nxp,pca953x.yaml | 4 ++++
 >  1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
-> index 22c0cae73425..4555f1644a4d 100644
-> --- a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
-> @@ -28,6 +28,10 @@ properties:
+> diff --git a/Documentation/devicetree/bindings/leds/nxp,pca953x.yaml b/Documentation/devicetree/bindings/leds/nxp,pca953x.yaml
+> index edf6f55df685..9610bca57dd5 100644
+> --- a/Documentation/devicetree/bindings/leds/nxp,pca953x.yaml
+> +++ b/Documentation/devicetree/bindings/leds/nxp,pca953x.yaml
+> @@ -29,6 +29,10 @@ properties:
 >  
 >    gpio-controller: true
 >  
 > +  gpio-line-names:
 > +    minItems: 1
-> +    maxItems: 24
-> +
 
-I am sure there is no variant with one GPIO.
+GPIO expander which adds only one GPIO? That would be weird. Are sure?
+Which model supports 1 GPIO?
 
 Best regards,
 Krzysztof
