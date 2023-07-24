@@ -2,111 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69E3775FA17
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 16:44:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE63275FAB3
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 17:23:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229700AbjGXOoy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jul 2023 10:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59542 "EHLO
+        id S229649AbjGXPXa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 11:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjGXOox (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 10:44:53 -0400
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3BC010F;
-        Mon, 24 Jul 2023 07:44:51 -0700 (PDT)
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7C34961E5FE01;
-        Mon, 24 Jul 2023 16:44:10 +0200 (CEST)
-Message-ID: <45cf294e-3124-9a0d-864f-ba7c605405c0@molgen.mpg.de>
-Date:   Mon, 24 Jul 2023 16:44:10 +0200
+        with ESMTP id S229486AbjGXPX3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 11:23:29 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B76312F;
+        Mon, 24 Jul 2023 08:23:28 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="367495892"
+X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
+   d="scan'208";a="367495892"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 08:23:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="815869624"
+X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
+   d="scan'208";a="815869624"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Jul 2023 08:23:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy@kernel.org>)
+        id 1qNxPA-001DIu-21;
+        Mon, 24 Jul 2023 18:23:24 +0300
+Date:   Mon, 24 Jul 2023 18:23:24 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: linux-next: Tree for Jul 20 (gpio/gpio-ge)
+Message-ID: <ZL6XbEI2pxOLDgge@smile.fi.intel.com>
+References: <20230720142243.1b463b82@canb.auug.org.au>
+ <65b4ac1a-1128-6e2a-92c0-9bbcca4b760a@infradead.org>
+ <f1e4938f-ddb8-1301-bd7a-f86679313eee@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v5 1/3] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
-Content-Language: en-US
-To:     Jim Liu <jim.t90615@gmail.com>
-Cc:     JJLIU0@nuvoton.com, KWLIU@nuvoton.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-gpio@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20230314092311.8924-1-jim.t90615@gmail.com>
- <20230314092311.8924-2-jim.t90615@gmail.com>
- <519312b6-f28c-7482-21c1-d9628f0295cb@molgen.mpg.de>
- <CAKUZ0+FGSEgzbK6H_sHaGpP9JnvrLeBRQViqmViR1OVXoVs7vA@mail.gmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <CAKUZ0+FGSEgzbK6H_sHaGpP9JnvrLeBRQViqmViR1OVXoVs7vA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f1e4938f-ddb8-1301-bd7a-f86679313eee@infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Jim,
+On Thu, Jul 20, 2023 at 12:56:53PM -0700, Randy Dunlap wrote:
+> On 7/20/23 12:54, Randy Dunlap wrote:
+> > On 7/19/23 21:22, Stephen Rothwell wrote:
 
+> >> Changes since 20230719:
 
-Am 24.07.23 um 05:04 schrieb Jim Liu:
-
-> sorry for reply late.
-
-No problem. Thank you for your reply. Some minor comments below.
-
-> First, thanks for your review.
+> > @Martyn:
+> > Please add a trailing '>' here:
+> > MODULE_AUTHOR("Martyn Welch <martyn.welch@ge.com");
 > 
-> the description is as below:
-> 
-> The SGPIO module can be programmed to support from zero (none) to
-> eight external output ports ,
+> and email to Martyn bounced... :(
 
-No space before the comma.
+Thank you for the report, I'm going to fix it right away.
+It also seems to have COMPILE_TEST to be added.
 
-> each with eight output pins (for a total of 64 output pins). The
-> output ports must be serial-to-parallel devices (such as the HC595 or
-> a faster equivalent).
-> 
-> The SGPIO can be programmed to accept from zero to eight external
-> input ports (IXPp), each with eight input pins, supporting a total of
-> 64 input pins. The input ports must be parallel-to-serial devices
-> (such as the HC165 or a faster equivalent).
-> 
-> you can add hc595 and hc165 ic to get the serial data from BMC and
-> send serial data to BMC.
-> This driver can expand  extra gpio pins up to 64 input and 64 output.
-
-One space before “extra”. Maybe:
-
-hc595 and c165 ic allow to transmit serial data from and to the BMC. 
-This driver can expand extra GPIO pins up to 64 inputs and 64 outputs.
-
-> i will use jim.t90615@gmail.com this mail to upstream this driver not
-> company mail.
-
-If this is paid work, using your company email address should be 
-preferred in my opinion.
-
-> The driver needs to fix the length of the variables, because the reg
-> size is one byte.
-
-One byte would also fit into `unsigned int`, wouldn’t it?
-
-> I will follow your suggestion to modify and upstream again. If you
-> have any questions please let me know.
-
-If you could use Mozilla Thunderbird to reply easily in interleaved 
-style, that would great.
-
-Otherwise, I am looking forward to the next revision.
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Kind regards,
-
-Paul
