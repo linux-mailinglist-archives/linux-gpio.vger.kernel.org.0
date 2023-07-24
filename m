@@ -2,169 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C62B575FC8B
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 18:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2949975FECE
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 20:09:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229983AbjGXQuz convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 24 Jul 2023 12:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42142 "EHLO
+        id S229800AbjGXSJt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 14:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbjGXQuz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 12:50:55 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47282D7;
-        Mon, 24 Jul 2023 09:50:54 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3a36b309524so3462457b6e.3;
-        Mon, 24 Jul 2023 09:50:54 -0700 (PDT)
+        with ESMTP id S229628AbjGXSJs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 14:09:48 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A0E7E49
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 11:09:46 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id 3f1490d57ef6-c84fd44593aso5043151276.0
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 11:09:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690222185; x=1690826985;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sv32dzLI0S4Cbunmm3HM6sgTMma037t/aW6t7P4RPbY=;
+        b=m9qM00AY4ZxOu6/glCrlngvO1uZkwJ9dILIjT/zcdXHELshmbaiO/Exh7UfIV/+5QP
+         90akMVHwl+u6dBhx/FSJY9nWYBDKfK/ds1HbirPIzyZLOdxLyR3u3gQCReu/qn8q8NDm
+         xdVKTL68bZe7H6YS6p+bsnklcP84kn3Vl3woxHQEskIU3TypCEapPd8kumLikO3n8Z4b
+         FCqsnQjrRIK5ko9N4g3idYTH/HuyBydmio38Cula9dLsXEiUB3LKUvHmpQRP+nEQ1/Sl
+         iOasgOTt7wzdNpngeg6F2WJ0bx46hKoZMwZ8qdiRFpJSznn5yobZdS3uIfECRVSRKGfi
+         /y0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690217453; x=1690822253;
+        d=1e100.net; s=20221208; t=1690222185; x=1690826985;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y7TFRM2vKH90k3Dtf6CLI36a//C1NHq5z29tE+TVuvw=;
-        b=KaRTk5xtWLXjkCrMXW1CDH2z5cNbiEiHzW13EFs2Gte5voHPahk+2Vm5Y6VYGm6Ot5
-         Ds2j2DuqYEFfOzppLTblKIPP1F7+vY7JVJoBjdEoQrueF+FIZ1bkpSVy5m79g5vTNzlq
-         qcGRUVZJg8Tyf7UupjKWxvBDa2eHlaVFx/ul5N7VuRWe4veXv1vnfGlPqIXyeiyIpUAl
-         3LRlOFIX+zRoSsMeYof35Syh8p/tqmefYfd2bYme7Ro5e051o7psTI5QvafedupY+Rct
-         C8s/nyF2hYyiGch/Ck7LGqJRN747ZPDvwThjcKE0kRMMKml/ZawD0c+bNHtaqWLJSn2u
-         hNbg==
-X-Gm-Message-State: ABy/qLa/WtwA8Q5+B9xzXyfHZEUtZy2eIuPOj2e25gJYtOxLA8P3zZ8P
-        aWyTLLkBYDJZyHrIFZFcDEvI4IjZh7qEpg==
-X-Google-Smtp-Source: APBJJlEsLcMttLlBkADBkO03dQAtpnT1oIpPaR9fWOd7vu2geFLXX9jv4YdnN7wI1KSbkCNtZfxnKw==
-X-Received: by 2002:a54:4089:0:b0:3a1:dc7e:bb39 with SMTP id i9-20020a544089000000b003a1dc7ebb39mr10783173oii.18.1690217453321;
-        Mon, 24 Jul 2023 09:50:53 -0700 (PDT)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id v14-20020a81a54e000000b005773430a57csm2870741ywg.78.2023.07.24.09.50.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jul 2023 09:50:53 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-ca4a6e11f55so3806428276.1;
-        Mon, 24 Jul 2023 09:50:52 -0700 (PDT)
-X-Received: by 2002:a25:e0c2:0:b0:d06:e29e:9bca with SMTP id
- x185-20020a25e0c2000000b00d06e29e9bcamr6446755ybg.55.1690217452760; Mon, 24
- Jul 2023 09:50:52 -0700 (PDT)
+        bh=sv32dzLI0S4Cbunmm3HM6sgTMma037t/aW6t7P4RPbY=;
+        b=Sy7eD8Xq16xXZ3cMulTH6VPCL9R9KvuetxRx2d3XDP1RA009zBD0Xvwd7hdAGopyXA
+         RrnIvv4yUtNaQHc4PhDc9Iga5300HMkUBIvPQ4Z9wFgjJu8HDyudqrWi0VlRN3p+oYgW
+         zyYcUUgyuXnMa91ENx/cE44LcsssEUcCTDNtQlXSZ+Ot4h6izkwWLAqXmFW2xVw5oKwY
+         E6oMltLgKe1Spfq80PW8LW+95/lGKpfUzKKYenHOVVwYzoHPjrHfzBtmM8Ku259h4Qin
+         +d5K/Z5TKjZJKizrQpJtX9HC9dzh0Ki2+LeAgBoq+aEjXCgi9n5jJZV/1ckp1t7nfCCT
+         zrhg==
+X-Gm-Message-State: ABy/qLYpCd5MDUYA+elkP+ejvi4mUslhi7lHdT4Ntt4LPGAcL+Cai7F2
+        zVpjY3+ND68+c2NDZ+W104BIK0NghbY8YbFaWABayQ==
+X-Google-Smtp-Source: APBJJlFsPXLIqdE4FI2fEH9PF5W6wX0kB9Iu5IZ67bqIZrFvevztigHRLGRRgVz6eTQN6Okx3EPcfSB7Z3fPf63pUlo=
+X-Received: by 2002:a25:a1ca:0:b0:cac:2767:2b8e with SMTP id
+ a68-20020a25a1ca000000b00cac27672b8emr8296660ybi.60.1690222185691; Mon, 24
+ Jul 2023 11:09:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230711072053.2837327-1-geert+renesas@glider.be>
- <CAMRc=Mef-J-WinQxphm+CU8u-PoBan1hPT2yLih4i-RFUDePBQ@mail.gmail.com> <CAMRc=MfsbngW4dor9UXX1ncyabZ=NjUFZFTarcfgOO3iMz4zgw@mail.gmail.com>
-In-Reply-To: <CAMRc=MfsbngW4dor9UXX1ncyabZ=NjUFZFTarcfgOO3iMz4zgw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 24 Jul 2023 18:50:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUratvH_C=EXaMxY+SDpvdRbLGPhe4qN7h_TtvHc_zWSg@mail.gmail.com>
-Message-ID: <CAMuHMdUratvH_C=EXaMxY+SDpvdRbLGPhe4qN7h_TtvHc_zWSg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mxc: Improve PM configuration
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Shenwei Wang <shenwei.wang@nxp.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
+References: <20230719192058.433517-1-krzysztof.kozlowski@linaro.org> <20230719192058.433517-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230719192058.433517-2-krzysztof.kozlowski@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 24 Jul 2023 20:09:34 +0200
+Message-ID: <CACRpkdbK7gU36nVOm0J+HbLk5JRKki+30=UaJ6hZjF1DiB4bBw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] pinctrl: qcom: sm8350-lpass-lpi: add SM8350 LPASS TLMM
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+On Wed, Jul 19, 2023 at 9:21=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-On Thu, Jul 20, 2023 at 5:23 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Thu, Jul 20, 2023 at 5:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Tue, Jul 11, 2023 at 9:20 AM Geert Uytterhoeven
-> > <geert+renesas@glider.be> wrote:
-> > > If CONFIG_PM=n (e.g. m68k/allmodconfig):
-> > >
-> > >     drivers/gpio/gpio-mxc.c:612:12: error: ‘mxc_gpio_runtime_resume’ defined but not used [-Werror=unused-function]
-> > >       612 | static int mxc_gpio_runtime_resume(struct device *dev)
-> > >           |            ^~~~~~~~~~~~~~~~~~~~~~~
-> > >     drivers/gpio/gpio-mxc.c:602:12: error: ‘mxc_gpio_runtime_suspend’ defined but not used [-Werror=unused-function]
-> > >       602 | static int mxc_gpio_runtime_suspend(struct device *dev)
-> > >           |            ^~~~~~~~~~~~~~~~~~~~~~~~
-> > >
-> > > Fix this by using the non-SET *_PM_OPS to configure the dev_pm_ops
-> > > callbacks, and by wrapping the driver.pm initializer insider pm_ptr().
-> > >
-> > > As NOIRQ_SYSTEM_SLEEP_PM_OPS() uses pm_sleep_ptr() internally, the
-> > > __maybe_unused annotations for the noirq callbacks are no longer needed,
-> > > and can be removed.
-> > >
-> > > Fixes: 3283d820dce649ad ("gpio: mxc: add runtime pm support")
-> > > Reported-by: noreply@ellerman.id.au
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > ---
-> > >  drivers/gpio/gpio-mxc.c | 10 +++++-----
-> > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> > > index a9fb6bd9aa6f9645..a43df5d5006e62d3 100644
-> > > --- a/drivers/gpio/gpio-mxc.c
-> > > +++ b/drivers/gpio/gpio-mxc.c
-> > > @@ -623,7 +623,7 @@ static int mxc_gpio_runtime_resume(struct device *dev)
-> > >         return 0;
-> > >  }
-> > >
-> > > -static int __maybe_unused mxc_gpio_noirq_suspend(struct device *dev)
-> > > +static int mxc_gpio_noirq_suspend(struct device *dev)
-> > >  {
-> > >         struct platform_device *pdev = to_platform_device(dev);
-> > >         struct mxc_gpio_port *port = platform_get_drvdata(pdev);
-> > > @@ -634,7 +634,7 @@ static int __maybe_unused mxc_gpio_noirq_suspend(struct device *dev)
-> > >         return 0;
-> > >  }
-> > >
-> > > -static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev)
-> > > +static int mxc_gpio_noirq_resume(struct device *dev)
-> > >  {
-> > >         struct platform_device *pdev = to_platform_device(dev);
-> > >         struct mxc_gpio_port *port = platform_get_drvdata(pdev);
-> > > @@ -647,8 +647,8 @@ static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev)
-> > >  }
-> > >
-> > >  static const struct dev_pm_ops mxc_gpio_dev_pm_ops = {
-> > > -       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_noirq_resume)
-> > > -       SET_RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resume, NULL)
-> > > +       NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_noirq_resume)
-> > > +       RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resume, NULL)
-> > >  };
-> > >
-> > >  static int mxc_gpio_syscore_suspend(void)
-> > > @@ -695,7 +695,7 @@ static struct platform_driver mxc_gpio_driver = {
-> > >                 .name   = "gpio-mxc",
-> > >                 .of_match_table = mxc_gpio_dt_ids,
-> > >                 .suppress_bind_attrs = true,
-> > > -               .pm = &mxc_gpio_dev_pm_ops,
-> > > +               .pm = pm_ptr(&mxc_gpio_dev_pm_ops),
-> > >         },
-> > >         .probe          = mxc_gpio_probe,
-> > >  };
-> > > --
-> > > 2.34.1
-> > >
-> >
-> > Applied, thanks!
-> >
-> > Bart
+> Add driver for pin controller in Low Power Audio SubSystem (LPASS).  The
+> driver is similar to SM8250 LPASS pin controller, with difference in one
+> new pin (gpio14) belonging to swr_tx_data.
 >
-> Nevermind, Arnd has a better fix for that so I'll apply his change.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I disagree. And my patch was first ;-)
+This sure looks good to me.
 
-Arnd's version lacks the pm_ptr() around the mxc_gpio_driver.driver.pm
-initializer, so the compiler cannot throw out the (rather large) unused
-mxc_gpio_dev_pm_ops structure.
+Krzystof, can you collect a branch with pin control changes for
+Qualcomm chips that I can pull? If it's OK with Bjorn that is.
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
