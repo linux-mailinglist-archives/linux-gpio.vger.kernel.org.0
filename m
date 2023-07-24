@@ -2,98 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2BC875EBB5
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 08:38:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EEA575EC1C
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jul 2023 09:00:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230260AbjGXGi0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jul 2023 02:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
+        id S229809AbjGXHAO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 03:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230391AbjGXGiZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 02:38:25 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439B910D;
-        Sun, 23 Jul 2023 23:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1690180681; x=1721716681;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qo77yFF1+Xe4+ux9WT9zH/pvobHjGv17l93nkcfgwNc=;
-  b=hXyO8TR7QuH2gwyjCM4mGLZjEb6SmqGKVymBzozMlBY0iXdAQExVf6BW
-   9YNl7yZJ6uOnSIzvAlWcH/rNqQIjWm6m0hprn+95+1bk4XD2ecuTAlBTz
-   DAiwLQ62NnqE7XogkzIjHzTd6yndYed2+gGgTZtQ5PX3nVinI92Kaav40
-   pzZ5a0Z5bTJgLRaA4byUwmzK05HWp5rXqag/sFek1sTIb+V2YGeHjL+0S
-   vwashBXEhDmkYB80+AIraNSnM/qJWmh6InyWRjzcTZLYuLRKN3oaRjERL
-   05WL6Hhw2a7Qb6zW6G3yuXJ048DLyYysSHuVo2+jlheQhAtFuxHaRR8CX
-   A==;
-X-IronPort-AV: E=Sophos;i="6.01,228,1684792800"; 
-   d="scan'208";a="32070465"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 24 Jul 2023 08:35:22 +0200
-Received: from steina-w.tq-net.de (unknown [10.123.53.21])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 56C1B280084;
-        Mon, 24 Jul 2023 08:35:22 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v2 2/2] dt-bindings: leds: Add gpio-line-names to PCA9532 GPIO
-Date:   Mon, 24 Jul 2023 08:35:20 +0200
-Message-Id: <20230724063520.182888-2-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230724063520.182888-1-alexander.stein@ew.tq-group.com>
-References: <20230724063520.182888-1-alexander.stein@ew.tq-group.com>
+        with ESMTP id S229498AbjGXHAN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 03:00:13 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87E1B7;
+        Mon, 24 Jul 2023 00:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1690182013; x=1721718013;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=LNoTdkXoZT85Gpvee9QVvqttY1j+UwGAAbCzY5X4MB4=;
+  b=rV8v90PmcsPYpgXcQmokLp+4FSs7hILtZkS9UFBHq7TRzxxVe4BDLFEF
+   4w+aVosYfL/tOzZn9tpfXXlofJ+8v0/niXth291yQWBnpErMseiGztZEv
+   M/KnUYWfaAn4C0UJ2tKEu50cfgx0KSSp3Xqx6zX4zBZ3MmaRGVpbh32jN
+   DG6/pmP6NjoT+bR2y1t9YcLmqCO0BJE09hZacDUzYglERC1thzh3b8KC9
+   3OXdRh6TSFG+jZtrjpRWzjc2AaYGaG7YG48mD+1s91GUrdjK+4DH0xwki
+   mACQ0u1+rSvvhDtvkhey0lgMr6leEi+6AuF3BRPr2zP10zlxfE9Xk1GKw
+   w==;
+X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
+   d="scan'208";a="221811342"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2023 00:00:11 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Sun, 23 Jul 2023 23:59:58 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.21 via Frontend
+ Transport; Sun, 23 Jul 2023 23:59:58 -0700
+Date:   Mon, 24 Jul 2023 08:59:57 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Colin Foster <colin.foster@in-advantage.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <UNGLinuxDriver@microchip.com>,
+        Daniel Machon <daniel.machon@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Christian Marangi <ansuelsmth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [RFC RESEND v1 pinctrl-next 1/1] pinctrl: microchip-sgpio: add
+ activity and blink functionality
+Message-ID: <20230724065957.a72yejua7us5e2s3@soft-dev3-1>
+References: <20230712022250.2319557-1-colin.foster@in-advantage.com>
+ <20230712022250.2319557-2-colin.foster@in-advantage.com>
+ <CACRpkdYXeGq2LnD+bpAXm82Aa-Czob8afQSfjfMFweBLhdr9uw@mail.gmail.com>
+ <ZLmSvkizdykGGpv6@MSI.localdomain>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZLmSvkizdykGGpv6@MSI.localdomain>
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is a gpio-controller, so gpio-line-names should be allowed as well.
-pca9532 supports up to 16 GPIOs.
+The 07/20/2023 14:02, Colin Foster wrote:
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-Changes in v2:
-* Add min/maxItems
+Hi,
 
- Documentation/devicetree/bindings/leds/nxp,pca953x.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+> 
+> On Thu, Jul 20, 2023 at 09:25:32PM +0200, Linus Walleij wrote:
+> > On Wed, Jul 12, 2023 at 4:23 AM Colin Foster
+> > <colin.foster@in-advantage.com> wrote:
+> >
+> > > Add additional functions - two blink and two activity, for each SGPIO
+> > > output.
+> > >
+> > > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> >
+> > Could Lars or Horatiu review this patch? You guys know the driver
+> > best.
+> 
+> Agreed. Please don't merge this without their approval and hopefully
+> testing.
+> 
 
-diff --git a/Documentation/devicetree/bindings/leds/nxp,pca953x.yaml b/Documentation/devicetree/bindings/leds/nxp,pca953x.yaml
-index edf6f55df685..9610bca57dd5 100644
---- a/Documentation/devicetree/bindings/leds/nxp,pca953x.yaml
-+++ b/Documentation/devicetree/bindings/leds/nxp,pca953x.yaml
-@@ -29,6 +29,10 @@ properties:
- 
-   gpio-controller: true
- 
-+  gpio-line-names:
-+    minItems: 1
-+    maxItems: 16
-+
-   '#gpio-cells':
-     const: 2
- 
+I have tried to apply the patch to test it, but unfortunately it doesn't
+apply.
+I have looked through the changes and they seem OK.
+
+> I did demote this patch I've been dragging around since 2021 to RFC
+> status because I'm more interested in making sure it will fit in with
+> the work on hardware-offloaded network activity LED work that's being
+> done. I took Andrew's response to the cover letter as an suggestion to
+> hold off for a little while longer. I can be patient.
+> 
+> Also, this RFC was two-fold. I don't want to duplicate efforts, and I
+> know this pinctrl driver was written with this functionality in mind. If
+> someone out there has a hankering to get those LEDs blinking and they
+> don't want to wait around for me, feel free to use this as a starting
+> point. I might not get around to the whole netdev trigger thing for
+> quite some time!
+> 
+> 
+> Colin Foster
+
 -- 
-2.34.1
-
+/Horatiu
