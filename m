@@ -2,97 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C12C761EC1
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 18:41:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BD33762134
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 20:18:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229541AbjGYQle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jul 2023 12:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
+        id S229780AbjGYSSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jul 2023 14:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjGYQlc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 12:41:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E698310F7;
-        Tue, 25 Jul 2023 09:41:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=VOpi6FeyBBxDJ9AWuyvGv6z4rjqWqlFn0g7noxTOdPg=; b=OE0Yv0C1dfCRicRWSmNMM59Dgv
-        MSlzOqH2FV32nJBQJYdaqktbAXnisAv4pM7CWD5mP9T7qa9mLIz8K9Ttq4APloaqzMCPgRMRhlsS/
-        muNPAvD9OZaUubBkxJZvQp1mw6eIdlwtFYM3JoCaGNhX/kBG+VrMhTclgrlCHqbDInmNRjBuZE1rJ
-        miJiFycFAZZ8O+qr9Lk/9p72vtqzNt4lDguzRfxt3Kx5aWulYjUwyyPDyD+I+qFRnn/HclzHEHzUA
-        UtHYz2xsCpPl/gEJBy/hGRuLEzy4irKjnW8K0JJrZkxj8GlXfp8f9fi4l2nTMdRRrYaQTpTls0+vh
-        uXR7iMsA==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qOL64-0083WK-1X;
-        Tue, 25 Jul 2023 16:41:16 +0000
-Message-ID: <ce045e96-e9b6-ae66-dd54-67a958ca1774@infradead.org>
-Date:   Tue, 25 Jul 2023 09:41:14 -0700
+        with ESMTP id S229847AbjGYSSd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 14:18:33 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E721FF5
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jul 2023 11:18:31 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-583d63ca1e9so37305817b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jul 2023 11:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690309110; x=1690913910;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bHxe1YfaBcJ5vzDMQqmktbhf3AMJRILx98UaWc/ORTE=;
+        b=wEgaZenPDz9l+e1u+X9JazDvOs2962XLBxVqBpIG9uerH2ZXOvUk16rAKe5LNvvTVv
+         wEHqazZhOD5UE2RtfO2H66jwlyUFsbRR6laxhP1XHHLIPhpsouqYpIQAonSC94BqbaNE
+         An9O8JCNLnx2S7eDeTqWfwXCl3RSuWIibvxKDTJLmY3GAD81BoJGHZbd1TGXUtQAnelh
+         6T2VMQE5MACYJLo2QDsnosA5FPksbX1/OFFQ814WeFDJbRBPv8VFQwwfSVadEc22pOVu
+         8gqiOExNYcliFFJY85PnGQx7pYzUZ46vynnYsDZ2PwlqJv1CSAaiuvff7y5jo6qg31WL
+         N+XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690309110; x=1690913910;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bHxe1YfaBcJ5vzDMQqmktbhf3AMJRILx98UaWc/ORTE=;
+        b=GBQZMQ9dfUT2h4CMFCEzIfk8aC04rmnLd1hItc/eeO7MY2Z2cVu5/etVlmavzfKoTR
+         eDsFczVCLNydGy+S842NknMjle8dqCHw8OIjK2nRiIW/V/7tFqSlRKOGJLgJeaIbqhz0
+         qflGZTDJD32SUlc0/rSNex1rpmEj2qK0rQTxF+29vrAcC3yoyKlR4IUK0z1ZrXIqGd5y
+         4IXjopp3kaOoxIl3JRJdbaES7/0rdtQC523XFSMNQ6+BIDBdGMTZeu3PIL4ITYU+5F+K
+         JjLlygztLVEwZbRw+WJv6eZ75NF7p7c1iYhipCMRDY7Jf+9qhCg/RXUFFF4yqWNrrKkE
+         fNyQ==
+X-Gm-Message-State: ABy/qLZK4dqZ18XBBHUG6OQQP9jDXBG0KnD3ivbM7dQm/36ZcZKxtlfn
+        DBJb00XUCnbboDddYtQjSY+v2NGg9m0Gz+WlwBc60A==
+X-Google-Smtp-Source: APBJJlGkrCq8klkh0wt3bHuOriA1aDLa6kOW7ZHi2gVp5kxrTA76iHjF4ZEb5bGJ3fpjAO+Kutf62cVEIpEdQMKNfF4=
+X-Received: by 2002:a25:ad88:0:b0:d0d:94dc:4a8 with SMTP id
+ z8-20020a25ad88000000b00d0d94dc04a8mr6483671ybi.26.1690309110430; Tue, 25 Jul
+ 2023 11:18:30 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 24/26] ASoC: codecs: Add support for the framer codec
-Content-Language: en-US
-To:     Herve Codina <herve.codina@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+References: <20230719192058.433517-1-krzysztof.kozlowski@linaro.org>
+ <20230719192058.433517-2-krzysztof.kozlowski@linaro.org> <CACRpkdbK7gU36nVOm0J+HbLk5JRKki+30=UaJ6hZjF1DiB4bBw@mail.gmail.com>
+ <34be3638-ed14-bb0b-eb2e-c44f43c582f2@linaro.org>
+In-Reply-To: <34be3638-ed14-bb0b-eb2e-c44f43c582f2@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Jul 2023 20:18:17 +0200
+Message-ID: <CACRpkdY=WYZEfHuYsJe3kxk4-E3r4wp-Ln=GyvSY2m=+-Ow47A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] pinctrl: qcom: sm8350-lpass-lpi: add SM8350 LPASS TLMM
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Conor Dooley <conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        alsa-devel@alsa-project.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20230725092417.43706-1-herve.codina@bootlin.com>
- <20230725092417.43706-25-herve.codina@bootlin.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230725092417.43706-25-herve.codina@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Jul 24, 2023 at 9:06=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 24/07/2023 20:09, Linus Walleij wrote:
+> > On Wed, Jul 19, 2023 at 9:21=E2=80=AFPM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >
+> >> Add driver for pin controller in Low Power Audio SubSystem (LPASS).  T=
+he
+> >> driver is similar to SM8250 LPASS pin controller, with difference in o=
+ne
+> >> new pin (gpio14) belonging to swr_tx_data.
+> >>
+> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >
+> > This sure looks good to me.
+> >
+> > Krzystof, can you collect a branch with pin control changes for
+> > Qualcomm chips that I can pull? If it's OK with Bjorn that is.
+>
+> Sure, I can go through the lore search results and grab recent submission=
+s.
 
+Thanks, I think you know better than me what is the stuff that is reviewed
+and ready for merge.
 
-On 7/25/23 02:24, Herve Codina wrote:
-> +config SND_SOC_FRAMER
-> +	tristate "Framer codec"
-> +	depends on GENERIC_FRAMER
-> +	help
-> +	  Enable support for the framer codec.
-> +	  The framer codec uses the generic framer infrastructure to transport
-> +	  some audio data over an analog E1/T1/J1 line.
-> +	  This codec allows to use some of the time slots available on the TDM
-> +	  bus on with the framer is connected to transport the audio data.
+I have this on my devel branch so far:
+59d612a3215c dt-bindings: pinctrl: qcom: lpass-lpi: Remove qcom,adsp-bypass=
+-mode
+abf02e132cb6 pinctrl: qcom: lpass-lpi: Make the clocks optional, always
+1e46c7430af7 pinctrl: qcom-pmic-gpio: Add support for pmx75
+8fff6514ff0a pinctrl: qcom-pmic-gpio: Add support for pm7550ba
+75ec058db332 dt-bindings: pinctrl: qcom-pmic-gpio: Add pmx75 support
+4bbee99da13a dt-bindings: pinctrl: qcom-pmic-gpio: Add pm7550ba support
 
-	      on which
+Anything else is in some inbetween state and I'm not sure of the status
+so it would really offload me if you could get it in order!
 
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called snd-soc-framer.
-
--- 
-~Randy
+Yours,
+Linus Walleij
