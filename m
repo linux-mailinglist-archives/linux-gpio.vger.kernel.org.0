@@ -2,80 +2,192 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30BF57619DD
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 15:25:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3B38761B67
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 16:24:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbjGYNZz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jul 2023 09:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55728 "EHLO
+        id S232757AbjGYOYN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jul 2023 10:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229788AbjGYNZy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 09:25:54 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1559419AF;
-        Tue, 25 Jul 2023 06:25:44 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="398633744"
-X-IronPort-AV: E=Sophos;i="6.01,230,1684825200"; 
-   d="scan'208";a="398633744"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2023 06:25:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="839864648"
-X-IronPort-AV: E=Sophos;i="6.01,230,1684825200"; 
-   d="scan'208";a="839864648"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Jul 2023 06:25:41 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1qOI2l-00BM3E-1h;
-        Tue, 25 Jul 2023 16:25:39 +0300
-Date:   Tue, 25 Jul 2023 16:25:39 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Andrei Coardos <aboutphysycs@gmail.com>
-Cc:     linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S232583AbjGYOYJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 10:24:09 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B1AC10DC;
+        Tue, 25 Jul 2023 07:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:MIME-Version:
+        Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=GH4DFvsFXW8HxyMaxhFu7HFeJ+P25ZX6SyEkxmWJA9Q=; b=PuBT85WBZ0t6SsodvImuFTmfhA
+        iHa1X53QasOKBN+PQfcwMk0aIesy840sRtKAS/47zBhsnEaRjORJL9Ab72onujxnMtT6UOtAm6BIy
+        MPZYMcMpf0IcO7m/77jVgCSR3wRetM3qPw5m2bdobSrTUfjlYrC/FinvNC39XbZn5n3c=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:34256 helo=localhost.localdomain)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1qOIx1-0003Kt-AQ; Tue, 25 Jul 2023 10:23:48 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        isaac.true@canonical.com, jesse.sung@canonical.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hugo@hugovil.com,
         linux-gpio@vger.kernel.org,
-        angelogioacchino.delregno@collabora.com, matthias.bgg@gmail.com,
-        brgl@bgdev.pl, linus.walleij@linaro.org,
-        Alexandru Ardelean <alex@shruggie.ro>
-Subject: Re: [PATCH] gpio: mt7621: remove unnecessary call to
- platfrom_set_drvdata()
-Message-ID: <ZL/NUySYJnOrc5Qs@smile.fi.intel.com>
-References: <20230721130838.26616-1-aboutphysycs@gmail.com>
- <ZLqf6P22HC0Dd4G5@smile.fi.intel.com>
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Date:   Tue, 25 Jul 2023 10:23:32 -0400
+Message-Id: <20230725142343.1724130-1-hugo@hugovil.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZLqf6P22HC0Dd4G5@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_SOFTFAIL,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: [PATCH v9 00/10] serial: sc16is7xx: fix GPIO regression and rs485 improvements
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 06:10:32PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 21, 2023 at 04:08:38PM +0300, Andrei Coardos wrote:
-> > This function call was found to be unnecessary as there is no equivalent
-> > platform_get_drvdata() call to access the private data of the driver.
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-Not true.
+Hello,
+this patch series mainly fixes a GPIO regression and improve RS485 flags and
+properties detection from DT.
 
-> > Also, the private data is defined in this driver, so there is no risk of
-> > it being accessed outside of this driver file.
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+It now also includes various small fixes and improvements that were previously
+sent as separate patches, but that made testing everything difficult.
 
-I have to withdraw this, the patch is wrong.
-NAK.
+Patch 1 fixes an issue with init of first port during probing.
 
-Sorry for the confusion (I have looked for the wrong pattern).
+Patch 2 fixes an issue when debugging IOcontrol register, but it is also
+necessary for patch "fix regression with GPIO configuration" to work.
 
+Patch 3 fixes an incorrect label in sc16is7xx_probe() cleanup code.
+
+Patch 4 is a refactor of GPIO registration code in preparation for patch 5.
+
+Patches 5 and 6 fix a GPIO regression by (re)allowing to choose GPIO function
+for GPIO pins shared with modem status lines.
+
+Patch 7 fixes a bug with the output value when first setting the GPIO direction.
+
+Patch 8 allows to read common rs485 device-tree flags and properties.
+
+Patch 9 introduces a delay after a reset operation to respect datasheet
+timing recommandations.
+
+Patch 10 improves comments about chip variants.
+
+I have tested the changes on a custom board with two SC16IS752 DUART using a
+Variscite IMX8MN NANO SOM.
+
+Boards that need to have GPIOS configured as modem control lines
+should add that property to their device tree. Here is a list of
+boards using the sc16is7xx driver in their device tree and that may
+need to be modified:
+    arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+    mips/boot/dts/ingenic/cu1830-neo.dts
+    mips/boot/dts/ingenic/cu1000-neo.dts
+
+Thank you.
+
+Link: [v0] https://lkml.org/lkml/2023/5/15/923
+      [v1] https://lkml.org/lkml/2023/5/17/967
+      [v1] https://lkml.org/lkml/2023/5/17/777
+      [v1] https://lkml.org/lkml/2023/5/17/780
+      [v1] https://lkml.org/lkml/2023/5/17/785
+      [v1] https://lkml.org/lkml/2023/5/17/1311
+      [v2] https://lkml.org/lkml/2023/5/18/516
+      [v3] https://lkml.org/lkml/2023/5/25/7
+      [v4] https://lkml.org/lkml/2023/5/29/656
+      [v5] https://lkml.org/lkml/2023/6/1/1046
+      [v6] https://lkml.org/lkml/2023/6/1/1328
+      [v7] https://lkml.org/lkml/2023/6/2/861
+      [v8] https://lkml.org/lkml/2023/6/7/813
+           https://lkml.org/lkml/2023/7/21/1055
+
+Changes for V1:
+- Abandonned the approach of trying to fix GPIO regression by reverting the
+  original patches, because it created more problems than it solved (breaking
+  existing users). Instead, add DT property to fix the GPIO behavior.
+
+Changes for V2:
+- Integrate multiple patches into this serie.
+
+Changes for V3:
+- Integrated all patches into single serie to facilitate debugging and tests.
+- Reduce number of exported GPIOs depending on new property
+  nxp,modem-control-line-ports
+- Added additional example in DT bindings
+
+Changes for V4:
+- Increase reset post delay to relax scheduler.
+- Put comments patches at the end.
+- Remove Fixes tag for patch "mark IOCONTROL register as volatile".
+- Improve commit messages after reviews.
+- Fix coding style issues after reviews.
+- Change GPIO registration to always register the maximum number of GPIOs
+  supported by the chip, but maks-out GPIOs declared as modem control lines.
+- Add patch to refactor GPIO registration.
+- Remove patch "serial: sc16is7xx: fix syntax error in comments".
+- Remove patch "add dump registers function"
+
+Changes for V5:
+- Change patch order to facilitate stable backport(s).
+- Change duplicate device addresses in DT binding examples.
+- Use GENMASK for bit masks.
+- Replace of_property_for_each_u32() with device_property_read_u32_array
+- Add "Cc: stable..." tags
+
+Changes for V6:
+- Fix compilation bug introduced by patch 3
+
+Changes for V7:
+- Minor changes and coding style fixes after review for
+  patch 5 "fix regression with GPIO configuration".
+
+Changes for V8:
+- Move mctrl_mask to "struct sc16is7xx_port" to avoid compiler warning when
+  CONFIG_GPIOLIB is undefined.
+- Add "struct device" member to "struct sc16is7xx_port", in order to avoid
+  passing a raw "struct device" to called functions from sc16is7xx_probe().
+- Add new patch "serial: sc16is7xx: remove obsolete out_thread label"
+
+Changes for V9:
+- Change DT property name in commit message and move some comments to cover
+  letter for patch "fix regression with GPIO configuration".
+- Add proper link to pre-v1 (v0) RFC patch.
+- Add changes log for V1 and V2 to this cover letter.
+
+Hugo Villeneuve (10):
+  serial: sc16is7xx: fix broken port 0 uart init
+  serial: sc16is7xx: mark IOCONTROL register as volatile
+  serial: sc16is7xx: remove obsolete out_thread label
+  serial: sc16is7xx: refactor GPIO controller registration
+  dt-bindings: sc16is7xx: Add property to change GPIO function
+  serial: sc16is7xx: fix regression with GPIO configuration
+  serial: sc16is7xx: fix bug when first setting GPIO direction
+  serial: sc16is7xx: add call to get rs485 DT flags and properties
+  serial: sc16is7xx: add post reset delay
+  serial: sc16is7xx: improve comments about variants
+
+ .../bindings/serial/nxp,sc16is7xx.txt         |  46 +++++
+ drivers/tty/serial/sc16is7xx.c                | 177 +++++++++++++-----
+ 2 files changed, 181 insertions(+), 42 deletions(-)
+
+
+base-commit: 0b5547c51827e053cc754db47d3ec3e6c2c451d2
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.30.2
 
