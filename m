@@ -2,150 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 769E5760FD1
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 11:56:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D10D760FF9
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 11:58:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230092AbjGYJ4K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jul 2023 05:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55042 "EHLO
+        id S232371AbjGYJ6c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jul 2023 05:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232395AbjGYJ4J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 05:56:09 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38DFDE56;
-        Tue, 25 Jul 2023 02:56:08 -0700 (PDT)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36P89NFk011752;
-        Tue, 25 Jul 2023 09:56:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=oxANqKL3T6h0PO+T/varJLfD1W31Y6md6sTVyawLt0c=;
- b=hIlZNY1UEgblcNX5hiQZTsLsTmfDjhETS64aUjtOxoenZcRN5FpPJZXz8UZoz8PGEsfq
- c5Xxws/r8JRXtEOVUtr0gAi4/gAdcHmXvyPfDgfoWs/qcJL/5LjBC9pGxwdKAahgsdsQ
- z22TK/ReFNIlgRa7Saa8HoSQZ9SpbWxRnd+2KGDQgd5HfegkUQy3fqBzuc+LSbE6oIiF
- PC8svfzfjsJhQruR4W/0VPT2kNaEp+xy3Hnjaw6EGOsEfQKSgD6sdNyl9u0Oi+j32aK9
- DfuHH3rXeogeKZFrmCW4sITde3vKvErUzhKyimxYB+sPf0Tmx2fos2rd0eUCPcdHEN8f OQ== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s29xmgaa5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jul 2023 09:56:04 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36P9u3De028457
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jul 2023 09:56:03 GMT
-Received: from [10.201.2.96] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Tue, 25 Jul
- 2023 02:55:58 -0700
-Message-ID: <eb723e27-de44-ed19-b331-41441c5cc755@quicinc.com>
-Date:   Tue, 25 Jul 2023 15:25:55 +0530
+        with ESMTP id S233534AbjGYJ6X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 05:58:23 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABF41FC9
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jul 2023 02:58:13 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-44360717659so4384476137.0
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Jul 2023 02:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690279092; x=1690883892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l0CXr8qUO3I0b7KpmPpq9/x2xv1za5Y0XE1WB4W2dco=;
+        b=lL+qxX++mKtv4r4f3KBsqJpG6c+NUpeIZF7o8MnMcy+bdBdH7QAGMhjJD+hATUi3V3
+         6uHgehJ6yU6DCnQ5z2KMjsI6OGboAZiIPy45Eyu8SEh24DIiOdYd76Dp3u8vGPGBX5nm
+         HY8JhyPgSv3zfr0ULBKqdi/spIsqYrkDvLYEzRUDAQxbkfIzpbse4pWmwovfd+Hpf8xH
+         1lUspD322S0cE1WXgBeDjIO8sZ6ARh4/K6gsk2HaSLVyf3BbcCv5tiAf+JlGaUnj/tPM
+         BaJqcicgsKxWwJeUlnUS2/U4ZfWGCoBFkEAsewMSAq9+rL++k5Dig/Yg5ldU8qmR8o+X
+         PUdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690279092; x=1690883892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l0CXr8qUO3I0b7KpmPpq9/x2xv1za5Y0XE1WB4W2dco=;
+        b=C689Q+THutccnOJuvdk/l2KQGHHflT2UYDeeYKE1rAAzYjcLF2lo8vCXYThoh7j8hC
+         wcL1MoD8uPJQGoY3e4MZ/GA7KKLcoiR5f6ULj4KboKlb5wS4JpoJceThMvAs56ZJWjVb
+         Db7BMVkH0NYMChwYzcuyH7bDqQTMBm6sTZwoGUtdCPAj/um81TEWRGKHk60oBDMZO8ZH
+         X9Kttq6oQgOQM7VUsaJZz3EqvvWRWd4rTLlpoPg9FENzgSavw2yDO7L+0wEiGhwfAkMR
+         kDU5BxyTAFJbnV8uz/vHygRB/zxEQIraQ9QN6EXGjyYVJpGi8DVjTGFIWrQavqFIm5Vy
+         sbOw==
+X-Gm-Message-State: ABy/qLalnNCQb9ODkpPRwNLSuMwP24v/isZ1d8HT5XUrPg/MP+vDT+ta
+        nUx6lVzeeuAFmHqjwHQtFfb/ApZFIKWKOqbBJFa2Yg==
+X-Google-Smtp-Source: APBJJlFdl4pjj60VCQ6ocL2zvFgFApGyitoMmdpxPHUtlbE9IO6z24Zk9if6TZexgwuwVsc1CxNfczNoRuu0LPDWCZA=
+X-Received: by 2002:a67:f5c3:0:b0:43f:3426:9e35 with SMTP id
+ t3-20020a67f5c3000000b0043f34269e35mr517225vso.12.1690279092356; Tue, 25 Jul
+ 2023 02:58:12 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH V5 0/3] Introduce the read-modify-write API to collect
-To:     Elliot Berman <quic_eberman@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Mukesh Ojha" <quic_mojha@quicinc.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     <quic_srichara@quicinc.com>, <quic_sjaganat@quicinc.com>,
-        <quic_anusha@quicinc.com>, <quic_saahtoma@quicinc.com>
-References: <20230720070408.1093698-1-quic_kathirav@quicinc.com>
- <cc1fec2c-1356-2716-86cf-5b76c18ec1dd@quicinc.com>
-Content-Language: en-US
-From:   Kathiravan T <quic_kathirav@quicinc.com>
-In-Reply-To: <cc1fec2c-1356-2716-86cf-5b76c18ec1dd@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: CYYs4OKS_Uwbelfl__4nPIsMvAtEufbt
-X-Proofpoint-GUID: CYYs4OKS_Uwbelfl__4nPIsMvAtEufbt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-25_05,2023-07-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- mlxlogscore=823 impostorscore=0 adultscore=0 mlxscore=0 bulkscore=0
- phishscore=0 suspectscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307250086
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230711072053.2837327-1-geert+renesas@glider.be>
+ <CAMRc=Mef-J-WinQxphm+CU8u-PoBan1hPT2yLih4i-RFUDePBQ@mail.gmail.com>
+ <CAMRc=MfsbngW4dor9UXX1ncyabZ=NjUFZFTarcfgOO3iMz4zgw@mail.gmail.com> <CAMuHMdUratvH_C=EXaMxY+SDpvdRbLGPhe4qN7h_TtvHc_zWSg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUratvH_C=EXaMxY+SDpvdRbLGPhe4qN7h_TtvHc_zWSg@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 25 Jul 2023 11:58:01 +0200
+Message-ID: <CAMRc=Mcqk+DSGS6co8oLD1K+_BFaUwirCgy0j0oTPDH3R_MKCw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxc: Improve PM configuration
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On 7/25/2023 12:35 AM, Elliot Berman wrote:
+On Mon, Jul 24, 2023 at 6:50=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
 >
+> Hi Bartosz,
 >
-> On 7/20/2023 12:04 AM, Kathiravan T wrote:
->> On IPQ platforms, to collect the crashdump, we need to just modify the
->> DLOAD bit in the TCSR register. Current infrastructure, overwrites the
->> entire regiter value when enabling the crashdump feature, which leads to
->> crashdump not gets collected. This series introduce the
->> qcom_scm_io_update_field API to achieve the same.
->>
+> On Thu, Jul 20, 2023 at 5:23=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> > On Thu, Jul 20, 2023 at 5:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> > > On Tue, Jul 11, 2023 at 9:20=E2=80=AFAM Geert Uytterhoeven
+> > > <geert+renesas@glider.be> wrote:
+> > > > If CONFIG_PM=3Dn (e.g. m68k/allmodconfig):
+> > > >
+> > > >     drivers/gpio/gpio-mxc.c:612:12: error: =E2=80=98mxc_gpio_runtim=
+e_resume=E2=80=99 defined but not used [-Werror=3Dunused-function]
+> > > >       612 | static int mxc_gpio_runtime_resume(struct device *dev)
+> > > >           |            ^~~~~~~~~~~~~~~~~~~~~~~
+> > > >     drivers/gpio/gpio-mxc.c:602:12: error: =E2=80=98mxc_gpio_runtim=
+e_suspend=E2=80=99 defined but not used [-Werror=3Dunused-function]
+> > > >       602 | static int mxc_gpio_runtime_suspend(struct device *dev)
+> > > >           |            ^~~~~~~~~~~~~~~~~~~~~~~~
+> > > >
+> > > > Fix this by using the non-SET *_PM_OPS to configure the dev_pm_ops
+> > > > callbacks, and by wrapping the driver.pm initializer insider pm_ptr=
+().
+> > > >
+> > > > As NOIRQ_SYSTEM_SLEEP_PM_OPS() uses pm_sleep_ptr() internally, the
+> > > > __maybe_unused annotations for the noirq callbacks are no longer ne=
+eded,
+> > > > and can be removed.
+> > > >
+> > > > Fixes: 3283d820dce649ad ("gpio: mxc: add runtime pm support")
+> > > > Reported-by: noreply@ellerman.id.au
+> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > ---
+> > > >  drivers/gpio/gpio-mxc.c | 10 +++++-----
+> > > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> > > > index a9fb6bd9aa6f9645..a43df5d5006e62d3 100644
+> > > > --- a/drivers/gpio/gpio-mxc.c
+> > > > +++ b/drivers/gpio/gpio-mxc.c
+> > > > @@ -623,7 +623,7 @@ static int mxc_gpio_runtime_resume(struct devic=
+e *dev)
+> > > >         return 0;
+> > > >  }
+> > > >
+> > > > -static int __maybe_unused mxc_gpio_noirq_suspend(struct device *de=
+v)
+> > > > +static int mxc_gpio_noirq_suspend(struct device *dev)
+> > > >  {
+> > > >         struct platform_device *pdev =3D to_platform_device(dev);
+> > > >         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
+> > > > @@ -634,7 +634,7 @@ static int __maybe_unused mxc_gpio_noirq_suspen=
+d(struct device *dev)
+> > > >         return 0;
+> > > >  }
+> > > >
+> > > > -static int __maybe_unused mxc_gpio_noirq_resume(struct device *dev=
+)
+> > > > +static int mxc_gpio_noirq_resume(struct device *dev)
+> > > >  {
+> > > >         struct platform_device *pdev =3D to_platform_device(dev);
+> > > >         struct mxc_gpio_port *port =3D platform_get_drvdata(pdev);
+> > > > @@ -647,8 +647,8 @@ static int __maybe_unused mxc_gpio_noirq_resume=
+(struct device *dev)
+> > > >  }
+> > > >
+> > > >  static const struct dev_pm_ops mxc_gpio_dev_pm_ops =3D {
+> > > > -       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_g=
+pio_noirq_resume)
+> > > > -       SET_RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runti=
+me_resume, NULL)
+> > > > +       NOIRQ_SYSTEM_SLEEP_PM_OPS(mxc_gpio_noirq_suspend, mxc_gpio_=
+noirq_resume)
+> > > > +       RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_r=
+esume, NULL)
+> > > >  };
+> > > >
+> > > >  static int mxc_gpio_syscore_suspend(void)
+> > > > @@ -695,7 +695,7 @@ static struct platform_driver mxc_gpio_driver =
+=3D {
+> > > >                 .name   =3D "gpio-mxc",
+> > > >                 .of_match_table =3D mxc_gpio_dt_ids,
+> > > >                 .suppress_bind_attrs =3D true,
+> > > > -               .pm =3D &mxc_gpio_dev_pm_ops,
+> > > > +               .pm =3D pm_ptr(&mxc_gpio_dev_pm_ops),
+> > > >         },
+> > > >         .probe          =3D mxc_gpio_probe,
+> > > >  };
+> > > > --
+> > > > 2.34.1
+> > > >
+> > >
+> > > Applied, thanks!
+> > >
+> > > Bart
+> >
+> > Nevermind, Arnd has a better fix for that so I'll apply his change.
 >
-> I don't think you describe patch 2 in the subject line or cover 
-> letter. As best I can tell, Patches 2 and 3 are independent. They're 
-> similar only in that they both depend on patch 1.
-
-
-Yeah. I missed that part. I'm thinking of dropping the 2nd patch and 
-send only the patch 1 and patch 3 in the next spin. Once the patch 1 and 
-the another pinctrl patch which Bjorn's is referring [1] (Hopefully, If 
-I am not wrong) is landed in linux-next, I can send out the patch 2 
-separately. Do let me know if this okay.
-
-[1] 
-https://lore.kernel.org/linux-arm-msm/2d790f7e-b373-f0ee-d978-fb78bc4f1ed1@quicinc.com/
-
-
+> I disagree. And my patch was first ;-)
 >
->> Intially this approach is posted by Poovendhan[1], later Mukesh
->> integrated this patch in his minidump support series[2]. Based on the
->> current feedback on the minidump series, seems it will take sometime to
->> get into a good shape, in the meantime these patches doesn't have any
->> dependency with the minidump series. As discussed with the Mukesh[3],
->> posting these 3 patches to enable the crashdump on IPQ chipsets.
->>
->> Since the current version of minidump series is V4, I'm posting this as
->> a V5. Please let me know if this should be V1.
->>
->> [1]
->> https://lore.kernel.org/linux-arm-msm/20230113160012.14893-4-quic_poovendh@quicinc.com/ 
->>
->>
->> [2]
->> https://lore.kernel.org/linux-arm-msm/1676990381-18184-3-git-send-email-quic_mojha@quicinc.com/ 
->>
->>
->> [3]
->> https://lore.kernel.org/linux-arm-msm/d77f5601-2b08-a7c7-1400-7ab68b8add3a@quicinc.com/ 
->>
->>
->>
->> Mukesh Ojha (3):
->>    firmware: qcom_scm: provide a read-modify-write function
->>    pinctrl: qcom: Use qcom_scm_io_update_field()
->>    firmware: scm: Modify only the download bits in TCSR register
->>
->>   drivers/firmware/qcom_scm.c            | 26 ++++++++++++++++++++++++--
->>   drivers/pinctrl/qcom/pinctrl-msm.c     | 12 +++++-------
->>   include/linux/firmware/qcom/qcom_scm.h |  2 ++
->>   3 files changed, 31 insertions(+), 9 deletions(-)
->>
+> Arnd's version lacks the pm_ptr() around the mxc_gpio_driver.driver.pm
+> initializer, so the compiler cannot throw out the (rather large) unused
+> mxc_gpio_dev_pm_ops structure.
+>
+> Thanks!
+>
+
+Fair enough, I replaced Arnd's patch with yours.
+
+Thanks,
+Bartosz
