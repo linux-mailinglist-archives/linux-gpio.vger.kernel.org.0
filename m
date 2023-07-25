@@ -2,119 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5708760B1F
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 09:05:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 678F2760C5E
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 09:50:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230331AbjGYHFc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jul 2023 03:05:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35272 "EHLO
+        id S232829AbjGYHuT convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 25 Jul 2023 03:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232084AbjGYHFF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 03:05:05 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E08C819A2;
-        Tue, 25 Jul 2023 00:05:01 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-51a52a7d859so12970664a12.0;
-        Tue, 25 Jul 2023 00:05:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690268700; x=1690873500;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/rywQXgpO5u1DqjN9adyjvwJjSzTGessRPrLO7F1AaE=;
-        b=ULJE+D89TTUVUUaP/IV1jDtGzFhTHxd3L2rCo5moFvzGPfdJWn8qj9gVJ5/8ROoSAY
-         Y1uUA7kCezicqsqNgUJRCZ1X34+FvkYxU7vFy/mRT8EbhU3Swa6T/bVyspBnXJXAfzLK
-         dMAljKWUsJA9utFvN81GcHWPxiRKj9xjCm+mCwSiVGEecL38ojOF2UtwMfo7ij+fnsjy
-         JMJMkrOEDlYsX0Svgn4Ajf5qgGE9Ao2zQqmgUZ36WNxrkKUEi3ysVgpI03jMAZniNRte
-         gdFYsQm0+r5oO4+4dRMJ+87H2B4C3bbel467x1GBaAPcZzc8hpwaaGbqheDFmdBrwkYa
-         3c4A==
+        with ESMTP id S232837AbjGYHuP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 03:50:15 -0400
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05FD918F;
+        Tue, 25 Jul 2023 00:50:12 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-d124309864dso1506544276.3;
+        Tue, 25 Jul 2023 00:50:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690268700; x=1690873500;
+        d=1e100.net; s=20221208; t=1690271411; x=1690876211;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/rywQXgpO5u1DqjN9adyjvwJjSzTGessRPrLO7F1AaE=;
-        b=W0A3Yuyqp3Vdvr8rOS9C9sf6iDG5kkTrLrc2RQ5LaT2xJkLiuYjIRXFWvW5ytGNt56
-         GJIKrYrExphW9qOrgWN9NFHai9ZUnN73VYzbx+1K6KM9INfB5xb4kBcNCLv1iMl9eXyZ
-         ueJzjvYdWNuUawOqegBqtPmH260/3NYH4HqxhK0e4pWsOHjelY+z4JJ/veHlJO0t8mP9
-         gHPJhtgL8JJIbdq1Q0fs4u+7jEZSAUOmRN1z1NqRDDmk+KBx+BXKO30P5iNDu1oMUASE
-         /0cwQpOCd4gvrvxqdBidDQRR63N7IMYF/JDuXiWSR3GN5XZ0xwqE42hgPVLEhyzjTmLk
-         77SA==
-X-Gm-Message-State: ABy/qLZ1hzuvqsDtdO2pFYs6T7SclEpMigXe0tITjB32rkz9x6Bv43X6
-        wCX/1MM9ilpci0LZa6INDkR3tM1EhVncmY9oItk=
-X-Google-Smtp-Source: APBJJlEwr7S33twyOTE3LTF9R7r+4PcAikCXfdNapTZNDBhbNtanpC9v0bta0ngKhzUbGrvaADJi7TYq+dhgQNlWrrc=
-X-Received: by 2002:a17:907:a089:b0:98d:f2c9:a1eb with SMTP id
- hu9-20020a170907a08900b0098df2c9a1ebmr1800076ejc.24.1690268700144; Tue, 25
- Jul 2023 00:05:00 -0700 (PDT)
+        bh=EqNUObKtnWU7CrTgMoTHsyHzfdm6+8QmUNqv2A2543c=;
+        b=W25unTmO+RfycN1l8WT7ryXU9FBMgt7QOmIwLHM1iX69xrN9udUj/2TaLbbJqXBTRi
+         PJNgqYgQ76p9Iu3ygzYVoCl7hdEsCGBgG9u4R04ZWvUluliOKI3NhZNwfznVVmgJrMg3
+         0IeHjRhd9HfdX7tDDuHRaoMqlPe068WvI4S0T90rtjG9PyjrTW4E5Z9DCb90VA//mX88
+         4/UIO0iO+X3BHknO3LwiI+lEie2sWFl0NjQcwPoDvGlwdqAKZlu3h3+LyvKHbuZtZY7d
+         yG8vkLQTJgRRYfOqn48z2Py42wN4EtL0XhAmZOpGGJT68sofqv6gvMhyld4RemnfLSnM
+         g0QQ==
+X-Gm-Message-State: ABy/qLasU/fcRjrSLC9l5iUV7/7NIrLi69gd6mlaDiB8kqy/W3HFtBfz
+        XJfqJruz4wKDR4nP92hYC/U69D9lC+uvmQ==
+X-Google-Smtp-Source: APBJJlElEeLzNDkqVv5Ha6SmFKBNhkmPkkd9zzOFXmZaCX/hlW8q997P44WTi7zH3O0d0LBIVjpn2Q==
+X-Received: by 2002:a81:4602:0:b0:562:16d7:e6eb with SMTP id t2-20020a814602000000b0056216d7e6ebmr7561645ywa.40.1690271410776;
+        Tue, 25 Jul 2023 00:50:10 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id j187-20020a816ec4000000b0058038e6609csm3372000ywc.74.2023.07.25.00.50.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jul 2023 00:50:10 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-c5f98fc4237so4431004276.2;
+        Tue, 25 Jul 2023 00:50:10 -0700 (PDT)
+X-Received: by 2002:a25:dfc8:0:b0:d0d:cd30:3967 with SMTP id
+ w191-20020a25dfc8000000b00d0dcd303967mr5769959ybg.51.1690271410365; Tue, 25
+ Jul 2023 00:50:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230725004043.381573-1-samuel.holland@sifive.com>
-In-Reply-To: <20230725004043.381573-1-samuel.holland@sifive.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 25 Jul 2023 10:04:23 +0300
-Message-ID: <CAHp75Vf5FvoshtHj+3MWFCr6-6MioCydSF8c5=tZueZHPZj=XA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] gpio: sifive: Module support
-To:     Samuel Holland <samuel.holland@sifive.com>
+References: <a4a586337d692f0ca396b80d275ba634eb419593.1690058500.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <a4a586337d692f0ca396b80d275ba634eb419593.1690058500.git.christophe.jaillet@wanadoo.fr>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 25 Jul 2023 09:49:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW-Dp0TLixZMOcZfe9U05GKZY7S-wvNGCvzL=WVeZWeWw@mail.gmail.com>
+Message-ID: <CAMuHMdW-Dp0TLixZMOcZfe9U05GKZY7S-wvNGCvzL=WVeZWeWw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Use devm_clk_get_enabled() helper
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 3:40=E2=80=AFAM Samuel Holland
-<samuel.holland@sifive.com> wrote:
->
-> With the call to of_irq_count() removed, the SiFive GPIO driver can be
-> built as a module. This helps to minimize the size of a multiplatform
-> kernel, and is required by some downstream distributions (Android GKI).
->
-> This series removes the rest of the of_* API usage in the process.
+Hi Christophe,
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-for unreviewed (by me) patches.
+On Sat, Jul 22, 2023 at 10:42 PM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+> The devm_clk_get_enabled() helper:
+>    - calls devm_clk_get()
+>    - calls clk_prepare_enable() and registers what is needed in order to
+>      call clk_disable_unprepare() when needed, as a managed resource.
+>
+> This simplifies the code and avoids the need of a dedicated function used
+> with devm_add_action_or_reset().
+>
+> While at it, use dev_err_probe() which filters -EPROBE_DEFER.
+>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Thank you!
+Thanks for your patch!
 
-> Changes in v3:
->  - Use dev_fwnode() instead of member access
->  - Mention the SIFIVE_GPIO_MAX check in the commit message
->  - Keep the variable for the parent IRQ domain
->  - Add a comment explaining why the IRQ data lookup will succeed
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -1471,11 +1471,6 @@ static int rzg2l_pinctrl_register(struct rzg2l_pinctrl *pctrl)
+>         return 0;
+>  }
 >
-> Changes in v2:
->  - Add 3 new patches removing of_* API usage
->  - Add MODULE_AUTHOR and MODULE_DESCRIPTION
+> -static void rzg2l_pinctrl_clk_disable(void *data)
+> -{
+> -       clk_disable_unprepare(data);
+> -}
+> -
+>  static int rzg2l_pinctrl_probe(struct platform_device *pdev)
+>  {
+>         struct rzg2l_pinctrl *pctrl;
+> @@ -1501,33 +1496,16 @@ static int rzg2l_pinctrl_probe(struct platform_device *pdev)
+>         if (IS_ERR(pctrl->base))
+>                 return PTR_ERR(pctrl->base);
 >
-> Samuel Holland (4):
->   gpio: sifive: Directly use the device's fwnode
->   gpio: sifive: Look up IRQs only once during probe
->   gpio: sifive: Get the parent IRQ's domain from its irq_data
->   gpio: sifive: Allow building the driver as a module
->
->  drivers/gpio/Kconfig       |  2 +-
->  drivers/gpio/gpio-sifive.c | 47 ++++++++++++++++----------------------
->  2 files changed, 21 insertions(+), 28 deletions(-)
->
-> --
-> 2.40.1
->
+> -       pctrl->clk = devm_clk_get(pctrl->dev, NULL);
+> -       if (IS_ERR(pctrl->clk)) {
+> -               ret = PTR_ERR(pctrl->clk);
+> -               dev_err(pctrl->dev, "failed to get GPIO clk : %i\n", ret);
+> -               return ret;
+> -       }
+> +       pctrl->clk = devm_clk_get_enabled(pctrl->dev, NULL);
 
+clk can become a local variable now.
 
---=20
-With Best Regards,
-Andy Shevchenko
+> +       if (IS_ERR(pctrl->clk))
+> +               return dev_err_probe(pctrl->dev, PTR_ERR(pctrl->clk),
+> +                                    "failed to get GPIO clk\n");
+
+failed to enable
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk-for-v6.6 with the above changes.
+No need to resend.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
