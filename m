@@ -2,86 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91B327602CF
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 00:56:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9615F760420
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 02:40:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbjGXW4F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jul 2023 18:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33744 "EHLO
+        id S229659AbjGYAks (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jul 2023 20:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbjGXW4E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 18:56:04 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C7A10E6;
-        Mon, 24 Jul 2023 15:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Xv427QC+R9vuHVbHCAZjuC2UpYowC4hp3LnREUt/91U=; b=OkjBl1DEAv9p/qikIyDaijwxe/
-        K2tZlk2NPbdwFenUZrX9RMAUdmQj5o4fzjJ/xvhB5g324dyytttePLevseSmopf9vl2V2gcGevDVU
-        GBlWond5QEtZLgq8igwjBDgsmbSSh3c6xjMW5Me2hcJj1FV3U4dT11mNuiefaVtHtUrXjM/KtWFA/
-        7pUEoUip650uHAzBJvdFP+S1Bvr8qd2EIRPH3OH25kO04CaiugnhPhE1/9BP0OKdWwYHp+rKaO4kc
-        GVthT7i+7EebQyq0guGPOYNf6jIQGJ8mStSDOaMgCvTi3bl+c+CcFaqRa7jwZPXHERnZUBirmAqvT
-        kQsViwvQ==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qO4TA-005bDi-1n;
-        Mon, 24 Jul 2023 22:56:00 +0000
-Message-ID: <489f5b97-36fb-75fa-c6eb-c9b36fd116a0@infradead.org>
-Date:   Mon, 24 Jul 2023 15:55:59 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v1 0/6] gpio: ge: fixes and cleanups
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S229596AbjGYAkr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jul 2023 20:40:47 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAE3171E
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 17:40:46 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-668709767b1so3122771b3a.2
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jul 2023 17:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1690245646; x=1690850446;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SJKuxFWSCWcxrpIbwE2dsS6yrYr3DSEy+K+qzjCR4Lk=;
+        b=l7xvwTPERLpVvpQQOA4WRpuVk0EuJsgNwRQcR3ONJJsnjusafrjTwvgqUddBw4Wuh3
+         BmRedeIM1hSUMspYRBmjkGxjYLDJEqbay+FwFo1Q9dvcHHfVhl9pehB9LoXpozEKnhRX
+         lQo8f+NtlifbPya6IiRrMFhKKRReXp4TsJ7kYVqpdAH8wCgrV0fmTz90qmfNEd4eibVY
+         5PgnFKtiNUMPPs0s8no4sflNGsXYaEl0X0FahJOt2IAnSPrA5DJLa01vafOTj6HvFOoi
+         FLL7+CGmvCIDcRvhEjSwGlO82XHwYPeKazIdmMz1mT4a/fghYeAJ5+VPdHtr8KA4vzJr
+         n/tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690245646; x=1690850446;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SJKuxFWSCWcxrpIbwE2dsS6yrYr3DSEy+K+qzjCR4Lk=;
+        b=AnPX1RWHm49vdlwW2jz/XtxK96zgynd5p9JkYwVqAj26mCluDo1yhG0sqEfRrPKC+S
+         LfjKSXWsHpVQEKYf0DT+Yjm2QJgfONsYb5O9U0GdAe3llD6pGH03f6tRRoAHqcqWgEr4
+         +Tt0FzDHnvRqObtSq7kDi7pia7pi+lBbIpHzV8z2D4VPg+d7/aLu3/y1n9XlaQ4r1yFO
+         74AmXHaPfvwYfHavZBhwEQi1NMIPSukxvLrdsFKX8gWxrD/G+erQzRZ2kF8KI98ShFwm
+         iCR+xymPtWRKhLqlE4LhnvcwD05YlBqmPPsoRNCCrNYx7Kt1s07p3OIv6Q8eH8mZnLKT
+         53sw==
+X-Gm-Message-State: ABy/qLZtP0TJOagx7FF4xcpaxbfC8Fvxxd1AzK4WotSdNW/9A86OIxwy
+        Hwtiqv9UOwNT8i+WbJjppPxHQA==
+X-Google-Smtp-Source: APBJJlFPb8LJJqI+24wS8Kl8vPzsOO78+Laoq3nKP3BBOg08DmgXv0tHgVQiYwYl8RCqUvPRzBE8VQ==
+X-Received: by 2002:a05:6a20:1053:b0:137:23f1:4281 with SMTP id gt19-20020a056a20105300b0013723f14281mr11113757pzc.12.1690245646421;
+        Mon, 24 Jul 2023 17:40:46 -0700 (PDT)
+Received: from sw06.internal.sifive.com ([64.62.193.194])
+        by smtp.gmail.com with ESMTPSA id be11-20020a170902aa0b00b001b8a3e2c241sm9528297plb.14.2023.07.24.17.40.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jul 2023 17:40:46 -0700 (PDT)
+From:   Samuel Holland <samuel.holland@sifive.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>
-References: <20230724161320.63876-1-andriy.shevchenko@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230724161320.63876-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Cc:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Samuel Holland <samuel.holland@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v3 0/4] gpio: sifive: Module support
+Date:   Mon, 24 Jul 2023 17:40:38 -0700
+Message-Id: <20230725004043.381573-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+With the call to of_irq_count() removed, the SiFive GPIO driver can be
+built as a module. This helps to minimize the size of a multiplatform
+kernel, and is required by some downstream distributions (Android GKI).
 
+This series removes the rest of the of_* API usage in the process.
 
-On 7/24/23 09:13, Andy Shevchenko wrote:
-> Randy reported a couple of problems, the first two patches
-> fix that. On top are a few cleanups.
-> 
+Changes in v3:
+ - Use dev_fwnode() instead of member access
+ - Mention the SIFIVE_GPIO_MAX check in the commit message
+ - Keep the variable for the parent IRQ domain
+ - Add a comment explaining why the IRQ data lookup will succeed
 
-For the series:
+Changes in v2:
+ - Add 3 new patches removing of_* API usage
+ - Add MODULE_AUTHOR and MODULE_DESCRIPTION
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Samuel Holland (4):
+  gpio: sifive: Directly use the device's fwnode
+  gpio: sifive: Look up IRQs only once during probe
+  gpio: sifive: Get the parent IRQ's domain from its irq_data
+  gpio: sifive: Allow building the driver as a module
 
-Thanks.
-
-> Andy Shevchenko (6):
->   gpio: ge: Add missing header
->   gpio: ge: Fix English spelling and grammar
->   gpio: ge: Make driver OF-independent
->   gpio: ge: Utilise temporary variable for struct device
->   gpio: ge: Replace GPLv2 boilerplate with SPDX
->   gpio: ge: Enable COMPILE_TEST for the driver
-> 
->  drivers/gpio/Kconfig   |  2 +-
->  drivers/gpio/gpio-ge.c | 66 +++++++++++++++++++-----------------------
->  2 files changed, 30 insertions(+), 38 deletions(-)
-> 
+ drivers/gpio/Kconfig       |  2 +-
+ drivers/gpio/gpio-sifive.c | 47 ++++++++++++++++----------------------
+ 2 files changed, 21 insertions(+), 28 deletions(-)
 
 -- 
-~Randy
+2.40.1
+
