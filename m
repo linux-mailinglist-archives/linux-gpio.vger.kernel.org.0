@@ -2,110 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC9F8761B8B
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 16:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C12C761EC1
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jul 2023 18:41:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232923AbjGYOYr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jul 2023 10:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37388 "EHLO
+        id S229541AbjGYQle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jul 2023 12:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232952AbjGYOY0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 10:24:26 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B6D2139;
-        Tue, 25 Jul 2023 07:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:References:
-        In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9yfW8mHRhmt1BZssK5Nqf/xXTWUgDfzvBAsuQ90MFC8=; b=IFBDaMMucxSRKRjkIyy3YkLhf3
-        m1IAPNzI/UCH9VMXqoal+9Yas8fzGkWOdArkpv9Ey/x6w/gvkR9JvnOTeQJ3E0FvyVuEiNtiAR5t4
-        8b7WrioCXmlp9OrM/2VZB868qFEmNASq1AJ5S8x+ZQEFYT8m1tQWnclHXO5BpD914LFk=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:34256 helo=localhost.localdomain)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1qOIxM-0003Kt-6C; Tue, 25 Jul 2023 10:24:09 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        isaac.true@canonical.com, jesse.sung@canonical.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hugo@hugovil.com,
-        linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        Lech Perczak <lech.perczak@camlingroup.com>
-Date:   Tue, 25 Jul 2023 10:23:42 -0400
-Message-Id: <20230725142343.1724130-11-hugo@hugovil.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230725142343.1724130-1-hugo@hugovil.com>
-References: <20230725142343.1724130-1-hugo@hugovil.com>
+        with ESMTP id S229499AbjGYQlc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jul 2023 12:41:32 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E698310F7;
+        Tue, 25 Jul 2023 09:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=VOpi6FeyBBxDJ9AWuyvGv6z4rjqWqlFn0g7noxTOdPg=; b=OE0Yv0C1dfCRicRWSmNMM59Dgv
+        MSlzOqH2FV32nJBQJYdaqktbAXnisAv4pM7CWD5mP9T7qa9mLIz8K9Ttq4APloaqzMCPgRMRhlsS/
+        muNPAvD9OZaUubBkxJZvQp1mw6eIdlwtFYM3JoCaGNhX/kBG+VrMhTclgrlCHqbDInmNRjBuZE1rJ
+        miJiFycFAZZ8O+qr9Lk/9p72vtqzNt4lDguzRfxt3Kx5aWulYjUwyyPDyD+I+qFRnn/HclzHEHzUA
+        UtHYz2xsCpPl/gEJBy/hGRuLEzy4irKjnW8K0JJrZkxj8GlXfp8f9fi4l2nTMdRRrYaQTpTls0+vh
+        uXR7iMsA==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qOL64-0083WK-1X;
+        Tue, 25 Jul 2023 16:41:16 +0000
+Message-ID: <ce045e96-e9b6-ae66-dd54-67a958ca1774@infradead.org>
+Date:   Tue, 25 Jul 2023 09:41:14 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 24/26] ASoC: codecs: Add support for the framer codec
+Content-Language: en-US
+To:     Herve Codina <herve.codina@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        alsa-devel@alsa-project.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20230725092417.43706-1-herve.codina@bootlin.com>
+ <20230725092417.43706-25-herve.codina@bootlin.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230725092417.43706-25-herve.codina@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: [PATCH v9 10/10] serial: sc16is7xx: improve comments about variants
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-Replace 740/750/760 with generic terms like 74x/75x/76x to account for
-variants like 741, 752 and 762.
 
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
----
- drivers/tty/serial/sc16is7xx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 7/25/23 02:24, Herve Codina wrote:
+> +config SND_SOC_FRAMER
+> +	tristate "Framer codec"
+> +	depends on GENERIC_FRAMER
+> +	help
+> +	  Enable support for the framer codec.
+> +	  The framer codec uses the generic framer infrastructure to transport
+> +	  some audio data over an analog E1/T1/J1 line.
+> +	  This codec allows to use some of the time slots available on the TDM
+> +	  bus on with the framer is connected to transport the audio data.
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 718e982e1efe..d6851360ef7d 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -223,7 +223,7 @@
-  * trigger levels. Trigger levels from 4 characters to 60 characters are
-  * available with a granularity of four.
-  *
-- * When the trigger level setting in TLR is zero, the SC16IS740/750/760 uses the
-+ * When the trigger level setting in TLR is zero, the SC16IS74x/75x/76x uses the
-  * trigger level setting defined in FCR. If TLR has non-zero trigger level value
-  * the trigger level defined in FCR is discarded. This applies to both transmit
-  * FIFO and receive FIFO trigger level setting.
-@@ -234,7 +234,7 @@
- #define SC16IS7XX_TLR_TX_TRIGGER(words)	((((words) / 4) & 0x0f) << 0)
- #define SC16IS7XX_TLR_RX_TRIGGER(words)	((((words) / 4) & 0x0f) << 4)
- 
--/* IOControl register bits (Only 750/760) */
-+/* IOControl register bits (Only 75x/76x) */
- #define SC16IS7XX_IOCONTROL_LATCH_BIT	(1 << 0) /* Enable input latching */
- #define SC16IS7XX_IOCONTROL_MODEM_A_BIT	(1 << 1) /* Enable GPIO[7:4] as modem A pins */
- #define SC16IS7XX_IOCONTROL_MODEM_B_BIT	(1 << 2) /* Enable GPIO[3:0] as modem B pins */
-@@ -249,9 +249,9 @@
- #define SC16IS7XX_EFCR_RTS_INVERT_BIT	(1 << 5) /* RTS output inversion */
- #define SC16IS7XX_EFCR_IRDA_MODE_BIT	(1 << 7) /* IrDA mode
- 						  * 0 = rate upto 115.2 kbit/s
--						  *   - Only 750/760
-+						  *   - Only 75x/76x
- 						  * 1 = rate upto 1.152 Mbit/s
--						  *   - Only 760
-+						  *   - Only 76x
- 						  */
- 
- /* EFR register bits */
+	      on which
+
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called snd-soc-framer.
+
 -- 
-2.30.2
-
+~Randy
