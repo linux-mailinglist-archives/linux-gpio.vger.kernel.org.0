@@ -2,64 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8F8F762E47
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 09:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9680476315A
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 11:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232753AbjGZHos (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jul 2023 03:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
+        id S233624AbjGZJMa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jul 2023 05:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231466AbjGZHoD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 03:44:03 -0400
-Received: from mail.strategicvision.pl (mail.strategicvision.pl [217.61.105.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037752705
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jul 2023 00:39:45 -0700 (PDT)
-Received: by mail.strategicvision.pl (Postfix, from userid 1002)
-        id 0D51284BCD; Wed, 26 Jul 2023 09:37:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=strategicvision.pl;
-        s=mail; t=1690357083;
-        bh=Z0N5VlX9/JlryGOL5I747Le9USomZJCRNNGRT3LbbKc=;
-        h=Date:From:To:Subject:From;
-        b=c1XKtGRe6CIxlcElGIaFvn5qCzIki9TRl4TcRtCIfUo3LnK1/lvGmtlefLVp2VVKW
-         SAYZONbdMQcMRq0d+oEBbSEKgZDt4pVc8av503UzzgdqxOEiPtWzg8FWcPiR2aHU7a
-         sfDl9dAT6totxde7TAj50aa1HAcD4f5jPz+U6DHhdddw5caiHTKjAcXjNxTNrip701
-         lUlrfoR97p675LMrddr/HW+B2AJtCLuRnPqkZWSKwN5daq/K6A7hcIO3X7SKiE3Xll
-         wFlgprRpc/Y3xY77P2uHC6ww0jFufJw4UAAUz96BL76/DvYnN6pSdM+siFiX9pu3h2
-         7erYRXdkfTMtw==
-Received: by mail.strategicvision.pl for <linux-gpio@vger.kernel.org>; Wed, 26 Jul 2023 07:35:40 GMT
-Message-ID: <20230726084502-0.1.k.8nd1.0.ri7p1b5a9l@strategicvision.pl>
-Date:   Wed, 26 Jul 2023 07:35:40 GMT
-From:   "Adam Charachuta" <adam.charachuta@strategicvision.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.strategicvision.pl
+        with ESMTP id S233539AbjGZJMB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 05:12:01 -0400
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E39CA196;
+        Wed, 26 Jul 2023 02:08:21 -0700 (PDT)
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 36Q966Gl8008069, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+        by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 36Q966Gl8008069
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 26 Jul 2023 17:06:06 +0800
+Received: from RTEXH36505.realtek.com.tw (172.21.6.25) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Wed, 26 Jul 2023 17:06:18 +0800
+Received: from localhost.localdomain (172.21.252.101) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server id
+ 15.1.2375.32 via Frontend Transport; Wed, 26 Jul 2023 17:06:18 +0800
+From:   TY Chang <tychang@realtek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/7] Add pinctrl driver support for Realtek DHC SoCs
+Date:   Wed, 26 Jul 2023 17:04:02 +0800
+Message-ID: <20230726090409.16606-1-tychang@realtek.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,URIBL_CSS_A,URIBL_DBL_SPAM
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Transfer-Encoding: 7BIT
+X-KSE-Antispam-Frontend-Serialized-Headers: RnJvbTogVFkgQ2hhbmcgPHR5Y2hhbmdAcmVhbHRlay5jb20+DQpUbzogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPiwNCglSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPiwNCglLcnp5c3p0b2YgS296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpK2R0QGxpbmFyby5vcmc+LA0KCUNvbm9yIERvb2xleSA8Y29ub3IrZHRAa2VybmVsLm9yZz4NCkNjOiBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZywNCglkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZywNCglsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBbUEFUQ0ggMC83XSBBZGQgcGluY3RybCBkcml2ZXIgc3VwcG9ydCBmb3IgUmVhbHRlayBESEMgU29Dcw0KRGF0ZTogV2VkLCAyNiBKdWwgMjAyMyAxNzowNDowMiArMDgwMA0KTWVzc2FnZS1JRDogPDIwMjMwNzI2MDkwNDA5LjE2NjA2LTEtdHljaGFuZ0ByZWFsdGVrLmNvbT4NClgtTWFpbGVyOiBnaXQtc2VuZC1lbWFpbCAyLjQxLjANCk1JTUUtVmVyc2lvbjogMS4wDQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiA4Yml0DQoNCg==
+Content-Type:   text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
+These patches add the bindings and the pinctrl drivers for Realtek
+DHC(Digital Home Center) RTD SoCs(RTD1619B, RTD1319D and RTD1315E).
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+TY Chang (7):
+  pinctrl: realtek: Add common pinctrl driver for Realtek DHC RTD SoCs
+  pinctrl: realtek: Add pinctrl driver for RTD1315E
+  pinctrl: realtek: Add pinctrl driver for RTD1319D
+  pinctrl: realtek: Add pinctrl driver for RTD1619B
+  dt-bindings: pinctrl: realtek: add RTD1315E pinctrl binding
+  dt-bindings: pinctrl: realtek: add RTD1319D pinctrl binding
+  dt-bindings: pinctrl: realtek: add RTD1619B pinctrl binding
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+ .../pinctrl/realtek,rtd1315e-pinctrl.yaml     |  165 ++
+ .../pinctrl/realtek,rtd1319d-pinctrl.yaml     |  163 ++
+ .../pinctrl/realtek,rtd1619b-pinctrl.yaml     |  162 ++
+ drivers/pinctrl/Kconfig                       |    1 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/realtek/Kconfig               |   23 +
+ drivers/pinctrl/realtek/Makefile              |    6 +
+ drivers/pinctrl/realtek/pinctrl-rtd.c         |  568 ++++++
+ drivers/pinctrl/realtek/pinctrl-rtd.h         |  124 ++
+ drivers/pinctrl/realtek/pinctrl-rtd1315e.c    | 1439 +++++++++++++++
+ drivers/pinctrl/realtek/pinctrl-rtd1319d.c    | 1609 +++++++++++++++++
+ drivers/pinctrl/realtek/pinctrl-rtd1619b.c    | 1601 ++++++++++++++++
+ 12 files changed, 5862 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1315e-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1319d-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/realtek/Kconfig
+ create mode 100644 drivers/pinctrl/realtek/Makefile
+ create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd.c
+ create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd.h
+ create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd1315e.c
+ create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd1319d.c
+ create mode 100644 drivers/pinctrl/realtek/pinctrl-rtd1619b.c
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+-- 
+2.41.0
 
-
-Pozdrawiam
-Adam Charachuta
