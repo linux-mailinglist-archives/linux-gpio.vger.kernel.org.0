@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E7DF763A0C
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 17:04:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9A92763A11
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 17:04:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234743AbjGZPEY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jul 2023 11:04:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46362 "EHLO
+        id S234716AbjGZPEi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jul 2023 11:04:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234655AbjGZPEA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 11:04:00 -0400
+        with ESMTP id S234757AbjGZPEM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 11:04:12 -0400
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4831B2D64;
-        Wed, 26 Jul 2023 08:03:31 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPA id BE18E1C0005;
-        Wed, 26 Jul 2023 15:03:26 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F333581;
+        Wed, 26 Jul 2023 08:03:35 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 900581C000D;
+        Wed, 26 Jul 2023 15:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1690383810;
+        t=1690383813;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QsB/MROgXq9pXsqS+5J4PMhc0csFongYTf9/sr1bSFQ=;
-        b=blolVYOzvpDtX/SRGAahoKWOHeQ7cDal8c4Kh93qJGwn87oAhUw2yFLndycJv7bNUKO4Ot
-        m2vgZqqlspsf3p/Ydw9JQ7jXOif3Ms/ZbgcCOuL89twKPIvDnzUvq3jryfRtQcSbVrwhJ+
-        aMAVG+r1XSlnztsqpTa8kAFPBmpolHdvdkfveYtvO9EzMks+NWqoGeCFnD61ICxQMHty8V
-        HqTj4N2iJZc6vwEBrYFiaCh1Q8pnpKGTsuzs4IJZF36+741tz6PSfaHC77973RA30Q2Hn9
-        qG2zWRVY/5aOqf4Iu9hvCpWZZ48yxZF9UbZ44jof6AWxPRssZVBcHT0/ivKGEQ==
+        bh=GBt50e+s29lg78AAaNK/5LXVHKyVi9N5D9KoMPA4Iqc=;
+        b=HOTKwtepgjDI5abcuVg8KB0ultpgrNFyvNU1rzpy3RseAZ4blkgsclcjHDE76K7hBIBsiw
+        91pbBo6Kmz4T0KJa7p202DD2zQixJ/Ub5Ej4ICPBfxzWu5dez1003gzIbaGZ7AZpNMCQ1u
+        d7izLYuIGGipF8gmjCx7p55iHn8iOKeR8dOSxkFAXyqEr4TQgrOXEkSlsJUlAgAfcSV8D+
+        0J8pRflISZqzr+bZ1TD8IqAGQ987w4yzmd89mOkq2g0ApibmhA+EQqtMQF5YBnxhBdT/U/
+        4xRwSiV+RFSK4AfCNGEARAkf56mmSjdSgE91nNXu1j1hvdZox1l/RDP3DvqmnQ==
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Herve Codina <herve.codina@bootlin.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -54,9 +54,9 @@ Cc:     netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         alsa-devel@alsa-project.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 14/28] soc: fsl: cpm1: qmc: Split Tx and Rx TSA entries setup
-Date:   Wed, 26 Jul 2023 17:02:10 +0200
-Message-ID: <20230726150225.483464-15-herve.codina@bootlin.com>
+Subject: [PATCH v2 15/28] soc: fsl: cpm1: qmc: Introduce is_tsa_64rxtx flag
+Date:   Wed, 26 Jul 2023 17:02:11 +0200
+Message-ID: <20230726150225.483464-16-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230726150225.483464-1-herve.codina@bootlin.com>
 References: <20230726150225.483464-1-herve.codina@bootlin.com>
@@ -73,102 +73,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Tx and Rx entries for a given channel are set in one function.
+In order to support runtime timeslot route changes, some operations will
+be different according the routing table used (common Rx and Tx table or
+one table for Rx and one for Tx).
 
-In order to modify Rx entries and Tx entries independently of one other,
-split this function in one for the Rx part and one for the Tx part.
+The is_tsa_64rxtx flag is introduced to avoid extra computation to
+determine the table format each time we need it.
+It is set once at initialization.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 ---
- drivers/soc/fsl/qe/qmc.c | 49 ++++++++++++++++++++++++++++------------
- 1 file changed, 35 insertions(+), 14 deletions(-)
+ drivers/soc/fsl/qe/qmc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/soc/fsl/qe/qmc.c b/drivers/soc/fsl/qe/qmc.c
-index 146eebc12737..c8ddd2a54bee 100644
+index c8ddd2a54bee..dc113463fbc7 100644
 --- a/drivers/soc/fsl/qe/qmc.c
 +++ b/drivers/soc/fsl/qe/qmc.c
-@@ -610,14 +610,14 @@ static int qmc_chan_setup_tsa_64rxtx(struct qmc_chan *chan, const struct tsa_ser
- 	return 0;
- }
- 
--static int qmc_chan_setup_tsa_32rx_32tx(struct qmc_chan *chan, const struct tsa_serial_info *info,
--					bool enable)
-+static int qmc_chan_setup_tsa_32rx(struct qmc_chan *chan, const struct tsa_serial_info *info,
-+				   bool enable)
- {
- 	unsigned int i;
- 	u16 curr;
- 	u16 val;
- 
--	/* Use a Tx 32 entries table and a Rx 32 entries table */
-+	/* Use a Rx 32 entries table */
- 
- 	val = QMC_TSA_VALID | QMC_TSA_MASK | QMC_TSA_CHANNEL(chan->id);
- 
-@@ -633,6 +633,30 @@ static int qmc_chan_setup_tsa_32rx_32tx(struct qmc_chan *chan, const struct tsa_
- 			return -EBUSY;
- 		}
- 	}
-+
-+	/* Set entries based on Rx stuff */
-+	for (i = 0; i < info->nb_rx_ts; i++) {
-+		if (!(chan->rx_ts_mask & (((u64)1) << i)))
-+			continue;
-+
-+		qmc_clrsetbits16(chan->qmc->scc_pram + QMC_GBL_TSATRX + (i * 2),
-+				 ~QMC_TSA_WRAP, enable ? val : 0x0000);
-+	}
-+
-+	return 0;
-+}
-+
-+static int qmc_chan_setup_tsa_32tx(struct qmc_chan *chan, const struct tsa_serial_info *info,
-+				   bool enable)
-+{
-+	unsigned int i;
-+	u16 curr;
-+	u16 val;
-+
-+	/* Use a Tx 32 entries table */
-+
-+	val = QMC_TSA_VALID | QMC_TSA_MASK | QMC_TSA_CHANNEL(chan->id);
-+
- 	/* Check entries based on Tx stuff */
- 	for (i = 0; i < info->nb_tx_ts; i++) {
- 		if (!(chan->tx_ts_mask & (((u64)1) << i)))
-@@ -646,14 +670,6 @@ static int qmc_chan_setup_tsa_32rx_32tx(struct qmc_chan *chan, const struct tsa_
- 		}
- 	}
- 
--	/* Set entries based on Rx stuff */
--	for (i = 0; i < info->nb_rx_ts; i++) {
--		if (!(chan->rx_ts_mask & (((u64)1) << i)))
--			continue;
--
--		qmc_clrsetbits16(chan->qmc->scc_pram + QMC_GBL_TSATRX + (i * 2),
--				 ~QMC_TSA_WRAP, enable ? val : 0x0000);
--	}
- 	/* Set entries based on Tx stuff */
- 	for (i = 0; i < info->nb_tx_ts; i++) {
- 		if (!(chan->tx_ts_mask & (((u64)1) << i)))
-@@ -680,9 +696,14 @@ static int qmc_chan_setup_tsa(struct qmc_chan *chan, bool enable)
+@@ -216,6 +216,7 @@ struct qmc {
+ 	u16 __iomem *int_curr;
+ 	dma_addr_t int_dma_addr;
+ 	size_t int_size;
++	bool is_tsa_64rxtx;
+ 	struct list_head chan_head;
+ 	struct qmc_chan *chans[64];
+ };
+@@ -696,7 +697,7 @@ static int qmc_chan_setup_tsa(struct qmc_chan *chan, bool enable)
  	 * Setup one common 64 entries table or two 32 entries (one for Tx
  	 * and one for Tx) according to assigned TS numbers.
  	 */
--	return ((info.nb_tx_ts > 32) || (info.nb_rx_ts > 32)) ?
--		qmc_chan_setup_tsa_64rxtx(chan, &info, enable) :
--		qmc_chan_setup_tsa_32rx_32tx(chan, &info, enable);
-+	if (info.nb_tx_ts > 32 || info.nb_rx_ts > 32)
-+		return qmc_chan_setup_tsa_64rxtx(chan, &info, enable);
-+
-+	ret = qmc_chan_setup_tsa_32rx(chan, &info, enable);
-+	if (ret)
-+		return ret;
-+
-+	return qmc_chan_setup_tsa_32tx(chan, &info, enable);
- }
+-	if (info.nb_tx_ts > 32 || info.nb_rx_ts > 32)
++	if (chan->qmc->is_tsa_64rxtx)
+ 		return qmc_chan_setup_tsa_64rxtx(chan, &info, enable);
  
- static int qmc_chan_command(struct qmc_chan *chan, u8 qmc_opcode)
+ 	ret = qmc_chan_setup_tsa_32rx(chan, &info, enable);
+@@ -1053,6 +1054,7 @@ static int qmc_init_tsa_64rxtx(struct qmc *qmc, const struct tsa_serial_info *in
+ 	 * Everything was previously checked, Tx and Rx related stuffs are
+ 	 * identical -> Used Rx related stuff to build the table
+ 	 */
++	qmc->is_tsa_64rxtx = true;
+ 
+ 	/* Invalidate all entries */
+ 	for (i = 0; i < 64; i++)
+@@ -1081,6 +1083,7 @@ static int qmc_init_tsa_32rx_32tx(struct qmc *qmc, const struct tsa_serial_info
+ 	 * Use a Tx 32 entries table and a Rx 32 entries table.
+ 	 * Everything was previously checked.
+ 	 */
++	qmc->is_tsa_64rxtx = false;
+ 
+ 	/* Invalidate all entries */
+ 	for (i = 0; i < 32; i++) {
 -- 
 2.41.0
 
