@@ -2,130 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDB54763271
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 11:38:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A6207635A5
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 13:52:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231190AbjGZJiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jul 2023 05:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54606 "EHLO
+        id S232435AbjGZLww (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jul 2023 07:52:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233419AbjGZJhz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 05:37:55 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157A6273D
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jul 2023 02:37:29 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-991ef0b464cso172186666b.0
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jul 2023 02:37:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690364247; x=1690969047;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FUdFsL7Rj7TOV3TMa/RIiUuM3Ig3WitH5zKl3a6zj7U=;
-        b=Yqeibz8Pw2C5YNjJ0AuM22nL0Sp6k5H8d9dIRNXCzP7danQnPgEFyI6KLsunRzDqLy
-         UEtoYBuNV6w6FvpPiqzVHPz/h2PzwWFYA3gRW9/zkD36tKMxFYaFQDLkC89tmN3fH6HG
-         0RMPWE5M7Txi1uqg+CwDyvoaum51xECSn77EqV4jphCfci2WHFfSNpjCnYd/sSOsZh9J
-         H+OVM5W1Qil609a8WNDzDbXsjxzhvD9neldH7sUlsdWR37ZiWGf6KpyWnRXoBGzr/j+2
-         QTJjWzOprLsE5FitgynFWdOkuNPHXihPEfwQxU2yZjPFWNexwx4Z5WG5qWJMweaq5VVm
-         q/dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690364247; x=1690969047;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FUdFsL7Rj7TOV3TMa/RIiUuM3Ig3WitH5zKl3a6zj7U=;
-        b=JcNQPeHUdugnhYi8KovfFKwa4ghpQ0kXfz3nBXXCVjK6mFi41+W110uGkQFJLOSDP3
-         WjO5j4EkYXd/q0EXEWjSISnFrGd9x86Au3f0tl9xjaZ2JeZ1ohX+JLJenAQXicy25AYd
-         MFUcFTO/NxT8VgMThlUhtKwfiMayHiNJIoseI+k9FdCS7moOuHQYxIdI8JA6SvX4cvxd
-         q2cO4GbuWw186LrkD+RoGzba9fsvB2R35BJtjpB3JsIUFsIKte3W8mK0TLMZuShNkc3c
-         +dzzmiMxNXvISXO3JPOt1Hkn/49E4tpi/qSCuT5DunpubuI/8+xRf94TytI71smFSRAu
-         o0GQ==
-X-Gm-Message-State: ABy/qLYq38WFZUIAoeplgaTjrKCio5BCNdTtFTBFnFONLftb/J+HAZyK
-        v2lW1EPLkVB/rS1hxI2iw4qoCVZs8Fg2gCICIgA=
-X-Google-Smtp-Source: APBJJlGyMOlgcRnfytdUMxZAaSNwN60cSkk/EeAYqYSWHODAAc3zU54oBjgkiPE02PuuQim25n4HvQ==
-X-Received: by 2002:a17:906:64c6:b0:99b:c2ce:501c with SMTP id p6-20020a17090664c600b0099bc2ce501cmr1394736ejn.19.1690364247517;
-        Wed, 26 Jul 2023 02:37:27 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id z15-20020a170906240f00b0098921e1b064sm9306439eja.181.2023.07.26.02.37.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jul 2023 02:37:27 -0700 (PDT)
-Message-ID: <fc55d5eb-1bc6-84b5-b9f2-daf24817b8b6@linaro.org>
-Date:   Wed, 26 Jul 2023 11:37:25 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 2/3] pinctrl: qcom: sm8350-lpass-lpi: add SM8350 LPASS
- TLMM
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230719192058.433517-1-krzysztof.kozlowski@linaro.org>
- <20230719192058.433517-2-krzysztof.kozlowski@linaro.org>
- <CACRpkdbK7gU36nVOm0J+HbLk5JRKki+30=UaJ6hZjF1DiB4bBw@mail.gmail.com>
- <34be3638-ed14-bb0b-eb2e-c44f43c582f2@linaro.org>
- <CACRpkdY=WYZEfHuYsJe3kxk4-E3r4wp-Ln=GyvSY2m=+-Ow47A@mail.gmail.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CACRpkdY=WYZEfHuYsJe3kxk4-E3r4wp-Ln=GyvSY2m=+-Ow47A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+        with ESMTP id S233033AbjGZLwv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 07:52:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D75F106;
+        Wed, 26 Jul 2023 04:52:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D401461AB0;
+        Wed, 26 Jul 2023 11:52:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8370DC433C7;
+        Wed, 26 Jul 2023 11:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690372369;
+        bh=8w/nLjkl+nqIUFXUBTIfnkF5EfW/TGFj9s/NoPLragY=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=akD/HSYbxVXXEERtZtCqh6Z/ZCB3eEUg4gJ52Y+tPfupgBO5JLY7T/ktCvZYHxcrh
+         YxCut95Sw2qrViRyB2tjz6VO2zBND12MnSUxmT/V8k6V+PFo0G8hTw15B+Gdxhqgar
+         EHA3bhne6Tl/AeS/Z9Lq85UKEN3DbhEQe4NZdYiM/AI8eqFx9Iq8BHHQVqze8RRvw2
+         VMSw2zZEJp2plrtm3Wer8mzHrExsbmR/ygIKKyPYcDHE9RDML8VyCNWIyQ5z2rZmew
+         zASthRVAZrRumWdSNy+gco8tjceGYnkHf9wUGDAA+WPtxTuzxWVyBO+653MEtR+3OL
+         GWxi33pVTGL5A==
+Received: (nullmailer pid 1158235 invoked by uid 1000);
+        Wed, 26 Jul 2023 11:52:47 -0000
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+MIME-Version: 1.0
+From:   Rob Herring <robh@kernel.org>
+To:     TY Chang <tychang@realtek.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <20230726090409.16606-8-tychang@realtek.com>
+References: <20230726090409.16606-1-tychang@realtek.com>
+ <20230726090409.16606-8-tychang@realtek.com>
+Message-Id: <169037236741.1158189.1605537876806523813.robh@kernel.org>
+Subject: Re: [PATCH 7/7] dt-bindings: pinctrl: realtek: add RTD1619B
+ pinctrl binding
+Date:   Wed, 26 Jul 2023 05:52:47 -0600
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/07/2023 20:18, Linus Walleij wrote:
-> On Mon, Jul 24, 2023 at 9:06 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->> On 24/07/2023 20:09, Linus Walleij wrote:
->>> On Wed, Jul 19, 2023 at 9:21 PM Krzysztof Kozlowski
->>> <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>>> Add driver for pin controller in Low Power Audio SubSystem (LPASS).  The
->>>> driver is similar to SM8250 LPASS pin controller, with difference in one
->>>> new pin (gpio14) belonging to swr_tx_data.
->>>>
->>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>
->>> This sure looks good to me.
->>>
->>> Krzystof, can you collect a branch with pin control changes for
->>> Qualcomm chips that I can pull? If it's OK with Bjorn that is.
->>
->> Sure, I can go through the lore search results and grab recent submissions.
-> 
-> Thanks, I think you know better than me what is the stuff that is reviewed
-> and ready for merge.
-> 
-> I have this on my devel branch so far:
-> 59d612a3215c dt-bindings: pinctrl: qcom: lpass-lpi: Remove qcom,adsp-bypass-mode
-> abf02e132cb6 pinctrl: qcom: lpass-lpi: Make the clocks optional, always
-> 1e46c7430af7 pinctrl: qcom-pmic-gpio: Add support for pmx75
-> 8fff6514ff0a pinctrl: qcom-pmic-gpio: Add support for pm7550ba
-> 75ec058db332 dt-bindings: pinctrl: qcom-pmic-gpio: Add pmx75 support
-> 4bbee99da13a dt-bindings: pinctrl: qcom-pmic-gpio: Add pm7550ba support
-> 
-> Anything else is in some inbetween state and I'm not sure of the status
-> so it would really offload me if you could get it in order!
 
-It seems only my patchset, SM6115 LPASS pinctrl and one my binding
-change were missing, so I took these.
+On Wed, 26 Jul 2023 17:04:09 +0800, TY Chang wrote:
+> Add device tree bindings for RTD1619B.
+> 
+> Signed-off-by: TY Chang <tychang@realtek.com>
+> ---
+>  .../pinctrl/realtek,rtd1619b-pinctrl.yaml     | 162 ++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.yaml
+> 
 
-Best regards,
-Krzysztof
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.example.dtb: /example-0/pinctrl@4e000: failed to match any schema with compatible: ['realtek,rtd16xxb-pinctrl']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230726090409.16606-8-tychang@realtek.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
