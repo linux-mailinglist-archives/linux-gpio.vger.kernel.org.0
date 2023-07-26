@@ -2,78 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6643763E23
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 20:06:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D170764227
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jul 2023 00:33:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232076AbjGZSF7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jul 2023 14:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
+        id S229506AbjGZWdI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jul 2023 18:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232100AbjGZSF6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 14:05:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D8312727;
-        Wed, 26 Jul 2023 11:05:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C523B61C2F;
-        Wed, 26 Jul 2023 18:05:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C603C433C7;
-        Wed, 26 Jul 2023 18:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690394756;
-        bh=AEPtmDO63l60QJhXsd4SYCRUNeIj+/oodVwfUeY8hjE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BQ7uyeNfjzdSkK3fLIdbMd7Fers9YmFeTfAkvTOqDrtr4zv978agpsWYC+IRx4OIr
-         fpD/P7lJm3jD+as8EMSrA8J1zsYlOErJerkW6jgX6SRQIvGLABQdTpUJ5j+30yiXh5
-         E09qCqcta9cG92MCuoWUWh+Wl7g2osDEMN8gw9JIf8xz2il6D5hgP3ioQLJEdue1UD
-         nmpHuGAEcg2mDkdzPkN6WCJ6yjb2zdvO9sGXF8In5iQIptg8XceRvMKK46Y2HVz7KM
-         Zno6Aw/OQAQZaj6n7kwCLoAPgRPQD2jbOxrhXmoxH7gjC0h06aDXLV2IPMpR4vpD4j
-         x1WqjrLttkNRg==
-Received: (nullmailer pid 1730126 invoked by uid 1000);
-        Wed, 26 Jul 2023 18:05:54 -0000
-Date:   Wed, 26 Jul 2023 12:05:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v1 1/6] gpio: ge: Add missing header
-Message-ID: <20230726180554.GA1725541-robh@kernel.org>
-References: <20230724161320.63876-1-andriy.shevchenko@linux.intel.com>
- <20230724161320.63876-2-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230271AbjGZWdH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 18:33:07 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48BF271D
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jul 2023 15:33:05 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-686efa1804eso276199b3a.3
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Jul 2023 15:33:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1690410785; x=1691015585;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rhoPsdiptB4d7CawXcBfwFloC2tMhAybwkRKGC29HLo=;
+        b=av/dLFPPKp+98RNL9nfep5UWmNIPTllIPkyIQu2zgxfP/EgHmeNkeo+Bsn1K6L2FJP
+         plKEV1Z419rQ4iB4SWzjRk1vKxlHQngI3pEdxmlnahPVa7SapauU8yXS0MSJ56/wZ1Ph
+         GZRRp8as5twmJ8rwBMhS/mN10XekiW12BlsQKXZeFmXPn275wb4SjFRT5RWTnC+9cY97
+         D58MsfY8bvBUlpRk10/EXdaEPJACH9V5V/fvR6HuXUIn1zgy1mZEU++wyj3UgDSrXbg3
+         iIz+OgIvm/WSRxT8XqMDPIRxBrjqm5Id/s6Uf1LHS5DzyAmWJv6JAXVCGrEbjA++oWnV
+         lzcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690410785; x=1691015585;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rhoPsdiptB4d7CawXcBfwFloC2tMhAybwkRKGC29HLo=;
+        b=YfoOZJ6ZSQpzm+MS3pyhKzjJrbve7PX7ZYN2cI5YMzxF+gMR2qfsfubalUz1TtVAzI
+         KHABg+kZNp/d/AbQ9jQh6INd/5WUw8pnfKqKs/wnrVCdCRqQHDv5cBatHTBXDIrT0yZW
+         v6TdJZZtHorVaMJ88kkSaEmJecoH3P6qr+31hHOYs8LYj2b2gkwP9ffS6LZ9j1Mz/uXA
+         hYf1Q5VrHuehdC08ZFnlKopAWQSdvEX5rerEPmnQJzNLgcTuOLWxl56nCxQYAyV9oG1j
+         5NNClvVWTyCGhLHBQh84Y1DNGKdNZvUQA+vp9L5ujOjWQ6NQp84VumPE3sjcVebW9e8v
+         Pyrw==
+X-Gm-Message-State: ABy/qLYFFtLkkStNFjQaUBCl/7BJTYtPTzvKjsT1eCBtzYNeNf5gGxf3
+        J7eNka4UqNM2KRrJWxSfekla0Q==
+X-Google-Smtp-Source: APBJJlETtaTlzNr3kJdmanHHAsk/PIfhyrVfhs5d7qXjTiodnT7x+VyKm7/uXDQlu0rPPnC2GX11rA==
+X-Received: by 2002:a05:6a20:1589:b0:12d:d615:9279 with SMTP id h9-20020a056a20158900b0012dd6159279mr3557489pzj.25.1690410785037;
+        Wed, 26 Jul 2023 15:33:05 -0700 (PDT)
+Received: from localhost ([75.172.135.98])
+        by smtp.gmail.com with ESMTPSA id c5-20020aa78c05000000b00682562b1549sm114742pfd.24.2023.07.26.15.33.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 15:33:04 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Huqiang Qin <huqiang.qin@amlogic.com>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        neil.armstrong@linaro.org, jbrunet@baylibre.com,
+        martin.blumenstingl@googlemail.com, linus.walleij@linaro.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Huqiang Qin <huqiang.qin@amlogic.com>
+Subject: Re: [PATCH 3/3] arm64: dts: Replace the IRQ number with the IRQID
+ macro definition
+In-Reply-To: <20230721073214.1876417-4-huqiang.qin@amlogic.com>
+References: <20230721073214.1876417-1-huqiang.qin@amlogic.com>
+ <20230721073214.1876417-4-huqiang.qin@amlogic.com>
+Date:   Wed, 26 Jul 2023 15:33:03 -0700
+Message-ID: <7hcz0ei9r4.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230724161320.63876-2-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 24, 2023 at 07:13:15PM +0300, Andy Shevchenko wrote:
-> Add missing platform_device.h that used to be implied by of_device.h.
-> 
-> While at it, sort headers alphabetically for better maintenance.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Fixes: e91d0f05e66a ("gpio: Explicitly include correct DT includes")
-> Closes: https://lore.kernel.org/r/65b4ac1a-1128-6e2a-92c0-9bbcca4b760a@infradead.org
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpio-ge.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+Huqiang Qin <huqiang.qin@amlogic.com> writes:
 
-Thanks for fixing.
+> Replacing IRQ numbers with IRQID macro definitions makes node properties
+> easier to understand and also makes GPIO interrupts easier to use.
+>
+> Associated platforms:
+> - Amlogic Meson-G12A
+> - Amlogic Meson-G12B
+> - Amlogic Meson-SM1
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Does this mean you tested/validated these changes on those platforms
+also?
+
+Kevin
