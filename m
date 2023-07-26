@@ -2,57 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A6207635A5
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 13:52:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 958057638DF
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jul 2023 16:17:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232435AbjGZLww (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jul 2023 07:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
+        id S234516AbjGZORY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jul 2023 10:17:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233033AbjGZLwv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 07:52:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D75F106;
-        Wed, 26 Jul 2023 04:52:50 -0700 (PDT)
+        with ESMTP id S234475AbjGZORM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jul 2023 10:17:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A4844A0;
+        Wed, 26 Jul 2023 07:16:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D401461AB0;
-        Wed, 26 Jul 2023 11:52:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8370DC433C7;
-        Wed, 26 Jul 2023 11:52:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D1BC61AF3;
+        Wed, 26 Jul 2023 14:15:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13437C43391;
+        Wed, 26 Jul 2023 14:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690372369;
-        bh=8w/nLjkl+nqIUFXUBTIfnkF5EfW/TGFj9s/NoPLragY=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=akD/HSYbxVXXEERtZtCqh6Z/ZCB3eEUg4gJ52Y+tPfupgBO5JLY7T/ktCvZYHxcrh
-         YxCut95Sw2qrViRyB2tjz6VO2zBND12MnSUxmT/V8k6V+PFo0G8hTw15B+Gdxhqgar
-         EHA3bhne6Tl/AeS/Z9Lq85UKEN3DbhEQe4NZdYiM/AI8eqFx9Iq8BHHQVqze8RRvw2
-         VMSw2zZEJp2plrtm3Wer8mzHrExsbmR/ygIKKyPYcDHE9RDML8VyCNWIyQ5z2rZmew
-         zASthRVAZrRumWdSNy+gco8tjceGYnkHf9wUGDAA+WPtxTuzxWVyBO+653MEtR+3OL
-         GWxi33pVTGL5A==
-Received: (nullmailer pid 1158235 invoked by uid 1000);
-        Wed, 26 Jul 2023 11:52:47 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
-MIME-Version: 1.0
+        s=k20201202; t=1690380937;
+        bh=ipv18QFNNUrxqsl0lsMwZSVvGm+N6/LfyCWeq4hqFVk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lk32612FqdEvy2OeXWzjqarlPqFN8JP6g4D2Js6HIif4ov1h0tA0TNz+q48AhPYLP
+         frbHskHa0M+tEKR/bInyHMmBWn1o8LCAM0wVg0rXhnCRZbQPHN8JPcV7VcZxitnyZY
+         w2I9tMB9f35meu6kzJRU/rCXCUrWTO5pD47/cmRrP8Db67bDJjq2na29KkgFXFDAkj
+         Bvf48DJzIhHLho/9hkUI4vupuUcN/YQlw3TH5DGrctDkqrCXUIUdjTrlZMpg6imAEl
+         GDk9KanVMy23lLgWUS1L5f3WgP42MNA0L4+IRPU0LLJ4751i1ewYfmAXlx7MmLhszs
+         vr0L9yASoyfdw==
+Received: (nullmailer pid 1383747 invoked by uid 1000);
+        Wed, 26 Jul 2023 14:15:35 -0000
+Date:   Wed, 26 Jul 2023 08:15:35 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     TY Chang <tychang@realtek.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-In-Reply-To: <20230726090409.16606-8-tychang@realtek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] dt-bindings: pinctrl: realtek: add RTD1619B pinctrl
+ binding
+Message-ID: <20230726141535.GA1378938-robh@kernel.org>
 References: <20230726090409.16606-1-tychang@realtek.com>
  <20230726090409.16606-8-tychang@realtek.com>
-Message-Id: <169037236741.1158189.1605537876806523813.robh@kernel.org>
-Subject: Re: [PATCH 7/7] dt-bindings: pinctrl: realtek: add RTD1619B
- pinctrl binding
-Date:   Wed, 26 Jul 2023 05:52:47 -0600
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230726090409.16606-8-tychang@realtek.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -61,8 +60,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On Wed, 26 Jul 2023 17:04:09 +0800, TY Chang wrote:
+On Wed, Jul 26, 2023 at 05:04:09PM +0800, TY Chang wrote:
 > Add device tree bindings for RTD1619B.
 > 
 > Signed-off-by: TY Chang <tychang@realtek.com>
@@ -71,29 +69,184 @@ On Wed, 26 Jul 2023 17:04:09 +0800, TY Chang wrote:
 >  1 file changed, 162 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..8efd33c59ed8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.yaml
+> @@ -0,0 +1,162 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2023 Realtek Semiconductor Corporation
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/realtek,rtd1619b-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Realtek DHC RTD1619B Pin Controller
+> +
+> +maintainers:
+> +  - TY Chang <tychang@realtek.com>
+> +
+> +description: |
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Don't need '|' if no formatting to preserve.
 
-yamllint warnings/errors:
+> +  Binding for Realtek DHC RTD1619B SoC pin control.
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.example.dtb: /example-0/pinctrl@4e000: failed to match any schema with compatible: ['realtek,rtd16xxb-pinctrl']
+Drop 'Binding for'. Every schema is.
 
-doc reference errors (make refcheckdocs):
+> +
+> +properties:
+> +  compatible:
+> +    const: realtek,rtd1619b-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  '^.*$':
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230726090409.16606-8-tychang@realtek.com
+For new bindings, define a node name pattern you can match on. '-pins$' 
+is commmon.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> +    if:
+> +      type: object
+> +    then:
+> +      allOf:
+> +        - $ref: pincfg-node.yaml#
+> +        - $ref: pinmux-node.yaml#
+> +
+> +      properties:
+> +        pins:
+> +          items:
+> +            enum: [ gpio_0, gpio_1, gpio_2, gpio_3, gpio_4, gpio_5, gpio_6, gpio_7,
+> +                    gpio_8, gpio_9, gpio_10, gpio_11, gpio_12, gpio_13, gpio_14,
+> +                    gpio_15, gpio_16, gpio_17, gpio_18, gpio_19, gpio_20, gpio_21,
+> +                    gpio_22, gpio_23, usb_cc2, gpio_25, gpio_26, gpio_27, gpio_28,
+> +                    gpio_29, gpio_30, gpio_31, gpio_32, gpio_33, gpio_34, gpio_35,
+> +                    hif_data, hif_en, hif_rdy, hif_clk, gpio_40, gpio_41, gpio_42,
+> +                    gpio_43, gpio_44, gpio_45, gpio_46, gpio_47, gpio_48, gpio_49,
+> +                    gpio_50, usb_cc1, gpio_52, gpio_53, ir_rx, ur0_rx, ur0_tx,
+> +                    gpio_57, gpio_58, gpio_59, gpio_60, gpio_61, gpio_62, gpio_63,
+> +                    gpio_64, gpio_65, gpio_66, gpio_67, gpio_68, gpio_69, gpio_70,
+> +                    gpio_71, gpio_72, gpio_73, gpio_74, gpio_75, gpio_76, emmc_cmd,
+> +                    spi_ce_n, spi_sck, spi_so, spi_si, emmc_rst_n, emmc_dd_sb,
+> +                    emmc_clk, emmc_data_0, emmc_data_1, emmc_data_2, emmc_data_3,
+> +                    emmc_data_4, emmc_data_5, emmc_data_6, emmc_data_7, ur2_loc,
+> +                    gspi_loc, sdio_loc, hi_loc, hi_width, sf_en, arm_trace_dbg_en,
+> +                    pwm_01_open_drain_en_loc0, pwm_23_open_drain_en_loc0,
+> +                    pwm_01_open_drain_en_loc1, pwm_23_open_drain_en_loc1,
+> +                    ejtag_acpu_loc, ejtag_vcpu_loc, ejtag_scpu_loc, dmic_loc,
+> +                    iso_gspi_loc, ejtag_ve3_loc, ejtag_aucpu0_loc, ejtag_aucpu1_loc ]
+> +
+> +        function:
+> +          enum: [ gpio, nf, nf_spi, spi, pmic, spdif, spdif_coaxial, spdif_optical_loc0,
+> +                  spdif_optical_loc1, emmc_spi, emmc, sc1, uart0, uart1, uart2_loc0, uart2_loc1,
+> +                  gspi_loc1, iso_gspi_loc1, i2c0, i2c1, i2c3, i2c4, i2c5, pwm0, pwm1, pwm2,
+> +                  pwm3, etn_led, etn_phy, etn_clk, sc0, vfd, gspi_loc0, iso_gspi_loc0, pcie1,
+> +                  pcie2, sd, sdio_loc0, sdio_loc1, hi, hi_m, dc_fan, pll_test_loc0, pll_test_loc1,
+> +                  usb_cc1, usb_cc2, ir_rx, tdm_ai_loc0, tdm_ai_loc1, dmic_loc0, dmic_loc1,
+> +                  ai_loc0, ai_loc1, tp0, tp1, ao, uart2_disable, gspi_disable, sdio_disable,
+> +                  hi_loc_disable, hi_loc0, hi_width_disable, hi_width_1bit, vtc_i2si_loc0,
+> +                  vtc_tdm_loc0, vtc_dmic_loc0, vtc_i2si_loc1, vtc_tdm_loc1, vtc_dmic_loc1,
+> +                  vtc_i2so, ve3_ejtag_loc0, aucpu0_ejtag_loc0, aucpu1_ejtag_loc0, ve3_ejtag_loc1,
+> +                  aucpu0_ejtag_loc1, aucpu1_ejtag_loc1, ve3_ejtag_loc2, aucpu0_ejtag_loc2,
+> +                  aucpu1_ejtag_loc2, scpu_ejtag_loc0, acpu_ejtag_loc0, vcpu_ejtag_loc0,
+> +                  scpu_ejtag_loc1, acpu_ejtag_loc1, vcpu_ejtag_loc1, scpu_ejtag_loc2,
+> +                  acpu_ejtag_loc2, vcpu_ejtag_loc2, ve3_ejtag_disable, aucpu0_ejtag_disable,
+> +                  aucpu1_ejtag_disable, acpu_ejtag_disable, vcpu_ejtag_disable,
+> +                  scpu_ejtag_disable, iso_gspi_disable, sf_disable, sf_enable,
+> +                  arm_trace_debug_disable, arm_trace_debug_enable, pwm_normal, pwm_open_drain,
+> +                  standby_dbg, test_loop_dis ]
+> +
+> +        drive-strength:
+> +          enum: [4, 8]
+> +
+> +        bias-pull-down: true
+> +
+> +        bias-pull-up: true
+> +
+> +        bias-disable: true
+> +
+> +        input-schmitt-enable: true
+> +
+> +        input-schmitt-disable: true
+> +
+> +        drive-push-pull: true
+> +
+> +        power-source:
+> +          description: |
+> +            Valid arguments are described as below:
+> +            0: power supply of 1.8V
+> +            1: power supply of 3.3V
+> +          enum: [0, 1]
+> +
+> +        realtek,pdrive:
+> +          description: |
+> +            An integer describing the level to adjust PMOS output driving capability.
+> +          $ref: /schemas/types.yaml#/definitions/uint32
+> +          minimum: 0
+> +          maximum: 7
+> +
+> +        realtek,ndrive:
+> +          description: |
+> +            An integer describing the level to adjust NMOS output driving capability.
+> +          $ref: /schemas/types.yaml#/definitions/uint32
+> +          minimum: 0
+> +          maximum: 7
+> +
+> +        realtek,dcycle:
+> +          description: |
+> +            An integer describing the level to adjust output duty cycle.
+> +            Valid arguments are described as below:
+> +            0: 0ns
+> +            2: + 0.25ns
+> +            3: + 0.5ns
+> +            4: -0.25ns
+> +            5: -0.5ns
+> +          $ref: /schemas/types.yaml#/definitions/uint32
+> +          enum: [ 0, 2, 3, 4, 5 ]
+> +
+> +      required:
+> +        - pins
+> +
+> +      additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +     pinctrl@4e000 {
+> +         compatible = "realtek,rtd16xxb-pinctrl";
+> +         reg = <0x4e000 0x130>;
+> +
+> +         emmc_pins_hs200: emmc_pins_hs200 {
+> +             pins = "emmc_clk",
+> +                    "emmc_cmd",
+> +                    "emmc_data_0",
+> +                    "emmc_data_1",
+> +                    "emmc_data_2",
+> +                    "emmc_data_3",
+> +                    "emmc_data_4",
+> +                    "emmc_data_5",
+> +                    "emmc_data_6",
+> +                    "emmc_data_7";
+> +             function = "emmc";
+> +             realtek,pdrive = <0x2>;
+> +             realtek,ndrive = <0x2>;
+> +         };
+> +
+> +         i2c_pins_0: i2c_pins_0 {
+> +             pins = "gpio_12",
+> +                    "gpio_13";
+> +             function = "i2c0";
+> +             drive-strength = <4>;
+> +         };
+> +     };
+> -- 
+> 2.41.0
+>
