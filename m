@@ -2,115 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8787D765FD3
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 00:38:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D89F676601F
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 01:07:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233044AbjG0Wiq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jul 2023 18:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53288 "EHLO
+        id S229852AbjG0XHd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jul 2023 19:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233043AbjG0Wio (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jul 2023 18:38:44 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A394D30DA
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 15:38:18 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bbc7b2133fso9656585ad.1
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 15:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690497408; x=1691102208;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w68MN6OHowr/E1geASqGx1rcC4ihNrOXW1FP097O22w=;
-        b=C/a7dZwQ4WU0B+Aw3fM3Jx9bi/5/VAll+WWFMEIiIOTRhvvmzlY923K+e0ainDC1T5
-         la05by2hhavmj93YdZ5z/2VC2bWpVYndWQZr89FetUHVrreuVg/Yzp/S6stA13OqEEY1
-         vUyB93JTfVxM2KqqiBgOySAMHP5+Wr40GJ7Ria+IxGnpnaVU7cV5dCQW5tyt1GFK7UgR
-         /+itw/dj0PZZnOoL2gRbDbpHHKfjf+M+LNI7G5E56/HVJ8Uu0zlJ7NhZdA+v+QlEgLRT
-         Gd5llQb5n+cFsedkKzC/nwuBDQef5+6dML6/z6R0vmjyq/5erPEZBkqS65k7KRPCoeGj
-         H2JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690497408; x=1691102208;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w68MN6OHowr/E1geASqGx1rcC4ihNrOXW1FP097O22w=;
-        b=TfB+pLMCl1QI7TIA5876pRSZB+AcspEOV8858A8rL/8WWhgzPA1O0jRtQBV4JAHpPK
-         +A+tqBiYDHl086Utyk1vOP3nMRSdk8NnJjkd24ZgG60xK6Ywkzjdh6975FTqnmrjBfOK
-         W70w469J+S8Sm5fFrRtNxDi4NZyIopcsTP5IKfH1NN4mzy9ovFAX725vGdHSwx33+4n8
-         NPIhtjGPNAD1vjdRp5NNrMgUzqW6UM2wouukvCsGMwOko0SLOZ47vUMpJmrkDhT1YtUy
-         qTe0Er8Oq2UQrc20jzjM2RyRL0JvwyYoIc5UQZW6TOVBpH0kuHBArGBK9HY1QrsO2apT
-         bA7A==
-X-Gm-Message-State: ABy/qLYI1ausY7pKrVIJA6BxXW30WXEqj3vi4lS2YbgyQ0cQKCJqEOCb
-        Inb+I/Lnxq1HW1e/aoc5tdZ7DentmPA=
-X-Google-Smtp-Source: APBJJlHYCs+oCaqNZW3sADZujW5nOzJncjj0wghmozBNaOq0crnbeI4pPmGN5Sf9gJNfUztuvcQTew==
-X-Received: by 2002:a17:902:7fce:b0:1bb:a056:2c5f with SMTP id t14-20020a1709027fce00b001bba0562c5fmr598829plb.7.1690497408501;
-        Thu, 27 Jul 2023 15:36:48 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id a21-20020a170902ee9500b001b9de8fbd78sm2129659pld.212.2023.07.27.15.36.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 15:36:47 -0700 (PDT)
-Date:   Fri, 28 Jul 2023 06:36:43 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     andy pugh <bodgesoc@gmail.com>
+        with ESMTP id S229499AbjG0XHd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jul 2023 19:07:33 -0400
+Received: from mgamail.intel.com (unknown [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51F9430CD
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 16:07:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690499252; x=1722035252;
+  h=date:from:to:cc:subject:message-id;
+  bh=KconX0zF0INyI0WQ2xf72/pbyNK+3IFO1P27N0/hdxI=;
+  b=a0f8dfA4JBYZe1JLM20WRNXW9qksJbANEuITUrhFs+UElZbmvQi9kaVX
+   g5jfE8FoX1vTG2zajXCWzeHKf35U9lDDvJEa3GpTJUtoB07C5g5qeRumi
+   qbQs2tsa+XtZX9HfasnSl76hYA/mo0hxl+a5n7v+vt0v3BqQmaptRzbYd
+   R/thvcvPWYLZxJHpz0j7zyRPIKodcEvVNVBRXEfdmBC5FCFnfI4qzqEyt
+   SQHv+hVSqmSkFHRw0j884EslEooX1UnqwMYZX54CaaIuThXoAVmIn6QFi
+   tdWlTbwmYasDDmPWVpmMcIlO4NMXt5qexlMAnZxgs1GB6hz2KblMHJYHu
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="365911068"
+X-IronPort-AV: E=Sophos;i="6.01,236,1684825200"; 
+   d="scan'208";a="365911068"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2023 16:07:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="704316221"
+X-IronPort-AV: E=Sophos;i="6.01,236,1684825200"; 
+   d="scan'208";a="704316221"
+Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 27 Jul 2023 16:07:30 -0700
+Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qPA4v-0002h7-29;
+        Thu, 27 Jul 2023 23:07:29 +0000
+Date:   Fri, 28 Jul 2023 07:06:35 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
-Message-ID: <ZMLxewtSF8lurh/m@sol>
-References: <CAN1+YZU95GyPdE0fDcQNweMCHq0FXQ5RxR5dqmKdmMUaoiMsfw@mail.gmail.com>
- <ZMLZSqRwrPfKEbX3@sol>
- <CAN1+YZX1m8iZPg1EM8ivqCft83hT1ERcmb2kxx53rNFA7NTJ3w@mail.gmail.com>
- <ZMLnz25brQvcwBVW@sol>
- <CAN1+YZVv6gkZT6yHH8fedSAbMCg0EXPWVbbEJPGNmVp9Uhgkdg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN1+YZVv6gkZT6yHH8fedSAbMCg0EXPWVbbEJPGNmVp9Uhgkdg@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 92f7a35836c2e13ae5f0dc8c7f889e92f66a9d19
+Message-ID: <202307280733.WtnaPzhH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 27, 2023 at 11:10:36PM +0100, andy pugh wrote:
-> On Thu, 27 Jul 2023 at 22:55, Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> > On a Pi is it significantly faster to go direct to hardware using
-> > /dev/gpiomem, rather than going via the kernel as libgpiod does.
-> > I do my best to avoid using gpiomem these days, but if you really need to
-> > minimize CPU cycles or latency then that is another option.
-> 
-> The existing driver uses gpiomem, but the interface used seems to not
-> be set up in Debian Bookworm.
-> It might be available in _Raspbian_ but that current Raspbian version
-> is based on Bullseye (or Buster)
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 92f7a35836c2e13ae5f0dc8c7f889e92f66a9d19  gpio: 104-dio-48e: Add Counter/Timer support
 
-gpiomem is a Pi specific extension, and is not part of the mainline
-kernel. Not sure what kernel your Debian Bookworm is providing, but if it
-lacks the Pi extensions then you wont get gpiomem.
+elapsed time: 727m
 
-> https://github.com/LinuxCNC/linuxcnc/issues/2371
-> 
-> Is where the suggestion was made to try gpiod, initially because of a
-> problem with the way we were detecting Pi versions, but then because
-> gpiomem wasn't there.
-> 
+configs tested: 121
+configs skipped: 6
 
-Yeah, the Pi4 requires a change to the driver as they changed the GPIO
-register map, IIRC.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> (It can probably be configured, but we have a user base largely made
-> of machinists, not Linux enthusiasts)
-> 
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r014-20230727   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r013-20230727   gcc  
+arc                  randconfig-r016-20230727   gcc  
+arc                  randconfig-r022-20230727   gcc  
+arc                  randconfig-r031-20230727   gcc  
+arc                  randconfig-r043-20230727   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r021-20230727   clang
+arm                  randconfig-r034-20230727   gcc  
+arm                  randconfig-r046-20230727   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r006-20230727   clang
+arm64                randconfig-r024-20230727   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r011-20230727   gcc  
+csky                 randconfig-r036-20230727   gcc  
+hexagon              randconfig-r041-20230727   clang
+hexagon              randconfig-r045-20230727   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230727   clang
+i386         buildonly-randconfig-r005-20230727   clang
+i386         buildonly-randconfig-r006-20230727   clang
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230727   clang
+i386                 randconfig-i002-20230727   clang
+i386                 randconfig-i003-20230727   clang
+i386                 randconfig-i004-20230727   clang
+i386                 randconfig-i005-20230727   clang
+i386                 randconfig-i006-20230727   clang
+i386                 randconfig-i011-20230727   gcc  
+i386                 randconfig-i012-20230727   gcc  
+i386                 randconfig-i013-20230727   gcc  
+i386                 randconfig-i014-20230727   gcc  
+i386                 randconfig-i015-20230727   gcc  
+i386                 randconfig-i016-20230727   gcc  
+i386                 randconfig-r003-20230727   clang
+i386                 randconfig-r012-20230727   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r034-20230727   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r026-20230727   gcc  
+m68k                 randconfig-r031-20230727   gcc  
+m68k                 randconfig-r035-20230727   gcc  
+microblaze           randconfig-r012-20230727   gcc  
+microblaze           randconfig-r025-20230727   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r036-20230727   gcc  
+openrisc             randconfig-r005-20230727   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r035-20230727   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r002-20230727   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r042-20230727   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r001-20230727   clang
+s390                 randconfig-r044-20230727   gcc  
+sh                               allmodconfig   gcc  
+sh                   randconfig-r004-20230727   gcc  
+sh                   randconfig-r032-20230727   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r013-20230727   gcc  
+sparc64              randconfig-r014-20230727   gcc  
+sparc64              randconfig-r015-20230727   gcc  
+sparc64              randconfig-r023-20230727   gcc  
+sparc64              randconfig-r033-20230727   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r001-20230727   gcc  
+um                   randconfig-r032-20230727   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230727   clang
+x86_64       buildonly-randconfig-r002-20230727   clang
+x86_64       buildonly-randconfig-r003-20230727   clang
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230727   gcc  
+x86_64               randconfig-x002-20230727   gcc  
+x86_64               randconfig-x003-20230727   gcc  
+x86_64               randconfig-x004-20230727   gcc  
+x86_64               randconfig-x005-20230727   gcc  
+x86_64               randconfig-x006-20230727   gcc  
+x86_64               randconfig-x011-20230727   clang
+x86_64               randconfig-x012-20230727   clang
+x86_64               randconfig-x013-20230727   clang
+x86_64               randconfig-x014-20230727   clang
+x86_64               randconfig-x015-20230727   clang
+x86_64               randconfig-x016-20230727   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r003-20230727   gcc  
+xtensa               randconfig-r011-20230727   gcc  
+xtensa               randconfig-r033-20230727   gcc  
 
-The only way to disable gpiomem that I am aware of is to build the kernel
-without it, so either a mainline kernel, or a Pi kernel without
-BCM2835_DEVGPIOMEM set.
-Even if there is some way to disable it in config, it seems unlikely
-to me that they would compile it in, but then configure it out.
-
-Cheers,
-Kent.
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
