@@ -2,44 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29CAB764F9F
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jul 2023 11:26:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67AD1764FC8
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jul 2023 11:30:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232705AbjG0J0Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jul 2023 05:26:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50982 "EHLO
+        id S231403AbjG0JaR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jul 2023 05:30:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232856AbjG0JZ6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jul 2023 05:25:58 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D59E5241;
-        Thu, 27 Jul 2023 02:15:41 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RBQ7q6X5GzrRqy;
-        Thu, 27 Jul 2023 17:14:31 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 27 Jul
- 2023 17:15:26 +0800
-From:   Ruan Jinjie <ruanjinjie@huawei.com>
-To:     <j-keerthy@ti.com>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <andy@kernel.org>, <grygorii.strashko@ti.com>,
-        <ssantosh@kernel.org>, <khilman@kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-omap@vger.kernel.org>
-CC:     <ruanjinjie@huawei.com>
-Subject: [PATCH -next] gpio: Remove redundant dev_err_probe()
-Date:   Thu, 27 Jul 2023 17:14:46 +0800
-Message-ID: <20230727091446.859984-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S234197AbjG0J3w (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jul 2023 05:29:52 -0400
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0975C9AB5;
+        Thu, 27 Jul 2023 02:20:11 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0FF5120009;
+        Thu, 27 Jul 2023 09:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1690449599;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c5uC+Ma0+GEtuYByV1fh5wNUb6P+Qvr99RmBUDDugXA=;
+        b=PWL77lXoaqzqWHDfFIl9jdKdv1M4MuRzjjxUGyq7w0BvAYoX3gBbaTeU5NM2l5MhMLkRlB
+        8Qc/C0E21db1XjGM/LWuV5Bj7nKFIgG6tObRGld5USHJ0Pu9/09eNFltserlLCc+0QRfod
+        4UB45gpmXCPKsJsQV3ekLDhlsSgr5UHkjj3htsrfjNdmwYc+SnTrWkoHiO5mF7G0E5vz+4
+        mmPH7kW2lmk4+Aa6SZuxQXNnb6Zu7inndp5s2/t1YafIK5XA0Pcx5pjnqwsmpk/zP61pn8
+        RIvivFsxuBkNmUPozqTqQeCifCJZ/iII6VSnwNSdw00aHZzQ5xSykuJAwf4yqQ==
+Date:   Thu, 27 Jul 2023 11:19:55 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 27/28] dt-bindings: net: fsl,qmc-hdlc: Add framer
+ support
+Message-ID: <20230727111955.43571766@bootlin.com>
+In-Reply-To: <20230727-jailer-recede-a62ab2238581@spud>
+References: <20230726150225.483464-1-herve.codina@bootlin.com>
+        <20230726150225.483464-28-herve.codina@bootlin.com>
+        <20230727-jailer-recede-a62ab2238581@spud>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500008.china.huawei.com (7.221.188.139)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,42 +77,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There is no need to call the dev_err_probe() function directly to print
-a custom message when handling an error from platform_get_irq() function as
-it is going to display an appropriate error message in case of a failure.
+Hi Conor,
 
-Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
----
- drivers/gpio/gpio-davinci.c | 2 +-
- drivers/gpio/gpio-omap.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Thu, 27 Jul 2023 09:12:01 +0100
+Conor Dooley <conor@kernel.org> wrote:
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index fff510d86e31..8db5717bdabe 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -236,7 +236,7 @@ static int davinci_gpio_probe(struct platform_device *pdev)
- 	for (i = 0; i < nirq; i++) {
- 		chips->irqs[i] = platform_get_irq(pdev, i);
- 		if (chips->irqs[i] < 0)
--			return dev_err_probe(dev, chips->irqs[i], "IRQ not populated\n");
-+			return chips->irqs[i];
- 	}
- 
- 	chips->chip.label = dev_name(dev);
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 2b78fde74e30..21c8cfedfd64 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1415,7 +1415,7 @@ static int omap_gpio_probe(struct platform_device *pdev)
- 	if (bank->irq <= 0) {
- 		if (!bank->irq)
- 			bank->irq = -ENXIO;
--		return dev_err_probe(dev, bank->irq, "can't get irq resource\n");
-+		return bank->irq;
- 	}
- 
- 	bank->chip.parent = dev;
--- 
-2.34.1
+> On Wed, Jul 26, 2023 at 05:02:23PM +0200, Herve Codina wrote:
+> > A framer can be connected to the QMC HDLC.
+> > If present, this framer is the interface between the TDM used by the QMC
+> > HDLC and the E1/T1 line.
+> > The QMC HDLC can use this framer to get information about the line and
+> > configure the line.
+> > 
+> > Add an optional framer property to reference the framer itself.
+> > 
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
+> 
+> Why not fully describe the hardware in one patch in this series, rather
+> than split this over two different ones?
 
+I agree, this can be squashed with a previous commit.
+My intention was to keep things separated in this first series.
+
+The framer property makes sense only if the stuff related the generic framer
+(previous patches) are accepted whereas the QMC HDLC previous binding can be
+accepted without this framer property.
+I though it would be easier to review the full series with separated
+modifications.
+
+That's said, I will squash this patch with the patch 5 ("dt-bindings: net:
+Add support for QMC HDLC") in the next iteration.
+
+Best regards,
+Hervé
+
+> 
+> > ---
+> >  Documentation/devicetree/bindings/net/fsl,qmc-hdlc.yaml | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/fsl,qmc-hdlc.yaml b/Documentation/devicetree/bindings/net/fsl,qmc-hdlc.yaml
+> > index 8bb6f34602d9..bf29863ab419 100644
+> > --- a/Documentation/devicetree/bindings/net/fsl,qmc-hdlc.yaml
+> > +++ b/Documentation/devicetree/bindings/net/fsl,qmc-hdlc.yaml
+> > @@ -27,6 +27,11 @@ properties:
+> >        Should be a phandle/number pair. The phandle to QMC node and the QMC
+> >        channel to use.
+> >  
+> > +  framer:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description:
+> > +      phandle to the framer node
+> > +
+> >  required:
+> >    - compatible
+> >    - fsl,qmc-chan
+> > -- 
+> > 2.41.0
+> >   
