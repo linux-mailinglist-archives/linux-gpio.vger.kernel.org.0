@@ -2,90 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A77EE7660FF
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 03:08:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 847D87663CF
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 07:57:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbjG1BIa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Jul 2023 21:08:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39892 "EHLO
+        id S231896AbjG1F5L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jul 2023 01:57:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231765AbjG1BI3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jul 2023 21:08:29 -0400
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43BAB35BF
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 18:08:18 -0700 (PDT)
-Received: by mail-qk1-x72f.google.com with SMTP id af79cd13be357-76731802203so129319685a.3
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 18:08:18 -0700 (PDT)
+        with ESMTP id S229483AbjG1F5K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 01:57:10 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9378219BA
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 22:57:09 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b9c5e07c1bso14319725ad.2
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 22:57:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690506497; x=1691111297;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OlVTNbepcYNNY3ZleC7mgBUq9w9sGh7jypvmFp8WhBE=;
-        b=cYwrCitzzGKjBVOAsKIBJmaYIdHaQvXsCBNzoj7Z12UnR5xyjVV8nzge9PTk6UmD12
-         IyuzXpzu4WP2s7R05yKFc/mGlRYR7a0sP4Ml8IKz4+wOR+7g/N13JEUiP+aKvrm+Q+C6
-         iVMeLCBpRRZbGvu4vaDYxLCt9oJECy0BM+zIVGxjF5aZ8hJ0EeB9z8b9376/EO9p+35K
-         TxIv1DRr5PrDqrq69kRDJ2L+xW95enLiKB9sdBU3VPk+FVUfoGmamFO0n8OBrqJWaeQP
-         uNNx8F0QhqjJfuQhL4uAVBAGLnoZDaDouiqutmxL2chghp93qN4pukRNpCLbYsU+DPly
-         qI/w==
+        d=gmail.com; s=20221208; t=1690523829; x=1691128629;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4pXI2S+4vxDeRhpOaJHNtSgFM8iSc9Ufx/FlYtZN07s=;
+        b=eLaXzr0cCsJugKdfcVA0mgVunCgIjL8Lq4evJeq5tSUGRrcBLXZteE/3uF8cnWfrRb
+         S9w/JbNo6gGNphIgk6Bk0FxK4ExPh+jdxuFGpM80EmtjS5rqInlrhLdxLtiSHiqvlez9
+         Igtf/9CLRxG5crVQlJSYdIa7xfUn/CSOu/fbY5fX4czblZMl+hOVCL0AVWbgturK4zci
+         fEL7vCdszEHvXAFpNvaffI7kR9wOfOLegeD7jYyICqv5WhnYnrFQygKtCuDWhFHjpN4e
+         GksNIXISGV6EbZO8hDs/PR/EfAD62bidsHRdVSJP67E7FinhtVzCBDCTXLejMVKZKkVs
+         om4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690506497; x=1691111297;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OlVTNbepcYNNY3ZleC7mgBUq9w9sGh7jypvmFp8WhBE=;
-        b=Oe6VlqSsV3lNLWNycwlSJjWHqgeZ47qReBrdQ92yeIi6Dd92AXt+UdBvsul9QsOFYe
-         nmI7F8YSCDzYgo9WQA1vqtKHO4fxk8Mj4rX2EV0jxjroLrWN4sYyF53PnP1XKSXkClNC
-         JXmo+n17kIPvtLbitFbBtRpjXsbuWqircprABhYuVWgBMryPgq61SKj+Pukqdf+fZye/
-         VYxdTbYM4ithxOqQvGdJAsyUbj7UVi5XsiWT4x+slq2v2Bp0cKvCsfiRkLP2Zvd8F+Fy
-         WGwvKs7nYSueqnhEMtq3yqj4pbfs/MIb+4ww0rIN6UyE+ItJ7CXWsgPSPoTPNs5ekZ/a
-         tRuw==
-X-Gm-Message-State: ABy/qLYPkl6MQSAgQL9CgNWDwZld4Yf10+hL8M0D2RT+1GfDFFxVITHC
-        IC2GrpgZS0hGci2DSHqIzJMFri9jnnILEMB+2hY=
-X-Google-Smtp-Source: APBJJlFvkxb2aEwnc9rwXWYJP4xF0qsAPJK6Q1J+rr94HFyQw59qYuvqDABpQ0c6p8EvJ2gpgq+ZNOQzosqL71dGA18=
-X-Received: by 2002:a05:622a:1906:b0:404:132b:f8a6 with SMTP id
- w6-20020a05622a190600b00404132bf8a6mr1723443qtc.26.1690506497203; Thu, 27 Jul
- 2023 18:08:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAN1+YZU95GyPdE0fDcQNweMCHq0FXQ5RxR5dqmKdmMUaoiMsfw@mail.gmail.com>
- <ZMLZSqRwrPfKEbX3@sol> <CAN1+YZX1m8iZPg1EM8ivqCft83hT1ERcmb2kxx53rNFA7NTJ3w@mail.gmail.com>
- <ZMLnz25brQvcwBVW@sol> <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
-In-Reply-To: <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
-From:   andy pugh <bodgesoc@gmail.com>
-Date:   Fri, 28 Jul 2023 02:07:40 +0100
-Message-ID: <CAN1+YZUJwbK0oUWET6_GkWxVpd-VdwwOh8FCNsApc3NF0JAknw@mail.gmail.com>
-Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
-To:     Kent Gibson <warthog618@gmail.com>
+        d=1e100.net; s=20221208; t=1690523829; x=1691128629;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4pXI2S+4vxDeRhpOaJHNtSgFM8iSc9Ufx/FlYtZN07s=;
+        b=GlosHMF5zAIGYfmlBmalrWCyOiUMmZNEklfcCHVZ4BAGGjgQ7wauqvTm2Ga4LRzFzb
+         QmSrxMDtuO3iCb5yv061V4lfjCv4dXcn5X4/yz6B/gYniVEBWyWIA6lDP0x9WnQi/VTt
+         73oOovLP/NO+h4walPHNCYAxs7lfOpJtUpB1Cmuf0Ba43azEqR/oWT09lTgN5HCGYGh0
+         mNEtvuGfEjgdM7LgdyanxgWBDpVp6MwLD11NBZ4+RQ0fZcjaIokXbhcaAl6RZ+0mdCLj
+         K8HIrz5Y5H5vP+EcqYKk+xjLsewylGHAtm1PXHBvSSjQrVgGqbHS1IGjRYOeOLY4IVSj
+         DzXA==
+X-Gm-Message-State: ABy/qLZmm2LSIgmUZLEuuDp55oYoDdj98SXy3NrzObzyU5yi85gk4cIm
+        dQ6khKwQKM9IlWT1tGEhy31ML9PqoG0=
+X-Google-Smtp-Source: APBJJlEIG1dD4Ce7bZlBLlLrbKP6FFYD5qm0NGzLjBVH/hl0EIt8UySD6frTrWYYbgbpGdVoScB31A==
+X-Received: by 2002:a17:903:2289:b0:1b8:560a:aa16 with SMTP id b9-20020a170903228900b001b8560aaa16mr1145636plh.10.1690523828941;
+        Thu, 27 Jul 2023 22:57:08 -0700 (PDT)
+Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
+        by smtp.gmail.com with ESMTPSA id 12-20020a170902e9cc00b001b05e96d859sm2644321plk.135.2023.07.27.22.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jul 2023 22:57:08 -0700 (PDT)
+Date:   Fri, 28 Jul 2023 13:57:04 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     andy pugh <bodgesoc@gmail.com>
 Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
+Message-ID: <ZMNYsOXrOOZgxLeC@sol>
+References: <CAN1+YZU95GyPdE0fDcQNweMCHq0FXQ5RxR5dqmKdmMUaoiMsfw@mail.gmail.com>
+ <ZMLZSqRwrPfKEbX3@sol>
+ <CAN1+YZX1m8iZPg1EM8ivqCft83hT1ERcmb2kxx53rNFA7NTJ3w@mail.gmail.com>
+ <ZMLnz25brQvcwBVW@sol>
+ <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Jul 28, 2023 at 01:39:37AM +0100, andy pugh wrote:
+> On Thu, 27 Jul 2023 at 22:55, Kent Gibson <warthog618@gmail.com> wrote:
+> 
+> > > I did try that way first, but it didn't seem to be working for me.
+> > > I am currently upgrading the system to Bookworm (gpiod v1.6) to try again.
+> > >
+> >
+> > If you can repeat it, and ideally provide a failing test case, then we can
+> > take a look at it.
+> 
+> Now using gpiod v1.6 in Bookworm. gpiod_line_request_bulk() does not
+> seem to set the consumer.
+> Also, with the suggested use of bulk requests I still get an error
+> return from gpiod_line_get_value_bulk and an errno (22) that suggests
+> that it is line_bulk_same_chip() which has caused the problem.
+> 
+> test output:
+> 
 > line0 (null) line1 (null) line2 (null)
-> Error =3D Invalid argument (22)
-> a.out: test.c:47: main: Assertion `retval =3D=3D 0' failed.
+> Error = Invalid argument (22)
+> a.out: test.c:47: main: Assertion `retval == 0' failed.
 > Aborted
+> 
+> 
+> test code:
+> 
+> ````
+> #include <gpiod.h>
+> #include <stdio.h>
+> #include <unistd.h>
+> #include <assert.h>
+> #include <errno.h>
+> #include <string.h>
+> int main(int argc, char **argv)
+> {
+>   struct gpiod_chip *chip;
+>   struct gpiod_line *line0, *line1, *line2;
+>   struct gpiod_line_bulk bulk;
+>   int retval;
+>   int val[4] = {0};
+> 
+>   // Open GPIO chip
+>   chip = gpiod_chip_open_by_name("gpiochip0");
+> 
+>   // Open GPIO lines
+>   line0 = gpiod_line_find("GPIO17");
+>   line1 = gpiod_line_find("GPIO18");
+>   line2 = gpiod_line_find("GPIO19");
+> 
 
-In case it matters. Raspberry Pi400
-Debian 12 for Pi4 downloaded from: https://raspi.debian.net/daily-images/ t=
-oday.
+Your problem is that finding lines this way produces gpiod_lines with
+different chip pointers, and gpiod_line_request_bulk_input() is taking
+that to mean different chips, so the request itself is failing - but you
+didn't check.
 
-files compiled with
+>   gpiod_line_bulk_init(&bulk);
+>   gpiod_line_bulk_add(&bulk, line0);
+>   gpiod_line_bulk_add(&bulk, line1);
+>   gpiod_line_bulk_add(&bulk, line2);
+>   gpiod_line_request_bulk_input(&bulk, "test");
+> 
 
-gcc test.c -lgpiod
+If you change that to:
+  retval = gpiod_line_request_bulk_input(&bulk, "test");
+  printf("Error = %s (%i)\n", strerror(errno), errno);
+  assert (retval == 0);
+
+it will die on the assert.
+
+Try this to find the lines instead:
+
+  // Open GPIO lines
+  // (actually this is just a find - the request performs the open)
+  line0 = gpiod_chip_find_line(chip, "GPIO17");
+  line1 = gpiod_chip_find_line(chip, "GPIO18");
+  line2 = gpiod_chip_find_line(chip, "GPIO19");
+
+That then works for me (including the extra Error print above):
+
+$ ./a.out
+Error = Success (0)
+line0 test line1 test line2 test
+Error = Success (0)
 
 
---=20
-atp
-"A motorcycle is a bicycle with a pandemonium attachment and is
-designed for the especial use of mechanical geniuses, daredevils and
-lunatics."
-=E2=80=94 George Fitch, Atlanta Constitution Newspaper, 1912
+Not saying the gpiod_line_request_bulk_input() behaviour is correct, but
+given v1 is obsoleted by v2, and there is a reasonable workaround for
+v1 (assuming you know the chip the line is on), I'm not sure Bart will
+want to fix that quirk.
+
+For the same reason, I would suggest that you try libgpiod v2 and use
+that instead if you possibly can - assuming libgpiod is fast enough for
+your application.  
+
+Cheers,
+Kent.
