@@ -2,123 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 054AE7675F4
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 21:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C789C76760A
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 21:06:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229771AbjG1TBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jul 2023 15:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33970 "EHLO
+        id S233195AbjG1TGo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jul 2023 15:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229715AbjG1TBv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 15:01:51 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD02E30F7
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Jul 2023 12:01:50 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-4039f0d140eso15581991cf.1
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Jul 2023 12:01:50 -0700 (PDT)
+        with ESMTP id S229653AbjG1TGm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 15:06:42 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF37A35A5
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jul 2023 12:06:35 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1b9e9765f2cso15249885ad.3
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jul 2023 12:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690570910; x=1691175710;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mUP/B+Sed6ddOfwPzKP7gRJkWCC4KdwjYWV/qQCd3vw=;
-        b=R+p36zwUpqQP/9DPNUesOcnqXOYHeT/ZKN5h9VDvhBB1uDo0LscHsfiTgM6L2XCmGI
-         xWdMB2Y808IjTm6ztWCPlzkmMDS1cBjUOoPXSbwJSGUIXGqJodUn2qtXWZ9rOYUpexgb
-         mGY09k75wrgH5US6s0mwT4TwAmXFpC6p+ovOtxOGvX71saNaj4WMuGHSJIWVSxKxKY5o
-         a1OSeYMN2FaYUrZ9krjJGwm6d77J7BCq0wh9eHEBIui4bMuQ3fDtDn4s/Ag7E+huN1Lc
-         8/VV3SbHpq2J4YX6/pveALv7kXyGXSjRd2kte4jw/UsNPWxiu9fFJnmEBQrRyy/91CqR
-         4igQ==
+        d=baylibre-com.20221208.gappssmtp.com; s=20221208; t=1690571195; x=1691175995;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NF0r9eMdsRlfx+fQNhsp0XsqZFCxcupFF3OG9UsICFo=;
+        b=cmdPjnKZGl31IJIA7yqBzK039eXHjdL/oax5B08GDm2piQtz8J4/mxsW9NeOL/x1+t
+         CvN/XCEeMge+mNEXXjV2jCCW/x67qrE7pVUVSVdrlxG6NcCo0YMevdqz0LFz27HbiOV2
+         ng1WrFQrHvQw5mdPdNkQpYoM7SQI6zNln6248JVTfvcPQ2soODtq6r0UjFnaHNWvPuiY
+         qxPIcU/4saAIRjZVfzTrEH3a/Yzvz7mU84cAQhFjGUcjWkFeHjGZkmGQMuEDtX8x1L7V
+         XnOorLhjCtv4GF8qVWDtyXB1aRz9cEFz5hmfH/k/gDnZaTYGAGFiI7ThocBh6BjyZ+4e
+         fXDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690570910; x=1691175710;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mUP/B+Sed6ddOfwPzKP7gRJkWCC4KdwjYWV/qQCd3vw=;
-        b=W8w8wLyjCNw3rqv6Wb6UhyaUAubOwT851OaDpOB83/gEVcXcy6B1gNINEGZnNuuTIq
-         FQeGl5lskt3yU9enbfVUUCzXaTKERWtc/U642s8hyehe8FEmipkeA8iluPaxMsyP2D7+
-         Nidn6CJNzkJG1eAJH8w3KcyWKsHLxKtMsnOZEeTzjjFhMJXkL+EzchO/km48OvC0aWtI
-         fq8RWD5MO7AZ6MvsZZTtOivFYoGaCbORlswatZX+cc9sFcpcMIHUcRqN5nBkInruBBHj
-         By30jqpQaSxCd198IQXcDjZM6q6icFywLG1KZqgzwaZfd9CZPw8SbNtO1Ze+vwOqVel6
-         /8Bg==
-X-Gm-Message-State: ABy/qLY2PBsoMW3dWDT8j3K/l9MwFo7QNcahDge0HBFgmo+6jAoHaiPH
-        bxAPdvXgT83zH3v2+nOmalEnB0Y3fiiLI3QLgG5Bavba
-X-Google-Smtp-Source: APBJJlG5sro+EYDT6+cbSV7pu8/sFQKk1I6RWbS7FHb3CchymtH2TM8YW3Jf+6Spv6AcqODmj5gDhwCZxQvx54+yw/w=
-X-Received: by 2002:ac8:5a4a:0:b0:403:a9aa:56d6 with SMTP id
- o10-20020ac85a4a000000b00403a9aa56d6mr4714842qta.58.1690570909639; Fri, 28
- Jul 2023 12:01:49 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1690571195; x=1691175995;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NF0r9eMdsRlfx+fQNhsp0XsqZFCxcupFF3OG9UsICFo=;
+        b=ZUbSC6bv0lCRA26a39PqRrK9e/j3nxDSybhxqf+6NiB3T+kEq4NSHVyc2UrTYgyPZb
+         Yx/0nPCIFSXkGxGc6nf9sBirUn1RDBwPcgxUoPC+Inmyg0jLeSWYucaTDS+boXIWt44V
+         4o1REkJTsRnBNr3INQ4+1YUj5tif9GHp5FEQ1GYpdCC1Uly2eDzgetaict3fTxIwYTIa
+         dT38RIrZ221p/RJ455geuxBNuLKpyfADe0vT8BkoZe6TtRuFSnZ+TlxOYy+ysgFbqj8g
+         p49V/shJCI7Hts3nPwG0dFqTwRnqr3Q8H/p6BUS+EhFdV5rF5ZRJZjwp6HhgeCcD4jLa
+         Bu0A==
+X-Gm-Message-State: ABy/qLY1vqKfKnoKCNqFdI4QGUT+QjoirWoGqOYXeq577YuYCn/tm3T0
+        4wXXslEcXyGL348U8HYKztW4yA==
+X-Google-Smtp-Source: APBJJlG6XFoP1LhFMTBznXGOJwP8YxSSulmHWjhYJ1NDAzk8KWNKByfw3HTiT206vlHYDjBoVhy7Yg==
+X-Received: by 2002:a17:902:e741:b0:1b8:28f4:f259 with SMTP id p1-20020a170902e74100b001b828f4f259mr2501220plf.69.1690571195271;
+        Fri, 28 Jul 2023 12:06:35 -0700 (PDT)
+Received: from localhost ([75.172.135.98])
+        by smtp.gmail.com with ESMTPSA id h13-20020a170902f54d00b001ac5896e96esm3901266plf.207.2023.07.28.12.06.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jul 2023 12:06:34 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Huqiang Qin <huqiang.qin@amlogic.com>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        neil.armstrong@linaro.org, jbrunet@baylibre.com,
+        martin.blumenstingl@googlemail.com, linus.walleij@linaro.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: Replace the IRQ number with the IRQID
+ macro definition
+In-Reply-To: <9da24c47-341b-1581-0043-a6c1cdce462d@amlogic.com>
+References: <20230721073214.1876417-1-huqiang.qin@amlogic.com>
+ <20230721073214.1876417-4-huqiang.qin@amlogic.com>
+ <7hcz0ei9r4.fsf@baylibre.com>
+ <9da24c47-341b-1581-0043-a6c1cdce462d@amlogic.com>
+Date:   Fri, 28 Jul 2023 12:06:34 -0700
+Message-ID: <7hh6pnhn45.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <CAN1+YZU95GyPdE0fDcQNweMCHq0FXQ5RxR5dqmKdmMUaoiMsfw@mail.gmail.com>
- <ZMLZSqRwrPfKEbX3@sol> <CAN1+YZX1m8iZPg1EM8ivqCft83hT1ERcmb2kxx53rNFA7NTJ3w@mail.gmail.com>
- <ZMLnz25brQvcwBVW@sol> <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
- <ZMNYsOXrOOZgxLeC@sol>
-In-Reply-To: <ZMNYsOXrOOZgxLeC@sol>
-From:   andy pugh <bodgesoc@gmail.com>
-Date:   Fri, 28 Jul 2023 20:01:13 +0100
-Message-ID: <CAN1+YZWjEZQY6yffCFrt0vLVA6P0j5dDbRz=b5c0MXJoSszhig@mail.gmail.com>
-Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 28 Jul 2023 at 06:57, Kent Gibson <warthog618@gmail.com> wrote:
+Huqiang Qin <huqiang.qin@amlogic.com> writes:
 
-> Your problem is that finding lines this way produces gpiod_lines with
-> different chip pointers, and gpiod_line_request_bulk_input() is taking
-> that to mean different chips, so the request itself is failing - but you
-> didn't check.
+> Hi Kevin Hilman,
+>
+> On 2023/7/27 6:33, Kevin Hilman wrote:
+>>> Replacing IRQ numbers with IRQID macro definitions makes node properties
+>>> easier to understand and also makes GPIO interrupts easier to use.
+>>>
+>>> Associated platforms:
+>>> - Amlogic Meson-G12A
+>>> - Amlogic Meson-G12B
+>>> - Amlogic Meson-SM1
+>> Does this mean you tested/validated these changes on those platforms
+>> also?
+>
+> Amlogic's G12A/G12B/SM1 have the same GPIO, and the GPIO interrupt number
+> is also the same, so I only tested on the SM1 platform, and the test results
+> prove that these changes are good.
 
-That was on my list of things to check next, but it was getting late
-and I wanted to send the failing case as requested.
-I had guessed that the same line_bulk_same_chip() routine would be the
-cause of the bulk request failing too.
+OK, thank you for the explanation.
 
-I think that test might be flawed....
+For future reference, this kind of detail is helpful to describe in the
+patch or cover letter so maintainers & reviewers better understand how
+the changes were tested.
 
->   line0 =3D gpiod_chip_find_line(chip, "GPIO17");
->   line1 =3D gpiod_chip_find_line(chip, "GPIO18");
->   line2 =3D gpiod_chip_find_line(chip, "GPIO19");
+Thanks,
 
-This is working for me now, thanks.
-
-> Not saying the gpiod_line_request_bulk_input() behaviour is correct, but
-> given v1 is obsoleted by v2, and there is a reasonable workaround for
-> v1 (assuming you know the chip the line is on), I'm not sure Bart will
-> want to fix that quirk.
-
-Unfortunately I won't know what chip the line is on, but I have
-already considered that and plan to have an array of structs
-containing the "bulk" and the "chip" for each chip that is needed
-according to the IO line list submitted by the (pesky!) users.
-
-> For the same reason, I would suggest that you try libgpiod v2 and use
-> that instead if you possibly can - assuming libgpiod is fast enough for
-> your application.
-
-libgpiod2 (and any further bugfix to 1.6 for that matter) have the
-problem of not being currently available as packages in the
-distributions we use.
-
-It is possible that we could serve the package from our _own_ package
-server which we have been running for a couple of decades, but as we
-have _just_ been accepted as a mainline Debian package that would seem
-a little peculiar (and involves trying to explain to machinists how to
-add extra repositories and set up the associated keys)
-
-I think I see the way forwards now. Thanks for your help.
-
---=20
-atp
-"A motorcycle is a bicycle with a pandemonium attachment and is
-designed for the especial use of mechanical geniuses, daredevils and
-lunatics."
-=E2=80=94 George Fitch, Atlanta Constitution Newspaper, 1912
+Kevin
