@@ -2,63 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67DDD7676C3
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 22:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02B9C7676D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 22:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbjG1UJt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jul 2023 16:09:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34034 "EHLO
+        id S233187AbjG1UQ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jul 2023 16:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjG1UJs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 16:09:48 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33D2423B
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Jul 2023 13:09:47 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-d0b597e7ac1so2357854276.1
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Jul 2023 13:09:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690574987; x=1691179787;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ypcj8O+X/OFMkfjHhQc10V2pJgPwGGRi5rjXK1oaPh0=;
-        b=Pfe4VOX7iBBXY6jB9a6N1NKHb4uagxUEc9y5lUZsPnrNELa6gMNcjRg4HE4LYXguWP
-         e3/JlgUIwLgHiEbPi28bOwxObbDMT56OLz70lC27cuZxOuTbWuwySavSK2iM5qkm4VB2
-         86NDOm2EL5xIpc4geShiUONBBzvNKKO4Q5CpdF18eGzOWgR37h+Ehn+VJEDgnvI2bdN+
-         qRALnj5jXfjqt4JBpnmss/BDc8xRV0O8OleBLLUKvd/cGCtVXvr2TqS2vsKAEWi55yAI
-         A4RrYVY798TBtM7Qb8GffiW5Os2VYAGdbFnQEGcB+Yt7+XQtRCDY0XN1k7yatuQ8o31r
-         CAiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690574987; x=1691179787;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ypcj8O+X/OFMkfjHhQc10V2pJgPwGGRi5rjXK1oaPh0=;
-        b=IbWsUskd9cGS+AXyA9tMqW+FbSLvQSJJ5lOn34m3KB03s24mNlhxVdHB7mSqR/MRDz
-         0bbhUGSf9uzroppIcW11EUYexe7zwjKND1BHnMzyoZjn7RlfbPv1r73peVxJWleIw/GQ
-         7z+kNl9kP2g/wOdU3WzreOu8AoOB1Khoyaor7HnkaLh9IMVtMQozeYoAXC4p5Xk2bN6r
-         URFJrz7uRkx7v3pkP6nNAWuPe4dc9ZAR0cedEOw7fYiuGYNbyzuDv8fcuSynVOgmjxjw
-         ncBbLi5cX0S1Yci1C1YmJpKFdf1u9BNfHSX/DGAonKDS1XlG5Lwv2lVKjlEXJTcRytUq
-         1UQg==
-X-Gm-Message-State: ABy/qLYBtCVHttQgRv9C3PYyWfvKWVxf+JGn3tTQjRtD1QS2W3d/bUdd
-        EwvgOZWLdD/1CJ/JAiCVOfJ7zW8sZOxJcBNCb6Z33sPix9DLsEWW
-X-Google-Smtp-Source: APBJJlGhROr0BN5fEQehQ/pF+xHP1sCS8d9UM3c8rFBJiNy8IcTQoSw5OWpWC1a96/UHYkcxqOcdKACc0fCTWfAGako=
-X-Received: by 2002:a05:6902:545:b0:d06:f99e:6345 with SMTP id
- z5-20020a056902054500b00d06f99e6345mr2624723ybs.22.1690574986940; Fri, 28 Jul
- 2023 13:09:46 -0700 (PDT)
+        with ESMTP id S233061AbjG1UQ6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 16:16:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4074C4483;
+        Fri, 28 Jul 2023 13:16:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B6EEA621F5;
+        Fri, 28 Jul 2023 20:16:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F1DEC433C8;
+        Fri, 28 Jul 2023 20:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690575416;
+        bh=z+gdMsxHU/7YKL9vhgSuvNK2Nl2t+BdQQB04fK3kaxg=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=VjV2emDeaa46kCYj97nEakfERp2X5HQbMXwwOHf2lVmTjVx4+PL2sCt9kQhVtU9qP
+         SeGnCbtalKjl4bHUldfHzpIKa4A0O9XqQO2BlfwgAhSvClEBVlZYGHpzetRJ/mZJB1
+         SbCiV6gLdTk+ptQPtEfn8mpF6iAY7kbT3bQn1gBfpiEDiL9TJdbfcqywxXJdcUcfFI
+         sRes9xYF8bl+SFStNhOMlSOfA3XmnWQ1GVhGsbunaQ7m5/rCbFVvo/pSNTPn6Iec9b
+         IqnwPmC2Umyaazx9jw1tWHwIvpxhrCbtPYVkSL4IxwGUwzNjwnnhRwZGyCrt9LPgmY
+         vImnhSw11L+Qg==
+Received: (nullmailer pid 1272797 invoked by uid 1000);
+        Fri, 28 Jul 2023 20:16:54 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-References: <20230719202253.13469-1-s.shtylyov@omp.ru>
-In-Reply-To: <20230719202253.13469-1-s.shtylyov@omp.ru>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Jul 2023 22:09:35 +0200
-Message-ID: <CACRpkdaj+8aZJqPJhiLu9zkB69iidixmRuSzvzenwDmknJg_9w@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Handle errors returned by radix_tree_insert() within drivers/pinctrl/
-To:     Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc:     linux-gpio@vger.kernel.org, lvc-patches@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+From:   Rob Herring <robh@kernel.org>
+To:     Stanislav Jakubek <stano.jakubek@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+In-Reply-To: <ZMQU7ap9CxfY5eIu@standask-GA-A55M-S2HP>
+References: <ZMQU7ap9CxfY5eIu@standask-GA-A55M-S2HP>
+Message-Id: <169057541402.1272771.5559155896859483307.robh@kernel.org>
+Subject: Re: [RFC] dt-bindings: gpio: brcm,kona-gpio: convert to YAML
+Date:   Fri, 28 Jul 2023 14:16:54 -0600
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -67,17 +65,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 10:23=E2=80=AFPM Sergey Shtylyov <s.shtylyov@omp.ru=
-> wrote:
 
-> The code in drivers/pinctrl/ doesn't check the results of radix_tree_inse=
-rt()
-> calls, although it could propagate the errors from the callers upstream.
-> (Linus Walleij said he has copied the radix tree code from kernel/irq/,
-> where the functions calling radix_tree_insert() are *void* themselves.)
+On Fri, 28 Jul 2023 21:20:13 +0200, Stanislav Jakubek wrote:
+> Convert Broadcom Kona family GPIO controller bindings to DT schema.
+> 
+> Changes during conversion:
+>   - add used, but previously undocumented SoC-specific compatibles
+> 
+> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
+> ---
+> RFC since dt_binding_check is giving me these errors/warnings:
+> 
+> Documentation/devicetree/bindings/gpio/brcm,kona-gpio.example.dts:21.23-34.11: Warning (interrupts_property): /example-0/gpio@35003000: Missing interrupt-parent
+> 
+> The old txt bindings and all current DTs do not use interrupt-parent AFAICT,
+> so I'm not sure what to do about that.
+> 
+> Documentation/devicetree/bindings/gpio/brcm,kona-gpio.example.dtb: gpio@35003000: interrupts: [[0], [106], [4], [0], [115], [4], [0], [114], [4], [0], [113], [4], [0], [112], [4], [0], [111], [4]] is too long
+> 
+> Here I'm not even sure what the issue is.
+> 
+>  .../bindings/gpio/brcm,kona-gpio.txt          | 52 -------------
+>  .../bindings/gpio/brcm,kona-gpio.yaml         | 77 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 78 insertions(+), 53 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,kona-gpio.yaml
+> 
 
-The fix is spot on.
-Patches applied!
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Yours,
-Linus Walleij
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/gpio/brcm,kona-gpio.example.dts:21.23-34.11: Warning (interrupts_property): /example-0/gpio@35003000: Missing interrupt-parent
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.example.dtb: gpio@35003000: interrupts: [[0], [106], [4], [0], [115], [4], [0], [114], [4], [0], [113], [4], [0], [112], [4], [0], [111], [4]] is too long
+	from schema $id: http://devicetree.org/schemas/gpio/brcm,kona-gpio.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/ZMQU7ap9CxfY5eIu@standask-GA-A55M-S2HP
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
