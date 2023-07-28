@@ -2,170 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 847D87663CF
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 07:57:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18E5C7666F9
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 10:25:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231896AbjG1F5L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jul 2023 01:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38970 "EHLO
+        id S233520AbjG1IZJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jul 2023 04:25:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbjG1F5K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 01:57:10 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9378219BA
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 22:57:09 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b9c5e07c1bso14319725ad.2
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Jul 2023 22:57:09 -0700 (PDT)
+        with ESMTP id S234972AbjG1IYb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 04:24:31 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D95C49C2;
+        Fri, 28 Jul 2023 01:23:34 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4fe1b00fce2so2211975e87.3;
+        Fri, 28 Jul 2023 01:23:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690523829; x=1691128629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4pXI2S+4vxDeRhpOaJHNtSgFM8iSc9Ufx/FlYtZN07s=;
-        b=eLaXzr0cCsJugKdfcVA0mgVunCgIjL8Lq4evJeq5tSUGRrcBLXZteE/3uF8cnWfrRb
-         S9w/JbNo6gGNphIgk6Bk0FxK4ExPh+jdxuFGpM80EmtjS5rqInlrhLdxLtiSHiqvlez9
-         Igtf/9CLRxG5crVQlJSYdIa7xfUn/CSOu/fbY5fX4czblZMl+hOVCL0AVWbgturK4zci
-         fEL7vCdszEHvXAFpNvaffI7kR9wOfOLegeD7jYyICqv5WhnYnrFQygKtCuDWhFHjpN4e
-         GksNIXISGV6EbZO8hDs/PR/EfAD62bidsHRdVSJP67E7FinhtVzCBDCTXLejMVKZKkVs
-         om4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690523829; x=1691128629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1690532612; x=1691137412;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4pXI2S+4vxDeRhpOaJHNtSgFM8iSc9Ufx/FlYtZN07s=;
-        b=GlosHMF5zAIGYfmlBmalrWCyOiUMmZNEklfcCHVZ4BAGGjgQ7wauqvTm2Ga4LRzFzb
-         QmSrxMDtuO3iCb5yv061V4lfjCv4dXcn5X4/yz6B/gYniVEBWyWIA6lDP0x9WnQi/VTt
-         73oOovLP/NO+h4walPHNCYAxs7lfOpJtUpB1Cmuf0Ba43azEqR/oWT09lTgN5HCGYGh0
-         mNEtvuGfEjgdM7LgdyanxgWBDpVp6MwLD11NBZ4+RQ0fZcjaIokXbhcaAl6RZ+0mdCLj
-         K8HIrz5Y5H5vP+EcqYKk+xjLsewylGHAtm1PXHBvSSjQrVgGqbHS1IGjRYOeOLY4IVSj
-         DzXA==
-X-Gm-Message-State: ABy/qLZmm2LSIgmUZLEuuDp55oYoDdj98SXy3NrzObzyU5yi85gk4cIm
-        dQ6khKwQKM9IlWT1tGEhy31ML9PqoG0=
-X-Google-Smtp-Source: APBJJlEIG1dD4Ce7bZlBLlLrbKP6FFYD5qm0NGzLjBVH/hl0EIt8UySD6frTrWYYbgbpGdVoScB31A==
-X-Received: by 2002:a17:903:2289:b0:1b8:560a:aa16 with SMTP id b9-20020a170903228900b001b8560aaa16mr1145636plh.10.1690523828941;
-        Thu, 27 Jul 2023 22:57:08 -0700 (PDT)
-Received: from sol (194-223-178-180.tpgi.com.au. [194.223.178.180])
-        by smtp.gmail.com with ESMTPSA id 12-20020a170902e9cc00b001b05e96d859sm2644321plk.135.2023.07.27.22.57.06
+        bh=a0xhbAiUbjd2h8hrbYvNKZ3J3fpbP+0wJ7Vc6YuSc5c=;
+        b=jrdmr35Ma2osjBpAw3b9zN2kpLkQsvLEfbCx5UHTMTNqBNBjhTPut7YAnI1ip2Me9E
+         yzozyIliQB4+szgNhW0g0Q4bblCOsZLbMn4ryQ95yGJCoL71J5dZ42Q3M2xBLvGVTNPp
+         LcyNALkje5B3N3kOTp2uN8zdRm7YP7l6y4qwUPR4u9PL8kKPH3sKDTUnYikFKf8ptMsq
+         YU1jL/0+FPTbtIWCnpf3Tbek+0YJvm2JFtIgL9QUnlg6OqEfX6FF3e2xh1CCKQo2r81+
+         hrKsVO1ierOOMs4LcFnOlzmEcHpJSZYhMstv5dGnsH0pXMmC2Y7WpIGZ1x6muN8i1vm7
+         qoEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690532612; x=1691137412;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a0xhbAiUbjd2h8hrbYvNKZ3J3fpbP+0wJ7Vc6YuSc5c=;
+        b=KSIRjIfu6lXfXAt3R8zmjPTMOgzO5rWvNdVUxYEKFmj7B5NOy4lLBwKxzLCIlQNiHW
+         WFMtInuRb4Co7VwJGQONgaHbtvkdQHMpOiOYWrweIGJxPKuSbzFVVlypXOBBQYeEEskX
+         JiGKOdXp6xGbfwWlnX+cZqAv9G4AQAIdnCJGc6A8mFRvNjRJCW4qAjOd5ZROekhfte79
+         /0yRQftJJnIBpzFv4AW5KdlvaOsaDZOcBIP8VwAwoAixZOh0FoK6aMCIeb1rPx98pRNj
+         xK7g22WcQAisIa53A2UZaenjK1u947b8C4YGejK1TdrUcfE4pDO8qNS/Gl1Lea/8DhSv
+         QB+g==
+X-Gm-Message-State: ABy/qLboI3a2GQMc2UjPA2oG5Nuf3xgsIorWzLP2L6U0lsYxvYuCaPGw
+        3/7tCxlA1A2yYPEYxJXpqFQ=
+X-Google-Smtp-Source: APBJJlFYN35PMSaGWFsU7bOEaiX1P6f6+mU/fUJluxRlPtCVWghClcGBDgOqdbqj5ReW0PmnIoHbWg==
+X-Received: by 2002:a05:6512:3256:b0:4fb:9e1a:e592 with SMTP id c22-20020a056512325600b004fb9e1ae592mr1042977lfr.4.1690532612150;
+        Fri, 28 Jul 2023 01:23:32 -0700 (PDT)
+Received: from orome (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id p17-20020aa7d311000000b005224f840130sm1528577edq.60.2023.07.28.01.23.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 22:57:08 -0700 (PDT)
-Date:   Fri, 28 Jul 2023 13:57:04 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     andy pugh <bodgesoc@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
-Message-ID: <ZMNYsOXrOOZgxLeC@sol>
-References: <CAN1+YZU95GyPdE0fDcQNweMCHq0FXQ5RxR5dqmKdmMUaoiMsfw@mail.gmail.com>
- <ZMLZSqRwrPfKEbX3@sol>
- <CAN1+YZX1m8iZPg1EM8ivqCft83hT1ERcmb2kxx53rNFA7NTJ3w@mail.gmail.com>
- <ZMLnz25brQvcwBVW@sol>
- <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
+        Fri, 28 Jul 2023 01:23:31 -0700 (PDT)
+Date:   Fri, 28 Jul 2023 10:23:29 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     nikita.shubin@maquefel.me
+Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
+        Lennert Buytenhek <kernel@wantstofly.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Peters <mpeters@embeddedts.com>,
+        Kris Bahnsen <kris@embeddedts.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 37/42] pwm: ep93xx: drop legacy pinctrl
+Message-ID: <ZMN7AQozKJ-WvEtD@orome>
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+ <20230605-ep93xx-v3-37-3d63a5f1103e@maquefel.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wGJHzmMJDSXZkkT2"
 Content-Disposition: inline
-In-Reply-To: <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230605-ep93xx-v3-37-3d63a5f1103e@maquefel.me>
+User-Agent: Mutt/2.2.10 (2023-03-25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 28, 2023 at 01:39:37AM +0100, andy pugh wrote:
-> On Thu, 27 Jul 2023 at 22:55, Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> > > I did try that way first, but it didn't seem to be working for me.
-> > > I am currently upgrading the system to Bookworm (gpiod v1.6) to try again.
-> > >
-> >
-> > If you can repeat it, and ideally provide a failing test case, then we can
-> > take a look at it.
-> 
-> Now using gpiod v1.6 in Bookworm. gpiod_line_request_bulk() does not
-> seem to set the consumer.
-> Also, with the suggested use of bulk requests I still get an error
-> return from gpiod_line_get_value_bulk and an errno (22) that suggests
-> that it is line_bulk_same_chip() which has caused the problem.
-> 
-> test output:
-> 
-> line0 (null) line1 (null) line2 (null)
-> Error = Invalid argument (22)
-> a.out: test.c:47: main: Assertion `retval == 0' failed.
-> Aborted
-> 
-> 
-> test code:
-> 
-> ````
-> #include <gpiod.h>
-> #include <stdio.h>
-> #include <unistd.h>
-> #include <assert.h>
-> #include <errno.h>
-> #include <string.h>
-> int main(int argc, char **argv)
-> {
->   struct gpiod_chip *chip;
->   struct gpiod_line *line0, *line1, *line2;
->   struct gpiod_line_bulk bulk;
->   int retval;
->   int val[4] = {0};
-> 
->   // Open GPIO chip
->   chip = gpiod_chip_open_by_name("gpiochip0");
-> 
->   // Open GPIO lines
->   line0 = gpiod_line_find("GPIO17");
->   line1 = gpiod_line_find("GPIO18");
->   line2 = gpiod_line_find("GPIO19");
-> 
 
-Your problem is that finding lines this way produces gpiod_lines with
-different chip pointers, and gpiod_line_request_bulk_input() is taking
-that to mean different chips, so the request itself is failing - but you
-didn't check.
+--wGJHzmMJDSXZkkT2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->   gpiod_line_bulk_init(&bulk);
->   gpiod_line_bulk_add(&bulk, line0);
->   gpiod_line_bulk_add(&bulk, line1);
->   gpiod_line_bulk_add(&bulk, line2);
->   gpiod_line_request_bulk_input(&bulk, "test");
-> 
+On Thu, Jul 20, 2023 at 02:29:37PM +0300, Nikita Shubin via B4 Relay wrote:
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
+>=20
+> Drop legacy gpio request/free since we are using
+> pinctrl for this now.
+>=20
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  arch/arm/mach-ep93xx/core.c       | 42 ---------------------------------=
+------
+>  drivers/pwm/pwm-ep93xx.c          | 18 -----------------
+>  include/linux/soc/cirrus/ep93xx.h |  4 ----
+>  3 files changed, 64 deletions(-)
 
-If you change that to:
-  retval = gpiod_line_request_bulk_input(&bulk, "test");
-  printf("Error = %s (%i)\n", strerror(errno), errno);
-  assert (retval == 0);
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
-it will die on the assert.
+--wGJHzmMJDSXZkkT2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Try this to find the lines instead:
+-----BEGIN PGP SIGNATURE-----
 
-  // Open GPIO lines
-  // (actually this is just a find - the request performs the open)
-  line0 = gpiod_chip_find_line(chip, "GPIO17");
-  line1 = gpiod_chip_find_line(chip, "GPIO18");
-  line2 = gpiod_chip_find_line(chip, "GPIO19");
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmTDewAACgkQ3SOs138+
+s6Fe1xAAmWGPXd//baY5gEQfFUeoZOB6tksL9wdhNTccZsdUbLbxDijfBzSgF8LC
+4mvLpGWCiVebT2hMwacsnHquq26aZ3xvnlVRB/0ic5Y2kxa86bm12Y4pBsVjTSJJ
+G4lOWY+DsW30C6I5FsCrnXfk0WQBj41lSHodIBmwHL9qac0hyJfTytGObyLB5oiF
+ac/Jss8xCi9FzacqnbKVCcWJQp070a/ptFCyXiXkc5sCZUii5eVbVyvjNvvuxUml
+BBdPYMMs4C+kocreEgCn7FI6anxgJ+IpqdxtMTwxUmocdA93Fif8XS75ystxbrRv
+SN0WMNlM6br95MU2Y/M0B21LivCfGu4PMreELcuoabHDN+TJwZk3AJzv6dv1hmhb
+Yy5Ptu2ZrR8xaV5LnHv1sDI5+RxSp1Pvt0Y8ap5MDHQDuL5oyzqBPVhhtPijSy1J
+qTZ3+vNGJAHWTGl5o748veQ8cu5tAdKANos5DSk1ihUcgdjopOrNVbAwpbStloRb
+1XGCOp8jBHitHVIibWOzq1iYX39CGqTR4IGzoPaE4vC7MwbJ/3gHxfMoyVLwpuEj
++XLcWlwcAfKINSGGx4yLHXAJF0bUbwHwom7p61rS8GeN0FCzkMO8ydTI6ZTh06lj
+sMd10ehwOllaHRNRjzZ8l3IozZoq+jDoPJPkeDuS8lTmKu2PKNk=
+=Y8RN
+-----END PGP SIGNATURE-----
 
-That then works for me (including the extra Error print above):
-
-$ ./a.out
-Error = Success (0)
-line0 test line1 test line2 test
-Error = Success (0)
-
-
-Not saying the gpiod_line_request_bulk_input() behaviour is correct, but
-given v1 is obsoleted by v2, and there is a reasonable workaround for
-v1 (assuming you know the chip the line is on), I'm not sure Bart will
-want to fix that quirk.
-
-For the same reason, I would suggest that you try libgpiod v2 and use
-that instead if you possibly can - assuming libgpiod is fast enough for
-your application.  
-
-Cheers,
-Kent.
+--wGJHzmMJDSXZkkT2--
