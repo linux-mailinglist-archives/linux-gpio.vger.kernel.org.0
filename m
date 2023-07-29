@@ -2,152 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0488B767FD5
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 15:57:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57C67767FDB
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 15:59:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbjG2N5q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jul 2023 09:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49972 "EHLO
+        id S231365AbjG2N7E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jul 2023 09:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229829AbjG2N5q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 09:57:46 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E771730
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 06:57:44 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-7653bd3ff2fso278181785a.3
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 06:57:44 -0700 (PDT)
+        with ESMTP id S231556AbjG2N7D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 09:59:03 -0400
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894931730
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 06:59:02 -0700 (PDT)
+Received: by mail-vk1-xa32.google.com with SMTP id 71dfb90a1353d-4865d994991so1196831e0c.0
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 06:59:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690639063; x=1691243863;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690639141; x=1691243941;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7LyyG1iya0TK3hzn1sz1vz2ztnTw5rxQOjlg3OWMh8Q=;
-        b=o0dNC+o/0b42oJq5tleuplcjRU8ahwiiWvtp5gjH8R63pJIip7sgzuZcf9WgdL4LOl
-         2Z1z6bbhlzT5e5dHUkdZH1n62Rta5CgEySVb5PLAfbz+XNXnrwvSrWXWdtn+gcWqAMdz
-         Nk/mU1FhIQlRd70oI7dhBNDRn82NwMqxNz3CQR8E4BDta9egTLqTggp1aqAtlEohzH/s
-         x0KuUZxQ4JMlr8zU5A0awwNFKWopm1XtfUNNuaPKam4BHKF7QnIqDLEAefl76/mCh/7N
-         M38mNHqnJEgKL68isMyg+hJbZRFc4VFoUcF1NDk6a7pDJeC/42EtdJRWIjh+xtc4dkiB
-         ziOA==
+        bh=0pKQ5uDa7ZswByLDltZ/DIqkWaRF0i1kVyEyWDjv/VM=;
+        b=oKM4pjutzQ1oJ9k2sA0kxxXX5BtM9MULRtW/njEpiRaLkqO72uWbDJoVhfgA9FW7kZ
+         YhPoljgXRkyrGtqw0i+zK5aMRUhxQYSmA2Vw9byp0dpNPpFLhGBk0DEJ0ub9LwFl+GTG
+         CfAIKi1q5VuC7v7eyoLIyxRqLFMkp6FKx4U6JCwUY4fB/hVP0noFtFKrUUwuiTUR7Lyw
+         8YleX/jDisN5fIEZG+s8TtyI0X1DmuBKOeV4iC/6xJ3ku1Pu8dGUo5zgCd0mJKJxYQCo
+         sQjalSpRCl8CJv7e7PO49IAMvl5gzdnR8STYH7imaoFmx1wDeuK9ffn+1Y6Mf5YrXYq9
+         uoEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690639063; x=1691243863;
+        d=1e100.net; s=20221208; t=1690639141; x=1691243941;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7LyyG1iya0TK3hzn1sz1vz2ztnTw5rxQOjlg3OWMh8Q=;
-        b=LhIUZvlyCJ4wPs4BA8j9MrV/6hckXlfNchZIsoY0G0m6qngYJ0b7BbK3nmNWF6ePOI
-         HFQ9t34czcz7srPxUEFS0je6Lh4MwXZM6thHKB9519kp2aPmyfNbGnUPg0hb4gad8YEU
-         F29t9LClGIYX8E8lX7eZoLPcwAZZ9dJIzFv4tLNF2Sexl/WhMHaAqKJy2A6mrZHZeluI
-         CrbEo6GNxY3sLa/trkf8oN7Med1m1vS2dQgNW9K538k98AnZ3CPgBYc+0FcKX8DgHgSa
-         oJxvOa4daixqyp9+CYQCsnt73PRWXb+sPJ78LqfxwSQ5qHW5aClIT9LL0HYwm9zGbsi2
-         TWAg==
-X-Gm-Message-State: ABy/qLbcg0D5E9DP6n5B08vg3EnZWCTBKVymbJI4Mm8B8oM7jDy32x6/
-        3PS3UJoeayYqqc/BUWzPnwbeZK6j5KaJWlbMF2iPCg==
-X-Google-Smtp-Source: APBJJlF5udWugLl33v35fF1l7AB8fZGzw+fysS2LDauWn+63T/yM+sPz0xL5WM0AhAl7atTVDj2FDywVLd4R0rOavDc=
-X-Received: by 2002:a05:620a:1787:b0:765:22d4:b267 with SMTP id
- ay7-20020a05620a178700b0076522d4b267mr6627987qkb.52.1690639063696; Sat, 29
- Jul 2023 06:57:43 -0700 (PDT)
+        bh=0pKQ5uDa7ZswByLDltZ/DIqkWaRF0i1kVyEyWDjv/VM=;
+        b=EK5Az+aPwZ+Hek/V4siwKuEmqthXJRrwPAwcbBaZXJVJSYBfiXx/YjKfIrSm3jI/nX
+         Vs+Y/hzjqGTcmvkGULWVG7rqvHgecjfyIheU0ih6w3xP340k4Xy8Ly3aks56snQKwe71
+         zdvddYykMg+95bCFXqFaQ43NcuGt1Yd9QI5tF9oL8LOi+dJQBIbpLTUOBtlYHvYgyB/d
+         1QKqT9l18jheRTLDhf3CwRqgSWjEL5cO3qG3UBtxkHeeIxTp7lALQrc2qCwhzxCR4TCC
+         gzxFElVWi59MnjnPxiCWdyYkF/nOeCKfcjsDZESR9ZptSxgWX7K9DrQQ15epl7ZnTuax
+         2g5Q==
+X-Gm-Message-State: ABy/qLarkUgTLOW9VsumDZXL3gStXw4haeUDhyUS3Yd71w1RVQDNqQME
+        oujfC1O33Gv0d/I3/gnTYw6tnrjUq3quWvUvP+dWSg==
+X-Google-Smtp-Source: APBJJlHRY5Z/K7f4tQSecZOnTxmIXQ3MC1aWdGPujOI/R/apUpaNRiVsv0Mo/iodDKNjhZTlBABKxSaK/fRp1bmdRwA=
+X-Received: by 2002:a1f:c404:0:b0:486:4b43:b94a with SMTP id
+ u4-20020a1fc404000000b004864b43b94amr3567714vkf.6.1690639141691; Sat, 29 Jul
+ 2023 06:59:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230727095432.82591-1-okan.sahin@analog.com> <20230727095432.82591-2-okan.sahin@analog.com>
-In-Reply-To: <20230727095432.82591-2-okan.sahin@analog.com>
+References: <20230727115726.2666041-1-ruanjinjie@huawei.com>
+In-Reply-To: <20230727115726.2666041-1-ruanjinjie@huawei.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 29 Jul 2023 15:57:32 +0200
-Message-ID: <CAMRc=MeLaadEVM1UBaGSJ=cUcJ=ub7_kOc=97t37+oU6+RMuhA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: gpio: ds4520: Add ADI DS4520
-To:     Okan Sahin <okan.sahin@analog.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Sat, 29 Jul 2023 15:58:50 +0200
+Message-ID: <CAMRc=MemnFPB3Q96jFRTb5_anJG+iU0hNPUYAK8OFvJ_-1Tr8Q@mail.gmail.com>
+Subject: Re: [PATCH -next v2] gpio: davinci: Remove redundant dev_err_probe()
+To:     Ruan Jinjie <ruanjinjie@huawei.com>
+Cc:     j-keerthy@ti.com, linus.walleij@linaro.org, andy@kernel.org,
+        grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org,
+        linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 27, 2023 at 11:55=E2=80=AFAM Okan Sahin <okan.sahin@analog.com>=
+On Thu, Jul 27, 2023 at 1:58=E2=80=AFPM Ruan Jinjie <ruanjinjie@huawei.com>=
  wrote:
 >
-> Add ADI DS4520 devicetree document.
+> There is no need to call the dev_err_probe() function directly to print
+> a custom message when handling an error from platform_get_irq() function =
+as
+> it is going to display an appropriate error message in case of a failure.
 >
-> Signed-off-by: Okan Sahin <okan.sahin@analog.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
 > ---
->  .../bindings/gpio/adi,ds4520-gpio.yaml        | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/adi,ds4520-gpi=
-o.yaml
+> v2:
+> - split into 2 patches on per-driver basis
+> ---
+>  drivers/gpio/gpio-davinci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/adi,ds4520-gpio.yaml =
-b/Documentation/devicetree/bindings/gpio/adi,ds4520-gpio.yaml
-> new file mode 100644
-> index 000000000000..25b3198c4d3e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/adi,ds4520-gpio.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/adi,ds4520-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: DS4520 I2C GPIO expander
-> +
-> +maintainers:
-> +  - Okan Sahin <okan.sahin@analog.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ds4520-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  ngpios:
-> +    minimum: 1
-> +    maximum: 9
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +  - ngpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        gpio@50 {
-> +            compatible =3D "adi,ds4520-gpio";
-> +            reg =3D <0x50>;
-> +            ngpios =3D <9>;
-> +            gpio-controller;
-> +            #gpio-cells =3D <2>;
-> +        };
-> +    };
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index fff510d86e31..8db5717bdabe 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -236,7 +236,7 @@ static int davinci_gpio_probe(struct platform_device =
+*pdev)
+>         for (i =3D 0; i < nirq; i++) {
+>                 chips->irqs[i] =3D platform_get_irq(pdev, i);
+>                 if (chips->irqs[i] < 0)
+> -                       return dev_err_probe(dev, chips->irqs[i], "IRQ no=
+t populated\n");
+> +                       return chips->irqs[i];
+>         }
+>
+>         chips->chip.label =3D dev_name(dev);
 > --
-> 2.30.2
+> 2.34.1
 >
 
-Applied this and the driver, thanks!
+Applied, thanks!
 
-Bart
+Bartosz
