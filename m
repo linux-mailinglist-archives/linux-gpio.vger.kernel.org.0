@@ -2,113 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2285767FDE
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 16:01:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D752F767FE6
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 16:03:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231563AbjG2OBE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jul 2023 10:01:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50830 "EHLO
+        id S229478AbjG2ODt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jul 2023 10:03:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231370AbjG2OBD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 10:01:03 -0400
-Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDBB1707
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 07:01:02 -0700 (PDT)
-Received: by mail-vk1-xa2e.google.com with SMTP id 71dfb90a1353d-4864cc561aeso1017181e0c.0
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 07:01:02 -0700 (PDT)
+        with ESMTP id S229895AbjG2ODs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 10:03:48 -0400
+Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17F6198C
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 07:03:47 -0700 (PDT)
+Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-1bba254a7d4so2334469fac.2
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 07:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690639261; x=1691244061;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690639427; x=1691244227;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MZVAQTl/KJwMx5MiWB8LXWVD/Og4xmNjpD5ZpeSnK7c=;
-        b=ln2TgybqxMOQuiLgVhRhLYsqCFV+8HwlugaM1KqCgC8XMYyjTTJNTczBAf5RteyRiu
-         EnUxo6Gpx7MnahdGEifLBxDmjnoVDHsU27yOxV0EIgSw/JqfZgF2ut6XolsFdcpXFgY/
-         NLRO6vNtbqi4z7Wb2HqwcIQnCUk/VasMlHM5rjHx0EsvjMseLj2EFhhA3Ge2jCMmxm1p
-         JwExs0c8Fz+1a7PfrbKqaeukn5dPUJ5eMgKPTD1GYc3f3LXY6uta9uVlq9eSrmmni1iB
-         pTg1bU2dZouz/HV0Hh7D1+Qsgbzk6Lg2vxhW0bCyG6Ok0JRfsIhDE5Sl1s+eJc6EU1R8
-         skIA==
+        bh=gEVF7rXPeI4PGjsgBxtiYZJ/zbC37N4D4oIpXtrNUo8=;
+        b=n9rjjQhBzl9xSGTDKJvdpNt3zao4B2YKPNBUsV4RNnvPx0ylvu0D7RYZMUAXJeKGcA
+         vAci9rb1PSg9kD0up/XAsEq5cAcilOhXTeCX3GhT/ZvDHKp96i4nsmTPBpu4nZT/nEBd
+         HERL56HO/4+9pqPB33hnajQGV40cT2vYQQMmVApaG196V9Md5FlRwfxdDr0A96d4RUZP
+         4vFB4KiH/3ilJaM7urVznxxrL5m85R/EZnk8ziB3nxipN9PIqYiyoptr2XLxnL9E5iIL
+         aRnobeoKitpymlzl8iackFGhMU/8wdOm3/wERK8jAjtnnkV4fbWthaKOv9cWjqUY5A+R
+         LTLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690639261; x=1691244061;
+        d=1e100.net; s=20221208; t=1690639427; x=1691244227;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MZVAQTl/KJwMx5MiWB8LXWVD/Og4xmNjpD5ZpeSnK7c=;
-        b=cMuGcLOQFmtymfQT9hkv0mtCP0lKiONRWaBgOWtgrEtzrOCVXciFosKwu4sVM5/PzI
-         07+qvtdbzn0kCgckNp9ES6VfOidwbqqu6tl2xUNmKp7p06twohhhhjpag5ADHIs5Zofa
-         8UsVrBgWgtCOfki0z3oej1Xeei2J+6dgz8VvP9tySOkw/Bh9YZtm54xEeev+fcwT2egm
-         TO+ehmFjOi1WbNFIE7myWjWe9Atu5z1V7hG8SNd9PrXDm2HTvd23a9kWlmuHw2cIJ5HN
-         ZVYY1agFN4lewYSIc54xTGB19p5Ro6eHmv8bv5K6P0Q8kJyd7XNn+JjEgCs/T6i9HfOk
-         cHvw==
-X-Gm-Message-State: ABy/qLaieH0Hzb/39HgoZf/Hj0o7p+1YIL5z8MVOqolQtCgIeOC8eKEL
-        S1QO5BQhkxX112YYsIHt9D0SU4ZxfQHcbhCcGu68DA==
-X-Google-Smtp-Source: APBJJlEi2RKDbITIjmlsevHI7wqEnXUgQewcF8UvMqd3GbsnOxKtGzuN1hsrPvplsPt4ahSEpNWCfRcs3dx1OhXil1E=
-X-Received: by 2002:a1f:ed83:0:b0:471:1785:e838 with SMTP id
- l125-20020a1fed83000000b004711785e838mr3717737vkh.2.1690639261551; Sat, 29
- Jul 2023 07:01:01 -0700 (PDT)
+        bh=gEVF7rXPeI4PGjsgBxtiYZJ/zbC37N4D4oIpXtrNUo8=;
+        b=EkD4K1OSVtAPpr8V0lRZWcxc9EIj38VlmBV8Qxbk3NNGQz9maNVgeGfD2y+b3s+Shb
+         n20beobeXwUp0w13WaAI3HceOS2rpMvs7TPmYubMqFeIZDUmmvtabLqKxyGe35zY2d0/
+         DgR5yYnE5ONgc7jJoV+YfAfOq8Dfp5gFibk4kIU/xr3Kitx4dFfgvAsXRrTC1Nps6acx
+         m4ip6oUXYMupkTsDcbRZWf9W0HodGzpjjRsUYGsMD1tpvoZ1wClgWwO6FKz5Nr76ddEd
+         n+aYHTP9gjOlmGmbZA1Rp9oIN3+e7ZpTirk/rzCKTNh8VnvxlHC5JQpzsieulQ9RaSjj
+         pnjQ==
+X-Gm-Message-State: ABy/qLapF+0OyIeV/O0OskPUkqAJ3lB7K+x4ub/PdZh0hOzU15QjHM1l
+        icOWwHWaSxa0/rnVSbIso17UBQHrlDAZU/pswcarpTfuYqkqWWkEyUM=
+X-Google-Smtp-Source: APBJJlH6AijIQ1JOjRYCMzv/L1hp+lVX335euKo8lnemq/h4JZC8ji77ZfUsvEpxrqUMMnpKdq8hMj1x+vWJBjKJrJQ=
+X-Received: by 2002:a05:6870:41d0:b0:1a6:a547:ffe1 with SMTP id
+ z16-20020a05687041d000b001a6a547ffe1mr5626596oac.21.1690639427203; Sat, 29
+ Jul 2023 07:03:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230724063520.182888-1-alexander.stein@ew.tq-group.com>
-In-Reply-To: <20230724063520.182888-1-alexander.stein@ew.tq-group.com>
+References: <20230712094857.218105-1-alex@shruggie.ro>
+In-Reply-To: <20230712094857.218105-1-alex@shruggie.ro>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 29 Jul 2023 16:00:50 +0200
-Message-ID: <CAMRc=Me3PAf7vuBS9MbLDh1t2MMWiTjA1CTW38UyMLmioYEowg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: Add gpio-line-names to STMPE GPIO
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
+Date:   Sat, 29 Jul 2023 16:03:36 +0200
+Message-ID: <CAMRc=Mfs_bAxHGqVzuAUOTLLAX8gUhAepNcHrgLXzkFHc89Nnw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: 74xx-mmio: remove unneeded platform_set_drvdata() call
+To:     Alexandru Ardelean <alex@shruggie.ro>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, andy@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 24, 2023 at 8:35=E2=80=AFAM Alexander Stein
-<alexander.stein@ew.tq-group.com> wrote:
+On Wed, Jul 12, 2023 at 11:49=E2=80=AFAM Alexandru Ardelean <alex@shruggie.=
+ro> wrote:
 >
-> This is a gpio-controller, so gpio-line-names should be allowed as well.
-> stmpe2403 supports up to 24 GPIOs.
+> The platform_set_drvdata() was needed when the driver had an explicit
+> remove function.
+> That function got removed a while back, so we don't need to keep a pointe=
+r
+> (on 'dev->driver_data') for the private data of the driver anymore.
 >
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Signed-off-by: Alexandru Ardelean <alex@shruggie.ro>
 > ---
-> Changes in v2:
-> * Add min/maxItems
+>  drivers/gpio/gpio-74xx-mmio.c | 2 --
+>  1 file changed, 2 deletions(-)
 >
->  Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> diff --git a/drivers/gpio/gpio-74xx-mmio.c b/drivers/gpio/gpio-74xx-mmio.=
+c
+> index 0464f1ecd20d..c7ac5a9ffb1f 100644
+> --- a/drivers/gpio/gpio-74xx-mmio.c
+> +++ b/drivers/gpio/gpio-74xx-mmio.c
+> @@ -135,8 +135,6 @@ static int mmio_74xx_gpio_probe(struct platform_devic=
+e *pdev)
+>         priv->gc.ngpio =3D MMIO_74XX_BIT_CNT(priv->flags);
+>         priv->gc.owner =3D THIS_MODULE;
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml b/=
-Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
-> index 22c0cae73425..4555f1644a4d 100644
-> --- a/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/st,stmpe-gpio.yaml
-> @@ -28,6 +28,10 @@ properties:
+> -       platform_set_drvdata(pdev, priv);
+> -
+>         return devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
+>  }
 >
->    gpio-controller: true
->
-> +  gpio-line-names:
-> +    minItems: 1
-> +    maxItems: 24
-> +
->    interrupt-controller: true
->
->    st,norequest-mask:
 > --
-> 2.34.1
+> 2.40.1
 >
 
 Applied, thanks!
