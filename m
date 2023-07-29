@@ -2,121 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02B9C7676D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jul 2023 22:17:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 731B77679A0
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 02:34:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233187AbjG1UQ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jul 2023 16:16:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
+        id S231997AbjG2Aet (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jul 2023 20:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233061AbjG1UQ6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 16:16:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4074C4483;
-        Fri, 28 Jul 2023 13:16:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B6EEA621F5;
-        Fri, 28 Jul 2023 20:16:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F1DEC433C8;
-        Fri, 28 Jul 2023 20:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690575416;
-        bh=z+gdMsxHU/7YKL9vhgSuvNK2Nl2t+BdQQB04fK3kaxg=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=VjV2emDeaa46kCYj97nEakfERp2X5HQbMXwwOHf2lVmTjVx4+PL2sCt9kQhVtU9qP
-         SeGnCbtalKjl4bHUldfHzpIKa4A0O9XqQO2BlfwgAhSvClEBVlZYGHpzetRJ/mZJB1
-         SbCiV6gLdTk+ptQPtEfn8mpF6iAY7kbT3bQn1gBfpiEDiL9TJdbfcqywxXJdcUcfFI
-         sRes9xYF8bl+SFStNhOMlSOfA3XmnWQ1GVhGsbunaQ7m5/rCbFVvo/pSNTPn6Iec9b
-         IqnwPmC2Umyaazx9jw1tWHwIvpxhrCbtPYVkSL4IxwGUwzNjwnnhRwZGyCrt9LPgmY
-         vImnhSw11L+Qg==
-Received: (nullmailer pid 1272797 invoked by uid 1000);
-        Fri, 28 Jul 2023 20:16:54 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S229592AbjG2Aer (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jul 2023 20:34:47 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C11DC2;
+        Fri, 28 Jul 2023 17:34:46 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36T0CUlm023961;
+        Sat, 29 Jul 2023 00:34:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=qcppdkim1;
+ bh=F27hwl9tI974THVrfkh2OErJAY/cWYVzivqDD+GiXXU=;
+ b=WEETP6ln7mRk5V1iU/Kn8ax0G0qg/AksUIgA8+CK3VGDFlohDR7IuZxMXVzuziDneYbI
+ F7KdhvJd1n9kS4lVqcErZfL8QBQFhXP+AllY1f0vE9Po+9sKhbKpDLEwdVqI/bfH8yix
+ aKE+qhX1bwf+o4rvJ4hqfG16A7y92FnBdCfmRElfDnaLIYS2p2E8e8b2f/jc8xUmoANZ
+ ELqfAFG4cDYS1iXchl14PFF+DP+T6mAVsyOZKLWgS5qM215Lvh7ij21bxKSA6s85njll
+ VjYxGDjQJyem0jU9G7uUsjvRfnd8qLiarXsLOlEVMQ6KPgG/LPxIyo7NTg80V1Y7gXdH jw== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s4j0g0phg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Jul 2023 00:34:42 +0000
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36T0YfNA012186
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Jul 2023 00:34:41 GMT
+Received: from quicinc.com (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 28 Jul
+ 2023 17:34:41 -0700
+Date:   Fri, 28 Jul 2023 17:34:40 -0700
+From:   Guru Das Srinagesh <quic_gurus@quicinc.com>
+To:     Kathiravan T <quic_kathirav@quicinc.com>
+CC:     Trilok Soni <quic_tsoni@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Elliot Berman" <quic_eberman@quicinc.com>,
+        Mukesh Ojha <quic_mojha@quicinc.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <quic_srichara@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_saahtoma@quicinc.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH V5 1/3] firmware: qcom_scm: provide a read-modify-write
+ function
+Message-ID: <20230729003440.GB25463@quicinc.com>
+References: <20230720070408.1093698-1-quic_kathirav@quicinc.com>
+ <20230720070408.1093698-2-quic_kathirav@quicinc.com>
+ <fdd4bc8b-1349-485d-18c5-c6d69cd415a1@quicinc.com>
+ <3ab86e8d-cc00-d0bb-20f8-4c75c90a7db8@quicinc.com>
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Stanislav Jakubek <stano.jakubek@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To: <ZMQU7ap9CxfY5eIu@standask-GA-A55M-S2HP>
-References: <ZMQU7ap9CxfY5eIu@standask-GA-A55M-S2HP>
-Message-Id: <169057541402.1272771.5559155896859483307.robh@kernel.org>
-Subject: Re: [RFC] dt-bindings: gpio: brcm,kona-gpio: convert to YAML
-Date:   Fri, 28 Jul 2023 14:16:54 -0600
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ab86e8d-cc00-d0bb-20f8-4c75c90a7db8@quicinc.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: VTOhw3Imm0ZSF4_uivZokM8wlR6Naa3e
+X-Proofpoint-ORIG-GUID: VTOhw3Imm0ZSF4_uivZokM8wlR6Naa3e
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-27_10,2023-07-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=433 mlxscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 phishscore=0 adultscore=0 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2307290003
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On Fri, 28 Jul 2023 21:20:13 +0200, Stanislav Jakubek wrote:
-> Convert Broadcom Kona family GPIO controller bindings to DT schema.
+On Jul 23 2023 19:25, Kathiravan T wrote:
 > 
-> Changes during conversion:
->   - add used, but previously undocumented SoC-specific compatibles
+> On 7/22/2023 6:47 AM, Trilok Soni wrote:
+> >On 7/20/2023 12:04 AM, Kathiravan T wrote:
+> >>From: Mukesh Ojha <quic_mojha@quicinc.com>
+> >>
+> >>It was realized by Srinivas K. that there is a need of read-modify-write
+> >>scm exported function so that it can be used by multiple clients.
+> >>
+> >>Let's introduce qcom_scm_io_update_field() which masks out the bits and
+> >>write the passed value to that bit-offset.
+> >>
+> >>Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >>Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> >>Signed-off-by: Kathiravan T <quic_kathirav@quicinc.com>
+> >>---
+> >>Changes in V5:
+> >>    - No changes
+> >>
+> >>  drivers/firmware/qcom_scm.c            | 15 +++++++++++++++
+> >>  include/linux/firmware/qcom/qcom_scm.h |  2 ++
+> >>  2 files changed, 17 insertions(+)
+> >>
+> >>diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> >>index fde33acd46b7..104d86e49b97 100644
+> >>--- a/drivers/firmware/qcom_scm.c
+> >>+++ b/drivers/firmware/qcom_scm.c
+> >>@@ -407,6 +407,21 @@ int qcom_scm_set_remote_state(u32 state, u32 id)
+> >>  }
+> >>  EXPORT_SYMBOL(qcom_scm_set_remote_state);
+> >>  +int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask,
+> >>unsigned int val)
+> >>+{
+> >>+    unsigned int old, new;
+> >>+    int ret;
+> >>+
+> >>+    ret = qcom_scm_io_readl(addr, &old);
+> >>+    if (ret)
+> >>+        return ret;
+> >>+
+> >>+    new = (old & ~mask) | (val & mask);
+> >>+
+> >>+    return qcom_scm_io_writel(addr, new);
+> >>+}
+> >>+EXPORT_SYMBOL(qcom_scm_io_update_field);
+> >
+> >EXPORT_SYMBO_GPL please.
 > 
-> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
-> ---
-> RFC since dt_binding_check is giving me these errors/warnings:
 > 
-> Documentation/devicetree/bindings/gpio/brcm,kona-gpio.example.dts:21.23-34.11: Warning (interrupts_property): /example-0/gpio@35003000: Missing interrupt-parent
-> 
-> The old txt bindings and all current DTs do not use interrupt-parent AFAICT,
-> so I'm not sure what to do about that.
-> 
-> Documentation/devicetree/bindings/gpio/brcm,kona-gpio.example.dtb: gpio@35003000: interrupts: [[0], [106], [4], [0], [115], [4], [0], [114], [4], [0], [113], [4], [0], [112], [4], [0], [111], [4]] is too long
-> 
-> Here I'm not even sure what the issue is.
-> 
->  .../bindings/gpio/brcm,kona-gpio.txt          | 52 -------------
->  .../bindings/gpio/brcm,kona-gpio.yaml         | 77 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 78 insertions(+), 53 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,kona-gpio.yaml
-> 
+> Sure, is it okay if I send the patch to convert the existing EXPORT_SYMBOL
+> to EXPORT_SYMBOL_GPL as well?
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+This is done already [1].
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/gpio/brcm,kona-gpio.example.dts:21.23-34.11: Warning (interrupts_property): /example-0/gpio@35003000: Missing interrupt-parent
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.example.dtb: gpio@35003000: interrupts: [[0], [106], [4], [0], [115], [4], [0], [114], [4], [0], [113], [4], [0], [112], [4], [0], [111], [4]] is too long
-	from schema $id: http://devicetree.org/schemas/gpio/brcm,kona-gpio.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/ZMQU7ap9CxfY5eIu@standask-GA-A55M-S2HP
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+[1] https://lore.kernel.org/lkml/19d9ac0bf79f957574ef9b3b73246ea0113cc0fd.1690503893.git.quic_gurus@quicinc.com/
