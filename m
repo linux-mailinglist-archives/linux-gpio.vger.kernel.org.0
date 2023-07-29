@@ -2,99 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2D46767FEE
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 16:06:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDF58767FF0
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 16:07:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231778AbjG2OGa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jul 2023 10:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53300 "EHLO
+        id S229746AbjG2OHn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jul 2023 10:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231796AbjG2OG3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 10:06:29 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CF72D71
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 07:06:25 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id 5614622812f47-3a5ad6087a1so1938539b6e.2
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 07:06:25 -0700 (PDT)
+        with ESMTP id S229865AbjG2OHm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 10:07:42 -0400
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF97A198C
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 07:07:37 -0700 (PDT)
+Received: by mail-ot1-x32b.google.com with SMTP id 46e09a7af769-6b9f46dc2e3so1996788a34.0
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 07:07:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690639584; x=1691244384;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690639657; x=1691244457;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=crd6A1HxfzYrRiHiG3JTOKFWwf3yPPJzZ+7nyJosIlQ=;
-        b=oA17bYfJB+sOc1FYbbZASQMOvUZu5/Sxo9vTA7LT34hjORio7D4hD6RAsPc814HcN1
-         /Asv1He6MoLQgHHpYWD/1v5HXUAcBslu8HlIcA3KKPtcKaqfB/3R/CjAcPO7ojRihWvO
-         JRwDtaFt9HrpgnqeSshNb9WxUCS0QwQAJjaQcU0mg5MDYvT0aDBiaynKSWz9NafHgoJA
-         EDUCHipYISO/gCFV7LpFLn8+EN+bHhKgRuU9Mp2MDERHSzytwidPESSvFceB7Jt+gqcc
-         uPyD6/VQhBP6UzLvnoK0Mc6TZwYNZCtfWYaWDoiPB7jGTIrXcw3K9Owt1sdVqVlGM0hC
-         gc5A==
+        bh=GD77DHRFkpskZxkdfsA8u8IlVV6prD4X4xlSeo6EhIM=;
+        b=QAWOHdXh9uKRNIu3bAYkqMYN5WCkfy92yLbRF1PONUCv7nGIAHugRghDHR44yjePX8
+         AD35OEjB7QqtWu4Kn8M5kg2q9JGFsqjufkudqHIXbtP0VsnwllTRcJxRuXSawuIzTK3k
+         xhvlkSyETzyUK5YswUThGlyIMKz35Prp7ymDWkA1B/SHKLJuobrf1kcQWBFg8kbfKvOh
+         V1jNUKogFAoT/3630VMbqnLbHCx8JZ0k4br3UJ5Tm2+tetozHH2G9ZusNO6jxLO8/4pT
+         KsddTtk+TrtivBFIw9QhHPY3WoKr7u0KoA/BOV1BU4O5M6Ro3Kj1CI5jhznUyx5PL849
+         +YXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690639584; x=1691244384;
+        d=1e100.net; s=20221208; t=1690639657; x=1691244457;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=crd6A1HxfzYrRiHiG3JTOKFWwf3yPPJzZ+7nyJosIlQ=;
-        b=Ct+IfZR0SBMMAXRyIJpchRxOHI+F8dE7RFOHmVFYemyFSh1Cqc6a0vBqsHitCV7UAR
-         appd77tP5hti/L5Xds6FkfCIK8svjbhEACm3v58C2bu6D08TjQ1iQhMcc+rO297IWFWu
-         CcwWJhy1yvhpBw47oj8olVNbZ3X8DcweSdr1cM/X3f8EDKa4VIdeZSqvYdAYlxEo4BZ6
-         l5ZtE8IxUQ+jkN2agvqQeBL2VUICSf9RkgQG+jjQ7dGMXr+kf2F1/9+SfbQX9Hiucw7O
-         IfFUwCUl6EWbOvCSz6byhPlFhaSevhOhaNsX4yj2oH5jMqnUd/jlSWoTXH4BJDxOq2vx
-         Gjjg==
-X-Gm-Message-State: ABy/qLbaCckIb70Y6opvVjbBxOA614SE3Ae8rL7fSghZBWp2sajyh8bE
-        fKE7mta6MPnxkEoCvqBHeLhAXGk5YucxP9rcBOwwIw==
-X-Google-Smtp-Source: APBJJlErm1+d3GEVhaaq1fHgFl4iK7NNfgxhOTKhBvKUG+2eD3XIHyV3Yy9G2z12mepW01OzXkAvL3uwZ0ht3DcDT8M=
-X-Received: by 2002:a05:6358:5292:b0:137:881b:fc73 with SMTP id
- g18-20020a056358529200b00137881bfc73mr2293977rwa.2.1690639584580; Sat, 29 Jul
- 2023 07:06:24 -0700 (PDT)
+        bh=GD77DHRFkpskZxkdfsA8u8IlVV6prD4X4xlSeo6EhIM=;
+        b=RzpFzTnmQcNg5ppIuYk4Wh82odk6YG6IdQZblqXXglhA0DsDiBsDRLBsXXpseclKPZ
+         U+T67a7ij9DjDlbxYaOj9zGjXb+zCxWf/LU+Ggr0wW9D7LKOBMWt3/s/l0QHkf69mRfY
+         Rx3lLj6dK+4v05vJYub/rT96XaQNGmJNOCn+2BSYfPDI9w/ArnUI83+D2m0YO6Wu7Xx2
+         cMnIjrAVNXaDkaUKM+Dkism7qAUc4QfBQawFs0sBQiT6EWw7H78w58/6eSjF41yiNBZe
+         Qv+gO9F4rxKvpHKbLCIcV/s3fd5MJk1C1e3wlqdI7OQFR4TR2ZFFVgcr8EY4sX5reYXa
+         Wvag==
+X-Gm-Message-State: ABy/qLZ1hDxN/O8UF1/bVaKMr0vKnJwt4TfgOupVO2HhjMhD1BVvvGSx
+        yibHVs/M7sfq8lpn+8c98/NZm0QlZaCwXTazozKIOw==
+X-Google-Smtp-Source: APBJJlGSWNTYG5qyQU6o8eskcO9zip6VB+0lsdetAM9RCOpO4OF1E2jUr7BMlj9Oyok2ltJioyP1e4VtlEaFd9FL8Ew=
+X-Received: by 2002:a05:6358:5e0e:b0:139:55de:329 with SMTP id
+ q14-20020a0563585e0e00b0013955de0329mr1766611rwn.27.1690639656981; Sat, 29
+ Jul 2023 07:07:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230719094803.17677-1-aboutphysycs@gmail.com>
-In-Reply-To: <20230719094803.17677-1-aboutphysycs@gmail.com>
+References: <20230717121004.5205-1-aboutphysycs@gmail.com>
+In-Reply-To: <20230717121004.5205-1-aboutphysycs@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 29 Jul 2023 16:06:13 +0200
-Message-ID: <CAMRc=Mfvfj1VgRkJUbcnqHr=RM1oaR4+nDGX46FLyE_pfhX0UA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: logicvc: remove unneeded platform_set_drvdata() call
+Date:   Sat, 29 Jul 2023 16:07:26 +0200
+Message-ID: <CAMRc=MdBni3dRHjTvVeZ2idCFcd=xf6pNiF-DNurfdtSCPzX2g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: eic-sprd: remove unneeded platform_set_drvdata() call
 To:     Andrei Coardos <aboutphysycs@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        andy@kernel.org, linus.walleij@linaro.org,
+        zhang.lyra@gmail.com, baolin.wang@linux.alibaba.com,
+        orsonzhai@gmail.com, andy@kernel.org, linus.walleij@linaro.org,
         Alexandru Ardelean <alex@shruggie.ro>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 11:48=E2=80=AFAM Andrei Coardos <aboutphysycs@gmail=
-.com> wrote:
+On Mon, Jul 17, 2023 at 2:10=E2=80=AFPM Andrei Coardos <aboutphysycs@gmail.=
+com> wrote:
 >
-> The platform_set_drvdata() isn't needed for anything. The function is a
-> simple setter that doesn't change anything in the code. That is because
-> there isn't a get function and since it has no dependencies it can be
-> removed.
+> The platform_set_drvdata() call was never used, ever since the driver was
+> originally added.
+> It looks like this copy+paste left-over. Possibly the author copied from =
+a
+> driver that had this line, but also had a remove hook.
 >
 > Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
 > Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
 > ---
->  drivers/gpio/gpio-logicvc.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/gpio/gpio-eic-sprd.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpio-logicvc.c b/drivers/gpio/gpio-logicvc.c
-> index 992cc958a43f..9b4789deae45 100644
-> --- a/drivers/gpio/gpio-logicvc.c
-> +++ b/drivers/gpio/gpio-logicvc.c
-> @@ -139,8 +139,6 @@ static int logicvc_gpio_probe(struct platform_device =
-*pdev)
->         logicvc->chip.set =3D logicvc_gpio_set;
->         logicvc->chip.direction_output =3D logicvc_gpio_direction_output;
+> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+> index 84352a6f4973..53db88ae2a20 100644
+> --- a/drivers/gpio/gpio-eic-sprd.c
+> +++ b/drivers/gpio/gpio-eic-sprd.c
+> @@ -653,7 +653,6 @@ static int sprd_eic_probe(struct platform_device *pde=
+v)
+>                 return ret;
+>         }
 >
-> -       platform_set_drvdata(pdev, logicvc);
-> -
->         return devm_gpiochip_add_data(dev, &logicvc->chip, logicvc);
+> -       platform_set_drvdata(pdev, sprd_eic);
+>         return 0;
 >  }
 >
 > --
