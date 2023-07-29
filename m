@@ -2,252 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57C6C767FB0
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 15:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE294767FB9
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 15:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbjG2NtJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jul 2023 09:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43776 "EHLO
+        id S230170AbjG2NvS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jul 2023 09:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229803AbjG2NtI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 09:49:08 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B86185
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 06:48:35 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id ada2fe7eead31-44768609e0bso926146137.0
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 06:48:35 -0700 (PDT)
+        with ESMTP id S230122AbjG2NvR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 09:51:17 -0400
+Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1831F185
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 06:51:17 -0700 (PDT)
+Received: by mail-vs1-xe31.google.com with SMTP id ada2fe7eead31-44504b2141bso1155809137.2
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 06:51:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690638512; x=1691243312;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690638676; x=1691243476;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F9K8MfQ/2KYhz06j+Ti9C7ni8VHpjYsaGehJNg80lJI=;
-        b=naIQ08e9IBfOBzXIQ+DBbyHF77bOcJQNh533DgoExpps7JzVZoEv1fxQ3inQztlBHm
-         mvKYyc0vz0Bbi8iKgmhAG6TBwUwkznd1U23XJpCnXdx6CayBCxZOyv3cUkDAHaX4u8ei
-         COapMeQMEOppzxngooX247ziuuQBLjEWaKiqrHsTP78Zwfvi/mK6l9E34p0gWB7lxL5L
-         HGAAvZlH7J/slyJ7/4CQFtlTfy1nFY17XHQYEPD6Y3i9UsmlMC15ANaAlgLcVYliJzO7
-         1UF70PEiYbhQjdxhD7JzhFumvZkL7YhPtYRUmUqr4nl65OO6Kutq0DACWraQwUQc/Yau
-         DHXQ==
+        bh=FMNLUfpZqoDexDPllLPnk4uUqUNtiZ0vTNU2n1jKZX8=;
+        b=fG5rmuqb4wscMQ6ZZRU/koMEGPRVOVF69vGWRmQTiAMB5I/OTHNgvN7CQnWfbZ6tWV
+         hbloZHILAMKXvCS0jZMBfEC0+HOvby1jgtykDYQizM14X5IVvfqzr1Ri2PfE77guu7n9
+         AQqSzskdRDFXmPJYooB5iNhHoSF6dRL2w/z/BaSH7ml4w/o4Lj54uAcq0Z2uvGKT3h7l
+         wqR4KgkunZxWbYZW6UGVefaKq7Oa1oKzqw1oVpw0wSnT7VytfRb6sp1QGrbLubjdySDn
+         WWsE6Qg356QGSogawab2F3lTSr4tMB0n3iIfFE0u30zK2hJP9lykPgTh1yDT1X7OZssm
+         vlLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690638512; x=1691243312;
+        d=1e100.net; s=20221208; t=1690638676; x=1691243476;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F9K8MfQ/2KYhz06j+Ti9C7ni8VHpjYsaGehJNg80lJI=;
-        b=BSELkZx0HGq7dy77gY7G5vNvYC+5zNPR1LnCAQoH/bJTmfmji7PwIPUn/ugifisWlo
-         6yqHYxaxnyRbzxryFgvMu1xdCqS0wE/5O5KxV067ZR7zo/g7SYeEC4Qls8UNr3joSsl9
-         /D2hrnBSmtxWUtJ4soX+8APm/G0rEHdHCIkIjJt/9QiIlleCp+zCiZzwNQEemmzsucV/
-         PB7EbXbSRZ6tXJF9KPKMc8kVUdbPMyC61BqqOvqhKuOUHrLfMFtUSHTBgAUS6uMOm0uu
-         VSKpRVakjFmrOUc2+8weHQunLg9JPb3JojZQN+DHBIuwCYVIhFRnvTYjpnJVudS7xYzP
-         eG4A==
-X-Gm-Message-State: ABy/qLYi4cRnpax16M3xGJ34WP9O7SJaFNBf/k1x+5rB1hJyJVDmS42I
-        6udaeCWXQE+KQgetR3OdJQFcGohg8adzFbW8nparMKI7YjLanM9Z910=
-X-Google-Smtp-Source: APBJJlEGxuzP14KFNTnaZg4SyM3xkhc7QIoXLz/6CmWWZKRzZ8SxNn9y5I7BtzIVblotIewqVro2HnrOCA4pAxkY964=
-X-Received: by 2002:a67:eb44:0:b0:447:6a0a:4c5f with SMTP id
- x4-20020a67eb44000000b004476a0a4c5fmr3432044vso.18.1690638512311; Sat, 29 Jul
- 2023 06:48:32 -0700 (PDT)
+        bh=FMNLUfpZqoDexDPllLPnk4uUqUNtiZ0vTNU2n1jKZX8=;
+        b=KV3sY6VyJk8Ogr0Ihw2y3aaCvkjdcwV3sCu7TK8C9RpC13V6IZeOClhMNEjnGOaX6K
+         oh1KcM2GdoCGGnQ7FZodDDhQWZ5fcG1aqIC0ExL2A+XtU3iVnZHEJK6TNFyqolykNkAr
+         rRtjtsBEtFQfLGQM6Cs3rZ8MXsx+hPk43LiYXtZ4I6NH+SiqpDdrXPaG6jxKAGl5qT/X
+         sQ81cft1fKpgMMebBxBYyNOLg0rinBQmosWU8K/YjCpJZDu1zwuP9tCUVh2q7xPziv2b
+         0aQC4llT3Ud/fhZ9xV3YjAJYNyWnTCt1dwIf92QFKSm6ixO+qRpWLxNfj9H3mDMp6rc5
+         +Bkg==
+X-Gm-Message-State: ABy/qLYcQIVn0HL9k2FsoVlLlHikbfB7E3Wzo5qNbyZDsdKQ11TM2IBP
+        7eGalzhSV85xOZr5RH3w8lVmK3n2YtRQTg0wXGJFcw==
+X-Google-Smtp-Source: APBJJlFiKvyURAlxhHJrT2uslgauOKKxfrwaDb6shL8iDM+gSjpfh1DG6gEV1onr92MCAPpOepW/tqMIkMIQG4k1T58=
+X-Received: by 2002:a05:6102:7cb:b0:440:de70:6c10 with SMTP id
+ y11-20020a05610207cb00b00440de706c10mr3071236vsg.14.1690638676157; Sat, 29
+ Jul 2023 06:51:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230711092328.26598-1-zhuyinbo@loongson.cn>
-In-Reply-To: <20230711092328.26598-1-zhuyinbo@loongson.cn>
+References: <20230727124043.2751747-1-ruanjinjie@huawei.com>
+In-Reply-To: <20230727124043.2751747-1-ruanjinjie@huawei.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 29 Jul 2023 15:48:21 +0200
-Message-ID: <CAMRc=MeJfWO+munPQGLtODEXyiS0g=MTm2E71etCLng1HXOq-A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: loongson: add firmware offset parse support
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        Liu Peibao <liupeibao@loongson.cn>,
-        loongson-kernel@lists.loongnix.cn
+Date:   Sat, 29 Jul 2023 15:51:05 +0200
+Message-ID: <CAMRc=MdYwzrK68+9eMq8_1unP=VR5Nv-bLoEJu1UARHHLkt2uw@mail.gmail.com>
+Subject: Re: [PATCH -next v3] gpio: omap: Remove redundant dev_err_probe() and
+ zero value handle code
+To:     Ruan Jinjie <ruanjinjie@huawei.com>
+Cc:     linus.walleij@linaro.org, andy@kernel.org,
+        grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org,
+        linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 11:23=E2=80=AFAM Yinbo Zhu <zhuyinbo@loongson.cn> w=
-rote:
+On Thu, Jul 27, 2023 at 2:41=E2=80=AFPM Ruan Jinjie <ruanjinjie@huawei.com>=
+ wrote:
 >
-> Some platforms contain multiple GPIO chips that with different offset
-> addresses, if using acpi_device_id or of_device_id's data domain to
-> initialize GPIO chip and different compatibles need to be added, but
-> this addition is unnecessary because these GPIO chips are compatible
-> with each other. Therefore, this driver adds support for parsing the
-> necessary offset elements of GPIO chips from firmware to fix such
-> issue.
+> There is no need to call the dev_err_probe() function directly to print
+> a custom message when handling an error from platform_get_irq() function =
+as
+> it is going to display an appropriate error message in case of a failure.
 >
-
-The commit message is hard to parse, it took me a long while trying to
-figure out what it's saying. Why not: "Loongson GPIO controllers come
-in multiple variants that are compatible except for certain register
-offset values. Add support for device properties allowing to specify
-them in ACPI or DT."
-
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> And the code to handle bank->irq =3D 0 is redundant because
+> platform_get_irq() do not return 0.
+>
+> Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
 > ---
->  drivers/gpio/gpio-loongson-64bit.c | 71 +++++++++++++++++++++++++++---
->  1 file changed, 64 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loong=
-son-64bit.c
-> index 06213bbfabdd..7f92cb6205b2 100644
-> --- a/drivers/gpio/gpio-loongson-64bit.c
-> +++ b/drivers/gpio/gpio-loongson-64bit.c
-> @@ -26,6 +26,7 @@ struct loongson_gpio_chip_data {
->         unsigned int            conf_offset;
->         unsigned int            out_offset;
->         unsigned int            in_offset;
-> +       unsigned int            inten_offset;
->  };
->
->  struct loongson_gpio_chip {
-> @@ -117,7 +118,17 @@ static void loongson_gpio_set(struct gpio_chip *chip=
-, unsigned int pin, int valu
->
->  static int loongson_gpio_to_irq(struct gpio_chip *chip, unsigned int off=
-set)
->  {
-> +       unsigned int u;
->         struct platform_device *pdev =3D to_platform_device(chip->parent)=
-;
-> +       struct loongson_gpio_chip *lgpio =3D to_loongson_gpio_chip(chip);
-> +
-> +       if (lgpio->chip_data->mode =3D=3D BIT_CTRL_MODE) {
-> +               u =3D readl(lgpio->reg_base + lgpio->chip_data->inten_off=
-set + offset / 32 * 4);
-> +               u |=3D BIT(offset % 32);
-> +               writel(u, lgpio->reg_base + lgpio->chip_data->inten_offse=
-t + offset / 32 * 4);
-> +       } else {
-> +               writeb(1, lgpio->reg_base + lgpio->chip_data->inten_offse=
-t + offset);
-> +       }
->
->         return platform_get_irq(pdev, offset);
->  }
-> @@ -127,11 +138,30 @@ static int loongson_gpio_init(struct device *dev, s=
-truct loongson_gpio_chip *lgp
->  {
->         int ret;
->         u32 ngpios;
-> +       unsigned int io_width;
->
->         lgpio->reg_base =3D reg_base;
-> +       if (device_property_read_u32(dev, "ngpios", &ngpios) || !ngpios)
-> +               return -EINVAL;
-> +
-> +       ret =3D DIV_ROUND_UP(ngpios, 8);
-> +       switch (ret) {
-> +       case 1 ... 2:
-> +               io_width =3D ret;
-> +               break;
-> +       case 3 ... 4:
-> +               io_width =3D 0x4;
-> +               break;
-> +       case 5 ... 8:
-> +               io_width =3D 0x8;
-> +               break;
-> +       default:
-> +               dev_err(dev, "unsupported io width\n");
-> +               return -EINVAL;
-> +       }
->
->         if (lgpio->chip_data->mode =3D=3D BIT_CTRL_MODE) {
-> -               ret =3D bgpio_init(&lgpio->chip, dev, 8,
-> +               ret =3D bgpio_init(&lgpio->chip, dev, io_width,
->                                 lgpio->reg_base + lgpio->chip_data->in_of=
-fset,
->                                 lgpio->reg_base + lgpio->chip_data->out_o=
-ffset,
->                                 NULL, NULL,
-> @@ -151,16 +181,35 @@ static int loongson_gpio_init(struct device *dev, s=
-truct loongson_gpio_chip *lgp
->                 spin_lock_init(&lgpio->lock);
->         }
->
-> -       device_property_read_u32(dev, "ngpios", &ngpios);
-> -
-> -       lgpio->chip.can_sleep =3D 0;
->         lgpio->chip.ngpio =3D ngpios;
-> -       lgpio->chip.label =3D lgpio->chip_data->label;
-> -       lgpio->chip.to_irq =3D loongson_gpio_to_irq;
-> +       lgpio->chip.can_sleep =3D 0;
-> +       if (lgpio->chip_data->label)
-> +               lgpio->chip.label =3D lgpio->chip_data->label;
-> +       else
-> +               lgpio->chip.label =3D kstrdup(to_platform_device(dev)->na=
-me, GFP_KERNEL);
-> +
-> +       if (lgpio->chip_data->inten_offset)
-> +               lgpio->chip.to_irq =3D loongson_gpio_to_irq;
->
->         return devm_gpiochip_add_data(dev, &lgpio->chip, lgpio);
->  }
->
-> +static int loongson_gpio_get_props(struct device *dev,
-> +                                   struct loongson_gpio_chip *lgpio)
-> +{
-> +       const struct loongson_gpio_chip_data *d =3D lgpio->chip_data;
-> +
-> +       if (device_property_read_u32(dev, "loongson,gpio-conf-offset", (u=
-32 *)&d->conf_offset)
-> +           || device_property_read_u32(dev, "loongson,gpio-in-offset", (=
-u32 *)&d->in_offset)
-> +           || device_property_read_u32(dev, "loongson,gpio-out-offset", =
-(u32 *)&d->out_offset)
-> +           || device_property_read_u32(dev, "loongson,gpio-ctrl-mode", (=
-u32 *)&d->mode))
 
-These need to be first specified in DT bindings. Please do it in a
-separate patch.
+Applied, thanks!
 
 Bart
-
-> +               return -EINVAL;
-> +
-> +       device_property_read_u32(dev, "loongson,gpio-inten-offset", (u32 =
-*)&d->inten_offset);
-> +
-> +       return 0;
-> +}
-> +
->  static int loongson_gpio_probe(struct platform_device *pdev)
->  {
->         void __iomem *reg_base;
-> @@ -172,7 +221,12 @@ static int loongson_gpio_probe(struct platform_devic=
-e *pdev)
->         if (!lgpio)
->                 return -ENOMEM;
->
-> -       lgpio->chip_data =3D device_get_match_data(dev);
-> +       lgpio->chip_data =3D devm_kzalloc(dev, sizeof(*lgpio->chip_data),=
- GFP_KERNEL);
-> +       if (!lgpio->chip_data)
-> +               return -ENOMEM;
-> +
-> +       if (loongson_gpio_get_props(dev, lgpio))
-> +               lgpio->chip_data =3D device_get_match_data(dev);
->
->         reg_base =3D devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(reg_base))
-> @@ -215,6 +269,9 @@ static const struct acpi_device_id loongson_gpio_acpi=
-_match[] =3D {
->                 .id =3D "LOON0002",
->                 .driver_data =3D (kernel_ulong_t)&loongson_gpio_ls7a_data=
-,
->         },
-> +       {
-> +               .id =3D "LOON0007",
-> +       },
->         {}
->  };
->  MODULE_DEVICE_TABLE(acpi, loongson_gpio_acpi_match);
-> --
-> 2.31.1
->
