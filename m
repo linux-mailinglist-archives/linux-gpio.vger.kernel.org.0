@@ -2,111 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 839E67680A1
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 18:39:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A93A87681F9
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Jul 2023 23:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbjG2Qjs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jul 2023 12:39:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53482 "EHLO
+        id S229488AbjG2Vh2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jul 2023 17:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbjG2Qjr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 12:39:47 -0400
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5315CE79;
-        Sat, 29 Jul 2023 09:39:44 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9200B1BF207;
-        Sat, 29 Jul 2023 16:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-        t=1690648783;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q1vPYh+RBZ0E0Mk1ojSUtBjCV8F9zDSzqFOeRor6Gi8=;
-        b=Ca6970Xdd0mzheJuqr9TNeSO6LKpUu9ThBv1MtHWD7tc1raBHhvJ7bI8jhDK0Sqe+Fide5
-        7+g08PbWPKt+CDHhFWYXfHKSGb5/ZjFk/ujaGX312s1TLnomUi4ncg3mrnEY4HWOlSc5rm
-        J9vmrWUYbRDzSuFh5BuU2yYRELwxBfPRB2mLKZzWjfdXr1X2qI1UHaCou3sAqXwSLLyOjX
-        89f8AMiI3sHBdBnGeztvJe+WonGDh/DnOxDlKM+wELQvP5JNi493OVoCQeMIYaWsbIjhqh
-        WXKWLM/9G9cpd+SqesY1QO9TTGfursygGS977NuPwrC/6Q5huqyh6pJ+MJmAAg==
-Message-ID: <2eb012d9-0d36-54c6-6f2c-1a286d45c497@arinc9.com>
-Date:   Sat, 29 Jul 2023 19:39:34 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: mtmips: support requesting different functions
- for same group
-To:     Shiji Yang <yangshiji66@outlook.com>, linux-gpio@vger.kernel.org
-Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
+        with ESMTP id S229462AbjG2Vh1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 17:37:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0456A26A9
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 14:37:26 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPrck-00008X-6d; Sat, 29 Jul 2023 23:37:18 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPrci-00315D-Fj; Sat, 29 Jul 2023 23:37:16 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPrch-008pjT-OP; Sat, 29 Jul 2023 23:37:15 +0200
+Date:   Sat, 29 Jul 2023 23:37:12 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org
-References: <TYAP286MB0315A9671B4BA0347E70D9E0BC00A@TYAP286MB0315.JPNP286.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From:   =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <TYAP286MB0315A9671B4BA0347E70D9E0BC00A@TYAP286MB0315.JPNP286.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        linux-gpio@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH 18/18] gpio: mvebu: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <20230729213712.mkfqgk6cage6yqsd@pengutronix.de>
+References: <20230718181849.3947851-1-u.kleine-koenig@pengutronix.de>
+ <20230718181849.3947851-19-u.kleine-koenig@pengutronix.de>
+ <CAMRc=MfGWvAGYAh8q7mOenGDMpKS3q7UK7-Yxw5bn1avhoQ-UQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="e67n3kcjaaudhirc"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MfGWvAGYAh8q7mOenGDMpKS3q7UK7-Yxw5bn1avhoQ-UQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 26.07.2023 03:48, Shiji Yang wrote:
-> Sometimes pinctrl consumers may request different functions for the
-> same pin group in different situations. This patch can help to reset
-> the group function flag when requesting a different function.
-> 
-> Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
-> ---
->   drivers/pinctrl/mediatek/pinctrl-mtmips.c | 21 +++++++++++++++++----
->   1 file changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtmips.c b/drivers/pinctrl/mediatek/pinctrl-mtmips.c
-> index efd77b6c5..e5e085915 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtmips.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtmips.c
-> @@ -123,11 +123,24 @@ static int mtmips_pmx_group_enable(struct pinctrl_dev *pctrldev,
->   	int i;
->   	int shift;
->   
-> -	/* dont allow double use */
-> +	/*
-> +	 * for the same pin group, if request a different function,
-> +	 * then clear the group function flag and continue, else exit.
-> +	 */
->   	if (p->groups[group].enabled) {
-> -		dev_err(p->dev, "%s is already enabled\n",
-> -			p->groups[group].name);
-> -		return 0;
-> +		for (i = 0; i < p->groups[group].func_count; i++) {
-> +			if (p->groups[group].func[i].enabled == 1) {
-> +				if (!strcmp(p->func[func]->name,
-> +					p->groups[group].func[i].name))
-> +					return 0;
-> +				p->groups[group].func[i].enabled = 0;
-> +				break;
-> +			}
-> +		}
-> +
-> +		/* exit if request the "gpio" function again */
-> +		if (i == p->groups[group].func_count && func == 0)
-> +			return 0;
 
-Could you help me understand why? The @gpio_request_enable operation is 
-not properly implemented on this driver so this check would never be 
-true, no?
+--e67n3kcjaaudhirc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Even if it was, this makes it so that if a pin group is already given a 
-function (meaning the pin group is enabled), it will never be given the 
-gpio function when requested, unless I understand it wrong.
+Hello Bartosz,
 
-Arınç
+On Sat, Jul 29, 2023 at 04:09:40PM +0200, Bartosz Golaszewski wrote:
+> Looks good to me (although I have my reservations about the concept of
+> foo_alloc() for subsystems in the kernel...).
+
+Wolfram's EOSS talk[1] mentioned "__cleanup__ + kref as suggested by Bartos=
+z?
+Paradigm shift, probably looong way to go". I guess that's what you'd
+prefer? Do you have a link for me to read about this?
+
+> How do you want this to go upstream?
+
+I haven't thought about that yet. I first will have to convince
+Thierry that this is a good idea I guess. This version will not be
+merged for sure.
+
+Best regards
+Uwe
+
+[1] https://static.sched.com/hosted_files/eoss2023/e3/LifecycleIssues_Wolfr=
+amSang_2023.pdf
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--e67n3kcjaaudhirc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTFhogACgkQj4D7WH0S
+/k4Bzgf8DtYV4R5X7URkPapzSd7lwfpZoroMiDZnejnmpO+bnNwRKlapEo+seuwc
+mC/zd0uhGGkzkXxpiY4iQ4A0VwZgt7G64GdphGsLyOikPtiR3u2DP79OAwudRP49
+MlGJHnVcT3l8o3NdmCgovI9uLsQJpi04/aaRJQ9LtNcl2Sfr6jyqndRIyC0MiYC7
+cVlz3Ayh5w4yL5prMP7gcw+Hc4v5/2jutdXYki8STgACm2I5lWlifyCmu0rBC0g5
+iy3yOYdboSiR69eshdAx6pX44H77ncTAZmr0S7T3vUJmUnTEHqFz5T50BIw0x7Sj
+Xk4BLmOGi6Te0DqrtvdKg4yz6jpPCQ==
+=RhDt
+-----END PGP SIGNATURE-----
+
+--e67n3kcjaaudhirc--
