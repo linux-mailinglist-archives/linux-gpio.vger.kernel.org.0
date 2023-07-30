@@ -2,54 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29245768631
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jul 2023 17:23:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D72907686D0
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jul 2023 19:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbjG3PXi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Jul 2023 11:23:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
+        id S229535AbjG3RqI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Jul 2023 13:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbjG3PXi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Jul 2023 11:23:38 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C3C1A6;
-        Sun, 30 Jul 2023 08:23:36 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-9891c73e0fbso774456066b.1;
-        Sun, 30 Jul 2023 08:23:36 -0700 (PDT)
+        with ESMTP id S229477AbjG3RqH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Jul 2023 13:46:07 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03304E7B
+        for <linux-gpio@vger.kernel.org>; Sun, 30 Jul 2023 10:46:06 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-992e22c09edso548599666b.2
+        for <linux-gpio@vger.kernel.org>; Sun, 30 Jul 2023 10:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690730615; x=1691335415;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=linaro.org; s=google; t=1690739164; x=1691343964;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7PX8xKK6O5wTvwtcUjC9IemCaEOi5PCdC3MyRdH4mEU=;
-        b=ZZeauXSqR4Gj+o9zgwWzvae9cSHIy1Q3fNln5iTZWZPGQudHC/xIEOv4XI+4ebjwx9
-         PrGZbv3RrQcMu4eSUDzWFTPBzGLkLYIHaZifRFnrzQ1892eXnLQn3pspUoIyLndhnlPt
-         oGSUIZlWK80gsqBpIXuuX4Im0uGOqtIwYRX4dlihJb9s4VXDthECEGX3i6XxKEqosebq
-         MBMoGhtV68DIizvmu9acc8zY9Ew7m6eQlKgDOqMVnCgGFBEWYeDLgIRwy8gCmvqSnmPB
-         vTqbMX9wZ6KVt0rlmexLjunx30Ldo5kSO76VjFksq+E9uXgIUK1czxFRkdeBYy3VrT3i
-         TS2Q==
+        bh=S1YU29zqeUxaos3hVgNC2yaFaW8qpla0dKTdA5NLg2Y=;
+        b=VbFECZP5mT8avx6h4h2FtXj91veskHtt7LLqUb/ZMy8y6GAfHwKQXJPL99sA2yU4H8
+         6GDde+ybLziKJQmTsdwYDqhrR5x8KXrMv1mFNodhxs/3H3k6RjAoFq7ZAuBcX56p3Xrx
+         quJN7lOt+7SyIy2xmViZk/Oy0r0b1i/t4mVPptwx/ZxghvptSsvZgN66tc6H++dzMZs2
+         lIl/io3wjZR/CXO4MvipJvlK8NvmnphuRWu1cpXQXWxKgBqHdNZM0OHclRPjaKSsRKkL
+         oPT59y1KnNJwisfVmQeVM+xwLcyHujyvYL48QZMN9AOTiAJNzabaz07YK+w3W0hqXLna
+         waDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690730615; x=1691335415;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1690739164; x=1691343964;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7PX8xKK6O5wTvwtcUjC9IemCaEOi5PCdC3MyRdH4mEU=;
-        b=EAUnDuqENXEDM2hO9XderGMt4iuZGIOniy01Ny5RI81Cwo1kc50OVfEgGGJc05sOY3
-         mkLFIdWifmqLTEv3L5Y6oh9/TFQm6FxLabvMjBRuYQzqP+dEueFA7eq/wMd2W1Qzj1YI
-         OsFMBpKpkAagL8gUGXTQ6W3f1TkC3EFM1mxZwWo/3UNe4/a4IxjwDycykRLbIwWrWI8a
-         Rxq/+U8fhTjoUcSGOAqe0dWx+D8S32KzXZP6/lkUR+2Brrh+Gv9E8Ut5dx2sPCjjGgRn
-         N6zJuHfDIos/Md7R3KnSGaL3XQjMDOvhm6pN/G2Pie8oAlwInczeAZz/tME6Hxq98JP0
-         b1Cg==
-X-Gm-Message-State: ABy/qLY0HI0m4k1cTHHwKutGGljy9iJ831o62NTnQwd+nAju2ZXDtzk5
-        H8qYNRVbTgB2I1YYcMin97MbPnN8iGY=
-X-Google-Smtp-Source: APBJJlHQ3IYa7n9r9AgEUAqsmkPfnF5daq7th+7HqRWkx3Qk1N6gibmKlrcWC8pXoXPYmgr5B+NkZA==
-X-Received: by 2002:a17:906:304f:b0:99b:4bab:2841 with SMTP id d15-20020a170906304f00b0099b4bab2841mr5425707ejd.26.1690730614887;
-        Sun, 30 Jul 2023 08:23:34 -0700 (PDT)
-Received: from standask-GA-A55M-S2HP ([188.123.113.247])
-        by smtp.gmail.com with ESMTPSA id f25-20020a1709067f9900b009934855d8f1sm4733868ejr.34.2023.07.30.08.23.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jul 2023 08:23:34 -0700 (PDT)
-Date:   Sun, 30 Jul 2023 17:23:32 +0200
-From:   Stanislav Jakubek <stano.jakubek@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        bh=S1YU29zqeUxaos3hVgNC2yaFaW8qpla0dKTdA5NLg2Y=;
+        b=hAAyC5AW42HEvkno28U9N2Sv/BiR+q2D/GH76VH95Pv7Wk82I2Tl7OiKJEHaTRm41W
+         D0whHFFMhzktz9L4S0SCmYuaQoTJ9O3jbn7tecr80L7u5s9vU5x7eDVkfdHej6y3uW+P
+         x86GznVGNj6oOuAEMaxsNneFmo8JsOdKhxIIxkqEEUKD2XswUFZbwzbhtyTau/Jk0EKS
+         ayIiducfc85rJ1QtjJJpnkxCt22WooUO4pNMvV0JpgEawH0l3mbdh8qQOhlBT4bv+TSQ
+         kTIoaYg8xwMb2GQt0UpB3/AnyuDX+kWq2RZSiTc6rhLiT1y7Zl/DQTc4pmECa3aWXpYO
+         eaPg==
+X-Gm-Message-State: ABy/qLY4cFbyL2OiZo8ee6mrQa14tcnFF1E23bYPBDHVm1dP6ho9opSn
+        /oFaeDdAeXwXRRZBMyJCSVfAXQ==
+X-Google-Smtp-Source: APBJJlGKsuK7EedFMznaZ471QDNb0j4xmicTbpYHSCeYH5o7U2syAJlFJjxwzLFRaQJN9JF01cuJSw==
+X-Received: by 2002:a17:906:2487:b0:993:e94e:7234 with SMTP id e7-20020a170906248700b00993e94e7234mr4162336ejb.77.1690739164410;
+        Sun, 30 Jul 2023 10:46:04 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.183])
+        by smtp.gmail.com with ESMTPSA id j13-20020a17090686cd00b0098884f86e41sm4890420ejy.123.2023.07.30.10.46.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Jul 2023 10:46:03 -0700 (PDT)
+Message-ID: <4707bdea-9398-8cbe-8f96-d56c1744b207@linaro.org>
+Date:   Sun, 30 Jul 2023 19:46:01 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: [PATCH] dt-bindings: gpio: brcm,kona-gpio: convert to YAML
+To:     Stanislav Jakubek <stano.jakubek@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -60,217 +67,43 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Scott Branden <sbranden@broadcom.com>
 Cc:     bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpio: brcm,kona-gpio: convert to YAML
-Message-ID: <ZMaAdG9Zj9AL1NiR@standask-GA-A55M-S2HP>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <ZMaAdG9Zj9AL1NiR@standask-GA-A55M-S2HP>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <ZMaAdG9Zj9AL1NiR@standask-GA-A55M-S2HP>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert Broadcom Kona family GPIO controller bindings to DT schema.
+On 30/07/2023 17:23, Stanislav Jakubek wrote:
+> Convert Broadcom Kona family GPIO controller bindings to DT schema.
+> 
+> Changes during conversion:
+>   - add used, but previously undocumented SoC-specific compatibles
+> 
+> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
+> ---
+> Changes since RFC:
+>   - fix interrupts maxItems
+>   - narrow interrupts min/maxItems per each variant
+>   - thanks for the feedback Linus, Krzysztof :)
 
-Changes during conversion:
-  - add used, but previously undocumented SoC-specific compatibles
+For the future
+RFC is v1, so this should be v2. And it matters, because:
 
-Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
----
-Changes since RFC:
-  - fix interrupts maxItems
-  - narrow interrupts min/maxItems per each variant
-  - thanks for the feedback Linus, Krzysztof :)
+b4 diff '<ZMaAdG9Zj9AL1NiR@standask-GA-A55M-S2HP>'
+ERROR: Could not auto-find previous revision
 
- .../bindings/gpio/brcm,kona-gpio.txt          |  52 ---------
- .../bindings/gpio/brcm,kona-gpio.yaml         | 100 ++++++++++++++++++
- MAINTAINERS                                   |   2 +-
- 3 files changed, 101 insertions(+), 53 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/brcm,kona-gpio.yaml
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt b/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
-deleted file mode 100644
-index 4a63bc96b687..000000000000
---- a/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--Broadcom Kona Family GPIO
--=========================
--
--This GPIO driver is used in the following Broadcom SoCs:
--  BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
--
--The Broadcom GPIO Controller IP can be configured prior to synthesis to
--support up to 8 banks of 32 GPIOs where each bank has its own IRQ. The
--GPIO controller only supports edge, not level, triggering of interrupts.
--
--Required properties
---------------------
--
--- compatible: "brcm,bcm11351-gpio", "brcm,kona-gpio"
--- reg: Physical base address and length of the controller's registers.
--- interrupts: The interrupt outputs from the controller. There is one GPIO
--  interrupt per GPIO bank. The number of interrupts listed depends on the
--  number of GPIO banks on the SoC. The interrupts must be ordered by bank,
--  starting with bank 0. There is always a 1:1 mapping between banks and
--  IRQs.
--- #gpio-cells: Should be <2>. The first cell is the pin number, the second
--  cell is used to specify optional parameters:
--  - bit 0 specifies polarity (0 for normal, 1 for inverted)
--  See also "gpio-specifier" in .../devicetree/bindings/gpio/gpio.txt.
--- #interrupt-cells: Should be <2>. The first cell is the GPIO number. The
--  second cell is used to specify flags. The following subset of flags is
--  supported:
--  - trigger type (bits[1:0]):
--      1 = low-to-high edge triggered.
--      2 = high-to-low edge triggered.
--      3 = low-to-high or high-to-low edge triggered
--      Valid values are 1, 2, 3
--  See also .../devicetree/bindings/interrupt-controller/interrupts.txt.
--- gpio-controller: Marks the device node as a GPIO controller.
--- interrupt-controller: Marks the device node as an interrupt controller.
--
--Example:
--	gpio: gpio@35003000 {
--		compatible = "brcm,bcm11351-gpio", "brcm,kona-gpio";
--		reg = <0x35003000 0x800>;
--		interrupts =
--		       <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH
--			GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH
--			GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH
--			GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
--			GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH
--			GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
--		#gpio-cells = <2>;
--		#interrupt-cells = <2>;
--		gpio-controller;
--		interrupt-controller;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.yaml b/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.yaml
-new file mode 100644
-index 000000000000..296fdd6b8f38
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/brcm,kona-gpio.yaml
-@@ -0,0 +1,100 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/brcm,kona-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom Kona family GPIO controller
-+
-+description:
-+  The Broadcom GPIO Controller IP can be configured prior to synthesis to
-+  support up to 8 banks of 32 GPIOs where each bank has its own IRQ. The
-+  GPIO controller only supports edge, not level, triggering of interrupts.
-+
-+maintainers:
-+  - Ray Jui <rjui@broadcom.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - brcm,bcm11351-gpio
-+          - brcm,bcm21664-gpio
-+          - brcm,bcm23550-gpio
-+      - const: brcm,kona-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 4
-+    maxItems: 6
-+    description:
-+      The interrupt outputs from the controller. There is one GPIO interrupt
-+      per GPIO bank. The number of interrupts listed depends on the number of
-+      GPIO banks on the SoC. The interrupts must be ordered by bank, starting
-+      with bank 0. There is always a 1:1 mapping between banks and IRQs.
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  interrupt-controller: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#gpio-cells'
-+  - '#interrupt-cells'
-+  - gpio-controller
-+  - interrupt-controller
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: brcm,bcm11351-gpio
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 6
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - brcm,bcm21664-gpio
-+              - brcm,bcm23550-gpio
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 4
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    gpio@35003000 {
-+        compatible = "brcm,bcm11351-gpio", "brcm,kona-gpio";
-+        reg = <0x35003000 0x800>;
-+        interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+        #gpio-cells = <2>;
-+        #interrupt-cells = <2>;
-+        gpio-controller;
-+        interrupt-controller;
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 733bcfa0209a..368fee1ef5b0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4221,7 +4221,7 @@ BROADCOM KONA GPIO DRIVER
- M:	Ray Jui <rjui@broadcom.com>
- R:	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
- S:	Supported
--F:	Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
-+F:	Documentation/devicetree/bindings/gpio/brcm,kona-gpio.yaml
- F:	drivers/gpio/gpio-bcm-kona.c
- 
- BROADCOM MPI3 STORAGE CONTROLLER DRIVER
--- 
-2.34.1
+Best regards,
+Krzysztof
 
