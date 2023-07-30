@@ -2,110 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CB43768374
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jul 2023 04:06:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D54D76837A
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jul 2023 04:40:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbjG3CGP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jul 2023 22:06:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58860 "EHLO
+        id S229445AbjG3CkV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jul 2023 22:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjG3CGO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 22:06:14 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2083.outbound.protection.outlook.com [40.92.99.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6A22115;
-        Sat, 29 Jul 2023 19:06:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cJoRDD+w9G85l9tDeCbnivmbTG4Np2oDpwNui8juxyyg5EtubuCYnsdZSfPR6HzyiWpleUgO7p13dw4trpgEtJXiIJgpYg3tVfP9Wlcv3SXXy5A3+Q5j+b5dKQaSY9SJxTVg5+qUlDG2ihwPP1mopMPkxHWVyKZ2w8Q5V++tHrY1hizwwcydg6lepd3S4vRpVB8hguYttlPVGgWDTF3LqpGsQQYoL2uZ11o2r/DhosXR6uAbAavjeDetAnilaaDlXhIo+nxiX/PMuvn4edGAI1fJWKURHF78NTXEdqgK4S5mZ48TeseqduZyeEsOELUjBZ1nyrzOkm8rC7Rmczee4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K+1VTjJbxCmFHeFSo9yQAYwvvsFfGTU+qgxw1UGrjwk=;
- b=YejtZXMvX8fVeLKAmONOxXMXGndS8G5Zp+Fc8hHmGbIXvIOEIFWahWs2+k01fQ2kwXmUwtLRKgc+AsUDfan984NpppF0E7W/cDbvCZ7XnOH6ywdjmbooxosojmhhZ9wupQGoroofgdwk/WPOpcWZdRijRx3SLVChJJ+H05eLY6nZsoKQiTRNnID0Lzq7ayEMqpa7S28eXJ/Idw8GB33igEaXAZq1EsIen6XmA+tBXps0cSjjO/UT/GnXdihgZ3XksBvFnhqJx84I1VRRKd+8Lf4L2A85twHQulpmu2K8zpjn8HfNU+5GmcngrRqaXSy6dfk6gZ3zHe7+4QE6CpDaBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K+1VTjJbxCmFHeFSo9yQAYwvvsFfGTU+qgxw1UGrjwk=;
- b=g/aCjwWU80ICDvXILKYfwXcCWMImLv5vlyGKUx+hFRUxrB0iVB3wOiE0A1YuHnHbJJmCU+rgdlMOW5ij/+o8w9YxPlduv4v7xeiVHd/PVJqyH1nDBKgX4wJ/D6G6sRhmR/km4Y/kTc4v1AZAcC8VZXShU6WAYnoeFAHyw6bRV0mVB2AE5yHqoXCQKJLBIsfNP8JAcVPO5tuj+2qkX+VGvFESgVlKdJMYWaAo9+wmiQBKn4fV1cAcVYyZbG1drGKtNlkjzwd8KrE2x9U5uwOwaP2lj+Et7/ysLUU1ZYrDttFBfZdfKCBfJpv2K2kyUH6p7KoFNK4KWtUr8negwN1F7Q==
-Received: from TYAP286MB0315.JPNP286.PROD.OUTLOOK.COM (2603:1096:404:8041::8)
- by OS3P286MB1783.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:1bd::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.42; Sun, 30 Jul
- 2023 02:06:08 +0000
-Received: from TYAP286MB0315.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f4c2:4b38:d074:f1e9]) by TYAP286MB0315.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f4c2:4b38:d074:f1e9%5]) with mapi id 15.20.6631.042; Sun, 30 Jul 2023
- 02:06:08 +0000
-From:   Shiji Yang <yangshiji66@outlook.com>
-To:     arinc.unal@arinc9.com
-Cc:     angelogioacchino.delregno@collabora.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-mips@vger.kernel.org, matthias.bgg@gmail.com,
-        sean.wang@kernel.org, sergio.paracuellos@gmail.com
-Subject: Re: [PATCH] pinctrl: mtmips: support requesting different functions for same group
-Date:   Sun, 30 Jul 2023 10:03:55 +0800
-Message-ID: <TYAP286MB031521A726F0A4C80876F473BC04A@TYAP286MB0315.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <2eb012d9-0d36-54c6-6f2c-1a286d45c497@arinc9.com>
-References: <2eb012d9-0d36-54c6-6f2c-1a286d45c497@arinc9.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TMN:  [9shSMEgPJMiV2WdKJ6k60p/WzBSSVkBd1Ll8lOD0WuQ=]
-X-ClientProxiedBy: TY2PR04CA0019.apcprd04.prod.outlook.com
- (2603:1096:404:f6::31) To TYAP286MB0315.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:404:8041::8)
-X-Microsoft-Original-Message-ID: <20230730020355.17808-1-yangshiji66@outlook.com>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYAP286MB0315:EE_|OS3P286MB1783:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2dd5b0b5-512e-4802-9c9f-08db90a1899d
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LG7FAaemxL9sF1vdpjmIeEKMWO1KyBvdED4FwHxQJwmkQDUhVsRDZ5fe5I+llLXgd1wZCubl8ynHCQR5OV/+CwpH9XUa5zIfd5+MQ4fvxlbWOo+aQJmBCftEYSqZf1s2RGhf98VwV8zMc+/jbM+iXifcVWpMvldqgmyB+TOc7jziszIry30Ohac3s0rbKxfan/yxeAw0DiBiwvEYsFvubLc7GLCC+iPj7M3/MQWVXh6l8qjk5uJd7p8LOMT+y/KPN0ZE/ROFVDc7WqxM/WCbA3usNnUUf17z58iwekHIG+srbeMmhB1f/IocDzImA5RLALeg0msjV1vR0wscV7TWPaFJkx1OUYQLtTsOcuI6J9bIYrZM28+1C4yyOx+rntgL11yPMoqaIlCK0TIeRPnhNbm08XBNNdyLOwzT/88k8aWyPoncz/T+shjyKvCYgo3k/bQ/flatHSKmS+GoaF4Fc6STnu22QOaRFxJH6sQkg0CpX0JrLZF8DpTDEFH5JozpyoXpFqd61YDV//Dd5OcP0b8Af3Rmr7nGhus5X0jFI0I=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q1dLTjFLTHFKRVhLNE9BeWRwcjhNOE5EbXQ3ejkrK3d3TGdoNWxDa0pjRjVo?=
- =?utf-8?B?dm5DeHNvYThIdjRiWHMxOFZvYkIzdFl4bEkyTjZMTVF4K2dkSk9uV1lZZ0pr?=
- =?utf-8?B?ZTZOK2RnT3pXTGV5UkxWR2RHSjNaWjBGRVR5bmhpZ05LWlo5S2NBYkt0S284?=
- =?utf-8?B?VjVPdWxVU0Rwb2VraDNoQzNIU3FuL2o5c050ZmRJbmt5VCtPVFVqMUZjdGxM?=
- =?utf-8?B?MkpEaWNFU0dIM2hmbzlaQytSM3NMbWgyTmttS0gwVzQyQzhNRjlzNWRzTnUz?=
- =?utf-8?B?R1l3Y3ZMdFVHdVpOY0RUWE9sV0lUR2o1SEVNT0ZFcFRnT3g0S0l6VWl5YWJh?=
- =?utf-8?B?RFF3bTgyVVN3NklIV2pxNE1pM290U0JPNU9FZ2pQNHJqdlBWU3dpY0xpeW1M?=
- =?utf-8?B?YjhmSnVsODhSbmxtMzl1YWlwZXFlSi9uY2NGd011QUtCaE5PMDhOSm9uYTRU?=
- =?utf-8?B?dklzb3ZxZzRBMjd0cjE3TTlFMXlQc2k0MUpiK3Rndko0cGpYMFpUVmlvSFB2?=
- =?utf-8?B?YUI5NmQzUEZjam1sRS9mTDJ0WGxFV2o1TGY4SlFUUm5CR1EwbWVtbTJXZGky?=
- =?utf-8?B?Sk51b2xyMmxYeTczajFyRHM1dFd5QUp0T2xCZjdoS0l6T0J5cytZYkQ3NnRl?=
- =?utf-8?B?eFJwTDEwLzFNSEk5UGJGcHFhRG5zeXAyZlJlbktIb1VhNGhoQlJDTE9LVVVJ?=
- =?utf-8?B?SGlweHFFRFU1MFZtckpEaVdEU3pFWkYxRnRZWnlEbmd5REh4VUNLYUhSS3Fv?=
- =?utf-8?B?Yy9TSFYydFBxSStUaDRsQjVYekNEV05GZkp4VFVkY1c2eUU3VHZTS3V3VzBx?=
- =?utf-8?B?NzZHUHh2NUtJSWtuQTI2a3FzNXBHZEo2ZW9CUmhhK05KZXFGcEY2d2FnN01G?=
- =?utf-8?B?U0ZDV0hvUWRXaXpTZ1hjc0wzU1RqWjBjMnFRYkQ5Mmt1Z0ovd0ZqaGxTaWR0?=
- =?utf-8?B?STYvZ1Y0R2JMWUI3T2xtdi9ETm55U3o5TndiVkR4RHB1MU1jTFF5WStWMG1q?=
- =?utf-8?B?d3phUFpaeGtJcTJMY0JwVGxIUzhEelp1N3djbDBXN1dacDhkZEFaeXUrRWdQ?=
- =?utf-8?B?QUNKT3hUVDJlbGFoQXdwcFdSNmlGaXJybmhoOWxuR3hHeWZ1dkN6Mk81WEVh?=
- =?utf-8?B?aUtvYllaMUxOZ1ZQQTFTbmFkNlVoaHNhVnl3NGhMdSthZ3lpUkN3T0hFMnBn?=
- =?utf-8?B?dHdpd0pGeDVRN3ZMM1YyNCtya1BHNW1LYStKQTNycHhIeWlSalR5NzhoNDZl?=
- =?utf-8?B?U2FIVGwyTXJzeE9mVFpHUzBZNEFMK1BmTnR2Q2lvMDc4SlZTYi9ZVFhFMHNV?=
- =?utf-8?B?YllRVTQremxmcVRTYjNVeTZQWk5BeGJPc3dxYjNDUXl6Qlk1K3N1eTZiNHg1?=
- =?utf-8?B?SFBNNkZHV1oydW9rSGo4WERWQkdJV1JUN21hdDJGUERqVGFRVTdNMi9vemRH?=
- =?utf-8?B?WWx0dy9ZeSs1eTFOSU9OcG9kVEozd3Jqc2ptT2pxMUxWN3IzK0t4a25QREoz?=
- =?utf-8?B?VTF0NXBhUUdXd2JuYjh1dENpRzQ1NWpFSVVUcXhpZWRxcDZwTHQ4bkMwZHpP?=
- =?utf-8?B?bTd1c2VtVFUyNDhIYW9Wdy9ITG00MDAvVWVodFl3NVQzUTl3cE15RG9zakIr?=
- =?utf-8?Q?cMl7+nVp4vIvS3N+pmUlxjJEIYP64xl2hUvuOcm5GzZU=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2dd5b0b5-512e-4802-9c9f-08db90a1899d
-X-MS-Exchange-CrossTenant-AuthSource: TYAP286MB0315.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2023 02:06:08.8139
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3P286MB1783
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        with ESMTP id S229437AbjG3CkU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jul 2023 22:40:20 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526A62D47
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jul 2023 19:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690684819; x=1722220819;
+  h=date:from:to:cc:subject:message-id;
+  bh=rNUwurhVt6yBOaiqgygTKAMIgKx8qciIKYgI6VXrsWg=;
+  b=UspPNXxULDjUhjgHruFftTzRFHZjaGjLK70aCZJCzxCpDWn3uZ92vAci
+   3Y4Nz8O6LfFnJuY4Cu41jEPytfV2KBV+1dCcWcrw7X5jFzSqP2D8sZN+6
+   zPvA2ID0TWbIGiItore1uLvJMG3RF+Zx+Q8QILVKNMNIc535cRCZ6xIle
+   YCQSanmK1KxjzkvRF9x52EeMloamZYmcyD2+gL5TZtcX0+GgObGLk+9Rq
+   BlzAMNEvFWySu/b5D9ABKAVgbFuymyUqw+EXg5BOUHVwmUj+WgqKAXJK6
+   8ePrtHCZUhbhiiBnhpe6xigr0l3FDU01PjprxHcyMXS3InncR57P8ZIEL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10786"; a="353713874"
+X-IronPort-AV: E=Sophos;i="6.01,240,1684825200"; 
+   d="scan'208";a="353713874"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2023 19:40:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10786"; a="1058544009"
+X-IronPort-AV: E=Sophos;i="6.01,240,1684825200"; 
+   d="scan'208";a="1058544009"
+Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Jul 2023 19:40:17 -0700
+Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qPwLx-0004OR-0F;
+        Sun, 30 Jul 2023 02:40:17 +0000
+Date:   Sun, 30 Jul 2023 10:40:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ c456c4d9707a0bd484a1af30188f5c416fc394f0
+Message-ID: <202307301002.n4qSfR6C-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -113,105 +59,135 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 29 Jul 2023 19:39:34 +0300, Arınç ÜNAL wrote:
-> On 26.07.2023 03:48, Shiji Yang wrote:
-> > Sometimes pinctrl consumers may request different functions for the
-> > same pin group in different situations. This patch can help to reset
-> > the group function flag when requesting a different function.
-> >
-> > Signed-off-by: Shiji Yang <yangshiji66@outlook.com>
-> > ---
-> >   drivers/pinctrl/mediatek/pinctrl-mtmips.c | 21 +++++++++++++++++----
-> >   1 file changed, 17 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtmips.c b/drivers/pinctrl/mediatek/pinctrl-mtmips.c
-> > index efd77b6c5..e5e085915 100644
-> > --- a/drivers/pinctrl/mediatek/pinctrl-mtmips.c
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mtmips.c
-> > @@ -123,11 +123,24 @@ static int mtmips_pmx_group_enable(struct pinctrl_dev *pctrldev,
-> >        int i;
-> >        int shift;
-> >  
-> > -     /* dont allow double use */
-> > +     /*
-> > +      * for the same pin group, if request a different function,
-> > +      * then clear the group function flag and continue, else exit.
-> > +      */
-> >        if (p->groups[group].enabled) {
-> > -             dev_err(p->dev, "%s is already enabled\n",
-> > -                     p->groups[group].name);
-> > -             return 0;
-> > +             for (i = 0; i < p->groups[group].func_count; i++) {
-> > +                     if (p->groups[group].func[i].enabled == 1) {
-> > +                             if (!strcmp(p->func[func]->name,
-> > +                                     p->groups[group].func[i].name))
-> > +                                     return 0;
-> > +                             p->groups[group].func[i].enabled = 0;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +
-> > +             /* exit if request the "gpio" function again */
-> > +             if (i == p->groups[group].func_count && func == 0)
-> > +                     return 0;
-> 
-> Could you help me understand why? The @gpio_request_enable operation is
-> not properly implemented on this driver so this check would never be
-> true, no?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: c456c4d9707a0bd484a1af30188f5c416fc394f0  gpio: eic-sprd: remove unneeded platform_set_drvdata() call
 
-'.func_count' is the function number of a pin group. I will use MT7620's
-'pa' group as an example to explain it. 'pa' group only has 1 function
-'pa' ('gpio' function not included). When this group is first requested
-as a gpio function, groups[pa].enabled will be set to 1, However,
-groups[pa].func[i].enabled will still be 0 because 'gpio' is not a member
-of groups[pa]. In this case, when we request gpio function again, for()
-loop will do nothing but just increase 'i' to 1 (func_count). This will
-make 'if (i == p->groups[group].func_count && func == 0)' to be true.
+elapsed time: 720m
 
+configs tested: 115
+configs skipped: 3
 
-> 
-> Even if it was, this makes it so that if a pin group is already given a
-> function (meaning the pin group is enabled), it will never be given the
-> gpio function when requested, unless I understand it wrong.
-> 
-> Arınç
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-When current function is pa, and we want to request a gpio function,
-'if (p->groups[group].func[i].enabled == 1)' check will break the for()
-loop and continue the pin configuration code.
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r022-20230729   gcc  
+alpha                randconfig-r025-20230729   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230729   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r005-20230729   gcc  
+arm                  randconfig-r046-20230729   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r032-20230729   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r006-20230729   gcc  
+hexagon                             defconfig   clang
+hexagon              randconfig-r002-20230729   clang
+hexagon              randconfig-r033-20230729   clang
+hexagon              randconfig-r041-20230729   clang
+hexagon              randconfig-r045-20230729   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230728   gcc  
+i386         buildonly-randconfig-r005-20230728   gcc  
+i386         buildonly-randconfig-r006-20230728   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230729   clang
+i386                 randconfig-i002-20230729   clang
+i386                 randconfig-i003-20230729   clang
+i386                 randconfig-i004-20230729   clang
+i386                 randconfig-i005-20230729   clang
+i386                 randconfig-i006-20230729   clang
+i386                 randconfig-i011-20230729   gcc  
+i386                 randconfig-i012-20230729   gcc  
+i386                 randconfig-i013-20230729   gcc  
+i386                 randconfig-i014-20230729   gcc  
+i386                 randconfig-i015-20230729   gcc  
+i386                 randconfig-i016-20230729   gcc  
+i386                 randconfig-r021-20230729   gcc  
+i386                 randconfig-r023-20230729   gcc  
+i386                 randconfig-r036-20230729   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r034-20230729   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                         cobalt_defconfig   gcc  
+mips                 randconfig-r026-20230729   clang
+nios2                               defconfig   gcc  
+nios2                randconfig-r011-20230729   gcc  
+openrisc                    or1ksim_defconfig   gcc  
+openrisc             randconfig-r013-20230729   gcc  
+openrisc             randconfig-r024-20230729   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r003-20230729   gcc  
+parisc               randconfig-r035-20230729   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                   lite5200b_defconfig   clang
+powerpc              randconfig-r001-20230729   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r042-20230729   gcc  
+riscv                          rv32_defconfig   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r015-20230729   gcc  
+s390                 randconfig-r044-20230729   gcc  
+sh                               allmodconfig   gcc  
+sh                   randconfig-r031-20230729   gcc  
+sh                   sh7724_generic_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r016-20230729   clang
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230728   gcc  
+x86_64       buildonly-randconfig-r002-20230728   gcc  
+x86_64       buildonly-randconfig-r003-20230728   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230728   clang
+x86_64               randconfig-x002-20230728   clang
+x86_64               randconfig-x003-20230728   clang
+x86_64               randconfig-x004-20230728   clang
+x86_64               randconfig-x005-20230728   clang
+x86_64               randconfig-x006-20230728   clang
+x86_64               randconfig-x011-20230728   gcc  
+x86_64               randconfig-x012-20230728   gcc  
+x86_64               randconfig-x013-20230728   gcc  
+x86_64               randconfig-x014-20230728   gcc  
+x86_64               randconfig-x015-20230728   gcc  
+x86_64               randconfig-x016-20230728   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                       common_defconfig   gcc  
+xtensa                          iss_defconfig   gcc  
+xtensa               randconfig-r012-20230729   gcc  
+xtensa               randconfig-r014-20230729   gcc  
 
-If this 'if (p->groups[group].enabled)' check doesn't return, the pinmux
-mode register will be reset and reconfigured.
-
-	p->groups[group].enabled = 1;
-	p->func[func]->enabled = 1;
-
-	shift = p->groups[group].shift;
-	if (shift >= 32) {
-		shift -= 32;
-		reg = SYSC_REG_GPIO_MODE2;
-	}
-	mode = rt_sysc_r32(reg);
-	mode &= ~(p->groups[group].mask << shift);
-
-	/* mark the pins as gpio */
-	for (i = 0; i < p->groups[group].func[0].pin_count; i++)
-		p->gpio[p->groups[group].func[0].pins[i]] = 1;
-
-	/* function 0 is gpio and needs special handling */
-	if (func == 0) {
-		mode |= p->groups[group].gpio << shift;
-	} else {
-		for (i = 0; i < p->func[func]->pin_count; i++)
-			p->gpio[p->func[func]->pins[i]] = 0;
-		mode |= p->func[func]->value << shift;
-	}
-	rt_sysc_w32(mode, reg);
-
-
-Ref:
-MT7620 pa group switches between PA and GPIO functions during wireless calibration.
-https://github.com/openwrt/openwrt/blob/main/package/kernel/mac80211/patches/rt2x00/994-rt2x00-import-support-for-external-LNA-on-MT7620.patch
-
-Regards,
-Shiji Yang
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
