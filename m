@@ -2,74 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F9AE769654
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jul 2023 14:30:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB7DD7697A7
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jul 2023 15:32:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230226AbjGaMaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Jul 2023 08:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52180 "EHLO
+        id S230140AbjGaNcU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Jul 2023 09:32:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbjGaMaC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jul 2023 08:30:02 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75854C6
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jul 2023 05:30:01 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-31765792c7cso4774389f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jul 2023 05:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690806600; x=1691411400;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bd9oC+qN9vojxTpZDloVHGiCls3SDiZuksEePnvnriY=;
-        b=BhyQpG5IAUPvbpyowAdpckBB1IjjFc2SrYNq1JPDr+XjKK16HpI6XDASMu61OgDS1s
-         RJO8FXq/UmrFCczSChoeOxIWRRivdRj70yjD2CWlYoXL2/w71osGmsdXjvJk0re87dJt
-         bB0Z6hheQ+A5OeCO2ubGut58ePfQ8Cb7wdw4cvKzgNYUd892+9qN5s+zrNwEnW2oNNIG
-         5Lanjknob9jYstH1bSeMczcnvgOK+d0lxheHnQPPktLr+2c2NfL+zMM9Ejc8QK3HKCf7
-         25IVbVcDj4APo+osaH0v8mnKKh2GtUmzk952deW0NZpy5+cnRANG5Wo7mCpOngUBDEvc
-         s9Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690806600; x=1691411400;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bd9oC+qN9vojxTpZDloVHGiCls3SDiZuksEePnvnriY=;
-        b=S1lNyZ50Pm+1m8gct0Mi1qayPnuzp0b74CSEJzI8opfBCR9z2WiVNNOqaT4YNJ0B5u
-         mL0a6xefzqZ8ikWjkgVpP6quQPGXlJB77+4wDyDGQDwEKW8GeXmEUsjEsh3+Je/5mxUM
-         N0fQdvoe4Q64Yn3nd1V2NuTMURKBUC7SanVXqrbJAMXUki4bDzSacVyReY2+0NLV5n/z
-         IVJPTSw0JaV4cF7SMNpBXwNX9CBy15K9u7xukyR3Sr5OYMzJN7XjmuxKs+2Jql6n6TN5
-         cP/WIrWT7IYpNrVhLKStkJNpCHQjJ8PwYVFsunUWsmNBEg3U+LIgaSNnhcMZ4SBcds8I
-         prEA==
-X-Gm-Message-State: ABy/qLZGFD6M6SXpxqmTSbF2wDN+ppc4icIItkJnxHLJT4pSwLmOsq40
-        VhxQknBScoHCbvQHSPGhuJBcAS0373iErnkjqRU=
-X-Google-Smtp-Source: APBJJlExfAnTgF4NmGDIE2qDHirQQR/Fb2oq4IRitUZWcuIuycKGcZS0qd2Mm7otFwEEVJ5U5BxpdrKExDIHZCZSAFo=
-X-Received: by 2002:a5d:5913:0:b0:30e:19a8:4b0a with SMTP id
- v19-20020a5d5913000000b0030e19a84b0amr7682060wrd.2.1690806599638; Mon, 31 Jul
- 2023 05:29:59 -0700 (PDT)
+        with ESMTP id S229555AbjGaNcT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jul 2023 09:32:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974D210E3;
+        Mon, 31 Jul 2023 06:32:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 23D926114E;
+        Mon, 31 Jul 2023 13:32:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B793C433C7;
+        Mon, 31 Jul 2023 13:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690810337;
+        bh=z+uAjZVNhz3LyIsdekBiHKjrJt8GwMtkgIpTiC3PAhA=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=kB01tzMRm0xGd46a/lcgXTdh7oLikepiXWJAdD8VSwE9ZBAEkWDo+TYXbogvXBgP9
+         AJ23A5d3Fq/rXkUPkZCk5FG6x+6wOgw05LSZhm/8oVNWbI1jQroLbsuHh3cscmQdt2
+         uRVnuLARcsiT1T1ydr16yNHdd7BwJUtENHPlZzBTzf+vtIX1GV9NmaO/ARfykaAFGt
+         m2NUtScqaxIMg7yiLb5xXR8tVV9P70OWi+gKX9fUuwToBmzCpKqv5jLqJNaDZsSM6U
+         O1ANB4DWnkC/flvt651yNsmqv6JmkQRc6yEgpwoXoHL+DKrdzi9C8ZtxDg1smtXDqI
+         ZhypNn1sURM7Q==
+Received: (nullmailer pid 2855850 invoked by uid 1000);
+        Mon, 31 Jul 2023 13:32:15 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Received: by 2002:adf:f6cf:0:b0:314:3929:2664 with HTTP; Mon, 31 Jul 2023
- 05:29:59 -0700 (PDT)
-Reply-To: AvaSmith62567@gmail.com
-From:   Dr Ava Smith <monicabrown671@gmail.com>
-Date:   Mon, 31 Jul 2023 05:29:59 -0700
-Message-ID: <CAFoLVbd6w4KArpHbLBY+RtyBW==QJ=voxHRXxcZgaW_NRjxAGw@mail.gmail.com>
-Subject: From Dr Ava Smith
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+From:   Rob Herring <robh@kernel.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     conor+dt@kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org,
+        tali.perry1@gmail.com, benjaminfair@google.com,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        yuenn@google.com, linux-kernel@vger.kernel.org, joel@jms.id.au,
+        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
+        venture@google.com, avifishman70@gmail.com
+In-Reply-To: <20230731122323.172834-2-tmaimon77@gmail.com>
+References: <20230731122323.172834-1-tmaimon77@gmail.com>
+ <20230731122323.172834-2-tmaimon77@gmail.com>
+Message-Id: <169081033533.2855823.7340412529584491141.robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and
+ GPIO documentation
+Date:   Mon, 31 Jul 2023 07:32:15 -0600
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Dear
-My name is Dr Ava Smith,a medical doctor from United States.
-I have Dual citizenship which is English and French.
-I will share pictures and more details about me as soon as i get
-a response from you
-Thanks
-Ava
+
+On Mon, 31 Jul 2023 15:23:22 +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
+> pinmux and GPIO controller.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../pinctrl/nuvoton,npcm845-pinctrl.yaml      | 215 ++++++++++++++++++
+>  1 file changed, 215 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> 
+
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml:77:1: [error] syntax error: found character '\t' that cannot start any token (syntax)
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml: patternProperties: '-mux' does not match '[\\^$()*@]'
+	hint: Fixed strings belong in 'properties', not 'patternProperties'
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230731122323.172834-2-tmaimon77@gmail.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
