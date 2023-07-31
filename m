@@ -2,103 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8F0C7693E3
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jul 2023 12:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EB227694CF
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jul 2023 13:29:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbjGaK6x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Jul 2023 06:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45112 "EHLO
+        id S231218AbjGaL31 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Jul 2023 07:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231402AbjGaK5h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jul 2023 06:57:37 -0400
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B70126B5
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jul 2023 03:56:21 -0700 (PDT)
-Received: from [192.168.1.103] (178.176.75.103) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.986.14; Mon, 31 Jul
- 2023 13:55:27 +0300
-Subject: Re: [PATCH 0/3] Handle errors returned by radix_tree_insert() within
- drivers/pinctrl/
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <lvc-patches@linuxtesting.org>
-References: <20230719202253.13469-1-s.shtylyov@omp.ru>
- <CACRpkdaj+8aZJqPJhiLu9zkB69iidixmRuSzvzenwDmknJg_9w@mail.gmail.com>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <4100074e-5689-67af-a47a-0ea1e05f3f0c@omp.ru>
-Date:   Mon, 31 Jul 2023 13:55:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        with ESMTP id S231386AbjGaL3Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jul 2023 07:29:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F01CD;
+        Mon, 31 Jul 2023 04:29:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EFCEF6106C;
+        Mon, 31 Jul 2023 11:29:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7509C433C9;
+        Mon, 31 Jul 2023 11:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690802963;
+        bh=PiUwuP1rRuNg85mBm3h0tfnKvyXwPsRiypzl3EEp98o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hjmk4pdiB5SU1jrvesiynxonXjfTlZOCjUBhJwE71PMHmLd9+Jwozq2QJtsiZy2ZU
+         +za4efC7uYUkgtzTqQO2BL5PL86cGvAsFvItct/o8uBQAI/Nb1GP2OAapGu+vjkGQb
+         AJoAY/mu4m2E2PsPeEWdt2SCa70V8HhoXFebIcdEIjUKhW+g3tn9GCVtcM2DlD8X6t
+         cAXJDT2kzd4W++ftLKBS1Smbdidi3FuDC1kX6g8qAZFurGcqJ/xAwbZnilLo9F6zqv
+         vrubxRuFuzg9NbHBWLqrAdojW5YeGnjZc4eDj852aQpRWxpStlU+/L3Pnm9WaV+hnN
+         DVryR1qgCrNow==
+Date:   Mon, 31 Jul 2023 16:59:19 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        linus.walleij@linaro.org, lgirdwood@gmail.com,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/6] soundwire: bus: Allow SoundWire peripherals to
+ register IRQ handlers
+Message-ID: <ZMebD//fpy5TbYyH@matsya>
+References: <20230725102532.2567580-1-ckeepax@opensource.cirrus.com>
+ <20230725102532.2567580-2-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdaj+8aZJqPJhiLu9zkB69iidixmRuSzvzenwDmknJg_9w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [178.176.75.103]
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 5.9.59, Database issued on: 07/31/2023 10:39:27
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 178959 [Jul 31 2023]
-X-KSE-AntiSpam-Info: Version: 5.9.59.0
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 526 526 7a6a9b19f6b9b3921b5701490f189af0e0cd5310
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_arrow_text}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.75.103 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: 178.176.75.103:7.7.3,7.4.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: {iprep_blacklist}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: {rdns complete}
-X-KSE-AntiSpam-Info: {fromrtbl complete}
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.75.103
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=none header.from=omp.ru;spf=none
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 07/31/2023 10:44:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 7/31/2023 6:54:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230725102532.2567580-2-ckeepax@opensource.cirrus.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 7/28/23 11:09 PM, Linus Walleij wrote:
-[...]
-
->> The code in drivers/pinctrl/ doesn't check the results of radix_tree_insert()
->> calls, although it could propagate the errors from the callers upstream.
->> (Linus Walleij said he has copied the radix tree code from kernel/irq/,
->> where the functions calling radix_tree_insert() are *void* themselves.)
+On 25-07-23, 11:25, Charles Keepax wrote:
+> From: Lucas Tanure <tanureal@opensource.cirrus.com>
 > 
-> The fix is spot on.
-> Patches applied!
+> Currently the in-band alerts for SoundWire peripherals can only
+> be communicated to the driver through the interrupt_callback
+> function. This however is slightly inconvient for devices that wish to
+> share IRQ handling code between SoundWire and I2C/SPI, the later would
+> normally register an IRQ handler with the IRQ subsystem. However there
+> is no reason the SoundWire in-band IRQs can not also be communicated
+> as an actual IRQ to the driver.
+> 
+> Add support for SoundWire peripherals to register a normal IRQ handler
+> to receive SoundWire in-band alerts, allowing code to be shared across
+> control buses. Note that we allow users to use both the
+> interrupt_callback and the IRQ handler, this is useful for devices which
+> must clear additional chip specific SoundWire registers that are not a
+> part of the normal IRQ flow, or the SoundWire specification.
 
-   Thank you!
-   But to which branch?
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
-> Yours,
-> Linus Walleij
-
-MBR, Sergey
+-- 
+~Vinod
