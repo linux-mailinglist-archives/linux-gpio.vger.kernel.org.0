@@ -2,139 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88B3C7690CC
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jul 2023 10:52:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D22CE769128
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jul 2023 11:11:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230514AbjGaIwW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Jul 2023 04:52:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58484 "EHLO
+        id S230518AbjGaJLY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Jul 2023 05:11:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbjGaIv5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jul 2023 04:51:57 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4311726
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jul 2023 01:49:11 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3fe078dcc3aso24411115e9.2
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jul 2023 01:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690793349; x=1691398149;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=h7W7YYE2gaBdXvF1/lo7GyDdBy4PWSaCW0nMcp8S290=;
-        b=tIPMOZHWC/DCPEOLEvFVLcVItIT0QU/S+4xWkQBcCZ9q7l6eNLELl5hlVuxn/dCxI8
-         ls0wK4RTi4m9/MnIcNx1cHV2lgaT9N51vwuHBqSWO7oebJGnUlc50+4QPtwN464XLYn8
-         J0MX6/ACCl7PMroV/sKIga+urSCV46HQVKBuGQ/DOwxI5CLCB++K3aHrN9g3ehJMZ0VI
-         DQUMmwywvWd9EyHscsVVDwfnLo5R4b/IRTIUWnzDAWUVHet9J+w3jM5tGB6f/ykWg5OR
-         R1d6jNIukr/g/kTSD7xsiK5cL9kQhRXNaDTmwUaW47DI0dJ8N5cgoRvhGGt0SAPUVJWA
-         5k/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690793349; x=1691398149;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h7W7YYE2gaBdXvF1/lo7GyDdBy4PWSaCW0nMcp8S290=;
-        b=EyN4p4lguzOKXLxdSwplv0gEs8Dhus2pyuiUacf63OAO3CwN5K8Ndm6Ur8m9DV9g7Y
-         i5/P5B2gHUrftU/0D7P3IU3yDtsUlvszpNT3111hubJj6F94PHGS6ZyUkUXMUbl4DyTU
-         2eppERxqnhvN71NhREbFO6c36UBsC1GPzF20E0L9rt0SHCFY7DPxtan6Ku/gX9xZkRQd
-         LgqKh6SpEoXY5jaGV6OGJwSYJ1+kMdRbtKXu7fn4+ttDnJSzXxZWYrGpp5+nYdkwLr3b
-         jNUSEI2bEi1hGrUtuG+2oKkKbww7ge0cAI/y5+ftodvyFFPVC9AiQgsihRqRcIDSBihK
-         k6oQ==
-X-Gm-Message-State: ABy/qLa0yxVWs7/GnHmGggViIVbKUY0nCrmeTc5AEU1989ZefDxY25Yp
-        3F3PLWttvH3CHClB8wejbu/3Xg==
-X-Google-Smtp-Source: APBJJlEzjzzfHPdjAO4t1hPBRUhwt15TSOFm9fPyDYFdX2mgRKf7NwRsU4/mLyv8fkkRD5Pq6zI4Lw==
-X-Received: by 2002:adf:f611:0:b0:315:9ee6:132f with SMTP id t17-20020adff611000000b003159ee6132fmr7441633wrp.68.1690793349307;
-        Mon, 31 Jul 2023 01:49:09 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:14b8:9aa7:6bf0:256d? ([2a01:e0a:982:cbb0:14b8:9aa7:6bf0:256d])
-        by smtp.gmail.com with ESMTPSA id p16-20020a5d68d0000000b003140f47224csm12339740wrw.15.2023.07.31.01.49.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Jul 2023 01:49:08 -0700 (PDT)
-Message-ID: <691102a4-e920-ef88-3c5b-8240b8f87c5b@linaro.org>
-Date:   Mon, 31 Jul 2023 10:49:07 +0200
+        with ESMTP id S229925AbjGaJLX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jul 2023 05:11:23 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38820107;
+        Mon, 31 Jul 2023 02:11:20 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8DxRvG1esdkPyINAA--.31437S3;
+        Mon, 31 Jul 2023 17:11:17 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxriOkesdk1DFCAA--.2097S2;
+        Mon, 31 Jul 2023 17:11:17 +0800 (CST)
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        Liu Peibao <liupeibao@loongson.cn>,
+        loongson-kernel@lists.loongnix.cn, Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v2 0/2] gpio: loongson: add firmware offset parse support
+Date:   Mon, 31 Jul 2023 17:10:57 +0800
+Message-Id: <20230731091059.17323-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-From:   neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH V2 0/3] Add binding header file for GPIO interrupt of
- Amlogic Meson-G12A
-Content-Language: en-US
-To:     linus.walleij@linaro.org
-Cc:     robh+dt@kernel.org, martin.blumenstingl@googlemail.com,
-        jbrunet@baylibre.com, khilman@baylibre.com, conor+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org,
-        Huqiang Qin <huqiang.qin@amlogic.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20230724060108.1403662-1-huqiang.qin@amlogic.com>
-Organization: Linaro Developer Services
-In-Reply-To: <20230724060108.1403662-1-huqiang.qin@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxriOkesdk1DFCAA--.2097S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Add some GPIO register offset value parse support for device properties
+allowing to specify them in ACPI or DT.
 
-On 24/07/2023 08:01, Huqiang Qin wrote:
-> After adding this binding header file, you can intuitively find
-> the interrupt number corresponding to each GPIO, and apply it
-> in the format of IRQID_XXX where it needs to be used.
-> 
-> Associated platforms:
-> - Amlogic Meson-G12A
-> - Amlogic Meson-G12B
-> - Amlogic Meson-SM1
-> 
-> [PATCH 1/3]:
->    V1 -> V2: Rename irq-meson-g12a-gpio.h to amlogic,meson-g12a-gpio-intc.h
-> 
-> [PATCH 2/3]:
->    V1 -> V2: Include header file changed to amlogic,meson-g12a-gpio-intc.h
-> 
-> [PATCH 3/3]:
->    V1 -> V2: Include header file changed to amlogic,meson-g12a-gpio-intc.h
-> 
-> Huqiang Qin (3):
->    dt-bindings: interrupt-controller: Add header file for Amlogic
->      Meson-G12A SoCs
->    pinctrl: Replace the IRQ number in the driver with the IRQID macro
->      definition
->    arm64: dts: Replace the IRQ number with the IRQID macro definition
+Change in v2:
+		1. Reword the patch commit log information.
+		2. Add some GPIO register offset description in yaml.
 
-What's the best way to apply this patchset ?
+Yinbo Zhu (2):
+  gpio: dt-bindings: add parsing of loongson gpio offset
+  gpio: loongson: add firmware offset parse support
 
-Thanks,
-Neil
+ .../bindings/gpio/loongson,ls-gpio.yaml       | 37 ++++++++++
+ drivers/gpio/gpio-loongson-64bit.c            | 71 +++++++++++++++++--
+ 2 files changed, 101 insertions(+), 7 deletions(-)
 
-> 
->   .../boot/dts/amlogic/meson-g12-common.dtsi    |   1 +
->   .../boot/dts/amlogic/meson-g12a-x96-max.dts   |   2 +-
->   .../dts/amlogic/meson-g12b-bananapi-cm4.dtsi  |   2 +-
->   .../boot/dts/amlogic/meson-g12b-bananapi.dtsi |   2 +-
->   .../amlogic/meson-g12b-odroid-go-ultra.dts    |   4 +-
->   .../dts/amlogic/meson-g12b-odroid-n2.dtsi     |   2 +-
->   .../boot/dts/amlogic/meson-g12b-w400.dtsi     |   2 +-
->   .../dts/amlogic/meson-sm1-a95xf3-air-gbit.dts |   2 +-
->   .../boot/dts/amlogic/meson-sm1-bananapi.dtsi  |   4 +-
->   .../boot/dts/amlogic/meson-sm1-h96-max.dts    |   2 +-
->   .../boot/dts/amlogic/meson-sm1-odroid.dtsi    |   2 +-
->   .../boot/dts/amlogic/meson-sm1-sei610.dts     |  12 +-
->   .../dts/amlogic/meson-sm1-x96-air-gbit.dts    |   2 +-
->   drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  35 ++---
->   .../amlogic,meson-g12a-gpio-intc.h            | 126 ++++++++++++++++++
->   15 files changed, 164 insertions(+), 36 deletions(-)
->   create mode 100644 include/dt-bindings/interrupt-controller/amlogic,meson-g12a-gpio-intc.h
-> 
-> 
-> base-commit: c58c49dd89324b18a812762a2bfa5a0458e4f252
+-- 
+2.20.1
 
