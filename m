@@ -2,109 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B703E76BB3A
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 19:30:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF2E476BC41
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 20:22:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232144AbjHARaH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 13:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37696 "EHLO
+        id S231922AbjHASWq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 14:22:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230219AbjHARaG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 13:30:06 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5D6E0;
-        Tue,  1 Aug 2023 10:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ZvTRdKUSUCAlBq6z3PWYIniKn+jbmGKNY+UDBwFRuzM=; b=ey1Wayli86L3djfdin+4kg0By7
-        gwK/elO18xN215cRvoeGvEGlsbZiuwTOJuBPPFPVmIgE0bgCn74jhYQ43AQGwsoy5qAI5Ok3PKHY1
-        8DK+zombrHVYE7qV/JzrIeplCgOXFw8dfQFSLNVO7yY9eXHTJyikXL/hJ47+Qy/EchxY=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:53184 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1qQtC3-00015J-Vy; Tue, 01 Aug 2023 13:30:00 -0400
-Date:   Tue, 1 Aug 2023 13:29:59 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
-        isaac.true@canonical.com, jesse.sung@canonical.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        Lech Perczak <lech.perczak@camlingroup.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Message-Id: <20230801132959.7c02e86f4c863f997226965a@hugovil.com>
-In-Reply-To: <2023073135-puppy-reflected-700d@gregkh>
-References: <20230725142343.1724130-1-hugo@hugovil.com>
-        <20230725142343.1724130-4-hugo@hugovil.com>
-        <2023073135-puppy-reflected-700d@gregkh>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S230456AbjHASWe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 14:22:34 -0400
+Received: from mgamail.intel.com (unknown [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511DD268D
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Aug 2023 11:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690914130; x=1722450130;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Qk+v55ylmaMRNH+NF7s+xwvDSP7kAEVKRFS8SGtTcY0=;
+  b=PYON2AUamguOu0rlMIYlhY/KZ+m7M4UIYql6P7qoYMhMYA/jTPabhrHS
+   NjOOnIrvU+xizNwlOmd4tQwbv3Eqaa8nfjQ8quDJmSjg53+7o+qUL/cAi
+   ruUL7hQIXaRXwm8x77r/wmsb+9GuhZSJ031tJxO950JIqkSCPX2Onp/YE
+   czIksG8Uw5TZi1KahsPPbVLZCrQXHHr57TCfzkhjpqLR+A/0nLpEhSOri
+   ICcF2UlGxAxITx31WsWLlPZM8u8hkSRTKf6pZLw7Ki3MTnvDcSMuBQKcy
+   VTLZRj26G4HQKgG0P+T84JM6qGixvY/6955ujsbBW1eRk2AOQgaeBRE8W
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="369379838"
+X-IronPort-AV: E=Sophos;i="6.01,247,1684825200"; 
+   d="scan'208";a="369379838"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 11:21:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="1059508163"
+X-IronPort-AV: E=Sophos;i="6.01,247,1684825200"; 
+   d="scan'208";a="1059508163"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Aug 2023 11:21:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qQtzk-00EKub-2X;
+        Tue, 01 Aug 2023 21:21:20 +0300
+Date:   Tue, 1 Aug 2023 21:21:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Zhu Wang <wangzhu9@huawei.com>
+Cc:     bartosz.golaszewski@linaro.org, thor.thayer@linux.intel.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        arnd@arndb.de
+Subject: Re: [PATCH -next] gpio: altera-a10sr: remove redundant of_match_ptr
+Message-ID: <ZMlNIBaIg5I2zbkz@smile.fi.intel.com>
+References: <20230801033428.220493-1-wangzhu9@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230801033428.220493-1-wangzhu9@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v9 03/10] serial: sc16is7xx: remove obsolete out_thread
- label
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 31 Jul 2023 17:53:10 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
+On Tue, Aug 01, 2023 at 11:34:28AM +0800, Zhu Wang wrote:
+> The driver depends on CONFIG_OF, so it is not necessary to use
+> of_match_ptr here.
 
-> On Tue, Jul 25, 2023 at 10:23:35AM -0400, Hugo Villeneuve wrote:
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > 
-> > Commit c8f71b49ee4d ("serial: sc16is7xx: setup GPIO controller later
-> > in probe") moved GPIO setup code later in probe function. Doing so
-> > also required to move ports cleanup code (out_ports label) after the
-> > GPIO cleanup code.
-> > 
-> > After these moves, the out_thread label becomes misplaced and makes
-> > part of the cleanup code illogical.
-> > 
-> > This patch remove the now obsolete out_thread label and make GPIO
-> > setup code jump to out_ports label if it fails.
-> > 
-> > Fixes: c8f71b49ee4d ("serial: sc16is7xx: setup GPIO controller later in probe")
-> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
-> > Tested-by: Lech Perczak <lech.perczak@camlingroup.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> Why is this not ok for stable kernels yet it has a Fixes: tag?
-> 
-> Please fix.
-> 
-> thanks,
-> 
-> greg k-h
+of_match_ptr()
 
-Hi,
-this is a somewhat particular case. It is a change that "fixes" some
-previously unseen consequence in original commit, but that does not
-result in any binary change in the end. That is why I decided not to
-put in a "stable" tag.
+> 
+> Even for drivers that do not depend on CONFIG_OF, it's almost always
+> better to leave out the of_match_ptr(), since the only thing it can
+> possibly do is to save a few bytes of .text if a driver can be used both
+> with and without it. Hence we remove of_match_ptr.
 
-If you want, maybe it would be simpler to remove the "Fixes" tag? I
-originally put this tag to have a reference to the original commit, but
-since it is already mentioned in the commit log message body, it can be
-removed.
+of_match_ptr()
 
-Hugo.
+
+Driver even doesn't include required of.h for this...
+But with your change you have to provide mod_devicetable.h.
+
+Good change,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+after updating the commit message and adding missing header.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
