@@ -2,35 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07B4B76B060
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 12:07:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20F9F76B1B9
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 12:26:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233812AbjHAKHk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 06:07:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34316 "EHLO
+        id S232310AbjHAK0n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 06:26:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233824AbjHAKHi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 06:07:38 -0400
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14AA0CF;
-        Tue,  1 Aug 2023 03:07:36 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 67785C0007;
-        Tue,  1 Aug 2023 10:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1690884455;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QWt1iHAsmrfK3BwrkrMdjb6oetsmwYgFvyU2cU/2Gk8=;
-        b=j0ab26/LBkhJu/rDBUgxTxpfUHsrUu+mfwFrtSgmX9T5+Pk0LuHAPLV/9JflTk/bXN78Iw
-        GxNpsOf5oXmOU1WefL+SDb12OMzJALhot9d8BpXmrOJkwqiKU9u+qM4F6K1E5nj0lBfb7+
-        gLCrL+TlVu1b+Du7sMnHz75yki1Sho1tzxFptk2CFoK+gEUyxpzLNZKbZLUIg8VILRvTNC
-        jA293aUHVMzqAS7Ih35p4vP9mjBeznj8kVMegn7AU6mm6wBKKsHMvIdoaGgWGc0lnAr6VS
-        XUP/Egyc8NGdUCrdAPow0ErAFNIpObFqtVsobYB9grq6Ebj8meCevmKJMnRnDw==
-Date:   Tue, 1 Aug 2023 12:07:30 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Andrew Lunn <andrew@lunn.ch>
+        with ESMTP id S232936AbjHAK0Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 06:26:16 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABC318F;
+        Tue,  1 Aug 2023 03:23:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=wmvKI/iPaqsWZlCgEQZAhs71pnFCVRSmegSoyV4Grnk=; b=r53/NdfAzOEMUIfF48OEW0mykR
+        g+usaIxtHz8A9u36njUCXk9JmGzmp40hfi9uUny4vf9SbDeUW9Vpry2ebPhMUlp8U/4zWpIgLX0AS
+        xx8+Pk52ErNmHPNSU2kJX+GCxSEkjnqPaTkHVAcEgQipd0UZufjkg6ioTrReyU0O7U6k=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1qQmWV-002n5y-Ik; Tue, 01 Aug 2023 12:22:39 +0200
+Date:   Tue, 1 Aug 2023 12:22:39 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Herve Codina <herve.codina@bootlin.com>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -54,40 +51,47 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 06/28] net: wan: Add support for QMC HDLC
-Message-ID: <20230801120730.64e5b58e@bootlin.com>
-In-Reply-To: <80341a96-c40f-4a45-9bad-359a890edfc4@lunn.ch>
+Subject: Re: [PATCH v2 23/28] net: wan: framer: Add support for the Lantiq
+ PEF2256 framer
+Message-ID: <4adae593-c428-4910-882e-7247727cf501@lunn.ch>
 References: <20230726150225.483464-1-herve.codina@bootlin.com>
-        <20230726150225.483464-7-herve.codina@bootlin.com>
-        <80341a96-c40f-4a45-9bad-359a890edfc4@lunn.ch>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+ <20230726150225.483464-24-herve.codina@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230726150225.483464-24-herve.codina@bootlin.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 1 Aug 2023 11:31:32 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
+> +static inline u8 pef2256_read8(struct pef2256 *pef2256, int offset)
+> +{
+> +	int val;
+> +
+> +	regmap_read(pef2256->regmap, offset, &val);
+> +	return val;
+> +}
+> +
+> +static inline void pef2256_write8(struct pef2256 *pef2256, int offset, u8 val)
+> +{
+> +	regmap_write(pef2256->regmap, offset, val);
+> +}
 
-> > +static inline struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *netdev)
-> > +{
-> > +	return (struct qmc_hdlc *)dev_to_hdlc(netdev)->priv;  
-> 
-> priv is a void *, so you don't need the cast.
-> 
+More cases of inline functions in .C files. Please let the compiler
+decide.
 
-Right, I will change in the next iteration.
+> +static void pef2256_isr_default_handler(struct pef2256 *pef2256, u8 nbr, u8 isr)
+> +{
+> +	dev_warn(pef2256->dev, "ISR%u: 0x%02x not handled\n", nbr, isr);
+> +}
 
-Regards,
-Hervé
+Should this be rate limited? It is going to be very noise if it gets
+called once per frame time.
+
+       Andrew
