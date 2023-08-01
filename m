@@ -2,87 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6158476A78C
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 05:37:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E78A376A94C
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 08:39:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231952AbjHADhc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Jul 2023 23:37:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        id S231742AbjHAGj5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 02:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbjHADhb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jul 2023 23:37:31 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A341BC7
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jul 2023 20:37:30 -0700 (PDT)
-Received: from dggpeml500025.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RFLNd4fJHzVjy1;
-        Tue,  1 Aug 2023 11:35:45 +0800 (CST)
-Received: from ubuntu1804.huawei.com (10.67.174.202) by
- dggpeml500025.china.huawei.com (7.185.36.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 1 Aug 2023 11:37:28 +0800
-From:   Zhu Wang <wangzhu9@huawei.com>
-To:     <andriy.shevchenko@linux.intel.com>,
-        <bartosz.golaszewski@linaro.org>, <nandor.han@ge.com>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <andy@kernel.org>,
-        <linux-gpio@vger.kernel.org>, <u.kleine-koenig@pengutronix.de>,
-        <arnd@arndb.de>
-CC:     <wangzhu9@huawei.com>
-Subject: [PATCH -next] gpio: xra1403: remove redundant of_match_ptr
-Date:   Tue, 1 Aug 2023 11:36:58 +0800
-Message-ID: <20230801033658.221565-1-wangzhu9@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S229946AbjHAGj4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 02:39:56 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 89F5F98;
+        Mon, 31 Jul 2023 23:39:53 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8Cxruu3qMhky+YNAA--.30050S3;
+        Tue, 01 Aug 2023 14:39:51 +0800 (CST)
+Received: from [10.20.42.201] (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniO1qMhkHphDAA--.4219S3;
+        Tue, 01 Aug 2023 14:39:50 +0800 (CST)
+Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        Liu Peibao <liupeibao@loongson.cn>,
+        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
+References: <20230731091059.17323-1-zhuyinbo@loongson.cn>
+ <20230731091059.17323-2-zhuyinbo@loongson.cn>
+ <20230731-setback-such-61815ee3ef51@spud>
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <041bf8a6-8d91-c2ce-6752-aa7255f946c7@loongson.cn>
+Date:   Tue, 1 Aug 2023 14:39:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.202]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500025.china.huawei.com (7.185.36.35)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230731-setback-such-61815ee3ef51@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8BxniO1qMhkHphDAA--.4219S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The driver depends on CONFIG_OF, so it is not necessary to use
-of_match_ptr here, and __maybe_unused can also be removed.
 
-Even for drivers that do not depend on CONFIG_OF, it's almost always
-better to leave out the of_match_ptr(), since the only thing it can
-possibly do is to save a few bytes of .text if a driver can be used both
-with and without it.
 
-Signed-off-by: Zhu Wang <wangzhu9@huawei.com>
----
- drivers/gpio/gpio-xra1403.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+在 2023/7/31 下午11:55, Conor Dooley 写道:
+> On Mon, Jul 31, 2023 at 05:10:58PM +0800, Yinbo Zhu wrote:
+>> Add parsing GPIO configure, input, output, interrupt register offset
+>> address and GPIO control mode support.
+> 
+> This reeks of insufficient use of SoC specific compatibles. Do GPIO
+> controllers on the same SoC have different register offsets?
 
-diff --git a/drivers/gpio/gpio-xra1403.c b/drivers/gpio/gpio-xra1403.c
-index eed8a1684830..dc2710c21c50 100644
---- a/drivers/gpio/gpio-xra1403.c
-+++ b/drivers/gpio/gpio-xra1403.c
-@@ -194,7 +194,7 @@ static const struct spi_device_id xra1403_ids[] = {
- };
- MODULE_DEVICE_TABLE(spi, xra1403_ids);
- 
--static const struct of_device_id xra1403_spi_of_match[] __maybe_unused = {
-+static const struct of_device_id xra1403_spi_of_match[] = {
- 	{ .compatible = "exar,xra1403" },
- 	{},
- };
-@@ -205,7 +205,7 @@ static struct spi_driver xra1403_driver = {
- 	.id_table = xra1403_ids,
- 	.driver   = {
- 		.name           = "xra1403",
--		.of_match_table = of_match_ptr(xra1403_spi_of_match),
-+		.of_match_table = xra1403_spi_of_match,
- 	},
- };
- 
--- 
-2.17.1
+
+Yes,
+
+> Where are the users for this?
+
+
+For example, ls2k500 contains multiple GPIO chips with different
+(configure, input, output, interrupt) offset addresses, but all others
+are the same.
+
+> 
+> Cheers,
+> Conor.
+> 
+>>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>>   .../bindings/gpio/loongson,ls-gpio.yaml       | 37 +++++++++++++++++++
+>>   1 file changed, 37 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> index fb86e8ce6349..cad67f8bfe6e 100644
+>> --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> @@ -29,6 +29,33 @@ properties:
+>>   
+>>     gpio-ranges: true
+>>   
+>> +  loongson,gpio-conf-offset:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate this GPIO configuration register offset address.
+>> +
+>> +  loongson,gpio-out-offset:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate this GPIO output register offset address.
+>> +
+>> +  loongson,gpio-in-offset:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate this GPIO input register offset address.
+>> +
+>> +  loongson,gpio-ctrl-mode:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate this GPIO control mode, where '0' represents
+>> +      bit control mode and '1' represents byte control mode.
+>> +
+>> +  loongson,gpio-inten-offset:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      This option indicate this GPIO interrupt enable register offset
+>> +      address.
+>> +
+>>     interrupts:
+>>       minItems: 1
+>>       maxItems: 64
+>> @@ -39,6 +66,11 @@ required:
+>>     - ngpios
+>>     - "#gpio-cells"
+>>     - gpio-controller
+>> +  - loongson,gpio-conf-offset
+>> +  - loongson,gpio-in-offset
+>> +  - loongson,gpio-out-offset
+>> +  - loongson,gpio-ctrl-mode
+>> +  - loongson,gpio-inten-offset
+>>     - gpio-ranges
+>>     - interrupts
+>>   
+>> @@ -54,6 +86,11 @@ examples:
+>>         ngpios = <64>;
+>>         #gpio-cells = <2>;
+>>         gpio-controller;
+>> +      loongson,gpio-conf-offset = <0>;
+>> +      loongson,gpio-in-offset = <0x20>;
+>> +      loongson,gpio-out-offset = <0x10>;
+>> +      loongson,gpio-ctrl-mode = <0>;
+>> +      loongson,gpio-inten-offset = <0x30>;
+>>         gpio-ranges = <&pctrl 0 0 15>,
+>>                       <&pctrl 16 16 15>,
+>>                       <&pctrl 32 32 10>,
+>> -- 
+>> 2.20.1
+>>
 
