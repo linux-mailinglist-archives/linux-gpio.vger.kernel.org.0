@@ -2,32 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E72B76B35F
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 13:37:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF8A476B2DF
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 13:15:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbjHALh0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 07:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37480 "EHLO
+        id S232204AbjHALPm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 07:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231391AbjHALhZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 07:37:25 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF1CD3;
-        Tue,  1 Aug 2023 04:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=BbIqX++u7tFTSva0KCFAR2Y+7S4v0rtzgJGAQYO1KzM=; b=rsR/yOJL9SkjbpT5u7oTNnltlY
-        yg9FUDUbGrezFAR7Ac/0PjGnwTNyoJAamuIjhPGujcC7XwpW9ndx6q4orSPtvEd6YYtcTw8Hsd4+i
-        uYtEQc/x7XyLZwul+/LOF9QPQoitYKTVSCm5coM9br7dxcY5DTTy+gl1PfpjFeab3HqM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1qQmzN-002nH2-Hd; Tue, 01 Aug 2023 12:52:29 +0200
-Date:   Tue, 1 Aug 2023 12:52:29 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Herve Codina <herve.codina@bootlin.com>
+        with ESMTP id S232458AbjHALPU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 07:15:20 -0400
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C7CB0;
+        Tue,  1 Aug 2023 04:12:46 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DB788FF802;
+        Tue,  1 Aug 2023 11:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1690888365;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U9XcoEVaGb/SzYJ6mJdNzeh0I7lywmTLcinYtPtZJ0c=;
+        b=YeU1uU9DZXfTdXg8TFeI2o8Vqm7D8c1Fnm2DfojyufbZMvZGwcPjdBxRDg8U36hs3GEZNV
+        RfioyzIjkZexR02ZLxdAkOfjwbF1bhjx0ieuUzu/mAHaPNwJQsd0PS6Wnw6126hLkLetZ5
+        Jje7zJ+VKap558GZ+oGgWv5oJscKoNwWOHSOTKJU+P4lyu+Gu5z5Nt6HjN3O7V25JsDewD
+        ggblvVDvfqULX9YEURYbqlRVqkpWoTW7Z8jtWNqqW9U1XTZzNG+09ROmeraVwAd5Qf+Hqg
+        +i4317dj/J6MOo8/Sais9wdrdmM/YCAHzsMdFKTCOSORGRoquZoMA+03nt5CQQ==
+Date:   Tue, 1 Aug 2023 13:12:35 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Andrew Lunn <andrew@lunn.ch>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -53,15 +56,19 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Subject: Re: [PATCH v2 23/28] net: wan: framer: Add support for the Lantiq
  PEF2256 framer
-Message-ID: <c27fa438-0885-4e02-a957-ee40b8ef6da1@lunn.ch>
+Message-ID: <20230801131235.10ad334a@bootlin.com>
+In-Reply-To: <c27fa438-0885-4e02-a957-ee40b8ef6da1@lunn.ch>
 References: <20230726150225.483464-1-herve.codina@bootlin.com>
- <20230726150225.483464-24-herve.codina@bootlin.com>
- <4adae593-c428-4910-882e-7247727cf501@lunn.ch>
- <20230801124401.3883d16c@bootlin.com>
+        <20230726150225.483464-24-herve.codina@bootlin.com>
+        <4adae593-c428-4910-882e-7247727cf501@lunn.ch>
+        <20230801124401.3883d16c@bootlin.com>
+        <c27fa438-0885-4e02-a957-ee40b8ef6da1@lunn.ch>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230801124401.3883d16c@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
@@ -72,21 +79,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> > > +static void pef2256_isr_default_handler(struct pef2256 *pef2256, u8 nbr, u8 isr)
-> > > +{
-> > > +	dev_warn(pef2256->dev, "ISR%u: 0x%02x not handled\n", nbr, isr);
-> > > +}  
+On Tue, 1 Aug 2023 12:52:29 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
+
+> > > > +static void pef2256_isr_default_handler(struct pef2256 *pef2256, u8 nbr, u8 isr)
+> > > > +{
+> > > > +	dev_warn(pef2256->dev, "ISR%u: 0x%02x not handled\n", nbr, isr);
+> > > > +}    
+> > > 
+> > > Should this be rate limited? It is going to be very noise if it gets
+> > > called once per frame time.  
 > > 
-> > Should this be rate limited? It is going to be very noise if it gets
-> > called once per frame time.
+> > This function should not be called.
+> > It is wired on some interrupts and these interrupts should not be triggered.
+> > It they fired, something was wrong.
+> > 
+> > I would prefer to keep this dev_warn() to keep the user informed about the
+> > problem.  
 > 
-> This function should not be called.
-> It is wired on some interrupts and these interrupts should not be triggered.
-> It they fired, something was wrong.
+> I would definitely keep it, but rate limit it. dev_warn_ratelimited().
 > 
-> I would prefer to keep this dev_warn() to keep the user informed about the
-> problem.
+> 	Andrew
 
-I would definitely keep it, but rate limit it. dev_warn_ratelimited().
+Ok, will be changed to dev_warn_ratelimited().
 
-	Andrew
+Hervé
