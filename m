@@ -2,30 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD0676AE19
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 11:36:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E18376AE8B
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 11:39:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233145AbjHAJgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 05:36:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34938 "EHLO
+        id S233318AbjHAJjx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 05:39:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232790AbjHAJfv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 05:35:51 -0400
+        with ESMTP id S233195AbjHAJj0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 05:39:26 -0400
 Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AFB4200;
-        Tue,  1 Aug 2023 02:33:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B41384EE2;
+        Tue,  1 Aug 2023 02:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
         Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
         Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=SNYkC/g1c+YfS8ZTo9JQVhuDkdGL5+kyeQ/yUz57+AY=; b=cpjULsYII+lR9kpuqlTcGQ64zN
-        YSf+oKkf8S3cxbtVU6PG3VprE3zGNQKRdFk4YRWAlLpSUWcI89OGnauzXWhFks7zwwPc6AgNlmSAM
-        XSkvQCdoANl7AS3AScQk7zhRMqAUCtHM+WmJjXGc08EE+CSOX31TtFFEZBL4KJbm/B6E=;
+        bh=FGgh4e/u0nE95gMrdCe+dqw90Rj4sKRfSKUYApsCC/Y=; b=RdyQXUNwnFn8Rqzex+Jjoy+yyd
+        QHP3O3jjTohOAQHBMujUjzyHmhPT8xwZ6KpDPRp6rZxJZLowUSZNFwpr4tweDnVkelcYwzQzbcQlj
+        oMdvQO3eW59xf8qUK3fEVnK/sB5kInWZgLAuB6zNNnKF9XS8A66IbhU4GxuCyMaNztCQ=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
         (envelope-from <andrew@lunn.ch>)
-        id 1qQll5-002mfV-Ob; Tue, 01 Aug 2023 11:33:39 +0200
-Date:   Tue, 1 Aug 2023 11:33:39 +0200
+        id 1qQlo3-002mgr-Li; Tue, 01 Aug 2023 11:36:43 +0200
+Date:   Tue, 1 Aug 2023 11:36:43 +0200
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Herve Codina <herve.codina@bootlin.com>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -51,15 +51,15 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 08/28] soc: fsl: cpm1: qmc: Introduce available
- timeslots masks
-Message-ID: <dd34fa03-0b34-44a4-9e70-9d9a69f95403@lunn.ch>
+Subject: Re: [PATCH v2 10/28] soc: fsl: cpm1: qmc: Introduce
+ qmc_chan_setup_tsa*
+Message-ID: <252d6a49-4a97-4ecc-844e-f23bda55debf@lunn.ch>
 References: <20230726150225.483464-1-herve.codina@bootlin.com>
- <20230726150225.483464-9-herve.codina@bootlin.com>
+ <20230726150225.483464-11-herve.codina@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230726150225.483464-9-herve.codina@bootlin.com>
+In-Reply-To: <20230726150225.483464-11-herve.codina@bootlin.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
@@ -70,34 +70,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 05:02:04PM +0200, Herve Codina wrote:
-> Available timeslots masks define timeslots available for the related
-> channel. These timeslots are defined by the QMC binding.
-> 
-> Timeslots used are initialized to available timeslots but can be a
-> subset of available timeslots.
-> This prepares the dynamic timeslots management (ie. changing timeslots
-> at runtime).
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  drivers/soc/fsl/qe/qmc.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soc/fsl/qe/qmc.c b/drivers/soc/fsl/qe/qmc.c
-> index 2d2a9d88ba6c..21ad7e79e7bd 100644
-> --- a/drivers/soc/fsl/qe/qmc.c
-> +++ b/drivers/soc/fsl/qe/qmc.c
-> @@ -177,7 +177,9 @@ struct qmc_chan {
->  	struct qmc *qmc;
->  	void __iomem *s_param;
->  	enum qmc_mode mode;
-> +	u64	tx_ts_mask_avail;
->  	u64	tx_ts_mask;
-> +	u64	rx_ts_mask_avail;
->  	u64	rx_ts_mask;
+> +static inline void qmc_clrsetbits16(void __iomem *addr, u16 clr, u16 set)
+> +{
+> +	qmc_write16(addr, (qmc_read16(addr) & ~clr) | set);
+> +}
+> +
 
-Is this for E1? So there is a maximum of 32 slots? A u32 would be
-sufficient i think?
+Please don't use inline in .c files. Let the compiler decide.
 
-	   Andrew
+       Andrew
