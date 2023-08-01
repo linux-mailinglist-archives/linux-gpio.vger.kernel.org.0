@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F51476BD8B
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 21:20:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E629B76BD8F
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 21:21:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbjHATUx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 15:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
+        id S231220AbjHATV5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 15:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229698AbjHATUw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 15:20:52 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B97C01BF5
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Aug 2023 12:20:51 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-79aa01cc971so1172886241.0
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Aug 2023 12:20:51 -0700 (PDT)
+        with ESMTP id S231158AbjHATVz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 15:21:55 -0400
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B5D1BF6
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Aug 2023 12:21:54 -0700 (PDT)
+Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-78caeb69125so2135684241.3
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Aug 2023 12:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690917651; x=1691522451;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690917713; x=1691522513;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Mx7BwwXurF50YVscvCcFIAyHMNie8lV8iSngFfBztW8=;
-        b=Q/ryACJY8mOBs7FzuG7mPffOSg1elIHIgquyvCGZzO7AKvm3K/7i6jn+5F7iZVW10U
-         ZipZbcsmOtolOwBiEDf31l39vuN8cRsMbkS5AOSG1M7W4iCTF4hlyMayzFrCcoH1oyMp
-         ezBTHNgUVvNhz+YdHM85U2Vn2Z+HP9xQcYNSoRCqXPohoxS69dzmcbOsPjHVJvuavOEE
-         0r4D1zNojwjyXxrAy6AwHV/XgtWocKveLUvl0aDR+SwWfGrsTiGu4dXWiTXZuhWlBTXl
-         KKJId/fv8ubSb4eoY8ZR69LaDUUXHrfrgrnhoRc4IFsGwbXRl9Hi4JUzXs5ZfHY8pe/p
-         WfuA==
+        bh=bOoS0qhaKcElbsi0Z+E0aV8vW9BZkaI19KrbMNaM/w8=;
+        b=H9t4D98cKETFIQBfxDzZBVS9TJtmYLNTa72PhkBpa0JdqLZ06xJZ1866UR/yW1NDwI
+         2ZV7TRslvDdsvVug/p0Jz2y7W7cj1xsakRVjqoykZDVftldCrCxzEAUjBHOPH7OY9d07
+         Lb7167PzGl7XZj7lxjn7gmz3rnfd2DSBz/n4AZKxDV83hYT8TSxCnya+6SGtzHRNh4iS
+         fMejEI94L4exTqhQdEHsOJxQ2Qsyq/ji9SilTH06QZbGJ3pbHPqN+xiC4uPi1dCwXrhu
+         WgQGJl6ymtqmiJ+0all926OUTRzyIQzIdnT35advjd/pDvGEb5luUQ8Kj1HV09vJfuvr
+         uQew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690917651; x=1691522451;
+        d=1e100.net; s=20221208; t=1690917713; x=1691522513;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Mx7BwwXurF50YVscvCcFIAyHMNie8lV8iSngFfBztW8=;
-        b=YL90XKI7NYvX1FU9swxMjIOU1iLaHrOxRQEqzXm2YvZUJmbnB+HGb9lMOYzSGhlmYd
-         uzO2issVkQSy2wFPihJU1x8j4oL3a+MSXkmD7Q2LZhGU2Y16AjVIDhRX9Gl3Wy880eCt
-         BXqPWQI9mci633pYmhfFe4HbbeKGW1BtIpJMXsc+vi+LbHg0fht6pEmljpB/WQsEbeYu
-         efP1cg3AsY+8y2Hh+6YcLnqMr0Cl9JqLr+qEstF1g1H/idIYqprmFmS3+Cfjr9n97GLu
-         vCOdoXS8dfNRz3ihukTudNWkaJdFpl4GoT1omhCh5EeTp1XvJvkym9BCnEb/7L8t9A3z
-         SKug==
-X-Gm-Message-State: ABy/qLaEhzEo+2Y/rQG8uIPdioDD8bia33bWv8P539IVvyHM0TfeyEtN
-        2fPN0WNSQ5EJisW4hxdjPR52e3Sa0Q/6rHfVXVdsVA==
-X-Google-Smtp-Source: APBJJlFLP7KpI5D4cz6fjxg/9AdfjY+LGxKi41ExFBTmXN3hLhxkaI113sTTfgpZpUsnLsOw7mioSyVPWp+c0G4kVEU=
-X-Received: by 2002:a67:f04b:0:b0:443:6917:215b with SMTP id
- q11-20020a67f04b000000b004436917215bmr2958771vsm.26.1690917650887; Tue, 01
- Aug 2023 12:20:50 -0700 (PDT)
+        bh=bOoS0qhaKcElbsi0Z+E0aV8vW9BZkaI19KrbMNaM/w8=;
+        b=TtkDIfhQ1187FK+lYdpBxGJkRqwPRM4Y+K5HBR6cdCR4kFvjHk66x5ZdBNJ8EamgE0
+         hykaXJfJP/6moUdAGOcBJa3qyoQIYHvjOnZ2GNa8255fHIyDbFAb8jFalrAFpRO8DKIk
+         58613lL8FPogtq3CLLgwpEDfxFNtsndzA1UZYO7+4hkyCSzaoW04Qntte6Urhyc1j7zT
+         Mm2QPda3KVl01+Jd2HUKKwtUvkjAo39JlMZSwOL05ppuDuJKEbij8G0/mAz7XugShTUr
+         8rBW4MNdK5xUdVyC4kUF3sGH0lD+/cGLqBnvZiUsghRt9mJgcpHSPXJuKbEJWOSjaZ+t
+         ljfQ==
+X-Gm-Message-State: ABy/qLYlnfZ7O7MEVVux437t59ww+wBoBlekDeN4RxYPqLJoFfqJmUwq
+        zBPhgqMQvs4ojTHfvJ3e0C1Wqha125uYmGeigj3Wug==
+X-Google-Smtp-Source: APBJJlF1meobDFC+ZZom+NUUmu82u66qQdK7EfT40YIL+nHAb5GKoQnLKohZsZSnrsBaksvB/hYoVew2swB3GYS0bU8=
+X-Received: by 2002:a05:6102:2456:b0:443:873a:16b8 with SMTP id
+ g22-20020a056102245600b00443873a16b8mr3193533vss.30.1690917713403; Tue, 01
+ Aug 2023 12:21:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230725123045.6367-1-aboutphysycs@gmail.com> <ZL/KZ2Q5G7JHZMhw@smile.fi.intel.com>
-In-Reply-To: <ZL/KZ2Q5G7JHZMhw@smile.fi.intel.com>
+References: <20230725123623.6411-1-aboutphysycs@gmail.com>
+In-Reply-To: <20230725123623.6411-1-aboutphysycs@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 1 Aug 2023 21:20:40 +0200
-Message-ID: <CAMRc=Mft3dTT+4H=4f4szSCc_NhJkDoG1xs8DkR=urgdhhHeqA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: mlxbf2: remove unneeded platform_set_drvdata() call
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Andrei Coardos <aboutphysycs@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, Alexandru Ardelean <alex@shruggie.ro>
+Date:   Tue, 1 Aug 2023 21:21:42 +0200
+Message-ID: <CAMRc=Mettq0xOPx7cgzk=-szp=FrzyWkCiW8NxC9WWyDnAM4dg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: max77620: remove unneeded platform_set_drvdata() call
+To:     Andrei Coardos <aboutphysycs@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        andy@kernel.org, linus.walleij@linaro.org,
+        Alexandru Ardelean <alex@shruggie.ro>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,31 +69,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 3:13=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
-rote:
+On Tue, Jul 25, 2023 at 2:36=E2=80=AFPM Andrei Coardos <aboutphysycs@gmail.=
+com> wrote:
 >
-> On Tue, Jul 25, 2023 at 03:30:45PM +0300, Andrei Coardos wrote:
-> > This function call was found to be unnecessary as there is no equivalen=
-t
-> > platform_get_drvdata() call to access the private data of the driver.
+> This function call is not required because no counterpart
+> platform_get_drvdata() call is present to leverage the private data of
+> the driver.
+> Since the private data is confined to this driver file, external access
+> is not feasible.
+> The use of this function appears redundant in the current context of the
+> driver's implementation.
 >
-> This is simply not true.
+> Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
+> Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
+> ---
 >
-> NAK.
+> Changelog V1->V2:
 >
-
-Just so you know if that's not obvious from reading the code:
-platform_get_drvdata() is just a wrapper around dev_get_drvdata()
-which is called plenty in PM callbacks of this driver.
-
-Bart
-
-> > Also, the private data is defined in this driver, so there is no risk o=
-f
-> > it being accessed outside of this driver file.
+> * https://lore.kernel.org/linux-gpio/20230720132535.23413-1-aboutphysycs@=
+gmail.com/
+> * fixed subject line: adjusted colons where needed
 >
+>  drivers/gpio/gpio-max77620.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+> index c18b60e39a94..8c2a5609161f 100644
+> --- a/drivers/gpio/gpio-max77620.c
+> +++ b/drivers/gpio/gpio-max77620.c
+> @@ -331,8 +331,6 @@ static int max77620_gpio_probe(struct platform_device=
+ *pdev)
+>         girq->init_hw =3D max77620_gpio_irq_init_hw;
+>         girq->threaded =3D true;
+>
+> -       platform_set_drvdata(pdev, mgpio);
+> -
+>         ret =3D devm_gpiochip_add_data(&pdev->dev, &mgpio->gpio_chip, mgp=
+io);
+>         if (ret < 0) {
+>                 dev_err(&pdev->dev, "gpio_init: Failed to add max77620_gp=
+io\n");
 > --
-> With Best Regards,
-> Andy Shevchenko
+> 2.34.1
 >
->
+
+Applied, thanks!
+
+Bartosz
