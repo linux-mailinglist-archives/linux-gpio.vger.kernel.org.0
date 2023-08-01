@@ -2,66 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40B1D76B44D
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 14:04:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A29EA76B44F
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 14:04:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233357AbjHAMEE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 08:04:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51480 "EHLO
+        id S234451AbjHAMER (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 08:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234277AbjHAMDp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 08:03:45 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C913D1734;
-        Tue,  1 Aug 2023 05:03:37 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b9b50be31aso84202331fa.3;
-        Tue, 01 Aug 2023 05:03:37 -0700 (PDT)
+        with ESMTP id S232086AbjHAMD5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 08:03:57 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB221990;
+        Tue,  1 Aug 2023 05:03:56 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4fe0c566788so9199398e87.0;
+        Tue, 01 Aug 2023 05:03:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690891416; x=1691496216;
+        d=gmail.com; s=20221208; t=1690891435; x=1691496235;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8zpSRj+GD1K9ivzCsboyfWepvG0nnxsJI4neiOMEOJA=;
-        b=J9YXI/qQWmc5foKYmcXr/mlM5rzoT7ewawJlMCCWUj6LqVxodgC86yvhX9LVcLzrId
-         ZMkIdl0WnR24MEWt1s91jJUWB2YFfz+xv/6wJ3QScW6rg/hiNPf+6xxw2h8RpPg2W120
-         eLvpxuzfmRCQOR4uZj8OJAQyPe6pgJzwUQGN84YvXJiXkPBdPKsEITrwhkeEfuw9jGMO
-         Cxy6RyLHU8T6grY7VKpp0XfSrhJxws3xim3yVFVyrpSRjcXTD+zBxKVE2QxoGmyvi68V
-         q9Hj0nPh3vM3KnxiFNfgc+Cs1AWHntrw4iN1SvF4Bmb1ZzgEr7Pg1Op51Tf76WTE9XFj
-         ItAg==
+        bh=aE2psrYzSQU8So7H2lqtVFtbvK/aQHA4jm0AH9xBQUo=;
+        b=Kt2466pEvz8QaUHjluSm/1dxuyp5VUaPGYzBbsiHrWYAi28e53FJAF2TG6wXZjkoRq
+         4K3o/fh0Ey5kPHKhL83Qgt+m1uJ3DigTwKl4ZtFQv8D2Fw+OzaF6FNbFQwjvw1ARdSII
+         Qre33ysDCX60hrAa80VBLKIUGbdDo+uGWUnw5/ff4fpn/P5pcE1yzA4DFl5O7MedHNFQ
+         c1vEj04FMU/DDpJmuS6vmT1GDdc2LyKc4r6tvsy6ioK83tVpwJ4V6hbKT36OKP4Il5BF
+         towKWW6NwstJ9TTE7D2IZPQyIGxhaqh3AGE/G3G1myGVKCBsZfMIu6Kwq5+qEQOY8IDx
+         qJPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690891416; x=1691496216;
+        d=1e100.net; s=20221208; t=1690891435; x=1691496235;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8zpSRj+GD1K9ivzCsboyfWepvG0nnxsJI4neiOMEOJA=;
-        b=Td0FvCqi2R8GJFCXfLdGRu31QBJsp0yunf3dXrjT1CU7uROhbNDCwObB1sdnfYN19+
-         2ZjpvyZP5jFgEIpQskg5YiyogoIl6GNtrAS1gFT7GUPWdb5kxjfsDGh6b3mDpXHqC2/e
-         8bzYun2Stb0Q8IfBVctO1dMJ1DpnFiaTYnzxEqYB4tT1g2Hyy2GABSeNXEaVW+RUhuXM
-         MnFoaj18A00GxEYHAeYqJBSLziYNOFkjyd2vn5OWr41DkZ/Aw+0UfQkBIfEcIdEyMT/y
-         +c9cv+g3+shcBj9LHcZZ2hE9zWVSf5EL4qRb2dsUfsmcF4ebPR4o6mgDWe2PTmROo7kC
-         vOaQ==
-X-Gm-Message-State: ABy/qLYfURSRWGI5ZNNGuCRWb2I6SQ2Dmffp2ainxGR44kOzzLSkOJkn
-        lD3SS3+yPOY/Gfhhm3vrFFc=
-X-Google-Smtp-Source: APBJJlHjM5sGeXJ8scrk4aBLFhYKc236hH6cKgiTcqCKxDSEfv4vNXCF+LRTsngmIqRpheMWNP66IQ==
-X-Received: by 2002:a2e:8812:0:b0:2b9:3cb3:2592 with SMTP id x18-20020a2e8812000000b002b93cb32592mr2327537ljh.10.1690891415898;
-        Tue, 01 Aug 2023 05:03:35 -0700 (PDT)
+        bh=aE2psrYzSQU8So7H2lqtVFtbvK/aQHA4jm0AH9xBQUo=;
+        b=PQvcKgGgmwkARU0g8KUQZNpdQAkDtdWm2lBK+yG0Nd39F0J4u/oS7DwRqMrWtRYDFw
+         egMF82wpeSps7gYcAWNeCmw3os8ReUDD7wnXbUqfGtL1ApA2AvOxkxCG42bjoLarVcSA
+         JotjkamadjYhi5NA8iwNKFEps284vewq1w2slEk8cs9NQh+OtIo3Z0Yi4P6HegkI99LG
+         tsyw1G8oRK25h8HH3nZET8zeeOmpdORGbzRpW+m7rzUp0UHBhKLZE0L6FqT0vbZGtPQ2
+         EHPkvcllhZM+wWULeAW/DuvjgruyJ83ERmGzcT/2/qgDQXFE/Q+iZkUzlpWIfmkSwLih
+         ClWw==
+X-Gm-Message-State: ABy/qLZSTl1Pcy1guhwqykWGJIta82ToDlDil/xTNd8cXH//DiMN2XGX
+        HeWGSIyab1LoLRlNr4A5raqdywzkIe4=
+X-Google-Smtp-Source: APBJJlG/vaA70Oy4b5vd7KmQuDtolMU4Sk6ht7mghTudw2X9PvGItUQ0DzoVxhgLpnub52sLgPS18g==
+X-Received: by 2002:a19:7b12:0:b0:4fe:958:88ac with SMTP id w18-20020a197b12000000b004fe095888acmr2062862lfc.6.1690891434702;
+        Tue, 01 Aug 2023 05:03:54 -0700 (PDT)
 Received: from fedora ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id y16-20020a2e7d10000000b002b9899d0f0bsm2590417ljc.83.2023.08.01.05.03.34
+        by smtp.gmail.com with ESMTPSA id b21-20020ac25635000000b004fe0ec5596bsm2542136lff.54.2023.08.01.05.03.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 05:03:35 -0700 (PDT)
-Date:   Tue, 1 Aug 2023 15:03:31 +0300
+        Tue, 01 Aug 2023 05:03:54 -0700 (PDT)
+Date:   Tue, 1 Aug 2023 15:03:50 +0300
 From:   Matti Vaittinen <mazziesaccount@gmail.com>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 4/8] pinctrl: ingenic: relax return value check for IRQ get
-Message-ID: <92e97e068e0f058d081886f0352715d1f22d43a1.1690890774.git.mazziesaccount@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v8 5/8] pinctrl: pistachio: relax return value check for IRQ
+ get
+Message-ID: <5077c4df68da920ab1119d6332878d0d31dc6d1b.1690890774.git.mazziesaccount@gmail.com>
 References: <cover.1690890774.git.mazziesaccount@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Fcap+cDW0Rqwoy47"
+        protocol="application/pgp-signature"; boundary="EcOrXqBb1q4t+H8h"
 Content-Disposition: inline
 In-Reply-To: <cover.1690890774.git.mazziesaccount@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,7 +74,7 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---Fcap+cDW0Rqwoy47
+--EcOrXqBb1q4t+H8h
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -85,7 +84,6 @@ fwnode_irq_get[_byname]() were changed to not return 0 anymore.
 Drop check for return value 0.
 
 Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
@@ -100,24 +98,28 @@ The patch changing the fwnode_irq_get() got merged during 5.4:
 https://lore.kernel.org/all/fb7241d3-d1d1-1c37-919b-488d6d007484@gmail.com/
 This is a clean-up as agreed.
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/pinctrl/pinctrl-pistachio.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-in=
-genic.c
-index 2f220a47b749..86e71ad703a5 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -4201,8 +4201,6 @@ static int __init ingenic_gpio_probe(struct ingenic_p=
-inctrl *jzpc,
- 	err =3D fwnode_irq_get(fwnode, 0);
- 	if (err < 0)
- 		return err;
--	if (!err)
--		return -EINVAL;
- 	jzgc->irq =3D err;
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-=
+pistachio.c
+index 53408344927a..8c50e0091b32 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -1393,12 +1393,6 @@ static int pistachio_gpio_register(struct pistachio_=
+pinctrl *pctl)
+ 			dev_err(pctl->dev, "Failed to retrieve IRQ for bank %u\n", i);
+ 			goto err;
+ 		}
+-		if (!ret) {
+-			fwnode_handle_put(child);
+-			dev_err(pctl->dev, "No IRQ for bank %u\n", i);
+-			ret =3D -EINVAL;
+-			goto err;
+-		}
+ 		irq =3D ret;
 =20
- 	girq =3D &jzgc->gc.irq;
+ 		bank =3D &pctl->gpio_banks[i];
 --=20
 2.40.1
 
@@ -134,19 +136,19 @@ Simon says - in Latin please.
 ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
 Thanks to Simon Glass for the translation =3D]=20
 
---Fcap+cDW0Rqwoy47
+--EcOrXqBb1q4t+H8h
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmTI9JMACgkQeFA3/03a
-ocVLWAf+NGRt7nw3/XhPANula40iJJFiuw8jhq/Wh2q7d5+R8FyuXJ4k0MxYnNai
-Gz7hXWymh+tE5m6X2AiVaGen80URaPifkWsCCoQQvtN3EOt0b/uACthvyx3CkvoJ
-/6suG7+iZvQcxZTbHeJKvxh9IwsyLIKKyD2YVWA3EekFn4GAm9TtCGI3eITfejKN
-qJvpQpreePQoxqOEr0oGj8ZxqF4M1OQV5xyAVxG/iP5r4x7syoVt3II0qkkL2JEJ
-QYDGxtlgy5WGQyACRlBdvRInq6sb4ELRD/zuRD0bAAB2S03yqY0PJzLWN3kQtrMR
-AEowC+zNv1M1/MfC47NKj/vsbSrIgA==
-=DHaf
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmTI9KYACgkQeFA3/03a
+ocXp3Af/dbshHL9gw7UQfzj41PPmapFb61j6WsVWG5ToE4fmmhBeL4x4uTa0I7q+
+WmPQbd3h9xarup2OvyJyYqJcSUaI1Hr+lahqjClJ+w/3R8DLvn6loMCB2nqUN7RN
+FSeLXKsYEKzvi+YhO7oFT1DXGVSmRN23UMsFewQpoSAputPZw1SAmsJrHMMFVZ9+
+qzwVMiYyVp+RGl/NBKclTyHrgzpsO/Rkw0HHHFBRBHjGqvhcoZMi4LaI8DUI5uW7
+nuFJFH+gzv/g8C9keHpF6FvCDPaepQlMobKcIe6hPFKK/MfDgrEDKfbnN5zwWDR/
+wZI21+vRp0q69fmPX65+xAgnOU7sTw==
+=zKCo
 -----END PGP SIGNATURE-----
 
---Fcap+cDW0Rqwoy47--
+--EcOrXqBb1q4t+H8h--
