@@ -2,27 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E78A376A94C
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 08:39:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9F8F76A9E4
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 09:23:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231742AbjHAGj5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 02:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50780 "EHLO
+        id S231324AbjHAHXa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 03:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbjHAGj4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 02:39:56 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 89F5F98;
-        Mon, 31 Jul 2023 23:39:53 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.201])
-        by gateway (Coremail) with SMTP id _____8Cxruu3qMhky+YNAA--.30050S3;
-        Tue, 01 Aug 2023 14:39:51 +0800 (CST)
-Received: from [10.20.42.201] (unknown [10.20.42.201])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniO1qMhkHphDAA--.4219S3;
-        Tue, 01 Aug 2023 14:39:50 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
- offset
-To:     Conor Dooley <conor@kernel.org>
+        with ESMTP id S231313AbjHAHXa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 03:23:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F84F1;
+        Tue,  1 Aug 2023 00:23:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 280FC614A5;
+        Tue,  1 Aug 2023 07:23:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBE78C433C7;
+        Tue,  1 Aug 2023 07:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690874608;
+        bh=my0GemI44LTxXtgO6hNse1vYl0rMa6dnpGwJk5pWK3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XAKmBefzRiBaU9azLIvQfXwVYN3M4+4VWZ8D0e06hyy+vkOB1daCRKnFIiOZgD32J
+         xM1WG8lXR/Xq40OF9Yg0fN9/hYo5aGBvZAyLiHmJDnfDxLeVnrMHhiDoF5waDZMEx/
+         U9Lg19eUALIQD7FF2esG5p7A42ROnBFYartmhnZuw9BIhxO9wvnpClSrBDZU+5AjIz
+         YMaVinulR/WQc+fldcJl0guPA/VUsv6uXl75VHRZD745dysKPK+aFkHQEzDg45/4/A
+         kY8hyjxb3vj5ebgY+lTlm9O6r/wFP62jAxLB5kR1i3yIbctJTmY9s+sWr9MmJpj8kC
+         qnMzaaRFY4WqQ==
+Date:   Tue, 1 Aug 2023 08:23:23 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
@@ -31,26 +43,21 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
         Liu Peibao <liupeibao@loongson.cn>,
-        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
+        loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+Message-ID: <20230801-whenever-imitation-b2759b212f6b@spud>
 References: <20230731091059.17323-1-zhuyinbo@loongson.cn>
  <20230731091059.17323-2-zhuyinbo@loongson.cn>
  <20230731-setback-such-61815ee3ef51@spud>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <041bf8a6-8d91-c2ce-6752-aa7255f946c7@loongson.cn>
-Date:   Tue, 1 Aug 2023 14:39:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ <041bf8a6-8d91-c2ce-6752-aa7255f946c7@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <20230731-setback-such-61815ee3ef51@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8BxniO1qMhkHphDAA--.4219S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-        nUUI43ZEXa7xR_UUUUUUUUU==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="iYDJfgIGL+4ugo0v"
+Content-Disposition: inline
+In-Reply-To: <041bf8a6-8d91-c2ce-6752-aa7255f946c7@loongson.cn>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,98 +67,49 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
+--iYDJfgIGL+4ugo0v
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-在 2023/7/31 下午11:55, Conor Dooley 写道:
-> On Mon, Jul 31, 2023 at 05:10:58PM +0800, Yinbo Zhu wrote:
->> Add parsing GPIO configure, input, output, interrupt register offset
->> address and GPIO control mode support.
-> 
-> This reeks of insufficient use of SoC specific compatibles. Do GPIO
-> controllers on the same SoC have different register offsets?
+On Tue, Aug 01, 2023 at 02:39:49PM +0800, Yinbo Zhu wrote:
+>=20
+>=20
+> =E5=9C=A8 2023/7/31 =E4=B8=8B=E5=8D=8811:55, Conor Dooley =E5=86=99=E9=81=
+=93:
+> > On Mon, Jul 31, 2023 at 05:10:58PM +0800, Yinbo Zhu wrote:
+> > > Add parsing GPIO configure, input, output, interrupt register offset
+> > > address and GPIO control mode support.
+> >=20
+> > This reeks of insufficient use of SoC specific compatibles. Do GPIO
+> > controllers on the same SoC have different register offsets?
+>=20
+>=20
+> Yes,
+>=20
+> > Where are the users for this?
+>=20
+>=20
+> For example, ls2k500 contains multiple GPIO chips with different
+> (configure, input, output, interrupt) offset addresses, but all others
+> are the same.
 
+Right. That's admittedly not what I expected to hear! Can you firstly
+explain this in the commit message, and secondly add a soc-specific
+compatible for the ls2k500 and only allow these properties on that SoC?
 
-Yes,
+Thanks,
+Conor.
 
-> Where are the users for this?
+--iYDJfgIGL+4ugo0v
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-For example, ls2k500 contains multiple GPIO chips with different
-(configure, input, output, interrupt) offset addresses, but all others
-are the same.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZMiy6wAKCRB4tDGHoIJi
+0vYgAQDuI7jEA+b9JDDSxFjsDMHi6wYg8nQNezU0dgANbuO6hgEAz0hN9trOiPv5
+d00AEqnFcc0GjrDjpqmiiZOz8i27tgk=
+=Zar6
+-----END PGP SIGNATURE-----
 
-> 
-> Cheers,
-> Conor.
-> 
->>
->> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->> ---
->>   .../bindings/gpio/loongson,ls-gpio.yaml       | 37 +++++++++++++++++++
->>   1 file changed, 37 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
->> index fb86e8ce6349..cad67f8bfe6e 100644
->> --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
->> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
->> @@ -29,6 +29,33 @@ properties:
->>   
->>     gpio-ranges: true
->>   
->> +  loongson,gpio-conf-offset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO configuration register offset address.
->> +
->> +  loongson,gpio-out-offset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO output register offset address.
->> +
->> +  loongson,gpio-in-offset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO input register offset address.
->> +
->> +  loongson,gpio-ctrl-mode:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO control mode, where '0' represents
->> +      bit control mode and '1' represents byte control mode.
->> +
->> +  loongson,gpio-inten-offset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO interrupt enable register offset
->> +      address.
->> +
->>     interrupts:
->>       minItems: 1
->>       maxItems: 64
->> @@ -39,6 +66,11 @@ required:
->>     - ngpios
->>     - "#gpio-cells"
->>     - gpio-controller
->> +  - loongson,gpio-conf-offset
->> +  - loongson,gpio-in-offset
->> +  - loongson,gpio-out-offset
->> +  - loongson,gpio-ctrl-mode
->> +  - loongson,gpio-inten-offset
->>     - gpio-ranges
->>     - interrupts
->>   
->> @@ -54,6 +86,11 @@ examples:
->>         ngpios = <64>;
->>         #gpio-cells = <2>;
->>         gpio-controller;
->> +      loongson,gpio-conf-offset = <0>;
->> +      loongson,gpio-in-offset = <0x20>;
->> +      loongson,gpio-out-offset = <0x10>;
->> +      loongson,gpio-ctrl-mode = <0>;
->> +      loongson,gpio-inten-offset = <0x30>;
->>         gpio-ranges = <&pctrl 0 0 15>,
->>                       <&pctrl 16 16 15>,
->>                       <&pctrl 32 32 10>,
->> -- 
->> 2.20.1
->>
-
+--iYDJfgIGL+4ugo0v--
