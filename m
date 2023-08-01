@@ -2,66 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12FEB76AA0A
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 09:32:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48A2976AA38
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 09:45:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231535AbjHAHc0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 03:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45216 "EHLO
+        id S229946AbjHAHpN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 03:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbjHAHcZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 03:32:25 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335FA10C7;
-        Tue,  1 Aug 2023 00:32:24 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-4fe0d5f719dso8808795e87.2;
-        Tue, 01 Aug 2023 00:32:24 -0700 (PDT)
+        with ESMTP id S232051AbjHAHpJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 03:45:09 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C71211B;
+        Tue,  1 Aug 2023 00:44:45 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-991c786369cso769813766b.1;
+        Tue, 01 Aug 2023 00:44:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690875142; x=1691479942;
+        d=gmail.com; s=20221208; t=1690875881; x=1691480681;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rgshofvWYyF/DhpPi22apL12vwawsYEjRGZkBlpio2o=;
-        b=ounrYPusqaK/Y/cRZwCbRP5ZabY27J2S5VdDx2TywsEIGxEindywms3vI0WjpE0krt
-         DeXI/P7EgCLLADwHkMRnNuUllXg1PZKWFXOP+Mx8CGWCmuXCBsXw/vyDZ94fQpWPMaFN
-         9nlcF9yWDogOqWQ52xtcIJn1s8EZV/hBMX6ZhxDap3+UWF5Ln6Nhj7jzXP67S1GjcYxD
-         QQLiQq/RJk5u8JQYri+IAGtz5Vph+b6xcceMLru6w8gudNGTDge1tdkRhwwyNbi5QwM2
-         LEu0+usahM751QKCCirqPbran8goL1vOcj2RIjHyvTk+GBWqOquFKczIBUCEbAz0Xj8n
-         P0mg==
+        bh=duwQiPtNtN/ka+/qSDejTLlGxxydtKaBegoBst6LgQA=;
+        b=bflEIgZJpGNTS6Jz8vjxQYTUlCm7p6fq9wi37gFvz6Gi1A1hnh7+v8PhmWz/e2NBHt
+         J5vBY1o1UnhJ9Em3FKmkl6F/GOUY+oKXK2ghU7UXx9IeuxZHwAbmhkgcbTajXOEAWioa
+         hPhxzLQnLBxTYZgO0jLt9sEd/xETN4tMB3uicL4jqtwOSmPEwbPVUwkEMEqcCsRw0CcW
+         O8Iu1uOydcP8C2lk7QC045zuzj7rk5F2AZCsbOoDZDNhnLik1OBdgrOqbQxbqd9x7a9I
+         nPLsvQ8EIffw4XaVl8z1SHccErANxiY2i0ZORp2GnU/RQ/VLV2/ykNyo2YP8gYDoWcmE
+         XDzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690875142; x=1691479942;
+        d=1e100.net; s=20221208; t=1690875881; x=1691480681;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rgshofvWYyF/DhpPi22apL12vwawsYEjRGZkBlpio2o=;
-        b=lhN+Gg1cwAWJwvP/Cae5hIPExn7jsFyEvaH3IKwnoSA04QdEZtlopWEyYbSWjtWir5
-         n1/G3ZQ0lmI+RIlYqlMMYthmmgDpbuWmCXBRgHP2YTFIgszczk+iB84L5H0encevnzZw
-         YVMcPXb4oFEc9nCftat3YwR3HWbM58Fb+2Zk0dQcJGTmunPFFffJDRbXB9wB3mgXs+9L
-         286zvepCnUvZiGhMAR8baTqiyXamj3mzCyk1vVOdf2bL1JhcW9IxGilzCHd/zxGBhs3n
-         xF2E2FfpqwpfnZKmOEWj0oK8Q0Vd9ePIIVGkYwTrJ83uTZyXjgJPcnow+UK6XokRmCH2
-         K9ww==
-X-Gm-Message-State: ABy/qLbjbdcBBi73lwnZTtx+Q3m9bWK+0kGQHUdEHSlCVGsEYrLNvBUL
-        Hn0niMW13QJvTmqC83G5H4C0fAsZZwOG+w==
-X-Google-Smtp-Source: APBJJlGDi01mRhcoTi0A1Gj6heCpwb5DOIRYb3jhpuOmn8W9RKD6wWUrse393Xnx4Yg6S395s9okdw==
-X-Received: by 2002:a05:6512:3d10:b0:4fe:1d88:2c61 with SMTP id d16-20020a0565123d1000b004fe1d882c61mr1914184lfv.32.1690875141921;
-        Tue, 01 Aug 2023 00:32:21 -0700 (PDT)
+        bh=duwQiPtNtN/ka+/qSDejTLlGxxydtKaBegoBst6LgQA=;
+        b=Vipze0gqCNmHLtD5DAdxv4/Ibi5fue8rgke/nbh8FBsrlUSiYfnquj1y5AYmlT9t1m
+         50LXHB6R1vheyBy722ZkoI2IKuf7wupvhqPoCrKcLT+iheWRQcxoNi6iwOtbPXU4Ap8r
+         yu1m7J3jTlsXhMteM74oNUCsqhNFOZmJE2jgc8BLa1zk6LOpfjH5JdS3o93OfUrbB7IT
+         GYplLYUuSMyOUfi3CmbnnGRZJNVY60dWBaEB50c79a/g8GIZLnO/0krqxlemQ3b/yu/r
+         p82woJjw08mM4eLaggo2OedLJjw99ofcg0LBa6VM9ub6Bvwaupk0MBncTeZs9e7x9k9d
+         fj9Q==
+X-Gm-Message-State: ABy/qLZmejbklFjXM203Nr2u80Mx5f7KI6vKbcbEej3N0IR1QpSqHkvk
+        OGKyw6WsFSLCxboJfEy0w9/t5gEGTPUrQw==
+X-Google-Smtp-Source: APBJJlFqt6jAfAmLQZ3qXcE0/0wX91lgUIY+ZCroPI0JqeFIQL3K+Xkro0RoAHQ81Axcfx+wmIIYZA==
+X-Received: by 2002:a17:907:77ce:b0:977:befe:d888 with SMTP id kz14-20020a17090777ce00b00977befed888mr1615099ejc.13.1690875880995;
+        Tue, 01 Aug 2023 00:44:40 -0700 (PDT)
 Received: from localhost.localdomain ([78.97.234.98])
-        by smtp.gmail.com with ESMTPSA id n10-20020aa7c44a000000b0052238bc70ccsm6503428edr.89.2023.08.01.00.32.20
+        by smtp.gmail.com with ESMTPSA id m15-20020a17090607cf00b00993159ce075sm7168595ejc.210.2023.08.01.00.44.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 00:32:21 -0700 (PDT)
+        Tue, 01 Aug 2023 00:44:40 -0700 (PDT)
 From:   Andrei Coardos <aboutphysycs@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     andy@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
+To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com, andy@kernel.org,
+        brgl@bgdev.pl, linus.walleij@linaro.org,
         Andrei Coardos <aboutphysycs@gmail.com>,
         Alexandru Ardelean <alex@shruggie.ro>
-Subject: [PATCH] gpio: timberdale: remove unneeded call to platform_set_drvdata()
-Date:   Tue,  1 Aug 2023 10:32:11 +0300
-Message-Id: <20230801073211.4274-1-aboutphysycs@gmail.com>
+Subject: [PATCH] gpio: sifive: remove unneeded call to platform_set_drvdata()
+Date:   Tue,  1 Aug 2023 10:44:30 +0300
+Message-Id: <20230801074430.5179-1-aboutphysycs@gmail.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,22 +79,21 @@ accessed outside of this driver file.
 Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
 Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
 ---
- drivers/gpio/gpio-timberdale.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpio/gpio-sifive.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-timberdale.c b/drivers/gpio/gpio-timberdale.c
-index de14949a3fe5..bbd9e9191199 100644
---- a/drivers/gpio/gpio-timberdale.c
-+++ b/drivers/gpio/gpio-timberdale.c
-@@ -256,8 +256,6 @@ static int timbgpio_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index c6a8d2374e31..0010f607a9ef 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -259,7 +259,6 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+ 	girq->child_to_parent_hwirq = sifive_gpio_child_to_parent_hwirq;
+ 	girq->handler = handle_bad_irq;
+ 	girq->default_type = IRQ_TYPE_NONE;
+-	platform_set_drvdata(pdev, priv);
  
--	platform_set_drvdata(pdev, tgpio);
--
- 	/* make sure to disable interrupts */
- 	iowrite32(0x0, tgpio->membase + TGPIO_IER);
- 
+ 	return gpiochip_add_data(&chip->gc, chip);
+ }
 -- 
 2.34.1
 
