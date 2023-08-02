@@ -2,65 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D22076C871
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Aug 2023 10:38:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 950A176CF6D
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Aug 2023 16:06:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232850AbjHBIiB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Aug 2023 04:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47734 "EHLO
+        id S234575AbjHBOGT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Aug 2023 10:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232468AbjHBIiA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Aug 2023 04:38:00 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3C751A8;
-        Wed,  2 Aug 2023 01:37:57 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.201])
-        by gateway (Coremail) with SMTP id _____8BxY_DkFcpk084OAA--.34853S3;
-        Wed, 02 Aug 2023 16:37:56 +0800 (CST)
-Received: from [10.20.42.201] (unknown [10.20.42.201])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLCPeFcpk1V1FAA--.29839S3;
-        Wed, 02 Aug 2023 16:37:54 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
- offset
-To:     Conor Dooley <conor.dooley@microchip.com>
-Cc:     Conor Dooley <conor@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        Liu Peibao <liupeibao@loongson.cn>,
-        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
-References: <20230731091059.17323-1-zhuyinbo@loongson.cn>
- <20230731091059.17323-2-zhuyinbo@loongson.cn>
- <20230731-setback-such-61815ee3ef51@spud>
- <041bf8a6-8d91-c2ce-6752-aa7255f946c7@loongson.cn>
- <20230801-whenever-imitation-b2759b212f6b@spud>
- <a5c27913-2a88-d376-0130-22ca8a3d4516@loongson.cn>
- <20230801-varsity-chemo-09cc5e250ded@spud>
- <26adb487-f8c5-9cf4-5b31-070e9161e761@loongson.cn>
- <20230802-jailer-pavilion-84fb17bb3710@wendy>
- <3534f7b9-0e02-28c1-238a-5a6fdbb95e94@loongson.cn>
- <20230802-bunkbed-siamese-57ee53bdf273@wendy>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <db7012b2-9156-34ed-ad1f-10a3e5dfe390@loongson.cn>
-Date:   Wed, 2 Aug 2023 16:37:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20230802-bunkbed-siamese-57ee53bdf273@wendy>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        with ESMTP id S233935AbjHBOGS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Aug 2023 10:06:18 -0400
+Received: from mail.schrack-seconet.com (mail.schrack-seconet.com [81.223.165.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25D6F7
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Aug 2023 07:06:16 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.schrack-seconet.com (Postfix) with ESMTP id 1664B2103F2
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Aug 2023 16:06:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=schrack-seconet.com;
+        s=mail; t=1690985175;
+        bh=rCRkerDBg8EgX+gnqaiozy/7750cJUAMSUOwSHBlBGw=;
+        h=From:To:CC:Subject:Date;
+        b=BgtYoBIYXxa7xQ3frxSZFybqfN92FZbPPQM1kSJ8rZFFVelWsGq9AZcZ/+noLkB9C
+         lKzbn5UhRn/5akTWY/26gjl+iQricICka7a/oxZ/ElnPqXW0mYORpYclNxECh9M3YP
+         mUKRGG+zqK1Fp0xJ3DWOtF4b9PSijtzkHutyhhGo=
+X-Virus-Scanned: Debian amavisd-new at schrack-seconet.com
+Received: from mail.schrack-seconet.com ([127.0.0.1])
+        by localhost (mail.schrack-seconet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 76JLsmDAHWw7 for <linux-gpio@vger.kernel.org>;
+        Wed,  2 Aug 2023 16:06:08 +0200 (CEST)
+Received: from outlook.schrack-seconet.com (unknown [10.20.201.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.schrack-seconet.com (Postfix) with ESMTPS id 6AC972103EC
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Aug 2023 16:06:08 +0200 (CEST)
+Received: from EXCH-W1.schrack-seconet.works (10.20.201.33) by
+ EXCH-W1.schrack-seconet.works (10.20.201.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.16; Wed, 2 Aug 2023 16:06:08 +0200
+Received: from EXCH-W1.schrack-seconet.works ([10.20.201.33]) by
+ EXCH-W1.schrack-seconet.works ([10.20.201.33]) with mapi id 15.02.1258.016;
+ Wed, 2 Aug 2023 16:06:08 +0200
+From:   "Hollerer Franz, Schrack Seconet AG, Entwicklung" 
+        <f.hollerer@schrack-seconet.com>
+To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+CC:     "Hollerer Franz, Schrack Seconet AG, Entwicklung" 
+        <f.hollerer@schrack-seconet.com>,
+        "Ullrich Lucas, Schrack Seconet AG, Entwicklung" 
+        <l.ullrich@schrack-seconet.com>
+Subject: [libgpiod]: feature request: API functions, const correctness
+Thread-Topic: [libgpiod]: feature request: API functions, const correctness
+Thread-Index: AdnFSksl/z46payhSI6AJ2k+kdDPzg==
+Date:   Wed, 2 Aug 2023 14:06:08 +0000
+Message-ID: <a6ce12acff7b4ed9bae1df0115bba1f3@schrack-seconet.com>
+Accept-Language: de-AT, en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxLCPeFcpk1V1FAA--.29839S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-        nUUI43ZEXa7xR_UUUUUUUUU==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.20.190.21]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,73 +71,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Dear libgpiod-team,
 
+I have a request, and it would be great if you could consider it for future=
+ versions of libgpiod. Within the current API it is not obvious which funct=
+ion parameters are input-only parameters, and which parameter are output pa=
+rameters, i.e., will be modified.
 
-在 2023/8/2 下午3:50, Conor Dooley 写道:
-> On Wed, Aug 02, 2023 at 03:44:17PM +0800, Yinbo Zhu wrote:
->> 在 2023/8/2 下午3:22, Conor Dooley 写道:
->>> On Wed, Aug 02, 2023 at 09:38:34AM +0800, Yinbo Zhu wrote:
->>>> 在 2023/8/1 下午11:54, Conor Dooley 写道:
->>>>> On Tue, Aug 01, 2023 at 04:34:30PM +0800, Yinbo Zhu wrote:
-> 
->>>>>> Sorry, I may not have described it clearly before, the ls2k500 was only
->>>>>> as a example, actually, Loongson GPIO controllers (2k500,2k1000,eg)come
->>>>>> in multiple variants that are compatible except for certain register
->>>>>> offset values.  So above all offset device property was used to in all
->>>>>> loongson gpio controller.
->>>>>
->>>>> But it would be good to know why they are different. Do they each
->>>>> support some different features, or was there some other reason for
->>>>> making controllers like this?
->>>>
->>>>
->>>> There are no other reasons, just differences in these offset addresses.
->>>
->>> Huh. Do you have a link to a devicetree for the ls2k500?
->>
->>
->> Yes,  there was a link about ls2k500 dts,  but that ls2k500 dts has not
->> yet added a gpio node.  this gpio node will be added later.
-> 
-> You must have something that you used to test with, no? I don't mind if
-> it is not a patch, but rather is some WIP - I'd just like to see user of
-> the binding :)
+I think it would be helpful if the API is const correct. As example, I thin=
+k
 
+> struct gpiod_line_info *gpiod_chip_get_line_info(struct gpiod_chip *chip,
+> 						 unsigned int offset);
 
-yes, I have a test, for 2k0500, that gpio dts as follows:
+should be changed to
 
-                 gpio0:gpio@0x1fe10430 {
-                         compatible = "loongson,ls2k-gpio";
-                         reg = <0 0x1fe10430 0 0x20>;
-                         gpio-controller;
-                         #gpio-cells = <2>;
-			interrupt-parent = <&liointc1>;
-                         ngpios = <64>;
-                         loongson,gpio-conf-offset = <0>;
-                         loongson,gpio-out-offset = <0x10>;
-                         loongson,gpio-in-offset = <0x8>;
-                         loongson,gpio-inten-offset = <0xb0>;
-			loongson,gpio-ctrl-mode = <0x0>;
-                         ...
-		  }
+> struct gpiod_line_info *gpiod_chip_get_line_info(const struct gpiod_chip =
+*chip,
+> 						 unsigned int offset);
 
-                 gpio1:gpio@0x1fe10450 {
-                         compatible = "loongson,ls2k-gpio";
-                         reg = <0 0x1fe10450 0 0x20>;
-                         gpio-controller;
-                         #gpio-cells = <2>;
-			interrupt-parent = <&liointc1>;
-                         ngpios = <64>;
-                         loongson,gpio-conf-offset = <0>;
-                         loongson,gpio-out-offset = <0x10>;
-                         loongson,gpio-in-offset = <0x8>;
-                         loongson,gpio-inten-offset = <0x98>;
-			loongson,gpio-ctrl-mode = <0x0>;
-                         ...
-	        }
+making it clear that the chip object is an input parameter which is not cha=
+nged by the API function. Same argument applies for many other API function=
+s...
 
+Thanks for consideration & Best regards,
 
-Thanks,
-Yinbo.
-> 
+Franz Hollerer
 
