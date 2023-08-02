@@ -2,117 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 838C476C58B
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Aug 2023 08:47:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA2AE76C6B0
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Aug 2023 09:23:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232465AbjHBGr1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Aug 2023 02:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40074 "EHLO
+        id S232789AbjHBHXE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Aug 2023 03:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231466AbjHBGr0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Aug 2023 02:47:26 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396721FF3
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Aug 2023 23:47:21 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id ada2fe7eead31-4476a9e8812so2125480137.2
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Aug 2023 23:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1690958840; x=1691563640;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aJvHQjKu6z8FmkxGVc6ZWP2ECLJmKX/NOuW6r8YK/ZY=;
-        b=hmnH5vSiUAJ+W5vjK+o3mGftPoblFBk4JmznB923bZJ9Wv+fKdeFzaDFVjJjRbuCZw
-         jN6jB1A98Nd9Z+YyYre4du24Q6JFzJvIOCbJL834POAY9PxMJOymdpIoYKOECjS9NaVy
-         +NZnXnrLXqELYni+F4IC8I9MSt20BXOtnCk03ZaTLU0JAB2MF5os9CDIDhOSNZYS+sZ8
-         Mn1xKpbJYlWyqYW0sXBq9lV3vEV+svxLcLVkSJbH6CpB+oDGbIe3yCohoKgos4G6CyUJ
-         9BAZAQLBUwqAvdGeBnAPj3PCoE84d46XtimAR8PJN9IZrKjWXh4gZcWryTgiLi+J472/
-         fHZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690958840; x=1691563640;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aJvHQjKu6z8FmkxGVc6ZWP2ECLJmKX/NOuW6r8YK/ZY=;
-        b=hf23LGYfW1vwKLe+Lanm7HM9GlO1q8Gpb6ObNiMBOrL//FVRGoIOwFdu1DvM1HWXZK
-         MfBmYjXekdyzsi6whaiLH5tePxmg29sIksS9zs5FLyuUI4Ok0qgcJ7eQHb9692WwZUlF
-         3wlnGLFHqtdGrQ6ykrdu/Q70h82rJIcR4IVUmm+tZDZaOfjYwTOWkAVavJB3rpH5syud
-         AUGTof+q5T3m20fNRA/kbNBvIoPSbyJMMLS8XIIKO6iDbVf++/9OJynLwOU/uPRnmpoe
-         Hd/yTwaMRIgpS3vn15kG83Qlbsmwpg2lWX8iqdmMgZcKhZgIjufRPTmd1aMro4p1cSP4
-         fiPg==
-X-Gm-Message-State: ABy/qLZv33dt4ex4SPyP9zgHeVLJ+xds9NoU86dWRtZpajMOZmQ6p4ST
-        XMkpHpWoq1p+qbKQU/R8cU7Efox2II48eImtf/Um1Q==
-X-Google-Smtp-Source: APBJJlEHRNMirg/Ob3AFzf5MNSsBaVkPAO0J8E7KRR5F6XkepT9GrYUIOrCYs9uQu6c2Ic2w1JXq7GtO7aG9IpEh2jk=
-X-Received: by 2002:a67:f1c2:0:b0:443:8898:2a50 with SMTP id
- v2-20020a67f1c2000000b0044388982a50mr3163651vsm.35.1690958840254; Tue, 01 Aug
- 2023 23:47:20 -0700 (PDT)
+        with ESMTP id S231322AbjHBHXD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Aug 2023 03:23:03 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095CCE4C;
+        Wed,  2 Aug 2023 00:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1690960982; x=1722496982;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7eFksLTYa9RuHQo4s+zL32kwqkynVdyzZ5o/ofGIt/c=;
+  b=Y1ChgCtyYHPpyvA3fbvxiG0i3ox+NDLGMv4GSH1eUbrPhhlxqB6Kjbju
+   45XQnyrKGNwyiZF2KUT065iIaZvD8HjtPHIJPCs7MBpJC7TVSQRkQ0SWL
+   gGRCCaFhqlgHddTvwTvQpp5LyRqD2kf9KnvMf46QytFH/66xHGMLS2RWz
+   31LRnt4KeTIMPmAYH+AXyIuksxA3keMPMTsapNWxStZ+oSvtKI67be1pT
+   sIXpJYDmqka2PCsyRxE91Q6gXdMRhn9FGjhtjxyqcxV21D9uryKqDSjp7
+   /pjJkW6pPE5GbNxVRhXexU0hGwAS9q0+S19V0Fuc087k3OH3MA1ykG93g
+   g==;
+X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
+   d="asc'?scan'208";a="239300202"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Aug 2023 00:22:49 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 2 Aug 2023 00:22:49 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Wed, 2 Aug 2023 00:22:46 -0700
+Date:   Wed, 2 Aug 2023 08:22:10 +0100
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>
+CC:     Conor Dooley <conor@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>,
+        <wanghongliang@loongson.cn>, Liu Peibao <liupeibao@loongson.cn>,
+        <loongson-kernel@lists.loongnix.cn>
+Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+Message-ID: <20230802-jailer-pavilion-84fb17bb3710@wendy>
+References: <20230731091059.17323-1-zhuyinbo@loongson.cn>
+ <20230731091059.17323-2-zhuyinbo@loongson.cn>
+ <20230731-setback-such-61815ee3ef51@spud>
+ <041bf8a6-8d91-c2ce-6752-aa7255f946c7@loongson.cn>
+ <20230801-whenever-imitation-b2759b212f6b@spud>
+ <a5c27913-2a88-d376-0130-22ca8a3d4516@loongson.cn>
+ <20230801-varsity-chemo-09cc5e250ded@spud>
+ <26adb487-f8c5-9cf4-5b31-070e9161e761@loongson.cn>
 MIME-Version: 1.0
-References: <20230801190951.51818-1-brgl@bgdev.pl> <ZMlY+QU+yXIl4yab@smile.fi.intel.com>
-In-Reply-To: <ZMlY+QU+yXIl4yab@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 2 Aug 2023 08:47:09 +0200
-Message-ID: <CAMRc=McLt23osfxcNA4-3eqVY_O-PD_BQzwWSthELGxd+=jVmw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: mark the GPIO chip as a one that can sleep
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="TdgctVrcqP1F3jZi"
+Content-Disposition: inline
+In-Reply-To: <26adb487-f8c5-9cf4-5b31-070e9161e761@loongson.cn>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 1, 2023 at 9:11=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Aug 01, 2023 at 09:09:51PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Simulated chips use a mutex for synchronization in driver callbacks so
-> > they must not be called from interrupt context. Set the can_sleep field
-> > of the GPIO chip to true to force users to only use threaded irqs.
->
-> Ah, good catch! Doesn't it deserve a Fixes tag?
+--TdgctVrcqP1F3jZi
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I will add it when applying.
+On Wed, Aug 02, 2023 at 09:38:34AM +0800, Yinbo Zhu wrote:
+>=20
+>=20
+> =E5=9C=A8 2023/8/1 =E4=B8=8B=E5=8D=8811:54, Conor Dooley =E5=86=99=E9=81=
+=93:
+> > On Tue, Aug 01, 2023 at 04:34:30PM +0800, Yinbo Zhu wrote:
+> > >=20
+> > >=20
+> > > =E5=9C=A8 2023/8/1 =E4=B8=8B=E5=8D=883:23, Conor Dooley =E5=86=99=E9=
+=81=93:
+> > > > On Tue, Aug 01, 2023 at 02:39:49PM +0800, Yinbo Zhu wrote:
+> > > > >=20
+> > > > >=20
+> > > > > =E5=9C=A8 2023/7/31 =E4=B8=8B=E5=8D=8811:55, Conor Dooley =E5=86=
+=99=E9=81=93:
+> > > > > > On Mon, Jul 31, 2023 at 05:10:58PM +0800, Yinbo Zhu wrote:
+> > > > > > > Add parsing GPIO configure, input, output, interrupt register=
+ offset
+> > > > > > > address and GPIO control mode support.
+> > > > > >=20
+> > > > > > This reeks of insufficient use of SoC specific compatibles. Do =
+GPIO
+> > > > > > controllers on the same SoC have different register offsets?
+> > > > >=20
+> > > > >=20
+> > > > > Yes,
+> > > > >=20
+> > > > > > Where are the users for this?
+> > > > >=20
+> > > > >=20
+> > > > > For example, ls2k500 contains multiple GPIO chips with different
+> > > > > (configure, input, output, interrupt) offset addresses, but all o=
+thers
+> > > > > are the same.
+> > > >=20
+> > > > Right. That's admittedly not what I expected to hear! Can you first=
+ly
+> > > > explain this in the commit message,
+> > >=20
+> > >=20
+> > > I will add following explain in the commit message. Do you think it's
+> > > suitable?
+> > >=20
+> > > Loongson GPIO controllers come in multiple variants that are compatib=
+le
+> > > except for certain register offset values.  Add support in yaml file =
+for
+> > > device properties allowing to specify them in DT.
+> >=20
+> > Sure, that would be helpful.
+> >=20
+> > > > and secondly add a soc-specific
+> > > > compatible for the ls2k500 and only allow these properties on that =
+SoC?
+> >=20
+> > > Sorry, I may not have described it clearly before, the ls2k500 was on=
+ly
+> > > as a example, actually, Loongson GPIO controllers (2k500,2k1000,eg)co=
+me
+> > > in multiple variants that are compatible except for certain register
+> > > offset values.  So above all offset device property was used to in all
+> > > loongson gpio controller.
+> >=20
+> > But it would be good to know why they are different. Do they each
+> > support some different features, or was there some other reason for
+> > making controllers like this?
+>=20
+>=20
+> There are no other reasons, just differences in these offset addresses.
 
-Bart
+Huh. Do you have a link to a devicetree for the ls2k500?
 
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  drivers/gpio/gpio-sim.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> > index cfbdade841e8..5f8723ad0048 100644
-> > --- a/drivers/gpio/gpio-sim.c
-> > +++ b/drivers/gpio/gpio-sim.c
-> > @@ -429,6 +429,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *=
-swnode, struct device *dev)
-> >       gc->set_config =3D gpio_sim_set_config;
-> >       gc->to_irq =3D gpio_sim_to_irq;
-> >       gc->free =3D gpio_sim_free;
-> > +     gc->can_sleep =3D true;
-> >
-> >       ret =3D devm_gpiochip_add_data(dev, gc, chip);
-> >       if (ret)
-> > --
-> > 2.39.2
-> >
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+--TdgctVrcqP1F3jZi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZMoEIgAKCRB4tDGHoIJi
+0qehAQD/TED1c6/DUFPI/gFo3nDFxCZVNRgFga8JtpLMIN0aCQEA77DxWD0/baeB
+r37YpCJXTvTMBnMSocT4alLPP0WzNQA=
+=O4O8
+-----END PGP SIGNATURE-----
+
+--TdgctVrcqP1F3jZi--
