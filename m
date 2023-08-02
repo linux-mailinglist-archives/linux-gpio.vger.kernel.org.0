@@ -2,66 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FEA976BEB0
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Aug 2023 22:46:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B609476C260
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Aug 2023 03:40:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230162AbjHAUqb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Aug 2023 16:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57394 "EHLO
+        id S231516AbjHBBkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Aug 2023 21:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjHAUqb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 16:46:31 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4119A1722;
-        Tue,  1 Aug 2023 13:46:30 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-5221b90f763so8662720a12.0;
-        Tue, 01 Aug 2023 13:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690922788; x=1691527588;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EsCbwck1W0BVGN7R4M4UBzImqiWrqRh5iCUK8g9cDlM=;
-        b=fjPOPM6Wt8T52UqI4RVSIw7Fr7W40yPbQL18fLlGO6G6uIpQX5BRvk3DeeJfmn6kPJ
-         HoiOg/HuTTSrKqDJ0QTYgkRSNpgy1E7M33xjdQ4GxVnsTPp/bvf5gVhTkEkGvEzoNlu1
-         ML++9MUb8BNAk3r3WynWrrUVJThnVb3/Nf/9Xi2VwsH3NAX8WVoExrDiMM43TL5clq3C
-         ECIqY9tm/pUFcBGaCfpAjOuMl7T5FaUzb8b6FLGXM57mzj9tqzf4rCcfE76dHZwTasx3
-         G6vB28imijZv+o5CGJEahNsUTA5ca2TN7KyoQm7tCZnBpaxSPcMd3suzrg3Zmz1vMLZS
-         6O1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690922788; x=1691527588;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EsCbwck1W0BVGN7R4M4UBzImqiWrqRh5iCUK8g9cDlM=;
-        b=Sf2Wb6k0McC27Im7mVUPX0mIohsCSsEjfwJS15R/cbP3FWdv9CxyaXqyXW/cJyuG2J
-         T6hBEORdALmw05UUh5FAP80t9lIHN8po0IXSCOJmxqFugkfDiZfTl4ycn9StprM4LS7m
-         rlM+Hzdcv+yvnPdHFOBD/fWyF2O1uiaBsouJplNljsL/6JxQy4qvyyywZAgnude6Pikj
-         /iGw9m+YY0dYJ8KB3zAEmUx3iUYbQidG5T0fVCwV1IKBfzjW/zSQR4Wyc+FXw/U/ES92
-         jKZabsyGj0jLKc86hekPTy1TJaeFejD4PNCgLhmpfkqX630/Ik6WSpergDuHqQCRbFI6
-         kY4g==
-X-Gm-Message-State: ABy/qLYCgV/xxJW29plROf23EBH1RtzgT2xXaQpeaC/CNovlnuqEyCBJ
-        ohBQhX8DsM56YfghbWdfV8lL07XFId4w3g==
-X-Google-Smtp-Source: APBJJlGwr6CUPEbN76s4J4w9xkApiZpZjeIBme8JHW3y0zZ3bP/dTDmfKsMyxH6MBUynyS3WJ2ExOg==
-X-Received: by 2002:a17:906:7685:b0:99b:c8db:d92c with SMTP id o5-20020a170906768500b0099bc8dbd92cmr3022204ejm.30.1690922788035;
-        Tue, 01 Aug 2023 13:46:28 -0700 (PDT)
-Received: from localhost.localdomain ([78.97.234.98])
-        by smtp.gmail.com with ESMTPSA id rs5-20020a170907036500b00982b204678fsm8109417ejb.207.2023.08.01.13.46.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 13:46:27 -0700 (PDT)
-From:   Andrei Coardos <aboutphysycs@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     andy@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
-        Andrei Coardos <aboutphysycs@gmail.com>,
-        Alexandru Ardelean <alex@shruggie.ro>
-Subject: [PATCH] gpio: zevio: remove unneeded call to platform_set_drvdata()
-Date:   Tue,  1 Aug 2023 23:46:06 +0300
-Message-Id: <20230801204606.9738-1-aboutphysycs@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S231555AbjHBBkF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Aug 2023 21:40:05 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4A467211B;
+        Tue,  1 Aug 2023 18:39:37 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8BxpPCcs8lkfYMOAA--.34146S3;
+        Wed, 02 Aug 2023 09:38:36 +0800 (CST)
+Received: from [10.20.42.201] (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX8+as8lkHshEAA--.47151S3;
+        Wed, 02 Aug 2023 09:38:35 +0800 (CST)
+Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        Liu Peibao <liupeibao@loongson.cn>,
+        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
+References: <20230731091059.17323-1-zhuyinbo@loongson.cn>
+ <20230731091059.17323-2-zhuyinbo@loongson.cn>
+ <20230731-setback-such-61815ee3ef51@spud>
+ <041bf8a6-8d91-c2ce-6752-aa7255f946c7@loongson.cn>
+ <20230801-whenever-imitation-b2759b212f6b@spud>
+ <a5c27913-2a88-d376-0130-22ca8a3d4516@loongson.cn>
+ <20230801-varsity-chemo-09cc5e250ded@spud>
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <26adb487-f8c5-9cf4-5b31-070e9161e761@loongson.cn>
+Date:   Wed, 2 Aug 2023 09:38:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20230801-varsity-chemo-09cc5e250ded@spud>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-CM-TRANSID: AQAAf8AxX8+as8lkHshEAA--.47151S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,30 +63,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This function call was found to be unnecessary as there is no equivalent
-platform_get_drvdata() call to access the private data of the driver. Also,
-the private data is defined in this driver, so there is no risk of it being
-accessed outside of this driver file.
 
-Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
-Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
----
- drivers/gpio/gpio-zevio.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-zevio.c b/drivers/gpio/gpio-zevio.c
-index f0f571b323f2..2de61337ad3b 100644
---- a/drivers/gpio/gpio-zevio.c
-+++ b/drivers/gpio/gpio-zevio.c
-@@ -176,8 +176,6 @@ static int zevio_gpio_probe(struct platform_device *pdev)
- 	if (!controller)
- 		return -ENOMEM;
- 
--	platform_set_drvdata(pdev, controller);
--
- 	/* Copy our reference */
- 	controller->chip = zevio_gpio_chip;
- 	controller->chip.parent = &pdev->dev;
--- 
-2.34.1
+在 2023/8/1 下午11:54, Conor Dooley 写道:
+> On Tue, Aug 01, 2023 at 04:34:30PM +0800, Yinbo Zhu wrote:
+>>
+>>
+>> 在 2023/8/1 下午3:23, Conor Dooley 写道:
+>>> On Tue, Aug 01, 2023 at 02:39:49PM +0800, Yinbo Zhu wrote:
+>>>>
+>>>>
+>>>> 在 2023/7/31 下午11:55, Conor Dooley 写道:
+>>>>> On Mon, Jul 31, 2023 at 05:10:58PM +0800, Yinbo Zhu wrote:
+>>>>>> Add parsing GPIO configure, input, output, interrupt register offset
+>>>>>> address and GPIO control mode support.
+>>>>>
+>>>>> This reeks of insufficient use of SoC specific compatibles. Do GPIO
+>>>>> controllers on the same SoC have different register offsets?
+>>>>
+>>>>
+>>>> Yes,
+>>>>
+>>>>> Where are the users for this?
+>>>>
+>>>>
+>>>> For example, ls2k500 contains multiple GPIO chips with different
+>>>> (configure, input, output, interrupt) offset addresses, but all others
+>>>> are the same.
+>>>
+>>> Right. That's admittedly not what I expected to hear! Can you firstly
+>>> explain this in the commit message,
+>>
+>>
+>> I will add following explain in the commit message. Do you think it's
+>> suitable?
+>>
+>> Loongson GPIO controllers come in multiple variants that are compatible
+>> except for certain register offset values.  Add support in yaml file for
+>> device properties allowing to specify them in DT.
+> 
+> Sure, that would be helpful.
+> 
+>>> and secondly add a soc-specific
+>>> compatible for the ls2k500 and only allow these properties on that SoC?
+> 
+>> Sorry, I may not have described it clearly before, the ls2k500 was only
+>> as a example, actually, Loongson GPIO controllers (2k500,2k1000,eg)come
+>> in multiple variants that are compatible except for certain register
+>> offset values.  So above all offset device property was used to in all
+>> loongson gpio controller.
+> 
+> But it would be good to know why they are different. Do they each
+> support some different features, or was there some other reason for
+> making controllers like this?
+
+
+There are no other reasons, just differences in these offset addresses.
+
+Thanks,
+Yinbo.
 
