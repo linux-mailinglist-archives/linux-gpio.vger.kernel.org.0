@@ -2,61 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1358976E042
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 08:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09E9876E066
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 08:41:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232890AbjHCGbn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Aug 2023 02:31:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44972 "EHLO
+        id S231628AbjHCGlP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Aug 2023 02:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbjHCGbm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 02:31:42 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C89E7D;
-        Wed,  2 Aug 2023 23:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1691044301; x=1722580301;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qFKr8bkFiCSUT8gGs1rqFHXGm44qmaw6Qe7PkE1fKq8=;
-  b=BTMAWzDY7cy20yafNRxa7+Z8l7Rxj17yWl5eLG3lBXtG3kaN3Zngb/lu
-   /Vz9q7FXilKG0qTAawTBOR78nE5WGiN9Wj8tGN9fz8VsvxybtdaZja+Md
-   GNkJ1hMAaCVz5pTeqVfjEdCQVo0EGhsfC1ewIKqmbE48WW/ymR8e1qqGk
-   MPDMXX2Sj5aDheC0RZWpIWTDa+myaL69hFXun5Y0/bBNofqf0ftO5XlaG
-   jqmv/qWJDJmAeg3tOrXM6qgn/Xx+lHRmKHchRkaF3x9cCNpwokhlethFj
-   Jp6pr8ohmkgUc7tFr3DiFWIXgMrGMuKpxfTMJOizkQKgUfKs7wC6gTYDj
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.01,251,1684825200"; 
-   d="asc'?scan'208";a="239517581"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Aug 2023 23:31:32 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 2 Aug 2023 23:31:32 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Wed, 2 Aug 2023 23:31:29 -0700
-Date:   Thu, 3 Aug 2023 07:30:53 +0100
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-CC:     Conor Dooley <conor@kernel.org>,
+        with ESMTP id S230005AbjHCGlO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 02:41:14 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 626BAE7D
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Aug 2023 23:41:13 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-52307552b03so703545a12.0
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Aug 2023 23:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691044872; x=1691649672;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R3lDHqasLR71p6RjL20g3V1HU00B9G2u701BbTE8dB0=;
+        b=JSK0Rb2m9+SiykNVmY0zcUcEzJqMFce01qKjOT2jA2sNtBiDW7Q5wP/8PYb0xAubX5
+         OLLWBWb/ZMhfjlQ+ZDPnQtk0+4ELNVckLJ/LmTIwdUra/GbRofxRC/w7/u4vVn3sXhqG
+         CEwfm3CPM/VtIWkVqJRrKvaVGRUopBinM0epkU7hVGTVe/LeaoTWVT2g24U18S2O3Nzd
+         O0SfJ9q+9i9BvMjroFP3Fwj7dGUPyLqJHfk1Vv9NZl7wdeXYyJJB8JdBHTjpwnr8eggb
+         NykE3e755WTkJZuBovR4gaX2U06fXZf/0KnxYcNPE7H4iiqqWhuZejKcJio0NgigCHQV
+         fU/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691044872; x=1691649672;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R3lDHqasLR71p6RjL20g3V1HU00B9G2u701BbTE8dB0=;
+        b=UlAa9SNnoXdgUsIxt70yPbHIv1ejpFjcQ+cskpwpWbXu3MLB4BwXos6JmPD571LQi5
+         6ow1fdXyR+UNc6ri8P5Fu7cUGvt3ROAjD09trNCMkmjP8gICzN9cHX71B4jbZmbmF2FP
+         2fpu8kGm3n1QrB5AhsgR14BQmUEiT/Iq6s6QI9lisaXHJgdb+24OpYBd4veRhNYpnJsc
+         MEuD9jFk0Jvws4/JH3XB2Qsky/gAx0L0QKWI6gOqdHLAX4xo7uZ2uvpcJ2JJfljwk3i2
+         aVdByEfRqzzXl9fZyPUjhhZ6IBvQJkbW8QPlOePkF7iNi9hszFihw8UR7x1Hs/colr76
+         i5VA==
+X-Gm-Message-State: ABy/qLZeMMxJ4+Eonx9KvOrWduZUu+dDSFVadqpLNCi875K++BOVyh7X
+        irEJjtwdvuuR2yKwmdfft1aleQ==
+X-Google-Smtp-Source: APBJJlGpY86nu/tit00wHwCp6uIvWO0w7bGHc9EPU6c1uYz6cuhy6gZYp6qQQ+A4SgFiqCGgfc81NQ==
+X-Received: by 2002:aa7:d705:0:b0:521:e502:baf8 with SMTP id t5-20020aa7d705000000b00521e502baf8mr6868369edq.11.1691044871858;
+        Wed, 02 Aug 2023 23:41:11 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.245])
+        by smtp.gmail.com with ESMTPSA id g17-20020aa7d1d1000000b00522854fb049sm9705791edp.2.2023.08.02.23.41.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Aug 2023 23:41:11 -0700 (PDT)
+Message-ID: <ca969933-c7f8-a727-3c7e-5ec3548862a0@linaro.org>
+Date:   Thu, 3 Aug 2023 08:41:09 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+To:     Conor Dooley <conor.dooley@microchip.com>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc:     Conor Dooley <conor@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>,
-        <wanghongliang@loongson.cn>, Liu Peibao <liupeibao@loongson.cn>,
-        <loongson-kernel@lists.loongnix.cn>
-Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
- offset
-Message-ID: <20230803-tartar-tainted-968687047460@wendy>
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        Liu Peibao <liupeibao@loongson.cn>,
+        loongson-kernel@lists.loongnix.cn
 References: <20230801-whenever-imitation-b2759b212f6b@spud>
  <a5c27913-2a88-d376-0130-22ca8a3d4516@loongson.cn>
  <20230801-varsity-chemo-09cc5e250ded@spud>
@@ -67,150 +78,88 @@ References: <20230801-whenever-imitation-b2759b212f6b@spud>
  <db7012b2-9156-34ed-ad1f-10a3e5dfe390@loongson.cn>
  <20230802-empathy-wound-70df4990a976@spud>
  <ae74e7b0-26ae-5707-7b85-5dcf733d2bed@loongson.cn>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="A/1BXil6Lt50okRB"
-Content-Disposition: inline
-In-Reply-To: <ae74e7b0-26ae-5707-7b85-5dcf733d2bed@loongson.cn>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+ <20230803-tartar-tainted-968687047460@wendy>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230803-tartar-tainted-968687047460@wendy>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---A/1BXil6Lt50okRB
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 03/08/2023 08:30, Conor Dooley wrote:
+>>>>                  gpio0:gpio@0x1fe10430 {
+>>>>                          compatible = "loongson,ls2k-gpio";
+>>>>                          reg = <0 0x1fe10430 0 0x20>;
+>>>>                          gpio-controller;
+>>>>                          #gpio-cells = <2>;
+>>>> 			interrupt-parent = <&liointc1>;
+>>>>                          ngpios = <64>;
+>>>>                          loongson,gpio-conf-offset = <0>;
+>>>>                          loongson,gpio-out-offset = <0x10>;
+>>>>                          loongson,gpio-in-offset = <0x8>;
+>>>>                          loongson,gpio-inten-offset = <0xb0>;
+>>>> 			loongson,gpio-ctrl-mode = <0x0>;
+>>>>                          ...
+>>>> 		  }
+>>>>
+>>>>                  gpio1:gpio@0x1fe10450 {
+>>>>                          compatible = "loongson,ls2k-gpio";
+>>>>                          reg = <0 0x1fe10450 0 0x20>;
+>>>>                          gpio-controller;
+>>>>                          #gpio-cells = <2>;
+>>>> 			interrupt-parent = <&liointc1>;
+>>>>                          ngpios = <64>;
+>>>>                          loongson,gpio-conf-offset = <0>;
+>>>>                          loongson,gpio-out-offset = <0x10>;
+>>>>                          loongson,gpio-in-offset = <0x8>;
+>>>
+>>> These 3 are the same for both controllers, no?
+>>> Is only the inten-offset a variable?
+>>>
+>>>>                          loongson,gpio-inten-offset = <0x98>;
+>>>
+>>> These offsets exceed the region that you've got in the reg property for
+>>> this controller, do they not?
+>>>
+>>> Is there some sort of "miscellaneous register area" at 0x1FE104E0, or
+>>> just those two interrupt registers and nothing else?
+>>
+>>
+>> 2k500 gpio dts is just an example, like 3a5000, or more other platform,
+>> above offset was different but the gpio controller was compatible.
+>>
+>>                 gpio: gpio@1fe00500 {
+>>                         compatible = "loongson,ls2k-gpio";
+>>                         reg = <0 0x1fe00500 0xc00>;
+>>                         gpio-controller;
+>>                         #gpio-cells = <2>;
+>>                         ngpios = <16>;
+>>                         loongson,gpio-conf-offset = <0x0>;
+>>                         loongson,gpio-out-offset = <0x8>;
+>>                         loongson,gpio-in-offset = <0xc>;
+>> 			...
+>> 			}
+> 
+> That is a different SoC and needs to have a different compatible string.
+> "loongson,ls2k-foo" compatible strings were a mistake that only got past
+> us because we were not aware it was a family, rather than a specific
+> SoC. They certainly should not be used in isolation on a 3a5000!
+> 
+> Are there more than one GPIO controllers on the 3a5000? If so, what do
+> those nodes look like.
 
-On Thu, Aug 03, 2023 at 09:56:02AM +0800, Yinbo Zhu wrote:
->=20
->=20
-> =E5=9C=A8 2023/8/2 =E4=B8=8B=E5=8D=8811:36, Conor Dooley =E5=86=99=E9=81=
-=93:
-> > On Wed, Aug 02, 2023 at 04:37:50PM +0800, Yinbo Zhu wrote:
-> > >=20
-> > >=20
-> > > =E5=9C=A8 2023/8/2 =E4=B8=8B=E5=8D=883:50, Conor Dooley =E5=86=99=E9=
-=81=93:
-> > > > On Wed, Aug 02, 2023 at 03:44:17PM +0800, Yinbo Zhu wrote:
-> > > > > =E5=9C=A8 2023/8/2 =E4=B8=8B=E5=8D=883:22, Conor Dooley =E5=86=99=
-=E9=81=93:
-> > > > > > On Wed, Aug 02, 2023 at 09:38:34AM +0800, Yinbo Zhu wrote:
-> > > > > > > =E5=9C=A8 2023/8/1 =E4=B8=8B=E5=8D=8811:54, Conor Dooley =E5=
-=86=99=E9=81=93:
-> > > > > > > > On Tue, Aug 01, 2023 at 04:34:30PM +0800, Yinbo Zhu wrote:
-> > > >=20
-> > > > > > > > > Sorry, I may not have described it clearly before, the ls=
-2k500 was only
-> > > > > > > > > as a example, actually, Loongson GPIO controllers (2k500,=
-2k1000,eg)come
-> > > > > > > > > in multiple variants that are compatible except for certa=
-in register
-> > > > > > > > > offset values.  So above all offset device property was u=
-sed to in all
-> > > > > > > > > loongson gpio controller.
-> > > > > > > >=20
-> > > > > > > > But it would be good to know why they are different. Do the=
-y each
-> > > > > > > > support some different features, or was there some other re=
-ason for
-> > > > > > > > making controllers like this?
-> > > > > > >=20
-> > > > > > >=20
-> > > > > > > There are no other reasons, just differences in these offset =
-addresses.
-> > > > > >=20
-> > > > > > Huh. Do you have a link to a devicetree for the ls2k500?
-> > > > >=20
-> > > > >=20
-> > > > > Yes,  there was a link about ls2k500 dts,  but that ls2k500 dts h=
-as not
-> > > > > yet added a gpio node.  this gpio node will be added later.
-> > > >=20
-> > > > You must have something that you used to test with, no? I don't min=
-d if
-> > > > it is not a patch, but rather is some WIP - I'd just like to see us=
-er of
-> > > > the binding :)
-> > >=20
-> > >=20
-> > > yes, I have a test, for 2k0500, that gpio dts as follows:
-> > >=20
-> > >                  gpio0:gpio@0x1fe10430 {
-> > >                          compatible =3D "loongson,ls2k-gpio";
-> > >                          reg =3D <0 0x1fe10430 0 0x20>;
-> > >                          gpio-controller;
-> > >                          #gpio-cells =3D <2>;
-> > > 			interrupt-parent =3D <&liointc1>;
-> > >                          ngpios =3D <64>;
-> > >                          loongson,gpio-conf-offset =3D <0>;
-> > >                          loongson,gpio-out-offset =3D <0x10>;
-> > >                          loongson,gpio-in-offset =3D <0x8>;
-> > >                          loongson,gpio-inten-offset =3D <0xb0>;
-> > > 			loongson,gpio-ctrl-mode =3D <0x0>;
-> > >                          ...
-> > > 		  }
-> > >=20
-> > >                  gpio1:gpio@0x1fe10450 {
-> > >                          compatible =3D "loongson,ls2k-gpio";
-> > >                          reg =3D <0 0x1fe10450 0 0x20>;
-> > >                          gpio-controller;
-> > >                          #gpio-cells =3D <2>;
-> > > 			interrupt-parent =3D <&liointc1>;
-> > >                          ngpios =3D <64>;
-> > >                          loongson,gpio-conf-offset =3D <0>;
-> > >                          loongson,gpio-out-offset =3D <0x10>;
-> > >                          loongson,gpio-in-offset =3D <0x8>;
-> >=20
-> > These 3 are the same for both controllers, no?
-> > Is only the inten-offset a variable?
-> >=20
-> > >                          loongson,gpio-inten-offset =3D <0x98>;
-> >=20
-> > These offsets exceed the region that you've got in the reg property for
-> > this controller, do they not?
-> >=20
-> > Is there some sort of "miscellaneous register area" at 0x1FE104E0, or
-> > just those two interrupt registers and nothing else?
->=20
->=20
-> 2k500 gpio dts is just an example, like 3a5000, or more other platform,
-> above offset was different but the gpio controller was compatible.
->=20
->                 gpio: gpio@1fe00500 {
->                         compatible =3D "loongson,ls2k-gpio";
->                         reg =3D <0 0x1fe00500 0xc00>;
->                         gpio-controller;
->                         #gpio-cells =3D <2>;
->                         ngpios =3D <16>;
->                         loongson,gpio-conf-offset =3D <0x0>;
->                         loongson,gpio-out-offset =3D <0x8>;
->                         loongson,gpio-in-offset =3D <0xc>;
-> 			...
-> 			}
+Eh, even for the same SoC having different offsets suggest that
+programming model is a bit different. Anyway, who designed such
+hardware? Really?
 
-That is a different SoC and needs to have a different compatible string.
-"loongson,ls2k-foo" compatible strings were a mistake that only got past
-us because we were not aware it was a family, rather than a specific
-SoC. They certainly should not be used in isolation on a 3a5000!
+Best regards,
+Krzysztof
 
-Are there more than one GPIO controllers on the 3a5000? If so, what do
-those nodes look like.
-
---A/1BXil6Lt50okRB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZMtJnQAKCRB4tDGHoIJi
-0kArAQD+rcB68+jpAIMJJa1aB+J6gS04M+ayrxBbtIq8BEWAdAD/Y1jWeY6UKWZi
-+L8XL7pSx3kOGm4iKgxgX2qN44GPpQc=
-=mz4d
------END PGP SIGNATURE-----
-
---A/1BXil6Lt50okRB--
