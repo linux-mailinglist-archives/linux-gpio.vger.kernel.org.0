@@ -2,102 +2,215 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C57E76DF9E
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 07:18:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1358976E042
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 08:31:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232161AbjHCFSu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Aug 2023 01:18:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
+        id S232890AbjHCGbn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Aug 2023 02:31:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232181AbjHCFSV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 01:18:21 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7627E30FF;
-        Wed,  2 Aug 2023 22:18:20 -0700 (PDT)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37347sOP001482;
-        Thu, 3 Aug 2023 05:18:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=91DonNJJR8nbkv0nnP+YVancydUGw7/+AHHnSVDrQ3E=;
- b=CBPURklfp6SmexmddjeDmG1/bTJdwjeW/SNsQ9Of+VIpD1X54z2YXS36bXUu7Slk44Qw
- 19He+mY3U/vC31Bv5EIY2bJ7187vkmF3mHHeoKWdYGUhCstHRtH3iLtPqO7SXcxJTdh1
- 8Ay3RLKalfp/YPJGyk/u024f8RW+VoIG+IEUDewCoI8ldvSHfoJtwiNhh8x0pMwSXEr1
- BozqiVJ58WRNxEYyOD4bigtTGvr/EKzsRCNj3Zsxfw3zV9lo3+d2frvDko6YAFmeG7VX
- dQR8cQp/v4ZpAxEQJikYHGRekMRbI7O+Ce1EGEUSwKIDsZT7kXXc8cRe+GsEfPzHDmFR 9A== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s7n93j17m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Aug 2023 05:18:00 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3735Hv9G024678
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 3 Aug 2023 05:17:57 GMT
-Received: from [10.216.43.191] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Wed, 2 Aug
- 2023 22:17:51 -0700
-Message-ID: <c1e6d380-256b-4750-9703-e893c79611da@quicinc.com>
-Date:   Thu, 3 Aug 2023 10:47:48 +0530
+        with ESMTP id S229578AbjHCGbm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 02:31:42 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C89E7D;
+        Wed,  2 Aug 2023 23:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1691044301; x=1722580301;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qFKr8bkFiCSUT8gGs1rqFHXGm44qmaw6Qe7PkE1fKq8=;
+  b=BTMAWzDY7cy20yafNRxa7+Z8l7Rxj17yWl5eLG3lBXtG3kaN3Zngb/lu
+   /Vz9q7FXilKG0qTAawTBOR78nE5WGiN9Wj8tGN9fz8VsvxybtdaZja+Md
+   GNkJ1hMAaCVz5pTeqVfjEdCQVo0EGhsfC1ewIKqmbE48WW/ymR8e1qqGk
+   MPDMXX2Sj5aDheC0RZWpIWTDa+myaL69hFXun5Y0/bBNofqf0ftO5XlaG
+   jqmv/qWJDJmAeg3tOrXM6qgn/Xx+lHRmKHchRkaF3x9cCNpwokhlethFj
+   Jp6pr8ohmkgUc7tFr3DiFWIXgMrGMuKpxfTMJOizkQKgUfKs7wC6gTYDj
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.01,251,1684825200"; 
+   d="asc'?scan'208";a="239517581"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Aug 2023 23:31:32 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 2 Aug 2023 23:31:32 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Wed, 2 Aug 2023 23:31:29 -0700
+Date:   Thu, 3 Aug 2023 07:30:53 +0100
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>
+CC:     Conor Dooley <conor@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jianmin Lv <lvjianmin@loongson.cn>,
+        <wanghongliang@loongson.cn>, Liu Peibao <liupeibao@loongson.cn>,
+        <loongson-kernel@lists.loongnix.cn>
+Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+Message-ID: <20230803-tartar-tainted-968687047460@wendy>
+References: <20230801-whenever-imitation-b2759b212f6b@spud>
+ <a5c27913-2a88-d376-0130-22ca8a3d4516@loongson.cn>
+ <20230801-varsity-chemo-09cc5e250ded@spud>
+ <26adb487-f8c5-9cf4-5b31-070e9161e761@loongson.cn>
+ <20230802-jailer-pavilion-84fb17bb3710@wendy>
+ <3534f7b9-0e02-28c1-238a-5a6fdbb95e94@loongson.cn>
+ <20230802-bunkbed-siamese-57ee53bdf273@wendy>
+ <db7012b2-9156-34ed-ad1f-10a3e5dfe390@loongson.cn>
+ <20230802-empathy-wound-70df4990a976@spud>
+ <ae74e7b0-26ae-5707-7b85-5dcf733d2bed@loongson.cn>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH V12 0/6] Add minimal boot support for IPQ5018
-Content-Language: en-US
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robimarko@gmail.com>,
-        <krzysztof.kozlowski@linaro.org>, <andy.shevchenko@gmail.com>
-References: <1690533192-22220-1-git-send-email-quic_srichara@quicinc.com>
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <1690533192-22220-1-git-send-email-quic_srichara@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: cz9b77BDoQtM8IGxcGvqquddyDRE_9WW
-X-Proofpoint-ORIG-GUID: cz9b77BDoQtM8IGxcGvqquddyDRE_9WW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-03_03,2023-08-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- bulkscore=0 mlxlogscore=724 spamscore=0 malwarescore=0 suspectscore=0
- mlxscore=0 impostorscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308030048
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="A/1BXil6Lt50okRB"
+Content-Disposition: inline
+In-Reply-To: <ae74e7b0-26ae-5707-7b85-5dcf733d2bed@loongson.cn>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+--A/1BXil6Lt50okRB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Aug 03, 2023 at 09:56:02AM +0800, Yinbo Zhu wrote:
+>=20
+>=20
+> =E5=9C=A8 2023/8/2 =E4=B8=8B=E5=8D=8811:36, Conor Dooley =E5=86=99=E9=81=
+=93:
+> > On Wed, Aug 02, 2023 at 04:37:50PM +0800, Yinbo Zhu wrote:
+> > >=20
+> > >=20
+> > > =E5=9C=A8 2023/8/2 =E4=B8=8B=E5=8D=883:50, Conor Dooley =E5=86=99=E9=
+=81=93:
+> > > > On Wed, Aug 02, 2023 at 03:44:17PM +0800, Yinbo Zhu wrote:
+> > > > > =E5=9C=A8 2023/8/2 =E4=B8=8B=E5=8D=883:22, Conor Dooley =E5=86=99=
+=E9=81=93:
+> > > > > > On Wed, Aug 02, 2023 at 09:38:34AM +0800, Yinbo Zhu wrote:
+> > > > > > > =E5=9C=A8 2023/8/1 =E4=B8=8B=E5=8D=8811:54, Conor Dooley =E5=
+=86=99=E9=81=93:
+> > > > > > > > On Tue, Aug 01, 2023 at 04:34:30PM +0800, Yinbo Zhu wrote:
+> > > >=20
+> > > > > > > > > Sorry, I may not have described it clearly before, the ls=
+2k500 was only
+> > > > > > > > > as a example, actually, Loongson GPIO controllers (2k500,=
+2k1000,eg)come
+> > > > > > > > > in multiple variants that are compatible except for certa=
+in register
+> > > > > > > > > offset values.  So above all offset device property was u=
+sed to in all
+> > > > > > > > > loongson gpio controller.
+> > > > > > > >=20
+> > > > > > > > But it would be good to know why they are different. Do the=
+y each
+> > > > > > > > support some different features, or was there some other re=
+ason for
+> > > > > > > > making controllers like this?
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > There are no other reasons, just differences in these offset =
+addresses.
+> > > > > >=20
+> > > > > > Huh. Do you have a link to a devicetree for the ls2k500?
+> > > > >=20
+> > > > >=20
+> > > > > Yes,  there was a link about ls2k500 dts,  but that ls2k500 dts h=
+as not
+> > > > > yet added a gpio node.  this gpio node will be added later.
+> > > >=20
+> > > > You must have something that you used to test with, no? I don't min=
+d if
+> > > > it is not a patch, but rather is some WIP - I'd just like to see us=
+er of
+> > > > the binding :)
+> > >=20
+> > >=20
+> > > yes, I have a test, for 2k0500, that gpio dts as follows:
+> > >=20
+> > >                  gpio0:gpio@0x1fe10430 {
+> > >                          compatible =3D "loongson,ls2k-gpio";
+> > >                          reg =3D <0 0x1fe10430 0 0x20>;
+> > >                          gpio-controller;
+> > >                          #gpio-cells =3D <2>;
+> > > 			interrupt-parent =3D <&liointc1>;
+> > >                          ngpios =3D <64>;
+> > >                          loongson,gpio-conf-offset =3D <0>;
+> > >                          loongson,gpio-out-offset =3D <0x10>;
+> > >                          loongson,gpio-in-offset =3D <0x8>;
+> > >                          loongson,gpio-inten-offset =3D <0xb0>;
+> > > 			loongson,gpio-ctrl-mode =3D <0x0>;
+> > >                          ...
+> > > 		  }
+> > >=20
+> > >                  gpio1:gpio@0x1fe10450 {
+> > >                          compatible =3D "loongson,ls2k-gpio";
+> > >                          reg =3D <0 0x1fe10450 0 0x20>;
+> > >                          gpio-controller;
+> > >                          #gpio-cells =3D <2>;
+> > > 			interrupt-parent =3D <&liointc1>;
+> > >                          ngpios =3D <64>;
+> > >                          loongson,gpio-conf-offset =3D <0>;
+> > >                          loongson,gpio-out-offset =3D <0x10>;
+> > >                          loongson,gpio-in-offset =3D <0x8>;
+> >=20
+> > These 3 are the same for both controllers, no?
+> > Is only the inten-offset a variable?
+> >=20
+> > >                          loongson,gpio-inten-offset =3D <0x98>;
+> >=20
+> > These offsets exceed the region that you've got in the reg property for
+> > this controller, do they not?
+> >=20
+> > Is there some sort of "miscellaneous register area" at 0x1FE104E0, or
+> > just those two interrupt registers and nothing else?
+>=20
+>=20
+> 2k500 gpio dts is just an example, like 3a5000, or more other platform,
+> above offset was different but the gpio controller was compatible.
+>=20
+>                 gpio: gpio@1fe00500 {
+>                         compatible =3D "loongson,ls2k-gpio";
+>                         reg =3D <0 0x1fe00500 0xc00>;
+>                         gpio-controller;
+>                         #gpio-cells =3D <2>;
+>                         ngpios =3D <16>;
+>                         loongson,gpio-conf-offset =3D <0x0>;
+>                         loongson,gpio-out-offset =3D <0x8>;
+>                         loongson,gpio-in-offset =3D <0xc>;
+> 			...
+> 			}
 
-On 7/28/2023 2:03 PM, Sricharan Ramabadhran wrote:
-> The IPQ5018 is Qualcomm's 802.11ax SoC for Routers,
-> Gateways and Access Points.
-> 
-> This series adds minimal board boot support for ipq5018-rdp432-c2 board.
-> 
-> [v12]   Fixed the subject for patch #1 and fixed a conflict in Makefile for patch #5
+That is a different SoC and needs to have a different compatible string.
+"loongson,ls2k-foo" compatible strings were a mistake that only got past
+us because we were not aware it was a family, rather than a specific
+SoC. They certainly should not be used in isolation on a 3a5000!
 
-Bjorn,
-   Any chance this can be pulled in now for 6.6 ?
+Are there more than one GPIO controllers on the 3a5000? If so, what do
+those nodes look like.
 
-Regards,
-  Sricharan
+--A/1BXil6Lt50okRB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZMtJnQAKCRB4tDGHoIJi
+0kArAQD+rcB68+jpAIMJJa1aB+J6gS04M+ayrxBbtIq8BEWAdAD/Y1jWeY6UKWZi
++L8XL7pSx3kOGm4iKgxgX2qN44GPpQc=
+=mz4d
+-----END PGP SIGNATURE-----
+
+--A/1BXil6Lt50okRB--
