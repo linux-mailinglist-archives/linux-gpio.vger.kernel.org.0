@@ -2,168 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 450BD76EE3A
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 17:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED2F876EF34
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 18:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236588AbjHCPfN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Aug 2023 11:35:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58592 "EHLO
+        id S235125AbjHCQPC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Aug 2023 12:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237174AbjHCPfG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 11:35:06 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3633C3D
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Aug 2023 08:35:02 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qRaLn-0001r8-7n; Thu, 03 Aug 2023 17:34:55 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qRaLm-000sJV-5k; Thu, 03 Aug 2023 17:34:54 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qRaLl-00AAqD-GW; Thu, 03 Aug 2023 17:34:53 +0200
-Date:   Thu, 3 Aug 2023 17:34:50 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Wolfram Sang <wsa@kernel.org>, linux-gpio@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de, Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 18/18] gpio: mvebu: Make use of devm_pwmchip_alloc()
- function
-Message-ID: <20230803153450.fbvqd35memctq6hr@pengutronix.de>
-References: <20230718181849.3947851-1-u.kleine-koenig@pengutronix.de>
- <20230718181849.3947851-19-u.kleine-koenig@pengutronix.de>
- <CAMRc=MfGWvAGYAh8q7mOenGDMpKS3q7UK7-Yxw5bn1avhoQ-UQ@mail.gmail.com>
- <20230729213712.mkfqgk6cage6yqsd@pengutronix.de>
- <CAMRc=MeSg7Emhv4VKdsPLfjTrLtsN8M0uapnDFtYGfbJ8UjxJA@mail.gmail.com>
- <20230803094212.g3il26hqbboppiz4@pengutronix.de>
- <ZMuUzChRuEckOHIE@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fx5tsoitclnrs7ab"
-Content-Disposition: inline
-In-Reply-To: <ZMuUzChRuEckOHIE@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232465AbjHCQPB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 12:15:01 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A790173F;
+        Thu,  3 Aug 2023 09:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
+        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=jswo9qlkLWf5K8IR24e3YaIGIMYkx7BIxRpgj01F1y4=; b=b0YMXBIZNHNd2NlA9Sq6UijP6q
+        xNsOJWNRwER7BHYGzpnNYEgrDxujdGM6Vtvox2fOsTOj3cbmUnkC7qnhAyPjMXaLnk7iCusRLHbHA
+        MEETnVICaTosKitKi+rKN13b1NwU3k1eQ2lJb0E5ksANth0rMcDBG0laQUVaQav+4vHs=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:47720 helo=pettiford)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1qRayQ-0001ok-55; Thu, 03 Aug 2023 12:14:50 -0400
+Date:   Thu, 3 Aug 2023 12:14:49 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
+        isaac.true@canonical.com, jesse.sung@canonical.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        stable@vger.kernel.org, Lech Perczak <lech.perczak@camlingroup.com>
+Message-Id: <20230803121449.bcf74899e062ca39dfb073a3@hugovil.com>
+In-Reply-To: <2023073118-mousiness-sandlot-6258@gregkh>
+References: <20230725142343.1724130-1-hugo@hugovil.com>
+        <20230725142343.1724130-5-hugo@hugovil.com>
+        <2023073118-mousiness-sandlot-6258@gregkh>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v9 04/10] serial: sc16is7xx: refactor GPIO controller
+ registration
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, 31 Jul 2023 17:55:42 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
---fx5tsoitclnrs7ab
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, Jul 25, 2023 at 10:23:36AM -0400, Hugo Villeneuve wrote:
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > 
+> > In preparation for upcoming patch "fix regression with GPIO
+> > configuration". To facilitate review and make code more modular.
+> 
+> I would much rather the issue be fixed _before_ the code is refactored,
+> unless it is impossible to fix it without the refactor?
 
-Hello Andy,
+Hi Greg,
+normally I would agree, but the refactor in this case helps a lot to
+address some issues raised by you and Andy in V7 of this series.
 
-On Thu, Aug 03, 2023 at 02:51:40PM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 03, 2023 at 11:42:12AM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Sun, Jul 30, 2023 at 12:07:33PM +0200, Bartosz Golaszewski wrote:
->=20
-> ...
->=20
-> >  - the locking scheme in gpiod_request_commit() looks strange. gpio_lock
-> >    is released and retaken possibly several times. I wonder what it
-> >    actually protects there. Maybe doing
-> >=20
-> > 	diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > 	index edab00c9cb3c..496b1cebba58 100644
-> > 	--- a/drivers/gpio/gpiolib.c
-> > 	+++ b/drivers/gpio/gpiolib.c
-> > 	@@ -2064,13 +2064,11 @@ static int gpiod_request_commit(struct gpio_de=
-sc *desc, const char *label)
-> > 				goto out_free_unlock;
-> > 			}
-> > 		}
-> > 	+	spin_unlock_irqrestore(&gpio_lock, flags);
-> > 		if (gc->get_direction) {
-> > 			/* gc->get_direction may sleep */
-> > 	-		spin_unlock_irqrestore(&gpio_lock, flags);
-> > 			gpiod_get_direction(desc);
-> > 	-		spin_lock_irqsave(&gpio_lock, flags);
-> > 		}
-> > 	-	spin_unlock_irqrestore(&gpio_lock, flags);
-> > 		return 0;
-> > 	=20
-> > 	 out_free_unlock:
-> >=20
-> >    simplifies the code and given that gpiod_get_direction() rechecks
-> >    gc->get_direction unlocked I don't think we'd loose anything here.
->=20
-> Wouldn't this break sleeping bus accesses (I2C gpio expanders, etc)?
+Maybe I could merge it with the actual patch "fix regression with GPIO
+configuration"?
 
-This question is too short for me to understand what you think. The
-only difference my patch does is that gc->get_direction is checked
-without holding the lock and a lock+unlock pair. I don't see how this is
-relevant to sleeping bus accesses.
 
-	lock()
-	...
-	if (A) {
-		unlock()
-		something()
-		lock()
-	}
-	unlock()
+> > Cc: <stable@vger.kernel.org> # 6.1.x
+> 
+> What commit id does this fix?
 
-is nearly identical to:
+It doesn't fix anything, but I tought that I needed this tag since
+this patch is a prerequisite for the next patch in the series, which
+would be applied to stable kernels. I will remove this tag (assuming
+the patch stays as it is, depending on your answer to the above
+question).
 
-	lock()
-	...
-	unlock()
-	if (A) {
-		something()
-	}
-	lock()
-	unlock()
+ 
+> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
+> > Tested-by: Lech Perczak <lech.perczak@camlingroup.com>
+> > ---
+> >  drivers/tty/serial/sc16is7xx.c | 40 ++++++++++++++++++++--------------
+> >  1 file changed, 24 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+> > index 32d43d00a583..5b0aeef9d534 100644
+> > --- a/drivers/tty/serial/sc16is7xx.c
+> > +++ b/drivers/tty/serial/sc16is7xx.c
+> > @@ -332,6 +332,7 @@ struct sc16is7xx_one {
+> >  
+> >  struct sc16is7xx_port {
+> >  	const struct sc16is7xx_devtype	*devtype;
+> > +	struct device			*dev;
+> 
+> Why is this pointer needed?
+> 
+> Why is it grabbed and yet the reference count is never incremented?  Who
+> owns the reference count and when will it go away?
+> 
+> And what device is this?  The parent?  Current device?  What type of
+> device is it?  And why is it needed?
+> 
+> Using "raw" devices is almost never something a driver should do, they
+> are only passed into functions by the driver core, but then the driver
+> should instantly turn them into the "real" structure.
 
-which in turn is nearly identical to
+We already discussed that a lot in previous versions (v7)... I am
+trying my best to modify the code to address your concerns, but I am
+not fully understanding what you mean about raw devices, and you didn't
+answer some of my previous questions/interrogations in v7 about that.
 
-	lock()
-	...
-	unlock()
-	if (A) {
-		something()
-	}
+So, in the new function that I
+need to implement, sc16is7xx_setup_gpio_chip(), I absolutely need to use
+a raw device to read a device tree property and to set
+s->gpio.parent:
 
-=2E But I might well miss something, as the "nearly"s above sometimes are
-relevant.
+    count = device_property_count_u32(dev, ...
+    ...
+    s->gpio.parent = dev;
 
-Best regards
-Uwe
+Do we agree on that?
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Then, how do I pass this raw device to the 
+device_property_count_u32() function and to the s->gpio.parent
+assignment?
 
---fx5tsoitclnrs7ab
-Content-Type: application/pgp-signature; name="signature.asc"
+Should I modify sc16is7xx_setup_gpio_chip() like so:
 
------BEGIN PGP SIGNATURE-----
+    static int sc16is7xx_setup_gpio_chip(struct sc16is7xx_port *s)
+    {
+	struct device *dev = &s->p[0].port.dev;
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTLyRkACgkQj4D7WH0S
-/k4DMQf+Pawujhnc3ZzBYZkiOXP11BGxTqGr1wgg+IovF89b6ga20rTcMBvrMSc6
-UJ2vhOyKTyMNJLUdpy5P0W6n6gJ6uhxQAMkQFH5hi+gBaYBL78UlRZ16w8z9Pp1v
-T/GPLg7XPi7U+XaLhY+M3JSZlSHJRd+oAPHrIZbnFk8u21rOQem7GsyRdDUHBVf5
-LS10rMEBHRE0YXgRyjMh93H5TF1+evQ7rfYZIZ23/2N8qzgv/tfCBdADo0OC7ubt
-rV+l6qqip8epP/i9cjpWuwAXX+FmoAZ0ofrp6LaHQ+zKnJVK6OD8rNKR/hVmsNyQ
-eOkRwFhgoYAO0FkpbPnvq2ZMjqds2Q==
-=p10U
------END PGP SIGNATURE-----
+        count = device_property_count_u32(dev, ...
+        ...
+        s->gpio.parent = dev;
 
---fx5tsoitclnrs7ab--
+?
+
+If not, can you show me how you would like to do it to avoid me trying
+to guess?
+
+Thank you,
+Hugo.
