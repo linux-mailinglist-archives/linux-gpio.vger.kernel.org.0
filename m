@@ -2,129 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF7CD76F466
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 23:05:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A207776F48C
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 23:16:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229828AbjHCVFI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Aug 2023 17:05:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32920 "EHLO
+        id S230471AbjHCVQ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Aug 2023 17:16:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjHCVFH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 17:05:07 -0400
-Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE962D43;
-        Thu,  3 Aug 2023 14:05:06 -0700 (PDT)
-Received: by mail-oo1-xc2f.google.com with SMTP id 006d021491bc7-56d2fe54863so726716eaf.0;
-        Thu, 03 Aug 2023 14:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691096705; x=1691701505;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3iykb0ohtHUOxu1qS/h80/ncUZA75kT5+rr0gHB5Pw8=;
-        b=bwIgCDVI7omgikbK2l7nU0xAW3OrLEslLM5tuHHsY/EsPY9eghaMPV3ZGjo9uUhbxN
-         Mg3DDSXTrUvQStc4tDr3unTcJOGYDglijWZrLog5+cBPLIZ+D4QPSHAA6JsVcD9stqyQ
-         lVGV4M5392N/TU9M/IGmkjTkuZE0hBXc12VE0d7Od1TjTPD8Th9rSJGBdDVsol6/kXpm
-         31JWHY2joKtZhI/4ubmYU4+9hHPCdBn15t+Q+wmxMWRwfkLTglNb3htRJfE9QspTsUbK
-         IxEk2RHTx6Gq5RdEmzVV99TSIY5QiqLdTTHRAzU8SwCxq8zjs26ORryAQ7cTnR1gR2c8
-         hgOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691096705; x=1691701505;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3iykb0ohtHUOxu1qS/h80/ncUZA75kT5+rr0gHB5Pw8=;
-        b=LMi4vhRKJQI60OV9BNQ+lkEDgAKk9d8BiILn6CIqDwt+YZ9CnCkTLQmaO65EV8wz/d
-         hOkcSV1kzONqpTNSY4iSlUceFdHv5pP8UCbelfg4o7gxKSTssY5G2xhbYWeH2QA0MY/u
-         HSA5762qYR8nG4Dsq9GILt1gdStZDqbdHvgZrweoM59TlUUj7bwRyQcOLM49d7p2Xls4
-         Wve82ORUNpxgFvbTs/+pjnwaWR19iOF0lsGTAV9zOggJEUIi/JBgiru+aiAuqmAWqub4
-         2cYcrzKqlcMJauHbtaeoE+UYS/IGAC3PIfhlhRlcaTtfvnthdyuRTVgNq8WRNN2mTSOX
-         ML4g==
-X-Gm-Message-State: ABy/qLb03MQS38FWwGqKwvuSGDco1c2v0zh3XFlvHcgLNxxM2rnk08m0
-        Ncs0SfphnAfbafj2gx2DFUuYcgVkxIF8sPEe/zQ=
-X-Google-Smtp-Source: APBJJlHWF19YdNlEw5neOPDLx2yKP0yQjc7UvVqD4DCZsuyVxs5cSaPp/BS7yKVMpY9D51X1ChhRRTjrKlyCkihMJaw=
-X-Received: by 2002:a4a:928f:0:b0:564:e465:5d5c with SMTP id
- i15-20020a4a928f000000b00564e4655d5cmr14966931ooh.2.1691096705538; Thu, 03
- Aug 2023 14:05:05 -0700 (PDT)
+        with ESMTP id S230369AbjHCVQY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 17:16:24 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4575E212B;
+        Thu,  3 Aug 2023 14:15:50 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 373LFWTb093898;
+        Thu, 3 Aug 2023 16:15:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1691097332;
+        bh=EykX/fSWMDfipxutXXuVj15oqbyV5u2JGSo7DRMwIaQ=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=OOCWpb+PtMJ4i/j1cga2VjQ9IIX7wT1FPy7dkFNhK0VdXf5FALEg4h5HrfUWyaSFz
+         WhVAg7wqpkjSJhb+sP+TN5jw/GFwLDMpTR1us5+E/RnC7CVrrT20eEYbMunvFnRQ8w
+         7ifsUupDmvv2R5IXwCAEMMnOgKmS0kCPtSu/R5wE=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 373LFWx9039379
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Aug 2023 16:15:32 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 3
+ Aug 2023 16:15:32 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 3 Aug 2023 16:15:32 -0500
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 373LFWXS040988;
+        Thu, 3 Aug 2023 16:15:32 -0500
+Date:   Thu, 3 Aug 2023 16:15:32 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Conor Dooley <conor@kernel.org>
+CC:     Dhruva Gole <d-gole@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Tony Lindgren <tony@atomide.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH V2] dt-bindings: pinctrl: pinctrl-single: add am625
+ compatible
+Message-ID: <20230803211532.ge4yr5r6pwprlyml@bonsai>
+References: <20230803150955.611717-1-d-gole@ti.com>
+ <20230803-antennae-donut-6cae9d43d791@spud>
 MIME-Version: 1.0
-References: <20230725142343.1724130-1-hugo@hugovil.com> <20230725142343.1724130-7-hugo@hugovil.com>
- <2023073105-elevation-canister-2777@gregkh> <20230803101814.39a61229d81dcd3e96cbe8ee@hugovil.com>
-In-Reply-To: <20230803101814.39a61229d81dcd3e96cbe8ee@hugovil.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 4 Aug 2023 00:04:29 +0300
-Message-ID: <CAHp75VdCqqZfQXRRWUkbDTf_gd3T60Stp+m59Q34iWxddLiG5g@mail.gmail.com>
-Subject: Re: [PATCH v9 06/10] serial: sc16is7xx: fix regression with GPIO configuration
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        jirislaby@kernel.org, jringle@gridpoint.com,
-        isaac.true@canonical.com, jesse.sung@canonical.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org, Lech Perczak <lech.perczak@camlingroup.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230803-antennae-donut-6cae9d43d791@spud>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 3, 2023 at 5:18=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> w=
-rote:
-> On Mon, 31 Jul 2023 17:58:41 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Tue, Jul 25, 2023 at 10:23:38AM -0400, Hugo Villeneuve wrote:
+On 16:29-20230803, Conor Dooley wrote:
+> On Thu, Aug 03, 2023 at 08:39:55PM +0530, Dhruva Gole wrote:
+> > Add the am625 compatible property to add support for the new
+> > wakeup enable and status bits positions
+> > 
+> > Cc: Nishanth Menon <nm@ti.com>
+> > Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> > CC: Tony Lindgren <tony@atomide.com>
+> > Signed-off-by: Dhruva Gole <d-gole@ti.com>
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Thanks,
+> Conor.
+> 
+> > ---
+> > 
+> > Base: tag: next-20230731 + below "depends on" patch
+> > Depends on: https://lore.kernel.org/linux-omap/20230731061908.GG5194@atomide.com/T/
+> > 
+> > v1 -> v2 changes:
+> > rename to use am625 instead of am6
+> > 
+> > link to previous version:
+> > https://lore.kernel.org/all/20230803092311.604610-1-d-gole@ti.com/
+> > 
+> >  Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+> > index b6b6bcd7074b..902469986fff 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
+> > @@ -23,6 +23,7 @@ properties:
+> >            - pinconf-single
+> >        - items:
+> >            - enum:
+> > +              - ti,am625-padconf
+> >                - ti,am437-padconf
 
-...
+please keep this sorted.
+> >                - ti,dra7-padconf
+> >                - ti,omap2420-padconf
+> > -- 
+> > 2.34.1
+> > 
 
-> > > Fixes: 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control li=
-nes")
-> > > Fixes: 21144bab4f11 ("sc16is7xx: Handle modem status lines")
-> > > Cc: <stable@vger.kernel.org> # 6.1.x: 95982fad dt-bindings: sc16is7xx=
-: Add property to change GPIO function
-> > > Cc: <stable@vger.kernel.org> # 6.1.x: 1584d572 serial: sc16is7xx: ref=
-actor GPIO controller registration
-> > > Cc: <stable@vger.kernel.org> # 6.1.x: ac2caa5a serial: sc16is7xx: rem=
-ove obsolete out_thread label
-> > > Cc: <stable@vger.kernel.org> # 6.1.x: d90961ad serial: sc16is7xx: mar=
-k IOCONTROL register as volatile
-> > > Cc: <stable@vger.kernel.org> # 6.1.x: 6dae3bad serial: sc16is7xx: fix=
- broken port 0 uart init
-> >
-> > Where are these git commit ids from?  I don't see them in Linus's tree,
-> > how are they supposed to be picked up by the stable developers if they
-> > are not valid ones?
-> >
-> > confused,
 
-...
 
-> I wrongly assumed that, for example, this patch had, as a prerequisite,
-> all the patches before it in this series, and that is why I listed
-> them.
-
-The problem, as I understand it, is not that you listed them (how else
-will the backporter know that this patch requires something else?) but
-the format (you used wrong SHA-1 sums).
-
-...
-
-> So I will remove them all, since this patch doesn't have any other
-> requisites other than the previous patches in this series.
->
-> Maybe it would be good to add some notes about that in
-> stable-kernel-rules.rst?
-
-This probably is a good idea. Briefly looking at it I see no examples
-like yours there.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
