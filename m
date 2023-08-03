@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EAC0576EE20
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 17:29:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 450BD76EE3A
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 17:35:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237117AbjHCP3m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Aug 2023 11:29:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56128 "EHLO
+        id S236588AbjHCPfN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Aug 2023 11:35:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236329AbjHCP3l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 11:29:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CFC3180;
-        Thu,  3 Aug 2023 08:29:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9668161DFB;
-        Thu,  3 Aug 2023 15:29:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6828AC433C7;
-        Thu,  3 Aug 2023 15:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691076579;
-        bh=WIrZTwTXZRHKURzn8DzxuIN1bcMf1+e2SozOf9PgZ+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PwqWjgtm8d3uYUUTox3cakgvCMDEeM0Fc4NO4SGnHTf1sfh42CylZ0LeySAYif4XM
-         cHvrnO7Y8QctMxlz1vjcztqV/bvqIjrwSNbryw5+4dMckkh8YA0ozWAl/dRd1C+Fx1
-         trHjOCa+MqmNmcdwLg93uYCBJ8h6t2t79eaeKBDNjVtKzFNOaWAyGnCP8Nj8azG9+r
-         /kKoVOhF/AhGdibW/M4MIegpJ4g5ewG1nvs2VF4V7akpXuUL294nfJBHCE7jsR1lWd
-         sTTkRdXR2esKs0fGG/DcV3fKGYz5KjxL/v8JoTH2Z/kOeJppFdANLNZCKoKxZ6Mw0m
-         /jE1mUxWaZjiQ==
-Date:   Thu, 3 Aug 2023 16:29:34 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Dhruva Gole <d-gole@ti.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH V2] dt-bindings: pinctrl: pinctrl-single: add am625
- compatible
-Message-ID: <20230803-antennae-donut-6cae9d43d791@spud>
-References: <20230803150955.611717-1-d-gole@ti.com>
+        with ESMTP id S237174AbjHCPfG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 11:35:06 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3633C3D
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Aug 2023 08:35:02 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qRaLn-0001r8-7n; Thu, 03 Aug 2023 17:34:55 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qRaLm-000sJV-5k; Thu, 03 Aug 2023 17:34:54 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qRaLl-00AAqD-GW; Thu, 03 Aug 2023 17:34:53 +0200
+Date:   Thu, 3 Aug 2023 17:34:50 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Wolfram Sang <wsa@kernel.org>, linux-gpio@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 18/18] gpio: mvebu: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <20230803153450.fbvqd35memctq6hr@pengutronix.de>
+References: <20230718181849.3947851-1-u.kleine-koenig@pengutronix.de>
+ <20230718181849.3947851-19-u.kleine-koenig@pengutronix.de>
+ <CAMRc=MfGWvAGYAh8q7mOenGDMpKS3q7UK7-Yxw5bn1avhoQ-UQ@mail.gmail.com>
+ <20230729213712.mkfqgk6cage6yqsd@pengutronix.de>
+ <CAMRc=MeSg7Emhv4VKdsPLfjTrLtsN8M0uapnDFtYGfbJ8UjxJA@mail.gmail.com>
+ <20230803094212.g3il26hqbboppiz4@pengutronix.de>
+ <ZMuUzChRuEckOHIE@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KaUmM+kU/IMfjpmo"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fx5tsoitclnrs7ab"
 Content-Disposition: inline
-In-Reply-To: <20230803150955.611717-1-d-gole@ti.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <ZMuUzChRuEckOHIE@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -64,66 +64,106 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---KaUmM+kU/IMfjpmo
-Content-Type: text/plain; charset=us-ascii
+--fx5tsoitclnrs7ab
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 03, 2023 at 08:39:55PM +0530, Dhruva Gole wrote:
-> Add the am625 compatible property to add support for the new
-> wakeup enable and status bits positions
->=20
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> CC: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Dhruva Gole <d-gole@ti.com>
+Hello Andy,
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+On Thu, Aug 03, 2023 at 02:51:40PM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 03, 2023 at 11:42:12AM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Sun, Jul 30, 2023 at 12:07:33PM +0200, Bartosz Golaszewski wrote:
+>=20
+> ...
+>=20
+> >  - the locking scheme in gpiod_request_commit() looks strange. gpio_lock
+> >    is released and retaken possibly several times. I wonder what it
+> >    actually protects there. Maybe doing
+> >=20
+> > 	diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > 	index edab00c9cb3c..496b1cebba58 100644
+> > 	--- a/drivers/gpio/gpiolib.c
+> > 	+++ b/drivers/gpio/gpiolib.c
+> > 	@@ -2064,13 +2064,11 @@ static int gpiod_request_commit(struct gpio_de=
+sc *desc, const char *label)
+> > 				goto out_free_unlock;
+> > 			}
+> > 		}
+> > 	+	spin_unlock_irqrestore(&gpio_lock, flags);
+> > 		if (gc->get_direction) {
+> > 			/* gc->get_direction may sleep */
+> > 	-		spin_unlock_irqrestore(&gpio_lock, flags);
+> > 			gpiod_get_direction(desc);
+> > 	-		spin_lock_irqsave(&gpio_lock, flags);
+> > 		}
+> > 	-	spin_unlock_irqrestore(&gpio_lock, flags);
+> > 		return 0;
+> > 	=20
+> > 	 out_free_unlock:
+> >=20
+> >    simplifies the code and given that gpiod_get_direction() rechecks
+> >    gc->get_direction unlocked I don't think we'd loose anything here.
+>=20
+> Wouldn't this break sleeping bus accesses (I2C gpio expanders, etc)?
 
-Thanks,
-Conor.
+This question is too short for me to understand what you think. The
+only difference my patch does is that gc->get_direction is checked
+without holding the lock and a lock+unlock pair. I don't see how this is
+relevant to sleeping bus accesses.
 
-> ---
->=20
-> Base: tag: next-20230731 + below "depends on" patch
-> Depends on: https://lore.kernel.org/linux-omap/20230731061908.GG5194@atom=
-ide.com/T/
->=20
-> v1 -> v2 changes:
-> rename to use am625 instead of am6
->=20
-> link to previous version:
-> https://lore.kernel.org/all/20230803092311.604610-1-d-gole@ti.com/
->=20
->  Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yam=
-l b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-> index b6b6bcd7074b..902469986fff 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-> @@ -23,6 +23,7 @@ properties:
->            - pinconf-single
->        - items:
->            - enum:
-> +              - ti,am625-padconf
->                - ti,am437-padconf
->                - ti,dra7-padconf
->                - ti,omap2420-padconf
-> --=20
-> 2.34.1
->=20
+	lock()
+	...
+	if (A) {
+		unlock()
+		something()
+		lock()
+	}
+	unlock()
 
---KaUmM+kU/IMfjpmo
+is nearly identical to:
+
+	lock()
+	...
+	unlock()
+	if (A) {
+		something()
+	}
+	lock()
+	unlock()
+
+which in turn is nearly identical to
+
+	lock()
+	...
+	unlock()
+	if (A) {
+		something()
+	}
+
+=2E But I might well miss something, as the "nearly"s above sometimes are
+relevant.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--fx5tsoitclnrs7ab
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZMvH3QAKCRB4tDGHoIJi
-0rU0AQDmDmrrKUtX5SYv/Uth0nB12CpgQQR7pF3Z+QTBPsIWxQEAsRbZAwvazgsh
-P+lF8aNXe5b80uSZ4NZlz1XNlqDs4QI=
-=Q6sB
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTLyRkACgkQj4D7WH0S
+/k4DMQf+Pawujhnc3ZzBYZkiOXP11BGxTqGr1wgg+IovF89b6ga20rTcMBvrMSc6
+UJ2vhOyKTyMNJLUdpy5P0W6n6gJ6uhxQAMkQFH5hi+gBaYBL78UlRZ16w8z9Pp1v
+T/GPLg7XPi7U+XaLhY+M3JSZlSHJRd+oAPHrIZbnFk8u21rOQem7GsyRdDUHBVf5
+LS10rMEBHRE0YXgRyjMh93H5TF1+evQ7rfYZIZ23/2N8qzgv/tfCBdADo0OC7ubt
+rV+l6qqip8epP/i9cjpWuwAXX+FmoAZ0ofrp6LaHQ+zKnJVK6OD8rNKR/hVmsNyQ
+eOkRwFhgoYAO0FkpbPnvq2ZMjqds2Q==
+=p10U
 -----END PGP SIGNATURE-----
 
---KaUmM+kU/IMfjpmo--
+--fx5tsoitclnrs7ab--
