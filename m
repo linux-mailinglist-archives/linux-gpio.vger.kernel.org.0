@@ -2,94 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1EB576EA5B
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 15:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B26976EB0E
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 15:45:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234652AbjHCNaI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Aug 2023 09:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47500 "EHLO
+        id S234671AbjHCNpo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Aug 2023 09:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234147AbjHCN3r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 09:29:47 -0400
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1734688;
-        Thu,  3 Aug 2023 06:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
-        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=HKMd41ztEQhdCZJks87581+xSsxJKDmGF5+5ygoMIxI=; b=XGOgrevrfCnRiUIRPwXG6WNdtu
-        47haAKBh0Dobgfm7Q5SB0LDtOlIGAHZb09HfV2K60izf5hkRwsFFD5C+3agiaNWRP0Err1pmYuZ/3
-        tkiZdBoQpk9CrjIrFgi+NF889G7PIhWpPzoGbZqlzTrM464VC4ySvOhfsczJ3lhpV0aE=;
-Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:40832 helo=pettiford)
-        by mail.hugovil.com with esmtpa (Exim 4.92)
-        (envelope-from <hugo@hugovil.com>)
-        id 1qRYNG-0008NY-U6; Thu, 03 Aug 2023 09:28:19 -0400
-Date:   Thu, 3 Aug 2023 09:28:18 -0400
-From:   Hugo Villeneuve <hugo@hugovil.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
-        isaac.true@canonical.com, jesse.sung@canonical.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        Lech Perczak <lech.perczak@camlingroup.com>
-Message-Id: <20230803092818.15ec39cf05745e22e0aa2999@hugovil.com>
-In-Reply-To: <2023073155-unpaired-dropper-f8fe@gregkh>
-References: <20230725142343.1724130-1-hugo@hugovil.com>
-        <20230725142343.1724130-11-hugo@hugovil.com>
-        <2023073155-unpaired-dropper-f8fe@gregkh>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 184.161.19.61
-X-SA-Exim-Mail-From: hugo@hugovil.com
+        with ESMTP id S235117AbjHCNpV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 09:45:21 -0400
+Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B017D46B5
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Aug 2023 06:43:48 -0700 (PDT)
+Received: by mail-ua1-x930.google.com with SMTP id a1e0cc1a2514c-79a00f74a92so353439241.3
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Aug 2023 06:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691070228; x=1691675028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mcdtTw4dkel5J7XpneY7Xveaen65+k0rJwQXNomPT1Q=;
+        b=YUx/Uk831P+5OMLZz9Ezcx9gqA+M4bfPCexEZuTXnfDhCo+Zm4LHxtbjh/LECMaV38
+         WXKlX+HXKmyPDW3841NAIsdCs4jMP8peAqpq/dRPJIwYTKS34lf1fMck10sz6jbgkTVR
+         W65DpN2d5s393vwqcr3nYCs2Av8EtvykozfWjNEB6CyKPsXjemWPrmxidVZh98TWo3ZO
+         IQrA0DYa4Ypj9T8zGgYslYYjB/ARxfpz7vVthq9aPkFDBSJOUIg59sYtegKBqy0Yy8Tl
+         kB/k1QUxbFhl+9IsYIou2kPUB2UKepG+7dmfSb5EcYsXBbtnplaWXp/XaJlkqodo5q7w
+         zgEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691070228; x=1691675028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mcdtTw4dkel5J7XpneY7Xveaen65+k0rJwQXNomPT1Q=;
+        b=P5Vosu01KiP4n424qyd/TQ1OwNvaOlDK/L5sATPgJ33RkM6zNtJ+S+Hrvu7HFnV9X1
+         56O2dE0hYhLXU8aNXzyskQt1/0ssyyZTANnkjHJh5LB0N4t51zuETkRFMBff2srFgf5A
+         8GWKSuGVCCS6brJc3T6W2M9Seddw/YtN/atC0CsBu/oGjamsUN0VSd4GMJ/OlP3DMR0k
+         tBxBmdjeRx3PzINOb8KyNkc/4OXHG4PFUALKSzHcfzE2mlLVl3PfRPA1yKwQGLCIxBws
+         AxrS9KweBXwhOLf3sv/36GJYOizvMNTNPvR3wxkYu2Ae7nviTISNMSWWHUSFMyPnakK2
+         fz6g==
+X-Gm-Message-State: ABy/qLbEju8zvx5Hr0gV0eftsiCKmmDY817Y34aS83aXYRLz3YNAuH0B
+        +c5aZXg+H3yl9cIF89zD5sW89xwsFrOaFyo0rQPjnQ==
+X-Google-Smtp-Source: APBJJlE6DgfLE8ulxBo2wRraz26sn1daNLA3cL1gBrcHf6ZmlOp7zQpV46Wgmp6efS+6X1TrYnjp67ALFLhBzF+uhHo=
+X-Received: by 2002:a67:f797:0:b0:447:4456:a1cb with SMTP id
+ j23-20020a67f797000000b004474456a1cbmr6774531vso.25.1691070227847; Thu, 03
+ Aug 2023 06:43:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230801072800.4130-1-aboutphysycs@gmail.com>
+In-Reply-To: <20230801072800.4130-1-aboutphysycs@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 3 Aug 2023 15:43:36 +0200
+Message-ID: <CAMRc=MdZg6vXj9gG27qRwry5qFhxKOW4W8W-UhQL7rjSwmiSYA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sch: remove unneeded call to platform_set_drvdata()
+To:     Andrei Coardos <aboutphysycs@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, andy@kernel.org,
+        Alexandru Ardelean <alex@shruggie.ro>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v9 10/10] serial: sc16is7xx: improve comments about
- variants
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 31 Jul 2023 17:56:53 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
+On Tue, Aug 1, 2023 at 9:28=E2=80=AFAM Andrei Coardos <aboutphysycs@gmail.c=
+om> wrote:
+>
+> This function call was found to be unnecessary as there is no equivalent
+> platform_get_drvdata() call to access the private data of the driver. Als=
+o,
+> the private data is defined in this driver, so there is no risk of it bei=
+ng
+> accessed outside of this driver file.
+>
+> Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
+> Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
+> ---
+>  drivers/gpio/gpio-sch.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
+> index 8a83f7bf4382..e48392074e4b 100644
+> --- a/drivers/gpio/gpio-sch.c
+> +++ b/drivers/gpio/gpio-sch.c
+> @@ -380,8 +380,6 @@ static int sch_gpio_probe(struct platform_device *pde=
+v)
+>                 return -ENODEV;
+>         }
+>
+> -       platform_set_drvdata(pdev, sch);
+> -
+>         girq =3D &sch->chip.irq;
+>         gpio_irq_chip_set_chip(girq, &sch_irqchip);
+>         girq->num_parents =3D 0;
+> --
+> 2.34.1
+>
 
-> On Tue, Jul 25, 2023 at 10:23:42AM -0400, Hugo Villeneuve wrote:
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > 
-> > Replace 740/750/760 with generic terms like 74x/75x/76x to account for
-> > variants like 741, 752 and 762.
-> > 
-> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
-> 
-> You have now mixed a patch series full of commits that are to be
-> backported to stable kernels (i.e. fixes) and general changes that do
-> not need to be.
-> 
-> Please make these two separate patch series, you can have one depend on
-> the other, but I can't apply them both to the "for Linus" branch as
-> obviously they are not all fixes nor need to go to Linus now.
-> 
-> thanks,
-> 
-> greg k-h
+Applied, thanks!
 
-Hi,
-Ok, will do.
-
-Thank you,
-Hugo.
+Bart
