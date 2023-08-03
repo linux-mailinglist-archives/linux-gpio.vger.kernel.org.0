@@ -2,189 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC8676EF80
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 18:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF49476F0EE
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Aug 2023 19:54:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233982AbjHCQbk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Aug 2023 12:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35466 "EHLO
+        id S234997AbjHCRyL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Aug 2023 13:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232768AbjHCQbj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 12:31:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8084E30D5
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Aug 2023 09:31:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691080298; x=1722616298;
-  h=date:from:to:cc:subject:message-id;
-  bh=opR6/FE49bjo3J6nHt651GLj22N49e5eCwo4jLTbs9g=;
-  b=CD3jC5Gx/iHHZEPs0QlCkT7btxZ+zItgkyaRQSq3zEeUh8Mnt8Wbv4l5
-   unYrt/0RzX97QVg//DZGP06ebKASm1Mf8dAJlNAvjPUtssL1vZf36jZis
-   G3SkV2E8fjzvE29Nq48P9Wp5moup2H6uJWUSP6TjMKBKoIrF+M140jPVB
-   XzE7KunanqRrpDB+KXA5S+C0lMvygpVUQqg0JwWc8OJYjE38X3ZR6iMZC
-   Lvn/r1M9B53wpPFO/ytBtG17+5mccTM0osr3cyUvYbu3XcKnliFOspWz6
-   Qgffi4kjq1jQw/EXncCJo89gpREGXZJ3bXfgPwowLlEFS8NuIpz/VdeLy
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="373572811"
-X-IronPort-AV: E=Sophos;i="6.01,252,1684825200"; 
-   d="scan'208";a="373572811"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 09:31:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="903483038"
-X-IronPort-AV: E=Sophos;i="6.01,252,1684825200"; 
-   d="scan'208";a="903483038"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 03 Aug 2023 09:26:43 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qRb9u-0002EJ-24;
-        Thu, 03 Aug 2023 16:26:42 +0000
-Date:   Fri, 04 Aug 2023 00:26:31 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 046d3546750a3e2f2e8e7d39318290604fe6f202
-Message-ID: <202308040027.Rf61YiwP-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232439AbjHCRyK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 13:54:10 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 855D810B;
+        Thu,  3 Aug 2023 10:54:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:Content-Type:Mime-Version:
+        References:In-Reply-To:Message-Id:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=vLgARTlyjbNGHDyn3Y334/21maDS9pB32/FVqFe4D7c=; b=CeyW8WwrfML0AMayYgmxySJPaP
+        4uaIVuOaRuPbviAOwFGxLPJkLUQ5epOe7TRAos4OLhYy6h3V32akcHBST5/1f6OgTRrBGMaeDthPP
+        QJhHc5ApKOajOCL+ur6+bEUTUK4t0EkXahzY5lpi+SGt8VXTq0LRRspHUeMTmXG6KFVA=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:53090 helo=pettiford)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1qRcWQ-0002nV-1W; Thu, 03 Aug 2023 13:54:02 -0400
+Date:   Thu, 3 Aug 2023 13:54:01 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     Hugo Villeneuve <hugo@hugovil.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        isaac.true@canonical.com, jesse.sung@canonical.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Lech Perczak <lech.perczak@camlingroup.com>
+Message-Id: <20230803135401.3a11bfb7c2985c1a90a2521b@hugovil.com>
+In-Reply-To: <20230731144115.14733f0e01f586a7efb91370@hugovil.com>
+References: <20230721161840.1393996-1-hugo@hugovil.com>
+        <20230721161840.1393996-7-hugo@hugovil.com>
+        <CAL_JsqJpdhtnZ8FcM7kGWnM+iuDs1fWiCVgf413evbw-o8TZGQ@mail.gmail.com>
+        <20230722104724.ef0c5896c239e721794b9fe9@hugovil.com>
+        <2023072240-supremacy-shallot-a77f@gregkh>
+        <20230724115428.d191186852c0bd0ee0d78398@hugovil.com>
+        <CAL_JsqL8rjwONd6UAitKik0U44BKSD6m8zbachgfq0R9oHBW8w@mail.gmail.com>
+        <20230731124600.39eb8d5c132f9338c2897543@hugovil.com>
+        <CAL_JsqLaF70hNQndXpJfmH1TMGNbA7myQG0GK9fjyKOs63z-3w@mail.gmail.com>
+        <20230731144115.14733f0e01f586a7efb91370@hugovil.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [RESEND PATCH v8 06/10] serial: sc16is7xx: fix regression with
+ GPIO configuration
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 046d3546750a3e2f2e8e7d39318290604fe6f202  Merge tag 'renesas-pinctrl-for-v6.6-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into devel
+On Mon, 31 Jul 2023 14:41:15 -0400
+Hugo Villeneuve <hugo@hugovil.com> wrote:
 
-elapsed time: 960m
+> On Mon, 31 Jul 2023 12:04:45 -0600
+> Rob Herring <robh+dt@kernel.org> wrote:
+> 
+> > On Mon, Jul 31, 2023 at 10:46 AM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > >
+> > > On Mon, 31 Jul 2023 09:31:53 -0600
+> > > Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > > On Mon, Jul 24, 2023 at 9:54 AM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > > > >
+> > > > > On Sat, 22 Jul 2023 17:15:26 +0200
+> > > > > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > >
+> > > > > > On Sat, Jul 22, 2023 at 10:47:24AM -0400, Hugo Villeneuve wrote:
+> > > > > > > On Fri, 21 Jul 2023 13:24:19 -0600
+> > > > > > > Rob Herring <robh+dt@kernel.org> wrote:
+> > > > > > >
+> > > > > > > > On Fri, Jul 21, 2023 at 10:19 AM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > > > > > > > >
+> > > > > > > > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > > > > > > > >
+> > > > > > > > > Commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
+> > > > > > > > > and commit 21144bab4f11 ("sc16is7xx: Handle modem status lines")
+> > > > > > > > > changed the function of the GPIOs pins to act as modem control
+> > > > > > > > > lines without any possibility of selecting GPIO function.
+> > > > > > > >
+> > > > > > > > Requiring a new DT property is not fixing a kernel regression. You
+> > > > > > > > should be returning the kernel to original behavior and then have a
+> > > > > > > > new DT property for new behavior.
+> > > > > > >
+> > > > > > > Hi Rob,
+> > > > > > > please read the entire patch history starting from V1
+> > > > > > >  and you will understand why this course of action was
+> > > > > > >  not selected.
+> > > > > >
+> > > > > > That's not going to happen, sorry, you need to explain it here, in this
+> > > > > > patch series, why a specific action is being taken over another one, as
+> > > > > > no one has time to go dig through past history, sorry.
+> > > > >
+> > > > > Hi Rob,
+> > > > > I initially submitted a patch to revert the kernel to original
+> > > > > behavior, but it created more problems because the patch was
+> > > > > unfortunately split in two separate patches, and mixed with other non
+> > > > > closely-related changes. It was also noted to me that reverting to the
+> > > > > old behavior would break things for some users.
+> > > > >
+> > > > > It was suggested to me by a more experienced kernel developer to
+> > > > > "suggest a fix, instead of hurrying a revert":
+> > > > >
+> > > > >     https://lkml.org/lkml/2023/5/17/758
+> > > >
+> > > > Do I have to go read this to decipher the justification and reasoning?
+> > > > When Greg says "in this patch series", he means in the commit messages
+> > > > of the patches. You send v9 already and it doesn't have that. The
+> > > > patchset needs to stand on its own summarizing any relevant prior
+> > > > discussions.
+> > > >
+> > > > I never suggested doing a revert.
+> > >
+> > > Hi Rob,
+> > > I am sorry, but this is exactly what I "deciphered" from your
+> > > original email.
+> > >
+> > > I am trying very hard to understand exactly what you mean, but it is
+> > > not that obvious for me. If something is not clear in my commit message,
+> > > I will try to improve it. But before, let's try to focus on making sure
+> > > I understand more clearly what you want exactly.
+> > >
+> > > > Obviously, someone still wants the
+> > > > new feature.
+> > >
+> > > I assume that you refer to the "new feature" as what was added in
+> > > the commit 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control
+> > > lines")?
+> > 
+> > Shrug. It's one of the 2 commits mentioned, I don't know which one
+> > exactly. Whichever one changed default behavior from use GPIOs to use
+> > modem ctrl lines.
+> > 
+> > Reading it again, I *think* this patch is correct. Default behavior is
+> > restored to use GPIOs. The DT property is needed to enable modem ctrl
+> > lines.
+> 
+> Hi,
+> this is correct.
+> 
+> 
+> > What's not okay is just saying, these platforms may or may not need an update:
+> > 
+> >     arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+> >     mips/boot/dts/ingenic/cu1830-neo.dts
+> >     mips/boot/dts/ingenic/cu1000-neo.dts
+> 
+> Yes, my bad. I initially mentioned them and hoped to get some
+> feedback, which I never got, and I kind of forgot about it.
+> 
+> > You need to figure that out. Have you checked with maintainers of
+> > these boards? When were they added and by who? At the same time or by
+> > the same person would be a good indication the platform uses modem
+> > ctrl lines. Or were these platforms in use before adding modem ctrl
+> > support? Then they probably use GPIOs or nothing.
+> > 
+> > If there are platforms which would regress if the modem ctrl feature
+> > was just reverted, which ones are those?
+> 
+> Ok, let me do some checks and get back to you on this.
 
-configs tested: 113
-configs skipped: 4
+Hi Rob,
+for this board:
+    arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+it uses a SC16IS740, which doesn't have any GPIOs nor modem
+control lines, so no DT changes required.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r022-20230731   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230731   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r011-20230801   gcc  
-arm                  randconfig-r031-20230731   clang
-arm                  randconfig-r046-20230731   gcc  
-arm                       versatile_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r021-20230731   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r006-20230801   gcc  
-hexagon              randconfig-r041-20230731   clang
-hexagon              randconfig-r045-20230731   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230731   gcc  
-i386         buildonly-randconfig-r005-20230731   gcc  
-i386         buildonly-randconfig-r006-20230731   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230802   clang
-i386                 randconfig-i002-20230802   clang
-i386                 randconfig-i003-20230802   clang
-i386                 randconfig-i004-20230802   clang
-i386                 randconfig-i005-20230802   clang
-i386                 randconfig-i006-20230802   clang
-i386                 randconfig-i011-20230801   clang
-i386                 randconfig-i012-20230801   clang
-i386                 randconfig-i013-20230801   clang
-i386                 randconfig-i014-20230801   clang
-i386                 randconfig-i015-20230801   clang
-i386                 randconfig-i016-20230801   clang
-i386                 randconfig-r024-20230731   clang
-i386                 randconfig-r026-20230731   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r016-20230801   gcc  
-m68k                        stmark2_defconfig   gcc  
-microblaze           randconfig-r005-20230801   gcc  
-microblaze           randconfig-r023-20230731   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                        bcm47xx_defconfig   gcc  
-mips                 randconfig-r001-20230801   clang
-nios2                               defconfig   gcc  
-openrisc             randconfig-r015-20230801   gcc  
-openrisc             randconfig-r032-20230731   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r003-20230801   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r012-20230801   clang
-riscv                randconfig-r042-20230731   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r035-20230731   gcc  
-s390                 randconfig-r044-20230731   clang
-sh                               allmodconfig   gcc  
-sh                   rts7751r2dplus_defconfig   gcc  
-sh                             shx3_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r036-20230731   gcc  
-sparc64              randconfig-r002-20230801   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r014-20230801   gcc  
-um                   randconfig-r025-20230731   gcc  
-um                   randconfig-r033-20230731   clang
-um                   randconfig-r034-20230731   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230731   gcc  
-x86_64       buildonly-randconfig-r002-20230731   gcc  
-x86_64       buildonly-randconfig-r003-20230731   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230731   clang
-x86_64               randconfig-x002-20230731   clang
-x86_64               randconfig-x003-20230731   clang
-x86_64               randconfig-x004-20230731   clang
-x86_64               randconfig-x005-20230731   clang
-x86_64               randconfig-x006-20230731   clang
-x86_64               randconfig-x011-20230802   clang
-x86_64               randconfig-x012-20230802   clang
-x86_64               randconfig-x013-20230802   clang
-x86_64               randconfig-x014-20230802   clang
-x86_64               randconfig-x015-20230802   clang
-x86_64               randconfig-x016-20230802   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+For these two Ingenic boards:
+    mips/boot/dts/ingenic/cu1830-neo.dts
+    mips/boot/dts/ingenic/cu1000-neo.dts
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+They use a SC16IS752, which has shared modem control lines and GPIOs.
+Unfortunately, the maintainers have not (yet) responded to my
+inquiries. Also, I tried to search for schematics or block diagrams on
+the net but couldn't find anything.
+
+These platforms were in use before the patch to add the modem control
+lines was added. Then like you said they probably use these shared
+lines as GPIOs or nothing, so no DT changes would be required.
+
+Hugo.
