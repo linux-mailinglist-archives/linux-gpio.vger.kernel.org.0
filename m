@@ -2,56 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC61876F855
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Aug 2023 05:20:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9036B76F928
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Aug 2023 06:53:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232132AbjHDDUj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Aug 2023 23:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43562 "EHLO
+        id S232607AbjHDExP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Aug 2023 00:53:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233096AbjHDDU3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Aug 2023 23:20:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A1C46B5
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Aug 2023 20:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691119210; x=1722655210;
-  h=date:from:to:cc:subject:message-id;
-  bh=LozGZnnHJ/WmKCBTBG372ep8U6BRovLG6nBygZzMO1U=;
-  b=WTOalAiAHPVGK0XvYCUdsps26phTZnKDTrFmbWrl4CeN1Uq6F+9eRESG
-   CjTEMbm6pHg4XhpRmF6MOySCLB16hNReGVxjxQ+3DIcegH5MC+lxgxC9V
-   WAgsBPzw5D+eykejfOZwEHJxr1hPSYQBQnHonbZdtqYEJNbDAzjcg6cLC
-   e40iYpJ71VuZ+hbg+4BS7Z47VQHkxmqP/BJhXoQP45CIv5qhhZod++LCw
-   E8r0EFP9KE8AeIpvQ+hRu9WX6ycIdIST0gsG6Ce6Vuf6OSzMnigsY6dQk
-   lIRYJV7p+x6NLW3dIHhw2RykhEwxNDNCYcGjTMSUpbmANFCM5hEF+2H7u
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="349646037"
-X-IronPort-AV: E=Sophos;i="6.01,253,1684825200"; 
-   d="scan'208";a="349646037"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 20:20:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="1060551577"
-X-IronPort-AV: E=Sophos;i="6.01,253,1684825200"; 
-   d="scan'208";a="1060551577"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Aug 2023 20:20:01 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qRlM8-0002Ze-29;
-        Fri, 04 Aug 2023 03:20:00 +0000
-Date:   Fri, 04 Aug 2023 11:19:43 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 87d0688483f56c748b37a5298bdc382df5cf8f74
-Message-ID: <202308041141.glpPEJmh-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        with ESMTP id S232818AbjHDExG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Aug 2023 00:53:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485C52D49;
+        Thu,  3 Aug 2023 21:53:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CBF2561F23;
+        Fri,  4 Aug 2023 04:53:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D0AAC433C7;
+        Fri,  4 Aug 2023 04:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1691124783;
+        bh=H0r420Rv0jy6sbduYNWFrMk8bU+2FH4efv4MEVBrzMk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D4cGJjtV8HI447xvYWdb3TtixgaYUV4PkbGZAkQwzpTeDXuW6Jj/iHFtyrvaMEgDg
+         PYe7vOi2o78mzoGYJpOAdiiv0m5N94xeuL4QAZJQJEN1X23SDJBT7L3ncQ6bmQaGRf
+         ZZ/qzezvQvEnP9vVTShhbv9jCz/WuArL/djMoQcQ=
+Date:   Fri, 4 Aug 2023 06:53:00 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hugo Villeneuve <hugo@hugovil.com>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        isaac.true@canonical.com, jesse.sung@canonical.com,
+        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        stable@vger.kernel.org, Lech Perczak <lech.perczak@camlingroup.com>
+Subject: Re: [PATCH v9 06/10] serial: sc16is7xx: fix regression with GPIO
+ configuration
+Message-ID: <2023080434-outcast-preheated-29b1@gregkh>
+References: <20230725142343.1724130-1-hugo@hugovil.com>
+ <20230725142343.1724130-7-hugo@hugovil.com>
+ <2023073105-elevation-canister-2777@gregkh>
+ <20230803101814.39a61229d81dcd3e96cbe8ee@hugovil.com>
+ <CAHp75VdCqqZfQXRRWUkbDTf_gd3T60Stp+m59Q34iWxddLiG5g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdCqqZfQXRRWUkbDTf_gd3T60Stp+m59Q34iWxddLiG5g@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,156 +64,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 87d0688483f56c748b37a5298bdc382df5cf8f74  gpio: xra1403: remove redundant of_match_ptr()
+On Fri, Aug 04, 2023 at 12:04:29AM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 3, 2023 at 5:18 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > On Mon, 31 Jul 2023 17:58:41 +0200
+> > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > On Tue, Jul 25, 2023 at 10:23:38AM -0400, Hugo Villeneuve wrote:
+> 
+> ...
+> 
+> > > > Fixes: 679875d1d880 ("sc16is7xx: Separate GPIOs from modem control lines")
+> > > > Fixes: 21144bab4f11 ("sc16is7xx: Handle modem status lines")
+> > > > Cc: <stable@vger.kernel.org> # 6.1.x: 95982fad dt-bindings: sc16is7xx: Add property to change GPIO function
+> > > > Cc: <stable@vger.kernel.org> # 6.1.x: 1584d572 serial: sc16is7xx: refactor GPIO controller registration
+> > > > Cc: <stable@vger.kernel.org> # 6.1.x: ac2caa5a serial: sc16is7xx: remove obsolete out_thread label
+> > > > Cc: <stable@vger.kernel.org> # 6.1.x: d90961ad serial: sc16is7xx: mark IOCONTROL register as volatile
+> > > > Cc: <stable@vger.kernel.org> # 6.1.x: 6dae3bad serial: sc16is7xx: fix broken port 0 uart init
+> > >
+> > > Where are these git commit ids from?  I don't see them in Linus's tree,
+> > > how are they supposed to be picked up by the stable developers if they
+> > > are not valid ones?
+> > >
+> > > confused,
+> 
+> ...
+> 
+> > I wrongly assumed that, for example, this patch had, as a prerequisite,
+> > all the patches before it in this series, and that is why I listed
+> > them.
 
-elapsed time: 726m
+That's fine, but if you have already marked those patches for stable
+inclusion, no need to list them here too.
 
-configs tested: 137
-configs skipped: 6
+> The problem, as I understand it, is not that you listed them (how else
+> will the backporter know that this patch requires something else?) but
+> the format (you used wrong SHA-1 sums).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Exactly, those are invalid sha1 values.
 
-tested configs:
-alpha                            alldefconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r011-20230731   gcc  
-alpha                randconfig-r034-20230731   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r004-20230731   gcc  
-arc                  randconfig-r004-20230801   gcc  
-arc                  randconfig-r033-20230731   gcc  
-arc                  randconfig-r043-20230731   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         at91_dt_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                       imx_v6_v7_defconfig   gcc  
-arm                  randconfig-r046-20230731   gcc  
-arm                        shmobile_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r003-20230731   gcc  
-arm64                randconfig-r014-20230731   clang
-arm64                randconfig-r036-20230731   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r001-20230731   clang
-hexagon              randconfig-r026-20230731   clang
-hexagon              randconfig-r041-20230731   clang
-hexagon              randconfig-r045-20230731   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230731   gcc  
-i386         buildonly-randconfig-r005-20230731   gcc  
-i386         buildonly-randconfig-r006-20230731   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230731   gcc  
-i386                 randconfig-i002-20230731   gcc  
-i386                 randconfig-i003-20230731   gcc  
-i386                 randconfig-i004-20230731   gcc  
-i386                 randconfig-i005-20230731   gcc  
-i386                 randconfig-i006-20230731   gcc  
-i386                 randconfig-i011-20230731   clang
-i386                 randconfig-i011-20230801   clang
-i386                 randconfig-i012-20230731   clang
-i386                 randconfig-i012-20230801   clang
-i386                 randconfig-i013-20230731   clang
-i386                 randconfig-i013-20230801   clang
-i386                 randconfig-i014-20230731   clang
-i386                 randconfig-i014-20230801   clang
-i386                 randconfig-i015-20230731   clang
-i386                 randconfig-i015-20230801   clang
-i386                 randconfig-i016-20230731   clang
-i386                 randconfig-i016-20230801   clang
-i386                 randconfig-r035-20230731   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r016-20230731   gcc  
-loongarch            randconfig-r023-20230731   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r026-20230731   gcc  
-microblaze           randconfig-r001-20230801   gcc  
-microblaze           randconfig-r002-20230731   gcc  
-microblaze           randconfig-r003-20230801   gcc  
-microblaze           randconfig-r025-20230731   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r022-20230731   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r035-20230731   gcc  
-nios2                randconfig-r036-20230731   gcc  
-openrisc             randconfig-r013-20230731   gcc  
-openrisc             randconfig-r014-20230731   gcc  
-openrisc             randconfig-r031-20230731   gcc  
-openrisc             randconfig-r032-20230731   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r006-20230731   gcc  
-parisc               randconfig-r006-20230801   gcc  
-parisc               randconfig-r015-20230731   gcc  
-parisc               randconfig-r031-20230731   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                       ppc64_defconfig   gcc  
-powerpc              randconfig-r021-20230731   clang
-powerpc                     taishan_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r021-20230731   clang
-riscv                randconfig-r042-20230731   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r011-20230731   clang
-s390                 randconfig-r034-20230731   gcc  
-s390                 randconfig-r044-20230731   clang
-sh                               allmodconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                   randconfig-r016-20230731   gcc  
-sh                          rsk7203_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r015-20230731   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r024-20230731   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230731   gcc  
-x86_64       buildonly-randconfig-r002-20230731   gcc  
-x86_64       buildonly-randconfig-r003-20230731   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r012-20230731   clang
-x86_64               randconfig-x001-20230731   clang
-x86_64               randconfig-x002-20230731   clang
-x86_64               randconfig-x003-20230731   clang
-x86_64               randconfig-x004-20230731   clang
-x86_64               randconfig-x005-20230731   clang
-x86_64               randconfig-x006-20230731   clang
-x86_64               randconfig-x011-20230731   gcc  
-x86_64               randconfig-x012-20230731   gcc  
-x86_64               randconfig-x013-20230731   gcc  
-x86_64               randconfig-x014-20230731   gcc  
-x86_64               randconfig-x015-20230731   gcc  
-x86_64               randconfig-x016-20230731   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                              defconfig   gcc  
+> > So I will remove them all, since this patch doesn't have any other
+> > requisites other than the previous patches in this series.
+> >
+> > Maybe it would be good to add some notes about that in
+> > stable-kernel-rules.rst?
+> 
+> This probably is a good idea. Briefly looking at it I see no examples
+> like yours there.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Because it's not a thing?  Just mark all of these patches in the series
+as cc: stable@ and all will happen automatically for you.  Nothing
+fancy or complex here, happens daily in other subsystems just fine :)
+
+thanks,
+
+greg k-h
