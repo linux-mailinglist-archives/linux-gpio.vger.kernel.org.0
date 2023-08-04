@@ -2,213 +2,265 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46B94770410
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Aug 2023 17:09:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D939A770586
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Aug 2023 18:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229905AbjHDPJl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Aug 2023 11:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49396 "EHLO
+        id S229778AbjHDQET (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Aug 2023 12:04:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbjHDPJj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Aug 2023 11:09:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D9F49F8;
-        Fri,  4 Aug 2023 08:09:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C53962051;
-        Fri,  4 Aug 2023 15:09:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E93CFC433C7;
-        Fri,  4 Aug 2023 15:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1691161756;
-        bh=8O0Wjzo18Eeo3bT1GIVVN1lfiYXzL8s5iSHfE8UYuNo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QyU85AmKeiVXq66XUP+H0XDDgcPvxIpbACZeWDKtLLR3QFGZ7durVVMkZxppxkUXc
-         +u0Na11dmOF+KYDuVjDD6pBxtZXeFwxhQlJFwbyTBJu1t62t4eVd/Qpq+ZOJlauo/W
-         ZK281c9fsSGh2WurVCYSsX2H802Obf/Cmf9vGt7k=
-Date:   Fri, 4 Aug 2023 17:09:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hugo Villeneuve <hugo@hugovil.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, jirislaby@kernel.org, jringle@gridpoint.com,
-        isaac.true@canonical.com, jesse.sung@canonical.com,
-        l.perczak@camlintechnologies.com, tomasz.mon@camlingroup.com,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org, Lech Perczak <lech.perczak@camlingroup.com>
-Subject: Re: [PATCH v9 04/10] serial: sc16is7xx: refactor GPIO controller
- registration
-Message-ID: <2023080433-depravity-debate-57d3@gregkh>
-References: <20230725142343.1724130-1-hugo@hugovil.com>
- <20230725142343.1724130-5-hugo@hugovil.com>
- <2023073118-mousiness-sandlot-6258@gregkh>
- <20230803121449.bcf74899e062ca39dfb073a3@hugovil.com>
- <2023080415-kinetic-repurpose-030a@gregkh>
- <20230804101554.c63202df93481bd5728bd3f1@hugovil.com>
+        with ESMTP id S230241AbjHDQEP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Aug 2023 12:04:15 -0400
+Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63904C0D
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Aug 2023 09:03:58 -0700 (PDT)
+Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-56c87f89178so1553145eaf.1
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Aug 2023 09:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691165038; x=1691769838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mbGJEAvdY+U9pkMi+EcWXOXKA+bs3Kgp9vMkmWDzcz8=;
+        b=QrqDDAN8zg5+KFMKpnaDIOVUHHKDIgCp6oNZZt9zwh/dKhK9ZZkfn/D23gkbN6zULG
+         /CcgkIHQj8GnIdmeFxygZG6hEDZcrui4LkoTDhxOLqW0ujq/C2sKPO8mhszZmVPNjtZf
+         A2njYcuQ0i8nj3E4lAycOdGHgBA96Fu6Z4hvmIJvuF68DgESdsPBeMJADI9XvX3WXxBP
+         xCPMUsqnmyYBl2acwqXtCu6NWNWrlMYRH2dBBuDBsg2Tb+lR0h8iX65cCrl6iOnI9uH9
+         tzah90jKLjSYIfjXXM8qpzA5iPfzS3qqE3Stma7gJxZNgksdDLCkCOyv2LLlpYYEL7CL
+         MvGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691165038; x=1691769838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mbGJEAvdY+U9pkMi+EcWXOXKA+bs3Kgp9vMkmWDzcz8=;
+        b=h8emzGXzf2nbO15Npgpa0FEQ5v0TApfgMTTVjkglv3c0MbKlZVSk0hZLh87aj00l8c
+         TeuIhRT3owQU5nQOXzDw9EuUAsLYNgjSQJ9teKEY1JSfXPPyRgV+GCiC6FCkzUyetkPm
+         96J0I5fW1CeDctrgfk0a5gMSoZM9rKl3dADdmu1wzVPW8W4uEB1Q3Ccp9zP3G8l/1rNi
+         GSVJz5XCjS0rhUwlJK2b2PjF6QPTQfLyO03fgTU4pV0xNJaRElLDye6H8SQULgmHEvK1
+         B9ttlX4EBmzmUbcBaGLozZiuyMJtUNAMzYvS1kU7Hr+y2Px3MYCVZ1SL0pwqfsLGgfCX
+         uPKA==
+X-Gm-Message-State: AOJu0Yx6/uRr5hBMD9jxhO5XBj20zVNBFEmMZC0WeHFETNUioI+FTF+Q
+        p0rMRG18T0pdRdf5jlV6U6SKCSTHpxbu6aBr7ka3+Q==
+X-Google-Smtp-Source: AGHT+IHZBH5r6emqQTL8xn4X8zOQdBhq06zI27xzGze62f+uqh1H/6qUhFPHofwIukXunpgiL/z49dHmYRxALsPUwtw=
+X-Received: by 2002:a05:6358:249f:b0:13a:9d5:356a with SMTP id
+ m31-20020a056358249f00b0013a09d5356amr1211941rwc.21.1691165037916; Fri, 04
+ Aug 2023 09:03:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230804101554.c63202df93481bd5728bd3f1@hugovil.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230802152808.33037-1-brgl@bgdev.pl> <ZMuR0W303WCbS1K0@smile.fi.intel.com>
+In-Reply-To: <ZMuR0W303WCbS1K0@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 4 Aug 2023 18:03:47 +0200
+Message-ID: <CAMRc=McEAG7Ezgb=OwMPoRhQzu_A66JMnB=aBSgmdZUvS-ZPhw@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpio: consumer: new virtual driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 10:15:54AM -0400, Hugo Villeneuve wrote:
-> On Fri, 4 Aug 2023 15:14:18 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Thu, Aug 03, 2023 at 12:14:49PM -0400, Hugo Villeneuve wrote:
-> > > On Mon, 31 Jul 2023 17:55:42 +0200
-> > > Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > > On Tue, Jul 25, 2023 at 10:23:36AM -0400, Hugo Villeneuve wrote:
-> > > > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > > > > 
-> > > > > In preparation for upcoming patch "fix regression with GPIO
-> > > > > configuration". To facilitate review and make code more modular.
-> > > > 
-> > > > I would much rather the issue be fixed _before_ the code is refactored,
-> > > > unless it is impossible to fix it without the refactor?
-> > > 
-> > > Hi Greg,
-> > > normally I would agree, but the refactor in this case helps a lot to
-> > > address some issues raised by you and Andy in V7 of this series.
-> > > 
-> > > Maybe I could merge it with the actual patch "fix regression with GPIO
-> > > configuration"?
-> > 
-> > Sure.
-> 
-> Hi Greg,
-> will do.
-> 
->  
-> > > > > Cc: <stable@vger.kernel.org> # 6.1.x
-> > > > 
-> > > > What commit id does this fix?
-> > > 
-> > > It doesn't fix anything, but I tought that I needed this tag since
-> > > this patch is a prerequisite for the next patch in the series, which
-> > > would be applied to stable kernels. I will remove this tag (assuming
-> > > the patch stays as it is, depending on your answer to the above
-> > > question).
-> > > 
-> > >  
-> > > > > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > > > > Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
-> > > > > Tested-by: Lech Perczak <lech.perczak@camlingroup.com>
-> > > > > ---
-> > > > >  drivers/tty/serial/sc16is7xx.c | 40 ++++++++++++++++++++--------------
-> > > > >  1 file changed, 24 insertions(+), 16 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> > > > > index 32d43d00a583..5b0aeef9d534 100644
-> > > > > --- a/drivers/tty/serial/sc16is7xx.c
-> > > > > +++ b/drivers/tty/serial/sc16is7xx.c
-> > > > > @@ -332,6 +332,7 @@ struct sc16is7xx_one {
-> > > > >  
-> > > > >  struct sc16is7xx_port {
-> > > > >  	const struct sc16is7xx_devtype	*devtype;
-> > > > > +	struct device			*dev;
-> > > > 
-> > > > Why is this pointer needed?
-> > > > 
-> > > > Why is it grabbed and yet the reference count is never incremented?  Who
-> > > > owns the reference count and when will it go away?
-> > > > 
-> > > > And what device is this?  The parent?  Current device?  What type of
-> > > > device is it?  And why is it needed?
-> > > > 
-> > > > Using "raw" devices is almost never something a driver should do, they
-> > > > are only passed into functions by the driver core, but then the driver
-> > > > should instantly turn them into the "real" structure.
-> > > 
-> > > We already discussed that a lot in previous versions (v7)... I am
-> > > trying my best to modify the code to address your concerns, but I am
-> > > not fully understanding what you mean about raw devices, and you didn't
-> > > answer some of my previous questions/interrogations in v7 about that.
-> > 
-> > I don't have time to answer all questions, sorry.
-> > 
-> > Please help review submitted patches to reduce my load and allow me to
-> > answer other stuff :)
-> 
-> Ok.
-> 
-> 
-> > > So, in the new function that I
-> > > need to implement, sc16is7xx_setup_gpio_chip(), I absolutely need to use
-> > > a raw device to read a device tree property and to set
-> > > s->gpio.parent:
-> > > 
-> > >     count = device_property_count_u32(dev, ...
-> > >     ...
-> > >     s->gpio.parent = dev;
-> > > 
-> > > Do we agree on that?
-> > 
-> > Yes, but what type of parent is that?
-> 
-> I am confused by your question. I do not understand why the type of
-> parent matters... And what do you call the parent: s, s->gpio or
-> s->gpio.parent?
-> 
-> For me, the way I understand it, the only question that matters is how I
-> can extract the raw device structure pointer from maybe "struct
-> sc16is7xx_port" or some other structure, and then use it in my
-> new function...
-> 
-> I should not have put "s->gpio.parent = dev" in the example, I think it
-> just complexifies things. Lets start over with a more simple example and
-> only:
-> 
->     count = device_property_count_u32(dev, ...
-> 
-> 
-> > > Then, how do I pass this raw device to the 
-> > > device_property_count_u32() function and to the s->gpio.parent
-> > > assignment?
-> > > 
-> > > Should I modify sc16is7xx_setup_gpio_chip() like so:
-> > > 
-> > >     static int sc16is7xx_setup_gpio_chip(struct sc16is7xx_port *s)
-> > >     {
-> > > 	struct device *dev = &s->p[0].port.dev;
-> > > 
-> > >         count = device_property_count_u32(dev, ...
-> > >         ...
-> > >         s->gpio.parent = dev;
-> > 
-> > Again, what is the real type of that parent?  It's a port, right, so
-> > pass in the port to this function and then do the "take the struct
-> > device of the port" at that point in time.
-> 
-> With the simplified example, is the following ok:
-> 
-> static int sc16is7xx_setup_gpio_chip(struct sc16is7xx_port *s)
-> {
->     struct device *dev = &s->p[0].port.dev;
-> 
->     count = device_property_count_u32(dev, ...
->     ...
-> }
-> 
-> If not, please indicate how you would do it with an actual example...
+On Thu, Aug 3, 2023 at 1:39=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
 
-At this point, after reviewing 500+ patches today, I really have no
-idea, my brain is fried.  Do what you think is right here and submit a
-new series and I'll be glad to review it.
+[snip]
 
-thanks,
+>
+> > +#include <linux/of_platform.h>
+>
+> Wrong header. Use mod_devicetable.h.
+>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/printk.h>
+> > +#include <linux/property.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/string.h>
+> > +#include <linux/timer.h>
+>
+> And general recommendation is to revisit this block and refine it accordi=
+ngly.
+>
 
-greg k-h
+I kept track of the interfaces I used for most part, so it should be
+mostly fine.
+
+[snip]
+
+> ...
+>
+> > +     flags =3D function =3D=3D GPIO_CONSUMER_FUNCTION_MONITOR ?
+> > +                                     GPIOD_IN : GPIOD_OUT_HIGH;
+> > +     for (i =3D 0; i < num_lines; i++) {
+> > +             desc =3D devm_gpiod_get(dev, lines[i], flags);
+> > +             if (IS_ERR(desc))
+> > +                     return dev_err_probe(dev, PTR_ERR(desc),
+> > +                                          "Failed to get GPIO '%s'\n",
+> > +                                          lines[i]);
+>
+> Would it make sense to request GPIOs via devm_gpiod_get_array() and then =
+try
+> the rest on them in a loop?
+>
+
+No it would not. gpiod_get_array() works for properties represented in DT a=
+s:
+
+    foo-gpios =3D <&chip ...>, <&chip ...>, <&chip ...>;
+
+while what we have here is:
+
+    foo-gpios =3D <&chip ...>;
+    bar-gpios =3D <&chip ...>;
+
+Which makes me think that I need to add proper documentation for this modul=
+e.
+
+[snip]
+
+>
+> > +static ssize_t
+> > +gpio_consumer_lookup_config_offset_store(struct config_item *item,
+> > +                                      const char *page, size_t count)
+> > +{
+> > +     struct gpio_consumer_lookup *lookup =3D to_gpio_consumer_lookup(i=
+tem);
+> > +     struct gpio_consumer_device *dev =3D lookup->parent;
+> > +     int offset, ret;
+> > +
+> > +     ret =3D kstrtoint(page, 0, &offset);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* Use -1 to indicate lookup by name. */
+> > +     if (offset > (U16_MAX - 1))
+> > +             return -EINVAL;
+>
+> So, offset here may be negative. Is it okay?
+>
+
+Yes. If negative - lookup line by name, if positive, by chip and
+offset. I will document this properly for v2.
+
+> > +     mutex_lock(&dev->lock);
+> > +
+> > +     if (gpio_consumer_device_is_live_unlocked(dev)) {
+> > +             mutex_unlock(&dev->lock);
+> > +             return -EBUSY;
+> > +     }
+> > +
+> > +     lookup->offset =3D offset;
+> > +
+> > +     mutex_unlock(&dev->lock);
+> > +
+> > +     return count;
+> > +}
+>
+> ...
+>
+> > +     if (flags & GPIO_OPEN_DRAIN)
+> > +             repr =3D "open-drain";
+> > +     else if (flags & GPIO_OPEN_SOURCE)
+> > +             repr =3D "open-source";
+>
+> Can it be both flags set?
+>
+
+No!
+
+> > +     else
+> > +             repr =3D "push-pull";
+>
+> ...
+>
+> > +     if (sysfs_streq(page, "push-pull")) {
+> > +             lookup->flags &=3D ~(GPIO_OPEN_DRAIN | GPIO_OPEN_SOURCE);
+> > +     } else if (sysfs_streq(page, "open-drain")) {
+> > +             lookup->flags &=3D ~GPIO_OPEN_SOURCE;
+> > +             lookup->flags |=3D GPIO_OPEN_DRAIN;
+> > +     } else if (sysfs_streq(page, "open-source")) {
+> > +             lookup->flags &=3D ~GPIO_OPEN_DRAIN;
+> > +             lookup->flags |=3D GPIO_OPEN_SOURCE;
+> > +     } else {
+> > +             count =3D -EINVAL;
+> > +     }
+>
+> I prefer to see some kind of the array of constant string literals and do
+> sysfs_match_string() here
+>
+
+I would generally agree but if the flag values ever change to ones
+that make the resulting string array have holes in it, match_string()
+will suddenly stop working. I think that with bit flags defined
+elsewhere it's safer and more readable to do the above.
+
+>         lookup->flags &=3D ~(GPIO_OPEN_DRAIN | GPIO_OPEN_SOURCE);
+>         flag =3D sysfs_match_string(...);
+>         if (flag < 0)
+>                 count =3D flag
+>         else
+>                 lookup->flags |=3D flag;
+>
+> (or something similar). And respectively indexed access above.
+>
+> ...
+>
+
+> ...
+>
+> > +     if (list_empty(&dev->lookup_list))
+> > +             return -ENODATA;
+>
+> Instead you may count nodes here and if 0, return an error, otherwise pas=
+s it
+> to the callee.
+
+I'm not following, please rephrase.
+
+>
+> > +     swnode =3D gpio_consumer_make_device_swnode(dev);
+> > +     if (IS_ERR(swnode))
+> > +             return PTR_ERR(swnode);
+>
+> ...
+>
+> > +static ssize_t
+> > +gpio_consumer_device_config_live_store(struct config_item *item,
+> > +                                    const char *page, size_t count)
+> > +{
+> > +     struct gpio_consumer_device *dev =3D to_gpio_consumer_device(item=
+);
+> > +     bool live;
+> > +     int ret;
+> > +
+> > +     ret =3D kstrtobool(page, &live);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     mutex_lock(&dev->lock);
+> > +
+> > +     if ((!live && !gpio_consumer_device_is_live_unlocked(dev)) ||
+> > +         (live && gpio_consumer_device_is_live_unlocked(dev)))
+>
+>         if (live ^ gpio_consumer_device_is_live_unlocked(dev))
+>
+> ?
+
+Nah, let's not use bitwise operators for boolean logic.
+
+[snip]
+
+I commented on the ones that needed it, for others, I'll fix them for v2.
+
+Bart
