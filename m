@@ -2,265 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D939A770586
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Aug 2023 18:04:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5A6B770833
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Aug 2023 20:52:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbjHDQET (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Aug 2023 12:04:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55900 "EHLO
+        id S229735AbjHDSwb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Aug 2023 14:52:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230241AbjHDQEP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Aug 2023 12:04:15 -0400
-Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63904C0D
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Aug 2023 09:03:58 -0700 (PDT)
-Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-56c87f89178so1553145eaf.1
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Aug 2023 09:03:58 -0700 (PDT)
+        with ESMTP id S229612AbjHDSwa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Aug 2023 14:52:30 -0400
+Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03EF446B2;
+        Fri,  4 Aug 2023 11:52:29 -0700 (PDT)
+Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-1bed90ee8b7so1522547fac.0;
+        Fri, 04 Aug 2023 11:52:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691165038; x=1691769838;
+        d=gmail.com; s=20221208; t=1691175147; x=1691779947;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mbGJEAvdY+U9pkMi+EcWXOXKA+bs3Kgp9vMkmWDzcz8=;
-        b=QrqDDAN8zg5+KFMKpnaDIOVUHHKDIgCp6oNZZt9zwh/dKhK9ZZkfn/D23gkbN6zULG
-         /CcgkIHQj8GnIdmeFxygZG6hEDZcrui4LkoTDhxOLqW0ujq/C2sKPO8mhszZmVPNjtZf
-         A2njYcuQ0i8nj3E4lAycOdGHgBA96Fu6Z4hvmIJvuF68DgESdsPBeMJADI9XvX3WXxBP
-         xCPMUsqnmyYBl2acwqXtCu6NWNWrlMYRH2dBBuDBsg2Tb+lR0h8iX65cCrl6iOnI9uH9
-         tzah90jKLjSYIfjXXM8qpzA5iPfzS3qqE3Stma7gJxZNgksdDLCkCOyv2LLlpYYEL7CL
-         MvGQ==
+        bh=4HItNTIMvCIXfonBezfurR93L/l9UQl6IcmZ4tatzJA=;
+        b=mlUliX93F5qFHHI1eoLLCSxrP0sRwTu71E0+0iF7A2cwIL58bh7yKQ2Zd6VhPOrrVR
+         4WdI+88TPtQ+l7NhMMov1wuxD/H4Wfpqib7Yg1CqBoLVgI9m47L6ZB6NS2aAqZe2o87V
+         jYs5ldnsb607oh+VfEDrtHDLtwbY6DO6R6Ugm+ofDucq4j8Xc5ioeiscE+q98v0yR9a3
+         RDVFTtbnWiWvOcsAhM3mLGK8JySKNDA30p9zWKdJUEpFB63B4SH4l7UsNu010WqETrWY
+         l4LdvmiG2xu7jdQFyaLi3vGEmIrG+6Q/NS66/vkYPDGplv0UaIiAPepVwHTI+A+HM11B
+         lAaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691165038; x=1691769838;
+        d=1e100.net; s=20221208; t=1691175147; x=1691779947;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mbGJEAvdY+U9pkMi+EcWXOXKA+bs3Kgp9vMkmWDzcz8=;
-        b=h8emzGXzf2nbO15Npgpa0FEQ5v0TApfgMTTVjkglv3c0MbKlZVSk0hZLh87aj00l8c
-         TeuIhRT3owQU5nQOXzDw9EuUAsLYNgjSQJ9teKEY1JSfXPPyRgV+GCiC6FCkzUyetkPm
-         96J0I5fW1CeDctrgfk0a5gMSoZM9rKl3dADdmu1wzVPW8W4uEB1Q3Ccp9zP3G8l/1rNi
-         GSVJz5XCjS0rhUwlJK2b2PjF6QPTQfLyO03fgTU4pV0xNJaRElLDye6H8SQULgmHEvK1
-         B9ttlX4EBmzmUbcBaGLozZiuyMJtUNAMzYvS1kU7Hr+y2Px3MYCVZ1SL0pwqfsLGgfCX
-         uPKA==
-X-Gm-Message-State: AOJu0Yx6/uRr5hBMD9jxhO5XBj20zVNBFEmMZC0WeHFETNUioI+FTF+Q
-        p0rMRG18T0pdRdf5jlV6U6SKCSTHpxbu6aBr7ka3+Q==
-X-Google-Smtp-Source: AGHT+IHZBH5r6emqQTL8xn4X8zOQdBhq06zI27xzGze62f+uqh1H/6qUhFPHofwIukXunpgiL/z49dHmYRxALsPUwtw=
-X-Received: by 2002:a05:6358:249f:b0:13a:9d5:356a with SMTP id
- m31-20020a056358249f00b0013a09d5356amr1211941rwc.21.1691165037916; Fri, 04
- Aug 2023 09:03:57 -0700 (PDT)
+        bh=4HItNTIMvCIXfonBezfurR93L/l9UQl6IcmZ4tatzJA=;
+        b=cvvA6Old39h8pkSWsFeKwG38ZUZdNRur8RxrrpYpZ5lyDHEEdUa5WhAoz6LxGWZ+f+
+         zKuTDkaCA8WJUBfVYnfma6TFZFnkmO3ORUmhpG7T2+rUAcuHnssrN4qjX1lPXzKX+Yie
+         NV+KF74nN48AZcF+H4jntubtSp2iPebeNR3UjyBxK7Ytl7PFF4PuvgeIftvUsDtOM1DC
+         Omjfi/o0h4fZUwuEwX7rCNmrmkwZ4f5GroMv/ubRxvJk+RIdILOm8UXaWgqx804qOZOR
+         75oZzTNkbiCuSAW38iRxa7djeodeWasE67yqSBB7GEwk8xlplGPj+DD7J7PkNZCrBj8T
+         ibZw==
+X-Gm-Message-State: AOJu0YxSefZUYg7sDXHGQo+v9IbCXMmg5gucTzG8iCduuMwPIS4mZLkp
+        Tvn9to/saJbDP+0onWGi1zRQal4wLm0F5hGR/9k=
+X-Google-Smtp-Source: AGHT+IGzp9pVDMXWry56NsZy1Wlu+pLORC3ORFvtBGhMu6TYOCe+P8wMbQo5bZqDncwUMYd/rqllnaxHLBBvOMv3P6I=
+X-Received: by 2002:a05:6870:ac2a:b0:1be:feb0:33ff with SMTP id
+ kw42-20020a056870ac2a00b001befeb033ffmr2969895oab.6.1691175147496; Fri, 04
+ Aug 2023 11:52:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230802152808.33037-1-brgl@bgdev.pl> <ZMuR0W303WCbS1K0@smile.fi.intel.com>
-In-Reply-To: <ZMuR0W303WCbS1K0@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 4 Aug 2023 18:03:47 +0200
-Message-ID: <CAMRc=McEAG7Ezgb=OwMPoRhQzu_A66JMnB=aBSgmdZUvS-ZPhw@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpio: consumer: new virtual driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de> <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 4 Aug 2023 21:51:51 +0300
+Message-ID: <CAHp75Vfr2VrKXiOnM7=+K6MvOdCdy52xb5PB+dzKMeHonF04eQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for drivers
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>, Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Michael Walle <michael@walle.cc>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Hammer Hsieh <hammerh0314@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Michal Simek <michal.simek@amd.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anjelique Melendez <quic_amelende@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        chrome-platform@lists.linux.dev, linux-mips@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 3, 2023 at 1:39=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Aug 4, 2023 at 5:28=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
+> Instead of requiring each driver to care for assigning the owner member
+> of struct pwm_ops, handle that implicitly using a macro. Note that the
+> owner member has to be moved to struct pwm_chip, as the ops structure
+> usually lives in read-only memory and so cannot be modified.
+>
+> The upside is that new lowlevel drivers cannot forget the assignment and
 
-[snip]
+low level
 
->
-> > +#include <linux/of_platform.h>
->
-> Wrong header. Use mod_devicetable.h.
->
-> > +#include <linux/platform_device.h>
-> > +#include <linux/printk.h>
-> > +#include <linux/property.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> > +#include <linux/timer.h>
->
-> And general recommendation is to revisit this block and refine it accordi=
-ngly.
->
+> save one line each. The pwm-crc driver didn't assign .owner, that's not
+> a problem in practise though as the driver cannot be compiled as a
+> module.
 
-I kept track of the interfaces I used for most part, so it should be
-mostly fine.
+...
 
-[snip]
+>  drivers/pwm/pwm-lpss.c                |  1 -
 
-> ...
->
-> > +     flags =3D function =3D=3D GPIO_CONSUMER_FUNCTION_MONITOR ?
-> > +                                     GPIOD_IN : GPIOD_OUT_HIGH;
-> > +     for (i =3D 0; i < num_lines; i++) {
-> > +             desc =3D devm_gpiod_get(dev, lines[i], flags);
-> > +             if (IS_ERR(desc))
-> > +                     return dev_err_probe(dev, PTR_ERR(desc),
-> > +                                          "Failed to get GPIO '%s'\n",
-> > +                                          lines[i]);
->
-> Would it make sense to request GPIOs via devm_gpiod_get_array() and then =
-try
-> the rest on them in a loop?
->
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com> # Intel LPSS
 
-No it would not. gpiod_get_array() works for properties represented in DT a=
-s:
-
-    foo-gpios =3D <&chip ...>, <&chip ...>, <&chip ...>;
-
-while what we have here is:
-
-    foo-gpios =3D <&chip ...>;
-    bar-gpios =3D <&chip ...>;
-
-Which makes me think that I need to add proper documentation for this modul=
-e.
-
-[snip]
-
->
-> > +static ssize_t
-> > +gpio_consumer_lookup_config_offset_store(struct config_item *item,
-> > +                                      const char *page, size_t count)
-> > +{
-> > +     struct gpio_consumer_lookup *lookup =3D to_gpio_consumer_lookup(i=
-tem);
-> > +     struct gpio_consumer_device *dev =3D lookup->parent;
-> > +     int offset, ret;
-> > +
-> > +     ret =3D kstrtoint(page, 0, &offset);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Use -1 to indicate lookup by name. */
-> > +     if (offset > (U16_MAX - 1))
-> > +             return -EINVAL;
->
-> So, offset here may be negative. Is it okay?
->
-
-Yes. If negative - lookup line by name, if positive, by chip and
-offset. I will document this properly for v2.
-
-> > +     mutex_lock(&dev->lock);
-> > +
-> > +     if (gpio_consumer_device_is_live_unlocked(dev)) {
-> > +             mutex_unlock(&dev->lock);
-> > +             return -EBUSY;
-> > +     }
-> > +
-> > +     lookup->offset =3D offset;
-> > +
-> > +     mutex_unlock(&dev->lock);
-> > +
-> > +     return count;
-> > +}
->
-> ...
->
-> > +     if (flags & GPIO_OPEN_DRAIN)
-> > +             repr =3D "open-drain";
-> > +     else if (flags & GPIO_OPEN_SOURCE)
-> > +             repr =3D "open-source";
->
-> Can it be both flags set?
->
-
-No!
-
-> > +     else
-> > +             repr =3D "push-pull";
->
-> ...
->
-> > +     if (sysfs_streq(page, "push-pull")) {
-> > +             lookup->flags &=3D ~(GPIO_OPEN_DRAIN | GPIO_OPEN_SOURCE);
-> > +     } else if (sysfs_streq(page, "open-drain")) {
-> > +             lookup->flags &=3D ~GPIO_OPEN_SOURCE;
-> > +             lookup->flags |=3D GPIO_OPEN_DRAIN;
-> > +     } else if (sysfs_streq(page, "open-source")) {
-> > +             lookup->flags &=3D ~GPIO_OPEN_DRAIN;
-> > +             lookup->flags |=3D GPIO_OPEN_SOURCE;
-> > +     } else {
-> > +             count =3D -EINVAL;
-> > +     }
->
-> I prefer to see some kind of the array of constant string literals and do
-> sysfs_match_string() here
->
-
-I would generally agree but if the flag values ever change to ones
-that make the resulting string array have holes in it, match_string()
-will suddenly stop working. I think that with bit flags defined
-elsewhere it's safer and more readable to do the above.
-
->         lookup->flags &=3D ~(GPIO_OPEN_DRAIN | GPIO_OPEN_SOURCE);
->         flag =3D sysfs_match_string(...);
->         if (flag < 0)
->                 count =3D flag
->         else
->                 lookup->flags |=3D flag;
->
-> (or something similar). And respectively indexed access above.
->
-> ...
->
-
-> ...
->
-> > +     if (list_empty(&dev->lookup_list))
-> > +             return -ENODATA;
->
-> Instead you may count nodes here and if 0, return an error, otherwise pas=
-s it
-> to the callee.
-
-I'm not following, please rephrase.
-
->
-> > +     swnode =3D gpio_consumer_make_device_swnode(dev);
-> > +     if (IS_ERR(swnode))
-> > +             return PTR_ERR(swnode);
->
-> ...
->
-> > +static ssize_t
-> > +gpio_consumer_device_config_live_store(struct config_item *item,
-> > +                                    const char *page, size_t count)
-> > +{
-> > +     struct gpio_consumer_device *dev =3D to_gpio_consumer_device(item=
-);
-> > +     bool live;
-> > +     int ret;
-> > +
-> > +     ret =3D kstrtobool(page, &live);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     mutex_lock(&dev->lock);
-> > +
-> > +     if ((!live && !gpio_consumer_device_is_live_unlocked(dev)) ||
-> > +         (live && gpio_consumer_device_is_live_unlocked(dev)))
->
->         if (live ^ gpio_consumer_device_is_live_unlocked(dev))
->
-> ?
-
-Nah, let's not use bitwise operators for boolean logic.
-
-[snip]
-
-I commented on the ones that needed it, for others, I'll fix them for v2.
-
-Bart
+--=20
+With Best Regards,
+Andy Shevchenko
