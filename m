@@ -2,34 +2,34 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1964770101
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Aug 2023 15:16:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2849F770134
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Aug 2023 15:17:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230382AbjHDNP6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Aug 2023 09:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57870 "EHLO
+        id S229639AbjHDNRc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Aug 2023 09:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230343AbjHDNP5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Aug 2023 09:15:57 -0400
+        with ESMTP id S229685AbjHDNQg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Aug 2023 09:16:36 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0EB011B;
-        Fri,  4 Aug 2023 06:14:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE435586;
+        Fri,  4 Aug 2023 06:14:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2860F61FF8;
-        Fri,  4 Aug 2023 13:14:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F31C433C8;
-        Fri,  4 Aug 2023 13:14:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3234F61FF5;
+        Fri,  4 Aug 2023 13:14:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C28EC433C7;
+        Fri,  4 Aug 2023 13:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1691154860;
-        bh=JRE8h+VxG5Sd0jsKXzMVWXS7hQJqeXSQ/aS/ksekctE=;
+        s=korg; t=1691154885;
+        bh=huRgIJ1gYjuFi3Njv1/kzHWYkFWESf8EQfF18/ErDXA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kiXa8ellOolgBX83CbkFAS4DexJZLm4NO9bEkXxWKDp2PRndVu92Fl8me2/AuA2iW
-         kAyX6ZYB8BHKmENnZohPpK8n/tItrWyZz3yDJt3zsoPqQBM4J+b+jI7prCAVlroolS
-         eC+syGFi33IAs2OJ/bVkE2Lueby6EfFjTC8uOsl8=
-Date:   Fri, 4 Aug 2023 15:14:18 +0200
+        b=XKe2d3mw0c0DB6ojc98z5+Ru8IDhBwbogj65tkUh84zANpvkzp0kNWsVUb1DMWt/l
+         V5cFby4aVwVI02GSgN5BgHEVSHbRBuuHhgjCGC+3DHLH4HGvuVkA5W8y/lsDHmyaRs
+         vnha7MjEDfEfZvH7c9q460nCSWLNU7JXjj9KavRA=
+Date:   Fri, 4 Aug 2023 15:14:43 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Hugo Villeneuve <hugo@hugovil.com>
 Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
@@ -39,18 +39,19 @@ Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        stable@vger.kernel.org, Lech Perczak <lech.perczak@camlingroup.com>
-Subject: Re: [PATCH v9 04/10] serial: sc16is7xx: refactor GPIO controller
- registration
-Message-ID: <2023080415-kinetic-repurpose-030a@gregkh>
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Lech Perczak <lech.perczak@camlingroup.com>
+Subject: Re: [PATCH v9 08/10] serial: sc16is7xx: add call to get rs485 DT
+ flags and properties
+Message-ID: <2023080429-animate-elliptic-3167@gregkh>
 References: <20230725142343.1724130-1-hugo@hugovil.com>
- <20230725142343.1724130-5-hugo@hugovil.com>
- <2023073118-mousiness-sandlot-6258@gregkh>
- <20230803121449.bcf74899e062ca39dfb073a3@hugovil.com>
+ <20230725142343.1724130-9-hugo@hugovil.com>
+ <2023073146-gauntlet-lake-0b77@gregkh>
+ <20230803103814.ec35dbddad880a77565ff681@hugovil.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230803121449.bcf74899e062ca39dfb073a3@hugovil.com>
+In-Reply-To: <20230803103814.ec35dbddad880a77565ff681@hugovil.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
@@ -61,108 +62,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 12:14:49PM -0400, Hugo Villeneuve wrote:
-> On Mon, 31 Jul 2023 17:55:42 +0200
+On Thu, Aug 03, 2023 at 10:38:14AM -0400, Hugo Villeneuve wrote:
+> On Mon, 31 Jul 2023 17:59:14 +0200
 > Greg KH <gregkh@linuxfoundation.org> wrote:
 > 
-> > On Tue, Jul 25, 2023 at 10:23:36AM -0400, Hugo Villeneuve wrote:
+> > On Tue, Jul 25, 2023 at 10:23:40AM -0400, Hugo Villeneuve wrote:
 > > > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > > > 
-> > > In preparation for upcoming patch "fix regression with GPIO
-> > > configuration". To facilitate review and make code more modular.
+> > > Add call to uart_get_rs485_mode() to probe for RS485 flags and
+> > > properties from device tree.
 > > 
-> > I would much rather the issue be fixed _before_ the code is refactored,
-> > unless it is impossible to fix it without the refactor?
+> > Again, you are saying what you are doing, but not why.  I have no hint
+> > as to if this is a bugfix, or a new features, or something else?
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
 > Hi Greg,
-> normally I would agree, but the refactor in this case helps a lot to
-> address some issues raised by you and Andy in V7 of this series.
+> I could change the commit message to:
 > 
-> Maybe I could merge it with the actual patch "fix regression with GPIO
-> configuration"?
+> ---------
+> serial: sc16is7xx: add missing support for rs485 devicetree properties
+> 
+> Retrieve rs485 devicetree properties on registration of sc16is7xx ports
+> in case they are attached to an rs485 transceiver.
+> ---------
+> 
+> I don't think that it should be considered as a bug fix, but maybe as a
+> missing feature.
+> 
+> And does it mean that it should also go to older (stable) kernels then?
+> If yes, then do I need to add the "Fixes" tag?
 
-Sure.
-
-> > > Cc: <stable@vger.kernel.org> # 6.1.x
-> > 
-> > What commit id does this fix?
-> 
-> It doesn't fix anything, but I tought that I needed this tag since
-> this patch is a prerequisite for the next patch in the series, which
-> would be applied to stable kernels. I will remove this tag (assuming
-> the patch stays as it is, depending on your answer to the above
-> question).
-> 
->  
-> > > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> > > Reviewed-by: Lech Perczak <lech.perczak@camlingroup.com>
-> > > Tested-by: Lech Perczak <lech.perczak@camlingroup.com>
-> > > ---
-> > >  drivers/tty/serial/sc16is7xx.c | 40 ++++++++++++++++++++--------------
-> > >  1 file changed, 24 insertions(+), 16 deletions(-)
-> > > 
-> > > diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> > > index 32d43d00a583..5b0aeef9d534 100644
-> > > --- a/drivers/tty/serial/sc16is7xx.c
-> > > +++ b/drivers/tty/serial/sc16is7xx.c
-> > > @@ -332,6 +332,7 @@ struct sc16is7xx_one {
-> > >  
-> > >  struct sc16is7xx_port {
-> > >  	const struct sc16is7xx_devtype	*devtype;
-> > > +	struct device			*dev;
-> > 
-> > Why is this pointer needed?
-> > 
-> > Why is it grabbed and yet the reference count is never incremented?  Who
-> > owns the reference count and when will it go away?
-> > 
-> > And what device is this?  The parent?  Current device?  What type of
-> > device is it?  And why is it needed?
-> > 
-> > Using "raw" devices is almost never something a driver should do, they
-> > are only passed into functions by the driver core, but then the driver
-> > should instantly turn them into the "real" structure.
-> 
-> We already discussed that a lot in previous versions (v7)... I am
-> trying my best to modify the code to address your concerns, but I am
-> not fully understanding what you mean about raw devices, and you didn't
-> answer some of my previous questions/interrogations in v7 about that.
-
-I don't have time to answer all questions, sorry.
-
-Please help review submitted patches to reduce my load and allow me to
-answer other stuff :)
-
-> So, in the new function that I
-> need to implement, sc16is7xx_setup_gpio_chip(), I absolutely need to use
-> a raw device to read a device tree property and to set
-> s->gpio.parent:
-> 
->     count = device_property_count_u32(dev, ...
->     ...
->     s->gpio.parent = dev;
-> 
-> Do we agree on that?
-
-Yes, but what type of parent is that?
-
-> Then, how do I pass this raw device to the 
-> device_property_count_u32() function and to the s->gpio.parent
-> assignment?
-> 
-> Should I modify sc16is7xx_setup_gpio_chip() like so:
-> 
->     static int sc16is7xx_setup_gpio_chip(struct sc16is7xx_port *s)
->     {
-> 	struct device *dev = &s->p[0].port.dev;
-> 
->         count = device_property_count_u32(dev, ...
->         ...
->         s->gpio.parent = dev;
-
-Again, what is the real type of that parent?  It's a port, right, so
-pass in the port to this function and then do the "take the struct
-device of the port" at that point in time.
+Does it fix a problem?  If so, yes, it should go to older kernels.  If
+not, then no.
 
 thanks,
 
