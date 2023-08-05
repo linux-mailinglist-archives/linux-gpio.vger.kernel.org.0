@@ -2,105 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A253771235
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Aug 2023 22:53:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CBAB7712F6
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Aug 2023 00:56:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230060AbjHEUxA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Aug 2023 16:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42848 "EHLO
+        id S229479AbjHEW4Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Aug 2023 18:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbjHEUw7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Aug 2023 16:52:59 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEBE2D69
-        for <linux-gpio@vger.kernel.org>; Sat,  5 Aug 2023 13:52:54 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fe4a89e8c4so12978985e9.3
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Aug 2023 13:52:54 -0700 (PDT)
+        with ESMTP id S229441AbjHEW4Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Aug 2023 18:56:24 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD171732
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Aug 2023 15:56:22 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-99bf9252eddso486601366b.3
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Aug 2023 15:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691268773; x=1691873573;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p4uZjubyBmUVVEt3PUoxQJFxZWi+4QvNzWctTLRO5ao=;
-        b=WL7oEn0O0nOTtFkhAhBzY0aPVBFffwA19BFKdsx7I1DewAg34m2T+Hh95HlEqMdBFv
-         sa7LISpkJsgpLiHoiBhDA4p5+SbaQlWaH7sRncfp1bkXIgGRQH0iDQJMhQKqEfHMNpzC
-         sLcV5yiuwadorVAxjd7rCH5LLwhO20Q8byp0ANRJns7YSQ9CSvMfTtxTAUel5xKzt3IX
-         biI6NdX3tR9NTwQjHXrRV/6vx6artkga+Mbos+c4meQRKIHjxL2zH3LnG33pYa6ZpxRo
-         VesO3oGb5tTqLsUhv2fFCYabj41IuOoLPW1jl5LGb90Lp8g3R4jjedO9BMX+Xf+NrAok
-         xniQ==
+        d=gmail.com; s=20221208; t=1691276181; x=1691880981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3rVEc+zvpdJbHdmR0vAkVZx6AXQ08DzE1Au0tsEbHCk=;
+        b=WqsDPyEUdKrno97k0JByYS1LFaq3JFASbUZ2afOsc00uaWIDL40oYmt5Pq2jN0vEOV
+         CjX9E3EEaBBeIZZyLBgi/FwKTNl4WeEY/bTWRLEycVs+Da/qkUTpt2SX6cuhAIm1rtZ5
+         X8MPyCgVw6GrFdPdEV5iamiNo0025ZW4ajowTtvs6in5sTLnHcPPW+VS3NYhP+S6F7+w
+         FZtkTm71dlM+4ODIX2c0DnaWSAhNYH0e0Ql+VQQTGY7M4O+XxNvG+9vAMPq/LRb7NK7r
+         U29RV2qCnblRMM32pVUagVGPkqQiAlpPvE3PSI2Emicsf1qUlsKxrRzE8g6VxjvUSMH4
+         pbEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691268773; x=1691873573;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p4uZjubyBmUVVEt3PUoxQJFxZWi+4QvNzWctTLRO5ao=;
-        b=dAcbLV6zoO2TGXxdZ7fKfaNDX+/mYFB1BoUK9fjd5Ox0eLdOGMZrB/74P5RtUXWHZp
-         sx/h6g/4cW55o6EqnbyGWJJ7N+hO1D1RR+RCXvzFBUIZa2WojunoFjIdQIOX8452Oq6v
-         4e26cmZz3yz98QMKov+1aj5BlJ+t1hTQabVDkXKUSaflI3bncLlCBt05H8KUFtmGA4We
-         Bo8q32rKZA8hKmc6W8eWldtW5csSb4BH9EzhpuNpL8d4Cltgigd8HSSrIJB2gV+Pf87Q
-         zxZdenR2j4vJT/75FtgC60rhX9QEDWrpr/4mXPJZXSDjGzPvTjAlxs3aiHnkpDZ0WJCJ
-         AoQA==
-X-Gm-Message-State: AOJu0YzxE7bqviXWGbT+XjpppMQXHaj9DVcCPhWGoRsGWOxuxhS4c3xy
-        QrmNKgkJOhGOS6d/AHjMollDPA==
-X-Google-Smtp-Source: AGHT+IHW4BPSBjV99OmrpHfUw1HgZrgGWtEtYc7eGhiVa2EkbPc+SDIb+/BdcX/n6S5Y4gKy9tR++A==
-X-Received: by 2002:a05:600c:22cf:b0:3fe:201a:4b7b with SMTP id 15-20020a05600c22cf00b003fe201a4b7bmr3754893wmg.27.1691268773391;
-        Sat, 05 Aug 2023 13:52:53 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.245])
-        by smtp.gmail.com with ESMTPSA id h6-20020adff4c6000000b003176eab8868sm5944676wrp.82.2023.08.05.13.52.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Aug 2023 13:52:52 -0700 (PDT)
-Message-ID: <c5330567-4fa5-c7b6-6927-d53ef9628a8c@linaro.org>
-Date:   Sat, 5 Aug 2023 22:52:50 +0200
+        d=1e100.net; s=20221208; t=1691276181; x=1691880981;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3rVEc+zvpdJbHdmR0vAkVZx6AXQ08DzE1Au0tsEbHCk=;
+        b=FfIug4t1YA76lZYOtW2UmK3quEf96WTgSAwe8e+KkRg+8XGErnAqM1r8WmXv7z8Snn
+         Wjykrvo404U+Ovo9FHm4ilQ6klF7lYAbQYrLrYBA3rN00n2xB/6khfRs97utDy7FK1GZ
+         mgsnOZQo75od7ubOyO3XtiGJMeWRt3HNVsc+ztpgVDi1XJYMfaONNwLfSYEzzHAacAXX
+         UdQXK+bxauBr+e/bI7fqdZMGz0OgTWcc4kAZ+4uyKsP9RG4y3+q9c1nLnay8brYRLps5
+         +bpltf2lhvRHEFHPoR18I0DIjTzqRvlhhYzs+jSeV4SpO8tMB75SSaFvX+cF81xKwk/2
+         H8fw==
+X-Gm-Message-State: AOJu0YzJZUhYpjNTHtvbttNIuGFQOPdD06xfUFJKp7IBJCb1oDw0g1Rb
+        Bg7xAtMLg7iIlYSazgJ5kWlADlaBT3aV1Zw7HP70di8tqsI=
+X-Google-Smtp-Source: AGHT+IGU9viCRNc9tvX7Kt43S8Goc7j8o/K8ki4KQyr1cZpGEDfpqEtpqLaZpznO0wZGuRRMjbjMP37BxrCCDDcsCZk=
+X-Received: by 2002:a17:907:2723:b0:99c:1ed1:65b2 with SMTP id
+ d3-20020a170907272300b0099c1ed165b2mr4194468ejl.33.1691276180845; Sat, 05 Aug
+ 2023 15:56:20 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v3 5/8] dt-bindings: marvell: Document PXA1908 SoC
-Content-Language: en-US
-To:     =?UTF-8?Q?Duje_Mihanovi=c4=87?= <duje.mihanovic@skole.hr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.de
-References: <20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr>
- <20230804-pxa1908-lkml-v3-5-8e48fca37099@skole.hr>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230804-pxa1908-lkml-v3-5-8e48fca37099@skole.hr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <CAN1+YZU95GyPdE0fDcQNweMCHq0FXQ5RxR5dqmKdmMUaoiMsfw@mail.gmail.com>
+ <ZMLZSqRwrPfKEbX3@sol> <CAN1+YZX1m8iZPg1EM8ivqCft83hT1ERcmb2kxx53rNFA7NTJ3w@mail.gmail.com>
+ <ZMLnz25brQvcwBVW@sol> <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
+ <ZMNYsOXrOOZgxLeC@sol> <CAN1+YZWjEZQY6yffCFrt0vLVA6P0j5dDbRz=b5c0MXJoSszhig@mail.gmail.com>
+ <ZMRzYD6wGYywiPbd@sol>
+In-Reply-To: <ZMRzYD6wGYywiPbd@sol>
+From:   andy pugh <bodgesoc@gmail.com>
+Date:   Sat, 5 Aug 2023 23:55:44 +0100
+Message-ID: <CAN1+YZW-EcQq=D=dLQoH-WsDD7RWjTUgqbQMynV+OXV0EjLOAw@mail.gmail.com>
+Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04/08/2023 15:32, Duje Mihanović wrote:
-> Add dt binding for the Marvell PXA1908 SoC.
-> 
-> Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+On Sat, 29 Jul 2023 at 03:03, Kent Gibson <warthog618@gmail.com> wrote:
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Unfortunately I won't know what chip the line is on, but I have
+> > already considered that and plan to have an array of structs
+> > containing the "bulk" and the "chip" for each chip that is needed
+> > according to the IO line list submitted by the (pesky!) users.
+> >
+>
+> So the IO lines are specified by name?
 
-Best regards,
-Krzysztof
+Yes, they are.
 
+Before I go too far down the wrong path, it has occurred to me that I
+probably can't allow the lines to go out of scope?
+
+ie, this (pseudocode) won't work
+
+for each lineName in lineList
+    temp_line =3D gpiod_chip_find_line(chip, lineName)
+    gpiod_line_bulk_add(&bulk, temp_line);
+next
+
+As each line in the bulk will actually point to the same (last found) line?
+Or am I missing a subtlety?
+
+--=20
+atp
+"A motorcycle is a bicycle with a pandemonium attachment and is
+designed for the especial use of mechanical geniuses, daredevils and
+lunatics."
+=E2=80=94 George Fitch, Atlanta Constitution Newspaper, 1912
