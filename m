@@ -2,108 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CC747710DF
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Aug 2023 19:17:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B08E8771228
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Aug 2023 22:36:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjHERRm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Aug 2023 13:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51862 "EHLO
+        id S229549AbjHEUgP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Aug 2023 16:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjHERRi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Aug 2023 13:17:38 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A864228;
-        Sat,  5 Aug 2023 10:17:22 -0700 (PDT)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 375HH5AP016470;
-        Sat, 5 Aug 2023 12:17:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1691255825;
-        bh=4jQZBB3DlVCu77H3Axbkc2fb17BRIk/4s588muh0kUM=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=vGUjn6I8z5eeFajASFHWqfCv4+oNLsbxdDMrSrFA/yamgylh7G8NtRbC6agxWdmEl
-         eNXIbtYsxortpLbvDCw4qnIwKoZCj59xZFMkzNouI2Zs4y0fEEyEm4ATS0yMCQLXfW
-         orP7PHk+KGjeLzL/nAc0ui41sJnaz8WNNpsyLunQ=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 375HH5Ta081641
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 5 Aug 2023 12:17:05 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 5
- Aug 2023 12:17:02 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 5 Aug 2023 12:17:02 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 375HH2K7036810;
-        Sat, 5 Aug 2023 12:17:02 -0500
-Date:   Sat, 5 Aug 2023 12:17:02 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Dhruva Gole <d-gole@ti.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH V3] dt-bindings: pinctrl: pinctrl-single: add am625
- compatible
-Message-ID: <20230805171702.hmlu7hb7sia44pd7@blouse>
-References: <20230804050737.635186-1-d-gole@ti.com>
- <20230804211432.xxyf74h6a2e5x4qi@reenter>
- <20230805051455.dag3ualnj7udyf76@dhruva>
+        with ESMTP id S229479AbjHEUgP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Aug 2023 16:36:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1A0127;
+        Sat,  5 Aug 2023 13:36:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ABC1460EF3;
+        Sat,  5 Aug 2023 20:36:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8402EC433C7;
+        Sat,  5 Aug 2023 20:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691267773;
+        bh=HV9N1662vFNg45/injmUeZzoXqqRaYKc6xS67ObhrCE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T8b37KpHrfdrHcPTjbp9eehNf/qy/zQ094uspwpe3knxbV/SAwFyOO+iL6poGeRt5
+         mmN2THgQL8TANiBbUZTIqmUiv0S7zyq3SAoSc1CzwM7lN991SYLqic8rCimc7bWwRI
+         Vu7ZXvkbMfRfxqG+wpJINgbL+2KpSYU+uMd2Pk44r5RPsQzRq94XsuoRFZfLcF3djQ
+         F5MggUSz0nkmmAejuORlF5VcmTYFbpwgyjqW04dzJAO9QAMzfqz5myArTvUzYEHRfd
+         0AdEI801aM4xbN8FAEhz4+QIYaCxO1e4lYxIngw3YRdHEiuSSaRBpD/K+KyiSmsD0z
+         8QDHViYep2Zwg==
+Date:   Sat, 5 Aug 2023 22:36:10 +0200
+From:   Andi Shyti <andi.shyti@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>, Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Michael Walle <michael@walle.cc>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Hammer Hsieh <hammerh0314@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Michal Simek <michal.simek@amd.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anjelique Melendez <quic_amelende@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        chrome-platform@lists.linux.dev, linux-mips@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for
+ drivers
+Message-ID: <20230805203610.jl7eea2lasmg2as2@intel.intel>
+References: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de>
+ <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20230805051455.dag3ualnj7udyf76@dhruva>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10:44-20230805, Dhruva Gole wrote:
-> On Aug 04, 2023 at 16:14:32 -0500, Nishanth Menon wrote:
-> > On 10:37-20230804, Dhruva Gole wrote:
-> > > Add the am625 compatible property to add support for the new
-> > > wakeup enable and status bits positions
-> > > 
-> > > Cc: Nishanth Menon <nm@ti.com>
-> > > Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> > > CC: Tony Lindgren <tony@atomide.com>
-> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> > > Signed-off-by: Dhruva Gole <d-gole@ti.com>
-> > > ---
-> > 
-> > How about the driver changes to actually support this compatible?
-> 
-> Wanted to post this patch before I posted the driver changes,
-> have posted them here now:
-> 
-> https://lore.kernel.org/all/20230805045554.786092-1-d-gole@ti.com
-> 
+Hi Uwe,
 
-Please dont patches piecemeal - it makes no sense to review without
-context.
+On Fri, Aug 04, 2023 at 04:27:06PM +0200, Uwe Kleine-König wrote:
+> Instead of requiring each driver to care for assigning the owner member
+> of struct pwm_ops, handle that implicitly using a macro. Note that the
+> owner member has to be moved to struct pwm_chip, as the ops structure
+> usually lives in read-only memory and so cannot be modified.
+> 
+> The upside is that new lowlevel drivers cannot forget the assignment and
+> save one line each. The pwm-crc driver didn't assign .owner, that's not
+> a problem in practise though as the driver cannot be compiled as a
 
-Please send future series organized as follows:
-* binding
-* driver updates
-* if any dts updates are relevant - mark them as DONOTMERGE to let the
-  driver maintainer know that the dts patches go via SoC tree - most
-  maintainers know this, but it is better to be safe.
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+/practise/practice/
+
+> module.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+
+Acked-by: Andi Shyti <andi.shyti@kernel.org> 
+
+Thanks,
+Andi
