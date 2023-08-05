@@ -2,60 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E47B771232
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Aug 2023 22:52:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A253771235
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Aug 2023 22:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230042AbjHEUwa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Aug 2023 16:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42464 "EHLO
+        id S230060AbjHEUxA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Aug 2023 16:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbjHEUw3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Aug 2023 16:52:29 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E452273B
-        for <linux-gpio@vger.kernel.org>; Sat,  5 Aug 2023 13:52:27 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3fe24dd8898so29643005e9.2
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Aug 2023 13:52:27 -0700 (PDT)
+        with ESMTP id S229983AbjHEUw7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Aug 2023 16:52:59 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEBE2D69
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Aug 2023 13:52:54 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fe4a89e8c4so12978985e9.3
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Aug 2023 13:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691268746; x=1691873546;
+        d=linaro.org; s=google; t=1691268773; x=1691873573;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=yMZ57FK/F5HfkVLTGQC4S3eZbwmC8Kg8tkKbLHOwgJU=;
-        b=fQ7k4sBnsoIVWX6Rccv2pmzsDjUrD/hEX4hi511Qfd3ayuvEJSt89N1Cx89fNbVVIP
-         yswyuL/YaHHd+5EHc7en9iiCw4R863j9HG3ZwIp0vRJTgdr0RzeoS7Fg890uvNHJjWHl
-         G7Y84XNGZymtnnJcnUqWYYCgVcjcGnQOqQJ8WBkFcenFclZ7AxkEZjMvoFYLXO3BX4XH
-         1rlSUhq+PNdVtF0LcmqlnsfeDU2GgwEodBbsT00V9yNcNjMcfgjbt1QAqMEOJ8Q8r5Mp
-         GknRHJlbEAZOh4DzXjyo95/PqocXP0v4EkrYDjPP2Rm5vcpEmhPR+ibwzGbdN8KNeQBE
-         4zMg==
+        bh=p4uZjubyBmUVVEt3PUoxQJFxZWi+4QvNzWctTLRO5ao=;
+        b=WL7oEn0O0nOTtFkhAhBzY0aPVBFffwA19BFKdsx7I1DewAg34m2T+Hh95HlEqMdBFv
+         sa7LISpkJsgpLiHoiBhDA4p5+SbaQlWaH7sRncfp1bkXIgGRQH0iDQJMhQKqEfHMNpzC
+         sLcV5yiuwadorVAxjd7rCH5LLwhO20Q8byp0ANRJns7YSQ9CSvMfTtxTAUel5xKzt3IX
+         biI6NdX3tR9NTwQjHXrRV/6vx6artkga+Mbos+c4meQRKIHjxL2zH3LnG33pYa6ZpxRo
+         VesO3oGb5tTqLsUhv2fFCYabj41IuOoLPW1jl5LGb90Lp8g3R4jjedO9BMX+Xf+NrAok
+         xniQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691268746; x=1691873546;
+        d=1e100.net; s=20221208; t=1691268773; x=1691873573;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yMZ57FK/F5HfkVLTGQC4S3eZbwmC8Kg8tkKbLHOwgJU=;
-        b=KNeQU1e9t+lRlRgO/ACIU36pFDPz17xPakwntQ1sVRqg9Bxj87trHlbCunW6frnX5x
-         g8C/zjCk6qtBcgscpswJQkFYciZHmbj54DKepSJPB7pEvfXH7VDD7VsKfQGt+xvIZlz4
-         84oICOlOUs2L4oi6Kg9kXEEDBZ3Mt/8YKSKU58tDL+P3Ryr1mV2KvpasCnBV/IH+fX3i
-         5Pt4z/NVMB7PHoimKpOdi0Gt+fgvi3iWHEJ/JYe810tZDSV7b1umqk1V5/jWVIQHcMvC
-         ST5R8xxzFnzWl7l9jNEy+ulJ5Xccl3MSNdVs2bXzBwkAKlagWflFgRBJ7ib6hLAjT1X4
-         r5rg==
-X-Gm-Message-State: AOJu0YyKYmWG477nQuXXdMRZ1P68By60PiYanmkR4mlgCuVUfW3WNrXl
-        RBkTmjVUhgqyFmfOGQ9X5JiDFg==
-X-Google-Smtp-Source: AGHT+IGlrHt+sxR7RnSvkI2RJnZZ+LB3aM9gw03DbVGz3kyVX5ECy+z4K5V6A9++7KFbnt6QeCDAsA==
-X-Received: by 2002:a05:600c:3794:b0:3fe:2102:8085 with SMTP id o20-20020a05600c379400b003fe21028085mr3690414wmr.8.1691268745782;
-        Sat, 05 Aug 2023 13:52:25 -0700 (PDT)
+        bh=p4uZjubyBmUVVEt3PUoxQJFxZWi+4QvNzWctTLRO5ao=;
+        b=dAcbLV6zoO2TGXxdZ7fKfaNDX+/mYFB1BoUK9fjd5Ox0eLdOGMZrB/74P5RtUXWHZp
+         sx/h6g/4cW55o6EqnbyGWJJ7N+hO1D1RR+RCXvzFBUIZa2WojunoFjIdQIOX8452Oq6v
+         4e26cmZz3yz98QMKov+1aj5BlJ+t1hTQabVDkXKUSaflI3bncLlCBt05H8KUFtmGA4We
+         Bo8q32rKZA8hKmc6W8eWldtW5csSb4BH9EzhpuNpL8d4Cltgigd8HSSrIJB2gV+Pf87Q
+         zxZdenR2j4vJT/75FtgC60rhX9QEDWrpr/4mXPJZXSDjGzPvTjAlxs3aiHnkpDZ0WJCJ
+         AoQA==
+X-Gm-Message-State: AOJu0YzxE7bqviXWGbT+XjpppMQXHaj9DVcCPhWGoRsGWOxuxhS4c3xy
+        QrmNKgkJOhGOS6d/AHjMollDPA==
+X-Google-Smtp-Source: AGHT+IHW4BPSBjV99OmrpHfUw1HgZrgGWtEtYc7eGhiVa2EkbPc+SDIb+/BdcX/n6S5Y4gKy9tR++A==
+X-Received: by 2002:a05:600c:22cf:b0:3fe:201a:4b7b with SMTP id 15-20020a05600c22cf00b003fe201a4b7bmr3754893wmg.27.1691268773391;
+        Sat, 05 Aug 2023 13:52:53 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.245])
-        by smtp.gmail.com with ESMTPSA id l12-20020adff48c000000b0030ada01ca78sm5946071wro.10.2023.08.05.13.52.23
+        by smtp.gmail.com with ESMTPSA id h6-20020adff4c6000000b003176eab8868sm5944676wrp.82.2023.08.05.13.52.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Aug 2023 13:52:25 -0700 (PDT)
-Message-ID: <609d5c1d-4ef7-22d5-d951-f32dbe410906@linaro.org>
-Date:   Sat, 5 Aug 2023 22:52:22 +0200
+        Sat, 05 Aug 2023 13:52:52 -0700 (PDT)
+Message-ID: <c5330567-4fa5-c7b6-6927-d53ef9628a8c@linaro.org>
+Date:   Sat, 5 Aug 2023 22:52:50 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.14.0
-Subject: Re: [PATCH v3 3/8] dt-bindings: clock: Add Marvell PXA1908 clock
- bindings
+Subject: Re: [PATCH v3 5/8] dt-bindings: marvell: Document PXA1908 SoC
 Content-Language: en-US
 To:     =?UTF-8?Q?Duje_Mihanovi=c4=87?= <duje.mihanovic@skole.hr>,
         Robert Jarzmik <robert.jarzmik@free.fr>,
@@ -80,15 +79,15 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         afaerber@suse.de
 References: <20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr>
- <20230804-pxa1908-lkml-v3-3-8e48fca37099@skole.hr>
+ <20230804-pxa1908-lkml-v3-5-8e48fca37099@skole.hr>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230804-pxa1908-lkml-v3-3-8e48fca37099@skole.hr>
+In-Reply-To: <20230804-pxa1908-lkml-v3-5-8e48fca37099@skole.hr>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -96,37 +95,11 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 04/08/2023 15:32, Duje Mihanović wrote:
-> Add dt bindings and documentation for the Marvell PXA1908 clock
-> controller.
+> Add dt binding for the Marvell PXA1908 SoC.
 > 
 > Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 
-
-> +++ b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-
-...
-
-> +examples:
-> +  # APMU block:
-> +  - |
-> +    clock-controller@d4282800 {
-> +      compatible = "marvell,pxa1908-apmu";
-> +      reg = <0xd4282800 0x400>;
-> +      #clock-cells = <1>;
-> +    };
-> diff --git a/include/dt-bindings/clock/marvell,pxa1908.h b/include/dt-bindings/clock/marvell,pxa1908.h
-> new file mode 100644
-> index 000000000000..1fff3bcefd21
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/marvell,pxa1908.h
-> @@ -0,0 +1,92 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause */
-
-Any particular reason to use different BSD-3 than bindings? Not easy to
-spot this difference...
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
