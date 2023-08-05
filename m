@@ -2,132 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B08E8771228
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Aug 2023 22:36:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E47B771232
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Aug 2023 22:52:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbjHEUgP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Aug 2023 16:36:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39842 "EHLO
+        id S230042AbjHEUwa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Aug 2023 16:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjHEUgP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Aug 2023 16:36:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1A0127;
-        Sat,  5 Aug 2023 13:36:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ABC1460EF3;
-        Sat,  5 Aug 2023 20:36:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8402EC433C7;
-        Sat,  5 Aug 2023 20:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691267773;
-        bh=HV9N1662vFNg45/injmUeZzoXqqRaYKc6xS67ObhrCE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T8b37KpHrfdrHcPTjbp9eehNf/qy/zQ094uspwpe3knxbV/SAwFyOO+iL6poGeRt5
-         mmN2THgQL8TANiBbUZTIqmUiv0S7zyq3SAoSc1CzwM7lN991SYLqic8rCimc7bWwRI
-         Vu7ZXvkbMfRfxqG+wpJINgbL+2KpSYU+uMd2Pk44r5RPsQzRq94XsuoRFZfLcF3djQ
-         F5MggUSz0nkmmAejuORlF5VcmTYFbpwgyjqW04dzJAO9QAMzfqz5myArTvUzYEHRfd
-         0AdEI801aM4xbN8FAEhz4+QIYaCxO1e4lYxIngw3YRdHEiuSSaRBpD/K+KyiSmsD0z
-         8QDHViYep2Zwg==
-Date:   Sat, 5 Aug 2023 22:36:10 +0200
-From:   Andi Shyti <andi.shyti@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        with ESMTP id S229906AbjHEUw3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Aug 2023 16:52:29 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E452273B
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Aug 2023 13:52:27 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3fe24dd8898so29643005e9.2
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Aug 2023 13:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691268746; x=1691873546;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yMZ57FK/F5HfkVLTGQC4S3eZbwmC8Kg8tkKbLHOwgJU=;
+        b=fQ7k4sBnsoIVWX6Rccv2pmzsDjUrD/hEX4hi511Qfd3ayuvEJSt89N1Cx89fNbVVIP
+         yswyuL/YaHHd+5EHc7en9iiCw4R863j9HG3ZwIp0vRJTgdr0RzeoS7Fg890uvNHJjWHl
+         G7Y84XNGZymtnnJcnUqWYYCgVcjcGnQOqQJ8WBkFcenFclZ7AxkEZjMvoFYLXO3BX4XH
+         1rlSUhq+PNdVtF0LcmqlnsfeDU2GgwEodBbsT00V9yNcNjMcfgjbt1QAqMEOJ8Q8r5Mp
+         GknRHJlbEAZOh4DzXjyo95/PqocXP0v4EkrYDjPP2Rm5vcpEmhPR+ibwzGbdN8KNeQBE
+         4zMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691268746; x=1691873546;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yMZ57FK/F5HfkVLTGQC4S3eZbwmC8Kg8tkKbLHOwgJU=;
+        b=KNeQU1e9t+lRlRgO/ACIU36pFDPz17xPakwntQ1sVRqg9Bxj87trHlbCunW6frnX5x
+         g8C/zjCk6qtBcgscpswJQkFYciZHmbj54DKepSJPB7pEvfXH7VDD7VsKfQGt+xvIZlz4
+         84oICOlOUs2L4oi6Kg9kXEEDBZ3Mt/8YKSKU58tDL+P3Ryr1mV2KvpasCnBV/IH+fX3i
+         5Pt4z/NVMB7PHoimKpOdi0Gt+fgvi3iWHEJ/JYe810tZDSV7b1umqk1V5/jWVIQHcMvC
+         ST5R8xxzFnzWl7l9jNEy+ulJ5Xccl3MSNdVs2bXzBwkAKlagWflFgRBJ7ib6hLAjT1X4
+         r5rg==
+X-Gm-Message-State: AOJu0YyKYmWG477nQuXXdMRZ1P68By60PiYanmkR4mlgCuVUfW3WNrXl
+        RBkTmjVUhgqyFmfOGQ9X5JiDFg==
+X-Google-Smtp-Source: AGHT+IGlrHt+sxR7RnSvkI2RJnZZ+LB3aM9gw03DbVGz3kyVX5ECy+z4K5V6A9++7KFbnt6QeCDAsA==
+X-Received: by 2002:a05:600c:3794:b0:3fe:2102:8085 with SMTP id o20-20020a05600c379400b003fe21028085mr3690414wmr.8.1691268745782;
+        Sat, 05 Aug 2023 13:52:25 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.245])
+        by smtp.gmail.com with ESMTPSA id l12-20020adff48c000000b0030ada01ca78sm5946071wro.10.2023.08.05.13.52.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Aug 2023 13:52:25 -0700 (PDT)
+Message-ID: <609d5c1d-4ef7-22d5-d951-f32dbe410906@linaro.org>
+Date:   Sat, 5 Aug 2023 22:52:22 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 3/8] dt-bindings: clock: Add Marvell PXA1908 clock
+ bindings
+Content-Language: en-US
+To:     =?UTF-8?Q?Duje_Mihanovi=c4=87?= <duje.mihanovic@skole.hr>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>, Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@amd.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-mips@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
-        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for
- drivers
-Message-ID: <20230805203610.jl7eea2lasmg2as2@intel.intel>
-References: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de>
- <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        afaerber@suse.de
+References: <20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr>
+ <20230804-pxa1908-lkml-v3-3-8e48fca37099@skole.hr>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230804-pxa1908-lkml-v3-3-8e48fca37099@skole.hr>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -135,25 +95,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Uwe,
-
-On Fri, Aug 04, 2023 at 04:27:06PM +0200, Uwe Kleine-König wrote:
-> Instead of requiring each driver to care for assigning the owner member
-> of struct pwm_ops, handle that implicitly using a macro. Note that the
-> owner member has to be moved to struct pwm_chip, as the ops structure
-> usually lives in read-only memory and so cannot be modified.
+On 04/08/2023 15:32, Duje MihanoviÄ‡ wrote:
+> Add dt bindings and documentation for the Marvell PXA1908 clock
+> controller.
 > 
-> The upside is that new lowlevel drivers cannot forget the assignment and
-> save one line each. The pwm-crc driver didn't assign .owner, that's not
-> a problem in practise though as the driver cannot be compiled as a
+> Signed-off-by: Duje MihanoviÄ‡ <duje.mihanovic@skole.hr>
 
-/practise/practice/
 
-> module.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> +++ b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
 
-Acked-by: Andi Shyti <andi.shyti@kernel.org> 
+...
 
-Thanks,
-Andi
+> +examples:
+> +  # APMU block:
+> +  - |
+> +    clock-controller@d4282800 {
+> +      compatible = "marvell,pxa1908-apmu";
+> +      reg = <0xd4282800 0x400>;
+> +      #clock-cells = <1>;
+> +    };
+> diff --git a/include/dt-bindings/clock/marvell,pxa1908.h b/include/dt-bindings/clock/marvell,pxa1908.h
+> new file mode 100644
+> index 000000000000..1fff3bcefd21
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/marvell,pxa1908.h
+> @@ -0,0 +1,92 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause */
+
+Any particular reason to use different BSD-3 than bindings? Not easy to
+spot this difference...
+
+Best regards,
+Krzysztof
+
