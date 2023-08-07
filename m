@@ -2,73 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55FA5772601
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 15:39:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAB1A77265B
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 15:45:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233639AbjHGNjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Aug 2023 09:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
+        id S231440AbjHGNpr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Aug 2023 09:45:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234254AbjHGNjM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 09:39:12 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02BAD10FE
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Aug 2023 06:39:10 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d075a831636so4943878276.3
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Aug 2023 06:39:10 -0700 (PDT)
+        with ESMTP id S233569AbjHGNpd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 09:45:33 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3E22719
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Aug 2023 06:45:04 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-583a8596e2aso41624317b3.1
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Aug 2023 06:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691415550; x=1692020350;
+        d=linaro.org; s=google; t=1691415901; x=1692020701;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MRDT9DXBzQlTjPrZAhEg59Olbt5sHylTIeFizzconrE=;
-        b=WWj1VMRsFjhJYS9j5EcWQz80Rwb9c4CFPW+X/veRPzcjP6bQYlI8+IBKtLrZRyXcKn
-         2VOWgfeqxdR2sYk2hA5qDR0AiQezwK0Vg7Ati5GcgJsNYyqlBfBcXQbJ8cHAXfvt0Mti
-         +YwEdYUjsc7cIaIZIiYqsS/Jge/eQi/RRiolkpH2NQHjg7dON76ErQNRE0CR3wqgRqYT
-         Eui8biZAxl4u7cVjdgZX/qsRojDmDkLUqW1cr7oZWi3Fy8eyaSrgrW5IXIGTZsv8ZywA
-         L1HsLMNAXaiKhb5puVZgh3fAWXKY0swJuJeerQB8ZF+S9UsYVA0hqeu27OLKsOLBS//3
-         N+DA==
+        bh=kMUoL4hnGiYD5mlozK9nMbQkuwFZ1466myKRpxECfj8=;
+        b=c2hxnScmXyOJNNEwoKxei8znJecQS2wtI3TXpVfWBeONeEnG4vwx3hpcJpNe2AayPO
+         0AMVZyb/lJSbUeTXtOm1Pe21cRqHs/VtGvkHi8MJvRMFFglgz/80jxQAaCUUe/phOgl+
+         Qpm4Uk9oDmcOpnq7mI7TqxH1yYgAW7W51OpmZaeTlrdOKGOZyz/gild0J8SldxlJ8Vm+
+         tWG35Hf6tHY/F2mjV+O+qDQgjBmuR6DtLD7/o7uSnQ2NONh4YbEdfL1P+dwcdwJJnrKp
+         JkELJca+1W2nV5dANEMwy59TbI68sZY5P+DSD2wmKU1l6My7Ng/g6H72CJmoUzsZZFWh
+         6YCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691415550; x=1692020350;
+        d=1e100.net; s=20221208; t=1691415901; x=1692020701;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MRDT9DXBzQlTjPrZAhEg59Olbt5sHylTIeFizzconrE=;
-        b=Xr2YPSUs8Q0JZw6an+N2JfKK+x+8GIYmsERTEKRnwFXh/0ChOsKQNVWV5pU3IiW9X4
-         5Ohbclz/K5p7M3SNWfw3katQrCCEOoZejw0zJU4NC2WRyuzMuqba7iZWKG+sYY97QWko
-         ftJCZ9iGihBAKbg6sAOdT7ydypX2R0QCbrhIi6kfZ5xc7b0SU3hnUv0WgHSDyTRvkYc/
-         WTf2CbbyN2Lsqwj8siPcZ9JrOt5HXU/WdqMixqi8slTgg1qxjeugArLmTTK/Fmfb8sj/
-         Nv/VLHXabDAsBEN2Lgu9V/lcqlvBgc9PseSvKfF9ZNqDPzaJJEJI166GTafY1iO+ZWka
-         hdsw==
-X-Gm-Message-State: AOJu0YyXzr4zetXGDJszpTHhUKYrkZlu5On7K4TmFEET4E2Ym8VWP/Ff
-        Wk+AdoXNRDjaWZIi20XzGRvevNabPPiRa2pE0w1wqQ==
-X-Google-Smtp-Source: AGHT+IEgUqiyfEGaIlKKBGfAfYasMwxTYrCOJerBNORMgootu9kvLZhnNC9y1WNIMYu+b/QBI2QTxv5w159iXcMsfwM=
-X-Received: by 2002:a05:6902:1024:b0:d4d:3551:15d0 with SMTP id
- x4-20020a056902102400b00d4d355115d0mr5414866ybt.61.1691415549840; Mon, 07 Aug
- 2023 06:39:09 -0700 (PDT)
+        bh=kMUoL4hnGiYD5mlozK9nMbQkuwFZ1466myKRpxECfj8=;
+        b=ONa2RWh46aL4A9WiworEVJMtgXfp98SeD467ktmN8WYTlcv+y+mQuLlJ3GNGgzbrKr
+         /wBn9fHFQkkvUcZ5XffT3uD6jrpX5xTCE/IlegAr0jUuQs5sNgDVtWBAhXV8vchVm5RT
+         of3PnBe85g0bRRHYERia7pVEb0n47h7z6z9/2BMsMPzYZyzrOr+wW/uEoDddNuUUfQoe
+         ABDzAlPsOCtb4qYrQ/cnqQc3JdSMwDBXecoC/qsKPxmqxDIlSrO9uqV21QATB5r69Tvj
+         B9bcpf5pdTVXdYrQkLQE7S8xU00N9xDyIC9yMM5OJEwVexLrjCIDbUIUtNrzttSGeCB7
+         vAyw==
+X-Gm-Message-State: AOJu0YzMVu7NTyHp8mVIvosJVevI/iGiEZXNua6c3mC/ZQF+XSNgyIvz
+        HAssJSfI8Qiql31lmWeAi7fIfmQQTThvBoUHrXdJMg==
+X-Google-Smtp-Source: AGHT+IHx1ajT83sKAnSY+O0ambUwFc4zjHyYjGAv1pUY5pxl3rdlLFD2APpbEZ6FIFnRNRDlCKdb6Khb5uVyVETW/uM=
+X-Received: by 2002:a25:d70a:0:b0:d4c:a288:ef4 with SMTP id
+ o10-20020a25d70a000000b00d4ca2880ef4mr4049416ybg.44.1691415901373; Mon, 07
+ Aug 2023 06:45:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230721073214.1876417-1-huqiang.qin@amlogic.com>
- <20230721073214.1876417-4-huqiang.qin@amlogic.com> <7hcz0ei9r4.fsf@baylibre.com>
- <9da24c47-341b-1581-0043-a6c1cdce462d@amlogic.com> <7hh6pnhn45.fsf@baylibre.com>
- <35713689-2b28-192c-5004-8a0ba6b9308b@amlogic.com>
-In-Reply-To: <35713689-2b28-192c-5004-8a0ba6b9308b@amlogic.com>
+References: <20230630-topic-oxnas-upstream-remove-v2-0-fb6ab3dea87c@linaro.org>
+ <20230630-topic-oxnas-upstream-remove-v2-9-fb6ab3dea87c@linaro.org> <a9074f2d-ffa2-477f-e3b5-2c7d213ec72c@linaro.org>
+In-Reply-To: <a9074f2d-ffa2-477f-e3b5-2c7d213ec72c@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 7 Aug 2023 15:38:58 +0200
-Message-ID: <CACRpkdaY-RNjiibVX0sZpxG39mqZGP-+nUg1sCBhF_N=4D8aNQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: Replace the IRQ number with the IRQID
- macro definition
-To:     Huqiang Qin <huqiang.qin@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        neil.armstrong@linaro.org, jbrunet@baylibre.com,
-        martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
+Date:   Mon, 7 Aug 2023 15:44:50 +0200
+Message-ID: <CACRpkdbMy=JWAgybtimQXJRQ7jsVZ1g-DfqjryjP31JT9f=Prg@mail.gmail.com>
+Subject: Re: [PATCH v2 09/15] pinctrl: pinctrl-oxnas: remove obsolete pinctrl driver
+To:     neil.armstrong@linaro.org
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-oxnas@groups.io,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Golle <daniel@makrotopia.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,14 +96,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 1, 2023 at 3:25=E2=80=AFPM Huqiang Qin <huqiang.qin@amlogic.com=
-> wrote:
+On Mon, Jul 31, 2023 at 4:44=E2=80=AFPM Neil Armstrong
+<neil.armstrong@linaro.org> wrote:
+> On 30/06/2023 18:58, Neil Armstrong wrote:
+> > Due to lack of maintenance and stall of development for a few years now=
+,
+> > and since no new features will ever be added upstream, remove support
+> > for OX810 and OX820 pinctrl & gpio.
+>
+> Do you plan to take patches 9, 10 & 11 or should I funnel them via a fina=
+l SoC PR ?
 
-> Thanks for the suggestion, I'll add it to the cover letter for the patch =
-v3.
-> (patch v2 was sent before your reply)
-
-No need to send a v3, I just applied v2 to the pinctrl tree.
+I tried to apply them to the pinctrl tree but that fails ...
+Could you rebase patches 9,10,11 onto my "devel" branch
+and send separately? Then I will apply them right away.
 
 Yours,
 Linus Walleij
