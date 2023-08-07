@@ -2,62 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C20487725F4
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 15:38:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55FA5772601
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 15:39:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbjHGNiX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Aug 2023 09:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
+        id S233639AbjHGNjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Aug 2023 09:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233749AbjHGNh4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 09:37:56 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C781AD
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Aug 2023 06:37:55 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-d465b3d50efso1648116276.1
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Aug 2023 06:37:55 -0700 (PDT)
+        with ESMTP id S234254AbjHGNjM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 09:39:12 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02BAD10FE
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Aug 2023 06:39:10 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d075a831636so4943878276.3
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Aug 2023 06:39:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691415474; x=1692020274;
+        d=linaro.org; s=google; t=1691415550; x=1692020350;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=whejdASkJGYmLZxS+FlOqF2f/J1Rdm5EDe6V5ST3LuQ=;
-        b=gZ+36WDDT3vFYnLcSlRKa/NuShCqLSSyXuRIKuBCcK2PB75SwhpLFE5DGSxZtR3+GQ
-         MWZ9PJtesN4mNZjrT3daZc6cH+e6gL+BYTJKIjTCg4n1uJf1Qe/y/4FDjHr19M2fiDXw
-         btkW4xbEeiAXJuuLmeNCwl4FV89XQRUsnGARA2nH2TkNpUwOFAWQXPzuZIM7YNjPS0Sp
-         9+apZXATVERqCRT4T+sJcS7UArh2Kzsq8gcplqQxBivztk9N5AvMLC5hFea2wA6Q4vXO
-         dHK5qEpjuCPIjMHzBqgUoiYsPkyBk2sf5uPz6/tSmJkg8yqAK7fkhNXcjLPZhlVx/lFh
-         UUXA==
+        bh=MRDT9DXBzQlTjPrZAhEg59Olbt5sHylTIeFizzconrE=;
+        b=WWj1VMRsFjhJYS9j5EcWQz80Rwb9c4CFPW+X/veRPzcjP6bQYlI8+IBKtLrZRyXcKn
+         2VOWgfeqxdR2sYk2hA5qDR0AiQezwK0Vg7Ati5GcgJsNYyqlBfBcXQbJ8cHAXfvt0Mti
+         +YwEdYUjsc7cIaIZIiYqsS/Jge/eQi/RRiolkpH2NQHjg7dON76ErQNRE0CR3wqgRqYT
+         Eui8biZAxl4u7cVjdgZX/qsRojDmDkLUqW1cr7oZWi3Fy8eyaSrgrW5IXIGTZsv8ZywA
+         L1HsLMNAXaiKhb5puVZgh3fAWXKY0swJuJeerQB8ZF+S9UsYVA0hqeu27OLKsOLBS//3
+         N+DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691415474; x=1692020274;
+        d=1e100.net; s=20221208; t=1691415550; x=1692020350;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=whejdASkJGYmLZxS+FlOqF2f/J1Rdm5EDe6V5ST3LuQ=;
-        b=IRzD6xmbXe4itkjQq5F6vS0ULBCHefrE1Z4htUGucrbhDaBRuCr5WAt0PIWO9dkzPj
-         gvIs53DDQRdJH9O6nq9ZSq0x6aKTu00IhI0KWT6iMOyITtWw+xX1H4uBXSU5Iu6C0n6X
-         5+FP8qO92WBJWAUPKLdapFV3WXhYxQB2wpGSm6IryZGJegjhnB9hpuNBESKz+Nw5+tnR
-         TIytvFiOqSHzhXk/oV9UdmPKCzBJ7qzDd3vlDc0rGyznlipyP/y/Sg8/W+4XGfqiGbwh
-         Y9Q0ZJf+EcJEpgqMsrqzQ0ANg7UparUJHCmtnIA7S3Kl5bEoBzI+cTbY2v0VYfAKx3qn
-         20hA==
-X-Gm-Message-State: AOJu0Yzp+66n9rO5dz9zBU4lyzHubvBobq5zC/k357KGOeLP1whzAYzq
-        bHWhXOB5NeA5R8gQD3m0M5rf4hOpSkOh5qZwloD3Qg==
-X-Google-Smtp-Source: AGHT+IF8qFOkXRjcLVqPSJs0Dcjy+XexfZt9JpoPqlbfN68UupareNNAKBdj08K5cz1GN8sYL8dyB/+6maviIRw0lVg=
-X-Received: by 2002:a25:4256:0:b0:d0a:fa7f:2fbf with SMTP id
- p83-20020a254256000000b00d0afa7f2fbfmr7826923yba.48.1691415474298; Mon, 07
- Aug 2023 06:37:54 -0700 (PDT)
+        bh=MRDT9DXBzQlTjPrZAhEg59Olbt5sHylTIeFizzconrE=;
+        b=Xr2YPSUs8Q0JZw6an+N2JfKK+x+8GIYmsERTEKRnwFXh/0ChOsKQNVWV5pU3IiW9X4
+         5Ohbclz/K5p7M3SNWfw3katQrCCEOoZejw0zJU4NC2WRyuzMuqba7iZWKG+sYY97QWko
+         ftJCZ9iGihBAKbg6sAOdT7ydypX2R0QCbrhIi6kfZ5xc7b0SU3hnUv0WgHSDyTRvkYc/
+         WTf2CbbyN2Lsqwj8siPcZ9JrOt5HXU/WdqMixqi8slTgg1qxjeugArLmTTK/Fmfb8sj/
+         Nv/VLHXabDAsBEN2Lgu9V/lcqlvBgc9PseSvKfF9ZNqDPzaJJEJI166GTafY1iO+ZWka
+         hdsw==
+X-Gm-Message-State: AOJu0YyXzr4zetXGDJszpTHhUKYrkZlu5On7K4TmFEET4E2Ym8VWP/Ff
+        Wk+AdoXNRDjaWZIi20XzGRvevNabPPiRa2pE0w1wqQ==
+X-Google-Smtp-Source: AGHT+IEgUqiyfEGaIlKKBGfAfYasMwxTYrCOJerBNORMgootu9kvLZhnNC9y1WNIMYu+b/QBI2QTxv5w159iXcMsfwM=
+X-Received: by 2002:a05:6902:1024:b0:d4d:3551:15d0 with SMTP id
+ x4-20020a056902102400b00d4d355115d0mr5414866ybt.61.1691415549840; Mon, 07 Aug
+ 2023 06:39:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230724060108.1403662-1-huqiang.qin@amlogic.com>
-In-Reply-To: <20230724060108.1403662-1-huqiang.qin@amlogic.com>
+References: <20230721073214.1876417-1-huqiang.qin@amlogic.com>
+ <20230721073214.1876417-4-huqiang.qin@amlogic.com> <7hcz0ei9r4.fsf@baylibre.com>
+ <9da24c47-341b-1581-0043-a6c1cdce462d@amlogic.com> <7hh6pnhn45.fsf@baylibre.com>
+ <35713689-2b28-192c-5004-8a0ba6b9308b@amlogic.com>
+In-Reply-To: <35713689-2b28-192c-5004-8a0ba6b9308b@amlogic.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 7 Aug 2023 15:37:43 +0200
-Message-ID: <CACRpkdafAWgt9A8km1zLZF9UawXkdqBOEVnMHiRjaF=2SeyhgA@mail.gmail.com>
-Subject: Re: [PATCH V2 0/3] Add binding header file for GPIO interrupt of
- Amlogic Meson-G12A
+Date:   Mon, 7 Aug 2023 15:38:58 +0200
+Message-ID: <CACRpkdaY-RNjiibVX0sZpxG39mqZGP-+nUg1sCBhF_N=4D8aNQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: dts: Replace the IRQ number with the IRQID
+ macro definition
 To:     Huqiang Qin <huqiang.qin@amlogic.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, neil.armstrong@linaro.org,
-        khilman@baylibre.com, jbrunet@baylibre.com,
+Cc:     Kevin Hilman <khilman@baylibre.com>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        neil.armstrong@linaro.org, jbrunet@baylibre.com,
         martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -74,30 +77,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 24, 2023 at 8:02=E2=80=AFAM Huqiang Qin <huqiang.qin@amlogic.co=
-m> wrote:
+On Tue, Aug 1, 2023 at 3:25=E2=80=AFPM Huqiang Qin <huqiang.qin@amlogic.com=
+> wrote:
 
-> After adding this binding header file, you can intuitively find
-> the interrupt number corresponding to each GPIO, and apply it
-> in the format of IRQID_XXX where it needs to be used.
-(...)
+> Thanks for the suggestion, I'll add it to the cover letter for the patch =
+v3.
+> (patch v2 was sent before your reply)
 
-> Huqiang Qin (3):
->   dt-bindings: interrupt-controller: Add header file for Amlogic
->     Meson-G12A SoCs
->   pinctrl: Replace the IRQ number in the driver with the IRQID macro
->     definition
->   arm64: dts: Replace the IRQ number with the IRQID macro definition
-
-Neil wrote:
-> What's the best way to apply this patchset ?
-
-I just applied all three to the pin control tree.
-
-I could have applied just the two first and then offered an
-immutable branch. But eh... too much work for too low risk.
-Better to just apply it and hope all works out. If it explodes
-I just back out and figure something like the above.
+No need to send a v3, I just applied v2 to the pinctrl tree.
 
 Yours,
 Linus Walleij
