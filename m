@@ -2,187 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E133B773143
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 23:30:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D11AF773176
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 23:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbjHGVai (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Aug 2023 17:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56266 "EHLO
+        id S229617AbjHGVqQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Aug 2023 17:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbjHGVah (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 17:30:37 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A80E7F
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Aug 2023 14:30:36 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-686b9920362so3291340b3a.1
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Aug 2023 14:30:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1691443836; x=1692048636;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uAYkRIRYZIluKvtE9wyso7bz3NBA4R/7X/MIc1OEt6A=;
-        b=IpjoIQlrO9zAPquMVpWPu3geNpkgzVwiHr6LsNgjEHGuVQLAbCcMqg/FAHW8o962Lw
-         AO5N3CZTMMudZZWnazZz3Oao3VX+0/KlfPWU5pdMI+yZPaRa+HpNsFEDEbaSUb+pWkqq
-         Hv1E0FQMKz1KPcUm0x1kpP+s1RbGFdrfWbSvo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691443836; x=1692048636;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uAYkRIRYZIluKvtE9wyso7bz3NBA4R/7X/MIc1OEt6A=;
-        b=Gk3taP8wZLO1UOgxYhMitYQRE5Qg/PyCkbbb+CcWVDTkpbixKA0t0fZUZKAMscHCD5
-         vpeq5r0xDuoeTFEfKdIGGWZ6nwDRDDbczMLM2AOWuqSdBsM4tGCDz1tDVwD2IQpHWmbW
-         M0EFb3iCguym514OS55Fys4yVS2O/PNeM03+iidQxOwEfwA6hOToOCat+HE08y14GiVI
-         qo6ZnzzVnL8Twyg5Hopwj3utmJyqu6HRgYE+L2SHxDr1jHcxDgXMnHgMVYsdOMqLpRel
-         FWg+XLfR+qKoEURleq8d7jSdT9WvG6xJAjF8k9NqY6otZ30vHFadUwAnibb/+3aVPoKq
-         vDiQ==
-X-Gm-Message-State: AOJu0Yz8u5Yso8GZhJI/jmdrzoU7xKnEsnWO2gugUOYr+AI3LnxVxpNW
-        1Py2nPtaFpceesvgGfHdhAN+Qw==
-X-Google-Smtp-Source: AGHT+IEoqUeOi1Lnwc6XDO9laauwqASSeutSQn6oLmeZyH7g2a+JK7+y6n7HMT2GMjO00VGcdR59fA==
-X-Received: by 2002:a05:6a20:72ac:b0:13b:a4fd:3017 with SMTP id o44-20020a056a2072ac00b0013ba4fd3017mr10732055pzk.46.1691443836380;
-        Mon, 07 Aug 2023 14:30:36 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id fm13-20020a056a002f8d00b0064fd4a6b306sm6571822pfb.76.2023.08.07.14.30.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Aug 2023 14:30:35 -0700 (PDT)
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM IPROC ARM
-        ARCHITECTURE)
-Subject: [PATCH 2/2] pinctrl: nsp-gpio:  Silence probe deferral messages
-Date:   Mon,  7 Aug 2023 14:30:22 -0700
-Message-Id: <20230807213022.1862903-3-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230807213022.1862903-1-florian.fainelli@broadcom.com>
-References: <20230807213022.1862903-1-florian.fainelli@broadcom.com>
+        with ESMTP id S229509AbjHGVqP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 17:46:15 -0400
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AD2410CF;
+        Mon,  7 Aug 2023 14:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+        ; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
+        :From:subject:date:message-id:reply-to;
+        bh=fuPTYKnBJKOXKnQ4H+uGsiph8wLAETrQseBXpkUnoJY=; b=hcSqiDTXaSkO3RD/mkjqcwBXf3
+        aYQ5iGy/MQCxSUMuepXIQh3cVQ8gzuvA75p6Dv5sYULdfOPHrP5JCUEGTdYjF31u0+t+tbnVvJB3N
+        t4XfBwB8zrSE7RosWi7eBXPNDN2KdmVGpSovzsm3Zv3ILEtIk+zkRJpf5TECMJrPe9U8=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:47088 helo=localhost.localdomain)
+        by mail.hugovil.com with esmtpa (Exim 4.92)
+        (envelope-from <hugo@hugovil.com>)
+        id 1qT839-0000hD-Jp; Mon, 07 Aug 2023 17:46:07 -0400
+From:   Hugo Villeneuve <hugo@hugovil.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        jirislaby@kernel.org, jringle@gridpoint.com,
+        tomasz.mon@camlingroup.com, l.perczak@camlintechnologies.com
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hugo@hugovil.com,
+        linux-gpio@vger.kernel.org,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Date:   Mon,  7 Aug 2023 17:45:50 -0400
+Message-Id: <20230807214556.540627-1-hugo@hugovil.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000000b162a06025bf539"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH v10 0/6] serial: sc16is7xx: fix GPIO regression and rs485 improvements
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---0000000000000b162a06025bf539
-Content-Transfer-Encoding: 8bit
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-We can have gpiochip_add_data() return -EPROBE_DEFER which will make
-us produce the "unable to add GPIO chip" message which is confusing.
-Use dev_err_probe() to silence probe deferral messages.
+Hello,
+this patch series mainly fixes a GPIO regression and improve RS485 flags and
+properties detection from DT.
 
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It now also includes various small fixes and improvements that were previously
+sent as separate patches, but that made testing everything difficult.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-index 5045a7e57f1d..e32901a92fcf 100644
---- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-@@ -687,7 +687,7 @@ static int nsp_gpio_probe(struct platform_device *pdev)
- 
- 	ret = devm_gpiochip_add_data(dev, gc, chip);
- 	if (ret < 0) {
--		dev_err(dev, "unable to add GPIO chip\n");
-+		dev_err_probe(dev, ret, "unable to add GPIO chip\n");
- 		return ret;
- 	}
- 
+Patch 1 fixes an issue with init of first port during probing.
+
+Patch 2 fixes an incorrect label in sc16is7xx_probe() cleanup code.
+
+Patches 3 and 4 fix a GPIO regression by (re)allowing to choose GPIO function
+for GPIO pins shared with modem status lines.
+
+Patch 5 fixes a bug with the output value when first setting the GPIO direction.
+
+Patch 6 allows to add a missing fetature to read common rs485 device-tree flags
+and properties.
+
+Boards that need to have GPIOS configured as modem control lines
+should add that property to their device tree. Here is a list of
+boards using the sc16is7xx driver in their device tree and that may
+need to be modified:
+
+    arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+    mips/boot/dts/ingenic/cu1830-neo.dts
+    mips/boot/dts/ingenic/cu1000-neo.dts
+
+fsl-ls1012a-frdm board uses a sc16is740, which has no GPIOs or modem control
+lines, so no DT changes are required.
+
+For the two Ingenic boards cu1xxx, they use a SC16IS752, which has shared modem
+control lines and GPIOs. No schematics or block diagrams could be found to
+understand if they need GPIOs or modem control lines. But considering that these
+platforms were in use before the patch to add the modem control lines was added,
+then they probably use these shared lines as GPIOs or nothing, so no DT changes
+would be required.
+
+The author of the patch to add modem control lines tested it on a board that
+was used only internally.
+
+I have tested the changes on a custom board with two SC16IS752 DUART using a
+Variscite IMX8MN NANO SOM.
+
+Thank you.
+
+Link: [v0] https://lkml.org/lkml/2023/5/15/923
+      [v1] https://lkml.org/lkml/2023/5/17/967
+      [v1] https://lkml.org/lkml/2023/5/17/777
+      [v1] https://lkml.org/lkml/2023/5/17/780
+      [v1] https://lkml.org/lkml/2023/5/17/785
+      [v1] https://lkml.org/lkml/2023/5/17/1311
+      [v2] https://lkml.org/lkml/2023/5/18/516
+      [v3] https://lkml.org/lkml/2023/5/25/7
+      [v4] https://lkml.org/lkml/2023/5/29/656
+      [v5] https://lkml.org/lkml/2023/6/1/1046
+      [v6] https://lkml.org/lkml/2023/6/1/1328
+      [v7] https://lkml.org/lkml/2023/6/2/861
+      [v8] https://lkml.org/lkml/2023/6/7/813
+           https://lkml.org/lkml/2023/7/21/1055
+      [v9] https://lkml.org/lkml/2023/7/25/914
+
+Changes for V1:
+- Abandonned the approach of trying to fix GPIO regression by reverting the
+  original patches, because it created more problems than it solved (breaking
+  existing users). Instead, add DT property to fix the GPIO behavior.
+
+Changes for V2:
+- Integrate multiple patches into this serie.
+
+Changes for V3:
+- Integrated all patches into single serie to facilitate debugging and tests.
+- Reduce number of exported GPIOs depending on new property
+  nxp,modem-control-line-ports
+- Added additional example in DT bindings
+
+Changes for V4:
+- Increase reset post delay to relax scheduler.
+- Put comments patches at the end.
+- Remove Fixes tag for patch "mark IOCONTROL register as volatile".
+- Improve commit messages after reviews.
+- Fix coding style issues after reviews.
+- Change GPIO registration to always register the maximum number of GPIOs
+  supported by the chip, but maks-out GPIOs declared as modem control lines.
+- Add patch to refactor GPIO registration.
+- Remove patch "serial: sc16is7xx: fix syntax error in comments".
+- Remove patch "add dump registers function"
+
+Changes for V5:
+- Change patch order to facilitate stable backport(s).
+- Change duplicate device addresses in DT binding examples.
+- Use GENMASK for bit masks.
+- Replace of_property_for_each_u32() with device_property_read_u32_array
+- Add "Cc: stable..." tags
+
+Changes for V6:
+- Fix compilation bug introduced by patch 3
+
+Changes for V7:
+- Minor changes and coding style fixes after review for
+  patch 5 "fix regression with GPIO configuration".
+
+Changes for V8:
+- Move mctrl_mask to "struct sc16is7xx_port" to avoid compiler warning when
+  CONFIG_GPIOLIB is undefined.
+- Add "struct device" member to "struct sc16is7xx_port", in order to avoid
+  passing a raw "struct device" to called functions from sc16is7xx_probe().
+- Add new patch "serial: sc16is7xx: remove obsolete out_thread label"
+
+Changes for V9:
+- Change DT property name in commit message and move some comments to cover
+  letter for patch "fix regression with GPIO configuration".
+- Add proper link to pre-v1 (v0) RFC patch.
+- Add changes log for V1 and V2 to this cover letter.
+
+Changes for V10:
+- Rebase on gregkh_tty/tty-next
+- Remove patch "mark IOCONTROL register as volatile" because an equivalent patch
+  is now present in gregkh_tty/tty-next tree:
+    https://lore.kernel.org/all/20230724034727.17335-1-hui.wang@canonical.com/
+- Remove kernel version prerequisites for "Cc: <stable@vger.kernel.org>" tags
+- Add source code comments for patch "fix broken port 0 uart init":
+- Remove confusing "Fixes" tag for patch "remove obsolete out_thread label"
+- Remove patch "improve comments about variants", which will be sent as a
+  separate patch
+- Remove patch "add post reset delay" which will be sent as a separate patch
+- Remove invalid "Cc: <stable@vger.kernel.org>" tags for patch
+  "fix regression with GPIO configuration"
+- Change commit log message for patch "add call to get rs485 DT flags and properties"
+- Merge patch "refactor GPIO controller registration" with
+  "fix regression with GPIO configuration"
+- Remove raw "struct device *" pointer added to "struct sc16is7xx_port".
+
+Hugo Villeneuve (6):
+  serial: sc16is7xx: fix broken port 0 uart init
+  serial: sc16is7xx: remove obsolete out_thread label
+  dt-bindings: sc16is7xx: Add property to change GPIO function
+  serial: sc16is7xx: fix regression with GPIO configuration
+  serial: sc16is7xx: fix bug when first setting GPIO direction
+  serial: sc16is7xx: add missing support for rs485 devicetree properties
+
+ .../bindings/serial/nxp,sc16is7xx.txt         |  46 +++++
+ drivers/tty/serial/sc16is7xx.c                | 166 ++++++++++++++----
+ 2 files changed, 174 insertions(+), 38 deletions(-)
+
+
+base-commit: 593135f09368dbddc0244b859a7c3befb97214e0
 -- 
-2.34.1
+2.30.2
 
-
---0000000000000b162a06025bf539
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIOJYOOqH5EiVDLTC
-Ni83TN6vireAM8A/ikLrn36Ix9WqMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTIzMDgwNzIxMzAzNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDcmn+fIbzNCxAgTb5y3/+O1iyO71CAXC9x
-7BZYZ2HddlYu/cGznE1bqiWOgyX/QpeYnqK6pUBUb2r4VJI0wDJefGYATH8E5ynac522hNqeoppH
-RR07kN3VcG1+RXu83UTYTssQ8PAtTTbLH7Sq29S2W4mwIy7IPAVL5syVVmM72b9G4G6Q+lozU2GC
-ywRAfDZDZ7cJOU1JO1vT9egS+kNHs4XyLzRjTw9rEsI7gftiehxyybbI8aYNwqT12nAgFeaoEddS
-fLxs4DoLwW9zwOp2nA9M4dPjB6ndwMYlhuL2TzNczJ3dW7vNgYGhxOx8dfjNr1V0i8IiS4aZluuz
-bSM6
---0000000000000b162a06025bf539--
