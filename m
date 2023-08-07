@@ -2,49 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDF2F77251C
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 15:10:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFEBE772541
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 15:17:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232332AbjHGNKK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Aug 2023 09:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
+        id S231871AbjHGNRs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Aug 2023 09:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231721AbjHGNKK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 09:10:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FEA410FE;
-        Mon,  7 Aug 2023 06:10:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 030F461A56;
-        Mon,  7 Aug 2023 13:10:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44A0C433C8;
-        Mon,  7 Aug 2023 13:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691413808;
-        bh=+ylZyoYYRfcm6fV2c5Chg3oeks3UOFVe6ienNx0Fhmw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ptPcngcyFrXPhfW+uAcklMgxyhnPVyuRFGiByyYxP0vv5fqTTBf1C+4ZecNjaXNCU
-         x5dexojsK7ip6GaiKDXtsaoPTYSzIcInPyoG7TA1F5LhXIZeJNLz4vhFA354hQ91bs
-         jlsfMHj4h4bMB1a/aQ3hV8/OzE/8wWOiZVToK/QLyt9vfOvmf665T9kjIbKegLgNdG
-         EZ4JdpqVL7wvyWODD+mDyu8mLQ22wCFOdQmTWgvbGeolnFdDe+TK/BROYHkQNEskI5
-         tUJXXtpYQAPIshCzIIkr5tAXQJJ/v2mXmUc9Kz2LqqQ5og6ku6/LbuVEVnS+gnoIru
-         0Ov9IDZ3B4O+w==
-Date:   Mon, 7 Aug 2023 14:09:58 +0100
-From:   Mark Brown <broonie@kernel.org>
+        with ESMTP id S231332AbjHGNRs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 09:17:48 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D431B3;
+        Mon,  7 Aug 2023 06:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+        Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+        In-Reply-To:References; bh=FX+zdCyQC4fqrwzCs9Z9NLrYt/aKv0Rj29Ql81i5Bfg=; b=AH
+        ViUK/ANA+r75YY8/oJVy5vwqLaEm/CyAxID8ZcWNHMyFnu8LOYfr5CkQTdB0k85TnOTXTMLne1w4M
+        T9oaWzt87Rtwm1CAiBG9/2w5u9/7hpGa1sIzLjaUvvEFw23YxbG7FW9htEQ4pYmfh88sLA0GCcJIU
+        ETGs1tdyjkNQhnA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1qT06h-003JzP-3p; Mon, 07 Aug 2023 15:17:11 +0200
+Date:   Mon, 7 Aug 2023 15:17:11 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Herve Codina <herve.codina@bootlin.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Paolo Abeni <pabeni@redhat.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
         Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
         Shengjiu Wang <shengjiu.wang@gmail.com>,
@@ -59,59 +54,41 @@ Cc:     Herve Codina <herve.codina@bootlin.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Subject: Re: [PATCH v2 24/28] pinctrl: Add support for the Lantic PEF2256
  pinmux
-Message-ID: <8f80edf2-c93d-416f-bcab-f7be3badf64a@sirena.org.uk>
+Message-ID: <eb99e739-6578-4aee-a0f4-7a0c5e5e81ef@lunn.ch>
 References: <20230726150225.483464-1-herve.codina@bootlin.com>
  <20230726150225.483464-25-herve.codina@bootlin.com>
  <CACRpkdYXCQRd3ZXNGHwMaQYiJc7tGtAJnBaSh5O-8ruDAJVdiA@mail.gmail.com>
+ <CACRpkdZebvrdGXooLXmgXhUcgdgxBczJBpdEoEyJDR39abaAqQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jTPmHke3dW8il9IP"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYXCQRd3ZXNGHwMaQYiJc7tGtAJnBaSh5O-8ruDAJVdiA@mail.gmail.com>
-X-Cookie: idleness, n.:
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZebvrdGXooLXmgXhUcgdgxBczJBpdEoEyJDR39abaAqQ@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Aug 07, 2023 at 03:06:42PM +0200, Linus Walleij wrote:
+> On Mon, Aug 7, 2023 at 3:05 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> 
+> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> >
+> > So it is a bridge chip? Please use that terminology since Linux
+> > DRM often talks about bridges.
+> 
+> Replying to self: no it's not a bridge, it's a WAN thingy.
+> 
+> So perhaps write that this is a WAN interface adapter chip.
 
---jTPmHke3dW8il9IP
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Linus
 
-On Mon, Aug 07, 2023 at 03:05:15PM +0200, Linus Walleij wrote:
-> On Wed, Jul 26, 2023 at 5:04=E2=80=AFPM Herve Codina <herve.codina@bootli=
-n.com> wrote:
+In the E1/T1/J1 world, framer is a well understood concept. Maybe the
+text needs a bit more background information to explain what this is
+to somebody who does not have an old school telecoms background.
 
-> > +#include "linux/bitfield.h"
-
-> Really? I don't think there is such a file there.
-
-> Do you mean <linux/bitfield.h> and does this even compile?
-
-#include "" means "try the local directory first then fall back to
-system includes" so it'll work, it picks up extra stuff on top of what
-<> does.  There's a stylistic issue though.
-
---jTPmHke3dW8il9IP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmTQ7SUACgkQJNaLcl1U
-h9Cgmwf/SLPNpdzBUj796oCGdE0sLv3Wx6OOJqUx6r7OcXxbdmI57ntyLtd42nrN
-Bto5bvnu1D1GkKvkmyy+3qu8xEk9s7C2T9S8wddibRU4Ltzcda/eNPj7PwZuLuj1
-0z8caed2ZZTmxKQJzHev6bV798Prre1UC1Wu8xTev1OLJpck8z68ITezl6gh97ma
-TFmBFQx8ZozN8KVhSTI49Oc5lUUWGJC/CYjNSASRYYC5Wm/bSfAfdDHclNhQLaW9
-7VQNOvJvO5CmbCu7s0dq39QvEWgoC2sm0Cx8ZWUpHxjKZVyWbnfMr0sMyPwgLtWb
-vb6uLwRLtAlanfRgULyEgNLTnZ+BIw==
-=+n7M
------END PGP SIGNATURE-----
-
---jTPmHke3dW8il9IP--
+   Andrew
