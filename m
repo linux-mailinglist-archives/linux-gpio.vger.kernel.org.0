@@ -2,48 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC34A771BA8
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 09:41:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A53771C06
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 10:09:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230115AbjHGHlH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Aug 2023 03:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42482 "EHLO
+        id S229697AbjHGIJb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Aug 2023 04:09:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjHGHlE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 03:41:04 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 30B7710FD;
-        Mon,  7 Aug 2023 00:41:00 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.201])
-        by gateway (Coremail) with SMTP id _____8AxDOsLoNBkDeARAA--.34612S3;
-        Mon, 07 Aug 2023 15:40:59 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.20.42.201])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxB838n9Bk+dBMAA--.56868S4;
-        Mon, 07 Aug 2023 15:40:57 +0800 (CST)
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn, Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v3 2/2] gpio: loongson: add firmware offset parse support
-Date:   Mon,  7 Aug 2023 15:40:43 +0800
-Message-Id: <20230807074043.31288-3-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230807074043.31288-1-zhuyinbo@loongson.cn>
-References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
+        with ESMTP id S229515AbjHGIJa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 04:09:30 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 839D1170A;
+        Mon,  7 Aug 2023 01:09:29 -0700 (PDT)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 37789NeD088783;
+        Mon, 7 Aug 2023 03:09:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1691395763;
+        bh=qXreic1jeDVpRWpVaJNwZXPhQDgIeVSEDk98xTOHGBY=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=xhI9Yiuz1Uumh52CcWtha1h6ubD29E+hDHlxmTz9RdmGawemMH5Mc3q7pnGgqxgTx
+         YzQcV9BB01dN1Uy/1N//ldg8zBWHJj1x8WaMj97WjTBXPXSTD4Oli984K+cV2uGjm5
+         PEktHsDE6401V/UO9C7P9dCj7xcnkNznml0QUngY=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 37789Nxt095413
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Aug 2023 03:09:23 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
+ Aug 2023 03:09:23 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 7 Aug 2023 03:09:23 -0500
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 37789MwN023168;
+        Mon, 7 Aug 2023 03:09:23 -0500
+Date:   Mon, 7 Aug 2023 13:39:22 +0530
+From:   Dhruva Gole <d-gole@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Nishanth Menon <nm@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH] pinctrl: single: Add compatible for ti,am625-padconf
+Message-ID: <20230807080922.t35yvyvrknjcriyr@dhruva>
+References: <20230805045554.786092-1-d-gole@ti.com>
+ <20230805171508.schg4xquoa24klk5@october>
+ <20230807070724.GN14799@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8BxB838n9Bk+dBMAA--.56868S4
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-        nUUI43ZEXa7xR_UUUUUUUUU==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230807070724.GN14799@atomide.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,152 +68,81 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Loongson GPIO controllers come in multiple variants that are compatible
-except for certain register offset values.  Add support for device
-properties allowing to specify them in ACPI or DT.
+On Aug 07, 2023 at 10:07:24 +0300, Tony Lindgren wrote:
+> * Nishanth Menon <nm@ti.com> [230805 17:15]:
+> > On 10:25-20230805, Dhruva Gole wrote:
+> > > From: Tony Lindgren <tony@atomide.com>
+> > > +static const struct pcs_soc_data pinctrl_single_am625 = {
+> > > +	.flags = PCS_QUIRK_SHARED_IRQ | PCS_CONTEXT_LOSS_OFF,
+> > > +	.irq_enable_mask = (1 << 29),   /* WKUP_EN */
+> > > +	.irq_status_mask = (1 << 30),   /* WKUP_EVT */
+> > > +};
+> > > +
+> > 
+> > Why cant we set this in the k3-pinctrl.h and set it once?
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
- drivers/gpio/gpio-loongson-64bit.c | 74 +++++++++++++++++++++++++++---
- 1 file changed, 67 insertions(+), 7 deletions(-)
+Do you mean that I set 1 << 29 and 30 as sort of macros in the
+k3-pinctrl.h file and then include it in pinctrl-single.c?
 
-diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
-index 06213bbfabdd..51bcd6e8660f 100644
---- a/drivers/gpio/gpio-loongson-64bit.c
-+++ b/drivers/gpio/gpio-loongson-64bit.c
-@@ -26,6 +26,7 @@ struct loongson_gpio_chip_data {
- 	unsigned int		conf_offset;
- 	unsigned int		out_offset;
- 	unsigned int		in_offset;
-+	unsigned int		inten_offset;
- };
- 
- struct loongson_gpio_chip {
-@@ -117,7 +118,17 @@ static void loongson_gpio_set(struct gpio_chip *chip, unsigned int pin, int valu
- 
- static int loongson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
- {
-+	unsigned int u;
- 	struct platform_device *pdev = to_platform_device(chip->parent);
-+	struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
-+
-+	if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
-+		u = readl(lgpio->reg_base + lgpio->chip_data->inten_offset + offset / 32 * 4);
-+		u |= BIT(offset % 32);
-+		writel(u, lgpio->reg_base + lgpio->chip_data->inten_offset + offset / 32 * 4);
-+	} else {
-+		writeb(1, lgpio->reg_base + lgpio->chip_data->inten_offset + offset);
-+	}
- 
- 	return platform_get_irq(pdev, offset);
- }
-@@ -127,11 +138,30 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
- {
- 	int ret;
- 	u32 ngpios;
-+	unsigned int io_width;
- 
- 	lgpio->reg_base = reg_base;
-+	if (device_property_read_u32(dev, "ngpios", &ngpios) || !ngpios)
-+		return -EINVAL;
-+
-+	ret = DIV_ROUND_UP(ngpios, 8);
-+	switch (ret) {
-+	case 1 ... 2:
-+		io_width = ret;
-+		break;
-+	case 3 ... 4:
-+		io_width = 0x4;
-+		break;
-+	case 5 ... 8:
-+		io_width = 0x8;
-+		break;
-+	default:
-+		dev_err(dev, "unsupported io width\n");
-+		return -EINVAL;
-+	}
- 
- 	if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
--		ret = bgpio_init(&lgpio->chip, dev, 8,
-+		ret = bgpio_init(&lgpio->chip, dev, io_width,
- 				lgpio->reg_base + lgpio->chip_data->in_offset,
- 				lgpio->reg_base + lgpio->chip_data->out_offset,
- 				NULL, NULL,
-@@ -151,16 +181,35 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
- 		spin_lock_init(&lgpio->lock);
- 	}
- 
--	device_property_read_u32(dev, "ngpios", &ngpios);
--
--	lgpio->chip.can_sleep = 0;
- 	lgpio->chip.ngpio = ngpios;
--	lgpio->chip.label = lgpio->chip_data->label;
--	lgpio->chip.to_irq = loongson_gpio_to_irq;
-+	lgpio->chip.can_sleep = 0;
-+	if (lgpio->chip_data->label)
-+		lgpio->chip.label = lgpio->chip_data->label;
-+	else
-+		lgpio->chip.label = kstrdup(to_platform_device(dev)->name, GFP_KERNEL);
-+
-+	if (lgpio->chip_data->inten_offset)
-+		lgpio->chip.to_irq = loongson_gpio_to_irq;
- 
- 	return devm_gpiochip_add_data(dev, &lgpio->chip, lgpio);
- }
- 
-+static int loongson_gpio_get_props(struct device *dev,
-+				    struct loongson_gpio_chip *lgpio)
-+{
-+	const struct loongson_gpio_chip_data *d = lgpio->chip_data;
-+
-+	if (device_property_read_u32(dev, "loongson,gpio-conf-offset", (u32 *)&d->conf_offset)
-+	    || device_property_read_u32(dev, "loongson,gpio-in-offset", (u32 *)&d->in_offset)
-+	    || device_property_read_u32(dev, "loongson,gpio-out-offset", (u32 *)&d->out_offset)
-+	    || device_property_read_u32(dev, "loongson,gpio-ctrl-mode", (u32 *)&d->mode))
-+		return -EINVAL;
-+
-+	device_property_read_u32(dev, "loongson,gpio-inten-offset", (u32 *)&d->inten_offset);
-+
-+	return 0;
-+}
-+
- static int loongson_gpio_probe(struct platform_device *pdev)
- {
- 	void __iomem *reg_base;
-@@ -172,7 +221,12 @@ static int loongson_gpio_probe(struct platform_device *pdev)
- 	if (!lgpio)
- 		return -ENOMEM;
- 
--	lgpio->chip_data = device_get_match_data(dev);
-+	lgpio->chip_data = devm_kzalloc(dev, sizeof(*lgpio->chip_data), GFP_KERNEL);
-+	if (!lgpio->chip_data)
-+		return -ENOMEM;
-+
-+	if (loongson_gpio_get_props(dev, lgpio))
-+		lgpio->chip_data = device_get_match_data(dev);
- 
- 	reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(reg_base))
-@@ -206,6 +260,9 @@ static const struct of_device_id loongson_gpio_of_match[] = {
- 		.compatible = "loongson,ls7a-gpio",
- 		.data = &loongson_gpio_ls7a_data,
- 	},
-+	{
-+		.compatible = "loongson,ls2k1000-gpio",
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, loongson_gpio_of_match);
-@@ -215,6 +272,9 @@ static const struct acpi_device_id loongson_gpio_acpi_match[] = {
- 		.id = "LOON0002",
- 		.driver_data = (kernel_ulong_t)&loongson_gpio_ls7a_data,
- 	},
-+	{
-+		.id = "LOON0007",
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(acpi, loongson_gpio_acpi_match);
+Are we okay to #include a header from arch/arm64/boot/dts/ti?
+
+> 
+> Good idea to define the bit offsets k3-pinctrl.h instead of magic numbers
+> here :)
+
+If I understand what Nishanth is saying correctly, are we expected to
+set the wake_en bit on every single K3 SoC's every single padconf reg?
+
+I am a little sceptical with this approach, because what is people
+_don't_ want to wakeup from certain pads? What would be the right way to
+disable wakeup on those pads then?
+
+> 
+> > The event will not be generated until wakeup daisy chain is triggered
+> > anyways.
+
+Any voltage level shift can potentially trigger a daisychain and I don't
+think that's really such a good idea?
+
+> 
+> Yup, and having that happen is enough to show the wake-up reason with
+> grep wakeup /proc/interrupts :)
+> 
+> > Have you looked at all the padconf registers across devices to ensure
+> > the WKUP_EN/EVT bits are present? daisy chain feature is used elsewhere
+> > as well.
+
+In my limited experience, I have only seen daisychain wakeups being
+enabled on AM62x SOC. This is because this is one of the first K3
+devices to implement deepsleep, and I think IO daisychain only applies for
+wakeups in the case of deepsleep kind of scenarios.
+
+> 
+> The lack of bits at least earlier just meant that attempting to use a
+> wake-up interrupt would just never trigger. Worth checking though.
+> Dhruva, care to check if some padconf register have reserved bits for
+> 29 and 30 that might be set high by default?
+
+Sure, I could take a look, but setting wake_en on all pads still
+doesn't feel right to me.
+
+> 
+> Regards,
+> 
+> Tony
+
+To summarise, I don't think any other devices are using daisychain
+atleast today, and even if there is possibility of using in future I
+think the same compatible I have used here can be used to set wake_en
+wherever applicable, for eg. whenever AM62A would want to use daisychain
+it can use this quirk in it's DT node.
+
+I believe that we shouldn't set every pad as daisychain enabled
+otherwise in deepsleep it may result in unintended wakeups. And the way
+I thought we can give this choice to the user is using wakeirq chained
+interrupt along with this quirk,
+compatible = "ti,am6-padconf";
+
 -- 
-2.20.1
-
+Best regards,
+Dhruva Gole <d-gole@ti.com>
