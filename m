@@ -2,39 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4075C771B1E
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 09:07:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0708771BA5
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 09:41:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231302AbjHGHHd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Aug 2023 03:07:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
+        id S230009AbjHGHlE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Aug 2023 03:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231321AbjHGHHc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 03:07:32 -0400
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E0C6510F0;
-        Mon,  7 Aug 2023 00:07:26 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E946A809D;
-        Mon,  7 Aug 2023 07:07:25 +0000 (UTC)
-Date:   Mon, 7 Aug 2023 10:07:24 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Nishanth Menon <nm@ti.com>
-Cc:     Dhruva Gole <d-gole@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH] pinctrl: single: Add compatible for ti,am625-padconf
-Message-ID: <20230807070724.GN14799@atomide.com>
-References: <20230805045554.786092-1-d-gole@ti.com>
- <20230805171508.schg4xquoa24klk5@october>
+        with ESMTP id S229972AbjHGHlD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 03:41:03 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DC51E10EC;
+        Mon,  7 Aug 2023 00:40:58 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8Bx5fAJoNBkBuARAA--.40293S3;
+        Mon, 07 Aug 2023 15:40:57 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxB838n9Bk+dBMAA--.56868S2;
+        Mon, 07 Aug 2023 15:40:56 +0800 (CST)
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn, Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v3 0/2] gpio: loongson: add firmware offset parse support
+Date:   Mon,  7 Aug 2023 15:40:41 +0800
+Message-Id: <20230807074043.31288-1-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230805171508.schg4xquoa24klk5@october>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8BxB838n9Bk+dBMAA--.56868S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -42,36 +49,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Nishanth Menon <nm@ti.com> [230805 17:15]:
-> On 10:25-20230805, Dhruva Gole wrote:
-> > From: Tony Lindgren <tony@atomide.com>
-> > +static const struct pcs_soc_data pinctrl_single_am625 = {
-> > +	.flags = PCS_QUIRK_SHARED_IRQ | PCS_CONTEXT_LOSS_OFF,
-> > +	.irq_enable_mask = (1 << 29),   /* WKUP_EN */
-> > +	.irq_status_mask = (1 << 30),   /* WKUP_EVT */
-> > +};
-> > +
-> 
-> Why cant we set this in the k3-pinctrl.h and set it once?
+Add some GPIO register offset value parse support for device properties
+allowing to specify them in ACPI or DT.
 
-Good idea to define the bit offsets k3-pinctrl.h instead of magic numbers
-here :)
+Change in v3:
+		1. Reword the dt-bindings patch commit log information.
+		2. Add "loongson,ls2k1000-gpio" compatible.
+Change in v2:
+		1. Reword the patch commit log information.
+		2. Add some GPIO register offset description in yaml.
 
-> The event will not be generated until wakeup daisy chain is triggered
-> anyways.
+Yinbo Zhu (2):
+  gpio: dt-bindings: add parsing of loongson gpio offset
+  gpio: loongson: add firmware offset parse support
 
-Yup, and having that happen is enough to show the wake-up reason with
-grep wakeup /proc/interrupts :)
+ .../bindings/gpio/loongson,ls-gpio.yaml       | 40 +++++++++-
+ drivers/gpio/gpio-loongson-64bit.c            | 74 +++++++++++++++++--
+ 2 files changed, 106 insertions(+), 8 deletions(-)
 
-> Have you looked at all the padconf registers across devices to ensure
-> the WKUP_EN/EVT bits are present? daisy chain feature is used elsewhere
-> as well.
+-- 
+2.20.1
 
-The lack of bits at least earlier just meant that attempting to use a
-wake-up interrupt would just never trigger. Worth checking though.
-Dhruva, care to check if some padconf register have reserved bits for
-29 and 30 that might be set high by default?
-
-Regards,
-
-Tony
