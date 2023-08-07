@@ -2,90 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60FCC772684
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 15:50:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74DFC7727AD
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 16:27:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234433AbjHGNuJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Aug 2023 09:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38462 "EHLO
+        id S232867AbjHGO1g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Aug 2023 10:27:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234440AbjHGNuH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 09:50:07 -0400
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D52D172B;
-        Mon,  7 Aug 2023 06:49:53 -0700 (PDT)
-Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-56c7eb17945so2652628eaf.2;
-        Mon, 07 Aug 2023 06:49:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691416192; x=1692020992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ws1fvLkPKnknDP1Bwp+5q1Up2hMICKJmNCu93ys8myM=;
-        b=UHwfRM0flSVeIIcUepWB3cOUHwe6nkh1PWgZTFtWOGD4ONRs3BhrKDLkx7T0aFWqXh
-         bcvkMM0PPB0q9EH83fMg/pay1/Um2DvcTumnxGvTjbW6J1q/xQ1BMG3HGw5OJBuluSZ6
-         ++oPmoTeIQB3FeIAOUpvRDLUjTzSIxeDV65kSa1ak6YV4A84S5e4WPAtmw+tv6YvIi2x
-         Bm0drO4KXkvMpawdIGF1K0PD0bxZ/3satjJtVrU4poTQ+mEfraH9JdBlrEQTomZmxMWk
-         vNSyGciRAysjbyU0vxxuf79oTyEwhLfw1XqH7P7uF3bZu1h181jPm6DWLbFWdkPABm5l
-         rHGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691416192; x=1692020992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ws1fvLkPKnknDP1Bwp+5q1Up2hMICKJmNCu93ys8myM=;
-        b=i3lSf7EsljObNTOeEtAaEeovTYbI46KeX+gXscJwiD4RJJeu2uI33DqV0qG1eyqtVS
-         kLjImXmgt9IkXNDwN2xfTZ1T9rz3e59jU8hhttsec8LfrS7tNPoy6oss95p/QZKo9WaR
-         PwY39nHDHQE3DxDISRGycMXVbWtbI/oCx2AI2iL5mrhrhlVjiHoiUifey7er7Z2X7VBf
-         DT5MnHMD725kxkb0kobni/xdl7lR6QBWVyghpYyGXgVgdO18QXBmDe99orPC5d4voeVW
-         8FaawMo/+FnW+GXXPpJT/8KPXuhJtQLFeDu/w43pjtfKSe0mwaOj6QIxpbirHd69TR18
-         jotQ==
-X-Gm-Message-State: AOJu0Yymmh90s2M3xkdsg9K9D2bhLXWYXq2qfR+wkLAMozre/JuAXGDa
-        46RWxEDXihr8UG8427I0hXu8p0+zFvSQJS2aKmE=
-X-Google-Smtp-Source: AGHT+IE4r0+iuAynzoUIlfeq89D7yczt7LMmvuawleig9x1fedQK2Iy48o76+74FFStlIdnn8il5fIJDWJV/AvlQNJM=
-X-Received: by 2002:a4a:2750:0:b0:56c:cefc:55d with SMTP id
- w16-20020a4a2750000000b0056ccefc055dmr8678776oow.4.1691416192247; Mon, 07 Aug
- 2023 06:49:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230727162909.6031-1-duje.mihanovic@skole.hr>
- <20230727162909.6031-3-duje.mihanovic@skole.hr> <ZMKd+CoWu7QjOxHo@smile.fi.intel.com>
- <13320053.uLZWGnKmhe@radijator> <CACRpkdZdpHjh_CCmuT2ORpuZ=CbUECW7dBXsL+P+aNvfMYmEuA@mail.gmail.com>
-In-Reply-To: <CACRpkdZdpHjh_CCmuT2ORpuZ=CbUECW7dBXsL+P+aNvfMYmEuA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 7 Aug 2023 16:49:16 +0300
-Message-ID: <CAHp75Vfkchxzxq=1cMbof0gOj90cs6ntTOefRNk1w+DYVeJLag@mail.gmail.com>
-Subject: Re: [PATCH v2 2/9] gpio: pxa: use dynamic allocation of base
+        with ESMTP id S231133AbjHGO1f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 10:27:35 -0400
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E764AE79;
+        Mon,  7 Aug 2023 07:27:29 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A286EFF808;
+        Mon,  7 Aug 2023 14:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1691418448;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nSKlAqEgzEsFnBW7d8u/9h1ZprRRwuRKRLFQ+P/wUY8=;
+        b=LywQYvYZoJqcYSSsOLGqNNJCC9NtdSGpEXpSP7h89QnexEqHiRwsI7y1Fopm8khwM4Jado
+        UYh+3ucNoG1TlHOxwycpd6wl86Ww1bH1aU60cma+N9WOR0OpLat30VEL6CeBvM4lykiuLw
+        YTsewxWRSsSjNtpcSTDCC/w5lLkMGaNv7Xw1yRiyjXwkVqDQrnGE9qAK5QvgIhhrsRkXmb
+        mp7wMTZO2Ss/rYbZR46XbfqZndue72KIO/PVTyaSLyZCXcr1LoUkH4LYGHzC6pgv3/FZsS
+        y1yxUPZoU8Fr9gDi5km21Xjd+hZnD+9mY+D/84flAYhqMYAgZ0XHWK6gTENonw==
+Date:   Mon, 7 Aug 2023 16:27:21 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-        Andy Shevchenko <andy@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 24/28] pinctrl: Add support for the Lantic PEF2256
+ pinmux
+Message-ID: <20230807162721.56318743@bootlin.com>
+In-Reply-To: <CACRpkdYXCQRd3ZXNGHwMaQYiJc7tGtAJnBaSh5O-8ruDAJVdiA@mail.gmail.com>
+References: <20230726150225.483464-1-herve.codina@bootlin.com>
+        <20230726150225.483464-25-herve.codina@bootlin.com>
+        <CACRpkdYXCQRd3ZXNGHwMaQYiJc7tGtAJnBaSh5O-8ruDAJVdiA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 7, 2023 at 4:31=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
-> On Sun, Jul 30, 2023 at 11:18=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihano=
-vic@skole.hr> wrote:
+Hi Linus,
 
-...
+On Mon, 7 Aug 2023 15:05:15 +0200
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> And maybe some more. Yeah it's tough, but it can be done!
+> Hi Herve,
+> 
+> thanks for your patch!
+> 
+> First: is this patch something we could merge separately? I don't see
+> any dependency on the other patches.
 
-And I will add "earlier started less effort it requires".
+It depends on pef2256:
+in drivers/pinctrl/Kconfig:
+--- 8< ---
++config PINCTRL_PEF2256
++	tristate "Lantiq PEF2256 (FALC56) pin controller driver"
++	depends on OF && FRAMER_PEF2256
+--- 8< ---
+in drivers/pinctrl/pinctrl-pef2256.c
+--- 8< ---
++#include <linux/framer/pef2256.h>
+--- 8< ---
 
---=20
-With Best Regards,
-Andy Shevchenko
+All the pef2256 it depends on is provided by
+ path 23/28 "net: wan: framer: Add support for the Lantiq PEF2256 framer"
+
+> 
+> On Wed, Jul 26, 2023 at 5:04 PM Herve Codina <herve.codina@bootlin.com> wrote:
+> 
+> > The Lantiq PEF2256 is a framer and line interface component designed to
+> > fulfill all required interfacing between an analog E1/T1/J1 line and the
+> > digital PCM system highway/H.100 bus.
+> >
+> > This pinmux support handles the pin muxing part (pins RP(A..D) and pins
+> > XP(A..D)) of the PEF2256.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
+> 
+> So it is a bridge chip? Please use that terminology since Linux
+> DRM often talks about bridges.
+> 
+> > +++ b/drivers/pinctrl/pinctrl-pef2256-regs.h  
+> (...)
+> > +#include "linux/bitfield.h"  
+> 
+> Really? I don't think there is such a file there.
+> 
+> Do you mean <linux/bitfield.h> and does this even compile?
+
+Yes and it compiles (even with quoted included file).
+I will be changed to <linux/bitfield.h> in the next interation.
+
+> 
+> > diff --git a/drivers/pinctrl/pinctrl-pef2256.c b/drivers/pinctrl/pinctrl-pef2256.c  
+> (...)
+> > +struct pef2256_pinctrl {
+> > +       struct device *dev;
+> > +       struct regmap *regmap;
+> > +       enum pef2256_version version;
+> > +       struct {
+> > +               struct pinctrl_desc pctrl_desc;
+> > +               const struct pef2256_function_desc *functions;
+> > +               unsigned int nfunctions;
+> > +       } pinctrl;  
+> 
+> Uh anonymous struct... can't you just define the struct separately
+> with a name? Or fold it into struct pef2256_pinctrl without the
+> additional struct? Thanks.
+
+I will fold it into struct pef2256_pinctrl in the next iteration.
+
+Thanks
+Hervé
+
+> 
+> Otherwise it looks neat!
+> 
+> Yours,
+> Linus Walleij
