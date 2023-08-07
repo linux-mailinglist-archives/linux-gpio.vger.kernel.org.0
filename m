@@ -2,119 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F4257729BB
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 17:48:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27DB0772D94
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Aug 2023 20:17:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231235AbjHGPsg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Aug 2023 11:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40118 "EHLO
+        id S230149AbjHGSRR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Aug 2023 14:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjHGPse (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 11:48:34 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB213AA;
-        Mon,  7 Aug 2023 08:48:33 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 377FmPMV044546;
-        Mon, 7 Aug 2023 10:48:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1691423305;
-        bh=NPz7a80K2FkSxjRcF3xZQ2MRydRhRayI5T9R1KAt6bc=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=SVMRsDzcPzE0xlZraVy9CwRxgCO7Ma6jL1xw/Ezm1fXxQlb33HmD/fkG7zKQ9mfA4
-         tnDZrE3puIqKgZda+kSN7jcEliW2zORL+PhzNe7hi+vjVNGBn7o1DUbmk9bFvzPx/7
-         qO62h85VfQd9UW1jyAgK0Q/EBLjSM3Rd1UxquT44=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 377FmP5c112492
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Aug 2023 10:48:25 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 7
- Aug 2023 10:48:25 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 7 Aug 2023 10:48:25 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 377FmOQc006254;
-        Mon, 7 Aug 2023 10:48:25 -0500
-Date:   Mon, 7 Aug 2023 21:18:24 +0530
-From:   Dhruva Gole <d-gole@ti.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: pinctrl-single: add am62x
- compatible
-Message-ID: <20230807154824.y6x2vnfoa65jxcyp@dhruva>
-References: <20230803092311.604610-1-d-gole@ti.com>
- <89993371-e26d-0308-060c-312a66c0cb08@linaro.org>
+        with ESMTP id S229809AbjHGSRQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Aug 2023 14:17:16 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2084.outbound.protection.outlook.com [40.107.243.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B7D171E;
+        Mon,  7 Aug 2023 11:17:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=apQRxuWObKZqFnt9XjBmSgj8eBEM5aKDlq/d1v3/Yej6ZmtY1p0ptp2JWru7zCMFna+pwjgCCZ9FgdF6c9XsWMn6vx4tYeEDhHSf5E0qc4L4WWyGnH/QJh8j47kkMe/TT6+mVEZZVbJlAV/KEakr2UiThI0n20BIjkDnGMREelMn89ws066l+ya55RxNrB95tetSOZ11urEy6YK8lKxEYMYymj9D7CHXMAumXa2LvHbiEuTnqGvZo7bRRcsR/DhHZHaY+DlecNWz2OoNqfDwyzVUyEG0sy+MVSHrKp1CipZPkuoI1leU87+mZsxlIvoII2/D6YzbQXUTrXngUy5gqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zaNg0VaIGbepA5WQ7OvxDDFFOReNVw5/NqUmJV/L6xM=;
+ b=XZjZi9Xj4Ge3RJMaLj+yoOc3gQCq+lzhJ1zGLLHfaqfcHqDj5a/XlRKwPmej2IoVp71/vKkZeREBP9A1GTyL/TqsO4WV7UlRMj3BbX+E2qjrCyJ8NlIEnguSfxf6LfuaXK+QZdMbFnvjVg2hK5M/+Fxs/AfAJiQ11stFBZ9KApf+JlMnlGWdwbvo6Up71xsS4/48gYlkmo3tFYA7YSSRA3ffbF/Cw3OkBljjsGPj9rcfL6q57Qi380FNeiI8yj/FwRZGJ63hrcpVTI7bfY8B6jNO94lf33/2HoJA1Mi76NxZ9kwpBrL9XOm+0pQALRlx5i7ZAX+e3LkgpTg8I7Ksig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zaNg0VaIGbepA5WQ7OvxDDFFOReNVw5/NqUmJV/L6xM=;
+ b=VxblXnB/hO25/qDa7HF6o/OIff+5H6tJsEGK2WoqgUrsFLPsHu9Np4CZPeZq5QXfB8qBbul4NZv3dYLpX3NLPabCP7Hg41008kFME2DbXAZo9LU4eb5cKZfiAGS+XsFawDxCD2elENj32ZAD0kvbJV5tE+vATximiHezBMDC4QE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by BY1PR12MB8448.namprd12.prod.outlook.com (2603:10b6:a03:534::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.44; Mon, 7 Aug
+ 2023 18:17:09 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6652.026; Mon, 7 Aug 2023
+ 18:17:09 +0000
+Message-ID: <87eada13-004a-4dd1-91fe-901cfdfd7992@amd.com>
+Date:   Mon, 7 Aug 2023 13:17:10 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: amd: Don't show `Invalid config param` errors
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230717201652.17168-1-mario.limonciello@amd.com>
+ <CACRpkdYoxoZ0G7QzQ7XV2FPh9gUJG-CKfpFY1xNQdbBcJOQ=3w@mail.gmail.com>
+From:   Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CACRpkdYoxoZ0G7QzQ7XV2FPh9gUJG-CKfpFY1xNQdbBcJOQ=3w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA0PR13CA0002.namprd13.prod.outlook.com
+ (2603:10b6:806:130::7) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <89993371-e26d-0308-060c-312a66c0cb08@linaro.org>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BY1PR12MB8448:EE_
+X-MS-Office365-Filtering-Correlation-Id: d38ee38c-733d-4ba1-756f-08db97728398
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: g9qOETDACSC+P6FWq7yDtABVS3Js67i/lVJ3V1cM8MULLyapUnQdQ5A9a7l2yxNCj8H6FjJdm6x4lB+G0SDupkJn3uAc9WOddmCwJSqKWN0dCAECADwSWryM/fPPwhaetCMLBHKkKIyGIvmtIx3FAkjRMzvzRRgRROnSLa3wlFECFVGoCPDb5cedf4bCGACKbErcowWt7H3cB0cRSRaqIDGGzcMdRPUVZC0WR/6ouC4d71/l7TP6D0ZLeNkk8l+qtskuY4cDipTNCwieTHA3sepbT6hM26Hc/SkCOEcg3RqAum+6XSvOR7drgxEJTzdXFhUgyvYGxswJ44HvFCnBUIidEEyu9EY6KgdiL5FW6fsDOxmbtPkx7Wz4BYXduHtrdyIlAoSPU7yedDQTcPEGd/lIPzNppip8UWYT9aZRd6aWAQHPGZvRTcLmyjAUApxfJfMpDo2LCIZRZDHBp4nMhhDo1t9MYKzcEuS/34OkZneTYjS2ztv6DzWeUPbrM/X997RTDf2cQWWY7BBehZipDAdEqu67wcATBlszneEQ/J36HoGOzZOxajavBHcpET2SKFGyqeGBFb+YoSEpVulY0E3HdRB7Tdr4bFluhlx7sfSzNT+apWMDX5HOEfrD9juaijpWD/Vf/svtqfsEexylNJa3SRz7Z58IM3MSZbgOjEk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(376002)(396003)(136003)(366004)(451199021)(186006)(1800799003)(6916009)(4326008)(53546011)(478600001)(26005)(6506007)(316002)(41300700001)(6486002)(6512007)(6666004)(38100700002)(4744005)(2906002)(44832011)(5660300002)(83380400001)(31696002)(86362001)(8676002)(2616005)(31686004)(8936002)(36756003)(66476007)(66946007)(66556008)(81973001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RHU0VDg3VUtXR1hiWktQdmJyNnlSWUx0N2NuYnlkODI2eDR0TEREQWhmUE9s?=
+ =?utf-8?B?Nng5Yy9ZRkVOMmNUYmo5alZXd1Y5S1BIcWZ1L1YwdUZyWUg4Q1dsMjBzdnpx?=
+ =?utf-8?B?MDFDM3BVS285QWJrTWdDMVk5Ry9pS1o0OFlQU0dZUG5VTEdvb25xTjBNZThw?=
+ =?utf-8?B?bG5ucEtROHdLaU9LcGR0T0Exem50eTlTc0d6U1hrTW5NdkpidXUwaUlhNkls?=
+ =?utf-8?B?a0RZMUFreDBHY084M3FiVlZ2dTdkRXZNcEloaVNnWlpKN0kydVFsSzVIbjRo?=
+ =?utf-8?B?MXN2d0MxQllheG9USDdSWUoxcTBNaWE3NDI5ckVWQkJ0ajkvSC9aTUtSbXZp?=
+ =?utf-8?B?UnFMZGpkbm04M1NwNHh2SHExVjJMbmd5cm9vRVYwSHNTZ1hLSlc2aGFsbGJE?=
+ =?utf-8?B?SEhvZGxiRklSOVhUblFrTTNvdEREYzVJVGMwdnlFVWhGZ0dHVU5OdVV3V2Fa?=
+ =?utf-8?B?R1N0cGVWMDgrRmM4WDhqRGdQaE1EalFuRHp3Wkt2a1VpNkpRdlp5RFR4OHRk?=
+ =?utf-8?B?QlBiM3RNRlFYZUZRaXFtb2Q5WXJiUDJkcEZ0VHdjV0hBSVNmczFvZGYyeHk5?=
+ =?utf-8?B?RFptWnhHR2JnUmZBT2ZRRjJuRE5CMnZodlkzTzBpdE5MR3NkczR4YnprVjJ3?=
+ =?utf-8?B?T2g5SFpVRS8xcXlHNWtLdlU3cFVNMUVBVDVLeFQwQ2dNVm1BQVplYTlrUVk4?=
+ =?utf-8?B?RU9iQmJPN3RaT2ZNRk9tSEdGVUE2dytvMVNhd3FPYXk1enlmUTdHSE9oazlt?=
+ =?utf-8?B?M0RWWVl3aDdOVVhjclBCUkFBSjI4UWU2aVRnV3lmMExrYTZWRmk5TzJTYzVS?=
+ =?utf-8?B?djRTR1NKYnBNY1lUSStqajFnVnNCaXlCM3BrakxXaElPRlJDM0V2ZitJY1JF?=
+ =?utf-8?B?OFRVeTVkOFc0QnBUNWs2YTdVODVnejRjMENZRzdIQ1g5SDZYZU1WM3FQTlJw?=
+ =?utf-8?B?SEk4OE9zajdnZ2xYMWp6MnJodmNURnlJbFlFYnkvUUpwcVBMWEZOeHVibitj?=
+ =?utf-8?B?REhNUjRmcWNoY1gyTDVBbFBuc21qbXRxWldxQ09HcWtpdFU2L3ZvZlhGbTVy?=
+ =?utf-8?B?Y3FlWnFsUjJrMXUvaGpPYVpaSFJld3MwdHN0ZHFDd004TTM0eC9BVTNMUFRJ?=
+ =?utf-8?B?VG4ySUwxdjR2UHQ0Qm5DMklQZTVmK3IvNE1NZ2NDZ1B5TlN6NFVQemYvMHQz?=
+ =?utf-8?B?MDltWUNyRldCdllFZ3VZOGhvTnV4dXpQNUtRNUgxYktWU0YzY1BmdWZyRUJL?=
+ =?utf-8?B?UlZRdUdCU0o1ZDgycFpTZHNTSjFjQTVMazMxMzhzM0t0by85amprblpOSDJi?=
+ =?utf-8?B?VDB1RjA1bEsxanhoWC9zcVk5TE9Tc0dWTndjdERLNXI3elZTby9PMm9jSURZ?=
+ =?utf-8?B?K2NSSmtSL1N5RGtwM25Rb0tySDdZM2QydEp6eXdnU2toNXdJYVEybU9nRlNB?=
+ =?utf-8?B?RU1yRmdCZGZuZm5PSnBlQ0ozKytJWWNSYW8yWXFWbGYyeFFFWHFlZlQ2Wjgy?=
+ =?utf-8?B?R2RueEFLQ2hiUWlUb3YxdVhoOSs4bFVzVXVGYm1DVVpVUXNmVnlMYW4rNklR?=
+ =?utf-8?B?bVdMQ3VvRjc2Y2NBQ203dmYweldWVk5wUGtBNWRrbWh1aEZGZ3V6NnBzRUsy?=
+ =?utf-8?B?c1FvT0htQUxuelhXKzM1SU15NXhoSVBudEtGOWxERS9BRDBqYXRkOERUVjFU?=
+ =?utf-8?B?YnlOcEt3RUlvUWcyaGNaU2Y1RDVTZ1owdzgrNnRaVjlJTjk0K1haVmZmS3l2?=
+ =?utf-8?B?ckFPaEtpUzJiY0ZPakgvTmpmUzVTaWl1UkNleENoV21kNjFiYzJmTWJZMnAw?=
+ =?utf-8?B?OUcyaE5ndGQvTURPcENQRktmWGtqbU5YaGVQS0tDUlQ4eENMLzU2VU9pei9Y?=
+ =?utf-8?B?UnI5Ykc3d2sxMXcwV2dLR3Z5K0pLL3NnN2tWU09rdUFhdlhBWlhDUlhBejln?=
+ =?utf-8?B?Y0NLa0pDTjgrMElwdGZOQkt4YkRydFQzRWZHbkdMZllKZndkZllqdFdnZWpy?=
+ =?utf-8?B?ZmFxZUk1bUZCOS84QWppcDJwQmZlRnZJL3JLWlB0NW1WeEwxSC9MZSt6TXM2?=
+ =?utf-8?B?M0pMV29zem9tMEtrR1hDbGFVZWhxNkE5YUYvRC9zVVZidE9XR2ZoanV3OTg5?=
+ =?utf-8?Q?gG+STfsLLdKCMF9Tlke9YPq/3?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d38ee38c-733d-4ba1-756f-08db97728398
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 18:17:09.4600
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +D4JHpC3nHklZ0MjBgIb9Onmbhq1wvMDSNKKE0WwrH5xFidqCBI+fYx6LBLv6wS9g8TCW/xMx261RCJpxTyfLA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR12MB8448
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Krzysztof,
-
-On Aug 07, 2023 at 16:53:28 +0200, Krzysztof Kozlowski wrote:
-> On 03/08/2023 11:23, Dhruva Gole wrote:
-> > Add the am62x compatible property to add support for the new
-> > wakeup enable and status bits positions
-> > 
-> > Cc: Nishanth Menon <nm@ti.com>
-> > Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> > CC: Tony Lindgren <tony@atomide.com>
-> > Signed-off-by: Dhruva Gole <d-gole@ti.com>
-> > ---
-> > 
-> > Base: tag: next-20230731 + below "depends on" patch
-> > Depends on: https://lore.kernel.org/linux-omap/20230731061908.GG5194@atomide.com/T/
-> > 
-> >  Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-> > index b6b6bcd7074b..4c98035a1217 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-> > @@ -23,6 +23,7 @@ properties:
-> >            - pinconf-single
-> >        - items:
-> >            - enum:
-> > +              - ti,am6-padconf
+On 7/23/2023 14:41, Linus Walleij wrote:
+> On Mon, Jul 17, 2023 at 10:17 PM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
 > 
-> This does not look like am62x. Except this, am62x looks like family, not
-> SoC.
-
-We are at V3 in this patch,
-Tony, please can you review the latest rev?
-https://lore.kernel.org/all/20230804050737.635186-1-d-gole@ti.com/
-
-Otherwise, I will re-spin a new series including the DT-Binding patch
-and the driver changes in a single patch series, where I will pick Tony's R-by.
-
+>> On some systems amd_pinconf_set() is called with parameters
+>> 0x8 (PIN_CONFIG_DRIVE_PUSH_PULL) or 0x14 (PIN_CONFIG_PERSIST_STATE)
+>> which are not supported by pinctrl-amd.
+>>
+>> Don't show an err message when called with an invalid parameter,
+>> downgrade this to debug instead.
+>>
+>> Cc: stable@vger.kernel.org # 6.1
+>> Fixes: 635a750d958e1 ("pinctrl: amd: Use amd_pinconf_set() for all config options")
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> Best regards,
-> Krzysztof
+> Applied for nonurgent fixes.
 > 
 
--- 
-Best regards,
-Dhruva Gole <d-gole@ti.com>
+Just wanted to check if you'll be sending this out for -rc6.  It 
+backported to stable and a few bugs cropped up because it's noisy.
+
