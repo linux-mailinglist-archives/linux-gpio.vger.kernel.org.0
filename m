@@ -2,113 +2,199 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0020C77486F
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 21:33:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CD4777497C
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 21:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236408AbjHHTdD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Aug 2023 15:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46580 "EHLO
+        id S229549AbjHHT5o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Aug 2023 15:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236403AbjHHTcf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 15:32:35 -0400
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC124AB6B8;
-        Tue,  8 Aug 2023 12:04:42 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 378AP5Xg049566;
-        Tue, 8 Aug 2023 05:25:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1691490305;
-        bh=wsH0cpHRqqTFMyRbmu2p89xDZgzCEPqmNhQL+OnduLo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=iNjRil2TLKn19kG5FTr/PDfQOAbEnUBu1ljvS7NqSpw4QQe6iqkoEuTdo9eLxGfBz
-         GJZEsIkUNG2HB9/5c0nQ6wqxk60C0DT+ZQK51ldg3gVkHOOE6Ul9TiAkTGFIaESWEo
-         P9ayMlHT9PUdSjlx7Mcn0ncvZB1bO1kggWhTtC0s=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 378AP4Zb005467
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Aug 2023 05:25:05 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 8
- Aug 2023 05:25:04 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 8 Aug 2023 05:25:04 -0500
-Received: from dhruva.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 378AO6oC022340;
-        Tue, 8 Aug 2023 05:25:02 -0500
-From:   Dhruva Gole <d-gole@ti.com>
-To:     Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>, Dhruva Gole <d-gole@ti.com>
-Subject: [PATCH 2/2] pinctrl: single: Add compatible for ti,am654-padconf
-Date:   Tue, 8 Aug 2023 15:52:08 +0530
-Message-ID: <20230808102207.130177-3-d-gole@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230808102207.130177-1-d-gole@ti.com>
-References: <20230808102207.130177-1-d-gole@ti.com>
+        with ESMTP id S230408AbjHHT4y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 15:56:54 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458CA15A8C6;
+        Tue,  8 Aug 2023 11:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691518281; x=1723054281;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FpZCxvND5fkfOA2Tn8DTYkZZj2XkJLbkMfoPEuaWbCY=;
+  b=TbpVCmtxdPU+2E+TA5wqUVBVbG7e3bokRoSYWvm3J1Fof01K8MreuVvN
+   2Hbj2BinbcpGD5HfIG8QYZxfrScUoODWdI3L6NSEAWjXS6lldsbw6oWQm
+   9AdbuPsEY797MNKgRRQXym53aVJp/GQJfLhxpDuQK6dNXRVQEtEQW2+kh
+   Gg7IUZMEk34kEyFSHAOLfn2U2rrZMhVSaDl5A8tTxSD7SOsbvjuYhRqt5
+   L2w3wFgZat3ItfUny2bWiX8FNye8VkhpnJ+kY/3dMZhvjqD7sMkl0uBpu
+   8myRrF4DsC35x0zIOWu5WAuFez5Ws1HGZORU7wn+n6mbWsE+KotwD1jgq
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="373677735"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="373677735"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 10:23:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="801403549"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="801403549"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Aug 2023 10:23:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qTQQn-000Bdk-0A;
+        Tue, 08 Aug 2023 20:23:41 +0300
+Date:   Tue, 8 Aug 2023 20:23:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpio: consumer: new virtual driver
+Message-ID: <ZNJ6HCOV0bzlaoXX@smile.fi.intel.com>
+References: <20230808145605.16908-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230808145605.16908-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+On Tue, Aug 08, 2023 at 04:56:05PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> The GPIO subsystem has a serious problem with undefined behavior and
+> use-after-free bugs on hot-unplug of GPIO chips. This can be considered a
+> corner-case by some as most GPIO controllers are enabled early in the
+> boot process and live until the system goes down but most GPIO drivers
+> do allow unbind over sysfs, many are loadable modules that can be (force)
+> unloaded and there are also GPIO devices that can be dynamically detached,
+> for instance CP2112 which is a USB GPIO expender.
+> 
+> Bugs can be triggered both from user-space as well as by in-kernel users.
+> We have the means of testing it from user-space via the character device
+> but the issues manifest themselves differently in the kernel.
+> 
+> This is a proposition of adding a new virtual driver - a configurable
+> GPIO consumer that can be configured over configfs (similarly to
+> gpio-sim).
+> 
+> The configfs interface allows users to create dynamic GPIO lookup tables
+> that are registered with the GPIO subsystem. Every config group
+> represents a consumer device. Every sub-group represents a single GPIO
+> lookup. The device can work in three modes: just keeping the line
+> active, toggling it every second or requesting its interrupt and
+> reporting edges. Every lookup allows to specify the key, offset and
+> flags as per the lookup struct defined in linux/gpio/machine.h.
+> 
+> The module together with gpio-sim allows to easily trigger kernel
+> hot-unplug errors. A simple use-case is to create a simulated chip,
+> setup the consumer to lookup one of its lines in 'monitor' mode, unbind
+> the simulator, unbind the consumer and observe the fireworks in dmesg.
+> 
+> This driver is aimed as a helper in tackling the hot-unplug problem in
+> GPIO as well as basis for future regression testing once the fixes are
+> upstream.
 
-Use the "ti,am654-padconf" compatible to enable the use of wake-up enable
-and event bits on K3 SOCs that support the daisychain feature
+I'll read documentation later. Some code comments below.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Dhruva Gole <d-gole@ti.com>
----
+...
 
-The previous version of this patch was posted stand alone here:
-https://lore.kernel.org/all/20230805045554.786092-1-d-gole@ti.com/
+> +static void gpio_consumer_on_timer(struct timer_list *timer)
+> +{
+> +	struct gpio_consumer_timer_data *timer_data = to_timer_data(timer);
 
-changelog: the compatible name has been changed in this series.
+> +	timer_data->val = timer_data->val == 0 ? 1 : 0;
 
- drivers/pinctrl/pinctrl-single.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Can be
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index f056923ecc98..92e495d13b9b 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -1954,6 +1954,12 @@ static const struct pcs_soc_data pinctrl_single_am437x = {
- 	.irq_status_mask = (1 << 30),   /* OMAP_WAKEUP_EVENT */
- };
- 
-+static const struct pcs_soc_data pinctrl_single_am654 = {
-+	.flags = PCS_QUIRK_SHARED_IRQ | PCS_CONTEXT_LOSS_OFF,
-+	.irq_enable_mask = (1 << 29),   /* WKUP_EN */
-+	.irq_status_mask = (1 << 30),   /* WKUP_EVT */
-+};
-+
- static const struct pcs_soc_data pinctrl_single = {
- };
- 
-@@ -1962,6 +1968,7 @@ static const struct pcs_soc_data pinconf_single = {
- };
- 
- static const struct of_device_id pcs_of_match[] = {
-+	{ .compatible = "ti,am654-padconf", .data = &pinctrl_single_am654 },
- 	{ .compatible = "ti,omap3-padconf", .data = &pinctrl_single_omap_wkup },
- 	{ .compatible = "ti,omap4-padconf", .data = &pinctrl_single_omap_wkup },
- 	{ .compatible = "ti,omap5-padconf", .data = &pinctrl_single_omap_wkup },
+	timer_data->val = timer_data->val ? 0 : 1;
+
+But again, why not
+
+	timer_data->val ^= 1;
+
+?
+
+> +	gpiod_set_value_cansleep(timer_data->desc, timer_data->val);
+> +	mod_timer(&timer_data->timer, jiffies + msecs_to_jiffies(1000));
+> +}
+
+...
+
+> +	key = kstrndup(page, count, GFP_KERNEL);
+> +	if (!key)
+> +		return -ENOMEM;
+
+> +	stripped = strstrip(key);
+> +	memmove(key, stripped, strlen(stripped) + 1);
+
+This can be avoided by
+
+	key = kstrndup(skip_spaces(page), count, GFP_KERNEL);
+
+no?
+
+...
+
+> +	ret = kstrtoint(page, 0, &offset);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Use -1 to indicate lookup by name. */
+
+This comment is unclear as offset can be -1 given by the user.
+What does above mean in that context?
+
+> +	if (offset > (U16_MAX - 1))
+
+And how does it related to this -1 if related at all?
+
+> +		return -EINVAL;
+
+...
+
+> +static struct config_group *
+> +gpio_consumer_config_make_device_group(struct config_group *group,
+> +				       const char *name)
+> +{
+> +	struct gpio_consumer_device *dev;
+> +
+> +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> +	if (!dev)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	dev->id = ida_alloc(&gpio_consumer_ida, GFP_KERNEL);
+> +	if (dev->id < 0) {
+> +		kfree(dev);
+
+Wondering if you can utilize cleanup.h.
+
+> +		return ERR_PTR(dev->id);
+> +	}
+> +
+> +	config_group_init_type_name(&dev->group, name,
+> +				    &gpio_consumer_device_config_group_type);
+> +	mutex_init(&dev->lock);
+> +	INIT_LIST_HEAD(&dev->lookup_list);
+> +	dev->bus_notifier.notifier_call = gpio_consumer_bus_notifier_call;
+> +	dev->function = GPIO_CONSUMER_FUNCTION_ACTIVE;
+> +	init_completion(&dev->probe_completion);
+> +
+> +	return &dev->group;
+> +}
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
