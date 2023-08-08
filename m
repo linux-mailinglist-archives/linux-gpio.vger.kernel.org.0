@@ -2,227 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 048A37749E7
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 22:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21540774C5C
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 23:07:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230249AbjHHUGL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Aug 2023 16:06:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59906 "EHLO
+        id S233250AbjHHVHW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Aug 2023 17:07:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233530AbjHHUFr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 16:05:47 -0400
-Received: from mx0b-0039f301.pphosted.com (mx0b-0039f301.pphosted.com [148.163.137.242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319621194C;
-        Tue,  8 Aug 2023 11:25:56 -0700 (PDT)
-Received: from pps.filterd (m0174681.ppops.net [127.0.0.1])
-        by mx0b-0039f301.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 378E6hV0002285;
-        Tue, 8 Aug 2023 18:25:39 GMT
-Received: from eur02-db5-obe.outbound.protection.outlook.com (mail-db5eur02lp2104.outbound.protection.outlook.com [104.47.11.104])
-        by mx0b-0039f301.pphosted.com (PPS) with ESMTPS id 3sbknk2902-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Aug 2023 18:25:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LHGpC6+zThipRjLw4v9JdByWgixYNAKjrmUR1498xT1wo5Ni46/mscIbmWFCB1cegzaSorwfi/WHEJ+x1WXm5WwYGV5/1e5wP9stg80WGeiYUiGk6JvDP3drsTHRRG0P01ORrKAluAWGxLRi7jtfHpipkbSVeS0c8EBZC/Nx7bkQnSMfbi2xvReUjvp4tRAhAeeiAGLVX0cFKGNeOYIhFtC86cilx73O/bcC4xsask5uvW61ZvP4B9hDPeyRZErtMZOEgGLhCL9RyvIYbaT9DBkk8uFQDHw/B9ToxuLhneHIbJUIlBE6xKfVcMikXWBfumMdgbQ1beidKHNxh1zEXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sqS/pUjPpEVLV51qYi6Phg2ZHA1nXvh5Cg65k9pOJy8=;
- b=iDXhPSMMtUM/xvkAwCda1bUxdm6p2bC0mxoIXsLy2d2e4c0M0EiLcnGom0DTD0NxwtfHxsvXcRq3GuRlGGlblgQPEjBwUZibBYr4gA0003ypl4kWNe7AxgJz54a6bfRjhGO9weOy9GdQypthFMmBFNWHOFvL/mMRxe53QQ9kGPCAY6/n7Wbdccx2hdvNwFM3xS+nPHf2IzhKIFsPxT4frCZ6293eXysnVJ7TPeEB4QRXBYx4EfeCPHO7vouaXvRBSI47h+pJoqg3AMJbSSmJjKTvcOY2zcewB2goSqN/unFk90oHGRss31gzbVsyysbWpz5P52AJnOntzrdI3D7XtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
- dkim=pass header.d=epam.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sqS/pUjPpEVLV51qYi6Phg2ZHA1nXvh5Cg65k9pOJy8=;
- b=EnzxwfoFbsVHscA4AAY4u5gLhAbwuQsg/ihamJ3B031QFoihAzhgUeBkgjHbF0ze3DlWfHkM0xb7qeQkPdC/aMcm/Ql2Cg8CWnNmL48R+S093Mq2y4pstUPm1ekoaPpOGIucr2gUk1L0WVA0atItR4wRdQiaiJMVmIALszuyf/6A1gQdKNwUp9OqOu9EXBFOHea17LTbRLqnlgFrSFQTB3ndEFqxS4+bSQEJBBnhhQ2/36J8uZybPF2hlfV1n8lzuOwcWJ7YaBB4WYeHWJrDJg+49Ao7XTq9J6tOVyID3m8jG45qKE9va6MFUaG5LXXDwhY4FcwgpjCCFLZvVqspfQ==
-Received: from PA4PR03MB7136.eurprd03.prod.outlook.com (2603:10a6:102:ea::23)
- by AS1PR03MB8151.eurprd03.prod.outlook.com (2603:10a6:20b:4c5::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.27; Tue, 8 Aug
- 2023 18:25:36 +0000
-Received: from PA4PR03MB7136.eurprd03.prod.outlook.com
- ([fe80::ccb5:5aee:f10d:ab26]) by PA4PR03MB7136.eurprd03.prod.outlook.com
- ([fe80::ccb5:5aee:f10d:ab26%4]) with mapi id 15.20.6652.026; Tue, 8 Aug 2023
- 18:25:36 +0000
-From:   Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
-To:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>
-CC:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: [PATCH v4 4/4] dt-bindings: firmware: arm,scmi: Add support for
- pinctrl protocol
-Thread-Topic: [PATCH v4 4/4] dt-bindings: firmware: arm,scmi: Add support for
- pinctrl protocol
-Thread-Index: AQHZyiW58zfrIydQN0ew8q6pi6gRRQ==
-Date:   Tue, 8 Aug 2023 18:25:36 +0000
-Message-ID: <1dcf25b5c6b16b7138534e3c13827287f7c644cf.1691518314.git.oleksii_moisieiev@epam.com>
-References: <cover.1691518313.git.oleksii_moisieiev@epam.com>
-In-Reply-To: <cover.1691518313.git.oleksii_moisieiev@epam.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PA4PR03MB7136:EE_|AS1PR03MB8151:EE_
-x-ms-office365-filtering-correlation-id: 0e90bda9-000d-4c78-0461-08db983cdc32
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Qh6egbmjtu6LJc4zrZ6ZLXWnjJgykdyMNmu/OOEQMPskC9mQpsWOXsOfpiRZHnmxDLsOAuRk18y7/TZMF0W0HXEvCcClvZwj5Jd+Cf3KqLg/MGLi6807Yp//2Ow9pCLalj3yzAw//SkUSmCKMimb4r2/shfyMJ1cSsvBdyrQxg5b2EdPOdDQQu5rtC2u0IH5oYw9Mela5ijRpw5o9QKPpYOI+BW+9dkr4fP5sDtSvkvI66d3hb2B2L0iprzGqBAFkzOPw4T+Vc7j7tjmgAdEKI58t+OGUhe7RihB9LpgTJx4I5EIxQHiySg5bCWErTR1srVEWdPfanb46HrSO01DIkry4yI5SXOp0Zjsf/cknSSHF5m6aKAjSlGS0dxHN2tOACBpLk0nXMrXbay56U6bKMV/BhSG78HxJsbgORwtdNzyfKPa6Sw874o6WvxIDZshzUnqhkI4thlaEzBh6tOgN2YnMFllpmbaGj5Y1kmzvas9j3zmiGXZN0GO11tIdx5XczafDJOEJyJnfWind5DlDTDqqSXVFufpey/LSyEU8jiC9+5edz32IdyUquLiQy1wh5iv41BvbAH0QzsSVsJYjr8NUm983acY1FcHTEzOrObidu0FzUyX/IA36XzBQ3mO
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR03MB7136.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(1800799003)(186006)(451199021)(2616005)(6506007)(26005)(6512007)(71200400001)(6486002)(36756003)(122000001)(478600001)(54906003)(38100700002)(66476007)(66946007)(66556008)(66446008)(91956017)(76116006)(64756008)(4326008)(6916009)(316002)(41300700001)(8676002)(8936002)(5660300002)(38070700005)(7416002)(2906002)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?wSfnDCz2poAL1d4ErvHy953PfjBXEh2qh33Vr8hs3hjHQmTOOLMpqeJBp2?=
- =?iso-8859-1?Q?FQipmAowFaE0Okojm6+OzmJnpj/pqUlW+ewgKIiOgog9Ucesrcvmp7n0hh?=
- =?iso-8859-1?Q?nNGw+GL40cQFIMZTLQsBjrtf9DaeK+hTVlYi9/q4IWinCOYImSjHrkFUqp?=
- =?iso-8859-1?Q?6qXpUwYvnBgOmAl4Scc15ZmbuczzOXoRtDk581KxXEiKVPLb3a0tiElBPN?=
- =?iso-8859-1?Q?aP/qxb6iHFeNBXDHutmK0S9XboOAVYmb6ApO48i/M0jbZw90S5OQ2h/G1h?=
- =?iso-8859-1?Q?f1/yhdfURytpQVp+hm8mev34RySKSzoYfvkmbdYcCqUKiwUp9a5ICWx2nv?=
- =?iso-8859-1?Q?ad+U0FZfwMLEKCoOuZuq8QF9OyJmTUPCRY938V3F/6n5KNqnCsujQfG6r7?=
- =?iso-8859-1?Q?v+eYm+cGwBPVRcv84R1cZ6PEqtwT5hlgt60OR/+nLpAB4200onQqxPScqx?=
- =?iso-8859-1?Q?6t7musVBe2/bQrRkSns+m1MEbHu5BgBSjlPjyx2u4/tkP5nwJNuVZjYZCh?=
- =?iso-8859-1?Q?qLchyjIUuvV8PtMaPbPW/E3vsgMqSaSNm7Rm+y80ibNMWnu+Nr6FRBJamX?=
- =?iso-8859-1?Q?lXJX08Urwq9kPW+oqoNjArCkMVm9nl2/P7n4NsHN8D4S3UjzgQbkkAMMsT?=
- =?iso-8859-1?Q?D8sZTk67o4UPVAQ8rV4bjXwHes2YLSI0CfBXCvk8fqDVZAL4vI3h5T6ZVq?=
- =?iso-8859-1?Q?AnHlDQ+egD5IgSyf2djPXpepUGH2wLNQdt7SzpGMbOhbneyUBZmk1kw8UT?=
- =?iso-8859-1?Q?XESDeGDMA6lFvIePFjJr69WhZsI/faEx+rEb4g9u3qU62HMIuIyp78+UHc?=
- =?iso-8859-1?Q?uSEbUZ5GkePzIPCwk05klcpnnhI7XwOb48F3LOm64EVq1O4/C+Po02BDTV?=
- =?iso-8859-1?Q?fUZWxrgBLyQ11byCgDtmNNqs7f82tNcT93dDgMxu/LzPWu6kmM3plS4qqQ?=
- =?iso-8859-1?Q?lX0/m0o3fQKaIHNORIW+OpPNYmCs33IUmAXEqbjyZBXXkmNxLu3BejxmmY?=
- =?iso-8859-1?Q?BMujP51SDwB/3ybrxc2kWebEjCat+u0Jf4QkAMkG1XuHcdJXVIDpqvfOIY?=
- =?iso-8859-1?Q?YMZncUd9G/+pHa2DEgR0M8Nc9T41+3VyH7SbfS5G/JF8qGje3ddL/jCIwh?=
- =?iso-8859-1?Q?w8cwp6pi+2GrX746PnCiMK5TyHEQ0wyRyZbCDHFNyzG+m+azCrRlR1UciD?=
- =?iso-8859-1?Q?SYoDGMBNUy8aRvMi4/FniAx5U3ztPgw5VsaZrp2iN7dmpyQFuAV+TpTwyE?=
- =?iso-8859-1?Q?+J2Mm6sj4oeUqW2D/h0bUV291dKzq6G/lJwhVlJqz+w5HlLnKxGEaZwel7?=
- =?iso-8859-1?Q?d4b4y5EZcxmy0Yhjjhi51ly6SQkkbiZUV9ILCx+9pwMiVGtMvTrXMszCfc?=
- =?iso-8859-1?Q?iu8s7tHqp4Rh1fR4r6tV4wO5SOZZaDZ7GqrJJ4Csv4R5+UF4/sjZxXoTuH?=
- =?iso-8859-1?Q?gnlfCenZ//bZm3MBE8hF943NWfPM7GAZXNbQI+VwrfVf0HmuxRmX6pv+eR?=
- =?iso-8859-1?Q?Lu/V7XNsTdOW1fXJwxafoqHOZBvleChwmpJZnNVIFFrie+MOSxOkxM08xq?=
- =?iso-8859-1?Q?lMS1AclttapzNq76kGMpiOvhNO/4Hzsd4S03eK+SaK1wRyY+hVGzx06XgA?=
- =?iso-8859-1?Q?O3fBO1IrF/q5Yu5nZL3WygpFUyZa5X9ecT1o38aA5M002pVnA3jJ2G+Q?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S233224AbjHHVHV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 17:07:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12EFE54
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Aug 2023 14:06:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1691528797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yk2jMcUKin7KHZxfkihPedUxC+ohlFBFrxtCM2fiaX8=;
+        b=CRpgi2YM6ScAlWcve4pi1QqvaN7YN5HPgx6ZqHBrpFbHGKRsN0DRe8zIVydAfwjTG5jvgx
+        rhEequFmMYU+hNrmvHNILu8SeUr2aq1gyganaXbCYzCfRSkN8/5v+p23kfOZjzGBs8928u
+        2GdyT7C3LConkydEqMzSlUGikV3VYVY=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-340-jE-mpMpLPKyyZkt5-YFJ4A-1; Tue, 08 Aug 2023 17:06:35 -0400
+X-MC-Unique: jE-mpMpLPKyyZkt5-YFJ4A-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-63cd1ea05d7so3011326d6.0
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Aug 2023 14:06:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691528795; x=1692133595;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yk2jMcUKin7KHZxfkihPedUxC+ohlFBFrxtCM2fiaX8=;
+        b=iEqyAZWwuprv4DPAyqGG7EC6/E9pb/GqQpOe1HR/UaFeXIobqJ5cjijifLy8FNjdfe
+         xZi0+1FjLgot1pwISQEmklKGpQT9PqfhvT4OgdX69lb5c18mAvfZCMfjumRhXhwgYQy2
+         /J4e269L2VyCHFtTX3qhJxfoQmdwevZJ1hsfQD5tqNVWtNLWMM1FRYOMmix4pJhZNa6A
+         75rBQ0fyhn0YBK1jMc1iB2gzlQDVbN30/qhWPyCyTD4KcNjwuyY3oiOSPja22LJwzdU5
+         sJD7KJcHx4yWSEBu74aDcl+x+Uz8koP5qnTEwwkQ1FO7bSbodBtGwpP/OmseDvnwNkF1
+         wGNg==
+X-Gm-Message-State: AOJu0Ywg5EgtfV3BrzK4bL6FkHTVqvhgKKNlO4WaFD/FpGn7MfVZu3bI
+        bq6pMVQctbRS2rvGMttkAQowD7GM79a+2hFtUejirSMTwklIlcngvHslYcbqTZYmEvkQQUvlsPR
+        Vz/ozLF7FBamqJjZ0l0dWIw==
+X-Received: by 2002:a05:6214:4114:b0:63d:3b2:482f with SMTP id kc20-20020a056214411400b0063d03b2482fmr12798283qvb.5.1691528795430;
+        Tue, 08 Aug 2023 14:06:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEsnwPimCXVkyjta9FS/2+45j9WVrBZygFxns7FwKn06ZeNICuX0tldF9IOYDjKZKH2ghDHZg==
+X-Received: by 2002:a05:6214:4114:b0:63d:3b2:482f with SMTP id kc20-20020a056214411400b0063d03b2482fmr12798262qvb.5.1691528795172;
+        Tue, 08 Aug 2023 14:06:35 -0700 (PDT)
+Received: from fedora ([2600:1700:1ff0:d0e0::37])
+        by smtp.gmail.com with ESMTPSA id p9-20020a0ce189000000b0063f822dae2csm2597025qvl.54.2023.08.08.14.06.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Aug 2023 14:06:34 -0700 (PDT)
+Date:   Tue, 8 Aug 2023 16:06:32 -0500
+From:   Andrew Halaney <ahalaney@redhat.com>
+To:     Bjorn Andersson <andersson@kernel.org>
+Cc:     Ninad Naik <quic_ninanaik@quicinc.com>, agross@kernel.org,
+        konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_ppareek@quicinc.com, psodagud@quicinc.com,
+        quic_kprasan@quicinc.com, quic_ymg@quicinc.com,
+        Bjorn Andersson <quic_bjorande@quicinc.com>
+Subject: Re: [PATCH v2] pinctrl: qcom: Add intr_target_width field to support
+ increased number of interrupt targets
+Message-ID: <pdag3mk5fru4x7zc3lljrt3mlg2g2pa6l6h7l6fyd6n2kjydli@yvxpnjelwfns>
+References: <20230718064246.12429-1-quic_ninanaik@quicinc.com>
+ <fskuol2q4wbfilrz3x3dcmikhjgfsajgnuqjnp4petxr2ne6at@zfnonisxnjh3>
 MIME-Version: 1.0
-X-OriginatorOrg: epam.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR03MB7136.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e90bda9-000d-4c78-0461-08db983cdc32
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2023 18:25:36.2462
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QtjjaAMWTFWP7ShPdGFf+SZv44HZ8QfErgj7wTqXsPyVGzZ3JB2Y2NQwsbsu1UthOiD6X5FeQWNp+pZH46Oo1ukVVcoY9U+4BVTbuF9wAmo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR03MB8151
-X-Proofpoint-GUID: A4k1w-RHrJqVYQQHTo7eoat-HVZ23Xcd
-X-Proofpoint-ORIG-GUID: A4k1w-RHrJqVYQQHTo7eoat-HVZ23Xcd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-08_15,2023-08-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxlogscore=999 suspectscore=0 malwarescore=0 spamscore=0 clxscore=1011
- priorityscore=1501 mlxscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308080163
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fskuol2q4wbfilrz3x3dcmikhjgfsajgnuqjnp4petxr2ne6at@zfnonisxnjh3>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add new SCMI v3.2 pinctrl protocol bindings definitions and example.
+On Tue, Jul 18, 2023 at 08:32:59AM -0700, Bjorn Andersson wrote:
+> On Tue, Jul 18, 2023 at 12:12:46PM +0530, Ninad Naik wrote:
+> > SA8775 and newer target have added support for an increased number of
+> > interrupt targets. To implement this change, the intr_target field, which
+> > is used to configure the interrupt target in the interrupt configuration
+> > register is increased from 3 bits to 4 bits.
+> >
+> > In accordance to these updates, a new intr_target_width member is
+> > introduced in msm_pingroup structure. This member stores the value of
+> > width of intr_target field in the interrupt configuration register. This
+> > value is used to dynamically calculate and generate mask for setting the
+> > intr_target field. By default, this mask is set to 3 bit wide, to ensure
+> > backward compatibility with the older targets.
+> >
+> > Changes in v2 :
+> > -----------------
+> > - Changed initial definition of intr_target_mask variable to use GENMASK().
+> > - Update commit subject appropiately.
+> > - Add Fixes tag.
+> > - v1 : https://lore.kernel.org/all/20230714061010.15817-1-quic_ninanaik@quicinc.com/
+>
+> Thanks for adding a good changelog, very much appreciated. The changelog
+> should be added below the '---' line though, as it typically don't add
+> value to the git history (except drivers/gpu/* which wants it here...).
+>
+> Perhaps Linus can drop it as he applies the patch, no need to resubmit
+> unless he ask you to.
+>
+> Thanks,
+> Bjorn
+>
 
-Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Gentle ping on this one... but then I realized that linusw isn't CC'ed
+on this patch directly, and I'm unsure of what the workflow is for
+pinctrl. ./scripts/get_maintainer.pl shows he should have been in the CC
+list ideally :)
 
----
-Changes v3 -> v4
-  - reworked protocol@19 format
----
- .../bindings/firmware/arm,scmi.yaml           | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
+Maybe send a v3 with the changelog dropped from the actual message (i.e.
+follow Bjorn's advice), and make sure to include the folks
+get_maintainer tells you to so this gets picked up (or maybe just saying
+Linus' name will make him appear out of the woodworks if we're lucky):
 
-diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Doc=
-umentation/devicetree/bindings/firmware/arm,scmi.yaml
-index 5824c43e9893..5318fe72354e 100644
---- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-+++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-@@ -233,6 +233,39 @@ properties:
-       reg:
-         const: 0x18
-=20
-+  protocol@19:
-+    type: object
-+    allOf:
-+      - $ref: "#/$defs/protocol-node"
-+      - $ref: "../pinctrl/pinctrl.yaml"
-+    unevaluatedProperties: false
-+
-+    properties:
-+      reg:
-+        const: 0x19
-+
-+      '#pinctrl-cells':
-+        const: 0
-+
-+    patternProperties:
-+      '-pins$':
-+        type: object
-+        allOf:
-+          - $ref: "../pinctrl/pincfg-node.yaml#"
-+          - $ref: "../pinctrl/pinmux-node.yaml#"
-+        unevaluatedProperties: false
-+
-+        description:
-+          A pin multiplexing sub-node describe how to configure a
-+          set of pins is some desired function.
-+          A single sub-node may define several pin configurations.
-+          This sub-node is using default pinctrl bindings to configure
-+          pin multiplexing and using SCMI protocol to apply specified
-+          configuration using SCMI protocol.
-+
-+    required:
-+      - reg
-+
- additionalProperties: false
-=20
- $defs:
-@@ -384,6 +417,26 @@ examples:
-             scmi_powercap: protocol@18 {
-                 reg =3D <0x18>;
-             };
-+
-+            scmi_pinctrl: protocol@19 {
-+                reg =3D <0x19>;
-+                #pinctrl-cells =3D <0>;
-+
-+                i2c2-pins {
-+                    groups =3D "i2c2_a", "i2c2_b";
-+                    function =3D "i2c2";
-+                };
-+
-+                mdio-pins {
-+                    groups =3D "avb_mdio";
-+                    drive-strength =3D <24>;
-+                };
-+
-+                keys_pins: keys-pins {
-+                    pins =3D "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
-+                    bias-pull-up;
-+                };
-+            };
-         };
-     };
-=20
---=20
-2.25.1
+    ahalaney@fedora ~/git/linux-next (git)-[7de73ad15b73] % b4 am 20230718064246.12429-1-quic_ninanaik@quicinc.com
+    Grabbing thread from lore.kernel.org/all/20230718064246.12429-1-quic_ninanaik@quicinc.com/t.mbox.gz
+    Analyzing 3 messages in the thread
+    Checking attestation on all messages, may take a moment...
+    ---
+      ✓ [PATCH v2] pinctrl: qcom: Add intr_target_width field to support increased number of interrupt targets
+      ---
+      ✓ Signed: DKIM/quicinc.com
+    ---
+    Total patches: 1
+    ---
+     Link: https://lore.kernel.org/r/20230718064246.12429-1-quic_ninanaik@quicinc.com
+     Base: applies clean to current tree
+           git checkout -b v2_20230718_quic_ninanaik_quicinc_com HEAD
+           git am ./v2_20230718_quic_ninanaik_pinctrl_qcom_add_intr_target_width_field_to_support_increased_number_of_in.mbx
+    ahalaney@fedora ~/git/linux-next (git)-[7de73ad15b73] % ./scripts/get_maintainer.pl ./v2_20230718_quic_ninanaik_pinctrl_qcom_add_intr_target_width_field_to_support_increased_number_of_in.mbx
+    Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
+    Bjorn Andersson <andersson@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
+    Konrad Dybcio <konrad.dybcio@linaro.org> (maintainer:ARM/QUALCOMM SUPPORT,blamed_fixes:1/1=100%)
+    Linus Walleij <linus.walleij@linaro.org> (maintainer:PIN CONTROL SUBSYSTEM,blamed_fixes:1/1=100%)
+    Bartosz Golaszewski <bartosz.golaszewski@linaro.org> (blamed_fixes:1/1=100%)
+    Yadu MG <quic_ymg@quicinc.com> (blamed_fixes:1/1=100%)
+    Prasad Sodagudi <quic_psodagud@quicinc.com> (blamed_fixes:1/1=100%)
+    linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
+    linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM)
+    linux-kernel@vger.kernel.org (open list)
+    ahalaney@fedora ~/git/linux-next (git)-[7de73ad15b73] %
+
+I'm eager to get this fix in so I can describe a missing IRQ or two
+wrt ethernet GPIOs and submit that without stating the dependency
+on this fix! :)
+
+Thanks,
+Andrew
+
