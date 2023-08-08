@@ -2,162 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21540774C5C
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 23:07:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2C56774D30
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 23:42:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233250AbjHHVHW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Aug 2023 17:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59748 "EHLO
+        id S229663AbjHHVmO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Aug 2023 17:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233224AbjHHVHV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 17:07:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12EFE54
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Aug 2023 14:06:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691528797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yk2jMcUKin7KHZxfkihPedUxC+ohlFBFrxtCM2fiaX8=;
-        b=CRpgi2YM6ScAlWcve4pi1QqvaN7YN5HPgx6ZqHBrpFbHGKRsN0DRe8zIVydAfwjTG5jvgx
-        rhEequFmMYU+hNrmvHNILu8SeUr2aq1gyganaXbCYzCfRSkN8/5v+p23kfOZjzGBs8928u
-        2GdyT7C3LConkydEqMzSlUGikV3VYVY=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-340-jE-mpMpLPKyyZkt5-YFJ4A-1; Tue, 08 Aug 2023 17:06:35 -0400
-X-MC-Unique: jE-mpMpLPKyyZkt5-YFJ4A-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-63cd1ea05d7so3011326d6.0
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Aug 2023 14:06:35 -0700 (PDT)
+        with ESMTP id S229636AbjHHVmO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 17:42:14 -0400
+Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04EDB10C
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Aug 2023 14:42:14 -0700 (PDT)
+Received: by mail-oo1-xc2b.google.com with SMTP id 006d021491bc7-56ce156bd37so3912877eaf.3
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Aug 2023 14:42:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691530933; x=1692135733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=765bOZ9Q3Awq9pYBjVlK/6DW6ZaFqIzjRa6sQD5aWp0=;
+        b=r1HmIfkFQtHA3+ektE8isZIInkgNkw2/0CirSxwHmYegAOIj0HjMuS9IVDW667VqDn
+         tQp+oL6lbTfz8tW4MLa5XGbbCGb+DsTEd70RuIqjimPNBy+Jc+t/i7CrtEO+a3lA0Dwr
+         dMeHK4vkjoSx6Ib2HdyieiKG7JsiY2G9FxVMFu2OvfyTIgEkF0uF9lyEtYMAwxmdocSD
+         5Ls8HjxmYdcJt3dJuZH3UxQEPoQWtn3SwpIhuzvMLv/fFGW3dAs7SPmD9jonAfSVG8A2
+         YK9Qhk39DgKtyeSnbW0Hwpog3K2cDbOTIqL4qvYPXgNpgTlxu59ppxrAO1ThaNNAho26
+         U6LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691528795; x=1692133595;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yk2jMcUKin7KHZxfkihPedUxC+ohlFBFrxtCM2fiaX8=;
-        b=iEqyAZWwuprv4DPAyqGG7EC6/E9pb/GqQpOe1HR/UaFeXIobqJ5cjijifLy8FNjdfe
-         xZi0+1FjLgot1pwISQEmklKGpQT9PqfhvT4OgdX69lb5c18mAvfZCMfjumRhXhwgYQy2
-         /J4e269L2VyCHFtTX3qhJxfoQmdwevZJ1hsfQD5tqNVWtNLWMM1FRYOMmix4pJhZNa6A
-         75rBQ0fyhn0YBK1jMc1iB2gzlQDVbN30/qhWPyCyTD4KcNjwuyY3oiOSPja22LJwzdU5
-         sJD7KJcHx4yWSEBu74aDcl+x+Uz8koP5qnTEwwkQ1FO7bSbodBtGwpP/OmseDvnwNkF1
-         wGNg==
-X-Gm-Message-State: AOJu0Ywg5EgtfV3BrzK4bL6FkHTVqvhgKKNlO4WaFD/FpGn7MfVZu3bI
-        bq6pMVQctbRS2rvGMttkAQowD7GM79a+2hFtUejirSMTwklIlcngvHslYcbqTZYmEvkQQUvlsPR
-        Vz/ozLF7FBamqJjZ0l0dWIw==
-X-Received: by 2002:a05:6214:4114:b0:63d:3b2:482f with SMTP id kc20-20020a056214411400b0063d03b2482fmr12798283qvb.5.1691528795430;
-        Tue, 08 Aug 2023 14:06:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEsnwPimCXVkyjta9FS/2+45j9WVrBZygFxns7FwKn06ZeNICuX0tldF9IOYDjKZKH2ghDHZg==
-X-Received: by 2002:a05:6214:4114:b0:63d:3b2:482f with SMTP id kc20-20020a056214411400b0063d03b2482fmr12798262qvb.5.1691528795172;
-        Tue, 08 Aug 2023 14:06:35 -0700 (PDT)
-Received: from fedora ([2600:1700:1ff0:d0e0::37])
-        by smtp.gmail.com with ESMTPSA id p9-20020a0ce189000000b0063f822dae2csm2597025qvl.54.2023.08.08.14.06.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Aug 2023 14:06:34 -0700 (PDT)
-Date:   Tue, 8 Aug 2023 16:06:32 -0500
-From:   Andrew Halaney <ahalaney@redhat.com>
-To:     Bjorn Andersson <andersson@kernel.org>
-Cc:     Ninad Naik <quic_ninanaik@quicinc.com>, agross@kernel.org,
-        konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_ppareek@quicinc.com, psodagud@quicinc.com,
-        quic_kprasan@quicinc.com, quic_ymg@quicinc.com,
-        Bjorn Andersson <quic_bjorande@quicinc.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: Add intr_target_width field to support
- increased number of interrupt targets
-Message-ID: <pdag3mk5fru4x7zc3lljrt3mlg2g2pa6l6h7l6fyd6n2kjydli@yvxpnjelwfns>
-References: <20230718064246.12429-1-quic_ninanaik@quicinc.com>
- <fskuol2q4wbfilrz3x3dcmikhjgfsajgnuqjnp4petxr2ne6at@zfnonisxnjh3>
+        d=1e100.net; s=20221208; t=1691530933; x=1692135733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=765bOZ9Q3Awq9pYBjVlK/6DW6ZaFqIzjRa6sQD5aWp0=;
+        b=NPEvlS74sqfUdrFGakCeFjDY4pRxm9CkmYDiTycLQMfInzvnzUsaB6oJtuGSDE+tTy
+         hXKDLFB9+BAFOQUjZJiGGgJ+vbc1d1NL/3TCShAc1Oyd5cK+BC6ZKDkn4DK3ER+yVzsV
+         9mzxk7AX41OnmCP8nRmOKXRKRnek34SN/Ypzls5aQjiCaXPDUHmUVyXhjBm3I5Hke7+H
+         xwiSKrYa2M+2v8z4wUV/FK8G0ZcOukLRAl0GOtAlbiK6DF/sVTGKjJv6VAzNN9NMUgkR
+         q14sMWzhZo7JxJgKwMh5pzXcXR7Fg02EwVl0eu75QOWnAfLUL3kE6lhiyjN31Z1RaDzR
+         GnjA==
+X-Gm-Message-State: AOJu0YyjRygA/iZfMKNxL5FVt6yeAoztNP6DnM2cajBPCmkduTcQkLBP
+        PiaMXqCZlhzrMJeIWTEGGXsXeuXQPYgH9+RFVJk=
+X-Google-Smtp-Source: AGHT+IFAwLfgnbOmi18Zo3y6LoHgyRUD31XAyvN30kizlfZa9jJXkENaD7g81ioQyzehst17WFKTQCxSiC8+pngsD8A=
+X-Received: by 2002:a4a:9b50:0:b0:56c:d297:164c with SMTP id
+ e16-20020a4a9b50000000b0056cd297164cmr987995ook.4.1691530933092; Tue, 08 Aug
+ 2023 14:42:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fskuol2q4wbfilrz3x3dcmikhjgfsajgnuqjnp4petxr2ne6at@zfnonisxnjh3>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230808153346.335411-1-shenwei.wang@nxp.com> <ZNJ9qDqDIF4s66E8@smile.fi.intel.com>
+ <PAXPR04MB91853FD015613B944B8D2085890DA@PAXPR04MB9185.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB91853FD015613B944B8D2085890DA@PAXPR04MB9185.eurprd04.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 9 Aug 2023 00:41:37 +0300
+Message-ID: <CAHp75VdmfF_P+GUcga5goZEDccjX+W75tLLXTV4OTUk13STd1w@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH] gpio: mxc: release the parent IRQ in runtime suspend
+To:     Shenwei Wang <shenwei.wang@nxp.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 18, 2023 at 08:32:59AM -0700, Bjorn Andersson wrote:
-> On Tue, Jul 18, 2023 at 12:12:46PM +0530, Ninad Naik wrote:
-> > SA8775 and newer target have added support for an increased number of
-> > interrupt targets. To implement this change, the intr_target field, which
-> > is used to configure the interrupt target in the interrupt configuration
-> > register is increased from 3 bits to 4 bits.
+On Tue, Aug 8, 2023 at 9:21=E2=80=AFPM Shenwei Wang <shenwei.wang@nxp.com> =
+wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko <andy@kernel.org>
+> > Sent: Tuesday, August 8, 2023 12:39 PM
+
+...
+
+> > > +static void mxc_update_irq_chained_handler(struct mxc_gpio_port
+> > > +*port, bool enable) {
+> > > +     if (!port)
+> > > +             return;
 > >
-> > In accordance to these updates, a new intr_target_width member is
-> > introduced in msm_pingroup structure. This member stores the value of
-> > width of intr_target field in the interrupt configuration register. This
-> > value is used to dynamically calculate and generate mask for setting the
-> > intr_target field. By default, this mask is set to 3 bit wide, to ensure
-> > backward compatibility with the older targets.
-> >
-> > Changes in v2 :
-> > -----------------
-> > - Changed initial definition of intr_target_mask variable to use GENMASK().
-> > - Update commit subject appropiately.
-> > - Add Fixes tag.
-> > - v1 : https://lore.kernel.org/all/20230714061010.15817-1-quic_ninanaik@quicinc.com/
+> > When can this be true?
 >
-> Thanks for adding a good changelog, very much appreciated. The changelog
-> should be added below the '---' line though, as it typically don't add
-> value to the git history (except drivers/gpu/* which wants it here...).
->
-> Perhaps Linus can drop it as he applies the patch, no need to resubmit
-> unless he ask you to.
->
-> Thanks,
-> Bjorn
->
+> If the function is called at right place and right time, it won't be true=
+. Just in case. =F0=9F=98=8A
 
-Gentle ping on this one... but then I realized that linusw isn't CC'ed
-on this patch directly, and I'm unsure of what the workflow is for
-pinctrl. ./scripts/get_maintainer.pl shows he should have been in the CC
-list ideally :)
+I'm not sure I get this. If you try to add a dead code, don't do that.
+Otherwise can you clarify at which circumstances it can be not a
+dead code?
 
-Maybe send a v3 with the changelog dropped from the actual message (i.e.
-follow Bjorn's advice), and make sure to include the folks
-get_maintainer tells you to so this gets picked up (or maybe just saying
-Linus' name will make him appear out of the woodworks if we're lucky):
-
-    ahalaney@fedora ~/git/linux-next (git)-[7de73ad15b73] % b4 am 20230718064246.12429-1-quic_ninanaik@quicinc.com
-    Grabbing thread from lore.kernel.org/all/20230718064246.12429-1-quic_ninanaik@quicinc.com/t.mbox.gz
-    Analyzing 3 messages in the thread
-    Checking attestation on all messages, may take a moment...
-    ---
-      ✓ [PATCH v2] pinctrl: qcom: Add intr_target_width field to support increased number of interrupt targets
-      ---
-      ✓ Signed: DKIM/quicinc.com
-    ---
-    Total patches: 1
-    ---
-     Link: https://lore.kernel.org/r/20230718064246.12429-1-quic_ninanaik@quicinc.com
-     Base: applies clean to current tree
-           git checkout -b v2_20230718_quic_ninanaik_quicinc_com HEAD
-           git am ./v2_20230718_quic_ninanaik_pinctrl_qcom_add_intr_target_width_field_to_support_increased_number_of_in.mbx
-    ahalaney@fedora ~/git/linux-next (git)-[7de73ad15b73] % ./scripts/get_maintainer.pl ./v2_20230718_quic_ninanaik_pinctrl_qcom_add_intr_target_width_field_to_support_increased_number_of_in.mbx
-    Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
-    Bjorn Andersson <andersson@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
-    Konrad Dybcio <konrad.dybcio@linaro.org> (maintainer:ARM/QUALCOMM SUPPORT,blamed_fixes:1/1=100%)
-    Linus Walleij <linus.walleij@linaro.org> (maintainer:PIN CONTROL SUBSYSTEM,blamed_fixes:1/1=100%)
-    Bartosz Golaszewski <bartosz.golaszewski@linaro.org> (blamed_fixes:1/1=100%)
-    Yadu MG <quic_ymg@quicinc.com> (blamed_fixes:1/1=100%)
-    Prasad Sodagudi <quic_psodagud@quicinc.com> (blamed_fixes:1/1=100%)
-    linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
-    linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM)
-    linux-kernel@vger.kernel.org (open list)
-    ahalaney@fedora ~/git/linux-next (git)-[7de73ad15b73] %
-
-I'm eager to get this fix in so I can describe a missing IRQ or two
-wrt ethernet GPIOs and submit that without stating the dependency
-on this fix! :)
-
-Thanks,
-Andrew
-
+--=20
+With Best Regards,
+Andy Shevchenko
