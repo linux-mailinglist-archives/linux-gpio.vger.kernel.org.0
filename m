@@ -2,170 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19EC67740B6
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 19:08:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3457773FA8
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 18:50:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234037AbjHHRIK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Aug 2023 13:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
+        id S233577AbjHHQuq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Aug 2023 12:50:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234168AbjHHRHY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 13:07:24 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D2259BB
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Aug 2023 09:03:02 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-d44c2ca78ceso702276.0
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Aug 2023 09:03:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691510555; x=1692115355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cCJVGIzRWp3n6+ocRSshdb4+bDJCLF8hHPywBz67DZU=;
-        b=z80BEyYLQKSMQ0Z4lGBzEcnLimXzCHGEDOg9fIyBavpWIrFPIR1Vz3CHh29IbiMuTl
-         6XJSpC1/U6aIVq0YWRHU9UBe/5QQPW0+gYm6ZVhtB9SmDZurRwxxjzIhoRHId3UGvxmf
-         ZKh9nBoowRLIMYdV4CaZ0WzfJYfbcvxCurWYlFpghALT+ukx+bTnHBQ/KQn0K3k9F/wT
-         U92HouoxH1YFJE5b3fsQfz5tLppS3kyFdO/JboSYhY5vRQaR4mvMAnag5IM3ksw6Lqv+
-         fnstJ/ZSxvheGjj8CLfZYc7aZvN0xqb4I94K65gPe7BxNLojh1zKHmEOIizdVu32iBHb
-         wX0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691510555; x=1692115355;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cCJVGIzRWp3n6+ocRSshdb4+bDJCLF8hHPywBz67DZU=;
-        b=fohn9cixY0sFLMRYCItTer8qf/9EEPlAzhSu984d9qOT5O/l2hQXvDU9J83FdECcVL
-         1FcsgqSkMaaaGohNRLHaqnhcsM5bYDbr3zhO5E0/Ey5iaYtRVWpX2sLo386sc2ODdGnB
-         cnqPR3CfL4kWjusAzzLl3StDjGxWdNC44DOjuUR2mdIKB5y6sqo4d3XSLo9iI+JmpJIM
-         l9zoBXeeZYrPKnB/fBQwNvzOSKrmMR24ffqt3TRvfO+O31w1tiiRx633hAfOlzuvBYuu
-         z08/3iHQvgVjMnT+pPpNojdWzi3rgTzo7Z3QbL3I6BgHGsLzJHEFlROwSwRjC1x6kQua
-         qQ1Q==
-X-Gm-Message-State: AOJu0YzkwrmRdBsyrHsvVDyRv6bDLrGBX5iQstq3ZwRvFLbgwF1VvVQx
-        sDrFla7Aovxwzt6ONKS88NwB8lHUqK3HXGBpi/ibfaHYYMQ5u+2L
-X-Google-Smtp-Source: AGHT+IGCQegfute4wq8vuctRCNyh2F9D25HtOrYRCxA1KPyHbK9gB5btAs+lYOVd+Us7kHls2/CFh6KxK9tgT70dyU8=
-X-Received: by 2002:a25:d14e:0:b0:cee:80e:23af with SMTP id
- i75-20020a25d14e000000b00cee080e23afmr3349036ybg.11.1691500721596; Tue, 08
- Aug 2023 06:18:41 -0700 (PDT)
+        with ESMTP id S233559AbjHHQti (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 12:49:38 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2071d.outbound.protection.outlook.com [IPv6:2a01:111:f400:feab::71d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760B117A85;
+        Tue,  8 Aug 2023 08:57:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tpzd9fk/DApq0m5G2PeH+x64IPEL4srZrjwdKfZqlfCyXpEciTWAdEWH4BRnV+zMNE5JxNj2fnSeo1ulfGy5QXhJFeGnQGReahBRVf2P6rxQjR9mavLN6EZ2L+l06iMcla5nLTtcxNoWUsBjFgjIPZRZWaF4kRZ34UBMh1+CEWSQnyK096MqyilqEEzm2G4Xqmdn8nMLqg0uehJqqJtqMWxZdBZDn8wBwM/HNMVASaGBqYV0AychFGk2JmpWGp+ohdwnqGwjogEte9kOmJ3PfdMEOb9hvRb2G4MsBmAgeyWRIovPajOHParMmO/hbBoYqaK40P8FEuNavcjIoVm3ZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4AP7aHA6hzFP91jf6S0BOR/4gut30wbF51EkRCnKf/g=;
+ b=dCPYIXvZiPJ9LBhS0N7xHaUULIX49ZTT3oHoEw3okzZXrbCvUfnoNFFMVCdYsXbgr7QnEvz5V89uoEju6YA6A1zvWQMg5rtwfCX38WLh6NJ2uvSL5Op2DoX9V8XeuaOyYrSMCaTYbFOxjuRTirhGBm0dqsKbppdSbBAGuUBqoNfSziBh7Ofgb5tCASD/l+MGdE/0rXey+VOxwOo8qL3O3v51PNhWp9PQeTj1K4a6A1lcUeibRxcZvmjj+MPwsrt3Tuz3aQpB3qTXJflU7KC/pSAkGk/HbwYFcssW8bIFE49a9OzE6ZCFvO275m8vLIYY9qedEWBdv5LhG1bhyNpsgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=yunjingtech.com; dmarc=pass action=none
+ header.from=yunjingtech.com; dkim=pass header.d=yunjingtech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=yunjingtech.com;
+Received: from SEYPR06MB6507.apcprd06.prod.outlook.com (2603:1096:101:177::9)
+ by KL1PR06MB6323.apcprd06.prod.outlook.com (2603:1096:820:e4::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.26; Tue, 8 Aug
+ 2023 14:56:50 +0000
+Received: from SEYPR06MB6507.apcprd06.prod.outlook.com
+ ([fe80::3fe6:a3fc:55d:fba0]) by SEYPR06MB6507.apcprd06.prod.outlook.com
+ ([fe80::3fe6:a3fc:55d:fba0%4]) with mapi id 15.20.6652.026; Tue, 8 Aug 2023
+ 14:56:49 +0000
+From:   "larry.lai" <larry.lai@yunjingtech.com>
+To:     lee@kernel.org, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, GaryWang@aaeon.com.tw,
+        musa.lin@yunjingtech.com, michael.wang@yunjingtech.com,
+        jack.chang@yunjingtech.com, noah.hung@yunjingtech.com,
+        "larry.lai" <larry.lai@yunjingtech.com>
+Subject: [PATCH V5 0/3] Add support control UP board CPLD/FPGA pin control
+Date:   Tue,  8 Aug 2023 22:55:58 +0800
+Message-Id: <20230808145601.9401-1-larry.lai@yunjingtech.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: TY2PR02CA0005.apcprd02.prod.outlook.com
+ (2603:1096:404:56::17) To SEYPR06MB6507.apcprd06.prod.outlook.com
+ (2603:1096:101:177::9)
 MIME-Version: 1.0
-References: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 8 Aug 2023 15:18:30 +0200
-Message-ID: <CACRpkdZ4OqLywBhCkDmA6bEkf3rfHpCODba9Rhx36fuP8ywt6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] pwm: Manage owner assignment implicitly for drivers
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>, Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@amd.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-mips@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
-        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEYPR06MB6507:EE_|KL1PR06MB6323:EE_
+X-MS-Office365-Filtering-Correlation-Id: 86aae575-296e-43f1-be5c-08db981fb195
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: T4WRLS1ll/+KmUZpuw8n+u29r7Vwcmx+BiTSy4rQeJCcaP3pcSbgpTwTx/cIG8LCkZG3W1ACmrbAxoJrZtjCsUmI2nBj5LuqDfWg5xQW6wEc9E14DRE5Idbw7RYsW/Fjb2+QDdDk3byT+/ie+LGqszGJxsZ4N/YIlY15yKiseSJV5S/VXEJLBBak6VvSjWFr9/oROibWMI4rQcijfnitB4QALfMozCs7N+mm3unysIHQ24FRvvrVLIeIFK2z/z2WJIlMv5LMCCpKtejrXBSbFuThHESa7SHBjVM+cM3PJjuMJysTPEEBfW0C7o4Ki8nWaEPqnVhwQX0fm7n56EPKVQUBclElGgUn1QMSssrsgm1YYQdsMsyyffb6So6RdedEvhICZAR2fsxktyLSS5U0X4LvgqghmgEqhAcG7sFNbXTRMUrrKryPDcGe+sz81r+Qq1uS1RPJYyxgTsxT5o1yzBBYfzRODcCR3gy+SeiY+LsLdK2RI+ei58e2I+5U+vHzD+1ImC3Jc7apMXpqZ7uQ3rLuPC12ziz1SgplK6Zcq0jkMYnPWGO2UAa9K9hk3TmIEZOYvHCbWCmYYxvAKqnVkQJTaIoLvKiTT8uWG+NvBLw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB6507.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(136003)(376002)(366004)(346002)(39830400003)(451199021)(186006)(1800799003)(2616005)(36756003)(4326008)(6512007)(316002)(478600001)(38100700002)(52116002)(38350700002)(66946007)(86362001)(6666004)(66556008)(66476007)(6486002)(6506007)(1076003)(26005)(107886003)(8676002)(8936002)(41300700001)(2906002)(83380400001)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?G3IyMg1KF3+JN1e3EQ6jCKtcKKOULH3M4T8iClqlXzwVx/ylBB1EM+Wx3gYl?=
+ =?us-ascii?Q?KL0x3fR8hTkP0HFvRSDvDNQaQHH+Ovt1hq6IyVGLFPhtBbSFVtH1kwSh2ACu?=
+ =?us-ascii?Q?1pLe6/qGZytkHiAfH0m8cFaKtDUMKDeEYl9xHAfwA65gtbTzlzGp2ZTvlqDr?=
+ =?us-ascii?Q?cNghA8eK2+qwopcAG1fqshXF9OzaqtiH/4goBLe5j6bP4nqNP+Czp3txjP77?=
+ =?us-ascii?Q?wRDnVMKbpbeIM4YNKtbyUZ+zWxrerm3NwVla7Dv9vx3s1gZmIpLn9tjTobKu?=
+ =?us-ascii?Q?l+TW2JdVIluB30Ok/eeuGCgpVs+bxAO9g2hCEboLXDLxG2DRs/Ajp//b/LkD?=
+ =?us-ascii?Q?99Z3b0+xUf7yWzm50potp4K2G7KOUbg17VVqLCeyGoRbx9218VZUPKAo7X5R?=
+ =?us-ascii?Q?GZ9Yo4jFgi8zHJSBT8qgNNG6Kmp0lJuul/df+5uoHuh8kr65px6DzMOco/ip?=
+ =?us-ascii?Q?cFfmHpeugVt+jeQxgxCMtKZbOh9Z5gnrp88qIB1PgI3VkQZ+ooT/QG92d/vn?=
+ =?us-ascii?Q?FCbWlHdKcAq91bJp/OK9pQtH63wiIOnbl0R3qERv8OO78aYSLhiIXJypXS/J?=
+ =?us-ascii?Q?HeIdWgFNrE3pUgJ/GQ6+G8XKv0Xwyl/PwxyMeGe8KjKPpDebt5/WQjQovJ++?=
+ =?us-ascii?Q?z0IFA0EXl88v+8eJgyzLJW9powylY0fKUoDievT3tk4k/PErtBp9fS98ZKM0?=
+ =?us-ascii?Q?ldMR6EAYwZw1plnSC50J67XsDPl6fqyBdtgVX4b3UuYKkDUAOuC7KXdnkind?=
+ =?us-ascii?Q?OtWPoTL7voO3svJMwA+PoJHWxbrRokVp27G8VApj+SfPUWxlI4yrCN4OfdX0?=
+ =?us-ascii?Q?gIX4/rUclGUt4LJZZ+33oRy1cUe0DpDe7G6Zwb517YPlCuG9QRlQXQIMZjI8?=
+ =?us-ascii?Q?yAafCIH7SKHU+p1SS9dAJJoe+SAqA+eLTcESz4Ycx13kKu8AEdSQ3ZQNRasd?=
+ =?us-ascii?Q?lZ57vqZ9KksG4CscHOQ0O2BRpv+EgbouYaqjQx+hyTzJWQ9bMFkp1ZjyZsMy?=
+ =?us-ascii?Q?WKCyxt4FpK3zAXvJvRWQkUufFiD79qlbq5Etn32dMoH3BiV7Qf+xPtiF4PwC?=
+ =?us-ascii?Q?IOKO8tW5yjTIOw+g1SKC1F8/ztfdD3n/m4lgfX1Az3mLE0P2Xy7qEb86lBM/?=
+ =?us-ascii?Q?Qi331Vt6cdJYAqUyCchmG71G4+kmxfF6ZduZA0hxbZUrsOUIARi5eZK7oS42?=
+ =?us-ascii?Q?QsufyQPDkwSDsrsXURaqyI58K7QWCfc2+u8sJxyUB0pn59dpOwAvDDKqd6kC?=
+ =?us-ascii?Q?61M9bEP4tWnuFDMUTYjjaoIj6jcJfmnp8m5ddilnu61azncAbjcf+ETdk4nf?=
+ =?us-ascii?Q?I0kaiVDTRxYaT52QqGMOzosFVLeidh58/OFQJAKELSsMgWNpdK6MJEyy+XyB?=
+ =?us-ascii?Q?eOVz8IumbVoRaJUBtzVIMLlP6/DNBJfvVePJa6hKV6DqrpMulsBYSiaDIYhy?=
+ =?us-ascii?Q?h7m2zXeYQjOkc9qWvybbeOveRImd0/F3fcM022ji/cpsm0ejh/V2DTJQd0LQ?=
+ =?us-ascii?Q?h/IQhfqMZ36QsJuPA0NFv48ChQA9e4dZG13MDpW9tPmQ7k/d0+aniYrttCes?=
+ =?us-ascii?Q?2SH5lzs6169XK9foAjUtxjmKKSdnHX4FRhCD5RUUAoAZJacrAk+FUDMKKYH0?=
+ =?us-ascii?Q?1w=3D=3D?=
+X-OriginatorOrg: yunjingtech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86aae575-296e-43f1-be5c-08db981fb195
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB6507.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2023 14:56:49.5945
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: be2d5505-f7e6-4600-bbe2-b3201c91b344
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fXZRBbFLBWCdvYpiOj+RVJ0AU8URXXPGWoqe8t75judigELlANtoG/EU2Q7q+678QwquVe7D2f8HPSnngB8OwkpgzN6hLEy7cKVz1OPFwto=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6323
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 4, 2023 at 4:28=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+The UP board <https://up-board.org/> is the computer board for 
+Professional Makers and Industrial Applications. We want to upstream 
+the UP board 40-pin GP-bus Kernel driver for giving the users better 
+experience on the software release. (not just download from UP board 
+github)
 
-> (implicit) v1 of this series can be found at
-> https://lore.kernel.org/linux-pwm/20230803140633.138165-1-u.kleine-koenig=
-@pengutronix.de .
->
-> Changes since then only affect documentation that I missed to adapt befor=
-e.
-> Thanks to Laurent for catching that
->
-> Best regards
-> Uwe
->
-> Uwe Kleine-K=C3=B6nig (2):
->   pwm: Manage owner assignment implicitly for drivers
->   pwm: crc: Allow compilation as module and with COMPILE_TEST
+These patches are generated from the Linux kernel mainline tag v6.0.
 
-Clearly the right thing to do! Nice patches.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This is the PATCH V5 and fixed kernel test robot compiler warning and 
+addressed Lee Jones review comments.
 
-Yours,
-Linus Walleij
+larry.lai (3):
+  mfd: Add support for UP board CPLD/FPGA
+  pinctrl: Add support pin control for UP board CPLD/FPGA
+  leds: Add support for UP board CPLD onboard LEDS
+
+ drivers/leds/Kconfig              |   10 +
+ drivers/leds/Makefile             |    1 +
+ drivers/leds/leds-upboard.c       |   79 ++
+ drivers/mfd/Kconfig               |   12 +
+ drivers/mfd/Makefile              |    1 +
+ drivers/mfd/upboard-fpga.c        |  492 +++++++++++
+ drivers/pinctrl/Kconfig           |   14 +
+ drivers/pinctrl/Makefile          |    1 +
+ drivers/pinctrl/pinctrl-upboard.c | 1377 +++++++++++++++++++++++++++++
+ include/linux/mfd/upboard-fpga.h  |   55 ++
+ 10 files changed, 2042 insertions(+)
+ create mode 100644 drivers/leds/leds-upboard.c
+ create mode 100644 drivers/mfd/upboard-fpga.c
+ create mode 100644 drivers/pinctrl/pinctrl-upboard.c
+ create mode 100644 include/linux/mfd/upboard-fpga.h
+
+-- 
+2.17.1
+
