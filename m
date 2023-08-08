@@ -2,96 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57993774136
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 19:16:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79086774368
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 20:03:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234260AbjHHRQv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Aug 2023 13:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
+        id S235071AbjHHSD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Aug 2023 14:03:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234239AbjHHRQW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 13:16:22 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8128A30C1
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Aug 2023 09:06:41 -0700 (PDT)
-Received: from dggpemm100005.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RKsqw0nZcz1L93H;
-        Tue,  8 Aug 2023 20:26:36 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm100005.china.huawei.com (7.185.36.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 8 Aug 2023 20:27:45 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 8 Aug
- 2023 20:27:45 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-gpio@vger.kernel.org>
-CC:     <vaibhaavram.tl@microchip.com>,
-        <kumaravel.thiagarajan@microchip.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>,
-        <tharunkumar.pasumarthi@microchip.com>, <yangyingliang@huawei.com>
-Subject: [PATCH -next v2] misc: microchip: pci1xxxx: fix return value in pci1xxxx_otp_eeprom_probe()
-Date:   Tue, 8 Aug 2023 20:24:53 +0800
-Message-ID: <20230808122453.556632-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S232960AbjHHSDS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 14:03:18 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0024ED9282;
+        Tue,  8 Aug 2023 09:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691512280; x=1723048280;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vdeuurTFaZQKhbFyW+6Tv/hjCwIufVCn/vBK6Sa8C78=;
+  b=IgZAhqXGoho8BxksK9QQJyEWebG+ahF5C+z4PNoYnQDaopDzbjg8ZghD
+   ++bGyqguC74AXc9nOsfqj0Th6xo92MClTDIlahA+s5wON0NucNPEplGA0
+   8bmS2ANG14tLU71hcPs6gyKBnQr659DPB1SjXgObHoaRrAJab3ovohHOb
+   QfL750RoGwVCgv4xTdRMEXIRFVqduc3XQlzk4EFFufF1WNhk4Vwwg2qEX
+   89xi72yOfLY6YbiPgNuVEqDBDT5ezMCnsB9gFmdvd5/cwv8VXmCuht5Q7
+   x3MaMFiMo5yg0XohEa+gyX4pr6pDXShXGyi4LlTahVfDiHNG+lvRalu75
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="401778704"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="401778704"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 06:09:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="1062012375"
+X-IronPort-AV: E=Sophos;i="6.01,156,1684825200"; 
+   d="scan'208";a="1062012375"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Aug 2023 06:09:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qTMSi-0097P4-1E;
+        Tue, 08 Aug 2023 16:09:24 +0300
+Date:   Tue, 8 Aug 2023 16:09:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Florian Fainelli <florian.fainelli@broadcom.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] pinctrl: iproc-gpio: Silence probe deferral messages
+Message-ID: <ZNI+hLy4jYgctYXX@smile.fi.intel.com>
+References: <20230807213022.1862903-1-florian.fainelli@broadcom.com>
+ <20230807213022.1862903-2-florian.fainelli@broadcom.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807213022.1862903-2-florian.fainelli@broadcom.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-devm_nvmem_register() never returns NULL pointer, it will return
-ERR_PTR() when it fails, so replace the check with IS_ERR() and
-use PTR_ERR() as return code.
+On Mon, Aug 07, 2023 at 02:30:21PM -0700, Florian Fainelli wrote:
+> We can have gpiochip_add_data() return -EPROBE_DEFER which will make us
+> produce the "unable to add GPIO chip" message which is confusing. Use
+> dev_err_probe() to silence probe deferral messages.
 
-Fixes: 9ab5465349c0 ("misc: microchip: pci1xxxx: Add support to read and write into PCI1XXXX EEPROM via NVMEM sysfs")
-Fixes: 0969001569e4 ("misc: microchip: pci1xxxx: Add support to read and write into PCI1XXXX OTP via NVMEM sysfs")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
-v1 -> v2:
-  Use PTR_ERR_OR_ZERO().
----
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+...
 
-diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
-index 3d3d1578119a..1b5b61cdacde 100644
---- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
-+++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
-@@ -379,8 +379,8 @@ static int pci1xxxx_otp_eeprom_probe(struct auxiliary_device *aux_dev,
- 
- 		priv->nvmem_eeprom = devm_nvmem_register(&aux_dev->dev,
- 							 &priv->nvmem_config_eeprom);
--		if (!priv->nvmem_eeprom)
--			return -ENOMEM;
-+		if (IS_ERR(priv->nvmem_eeprom))
-+			return PTR_ERR(priv->nvmem_eeprom);
- 	}
- 
- 	release_sys_lock(priv);
-@@ -398,10 +398,8 @@ static int pci1xxxx_otp_eeprom_probe(struct auxiliary_device *aux_dev,
- 
- 	priv->nvmem_otp = devm_nvmem_register(&aux_dev->dev,
- 					      &priv->nvmem_config_otp);
--	if (!priv->nvmem_otp)
--		return -ENOMEM;
- 
--	return ret;
-+	return PTR_ERR_OR_ZERO(priv->nvmem_otp);
- }
- 
- static void pci1xxxx_otp_eeprom_remove(struct auxiliary_device *aux_dev)
+>  	ret = gpiochip_add_data(gc, chip);
+>  	if (ret < 0) {
+> -		dev_err(dev, "unable to add GPIO chip\n");
+> +		dev_err_probe(dev, ret, "unable to add GPIO chip\n");
+>  		return ret;
+
+	return dev_err_probe(...);
+
+>  	}
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
