@@ -2,191 +2,283 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3307774C24
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 23:03:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83C0D7749DD
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 22:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235124AbjHHVDO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Aug 2023 17:03:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56976 "EHLO
+        id S234130AbjHHUFv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Aug 2023 16:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234339AbjHHVDE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 17:03:04 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A425FAA4
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Aug 2023 11:07:44 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-564ef63a010so91755a12.0
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Aug 2023 11:07:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1691518063; x=1692122863;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNB9PBX+R84ecp55IsFR5qJhn0vu2a9VSkor2FpXx8U=;
-        b=Nha62rvCE/kmQFNXWjQcNi9k9PPUMxjF67zkzDv0x7DNw65HN6GLmgtrvtpRfrpBFL
-         +VCsfNVazlwFfjbPZYQglUZGB85euWgeyXLOajbaHtkViDW2iu7BbCrWarWq7zRsG0Qg
-         5oUB5H4Vpqp9Y5noXK6CmJpXvgNGlAn2CxW/s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691518063; x=1692122863;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNB9PBX+R84ecp55IsFR5qJhn0vu2a9VSkor2FpXx8U=;
-        b=BuDHRBxS316bgfZcE/5IovIyfFTHg9wN+3/fYk+S+oAYigQE5dPWbJIwFG0aCuuA2s
-         sBDYW8S8ftJ7Kfvn/b0j4UNLXVmBROcqynioRcrHIxJpdSwt05iKUQ/M9D3NmtAukx0k
-         LWjXDflUfoE431mM0nya8IP9r3G3VQXurjdPNwxzsQ4qZ6Y957EV8/IjodCj0+iANFQB
-         fb0bw96DPwuasIkjfLA6IBCcDMrNZmF92TdJym7Kk/jZrj6eRFm7Q1kFTFsCDM2oDJeJ
-         F3f8miMQSuEP9MuNMSLBj641DPKgISD0hQCiRAknOEzGlSu9pKyso1dRWREV0fn+Qd3l
-         QpMQ==
-X-Gm-Message-State: AOJu0YxKTb2TNSg5Zr8GeiWwrkCqS8a2SS/v1rFm6A4YqRKTYGu6lwsT
-        OtK6SdFdnCCREPPSX7K50EMzow==
-X-Google-Smtp-Source: AGHT+IG0HmGIL7nO84nsLyrRwT8W8ltx+IezVllaebNL5g7CayrjkjWph4OiWB61+HFtyQnIVp2Pog==
-X-Received: by 2002:a05:6a20:8f0c:b0:138:68b9:138e with SMTP id b12-20020a056a208f0c00b0013868b9138emr14627624pzk.8.1691518063452;
-        Tue, 08 Aug 2023 11:07:43 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id y28-20020a637d1c000000b00564beacbd20sm6683067pgc.74.2023.08.08.11.07.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Aug 2023 11:07:42 -0700 (PDT)
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
+        with ESMTP id S233994AbjHHUFk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 16:05:40 -0400
+Received: from mx0b-0039f301.pphosted.com (mx0b-0039f301.pphosted.com [148.163.137.242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E9A995E5;
+        Tue,  8 Aug 2023 11:25:57 -0700 (PDT)
+Received: from pps.filterd (m0174683.ppops.net [127.0.0.1])
+        by mx0b-0039f301.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 378E6eOx003021;
+        Tue, 8 Aug 2023 18:25:40 GMT
+Received: from eur01-ve1-obe.outbound.protection.outlook.com (mail-ve1eur01lp2057.outbound.protection.outlook.com [104.47.1.57])
+        by mx0b-0039f301.pphosted.com (PPS) with ESMTPS id 3sbpek1ayb-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Aug 2023 18:25:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VB+UT3jkHqur7UgD2/mHA2jlK3mskdpnq8MN99nECYkE5+0uUEE+dIQ7h0t2R9Ii0Xi1AUknpUwB6UqRLnm8rfSK7ZdWMWXfdJ5wNzn0Km59+wjq/qOX4m8WOqbUve66GdwVVvZ8Y3B0lTVed5N4PTAmXCSYkl04THp28F5I4Lu3ReX7Cqd8LzM8X5364kWB1qRdupPrL+31Dunsd5OxePejTQGC5Uk01+a1vjKOTtG8F0jSOQ4lHeACL30c9R95DyqQ20jyRByehUrCiLSLDAc2iKWxLWgwQ2BUcpZzDICPa775INfYgM4A+oec3VWSZjdd92egWQb5pHcItiWmew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OMfte9DhB08hbs2PmBiEDR00GZEeLX85flz/q2FrBY0=;
+ b=SGNbvW5ATS+SYPLOMgSWxIyMK+GJCWufJFPLz6RkKLylLUGRnA1t4yrWg7wQZhfAcTxdHO/VnslDugQUVi7txXwnCrRjSLvsAzzpf1vcI5JxKKeEWDnj1itM88L/WTqGt0mjMWwvEw/h0lpAaM13zgm5hPeNLdhBlpLubMwWuC8cmrFS41uFDkbyapkTt3/c/VkabYuybNUrjSSkPa7ZeYX5Bqe/EUMuMaDph4Wpqc0dGIffEl4qifie20L8FUlbwMeLYON0Knr9shA8SMQndctNTFaVyZs+ZGL45bQ/SjipFpTvtOejW1JUd6cxp/xVLDbxHof/0v3eLCStmV4zrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
+ dkim=pass header.d=epam.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OMfte9DhB08hbs2PmBiEDR00GZEeLX85flz/q2FrBY0=;
+ b=SRJ7FS/AnM/p0NepImFTh5Gsht71gSUbJUXEHJyXjzzj5IapFmrwuCHT5nNFDJ4ywusKOUxlRK4/hsbz1KZ8s6e2vh27z9cmDIyjakySAIQvYmfmjkBpkJn48ozRGHqt/HXy0bo07+HxlUzFJptFFAg2nmAnIe5Zr4jHd2G9mgN4RlZ5qIXdUFYutyFA13tFFSgqPBcWB/3kxBiDTVNYszUoRz+sbflOOUQ8IVZ/x8sxozc9M9W/ZfKPDPAuLE1JRDicmv2+S2ZA7o/QOmoBrkU01L/kS+FtL79HbJGAnY4HUqUZ3H3ePIQ4epjfqcFDDZI1wSyx63it9xTA1j/iMA==
+Received: from PA4PR03MB7136.eurprd03.prod.outlook.com (2603:10a6:102:ea::23)
+ by AS4PR03MB8458.eurprd03.prod.outlook.com (2603:10a6:20b:519::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.27; Tue, 8 Aug
+ 2023 18:25:35 +0000
+Received: from PA4PR03MB7136.eurprd03.prod.outlook.com
+ ([fe80::ccb5:5aee:f10d:ab26]) by PA4PR03MB7136.eurprd03.prod.outlook.com
+ ([fe80::ccb5:5aee:f10d:ab26%4]) with mapi id 15.20.6652.026; Tue, 8 Aug 2023
+ 18:25:34 +0000
+From:   Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+To:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>
+CC:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM IPROC ARM
-        ARCHITECTURE)
-Subject: [PATCH 1/2 v2] pinctrl: iproc-gpio: Silence probe deferral messages
-Date:   Tue,  8 Aug 2023 11:07:32 -0700
-Message-Id: <20230808180733.2081353-2-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230808180733.2081353-1-florian.fainelli@broadcom.com>
-References: <20230808180733.2081353-1-florian.fainelli@broadcom.com>
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [PATCH v4 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol protocol
+ basic support
+Thread-Topic: [PATCH v4 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Thread-Index: AQHZyiW4JT1gPXk7akOBuyCkkIz0Cw==
+Date:   Tue, 8 Aug 2023 18:25:34 +0000
+Message-ID: <cover.1691518313.git.oleksii_moisieiev@epam.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR03MB7136:EE_|AS4PR03MB8458:EE_
+x-ms-office365-filtering-correlation-id: b0d9789d-62c9-4fdd-68a2-08db983cdb48
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QUGJLazb8+7b5r7EhVbMw5xx0IczQwBvOZCnmeiVWFBUPQxSlqFmEIOxhYr/RMASWeB2D95dzvdGH7SwX5Dr5fPwNV0+w1gDoDSCGV+4N0ctzgSsw85dsUFsrK+/mSV5ZfNzo/GgpKKviq1CrsSw10TATSqzBKtWV2wrpb/qTjs4/sLeCsqUkIoLj++/s/eU83JBxHAjCaClEetTZeduYSNouxSuO06QCB8ZcRFtdWENK0d0W5eWIV5b++f8VedyhajsYd6sJa6jZQn0wWa283tSv6SselH9DqY1nNQYdmGlBvEHxAGfJe7tSl5U0xZQ3lGHYDbm/nJBraz7c+erAn91Z/uB7hw8j5gZ7iDX67CT+KahwxHxBwKW8I+dRICHJCVUxP5BTEeCIAnnIzybs4IKwYnIiiCAkqoa0/HW0g9TZnkX3+keHvHKEgz+jhGuLktKbyiHRzsHteuQJb6/cGMIyjvPlsSoi7CQ6vMc1xGsFaBB1gfciuuNTI6ulyp2FY6Wu7axO0ENx0z2SQF0C/GY7MvM/XwoxbP0stLJhiNiDkbM9X3yIxxfSVAADHhLqup0Mytd0VjE6dzokYHOxNlD2CnjHbvlCrKtJpazVEU=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR03MB7136.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(376002)(366004)(346002)(136003)(451199021)(1800799003)(186006)(7416002)(38070700005)(8936002)(8676002)(5660300002)(64756008)(4326008)(6916009)(41300700001)(316002)(83380400001)(86362001)(2906002)(6512007)(6486002)(71200400001)(966005)(2616005)(6506007)(26005)(36756003)(76116006)(66476007)(91956017)(66556008)(66946007)(66446008)(478600001)(122000001)(54906003)(38100700002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?tjwQmSLAX5NNgZVRbaTNov1SEOusjDmpF4FvZxN8DrID0V3bvaO6Bqwptf?=
+ =?iso-8859-1?Q?72Zan2v+VQcPY0xvXcP0acVPiJU/2EKlZnsmR5U9cerOUXoqP1JGEqyZ5C?=
+ =?iso-8859-1?Q?DAr7iS9poNJAiJYofevIqwtYX45/osioxg1tIS6PCwtlWgn7K1y2Wadhnw?=
+ =?iso-8859-1?Q?MX+E7d/aLny4n/qGqnXrPmPGNgHBbarTx6ySTfad606aRfH0FraevZj57k?=
+ =?iso-8859-1?Q?7vxzB/1IkQAQ5l5VfK68DdMkJ+gIoH9wMksjH2xnAqMIXqVn1roZ5pPY5w?=
+ =?iso-8859-1?Q?7XX5zpKuQFClQsex/3OKDzgqfaAJUEJG3Qd3OJYOkAjP2rHINYRpNLdk2B?=
+ =?iso-8859-1?Q?hq1Jd6M5IBgy4pvLjRm1IEtoeL97sUo30LJL8sTo6/23X9SS/ZS29FipjB?=
+ =?iso-8859-1?Q?NnqKZNKLZB7zTAHzZrWCYYHZNxZV4kz31ed18JKCCPdRr6u39f1p6iBExB?=
+ =?iso-8859-1?Q?mMOuJ/t5rDIEqygTwz32Pk+48KsA+PazxVnSA1ElGZFL0gEQt74RqzUWbf?=
+ =?iso-8859-1?Q?tgJ9ya73flxFK6sJGUKpon3SS9RWxyqNYXTEY1XcFl9OjHnl0n/Z1Jx3VC?=
+ =?iso-8859-1?Q?OtmPemul/NpxD9/CsFGontKkulbAqZdqi8XQk1xUXYJOzNudbcAuEQ3LiN?=
+ =?iso-8859-1?Q?18PcM0IIQpz94bUqw+p+eCPFbolAO+0hEeSBSzo2ez106t99QJoYrmTOhh?=
+ =?iso-8859-1?Q?6WZT3fkR8ULaYSGIk055iKPws9nRwaWbpo4HhCnXbn/eN/JgJvWhBsHinz?=
+ =?iso-8859-1?Q?pyx5JC24/gL+dOdzaf4ohBFAWSzsJPB0WXjqJb8KvEHyxte28Q+dt6sBcA?=
+ =?iso-8859-1?Q?Zndm7zl6L9E/YqPvUyAa1y0kwDyVR3a5sU8sLeFQMjnWPqQyCVHcCBxa4/?=
+ =?iso-8859-1?Q?2F/E4PPabYknMEKM46tdt/RjVqpMriPEMei08/FHB0NtkhZA+Q7jgjWyUD?=
+ =?iso-8859-1?Q?YGOmsTE870bYrxcQ6UJWDtnmTl58uP+dXxGFmzNYgUm6GbsnbbE4z+JQ39?=
+ =?iso-8859-1?Q?KHwKzjDUrhOGPuK0xcvqAR9wmntdYjnFeVAVW540qlMziSwcELPMVC4faU?=
+ =?iso-8859-1?Q?tj1KWPI7DoyGfv4C/4P+Djf0dE/EIbIUBw57IDpKdkl2mh+wmWEBfYw2bs?=
+ =?iso-8859-1?Q?vWjev7tDPOGSFgWR3k2ViasZEKA+oRnpRsxQgmVf/KA7NPNopvlhgnibkt?=
+ =?iso-8859-1?Q?nMMqYHpU55o3+VDzLYpSr65MGABk5VDfyGzFGwYR2Gmjr6PnAzCuN1RhzN?=
+ =?iso-8859-1?Q?vD7/1Ltlbs/pdD0hNrjzydthzJ8qU9K4FyKma3okisTEMHDM/s+ZR2M6r2?=
+ =?iso-8859-1?Q?Q4nj/v/hsa1CVYZ5P9Bj0F0yeVCik2P9NtD5+lfiIQqXG0bpmvqdASw+BB?=
+ =?iso-8859-1?Q?ETHrjl91uefB5nQEaPeq2OADaHuqBpbr6G23w7uxZa3uzYlYzwC/V0+YHl?=
+ =?iso-8859-1?Q?XDcnxjcjRg1gMgOOAYOk/iTbd9SOfJu2YoxNOSy/jkJ9fUrSfMkAe/SlF3?=
+ =?iso-8859-1?Q?62uEc3i4cQvYrM9uu12pBwm4sy2ygu3AY5feDyyjHUrV/lL1BTFltVu5mx?=
+ =?iso-8859-1?Q?z1Rm9D0dsBRrI/mM/6Jaj+cVX4Nom2m6T+rYthh1A77VYjPSCGqv6pUcDc?=
+ =?iso-8859-1?Q?XzL3BOItGhxhZx+oAE3wQ4q3mJHc2cuATHzLBUOPXFq7+HLBVbDYy5jA?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="00000000000052938c06026d3d08"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: epam.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR03MB7136.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0d9789d-62c9-4fdd-68a2-08db983cdb48
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Aug 2023 18:25:34.7146
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z2EumVU+SVekyF40Hwd2+yEN0pn3gGgdAjqm/ptg0opiffJiYSQlaIUX4RmcJf4GYDTz5pq9gKfNqUIU8CMNlCgZPrjzkS1a/pWqOkZw1L0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR03MB8458
+X-Proofpoint-ORIG-GUID: O1GjMCwLO89JzjOUSJ9itAbBLffveSyM
+X-Proofpoint-GUID: O1GjMCwLO89JzjOUSJ9itAbBLffveSyM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-08_15,2023-08-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308080163
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---00000000000052938c06026d3d08
-Content-Transfer-Encoding: 8bit
+This Patch series is intended to introduce the generic driver for
+pin controls over SCMI protocol, provided in the latest beta version of DEN=
+0056 [0].
 
-We can have gpiochip_add_data() return -EPROBE_DEFER which will make us
-produce the "unable to add GPIO chip" message which is confusing. Use
-dev_err_probe() to silence probe deferral messages.
+On ARM-based systems, a separate Cortex-M based System Control Processor (S=
+CP)
+provides control on pins, as well as with power, clocks, reset controllers.=
+ In this case,
+kernel should use one of the possible transports, described in [0] to acces=
+s SCP and
+control clocks/power-domains etc. This driver is using SMC transport to com=
+municate with SCP via
+SCMI protocol and access to the Pin Control Subsystem.
 
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+The provided driver consists of 2 parts:
+ - firmware/arm_scmi/pinctrl.c - the SCMI pinctrl protocol inmplementation
+   responsible for the communication with SCP firmware.
+
+ - drivers/pinctrl/pinctrl-scmi.c - pinctrl driver, which is using pinctrl
+  protocol implementation to access all necessary data.
+
+Configuration:
+The scmi-pinctrl driver can be configured using DT bindings.
+For example:
+/ {
+	cpu_scp_shm: scp-shmem@0x53FF0000 {
+		compatible =3D "arm,scmi-shmem";
+		reg =3D <0x0 0x53FF0000 0x0 0x1000>;
+	};
+
+	firmware {
+		scmi {
+			compatible =3D "arm,scmi-smc";
+			arm,smc-id =3D <0x82000002>;
+			shmem =3D <&cpu_scp_shm>;
+			#address-cells =3D <1>;
+			#size-cells =3D <0>;
+
+			scmi_pinctrl: protocol@19 {
+				reg =3D <0x18>;
+				#pinctrl-cells =3D <0>;
+
+				i2c2_pins: i2c2 {
+					groups =3D "i2c2_a";
+					function =3D "i2c2";
+				};
+			};
+		};
+	};
+};
+
+&pfc {
+	/delete-node/i2c2;
+};
+
+So basically, it's enough to move pfc subnode, which configures pin group t=
+hat should work through
+SCMI protocol to scmi_pinctrl node. The current driver implementation is us=
+ing generic pinctrl dt_node
+format.
+
+I've tested this driver on the Renesas H3ULCB Kingfisher board with pinctrl=
+ driver ported to the
+Arm-trusted-firmware. Unfortunately, not all hardware was possible to test =
+because the Renesas
+pinctrl driver has gaps in pins and groups numeration, when Spec [0] requir=
+es pins, groups and
+functions numerations to be 0..n without gaps.
+
+Also, sharing link to the ATF pinctrl driver I used for testing:
+https://github.com/oleksiimoisieiev/arm-trusted-firmware/tree/pinctrl_rcar_=
+m3_up
+
+[0] https://developer.arm.com/documentation/den0056/latest
+
 ---
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Changes v3 -> v4:
+   - Fixed MAINTAINERS file description
+   - adjusted pinctrl ops position and callback names
+   - add trailing coma in scmi_protocol list
+   - removed unneeded pi checks
+   - corrected selector check
+   - resource allocation refactoring
+   - scmi_*_info swap params to generate better code
+   - style, add trailing coma in definitions
+   - reworked protocol@19 format in device-tree bindings
+   - ordered config option and object file alphabetically
+   - rephrased PINCTRL_SCMI config description
+   - formatting fixes, removed blank lines after get_drvdata call
+   - code style adjustments
+   - add set_drvdata call
+   - removed goto label
+   - refactoring of the devm resource management
+   - removed pctldev !=3D NULL check
+   - fix parameter name in pinconf-group-get
+   - probe function refactoring
+   - removed unneeded pmx checks
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-index cc3eb7409ab3..0e3f787b93ef 100644
---- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-@@ -891,10 +891,8 @@ static int iproc_gpio_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = gpiochip_add_data(gc, chip);
--	if (ret < 0) {
--		dev_err(dev, "unable to add GPIO chip\n");
--		return ret;
--	}
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "unable to add GPIO chip\n");
- 
- 	if (!no_pinconf) {
- 		ret = iproc_gpio_register_pinconf(chip);
--- 
-2.34.1
+Changes v2 -> v3:
+   - update get_name calls as suggested by Cristian Marussi
+   - fixing comments
+   - refactoring of the dt_bindings according to the comments
+Changes v1 -> v2:
+   - rebase patches to the latest kernel version
+   - use protocol helpers in the pinctrl scmi protocol driver implementatio=
+n
+   - reworked pinctrl_ops. Removed similar calls to simplify the interface
+   - implementation of the .instance_deinit callback to properly clean reso=
+urces
+   - add description of the pinctrl protocol to the device-tree schema
 
+---
+Cristian Marussi (1):
+  firmware: arm_scmi: Add optional flags to extended names helper
 
---00000000000052938c06026d3d08
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Oleksii Moisieiev (3):
+  firmware: arm_scmi: Add SCMI v3.2 pincontrol protocol basic support
+  pinctrl: Implementation of the generic scmi-pinctrl driver
+  dt-bindings: firmware: arm,scmi: Add support for pinctrl protocol
 
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIG3LECCGsvEkMbhg
-l51Ox5jfTkXibQGiUAr+DxcdGOSUMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTIzMDgwODE4MDc0M1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBB4YfMAtY/AGXnL5u4OVfCeP+zAcFv7CBx
-7GrVKJTJ0IlFPIO15ouMye/mYB44T2eanToV+Dfri8zownBdtR0pDqqR3YkMzO4Dw4v8OkMzIZ6l
-SsO8xWmJ0C/4bd4JbOTvkUuJfOE4PLByVfE+QoiPPSuWLC62ekpWgSc2Hmj7Hg1UNR8tbGhdbxqF
-aXF3C84tFqMMmArxE30PfkmLg/7MWtUMLw7NQTjNs3cbhQrqwfjV+hpOfnH6TpAATS6IDsV2ADfb
-yVN3fOKX7WPjfDEtB0hB6PEkPPkNpabZRQ7t4qCt5riiFejq95NpFPsyc3BdHVDGjllnIaSyE58w
-AgcJ
---00000000000052938c06026d3d08--
+ .../bindings/firmware/arm,scmi.yaml           |  53 ++
+ MAINTAINERS                                   |   7 +
+ drivers/firmware/arm_scmi/Makefile            |   2 +-
+ drivers/firmware/arm_scmi/clock.c             |   2 +-
+ drivers/firmware/arm_scmi/driver.c            |   9 +-
+ drivers/firmware/arm_scmi/perf.c              |   3 +-
+ drivers/firmware/arm_scmi/pinctrl.c           | 791 ++++++++++++++++++
+ drivers/firmware/arm_scmi/power.c             |   2 +-
+ drivers/firmware/arm_scmi/powercap.c          |   2 +-
+ drivers/firmware/arm_scmi/protocols.h         |   4 +-
+ drivers/firmware/arm_scmi/reset.c             |   3 +-
+ drivers/firmware/arm_scmi/sensors.c           |   2 +-
+ drivers/firmware/arm_scmi/voltage.c           |   2 +-
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-scmi.c                | 442 ++++++++++
+ include/linux/scmi_protocol.h                 |  42 +
+ 17 files changed, 1367 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/firmware/arm_scmi/pinctrl.c
+ create mode 100644 drivers/pinctrl/pinctrl-scmi.c
+
+--=20
+2.25.1
