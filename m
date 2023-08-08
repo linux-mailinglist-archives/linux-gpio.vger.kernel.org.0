@@ -2,87 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64EF0774B96
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 22:50:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B545774B3B
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Aug 2023 22:43:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234590AbjHHUuu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Aug 2023 16:50:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
+        id S233958AbjHHUnp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Aug 2023 16:43:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234564AbjHHUuf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 16:50:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54934171AA;
-        Tue,  8 Aug 2023 09:45:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 27DD26243D;
-        Tue,  8 Aug 2023 08:28:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A10C433C7;
-        Tue,  8 Aug 2023 08:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691483312;
-        bh=OtN5TC3lLhHvv2gUjXivG/p6EAIkEUCxlvCJ35J9k8E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KEH8U4jXIWmwb3yoglAO/RZVZZoCWyAExPW9mEpVRtvV1TYvMiwOndF/YG1ZAeFCk
-         AEHLFM6LG8l4/ZekJB7LfC3Nv7kMKKE315Zjg0+IcLRbwImvD1jK6fzUYy4IcOx6sA
-         o+5litlDPMscM7OI423XpOLsSKDcY0KXGMoH7qNH4MRI8y/W4UD2i61hONbie6lCF/
-         EY0ijYy7b18+i/rPO7PY9iwyDzc3/9/X7RVFQbey9029kDL4Q2bEI3vRfErih6Q9aN
-         PWkEU1I79GwaDselBoHBM+rQMal+lu6HH6yfH6SYgBpqRVBClKSDxNU964yV7l7GBL
-         OUcCE18EgN8tA==
-Date:   Tue, 8 Aug 2023 10:28:28 +0200
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: regression from commit b0ce9ce408b6 ("gpiolib: Do not unexport GPIO
- on freeing")
-Message-ID: <20230808102828.4a9eac09@dellmb>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233994AbjHHUn3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Aug 2023 16:43:29 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03443208B;
+        Tue,  8 Aug 2023 09:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691512248; x=1723048248;
+  h=from:to:cc:subject:date:message-id;
+  bh=FHiTNDUCzaH3CxhFl0M+eCf/lVRDrPXo5yOGv54eeZQ=;
+  b=YH6Zi0bGvGGNQyhYAnDp66gA22iieQyeNuwt1WxGB4kdYkpaeIbt25Hc
+   Qmwn4ubKsKuIIfEkwTNe/RHElPVU9A0uxWzOUvRVLpoTQni4z7f1hxyaJ
+   7VNqahDHPl0D/HZCiyD17sDp+cb4lhF2ZaJgUHtyynztM8AmGTsxyU8Ll
+   7zuWErGjNKS+qsSsVPEfeBa/0udgRrQcnoPbOmeeI9dA82T8g8cKOs+t5
+   /q+cVR2K9fas2Flif+qxiHhEsjjmwgV/eIWGxATcYHvBFd/bf7elKK3l3
+   Z6OtLnp+ouLeOfT0jmXJTMppu2E0DXV+nUt7kQNqZ7fsdu9RyHPxBdLfF
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="401725840"
+X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
+   d="scan'208";a="401725840"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 01:49:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="760827832"
+X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
+   d="scan'208";a="760827832"
+Received: from inlubt0316.iind.intel.com ([10.191.20.213])
+  by orsmga008.jf.intel.com with ESMTP; 08 Aug 2023 01:49:10 -0700
+From:   Raag Jadav <raag.jadav@intel.com>
+To:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+        andriy.shevchenko@linux.intel.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
+        Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v1] pinctrl: baytrail: consolidate common mask operation
+Date:   Tue,  8 Aug 2023 14:19:01 +0530
+Message-Id: <20230808084901.18927-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Consolidate common mask operation outside of switch cases and
+limit IO operations to positive cases.
 
-the commit b0ce9ce408b6 ("gpiolib: Do not unexport GPIO on freeing")
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 34 +++++++++++-------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b0ce9ce408b6
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 27aef62fc7c0..02ab5fd7cbd5 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -995,8 +995,8 @@ static int byt_pin_config_set(struct pinctrl_dev *pctl_dev,
+ 	void __iomem *conf_reg = byt_gpio_reg(vg, offset, BYT_CONF0_REG);
+ 	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
+ 	void __iomem *db_reg = byt_gpio_reg(vg, offset, BYT_DEBOUNCE_REG);
++	u32 conf, val, db_pulse, debounce;
+ 	unsigned long flags;
+-	u32 conf, val, debounce;
+ 	int i, ret = 0;
+ 
+ 	raw_spin_lock_irqsave(&byt_lock, flags);
+@@ -1053,8 +1053,6 @@ static int byt_pin_config_set(struct pinctrl_dev *pctl_dev,
+ 
+ 			break;
+ 		case PIN_CONFIG_INPUT_DEBOUNCE:
+-			debounce = readl(db_reg);
+-
+ 			if (arg)
+ 				conf |= BYT_DEBOUNCE_EN;
+ 			else
+@@ -1062,32 +1060,25 @@ static int byt_pin_config_set(struct pinctrl_dev *pctl_dev,
+ 
+ 			switch (arg) {
+ 			case 375:
+-				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+-				debounce |= BYT_DEBOUNCE_PULSE_375US;
++				db_pulse = BYT_DEBOUNCE_PULSE_375US;
+ 				break;
+ 			case 750:
+-				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+-				debounce |= BYT_DEBOUNCE_PULSE_750US;
++				db_pulse = BYT_DEBOUNCE_PULSE_750US;
+ 				break;
+ 			case 1500:
+-				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+-				debounce |= BYT_DEBOUNCE_PULSE_1500US;
++				db_pulse = BYT_DEBOUNCE_PULSE_1500US;
+ 				break;
+ 			case 3000:
+-				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+-				debounce |= BYT_DEBOUNCE_PULSE_3MS;
++				db_pulse = BYT_DEBOUNCE_PULSE_3MS;
+ 				break;
+ 			case 6000:
+-				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+-				debounce |= BYT_DEBOUNCE_PULSE_6MS;
++				db_pulse = BYT_DEBOUNCE_PULSE_6MS;
+ 				break;
+ 			case 12000:
+-				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+-				debounce |= BYT_DEBOUNCE_PULSE_12MS;
++				db_pulse = BYT_DEBOUNCE_PULSE_12MS;
+ 				break;
+ 			case 24000:
+-				debounce &= ~BYT_DEBOUNCE_PULSE_MASK;
+-				debounce |= BYT_DEBOUNCE_PULSE_24MS;
++				db_pulse = BYT_DEBOUNCE_PULSE_24MS;
+ 				break;
+ 			default:
+ 				if (arg)
+@@ -1095,8 +1086,13 @@ static int byt_pin_config_set(struct pinctrl_dev *pctl_dev,
+ 				break;
+ 			}
+ 
+-			if (!ret)
+-				writel(debounce, db_reg);
++			if (ret)
++				break;
++
++			debounce = readl(db_reg);
++			debounce = (debounce & ~BYT_DEBOUNCE_PULSE_MASK) | db_pulse;
++			writel(debounce, db_reg);
++
+ 			break;
+ 		default:
+ 			ret = -ENOTSUPP;
+-- 
+2.17.1
 
-causes a regression on my mvebu arm board (haven't tested on other
-systems), wherein if I export a GPIO to sysfs and then unexport it, it
-does not disasppear from the /sys/class/gpio directory, and subsequent
-writes to the export and unexport files for the gpio fail.
-
-  $ cd /sys/class/gpio
-  $ ls
-  export       gpiochip0    gpiochip32   gpiochip512  unexport
-  $ echo 43 >export
-  $ ls
-  export       gpio43       gpiochip0    gpiochip32   gpiochip512
-  unexport
-  $ cat gpio43/value
-  1
-  $ echo 43 >unexport
-  $ ls
-  export       gpio43       gpiochip0    gpiochip32   gpiochip512
-  unexport
-  $ echo 43 >unexport
-  ash: write error: Invalid argument
-  $ echo 43 >export
-  ash: write error: Operation not permitted
-
-Marek
