@@ -2,1246 +2,200 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A96477626B
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 16:27:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B24147762E6
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 16:47:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbjHIO1U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Aug 2023 10:27:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34728 "EHLO
+        id S233427AbjHIOr3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Aug 2023 10:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbjHIO1U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 10:27:20 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE6010F5
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Aug 2023 07:27:15 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 5b1f17b1804b1-3fe2ba3e260so64897865e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Aug 2023 07:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691591234; x=1692196034;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o2f74yHwohfJ+YjEFoVkYHa7dimY2MR7Ci6gXHYMxPM=;
-        b=txy9eXX6DjLGX1CdKCNMWJ+b4dz2OZ2lsoKpfB9LSzc4QTqMtyNpX9IlUU7TaOnRQE
-         396Jr67BjuPf5DVZ6gyD9iOiBnbeKDJJviw93cXIoKKBiLvpsUlmO56XWhH3G82gqa4X
-         8I+KC05NcWFUhORAb4uXPSVLkPMfQ3pO6M+h+0m6HeLg2w8lhJvvxInwcs5kw7nE7TUn
-         x0bMwEFPKNXHW4TZ44gJXLstgUpU/hhptMs4gSTbhgiyH5wo7T02coN6PlQcuf3Rtxt2
-         bjY5aFFL6CZQedPRrST+4yPhb3JTXrCAbGOLkLfPSRczXlN2tMpgLl32ucTcMB7wW8m5
-         MroA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691591234; x=1692196034;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o2f74yHwohfJ+YjEFoVkYHa7dimY2MR7Ci6gXHYMxPM=;
-        b=MMF9qxJt1et2LyizE9Ga1HUA1HHwzX0rLEkllMfwSxxGiB/phgdNgHuT+7mVkPtW9o
-         h0uMSrN78B6smDJfHKZmLn/iUkyZ7wmtajt28LcU0KkSGGa0cMWg/MgGntyWydWqAIOP
-         36BCKMHMXB/PsDPnocnBWLf6u7YJ/CUD17D2xIXRxh9lQCuHaNlg7m3PvVMq8g+9nEzx
-         YPkC9SFjBhX9g/DvypMMgYWC++b6Pf1EEG1KWW20xK6BhoGW1qYU+PEqub/rk28huWaP
-         2nkwCxjWYONUkh4/95sABj2bWWbPouHOryx5W+DTlKL765INhCKiX/jL1gHHEoUFqXAO
-         rJcA==
-X-Gm-Message-State: AOJu0YxbZarvISXjnAL5b79plAvoOLyqDnbtojejN7oXjH64rTvOaGHg
-        zkJnqfJr1sO5NYYq/+2D5HuoTtMaPLIyTsFizFlxMS++
-X-Google-Smtp-Source: AGHT+IEUrysnUu4MTjkUz511FhfXPZxDGsiLrlc7sWvKA6Ief+DHUqGBpuS6RVS7mIu+g6rQ847NXA==
-X-Received: by 2002:a05:600c:21c2:b0:3f4:d18f:b2fb with SMTP id x2-20020a05600c21c200b003f4d18fb2fbmr2343124wmj.8.1691591233784;
-        Wed, 09 Aug 2023 07:27:13 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:bf0d:f784:9c7e:dd22])
-        by smtp.gmail.com with ESMTPSA id 17-20020a05600c231100b003fc01495383sm2200096wmo.6.2023.08.09.07.27.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 07:27:13 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v3] gpio: consumer: new virtual driver
-Date:   Wed,  9 Aug 2023 16:27:09 +0200
-Message-Id: <20230809142709.28042-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S233271AbjHIOr2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 10:47:28 -0400
+Received: from FRA01-PR2-obe.outbound.protection.outlook.com (mail-pr2fra01on2075.outbound.protection.outlook.com [40.107.12.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773101FCC;
+        Wed,  9 Aug 2023 07:47:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XTFoK58rkCx0Fg4ExwoHuqtLj1np9XG66MkahJuBt7qcsIJgIPWAWOWd7/vx9vH+rALqGArSdIaBbsDWcr8UCMAOk3BdECw+21YVtZ4JNL7/H8pbE/tfFW5zTUlTRl/DFL90okcohyOsq2ziHXP6dsgAUPvrKv2fEfnIs2g4+OcRbyS738b48LHTjuyvo4I2JT/pGw33RuizBA+GY+94B+dSrNc2nS1k8Iakh+285RH9w/PydJZxB6ljjHCWYHv8iBrU4jEPPUd2c7z0N2XQjVfwjyYVEApEZT6vnBB+h/VYNXl1A87Mpb4zpWTYvJnAM9QayCya2cFQ6/fMGRowxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6Ej41Eg0BNnG3/tSXO1swpCnyLR05JKXNH1E9/4TQTk=;
+ b=ipODgWPCaJeabbMayfO+yvvFJrviLAtXrPoAKSlslXBHuLOhBx5j+5QRPPvpnJk/pgHiyYlVfi7Cv039hTxFhPsgAuEMJDmCyieNK1pXXYFX0n76fyobJz8iWrGkzlhvJhxLTr4oUTH2YHJADDOjkWFrgcDGuxlv2OdqEPeyvwgsuZW1tVe/MJNPqykQyYROfMWxN3OJ+5Ry+cSsmmZkZk/j1C/MwZsGrK48fnW9Hah0Kr4tgRYdn0i+okbfUJ3VxkIS6J7QbYgPgpDeH6yTkGs7nXLCCvsqOB2fFVxyi0a4zk1lglJz95SCd01TT8YegPTT2bUQbSDeLlbdubmAhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Ej41Eg0BNnG3/tSXO1swpCnyLR05JKXNH1E9/4TQTk=;
+ b=kHBPVucC8YswOZR3dsKEZvPWB3X2zFaXZ9O1rJaNotJDAlH5/q4mHLmqzHW/OyOpUH/wKHwKipb0RxblVDhAP7znzIsprAzo7+GwLyH6/79QSyXoJbSxwBW/o8Ru90t9KDnn1gVqN2XEuOM1xCPr6lo2Qsvu3N7r6pouDumHHU8l08GYGxj0rYDb9aUbj/K7n1Wuy+3kLkd/n6j2c2I8xj1y55tmzRCC641TEShDGw9A3gH/vwEeZQz93y0hTUA4hl0/HREJv/lMvxSD7Qq1uKtSG3wkMrlsj33Tn2NISsBEPxsMmKhuk4slZx13BoN3VdR6L0zqudR//yHJgzdEHQ==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by PR0P264MB3339.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:145::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.28; Wed, 9 Aug
+ 2023 14:47:23 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::2820:d3a6:1cdf:c60e]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::2820:d3a6:1cdf:c60e%6]) with mapi id 15.20.6652.028; Wed, 9 Aug 2023
+ 14:47:22 +0000
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Herve Codina <herve.codina@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 05/28] soc: fsl: cpm1: qmc: Remove inline function
+ specifiers
+Thread-Topic: [PATCH v3 05/28] soc: fsl: cpm1: qmc: Remove inline function
+ specifiers
+Thread-Index: AQHZysVbd5zx4sLOREKEPFRUXfowEq/iC0MA
+Date:   Wed, 9 Aug 2023 14:47:22 +0000
+Message-ID: <c95cb60e-187f-528f-41e8-4f5989e15198@csgroup.eu>
+References: <20230809132757.2470544-1-herve.codina@bootlin.com>
+ <20230809132757.2470544-6-herve.codina@bootlin.com>
+In-Reply-To: <20230809132757.2470544-6-herve.codina@bootlin.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=csgroup.eu;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MRZP264MB2988:EE_|PR0P264MB3339:EE_
+x-ms-office365-filtering-correlation-id: d62e7601-5ae7-43b2-666b-08db98e78a3a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IWn4MYQs1jVsgYaRjY5halBNb4CWBL/avGiJKbOGCBsG9sVCTvdKFHZV8UP5Y+NwmQs+hbWaW03VnNcnMQ7PM7sW2Io65aq44h/w+0m0MLy1ILFYtdk9o1fTTBI/Em1TIjPEmGlx6haBrm0LPIDFEzEaHMyRgnFUjJHQJj+AGWaXPG0uxd/0HuoDrULB3ehZY4+j3PEiEAOUvVzN8kc6DnXidZuEI3MEPEaj6W1DLu4z3EgqIFrRJEZm3KO0Vta2k7XAxrdREfeRSmwO7H7WfJdz/7Dv+uOuD9bHBnHzORmeximalxlCdQzt0M/OUy/K6hVRc5sz3MmV68aMW4GPsTpb9D8xTh0Zo1Lhsn2KFHQdhXS1RBO1RLZWSvZoGU+otp3KDPZMWlJtaU8Bqunkaw5zXe594vvq3ZfoXWr01JZal5LayBKebKoGT0pGdoks5CGWyrdJHOba2Ml/xaNe71F3ySTagFaxauJCXTxzE2ncg6AMUk+sX/NEZ+zP3O5P99qS11FEzqoIR+gPMVeivO1/0Z0ebwYj5X9xBex/drxkeDRsc+cNpryYEFSOxJPDlWeBejj3w8Pwg1Dg0oRhI/b6+PGsCycEiCDH51cEYdVKDDwiCACXUmneWJwRz4vuouSCSsF448EvLMktBu+O82OA1gMgRQhkiXuL+l2FMWd0T3k61yCISj9UXIIf4WdTJriK1FhYfnMOpX0tym1K8w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(346002)(39850400004)(136003)(396003)(376002)(366004)(186006)(1800799006)(451199021)(41300700001)(6486002)(36756003)(38100700002)(122000001)(71200400001)(921005)(38070700005)(478600001)(54906003)(110136005)(4326008)(86362001)(31696002)(66556008)(64756008)(76116006)(66446008)(66476007)(66946007)(91956017)(2906002)(316002)(6512007)(83380400001)(31686004)(5660300002)(44832011)(2616005)(8936002)(26005)(8676002)(6506007)(7416002)(7406005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WEx0TUx4RzI0T3MybXZQUlVZSGJNMkpzNkRHa0twQmZ2ZENlNzRJajhhNlI2?=
+ =?utf-8?B?N3N2VmpJdytwZFJJcmdxT2FGM3EydU43M0dmS290UDhxeHh3M3VXMitpZnJL?=
+ =?utf-8?B?RHpQTklndlp3akJFZC9TaGtKZTEweHc4K0s0c0ZWMFFjZnVqNzdsZ3Y4eVUz?=
+ =?utf-8?B?VnRTK0xQc3poa0sxL0dUa3Jpc0VmTzRSQUVxRysvNlIwQ0REQXpVbFhDOFdG?=
+ =?utf-8?B?NXVjSzJzWnE0cW03QzVFdTB6aS9hRm1PR1FXaC9KckVTNWlEbloyRERGdDNj?=
+ =?utf-8?B?d0NrdzFDSXFSaTNUNUhtQUZKazNObDF2SVVHbFg0UFdjUlhFR0prTkZsK28y?=
+ =?utf-8?B?SndnS0NUMWo2VDNpdG9vaEtXdjgzM3g2b0xZTGF5VFhuSTJ0RE9RTVp0Rm5Y?=
+ =?utf-8?B?NldOZE85WGIzelRjOWQ1cFBBOFVXY25vQ3E3Z1FOQkQveDhWNzJtM1h1M3F4?=
+ =?utf-8?B?cnhrNUhEMXNreFhwM25JU09yTVlRRG5hbTlyMG5GQlJ2cWlNYnhoWDhBeDVz?=
+ =?utf-8?B?MnZDdHNlNG40SzRkNVdoc3cwZ2toeHlCeTUvWkJFTHVpNzhNejZZZC9nSFd4?=
+ =?utf-8?B?UXJSaCtodGpSM0FWbkVRdU5ZTkhKV3FyRmFEc0FPenprOVFxQU1FTWw5enlk?=
+ =?utf-8?B?T3pIVWxhRWZGOFo5R1p1QzdlZzd5TS9XMFZZUXBZVkhIQkdPYXVacERtNEJV?=
+ =?utf-8?B?aEdBaGlXcXdBSlYxY0x3M1d6ZExFcUlhSWZ2eVpoUjNMRGlLOElzNlhmWGlz?=
+ =?utf-8?B?OVJqWlVHaWJMSktiSzVoY0FWOHpjcmQ3cFd1bGhvWjNGK1o2a3hMcXhFUm11?=
+ =?utf-8?B?WGptU1JwcnlMNUl4N2M2NEVnSFpVOUJ0V1kza0tEeUlyVXp0aHVFYUNpc3JY?=
+ =?utf-8?B?ZXlwQWxhVUFUbGtGZzNVeEh5UjFNN0xyYU1vUGFrRHNVT2MxamVNWmtIZDdi?=
+ =?utf-8?B?K1BLZjBlSWJDb0V2Tk5XVkN4RmNPZUc2RXhRNDIrMERrTzBVL2JjamVsTGlw?=
+ =?utf-8?B?L1pzMXlHbWtYRHRINUlFeWs2NDM0WUh6REFZMGxhcGhnRFpERG1sOUU2YTBO?=
+ =?utf-8?B?SlZuYjZDMTRhbTd2ZlJxWnJkK1RpUTlqT3RpaFJCdUZ5NmpiNjB1ZGhmTU5q?=
+ =?utf-8?B?K0t3V3ZibTR1WitzT0tOZDRFQnZxZnQ1R1VWUGRENHlMc3ZJbGRpWGhiczFE?=
+ =?utf-8?B?TWJpeXhPOWUvdXo3V2JaY2FlL3RxeHYxTlNuMHpkZ2hXNUQrYmo5eG5VT1I4?=
+ =?utf-8?B?TlZaQk9teDRYWDR6QzNrKzdtTGpYUjZuUTgvWWczNXRwS2ltZGJ6S01Eb1pH?=
+ =?utf-8?B?M0luNVZLUWpjbVdKRUZuWGpuN09RQkx0aFZDUlo5cUxoZ1pWeUthZ3V2SUpB?=
+ =?utf-8?B?MllsOE5pQTBHR1FaOW9NOXBJWE9raDNPbVlSbktFcmVzUEtSNWUvT0hwNGlU?=
+ =?utf-8?B?UlVhWVdKSWVZa3Fmb1ZsNWVBbEd3N3luSy9FQWtnWHhTclAzckRHUVB2ZlNS?=
+ =?utf-8?B?RzY1cThvdDdlNzhyY0VpZTBrWm12ajZSSURYaUpHK0hzVENTRE03ckYrZVFz?=
+ =?utf-8?B?aFJJYnNzK09nSlIzUWhBRHY1RnY5bnkvd0MzZTVGV05XbCtsWkVsMkZkdlhi?=
+ =?utf-8?B?M0ZidHRBM01pUlVaVFJBUTE4NXJIUllXaEpCUE11c0hySnpUaTJtKytlYk03?=
+ =?utf-8?B?a2xqUkFSQzZ3ZlZ4TDh4dUZYLy9NOENrazNJR2FscUVZc3NrRjY5Q1RxWWNV?=
+ =?utf-8?B?am92UkxHQ24zRGNaSVg2cVU0SHVraTZIek1KeGYwa2JkcTBsY1U4MTlDWE9a?=
+ =?utf-8?B?dU00alNMQ2R2bldXc2RjTVFuQXQ5THNHRGpQRzhtTGJzck04NWt5WnlxMmV1?=
+ =?utf-8?B?VUZ0cHpqbWU3eHIwUUJROWlRbDUyRitnZG1RZllpeko2SWFyQU5HeVh4VXFl?=
+ =?utf-8?B?dGd6NnRQUGc4KzZXc1Z4THgrcW1aU0YwTzNJOEs1VFM2VGN2ckNLbE8xNzlk?=
+ =?utf-8?B?ZkkvSE1jUk9ZWFRmM2xHdUxwYmRMTjJ3Ym9TTldqQ1RINXlIWnhFOEtiaHVu?=
+ =?utf-8?B?clNmOHhjYlNKUGNBMlRzcmYzcnNKR0NUMnpscUVjR1RNNy9wTnkvV0dPV0ZD?=
+ =?utf-8?B?NWcwZFJ3bDk5QmtadG1mZC84VG9URERRZEVseDgwYzZWc2k4ckVSZjB3ZTF1?=
+ =?utf-8?B?SkE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <991A0B2F7BF8E746A724B048DAC10BAA@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: d62e7601-5ae7-43b2-666b-08db98e78a3a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2023 14:47:22.6442
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OJcmgMYlAdWLlzDr720H9fN5yHnkF+Ai5pQ7uwnLVMYqxBpd1GM1KymkeLMdqdElcIcUTbVm6M7UuPgiqg2lIoRyCc8kOV7gdY1AIaFDNqg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR0P264MB3339
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-The GPIO subsystem has a serious problem with undefined behavior and
-use-after-free bugs on hot-unplug of GPIO chips. This can be considered a
-corner-case by some as most GPIO controllers are enabled early in the
-boot process and live until the system goes down but most GPIO drivers
-do allow unbind over sysfs, many are loadable modules that can be (force)
-unloaded and there are also GPIO devices that can be dynamically detached,
-for instance CP2112 which is a USB GPIO expender.
-
-Bugs can be triggered both from user-space as well as by in-kernel users.
-We have the means of testing it from user-space via the character device
-but the issues manifest themselves differently in the kernel.
-
-This is a proposition of adding a new virtual driver - a configurable
-GPIO consumer that can be configured over configfs (similarly to
-gpio-sim).
-
-The configfs interface allows users to create dynamic GPIO lookup tables
-that are registered with the GPIO subsystem. Every config group
-represents a consumer device. Every sub-group represents a single GPIO
-lookup. The device can work in three modes: just keeping the line
-active, toggling it every second or requesting its interrupt and
-reporting edges. Every lookup allows to specify the key, offset and
-flags as per the lookup struct defined in linux/gpio/machine.h.
-
-The module together with gpio-sim allows to easily trigger kernel
-hot-unplug errors. A simple use-case is to create a simulated chip,
-setup the consumer to lookup one of its lines in 'monitor' mode, unbind
-the simulator, unbind the consumer and observe the fireworks in dmesg.
-
-This driver is aimed as a helper in tackling the hot-unplug problem in
-GPIO as well as basis for future regression testing once the fixes are
-upstream.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
-RFC -> v2:
-- add documentation
-- fix various issues pointed out by Andy: use struct_size() where
-  applicable, improve the logic when storing the 'live' property,
-  improve log messages, remove commas in terminators, etc.
-
-v2 -> v3:
-- use cleanup.h interfaces
-- add some clarifying commets
-- more minor code tweaks
-
- .../admin-guide/gpio/gpio-consumer.rst        | 111 ++
- drivers/gpio/Kconfig                          |   7 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-consumer.c                  | 961 ++++++++++++++++++
- 4 files changed, 1080 insertions(+)
- create mode 100644 Documentation/admin-guide/gpio/gpio-consumer.rst
- create mode 100644 drivers/gpio/gpio-consumer.c
-
-diff --git a/Documentation/admin-guide/gpio/gpio-consumer.rst b/Documentation/admin-guide/gpio/gpio-consumer.rst
-new file mode 100644
-index 000000000000..436af3eec4ab
---- /dev/null
-+++ b/Documentation/admin-guide/gpio/gpio-consumer.rst
-@@ -0,0 +1,111 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+Virtual GPIO Consumer
-+=====================
-+
-+The virtual GPIO Consumer module allows users to create dynamic GPIO lookup
-+tables using the exposed configfs interface and instantiate virtual GPIO
-+consumer devices that retrieve and use GPIOs using these tables.
-+
-+Creating GPIO consumers
-+-----------------------
-+
-+The gpio-consumer module registers a configfs subsystem called
-+``'gpio-consumer'``. For details of the configfs filesystem, please refer to
-+the configfs documentation.
-+
-+The user can create a hierarchy of configfs groups and items as well as modify
-+values of exposed attributes. Once the consumer is instantiated, this hierarchy
-+will be translated to appropriate device properties. The general structure is:
-+
-+**Group:** ``/config/gpio-consumer``
-+
-+This is the top directory of the gpio-consumer configfs tree.
-+
-+**Group:** ``/config/gpio-consumer/consumer-device``
-+
-+**Attribute:** ``/config/gpio-consumer/gpio-device/function``
-+
-+**Attribute:** ``/config/gpio-consumer/gpio-device/live``
-+
-+This is a directory representing a GPIO consumer device. The ``'function'``
-+attribute defines how the device will use requested GPIOs. It takes the
-+following values: ``'active'`` - GPIOs will be requested as output-high and
-+kept in this state until the device is unbound, ``'toggle'`` - GPIOs will
-+be requested in output mode and then toggled periodically (every second)
-+between 1 and 0, ``'monitor'`` - GPIOs will be requested in input mode, then
-+requested as interrupts and their firing reported in the kernel log.
-+
-+The ``'live'`` attribute allows to trigger the actual creation of the device
-+once it's fully configured. The accepted values are: ``'1'`` to enable the
-+virtual device and ``'0'`` to disable and tear it down.
-+
-+Creating GPIO lookup tables
-+---------------------------
-+
-+User can create a number of configfs groups under the device group with the
-+following properties:
-+
-+**Group:** ``/config/gpio-consumer/consumer-device/lookupX``
-+
-+**Attribute:** ``/config/gpio-consumer/consumer-device/lookupX/key``
-+
-+**Attribute:** ``/config/gpio-consumer/consumer-device/lookupX/offset``
-+
-+**Attribute:** ``/config/gpio-consumer/consumer-device/lookupX/drive``
-+
-+**Attribute:** ``/config/gpio-consumer/consumer-device/lookupX/pull``
-+
-+**Attribute:** ``/config/gpio-consumer/consumer-device/lookupX/active_low``
-+
-+**Attribute:** ``/config/gpio-consumer/consumer-device/lookupX/transitory``
-+
-+This group represents a single entry in the GPIO lookup table. The name of the
-+sub-directory maps to the ``'con_id'`` field of ``'struct gpiod_lookup'``. The
-+``'key'`` attribute represents either the name of the chip this GPIO belongs to
-+or the GPIO line name. This depends on the value of the ``'offset'`` attribute:
-+if its value is >= 0, then ``'key'`` represents the label of the chip to lookup
-+while ``'offset'`` represents the offset of the line in that chip. If
-+``'offset'`` is < 0, then ``'key'`` represents the name of the line.
-+
-+The remaining attributes map to the ``'flags'`` field of the GPIO lookup struct.
-+The first two take string values as arguments:
-+
-+**``'drive'``:** ``'push-pull'``, ``'open-drain'``, ``'open-source'``
-+**``'pull'``:** ``'pull-up'``, ``'pull-down'``, ``'pull-disabled'``, ``'as-is'``
-+
-+``'active_low'`` and ``'transitory'`` are boolean attributes.
-+
-+Activating GPIO consumers
-+-------------------------
-+
-+Once the confiuration is complete, the ``'live'`` attribute must be set to 1 in
-+order to instantiate the consumer. It can be set back to 0 to destroy the
-+virtual devices. The module will synchronously wait for the new simulated device
-+to be successfully probed and if this doesn't happen, writing to ``'live'`` will
-+result in an error.
-+
-+Device-tree
-+-----------
-+
-+Virtual GPIO consumers can also be defined in device-tree. The compatible string
-+must be: ``"gpio-virtual-consumer"``. Supported properties are:
-+
-+  ``"gpio-virtual-consumer,function"`` - function of the virtual device
-+  ``"gpio-virtual-consumer,lines"`` - list of lookup keys
-+
-+An example device-tree code defining a virtual GPIO consumer:
-+
-+.. code-block :: none
-+
-+    gpio-virt-consumer {
-+        compatible = "gpio-virtual-consumer";
-+
-+        foo-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
-+        bar-gpios = <&gpio0 6 0>;
-+
-+        gpio-virtual-consumer,function = "toggle";
-+        gpio-virtual-consumer,lines = "foo", "bar";
-+    };
-+
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e382dfebad7c..c152fcf6c54f 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1762,6 +1762,13 @@ config GPIO_AGGREGATOR
- 	      industrial control context, to be operated from userspace using
- 	      the GPIO chardev interface.
- 
-+config GPIO_CONSUMER
-+	tristate "GPIO Consumer Testing Module"
-+	select CONFIGFS_FS
-+	help
-+	  This enables the configurable, configfs-based virtual GPIO consumer
-+	  testing driver.
-+
- config GPIO_LATCH
- 	tristate "GPIO latch driver"
- 	help
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index c3ac51d47aa9..268e8f65f3c8 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
- obj-$(CONFIG_GPIO_CADENCE)		+= gpio-cadence.o
- obj-$(CONFIG_GPIO_CLPS711X)		+= gpio-clps711x.o
- obj-$(CONFIG_GPIO_SNPS_CREG)		+= gpio-creg-snps.o
-+obj-$(CONFIG_GPIO_CONSUMER)		+= gpio-consumer.o
- obj-$(CONFIG_GPIO_CRYSTAL_COVE)		+= gpio-crystalcove.o
- obj-$(CONFIG_GPIO_CS5535)		+= gpio-cs5535.o
- obj-$(CONFIG_GPIO_DA9052)		+= gpio-da9052.o
-diff --git a/drivers/gpio/gpio-consumer.c b/drivers/gpio/gpio-consumer.c
-new file mode 100644
-index 000000000000..30702d740a5c
---- /dev/null
-+++ b/drivers/gpio/gpio-consumer.c
-@@ -0,0 +1,961 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Configurable virtual GPIO consumer module.
-+ *
-+ * Copyright (C) 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/cleanup.h>
-+#include <linux/completion.h>
-+#include <linux/configfs.h>
-+#include <linux/device.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/machine.h>
-+#include <linux/idr.h>
-+#include <linux/interrupt.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/limits.h>
-+#include <linux/list.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/notifier.h>
-+#include <linux/overflow.h>
-+#include <linux/platform_device.h>
-+#include <linux/printk.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/timer.h>
-+
-+#include "gpiolib.h"
-+
-+#define GPIO_CONSUMER_MAX_PROPS 3
-+
-+enum gpio_consumer_function {
-+	GPIO_CONSUMER_FUNCTION_ACTIVE = 0,
-+	GPIO_CONSUMER_FUNCTION_TOGGLE,
-+	GPIO_CONSUMER_FUNCTION_MONITOR,
-+	__GPIO_CONSUMER_FUNCTION_LAST
-+};
-+
-+static const char *const gpio_consumer_function_strings[] = {
-+	[GPIO_CONSUMER_FUNCTION_ACTIVE] = "active",
-+	[GPIO_CONSUMER_FUNCTION_TOGGLE] = "toggle",
-+	[GPIO_CONSUMER_FUNCTION_MONITOR] = "monitor",
-+	NULL
-+};
-+
-+struct gpio_consumer_irq_data {
-+	struct device *dev;
-+	struct gpio_desc *desc;
-+};
-+
-+struct gpio_consumer_timer_data {
-+	struct timer_list timer;
-+	struct gpio_desc *desc;
-+	int val;
-+};
-+
-+static struct gpio_consumer_timer_data *to_timer_data(struct timer_list *timer)
-+{
-+	return container_of(timer, struct gpio_consumer_timer_data, timer);
-+}
-+
-+static DEFINE_IDA(gpio_consumer_ida);
-+
-+static irqreturn_t gpio_consumer_on_irq(int irq, void *data)
-+{
-+	struct gpio_consumer_irq_data *irq_data = data;
-+	struct gpio_desc *desc = irq_data->desc;
-+	struct gpio_device *gdev = desc->gdev;
-+	struct device *dev = irq_data->dev;
-+	int val;
-+
-+	val = gpiod_get_value_cansleep(desc);
-+	if (val < 0) {
-+		dev_err(dev, "failed to read GPIO value: %d\n", val);
-+		return IRQ_HANDLED;
-+	}
-+
-+	dev_info(dev, "interrupt triggered on line %u of %s, new value: %d\n",
-+		 gpio_chip_hwgpio(desc), dev_name(&gdev->dev), val);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void gpio_consumer_on_timer(struct timer_list *timer)
-+{
-+	struct gpio_consumer_timer_data *timer_data = to_timer_data(timer);
-+
-+	timer_data->val = timer_data->val ? 1 : 0;
-+	gpiod_set_value_cansleep(timer_data->desc, timer_data->val);
-+	mod_timer(&timer_data->timer, jiffies + msecs_to_jiffies(1000));
-+}
-+
-+static void gpio_consumer_del_timer(void *data)
-+{
-+	struct timer_list *timer = data;
-+
-+	del_timer(timer);
-+}
-+
-+static int gpio_consumer_probe(struct platform_device *pdev)
-+{
-+	struct gpio_consumer_timer_data *timer_data;
-+	struct gpio_consumer_irq_data *irq_data;
-+	enum gpio_consumer_function function;
-+	const char *function_prop, **lines;
-+	struct device *dev = &pdev->dev;
-+	struct gpio_desc *desc;
-+	enum gpiod_flags flags;
-+	int ret, num_lines, i;
-+
-+	ret = device_property_read_string(dev, "gpio-virtual-consumer,function",
-+					  &function_prop);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to read the consumer GPIO function\n");
-+
-+	ret = match_string(gpio_consumer_function_strings, -1, function_prop);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret,
-+				     "Invalid consumer function: '%s'\n",
-+				     function_prop);
-+
-+	function = ret;
-+	num_lines = device_property_string_array_count(dev,
-+					"gpio-virtual-consumer,lines");
-+	if (num_lines < 0)
-+		return dev_err_probe(dev, num_lines,
-+				     "List of GPIO lines to request not found\n");
-+
-+	lines = devm_kcalloc(dev, num_lines, sizeof(*lines), GFP_KERNEL);
-+	if (!lines)
-+		return -ENOMEM;
-+
-+	ret = device_property_read_string_array(dev,
-+						"gpio-virtual-consumer,lines",
-+						lines, num_lines);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to read GPIO line names\n");
-+
-+	flags = function == GPIO_CONSUMER_FUNCTION_MONITOR ?
-+					GPIOD_IN : GPIOD_OUT_HIGH;
-+	for (i = 0; i < num_lines; i++) {
-+		desc = devm_gpiod_get(dev, lines[i], flags);
-+		if (IS_ERR(desc))
-+			return dev_err_probe(dev, PTR_ERR(desc),
-+					     "Failed to get GPIO '%s'\n",
-+					     lines[i]);
-+
-+		if (function == GPIO_CONSUMER_FUNCTION_MONITOR) {
-+			irq_data = devm_kzalloc(dev, sizeof(*irq_data),
-+						GFP_KERNEL);
-+			if (!irq_data)
-+				return -ENOMEM;
-+
-+			irq_data->dev = dev;
-+			irq_data->desc = desc;
-+
-+			ret = devm_request_threaded_irq(dev, gpiod_to_irq(desc),
-+							NULL,
-+							gpio_consumer_on_irq,
-+							IRQF_TRIGGER_FALLING |
-+							IRQF_TRIGGER_RISING |
-+							IRQF_ONESHOT,
-+							lines[i], irq_data);
-+			if (ret)
-+				return dev_err_probe(dev, ret,
-+						"Failed to request GPIO line interrupt\n");
-+		} else if (function == GPIO_CONSUMER_FUNCTION_TOGGLE) {
-+			timer_data = devm_kzalloc(dev, sizeof(*timer_data),
-+						  GFP_KERNEL);
-+			if (!timer_data)
-+				return -ENOMEM;
-+
-+			timer_data->desc = desc;
-+			timer_data->val = 1;
-+
-+			timer_setup(&timer_data->timer,
-+				    gpio_consumer_on_timer, 0);
-+			mod_timer(&timer_data->timer,
-+				  jiffies + msecs_to_jiffies(1000));
-+
-+			ret = devm_add_action_or_reset(dev,
-+						       gpio_consumer_del_timer,
-+						       &timer_data->timer);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id gpio_consumer_of_match[] = {
-+	{ .compatible = "gpio-virtual-consumer" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_consumer_of_match);
-+
-+static struct platform_driver gpio_consumer_driver = {
-+	.driver = {
-+		.name = "gpio-virtual-consumer",
-+		.of_match_table = gpio_consumer_of_match,
-+	},
-+	.probe = gpio_consumer_probe,
-+};
-+
-+struct gpio_consumer_device {
-+	struct config_group group;
-+
-+	struct platform_device *pdev;
-+	int id;
-+	struct mutex lock;
-+
-+	struct notifier_block bus_notifier;
-+	struct completion probe_completion;
-+	bool driver_bound;
-+
-+	struct gpiod_lookup_table *lookup_table;
-+	enum gpio_consumer_function function;
-+
-+	struct list_head lookup_list;
-+};
-+
-+static int gpio_consumer_bus_notifier_call(struct notifier_block *nb,
-+					   unsigned long action, void *data)
-+{
-+	struct gpio_consumer_device *consumer;
-+	struct device *dev = data;
-+	char devname[32];
-+
-+	consumer = container_of(nb, struct gpio_consumer_device, bus_notifier);
-+	snprintf(devname, sizeof(devname), "gpio-virtual-consumer.%d",
-+		 consumer->id);
-+
-+	if (strcmp(dev_name(dev), devname))
-+		return NOTIFY_DONE;
-+
-+	switch (action) {
-+	case BUS_NOTIFY_BOUND_DRIVER:
-+		consumer->driver_bound = true;
-+		break;
-+	case BUS_NOTIFY_DRIVER_NOT_BOUND:
-+		consumer->driver_bound = false;
-+		break;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	complete(&consumer->probe_completion);
-+	return NOTIFY_OK;
-+}
-+
-+static struct gpio_consumer_device *
-+to_gpio_consumer_device(struct config_item *item)
-+{
-+	struct config_group *group = to_config_group(item);
-+
-+	return container_of(group, struct gpio_consumer_device, group);
-+}
-+
-+static bool
-+gpio_consumer_device_is_live_unlocked(struct gpio_consumer_device *dev)
-+{
-+	return !!dev->pdev;
-+}
-+
-+struct gpio_consumer_lookup {
-+	struct config_group group;
-+
-+	struct gpio_consumer_device *parent;
-+	struct list_head siblings;
-+
-+	char *con_id;
-+	char *key;
-+	/* Can be negative to indicate lookup by name. */
-+	int offset;
-+
-+	enum gpio_lookup_flags flags;
-+};
-+
-+static struct gpio_consumer_lookup *
-+to_gpio_consumer_lookup(struct config_item *item)
-+{
-+	struct config_group *group = to_config_group(item);
-+
-+	return container_of(group, struct gpio_consumer_lookup, group);
-+}
-+
-+static ssize_t
-+gpio_consumer_lookup_config_key_show(struct config_item *item, char *page)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+	int ret;
-+
-+	scoped_guard(mutex, &dev->lock)
-+		ret = sprintf(page, "%s\n", lookup->key);
-+
-+	return ret;
-+}
-+
-+static ssize_t
-+gpio_consumer_lookup_config_key_store(struct config_item *item,
-+				      const char *page, size_t count)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+	char *key __free(kfree) = NULL;
-+	char *stripped;
-+
-+	key = kstrndup(page, count, GFP_KERNEL);
-+	if (!key)
-+		return -ENOMEM;
-+
-+	stripped = strstrip(key);
-+	memmove(key, stripped, strlen(stripped) + 1);
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		return -EBUSY;
-+
-+	kfree(lookup->key);
-+	lookup->key = no_free_ptr(key);
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(gpio_consumer_lookup_config_, key);
-+
-+static ssize_t
-+gpio_consumer_lookup_config_offset_show(struct config_item *item, char *page)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+	unsigned int offset;
-+
-+	scoped_guard(mutex, &dev->lock)
-+		offset = lookup->offset;
-+
-+	return sprintf(page, "%d\n", offset);
-+}
-+
-+static ssize_t
-+gpio_consumer_lookup_config_offset_store(struct config_item *item,
-+					 const char *page, size_t count)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+	int offset, ret;
-+
-+	ret = kstrtoint(page, 0, &offset);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Negative number here means: 'key' represents a line name to lookup.
-+	 * Non-negative means: 'key' represents the label of the chip with
-+	 * the 'offset' value representing the line within that chip.
-+	 *
-+	 * GPIOLIB uses the U16_MAX value to indicate lookup by line name so
-+	 * the greatest offset we can accept is (U16_MAX - 1).
-+	 */
-+	if (offset > (U16_MAX - 1))
-+		return -EINVAL;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		return -EBUSY;
-+
-+	lookup->offset = offset;
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(gpio_consumer_lookup_config_, offset);
-+
-+static enum gpio_lookup_flags
-+gpio_consumer_lookup_get_flags(struct config_item *item)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+	enum gpio_lookup_flags flags;
-+
-+	scoped_guard(mutex, &dev->lock)
-+		flags = lookup->flags;
-+
-+	return flags;
-+}
-+
-+static ssize_t
-+gpio_consumer_lookup_config_drive_show(struct config_item *item, char *page)
-+{
-+	enum gpio_lookup_flags flags;
-+	const char *repr;
-+
-+	flags = gpio_consumer_lookup_get_flags(item);
-+
-+	if (flags & GPIO_OPEN_DRAIN)
-+		repr = "open-drain";
-+	else if (flags & GPIO_OPEN_SOURCE)
-+		repr = "open-source";
-+	else
-+		repr = "push-pull";
-+
-+	return sprintf(page, "%s\n", repr);
-+}
-+
-+static ssize_t
-+gpio_consumer_lookup_config_drive_store(struct config_item *item,
-+					const char *page, size_t count)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		return -EBUSY;
-+
-+	if (sysfs_streq(page, "push-pull")) {
-+		lookup->flags &= ~(GPIO_OPEN_DRAIN | GPIO_OPEN_SOURCE);
-+	} else if (sysfs_streq(page, "open-drain")) {
-+		lookup->flags &= ~GPIO_OPEN_SOURCE;
-+		lookup->flags |= GPIO_OPEN_DRAIN;
-+	} else if (sysfs_streq(page, "open-source")) {
-+		lookup->flags &= ~GPIO_OPEN_DRAIN;
-+		lookup->flags |= GPIO_OPEN_SOURCE;
-+	} else {
-+		count = -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(gpio_consumer_lookup_config_, drive);
-+
-+static ssize_t
-+gpio_consumer_lookup_config_pull_show(struct config_item *item, char *page)
-+{
-+	enum gpio_lookup_flags flags;
-+	const char *repr;
-+
-+	flags = gpio_consumer_lookup_get_flags(item);
-+
-+	if (flags & GPIO_PULL_UP)
-+		repr = "pull-up";
-+	else if (flags & GPIO_PULL_DOWN)
-+		repr = "pull-down";
-+	else if (flags & GPIO_PULL_DISABLE)
-+		repr = "pull-disabled";
-+	else
-+		repr = "as-is";
-+
-+	return sprintf(page, "%s\n", repr);
-+}
-+
-+static ssize_t
-+gpio_consumer_lookup_config_pull_store(struct config_item *item,
-+				       const char *page, size_t count)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		return -EBUSY;
-+
-+	if (sysfs_streq(page, "pull-up")) {
-+		lookup->flags &= ~(GPIO_PULL_DOWN | GPIO_PULL_DISABLE);
-+		lookup->flags |= GPIO_PULL_UP;
-+	} else if (sysfs_streq(page, "pull-down")) {
-+		lookup->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DISABLE);
-+		lookup->flags |= GPIO_PULL_DOWN;
-+	} else if (sysfs_streq(page, "pull-disabled")) {
-+		lookup->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DOWN);
-+		lookup->flags |= GPIO_PULL_DISABLE;
-+	} else if (sysfs_streq(page, "as-is")) {
-+		lookup->flags &= ~(GPIO_PULL_UP | GPIO_PULL_DOWN |
-+				   GPIO_PULL_DISABLE);
-+	} else {
-+		count = -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(gpio_consumer_lookup_config_, pull);
-+
-+static ssize_t
-+gpio_consumer_lookup_config_active_low_show(struct config_item *item,
-+					    char *page)
-+{
-+	enum gpio_lookup_flags flags;
-+
-+	flags = gpio_consumer_lookup_get_flags(item);
-+
-+	return sprintf(page, "%s\n", flags & GPIO_ACTIVE_LOW ? "1" : "0");
-+}
-+
-+static ssize_t
-+gpio_consumer_lookup_config_active_low_store(struct config_item *item,
-+					     const char *page, size_t count)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+	bool active_low;
-+	int ret;
-+
-+	ret = kstrtobool(page, &active_low);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		return -EBUSY;
-+
-+	if (active_low)
-+		lookup->flags |= GPIO_ACTIVE_LOW;
-+	else
-+		lookup->flags &= ~GPIO_ACTIVE_LOW;
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(gpio_consumer_lookup_config_, active_low);
-+
-+static ssize_t
-+gpio_consumer_lookup_config_transitory_show(struct config_item *item,
-+					    char *page)
-+{
-+	enum gpio_lookup_flags flags;
-+
-+	flags = gpio_consumer_lookup_get_flags(item);
-+
-+	return sprintf(page, "%s\n", flags & GPIO_TRANSITORY ? "1" : "0");
-+}
-+
-+static ssize_t
-+gpio_consumer_lookup_config_transitory_store(struct config_item *item,
-+					     const char *page, size_t count)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+	bool transitory;
-+	int ret;
-+
-+	ret = kstrtobool(page, &transitory);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		return -EBUSY;
-+
-+	if (transitory)
-+		lookup->flags |= GPIO_TRANSITORY;
-+	else
-+		lookup->flags &= ~GPIO_TRANSITORY;
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(gpio_consumer_lookup_config_, transitory);
-+
-+static struct configfs_attribute *gpio_consumer_lookup_config_attrs[] = {
-+	&gpio_consumer_lookup_config_attr_key,
-+	&gpio_consumer_lookup_config_attr_offset,
-+	&gpio_consumer_lookup_config_attr_drive,
-+	&gpio_consumer_lookup_config_attr_pull,
-+	&gpio_consumer_lookup_config_attr_active_low,
-+	&gpio_consumer_lookup_config_attr_transitory,
-+	NULL
-+};
-+
-+static ssize_t gpio_consumer_device_config_live_show(struct config_item *item,
-+						     char *page)
-+{
-+	struct gpio_consumer_device *dev = to_gpio_consumer_device(item);
-+	bool live;
-+
-+	scoped_guard(mutex, &dev->lock)
-+		live = gpio_consumer_device_is_live_unlocked(dev);
-+
-+	return sprintf(page, "%c\n", live ? '1' : '0');
-+}
-+
-+static int
-+gpio_consumer_make_lookup_table_unlocked(struct gpio_consumer_device *dev)
-+{
-+	struct gpiod_lookup_table *table __free(kfree) = NULL;
-+	struct gpio_consumer_lookup *lookup;
-+	struct gpiod_lookup *curr;
-+	size_t num_entries;
-+	unsigned int i = 0;
-+
-+	num_entries = list_count_nodes(&dev->lookup_list);
-+	table = kzalloc(struct_size(table, table, num_entries), GFP_KERNEL);
-+	if (!table)
-+		return -ENOMEM;
-+
-+	table->dev_id = kasprintf(GFP_KERNEL, "gpio-virtual-consumer.%d",
-+				  dev->id);
-+	if (!table->dev_id)
-+		return -ENOMEM;
-+
-+	list_for_each_entry(lookup, &dev->lookup_list, siblings) {
-+		curr = &table->table[i];
-+
-+		curr->key = lookup->key;
-+		curr->chip_hwnum = lookup->offset < 0 ?
-+					U16_MAX : lookup->offset;
-+		curr->con_id = lookup->con_id;
-+		curr->flags = lookup->flags;
-+	}
-+
-+	gpiod_add_lookup_table(table);
-+	dev->lookup_table = no_free_ptr(table);
-+
-+	return 0;
-+}
-+
-+static struct fwnode_handle *
-+gpio_consumer_make_device_swnode(struct gpio_consumer_device *dev)
-+{
-+	struct property_entry properties[GPIO_CONSUMER_MAX_PROPS];
-+	struct gpio_consumer_lookup *lookup;
-+	char **lines __free(kfree) = NULL;
-+	struct fwnode_handle *swnode;
-+	int prop_idx = 0, i = 0;
-+	size_t num_lookups;
-+
-+	memset(properties, 0, sizeof(properties));
-+
-+	properties[prop_idx++] = PROPERTY_ENTRY_STRING(
-+			"gpio-virtual-consumer,function",
-+			gpio_consumer_function_strings[dev->function]);
-+
-+	num_lookups = list_count_nodes(&dev->lookup_list);
-+	lines = kcalloc(num_lookups + 1, sizeof(*lines), GFP_KERNEL);
-+	if (!lines)
-+		return ERR_PTR(-ENOMEM);
-+
-+	list_for_each_entry(lookup, &dev->lookup_list, siblings)
-+		lines[i++] = lookup->con_id;
-+
-+	properties[prop_idx++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
-+		"gpio-virtual-consumer,lines", lines, num_lookups);
-+
-+	swnode = fwnode_create_software_node(properties, NULL);
-+	return swnode;
-+}
-+
-+static int
-+gpio_consumer_device_activate_unlocked(struct gpio_consumer_device *dev)
-+{
-+	struct platform_device_info pdevinfo;
-+	struct fwnode_handle *swnode;
-+	struct platform_device *pdev;
-+	int ret;
-+
-+	if (list_empty(&dev->lookup_list))
-+		return -ENODATA;
-+
-+	swnode = gpio_consumer_make_device_swnode(dev);
-+	if (IS_ERR(swnode))
-+		return PTR_ERR(swnode);
-+
-+	memset(&pdevinfo, 0, sizeof(pdevinfo));
-+	pdevinfo.name = "gpio-virtual-consumer";
-+	pdevinfo.id = dev->id;
-+	pdevinfo.fwnode = swnode;
-+
-+	ret = gpio_consumer_make_lookup_table_unlocked(dev);
-+	if (ret) {
-+		fwnode_remove_software_node(swnode);
-+		return ret;
-+	}
-+
-+	reinit_completion(&dev->probe_completion);
-+	dev->driver_bound = false;
-+	bus_register_notifier(&platform_bus_type, &dev->bus_notifier);
-+
-+	pdev = platform_device_register_full(&pdevinfo);
-+	if (IS_ERR(pdev)) {
-+		bus_unregister_notifier(&platform_bus_type, &dev->bus_notifier);
-+		fwnode_remove_software_node(swnode);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	wait_for_completion(&dev->probe_completion);
-+	bus_unregister_notifier(&platform_bus_type, &dev->bus_notifier);
-+
-+	if (!dev->driver_bound) {
-+		platform_device_unregister(pdev);
-+		fwnode_remove_software_node(swnode);
-+		return -ENXIO;
-+	}
-+
-+	dev->pdev = pdev;
-+
-+	return 0;
-+}
-+
-+static void
-+gpio_consumer_device_deactivate_unlocked(struct gpio_consumer_device *dev)
-+{
-+	struct fwnode_handle *swnode;
-+
-+	swnode = dev_fwnode(&dev->pdev->dev);
-+	platform_device_unregister(dev->pdev);
-+	fwnode_remove_software_node(swnode);
-+	dev->pdev = NULL;
-+	kfree(dev->lookup_table);
-+}
-+
-+static ssize_t
-+gpio_consumer_device_config_live_store(struct config_item *item,
-+				       const char *page, size_t count)
-+{
-+	struct gpio_consumer_device *dev = to_gpio_consumer_device(item);
-+	bool live;
-+	int ret;
-+
-+	ret = kstrtobool(page, &live);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (live == gpio_consumer_device_is_live_unlocked(dev))
-+		ret = -EPERM;
-+	else if (live)
-+		ret = gpio_consumer_device_activate_unlocked(dev);
-+	else
-+		gpio_consumer_device_deactivate_unlocked(dev);
-+
-+	return ret ?: count;
-+}
-+
-+CONFIGFS_ATTR(gpio_consumer_device_config_, live);
-+
-+static ssize_t
-+gpio_consumer_device_config_function_show(struct config_item *item, char *page)
-+{
-+	struct gpio_consumer_device *dev = to_gpio_consumer_device(item);
-+	enum gpio_consumer_function function;
-+	const char *repr;
-+
-+	scoped_guard(mutex, &dev->lock)
-+		function = dev->function;
-+
-+	repr = gpio_consumer_function_strings[function];
-+
-+	return sprintf(page, "%s\n", repr);
-+}
-+
-+static ssize_t
-+gpio_consumer_device_config_function_store(struct config_item *item,
-+					   const char *page, size_t count)
-+{
-+	struct gpio_consumer_device *dev = to_gpio_consumer_device(item);
-+	int ret;
-+
-+	ret = sysfs_match_string(gpio_consumer_function_strings, page);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		return -EBUSY;
-+
-+	dev->function = ret;
-+
-+	return count;
-+}
-+
-+CONFIGFS_ATTR(gpio_consumer_device_config_, function);
-+
-+static struct configfs_attribute *gpio_consumer_device_config_attrs[] = {
-+	&gpio_consumer_device_config_attr_live,
-+	&gpio_consumer_device_config_attr_function,
-+	NULL
-+};
-+
-+static void gpio_consumer_lookup_config_group_release(struct config_item *item)
-+{
-+	struct gpio_consumer_lookup *lookup = to_gpio_consumer_lookup(item);
-+	struct gpio_consumer_device *dev = lookup->parent;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	list_del(&lookup->siblings);
-+
-+	kfree(lookup->con_id);
-+	kfree(lookup->key);
-+	kfree(lookup);
-+}
-+
-+static struct configfs_item_operations gpio_consumer_lookup_config_item_ops = {
-+	.release	= gpio_consumer_lookup_config_group_release,
-+};
-+
-+static const struct config_item_type gpio_consumer_lookup_config_group_type = {
-+	.ct_item_ops	= &gpio_consumer_lookup_config_item_ops,
-+	.ct_attrs	= gpio_consumer_lookup_config_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct config_group *
-+gpio_consumer_device_make_lookup_group(struct config_group *group,
-+				       const char *name)
-+{
-+	struct gpio_consumer_device *dev =
-+			to_gpio_consumer_device(&group->cg_item);
-+	struct gpio_consumer_lookup *lookup __free(kfree) = NULL;
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		return ERR_PTR(-EBUSY);
-+
-+	lookup = kzalloc(sizeof(*lookup), GFP_KERNEL);
-+	if (!lookup)
-+		return ERR_PTR(-ENOMEM);
-+
-+	lookup->con_id = kstrdup(name, GFP_KERNEL);
-+	if (!lookup->con_id)
-+		return ERR_PTR(-ENOMEM);
-+
-+	config_group_init_type_name(&lookup->group, name,
-+				    &gpio_consumer_lookup_config_group_type);
-+	lookup->flags = GPIO_LOOKUP_FLAGS_DEFAULT;
-+	lookup->parent = dev;
-+	list_add_tail(&lookup->siblings, &dev->lookup_list);
-+
-+	return &no_free_ptr(lookup)->group;
-+}
-+
-+static void gpio_consumer_device_config_group_release(struct config_item *item)
-+{
-+	struct gpio_consumer_device *dev = to_gpio_consumer_device(item);
-+
-+	guard(mutex)(&dev->lock);
-+
-+	if (gpio_consumer_device_is_live_unlocked(dev))
-+		gpio_consumer_device_deactivate_unlocked(dev);
-+
-+	mutex_destroy(&dev->lock);
-+	ida_free(&gpio_consumer_ida, dev->id);
-+	kfree(dev);
-+}
-+
-+static struct configfs_item_operations gpio_consumer_device_config_item_ops = {
-+	.release	= gpio_consumer_device_config_group_release,
-+};
-+
-+static struct configfs_group_operations gpio_consumer_device_config_group_ops = {
-+	.make_group	= gpio_consumer_device_make_lookup_group,
-+};
-+
-+static const struct config_item_type gpio_consumer_device_config_group_type = {
-+	.ct_group_ops	= &gpio_consumer_device_config_group_ops,
-+	.ct_item_ops	= &gpio_consumer_device_config_item_ops,
-+	.ct_attrs	= gpio_consumer_device_config_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct config_group *
-+gpio_consumer_config_make_device_group(struct config_group *group,
-+				       const char *name)
-+{
-+	struct gpio_consumer_device *dev __free(kfree) = NULL;
-+
-+	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dev->id = ida_alloc(&gpio_consumer_ida, GFP_KERNEL);
-+	if (dev->id < 0)
-+		return ERR_PTR(dev->id);
-+
-+	config_group_init_type_name(&dev->group, name,
-+				    &gpio_consumer_device_config_group_type);
-+	mutex_init(&dev->lock);
-+	INIT_LIST_HEAD(&dev->lookup_list);
-+	dev->bus_notifier.notifier_call = gpio_consumer_bus_notifier_call;
-+	dev->function = GPIO_CONSUMER_FUNCTION_ACTIVE;
-+	init_completion(&dev->probe_completion);
-+
-+	return &no_free_ptr(dev)->group;
-+}
-+
-+static struct configfs_group_operations gpio_consumer_config_group_ops = {
-+	.make_group	= gpio_consumer_config_make_device_group,
-+};
-+
-+static const struct config_item_type gpio_consumer_config_type = {
-+	.ct_group_ops	= &gpio_consumer_config_group_ops,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct configfs_subsystem gpio_consumer_config_subsys = {
-+	.su_group = {
-+		.cg_item = {
-+			.ci_namebuf	= "gpio-consumer",
-+			.ci_type	= &gpio_consumer_config_type,
-+		},
-+	},
-+};
-+
-+static int __init gpio_consumer_init(void)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(&gpio_consumer_driver);
-+	if (ret) {
-+		pr_err("Failed to register the platform driver: %d\n",
-+		       ret);
-+		return ret;
-+	}
-+
-+	config_group_init(&gpio_consumer_config_subsys.su_group);
-+	mutex_init(&gpio_consumer_config_subsys.su_mutex);
-+	ret = configfs_register_subsystem(&gpio_consumer_config_subsys);
-+	if (ret) {
-+		pr_err("Failed to register the '%s' configfs subsystem: %d\n",
-+		       gpio_consumer_config_subsys.su_group.cg_item.ci_namebuf,
-+		       ret);
-+		mutex_destroy(&gpio_consumer_config_subsys.su_mutex);
-+		platform_driver_unregister(&gpio_consumer_driver);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+module_init(gpio_consumer_init);
-+
-+static void __exit gpio_consumer_exit(void)
-+{
-+	configfs_unregister_subsystem(&gpio_consumer_config_subsys);
-+	mutex_destroy(&gpio_consumer_config_subsys.su_mutex);
-+	platform_driver_unregister(&gpio_consumer_driver);
-+}
-+module_exit(gpio_consumer_exit);
-+
-+MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
-+MODULE_DESCRIPTION("Virtual GPIO consumer module");
-+MODULE_LICENSE("GPL");
--- 
-2.39.2
-
+DQoNCkxlIDA5LzA4LzIwMjMgw6AgMTU6MjcsIEhlcnZlIENvZGluYSBhIMOpY3JpdMKgOg0KPiBU
+aGUgaW5saW5lIGZ1bmN0aW9uIHNwZWNpZmllciBpcyBwcmVzZW50IG9uIHNvbWUgZnVuY3Rpb25z
+IGJ1dCBpdCBpcw0KPiBiZXR0ZXIgdG8gbGV0IHRoZSBjb21waWxlciBkZWNpZGUgaW5saW5pbmcg
+b3Igbm90IHRoZXNlIGZ1bmN0aW9ucy4NCg0KQW5kIGFueXdheSB0aGUgY29tcGlsZXIgY2FuIGRl
+Y2lkZSB0byBub3QgaW5saW5lIGEgZnVuY3Rpb24gbWFya2VkIA0KaW5saW5lIHNpbmNlIGNvbW1p
+dCBhYzdjM2U0ZmY0MDEgKCJjb21waWxlcjogZW5hYmxlIA0KQ09ORklHX09QVElNSVpFX0lOTElO
+SU5HIGZvcmNpYmx5IikgZm9sbG93ZWQgYnkgY29tbWl0IDg4OWIzYzEyNDVkZSANCigiY29tcGls
+ZXI6IHJlbW92ZSBDT05GSUdfT1BUSU1JWkVfSU5MSU5JTkcgZW50aXJlbHkiKS4NCg0KU28gdW5s
+ZXNzIHlvdSBtYXJrIGl0IF9fYWx3YXlzX2lubGluZSB5b3UgaGF2ZSBubyBndWFycmFudHkgdGhh
+dCB0aGUgDQpjb21waWxlciBkb2VzIHdoYXQgeW91IHRlbGwgaXQgdG8gZG8uDQoNCj4gDQo+IFJl
+bW92ZSBpbmxpbmUgc3BlY2lmaWVycy4NCj4gDQo+IEZpeGVzOiAzMTc4ZDU4ZTBiOTcgKCJzb2M6
+IGZzbDogY3BtMTogQWRkIHN1cHBvcnQgZm9yIFFNQyIpDQo+IFNpZ25lZC1vZmYtYnk6IEhlcnZl
+IENvZGluYSA8aGVydmUuY29kaW5hQGJvb3RsaW4uY29tPg0KPiBTdWdnZXN0ZWQtYnk6IEFuZHJl
+dyBMdW5uIDxhbmRyZXdAbHVubi5jaD4NCg0KUmV2aWV3ZWQtYnk6IENocmlzdG9waGUgTGVyb3kg
+PGNocmlzdG9waGUubGVyb3lAY3Nncm91cC5ldT4NCg0KPiAtLS0NCj4gICBkcml2ZXJzL3NvYy9m
+c2wvcWUvcW1jLmMgfCAxNCArKysrKysrLS0tLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA3IGlu
+c2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+b2MvZnNsL3FlL3FtYy5jIGIvZHJpdmVycy9zb2MvZnNsL3FlL3FtYy5jDQo+IGluZGV4IDJkMmE5
+ZDg4YmE2Yy4uNDU5ZTBiYmQ3MjNkIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9mc2wvcWUv
+cW1jLmMNCj4gKysrIGIvZHJpdmVycy9zb2MvZnNsL3FlL3FtYy5jDQo+IEBAIC0yMTgsMzcgKzIx
+OCwzNyBAQCBzdHJ1Y3QgcW1jIHsNCj4gICAJc3RydWN0IHFtY19jaGFuICpjaGFuc1s2NF07DQo+
+ICAgfTsNCj4gICANCj4gLXN0YXRpYyBpbmxpbmUgdm9pZCBxbWNfd3JpdGUxNih2b2lkIF9faW9t
+ZW0gKmFkZHIsIHUxNiB2YWwpDQo+ICtzdGF0aWMgdm9pZCBxbWNfd3JpdGUxNih2b2lkIF9faW9t
+ZW0gKmFkZHIsIHUxNiB2YWwpDQo+ICAgew0KPiAgIAlpb3dyaXRlMTZiZSh2YWwsIGFkZHIpOw0K
+PiAgIH0NCj4gICANCj4gLXN0YXRpYyBpbmxpbmUgdTE2IHFtY19yZWFkMTYodm9pZCBfX2lvbWVt
+ICphZGRyKQ0KPiArc3RhdGljIHUxNiBxbWNfcmVhZDE2KHZvaWQgX19pb21lbSAqYWRkcikNCj4g
+ICB7DQo+ICAgCXJldHVybiBpb3JlYWQxNmJlKGFkZHIpOw0KPiAgIH0NCj4gICANCj4gLXN0YXRp
+YyBpbmxpbmUgdm9pZCBxbWNfc2V0Yml0czE2KHZvaWQgX19pb21lbSAqYWRkciwgdTE2IHNldCkN
+Cj4gK3N0YXRpYyB2b2lkIHFtY19zZXRiaXRzMTYodm9pZCBfX2lvbWVtICphZGRyLCB1MTYgc2V0
+KQ0KPiAgIHsNCj4gICAJcW1jX3dyaXRlMTYoYWRkciwgcW1jX3JlYWQxNihhZGRyKSB8IHNldCk7
+DQo+ICAgfQ0KPiAgIA0KPiAtc3RhdGljIGlubGluZSB2b2lkIHFtY19jbHJiaXRzMTYodm9pZCBf
+X2lvbWVtICphZGRyLCB1MTYgY2xyKQ0KPiArc3RhdGljIHZvaWQgcW1jX2NscmJpdHMxNih2b2lk
+IF9faW9tZW0gKmFkZHIsIHUxNiBjbHIpDQo+ICAgew0KPiAgIAlxbWNfd3JpdGUxNihhZGRyLCBx
+bWNfcmVhZDE2KGFkZHIpICYgfmNscik7DQo+ICAgfQ0KPiAgIA0KPiAtc3RhdGljIGlubGluZSB2
+b2lkIHFtY193cml0ZTMyKHZvaWQgX19pb21lbSAqYWRkciwgdTMyIHZhbCkNCj4gK3N0YXRpYyB2
+b2lkIHFtY193cml0ZTMyKHZvaWQgX19pb21lbSAqYWRkciwgdTMyIHZhbCkNCj4gICB7DQo+ICAg
+CWlvd3JpdGUzMmJlKHZhbCwgYWRkcik7DQo+ICAgfQ0KPiAgIA0KPiAtc3RhdGljIGlubGluZSB1
+MzIgcW1jX3JlYWQzMih2b2lkIF9faW9tZW0gKmFkZHIpDQo+ICtzdGF0aWMgdTMyIHFtY19yZWFk
+MzIodm9pZCBfX2lvbWVtICphZGRyKQ0KPiAgIHsNCj4gICAJcmV0dXJuIGlvcmVhZDMyYmUoYWRk
+cik7DQo+ICAgfQ0KPiAgIA0KPiAtc3RhdGljIGlubGluZSB2b2lkIHFtY19zZXRiaXRzMzIodm9p
+ZCBfX2lvbWVtICphZGRyLCB1MzIgc2V0KQ0KPiArc3RhdGljIHZvaWQgcW1jX3NldGJpdHMzMih2
+b2lkIF9faW9tZW0gKmFkZHIsIHUzMiBzZXQpDQo+ICAgew0KPiAgIAlxbWNfd3JpdGUzMihhZGRy
+LCBxbWNfcmVhZDMyKGFkZHIpIHwgc2V0KTsNCj4gICB9DQo=
