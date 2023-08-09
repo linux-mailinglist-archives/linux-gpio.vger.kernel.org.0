@@ -2,193 +2,245 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFA38775421
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 09:30:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F2BF775427
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 09:30:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231804AbjHIHaQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Aug 2023 03:30:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45006 "EHLO
+        id S230460AbjHIHap (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Aug 2023 03:30:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231847AbjHIH3u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 03:29:50 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2CD52129;
-        Wed,  9 Aug 2023 00:29:06 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.201])
-        by gateway (Coremail) with SMTP id _____8BxpPApQNNkn6UTAA--.42873S3;
-        Wed, 09 Aug 2023 15:28:41 +0800 (CST)
-Received: from [10.20.42.201] (unknown [10.20.42.201])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniMnQNNkxd9QAA--.31150S3;
-        Wed, 09 Aug 2023 15:28:40 +0800 (CST)
-Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
- offset
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
-References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
- <20230807074043.31288-2-zhuyinbo@loongson.cn>
- <91f57b0d-a6e9-c039-40b6-0a1a9af5f7a0@linaro.org>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <78c5a043-3e2a-48d6-88bd-2f91cc6d1347@loongson.cn>
-Date:   Wed, 9 Aug 2023 15:28:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S231802AbjHIHaQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 03:30:16 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF4CC270E
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Aug 2023 00:29:26 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-586df08bba0so34068037b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Aug 2023 00:29:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691566165; x=1692170965;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kF0E6kelvstAlRFQ0vx9A2QeB/j089mo1MhMvgo0Ads=;
+        b=iFMIwlh74ckHTEvU1PmweClfZqe+2VOWxg41DZJDgzMXImMBGqsPbeIuCdmKqyKG8T
+         1B/qLoYOzkYvo1+toBuJqLVntdapykF2iYJh7F9ZVIRCxTuKrl3jtVwtNt5QAYpQreLN
+         LtudQc0LGTisG3nigRg4h+WH+AGyZbRMmai6HUqk6mSTiFYxxLnTJ1Mt8mWO1pxos9C7
+         B1RnGcXWaPOEnlyE0khB02KZjI7qFD0GlOeAOCemuvu2vhHpMizKJ5iuvlc84y9W+6C+
+         IloJ1vnRO0d7ihxHVs9QU1WMGcK+XcHj2veb1TR+DiYJnI9GR8CQXY4pt1E1cUDmoS4r
+         eSBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691566165; x=1692170965;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kF0E6kelvstAlRFQ0vx9A2QeB/j089mo1MhMvgo0Ads=;
+        b=Cg4iCZMHne4Lucz3oi3AS0jrsuL9i3i/MOBnLiBB3xLlznWFKaUqUMwTOmGi+NVqg3
+         oI7VwVD20YWaC7RfPrV3TnFf5onlLS/MM0kTc0NcL/sGtVuw4RFQI+DhaxgdJLKwFvCr
+         BK5emCr3SZVgpAwhw0gU5/kRkltjdnmPSU6vl61kmaI6i/qMAAl5zLm52GKvXh2xLzkX
+         rst4DzqD7aACz6+9aXLG/SDHpbMXuMjByI+nDhTeWTJNh0J5OfejBEIJMnBXxTpkQH5K
+         BbiKBFnBAWdhwcEIRbbmNZjsF6S2YvS/5rh/v4hsthx1Gh95Ryz8L7zkr4aAUjJ483Mc
+         IObg==
+X-Gm-Message-State: AOJu0Yzn3QBhDZn78fLLGTXwhe2wJEGbbBAFSw3L2PA3kmRxwlFwmOFd
+        pxsFwyrjTm9jFxsYUIJQnSUSUbLWvSJABrE1BsAh2w==
+X-Google-Smtp-Source: AGHT+IEcgNVmCrDg7WhZ5Y7Sdpfe+CEimwGKyuQgZ73mFnaAH4BYmRmXY5kpYENq+M3TX4yW7BThnqeD5zZ13e2cOqo=
+X-Received: by 2002:a0d:e612:0:b0:583:4e2e:9da0 with SMTP id
+ p18-20020a0de612000000b005834e2e9da0mr2102581ywe.1.1691566165427; Wed, 09 Aug
+ 2023 00:29:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <91f57b0d-a6e9-c039-40b6-0a1a9af5f7a0@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8BxniMnQNNkxd9QAA--.31150S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-        nUUI43ZEXa7xR_UUUUUUUUU==
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230808145605.16908-1-brgl@bgdev.pl> <ZNJ6HCOV0bzlaoXX@smile.fi.intel.com>
+In-Reply-To: <ZNJ6HCOV0bzlaoXX@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 9 Aug 2023 09:29:14 +0200
+Message-ID: <CAMRc=Mf_BmhZLN1J2m4SnpmPJzZtYPcfdR54EfG9gR5Px_Ss-Q@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: consumer: new virtual driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Aug 8, 2023 at 8:11=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Aug 08, 2023 at 04:56:05PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > The GPIO subsystem has a serious problem with undefined behavior and
+> > use-after-free bugs on hot-unplug of GPIO chips. This can be considered=
+ a
+> > corner-case by some as most GPIO controllers are enabled early in the
+> > boot process and live until the system goes down but most GPIO drivers
+> > do allow unbind over sysfs, many are loadable modules that can be (forc=
+e)
+> > unloaded and there are also GPIO devices that can be dynamically detach=
+ed,
+> > for instance CP2112 which is a USB GPIO expender.
+> >
+> > Bugs can be triggered both from user-space as well as by in-kernel user=
+s.
+> > We have the means of testing it from user-space via the character devic=
+e
+> > but the issues manifest themselves differently in the kernel.
+> >
+> > This is a proposition of adding a new virtual driver - a configurable
+> > GPIO consumer that can be configured over configfs (similarly to
+> > gpio-sim).
+> >
+> > The configfs interface allows users to create dynamic GPIO lookup table=
+s
+> > that are registered with the GPIO subsystem. Every config group
+> > represents a consumer device. Every sub-group represents a single GPIO
+> > lookup. The device can work in three modes: just keeping the line
+> > active, toggling it every second or requesting its interrupt and
+> > reporting edges. Every lookup allows to specify the key, offset and
+> > flags as per the lookup struct defined in linux/gpio/machine.h.
+> >
+> > The module together with gpio-sim allows to easily trigger kernel
+> > hot-unplug errors. A simple use-case is to create a simulated chip,
+> > setup the consumer to lookup one of its lines in 'monitor' mode, unbind
+> > the simulator, unbind the consumer and observe the fireworks in dmesg.
+> >
+> > This driver is aimed as a helper in tackling the hot-unplug problem in
+> > GPIO as well as basis for future regression testing once the fixes are
+> > upstream.
+>
+> I'll read documentation later. Some code comments below.
+>
+> ...
+>
+> > +static void gpio_consumer_on_timer(struct timer_list *timer)
+> > +{
+> > +     struct gpio_consumer_timer_data *timer_data =3D to_timer_data(tim=
+er);
+>
+> > +     timer_data->val =3D timer_data->val =3D=3D 0 ? 1 : 0;
+>
+> Can be
+>
+>         timer_data->val =3D timer_data->val ? 0 : 1;
+>
 
+This is still find, though it doesn't really save us even a single line of =
+code.
 
-在 2023/8/8 下午11:05, Krzysztof Kozlowski 写道:
-> On 07/08/2023 09:40, Yinbo Zhu wrote:
->> Loongson GPIO controllers come in multiple variants that are compatible
->> except for certain register offset values. Add support in yaml file for
->> device properties allowing to specify them in DT.
->>
->> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->> ---
->>   .../bindings/gpio/loongson,ls-gpio.yaml       | 40 ++++++++++++++++++-
->>   1 file changed, 39 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
->> index fb86e8ce6349..fc51cf40fccd 100644
->> --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
->> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
->> @@ -14,6 +14,7 @@ properties:
->>       enum:
->>         - loongson,ls2k-gpio
->>         - loongson,ls7a-gpio
->> +      - loongson,ls2k1000-gpio
->>   
->>     reg:
->>       maxItems: 1
->> @@ -29,6 +30,33 @@ properties:
->>   
->>     gpio-ranges: true
->>   
->> +  loongson,gpio-conf-offset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO configuration register offset address.
->> +
->> +  loongson,gpio-out-offset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO output register offset address.
->> +
->> +  loongson,gpio-in-offset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO input register offset address.
->> +
->> +  loongson,gpio-ctrl-mode:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO control mode, where '0' represents
->> +      bit control mode and '1' represents byte control mode.
-> 
-> I have no clue what does it mean. Is it only 0 or 1? Then it should be
-> enum or even bool.
+> But again, why not
+>
+>         timer_data->val ^=3D 1;
+>
 
+This is not ok in my book. If I need to think for more than a second
+about what it does, then it's worse. I put clarity over brevity.
 
-Yes, it only 0 or 1, and I will use bool type.
+> ?
+>
+> > +     gpiod_set_value_cansleep(timer_data->desc, timer_data->val);
+> > +     mod_timer(&timer_data->timer, jiffies + msecs_to_jiffies(1000));
+> > +}
+>
+> ...
+>
+> > +     key =3D kstrndup(page, count, GFP_KERNEL);
+> > +     if (!key)
+> > +             return -ENOMEM;
+>
+> > +     stripped =3D strstrip(key);
+> > +     memmove(key, stripped, strlen(stripped) + 1);
+>
+> This can be avoided by
+>
+>         key =3D kstrndup(skip_spaces(page), count, GFP_KERNEL);
+>
+> no?
+>
 
-Byte mode is to access by byte, such as gpio3, the base address of the
-gpio controller is offset by 3 bytes as the access address of gpio3.
+No, because we also want to remove the trailing spaces and newlines.
+But if you have a different suggestion with existing helpers, let me
+know. I didn't find any.
 
-The bit mode is the normal mode that like other platform gpio and it is
-to access by bit.
+> ...
+>
+> > +     ret =3D kstrtoint(page, 0, &offset);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* Use -1 to indicate lookup by name. */
+>
+> This comment is unclear as offset can be -1 given by the user.
+> What does above mean in that context?
+>
 
-> 
->> +
->> +  loongson,gpio-inten-offset:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      This option indicate this GPIO interrupt enable register offset
->> +      address.
->> +
->>     interrupts:
->>       minItems: 1
->>       maxItems: 64
->> @@ -39,6 +67,11 @@ required:
->>     - ngpios
->>     - "#gpio-cells"
->>     - gpio-controller
->> +  - loongson,gpio-conf-offset
->> +  - loongson,gpio-in-offset
->> +  - loongson,gpio-out-offset
->> +  - loongson,gpio-ctrl-mode
->> +  - loongson,gpio-inten-offset
-> 
-> No, you cannot add them as required to every other device. First, there
-> is no single need. Second, it breaks the ABI.
+I added this to the documentation. Negative number means: lookup by
+line name, positive or zero - lookup offset in chip.
 
+> > +     if (offset > (U16_MAX - 1))
+>
+> And how does it related to this -1 if related at all?
+>
 
-Okay, I will remove it in required paragraph.
+GPIOLIB interprets U16_MAX as "lookup by line name". So we can allow
+max (U16_MAX - 1). I will add a comment.
 
-> 
->>     - gpio-ranges
->>     - interrupts
->>   
->> @@ -49,11 +82,16 @@ examples:
->>       #include <dt-bindings/interrupt-controller/irq.h>
->>   
->>       gpio0: gpio@1fe00500 {
->> -      compatible = "loongson,ls2k-gpio";
->> +      compatible = "loongson,ls2k1000-gpio";
->>         reg = <0x1fe00500 0x38>;
->>         ngpios = <64>;
->>         #gpio-cells = <2>;
->>         gpio-controller;
->> +      loongson,gpio-conf-offset = <0>;
->> +      loongson,gpio-in-offset = <0x20>;
->> +      loongson,gpio-out-offset = <0x10>;
->> +      loongson,gpio-ctrl-mode = <0>;
->> +      loongson,gpio-inten-offset = <0x30>;
-> 
-> I still think that you just embed the programming model into properties,
-> instead of using dedicated compatible for different blocks. It could be
-> fine, although I would prefer to check it with your DTS
+> > +             return -EINVAL;
+>
+> ...
+>
+> > +static struct config_group *
+> > +gpio_consumer_config_make_device_group(struct config_group *group,
+> > +                                    const char *name)
+> > +{
+> > +     struct gpio_consumer_device *dev;
+> > +
+> > +     dev =3D kzalloc(sizeof(*dev), GFP_KERNEL);
+> > +     if (!dev)
+> > +             return ERR_PTR(-ENOMEM);
+> > +
+> > +     dev->id =3D ida_alloc(&gpio_consumer_ida, GFP_KERNEL);
+> > +     if (dev->id < 0) {
+> > +             kfree(dev);
+>
+> Wondering if you can utilize cleanup.h.
+>
 
-Okay, I got it,  and if I understand correctly, you seem to agree with
-me adding attributes like this.
+Whooaah! In february this year I suggested basic C RAII during my talk
+at fosdem and here we are? I missed this one. Yeah, I will use it!
+Even better, I will abuse the cr*p out of it in gpio-sim as well!
+Thanks for bringing this to my attention. This may be the best thing
+that happened to kernel C code in years if people widely adopt it.
+(This paragraph was written by a fan of GLib's autopointer paradigm.
+:) )
 
-And, if using this method that programming model into dts properites,
-then when adding a new platform's GPIO,  there is no longer a need to
-modify the driver because gpio controller is compatible and different
-platform can use a same compatible.
+Bartosz
 
-> 
-> Where is your DTS?
-
-
-Sorry, the dts containing gpio nodes are only available in the product
-code and have not been sent to the community yet.
-
-2k500, 2k2000, and 3a5000's gpio dts node have been listed in v2, which
-gpio dts node will be added in upstream dts.
-
-
-Thanks,
-Yinbo.
-
+> > +             return ERR_PTR(dev->id);
+> > +     }
+> > +
+> > +     config_group_init_type_name(&dev->group, name,
+> > +                                 &gpio_consumer_device_config_group_ty=
+pe);
+> > +     mutex_init(&dev->lock);
+> > +     INIT_LIST_HEAD(&dev->lookup_list);
+> > +     dev->bus_notifier.notifier_call =3D gpio_consumer_bus_notifier_ca=
+ll;
+> > +     dev->function =3D GPIO_CONSUMER_FUNCTION_ACTIVE;
+> > +     init_completion(&dev->probe_completion);
+> > +
+> > +     return &dev->group;
+> > +}
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
