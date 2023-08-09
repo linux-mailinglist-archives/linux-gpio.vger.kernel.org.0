@@ -2,115 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA33776420
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 17:39:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52C5177662B
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 19:12:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231301AbjHIPjz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Aug 2023 11:39:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49024 "EHLO
+        id S231359AbjHIRMx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Aug 2023 13:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234349AbjHIPjj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 11:39:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EEE211C;
-        Wed,  9 Aug 2023 08:39:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BEBA63EE4;
-        Wed,  9 Aug 2023 15:39:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C72C433C7;
-        Wed,  9 Aug 2023 15:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691595570;
-        bh=ZN+Ph02j0blvyY6VRiCcTlHg1lDxH5//uAa9haCbAn8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i0MzQOFzaKje3rSd1sMFSE1kApBZCzLB8I2z0MbQK+v/GUrlpsqiQjqi+xSnExklK
-         hQM+06ieQ+JBEv/MhCR02KZbqQPtc0jNLt+qnangDl1IihkMA4ymCsnS8lE1sia4eX
-         OFBqlgq/O2RGSgpaa8bGA0+pVDpm8wQQzStXZhSu63ZdO4N7OxTYIUajdURgwKXQv2
-         AMXeLFGwS192JLeKX1paG5pWcwrdKCTY50kF9iu9t/WZuc49OOE/eyex/soOi6Hs4D
-         RhtqbijCKALv6khgCE3zzk1D8roP8Mxms7RHmtWAbVu9JMdz69IjKL15wGn99BEDyw
-         84nb+hYMMvFxQ==
-Date:   Wed, 9 Aug 2023 16:39:25 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
- offset
-Message-ID: <20230809-circus-photo-6911d2e18f96@spud>
-References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
- <20230807074043.31288-2-zhuyinbo@loongson.cn>
- <20230808-amount-urban-9a6eb09852ca@spud>
- <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
+        with ESMTP id S229517AbjHIRMx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 13:12:53 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766832103;
+        Wed,  9 Aug 2023 10:12:52 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-687087d8ddaso6678974b3a.1;
+        Wed, 09 Aug 2023 10:12:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691601172; x=1692205972;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QeYbOsS7m7Ci+oO9qmLW4YJFfrwZPXuK5PLkDCaWNro=;
+        b=m9SLyR5CWKCKowrtvk50dLqs8iMis6jpBIAhdByP4ZJW79BOm4DB7iaJsDvYTXOxI/
+         SA8AShuYF5AvXOGeFSyjDF7JIZPKqzr+Li4+3bhmGUMb08ErRhuXVaKlcedACDM/ieCJ
+         HslHe6BSV6hvQsRaq1IaAsut3pr3NvZySYTDC/WvyyZutDjCa+zyX/333iUa03CLwGRf
+         3HxqJeTH7C/xGOjTVHSZe8iQ2oc983fpxrOe3Gqvz9nRrISd+XBdMEnCHxP/CKCh7ych
+         00OXgh3Qq5D9KgOmpYGP3D39DNacc+F5/moXj2LSdh9wBCvZT9f2OjERsxHRua0SMdlZ
+         49xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691601172; x=1692205972;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QeYbOsS7m7Ci+oO9qmLW4YJFfrwZPXuK5PLkDCaWNro=;
+        b=UcQLyvv++HBYbGsth5wB7CAjXgyK+K7zpB/RubYTWnCNI3l2J1fx4iXaMjRN040Ses
+         kiGLubKQ9nSQhAypeTZGla/+rueROHR2I0x+YKj19myqNEFHFrmhg1bKYGUs0xxl+97B
+         hc8dv5XSW2dSaeLEhc/lf/QuwyWCOZOf931J2259p5Y5vWg079sUhR5ohLDlBmJv5lbu
+         7nL6kVJ/apK6Kz8BAS6XvT5XmFE5n4AFCu76cLoa9AbvjS1O8BLv61ZBdoF3KDgz3CH0
+         f+7AUvhkntuzQ1yj5CyjUB0cJeFu/w42xYYT6sSiaa6aCa0TGSLAPMFOnEIbLMCmWdT0
+         ph5A==
+X-Gm-Message-State: AOJu0YyPYJx0f1JwG5x8c0X4sENeCp/gZngFdh3ZwnLJghGYOuK53V7Q
+        0mqy93RGtZrUvUpRlCH3WMU=
+X-Google-Smtp-Source: AGHT+IEQM2P86vJ5xnSvgcE3nb86ErwM/e9/QOs1IeoTEXzT8GSnjWcd8eyauGfAKy+KgXYuB7mtCA==
+X-Received: by 2002:a05:6a20:4422:b0:138:1c5b:24c3 with SMTP id ce34-20020a056a20442200b001381c5b24c3mr3958967pzb.49.1691601171849;
+        Wed, 09 Aug 2023 10:12:51 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40c2:1009:f4c5:4c0f:f2b7:4636:86b])
+        by smtp.gmail.com with ESMTPSA id g5-20020a170902c38500b001bbd1562e75sm11390069plg.55.2023.08.09.10.12.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Aug 2023 10:12:50 -0700 (PDT)
+From:   coolrrsh@gmail.com
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        Rajeshwar R Shinde <coolrrsh@gmail.com>
+Subject: [PATCH] gpio: gpio-imx-scu: Use ARRAY_SIZE for array length
+Date:   Wed,  9 Aug 2023 22:42:45 +0530
+Message-Id: <20230809171245.92081-1-coolrrsh@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="VXgqk7woHVK+3S1c"
-Content-Disposition: inline
-In-Reply-To: <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Rajeshwar R Shinde <coolrrsh@gmail.com>
 
---VXgqk7woHVK+3S1c
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use of macro ARRAY_SIZE to calculate array size minimizes
+the redundant code and improves code reusability.
+This fixes warnings reported by Coccinelle:
+drivers/gpio/gpio-imx-scu.c:106:32-33: WARNING: Use ARRAY_SIZE
 
-On Wed, Aug 09, 2023 at 03:47:55PM +0800, Yinbo Zhu wrote:
-> =E5=9C=A8 2023/8/8 =E4=B8=8B=E5=8D=888:05, Conor Dooley =E5=86=99=E9=81=
-=93:
-> > On Mon, Aug 07, 2023 at 03:40:42PM +0800, Yinbo Zhu wrote:
+Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
+---
+ drivers/gpio/gpio-imx-scu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > > +  loongson,gpio-ctrl-mode:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description:
-> > > +      This option indicate this GPIO control mode, where '0' represe=
-nts
-> > > +      bit control mode and '1' represents byte control mode.
-> >=20
-> > How is one supposed to know which of these modes to use?
->=20
->=20
-> Byte mode is to access by byte, such as gpio3, the base address of the
-> gpio controller is offset by 3 bytes as the access address of gpio3.
->=20
-> The bit mode is the normal mode that like other platform gpio and it is
-> to access by bit.
->=20
-> If both modes are supported, it is recommended to prioritize using byte
-> mode that according to spec.
+diff --git a/drivers/gpio/gpio-imx-scu.c b/drivers/gpio/gpio-imx-scu.c
+index e190bde5397d..fb05a53c9712 100644
+--- a/drivers/gpio/gpio-imx-scu.c
++++ b/drivers/gpio/gpio-imx-scu.c
+@@ -103,7 +103,7 @@ static int imx_scu_gpio_probe(struct platform_device *pdev)
+ 	gc = &priv->chip;
+ 	gc->base = -1;
+ 	gc->parent = dev;
+-	gc->ngpio = sizeof(scu_rsrc_arr)/sizeof(unsigned int);
++	gc->ngpio = ARRAY_SIZE(scu_rsrc_arr)/sizeof(unsigned int);
+ 	gc->label = dev_name(dev);
+ 	gc->get = imx_scu_gpio_get;
+ 	gc->set = imx_scu_gpio_set;
+-- 
+2.25.1
 
-So, sounds like this property should instead be a boolean that notes
-whether the hardware supports the mode or not, rather than the current
-enum used to determine software policy.
-
-However, from Krzysztof's comments & my own feeling, it really does seem
-like you should drop the do-everything compatible and introduce things
-that are soc-specific.
-
---VXgqk7woHVK+3S1c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNOzLQAKCRB4tDGHoIJi
-0gKZAPwMObBwfQu8x9fheCqfaLGcTVE9kP/GlXm+nZ+WkYpRAAEA/fvnRYxDaHud
-NkKpJyX9yzzr+jgHCWeKNA/w/9hz6QQ=
-=8LUU
------END PGP SIGNATURE-----
-
---VXgqk7woHVK+3S1c--
