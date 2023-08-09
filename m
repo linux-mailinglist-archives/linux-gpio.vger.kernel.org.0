@@ -2,140 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 650C5775EFA
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 14:30:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45500776017
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 15:00:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbjHIMaS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 9 Aug 2023 08:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54482 "EHLO
+        id S232156AbjHINAs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Aug 2023 09:00:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjHIMaR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 08:30:17 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96AE910F3;
-        Wed,  9 Aug 2023 05:30:14 -0700 (PDT)
-Received: from [194.95.143.137] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1qTiJH-00071M-LR; Wed, 09 Aug 2023 14:29:07 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>, Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@amd.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-mips@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
-        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for drivers
-Date:   Wed, 09 Aug 2023 14:29:04 +0200
-Message-ID: <5316381.7s5MMGUR32@phil>
-In-Reply-To: <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-References: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de>
- <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S229844AbjHINAr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 09:00:47 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 064172101
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Aug 2023 06:00:47 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-5234b80e9b6so2123830a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Aug 2023 06:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691586045; x=1692190845;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BkQfk41wpqfjz+mLvTVXwnfN3tFzJusZiA/ZzblZA/c=;
+        b=JOt/neGsXumf2WLwlF0maWpAxYugaJRAPqX2QsPsvyHfvEorQnvr2rifTBwv0cxtYt
+         OK/482mz0avRMRrBF7JmOgcLMPsmGgRPTB5plHb+b1/whOCnWs5CAf++wq3rCa9F6k3L
+         XMXUEu+L85QAl34800PQFNkBIB+OiX0duWdMqPg2UUBVigdodRQphjXlXpJYZyhDKX8r
+         k5Sg24NFQb8BL9eTraIpLvpYqzOCmDE1nIIgOIpt/T+DuF0VosMneN4Hx6sY8LKhM+pT
+         QPMdzI9YPaDPkFCFLHV2wtnam9AVovJuKgZHI226oYAhei4exylUorWsXSLTku0TBS6M
+         J7ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691586045; x=1692190845;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BkQfk41wpqfjz+mLvTVXwnfN3tFzJusZiA/ZzblZA/c=;
+        b=TMdPouKuSrD9QStw3uGokIwXXTdSnNvN3VftcrQa0k/07/f8+kH6GFYdhPpf+LvIqQ
+         5G7yqHXczPsv103n2er3ID0NEyl7A3Kidjq8sx0E+gnaBm1GXRcfs428nc3zQvUoVsD/
+         7B9cFeMA64anTWfZAQwyKudVIiFdS33CfuN6BWETEOBf1DOLLr/zSfEDKZ2LwFeUVmur
+         5swxf5dRDdSa0K53daSLpyNEFpzt6aLMijz+Wt9Fwopp0q9A4NbuMQrl/mJ7rNBI93vJ
+         GPvpVNi2whIbi/3p7wB/RZpb3J/IlobL9qoVTtguLBmDif1o0zYc/tW/yQs/dT0zrVF+
+         gHUA==
+X-Gm-Message-State: AOJu0YzYIBg/JS3Ev+x+NkVQGkLo14ENrdwuxmPNX9yDj6ijDQ/ePAgG
+        dRWAgrDkdHDxBuuXOzpDDxLxxQ==
+X-Google-Smtp-Source: AGHT+IG/xFtqsZIi/wA1IMhYIyCrPe8A6tlho6R+B+aFuU7npNcg9qbHmJn2OSrG0KdQ6W7qc2IZ4g==
+X-Received: by 2002:a17:907:77c8:b0:99b:f8e7:130f with SMTP id kz8-20020a17090777c800b0099bf8e7130fmr2114166ejc.15.1691586045471;
+        Wed, 09 Aug 2023 06:00:45 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.113])
+        by smtp.gmail.com with ESMTPSA id bw5-20020a170906c1c500b00988f168811bsm8049495ejb.135.2023.08.09.06.00.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Aug 2023 06:00:45 -0700 (PDT)
+Message-ID: <f9a8897e-301e-9d69-be59-a5aa9290f01b@linaro.org>
+Date:   Wed, 9 Aug 2023 15:00:41 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_PASS,T_SPF_HELO_TEMPERROR autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn
+References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
+ <20230807074043.31288-2-zhuyinbo@loongson.cn>
+ <91f57b0d-a6e9-c039-40b6-0a1a9af5f7a0@linaro.org>
+ <78c5a043-3e2a-48d6-88bd-2f91cc6d1347@loongson.cn>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <78c5a043-3e2a-48d6-88bd-2f91cc6d1347@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Freitag, 4. August 2023, 16:27:06 CEST schrieb Uwe Kleine-König:
-> Instead of requiring each driver to care for assigning the owner member
-> of struct pwm_ops, handle that implicitly using a macro. Note that the
-> owner member has to be moved to struct pwm_chip, as the ops structure
-> usually lives in read-only memory and so cannot be modified.
+On 09/08/2023 09:28, Yinbo Zhu wrote:
+>>
+>>>     - gpio-ranges
+>>>     - interrupts
+>>>   
+>>> @@ -49,11 +82,16 @@ examples:
+>>>       #include <dt-bindings/interrupt-controller/irq.h>
+>>>   
+>>>       gpio0: gpio@1fe00500 {
+>>> -      compatible = "loongson,ls2k-gpio";
+>>> +      compatible = "loongson,ls2k1000-gpio";
+>>>         reg = <0x1fe00500 0x38>;
+>>>         ngpios = <64>;
+>>>         #gpio-cells = <2>;
+>>>         gpio-controller;
+>>> +      loongson,gpio-conf-offset = <0>;
+>>> +      loongson,gpio-in-offset = <0x20>;
+>>> +      loongson,gpio-out-offset = <0x10>;
+>>> +      loongson,gpio-ctrl-mode = <0>;
+>>> +      loongson,gpio-inten-offset = <0x30>;
+>>
+>> I still think that you just embed the programming model into properties,
+>> instead of using dedicated compatible for different blocks. It could be
+>> fine, although I would prefer to check it with your DTS
 > 
-> The upside is that new lowlevel drivers cannot forget the assignment and
-> save one line each. The pwm-crc driver didn't assign .owner, that's not
-> a problem in practise though as the driver cannot be compiled as a
-> module.
+> Okay, I got it,  and if I understand correctly, you seem to agree with
+> me adding attributes like this.
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
+> And, if using this method that programming model into dts properites,
+> then when adding a new platform's GPIO,  there is no longer a need to
+> modify the driver because gpio controller is compatible and different
+> platform can use a same compatible.
 
->  drivers/pwm/pwm-rockchip.c            |  1 -
+Uhu, so there we are. You use this method now to avoid new compatibles.
+No, therefore I do not agree.
 
-Acked-by: Heiko Stuebner <heiko@sntech.de> #pwm-rockchip
+> 
+>>
+>> Where is your DTS?
+> 
+> 
+> Sorry, the dts containing gpio nodes are only available in the product
+> code and have not been sent to the community yet.
 
+Does not help to convince us, but it is your right. With this and above
+explanation, my answer is no - NAK.
 
+Best regards,
+Krzysztof
 
