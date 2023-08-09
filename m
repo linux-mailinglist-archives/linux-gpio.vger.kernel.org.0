@@ -2,133 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F8AC77633B
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 17:01:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA33776420
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Aug 2023 17:39:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233493AbjHIPBu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Aug 2023 11:01:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52030 "EHLO
+        id S231301AbjHIPjz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Aug 2023 11:39:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231468AbjHIPBt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 11:01:49 -0400
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683402107;
-        Wed,  9 Aug 2023 08:01:48 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 08F12E0008;
-        Wed,  9 Aug 2023 15:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1691593306;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=g0zvfLvyRJt7hOgvNIifYjQHxyaOMWD1ltEX2pdHMbc=;
-        b=iXnta/0eS8D5cHJ76Q4dwhU+XK3qsGA5Twh8/3mjUO44s+pEvR/n0UP3phDRDaRzknJJqg
-        U0Po6QG77G0tYGseNfrgZzZ+oWZIReHQUy/j7wwlAqPpgNMdWXCyXkv/pWCbZTB17U0vBq
-        09x+R9HSs6PA9O+bm3Z01VLxBArlIT/tenAyyV94zuJu4ABgfwHf1jlpBmT9JL/aTrx54e
-        xulDWbuzkyyvyvjDTlEeKHtRrqbNHF9NWfFODttuROxRsjNMQwXq4dUnuY5B9C5WUAcO8L
-        rl4cb1owoaMRbW2+7s4uQte7dbC1HrDGo95q3ov+1CrqQAidzdIy5MawOqVkLw==
-Date:   Wed, 9 Aug 2023 17:01:39 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        with ESMTP id S234349AbjHIPjj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 11:39:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EEE211C;
+        Wed,  9 Aug 2023 08:39:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BEBA63EE4;
+        Wed,  9 Aug 2023 15:39:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C72C433C7;
+        Wed,  9 Aug 2023 15:39:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691595570;
+        bh=ZN+Ph02j0blvyY6VRiCcTlHg1lDxH5//uAa9haCbAn8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i0MzQOFzaKje3rSd1sMFSE1kApBZCzLB8I2z0MbQK+v/GUrlpsqiQjqi+xSnExklK
+         hQM+06ieQ+JBEv/MhCR02KZbqQPtc0jNLt+qnangDl1IihkMA4ymCsnS8lE1sia4eX
+         OFBqlgq/O2RGSgpaa8bGA0+pVDpm8wQQzStXZhSu63ZdO4N7OxTYIUajdURgwKXQv2
+         AMXeLFGwS192JLeKX1paG5pWcwrdKCTY50kF9iu9t/WZuc49OOE/eyex/soOi6Hs4D
+         RhtqbijCKALv6khgCE3zzk1D8roP8Mxms7RHmtWAbVu9JMdz69IjKL15wGn99BEDyw
+         84nb+hYMMvFxQ==
+Date:   Wed, 9 Aug 2023 16:39:25 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        alsa-devel@alsa-project.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 21/28] net: wan: Add framer framework support
-Message-ID: <20230809170139.2402e4a2@bootlin.com>
-In-Reply-To: <cc9417a3-ef86-bb46-9519-cf65b03b5f08@infradead.org>
-References: <20230809132757.2470544-1-herve.codina@bootlin.com>
-        <20230809132757.2470544-22-herve.codina@bootlin.com>
-        <cc9417a3-ef86-bb46-9519-cf65b03b5f08@infradead.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+Message-ID: <20230809-circus-photo-6911d2e18f96@spud>
+References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
+ <20230807074043.31288-2-zhuyinbo@loongson.cn>
+ <20230808-amount-urban-9a6eb09852ca@spud>
+ <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VXgqk7woHVK+3S1c"
+Content-Disposition: inline
+In-Reply-To: <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Randy,
 
-On Wed, 9 Aug 2023 07:24:32 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+--VXgqk7woHVK+3S1c
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Hi,
-> 
-> On 8/9/23 06:27, Herve Codina wrote:
-> > diff --git a/drivers/net/wan/framer/Kconfig b/drivers/net/wan/framer/Kconfig
-> > new file mode 100644
-> > index 000000000000..96ef1e7ba8eb
-> > --- /dev/null
-> > +++ b/drivers/net/wan/framer/Kconfig
-> > @@ -0,0 +1,19 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +#
-> > +# FRAMER
-> > +#
-> > +
-> > +menu "Framer Subsystem"
-> > +
-> > +config GENERIC_FRAMER
-> > +	bool "Framer Core"  
-> 
-> Just curious: any reason that this cannot be tristate (i.e., a loadable module)?
-> Thanks.
+On Wed, Aug 09, 2023 at 03:47:55PM +0800, Yinbo Zhu wrote:
+> =E5=9C=A8 2023/8/8 =E4=B8=8B=E5=8D=888:05, Conor Dooley =E5=86=99=E9=81=
+=93:
+> > On Mon, Aug 07, 2023 at 03:40:42PM +0800, Yinbo Zhu wrote:
 
-For the same reasons as generic phy cannot be built as module
-  b51fbf9fb0c3 phy-core: Don't allow building phy-core as a module
+> > > +  loongson,gpio-ctrl-mode:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description:
+> > > +      This option indicate this GPIO control mode, where '0' represe=
+nts
+> > > +      bit control mode and '1' represents byte control mode.
+> >=20
+> > How is one supposed to know which of these modes to use?
+>=20
+>=20
+> Byte mode is to access by byte, such as gpio3, the base address of the
+> gpio controller is offset by 3 bytes as the access address of gpio3.
+>=20
+> The bit mode is the normal mode that like other platform gpio and it is
+> to access by bit.
+>=20
+> If both modes are supported, it is recommended to prioritize using byte
+> mode that according to spec.
 
-In the framer case, this allows to have the QMC HDLC driver built on systems
-without any framers (no providers and no framer core framework).
-Also the framer phandle is optional in the device tree QMC HDLC node.
+So, sounds like this property should instead be a boolean that notes
+whether the hardware supports the mode or not, rather than the current
+enum used to determine software policy.
 
-Regards,
-Hervé
+However, from Krzysztof's comments & my own feeling, it really does seem
+like you should drop the do-everything compatible and introduce things
+that are soc-specific.
 
-> 
-> > +	help
-> > +	  Generic Framer support.
-> > +
-> > +	  This framework is designed to provide a generic interface for framer
-> > +	  devices present in the kernel. This layer will have the generic
-> > +	  API by which framer drivers can create framer using the framer
-> > +	  framework and framer users can obtain reference to the framer.
-> > +	  All the users of this framework should select this config.
-> > +
-> > +endmenu  
-> 
+--VXgqk7woHVK+3S1c
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNOzLQAKCRB4tDGHoIJi
+0gKZAPwMObBwfQu8x9fheCqfaLGcTVE9kP/GlXm+nZ+WkYpRAAEA/fvnRYxDaHud
+NkKpJyX9yzzr+jgHCWeKNA/w/9hz6QQ=
+=8LUU
+-----END PGP SIGNATURE-----
 
--- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--VXgqk7woHVK+3S1c--
