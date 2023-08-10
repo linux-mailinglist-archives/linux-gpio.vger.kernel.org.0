@@ -2,106 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74519778360
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 00:01:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDCA4778372
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 00:08:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232009AbjHJWBW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 18:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50924 "EHLO
+        id S231872AbjHJWIY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 18:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231680AbjHJWBH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 18:01:07 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2303F2D40
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 15:01:06 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-487196276f4so398076e0c.3
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 15:01:06 -0700 (PDT)
+        with ESMTP id S229539AbjHJWIX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 18:08:23 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A33128
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 15:08:22 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-51d95aed33aso1685614a12.3
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 15:08:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691704866; x=1692309666;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1691705300; x=1692310100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KaWOwFxP8NeV5qZedju52jWrRv0oTxVWbWYYg0K/4Gg=;
-        b=YMahL25m3XKqYTF4tno5ua0W4dOvsnqIBvCUMy2x8KZZyTsT8BlW54NZUHEQ30RPdB
-         4TcVqCTYMgn7zpITd125wpcm2gqyyyD78jEnJ6l2ZqROunAxjFi8jtY/8BPih8B2ObZi
-         Uxx7U7CZJL9+yG0d8RC6Doh5QmiZjfMYs419H8f4W8MYmVhrLSSdQFyl8VWtsjWcN5qa
-         8DEsnl57f08go0qLD6ck5Ods4ap+675acDCdGvyqqctEkRBwuXjM/viFqix8LOyUrQnS
-         zxOe7SOwZDKJ7wXziY6SHf7jttqli38B+OsUKIB1iiWu8Vl2Unh5BKb+T6iIwKMV902k
-         7fgg==
+        bh=qDW6V4YCgLGKhp/AheaEpquVZOz7qd834C1xXJh9oFo=;
+        b=PC0inTo6TdstKASOj0YuNTsriUuf4LKpKZCPNbVJY5tfURaMkEjJNQeOCbpwsUHw9K
+         o2nktcqjNBK9jMYYoc1ulmYGgpFD+5nDxy/Sr/ev9BilqbAGkcOcR4sy5KMZKODe39XF
+         1Wky2ND9zvsGPTucb3jGB/rjjjFQGA1xOFnHPB+Pt6smKpiBlo2PZYFjfkWZROL38X/N
+         ikcM1V2lXMh9DR1IuObasXz9Vq/ncPDRrdHld2a86sNGgVkYilBQeIj/SnsTJC9DG5sO
+         9wRMytZHfyVpIUvqaeYmtT2tyzIuba867wxX//l7L/5nkZITUfZBEEp8FDqlV2VWeXlC
+         PV8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691704866; x=1692309666;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1691705300; x=1692310100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KaWOwFxP8NeV5qZedju52jWrRv0oTxVWbWYYg0K/4Gg=;
-        b=FX3kFf2bVIKrZ+FPUK+nbJHQbyIu3QwFifYL4xsaW/s8Vt9KELbuhfgYq5FDNIJPVl
-         DAHVBRTO75fAy8w3Uw7nPbdRY+UljzzF5t2QLkSN103DPfKS6fjMNzw8bjLcS25stpWL
-         xIGh7tRSTN5nFPXuDfzKaOFHwL5XvGcYzLDXhWud1RBBq84TrtdxTVV/YLnMLjdM217x
-         DDOmUswS/t5erzl9hkcOIY45P7ILwEKLCp75yKGHuuXI2aZODor0f2DU8FLdekSI575f
-         G9m0mqqiHmSAljLV5MUy5D5r68cmO6oZpgcFN/DX72zKAYtmnAAubSAXDydA2+/e+5R9
-         Uf3A==
-X-Gm-Message-State: AOJu0Yzd5KwuctQ043J2eG1xhj3gj5VlGXqzTVpIiozRysKbRAtojLD0
-        RL8PYYc0dIq3JAAxHrmA6Gu5rA==
-X-Google-Smtp-Source: AGHT+IEYwVf7B0V1B4z6z76aZNmEVOl6H78RqiHn2wkqhFTp4uAfBB2ZrQMHIsgHiejBcL6+A1R0vQ==
-X-Received: by 2002:a1f:c305:0:b0:486:de54:b11 with SMTP id t5-20020a1fc305000000b00486de540b11mr158396vkf.16.1691704866069;
-        Thu, 10 Aug 2023 15:01:06 -0700 (PDT)
-Received: from fedora.. (072-189-067-006.res.spectrum.com. [72.189.67.6])
-        by smtp.gmail.com with ESMTPSA id r17-20020a056122009100b004872b997d3bsm387105vka.1.2023.08.10.15.01.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 15:01:05 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <william.gray@linaro.org>,
-        stable@vger.kernel.org,
-        Paul Demetrotion <pdemetrotion@winsystems.com>
-Subject: [RESEND PATCH 7/7] gpio: ws16c48: Fix off-by-one error in WS16C48 resource region extent
-Date:   Thu, 10 Aug 2023 18:00:44 -0400
-Message-ID: <f20243853e94264534927f2cdf9288b869e7e03b.1691703928.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <cover.1691703927.git.william.gray@linaro.org>
-References: <cover.1691703927.git.william.gray@linaro.org>
+        bh=qDW6V4YCgLGKhp/AheaEpquVZOz7qd834C1xXJh9oFo=;
+        b=WIThO/q69pzBc+QiogDH7IklWQWBEeQGIjiJCq6jj/gs8zPT6P44eDQGltcFtvMjuX
+         FEV5+fxZZD3JarXs8beqmGASXTyXpH7VK+vh4KhVj4XEL26p4l6IBXLcz6eTs+LxUhqS
+         5V5yFOZd/K3Zw/43iCSfk+Umo2NUN1/TQrKtbQJgEvamNCHEqGOd1J4g3nMqvavYF9Z5
+         JffBvu6STamcOBWop05CIAjlwCJMfmjIOEHOi7rbZnki1sdc3Sh3PsKnqihIfQ3pQWe9
+         YXWtxU6PhvFfM+nbYPWgZ5AOhK+cAsSKyk5DrBoyOwuypjGajCEw2SbPCSbF+PK+e6kY
+         XYgQ==
+X-Gm-Message-State: AOJu0YznNSxk7Jqu7WzRJdM57TB5puSDvbRsnRrpmx4+6QPrqgbqpn5e
+        uGijfupjMAskC5r/+Q9si7gIbhV9TzIgvP7gZ/s=
+X-Google-Smtp-Source: AGHT+IEX8w1+47RHSg5m5LXJyfnXV+1AeciJIWq2zKeshaMj6XqcQPjlkrXGxKzMx3dRwIbsm/r8ENH9eFGhAq4VVSY=
+X-Received: by 2002:a05:6402:50d:b0:522:2b76:1985 with SMTP id
+ m13-20020a056402050d00b005222b761985mr210954edv.2.1691705300362; Thu, 10 Aug
+ 2023 15:08:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <ZMLnz25brQvcwBVW@sol> <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
+ <ZMNYsOXrOOZgxLeC@sol> <CAN1+YZWjEZQY6yffCFrt0vLVA6P0j5dDbRz=b5c0MXJoSszhig@mail.gmail.com>
+ <ZMRzYD6wGYywiPbd@sol> <CAN1+YZW-EcQq=D=dLQoH-WsDD7RWjTUgqbQMynV+OXV0EjLOAw@mail.gmail.com>
+ <ZM7xEbr0essN2qY3@sol> <CAN1+YZXd_dMJK9CYL+bmtTRCzT=W7Kt9VTeD38Wg8habFLirzg@mail.gmail.com>
+ <ZM9oB0l4fvOinzLm@sol> <CAN1+YZVD7ui4HSRMaGv+y-xT9NgeGNWDM_vx2MhZfiGrwhLPVA@mail.gmail.com>
+ <ZNQzT2MtskTTZTiI@sol>
+In-Reply-To: <ZNQzT2MtskTTZTiI@sol>
+From:   andy pugh <bodgesoc@gmail.com>
+Date:   Thu, 10 Aug 2023 23:07:44 +0100
+Message-ID: <CAN1+YZWz10vZ__3gThzTACbiPY=EVVJ_2qjrAzk6rgpjWwKv9g@mail.gmail.com>
+Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The WinSystems WS16C48 I/O address region spans offsets 0x0 through 0xA,
-which is a total of 11 bytes. Fix the WS16C48_EXTENT define to the
-correct value of 11 so that access to necessary device registers is
-properly requested in the ws16c48_probe() callback by the
-devm_request_region() function call.
+On Thu, 10 Aug 2023 at 01:46, Kent Gibson <warthog618@gmail.com> wrote:
 
-Fixes: 2c05a0f29f41 ("gpio: ws16c48: Implement and utilize register structures")
-Cc: stable@vger.kernel.org
-Cc: Paul Demetrotion <pdemetrotion@winsystems.com>
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/gpio-ws16c48.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Check the sizes of the memory you are allocating.
+> e.g. this:
+>
+>             arr[c].chip =3D (struct gpiod_chip *)rtapi_kmalloc(sizeof(arr=
+[c].chip), RTAPI_GFP_KERNEL);
+>
+> allocates the space for a pointer to a struct, not the struct itself.
 
-diff --git a/drivers/gpio/gpio-ws16c48.c b/drivers/gpio/gpio-ws16c48.c
-index 701847508e94..6289b0510cf2 100644
---- a/drivers/gpio/gpio-ws16c48.c
-+++ b/drivers/gpio/gpio-ws16c48.c
-@@ -17,7 +17,7 @@
- #include <linux/regmap.h>
- #include <linux/types.h>
- 
--#define WS16C48_EXTENT 10
-+#define WS16C48_EXTENT 11
- #define MAX_NUM_WS16C48 max_num_isa_dev(WS16C48_EXTENT)
- 
- static unsigned int base[MAX_NUM_WS16C48];
--- 
-2.41.0
+Oh, that's embarrassing.
 
+>             arr[c].chip =3D (struct gpiod_chip *)rtapi_kmalloc(sizeof(*ar=
+r[c].chip), RTAPI_GFP_KERNEL);
+
+But that doesn't actually work:
+
+"hal/drivers/hal_gpio.c: In function =E2=80=98build_chips_collection=E2=80=
+=99:
+hal/drivers/hal_gpio.c:119:41: error: dereferencing pointer to
+incomplete type =E2=80=98struct gpiod_chip=E2=80=99
+      arr[c].chip =3D rtapi_kmalloc(sizeof(*arr[c].chip), RTAPI_GFP_KERNEL)=
+;
+"
+
+The exact same structure compiles without error for the
+gpiod_line_bulk a few lines lower. I think that the difference is that
+gpiod.h includes the definition of struct gpiod_line_bulk, but only
+the prototype of struct gpiod_chip.
+(This is mainly based on googling Stack Overflow, so might be wrong)
+
+> There is no code movement at all, this is just telling the linker to
+> link libgpiod.a directly into your executable, rather than dynamically
+> linking against libgpiod.so.
+>
+> The specifics of how to do that depend on your build.
+
+But surely the compiler and linker need either the V2 code, or the
+library object? How does it access these if we don't have them in our
+repository?
+Even if we add it as a build-time dependency, it isn't currently
+available in the usual places?
+I must be missing something? Or are you assuming that I am the only
+one compiling LinuxCNC?
+
+--=20
+atp
+"A motorcycle is a bicycle with a pandemonium attachment and is
+designed for the especial use of mechanical geniuses, daredevils and
+lunatics."
+=E2=80=94 George Fitch, Atlanta Constitution Newspaper, 1912
