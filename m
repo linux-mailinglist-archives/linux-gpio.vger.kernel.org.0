@@ -2,98 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70A2F777030
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 08:20:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA81C7770A6
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 08:47:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230304AbjHJGUA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 02:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        id S232102AbjHJGrB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 02:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232593AbjHJGT7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 02:19:59 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A88A9E52;
-        Wed,  9 Aug 2023 23:19:56 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.201])
-        by gateway (Coremail) with SMTP id _____8DxxPCLgdRkC3AUAA--.44963S3;
-        Thu, 10 Aug 2023 14:19:55 +0800 (CST)
-Received: from [10.20.42.201] (unknown [10.20.42.201])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxWM2JgdRkdZlSAA--.11579S3;
-        Thu, 10 Aug 2023 14:19:54 +0800 (CST)
-Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
- offset
-To:     Conor Dooley <conor@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
-References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
- <20230807074043.31288-2-zhuyinbo@loongson.cn>
- <20230808-amount-urban-9a6eb09852ca@spud>
- <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
- <20230809-circus-photo-6911d2e18f96@spud>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <d4e16768-bed0-beda-42c3-f0a01b7e96cc@loongson.cn>
-Date:   Thu, 10 Aug 2023 14:19:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S229677AbjHJGqz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 02:46:55 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 568CCED;
+        Wed,  9 Aug 2023 23:46:54 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-5237365f3a6so658193a12.2;
+        Wed, 09 Aug 2023 23:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691650013; x=1692254813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d97DNxVWndRKqy+GYLUUwTxQ5wSEsSYDcK7bljZp6nM=;
+        b=fShcXfPyq5qTLCY/hQVnKm0r+Fz1cWZbRI6whRrplxAtEaOAvSNl/QW55WZ4OWIVUQ
+         nkM3mryRvhgEptszJeJvJTLwPW6pDtlbZDRSQmQSIHGPHSaCe++dzkz948vwpEvv22wQ
+         7hrCdpMjaYC+s/dofUAUWnwBy5125U/oushoyb+K/W8oExKlQwjn0SIVcX/MPN2epsn1
+         J3dc0NtrnbzUge744OmpfaYD33NwztV5USXEsk3oWu72Yx/In4wy6u2STE7kM96i6mGk
+         w/yFRaGe4xTmHbC775KZ0lUZVoBBtqESIjss+7LGjwngnYcbKNacPFyCISmKniBjerAh
+         7/oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691650013; x=1692254813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d97DNxVWndRKqy+GYLUUwTxQ5wSEsSYDcK7bljZp6nM=;
+        b=gSdYBXh6i2jXzvBdGk2ByEObOmw0CUFYl+UZUINPUTHlR1gWKA+asxc8C5BD0HY7Hh
+         0jmag4WgJhFugR5NwcoGJ5smOqKDlBOqgpYLjA2dhfOLQRIcFC4V/t74mJVamce63DDI
+         Jq/TrED9yK1aLSG0gsQfISP3sBcyjHKXKS4yOCHMMyLNl+6vkDCcwB5/GLuchxbtxqjg
+         8efzBg+VH1MzYPFuW7HS66bDhB0lt1P/CciEb86y12mqG1rlBkiGEpEuDSw+rhuboEjM
+         eKMNQXRSMq01m4qtneKov1GabU3+MmO0RdwGaIrUsY1V9ESH30VUeY61Xkam/yECpQjR
+         zQ/A==
+X-Gm-Message-State: AOJu0YzBVjN6uasKP28nvJ7nH5iuRJaRBOiJZ8DHK5129Dek8mQpRRw1
+        powkCOBZkMkMDZZQs/XwkM8ZcunJTRr2O9zC4UrPLYp9QaY=
+X-Google-Smtp-Source: AGHT+IEwWVlBeLryVc/eVOBBpMdYCkROMbaNhtiRKBVmwPQPhVZYoNNJyQh4qTwTplR/yAaIor0VgaZyup3j8VKzHP4=
+X-Received: by 2002:a05:6402:184d:b0:522:41b8:3dad with SMTP id
+ v13-20020a056402184d00b0052241b83dadmr1303993edy.15.1691650012582; Wed, 09
+ Aug 2023 23:46:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20230809-circus-photo-6911d2e18f96@spud>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxWM2JgdRkdZlSAA--.11579S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-        nUUI43ZEXa7xR_UUUUUUUUU==
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230809171245.92081-1-coolrrsh@gmail.com>
+In-Reply-To: <20230809171245.92081-1-coolrrsh@gmail.com>
+From:   Khalid Masum <khalid.masum.92@gmail.com>
+Date:   Thu, 10 Aug 2023 12:46:41 +0600
+Message-ID: <CAABMjtECX_p=G_Vwedxn3xuxm+WDy7hnyuSVc_rTNDr9yXKrYA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-imx-scu: Use ARRAY_SIZE for array length
+To:     coolrrsh@gmail.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Aug 9, 2023 at 11:12=E2=80=AFPM <coolrrsh@gmail.com> wrote:
+>
+> From: Rajeshwar R Shinde <coolrrsh@gmail.com>
+>
+> Use of macro ARRAY_SIZE to calculate array size minimizes
+> the redundant code and improves code reusability.
+> This fixes warnings reported by Coccinelle:
+> drivers/gpio/gpio-imx-scu.c:106:32-33: WARNING: Use ARRAY_SIZE
+>
+> Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
+> ---
+>  drivers/gpio/gpio-imx-scu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-imx-scu.c b/drivers/gpio/gpio-imx-scu.c
+> index e190bde5397d..fb05a53c9712 100644
+> --- a/drivers/gpio/gpio-imx-scu.c
+> +++ b/drivers/gpio/gpio-imx-scu.c
+> @@ -103,7 +103,7 @@ static int imx_scu_gpio_probe(struct platform_device =
+*pdev)
+>         gc =3D &priv->chip;
+>         gc->base =3D -1;
+>         gc->parent =3D dev;
+> -       gc->ngpio =3D sizeof(scu_rsrc_arr)/sizeof(unsigned int);
+> +       gc->ngpio =3D ARRAY_SIZE(scu_rsrc_arr)/sizeof(unsigned int);
+Since ARRAY_SIZE is being used, no need to divide it with sizeof unsigned i=
+nt
+again.
+...
+ gc->ngpio =3D ARRAY_SIZE(scu_rsrc_arr);
+...
 
+>         gc->label =3D dev_name(dev);
+>         gc->get =3D imx_scu_gpio_get;
+>         gc->set =3D imx_scu_gpio_set;
+> --
+> 2.25.1
 
-在 2023/8/9 下午11:39, Conor Dooley 写道:
-> On Wed, Aug 09, 2023 at 03:47:55PM +0800, Yinbo Zhu wrote:
->> 在 2023/8/8 下午8:05, Conor Dooley 写道:
->>> On Mon, Aug 07, 2023 at 03:40:42PM +0800, Yinbo Zhu wrote:
-> 
->>>> +  loongson,gpio-ctrl-mode:
->>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>> +    description:
->>>> +      This option indicate this GPIO control mode, where '0' represents
->>>> +      bit control mode and '1' represents byte control mode.
->>>
->>> How is one supposed to know which of these modes to use?
->>
->>
->> Byte mode is to access by byte, such as gpio3, the base address of the
->> gpio controller is offset by 3 bytes as the access address of gpio3.
->>
->> The bit mode is the normal mode that like other platform gpio and it is
->> to access by bit.
->>
->> If both modes are supported, it is recommended to prioritize using byte
->> mode that according to spec.
-> 
-> So, sounds like this property should instead be a boolean that notes
-> whether the hardware supports the mode or not, rather than the current
-> enum used to determine software policy.
-
-
-okay, I got it, I will use boolean,
-
-Thanks,
-Yinbo.
-
-
-
+thanks,
+  -- Khalid Masum
