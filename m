@@ -2,89 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F0A7777613
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 12:41:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1A5C7776AF
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 13:17:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234424AbjHJKlQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 06:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50860 "EHLO
+        id S231814AbjHJLRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 07:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234357AbjHJKlB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 06:41:01 -0400
-Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851481702;
-        Thu, 10 Aug 2023 03:41:00 -0700 (PDT)
-Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-56d263da4f2so631308eaf.0;
-        Thu, 10 Aug 2023 03:41:00 -0700 (PDT)
+        with ESMTP id S232186AbjHJLRX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 07:17:23 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43EAF2689
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 04:17:22 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-d62ae3fc7f1so690470276.2
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 04:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691664060; x=1692268860;
+        d=linaro.org; s=google; t=1691666241; x=1692271041;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IzGgdaSbIbO5607Bipi/BVOCslTkWPmDB2/kSSg0w98=;
-        b=GPvrgMmq+chXVdFnEk9PGz2ydLogpF32PvUNg+4t9DmG3TwOcFvqJWeNdqylVbUIhQ
-         RSOAX76SyLgThVlrNP/+88CJvg3E4dEH7qJ4Vyy8Bt2nZntX3FvEvRtfmLs3/tuk5dzP
-         GUmD/GXjr7uC7TKx0t1UnP1ixWKazUF1DMqsQuMeulNN+XheZgG+AhrV/tJ57oWPrDuU
-         1SEldI0rfzBWNPOtcoHN324a/dA8j5zuIm7YJcf5gKgJznWRYWkw4dkKdwmsICGMAdFg
-         yj+KFap3WeMmn2rGW8b391L6YE91Ka+XeW9AW6thBHYR8KVqhrvjep8hZHMjbtcElkTu
-         YTPQ==
+        bh=ADRnTf+HtriZ7mqwDU3wWvmXrT7FB+Ztxvgw7H2KXeU=;
+        b=QFhKu9tkFZ+fkU1lcY4zVfF0dk/FWoUgZD0eH36Sz7H5E6vylleVAxrx4pnTaXqwhk
+         0+gy/gZj3JZk12Km6iz/EZoWzKbi128l5ProuMk6rD8PXzxfQdAWHaHfYFH+hT3tRM5T
+         JhuEe8IlHx2uTiKvZWsgQrv6fkFqrBx0+2vETEZCqjNX/pWDMRwL/0BRd5MvDHtFVvKa
+         BM/Lp+D9Uqm7WCUrVCer3WiE1OLLbVSPYEz4lyAydeXxxun5B/2ka3EMFk7a+ErH42db
+         gw2/aA6IBStBu2S2LDjrdyts3q5jk/zxoySCSTATECPSlKOeat6hCKBGV6ZorzoWY9HV
+         DN/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691664060; x=1692268860;
+        d=1e100.net; s=20221208; t=1691666241; x=1692271041;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IzGgdaSbIbO5607Bipi/BVOCslTkWPmDB2/kSSg0w98=;
-        b=U5o0dOBrAEgWeHU0aAfM/c3eqJ0qSCj9EC+N77gtnb+ZjR6sO+4W87qn5d8Rr2pBCW
-         NKpNHZkM+MufIRNyJCwoyxz9YIRKe47VCqJoCX+hyI01TlVypX3b7SIhp2pcVzeKwepD
-         JxvvEi6MMCE8fqfczwvL27MaEeLmJffH7wiVbBhpSTh28wSkJJsdbsZNSM4ybMHfGcMe
-         7tOXvNfEhDt6SAb6VMDZ/K9LEIx2ZPa2q4v+j/zcLlO4257JUPG+GGqSrif22AoIWYiS
-         TXY29Ff97W3Gpuqm4OXsONWkvEz6ngWiWLTyiG2fsi6K9g24MUVC8fBj+4xfx0N/J7SM
-         tlug==
-X-Gm-Message-State: AOJu0Yz2TkA9GVCIiXb2Nn72FGoe8nhBdtfcgOGYETbcViTFRozu0Nyy
-        Ctv0raJu3hIWllL5TFZPCn7yJ5ZObYiVwJPW86EilNrbzrk=
-X-Google-Smtp-Source: AGHT+IE472b1bBC1wnLWrRDe+WBNUm860iODbGwa4NJ/eoWfeoqPR7DWvpHGMbjOH3OcpROQ7IS0Vh10NJjlFUVmpzY=
-X-Received: by 2002:a05:6820:47:b0:56c:cd0c:1d67 with SMTP id
- v7-20020a056820004700b0056ccd0c1d67mr1616704oob.7.1691664059810; Thu, 10 Aug
- 2023 03:40:59 -0700 (PDT)
+        bh=ADRnTf+HtriZ7mqwDU3wWvmXrT7FB+Ztxvgw7H2KXeU=;
+        b=PImuMkXD0Wv96TAAeYdFWJwQKzlMaX3JnAl8R8zc6gbsA+sL9nZfC9RxloOcYt95oQ
+         pooVeXl3sSIP3J3l/c53GnQgBieUjNXpidwaetdZ/BIDfPxQBE9HNVkWISRjMykE2B8U
+         N3MftBOwexmkSliT8rfWSwGxYvbropTQzg4Q0DwVYLh950MPanH8HhJk33KldgzPam0r
+         MqK4lQINlNRvNZocxrehu7ChBtqBfwgBiZfp0SHpuutR932wPRU9If6FUT9j70Nhvi90
+         ANFPEJ5+/Uh5xHJfber2lo3z7VgGu7MyVXU99C/BvwL6B/WE+zphOyJAiT+oHzRakWM9
+         0ghg==
+X-Gm-Message-State: AOJu0YxbenoAuibCmRIdupfqkTW8onRRFoIplbvxtXhiQG5k7RnQq+7W
+        4WsT0VCsLMr6xOMiXrWDBn/jgkk5p7k5pD12hiWLOg==
+X-Google-Smtp-Source: AGHT+IG0cc60EKwg6aO/Vl/FWx+h3xKBM7qpk0WTUOrKZYJlTlQ3xEW/05G+n7KdFt0H+qP3lFIXHa3H2q7KcJby2j8=
+X-Received: by 2002:a25:250f:0:b0:cea:6760:d2c6 with SMTP id
+ l15-20020a25250f000000b00cea6760d2c6mr2046852ybl.41.1691666241474; Thu, 10
+ Aug 2023 04:17:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230810074633.13111-1-coolrrsh@gmail.com>
-In-Reply-To: <20230810074633.13111-1-coolrrsh@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Aug 2023 13:40:23 +0300
-Message-ID: <CAHp75VfmnY1u2d4UX1qoKALqE--3+CUSGn9oDudCPZDa_-0GTA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: gpio-imx-scu: Use ARRAY_SIZE for array length
-To:     coolrrsh@gmail.com
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20230809132757.2470544-1-herve.codina@bootlin.com> <20230809132757.2470544-22-herve.codina@bootlin.com>
+In-Reply-To: <20230809132757.2470544-22-herve.codina@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 10 Aug 2023 13:17:09 +0200
+Message-ID: <CACRpkdZQ9_f6+9CseV1L_wGphHujFPAYXMjJfjUrzSZRakOBzg@mail.gmail.com>
+Subject: Re: [PATCH v3 21/28] net: wan: Add framer framework support
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 10:46=E2=80=AFAM <coolrrsh@gmail.com> wrote:
+Hi Herve,
+
+On Wed, Aug 9, 2023 at 3:28=E2=80=AFPM Herve Codina <herve.codina@bootlin.c=
+om> wrote:
+
+> A framer is a component in charge of an E1/T1 line interface.
+> Connected usually to a TDM bus, it converts TDM frames to/from E1/T1
+> frames. It also provides information related to the E1/T1 line.
 >
-> From: Rajeshwar R Shinde <coolrrsh@gmail.com>
+> The framer framework provides a set of APIs for the framer drivers
+> (framer provider) to create/destroy a framer and APIs for the framer
+> users (framer consumer) to obtain a reference to the framer, and
+> use the framer.
 >
-> Use of macro ARRAY_SIZE to calculate array size minimizes
-> the redundant code and improves code reusability.
-> This fixes warnings reported by Coccinelle:
-> drivers/gpio/gpio-imx-scu.c:106:32-33: WARNING: Use ARRAY_SIZE
+> This basic implementation provides a framer abstraction for:
+>  - power on/off the framer
+>  - get the framer status (line state)
+>  - be notified on framer status changes
+>  - get/set the framer configuration
+>
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-...
+I love it, very clear commit message telling us what it is all
+about.
 
-> -       gc->ngpio =3D sizeof(scu_rsrc_arr)/sizeof(unsigned int);
-> +       gc->ngpio =3D ARRAY_SIZE(scu_rsrc_arr);
+The placement in the WAN subsystem also hints that this has
+something to do with long distance links (relative to something)
+so maybe mention that?
 
-And you need to include kernel.h for this.
+> +menu "Framer Subsystem"
+> +
+> +config GENERIC_FRAMER
+> +       bool "Framer Core"
+> +       help
+> +         Generic Framer support.
+> +
+> +         This framework is designed to provide a generic interface for f=
+ramer
+> +         devices present in the kernel. This layer will have the generic
+> +         API by which framer drivers can create framer using the framer
+> +         framework and framer users can obtain reference to the framer.
+> +         All the users of this framework should select this config.
 
---=20
-With Best Regards,
-Andy Shevchenko
+But this description just says this is a framing framer that frames frames =
+;)
+
+So please copy some of the nice description from the commit message
+into this Kconfig helptext.
+
+Is "long distance link time division multiplexing (TDM) framer" more
+to the point for example? Or is the ambition to frame other multiplexing
+techniques as well with this subsystem? Such as FDM? Then mention
+that.
+
+Yours,
+Linus Walleij
