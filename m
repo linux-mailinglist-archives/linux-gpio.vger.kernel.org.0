@@ -2,131 +2,249 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE41A776E1E
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 04:36:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60679776E61
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 05:13:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbjHJCgi convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 9 Aug 2023 22:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54190 "EHLO
+        id S231809AbjHJDNZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Aug 2023 23:13:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjHJCgi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 22:36:38 -0400
-X-Greylist: delayed 61 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Aug 2023 19:36:18 PDT
-Received: from mx14.diba.cat (mx14.diba.cat [45.15.50.208])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6AE221BF7
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Aug 2023 19:36:18 -0700 (PDT)
-X-IPAS-Result: =?us-ascii?q?A2Hv/wCmS9Rk/+E5qMBCGB0BATwBBQUBAgEJAQELCYFHB?=
- =?us-ascii?q?gEDARcDgmsBHYF5iDmRE4EjjnKCLQOHfhwDgS4wDwEBAQEBAQEBAQgBAhILC?=
- =?us-ascii?q?RwEAQGLXhYROwMNAQIEAQEBAQMCAwEBAQEBAQMCCAEBAQEGBgKBGYUvRAKGB?=
- =?us-ascii?q?gkGCwEfYAEIK0oBAgwBARgBCgEUUoIlgigBATKsI3iBNA10hF8XkRqbeAQKg?=
- =?us-ascii?q?nkJAYE4AYgAAYQqhVBCgg2EQD6DfyMBAYQRglEEiWqTHAQECxiBBAQIXzMDg?=
- =?us-ascii?q?R4bPQINVQsLYx4RCF4LgQ6BLwICBQMJOhNKBgQjRBsDBwOBBAQMLwcEMhsHA?=
- =?us-ascii?q?wMJFwMsJQZPAgcKIxQQCRMVQAQ7NzqBBIEbAwoHLxc4MwUHBBEOEQuBbVgrN?=
- =?us-ascii?q?jgUBwhDEoIuIwMJFQwqCzEOERlfEC4EFBiBEwQ4EycFFQUVDA0DAjkDDhIZA?=
- =?us-ascii?q?gsDCEAGEQoOBgYNDQMCLAgOLgMFAwQVBRUHBQUfAwshBhUPAzUFAwMKNQMzE?=
- =?us-ascii?q?R03CQMLB2k9AzIIChwBBgIBIyYhFhAFDAwSBZ9ogzeBKkRUomyhJAong2SKG?=
- =?us-ascii?q?JZ0LheDbgGXVxEBJ4FcjADAQgIEAgQFAhZggS0BgWuBR4EXCQsaQFxRFwIPj?=
- =?us-ascii?q?iwWk0uBOgEKAQEDCYkJAQEBAQIBAQECgR+BFQEB?=
-IronPort-Data: A9a23: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
-IronPort-HdrOrdr: A9a23:/bPKt6HvIGPRbnGcpLqEx8eALOsnbusQ8zAXPhhKOHlom7+j5q
- STdZMgpGTJYVcqKQkdcL+7WJVoLUmxyXcX2/hqAV7BZniEhILAFugLhuGO/9SHIVydygc079
- YdT0EUMrLN5C1B7PoSlzPXLz9P+qj7zEniv5a4854kd3ANV0hP1XYBNjqm
-X-Talos-CUID: 9a23:3qIKmmGUwX0SDVBHqmJEqWM/G+0VXEeG3X36eFGmEER0Y5SaHAo=
-X-Talos-MUID: =?us-ascii?q?9a23=3AmqdZGwyH6BmXelaUMpRYBi4+RmmaqPyHMngwjbE?=
- =?us-ascii?q?ogemdBQ5aBRmw3QyReIByfw=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.01,160,1684792800"; 
-   d="scan'208";a="7686745"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from swcs501.corpo.ad.diba.es ([192.168.57.225])
-  by mx14.diba.cat with ESMTP; 10 Aug 2023 04:35:13 +0200
-Received: from SW0394.corpo.ad.diba.es (192.168.53.94) by
- swcs501.corpo.ad.diba.es (192.168.57.225) with Microsoft SMTP Server (TLS) id
- 14.3.498.0; Thu, 10 Aug 2023 04:35:14 +0200
-Received: from SW0397.corpo.ad.diba.es (192.168.53.97) by
- SW0394.corpo.ad.diba.es (192.168.53.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 10 Aug 2023 04:35:13 +0200
-Received: from SW0397.corpo.ad.diba.es ([fe80::5dc4:d67:8526:ca19]) by
- SW0397.corpo.ad.diba.es ([fe80::5dc4:d67:8526:ca19%8]) with mapi id
- 15.01.2507.023; Thu, 10 Aug 2023 04:35:13 +0200
-From:   "CABRERA RABADAN, ESTHER" <cabrerare@llagosta.cat>
-Subject: RE: urgent- 
-Thread-Topic: urgent- 
-Thread-Index: AdnLLxFc4KwxrsWDMEW8t6SL78j+4g==
-Date:   Thu, 10 Aug 2023 02:35:13 +0000
-Message-ID: <05d394ce00c04a2c8c8a24852d35203f@llagosta.cat>
-Reply-To: "db1985db77@gmail.com" <db1985db77@gmail.com>
-Accept-Language: ca-ES, es-ES, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.171.10]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        with ESMTP id S229582AbjHJDNZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 23:13:25 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A54B9;
+        Wed,  9 Aug 2023 20:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691637204; x=1723173204;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HxGWHKx9Iwk/BOa+mNcHI9v6yPigjZskuc2ISwPW4EU=;
+  b=U/V0bjgYz6ICANLOxa5c6gqVD0FHepDlGm/kRWRCJELdKXWuchG60OeP
+   IOn+a7NTPTcnr6EvGSfcRJYrFmDh2Q0p9z1cXpEXZZj+FFk/5edbaU7+Z
+   JB1j/Ir8pKFshinieM58LxJsCYkkQO0IvKcdkuhfNkGgGWs64Iu+1puXf
+   alvStrfgzH/fmi8fvxcwlt6On6wrB+14svjCwpYhncK1Y2q8A/u6n4HVY
+   GqPTuj2pp9KyvxiUU3OMq+bMQ45Vb+t3IsaRt5LhsAZx6QVTIueUqhurM
+   YBq/E4r7wi+lGAtYRs2pBgGp+UH0Ofo6zFoO8ehJtazElKS/2S9i172gt
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="457642658"
+X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
+   d="scan'208";a="457642658"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2023 20:13:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10797"; a="732047061"
+X-IronPort-AV: E=Sophos;i="6.01,160,1684825200"; 
+   d="scan'208";a="732047061"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 09 Aug 2023 20:12:57 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qTw6b-0006gi-06;
+        Thu, 10 Aug 2023 03:12:57 +0000
+Date:   Thu, 10 Aug 2023 11:12:50 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "larry.lai" <larry.lai@yunjingtech.com>, lee@kernel.org,
+        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        pavel@ucw.cz
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-leds@vger.kernel.org,
+        GaryWang@aaeon.com.tw, musa.lin@yunjingtech.com,
+        michael.wang@yunjingtech.com, jack.chang@yunjingtech.com,
+        noah.hung@yunjingtech.com, "larry.lai" <larry.lai@yunjingtech.com>
+Subject: Re: [PATCH V5 1/3] mfd: Add support for UP board CPLD/FPGA
+Message-ID: <202308101112.LWcBvo24-lkp@intel.com>
+References: <20230808145601.9401-2-larry.lai@yunjingtech.com>
 MIME-Version: 1.0
-To:     Undisclosed recipients:;
-X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230808145601.9401-2-larry.lai@yunjingtech.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi larry.lai,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on lee-mfd/for-mfd-fixes]
+[also build test WARNING on pavel-leds/for-next]
+[cannot apply to lee-mfd/for-mfd-next linusw-pinctrl/devel linusw-pinctrl/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/larry-lai/pinctrl-Add-support-pin-control-for-UP-board-CPLD-FPGA/20230809-013857
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-fixes
+patch link:    https://lore.kernel.org/r/20230808145601.9401-2-larry.lai%40yunjingtech.com
+patch subject: [PATCH V5 1/3] mfd: Add support for UP board CPLD/FPGA
+config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20230810/202308101112.LWcBvo24-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230810/202308101112.LWcBvo24-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308101112.LWcBvo24-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/mfd/upboard-fpga.c:344:5: warning: no previous prototype for 'upboard_led_gpio_register' [-Wmissing-prototypes]
+     344 | int upboard_led_gpio_register(struct upboard_fpga *fpga)
+         |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/mfd/upboard-fpga.c: In function 'upboard_fpga_probe':
+>> drivers/mfd/upboard-fpga.c:460:30: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+     460 |         ddata->regmap_config = fpga_data->regmap_config;
+         |                              ^
 
 
------
+vim +/upboard_led_gpio_register +344 drivers/mfd/upboard-fpga.c
 
-Deár Friend,
-Did you rècèive my èmail règárding á businèss proposal???If intèrèsted do reply for morè dètáil.
+   343	
+ > 344	int upboard_led_gpio_register(struct upboard_fpga *fpga)
+   345	{
+   346		struct gpio_led blue_led, yellow_led, green_led, red_led;
+   347		struct gpio_desc *desc;
+   348		static struct gpio_led leds[4];
+   349		int num_leds = 0;
+   350		int ret;
+   351	
+   352		desc = devm_gpiod_get(fpga->dev, "blue", GPIOD_OUT_LOW);
+   353		if (!IS_ERR(desc)) {
+   354			blue_led.name = "upboard:blue:";
+   355			blue_led.gpio = desc_to_gpio(desc);
+   356			blue_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+   357			leds[num_leds++] = blue_led;
+   358			devm_gpiod_put(fpga->dev, desc);
+   359		}
+   360	
+   361		desc = devm_gpiod_get(fpga->dev, "yellow", GPIOD_OUT_LOW);
+   362		if (!IS_ERR(desc)) {
+   363			yellow_led.name = "upboard:yellow:";
+   364			yellow_led.gpio = desc_to_gpio(desc);
+   365			yellow_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+   366			leds[num_leds++] = yellow_led;
+   367			devm_gpiod_put(fpga->dev, desc);
+   368		}
+   369	
+   370		desc = devm_gpiod_get(fpga->dev, "green", GPIOD_OUT_LOW);
+   371		if (!IS_ERR(desc)) {
+   372			green_led.name = "upboard:green:";
+   373			green_led.gpio = desc_to_gpio(desc);
+   374			green_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+   375			leds[num_leds++] = green_led;
+   376			devm_gpiod_put(fpga->dev, desc);
+   377		}
+   378	
+   379		desc = devm_gpiod_get(fpga->dev, "red", GPIOD_OUT_LOW);
+   380		if (!IS_ERR(desc)) {
+   381			red_led.name = "upboard:red:";
+   382			red_led.gpio = desc_to_gpio(desc);
+   383			red_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+   384			leds[num_leds++] = red_led;
+   385			devm_gpiod_put(fpga->dev, desc);
+   386		}
+   387	
+   388		/* No optional LEDs defined */
+   389		if (num_leds == 0)
+   390			return 0;
+   391	
+   392		pdata.num_leds = num_leds;
+   393		pdata.leds = leds;
+   394	
+   395		ret = devm_mfd_add_devices(fpga->dev, PLATFORM_DEVID_AUTO,
+   396					   upboard_gpio_led_cells,
+   397					   ARRAY_SIZE(upboard_gpio_led_cells),
+   398					   NULL, 0, NULL);
+   399		if (ret) {
+   400			dev_err(fpga->dev, "Failed to add GPIO LEDs, %d", ret);
+   401			return ret;
+   402		}
+   403	
+   404		return 0;
+   405	}
+   406	
+   407	/*
+   408	 * --------------------------------------       ------------
+   409	 * |    Intel SOC,1.8V                   | --- |ADC Chip   |  native driver
+   410	 * | GPIO/I2C/SPI/UART/PWM               |     |SPI/I2C    |
+   411	 * --------------------------------------      -------------
+   412	 *            |                                     |
+   413	 * ----------------------------------------------------------
+   414	 * |        CPLD/FPGA Driver                                |   upboard-fpga CPLD control driver
+   415	 * |   provide more GPIO driving power                      |   register leds-upboard
+   416	 * |        HAT 40 pin mux function                         |   register pinctrl-upboard
+   417	 * ---------------------------------------------------------
+   418	 *    |                                      |
+   419	 * ----------   -------------------------------------------
+   420	 * |3 or 4|     |    HAT 40 pins, 3.3V                    |   leds-upboard
+   421	 * | Leds |     |GPIO/ADC/I2C/SPI/UART/PWM                |  pinctrl-upboard
+   422	 * ----------   -------------------------------------------
+   423	 */
+   424	static const struct acpi_device_id upboard_fpga_acpi_match[] = {
+   425		{ "AANT0000", (kernel_ulong_t)&upboard_pinctrl_data },
+   426		{ "AANT0F00", (kernel_ulong_t)&upboard_up_fpga_data },
+   427		{ "AANT0F01", (kernel_ulong_t)&upboard_up2_fpga_data },
+   428		{ "AANT0F02", (kernel_ulong_t)&upboard_up_fpga_data },
+   429		{ "AANT0F03", (kernel_ulong_t)&upboard_upcore_crst02_fpga_data },
+   430		{ "AANT0F04", (kernel_ulong_t)&upboard_up_fpga_data },
+   431		{ }
+   432	};
+   433	MODULE_DEVICE_TABLE(acpi, upboard_fpga_acpi_match);
+   434	
+   435	static int __init upboard_fpga_probe(struct platform_device *pdev)
+   436	{
+   437		struct device *dev = &pdev->dev;
+   438		struct upboard_fpga *ddata;
+   439		const struct acpi_device_id *id;
+   440		const struct upboard_fpga_data *fpga_data;
+   441		int ret;
+   442	
+   443		id = acpi_match_device(upboard_fpga_acpi_match, dev);
+   444		if (!id)
+   445			return -ENODEV;
+   446	
+   447		fpga_data = (const struct upboard_fpga_data *) id->driver_data;
+   448	
+   449		ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+   450		if (!ddata)
+   451			return -ENOMEM;
+   452	
+   453		platform_set_drvdata(pdev, ddata);
+   454		ddata->dev = dev;
+   455	
+   456		ddata->regmap = devm_regmap_init(dev, NULL, ddata, fpga_data->regmap_config);
+   457		if (IS_ERR(ddata->regmap))
+   458			return PTR_ERR(ddata->regmap);
+   459	
+ > 460		ddata->regmap_config = fpga_data->regmap_config;
+   461	
+   462		ret = upboard_fpga_gpio_init(ddata);
+   463		if (ret) {
+   464			/* Not FPGA firmware, abort FPGA GPIO initialize process */
+   465			dev_warn(dev, "Failed to initialize FPGA common GPIOs: %d", ret);
+   466		} else {
+   467			upboard_fpga_verify_device(ddata);
+   468		}
+   469	
+   470		ret = upboard_led_gpio_register(ddata);
+   471		if (ret) {
+   472			/* LEDs are optional. */
+   473			dev_warn(dev, "Failed to register LEDs: %d", ret);
+   474		}
+   475	
+   476		return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO,
+   477					    fpga_data->cells,
+   478					    fpga_data->ncells,
+   479					    NULL, 0, NULL);
+   480	}
+   481	
 
-David.
-Stáff-Mèmbèr of Dánskè-Bank hèrè in Swèden
-
-
-
-
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
