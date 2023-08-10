@@ -2,146 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1A5C7776AF
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 13:17:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E53A777761
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 13:41:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231814AbjHJLRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 07:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42670 "EHLO
+        id S235444AbjHJLlm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 07:41:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232186AbjHJLRX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 07:17:23 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43EAF2689
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 04:17:22 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-d62ae3fc7f1so690470276.2
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 04:17:22 -0700 (PDT)
+        with ESMTP id S232196AbjHJLll (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 07:41:41 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0167391
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 04:41:40 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id 3f1490d57ef6-d18566dc0c1so765454276.0
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 04:41:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691666241; x=1692271041;
+        d=linaro.org; s=google; t=1691667700; x=1692272500;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ADRnTf+HtriZ7mqwDU3wWvmXrT7FB+Ztxvgw7H2KXeU=;
-        b=QFhKu9tkFZ+fkU1lcY4zVfF0dk/FWoUgZD0eH36Sz7H5E6vylleVAxrx4pnTaXqwhk
-         0+gy/gZj3JZk12Km6iz/EZoWzKbi128l5ProuMk6rD8PXzxfQdAWHaHfYFH+hT3tRM5T
-         JhuEe8IlHx2uTiKvZWsgQrv6fkFqrBx0+2vETEZCqjNX/pWDMRwL/0BRd5MvDHtFVvKa
-         BM/Lp+D9Uqm7WCUrVCer3WiE1OLLbVSPYEz4lyAydeXxxun5B/2ka3EMFk7a+ErH42db
-         gw2/aA6IBStBu2S2LDjrdyts3q5jk/zxoySCSTATECPSlKOeat6hCKBGV6ZorzoWY9HV
-         DN/Q==
+        bh=Hx/5YT6XegydpQ9HDHKXuTgMelH8UKyh2sBTXOs3F14=;
+        b=zI1ChKG6BqfjxsQCmESQ5twa91fhue0geikSkeOpKgnIixMRg4cbf+/FTiCEQzzA8D
+         et5yfTBCE8Y+RPZQzCcubrNaA6ClPkx1nunw3PKvReKZQ6cn0bGbcJEYVX7xFvDbkyfX
+         dQJoKGxA0gvnsBV4wUzwWp6Tcjx8GEMLgHJ72fu4o6Ltp5/u8PVWLavM01Tcy+UjB6RP
+         6SYeZ4fZwqgmGMHF79vT9z6uMt8ZyP1X1iGojgZmQgdvsXJA0TINASs9X4IJDxl185HX
+         DbeTjG0VcMKsvTtfyAR0MFfbk3AnWaIHZTE74fZ8TabxGTQWIst28ALmXKZyYqKoM9Sp
+         2W7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691666241; x=1692271041;
+        d=1e100.net; s=20221208; t=1691667700; x=1692272500;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ADRnTf+HtriZ7mqwDU3wWvmXrT7FB+Ztxvgw7H2KXeU=;
-        b=PImuMkXD0Wv96TAAeYdFWJwQKzlMaX3JnAl8R8zc6gbsA+sL9nZfC9RxloOcYt95oQ
-         pooVeXl3sSIP3J3l/c53GnQgBieUjNXpidwaetdZ/BIDfPxQBE9HNVkWISRjMykE2B8U
-         N3MftBOwexmkSliT8rfWSwGxYvbropTQzg4Q0DwVYLh950MPanH8HhJk33KldgzPam0r
-         MqK4lQINlNRvNZocxrehu7ChBtqBfwgBiZfp0SHpuutR932wPRU9If6FUT9j70Nhvi90
-         ANFPEJ5+/Uh5xHJfber2lo3z7VgGu7MyVXU99C/BvwL6B/WE+zphOyJAiT+oHzRakWM9
-         0ghg==
-X-Gm-Message-State: AOJu0YxbenoAuibCmRIdupfqkTW8onRRFoIplbvxtXhiQG5k7RnQq+7W
-        4WsT0VCsLMr6xOMiXrWDBn/jgkk5p7k5pD12hiWLOg==
-X-Google-Smtp-Source: AGHT+IG0cc60EKwg6aO/Vl/FWx+h3xKBM7qpk0WTUOrKZYJlTlQ3xEW/05G+n7KdFt0H+qP3lFIXHa3H2q7KcJby2j8=
-X-Received: by 2002:a25:250f:0:b0:cea:6760:d2c6 with SMTP id
- l15-20020a25250f000000b00cea6760d2c6mr2046852ybl.41.1691666241474; Thu, 10
- Aug 2023 04:17:21 -0700 (PDT)
+        bh=Hx/5YT6XegydpQ9HDHKXuTgMelH8UKyh2sBTXOs3F14=;
+        b=Z8iH3iNYl0l3209JDwryWoZI8vZlH11lfneYVgngv9JdcJDwBSC/zc2L+fYwYss6AE
+         rugASpF9Yw7Lr0zzM+kt+UWuiJ90HlgTPk5s0RBuvM2pyhX3y00rvb9KtjRBSDQDPm+7
+         acIQEO1DjFvMgFTDMmY8NSar/IDUM0DkD/D8krkZzDmgOixdHB8Om2u+kYOc1YkeVANa
+         4vdE6Gn0ZWnlO9KY0oEsiqZa67PKYeENwEeDpby0zZ3RFjhYUWlXBsze4OPrYUYPcPlr
+         Kpa71YW++CKs7YgijIqDBRrEycoS7tfZ+Qh6iXor6OQ8YSBbXGXuiAMdoCpUnJc0r5EB
+         Ku7w==
+X-Gm-Message-State: AOJu0Yyz05pPqbuNM4ZTfHI+oijVuLS4xasviWZZAbbpSJDXQ17r6y8f
+        9VarC7CXOeI9tekDmOz4NgsqsZ3vtBh85LuEZ05hJg==
+X-Google-Smtp-Source: AGHT+IE4BfMBftMeTXrU03NCKJ45qCrOgvo8LFmqhmlU0Il2bHBNJk0wLdRyZNhGZgFS3z9OoV5Mk7FswmxaRX2G6Fg=
+X-Received: by 2002:a25:6809:0:b0:bcb:9b43:5a89 with SMTP id
+ d9-20020a256809000000b00bcb9b435a89mr2222229ybc.61.1691667700236; Thu, 10 Aug
+ 2023 04:41:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230809132757.2470544-1-herve.codina@bootlin.com> <20230809132757.2470544-22-herve.codina@bootlin.com>
-In-Reply-To: <20230809132757.2470544-22-herve.codina@bootlin.com>
+References: <20230808145601.9401-1-larry.lai@yunjingtech.com> <20230808145601.9401-3-larry.lai@yunjingtech.com>
+In-Reply-To: <20230808145601.9401-3-larry.lai@yunjingtech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 10 Aug 2023 13:17:09 +0200
-Message-ID: <CACRpkdZQ9_f6+9CseV1L_wGphHujFPAYXMjJfjUrzSZRakOBzg@mail.gmail.com>
-Subject: Re: [PATCH v3 21/28] net: wan: Add framer framework support
-To:     Herve Codina <herve.codina@bootlin.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+Date:   Thu, 10 Aug 2023 13:41:29 +0200
+Message-ID: <CACRpkdZZ020mQ8MuKzjab3_qwEcPuQ8=OcrRAz6OtN+B9_JgUw@mail.gmail.com>
+Subject: Re: [PATCH V5 2/3] pinctrl: Add support pin control for UP board CPLD/FPGA
+To:     "larry.lai" <larry.lai@yunjingtech.com>
+Cc:     lee@kernel.org, andriy.shevchenko@linux.intel.com, pavel@ucw.cz,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+        linux-leds@vger.kernel.org, GaryWang@aaeon.com.tw,
+        musa.lin@yunjingtech.com, michael.wang@yunjingtech.com,
+        jack.chang@yunjingtech.com, noah.hung@yunjingtech.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Herve,
+Hi Larry,
 
-On Wed, Aug 9, 2023 at 3:28=E2=80=AFPM Herve Codina <herve.codina@bootlin.c=
-om> wrote:
+thanks for your patch!
 
-> A framer is a component in charge of an E1/T1 line interface.
-> Connected usually to a TDM bus, it converts TDM frames to/from E1/T1
-> frames. It also provides information related to the E1/T1 line.
+I would really like Andy to look at this, because ACPI and I'm not good at
+ACPI.
+
+On Tue, Aug 8, 2023 at 4:57=E2=80=AFPM larry.lai <larry.lai@yunjingtech.com=
+> wrote:
+
+> The UP Squared board <http://www.upboard.com> implements certain
+> features (pin control) through an on-board FPGA.
 >
-> The framer framework provides a set of APIs for the framer drivers
-> (framer provider) to create/destroy a framer and APIs for the framer
-> users (framer consumer) to obtain a reference to the framer, and
-> use the framer.
->
-> This basic implementation provides a framer abstraction for:
->  - power on/off the framer
->  - get the framer status (line state)
->  - be notified on framer status changes
->  - get/set the framer configuration
->
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Gary Wang <garywang@aaeon.com.tw>
+> Signed-off-by: larry.lai <larry.lai@yunjingtech.com>
+(...)
 
-I love it, very clear commit message telling us what it is all
-about.
+> +               if (strstr(pctrl->pctldesc->pins[offset[i]].name, "I2C") =
+||
+> +                   strstr(pctrl->pctldesc->pins[offset[i]].name, "PINMUX=
+")) {
 
-The placement in the WAN subsystem also hints that this has
-something to do with long distance links (relative to something)
-so maybe mention that?
+I think there is something like match a string list in the kernel,
+Andy will know.
 
-> +menu "Framer Subsystem"
+> +static int upboard_gpio_get(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +       struct upboard_pinctrl *pctrl =3D container_of(gc, struct upboard=
+_pinctrl, chip);
+> +       unsigned int pin =3D pctrl->rpi_mapping[offset];
+> +       int gpio =3D upboard_rpi_to_native_gpio(gc, offset);
 > +
-> +config GENERIC_FRAMER
-> +       bool "Framer Core"
-> +       help
-> +         Generic Framer support.
+> +       if (gpio < 0)
+> +               return gpio;
 > +
-> +         This framework is designed to provide a generic interface for f=
-ramer
-> +         devices present in the kernel. This layer will have the generic
-> +         API by which framer drivers can create framer using the framer
-> +         framework and framer users can obtain reference to the framer.
-> +         All the users of this framework should select this config.
+> +       /* APL03 board open drain GPIO */
+> +       if (pctrl->ident =3D=3D BOARD_UP_APL03) {
+> +               int val =3D 0;
+> +
+> +               switch (pin) {
+> +               case 0:
+> +               case 1:
+> +               case 9:
+> +               case 23:
+> +                       val =3D readl(pctrl->pins[pin].regs);
+> +                       return val & 0x00000003;
+> +               default:
+> +                       break;
+> +               }
+> +       }
+> +
+> +       return gpiod_get_value(gpio_to_desc(gpio));
 
-But this description just says this is a framing framer that frames frames =
-;)
+I don't really like this construction bouncing us back into the global GPIO
+numberspace to get to the descriptor of the corresponding native GPIO.
+gpio_to_desc() is an uglyhack and shall not be used.
 
-So please copy some of the nice description from the commit message
-into this Kconfig helptext.
+You need to come up with something better here: request all the underlying
+GPIO descriptors with gpiod_get(dev, .. ASIS) and store them in an array.
+Look in e.g.
+drivers/gpio/gpio-aggregator.c
+drivers/gpio/gpio-latch.c
+for examples of how we do this in other drivers.
 
-Is "long distance link time division multiplexing (TDM) framer" more
-to the point for example? Or is the ambition to frame other multiplexing
-techniques as well with this subsystem? Such as FDM? Then mention
-that.
+The underlying GPIO lines need to be specified somehow, in worst case
+using descriptor tables.
+
+> +/* DMI Matches for older bios without fpga initialization */
+> +static const struct dmi_system_id upboard_dmi_table[] __initconst =3D {
+> +       {
+> +               .ident =3D BOARD_U
+
+A DMI table OK....
+
+> +static struct platform_driver upboard_pinctrl_driver =3D {
+> +       .driver =3D {
+> +               .name =3D "upboard-pinctrl",
+> +       },
+> +};
+> +module_platform_driver_probe(upboard_pinctrl_driver, upboard_pinctrl_pro=
+be);
+
+OK I don't know ACPI, but what I've seen the DMI table is supposed
+to be used for some kind of lookup, such as checking in .init if the
+device is there, so I don't get this. Also doesn't ACPI drivers use
+the ACPI bus?
 
 Yours,
 Linus Walleij
