@@ -2,105 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1D7E7771D5
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 09:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D12AB7771FE
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 09:57:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232243AbjHJHqk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 03:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40260 "EHLO
+        id S231208AbjHJH5F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 03:57:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232651AbjHJHqj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 03:46:39 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8EC1702;
-        Thu, 10 Aug 2023 00:46:39 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1bc65360648so5969705ad.1;
-        Thu, 10 Aug 2023 00:46:39 -0700 (PDT)
+        with ESMTP id S231629AbjHJH5E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 03:57:04 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 508031703
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 00:57:04 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5844bb9923eso8242587b3.0
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 00:57:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691653599; x=1692258399;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6gTz6hcoAzVZcSGAehaR348Fo/uyOm0OL4hmIYIrZZA=;
-        b=h+7tOucTOdOz8TQvOUT0sabcTzCnlSOWbL7VcjubyhRJs+QRtvKFAzzRM9L9nIdS1P
-         nNqSVk11YEy+loiPRdPtrDsxc70BDIN/FdnI/Gv++3cDOqT+dy2jNySYJHJSn74O76VA
-         8O++XVsIB+8Am+HaqWRxb46ZiM3DX4Xdt92RorosZGzSSzsjbQqETzrV/kziY0D9qqGY
-         Kyi9t12RhX+pLWrsHLReJJRmDedo44LaAn/d07J61w5mgYvc9qqfkOPirZXn1pDuGzJa
-         tcqt0dAzZofras8bhHuFKI6PVblJz64hhuhZUeBblGaP4bd8MYWSPLmkBaLMlnLp96NR
-         yVPA==
+        d=linaro.org; s=google; t=1691654223; x=1692259023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0STt0Takw7Y0P938rttZLRMpSJH30p1wWPnOAeM08cE=;
+        b=Tgi2kkRMtZ0BZuUMn6u4JHBS7YtfvbqcG2i1jqQG0JS4U0nwI1114IQtgzjX+c7IR4
+         0TJOl5EJPwnUE5mF+PvN8A1cdrlWOOG0Gg5WffRqVRfE//eOsu19ScjKA6bZ3M4PXUt7
+         oN924JhHC6uJpsAt1lGRD67Up8j+Gk+hLJj3zoQP0UwhYVARbmyXPwbUXfhEw8n68XaT
+         0RmFMyoV3BES3k/uwrhtkJLvApLYipW7Mwmt2qlWKz3hR1JEig6Z1uY5bXTBHU24lie5
+         dmsfjdFTVoWgTvZR6tRYDk86uFZG/qXSbv0M3Rp2lxd5yIREEAgFZxOSB3J7DqODxPKz
+         U92A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691653599; x=1692258399;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6gTz6hcoAzVZcSGAehaR348Fo/uyOm0OL4hmIYIrZZA=;
-        b=N6DQaY3NnLOpWuW35W/Jgi+jpGGfAHQoiw1Nsu0GPFZVh0xME/Hkwotu1mdthHPvLa
-         SlIf2yn+ZoLakIHMBEG52wZ3CJlzLUyR52AkXxk8R+miiZDKG9r7+v6g9uWR1pFoEta4
-         1ntRCjsS4kTSt5aUyso/lLnzc+NR44Wa5YFQFTEOP7XhN7ccJ7UDv2P+XlM0qfY8qIlM
-         ZJW7wEryjrx0kOjGM2sjoucN+hhwEA/+YlccIeEnflzcgCu3UGJsGgR8IO0VbeNIxkn6
-         ysdMXsFw2oDFhi8fXkM4pOkxg3Gr/dGBBgc8EqP2Kf035TDcI5kY4EptDTnMOrNsRFv0
-         UIwg==
-X-Gm-Message-State: AOJu0Yz5TXMkxWgdC6ZspCt00zFCcoXnn+gVcFOSAz8Y8FpWo3zkm4Sb
-        6NtEZ7BFKRQvevctoiUMdDI=
-X-Google-Smtp-Source: AGHT+IEdVgZI7BPbqizq8DoWCJq/ZmRAIgZoKv81fEAzLLFHRJbKGVmqf2OVRsvfxWzC9SRZcQGVeQ==
-X-Received: by 2002:a17:902:ba86:b0:1b9:ebe9:5f01 with SMTP id k6-20020a170902ba8600b001b9ebe95f01mr1637726pls.19.1691653598860;
-        Thu, 10 Aug 2023 00:46:38 -0700 (PDT)
-Received: from localhost.localdomain ([2409:40c2:103c:968b:4dc8:d063:71b0:bea])
-        by smtp.gmail.com with ESMTPSA id a15-20020a170902710f00b001bd99fd1114sm948570pll.288.2023.08.10.00.46.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 00:46:38 -0700 (PDT)
-From:   coolrrsh@gmail.com
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        Rajeshwar R Shinde <coolrrsh@gmail.com>
-Subject: [PATCH v2] gpio: gpio-imx-scu: Use ARRAY_SIZE for array length
-Date:   Thu, 10 Aug 2023 13:16:33 +0530
-Message-Id: <20230810074633.13111-1-coolrrsh@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20221208; t=1691654223; x=1692259023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0STt0Takw7Y0P938rttZLRMpSJH30p1wWPnOAeM08cE=;
+        b=HOQKOmIPwjGPXgOgBVgmeRT9T4PwYV44qRnThaFZ5yp/nx4FMjCoOj/yn5aWQo6t76
+         oHyfzfOPvffmnkqr3FJhjH9k19LTfRBiNLyHeD2MoIyddnnhpqYhWwEpUgkfUpV8XYLG
+         nEdnOJyhNz8L/QbWAbgcyWDhnRL4XMbwO6VSbfLyzhIf4smrWL9WeT2Qc/NQ6ePjrYbw
+         2JqlR68azaOfGgH6qIdgOEUPSCExSt9//Nl09AwHk6ldjpcNLIiNK0K/DNVJ12PpE0Xs
+         RyRxSKXaElfrqvZf3x70YVfwWMHpDKvBhyPzbGONF20rUa6b/Zw8r9Jy1vNm1QaEsMJ9
+         D7fQ==
+X-Gm-Message-State: AOJu0YyXF3F6oIJ1yrb/mbPRRKoTHO5Cxryp33MrFbSZincJuyMNk8iD
+        OdW7Oee7w/1EYiojLopK7OXJ74VnCUsK1Ov1XLJkHw==
+X-Google-Smtp-Source: AGHT+IH+HHlOnbALjvLYzAEZF6kJxPPAeSM47NBdZbA6K2trPA3XVRBt0uGjd0F0UAYulLJ95OpwqbWtjC9tB9NX9es=
+X-Received: by 2002:a25:ac65:0:b0:d4b:6936:90f9 with SMTP id
+ r37-20020a25ac65000000b00d4b693690f9mr1961508ybd.49.1691654223538; Thu, 10
+ Aug 2023 00:57:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230621100409.1608395-1-claudiu.beznea@microchip.com>
+In-Reply-To: <20230621100409.1608395-1-claudiu.beznea@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 10 Aug 2023 09:56:52 +0200
+Message-ID: <CACRpkdZbdAidnNjjixkBnrBYK8eGhG5jPegkhEDppV-1o1mLfQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mcp23s08: check return value of devm_kasprintf()
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Rajeshwar R Shinde <coolrrsh@gmail.com>
+On Wed, Jun 21, 2023 at 12:04=E2=80=AFPM Claudiu Beznea
+<claudiu.beznea@microchip.com> wrote:
 
-Use of macro ARRAY_SIZE to calculate array size minimizes
-the redundant code and improves code reusability.
-This fixes warnings reported by Coccinelle:
-drivers/gpio/gpio-imx-scu.c:106:32-33: WARNING: Use ARRAY_SIZE
+> devm_kasprintf() returns a pointer to dynamically allocated memory.
+> Pointer could be NULL in case allocation fails. Check pointer validity.
+> Identified with coccinelle (kmerr.cocci script).
+>
+> Fixes: 0f04a81784fe ("pinctrl: mcp23s08: Split to three parts: core, I=C2=
+=B2C, SPI")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Signed-off-by: Rajeshwar R Shinde <coolrrsh@gmail.com>
+Patch applied!
 
----
-v1->v2
-ARRAY_SIZE calculates array length, so changed 
-gc->ngpio = ARRAY_SIZE(scu_rsrc_arr)/sizeof(unsigned int) to
-gc->ngpio = ARRAY_SIZE(scu_rsrc_arr)
-
----
- drivers/gpio/gpio-imx-scu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-imx-scu.c b/drivers/gpio/gpio-imx-scu.c
-index e190bde5397d..fb05a53c9712 100644
---- a/drivers/gpio/gpio-imx-scu.c
-+++ b/drivers/gpio/gpio-imx-scu.c
-@@ -103,7 +103,7 @@ static int imx_scu_gpio_probe(struct platform_device *pdev)
- 	gc = &priv->chip;
- 	gc->base = -1;
- 	gc->parent = dev;
--	gc->ngpio = sizeof(scu_rsrc_arr)/sizeof(unsigned int);
-+	gc->ngpio = ARRAY_SIZE(scu_rsrc_arr);
- 	gc->label = dev_name(dev);
- 	gc->get = imx_scu_gpio_get;
- 	gc->set = imx_scu_gpio_set;
--- 
-2.25.1
-
+Yours,
+Linus Walleij
