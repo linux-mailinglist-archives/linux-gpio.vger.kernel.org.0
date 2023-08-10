@@ -2,120 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7D0B77755C
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 12:05:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3242777759D
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 12:20:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235321AbjHJKF6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 06:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41842 "EHLO
+        id S231510AbjHJKUh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 06:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235301AbjHJKF0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 06:05:26 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE3435A6
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 03:03:42 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-307d20548adso698703f8f.0
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 03:03:42 -0700 (PDT)
+        with ESMTP id S231533AbjHJKUg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 06:20:36 -0400
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E36FC9F;
+        Thu, 10 Aug 2023 03:20:35 -0700 (PDT)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1bb782974f4so676716fac.3;
+        Thu, 10 Aug 2023 03:20:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691661821; x=1692266621;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YLNyJJxImTMb77ahFur8tDBev0QNJcAaI7522FZEALk=;
-        b=PlIAOobjw8RO1syhEZGreHmiYYCyih1N4G+s7Dj7XxyEwxEQ8eexmopxNiWGDzxPbA
-         +IWcGLpL0TdnAkaki91WK84gRTvILCv2p9lUNwAKONjMdTg7HrYo+L9CadlW45FDm661
-         AqTa4Q9no8Nq7qxXsOxVa8yHPgCjia8ZN1PQuZKMS+6Ka5V6aMyFY1miCutGkY/TNv4c
-         jcLbvWQGkTkjqUi+A+wuQymMm2w2nIxeav0jpNcnb7GoB7Z0PW135LF8lFxigpVssDr/
-         wMuONd0rUh//AuaTsgLF+NCubgHKSEGOCNUDVmzhHqa1Lspcu1mOm7O4rWnRZXaifvA1
-         u1EA==
+        d=gmail.com; s=20221208; t=1691662835; x=1692267635;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GE4pGueQV8y2D52sbpZ8fiifhgsCMak0CFYGf7FSEn8=;
+        b=kN8NaS4+IX1YhOzjYiU/j5C2QaBh8E/y0dbQJPAdxDg6sA2hgAX8id7Gvsmzycd3dE
+         rPgFrPDWW7iIfkuWbz6ILJQQaYrSUNi/TNnK4wW8Cekxl9Fx7cACO5dAQr/yZipImDnc
+         9PCds7NQ4Y/NIVUMdCEVhOybMTYjC9ltWg6uEENCPCO+DtWqu2Tl5/XY/3uuLpZSL6zV
+         uI8pl/PKSybsDURl+tllZ2Wpf5EAdShSCf0L3e+wSNspEt/PJ71t1HKkwqndh9aAYRbB
+         xjspt7Io3VRoU3d3/7pEUnjajOJeHaPgHOLJYFeEutawJYqKKiAgxkqxwvsALgDrJdhz
+         yQuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691661821; x=1692266621;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YLNyJJxImTMb77ahFur8tDBev0QNJcAaI7522FZEALk=;
-        b=PMw68W3EQp2GQUzN0ffnwcb+sQT8+k5sUOEC4OA21nuIbbvmDwmm3W8z84DldcIJ/g
-         ZrXoxYNhNyuBB67cZ1XAi1EcXnavsgcYVEtwLOVlWPHJPvp23Y1cOeH2r4YsUQmzz422
-         v4OKlqXU/6WsX1jvCrgQu5SYDRR8wC1IACIIuLhEtsYpzf+uQThA5wNgQCbXsY4xTyMu
-         rUp1IyMvScevkfkPGahtIkSLMLtRN+jcGox3gk1dSu0OUhoII6XH6ihL0jKulG9OCIPO
-         TRsBgTQuH1iM+sVeC0DzZGiGwy2CxAglNy5tfWcXSSdz6Ui0CDI3IncrPsBe88weerrT
-         vtCw==
-X-Gm-Message-State: AOJu0YwAWHFsn3ZcUEcdX75DDGCHgWViNcEudwpMQFLNBanNdTel/fWu
-        0EHfcJYac9NftT3F5MeGlJoHWE40fst3jA51dN67Mg==
-X-Google-Smtp-Source: AGHT+IFP3dkfs5TTjEQlwRat/KlFvZxnefHBn0Av+woaGf4/4Jq6wLVZl0GlRBSaVAPXhsZZh8t9Ng==
-X-Received: by 2002:a5d:6584:0:b0:307:8c47:a266 with SMTP id q4-20020a5d6584000000b003078c47a266mr1322416wru.61.1691661820693;
-        Thu, 10 Aug 2023 03:03:40 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:74d3:226a:31b3:454c])
-        by smtp.gmail.com with ESMTPSA id s7-20020adfecc7000000b0031912c0ffebsm891135wro.23.2023.08.10.03.03.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 03:03:40 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: fix reference leaks when removing GPIO chips still in use
-Date:   Thu, 10 Aug 2023 12:03:34 +0200
-Message-Id: <20230810100335.9330-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20221208; t=1691662835; x=1692267635;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GE4pGueQV8y2D52sbpZ8fiifhgsCMak0CFYGf7FSEn8=;
+        b=kuh/I4RVEcjL36qXVpOoZ+LFfcG8eza14pb1NMpzYTU+bYKPZ5dR16ZFRUzS83kYnp
+         N0wb7jI217Bs16DfRt5UB/bXiuobDLh2f5SeOdKLTzX6GfafAXUTB3B0CtjbBIHloVf7
+         l030Geo4XREbzDGoMOfhZuOdxe8iwiMBIa4d/PbRjU098cp9GxM9VEAe8p3eFKS1glTh
+         eocfxMY0GIGcTxyGS0jcfgu0X80r9l/UGmsOONioOyxtdoEBmcIJ8CCnvz5+RbuiHs9p
+         EYYyh7Cc7cZ/AcbwzFXYufoisWvFCoO+g4zyMHBYPNNyOIODUahXQJ1vn6vodRNxjiw7
+         +rJw==
+X-Gm-Message-State: AOJu0YwKHhEfyvoOCsqW4RQ2xcrAb63edH008r/gNhFxe4Jaft8yr5ng
+        MDUBAhnz49D0hn839VKlgg119fmo9mVkhiOKlZo=
+X-Google-Smtp-Source: AGHT+IEU7jrkjc7QYAUzq3EGr7+QEUmHLkcB26vZh5ZVEFdlzpiXV73KEuu5+NYKbWwq9rOVg5C1fI/h0emJ/fIlnk8=
+X-Received: by 2002:a05:6870:a249:b0:1bb:b9d6:a879 with SMTP id
+ g9-20020a056870a24900b001bbb9d6a879mr2203559oai.38.1691662835044; Thu, 10 Aug
+ 2023 03:20:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230810095949.123473-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230810095949.123473-1-krzysztof.kozlowski@linaro.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 10 Aug 2023 13:19:59 +0300
+Message-ID: <CAHp75VdoXWrAfDqWHDdyqbmNjFaOCkA+frzR80TUi7xJymk1Zg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mxs: fix Wvoid-pointer-to-enum-cast warning
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Aug 10, 2023 at 12:59=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> 'devid' is an enum, thus cast of pointer on 64-bit compile test with W=3D=
+1
+> causes:
+>
+>   gpio-mxs.c:274:16: error: cast to smaller integer type 'enum mxs_gpio_i=
+d' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
 
-After we remove a GPIO chip that still has some requested descriptors,
-gpiod_free_commit() will fail and we will never put the references to the
-GPIO device and the owning module in gpiod_free().
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Rework this function to:
-- not warn on desc == NULL as this is a use-case on which most free
-  functions silently return
-- put the references to desc->gdev and desc->gdev->owner unconditionally
-  so that the release callback actually gets called when the remaining
-  references are dropped by external GPIO users
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-I'm going through the resource management issues one-by-one using the
-new virtual consumer module. This is something I found when I noticed
-that IDA numbers never get freed for a chip that was removed with descs
-still in use.
-
- drivers/gpio/gpiolib.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 251c875b5c34..7408e2561b2d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2167,12 +2167,14 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
- 
- void gpiod_free(struct gpio_desc *desc)
- {
--	if (desc && desc->gdev && gpiod_free_commit(desc)) {
--		module_put(desc->gdev->owner);
--		gpio_device_put(desc->gdev);
--	} else {
-+	if (!desc)
-+		return;
-+
-+	if (!gpiod_free_commit(desc))
- 		WARN_ON(extra_checks);
--	}
-+
-+	gpio_device_put(desc->gdev);
-+	module_put(desc->gdev->owner);
- }
- 
- /**
--- 
-2.39.2
-
+--=20
+With Best Regards,
+Andy Shevchenko
