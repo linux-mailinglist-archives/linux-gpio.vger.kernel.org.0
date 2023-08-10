@@ -2,102 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF33F777BF8
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 17:19:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B258C777C9B
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 17:48:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232865AbjHJPTX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 11:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50612 "EHLO
+        id S233527AbjHJPsY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 11:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231195AbjHJPTW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 11:19:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF2226B5;
-        Thu, 10 Aug 2023 08:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691680762; x=1723216762;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x6k1erl4t9tWXDGkDpu6EtDpKNzUku2CvqW/FmS6BLI=;
-  b=eG74oiJLBWk9HFhPxFIiptg5V4C90mKwAs/+4jG9P35rWEw46Il4JlJ4
-   6YhNw5xLmNxLMW9HgWQC3K/o/ooFGgZaU8263VjlQZWocnehp8GvvXY6G
-   rr1p7GVvdLJg4ef50zSNV8tSleYUza90b6pnaUjtP0WoeDBio9+KODfBE
-   uoit6wTBELaaO91OcKuRdlXivQ/RMELwZFXYgYNMSwJ0+3cC4mv+tobC2
-   7jk/0jytpLM4HM+VS6LlsmtLeg7STdyHflgD15/1k6GOqND0bYl78Ff5R
-   QV2fJ0oA7A+Wj6SCdHUgyQzoJg9w9LXW+tevErXlGRmsiu8F5q7nPB3HC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="437775476"
-X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
-   d="scan'208";a="437775476"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2023 08:19:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="906102440"
-X-IronPort-AV: E=Sophos;i="6.01,162,1684825200"; 
-   d="scan'208";a="906102440"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 10 Aug 2023 08:19:19 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qU7RV-006Ysq-2m;
-        Thu, 10 Aug 2023 18:19:17 +0300
-Date:   Thu, 10 Aug 2023 18:19:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpiolib: fix reference leaks when removing GPIO chips
- still in use
-Message-ID: <ZNT/9WqW4c0FwVlw@smile.fi.intel.com>
-References: <20230810100335.9330-1-brgl@bgdev.pl>
- <ZNT/hvkZswZsZUFU@smile.fi.intel.com>
+        with ESMTP id S236239AbjHJPsB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 11:48:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001D41BF7;
+        Thu, 10 Aug 2023 08:48:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A48E660C5;
+        Thu, 10 Aug 2023 15:48:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05C91C433C7;
+        Thu, 10 Aug 2023 15:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691682480;
+        bh=IhSS+Gzq9OcK1ql5cyEbAn3ygO8llggcsc2KQLqvMkQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HKVJBPVILtGjaC3mXfV61EVcGPf6DXaqle9TFghct4pX5yjDFaMFifWcgHnrtNkZX
+         uu4crxxP79VILE2yvP8vZF1+6OnXPjZh+P03ynl7KcwkhiIK4A0GGfNpJuHWMClxEM
+         gF1EhHXmuYlAoiqNfthZPiWy6pTBeDKmoayE0/7uIin6fDsKDxEYodpYlustac55bi
+         kTAgiWH6fJRR/Emv6fJkjLX9krk9TbhSzrZDyL917VRz1CcFgJD0KqnS8BYI8Kj+7n
+         BII24XVDFE5B3Y/CpH1l5HWyBVYR6TeXUIqucIVz4+3EJuMsvoSoyvW0/3OodMlpsM
+         OgjGTfouHcUlw==
+Date:   Thu, 10 Aug 2023 08:47:58 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 00/28] Add support for QMC HDLC, framer infrastruture
+ and PEF2256 framer
+Message-ID: <20230810084758.2adbfeb8@kernel.org>
+In-Reply-To: <20230809132757.2470544-1-herve.codina@bootlin.com>
+References: <20230809132757.2470544-1-herve.codina@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZNT/hvkZswZsZUFU@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 06:17:26PM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 10, 2023 at 12:03:34PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed,  9 Aug 2023 15:27:27 +0200 Herve Codina wrote:
+> The series contains the full story and detailed modifications.
+> If needed, the series can be split and/or commmits can be squashed.
+> Let me know.
 
-...
-
-> >  void gpiod_free(struct gpio_desc *desc)
-> >  {
-> > -	if (desc && desc->gdev && gpiod_free_commit(desc)) {
-> > -		module_put(desc->gdev->owner);
-> > -		gpio_device_put(desc->gdev);
-> > -	} else {
-> > +	if (!desc)
-> > +		return;
-
-> 	VALIDATE_DESC_VOID() ?
-
-If it is not possible to use, the comment should be added, like we have in
-gpiod_to_irq().
-
-> > +	if (!gpiod_free_commit(desc))
-> >  		WARN_ON(extra_checks);
-> > -	}
-> > +
-> > +	gpio_device_put(desc->gdev);
-> > +	module_put(desc->gdev->owner);
-> >  }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Are there any dependencies in one of the -next trees?
+As it the series doesn't seem to build on top of net-next 
+with allmodconfig.
