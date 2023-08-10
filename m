@@ -2,151 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2642E776D36
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 02:46:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE41A776E1E
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 04:36:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbjHJAqW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Aug 2023 20:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37238 "EHLO
+        id S230097AbjHJCgi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 9 Aug 2023 22:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbjHJAqV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 20:46:21 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D06D3B9
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Aug 2023 17:46:17 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-68730bafa6bso1080625b3a.1
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Aug 2023 17:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691628377; x=1692233177;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4wxN64KMBgJpviwELOeGDa8H66huE6dZUNApQ5tpNMY=;
-        b=HXDRueGAenmohKvnvrJVFlJJcyYbHN9StqweLwGBwX18OIZqJ7MgR2vzNPb0XZuuc9
-         FTihGWJnBuGhwDJ93MC+upuDMbhHP0WH7Zf8DsJqHwb3vAA6WWjyZfgk8fIAF2yhey6P
-         OOwb7saI7xociTUbiEGkAGcDn7jTh1PLGNWn+Q/aB4AMOdyxPXb9s36hyub530fr6qra
-         ve+zKPXAbhAGVBgGAg1YsRpS8UmyAFWoqVVuoRXR3YTzMTuypaEJGXgIxCow1QpECphQ
-         KI7F/+2dys9GSIaezmREt4CYGugjVIE/AHp1if4cBKWearXxIR6nLAusEs8hE+QURD5p
-         FPcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691628377; x=1692233177;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4wxN64KMBgJpviwELOeGDa8H66huE6dZUNApQ5tpNMY=;
-        b=dCnkQnYFGcoQZUKcaaeNEABirCWs2pZ+NeNgAUnPB2NsnhuHdPTYYuXxl8cKs02NNV
-         /unvWOCLUbrUD7zHG1ikf/U3b7u2XjMmmJhWmMy4Dg7o0EH8eT/sS8hAoAxGBhow/+Eo
-         JhuxWemrYbHhkJBLlANIPMXfOVAckLBrVPRulSiaRfJA110KTnFylw3wwkWWrqile6nJ
-         A+89pwUWF1cUmx3buc0sSXTbQjypFHwoOcG1oVNtXWsHT+g3bf1irfcCZt8CwXOpHOAs
-         GFS1zh1arWX9Vu+6wQYCGS8Mde6lOpAPBOZjkNVPTjb+ZQH/J+tpLzfpoLrlnJiBlM0g
-         FXcQ==
-X-Gm-Message-State: AOJu0YwP9Os/D7XwGuGnGCG+cYldD0h657WJ7iKR9DWYDPkykayfudPa
-        bFa66mD6c5cYiK15uUB4O8JBKxHmodE=
-X-Google-Smtp-Source: AGHT+IHsChFB2AFAzZilISs1jrgEOy/DCIGbt+06+wE56X1eVdauJle18q2kLXb353J8NCgIzdOMzg==
-X-Received: by 2002:a05:6a21:99a6:b0:13d:7f7b:1926 with SMTP id ve38-20020a056a2199a600b0013d7f7b1926mr633977pzb.11.1691628377173;
-        Wed, 09 Aug 2023 17:46:17 -0700 (PDT)
-Received: from sol ([220.235.36.234])
-        by smtp.gmail.com with ESMTPSA id g5-20020a633745000000b00563da87a52dsm228970pgn.40.2023.08.09.17.46.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 17:46:13 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 08:46:07 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     andy pugh <bodgesoc@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
-Message-ID: <ZNQzT2MtskTTZTiI@sol>
-References: <ZMLnz25brQvcwBVW@sol>
- <CAN1+YZXqsgCXVhiVHasBMBzCVs-r=wi93m6m5ojUhOi_NOsOxg@mail.gmail.com>
- <ZMNYsOXrOOZgxLeC@sol>
- <CAN1+YZWjEZQY6yffCFrt0vLVA6P0j5dDbRz=b5c0MXJoSszhig@mail.gmail.com>
- <ZMRzYD6wGYywiPbd@sol>
- <CAN1+YZW-EcQq=D=dLQoH-WsDD7RWjTUgqbQMynV+OXV0EjLOAw@mail.gmail.com>
- <ZM7xEbr0essN2qY3@sol>
- <CAN1+YZXd_dMJK9CYL+bmtTRCzT=W7Kt9VTeD38Wg8habFLirzg@mail.gmail.com>
- <ZM9oB0l4fvOinzLm@sol>
- <CAN1+YZVD7ui4HSRMaGv+y-xT9NgeGNWDM_vx2MhZfiGrwhLPVA@mail.gmail.com>
+        with ESMTP id S229514AbjHJCgi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Aug 2023 22:36:38 -0400
+X-Greylist: delayed 61 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Aug 2023 19:36:18 PDT
+Received: from mx14.diba.cat (mx14.diba.cat [45.15.50.208])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6AE221BF7
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Aug 2023 19:36:18 -0700 (PDT)
+X-IPAS-Result: =?us-ascii?q?A2Hv/wCmS9Rk/+E5qMBCGB0BATwBBQUBAgEJAQELCYFHB?=
+ =?us-ascii?q?gEDARcDgmsBHYF5iDmRE4EjjnKCLQOHfhwDgS4wDwEBAQEBAQEBAQgBAhILC?=
+ =?us-ascii?q?RwEAQGLXhYROwMNAQIEAQEBAQMCAwEBAQEBAQMCCAEBAQEGBgKBGYUvRAKGB?=
+ =?us-ascii?q?gkGCwEfYAEIK0oBAgwBARgBCgEUUoIlgigBATKsI3iBNA10hF8XkRqbeAQKg?=
+ =?us-ascii?q?nkJAYE4AYgAAYQqhVBCgg2EQD6DfyMBAYQRglEEiWqTHAQECxiBBAQIXzMDg?=
+ =?us-ascii?q?R4bPQINVQsLYx4RCF4LgQ6BLwICBQMJOhNKBgQjRBsDBwOBBAQMLwcEMhsHA?=
+ =?us-ascii?q?wMJFwMsJQZPAgcKIxQQCRMVQAQ7NzqBBIEbAwoHLxc4MwUHBBEOEQuBbVgrN?=
+ =?us-ascii?q?jgUBwhDEoIuIwMJFQwqCzEOERlfEC4EFBiBEwQ4EycFFQUVDA0DAjkDDhIZA?=
+ =?us-ascii?q?gsDCEAGEQoOBgYNDQMCLAgOLgMFAwQVBRUHBQUfAwshBhUPAzUFAwMKNQMzE?=
+ =?us-ascii?q?R03CQMLB2k9AzIIChwBBgIBIyYhFhAFDAwSBZ9ogzeBKkRUomyhJAong2SKG?=
+ =?us-ascii?q?JZ0LheDbgGXVxEBJ4FcjADAQgIEAgQFAhZggS0BgWuBR4EXCQsaQFxRFwIPj?=
+ =?us-ascii?q?iwWk0uBOgEKAQEDCYkJAQEBAQIBAQECgR+BFQEB?=
+IronPort-Data: A9a23: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
+IronPort-HdrOrdr: A9a23:/bPKt6HvIGPRbnGcpLqEx8eALOsnbusQ8zAXPhhKOHlom7+j5q
+ STdZMgpGTJYVcqKQkdcL+7WJVoLUmxyXcX2/hqAV7BZniEhILAFugLhuGO/9SHIVydygc079
+ YdT0EUMrLN5C1B7PoSlzPXLz9P+qj7zEniv5a4854kd3ANV0hP1XYBNjqm
+X-Talos-CUID: 9a23:3qIKmmGUwX0SDVBHqmJEqWM/G+0VXEeG3X36eFGmEER0Y5SaHAo=
+X-Talos-MUID: =?us-ascii?q?9a23=3AmqdZGwyH6BmXelaUMpRYBi4+RmmaqPyHMngwjbE?=
+ =?us-ascii?q?ogemdBQ5aBRmw3QyReIByfw=3D=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.01,160,1684792800"; 
+   d="scan'208";a="7686745"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from swcs501.corpo.ad.diba.es ([192.168.57.225])
+  by mx14.diba.cat with ESMTP; 10 Aug 2023 04:35:13 +0200
+Received: from SW0394.corpo.ad.diba.es (192.168.53.94) by
+ swcs501.corpo.ad.diba.es (192.168.57.225) with Microsoft SMTP Server (TLS) id
+ 14.3.498.0; Thu, 10 Aug 2023 04:35:14 +0200
+Received: from SW0397.corpo.ad.diba.es (192.168.53.97) by
+ SW0394.corpo.ad.diba.es (192.168.53.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 10 Aug 2023 04:35:13 +0200
+Received: from SW0397.corpo.ad.diba.es ([fe80::5dc4:d67:8526:ca19]) by
+ SW0397.corpo.ad.diba.es ([fe80::5dc4:d67:8526:ca19%8]) with mapi id
+ 15.01.2507.023; Thu, 10 Aug 2023 04:35:13 +0200
+From:   "CABRERA RABADAN, ESTHER" <cabrerare@llagosta.cat>
+Subject: RE: urgent- 
+Thread-Topic: urgent- 
+Thread-Index: AdnLLxFc4KwxrsWDMEW8t6SL78j+4g==
+Date:   Thu, 10 Aug 2023 02:35:13 +0000
+Message-ID: <05d394ce00c04a2c8c8a24852d35203f@llagosta.cat>
+Reply-To: "db1985db77@gmail.com" <db1985db77@gmail.com>
+Accept-Language: ca-ES, es-ES, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.171.10]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN1+YZVD7ui4HSRMaGv+y-xT9NgeGNWDM_vx2MhZfiGrwhLPVA@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+To:     Undisclosed recipients:;
+X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 01:17:13AM +0100, andy pugh wrote:
-> On Sun, 6 Aug 2023 at 10:29, Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> > You can't statically link libgpiod until it is available as a package?
-> 
-> Would that mean merging the gpiod code into our codebase? Or can this
-> be done some other way?
-> 
 
-There is no code movement at all, this is just telling the linker to
-link libgpiod.a directly into your executable, rather than dynamically
-linking against libgpiod.so.
 
-The specifics of how to do that depend on your build.
+-----
 
-Later, when libgpiod v2 becomes more widely available, you can switch
-the build back to dynamic linkage.
+Deár Friend,
+Did you rècèive my èmail règárding á businèss proposal???If intèrèsted do reply for morè dètáil.
 
-> 
-> Anyway, I now have it working, to an extent, but feel that there might
-> be a problem with gpiod_line_request_bulk_input() and
-> gpiod_line_request_bulk_output() if the bulk contains more than 5
-> lines.
-> 
-> My current code is here (Work in progress!)
-> 
-> https://github.com/LinuxCNC/linuxcnc/blob/andypugh/hal_gpio/src/hal/drivers/hal_gpio.c
-> 
-> The test input file (
-> https://github.com/LinuxCNC/linuxcnc/blob/andypugh/hal_gpio/src/test.hal
-> ) attempts to configure 8 input and 8 output lines.
-> However, if I change the 5 to 6 in either of lines 157 or 180 then the
-> output looks something like:
-> 
-> HAL: initializing hal_lib
-> /home/andypugh/linuxcnc-dev/bin/rtapi_app load hal_gpio
-> inputs=GPIO5,GPIO6,GPIO12,GPIO13,GPIO16,GPIO17,GPIO18,GPIO19
-> outputs=GPIO20,GPIO21,GPIO22,GPIO23,GPIO24,GPIO25,GPIO26,GPIO27
-> HAL: initializing component 'halcmd9608'
-> smalloc_dn: shmem available 1048284
-> HAL: component 'halcmd9608' initialized, ID = 02
-> Note: Using POSIX realtime
-> before request
-> rtapi_app: caught signal 11 - dumping core
-> 
-> The "before request" line was added for debugging, the "after request"
-> line is never printed, nor is the error message if the request fails,
-> so my belief is that lines 163 and/or 185 are segfaulting in the
-> bulk_request functions.
-> 
-> The driver appears to work fine if I limit the number of parsed input
-> strings to 5.
+David.
+Stáff-Mèmbèr of Dánskè-Bank hèrè in Swèden
 
-Check the sizes of the memory you are allocating.
-e.g. this:
 
-	    arr[c].chip = (struct gpiod_chip *)rtapi_kmalloc(sizeof(arr[c].chip), RTAPI_GFP_KERNEL);
 
-allocates the space for a pointer to a struct, not the struct itself.
-So you are corrupting your heap.
 
-Try
-	    arr[c].chip = (struct gpiod_chip *)rtapi_kmalloc(sizeof(*arr[c].chip), RTAPI_GFP_KERNEL);
 
-Similarly your other mallocs.
 
-Btw, v2 uses opaque structs so this wouldn't be an issue - it would do
-the allocating for you, e.g. gpiod_chip_open() allocates and returns the
-pointer to the struct gpiod_chip.
-
-Cheers,
-Kent.
