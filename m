@@ -2,82 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD876776FFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 08:08:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70A2F777030
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Aug 2023 08:20:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232907AbjHJGIh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 02:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
+        id S230304AbjHJGUA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 02:20:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231656AbjHJGIg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 02:08:36 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6149B1728
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Aug 2023 23:08:35 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fe4cdb724cso4823685e9.1
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Aug 2023 23:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691647714; x=1692252514;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p0e0j+mOVNXfmgbebLeeHV/YeTp0gFm+U8YnF+fvMcc=;
-        b=RmNLmcP1GXD4c6VBEl85jNdQDQy8g543rQHclmVF3pauFoY5RKczoniWQV8LzImfl0
-         b/OaZviYVCajRSZO44BklswKOLpq4veNGoD2XNz79qf8sTX6bSJr4wxany3Z/UGEWWfk
-         EhPzvdsD2onMx1c7k1egxXJBtqtOdI46+BCnIukHA0ZYHzjb6r7Gj+yBPl9O/T4/IlAg
-         7B+6UO8dTYG9dvPrBYo2cNRpPLnx9+RKCrvgv+luaH0D8ehJhvAOH2dIoyN+gRf8UXkv
-         hCAJIBAw8vIu2AVSSoH+iDCmSndMi8P2O4raDUsiFQnA3HsIL48rmjT/KRSpgQCfUbPr
-         gNRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691647714; x=1692252514;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p0e0j+mOVNXfmgbebLeeHV/YeTp0gFm+U8YnF+fvMcc=;
-        b=Iwi9orNwUrAehJyi15nfnPI+AMHob4//y5U1fmDoNvvCQBRyMuay1xt38e3O3Lyg2N
-         lr8cPAoZDsdJvQ6xCu6uUsC2xwJBs2GwfITF8Bm7LN4Fszka+9HJgBLAOaJ3dlXq4U2q
-         ZPde5aBPvETp6NTW9Jc4RGRqN5ZDuX5vO4RpzLdYYnRbj3DLcOjJosh3Qt65pyng1tFw
-         UkFIQW0RC4a5DVRdlvTS2WuHEQRxGUXq83EgHIkz257ekZdKu6IETJJ/5mCg9C7BmFih
-         Jprsa/u6LYbwCBdaHMYTJ0HXWqIGNLAeDZyUWRCMDF9BTcZQSOy8lTKb0YfPIrp9uefX
-         KcwQ==
-X-Gm-Message-State: AOJu0Yx0LqdLz329PIBm6L06Tc4+LV1lfsDwSnCY6oiPdmhMbXyy/gp+
-        8BVLkRrkxE6cO0uEO88JB2ptWQ==
-X-Google-Smtp-Source: AGHT+IGuRbxtkVF5rtRNwLubFWM/KXOrLd15vCyh0rHGtTQ7U5FWocQviGG/mZJFNC9IOMvuay0evQ==
-X-Received: by 2002:a05:600c:25a:b0:3fb:e1d5:7f48 with SMTP id 26-20020a05600c025a00b003fbe1d57f48mr1018328wmj.5.1691647713872;
-        Wed, 09 Aug 2023 23:08:33 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.113])
-        by smtp.gmail.com with ESMTPSA id e7-20020a05600c218700b003fe3674bb39sm1016170wme.2.2023.08.09.23.08.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Aug 2023 23:08:33 -0700 (PDT)
-Message-ID: <2d5b0f37-ac1e-c22a-9389-959fcfa74668@linaro.org>
-Date:   Thu, 10 Aug 2023 08:08:31 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
+        with ESMTP id S232593AbjHJGT7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 02:19:59 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A88A9E52;
+        Wed,  9 Aug 2023 23:19:56 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8DxxPCLgdRkC3AUAA--.44963S3;
+        Thu, 10 Aug 2023 14:19:55 +0800 (CST)
+Received: from [10.20.42.201] (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxWM2JgdRkdZlSAA--.11579S3;
+        Thu, 10 Aug 2023 14:19:54 +0800 (CST)
 Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
  offset
-Content-Language: en-US
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
 References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
  <20230807074043.31288-2-zhuyinbo@loongson.cn>
- <91f57b0d-a6e9-c039-40b6-0a1a9af5f7a0@linaro.org>
- <78c5a043-3e2a-48d6-88bd-2f91cc6d1347@loongson.cn>
- <f9a8897e-301e-9d69-be59-a5aa9290f01b@linaro.org>
- <36dd6038-933d-1513-1426-9c1283f3cbf8@loongson.cn>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <36dd6038-933d-1513-1426-9c1283f3cbf8@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
+ <20230808-amount-urban-9a6eb09852ca@spud>
+ <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
+ <20230809-circus-photo-6911d2e18f96@spud>
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <d4e16768-bed0-beda-42c3-f0a01b7e96cc@loongson.cn>
+Date:   Thu, 10 Aug 2023 14:19:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20230809-circus-photo-6911d2e18f96@spud>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+X-CM-TRANSID: AQAAf8CxWM2JgdRkdZlSAA--.11579S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -86,85 +60,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/08/2023 05:35, Yinbo Zhu wrote:
+
+
+在 2023/8/9 下午11:39, Conor Dooley 写道:
+> On Wed, Aug 09, 2023 at 03:47:55PM +0800, Yinbo Zhu wrote:
+>> 在 2023/8/8 下午8:05, Conor Dooley 写道:
+>>> On Mon, Aug 07, 2023 at 03:40:42PM +0800, Yinbo Zhu wrote:
 > 
-> 
-> 在 2023/8/9 下午9:00, Krzysztof Kozlowski 写道:
->> On 09/08/2023 09:28, Yinbo Zhu wrote:
->>>>
->>>>>      - gpio-ranges
->>>>>      - interrupts
->>>>>    
->>>>> @@ -49,11 +82,16 @@ examples:
->>>>>        #include <dt-bindings/interrupt-controller/irq.h>
->>>>>    
->>>>>        gpio0: gpio@1fe00500 {
->>>>> -      compatible = "loongson,ls2k-gpio";
->>>>> +      compatible = "loongson,ls2k1000-gpio";
->>>>>          reg = <0x1fe00500 0x38>;
->>>>>          ngpios = <64>;
->>>>>          #gpio-cells = <2>;
->>>>>          gpio-controller;
->>>>> +      loongson,gpio-conf-offset = <0>;
->>>>> +      loongson,gpio-in-offset = <0x20>;
->>>>> +      loongson,gpio-out-offset = <0x10>;
->>>>> +      loongson,gpio-ctrl-mode = <0>;
->>>>> +      loongson,gpio-inten-offset = <0x30>;
->>>>
->>>> I still think that you just embed the programming model into properties,
->>>> instead of using dedicated compatible for different blocks. It could be
->>>> fine, although I would prefer to check it with your DTS
+>>>> +  loongson,gpio-ctrl-mode:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description:
+>>>> +      This option indicate this GPIO control mode, where '0' represents
+>>>> +      bit control mode and '1' represents byte control mode.
 >>>
->>> Okay, I got it,  and if I understand correctly, you seem to agree with
->>> me adding attributes like this.
->>>
->>> And, if using this method that programming model into dts properites,
->>> then when adding a new platform's GPIO,  there is no longer a need to
->>> modify the driver because gpio controller is compatible and different
->>> platform can use a same compatible.
+>>> How is one supposed to know which of these modes to use?
 >>
->> Uhu, so there we are. You use this method now to avoid new compatibles.
->> No, therefore I do not agree.
-> 
-> 
-> I don't seem to got it, if the GPIO controllers of two platforms are
-> compatible, shouldn't they use the same compatible?
-
-They can use the same fallback compatible, but you should have specific
-compatible anyway. However they are not compatible, because programming
-model is different.-
-
-> 
 >>
->>>
->>>>
->>>> Where is your DTS?
->>>
->>>
->>> Sorry, the dts containing gpio nodes are only available in the product
->>> code and have not been sent to the community yet.
+>> Byte mode is to access by byte, such as gpio3, the base address of the
+>> gpio controller is offset by 3 bytes as the access address of gpio3.
 >>
->> Does not help to convince us, but it is your right. With this and above
->> explanation, my answer is no - NAK.
+>> The bit mode is the normal mode that like other platform gpio and it is
+>> to access by bit.
+>>
+>> If both modes are supported, it is recommended to prioritize using byte
+>> mode that according to spec.
 > 
-> 
-> The community work for DTS on the 2K platform is still ongoing. Do I
-> need to add a GPIO DTS node based on the following DTS to request your
-> review?  so that you can more conveniently review whether my patch is
-> suitable.
-> 
-> 2k1000
-> https://lore.kernel.org/all/99bdbfc66604b4700e3e22e28c3d27ef7c9c9af7.1686882123.git.zhoubinbin@loongson.cn/
-> 
-> 2k500
-> https://lore.kernel.org/all/c7087046a725e7a2cfde788185112c150e216f1b.1686882123.git.zhoubinbin@loongson.cn/
-> 
-> 2k2000
-> https://lore.kernel.org/all/977009099c38177c384fca5a0ee77ebbe50e3ea2.1686882123.git.zhoubinbin@loongson.cn/
+> So, sounds like this property should instead be a boolean that notes
+> whether the hardware supports the mode or not, rather than the current
+> enum used to determine software policy.
 
-If you want to convince us that your properties makes sense, adding GPIO
-nodes there would be helpful.
 
-Best regards,
-Krzysztof
+okay, I got it, I will use boolean,
+
+Thanks,
+Yinbo.
+
+
 
