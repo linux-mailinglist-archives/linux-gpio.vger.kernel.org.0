@@ -2,553 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4944577923E
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 16:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7807B77926F
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 17:08:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234786AbjHKOw6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Aug 2023 10:52:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54782 "EHLO
+        id S230266AbjHKPIe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Aug 2023 11:08:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232651AbjHKOw6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 10:52:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6842702;
-        Fri, 11 Aug 2023 07:52:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A695C673A6;
-        Fri, 11 Aug 2023 14:52:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE01C433C7;
-        Fri, 11 Aug 2023 14:52:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691765576;
-        bh=COHo4IWgjZScroVUYHPEPJCT0FXqzIIKPLX0dc9JXOA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VShJqUTXr86A4eo3Cq5qNFDATWI/nvV5M7s7MhOkpwpOFugA4MGzdrwkoh7Q6ECLW
-         fm40dsGrjoQXYSYSncg89+/seVDWNZ+01cRHE6a+GRX0gsYSFwPKHygFQgy2fQOIql
-         zVRFocddYW1MqS1x5LQpNFBeMJJ8b+3mp6qJmLL5CeR9GM/+/Elav1KjkT35L17xtp
-         EXr49eG+CpomusRESYHShe6o/3CEV2Qki4HvcVKcNMQxVhZGCGX7E6nXzvoYdb0MLN
-         SxWngQFJ0A+RQE4U4thnM96FqTtL3BZrRC3DMOdmHNZY9Nw2RPaDG9Zagu3fEYohXf
-         Bymq/h+ieirgA==
-Received: (nullmailer pid 3450514 invoked by uid 1000);
-        Fri, 11 Aug 2023 14:52:54 -0000
-Date:   Fri, 11 Aug 2023 08:52:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Peter Griffin <peter.griffin@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Convert the sti pin controller bindings to
- YAML
-Message-ID: <20230811145254.GA3414847-robh@kernel.org>
-References: <20230810-dt-bindings-sti-v1-1-4f73ffc37d87@linaro.org>
-MIME-Version: 1.0
+        with ESMTP id S229610AbjHKPIe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 11:08:34 -0400
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2085.outbound.protection.outlook.com [40.107.249.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2B1171F;
+        Fri, 11 Aug 2023 08:08:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j1GlsYQe+BQNlR5hjFovYtIvkpnhgDZH2g5zUYE1BEpLTu3qKUgKsNHNJH28yMYPI0GmN6drl9wfnXVqVMCPCjgrXi50LOlc6IbrcHjM79c7oq7SCfexL2UtYHbqxAnO+pBgLDrt/lyZZldoNOb3dtq0gTj3RSTdefy8tNQYVl6jbYtcr3fiqKQydwZgd9Bp7mzfmGROvcGtGfGkjT6JEaSWB6Y4PxYa559pm2DcJMeq4ERsfP/HCu9EoZ9VnAZBkF9+H2GwsjEPSR2E2Ap+RZPXsdQ7+vpFV9EShAgZHgVWmfilYYet6ZtO/HbcWSaBM2H9YZ9KH68D2SGiHNtI9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wdw11V7+ukn5xb0vqDPbVlMWFT2k6U4Os7pG0f4KL6Y=;
+ b=VOMOaGp86NsCjvHaV8ig9dpputv2KuCcdQMBOT15wKcJ97ZsCznz9kpcVnID+4F4fm6PjaKLwNq8qYPbA/w57JTGM5HilaxXqZheiUhZ5vpgJWCHKax+Ud0ieQHz6LKi+1FLu9jgruUiza3mSTqI4fFdn0zkkEM6oGuNaXhta0mIbGSapVRYzx+o0Tu1qqGchpEYimejCpFSiOITuI3QBUf4W0uriGajYwMiSF0Z6vI6K288/ZouXvhF93/xWJqkxR/o7GYLIwN0JrmJamqQ7f8hQUxMZNRI14BjDwWq4BS1hu5/XmcOMSNHsuIjE9OQsLcEP07Q1QE93OgL2MHbDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wdw11V7+ukn5xb0vqDPbVlMWFT2k6U4Os7pG0f4KL6Y=;
+ b=exgV0vdsvoTQmqGO8yA4tyYAhrEgGk6yVS6jipwgsEEGUm/wh8v0d/yEX935nJVwsERpSg0CC8R/GrtYNYN3VnWV3pSfVKFd7ShKLnSTJBjCmjPj/xG1crQU/LT2J9dqrDtQNmm+pr52PP+hk5iMtXAbI5rFTEJw2jXDdFkjKig=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
+ by PR3PR04MB7307.eurprd04.prod.outlook.com (2603:10a6:102:84::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.20; Fri, 11 Aug
+ 2023 15:08:31 +0000
+Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
+ ([fe80::d4ed:20a0:8c0a:d9cf]) by AM0PR04MB6452.eurprd04.prod.outlook.com
+ ([fe80::d4ed:20a0:8c0a:d9cf%7]) with mapi id 15.20.6678.019; Fri, 11 Aug 2023
+ 15:08:31 +0000
+Date:   Fri, 11 Aug 2023 18:08:26 +0300
+From:   Vladimir Oltean <vladimir.oltean@nxp.com>
+To:     Sean Anderson <sean.anderson@seco.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?utf-8?B?RmVybuKUnMOtbmRleg==?= Rojas <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
+Message-ID: <20230811150826.urp2hzl3tahesrjx@skbuf>
+References: <20230429172422.vc35tnwkekfieoru@skbuf>
+ <c81d23b6-ed22-0b37-d71b-ddce9d5d58eb@seco.com>
+ <c2f928d2-25f6-0e31-9ab3-9d585968df1b@seco.com>
+ <20230522150010.q5zndfwcuvrb6pg2@skbuf>
+ <22a28a6f-2c84-a6b1-bb57-a269af34c993@seco.com>
+ <20230610222123.mzmfjx7zfw4nh2lo@skbuf>
+ <c702e2b6-cb0f-4ac9-86fe-a220284d45aa@seco.com>
+ <20230612163353.dwouatvqbuo6h4ea@skbuf>
+ <1dd01fe2-08a8-ec2f-1184-a58b2f55ba85@seco.com>
+ <20230613142754.wr5njtjo4tbloqwu@skbuf>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230810-dt-bindings-sti-v1-1-4f73ffc37d87@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230613142754.wr5njtjo4tbloqwu@skbuf>
+X-ClientProxiedBy: AM9P250CA0026.EURP250.PROD.OUTLOOK.COM
+ (2603:10a6:20b:21c::31) To AM0PR04MB6452.eurprd04.prod.outlook.com
+ (2603:10a6:208:16d::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|PR3PR04MB7307:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0a5e9824-54b7-4660-efd7-08db9a7cd2dd
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kWCYsvn7NyIMh9t154Af8sWdP+IOj/20zYtbX6C+xQ5r5ddwlClJIgDk+SydZZJB+WwuIM4dXId6nFG/Pf8Ww/rbO3P9a2EFwrck7NocjGsAzToW26cMj2eh/SosAXcRMdL6XPHTkvajGEmN+oa1P/MRbBDh5P8Yi8N2wnSOgQDeITMYRb9k2ZsIFh85Zts1aHVARfa8QC2AgTFKTrMoflscn4anRkBjppgwEkWTQtO5mi3HkSXA3KpBpM9sXuOjMArlfCPQA2e8LhSnAz+xAZIGEW4BjGrPkPdMmrNw6Gs++N+b+XNR1DiMEVHhaDcKcwXS6tslB5RkztP+XlPxBkohny0up6ucw0EzkvPdLw2Sp5oAhyG6EOjHvL9EmeHaonchqipHNzpeSqZyGI5yz3z74s2x/9nN97bh7/W0RR1oVFBt5UOVApawo6O6+HBTwpLLHy9O9tqtVFiyw1oQ+EZL0j1XvqozmSZ2Tn6zGH44FkZNPI3AS50KlYAQ4oTTu9mqxJ5J6GU/GhdhxCogi3uRVU94uwZfFyTcn9+UWvB3auGwefK5NSUhd5mWKAnU
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(376002)(396003)(136003)(39860400002)(366004)(346002)(451199021)(1800799006)(186006)(9686003)(6512007)(478600001)(6666004)(6486002)(54906003)(1076003)(6506007)(26005)(83380400001)(7416002)(33716001)(44832011)(66476007)(5660300002)(66946007)(66556008)(4326008)(6916009)(2906002)(8936002)(8676002)(316002)(41300700001)(86362001)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JJefCEk82fH8JUL1Dhs43S6X20whSNqRrqMfBvKItcSkmUzIs/G4T5igEjok?=
+ =?us-ascii?Q?tU7AiKmMY2jmyEGMdU3Gv6r1JeACs2WXlSQG9e9MiUL3xlpWNrAs8glT5AKL?=
+ =?us-ascii?Q?L/u6ZtSJxMkN3yfHGGFWN53nVx28ef5S+n2CdntV15xSC6Nb8XBDjD9bIh/k?=
+ =?us-ascii?Q?JhdjCYmDLibD4Inri2pXaL8MBQMkObRcdcZm/tvQnAH64fxe87eiH5WEGgm6?=
+ =?us-ascii?Q?cTZRBOCWhJ3NftKhgvXMh2TUuQDhyDtnQNzk8Bpfcta24KoD7Jd0aLIqNwod?=
+ =?us-ascii?Q?FNFFNMfLAEU5Ig4Edo7q4GcVflNjuKT6WKJzFcYX7GCxUbJc7MgU3kpJwbf5?=
+ =?us-ascii?Q?UlIPjoKM3AOOB6zVA3EdCCEa67IP75I9TWEvI8tKpAfL3AHzEHP2eWBzNWt1?=
+ =?us-ascii?Q?EqDpjUNfWYZQ4NTZm1Qj/JYnuT0dkYrBwSZQNHTiSgepmfCvh8ZY7MfH5AVz?=
+ =?us-ascii?Q?ESWdCHMiDlxgrGFn70sHrtSTvVi4egEogIYPd5eFWwMFPpqcF8AqHf0SU+Li?=
+ =?us-ascii?Q?5CLyknNT+Px5lygHVWhJ1lUWnZh5lMQWlrEH4ZuwGNq9doE0X63SzuClKseZ?=
+ =?us-ascii?Q?cfbpB2AkcgEDBZAuWvyhc+t/I0VlO9l1kNdFdJGWcuVFG7uyxvG8zGv1CHPo?=
+ =?us-ascii?Q?adKb2af73mQJKq1Vpa7MYicsMMgBmyZ6a/t5QgvIFHz7XygZKSOrzb6/gLKw?=
+ =?us-ascii?Q?iykUsgdSgnS7bcBkV0ZGpOb7eetlWSLsMcvUPSr6pfP6CPs9VqNWpXyhmf3U?=
+ =?us-ascii?Q?D+kKxAd16JYp1al5kZW1zq0er4GSR+d5lgCdVEfevkHVBwroq1UGwpDrvj3X?=
+ =?us-ascii?Q?HpudwknC1GUb8IcT1uQTEIrQp/OJL0PnRIUp14uK89PVHyjkdjXpqK4Dc9AM?=
+ =?us-ascii?Q?XEmwpWoljzLeSqzZ/SqvNuiK/S9KH8Jy2w2xLGWpiF0mhjAIbxNTIQXj1h2i?=
+ =?us-ascii?Q?iYd38AqlAnrpLfwqlDS2cAuGUrmapNQ1MBzVTvxfDriA2kreAIlb3Y4kJsII?=
+ =?us-ascii?Q?9kNnVUX9QmIijWAueBCct+hTqDyloev+b4iUy+bJukWeUgaRkmRTw3M4Lf56?=
+ =?us-ascii?Q?hHWzVx2eWxsVr375hPfWfmhUxm3o10h1TConZeyzW2J21io0dAN1Vmf223N9?=
+ =?us-ascii?Q?dijKvt5doYmK5haUDv+FvxPdQ3jf6+XhFeS/vwEpbAPxfzG1cUmCrTw15j5f?=
+ =?us-ascii?Q?uGkJf7fy7hhNUqQ2Vx1TMpydXVLKjnF7SRGjgrp5kRCdErU63/bKX0td/stA?=
+ =?us-ascii?Q?p06d4IbPWpfT79M9xcuRzAVc1Mq3aNYqj0c5CtFDSXXEAxeN1/ZrY3a7KB9C?=
+ =?us-ascii?Q?8AbeH0tPeTFDp11LjHTgoEhPqsxyERrYuIwz6xsD/8XQLmDPvw5brTpIMy0s?=
+ =?us-ascii?Q?gqfRlgZ/2sT03Hwi0mXsUoprJbDZqXXNDS0bn/b6mmR7FMQTsu93l5bRUaiP?=
+ =?us-ascii?Q?K9l3A3aI186KdGo7CxTimN9tefHHrVYlw91pp+ATEfD3Uj5HpeK/RqL81YrA?=
+ =?us-ascii?Q?LZF7xnkAL9SY1L9GcvJoCASMcu6NdvMNfjVlolLbMu0gxaBOyzEfGPZWc/Qq?=
+ =?us-ascii?Q?bfrSU8mCo0/1wgLzyYHbtX3vZ72QtWMX0jNp5MiyczaPd5sXu2nMb8itaLER?=
+ =?us-ascii?Q?wg=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a5e9824-54b7-4660-efd7-08db9a7cd2dd
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2023 15:08:31.0822
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: esgMkMeOCbPWyQk8yuCyCRhqwJK4I/wKiPcpiqF9nbXIaBF5zWi9h2Xr57+unDoHbCInjKUoq/V413rz0JNKnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7307
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 11:53:17PM +0200, Linus Walleij wrote:
-> This rewrites the STi pin control bindings to use YAML.
+Hi Sean,
+
+On Tue, Jun 13, 2023 at 05:27:54PM +0300, Vladimir Oltean wrote:
+> > > At first sight you might appear to have a point related to the fact that
+> > > PLL register writes are necessary, and thus this whole shebang is necessary.
+> > > But this can all be done using PBI commands, with the added benefit that
+> > > U-Boot can also use those SERDES networking ports, and not just Linux.
+> > > You can use the RCW+PBL specific to your board to inform the SoC that
+> > > your platform's refclk 1 is 156 MHz (something which the reset state
+> > > machine seems unable to learn, with protocol 0x3333). You don't have to
+> > > put that in the device tree. You don't have to push code to any open
+> > > source project to expose your platform specific details. Then, just like
+> > > in the case of the Lynx 28G driver on LX2160, the SERDES driver could
+> > > just treat the PLL configuration as read-only, which would greatly
+> > > simplify things and eliminate the need for a clk driver.
+> > > 
+> > > Here is an illustrative example (sorry, I don't have a board with the
+> > > right refclk on that PLL, to verify all the way):
+> > > 
+> > > ... snip ...
+> > 
+> > (which of course complicates the process of building the PBIs...)
 > 
-> These bindings came early in the development of pin control
-> bindings so they are a bit obscure, and required a bit of
-> uncommon regexp work.
-> 
-> The reason why these bindings need to be converted and
-> preserved can be seen in the two new added compatibles,
-> which are for the SpaceX Starlink chip "gllcff" which uses
-> a derivative of this pin controller.
+> Maybe this is the language barrier, but what are you trying to say here?
 
-Well, this trips up the tools pretty good...
-
-> 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../devicetree/bindings/pinctrl/pinctrl-st.txt     | 174 ---------------
->  .../bindings/pinctrl/st,sti-pinctrl.yaml           | 238 +++++++++++++++++++++
->  2 files changed, 238 insertions(+), 174 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
-> deleted file mode 100644
-> index 48b9be48af18..000000000000
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
-> +++ /dev/null
-> @@ -1,174 +0,0 @@
-> -*ST pin controller.
-> -
-> -Each multi-function pin is controlled, driven and routed through the
-> -PIO multiplexing block. Each pin supports GPIO functionality (ALT0)
-> -and multiple alternate functions(ALT1 - ALTx) that directly connect
-> -the pin to different hardware blocks.
-> -
-> -When a pin is in GPIO mode, Output Enable (OE), Open Drain(OD), and
-> -Pull Up (PU) are driven by the related PIO block.
-> -
-> -ST pinctrl driver controls PIO multiplexing block and also interacts with
-> -gpio driver to configure a pin.
-> -
-> -GPIO bank can have one of the two possible types of interrupt-wirings.
-> -
-> -First type is via irqmux, single interrupt is used by multiple gpio banks. This
-> -reduces number of overall interrupts numbers required. All these banks belong to
-> -a single pincontroller.
-> -		  _________
-> -		 |	   |----> [gpio-bank (n)    ]
-> -		 |	   |----> [gpio-bank (n + 1)]
-> -	[irqN]-- | irq-mux |----> [gpio-bank (n + 2)]
-> -		 |	   |----> [gpio-bank (...  )]
-> -		 |_________|----> [gpio-bank (n + 7)]
-> -
-> -Second type has a dedicated interrupt per gpio bank.
-> -
-> -	[irqN]----> [gpio-bank (n)]
-> -
-> -
-> -Pin controller node:
-> -Required properties:
-> -- compatible	: should be "st,stih407-<pio-block>-pinctrl"
-> -- st,syscfg		: Should be a phandle of the syscfg node.
-> -- st,retime-pin-mask	: Should be mask to specify which pins can be retimed.
-> -	If the property is not present, it is assumed that all the pins in the
-> -	bank are capable of retiming. Retiming is mainly used to improve the
-> -	IO timing margins of external synchronous interfaces.
-> -- ranges : defines mapping between pin controller node (parent) to gpio-bank
-> -  node (children).
-> -
-> -Optional properties:
-> -- interrupts	: Interrupt number of the irqmux. If the interrupt is shared
-> -  with other gpio banks via irqmux.
-> -  a irqline and gpio banks.
-> -- reg		: irqmux memory resource. If irqmux is present.
-> -- reg-names	: irqmux resource should be named as "irqmux".
-> -
-> -GPIO controller/bank node.
-> -Required properties:
-> -- gpio-controller : Indicates this device is a GPIO controller
-> -- #gpio-cells	  : Must be two.
-> -     - First cell: specifies the pin number inside the controller
-> -     - Second cell: specifies whether the pin is logically inverted.
-> -       - 0 = active high
-> -       - 1 = active low
-> -- st,bank-name	  : Should be a name string for this bank as specified in
-> -  datasheet.
-> -
-> -Optional properties:
-> -- interrupts	: Interrupt number for this gpio bank. If there is a dedicated
-> -  interrupt wired up for this gpio bank.
-> -
-> -- interrupt-controller : Indicates this device is a interrupt controller. GPIO
-> -  bank can be an interrupt controller iff one of the interrupt type either via
-> -irqmux or a dedicated interrupt per bank is specified.
-> -
-> -- #interrupt-cells: the value of this property should be 2.
-> -     - First Cell: represents the external gpio interrupt number local to the
-> -       gpio interrupt space of the controller.
-> -     - Second Cell: flags to identify the type of the interrupt
-> -       - 1 = rising edge triggered
-> -       - 2 = falling edge triggered
-> -       - 3 = rising and falling edge triggered
-> -       - 4 = high level triggered
-> -       - 8 = low level triggered
-> -for related macros look in:
-> -include/dt-bindings/interrupt-controller/irq.h
-> -
-> -Example:
-> -	pin-controller-sbc {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		compatible = "st,stih407-sbc-pinctrl";
-> -		st,syscfg = <&syscfg_sbc>;
-> -		reg = <0x0961f080 0x4>;
-> -		reg-names = "irqmux";
-> -		interrupts = <GIC_SPI 188 IRQ_TYPE_NONE>;
-> -		interrupt-names = "irqmux";
-> -		ranges = <0 0x09610000 0x6000>;
-> -
-> -		pio0: gpio@9610000 {
-> -			gpio-controller;
-> -			#gpio-cells = <2>;
-> -			interrupt-controller;
-> -			#interrupt-cells = <2>;
-> -			reg = <0x0 0x100>;
-> -			st,bank-name = "PIO0";
-> -		};
-> -		...
-> -		pin-functions nodes follow...
-> -	};
-> -
-> -
-> -Contents of function subnode node:
-> -----------------------
-> -Required properties for pin configuration node:
-> -- st,pins	: Child node with list of pins with configuration.
-> -
-> -Below is the format of how each pin conf should look like.
-> -
-> -<bank offset mux mode rt_type rt_delay rt_clk>
-> -
-> -Every PIO is represented with 4-7 parameters depending on retime configuration.
-> -Each parameter is explained as below.
-> -
-> --bank		: Should be bank phandle to which this PIO belongs.
-> --offset		: Offset in the PIO bank.
-> --mux		: Should be alternate function number associated this pin.
-> -		Use same numbers from datasheet.
-> --mode		:pin configuration is selected from one of the below values.
-> -		IN
-> -		IN_PU
-> -		OUT
-> -		BIDIR
-> -		BIDIR_PU
-> -
-> --rt_type	Retiming Configuration for the pin.
-> -		Possible retime configuration are:
-> -
-> -		-------		-------------
-> -		value		args
-> -		-------		-------------
-> -		NICLK		<delay> <clk>
-> -		ICLK_IO		<delay> <clk>
-> -		BYPASS		<delay>
-> -		DE_IO		<delay> <clk>
-> -		SE_ICLK_IO	<delay> <clk>
-> -		SE_NICLK_IO	<delay> <clk>
-> -
-> -- delay	is retime delay in pico seconds as mentioned in data sheet.
-> -
-> -- rt_clk	:clk to be use for retime.
-> -		Possible values are:
-> -		CLK_A
-> -		CLK_B
-> -		CLK_C
-> -		CLK_D
-> -
-> -Example of mmcclk pin which is a bi-direction pull pu with retime config
-> -as non inverted clock retimed with CLK_B and delay of 0 pico seconds:
-> -
-> -pin-controller {
-> -	...
-> -	mmc0 {
-> -		pinctrl_mmc: mmc {
-> -			st,pins {
-> -				mmcclk = <&PIO13 4 ALT4 BIDIR_PU NICLK 0 CLK_B>;
-> -				...
-> -			};
-> -		};
-> -	...
-> -	};
-> -};
-> -
-> -sdhci0:sdhci@fe810000{
-> -	...
-> -	interrupt-parent = <&pio3>;
-> -	#interrupt-cells = <2>;
-> -	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>; /* Interrupt line via PIO3-3 */
-> -	interrupt-names = "card-detect";
-> -	pinctrl-names = "default";
-> -	pinctrl-0	= <&pinctrl_mmc>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/pinctrl/st,sti-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,sti-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..846b9438ac06
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/st,sti-pinctrl.yaml
-> @@ -0,0 +1,238 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/st,sti-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ST STi/GLLCFF GPIO and Pin Mux/Config controller
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +description: |
-> +  In the ST STi/GLLCFF pin controller each multi-function pin is controlled,
-> +  driven and routed through the PIO multiplexing block. Each pin supports
-> +  GPIO functionality (ALT0) and multiple alternate functions(ALT1 - ALTx)
-> +  that directly connect the pin to different hardware blocks.
-> +
-> +  The STi SoCs are used for consumer electronics. The GLLCFF SoCs are
-> +  used for SpaceX Starlink.
-> +
-> +  When a pin is in GPIO mode, Output Enable (OE), Open Drain(OD), and
-> +  Pull Up (PU) are driven by the related PIO block.
-> +
-> +  ST pinctrl driver controls PIO multiplexing block and also interacts with
-> +  gpio driver to configure a pin.
-> +
-> +  GPIO bank can have one of the two possible types of interrupt-wirings.
-> +
-> +  First type is via irqmux, single interrupt is used by multiple gpio banks. This
-> +  reduces number of overall interrupts numbers required. All these banks belong to
-> +  a single pincontroller.
-> +                  _________
-> +                 |         |----> [gpio-bank (n)    ]
-> +                 |         |----> [gpio-bank (n + 1)]
-> +        [irqN]-- | irq-mux |----> [gpio-bank (n + 2)]
-> +                 |         |----> [gpio-bank (...  )]
-> +                 |_________|----> [gpio-bank (n + 7)]
-> +
-> +  Second type has a dedicated interrupt per gpio bank.
-> +
-> +        [irqN]----> [gpio-bank (n)]
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,gllcff-pinctrl
-> +      - st,gllcff-flash-pinctrl
-> +      - st,stih407-front-pinctrl
-> +      - st,stih407-rear-pinctrl
-> +      - st,stih407-flash-pinctrl
-> +      - st,stih407-sbc-pinctrl
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
-> +
-> +  reg: true
-> +
-> +  reg-names:
-> +    const: irqmux
-> +
-> +  ranges: true
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    const: irqmux
-> +
-> +  st,syscfg:
-> +    description: Should be a phandle of the syscfg node
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    items:
-> +      - items:
-> +          - description: syscon node to be used with the pin controller
-> +
-> +patternProperties:
-> +  # GPIO banks below the main node
-> +  '^(gpio|pio)@[0-9a-f]+$':
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      gpio-controller: true
-> +
-> +      '#gpio-cells':
-> +        const: 2
-> +
-> +      interrupt-controller: true
-> +
-> +      '#interrupt-cells':
-> +        const: 2
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      resets:
-> +        maxItems: 1
-> +
-> +      gpio-line-names: true
-> +
-> +      st,bank-name:
-> +        description:
-> +          Should be a name string for this bank as specified in the datasheet.
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        enum:
-> +          - PIO0
-> +          - PIO1
-> +          - PIO2
-> +          - PIO3
-> +          - PIO4
-> +          - PIO5
-> +          - PIO10
-> +          - PIO11
-> +          - PIO12
-> +          - PIO13
-> +          - PIO14
-> +          - PIO15
-> +          - PIO16
-> +          - PIO17
-> +          - PIO18
-> +          - PIO19
-> +          - PIO20
-> +          - PIO30
-> +          - PIO31
-> +          - PIO32
-> +          - PIO33
-> +          - PIO34
-> +          - PIO35
-> +          - PIO40
-> +          - PIO41
-> +          - PIO42
-> +
-> +      st,retime-pin-mask:
-> +        description:
-> +          Should be mask to specify which pins can be retimed.
-> +          If the property is not present, it is assumed that all the pins in the
-> +          bank are capable of retiming. Retiming is mainly used to improve the
-> +          IO timing margins of external synchronous interfaces.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 63
-> +
-> +    patternProperties:
-> +      "^(.+-hog(-[0-9]+)?)$":
-> +        type: object
-> +        required:
-> +          - gpio-hog
-> +
-> +    required:
-> +      - gpio-controller
-> +      - '#gpio-cells'
-> +      - reg
-> +      - st,bank-name
-> +
-> +  # Explicitly match all other nodes, EXCEPT the gpio nodes
-> +  # these contain the actual pin control states
-> +  '^(cec|rc|sbc_serial|i2c|keyscan|gmac|pwm|spi|serial|mmc|tsin|tsout|mtsin|systrace|usb|i2s_out|i2s_in|spdif_out|fsm|nand)[0-9]*$':
-
-This seems to be the source of a lot of the warnings, but I'm not sure 
-why exactly. I'll investigate.
-
-Or you can use 'additionalProperties' to match on anything that doesn't 
-have an explicit match. More below.
-
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '[-_0-9a-z]+$':
-
-This allows pretty much anything. If that's what you want/need, 
-use 'additionalProperties':
-
-       additionalProperties:
-         type: object
-         properties:
-           st,pins:
-             ...
-
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        patternProperties:
-> +          '^st,pins':
-
-Did you mean for this to really be a pattern? No '$' on the end, so this 
-is equivalent to '^st,pins.*$'. Actual driver and dts files indicate 
-this is not a pattern, but a fixed node name of 'st,pins'.
-
-> +            type: object
-> +            additionalProperties: false
-> +            description: The st,pins is a custom key equals value list. The value
-> +              is a phandle with 4 or 7 parameters.
-> +
-> +            patternProperties:
-> +              ^[-_0-9a-zA-Z]+$:
-
-This is where I was expecting the tools to get hung up as this will 
-match practically any property. The way things work now is we extract 
-property types from all the schemas. This is a flat list, so property 
-names and types are global. That list is then used to decode the 
-dtb before validation. There's some heuristics for dealing with multiple 
-types for the same property name.
-
-To support this binding, I think we're going to need some sort of 
-conditional information to use. For this case, the node name might work. 
-I'll have to investigate this some.
-
-The other option is just drop this for now and put an 
-'additionalProperties: true' with a note.
-
-> +                description: the parameters to the phandle configures the pin.
-> +                   Arg 0 = pio node phandle for the bank of the pin
-> +                   Arg 1 = pin offset for the pin in the pio unit
-> +                   Arg 2 = mux alternate function taken from the datasheet
-> +                   Arg 3 = pin configuration mode for the pin, bits for a register
-> +                   Arg 5 = retiming configuration for the pin
-> +                   Arg 6 = retiming delay in picoseconds
-> +                   Arg 7 = retiming clock to be used for the delay
-> +                $ref: /schemas/types.yaml#/definitions/phandle-array
-> +                minItems: 1
-> +                maxItems: 1
-> +                items:
-> +                  minItems: 4
-> +                  maxItems: 7
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    pinctrl@961f080 {
-> +      compatible = "st,stih407-sbc-pinctrl";
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      st,syscfg = <&syscfg_sbc>;
-> +      reg = <0x0961f080 0x4>;
-> +      reg-names = "irqmux";
-> +      interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-> +      interrupt-names = "irqmux";
-> +      ranges = <0 0x09610000 0x6000>;
-> +
-> +      pio0: gpio@9610000 {
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        reg = <0x0 0x100>;
-> +        st,bank-name = "PIO0";
-> +      };
-> +
-> +      sbc_serial0 {
-> +        pinctrl_sbc_serial0: sbc_serial0-0 {
-> +          st,pins {
-> +            tx = <&pio0 4 1 (1 << 27)>;
-> +            rx = <&pio0 5 1 0>;
-> +          };
-> +        };
-> +      };
-> +    };
-> +...
-> 
-> ---
-> base-commit: d6f3b83206bdbd9b969663f0eeedd963bdc13fcb
-> change-id: 20230810-dt-bindings-sti-644ff6350456
-> 
-> Best regards,
-> -- 
-> Linus Walleij <linus.walleij@linaro.org>
-> 
+I said that I don't understand. Can you please clarify what you were
+trying to transmit with this comment?
