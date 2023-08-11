@@ -2,69 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A24657784E9
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 03:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F8807784ED
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 03:36:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229896AbjHKB1l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Aug 2023 21:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43710 "EHLO
+        id S229665AbjHKBg4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Aug 2023 21:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230034AbjHKB1l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 21:27:41 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1ADA2D64
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 18:27:33 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-99bfcf4c814so210161466b.0
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 18:27:33 -0700 (PDT)
+        with ESMTP id S229540AbjHKBgz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Aug 2023 21:36:55 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45BD2D54
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 18:36:54 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b9c5e07c1bso13378535ad.2
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 18:36:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691717252; x=1692322052;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C1xLjbZT2T7cuQY6eHvqpE2fa2fNdp+M9tdYDL3xufs=;
-        b=OWCpEZaq9EjuwppVxHXfWKl6Uhw347zF8awOkojlLvpYPerB+oXKJUIhzMqZRkJEfT
-         j+LCBSCD3zeIx7l1LeG8ITgv0WIgwu6Uan47k5YsNL/sFJdRmOrFTXJW3DZeSUtO/Cs+
-         xtdQ1+QdJRszGeIjXP0PhpTLLZIg+y7fbhtDTys/U8C/cWGqYevPEsf0xeu06GbB2KOZ
-         Si6MZhkmYZ+D18riJXUOoeUMNMSp8DpZN0wbemm/j4N+jq4hsL9z1gy6IuDRBsRxyU1e
-         O1jWkm57VxPWGuIgEMDkrx3y5NsvIh0OQhj3vQeOU3gmefoyWmittKGVJ6h4LGR0mvtS
-         9ndw==
+        d=gmail.com; s=20221208; t=1691717814; x=1692322614;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7UTMfOaKFSt18HlYL1g8HpfFibxYJQzIAktauR7BXTA=;
+        b=ZPXWhQ/xJrhiWiaHFts4PUhh83NGnPjnm4JAypKiEOjKG1gthhhgNri8jSINW3yOJS
+         0G5oXWXnsfJ++PAWiy08NAM+OdxHzKK5BRlv+saErSNPcW3DlA2UM8YEbq17CK/0JhN5
+         DoLlhqJmJnjJjINqoRb8HHv5ZRDGHG+JTeAL/sQpKdsjesRm4G6DfPcgmRkEpiT5vgz8
+         WMAA7SK7AMRGBUoEC1B1EYOlbiK2Xref7kHK5/w8Zs2iL/vfE5MwfiuBQbPmk5H1QEfF
+         UNJtvK88BrbK6DQQPlywySXMh6jgU5FMvF5hHrCupCnNJKj7nkn6Mo/ASaN69Y9y++EH
+         618w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691717252; x=1692322052;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C1xLjbZT2T7cuQY6eHvqpE2fa2fNdp+M9tdYDL3xufs=;
-        b=d/mEYDrVH8Snm5DLCbHN8Tt0u50M7DZLsH2j1vyOv/IHSmelem9aJ3JRqdnl2aNluG
-         EEC3BKzPCCEauMQxUgk3LbIrmdP8becgF3R9uMK/rW27wrA6hr+E8YKggBfD1Sg9hvFJ
-         mTcQQUQGvkKTH+fehwGEj7NhiBqqA97wnLj6NAH40hdFPuOCLEL1IeW3rn0oshKWqvMA
-         InBywHthsYqk3c98YAJuNCweC4LBdmiCGypKMvxzkGz7txa1J6DAQsanA9YsMuC+cntJ
-         zswX9rIa2BhxL4Puc+d7QI19ILKbhR1qerDZEm4KtmQ3NfopVqMJUUZNfRoh+pOziS53
-         VbuA==
-X-Gm-Message-State: AOJu0YwbGqZiFgEDIjYQKbd/DM+ebaIOQjCs7JvU3ba5crgDRSvpkfei
-        NRhwdp3A6L4pYpE89fAykwIqNI//SAc2ocBykEw1TKDr
-X-Google-Smtp-Source: AGHT+IEJiZUySmnMZV9axojEb+RGmfZWRwkUz242obnSk7J6DeyOTRSIRYHzlm0FZ0gKP/NF/VvuvLxlqcubsOyARN0=
-X-Received: by 2002:a17:907:7781:b0:993:f2c2:7512 with SMTP id
- ky1-20020a170907778100b00993f2c27512mr450817ejc.33.1691717252013; Thu, 10 Aug
- 2023 18:27:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <ZMNYsOXrOOZgxLeC@sol> <CAN1+YZWjEZQY6yffCFrt0vLVA6P0j5dDbRz=b5c0MXJoSszhig@mail.gmail.com>
- <ZMRzYD6wGYywiPbd@sol> <CAN1+YZW-EcQq=D=dLQoH-WsDD7RWjTUgqbQMynV+OXV0EjLOAw@mail.gmail.com>
- <ZM7xEbr0essN2qY3@sol> <CAN1+YZXd_dMJK9CYL+bmtTRCzT=W7Kt9VTeD38Wg8habFLirzg@mail.gmail.com>
- <ZM9oB0l4fvOinzLm@sol> <CAN1+YZVD7ui4HSRMaGv+y-xT9NgeGNWDM_vx2MhZfiGrwhLPVA@mail.gmail.com>
- <ZNQzT2MtskTTZTiI@sol> <CAN1+YZWz10vZ__3gThzTACbiPY=EVVJ_2qjrAzk6rgpjWwKv9g@mail.gmail.com>
- <ZNWH+L9o5gp6PWyq@sol>
-In-Reply-To: <ZNWH+L9o5gp6PWyq@sol>
-From:   andy pugh <bodgesoc@gmail.com>
-Date:   Fri, 11 Aug 2023 02:26:55 +0100
-Message-ID: <CAN1+YZWTJ-TqjR99MBGSPPmQY1ao-TCGu-DfNTYBQvbXcmV=5A@mail.gmail.com>
-Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
-To:     Kent Gibson <warthog618@gmail.com>
+        d=1e100.net; s=20221208; t=1691717814; x=1692322614;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7UTMfOaKFSt18HlYL1g8HpfFibxYJQzIAktauR7BXTA=;
+        b=HoZvH3HyulfvSOAMbYVRKewPzqOf/vUqF1bT7CF9rsiTPbK09j8r8lR1SKZkmpVQ4c
+         MaZR++EhtKu6xKH2BJzBkRJmT5Fefi0q7SknR4rnYwR93BPDL/UWeELrPRBen9Z5WSZW
+         +WND/GdinJWanbxtwJ/PoVzro5SObv98C0xGPwOwophlca54Ip4VU9TRAV1ZtkUT3PeM
+         8MAjCvf4dzsEARSwXu4t4miczsEDVByhdLQN3r5jvHxONLZQo2NyBDSLeXHnNh3ZvulL
+         fCuMSWT4RGF7X380fbtZylRJ/XmCrWQQH3dJeRdiWEQcuAyWZ5NoR4U6V9p0aXHoks8T
+         R/nQ==
+X-Gm-Message-State: AOJu0YxH4AwtEhlg9wKoTUP3I3WzgOHSTOTS0UGbm3vYG6s+rK7EdDHL
+        nkMN5yQOXIQF5t/L3xGmYEU=
+X-Google-Smtp-Source: AGHT+IFh4O7jz2+V/DMV++U64TeuuKik3i9lxwn3G8fT4uvvFan4Wo5CqqdGXlEIn7Dizs7cu0XQyg==
+X-Received: by 2002:a17:902:e545:b0:1b8:76fc:5bf6 with SMTP id n5-20020a170902e54500b001b876fc5bf6mr534938plf.43.1691717814115;
+        Thu, 10 Aug 2023 18:36:54 -0700 (PDT)
+Received: from sol ([220.235.36.234])
+        by smtp.gmail.com with ESMTPSA id c1-20020a170902b68100b001b53be3d942sm2433364pls.232.2023.08.10.18.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Aug 2023 18:36:53 -0700 (PDT)
+Date:   Fri, 11 Aug 2023 09:36:49 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     andy pugh <bodgesoc@gmail.com>
 Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Subject: Re: [libgpiod] gpiod_line_get_value_bulk may be broken?
+Message-ID: <ZNWQsabr8kPCbD4X@sol>
+References: <ZMRzYD6wGYywiPbd@sol>
+ <CAN1+YZW-EcQq=D=dLQoH-WsDD7RWjTUgqbQMynV+OXV0EjLOAw@mail.gmail.com>
+ <ZM7xEbr0essN2qY3@sol>
+ <CAN1+YZXd_dMJK9CYL+bmtTRCzT=W7Kt9VTeD38Wg8habFLirzg@mail.gmail.com>
+ <ZM9oB0l4fvOinzLm@sol>
+ <CAN1+YZVD7ui4HSRMaGv+y-xT9NgeGNWDM_vx2MhZfiGrwhLPVA@mail.gmail.com>
+ <ZNQzT2MtskTTZTiI@sol>
+ <CAN1+YZWz10vZ__3gThzTACbiPY=EVVJ_2qjrAzk6rgpjWwKv9g@mail.gmail.com>
+ <ZNWH+L9o5gp6PWyq@sol>
+ <CAN1+YZWTJ-TqjR99MBGSPPmQY1ao-TCGu-DfNTYBQvbXcmV=5A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN1+YZWTJ-TqjR99MBGSPPmQY1ao-TCGu-DfNTYBQvbXcmV=5A@mail.gmail.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,36 +78,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 11 Aug 2023 at 01:59, Kent Gibson <warthog618@gmail.com> wrote:
+On Fri, Aug 11, 2023 at 02:26:55AM +0100, andy pugh wrote:
+> On Fri, 11 Aug 2023 at 01:59, Kent Gibson <warthog618@gmail.com> wrote:
+> 
+> > So you don't need to alloc for it at all - gpiod_line_find() already did
+> > that. As per that function's comment, you still need to close the chip
+> > eventually to prevent memory leaks.
+> 
+> Close then free?
+> 
 
-> So you don't need to alloc for it at all - gpiod_line_find() already did
-> that. As per that function's comment, you still need to close the chip
-> eventually to prevent memory leaks.
+gpiod_chip_close() does both the close of the file descriptor and the free
+of the allocated struct.
 
-Close then free?
+Cheers,
+Kent.
 
-> > I must be missing something? Or are you assuming that I am the only
-> > one compiling LinuxCNC?
-
-> I am assuming you are building an execuable to package as a binary.
-> If you are building a dev package then you can't hide the libgpiod
-> dependency from the end user, so you have the choice of either using
-> what is readily available or forcing the end user to install libgpiod
-> from source themselves
-
-We do build binary packages, but not generally on my PC, instead the
-builds happen on a number of buildbots, including the one at Debian.
-Also, there are about 20 active developers who expect to pull the
-repository from Git and have it build, and probably low-hundreds of
-users who regularly build from source.
-
-Basically, a git pull of the repository  + the listed build-time
-dependencies has to build without anyone manually fetching an external
-code repository.
-
---=20
-atp
-"A motorcycle is a bicycle with a pandemonium attachment and is
-designed for the especial use of mechanical geniuses, daredevils and
-lunatics."
-=E2=80=94 George Fitch, Atlanta Constitution Newspaper, 1912
