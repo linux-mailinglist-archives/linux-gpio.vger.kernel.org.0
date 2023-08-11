@@ -2,74 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD8AE778D8C
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 13:23:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED771778E68
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 13:57:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236359AbjHKLXl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Aug 2023 07:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57824 "EHLO
+        id S236247AbjHKL5U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Aug 2023 07:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236391AbjHKLXk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 07:23:40 -0400
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55C8270F
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Aug 2023 04:23:19 -0700 (PDT)
-Received: by mail-vs1-xe2d.google.com with SMTP id ada2fe7eead31-447a3d97d77so769958137.1
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Aug 2023 04:23:19 -0700 (PDT)
+        with ESMTP id S235975AbjHKL5R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 07:57:17 -0400
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690F03580
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Aug 2023 04:57:15 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-79a31d66002so609497241.3
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Aug 2023 04:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691752986; x=1692357786;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lv+vyUR/iDrFWpNn5L3Z/ySLjn32cAxm1edMyZdQk+A=;
-        b=nQWlqRLCTEqRmeYDChWC9zfVO+Rb1+9Mdx7Szo/ZRUWKQO6TBfPZIkq0Fta3d81C5Q
-         WY4c5QC1VIlW2CJ0qsyFrxB8W/7G4Tr6F0rmf6/HVYk0vCecqqsYV4wl8BQnzrgBX58m
-         l6NVxYdHPIgW3vA4/uVEeoMjDSU7qYp+FyHQrpKPxqYcjkx8MKSIPp99g0Yy2iqKXiQZ
-         vC2HYX+IoaaY3NdiUE45vtYlRqLUPq7hBLsshLEW+lNLssDfs9s9Tfcctv5cAzywJibh
-         6ZvMWZRvd4IFkVewDO6pHWOBLEGCn24klvu7JXKjBPcUpQjELSxKg78QWYSMNbVRsnE9
-         MBKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691752986; x=1692357786;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691755034; x=1692359834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lv+vyUR/iDrFWpNn5L3Z/ySLjn32cAxm1edMyZdQk+A=;
-        b=XnzRu6jiYwD7w2dGaP4cHqISuULLi1nOgrn9BKVYukAmsPEucT3vozFoszF2kV7gjj
-         wfP+XX5OOTp4UwbegauZS2OrUOZeWPjr/qyZWJVs20TliPbEkHE5z3LCdrp09hmYomEv
-         D7ow1u3n2C4zbkyEdvMjGFQ8QSXGNywELP2LLA2uFDld5qZ644k84N/2Dx5SFVdpWJHI
-         ErIioysS12fchZ4odwp3u0bg1wsS1KNZWNSN7Yt1IDCNaen76/lAltgjgXOfDYuGK/An
-         PyDnKn2Y+ph5dtgklZpDxt6MqBuQLUQuo2bWyifaKi3+BnLZLky8QyKHU9s3uMUhfbZ6
-         0uUw==
-X-Gm-Message-State: AOJu0YweS0dlSMU4PwCv6rDk1h2tR47SyGlC7Jq+RU7BbA2i/W2B4TRY
-        mU30MDbwyCFQMXtgg5M0b4cEYw==
-X-Google-Smtp-Source: AGHT+IF4wNEGDOEiYLWG0d95LtvJeE8wN5SUJuqdoeUseoOT2FlTMaRDxCAlfeGTas6jdcxvLbg7XA==
-X-Received: by 2002:a67:ee5a:0:b0:443:7503:a534 with SMTP id g26-20020a67ee5a000000b004437503a534mr1222064vsp.16.1691752985884;
-        Fri, 11 Aug 2023 04:23:05 -0700 (PDT)
-Received: from fedora (072-189-067-006.res.spectrum.com. [72.189.67.6])
-        by smtp.gmail.com with ESMTPSA id r2-20020a67c302000000b00426768819d4sm541323vsj.3.2023.08.11.04.23.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Aug 2023 04:23:05 -0700 (PDT)
-Date:   Fri, 11 Aug 2023 07:23:03 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        Paul Demetrotion <pdemetrotion@winsystems.com>
-Subject: Re: [RESEND PATCH 7/7] gpio: ws16c48: Fix off-by-one error in
- WS16C48 resource region extent
-Message-ID: <ZNYaF0bghMQp4+Pl@fedora>
-References: <cover.1691703927.git.william.gray@linaro.org>
- <f20243853e94264534927f2cdf9288b869e7e03b.1691703928.git.william.gray@linaro.org>
- <ZNX9Oo2AOASHKOPZ@smile.fi.intel.com>
+        bh=Fwd/GQaC5Var2VRAIYUUNIOAcVCAPS6jdx6HEHhIjcY=;
+        b=Brd8oVXG1yHwigSlT4kv+EMSbguhXvboqzLE7ncaOnEpxbR9cJqg2EZSkA/GvDdHLj
+         MidfJcuJvgGDQKyg6fx4MTw3zj09XzSaTjZk/fwODibCS3/AFpjgaAyR+yCVx4x/mHrp
+         hSHRVNbom1ncvwC0reF3Y6U6L4nuWiKxEGHPIUrlaX+xfTeCmVImxopmz/f3uwOnvuNz
+         lCXndhDA4ciTxvLZpoc7nlq4uH/TPweQxPDVWKn2gM37YGPoBJ4yUYO60cn8UktLoYgq
+         n55AeNTMgIXRdF09L4ZPaUfs9MahczMYwENwtBC41Wt80JRTKlDhghh4AmspgS5gI3BO
+         +TKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691755034; x=1692359834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fwd/GQaC5Var2VRAIYUUNIOAcVCAPS6jdx6HEHhIjcY=;
+        b=Bf3PKlgWB0KaYgphp70QbPYH4Ed2TnYsJeykGP2JcBikhhPLm801ih+n+i+fcNSlum
+         wNsosk09FG8jcwb8yOK9mDVJ6OGUTzB8eIAENoxJ2sFQqNRZU37dUo7afExmOagEYo2f
+         KiJ0AB38IXq6fyWE5qIU3u1xHYVGyAJKoPL02zniols6b4Vq+aAv3lm0VU4iipO0iaYp
+         bbNo8MZrfE9D+8NC9VTLHrlSYBFUEfbX+luaTMBqyM1rRHemuYwFDQOIeuOx/anR0x0o
+         KD4hBKe7miN86gYl1KZf7Tk/nt5ABCw8f1hAanE+BSNIy+eyom2eQ/cuQfo6BYcviE4a
+         0BfA==
+X-Gm-Message-State: AOJu0Yzk3cQrPlI8Yyo+4646XojtdV74pW6RzjETp7TbXBbg32QN554S
+        +Jdp+kTGcqh8p218lNS1bdALU6GwPSswKunkm4Bvzg==
+X-Google-Smtp-Source: AGHT+IEIKMN6wZE6v8RZjzlZTGlau0HLXsoO9zD0l9PA87cP0lwE4EYGwQ/psNRx+5R/UicyQ3W4mLFeF/7bWPyXewo=
+X-Received: by 2002:a67:f753:0:b0:443:6457:101 with SMTP id
+ w19-20020a67f753000000b0044364570101mr1311370vso.7.1691755034555; Fri, 11 Aug
+ 2023 04:57:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="o6AHCCJzQpZ6h7SL"
-Content-Disposition: inline
-In-Reply-To: <ZNX9Oo2AOASHKOPZ@smile.fi.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+References: <20230810184846.22144-1-brgl@bgdev.pl>
+In-Reply-To: <20230810184846.22144-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 11 Aug 2023 13:57:03 +0200
+Message-ID: <CAMRc=MdOFpyz8u6xnPtB7+Q0qzq_JqZwaS3=yACAEJzLh60r-g@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: fix reference leaks when removing GPIO chips
+ still in use
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,50 +70,64 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Aug 10, 2023 at 8:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> After we remove a GPIO chip that still has some requested descriptors,
+> gpiod_free_commit() will fail and we will never put the references to the
+> GPIO device and the owning module in gpiod_free().
+>
+> Rework this function to:
+> - not warn on desc =3D=3D NULL as this is a use-case on which most free
+>   functions silently return
+> - put the references to desc->gdev and desc->gdev->owner unconditionally
+>   so that the release callback actually gets called when the remaining
+>   references are dropped by external GPIO users
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> v1 -> v2:
+> - add a comment about why we can't use VALIDATE_DESC_VOID()
+>
+>  drivers/gpio/gpiolib.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 251c875b5c34..2158067c4fd2 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2167,12 +2167,18 @@ static bool gpiod_free_commit(struct gpio_desc *d=
+esc)
+>
+>  void gpiod_free(struct gpio_desc *desc)
+>  {
+> -       if (desc && desc->gdev && gpiod_free_commit(desc)) {
+> -               module_put(desc->gdev->owner);
+> -               gpio_device_put(desc->gdev);
+> -       } else {
+> +       /*
+> +        * We must not use VALIDATE_DESC_VOID() as the underlying gdev->c=
+hip
+> +        * may already be NULL but we still want to put the references.
+> +        */
+> +       if (!desc)
+> +               return;
+> +
+> +       if (!gpiod_free_commit(desc))
+>                 WARN_ON(extra_checks);
+> -       }
+> +
+> +       gpio_device_put(desc->gdev);
+> +       module_put(desc->gdev->owner);
+>  }
+>
+>  /**
+> --
+> 2.39.2
+>
 
---o6AHCCJzQpZ6h7SL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Queued for fixes.
 
-On Fri, Aug 11, 2023 at 12:19:54PM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 10, 2023 at 06:00:44PM -0400, William Breathitt Gray wrote:
-> > The WinSystems WS16C48 I/O address region spans offsets 0x0 through 0xA,
-> > which is a total of 11 bytes. Fix the WS16C48_EXTENT define to the
-> > correct value of 11 so that access to necessary device registers is
-> > properly requested in the ws16c48_probe() callback by the
-> > devm_request_region() function call.
-> >=20
-> > Fixes: 2c05a0f29f41 ("gpio: ws16c48: Implement and utilize register str=
-uctures")
->=20
-> Fixes should go first in the series, but I see no conflict here, I hope B=
-art
-> can manage this when applying.
->=20
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
-
-Bart, if you encounter any issues reordering this patch first before the
-others, just let me know and I'll send a rebased version with the
-appropriate context adjustments.
-
-Thanks,
-
-William Breathitt Gray
-
---o6AHCCJzQpZ6h7SL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZNYaFwAKCRC1SFbKvhIj
-K53tAQCmfMIu4VjYvVibria+Kya/aqVior9d1mzupq6Ji2p1wAD/fmQr8RVuFrSq
-sz5p5w7BA/mPTBdb2TrUZlNjOX/56QA=
-=O5hu
------END PGP SIGNATURE-----
-
---o6AHCCJzQpZ6h7SL--
+Bartosz
