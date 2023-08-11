@@ -2,90 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B19B577899C
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 11:20:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE0A87789F2
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 11:32:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234821AbjHKJUB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Aug 2023 05:20:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
+        id S234356AbjHKJcN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Aug 2023 05:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234841AbjHKJT6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 05:19:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99EB32D78;
-        Fri, 11 Aug 2023 02:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691745598; x=1723281598;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5cLnojzw8GwJQeVPk+d6p7jnvKD0oM2DncTUym4BGQU=;
-  b=EzunvH/GqXvzrrG5RSv/vLwW4JASmhyEAstXHmgc4HYv0upUvU05b/+l
-   wgDfFs6M+kk2XEVE+CHWlKrAp9QqOs4LczOot/aqkasR6NOWVl9INAvC4
-   t8bPysJ1Vhg4FP3UvWabSa63Nc0njlMms5JvsOraGSEqXjesxpoZi7zrY
-   252Ej2MOuQz+43w/oxM602NCyUhFQ8AmWUAHIKppxoE9tBd253lbD2A3b
-   mQ9OOeq5otzKFu9T66Cb07oDyw/n3zgDOxgLj2g6xozLMbsRUKgIaL5dR
-   IUqdEr8OIML1sx+CX8zEcXGCU1cptR2WCn09MLc0Y4rhs4tp8o/nFCl04
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="374406319"
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="374406319"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 02:19:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="726197121"
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="726197121"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 11 Aug 2023 02:19:56 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qUOJG-008FZl-35;
-        Fri, 11 Aug 2023 12:19:54 +0300
-Date:   Fri, 11 Aug 2023 12:19:54 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        with ESMTP id S235016AbjHKJcB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 05:32:01 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E82D30DA
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Aug 2023 02:31:58 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2b9aa1d3029so28301341fa.2
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Aug 2023 02:31:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691746317; x=1692351117;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2VGyZBytmpnhJA0vv2u38IIsmTj+XuPqzVQBW8m7X8=;
+        b=pC1Os6ZCtOEPs37F7qkk1QPZGPEYNG3QycSK86EQO7CfDh4WeEengx5Q7GbAdpbtyu
+         NbGVzL/JtntLzzgbs4OSb1JOh0kZN5bqQ1v0/tdgr25+tFtLO9BQYB9xQ6HsimF197B9
+         Rdbr37zidkokL2for+H9vX+8p3WCo2R/nFhx4Vb5/aeal12LD/HglVlCte6QcXn9rRTh
+         DJ+/EWj2HiLgBFV60XqexbZOhG5EJQL1rE2YtGvclqXO0tFMacDgkpSXghctoSITgJHi
+         q2LoXpxtzrf6mc17Yus3kSunD5oA26l8YMxlyy0Q+XYyXWRulJMzfQSBbbXxcyu2/8WH
+         dqcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691746317; x=1692351117;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G2VGyZBytmpnhJA0vv2u38IIsmTj+XuPqzVQBW8m7X8=;
+        b=YgyHQEYDamsfjZk2nNdiO1hKyRo1JuRaWsMeN0r7XOyeqw8j4tvdsbXchHaOaUk7DB
+         Dasr58KYUPDp4SodpV8i60VKJ4j0Nvmq/ZlXjAevzBhJWKVi2aniflfKJGKAseQJ5cbx
+         X11iRv1p8ApD9nzjeS2hM0otV76oY986rJfJXK2t+Tk7Cq8DbpN2jXLceZnnV7U0TpVb
+         l2X0eA3PriR92SUObJIpXyWZYVcjTJKHAbOpeGYyF3Pfkudu55tGQrp51hcMg1Hfn7mb
+         80EMuiElpGU7+Am1U0PEvgzm0nS17Hp9h0jHP1v4XaP8iItx9Or8jfPw2iI++ESQys3B
+         KtAg==
+X-Gm-Message-State: AOJu0YzYstgbP8tqhAUCOLeqFkhs9PwhFlin9nAWV7s4PARG0nanFkoM
+        Ko7FRJWOieUd+WdI2eUGlkLXXg==
+X-Google-Smtp-Source: AGHT+IEgLWmt9jM55+QIvswvVbtk9wb3d49vZcs5e6sq7Hrp8q5aRDoXXwp7b+uYFEjuwAOVYgb/zw==
+X-Received: by 2002:a05:651c:104f:b0:2b7:2db:8ea4 with SMTP id x15-20020a05651c104f00b002b702db8ea4mr1336268ljm.30.1691746316757;
+        Fri, 11 Aug 2023 02:31:56 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id f9-20020a7bc8c9000000b003fba92fad35sm7608507wml.26.2023.08.11.02.31.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Aug 2023 02:31:56 -0700 (PDT)
+Date:   Fri, 11 Aug 2023 12:31:53 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     oe-kbuild@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        Paul Demetrotion <pdemetrotion@winsystems.com>
-Subject: Re: [RESEND PATCH 7/7] gpio: ws16c48: Fix off-by-one error in
- WS16C48 resource region extent
-Message-ID: <ZNX9Oo2AOASHKOPZ@smile.fi.intel.com>
-References: <cover.1691703927.git.william.gray@linaro.org>
- <f20243853e94264534927f2cdf9288b869e7e03b.1691703928.git.william.gray@linaro.org>
+        Kent Gibson <warthog618@gmail.com>, lkp@intel.com,
+        oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/2] gpio: sim: simplify code with cleanup helpers
+Message-ID: <e1f0ddf1-542f-423b-9484-5f992c1f7d1d@kadam.mountain>
+References: <20230809131442.25524-2-brgl@bgdev.pl>
+ <2444c3ff-eaf3-4cb9-851b-8e92156128b0@kadam.mountain>
+ <ZNX8DDKYMOyxdTnB@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f20243853e94264534927f2cdf9288b869e7e03b.1691703928.git.william.gray@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZNX8DDKYMOyxdTnB@smile.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 06:00:44PM -0400, William Breathitt Gray wrote:
-> The WinSystems WS16C48 I/O address region spans offsets 0x0 through 0xA,
-> which is a total of 11 bytes. Fix the WS16C48_EXTENT define to the
-> correct value of 11 so that access to necessary device registers is
-> properly requested in the ws16c48_probe() callback by the
-> devm_request_region() function call.
+On Fri, Aug 11, 2023 at 12:14:52PM +0300, Andy Shevchenko wrote:
+> On Fri, Aug 11, 2023 at 08:20:11AM +0300, Dan Carpenter wrote:
 > 
-> Fixes: 2c05a0f29f41 ("gpio: ws16c48: Implement and utilize register structures")
+> > smatch warnings:
+> > drivers/gpio/gpio-sim.c:1472 gpio_sim_config_make_device_group() warn: possible memory leak of 'dev'
+> 
+> Isn't smatch a bit dumb about cleanup.h?
+> 
 
-Fixes should go first in the series, but I see no conflict here, I hope Bart
-can manage this when applying.
+Aw.  Crud.  I hadn't seen that this was a cleanup.h thing.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I did do some work to suppoort cleanup.h but probably it will take a
+while to work out the kinks.  Let me figure this out.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+regards,
+dan carpenter
