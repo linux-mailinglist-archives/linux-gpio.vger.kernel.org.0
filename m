@@ -2,64 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39F37778983
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 11:14:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE938778987
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 11:15:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232898AbjHKJOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Aug 2023 05:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43604 "EHLO
+        id S234769AbjHKJO6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Aug 2023 05:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229709AbjHKJOI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 05:14:08 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564E11BD;
-        Fri, 11 Aug 2023 02:14:07 -0700 (PDT)
+        with ESMTP id S229709AbjHKJO5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 05:14:57 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AF5211C;
+        Fri, 11 Aug 2023 02:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691745247; x=1723281247;
+  t=1691745297; x=1723281297;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=lGakJNNFUtfZiqP/sKV4opLGlYZoNKOYhGGsZPRr5UI=;
-  b=SSUPpS9gYFpdPPXQpVlb5LSQgkuDDe9y+vDyx/3XVHSODf39Kakgzk7U
-   w7sQ0c5vmkVi9v7fmwHD9tPjk/h+fEQ7Q9lqoaYyWWUX/Mk7JsH3/Xg/1
-   pKc/Lhdxv6mHIcRPC76cakYSyAVzHdDIS07eanJzm97ZOUqO9FSX1DBov
-   BEWQe1QxBXSPr6W1MA3R3slm1bO7k92cVwJWdkNebPg6BguQRF817ijLZ
-   CRrDDu3FIpXLywIgrvYXBn7Vlg74ygMI/wqYB4lJ/BZh3Xe/vgTvzfcgf
-   /QYenM5GtVcIdEbNgGRFgii/ZR8G4cCGeUybynDh1pOR0f8OyLE3DabWj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="356598668"
+   mime-version:in-reply-to;
+  bh=B0PTp68QBaHEMGjETTEG/Ui5ge9x1geBW0y6XBpBgCs=;
+  b=ff0+U0yPxq/q8XIjLzZFPzNxL5Z36Xc7D8CoISkoCecf4JDj6kfvD+x/
+   D1fN6AmvJ47YyqnoLS7wtfEbXALn0J+wmuxA3dJa+x0fsJFpFEGF5sQ6r
+   rZyUOHC+oolbDNooIDqDTm0wQMN3Y01byu7+xXdbR5wfqMP4Rf+VTnYXm
+   Lo9l1gvny4TWYTt0A19nLXahX1pMRnmGA6Q1smrKgNxa0k2J48inezf8c
+   AdtoiHQS/3l5uzNK+kFCgcaLcJ8mA8VhXk2NdUA9p3Lq/GCAUXtQfl6a4
+   j1C24e6yT2i98j7UYAcQTgmI8i3eKQd3majOJoNU+H5HkRLsY8d+bM1HR
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="369106397"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="356598668"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 02:14:06 -0700
+   d="scan'208";a="369106397"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 02:14:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="856241139"
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="802601945"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="856241139"
+   d="scan'208";a="802601945"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP; 11 Aug 2023 02:14:04 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 11 Aug 2023 02:14:54 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qUODa-0083EI-1I;
-        Fri, 11 Aug 2023 12:14:02 +0300
-Date:   Fri, 11 Aug 2023 12:14:02 +0300
+        id 1qUOEO-00852W-25;
+        Fri, 11 Aug 2023 12:14:52 +0300
+Date:   Fri, 11 Aug 2023 12:14:52 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     oe-kbuild@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, lkp@intel.com,
+        oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Subject: Re: [PATCH 2/2] gpio: sim: simplify code with cleanup helpers
-Message-ID: <ZNX72qCPBK0mzEVq@smile.fi.intel.com>
-References: <20230809131442.25524-1-brgl@bgdev.pl>
- <20230809131442.25524-2-brgl@bgdev.pl>
- <ZNT2pNW3aPu82vs1@smile.fi.intel.com>
- <CAMRc=Me43ZqeDf0e3pA=UJ-x_051HxUbzESmTfSSTbG3cV8-hw@mail.gmail.com>
+Message-ID: <ZNX8DDKYMOyxdTnB@smile.fi.intel.com>
+References: <20230809131442.25524-2-brgl@bgdev.pl>
+ <2444c3ff-eaf3-4cb9-851b-8e92156128b0@kadam.mountain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Me43ZqeDf0e3pA=UJ-x_051HxUbzESmTfSSTbG3cV8-hw@mail.gmail.com>
+In-Reply-To: <2444c3ff-eaf3-4cb9-851b-8e92156128b0@kadam.mountain>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
@@ -71,24 +70,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 09:04:12PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Aug 10, 2023 at 4:42 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Aug 09, 2023 at 03:14:42PM +0200, Bartosz Golaszewski wrote:
+On Fri, Aug 11, 2023 at 08:20:11AM +0300, Dan Carpenter wrote:
 
-...
+> smatch warnings:
+> drivers/gpio/gpio-sim.c:1472 gpio_sim_config_make_device_group() warn: possible memory leak of 'dev'
 
-> > > +     scoped_guard(mutex, &chip->lock)
-> > > +             bitmap_replace(chip->value_map, chip->value_map, bits, mask,
-> > > +                            gc->ngpio);
-> >
-> > Perhaps with {} ?
-> 
-> This scoped_guard() thing is in essence a for loop, so I believe
-> kernel coding style applies and a single statement doesn't require a
-> {}.
-
-You have two lines (or single wrapped line). I found to read it better with {}.
+Isn't smatch a bit dumb about cleanup.h?
 
 -- 
 With Best Regards,
