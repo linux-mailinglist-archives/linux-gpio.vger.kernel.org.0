@@ -2,132 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDD917786EE
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 07:20:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F7E17787FB
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Aug 2023 09:17:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231317AbjHKFUS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Aug 2023 01:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33144 "EHLO
+        id S230075AbjHKHRE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Aug 2023 03:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbjHKFUS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 01:20:18 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B84BD2D43
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 22:20:16 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fe501e0b4cso15058955e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Aug 2023 22:20:16 -0700 (PDT)
+        with ESMTP id S233911AbjHKHQx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Aug 2023 03:16:53 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A2F2D62
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Aug 2023 00:16:52 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id 3f1490d57ef6-d63c0a6568fso1347020276.0
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Aug 2023 00:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691731215; x=1692336015;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lHN6nCsindmvZSmW+Ost0OAJtww0JSFN6IJG/A95yG8=;
-        b=v0oTBmkA30g63g+zrXaH+kC255DqRrabdvs7JqZ9wTjTPt81N83qGEDoJw976hJ8wn
-         TFY4fW8brmtxQXBe9fMyLnuGq5Cql7ArRzf7XS1iueDKNkGUHcEAdOzNktX9C7Bek1WL
-         Pqp3Hu87Z9vuU++K3QmFZ7J9z0eUE6AaMWi2k2PEXBwJ00+h5Fk4hYnCJgKqafYDl+XC
-         MdHOXg53C7xL480FEeAuVPkzCMwqNLFtPnRNOMqLLfDfyhufgNebnLe+nfAjA9hSnLZL
-         /MuX5JTomrHDcUG1O4x5jlDdwWK/Ic3Vh1NB2yM7TZGeP38uZmxKhbsDqYAJ2R8LQ5SY
-         dv7Q==
+        d=linaro.org; s=google; t=1691738212; x=1692343012;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AuD+XvQj11PFtz40BWumJNEeWgFHkhlGekqR3/kY8Tw=;
+        b=Isx2d+kCI1nozCWlKOycDEC/wKKMWgncq+rRxKn+Aavz3PnKQoTRMM23chl4bf3qC/
+         IAyItdbnwXMJbKqBVFCG6nZ50LxGtXMA5A8GoeqpbMJxfN5WUhhq6ewUsWdhc8FoPNIG
+         +G38wVz9cOtlJ3kUsyugz272OiTnaNNNd6fisF6+NV7cPFmH3l/C4ZnE74Zu3RBp+jSU
+         /DG70x1ZWJ9GiirPTa8wZIZfm/Ej5smK3k69c7hm83e9tXjLTmEEBiKMcKi0ve9hKc+w
+         WP3SfoFL8OTee71peLnOXEv1jKK+Wj5KVWkiXHxUR0u49FhPAR3Q4aoMaABbnvb2brkM
+         Idjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691731215; x=1692336015;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lHN6nCsindmvZSmW+Ost0OAJtww0JSFN6IJG/A95yG8=;
-        b=LikToF3K4vCDbXZHfPrVWvkeuy1EJGqAmCl4hiWKNz0p23ZXDYmbfPdxVP/LX5uMbR
-         vTTuMvC1PLumqEBuwEAGJY02ZCHHCr1bDICcSykHD9BHDcmfe0/vzY5uIebqIavJjZqT
-         PCXmrZTdt0AIzjmJKltJL7EPYgxsYsPRXHMI/SOJWaGlWN9sfBQtg+yI3D8xVvsvJnlR
-         oMQgJQg6RwhICkUnE3YkjrJm0fASSGjXuYOUz6v5d8xCc0PkXmZ1SYChe2wyXgluYeAG
-         K++wh6mmC/dRB1lFkL8xYnAHgOMcyZqjwVgzooGWl8+SzOpwYuTQ20NKv5ouY9EzrMSq
-         KRug==
-X-Gm-Message-State: AOJu0YyyW8lMsbwBZs/gO5uxorRPLGQZ+EaezR0ZnLUXtaVOcLLvlWEb
-        kNSc3unHgr2YhxyAytt3CpoRkQ==
-X-Google-Smtp-Source: AGHT+IFYOi7MjNr25x0oxodE8rfqcV/8fg2eV6bH03ZaZGO+V393IALekROo8p9DYd5efNxF6gZHyQ==
-X-Received: by 2002:a05:600c:249:b0:3fe:15e7:c8a1 with SMTP id 9-20020a05600c024900b003fe15e7c8a1mr683291wmj.16.1691731214921;
-        Thu, 10 Aug 2023 22:20:14 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id t16-20020a05600001d000b00317b5c8a4f1sm4152202wrx.60.2023.08.10.22.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 22:20:14 -0700 (PDT)
-Date:   Fri, 11 Aug 2023 08:20:11 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     oe-kbuild@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: sim: simplify code with cleanup helpers
-Message-ID: <2444c3ff-eaf3-4cb9-851b-8e92156128b0@kadam.mountain>
+        d=1e100.net; s=20221208; t=1691738212; x=1692343012;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AuD+XvQj11PFtz40BWumJNEeWgFHkhlGekqR3/kY8Tw=;
+        b=TFmyIKPeLHh5gW5OWphCbQcMxlkfhAeckST9WWQGp/oiWUfCZgLZKYF+nR0Cv4FIx+
+         imp7pp/D+ZZ3YeQP2KZDBLNGrDk/hEOzu5Y+Fo0E/GpeioWkac7vXKM3shyRS3gBxQKD
+         pB2adn3A7JqxhgWEqxenOXjxd2rrE7UGwRiipR6C3gtrbvB6t3rkxkR2kQ65kzvrdA+t
+         9j8nwLD6YKRZrSX/Ubra1/VpPJ6vhcalsl1l60rgODjdnSCPTs0oVfl7sqTzVjGoxqKi
+         ROTt8sOvttrq93RWXeE7yVwzS/Mf0oxJMSx8YrHdsGSQbwV/J/9RBG5Yipg3oFot7KCv
+         jwyA==
+X-Gm-Message-State: AOJu0YzMkWjxGD62DyW0YdcWBm+4FiroXl2sh5YLiuKUEfCC8BoLJFqR
+        sI9bNzTeE5NtMtAjiA7LoKFJk3tHMCPWzDPWK7u3xA==
+X-Google-Smtp-Source: AGHT+IGVQUUyjKB7jXd+TkcIl2iAw4CLxpsQjkB+905Y9DhQVex8KMfUqPq06BZz/bPR5qyeXzBCsUa1bSHuCJGA+KE=
+X-Received: by 2002:a25:34d8:0:b0:d12:77c7:b362 with SMTP id
+ b207-20020a2534d8000000b00d1277c7b362mr971827yba.26.1691738212166; Fri, 11
+ Aug 2023 00:16:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230809131442.25524-2-brgl@bgdev.pl>
+References: <20230810184846.22144-1-brgl@bgdev.pl> <CAMRc=Mf8g0JV0QQgpiTS2i+y68NVW-97vOMt+0389++wB1swqw@mail.gmail.com>
+In-Reply-To: <CAMRc=Mf8g0JV0QQgpiTS2i+y68NVW-97vOMt+0389++wB1swqw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 11 Aug 2023 09:16:40 +0200
+Message-ID: <CACRpkdanyKRYSeRTB8=Sh4Dh4ODx13V6J3yRXUV7dY3V-qBiWA@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: fix reference leaks when removing GPIO chips
+ still in use
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+On Thu, Aug 10, 2023 at 8:58=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-kernel test robot noticed the following build warnings:
+> I forgot to pick up Linus' tag. I'll do it when applying. I should
+> really start using b4...
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Well with b4 you still have to issue b4 trailers -u, I almost want to
+make a cron script that just loop over my b4 branches and do that
+every night when I'm asleep so tags get picked up in case I miss
+them.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-sim-simplify-code-with-cleanup-helpers/20230809-211601
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20230809131442.25524-2-brgl%40bgdev.pl
-patch subject: [PATCH 2/2] gpio: sim: simplify code with cleanup helpers
-config: i386-randconfig-m021-20230809 (https://download.01.org/0day-ci/archive/20230811/202308110253.R2TUMfFr-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230811/202308110253.R2TUMfFr-lkp@intel.com/reproduce)
+Hm, maybe not such a bad idea.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202308110253.R2TUMfFr-lkp@intel.com/
-
-smatch warnings:
-drivers/gpio/gpio-sim.c:1472 gpio_sim_config_make_device_group() warn: possible memory leak of 'dev'
-
-vim +/dev +1472 drivers/gpio/gpio-sim.c
-
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1460  static struct config_group *
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1461  gpio_sim_config_make_device_group(struct config_group *group, const char *name)
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1462  {
-c7a663cdcfc698 Bartosz Golaszewski 2023-08-09  1463  	struct gpio_sim_device *dev __free(kfree) = NULL;
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1464  	int id;
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1465  
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1466  	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1467  	if (!dev)
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1468  		return ERR_PTR(-ENOMEM);
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1469  
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1470  	id = ida_alloc(&gpio_sim_ida, GFP_KERNEL);
-c7a663cdcfc698 Bartosz Golaszewski 2023-08-09  1471  	if (id < 0)
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07 @1472  		return ERR_PTR(id);
-
-kfree(dev);
-
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1473  
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1474  	config_group_init_type_name(&dev->group, name,
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1475  				    &gpio_sim_device_config_group_type);
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1476  	dev->id = id;
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1477  	mutex_init(&dev->lock);
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1478  	INIT_LIST_HEAD(&dev->bank_list);
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1479  
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1480  	dev->bus_notifier.notifier_call = gpio_sim_bus_notifier_call;
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1481  	init_completion(&dev->probe_completion);
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1482  
-c7a663cdcfc698 Bartosz Golaszewski 2023-08-09  1483  	return &no_free_ptr(dev)->group;
-cb8c474e79be45 Bartosz Golaszewski 2021-12-07  1484  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+Yours,
+Linus Walleij
