@@ -2,184 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D40F977A02F
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Aug 2023 15:40:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2042177A1B8
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Aug 2023 20:26:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbjHLNkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Aug 2023 09:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
+        id S229506AbjHLS02 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Aug 2023 14:26:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbjHLNkN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Aug 2023 09:40:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 219B71FED
-        for <linux-gpio@vger.kernel.org>; Sat, 12 Aug 2023 06:40:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691847617; x=1723383617;
-  h=date:from:to:cc:subject:message-id;
-  bh=ApkRSfOGdyX+B699R+7bfO+gLI0GPKemg0TJqnaa8+0=;
-  b=S5qjNvYdQChGeHW+POFt4KFTGpymfCkkp9PgIR5bnGRoMfwOK9UOTnKS
-   EiaNUvl6yzEL3Ju6XIbgCSg0uBUyNUjWXASRWnDtbK6V2BRCd7pEJjX8h
-   c4trmZAMCkrbkH1VyQVKcz0VqHAmiGzoDhIU6nRXO8jXZ35vktY6IUjdV
-   74/HgbH274jYhR5RN+UnzhZwH81rvXHHtZsaMcgg4kjvIyvQzoj4QjRSr
-   SNoHRLU4pQeQmhMAL44XG3i806Qyn7ozMzie1mKWaQwJhtbZVRz4xWESt
-   hSNyUwAmgx1vOWj5aQ6pdq3igxKGZoiZLMAovIGuYRGBiOXx+lEctDctq
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10800"; a="351433764"
-X-IronPort-AV: E=Sophos;i="6.01,168,1684825200"; 
-   d="scan'208";a="351433764"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2023 06:40:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
-   d="scan'208";a="876465128"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Aug 2023 06:40:19 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qUoqk-0008bK-1U;
-        Sat, 12 Aug 2023 13:40:14 +0000
-Date:   Sat, 12 Aug 2023 21:39:53 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 33f83d13ded164cd49ce2a3bd2770115abc64e6f
-Message-ID: <202308122151.Y2AgzuDx-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229490AbjHLS02 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Aug 2023 14:26:28 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D561716
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Aug 2023 11:26:31 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 5b1f17b1804b1-3fe4a89e7efso26556405e9.3
+        for <linux-gpio@vger.kernel.org>; Sat, 12 Aug 2023 11:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691864789; x=1692469589;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pXZytH4ol5RAef6ByZ3UNwYY/9mipLfGMfHZAOyBiw8=;
+        b=Sb3/tnFwBCUbh3WduxYWjWup2rxO7QbWzYXeDZ0XSMQdLwlLXS3VaK+GeXpC0/gS0L
+         T+TGmW8JYU6VuhCRFytCal2ObnSYi0bXR2sQh2xlD0uHkn3g2BeK0f0muV3PSY5JezXF
+         ff1eoZNcaR4WVNW7RrfbHdfZsSiC4MCZat0OFf2IdhawNCBmNC0uR/VaN8/AnnuXN7jg
+         r9uJ5c6nZUs7xxY3PJghGhNVkJYunFWS/JtM8xRbAeSVc4CGgbNe7k67L4PpzE24WMVW
+         TteyXcNszmgR9r54aM8sH43GTwwYz7cIkWOTB8OMF2ZbG34cSj/InwGwud0QxHV3E9kt
+         Md2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691864789; x=1692469589;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pXZytH4ol5RAef6ByZ3UNwYY/9mipLfGMfHZAOyBiw8=;
+        b=LHysw0GGEEmvU3uxEDrOqJvtPKP9iHmLFh738GdR4R3+I1370s2UEHM2+g7Sl9E0x9
+         oLa0rROqzudBje90JzfLKiG88fwxlSiO3Wo2+LgXHcOgI/sq7QwHaRZdtfQmliQ2jSnH
+         twBUd3hMJEfnmZ4xYP7v8kWpfhYNNrbyfmWdMHrVkvGWe6tI7pAvj8weLiZdZzWbARTt
+         81Lc6SXmMLAbEfwyCeGNf9vIvt7ZsNaBDLyenISOwk2cHXZyTLNXUJyzXPgQwXcQOZrM
+         hjvLp2rAE+csbM2jL+SgmbOAKFdBVoPHXY5ejCfOx2vEVO29Qnj+GtRkzJndowSerqYU
+         4OGg==
+X-Gm-Message-State: AOJu0YwO2EPMyKB8npXzivBODclBc7CLRx456X4ry3H8uzDh/6m4YPQl
+        lP9KCtYb/8g73o4bqlK/8jyO2Q==
+X-Google-Smtp-Source: AGHT+IFuKFLIEncDYK/lodzPUslM6BImxVjlsoJmjdNK8rUw72L5cVHy0BZFrSVoarCqRgdBcnlaxA==
+X-Received: by 2002:a05:600c:218:b0:3fe:212c:f790 with SMTP id 24-20020a05600c021800b003fe212cf790mr3840391wmi.36.1691864789448;
+        Sat, 12 Aug 2023 11:26:29 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:74c0:22ae:ddb5:1bed])
+        by smtp.gmail.com with ESMTPSA id v9-20020a5d6b09000000b0031759e6b43fsm9261083wrw.39.2023.08.12.11.26.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Aug 2023 11:26:29 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: fixes for v6.5-rc6
+Date:   Sat, 12 Aug 2023 20:26:25 +0200
+Message-Id: <20230812182625.5059-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 33f83d13ded164cd49ce2a3bd2770115abc64e6f  gpio: ws16c48: Fix off-by-one error in WS16C48 resource region extent
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-elapsed time: 1044m
+Linus,
 
-configs tested: 109
-configs skipped: 2
+Please pull the following two one-liners from the GPIO subsystem for the
+next RC.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Bartosz
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r024-20230812   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r005-20230812   gcc  
-arc                  randconfig-r015-20230812   gcc  
-arc                  randconfig-r034-20230812   gcc  
-arc                  randconfig-r043-20230812   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r046-20230812   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r003-20230812   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r022-20230812   gcc  
-hexagon              randconfig-r001-20230812   clang
-hexagon              randconfig-r011-20230812   clang
-hexagon              randconfig-r026-20230812   clang
-hexagon              randconfig-r041-20230812   clang
-hexagon              randconfig-r045-20230812   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230812   gcc  
-i386         buildonly-randconfig-r005-20230812   gcc  
-i386         buildonly-randconfig-r006-20230812   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230812   gcc  
-i386                 randconfig-i002-20230812   gcc  
-i386                 randconfig-i003-20230812   gcc  
-i386                 randconfig-i004-20230812   gcc  
-i386                 randconfig-i005-20230812   gcc  
-i386                 randconfig-i006-20230812   gcc  
-i386                 randconfig-i011-20230812   clang
-i386                 randconfig-i012-20230812   clang
-i386                 randconfig-i013-20230812   clang
-i386                 randconfig-i014-20230812   clang
-i386                 randconfig-i015-20230812   clang
-i386                 randconfig-i016-20230812   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r013-20230812   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r021-20230812   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r014-20230812   gcc  
-mips                 randconfig-r025-20230812   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r032-20230812   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r002-20230812   gcc  
-parisc               randconfig-r006-20230812   gcc  
-parisc               randconfig-r016-20230812   gcc  
-parisc               randconfig-r035-20230812   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r012-20230812   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230812   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230812   clang
-sh                               allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r033-20230812   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r031-20230812   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230812   gcc  
-x86_64       buildonly-randconfig-r002-20230812   gcc  
-x86_64       buildonly-randconfig-r003-20230812   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230812   clang
-x86_64               randconfig-x002-20230812   clang
-x86_64               randconfig-x003-20230812   clang
-x86_64               randconfig-x004-20230812   clang
-x86_64               randconfig-x005-20230812   clang
-x86_64               randconfig-x006-20230812   clang
-x86_64               randconfig-x011-20230812   gcc  
-x86_64               randconfig-x012-20230812   gcc  
-x86_64               randconfig-x013-20230812   gcc  
-x86_64               randconfig-x014-20230812   gcc  
-x86_64               randconfig-x015-20230812   gcc  
-x86_64               randconfig-x016-20230812   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r004-20230812   gcc  
-xtensa               randconfig-r023-20230812   gcc  
-xtensa               randconfig-r036-20230812   gcc  
+The following changes since commit 6eaae198076080886b9e7d57f4ae06fa782f90ef:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Linux 6.5-rc3 (2023-07-23 15:24:10 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.5-rc6
+
+for you to fetch changes up to 33f83d13ded164cd49ce2a3bd2770115abc64e6f:
+
+  gpio: ws16c48: Fix off-by-one error in WS16C48 resource region extent (2023-08-11 21:31:59 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.5-rc6
+
+- mark virtual chips exposed by gpio-sim as ones that can sleep (callbacks
+  must not be called from interrupt context)
+- fix an off-by-one error in gpio-ws16c48
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      gpio: sim: mark the GPIO chip as a one that can sleep
+
+William Breathitt Gray (1):
+      gpio: ws16c48: Fix off-by-one error in WS16C48 resource region extent
+
+ drivers/gpio/gpio-sim.c     | 1 +
+ drivers/gpio/gpio-ws16c48.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
