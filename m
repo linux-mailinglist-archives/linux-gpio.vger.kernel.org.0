@@ -2,39 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8C0677A5EE
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Aug 2023 12:01:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B006D77A65D
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Aug 2023 14:44:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbjHMKBg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Aug 2023 06:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
+        id S230225AbjHMMoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Aug 2023 08:44:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbjHMKBf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Aug 2023 06:01:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4151708;
-        Sun, 13 Aug 2023 03:01:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 314C061BE9;
-        Sun, 13 Aug 2023 10:01:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D509BC433C8;
-        Sun, 13 Aug 2023 10:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691920896;
-        bh=5hO7G8BpKx5nLqEG8LO3RfxbwU3vMuk/JGHyD8Z2QPM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nNEi0tg2ThEOU476rUdbxfpBIRh3p8owJCpaS8oA7kQ8WJeDFHDmdQkhkxLjQg9u3
-         tPQmoiEFXwniy2ScG0BxiJbYWEs17LtjbKj/F6oqvCMfHYCrVveh8HqHHNlpKy9Y0b
-         4AYbVRa7pqxM5s1yc2sDNRpESknRRQ9nZkVdJkK8cmHYlzL1vKx6hr+3OqmrzWCRUo
-         bAcrp0+iyINQGe/GalQ1ZYOSG4pjbYlJhWXhuFR3gPetlHkPRSGbm8QNqOQf6HXrt3
-         wmeJ7QhD7abO+hPyJdY5+grsZhWUIenzv/SAW3yXKe8twRgJPVGcu+/g9DTPXfvjLA
-         LDdNIcEBRq9IA==
-Date:   Sun, 13 Aug 2023 11:01:29 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+        with ESMTP id S229478AbjHMMop (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Aug 2023 08:44:45 -0400
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67804E6F;
+        Sun, 13 Aug 2023 05:44:44 -0700 (PDT)
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+        by mx.skole.hr (mx.skole.hr) with ESMTP id 90BC682B08;
+        Sun, 13 Aug 2023 14:44:31 +0200 (CEST)
+Message-ID: <c98f26a3-1cd7-4e0a-9336-73587c19b158@skole.hr>
+Date:   Sun, 13 Aug 2023 14:43:33 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/8] dt-bindings: clock: Add Marvell PXA1908 clock
+ bindings
+To:     Conor Dooley <conor@kernel.org>
 Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -56,41 +45,28 @@ Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
         linux-hardening@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         afaerber@suse.de
-Subject: Re: [PATCH v5 3/8] dt-bindings: clock: Add Marvell PXA1908 clock
- bindings
-Message-ID: <20230813-overarch-golf-e467a8adc559@spud>
 References: <20230812-pxa1908-lkml-v5-0-a5d51937ee34@skole.hr>
  <20230812-pxa1908-lkml-v5-3-a5d51937ee34@skole.hr>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="geLVKEvy9vaVuliu"
-Content-Disposition: inline
-In-Reply-To: <20230812-pxa1908-lkml-v5-3-a5d51937ee34@skole.hr>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <20230813-overarch-golf-e467a8adc559@spud>
+Content-Language: en-US
+From:   =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+In-Reply-To: <20230813-overarch-golf-e467a8adc559@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 8/13/2023 12:01 PM, Conor Dooley wrote:
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
---geLVKEvy9vaVuliu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for the review.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Regards,
+Duje
 
---geLVKEvy9vaVuliu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNip+QAKCRB4tDGHoIJi
-0uMvAQCKjDQuz5Y5rfSWj6T8SBT3jfQqFD74ecb2X5GpM7fftgD8Co75UBnhhlzD
-FVVRrZys1XbsY13gOt1vF3MQjAcP5g8=
-=ZSrA
------END PGP SIGNATURE-----
-
---geLVKEvy9vaVuliu--
