@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8936677AF51
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 04:02:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C688C77B031
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 05:40:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231701AbjHNCA1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Aug 2023 22:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33316 "EHLO
+        id S232968AbjHNDjr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Aug 2023 23:39:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231783AbjHNCAE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Aug 2023 22:00:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E276EE77;
-        Sun, 13 Aug 2023 19:00:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7903562883;
-        Mon, 14 Aug 2023 02:00:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 379E7C433C8;
-        Mon, 14 Aug 2023 02:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691978401;
-        bh=VXCgreshLhYYln6/SruNwFSfHu1qDG+fekDFktePmJc=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Jmcl7UOjFEL9oROv23bexnFwWHXZdx/INnmp82xfnx1PtzLpsYJVAvVS9sk3RlnPu
-         KiGKnAncUTqo5zChom23XTdbv2QlkH+9FZji6m3SoGCCcsafbz+LRvbEFUodCHNfVS
-         W6X/weeU4H/LyqzihjjN7do5NcPt5ZchF21SiHvZsaciqe3Yv3haQi5Y9cDqRjdy/9
-         VW+uJyhgEjyVbosk9jPE9HjAhcFFmghmwUfFYNpmDWlVnExmW7sGUciKy0m8Q3yVIg
-         ByWpCkxj99YW4uj+EbO+Z3Pzz/tC2FTBI3cRdqElUXdNkmRcHPS+LWSMEmMlspTInX
-         GvrRCe5ZQQpUA==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     agross@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robimarko@gmail.com, krzysztof.kozlowski@linaro.org,
-        andy.shevchenko@gmail.com,
-        Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Subject: Re: (subset) [PATCH V12 0/6] Add minimal boot support for IPQ5018
-Date:   Sun, 13 Aug 2023 19:02:44 -0700
-Message-ID: <169197856187.2338511.8659955599601986267.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <1690533192-22220-1-git-send-email-quic_srichara@quicinc.com>
-References: <1690533192-22220-1-git-send-email-quic_srichara@quicinc.com>
+        with ESMTP id S232987AbjHNDjQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Aug 2023 23:39:16 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 75795E75;
+        Sun, 13 Aug 2023 20:39:14 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8AxlPDhodlk8OMXAA--.49462S3;
+        Mon, 14 Aug 2023 11:39:13 +0800 (CST)
+Received: from [10.20.42.201] (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx7yPgodlkB01ZAA--.48709S3;
+        Mon, 14 Aug 2023 11:39:12 +0800 (CST)
+Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Conor Dooley <conor@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
+References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
+ <20230807074043.31288-2-zhuyinbo@loongson.cn>
+ <20230808-amount-urban-9a6eb09852ca@spud>
+ <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
+ <20230809-circus-photo-6911d2e18f96@spud>
+ <d4e16768-bed0-beda-42c3-f0a01b7e96cc@loongson.cn>
+ <CAMRc=Mc00yy6DxdEos_w7HAkAwH7j0HBvkbQbaQiA_wTXiwFUg@mail.gmail.com>
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <80325b72-e7b3-08cc-f726-513de75de94c@loongson.cn>
+Date:   Mon, 14 Aug 2023 11:39:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAMRc=Mc00yy6DxdEos_w7HAkAwH7j0HBvkbQbaQiA_wTXiwFUg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8Cx7yPgodlkB01ZAA--.48709S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
+X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -62,23 +63,56 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On Fri, 28 Jul 2023 14:03:06 +0530, Sricharan Ramabadhran wrote:
-> The IPQ5018 is Qualcomm's 802.11ax SoC for Routers,
-> Gateways and Access Points.
-> 
-> This series adds minimal board boot support for ipq5018-rdp432-c2 board.
-> 
-> [v12]   Fixed the subject for patch #1 and fixed a conflict in Makefile for patch #5
->         Reposting all because of some confusion from Hariharan K other patch series.
-> 	https://www.spinics.net/lists/linux-arm-msm/msg165658.html
-> 
-> [...]
 
-Applied, thanks!
+在 2023/8/11 下午10:25, Bartosz Golaszewski 写道:
+> On Thu, Aug 10, 2023 at 8:19 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+>>
+>>
+>>
+>> 在 2023/8/9 下午11:39, Conor Dooley 写道:
+>>> On Wed, Aug 09, 2023 at 03:47:55PM +0800, Yinbo Zhu wrote:
+>>>> 在 2023/8/8 下午8:05, Conor Dooley 写道:
+>>>>> On Mon, Aug 07, 2023 at 03:40:42PM +0800, Yinbo Zhu wrote:
+>>>
+>>>>>> +  loongson,gpio-ctrl-mode:
+>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>> +    description:
+>>>>>> +      This option indicate this GPIO control mode, where '0' represents
+>>>>>> +      bit control mode and '1' represents byte control mode.
+>>>>>
+>>>>> How is one supposed to know which of these modes to use?
+>>>>
+>>>>
+>>>> Byte mode is to access by byte, such as gpio3, the base address of the
+>>>> gpio controller is offset by 3 bytes as the access address of gpio3.
+>>>>
+>>>> The bit mode is the normal mode that like other platform gpio and it is
+>>>> to access by bit.
+>>>>
+>>>> If both modes are supported, it is recommended to prioritize using byte
+>>>> mode that according to spec.
+>>>
+>>> So, sounds like this property should instead be a boolean that notes
+>>> whether the hardware supports the mode or not, rather than the current
+>>> enum used to determine software policy.
+>>
+>>
+>> okay, I got it, I will use boolean,
+>>
+> 
+> Why do you want to put it into device-tree so badly? This is not the
+> first driver that would have of_match_data for different variants
+> where you can have a structure that would keep offsets for different
+> models. It's not like you will have hundreds of "compatible" chips
+> anyway, most likely just a few?
 
-[6/6] arm64: defconfig: Enable IPQ5018 SoC base configs
-      commit: 7f0c87348fb52d575295d16d4656ecd4c00bad87
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+Using this ways that put offset property into device-tree that can be
+compatible with future GPIO chips without the need to modify drivers,
+such as more 2K chips in the future, but use of_match_data and data
+field of_device_id, which every time a new SoC is released, the GPIO
+driver needs to be modified once, which is not friendly to us.
+
+Thanks,
+Yinbo
+
