@@ -2,69 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2131477BDEF
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 18:30:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E86877C09A
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 21:19:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbjHNQ3j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Aug 2023 12:29:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
+        id S229699AbjHNTSv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Aug 2023 15:18:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbjHNQ3O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 12:29:14 -0400
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13015E62;
-        Mon, 14 Aug 2023 09:29:13 -0700 (PDT)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-56ca9a337caso2890548eaf.1;
-        Mon, 14 Aug 2023 09:29:13 -0700 (PDT)
+        with ESMTP id S230207AbjHNTSo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 15:18:44 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2705CE65
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 12:18:43 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3fe4a89e8c4so43067705e9.3
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 12:18:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692030552; x=1692635352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tXuX+XLRKUCBgIrTdnNUChHqV7gJDCGrxnwU80goqho=;
-        b=O93rRiNUHIGp7UPWQ8raXqlVPwGmvzNLTJ6VVFT7DPJf4FXXYUzU+NdCC3Q4xAH4Nm
-         4D0qUaEYTeFyXf8FMw1QknFxGAo1g92THDSigH1U+n4yKX5avGZDiwCCg+rtq3yyX7Ho
-         uySX1U7J5mgiCD9CVZlfG93GOr9asSh3yEote3AgeA2isl6nQLZXwiC0HlNGp6R1yOrH
-         Crn5+2tLU0CV06kvgYLrtUa0NigLVkvfhwnDTRNu4YlIZjLrcTg19i7YDjlJOAfkj2JD
-         YXJ7x2SP0yshVKdzw3xVTj+s2WyxEV56WCh94XMIM3vbZwC6QUiZH5BlKbv9SdT3Yd3+
-         4lLA==
+        d=linaro.org; s=google; t=1692040721; x=1692645521;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=72S2n2lYPlrUM7ALoHtN9DEXfa2PT84mmokJwTNUvmk=;
+        b=TBb8grKi7j+lELjw3Ihzgfgf18E8CY0MRN/h+FGwbfymfjb1yxo0fCAIWwB3UbsQS6
+         WeInwfinusQ9UEdLRBDby+avB+k8ncrYk8BPtFAE3wm91XzJ+Y0QINjEx0+ZpE5aUmbD
+         wNv/jMgiaquqemZkBlLIPNTqifydMmomZnZ/XBH8h3szl4XBkwm+NGiyOdfW79HFDpLN
+         vrWKQbPRWL56kFUcNlLgUOBopKfYTvm82ecGOVEHj7x+H4QOU3Gp16iIlmK+7ppa1SNt
+         J7uqcXY1w4KEnFqY9pJg3V8ONHQAkdWHPwj+ArDmjBgX8zC+LcZzQB6oBkO10zcibY61
+         BfWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692030552; x=1692635352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tXuX+XLRKUCBgIrTdnNUChHqV7gJDCGrxnwU80goqho=;
-        b=lhNnSiNKZQoWwVQGv5M+G3G30vkhZTmsKKph4HEIFTl1OYQZ6ohEtM0yj9v83k4X4A
-         8Dcw6GU2yfctIADPd3PVLKmb1Ik6BfBWwtAUHuzRgaO+XQCMpj+bMg7R26GfG2QNNRra
-         2NQlbp/h0vin9Oz6ZPv80WUQAtGG8ZKWdlUbFxb1tHHXXA0wNC7tg3g2sZEXTkyZ2QxG
-         /1TL+6bA0xnt9+tDxPyzxrZJ5oUoUMmpTYBW3wsHcD/A18YiEUKA5y8swaMHXuZljqi5
-         qthiEiG0GuDr9hn030n5dUZ3WMSCC8B8lndm+v6i9TpMwmLXev6oNKfuvETEX1ldkDJ8
-         cxrw==
-X-Gm-Message-State: AOJu0YxpKrA7hJ3suuhwbc95waIgGYIIiyTWrORJpnxhOXMJMU58LfO3
-        j02Q11uWUVl8QMIuaLsHHQhaDe9CMvu0uLpWnK8=
-X-Google-Smtp-Source: AGHT+IFfsfEspUV/yyJ4fUAH0At+LumMzcsJGFpuBW6E5OIqB88Izk3HskeP8Q7r63VL+8opDj0rmpx7BK3iBn8SAj4=
-X-Received: by 2002:a4a:2a1d:0:b0:56c:e747:4609 with SMTP id
- k29-20020a4a2a1d000000b0056ce7474609mr7457520oof.7.1692030552269; Mon, 14 Aug
- 2023 09:29:12 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692040721; x=1692645521;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=72S2n2lYPlrUM7ALoHtN9DEXfa2PT84mmokJwTNUvmk=;
+        b=UwVzQ+4B95v7jtkkY4HHIkI6ZxEGafktZ9cIcnkbKnbtnUaG+awodHEnie1/cGAwAQ
+         Lfk6Xyo2aE8399vL1WzlULUA6AtnAz1TnZFb+xvFgSCBuF07v+HjmflFYvmzOlhJpgzU
+         K2P0/10OJ5IW0X8mJvtmPgkgaSGh6oR44qm51EPT9pz6YpkrPabbie+CCXH064YbdgyR
+         XkFBmb/vQ+vAHXVpDQJCz6It3dCTNNyhR+w7ENyYcNLUKDoH6KYt6xjth0eNzhc9BPq/
+         jQoeM19FQakxwZgHVX2jGfciwvZ26xPqzWFb4+TJt0TfPYfXaEdyO+yFMCnQwBV+8oeo
+         HSTQ==
+X-Gm-Message-State: AOJu0YziOVhztkM0XieTpeS/I/nUFr06REIC4w2aR3euY94wfOOYSdID
+        5yg1jE3/D3jTZLhg+tohcxDj9Q==
+X-Google-Smtp-Source: AGHT+IEeFPxWx2KSxTh6FCCps3OOKBDVdbRhF6OY2QRxepJQgs6kH8Obt3EcA9VGUfe6+GdUAdjj4w==
+X-Received: by 2002:adf:db0a:0:b0:314:2e95:1ec9 with SMTP id s10-20020adfdb0a000000b003142e951ec9mr7902967wri.10.1692040721649;
+        Mon, 14 Aug 2023 12:18:41 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.214.188])
+        by smtp.gmail.com with ESMTPSA id 11-20020a05600c234b00b003fbca942499sm18034835wmq.14.2023.08.14.12.18.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Aug 2023 12:18:41 -0700 (PDT)
+Message-ID: <b911cd23-8590-55bb-7606-718f16e8ed42@linaro.org>
+Date:   Mon, 14 Aug 2023 21:18:39 +0200
 MIME-Version: 1.0
-References: <20230814112615.42448-1-andriy.shevchenko@linux.intel.com> <CAMRc=MfhoeMfC7gAcKioKpkCA1jykyqGSH4vg7Hpu9bb=yeGaA@mail.gmail.com>
-In-Reply-To: <CAMRc=MfhoeMfC7gAcKioKpkCA1jykyqGSH4vg7Hpu9bb=yeGaA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 14 Aug 2023 19:28:36 +0300
-Message-ID: <CAHp75VdLuj1UZB+UqfvkrBUreT6NdFY5xrXASncinj-_XVqEbA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: sysfs: Do unexport GPIO when user asks
- for it
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
+ offset
+Content-Language: en-US
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Conor Dooley <conor@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn
+References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
+ <20230807074043.31288-2-zhuyinbo@loongson.cn>
+ <20230808-amount-urban-9a6eb09852ca@spud>
+ <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
+ <20230809-circus-photo-6911d2e18f96@spud>
+ <d4e16768-bed0-beda-42c3-f0a01b7e96cc@loongson.cn>
+ <CAMRc=Mc00yy6DxdEos_w7HAkAwH7j0HBvkbQbaQiA_wTXiwFUg@mail.gmail.com>
+ <80325b72-e7b3-08cc-f726-513de75de94c@loongson.cn>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <80325b72-e7b3-08cc-f726-513de75de94c@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,29 +89,64 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 14, 2023 at 7:13=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Mon, Aug 14, 2023 at 1:19=E2=80=AFPM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > It seems that sysfs interface implicitly relied on the gpiod_free()
-> > to unexport the line. This is not good and prone to regressions.
-> > Fix it by explicitly calling gpiod_unexport().
-> >
->
-> I wouldn't say it's prone to regressions, it's literally just that
-> gpiod_free() should not deal with sysfs.
->
-> How about that for commit message (I can change it when applying):
->
-> It seems that sysfs interface implicitly relied on the gpiod_free()
-> to unexport the line. This is logically incorrect as core gpiolib should
-> not deal with sysfs so instead of restoring it, let's call gpiod_unexport=
-()
-> from sysfs code.
+On 14/08/2023 05:39, Yinbo Zhu wrote:
+> 
+> 
+> 在 2023/8/11 下午10:25, Bartosz Golaszewski 写道:
+>> On Thu, Aug 10, 2023 at 8:19 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+>>>
+>>>
+>>>
+>>> 在 2023/8/9 下午11:39, Conor Dooley 写道:
+>>>> On Wed, Aug 09, 2023 at 03:47:55PM +0800, Yinbo Zhu wrote:
+>>>>> 在 2023/8/8 下午8:05, Conor Dooley 写道:
+>>>>>> On Mon, Aug 07, 2023 at 03:40:42PM +0800, Yinbo Zhu wrote:
+>>>>
+>>>>>>> +  loongson,gpio-ctrl-mode:
+>>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>>> +    description:
+>>>>>>> +      This option indicate this GPIO control mode, where '0' represents
+>>>>>>> +      bit control mode and '1' represents byte control mode.
+>>>>>>
+>>>>>> How is one supposed to know which of these modes to use?
+>>>>>
+>>>>>
+>>>>> Byte mode is to access by byte, such as gpio3, the base address of the
+>>>>> gpio controller is offset by 3 bytes as the access address of gpio3.
+>>>>>
+>>>>> The bit mode is the normal mode that like other platform gpio and it is
+>>>>> to access by bit.
+>>>>>
+>>>>> If both modes are supported, it is recommended to prioritize using byte
+>>>>> mode that according to spec.
+>>>>
+>>>> So, sounds like this property should instead be a boolean that notes
+>>>> whether the hardware supports the mode or not, rather than the current
+>>>> enum used to determine software policy.
+>>>
+>>>
+>>> okay, I got it, I will use boolean,
+>>>
+>>
+>> Why do you want to put it into device-tree so badly? This is not the
+>> first driver that would have of_match_data for different variants
+>> where you can have a structure that would keep offsets for different
+>> models. It's not like you will have hundreds of "compatible" chips
+>> anyway, most likely just a few?
+> 
+> 
+> Using this ways that put offset property into device-tree that can be
+> compatible with future GPIO chips without the need to modify drivers,
 
-I'm fine with it, go ahead and apply with the change. Thank you!
+That's not an argument for putting into DT.
 
---=20
-With Best Regards,
-Andy Shevchenko
+> such as more 2K chips in the future, but use of_match_data and data
+> field of_device_id, which every time a new SoC is released, the GPIO
+> driver needs to be modified once, which is not friendly to us.
+
+Sorry, "friendly" is again hardly an argument what should or should not
+be in DT.
+
+Best regards,
+Krzysztof
+
