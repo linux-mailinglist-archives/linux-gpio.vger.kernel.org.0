@@ -2,122 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11A8D77B253
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 09:25:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1DEF77B266
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 09:27:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233826AbjHNHZA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Aug 2023 03:25:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49996 "EHLO
+        id S231625AbjHNH1G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Aug 2023 03:27:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234052AbjHNHYy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 03:24:54 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E05FBE71;
-        Mon, 14 Aug 2023 00:24:52 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="6.01,171,1684767600"; 
-   d="scan'208";a="176575855"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 14 Aug 2023 16:24:52 +0900
-Received: from localhost.localdomain (unknown [10.226.92.104])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9A5B7419AC8E;
-        Mon, 14 Aug 2023 16:24:49 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        stable@kernel.org
-Subject: [PATCH 3/3] pinctrl: renesas: rza2: Add lock around pinctrl_generic{{add,remove}_group,{add,remove}_function}
-Date:   Mon, 14 Aug 2023 08:24:36 +0100
-Message-Id: <20230814072436.3757-4-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230814072436.3757-1-biju.das.jz@bp.renesas.com>
-References: <20230814072436.3757-1-biju.das.jz@bp.renesas.com>
+        with ESMTP id S234095AbjHNH04 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 03:26:56 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF676E73;
+        Mon, 14 Aug 2023 00:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691998015; x=1723534015;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fJy8W7xTgs+ewccv0eUJYr8iqTVcjrrPHPF1T9aRC98=;
+  b=akq0lYAfoudJ/zSg+XwNSUNS/579t0osqPskAt0EbNx5NIZcUq8heTdn
+   Vtprt/ke+JkOkIByXa7T3tqk0XD+D96cckoUc1UT81s/VRQghFDh/ZmAY
+   kCj1IhphK5JpeEBfseakmykt0+osNxKk/tAJCZtto4aTrtmumWh9pXh+L
+   QaUbWksbIoJBdS05V53FZDO4SFMvu+mb8QQdoanWrrVOLLQp9eUP2WLtT
+   u/wOgXtlmZEylqzuMSt7IS4f4VtkDLNMZg4Wsnz1AhiQFDBbvPBLr7Izy
+   BK3D0SGb4dSVWG5q9HXTeplg4gY8emdfRh+O8MJsXmP12zfDQgu2M9g3+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="351579342"
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="351579342"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 00:26:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="803369875"
+X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
+   d="scan'208";a="803369875"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Aug 2023 00:26:53 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id D1A2C33B; Mon, 14 Aug 2023 10:34:05 +0300 (EEST)
+Date:   Mon, 14 Aug 2023 10:34:05 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Raag Jadav <raag.jadav@intel.com>
+Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
+Subject: Re: [PATCH v1 0/4] Reuse common functions from pinctrl-intel
+Message-ID: <20230814073405.GX14638@black.fi.intel.com>
+References: <20230814060311.15945-1-raag.jadav@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230814060311.15945-1-raag.jadav@intel.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pinctrl group and function creation/remove calls expect
-caller to take care of locking. Add lock around these functions.
+Hi,
 
-Fixes: b59d0e782706 ("pinctrl: Add RZ/A2 pin and gpio controller")
-Cc: stable@kernel.org
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rza2.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+On Mon, Aug 14, 2023 at 11:33:07AM +0530, Raag Jadav wrote:
+>  drivers/pinctrl/intel/Kconfig              |  6 +-
+>  drivers/pinctrl/intel/pinctrl-baytrail.c   | 90 +++-------------------
+>  drivers/pinctrl/intel/pinctrl-cherryview.c | 69 +++--------------
+>  drivers/pinctrl/intel/pinctrl-intel.c      | 30 ++++----
+>  drivers/pinctrl/intel/pinctrl-intel.h      | 12 +++
+>  drivers/pinctrl/intel/pinctrl-lynxpoint.c  | 86 ++-------------------
+>  6 files changed, 57 insertions(+), 236 deletions(-)
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rza2.c b/drivers/pinctrl/renesas/pinctrl-rza2.c
-index 0b454a31c4bd..afb595a6eb9e 100644
---- a/drivers/pinctrl/renesas/pinctrl-rza2.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rza2.c
-@@ -14,6 +14,7 @@
- #include <linux/gpio/driver.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/of.h>
- #include <linux/pinctrl/pinmux.h>
- #include <linux/platform_device.h>
-@@ -47,6 +48,7 @@ struct rza2_pinctrl_priv {
- 	struct pinctrl_dev *pctl;
- 	struct pinctrl_gpio_range gpio_range;
- 	int npins;
-+	struct mutex mutex; /* serialize adding groups and functions */
- };
- 
- #define RZA2_PDR(port)		(0x0000 + (port) * 2)	/* Direction 16-bit */
-@@ -359,10 +361,13 @@ static int rza2_dt_node_to_map(struct pinctrl_dev *pctldev,
- 		psel_val[i] = MUX_FUNC(value);
- 	}
- 
-+	mutex_lock(&priv->mutex);
- 	/* Register a single pin group listing all the pins we read from DT */
- 	gsel = pinctrl_generic_add_group(pctldev, np->name, pins, npins, NULL);
--	if (gsel < 0)
-+	if (gsel < 0) {
-+		mutex_unlock(&priv->mutex);
- 		return gsel;
-+	}
- 
- 	/*
- 	 * Register a single group function where the 'data' is an array PSEL
-@@ -390,6 +395,7 @@ static int rza2_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	(*map)->data.mux.group = np->name;
- 	(*map)->data.mux.function = np->name;
- 	*num_maps = 1;
-+	mutex_unlock(&priv->mutex);
- 
- 	return 0;
- 
-@@ -398,6 +404,7 @@ static int rza2_dt_node_to_map(struct pinctrl_dev *pctldev,
- 
- remove_group:
- 	pinctrl_generic_remove_group(pctldev, gsel);
-+	mutex_unlock(&priv->mutex);
- 
- 	dev_err(priv->dev, "Unable to parse DT node %s\n", np->name);
- 
-@@ -474,6 +481,8 @@ static int rza2_pinctrl_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
-+	mutex_init(&priv->mutex);
-+
- 	platform_set_drvdata(pdev, priv);
- 
- 	priv->npins = (int)(uintptr_t)of_device_get_match_data(&pdev->dev) *
--- 
-2.25.1
+This is really nice reductions of lines :-)
 
+For the whole series,
+
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
