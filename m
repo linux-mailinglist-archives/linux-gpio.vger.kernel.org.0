@@ -2,78 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FDC077B3B5
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 10:17:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF47377B3C4
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 10:17:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233281AbjHNIQg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Aug 2023 04:16:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
+        id S233833AbjHNIRL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Aug 2023 04:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233944AbjHNIQN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 04:16:13 -0400
-Received: from mail.schrack-seconet.com (mail.schrack-seconet.com [81.223.165.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF44810D
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 01:16:11 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.schrack-seconet.com (Postfix) with ESMTP id 5B3B1213CA4;
-        Mon, 14 Aug 2023 10:16:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=schrack-seconet.com;
-        s=mail; t=1692000970;
-        bh=n0gCHVQHmSgY9LUbsKZj2DDLJNaDk3t/4xMrL+ReK1k=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=Nqatq7nVqVbZbszK8vH6gbbZMQAI/JnapVSBKA3x/Om2HY3TQmNpsU9faC7iMC9bs
-         DGQ+Q6Z3anY+Wv6F/fr7WjbcsqTZ90hakcwsWqvQoh5eqQJa4ZCgS4F5rXAzTWEYTD
-         69/rie1RCJ3MTiapcJuEpij/QYL7gK7GQaREsT5A=
-X-Virus-Scanned: Debian amavisd-new at schrack-seconet.com
-Received: from mail.schrack-seconet.com ([127.0.0.1])
-        by localhost (mail.schrack-seconet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id elbZQfA4Ki1Y; Mon, 14 Aug 2023 10:16:03 +0200 (CEST)
-Received: from outlook.schrack-seconet.com (unknown [10.20.201.33])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.schrack-seconet.com (Postfix) with ESMTPS id D2147213CA3;
-        Mon, 14 Aug 2023 10:16:03 +0200 (CEST)
-Received: from EXCH-W1.schrack-seconet.works (10.20.201.33) by
- EXCH-W1.schrack-seconet.works (10.20.201.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.16; Mon, 14 Aug 2023 10:16:03 +0200
-Received: from EXCH-W1.schrack-seconet.works ([10.20.201.33]) by
- EXCH-W1.schrack-seconet.works ([10.20.201.33]) with mapi id 15.02.1258.016;
- Mon, 14 Aug 2023 10:16:03 +0200
-From:   "Hollerer Franz, Schrack Seconet AG, Entwicklung" 
-        <f.hollerer@schrack-seconet.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "Ullrich Lucas, Schrack Seconet AG, Entwicklung" 
-        <l.ullrich@schrack-seconet.com>
-Subject: RE: [libgpiod]: feature request: API functions, const correctness
-Thread-Topic: [libgpiod]: feature request: API functions, const correctness
-Thread-Index: AdnFSksl/z46payhSI6AJ2k+kdDPzgH8bGGAAFIPTbA=
-Date:   Mon, 14 Aug 2023 08:16:03 +0000
-Message-ID: <5e106aba54904302bef2bc743ea6959b@schrack-seconet.com>
-References: <a6ce12acff7b4ed9bae1df0115bba1f3@schrack-seconet.com>
- <CAMRc=Mcc7M3wbGX+77pUkQFTiPtDx3vYkWp=8eJWMh6k4eqhhw@mail.gmail.com>
-In-Reply-To: <CAMRc=Mcc7M3wbGX+77pUkQFTiPtDx3vYkWp=8eJWMh6k4eqhhw@mail.gmail.com>
-Accept-Language: de-AT, en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.20.190.21]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S234222AbjHNIQs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 04:16:48 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6FC5E5C
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 01:16:46 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3fe2fb9b4d7so36528035e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 01:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692001005; x=1692605805;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1P+7jhSSNcltObBqcyP3huFreuMp7RiZ1kKqWA9BdTU=;
+        b=QNHpiT7CaXxRuYW7wplRo1hM0BIwfS/5U3VNJMClXwpDK49QfOCqp11ER/vTMWkJqP
+         tVGRpr+vxyYS0/3BfhIE43SYUv2gyH/LYjRu+FsuLccS7otPdjMNrZj+EsKIif8a3MWE
+         3c1hRee5MeSgQ/gOpGq7YwUXOGBfG4PETsB0ER9zOifFMX6XUEF/a+FZB+GK3A8T11lI
+         l8Npq5fgiX700a9rtgke8nbGM8DpSQd6ffAgWRAum0JD6rJdUgMHmwj8fnA0QAh4HlSl
+         SiQnr8rsCg+vQ4jwwbq5CHIEJpcBSIOWI3HJNnW1e6t3Kn1gdWsUIhZK441Pj8ZSyloQ
+         D67Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692001005; x=1692605805;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1P+7jhSSNcltObBqcyP3huFreuMp7RiZ1kKqWA9BdTU=;
+        b=arCIwl1mMxJLqr+lq0a7V0IEzCXzdTESELnrzeI/Aby+A7blq/UOVkoZW3HBhr5dHo
+         giHWPqMYjYVzyHGOvieuHjv5/wPhoep6yL6dR0OM74NF6ghoIcR1Kj5rkcemHQLvk6uS
+         qrebu04iERDbkol+zMqLMOTmtFGJOGNjCxWAAFz2jGhbhg6Lpejs8I1V7hCros+PcCm5
+         yjkHC18Lf4ag80dyECaBgZVOcAVcGuYx2v5uFlR0lOqAj14DCy3dfLGIeilxBG0cq7qO
+         Bf0VLww15hnqg3Qr7SxzJUK8F7wSqjbhK00miFVVl+OcLEkIs/4Gk+lyGU9Poi2slVcr
+         Tp4A==
+X-Gm-Message-State: AOJu0YxDAdgdokNPU7xCU+Yy4EXQsVyl/Wm/SsPNDmCFkzclqcL18hkt
+        LBza/Ou6QDpkvcCDEw0GJT1BEg==
+X-Google-Smtp-Source: AGHT+IHtsrQFTxvyDoKJq0zJhTadqcM+XG7I+k33MHdMnKAw7Jjir0xPCJuUc09N6AgAGh0jgp8xRQ==
+X-Received: by 2002:a5d:4448:0:b0:317:f537:748d with SMTP id x8-20020a5d4448000000b00317f537748dmr5220459wrr.64.1692001005329;
+        Mon, 14 Aug 2023 01:16:45 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id k1-20020a5d4281000000b00317a29af4b2sm13542994wrq.68.2023.08.14.01.16.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Aug 2023 01:16:44 -0700 (PDT)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH v3 0/3] pinctrl: oxnas support removal
+Date:   Mon, 14 Aug 2023 10:16:36 +0200
+Message-Id: <20230814-topic-oxnas-upstream-remove-v3-0-04a0c5cdda52@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOTi2WQC/43OwQ7CIBAE0F8xnF1TIFbryf8wHpayWJIWmqUSj
+ em/S3sxXozHmcObeYlE7CmJ0+YlmLJPPoYS9HYj2g7DjcDbkoWqlK60ljDF0bcQHwET3Mc0MeE
+ ATEPMBFgramxTOyISRTCYCAxjaLtihHvfl3Jkcv6xTl6uJXc+TZGf64Msl/a/sSyhgr2x+6Oz0
+ lrpzr0PyHEX+SYWOKsPVuvqN6YK5kyNRlvC46H9wuZ5fgMPKRwuKQEAAA==
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
+        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2278;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=svL6aI+Ivh8BepAtDKpiDrwHSHdF9+dU0wkSJh9amZ0=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBk2eLqbnzULI5saow0fVSkLtRpOAARsRIwaipWDhVx
+ lsLLaj6JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZNni6gAKCRB33NvayMhJ0cmvEA
+ CvB0XkWPo2+wZVpZSUMFe6ciE43WkhMmHVwX30myPEwI4x0DUu81GxN1KDeMCIIf6gvbSNQhf4jhux
+ Pa5rErjAnLfNSMU2x8B/RJ/ENNjzU8RALcgV5Pl915uoCHTOwxw3JqDhQ6SYtA2rGcQpCCoyHVrghj
+ JRvWtnJbE5gSRtA2nnFyiUyTVQZnLl2BdBkxXVTW8cvgi/oXnVxbKvVdJSelWpMfSbwkwBde+3PBvm
+ DadHl6Z35P/rZzQhPwMQmQg4u8mxvRpQKfvpdkdOq7L40qJZq8zQXp3S93+POeFcSgkRy/E6kZecU5
+ plgKiyRUXDl/PgGSzECnCAAVqXJfPD4elh9ukb0YgdKRdLo0KVWUZoBXh5/mmBmQp7x3upVF9RJeg+
+ NobaW8Z5h1OLSi2NpYMatz/qAtm551wWVTWn0YEncwE7dC2v6F3MzL19mbxxoj6vFdwYwmnbNXDDaW
+ 4VbxNV2r6utPtXxaB7FWngH5ugU1hn3ufZbojuKukVVepzsFmcIJmJqWc2Xsw2IrYEIvi8YRSF2Dwd
+ Hedc0ksfNGBKzoOt5SOr+H2ckOYss+L8j09/iZmtLBQICJcsLH5bwrswVKmRno59Pq/vaR/6wxWb5g
+ 5yhQWrzswT9b4eb3zaomgEryjl0Tbrme0H4Mgmim+a5NKx+OKQRbCgL63iwg==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgQmFydG9zeiENCg0KSSBoZXNpdGF0ZSB0byBmb2xsb3cgeW91ciByZWFzb25pbmcuIEkgcGVy
-c29uYWxseSBoaWdobHkgYXBwcmVjaWF0ZSBjb25zdCBjb3JyZWN0bmVzcyBhcyBpdCBJTUhPIG1h
-a2VzIHRoZSBpbnRlbmQgb2YgdGhlIGNvZGUgY2xlYXJlciwgcHJldmVudHMgbWlzdXNlLCBhbmQg
-Z2l2ZXMgdGhlIGNvbXBpbGVyIG1vcmUgb3B0aW9ucyBmb3Igd2FybmluZ3MgYW5kIG9wdGltaXph
-dGlvbi4NCg0KQW55d2F5LCBpdCdzIHlvdXIgY2hvaWNlIGFuZCBJIHJlc3BlY3QgdGhpcy4NCg0K
-RnJhbnoNCg0K
+With [1] removing MPCore SMP support, this makes the OX820 barely usable,
+associated with a clear lack of maintainance, development and migration to
+dt-schema it's clear that Linux support for OX810 and OX820 should be removed.
+
+In addition, the OX810 hasn't been booted for years and isn't even present
+in an ARM config file.
+
+For the OX820, lack of USB and SATA support makes the platform not usable
+in the current Linux support and relies on off-tree drivers hacked from the
+vendor (defunct for years) sources.
+
+The last users are in the OpenWRT distribution, and today's removal means
+support will still be in stable 6.1 LTS kernel until end of 2026.
+
+If someone wants to take over the development even with lack of SMP, I'll
+be happy to hand off maintainance.
+
+It has been a fun time adding support for this architecture, but it's time
+to get over!
+
+This patchset only removes pinctrl/gpio code, and is derived from:
+https://lore.kernel.org/r/20230630-topic-oxnas-upstream-remove-v2-0-fb6ab3dea87c@linaro.org
+
+---
+Changes in v3:
+- Removed applied patches
+- Added Andy's tags
+- Reduced for pinctrl, rebased on pinctrl devel branch
+- Link to v2: https://lore.kernel.org/r/20230630-topic-oxnas-upstream-remove-v2-0-fb6ab3dea87c@linaro.org
+
+Changes in v2:
+- s/maintainance/maintenance/
+- added acked/review tags
+- dropped already applied patches
+- drop RFC
+- Link to v1: https://lore.kernel.org/r/20230331-topic-oxnas-upstream-remove-v1-0-5bd58fd1dd1f@linaro.org
+
+---
+Neil Armstrong (3):
+      pinctrl: pinctrl-oxnas: remove obsolete pinctrl driver
+      dt-bindings: pinctrl: oxnas,pinctrl: remove obsolete bindings
+      dt-bindings: gpio: gpio_oxnas: remove obsolete bindings
+
+ .../devicetree/bindings/gpio/gpio_oxnas.txt        |   47 -
+ .../devicetree/bindings/pinctrl/oxnas,pinctrl.txt  |   56 -
+ drivers/pinctrl/Kconfig                            |   11 -
+ drivers/pinctrl/Makefile                           |    1 -
+ drivers/pinctrl/pinctrl-oxnas.c                    | 1291 --------------------
+ 5 files changed, 1406 deletions(-)
+---
+base-commit: c9b2572f488c3ed3974a0ff6885bb059b1751c86
+change-id: 20230331-topic-oxnas-upstream-remove-a62e9d96feee
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
+
