@@ -2,261 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 08D0C77B2BF
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 09:42:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FDC077B3B5
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 10:17:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234219AbjHNHlf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Aug 2023 03:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36760 "EHLO
+        id S233281AbjHNIQg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Aug 2023 04:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234318AbjHNHl3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 03:41:29 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEF310CE
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 00:41:27 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3fea0640d88so1820265e9.2
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 00:41:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691998886; x=1692603686;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zitqku576TZpQnQPr3Oh2ohHuEFbeZPBBxEvo1sZc+Q=;
-        b=c2ibWsrtxlpOl2l93H8I7dwO30O1xssdh4p/RrE2q8N2J8sUQOiLfPy4jrHUDNecWQ
-         B9Xl7UbuevI0/fpeC3Cqz4JjJBdAc1fM3Sx+NRxxOWZwKyMRK3wSy1FRjBCN1vRcCJ3V
-         iNaGpXWAcpuPTu7ilq8+T4iAp1Du1dTft6ZdWvtZ4YteQjS4RMAl8rEkUzkK3U48fPQ3
-         Ta+6PDHsz/O7Bxk8FyAYZKsv9wLW0hBYeG+zmWBSRbPB9cFQZwP3sWc7W4O0II/GdFDH
-         XLs0zYerpdo1H3GjEXSiYzl+d1vN7CnfVNDwP6MnTibEClBZjnwlup1Vh8wpi7JEvqyE
-         zjQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691998886; x=1692603686;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zitqku576TZpQnQPr3Oh2ohHuEFbeZPBBxEvo1sZc+Q=;
-        b=fSjThrSCocwc4Nq0w1UxO1QUjBb0tZ864FD+fz+V3oGX6m2nQj3xr4/uLIjWnA37wl
-         7bNs7XZbBkYONAbRPqU55AhB6Bdp6ublbHpAQbTHu9BC27moMRq3fUCmO7hoPQaMPeX5
-         tzCCo8WAkJZaL4Wvk/NCQINc7VYdCNoWvf9xpaeILEJdbWXQwlPzTm7AnzSYEJa3sR4m
-         a51OpojDhXN0yzQrui9uyAg0ppq2goCG3DDlh7sjNS5MIQRq+CeZ45YnqE224mZUQ0ko
-         LSE7iMhKfwZNWZNxi9gRGdwx+JnEflHGGymyyn6ATKATMbpnO6XKnha0WsCm54lA7GuG
-         P/YQ==
-X-Gm-Message-State: AOJu0YyDMxTCfIXmXV9PEjtj+r4SGLGXwDlNTAf69ds9YQDXzcCyTUkP
-        1DpBBBasGK3OFeOgxERNBbl6kQ==
-X-Google-Smtp-Source: AGHT+IFYfAjXxtZPBAO6xzW1e3FH1h7mkoQ3yNtVsbL8sLdvSW5eTgH/X76mW18QMBp5iOQDIcXGqw==
-X-Received: by 2002:adf:ee87:0:b0:317:5e0d:c249 with SMTP id b7-20020adfee87000000b003175e0dc249mr6776837wro.35.1691998885785;
-        Mon, 14 Aug 2023 00:41:25 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:a3d8:b217:d82c:9bc0? ([2a01:e0a:982:cbb0:a3d8:b217:d82c:9bc0])
-        by smtp.gmail.com with ESMTPSA id k3-20020a5d6283000000b00317643a93f4sm13507243wru.96.2023.08.14.00.41.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Aug 2023 00:41:25 -0700 (PDT)
-Message-ID: <81500a13-0fed-e9d4-7f51-552b888a98e1@linaro.org>
-Date:   Mon, 14 Aug 2023 09:41:21 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for
- drivers
+        with ESMTP id S233944AbjHNIQN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 04:16:13 -0400
+Received: from mail.schrack-seconet.com (mail.schrack-seconet.com [81.223.165.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF44810D
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 01:16:11 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.schrack-seconet.com (Postfix) with ESMTP id 5B3B1213CA4;
+        Mon, 14 Aug 2023 10:16:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=schrack-seconet.com;
+        s=mail; t=1692000970;
+        bh=n0gCHVQHmSgY9LUbsKZj2DDLJNaDk3t/4xMrL+ReK1k=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=Nqatq7nVqVbZbszK8vH6gbbZMQAI/JnapVSBKA3x/Om2HY3TQmNpsU9faC7iMC9bs
+         DGQ+Q6Z3anY+Wv6F/fr7WjbcsqTZ90hakcwsWqvQoh5eqQJa4ZCgS4F5rXAzTWEYTD
+         69/rie1RCJ3MTiapcJuEpij/QYL7gK7GQaREsT5A=
+X-Virus-Scanned: Debian amavisd-new at schrack-seconet.com
+Received: from mail.schrack-seconet.com ([127.0.0.1])
+        by localhost (mail.schrack-seconet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id elbZQfA4Ki1Y; Mon, 14 Aug 2023 10:16:03 +0200 (CEST)
+Received: from outlook.schrack-seconet.com (unknown [10.20.201.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.schrack-seconet.com (Postfix) with ESMTPS id D2147213CA3;
+        Mon, 14 Aug 2023 10:16:03 +0200 (CEST)
+Received: from EXCH-W1.schrack-seconet.works (10.20.201.33) by
+ EXCH-W1.schrack-seconet.works (10.20.201.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.16; Mon, 14 Aug 2023 10:16:03 +0200
+Received: from EXCH-W1.schrack-seconet.works ([10.20.201.33]) by
+ EXCH-W1.schrack-seconet.works ([10.20.201.33]) with mapi id 15.02.1258.016;
+ Mon, 14 Aug 2023 10:16:03 +0200
+From:   "Hollerer Franz, Schrack Seconet AG, Entwicklung" 
+        <f.hollerer@schrack-seconet.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "Ullrich Lucas, Schrack Seconet AG, Entwicklung" 
+        <l.ullrich@schrack-seconet.com>
+Subject: RE: [libgpiod]: feature request: API functions, const correctness
+Thread-Topic: [libgpiod]: feature request: API functions, const correctness
+Thread-Index: AdnFSksl/z46payhSI6AJ2k+kdDPzgH8bGGAAFIPTbA=
+Date:   Mon, 14 Aug 2023 08:16:03 +0000
+Message-ID: <5e106aba54904302bef2bc743ea6959b@schrack-seconet.com>
+References: <a6ce12acff7b4ed9bae1df0115bba1f3@schrack-seconet.com>
+ <CAMRc=Mcc7M3wbGX+77pUkQFTiPtDx3vYkWp=8eJWMh6k4eqhhw@mail.gmail.com>
+In-Reply-To: <CAMRc=Mcc7M3wbGX+77pUkQFTiPtDx3vYkWp=8eJWMh6k4eqhhw@mail.gmail.com>
+Accept-Language: de-AT, en-GB, en-US
 Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Robert Foss <rfoss@kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>, Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@amd.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-mips@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
-        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
-References: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de>
- <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-Organization: Linaro Developer Services
-In-Reply-To: <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.20.190.21]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04/08/2023 16:27, Uwe Kleine-König wrote:
-> Instead of requiring each driver to care for assigning the owner member
-> of struct pwm_ops, handle that implicitly using a macro. Note that the
-> owner member has to be moved to struct pwm_chip, as the ops structure
-> usually lives in read-only memory and so cannot be modified.
-> 
-> The upside is that new lowlevel drivers cannot forget the assignment and
-> save one line each. The pwm-crc driver didn't assign .owner, that's not
-> a problem in practise though as the driver cannot be compiled as a
-> module.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->   drivers/gpio/gpio-mvebu.c             |  1 -
->   drivers/gpu/drm/bridge/ti-sn65dsi86.c |  1 -
->   drivers/leds/rgb/leds-qcom-lpg.c      |  1 -
->   drivers/pwm/core.c                    | 24 ++++++++++++++----------
->   drivers/pwm/pwm-ab8500.c              |  1 -
->   drivers/pwm/pwm-apple.c               |  1 -
->   drivers/pwm/pwm-atmel-hlcdc.c         |  1 -
->   drivers/pwm/pwm-atmel-tcb.c           |  1 -
->   drivers/pwm/pwm-atmel.c               |  1 -
->   drivers/pwm/pwm-bcm-iproc.c           |  1 -
->   drivers/pwm/pwm-bcm-kona.c            |  1 -
->   drivers/pwm/pwm-bcm2835.c             |  1 -
->   drivers/pwm/pwm-berlin.c              |  1 -
->   drivers/pwm/pwm-brcmstb.c             |  1 -
->   drivers/pwm/pwm-clk.c                 |  1 -
->   drivers/pwm/pwm-clps711x.c            |  1 -
->   drivers/pwm/pwm-cros-ec.c             |  1 -
->   drivers/pwm/pwm-dwc.c                 |  1 -
->   drivers/pwm/pwm-ep93xx.c              |  1 -
->   drivers/pwm/pwm-fsl-ftm.c             |  1 -
->   drivers/pwm/pwm-hibvt.c               |  1 -
->   drivers/pwm/pwm-img.c                 |  1 -
->   drivers/pwm/pwm-imx-tpm.c             |  1 -
->   drivers/pwm/pwm-imx1.c                |  1 -
->   drivers/pwm/pwm-imx27.c               |  1 -
->   drivers/pwm/pwm-intel-lgm.c           |  1 -
->   drivers/pwm/pwm-iqs620a.c             |  1 -
->   drivers/pwm/pwm-jz4740.c              |  1 -
->   drivers/pwm/pwm-keembay.c             |  1 -
->   drivers/pwm/pwm-lp3943.c              |  1 -
->   drivers/pwm/pwm-lpc18xx-sct.c         |  1 -
->   drivers/pwm/pwm-lpc32xx.c             |  1 -
->   drivers/pwm/pwm-lpss.c                |  1 -
->   drivers/pwm/pwm-mediatek.c            |  1 -
->   drivers/pwm/pwm-meson.c               |  1 -
-
-Acked-by: Neil Armstrong <neil.armstrong@linaro.org> # pwm-meson
-
->   drivers/pwm/pwm-microchip-core.c      |  1 -
->   drivers/pwm/pwm-mtk-disp.c            |  1 -
->   drivers/pwm/pwm-mxs.c                 |  1 -
->   drivers/pwm/pwm-ntxec.c               |  1 -
->   drivers/pwm/pwm-omap-dmtimer.c        |  1 -
->   drivers/pwm/pwm-pca9685.c             |  1 -
->   drivers/pwm/pwm-pxa.c                 |  1 -
->   drivers/pwm/pwm-raspberrypi-poe.c     |  1 -
->   drivers/pwm/pwm-rcar.c                |  1 -
->   drivers/pwm/pwm-renesas-tpu.c         |  1 -
->   drivers/pwm/pwm-rockchip.c            |  1 -
->   drivers/pwm/pwm-rz-mtu3.c             |  1 -
->   drivers/pwm/pwm-samsung.c             |  1 -
->   drivers/pwm/pwm-sifive.c              |  1 -
->   drivers/pwm/pwm-sl28cpld.c            |  1 -
->   drivers/pwm/pwm-spear.c               |  1 -
->   drivers/pwm/pwm-sprd.c                |  1 -
->   drivers/pwm/pwm-sti.c                 |  1 -
->   drivers/pwm/pwm-stm32-lp.c            |  1 -
->   drivers/pwm/pwm-stm32.c               |  1 -
->   drivers/pwm/pwm-stmpe.c               |  1 -
->   drivers/pwm/pwm-sun4i.c               |  1 -
->   drivers/pwm/pwm-sunplus.c             |  1 -
->   drivers/pwm/pwm-tegra.c               |  1 -
->   drivers/pwm/pwm-tiecap.c              |  1 -
->   drivers/pwm/pwm-tiehrpwm.c            |  1 -
->   drivers/pwm/pwm-twl-led.c             |  2 --
->   drivers/pwm/pwm-twl.c                 |  2 --
->   drivers/pwm/pwm-visconti.c            |  1 -
->   drivers/pwm/pwm-vt8500.c              |  1 -
->   drivers/pwm/pwm-xilinx.c              |  1 -
->   drivers/staging/greybus/pwm.c         |  1 -
->   include/linux/pwm.h                   | 10 ++++++----
->   68 files changed, 20 insertions(+), 82 deletions(-)
-> 
-
-<snip>
-
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 25519cddc2a9..5bea53243ed2 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -335,7 +335,6 @@ static const struct pwm_ops meson_pwm_ops = {
->   	.free = meson_pwm_free,
->   	.apply = meson_pwm_apply,
->   	.get_state = meson_pwm_get_state,
-> -	.owner = THIS_MODULE,
->   };
->   
->   static const char * const pwm_meson8b_parent_names[] = {
-
-<snip>
-
+SGkgQmFydG9zeiENCg0KSSBoZXNpdGF0ZSB0byBmb2xsb3cgeW91ciByZWFzb25pbmcuIEkgcGVy
+c29uYWxseSBoaWdobHkgYXBwcmVjaWF0ZSBjb25zdCBjb3JyZWN0bmVzcyBhcyBpdCBJTUhPIG1h
+a2VzIHRoZSBpbnRlbmQgb2YgdGhlIGNvZGUgY2xlYXJlciwgcHJldmVudHMgbWlzdXNlLCBhbmQg
+Z2l2ZXMgdGhlIGNvbXBpbGVyIG1vcmUgb3B0aW9ucyBmb3Igd2FybmluZ3MgYW5kIG9wdGltaXph
+dGlvbi4NCg0KQW55d2F5LCBpdCdzIHlvdXIgY2hvaWNlIGFuZCBJIHJlc3BlY3QgdGhpcy4NCg0K
+RnJhbnoNCg0K
