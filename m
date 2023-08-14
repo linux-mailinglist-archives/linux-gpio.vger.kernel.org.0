@@ -2,86 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E86877C09A
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 21:19:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90C9277C1B4
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 22:50:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbjHNTSv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Aug 2023 15:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33554 "EHLO
+        id S229523AbjHNUtv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Aug 2023 16:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230207AbjHNTSo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 15:18:44 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2705CE65
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 12:18:43 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3fe4a89e8c4so43067705e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 12:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692040721; x=1692645521;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=72S2n2lYPlrUM7ALoHtN9DEXfa2PT84mmokJwTNUvmk=;
-        b=TBb8grKi7j+lELjw3Ihzgfgf18E8CY0MRN/h+FGwbfymfjb1yxo0fCAIWwB3UbsQS6
-         WeInwfinusQ9UEdLRBDby+avB+k8ncrYk8BPtFAE3wm91XzJ+Y0QINjEx0+ZpE5aUmbD
-         wNv/jMgiaquqemZkBlLIPNTqifydMmomZnZ/XBH8h3szl4XBkwm+NGiyOdfW79HFDpLN
-         vrWKQbPRWL56kFUcNlLgUOBopKfYTvm82ecGOVEHj7x+H4QOU3Gp16iIlmK+7ppa1SNt
-         J7uqcXY1w4KEnFqY9pJg3V8ONHQAkdWHPwj+ArDmjBgX8zC+LcZzQB6oBkO10zcibY61
-         BfWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692040721; x=1692645521;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=72S2n2lYPlrUM7ALoHtN9DEXfa2PT84mmokJwTNUvmk=;
-        b=UwVzQ+4B95v7jtkkY4HHIkI6ZxEGafktZ9cIcnkbKnbtnUaG+awodHEnie1/cGAwAQ
-         Lfk6Xyo2aE8399vL1WzlULUA6AtnAz1TnZFb+xvFgSCBuF07v+HjmflFYvmzOlhJpgzU
-         K2P0/10OJ5IW0X8mJvtmPgkgaSGh6oR44qm51EPT9pz6YpkrPabbie+CCXH064YbdgyR
-         XkFBmb/vQ+vAHXVpDQJCz6It3dCTNNyhR+w7ENyYcNLUKDoH6KYt6xjth0eNzhc9BPq/
-         jQoeM19FQakxwZgHVX2jGfciwvZ26xPqzWFb4+TJt0TfPYfXaEdyO+yFMCnQwBV+8oeo
-         HSTQ==
-X-Gm-Message-State: AOJu0YziOVhztkM0XieTpeS/I/nUFr06REIC4w2aR3euY94wfOOYSdID
-        5yg1jE3/D3jTZLhg+tohcxDj9Q==
-X-Google-Smtp-Source: AGHT+IEeFPxWx2KSxTh6FCCps3OOKBDVdbRhF6OY2QRxepJQgs6kH8Obt3EcA9VGUfe6+GdUAdjj4w==
-X-Received: by 2002:adf:db0a:0:b0:314:2e95:1ec9 with SMTP id s10-20020adfdb0a000000b003142e951ec9mr7902967wri.10.1692040721649;
-        Mon, 14 Aug 2023 12:18:41 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.214.188])
-        by smtp.gmail.com with ESMTPSA id 11-20020a05600c234b00b003fbca942499sm18034835wmq.14.2023.08.14.12.18.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Aug 2023 12:18:41 -0700 (PDT)
-Message-ID: <b911cd23-8590-55bb-7606-718f16e8ed42@linaro.org>
-Date:   Mon, 14 Aug 2023 21:18:39 +0200
+        with ESMTP id S230258AbjHNUtY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 16:49:24 -0400
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A17C3
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Aug 2023 13:49:20 -0700 (PDT)
+Received: from localhost (88-113-24-87.elisa-laajakaista.fi [88.113.24.87])
+        by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+        id 04fd1c4f-3ae4-11ee-b972-005056bdfda7;
+        Mon, 14 Aug 2023 23:49:11 +0300 (EEST)
+From:   andy.shevchenko@gmail.com
+Date:   Mon, 14 Aug 2023 23:49:10 +0300
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        stable@kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: Re: [PATCH 1/3] pinctrl: renesas: rzg2l: Fix NULL pointer
+ dereference in rzg2l_dt_subnode_to_map()
+Message-ID: <ZNqTRrf2iC6xLvR7@surfacebook.localdomain>
+References: <20230814072436.3757-1-biju.das.jz@bp.renesas.com>
+ <20230814072436.3757-2-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v3 1/2] gpio: dt-bindings: add parsing of loongson gpio
- offset
-Content-Language: en-US
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Conor Dooley <conor@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn
-References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
- <20230807074043.31288-2-zhuyinbo@loongson.cn>
- <20230808-amount-urban-9a6eb09852ca@spud>
- <536a9062-65b2-5518-5c50-1a61e23870ee@loongson.cn>
- <20230809-circus-photo-6911d2e18f96@spud>
- <d4e16768-bed0-beda-42c3-f0a01b7e96cc@loongson.cn>
- <CAMRc=Mc00yy6DxdEos_w7HAkAwH7j0HBvkbQbaQiA_wTXiwFUg@mail.gmail.com>
- <80325b72-e7b3-08cc-f726-513de75de94c@loongson.cn>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <80325b72-e7b3-08cc-f726-513de75de94c@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230814072436.3757-2-biju.das.jz@bp.renesas.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,64 +46,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/08/2023 05:39, Yinbo Zhu wrote:
-> 
-> 
-> 在 2023/8/11 下午10:25, Bartosz Golaszewski 写道:
->> On Thu, Aug 10, 2023 at 8:19 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
->>>
->>>
->>>
->>> 在 2023/8/9 下午11:39, Conor Dooley 写道:
->>>> On Wed, Aug 09, 2023 at 03:47:55PM +0800, Yinbo Zhu wrote:
->>>>> 在 2023/8/8 下午8:05, Conor Dooley 写道:
->>>>>> On Mon, Aug 07, 2023 at 03:40:42PM +0800, Yinbo Zhu wrote:
->>>>
->>>>>>> +  loongson,gpio-ctrl-mode:
->>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>>>> +    description:
->>>>>>> +      This option indicate this GPIO control mode, where '0' represents
->>>>>>> +      bit control mode and '1' represents byte control mode.
->>>>>>
->>>>>> How is one supposed to know which of these modes to use?
->>>>>
->>>>>
->>>>> Byte mode is to access by byte, such as gpio3, the base address of the
->>>>> gpio controller is offset by 3 bytes as the access address of gpio3.
->>>>>
->>>>> The bit mode is the normal mode that like other platform gpio and it is
->>>>> to access by bit.
->>>>>
->>>>> If both modes are supported, it is recommended to prioritize using byte
->>>>> mode that according to spec.
->>>>
->>>> So, sounds like this property should instead be a boolean that notes
->>>> whether the hardware supports the mode or not, rather than the current
->>>> enum used to determine software policy.
->>>
->>>
->>> okay, I got it, I will use boolean,
->>>
->>
->> Why do you want to put it into device-tree so badly? This is not the
->> first driver that would have of_match_data for different variants
->> where you can have a structure that would keep offsets for different
->> models. It's not like you will have hundreds of "compatible" chips
->> anyway, most likely just a few?
-> 
-> 
-> Using this ways that put offset property into device-tree that can be
-> compatible with future GPIO chips without the need to modify drivers,
+Mon, Aug 14, 2023 at 08:24:34AM +0100, Biju Das kirjoitti:
+> Fix the below random NULL pointer crash during boot by serializing
+> pinctrl group and function creation/remove calls in
+> rzg2l_dt_subnode_to_map() with mutex lock.
 
-That's not an argument for putting into DT.
+> Crash logs:
+> [   15.310036] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+> [   15.354291] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+> [   15.870714] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+> [   15.939989] Internal error: Oops: 0000000096000004 2 PREEMPT SMP
+> [   15.946285] Modules linked in: drm_shmem_helper rzg2l_mipi_dsi videobuf2_common display_connector gpu_sched mc drm_kms_helper rcar_fcp drm rcar_canfd snd_soc_wm8978 rtc_isl1208 can_dev rzg2l_adc snd_soc_rz_ssi renesas_rpc_if spi_rspi backlight ipv6
+> [   15.969077] CPU: 1 PID: 117 Comm: systemd-udevd Tainted: G      D            6.5.0-rc4-next-20230801-00013-gd1819ab30a54 #986
+> [   15.980351] Hardware name: Renesas SMARC EVK based on r9a07g054l2 (DT)
+> [   15.986857] pstate: 40400005 (nZcv daif +PAN UAO -TCO -DIT -SSBS BTYPE=-)
+> [   15.993797] pc : __pi_strcmp+0x20/0x140
+> [   15.997647] lr : pinmux_func_name_to_selector+0x68/0xa4
+> [   16.002876] sp : ffff800082d9b5a0
+> [   16.006210] x29: ffff800082d9b5a0 x28: 0000000000000002 x27: ffff00000cda7080
+> [   16.013338] x26: 0000000000000002 x25: ffff00000a1f26c0 x24: ffff00000cda7080
+> [   16.020456] x23: ffff800081224960 x22: ffff00007fc2e598 x21: 000000000000000c
+> [   16.027571] x20: ffff00000b6c8840 x19: 000000000000000b x18: 0000000000000002
+> [   16.034686] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+> [   16.041799] x14: 0000000000000001 x13: 0000000000068a68 x12: 0000000000000040
+> [   16.048913] x11: ffff00000b092ff8 x10: 0000ffff803d1a68 x9 : ffff00000b6c8888
+> [   16.056028] x8 : 0101010101010101 x7 : 0000000000000000 x6 : 0000000000000000
+> [   16.063142] x5 : ffff00000b092ff8 x4 : ffff00000b093078 x3 : 0000000000000000
+> [   16.070256] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff00007fc2e598
+> [   16.077370] Call trace:
+> [   16.079807]  __pi_strcmp+0x20/0x140
+> [   16.083296]  pinmux_generic_add_function+0x34/0xcc
+> [   16.088077]  rzg2l_dt_subnode_to_map+0x314/0x44c
+> [   16.092682]  rzg2l_dt_node_to_map+0x164/0x194
+> [   16.097025]  pinctrl_dt_to_map+0x218/0x37c
+> [   16.101107]  create_pinctrl+0x70/0x3d8
 
-> such as more 2K chips in the future, but use of_match_data and data
-> field of_device_id, which every time a new SoC is released, the GPIO
-> driver needs to be modified once, which is not friendly to us.
+Submitting Patches says why the above is too noisy for the commit message.
+Please, amend accordingly.
 
-Sorry, "friendly" is again hardly an argument what should or should not
-be in DT.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Best regards,
-Krzysztof
 
