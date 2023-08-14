@@ -2,221 +2,212 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C301377B10A
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 08:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA9EA77B1D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Aug 2023 08:50:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233454AbjHNGER (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Aug 2023 02:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41878 "EHLO
+        id S229762AbjHNGto (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Aug 2023 02:49:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233343AbjHNGEO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 02:04:14 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF851129;
-        Sun, 13 Aug 2023 23:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691993053; x=1723529053;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=BPpmaoshcMt6goKsPUPVpZaxcfTUVVBLgBqsePBBad0=;
-  b=je8x6t67Y7ZBiwxk70ZgHjUC83FhQKqo7jfSGuOm6ThXy8+FxB99JkU4
-   GRfBtRKjR1t10o9pxHlrJ+/tVP9B5Wnie81Em0lgfHg7L2KFE/3arP+mF
-   R25wnCa8ug19KAN+ZdnMF1jcTrzMeAgWOLMF66rCWnjn4pQFW7EZ2wHKS
-   Fgo7e1C3aqKXEonMqnWdPKQ3AtHbAMKnXZk7qD5Q8Rh/ASof7Wq0RMKZR
-   kiryM+19UzWvQTjjqzWmRMBL+qfhZIdbXEActQEqxlgHAG9ZNkYOMJdjE
-   CaJaxyMbRxy2BPwKMPpzkWy7EwjNQz5JOEihTyrVoukC6kANsunjGKJ8I
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="371970764"
-X-IronPort-AV: E=Sophos;i="6.01,171,1684825200"; 
-   d="scan'208";a="371970764"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2023 23:04:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10801"; a="798702983"
-X-IronPort-AV: E=Sophos;i="6.01,171,1684825200"; 
-   d="scan'208";a="798702983"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Aug 2023 23:04:11 -0700
-From:   Raag Jadav <raag.jadav@intel.com>
-To:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
-        andriy.shevchenko@linux.intel.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
-        Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1 4/4] pinctrl: lynxpoint: reuse common functions from pinctrl-intel
-Date:   Mon, 14 Aug 2023 11:33:11 +0530
-Message-Id: <20230814060311.15945-5-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230814060311.15945-1-raag.jadav@intel.com>
-References: <20230814060311.15945-1-raag.jadav@intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229500AbjHNGtZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Aug 2023 02:49:25 -0400
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 42450E5E;
+        Sun, 13 Aug 2023 23:49:23 -0700 (PDT)
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 37E6mkN13005740, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+        by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 37E6mkN13005740
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 14 Aug 2023 14:48:46 +0800
+Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Mon, 14 Aug 2023 14:49:05 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Mon, 14 Aug 2023 14:49:04 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::e138:e7f1:4709:ff4d]) by
+ RTEXMBS04.realtek.com.tw ([fe80::e138:e7f1:4709:ff4d%5]) with mapi id
+ 15.01.2375.007; Mon, 14 Aug 2023 14:49:04 +0800
+From:   =?big5?B?VFlfQ2hhbmdbsWmkbLZoXQ==?= <tychang@realtek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 5/7] dt-bindings: pinctrl: realtek: add RTD1315E pinctrl binding
+Thread-Topic: [PATCH 5/7] dt-bindings: pinctrl: realtek: add RTD1315E pinctrl
+ binding
+Thread-Index: AQHZxaI0lrKw42BEDUewXNjTeqXxea/paqug
+Date:   Mon, 14 Aug 2023 06:49:04 +0000
+Message-ID: <3dcc7e74c4804bfda70c526050d04cac@realtek.com>
+References: <20230726090409.16606-1-tychang@realtek.com>
+ <20230726090409.16606-6-tychang@realtek.com>
+ <20230803003354.GA1586526-robh@kernel.org>
+In-Reply-To: <20230803003354.GA1586526-robh@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.181.166]
+x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Reuse common functions from pinctrl-intel driver.
-While at it, select pinctrl-intel for Intel Lynxpoint driver.
-
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/pinctrl/intel/Kconfig             |  6 +-
- drivers/pinctrl/intel/pinctrl-lynxpoint.c | 86 +++--------------------
- 2 files changed, 9 insertions(+), 83 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
-index eaa45ebfd1c1..f42a83e29b8b 100644
---- a/drivers/pinctrl/intel/Kconfig
-+++ b/drivers/pinctrl/intel/Kconfig
-@@ -26,11 +26,7 @@ config PINCTRL_CHERRYVIEW
- config PINCTRL_LYNXPOINT
- 	tristate "Intel Lynxpoint pinctrl and GPIO driver"
- 	depends on ACPI
--	select PINMUX
--	select PINCONF
--	select GENERIC_PINCONF
--	select GPIOLIB
--	select GPIOLIB_IRQCHIP
-+	select PINCTRL_INTEL
- 	help
- 	  Lynxpoint is the PCH of Intel Haswell. This pinctrl driver
- 	  provides an interface that allows configuring of PCH pins and
-diff --git a/drivers/pinctrl/intel/pinctrl-lynxpoint.c b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-index cdace55aaeac..780c9ab79d85 100644
---- a/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-+++ b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-@@ -206,21 +206,6 @@ static const struct intel_pinctrl_soc_data lptlp_soc_data = {
-  * IOxAPIC redirection map applies only for gpio 8-10, 13-14, 45-55.
-  */
- 
--static struct intel_community *lp_get_community(struct intel_pinctrl *lg,
--						unsigned int pin)
--{
--	struct intel_community *comm;
--	int i;
--
--	for (i = 0; i < lg->ncommunities; i++) {
--		comm = &lg->communities[i];
--		if (pin < comm->pin_base + comm->npins && pin >= comm->pin_base)
--			return comm;
--	}
--
--	return NULL;
--}
--
- static void __iomem *lp_gpio_reg(struct gpio_chip *chip, unsigned int offset,
- 				 int reg)
- {
-@@ -228,7 +213,7 @@ static void __iomem *lp_gpio_reg(struct gpio_chip *chip, unsigned int offset,
- 	struct intel_community *comm;
- 	int reg_offset;
- 
--	comm = lp_get_community(lg, offset);
-+	comm = intel_get_community(lg, offset);
- 	if (!comm)
- 		return NULL;
- 
-@@ -272,34 +257,6 @@ static bool lp_gpio_ioxapic_use(struct gpio_chip *chip, unsigned int offset)
- 	return false;
- }
- 
--static int lp_get_groups_count(struct pinctrl_dev *pctldev)
--{
--	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
--
--	return lg->soc->ngroups;
--}
--
--static const char *lp_get_group_name(struct pinctrl_dev *pctldev,
--				     unsigned int selector)
--{
--	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
--
--	return lg->soc->groups[selector].grp.name;
--}
--
--static int lp_get_group_pins(struct pinctrl_dev *pctldev,
--			     unsigned int selector,
--			     const unsigned int **pins,
--			     unsigned int *num_pins)
--{
--	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
--
--	*pins		= lg->soc->groups[selector].grp.pins;
--	*num_pins	= lg->soc->groups[selector].grp.npins;
--
--	return 0;
--}
--
- static void lp_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
- 			    unsigned int pin)
- {
-@@ -323,40 +280,12 @@ static void lp_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
- }
- 
- static const struct pinctrl_ops lptlp_pinctrl_ops = {
--	.get_groups_count	= lp_get_groups_count,
--	.get_group_name		= lp_get_group_name,
--	.get_group_pins		= lp_get_group_pins,
-+	.get_groups_count	= intel_get_groups_count,
-+	.get_group_name		= intel_get_group_name,
-+	.get_group_pins		= intel_get_group_pins,
- 	.pin_dbg_show		= lp_pin_dbg_show,
- };
- 
--static int lp_get_functions_count(struct pinctrl_dev *pctldev)
--{
--	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
--
--	return lg->soc->nfunctions;
--}
--
--static const char *lp_get_function_name(struct pinctrl_dev *pctldev,
--					unsigned int selector)
--{
--	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
--
--	return lg->soc->functions[selector].func.name;
--}
--
--static int lp_get_function_groups(struct pinctrl_dev *pctldev,
--				  unsigned int selector,
--				  const char * const **groups,
--				  unsigned int *ngroups)
--{
--	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
--
--	*groups		= lg->soc->functions[selector].func.groups;
--	*ngroups	= lg->soc->functions[selector].func.ngroups;
--
--	return 0;
--}
--
- static int lp_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 			     unsigned int function, unsigned int group)
- {
-@@ -481,9 +410,9 @@ static int lp_gpio_set_direction(struct pinctrl_dev *pctldev,
- }
- 
- static const struct pinmux_ops lptlp_pinmux_ops = {
--	.get_functions_count	= lp_get_functions_count,
--	.get_function_name	= lp_get_function_name,
--	.get_function_groups	= lp_get_function_groups,
-+	.get_functions_count	= intel_get_functions_count,
-+	.get_function_name	= intel_get_function_name,
-+	.get_function_groups	= intel_get_function_groups,
- 	.set_mux		= lp_pinmux_set_mux,
- 	.gpio_request_enable	= lp_gpio_request_enable,
- 	.gpio_disable_free	= lp_gpio_disable_free,
-@@ -987,3 +916,4 @@ MODULE_AUTHOR("Andy Shevchenko (Intel)");
- MODULE_DESCRIPTION("Intel Lynxpoint pinctrl driver");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:lp_gpio");
-+MODULE_IMPORT_NS(PINCTRL_INTEL);
--- 
-2.17.1
-
+SGkgUm9iLA0KDQo+T24gV2VkLCBKdWwgMjYsIDIwMjMgYXQgMDU6MDQ6MDdQTSArMDgwMCwgVFkg
+Q2hhbmcgd3JvdGU6DQo+PiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIFJURDEzMTVFLg0K
+Pj4NCj4+IFNpZ25lZC1vZmYtYnk6IFRZIENoYW5nIDx0eWNoYW5nQHJlYWx0ZWsuY29tPg0KPj4g
+LS0tDQo+PiAgLi4uL3BpbmN0cmwvcmVhbHRlayxydGQxMzE1ZS1waW5jdHJsLnlhbWwgICAgIHwg
+MTY1ICsrKysrKysrKysrKysrKysrKw0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxNjUgaW5zZXJ0aW9u
+cygrKQ0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BpbmN0cmwvcmVhbHRlayxydGQxMzE1ZS1waW5jdHJsLnlhbQ0KPj4gbA0KPj4N
+Cj4+IGRpZmYgLS1naXQNCj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bp
+bmN0cmwvcmVhbHRlayxydGQxMzE1ZS1waW5jdHJsLnkNCj4+IGFtbA0KPj4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9yZWFsdGVrLHJ0ZDEzMTVlLXBpbmN0cmwu
+eQ0KPj4gYW1sDQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMDAwMDAw
+Li5iOGZiNjMzNWVkNjUNCj4+IC0tLSAvZGV2L251bGwNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3JlYWx0ZWsscnRkMTMxNWUtcGluY3QNCj4+ICsr
+KyBybC55YW1sDQo+PiBAQCAtMCwwICsxLDE2NSBAQA0KPj4gKyMgU1BEWC1MaWNlbnNlLUlkZW50
+aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkgIyBDb3B5cmlnaHQgMjAyMw0KPj4gK1Jl
+YWx0ZWsgU2VtaWNvbmR1Y3RvciBDb3Jwb3JhdGlvbiAlWUFNTCAxLjINCj4+ICstLS0NCj4+ICsk
+aWQ6DQo+PiAraHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvcGluY3RybC9yZWFsdGVrLHJ0
+ZDEzMTVlLXBpbmN0cmwueWFtbCMNCj4+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcv
+bWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4+ICsNCj4+ICt0aXRsZTogUmVhbHRlayBESEMgUlRE
+MTMxNUUgUGluIENvbnRyb2xsZXINCj4+ICsNCj4+ICttYWludGFpbmVyczoNCj4+ICsgIC0gVFkg
+Q2hhbmcgPHR5Y2hhbmdAcmVhbHRlay5jb20+DQo+PiArDQo+PiArZGVzY3JpcHRpb246IHwNCj4+
+ICsgIEJpbmRpbmcgZm9yIFJlYWx0ZWsgREhDIFJURDEzMTVFIFNvQyBwaW4gY29udHJvbC4NCj4+
+ICsNCj4+ICtwcm9wZXJ0aWVzOg0KPj4gKyAgY29tcGF0aWJsZToNCj4+ICsgICAgY29uc3Q6IHJl
+YWx0ZWsscnRkMTN4eGUtcGluY3RybA0KPg0KPkRvbid0IHVzZSB3aWxkY2FyZHMgaW4gY29tcGF0
+aWJsZSBzdHJpbmdzLg0KDQpJIHdpbGwgZml4IGl0IGluIHRoZSBuZXh0IHZlcnNpb24uDQoNCj4N
+Cj4+ICsNCj4+ICsgIHJlZzoNCj4+ICsgICAgbWF4SXRlbXM6IDENCj4+ICsNCj4+ICtwYXR0ZXJu
+UHJvcGVydGllczoNCj4+ICsgICdeLiokJzoNCj4+ICsgICAgaWY6DQo+PiArICAgICAgdHlwZTog
+b2JqZWN0DQo+DQo+Rm9yIG5ldyBiaW5kaW5ncywgZGVmaW5lIGEgc3VmZml4IChlLmcuICItcGlu
+cyIpIGZvciB0aGUgbm9kZSBuYW1lLg0KDQpJIHdpbGwgZml4IGl0Lg0KDQo+DQo+PiArICAgIHRo
+ZW46DQo+PiArICAgICAgYWxsT2Y6DQo+PiArICAgICAgICAtICRyZWY6IHBpbmNmZy1ub2RlLnlh
+bWwjDQo+PiArICAgICAgICAtICRyZWY6IHBpbm11eC1ub2RlLnlhbWwjDQo+PiArDQo+PiArICAg
+ICAgcHJvcGVydGllczoNCj4+ICsgICAgICAgIHBpbnM6DQo+PiArICAgICAgICAgIGl0ZW1zOg0K
+Pj4gKyAgICAgICAgICAgIGVudW06IFsgZ3Bpb18wLCBncGlvXzEsIGVtbWNfcnN0X24sIGVtbWNf
+ZGRfc2IsIGVtbWNfY2xrLA0KPmVtbWNfY21kLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgZ3Bp
+b182LCBncGlvXzcsIGdwaW9fOCwgZ3Bpb185LCBncGlvXzEwLCBncGlvXzExLA0KPmdwaW9fMTIs
+DQo+PiArICAgICAgICAgICAgICAgICAgICBncGlvXzEzLCBncGlvXzE0LCBncGlvXzE1LCBncGlv
+XzE2LCBncGlvXzE3LCBncGlvXzE4LA0KPmdwaW9fMTksDQo+PiArICAgICAgICAgICAgICAgICAg
+ICBncGlvXzIwLCBlbW1jX2RhdGFfMCwgZW1tY19kYXRhXzEsIGVtbWNfZGF0YV8yLA0KPnVzYl9j
+YzIsIGdwaW9fMjUsDQo+PiArICAgICAgICAgICAgICAgICAgICBncGlvXzI2LCBncGlvXzI3LCBn
+cGlvXzI4LCBncGlvXzI5LCBncGlvXzMwLCBncGlvXzMxLA0KPmdwaW9fMzIsDQo+PiArICAgICAg
+ICAgICAgICAgICAgICBncGlvXzMzLCBncGlvXzM0LCBncGlvXzM1LCBoaWZfZGF0YSwgaGlmX2Vu
+LCBoaWZfcmR5LA0KPmhpZl9jbGssDQo+PiArICAgICAgICAgICAgICAgICAgICBncGlvX2R1bW15
+XzQwLCBncGlvX2R1bW15XzQxLCBncGlvX2R1bW15XzQyLA0KPmdwaW9fZHVtbXlfNDMsDQo+PiAr
+ICAgICAgICAgICAgICAgICAgICBncGlvX2R1bW15XzQ0LCBncGlvX2R1bW15XzQ1LCBncGlvXzQ2
+LCBncGlvXzQ3LA0KPmdwaW9fNDgsIGdwaW9fNDksDQo+PiArICAgICAgICAgICAgICAgICAgICBn
+cGlvXzUwLCB1c2JfY2MxLCBlbW1jX2RhdGFfMywgZW1tY19kYXRhXzQsIGlyX3J4LA0KPnVyMF9y
+eCwgdXIwX3R4LA0KPj4gKyAgICAgICAgICAgICAgICAgICAgZ3Bpb181NywgZ3Bpb181OCwgZ3Bp
+b181OSwgZ3Bpb182MCwgZ3Bpb182MSwgZ3Bpb182MiwNCj5ncGlvX2R1bW15XzYzLA0KPj4gKyAg
+ICAgICAgICAgICAgICAgICAgZ3Bpb19kdW1teV82NCwgZ3Bpb19kdW1teV82NSwgZ3Bpb182Niwg
+Z3Bpb182NywNCj5ncGlvXzY4LCBncGlvXzY5LA0KPj4gKyAgICAgICAgICAgICAgICAgICAgZ3Bp
+b183MCwgZ3Bpb183MSwgZ3Bpb183MiwgZ3Bpb19kdW1teV83MywNCj5lbW1jX2RhdGFfNSwgZW1t
+Y19kYXRhXzYsDQo+PiArICAgICAgICAgICAgICAgICAgICBlbW1jX2RhdGFfNywgZ3Bpb19kdW1t
+eV83NywgZ3Bpb183OCwgZ3Bpb183OSwNCj5ncGlvXzgwLCBncGlvXzgxLA0KPj4gKyAgICAgICAg
+ICAgICAgICAgICAgdXIyX2xvYywgZ3NwaV9sb2MsIGhpX3dpZHRoLCBzZl9lbiwgYXJtX3RyYWNl
+X2RiZ19lbiwNCj4+ICsgICAgICAgICAgICAgICAgICAgIGVqdGFnX2F1Y3B1X2xvYywgZWp0YWdf
+YWNwdV9sb2MsIGVqdGFnX3ZjcHVfbG9jLA0KPmVqdGFnX3NjcHVfbG9jLA0KPj4gKyAgICAgICAg
+ICAgICAgICAgICAgZG1pY19sb2MsIHZ0Y19kbWljX2xvYywgdnRjX3RkbV9sb2MsIHZ0Y19pMnNp
+X2xvYywNCj50ZG1fYWlfbG9jLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgYWlfbG9jLCBzcGRp
+Zl9sb2MsIGhpZl9lbl9sb2MsIHNjYW5fc3dpdGNoLCB3ZF9yc2V0LA0KPmJvb3Rfc2VsLA0KPj4g
+KyAgICAgICAgICAgICAgICAgICAgcmVzZXRfbiwgdGVzdG1vZGUgXQ0KPj4gKw0KPj4gKyAgICAg
+ICAgZnVuY3Rpb246DQo+PiArICAgICAgICAgIGVudW06IFsgZ3BpbywgbmYsIGVtbWMsIGFvLCBn
+c3BpX2xvYzAsIGdzcGlfbG9jMSwgdWFydDAsIHVhcnQxLA0KPj4gKyAgICAgICAgICAgICAgICAg
+IHVhcnQyX2xvYzAsIHVhcnQyX2xvYzEsIGkyYzAsIGkyYzEsIGkyYzQsIGkyYzUsIHBjaWUxLA0K
+Pj4gKyAgICAgICAgICAgICAgICAgIGV0bl9sZWQsIGV0bl9waHksIHNwaSwgcHdtMF9sb2MwLCBw
+d20wX2xvYzEsDQo+cHdtMV9sb2MwLA0KPj4gKyAgICAgICAgICAgICAgICAgIHB3bTFfbG9jMSwg
+cHdtMl9sb2MwLCBwd20yX2xvYzEsIHB3bTNfbG9jMCwNCj5wd20zX2xvYzEsDQo+PiArICAgICAg
+ICAgICAgICAgICAgc3BkaWZfb3B0aWNhbF9sb2MwLCBzcGRpZl9vcHRpY2FsX2xvYzEsIHVzYl9j
+YzEsIHVzYl9jYzIsDQo+PiArICAgICAgICAgICAgICAgICAgc2QsIGRtaWNfbG9jMCwgZG1pY19s
+b2MxLCBhaV9sb2MwLCBhaV9sb2MxLCB0ZG1fYWlfbG9jMCwNCj4+ICsgICAgICAgICAgICAgICAg
+ICB0ZG1fYWlfbG9jMSwgaGlfbG9jMCwgaGlfbSwgdnRjX2kyc28sIHZ0Y19pMnNpX2xvYzAsDQo+
+PiArICAgICAgICAgICAgICAgICAgdnRjX2kyc2lfbG9jMSwgdnRjX2RtaWNfbG9jMCwgdnRjX2Rt
+aWNfbG9jMSwNCj52dGNfdGRtX2xvYzAsDQo+PiArICAgICAgICAgICAgICAgICAgdnRjX3RkbV9s
+b2MxLCBkY19mYW4sIHBsbF90ZXN0X2xvYzAsIHBsbF90ZXN0X2xvYzEsDQo+PiArICAgICAgICAg
+ICAgICAgICAgaXJfcngsIHVhcnQyX2Rpc2FibGUsIGdzcGlfZGlzYWJsZSwgaGlfd2lkdGhfZGlz
+YWJsZSwNCj4+ICsgICAgICAgICAgICAgICAgICBoaV93aWR0aF8xYml0LCBzZl9kaXNhYmxlLCBz
+Zl9lbmFibGUsIHNjcHVfZWp0YWdfbG9jMCwNCj4+ICsgICAgICAgICAgICAgICAgICBzY3B1X2Vq
+dGFnX2xvYzEsIHNjcHVfZWp0YWdfbG9jMiwgc2NwdV9lanRhZ19sb2MzLA0KPj4gKyAgICAgICAg
+ICAgICAgICAgIGFjcHVfZWp0YWdfbG9jMCwgYWNwdV9lanRhZ19sb2MxLCBhY3B1X2VqdGFnX2xv
+YzIsDQo+PiArICAgICAgICAgICAgICAgICAgdmNwdV9lanRhZ19sb2MwLCB2Y3B1X2VqdGFnX2xv
+YzEsIHZjcHVfZWp0YWdfbG9jMiwNCj4+ICsgICAgICAgICAgICAgICAgICBhdWNwdV9lanRhZ19s
+b2MwLCBhdWNwdV9lanRhZ19sb2MxLCBhdWNwdV9lanRhZ19sb2MyLA0KPj4gKyAgICAgICAgICAg
+ICAgICAgIGdwdV9lanRhZywgaXNvX3RyaXN0YXRlLCBkYmdfb3V0MCwgZGJnX291dDEsDQo+c3Rh
+bmRieV9kYmcsDQo+PiArICAgICAgICAgICAgICAgICAgc3BkaWYsIGFybV90cmFjZV9kZWJ1Z19k
+aXNhYmxlLA0KPmFybV90cmFjZV9kZWJ1Z19lbmFibGUsDQo+PiArICAgICAgICAgICAgICAgICAg
+YXVjcHVfZWp0YWdfZGlzYWJsZSwgYWNwdV9lanRhZ19kaXNhYmxlLA0KPnZjcHVfZWp0YWdfZGlz
+YWJsZSwNCj4+ICsgICAgICAgICAgICAgICAgICBzY3B1X2VqdGFnX2Rpc2FibGUsIHZ0Y19kbWlj
+X2xvY19kaXNhYmxlLA0KPnZ0Y190ZG1fZGlzYWJsZSwNCj4+ICsgICAgICAgICAgICAgICAgICB2
+dGNfaTJzaV9kaXNhYmxlLCB0ZG1fYWlfZGlzYWJsZSwgYWlfZGlzYWJsZSwgc3BkaWZfZGlzYWJs
+ZSwNCj4+ICsgICAgICAgICAgICAgICAgICBoaWZfZGlzYWJsZSwgaGlmX2VuYWJsZSwgdGVzdF9s
+b29wLCBwbWljX3B3cnVwIF0NCj4+ICsNCj4+ICsNCj4+ICsgICAgICAgIGRyaXZlLXN0cmVuZ3Ro
+Og0KPj4gKyAgICAgICAgICBlbnVtOiBbNCwgOF0NCj4+ICsNCj4+ICsgICAgICAgIGJpYXMtcHVs
+bC1kb3duOiB0cnVlDQo+PiArDQo+PiArICAgICAgICBiaWFzLXB1bGwtdXA6IHRydWUNCj4+ICsN
+Cj4+ICsgICAgICAgIGJpYXMtZGlzYWJsZTogdHJ1ZQ0KPj4gKw0KPj4gKyAgICAgICAgaW5wdXQt
+c2NobWl0dC1lbmFibGU6IHRydWUNCj4+ICsNCj4+ICsgICAgICAgIGlucHV0LXNjaG1pdHQtZGlz
+YWJsZTogdHJ1ZQ0KPj4gKw0KPj4gKyAgICAgICAgZHJpdmUtcHVzaC1wdWxsOiB0cnVlDQo+PiAr
+DQo+PiArICAgICAgICBwb3dlci1zb3VyY2U6DQo+PiArICAgICAgICAgIGRlc2NyaXB0aW9uOiB8
+DQo+PiArICAgICAgICAgICAgVmFsaWQgYXJndW1lbnRzIGFyZSBkZXNjcmliZWQgYXMgYmVsb3c6
+DQo+PiArICAgICAgICAgICAgMDogcG93ZXIgc3VwcGx5IG9mIDEuOFYNCj4+ICsgICAgICAgICAg
+ICAxOiBwb3dlciBzdXBwbHkgb2YgMy4zVg0KPj4gKyAgICAgICAgICBlbnVtOiBbMCwgMV0NCj4+
+ICsNCj4+ICsgICAgICAgIHJlYWx0ZWsscGRyaXZlOg0KPj4gKyAgICAgICAgICBkZXNjcmlwdGlv
+bjogfA0KPj4gKyAgICAgICAgICAgIEFuIGludGVnZXIgZGVzY3JpYmluZyB0aGUgbGV2ZWwgdG8g
+YWRqdXN0IFBNT1Mgb3V0cHV0IGRyaXZpbmcNCj5jYXBhYmlsaXR5Lg0KPj4gKyAgICAgICAgICAk
+cmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzINCj4+ICsgICAgICAg
+ICAgbWluaW11bTogMA0KPj4gKyAgICAgICAgICBtYXhpbXVtOiA3DQo+PiArDQo+PiArICAgICAg
+ICByZWFsdGVrLG5kcml2ZToNCj4+ICsgICAgICAgICAgZGVzY3JpcHRpb246IHwNCj4+ICsgICAg
+ICAgICAgICBBbiBpbnRlZ2VyIGRlc2NyaWJpbmcgdGhlIGxldmVsIHRvIGFkanVzdCBOTU9TIG91
+dHB1dCBkcml2aW5nDQo+Y2FwYWJpbGl0eS4NCj4+ICsgICAgICAgICAgJHJlZjogL3NjaGVtYXMv
+dHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyDQo+PiArICAgICAgICAgIG1pbmltdW06IDAN
+Cj4+ICsgICAgICAgICAgbWF4aW11bTogNw0KPj4gKw0KPj4gKyAgICAgICAgcmVhbHRlayxkY3lj
+bGU6DQo+PiArICAgICAgICAgIGRlc2NyaXB0aW9uOiB8DQo+PiArICAgICAgICAgICAgQW4gaW50
+ZWdlciBkZXNjcmliaW5nIHRoZSBsZXZlbCB0byBhZGp1c3Qgb3V0cHV0IGR1dHkgY3ljbGUuDQo+
+PiArICAgICAgICAgICAgVmFsaWQgYXJndW1lbnRzIGFyZSBkZXNjcmliZWQgYXMgYmVsb3c6DQo+
+PiArICAgICAgICAgICAgMDogMG5zDQo+PiArICAgICAgICAgICAgMjogKyAwLjI1bnMNCj4+ICsg
+ICAgICAgICAgICAzOiArIDAuNW5zDQo+PiArICAgICAgICAgICAgNDogLTAuMjVucw0KPj4gKyAg
+ICAgICAgICAgIDU6IC0wLjVucw0KPj4gKyAgICAgICAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55
+YW1sIy9kZWZpbml0aW9ucy91aW50MzINCj4+ICsgICAgICAgICAgZW51bTogWyAwLCAyLCAzLCA0
+LCA1IF0NCj4+ICsNCj4+ICsgICAgICByZXF1aXJlZDoNCj4+ICsgICAgICAgIC0gcGlucw0KPj4g
+Kw0KPj4gKyAgICAgIGFkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPj4gKw0KPj4gK3JlcXVp
+cmVkOg0KPj4gKyAgLSBjb21wYXRpYmxlDQo+PiArICAtIHJlZw0KPj4gKw0KPj4gK2FkZGl0aW9u
+YWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPj4gKw0KPj4gK2V4YW1wbGVzOg0KPj4gKyAgLSB8DQo+PiAr
+ICAgICBwaW5jdHJsQDRlMDAwIHsNCj4+ICsgICAgICAgICBjb21wYXRpYmxlID0gInJlYWx0ZWss
+cnRkMTN4eGUtcGluY3RybCI7DQo+PiArICAgICAgICAgcmVnID0gPDB4NGUwMDAgMHgxMzA+Ow0K
+Pj4gKw0KPj4gKyAgICAgICAgIGVtbWNfcGluc19oczIwMCB7DQo+DQo+RG9uJ3QgdXNlICdfJyBp
+biBub2RlIG5hbWVzLg0KDQpJIHdpbGwgZml4IGl0Lg0KDQo+DQo+PiArICAgICAgICAgICAgIHBp
+bnMgPSAiZW1tY19jbGsiLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgImVtbWNfY21kIiwNCj4+
+ICsgICAgICAgICAgICAgICAgICAgICJlbW1jX2RhdGFfMCIsDQo+PiArICAgICAgICAgICAgICAg
+ICAgICAiZW1tY19kYXRhXzEiLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgImVtbWNfZGF0YV8y
+IiwNCj4+ICsgICAgICAgICAgICAgICAgICAgICJlbW1jX2RhdGFfMyIsDQo+PiArICAgICAgICAg
+ICAgICAgICAgICAiZW1tY19kYXRhXzQiLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgImVtbWNf
+ZGF0YV81IiwNCj4+ICsgICAgICAgICAgICAgICAgICAgICJlbW1jX2RhdGFfNiIsDQo+PiArICAg
+ICAgICAgICAgICAgICAgICAiZW1tY19kYXRhXzciOw0KPj4gKyAgICAgICAgICAgICBmdW5jdGlv
+biA9ICJlbW1jIjsNCj4+ICsgICAgICAgICAgICAgcmVhbHRlayxwZHJpdmUgPSA8MHgyPjsNCj4+
+ICsgICAgICAgICAgICAgcmVhbHRlayxuZHJpdmUgPSA8MHgyPjsNCj4+ICsgICAgICAgICB9Ow0K
+Pj4gKw0KPj4gKyAgICAgICAgIGkyY19waW5zXzAgew0KPj4gKyAgICAgICAgICAgICBwaW5zID0g
+ImdwaW9fMTIiLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgImdwaW9fMTMiOw0KPj4gKyAgICAg
+ICAgICAgICBmdW5jdGlvbiA9ICJpMmMwIjsNCj4+ICsgICAgICAgICAgICAgZHJpdmUtc3RyZW5n
+dGggPSA8ND47DQo+PiArICAgICAgICAgfTsNCj4+ICsgICAgIH07DQo+PiAtLQ0KPj4gMi40MS4w
+DQo+Pg0KPg0KDQoNClRoYW5rcywNClRZIENoYW5nDQo=
