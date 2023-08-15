@@ -2,98 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 844A877CFC4
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Aug 2023 17:59:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4818877D175
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Aug 2023 20:05:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235417AbjHOP6k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Aug 2023 11:58:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
+        id S237958AbjHOSEZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Aug 2023 14:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238478AbjHOP6X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Aug 2023 11:58:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC3D1BF8;
-        Tue, 15 Aug 2023 08:58:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692115095; x=1723651095;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=o2Eb+5rz5n+LyEqDEQcpJWsHJ40eqEd9SL2bfrfu7A4=;
-  b=QDiN448Itx7NQgi2HD+d77fv7NeynydSEwbIlujnipEWZ3DKHMFPmSoz
-   F4u7DIMGJ7RzprCS+LW7GshocF/6gxbqXcjDSwj8aESGs7+Z1CElwYARM
-   tXFR15cvCSff2Il8+0WDCrYqcVKOypAH3fIyjl8515IMyWSFuAa4Tzlsh
-   5e6W+SkAfBKQIttyLLWqLJts3iJPG0NBBDf6wq3TrD2eRzcaSPlNIE88S
-   UuehgiO9pk+kXgtjtu1nKfqZgeLlmmxnCstXBkI+YtOVaht/vZJw8620s
-   0tAzarLv/fw3DGlbxSdSn/va4/t8lSAgrtTzoVNeUbqy8XTqm6G3NSdPv
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="438650368"
-X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="438650368"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 08:58:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="857488813"
-X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
-   d="scan'208";a="857488813"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP; 15 Aug 2023 08:58:12 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qVwQs-008KLb-2S;
-        Tue, 15 Aug 2023 18:58:10 +0300
-Date:   Tue, 15 Aug 2023 18:58:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: sim: simplify code with cleanup helpers
-Message-ID: <ZNugkmhj1Joygorj@smile.fi.intel.com>
-References: <20230809131442.25524-1-brgl@bgdev.pl>
- <20230809131442.25524-2-brgl@bgdev.pl>
- <CACRpkdavsv3nJnhtdqW8ANAVfxbgHdM-SpcfOv4p_t-7EOaOHQ@mail.gmail.com>
- <20230815155253.GK212435@hirez.programming.kicks-ass.net>
+        with ESMTP id S237772AbjHOSEI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Aug 2023 14:04:08 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FBF1984
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Aug 2023 11:04:07 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-99c1c66876aso753796166b.2
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Aug 2023 11:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692122646; x=1692727446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YHQetwDY0S+nesWckihQyYGyUne1hsQmp/ypqZuBn08=;
+        b=gIZBAdDCRGoR0cQudPL6l4mFJpS0F+2Qg0Lz5lkHd/DKHfQ8cxtRSvSchoDCN1Qmza
+         HcsRHW+5FgfqTvXFFW3ojKHlJqvcX9pmx20QVXaNF1ExVTdrF/PhRAKyYdBIbN2/yll5
+         ThQud9GKQAXB6h+aysbMsbUFQqbxpR2u5a8ORp0CfnQMdzJUYcjV5iIRLos8GY6vU7UY
+         4djPr0+ivTxpsR7CDwkG4arfmXHHfscF9JC4cw4QBcqlqtwTMHADkSbqaqZPKUxFu1me
+         1rUFQMP8wt2j6ObE479qLT43r/Laq0HTGpqTmojrabpvQkzu5QDgHaBO5pwwlsNc50vE
+         zCwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692122646; x=1692727446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YHQetwDY0S+nesWckihQyYGyUne1hsQmp/ypqZuBn08=;
+        b=MShvSrZLVPuYpBmd+4ffv2Ds01vLYCrzopPU5WESqCHZB6Ftf/u5pNgycNzm7WkgX4
+         W8NiFjtmVyIN60gVTjmLyxGXQY0PtFesBLHeXY0IGtPYZIP+v7zRlJF8vllBH00m2d1S
+         qVNvvfSTE3oE9awleQ7O3zKi61u5H/qQ26EYrEZHcb0WygHxdLQN8j9NEJB04r82jZw9
+         9/Tu732W+qlDeoav6WTZyE0GPGXi8OSfx4Hcrlsl5IVHshr6UAlZpvJfAGA59F4W4Dvt
+         qQuSiDtSS7Jsi5ezsVlDMexw3RzxR1WeiiTxnsNWDlZH+SZ4DRXHkejbO7RFEU4yrTCx
+         gf6w==
+X-Gm-Message-State: AOJu0Yyn5Tsji4aPMYNZ0zjV0qs+3h7f5zE66tQQJGFmqNGm5KNdVQKn
+        CSAK0p6ypdB78FWAJ9tWiGZHQ6wt0GuGUxKUMyslE65W
+X-Google-Smtp-Source: AGHT+IFwK3KEd1qqN9UMlTRwX+as/eLCLveAOkNUX+6/6UPELj5ZyRqGhEKeOTNGGxs0M81YNohU1vRcT++C+/JXN0A=
+X-Received: by 2002:a17:906:3cb2:b0:99b:cf0c:2cb1 with SMTP id
+ b18-20020a1709063cb200b0099bcf0c2cb1mr11042695ejh.66.1692122645688; Tue, 15
+ Aug 2023 11:04:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230815155253.GK212435@hirez.programming.kicks-ass.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <ZM7xEbr0essN2qY3@sol> <CAN1+YZXd_dMJK9CYL+bmtTRCzT=W7Kt9VTeD38Wg8habFLirzg@mail.gmail.com>
+ <ZM9oB0l4fvOinzLm@sol> <CAN1+YZVD7ui4HSRMaGv+y-xT9NgeGNWDM_vx2MhZfiGrwhLPVA@mail.gmail.com>
+ <ZNQzT2MtskTTZTiI@sol> <CAN1+YZWz10vZ__3gThzTACbiPY=EVVJ_2qjrAzk6rgpjWwKv9g@mail.gmail.com>
+ <ZNWH+L9o5gp6PWyq@sol> <CAN1+YZWTJ-TqjR99MBGSPPmQY1ao-TCGu-DfNTYBQvbXcmV=5A@mail.gmail.com>
+ <ZNWQsabr8kPCbD4X@sol> <CAN1+YZUtCp1FLUSTGJthpXt1q7=2seYFiEHTb3-pMarpk0DnOA@mail.gmail.com>
+ <ZNrLmd3DxcFPptEq@sol>
+In-Reply-To: <ZNrLmd3DxcFPptEq@sol>
+From:   andy pugh <bodgesoc@gmail.com>
+Date:   Tue, 15 Aug 2023 19:03:29 +0100
+Message-ID: <CAN1+YZVAMVji862kGmbstOo-Ldu1tCjqgqYPOc2D7EhPa6uyHQ@mail.gmail.com>
+Subject: Re: How to use gpiod_line_set_flags
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 05:52:53PM +0200, Peter Zijlstra wrote:
-> On Tue, Aug 15, 2023 at 10:04:32AM +0200, Linus Walleij wrote:
-> > On Wed, Aug 9, 2023 at 3:14 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, 15 Aug 2023 at 01:49, Kent Gibson <warthog618@gmail.com> wrote:
+
+> gpiod_line_set_flags() was a relatively recent addition to libgpiod, so
+> my guess is you have an old gpiod.h being included by your build.
+> Though that was added in 1.5, so it would have to be older than that.
+
+Ah, yes, that will be it. I forgot that I went back to Raspbian/Buster
+and that has v1.2
 
 
-> > > -       mutex_lock(&chip->lock);
-> > > +       guard(mutex)(&chip->lock);
-
-> Looks about right.
-
-Btw, why don't we have something like
-
-	guard_mutex()
-
-to be used as
-
-	guard_mutex(&chip->lock);
-
-Moreover, maybe some macro that can predict the API call from the type of
-the parameter?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--
+atp
+"A motorcycle is a bicycle with a pandemonium attachment and is
+designed for the especial use of mechanical geniuses, daredevils and
+lunatics."
+=E2=80=94 George Fitch, Atlanta Constitution Newspaper, 1912
