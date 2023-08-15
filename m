@@ -2,102 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B669177CA82
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Aug 2023 11:34:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D19F877CABD
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Aug 2023 11:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236028AbjHOJdk convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 15 Aug 2023 05:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40480 "EHLO
+        id S236335AbjHOJuZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Aug 2023 05:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236268AbjHOJcf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Aug 2023 05:32:35 -0400
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F1D1BC7;
-        Tue, 15 Aug 2023 02:32:33 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-58a24ac48eeso16320727b3.0;
-        Tue, 15 Aug 2023 02:32:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692091952; x=1692696752;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sWdpDNEBZCXweam0z6ARfXcf85ClHVSuzD7JjlW5VJY=;
-        b=MkMgRulSLOUcIJWVVGwjovpSCpZQcPsdjHJbp0L57NFKsTeVZRz+vTaoh1W/a4f1S2
-         k0VE2B4l+gCDYoMVs0POuV7ykVPMfDGlv2Qa6UZsFa08QaZt/VgBzHPJWOBKhKICP94I
-         zir1E/abQBAGK6a4UW03mYhupYJuAMZ5GHYk0MfVlEGtRAnITzX0raImtEaGTK9byS5F
-         miVkakkMF/UJoJjTRUambK8wrYQDQgr3VeSnNgE5F3N0q/qDdpdt7EGCyHpkEqIVL4pM
-         QwtCW3RLQZlsjR4dv+mRim74w+eNQ4fU+DSWT2SBL+4iEQ4Zl66IOWXR1P/grBO5otfs
-         8zVQ==
-X-Gm-Message-State: AOJu0YzQoSwvxjrIe0RbHfMl+wsEI5lLxm/RqZcx+sbbWotmpm3apRfP
-        UoXVzERZRUk63hk+4HZjDs6Sfj5R4YDsPw==
-X-Google-Smtp-Source: AGHT+IHQbRl+w8DMSEKB/oPWqTnJqWbYpmkVDTWIFWHHd1C2sdMIDpAcFIzdGqWjeQ1jjVtF586FsQ==
-X-Received: by 2002:a0d:dfcc:0:b0:577:3d46:f90e with SMTP id i195-20020a0ddfcc000000b005773d46f90emr12255628ywe.32.1692091952590;
-        Tue, 15 Aug 2023 02:32:32 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id n186-20020a8172c3000000b0058605521e6esm3307751ywc.125.2023.08.15.02.32.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Aug 2023 02:32:31 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d684d7a2a67so3185806276.0;
-        Tue, 15 Aug 2023 02:32:31 -0700 (PDT)
-X-Received: by 2002:a25:838d:0:b0:d44:2269:a289 with SMTP id
- t13-20020a25838d000000b00d442269a289mr12697634ybk.1.1692091951314; Tue, 15
- Aug 2023 02:32:31 -0700 (PDT)
+        with ESMTP id S236252AbjHOJuC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Aug 2023 05:50:02 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE5CE3;
+        Tue, 15 Aug 2023 02:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692092999; x=1723628999;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=T7avx6akMBj8VUyBxXusJjovm//UmqITJGtB1agsYRQ=;
+  b=Z/JekSAn1vGgGa/OpByVm7vXxrpXpSTRkasiqmJ6VoTh+uuKMCDQlv1x
+   9+5JdyEE0W7sFrNyl4s9gpoF2WwygeDZFR0DG/PFzJAzPyP2oSDHBWvzO
+   YgyA7563jqpfaVKJ1imajh988c9XsF2HxAA0rJV7muEC2HiGY2s7A6roU
+   Dijhpg0dtx5BiMrSer7sTYxGzCb4Peynjpsy7/7dUisBxXz5NKaBK4NZ9
+   PZSiRf8rLmDxbAFD/vZCOkdEGnCa5Q1+iAvUP6q3tyLQDNFh6im5b+ras
+   Q1mPlM89SUQpo9CEd15Wa7X/HHf16UNr/wgA6Bw04N69AgmrokAtq6Wv8
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="362392954"
+X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
+   d="scan'208";a="362392954"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2023 02:49:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="733788881"
+X-IronPort-AV: E=Sophos;i="6.01,174,1684825200"; 
+   d="scan'208";a="733788881"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP; 15 Aug 2023 02:49:56 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qVqgU-00DF2A-2w;
+        Tue, 15 Aug 2023 12:49:54 +0300
+Date:   Tue, 15 Aug 2023 12:49:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3] gpiolib: fix reference leaks when removing GPIO chips
+ still in use
+Message-ID: <ZNtKQlnQxFediB0J@smile.fi.intel.com>
+References: <20230811193034.59124-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20230814072436.3757-1-biju.das.jz@bp.renesas.com>
- <20230814072436.3757-2-biju.das.jz@bp.renesas.com> <CACRpkdaZGrnV6bp0Sz5_yxG6y0oAqBeZh2UAz+pM4ULtpWq30Q@mail.gmail.com>
-In-Reply-To: <CACRpkdaZGrnV6bp0Sz5_yxG6y0oAqBeZh2UAz+pM4ULtpWq30Q@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 15 Aug 2023 11:32:18 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU+544cr+Ykq9Z=0Q8YoNdwWyqHkN81v8UzJJXF23uQsw@mail.gmail.com>
-Message-ID: <CAMuHMdU+544cr+Ykq9Z=0Q8YoNdwWyqHkN81v8UzJJXF23uQsw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: renesas: rzg2l: Fix NULL pointer dereference
- in rzg2l_dt_subnode_to_map()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        stable@kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230811193034.59124-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Fri, Aug 11, 2023 at 09:30:34PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> After we remove a GPIO chip that still has some requested descriptors,
+> gpiod_free_commit() will fail and we will never put the references to the
+> GPIO device and the owning module in gpiod_free().
+> 
+> Rework this function to:
+> - not warn on desc == NULL as this is a use-case on which most free
+>   functions silently return
+> - put the references to desc->gdev and desc->gdev->owner unconditionally
+>   so that the release callback actually gets called when the remaining
+>   references are dropped by external GPIO users
 
-On Tue, Aug 15, 2023 at 11:14 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Aug 14, 2023 at 9:24 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> > Fix the below random NULL pointer crash during boot by serializing
-> > pinctrl group and function creation/remove calls in
-> > rzg2l_dt_subnode_to_map() with mutex lock.
->
-> What about using, hehe, scoped guards? Bartosz premiered the use
-> of this and I already like it a lot... see:
-> https://lore.kernel.org/linux-gpio/20230812183635.5478-1-brgl@bgdev.pl/
+...
 
-Quoting the other Linus:
+> -	if (desc && desc->gdev && gpiod_free_commit(desc)) {
 
-   "We should probably also strive to avoid it for bug-fixes that end up
-    going to stable."
+The commit message doesn't explain disappearing of gdev check.
 
-https://lore.kernel.org/all/CAHk-=wjsb5gZTvhXofPCQthk48S9_bSGohXKU8x8XDnf7=bROw@mail.gmail.com
+> -		module_put(desc->gdev->owner);
+> -		gpio_device_put(desc->gdev);
+> -	} else {
+> +	/*
+> +	 * We must not use VALIDATE_DESC_VOID() as the underlying gdev->chip
+> +	 * may already be NULL but we still want to put the references.
+> +	 */
+> +	if (!desc)
+> +		return;
+> +
+> +	if (!gpiod_free_commit(desc))
+>  		WARN_ON(extra_checks);
+> -	}
+> +
+> +	module_put(desc->gdev->owner);
+> +	gpio_device_put(desc->gdev);
+>  }
 
-Gr{oetje,eeting}s,
+So, if gdev can be NULL, you will get an Oops with new code.
 
-                        Geert
+To keep a status quo this needs to be rewritten.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
