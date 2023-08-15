@@ -2,82 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C7D77CA0B
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Aug 2023 11:11:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B323477CA25
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Aug 2023 11:15:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235870AbjHOJKu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Aug 2023 05:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45520 "EHLO
+        id S235884AbjHOJPK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Aug 2023 05:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235893AbjHOJKW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Aug 2023 05:10:22 -0400
-Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D892E1998
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Aug 2023 02:10:19 -0700 (PDT)
-Received: by mail-oo1-xc2d.google.com with SMTP id 006d021491bc7-56d455462c2so3721768eaf.2
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Aug 2023 02:10:19 -0700 (PDT)
+        with ESMTP id S235973AbjHOJOh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Aug 2023 05:14:37 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C80C9
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Aug 2023 02:14:36 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-d6a5207d9d8so2749460276.0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Aug 2023 02:14:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692090618; x=1692695418;
+        d=linaro.org; s=google; t=1692090875; x=1692695675;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HTEF3mMEwF6YiiLngewsEfRU77YIxTEoS69H+Rwqbd0=;
-        b=VwWw7KpCrtSFxxsif4kM2FXRaUcWrnLoLuvxjuE1nnBjkoypFOscPY9JCuwbvSlGgn
-         vwhbP/Skv8j3YwESeAWmdtqakZGqvtlSDKkwVT7LHw5QwZqHiFoL8RLwdYdTxq89h86h
-         vwaDDJxFYoc2W9+3iBkXgLm9djhr1mownIn3JfHNIG/JY5Vxjx/dL0SEcr3RG2mEnkST
-         hUEJf596xX5FsfeZkwbbh6uPKY3XMRGrcCzlY5W9s7bWa/yrVyxS5co+w9GDiP/8ax6/
-         g5juva9uIG5s+i92ALBTFYyos7WX2At2iw31uNxPzDojAHSi4uraZqkxezPWFn1gNiHG
-         btwQ==
+        bh=2GyKzeoNrkKCtptNnkMb1Win6meoNikolvNJpv26RGA=;
+        b=YQyehcNWH/HXpaISmk4MT8R99KOXRRZW4YRoiwH+pvau1FpjGujmlec535XaaInKnX
+         T8wnh4N9CUWhF2ApegkyjAcd0jqcFqIu1YlAe8af1ypYIJqaxvNS8spRHjVMAJo0H6d0
+         KAteL7WYKI61vV9hAP46D/BL6YvDmaer49NgGJvzs8i/Rj3MirqNNNco5h8JXuUx0RMs
+         L7WBESo9xtis0oFeIqB1lU+fNQBIOtun6lKyWYmm8RtgV/tHPQ5sKeAv8GHui9QOvEZH
+         RpCfV3LQ8Im32sX7LyC5Rkq1TKY74l0ehZods3gZdIhr5liRDrO+7mSrGZ0Amk1LuFHv
+         EvuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692090618; x=1692695418;
+        d=1e100.net; s=20221208; t=1692090875; x=1692695675;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HTEF3mMEwF6YiiLngewsEfRU77YIxTEoS69H+Rwqbd0=;
-        b=jhmX6Qrm8BScreXGhuVlAFx27t37PPGiO8E5k+niJRctPqjda9DXYngLsZsAlqMhUk
-         A6l9JG5npsPN6g15F+9IH3NG2Heo0SvfvysduJxlrZYion/qBpPqf1wcF8x1sfG826SM
-         c3/CjonfUpEIhvidvRbyw57zwvARInfR8k4E+PxARJnrK/ANW2UVs2ueSibgJ7YQG4Ti
-         owjH0VTXVOM4zL4nq3inJlqUBoOGp+ZbFMbsvvfqIpjqtLM2XCt79FxKt1nHTQ/kaKm+
-         Ox+cUnNG2bqZGJkIx27wPN/AeLvuI1OjcAvXfwWE7nMd35u/M/icRr8RFb87aotfAJO/
-         4HJw==
-X-Gm-Message-State: AOJu0Yyyknat1NYkYOEiq2W1GyGJSzGSQZZscO3aERuv8V16nAyKMn90
-        tX2vuNrXOJPrW52j9B/4zKlibShuIlwa+pJMiOCCUA==
-X-Google-Smtp-Source: AGHT+IELEzEzRHt7+/91xk3FRpX9OXjbJ3v23mrOMtATDKEZGj8lJsjlFm1Ydv4GSP2Njf9WpzC6Tp2I3wO1jQVdj4A=
-X-Received: by 2002:a05:6358:2610:b0:139:d14c:d6ea with SMTP id
- l16-20020a056358261000b00139d14cd6eamr10111849rwc.9.1692090618249; Tue, 15
- Aug 2023 02:10:18 -0700 (PDT)
+        bh=2GyKzeoNrkKCtptNnkMb1Win6meoNikolvNJpv26RGA=;
+        b=hStwQnGE/gtTgbBH42ut6scebS4qWuzVmOw+G3HpNh0CubTNvTFSRpl/GrofXtSANE
+         U9JAzatF6mZTKqhOMMRf26lvDBowT9BPuFGk9/jF94JWRf+aA3gmbm/BFyLnVMS3uCVN
+         jaQPi4TdHhybff+pHuCWQo3y6IMo1Dj0+dm8Xz/sKsXlWu7/M8RSpId5zzMUKx0mL6ou
+         I1siy853xEus3JClxn1SM7NJcYtZ9uR6RbdDmXyZd4Tms0b4vIpadY06Z5xVaX73PLuH
+         c14vkJCNUbMGDSoYiUXiU5ggyuWIYQ32fOqCxuoHEsWdgndLyNpeEXLg8XGgNXVxYLsr
+         BE+w==
+X-Gm-Message-State: AOJu0Ywg6Y6iavLN18U6cN+ddywWQuxYNA/7nGi/nLc+dG1g5idp5ZUV
+        YqQsDkMJLUTEEDN1HJtXxykBgguljIVZGmtrOb9Ie21INA8puUuyvl8=
+X-Google-Smtp-Source: AGHT+IGIkUXHnDswHZIYR4qRhuzq75a8JNyAXGmCuPxIzxsVXoAnNQzpwCSP8OT+hs+7BQPT8z4xFTpzecW8/v9iAEE=
+X-Received: by 2002:a25:25d8:0:b0:d47:7448:81a with SMTP id
+ l207-20020a2525d8000000b00d477448081amr1452994ybl.23.1692090875676; Tue, 15
+ Aug 2023 02:14:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230814114518.26243-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230814114518.26243-1-krzysztof.kozlowski@linaro.org>
+References: <20230814072436.3757-1-biju.das.jz@bp.renesas.com> <20230814072436.3757-2-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20230814072436.3757-2-biju.das.jz@bp.renesas.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 15 Aug 2023 11:10:07 +0200
-Message-ID: <CACRpkdZvr7fvXyh7V2nMJTwDxtK=sUz=DBRtqhR=6YzZpb7DxQ@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: qcom: new drivers for v6.6
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 15 Aug 2023 11:14:24 +0200
+Message-ID: <CACRpkdaZGrnV6bp0Sz5_yxG6y0oAqBeZh2UAz+pM4ULtpWq30Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: renesas: rzg2l: Fix NULL pointer dereference
+ in rzg2l_dt_subnode_to_map()
+To:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        stable@kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 14, 2023 at 1:45=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Mon, Aug 14, 2023 at 9:24=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
 
-> That's what I got in my queue for v6.6.
+> Fix the below random NULL pointer crash during boot by serializing
+> pinctrl group and function creation/remove calls in
+> rzg2l_dt_subnode_to_map() with mutex lock.
 
-Thanks a lot for backing me up with this, pulled in!
+What about using, hehe, scoped guards? Bartosz premiered the use
+of this and I already like it a lot... see:
+https://lore.kernel.org/linux-gpio/20230812183635.5478-1-brgl@bgdev.pl/
 
 Yours,
 Linus Walleij
