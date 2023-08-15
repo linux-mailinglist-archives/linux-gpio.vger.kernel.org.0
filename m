@@ -2,169 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E53B077D30C
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Aug 2023 21:11:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9628D77D425
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Aug 2023 22:32:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236637AbjHOTK5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Aug 2023 15:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37434 "EHLO
+        id S236518AbjHOUby (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Aug 2023 16:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240049AbjHOTKZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Aug 2023 15:10:25 -0400
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806EA1FF7
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Aug 2023 12:10:07 -0700 (PDT)
-Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-447abb2f228so2088640137.0
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Aug 2023 12:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692126606; x=1692731406;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hiUxUt5zsNu7YvGS43EgY8hBy5YnTNcR0LzuDxUSonI=;
-        b=OoRky4z7z2k+pVNnv2paMYSyzLbht0EaTRzRmeJw8QmznvnjGBu2J40Xb1atfsI43K
-         9XKKAQQLh94m4fLJzf+SSAexlIHo1tIQuyma13YCYpAeGbZAwEWxT4a4xwUpX7bj9+co
-         6VUkuA8wt6iij34h5iuip5bNLpAXaZTATUjuqReqM5bywKr+zFRwFN+fEX/niTGILOqn
-         ajWWJcXSshRyKxijRLaZkTaX6Jatigyl++Y1RzdR/ZmFI6vRqH66duV1T0tc2Nsi4wvk
-         AmH1JXpmZSLmGm2CMpbYdqqHUJdaZ67XjU7FUhmPjn4Mzh9EYiYnn4+S/KLnq6aH7qap
-         J42Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692126606; x=1692731406;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hiUxUt5zsNu7YvGS43EgY8hBy5YnTNcR0LzuDxUSonI=;
-        b=P+gwpGDimyqPJQJdh7KPq0q1GDbas5uolLEpf0UZnkUZ3hmDRHF5/MKkzwNm67G+XI
-         DsBassPJfS1LRPzU+8S/VvM1MQw8AzIvX1Swl37iIBE+/x1eEFq92O9FVUrE6I2FMrPo
-         IZwuO0GdYG5OB3AvoJq0O6qMfKO0RzzzCj+Vwik67oWbNFYInAdlfzFdo7Ajqo/nLM1J
-         uGv+x0ZL5Y8evcjXqsBDCT6AP2ZSAYfvnW1Wy2oTnsbRNCENwQcWQYXxUavTPlQLrdFb
-         aAJSlcZyPCWUTj+exg/9w7/zg2o0kzhd+mSTs54U7zuuoidqsB1rKR2c1hBmmYlWfQKO
-         WVnw==
-X-Gm-Message-State: AOJu0YzUrS3WdxbqZCkT5qWp8J/VzA5Ed2alEaWlVf9R/kApaWK5bf3z
-        DAanogStCNV+gIewfLitj0P2xBqba/AZ2voad8jcvA==
-X-Google-Smtp-Source: AGHT+IHnW+Qapu3KsvoKRVkEgCydWxhc70EI3sroVoORi+Hj0jCfSux1fJ1DhvuZxaSyTXlFs9uXafPQIAIIKoNBWWE=
-X-Received: by 2002:a67:db04:0:b0:449:6e0e:b2d5 with SMTP id
- z4-20020a67db04000000b004496e0eb2d5mr9613977vsj.8.1692126606625; Tue, 15 Aug
- 2023 12:10:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230812183635.5478-1-brgl@bgdev.pl> <ZNtT37d3eR6FcQyR@smile.fi.intel.com>
-In-Reply-To: <ZNtT37d3eR6FcQyR@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 15 Aug 2023 21:09:55 +0200
-Message-ID: <CAMRc=McqdnBBSe1QhyNEFCs3E+Qb_K-z1dT+B8+n2KvWajj5hA@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: sim: simplify code with cleanup helpers
+        with ESMTP id S237828AbjHOUbZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Aug 2023 16:31:25 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93B341BF7;
+        Tue, 15 Aug 2023 13:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=5qU/5VuCNxpl7AX33gP+0AiuqhusLaBl3uuYx+5QjPY=; b=O48VbhaB/crYgFw5YXDyYmVlmD
+        c6yFbFo9wu37AXbWrb1K7w7G2IMtEdNqHwk8zFqTW8m5B64YaHxl+OqkfHo7rwXNBLrmvyl/Ma0b0
+        zO0G2nQjK0r3QtA5OR1TYNIx/SgjtoBgS3oToZLa0Oi6k6g5LNGqSMUCZ4GhYQYFkD8FK1knZAqbN
+        of0V+d9ic6KlxpS39laH9gW38gGqk0o5AUxowGd2sI5/cnl64PxDsb7Ui61KTdi9FfrowSbatS2xX
+        ZhgPZvGHrIc7xQ4bcTC18seZ799MVpy+PHtgzx+p6L4DMP2WOsExYG/8cVPuNeC0fUfsn13gInE1o
+        Ly4nPrrg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qW0hB-00C4qZ-2k;
+        Tue, 15 Aug 2023 20:31:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4FD07300222;
+        Tue, 15 Aug 2023 22:31:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 39F702B57699C; Tue, 15 Aug 2023 22:31:17 +0200 (CEST)
+Date:   Tue, 15 Aug 2023 22:31:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 2/2] gpio: sim: simplify code with cleanup helpers
+Message-ID: <20230815203117.GA971582@hirez.programming.kicks-ass.net>
+References: <20230809131442.25524-1-brgl@bgdev.pl>
+ <20230809131442.25524-2-brgl@bgdev.pl>
+ <CACRpkdavsv3nJnhtdqW8ANAVfxbgHdM-SpcfOv4p_t-7EOaOHQ@mail.gmail.com>
+ <20230815155253.GK212435@hirez.programming.kicks-ass.net>
+ <ZNugkmhj1Joygorj@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZNugkmhj1Joygorj@smile.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 12:31=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Sat, Aug 12, 2023 at 08:36:35PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Use macros defined in linux/cleanup.h to automate resource lifetime
-> > control in gpio-sim.
->
-> ...
->
-> >  static void gpio_sim_set(struct gpio_chip *gc, unsigned int offset, in=
-t value)
-> >  {
-> >       struct gpio_sim_chip *chip =3D gpiochip_get_data(gc);
-> >
-> > -     mutex_lock(&chip->lock);
-> > -     __assign_bit(offset, chip->value_map, value);
-> > -     mutex_unlock(&chip->lock);
-> > +     scoped_guard(mutex, &chip->lock)
-> > +             __assign_bit(offset, chip->value_map, value);
->
-> But this can also be guarded.
->
->         guard(mutex)(&chip->lock);
->
->         __assign_bit(offset, chip->value_map, value);
->
+On Tue, Aug 15, 2023 at 06:58:10PM +0300, Andy Shevchenko wrote:
+> On Tue, Aug 15, 2023 at 05:52:53PM +0200, Peter Zijlstra wrote:
+> > On Tue, Aug 15, 2023 at 10:04:32AM +0200, Linus Walleij wrote:
+> > > On Wed, Aug 9, 2023 at 3:14 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+> 
+> > > > -       mutex_lock(&chip->lock);
+> > > > +       guard(mutex)(&chip->lock);
+> 
+> > Looks about right.
+> 
+> Btw, why don't we have something like
+> 
+> 	guard_mutex()
+> 
+> to be used as
+> 
+> 	guard_mutex(&chip->lock);
 
-Come on, this is total bikeshedding! I could produce ten arguments in
-favor of the scoped variant.
+Because this way I can write:
 
-Linus acked even the previous version and Peter says it looks right. I
-will queue it unless some *real* issues come up.
+DEFINE_LOCK_GUARD_1(rq_lock_irqsave, struct rq,
+		    rq_lock_irqsave(_T->lock, &_T->rf),
+		    rq_unlock_irqrestore(_T->lock, &_T->rf),
+		    struct rq_flags rf);
 
-> >  }
->
-> ...
->
-> >  {
-> >       struct gpio_sim_chip *chip =3D gpiochip_get_data(gc);
-> >
-> > -     mutex_lock(&chip->lock);
-> > -     bitmap_replace(chip->value_map, chip->value_map, bits, mask, gc->=
-ngpio);
-> > -     mutex_unlock(&chip->lock);
-> > +     scoped_guard(mutex, &chip->lock)
-> > +             bitmap_replace(chip->value_map, chip->value_map, bits, ma=
-sk,
-> > +                            gc->ngpio);
->
-> Ditto.
->
->         guard(mutex)(&chip->lock);
->
->         bitmap_replace(chip->value_map, chip->value_map, bits, mask, gc->=
-ngpio);
->
-> (exactly 80 for the sectants of 80 characters :).
->
-> >  }
->
-> ...
->
-> >  {
-> >       struct gpio_sim_chip *chip =3D gpiochip_get_data(gc);
-> >
-> > -     mutex_lock(&chip->lock);
-> > -     __assign_bit(offset, chip->value_map, !!test_bit(offset, chip->pu=
-ll_map));
-> > -     mutex_unlock(&chip->lock);
-> > +     scoped_guard(mutex, &chip->lock)
-> > +             __assign_bit(offset, chip->value_map,
-> > +                          !!test_bit(offset, chip->pull_map));
->
-> Ditto.
->
->         guard(mutex)(&chip->lock);
->
->         __assign_bit(offset, chip->value_map, test_bit(offset, chip->pull=
-_map));
->
-> (in this form fanatics of 80 can sleep well :-)
->
-> Note that !! is redundant as test_bit() family of functions were fixed to
-> return boolean.
+And have:
 
-Ha! TIL... I'll change it in a separate patch.
+	guard(rq_lock_irqsave)(rq);
 
-Bart
+and
 
->
-> >  }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+	scoped_guard (rq_lock_irqsave, rq) {
+	}
+
+just work.
+
+And if you look in tip/sched/core, you'll find exactly this.
+
+Or look here:
+
+  https://lkml.kernel.org/r/20230612090713.652690195@infradead.org
+
+for a bunch more examples -- I've wanted to get more of that merged, but
+alas, only 24h in a day and life got in the way. Defining local guard
+types is very useful.
+
+> Moreover, maybe some macro that can predict the API call from the type of
+> the parameter?
+
+The whole type inferrence in C is not extensible. That is, you get to
+write a single _Generic() statement, and every case that is included in
+it will work, but the moment you use a new type, one that is not
+included in your giant _Generic() statement, you're out of luck.
