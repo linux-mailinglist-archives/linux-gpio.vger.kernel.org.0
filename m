@@ -2,90 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0B7277EBEC
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Aug 2023 23:34:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B0ED77EC09
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Aug 2023 23:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243351AbjHPVeC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Aug 2023 17:34:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40178 "EHLO
+        id S1346534AbjHPVlj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Aug 2023 17:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346586AbjHPVd7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Aug 2023 17:33:59 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319971FF3
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Aug 2023 14:33:58 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-d678b44d1f3so456990276.0
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Aug 2023 14:33:58 -0700 (PDT)
+        with ESMTP id S1346674AbjHPVlf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Aug 2023 17:41:35 -0400
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0102D7C
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Aug 2023 14:41:18 -0700 (PDT)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-58c92a2c52dso12873187b3.2
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Aug 2023 14:41:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692221637; x=1692826437;
+        d=linaro.org; s=google; t=1692222077; x=1692826877;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/RBVqp4kduJXMJbxlAvEmo+9gvCH5BX3b44BJoL4eqo=;
-        b=jvOzYHAAWNRja/8gLNIAYZd28LRCoDJ+poMcE4M6vMSSwteXt95Oac+kEwZkwJx+Jq
-         t3r5/e65lbRRtbXjlQdHa2+twul/cuJKKdVPV16c4/Jsz6QHlmmxJCClrdIguWcPvzA/
-         xPytpmL9Tg0O8vypX61xkkJ9B88mCxcRFvUVDYh3/G3UAggydn2hKOUZlY+6ZIYxdymf
-         a/fZ5/LLysX2lpQjAb2140tZAdsO0xvQP5uouzTpACgahG45wsCdLu9k2iu8YCRvauvK
-         p0zMQJ1+Ewd4/VD3/q5NTsLiWah3irTjPaK8cr5vfDMWCnit8j2PUP4BTDXJvBGX5bo8
-         DnlQ==
+        bh=YM2d8iCeF3hjgjUnKhIrZx6ABnQwbFOwCyrc+YukRcU=;
+        b=Mxnl5jY7bKUsxCvorsG3pNieWLVGkaJNRBXChZA9KDf7TytXPrwgObDN4rQ0goNj3V
+         DYs32WTOA6Qa5lKh0QH95iMsWgtnOTRAkmkscTI8wQjM2USOJWOdNZh8U/d0UYdfuwMX
+         dElzfkUa9mRp9HufX0SozO+YBzi+oXAHJxDnbBLSqIF18yCa+qOe5WasHBzl4jS9e2Gp
+         NTjWrHiCl9S4PAcQ8I3bFB83XAB8iqRXDMNI2U0WjksUzYXshLSDvDxE07I0N3H9zYt5
+         gnjbvYDpUQhtEeLsyYiOWcysbDp04JhFMpcHprrXhwjhUbltBF/NyCG/dEr7EsDbKadG
+         4HCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692221637; x=1692826437;
+        d=1e100.net; s=20221208; t=1692222077; x=1692826877;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/RBVqp4kduJXMJbxlAvEmo+9gvCH5BX3b44BJoL4eqo=;
-        b=DuPdmIgnaSX8J4z2rp+yvRgKswQSqN0cnYdPukyZ0KYzEr4FpO0fha3mRMTDUncxC5
-         fgjfLsApL2g0R3VqSyKudC/j9ExbR68w7uLoPnVXK2lCStWVXHiR/m87moy/3HlJtHHx
-         TAm5N8z6ZMV5NC6euoxFHOPf0CAqZPrn0r77JAZXosmOIO2ZHS69j6/YMrkI7SuAUehM
-         zru3pWoDG9KfiQdADPUgJBYfqbgXm8I2IR6TRXAoqEabIoOg6mI3F2jCi4uLVSOyrfFX
-         38VlV0HE5W5d/6Nd0cEtG+wEdNE0UuWRboCbsAFm/B07HeP5rS4DYpmHHR3jw0WzFkzN
-         unVQ==
-X-Gm-Message-State: AOJu0YywiPkoYAZhbKuBgVuXEALUm3RgtOUpNr6pzMoO+XSw0qU4yt1g
-        cAcAIox0Hgysj+VrfoW6yf5qNyoDv9wgb8dlTprOPw==
-X-Google-Smtp-Source: AGHT+IH2Z/OEtN5cFhO4F5L3HrStmbVp/yxc+UL7spJsYhuWAjsj/K5t8j99MIqXIZEPs68T6FRkkCgQaQWLU9GzADc=
-X-Received: by 2002:a25:b189:0:b0:d4a:499d:a881 with SMTP id
- h9-20020a25b189000000b00d4a499da881mr817195ybj.9.1692221637406; Wed, 16 Aug
- 2023 14:33:57 -0700 (PDT)
+        bh=YM2d8iCeF3hjgjUnKhIrZx6ABnQwbFOwCyrc+YukRcU=;
+        b=KdODc7I2LDRvFuiAiyOnaMqRO9VrlXH0rAtJPNXUvX664rsMnbjHmvGWgR+hz+7C0r
+         kKeX4Ymi1fbGZV+1XAAh/AdyiaGxS9BnklYgfbyWaDeXi+tKs2aw1kmOKiL4L1QmrHkC
+         3Lo+Vc0lCgYfcUydafKJNOn7xy4g5BwAe65Sy25pyd9fT7Y0lHK0n5zbptaeq+pN2d4E
+         GFvflT9H5g5jdJSY3SYPnGMuex4ymH+c6DTLTmdvYXc5bdzVszFzzleaqwMkE/fcDK4X
+         ruM0v94Rh3U9yczC2veILsMLyZSWUTXWFux8cbgs6FzJp18IEu2hu3QinmksDuy2Qp5t
+         ++jQ==
+X-Gm-Message-State: AOJu0Yx9CPOrdRl8mJ6BVeRHny37ktJy/ATzpkomsRow/+lYSDfuDPX1
+        kukHyplfxINIKouHdQ2ejB7B8As5S8HsCJAFdvem7Q==
+X-Google-Smtp-Source: AGHT+IF2K3nSGKFFw9RoL3fu5zk1l3Bx7/4FhkrJhLUHZPgAou6gIjFpZk/Q13JhyjcX3Qw1xdligCFwhJp8Gd9VkGg=
+X-Received: by 2002:a0d:c4c4:0:b0:56d:d58:82b7 with SMTP id
+ g187-20020a0dc4c4000000b0056d0d5882b7mr3314034ywd.23.1692222077678; Wed, 16
+ Aug 2023 14:41:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230814112615.42448-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230814112615.42448-1-andriy.shevchenko@linux.intel.com>
+References: <20230816122032.15548-1-brgl@bgdev.pl>
+In-Reply-To: <20230816122032.15548-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 16 Aug 2023 23:33:45 +0200
-Message-ID: <CACRpkdbLbj88h98f92q_efWNbeM4s5hwu3FpyCyuaCL1QpRJkg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: sysfs: Do unexport GPIO when user asks
- for it
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
+Date:   Wed, 16 Aug 2023 23:41:06 +0200
+Message-ID: <CACRpkdaTUi0r+nY12J8sLxmvfG2xRd+OMngcMiQkr5cqerevtA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] gpio: cdev: bail out of poll() if the device goes down
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 14, 2023 at 1:19=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Wed, Aug 16, 2023 at 2:20=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-> It seems that sysfs interface implicitly relied on the gpiod_free()
-> to unexport the line. This is not good and prone to regressions.
-> Fix it by explicitly calling gpiod_unexport().
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Fixes: b0ce9ce408b6 ("gpiolib: Do not unexport GPIO on freeing")
-> Reported-by: Marek Beh=C3=BAn <kabel@kernel.org>
-> Closes: https://lore.kernel.org/r/20230808102828.4a9eac09@dellmb
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Tested-by: Marek Beh=C3=BAn <kabel@kernel.org>
+> Wake up all three wake queues (the one associated with the character
+> device file, the one for V1 line events and the V2 line request one)
+> when the underlying GPIO device is unregistered. This way we won't get
+> stuck in poll() after the chip is gone as user-space will be forced to
+> go back into a new system call and will see that gdev->chip is NULL.
+>
+> Bartosz Golaszewski (5):
+>   gpio: cdev: ignore notifications other than line status changes
+>   gpio: cdev: rename the notifier block and notify callback
+>   gpio: cdev: wake up chardev poll() on device unbind
+>   gpio: cdev: wake up linereq poll() on device unbind
+>   gpio: cdev: wake up lineevent poll() on device unbind
 
-Late to the show so patch already applied, but THANKS for
-drilling into it and smoking out this bug Andy.
+I see why this is needed and while the whole notification chain
+is a bit clunky I really cannot think about anything better so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
