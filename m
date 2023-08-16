@@ -2,112 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71D8477E5A2
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Aug 2023 17:51:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C689F77E5A0
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Aug 2023 17:51:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344163AbjHPPuv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Aug 2023 11:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
+        id S1344126AbjHPPuu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Aug 2023 11:50:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344403AbjHPPuX (ORCPT
+        with ESMTP id S1344243AbjHPPuX (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Aug 2023 11:50:23 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB732D57;
-        Wed, 16 Aug 2023 08:50:04 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id 46e09a7af769-6bc9d16c317so5313250a34.1;
-        Wed, 16 Aug 2023 08:50:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692201004; x=1692805804;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uB7+5icQ5UTUMKnaDnyZ2cljK5vL3tau83bYKQpLyAo=;
-        b=Wd+bpyTClvEVSzKupMvIKrNkqmkPJIIlS1GQAnH1zjc/eP0DznOZa6YLQah6IX2VIT
-         MhLluHfF69yjxdqL/tzB2JARoxVrDTG29v3UbXTTa32zoBZZwTjYiLYkcLCPyS+Hmg/I
-         wXN5GVw/+uiah8l0ShE9PNutuzmHhnXIws+ObDdhXIGVB4pmohs3M+L3HMuj89L/4CGy
-         jc4jY2rGLDdYPEYYXngZzdhGlgZOZiO68zRYNOc4Fqr/kPGGF6JrTRoeUOVXsKcaw9vi
-         5fZqL2ZeMar4K28qWOF9vLGzYukuLoiq2Ka9EarruFfXqMJsNhlW8MniFph5b2ACownb
-         z9rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692201004; x=1692805804;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uB7+5icQ5UTUMKnaDnyZ2cljK5vL3tau83bYKQpLyAo=;
-        b=NFIu6AOP0Y3QQXywPzqKrZyg7fm8PRcXRqUXPB/7WXrVO0Rh3VtBk/q07ZY7BdvzVg
-         PnRzJP818vPfmEYy/DtI61etOEHWLOvAg9SjldSs+lSjNwnOBTSI512vcqccdE2K7dan
-         HjR0kvtMX3pEchq9jwkcFY6SyO1Zq8RSlUs03EEIygXMcIdNw6HtosTy2vh1eDgcVhEF
-         jQke+Z1W1EMHNuRW2RxFW+NOYBM2dRE+zYcqan1kUpQvEgWYd/0j1eULagmX5T9xFV44
-         C3lJYHFrdnK1P3JB0+mGPXcfsogQTW+r7acD5e2s/3aLvLfBmkLHu/6YJJyGeMOyaiAZ
-         16eg==
-X-Gm-Message-State: AOJu0Yxh11aHvtTzynEPpjM+I0XDzxZmD78YytqXP+Tc0UCR0qIbKZgD
-        5gdF7P8q9hHYhLuQazr0NJLujFynnpDUgncFnMgMJJgTsiQ=
-X-Google-Smtp-Source: AGHT+IHcfwUYm3HCUC9d5U+ltSlNKWYLuQFXQdNYRPI0Y0Cy6bPgO5d3prxCnuYzi2je9q9keQgSdLfCH4iL+1FzSh4=
-X-Received: by 2002:a05:6870:3382:b0:1bf:1346:63e with SMTP id
- w2-20020a056870338200b001bf1346063emr2430102oae.49.1692201004053; Wed, 16 Aug
- 2023 08:50:04 -0700 (PDT)
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A7C92D58;
+        Wed, 16 Aug 2023 08:50:05 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 88A01E0008;
+        Wed, 16 Aug 2023 15:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1692201004;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U7qqsraPhv0yClgxA/hyk25/qkMt80mxh+Qel/Qxjxk=;
+        b=aTA9l5F6XqBRUIBDAk06nQK/nIEigxkLt66oO1lwGxbsCjnlCIksXy66MYVGgyPuPhY0NJ
+        vcgwSZPKuyDa3dpID6QwUfiGt+IN8msV8YcunSM7kYtF1MGNuhN3WTTVxkX+EPgysd5VQG
+        Y1STGp7KLgLqOUDDP+50lCSdlCa8KUV9rkbZbfyStWE5OcI3ADLgii1Ip6/MvbsBxhQlDj
+        6u2BmR71zqZy9okYfyhuIL6jZaEld4kQiGU7rMUIwVCh7I2/PYqV1NMKGK610szgjiBcZk
+        w7ZnmE8N4F7hjEK/ew8ZCi5q3X25mzwLmN2yTK1pO+C2UzINVFe4WGbLTiP2Kg==
+Date:   Wed, 16 Aug 2023 17:49:58 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 22/28] dt-bindings: net: Add the Lantiq PEF2256
+ E1/T1/J1 framer
+Message-ID: <20230816174847.4709a428@bootlin.com>
+In-Reply-To: <CACRpkdZWHw7sL6EKe0EP0hX5TEsdhzgkPSdVtPPYhS3LqJRHFg@mail.gmail.com>
+References: <20230809132757.2470544-1-herve.codina@bootlin.com>
+        <20230809132757.2470544-23-herve.codina@bootlin.com>
+        <CACRpkdZWHw7sL6EKe0EP0hX5TEsdhzgkPSdVtPPYhS3LqJRHFg@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20230816154442.8417-1-asmaa@nvidia.com> <20230816154442.8417-3-asmaa@nvidia.com>
-In-Reply-To: <20230816154442.8417-3-asmaa@nvidia.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 16 Aug 2023 18:49:27 +0300
-Message-ID: <CAHp75Vdp9TYTod6UBLxG_YrT_vD4azfyrM9dTrau8CPJuH_vrQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: mlxbf3: Support add_pin_ranges()
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, brgl@bgdev.pl,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 16, 2023 at 6:45=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
-te:
->
-> Support add_pin_ranges() so that pinctrl_gpio_request() can be called.
-> The GPIO value is not modified when the user runs the "gpioset" tool.
-> This is because when gpiochip_generic_request is invoked by the gpio-mlxb=
-f3
-> driver, "pin_ranges" is empty so it skips "pinctrl_gpio_request()".
-> pinctrl_gpio_request() is essential in the code flow because it changes t=
-he
-> mux value so that software has control over modifying the GPIO value.
-> Adding add_pin_ranges() creates a dependency on the pinctrl-mlxbf3.c driv=
-er.
+Hi Linus,
 
-...
+On Thu, 10 Aug 2023 10:53:04 +0200
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-> v1->v2:
-> - No changes.
+> Hi Herve,
+> 
+> thanks for your patch!
+> 
+> On Wed, Aug 9, 2023 at 3:28 PM Herve Codina <herve.codina@bootlin.com> wrote:
+> 
+> > The Lantiq PEF2256 is a framer and line interface component designed to
+> > fulfill all required interfacing between an analog E1/T1/J1 line and the
+> > digital PCM system highway/H.100 bus.
+> >
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
+> (...)
+> > +    patternProperties:
+> > +      '-pins$':
+> > +        type: object
+> > +        $ref: /schemas/pinctrl/pincfg-node.yaml#  
+> 
+> Shouldn't that be pinmux-node.yaml?
+> 
 
-Is this correct?
+Indeed, it should be pinmux-node.yaml.
+This will be fixed in the next iteration.
 
-...
-
-> +static int mlxbf3_gpio_add_pin_ranges(struct gpio_chip *chip)
-> +{
-> +       unsigned int id =3D 0;
-> +       int ret;
-> +
-> +       if (chip->ngpio % MLXBF3_GPIO_MAX_PINS_PER_BLOCK)
-> +               id =3D 1;
-
-This id calculation seems wrong to me as I said in v1 review.
-Why do you think the above is what you want and not just working by luck?
-
-> +       return gpiochip_add_pin_range(chip, "MLNXBF34:00",
-> +                       chip->base, id * MLXBF3_GPIO_MAX_PINS_PER_BLOCK,
-> +                       chip->ngpio);
-> +}
-
---=20
-With Best Regards,
-Andy Shevchenko
+Best regards,
+Hervé
