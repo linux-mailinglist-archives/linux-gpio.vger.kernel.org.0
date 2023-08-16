@@ -2,79 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37E0F77E1E3
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Aug 2023 14:49:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05EB477E31E
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Aug 2023 15:59:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243779AbjHPMs2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Aug 2023 08:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56658 "EHLO
+        id S245626AbjHPN7J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Aug 2023 09:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245291AbjHPMsF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Aug 2023 08:48:05 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D46126B8;
-        Wed, 16 Aug 2023 05:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GGCu/GRD17jPc3T/ys+sZ+kMnjtC7ErwGI2gheEw0qU=; b=K8687z2pGUf/NoX2Tztey5Skr0
-        FuVc/9GciJIND18ICW1H1NqqlTjoNsE+hrNYEfGEgA4nb2QlmaU4WvxBBgUZsFjELCEliU+0LELZd
-        gXU0GgnhpvSd67l7DRkKUnj3Nj+0u43vFVHP0Z4xKwZKfkK/4EN+h5hsUQE5ZucLEOy5H7ushWWTv
-        8g5vOIOhlieydk4cjwVid6nYgzvahGW+xevf8qp9nCRO58GbFOAeH0y2BPsLvsWfJJ0xk01fUH1sq
-        A7GoyamD06qAtkejIW2MgX3faVq2M/ZYcT3OhsoLhu8HBh4Gm00WkPusy80SCQZuUg8/4bb/Q+EBF
-        a8sV/5Mg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qWFwM-00D0bf-1l;
-        Wed, 16 Aug 2023 12:47:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0925D30020C;
-        Wed, 16 Aug 2023 14:47:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D730A2C99C213; Wed, 16 Aug 2023 14:47:57 +0200 (CEST)
-Date:   Wed, 16 Aug 2023 14:47:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: sim: simplify code with cleanup helpers
-Message-ID: <20230816124757.GB982867@hirez.programming.kicks-ass.net>
-References: <20230809131442.25524-1-brgl@bgdev.pl>
- <20230809131442.25524-2-brgl@bgdev.pl>
- <CACRpkdavsv3nJnhtdqW8ANAVfxbgHdM-SpcfOv4p_t-7EOaOHQ@mail.gmail.com>
- <20230815155253.GK212435@hirez.programming.kicks-ass.net>
- <ZNugkmhj1Joygorj@smile.fi.intel.com>
- <20230815203117.GA971582@hirez.programming.kicks-ass.net>
+        with ESMTP id S245746AbjHPN66 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Aug 2023 09:58:58 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on20606.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8a::606])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 324EE2711;
+        Wed, 16 Aug 2023 06:58:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cwwl/G/uaTbC80Uo3HS16+P7GYcTO4h2SRkyeLV9XL0BKr80b1w3siAvk2wf0kAbMSI++hKprUjV/AKRJ0h/DPjRZI2VeGOsyyJdOEGky4y9A0GUevBObKHM0WLHp4cvEzYMoGCeWWL308tULgsJXltE/HCBPwLnfqVzxUTZczjEJs8WhqI9mkrC/X9sSLsgY2IO1DcNYK7EMOpqGglb4IQvmgYvtaon/zN7eO26RMCKu8VzfQLiIkc7aI1gd73AE2CBJjf+5otCzo2XRIlFqLauZSyMqmOPzYIcXIWDLSiTjjkLuFYR2L76pTM8LwZHX/+pPtQ94GR4HI0XhGQDIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PzWU8BzzH3SqSYEA2LLJl30W5zFcax5iBensNa6UXCA=;
+ b=UKBIARMKkCjRbJAB9Ot8YHBNtL1WsXzPEkanDAEeKorC+3aBHIQWoIrzmjI5au5AhTG5On7S0L5FeP3TOwEwTlxsg4IhAZ+r+hcXFrc26CBWQtTSAoPeDXz/0o+aZznJydbyoeiVR1JuEMcQf83Zp8y/sN8nRuGfIpIW1KL1vlmREkB4flmYUacLUYxDvQzr0BQAD+BIdXqDqQoi++RUdP+im7EJbqVxBirorkjjJTg5AEwFZ04D2GWcjpNZxUBeUq9Xh7/ZO6K2aS10dSRDg1P+GTPCf8B7Wuv1na/KUgv8GuUVvwLVHN5gv7HzHnyyHqGc12LW6w1nK85P7v7Ftw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PzWU8BzzH3SqSYEA2LLJl30W5zFcax5iBensNa6UXCA=;
+ b=DjEtAPfK18KPLw5wFgkvRXBD/0DEiHHtawW2jes7vngnyeld4VkGh5YpOec8385KqpmzDwS0TX/v7Dh8HsPG+tz19FD/OW2JZLiMI89hiEMp0guA0nurzoiPxmsl3XJpiiK6RRFDYVmu0LAm1oGLSuDDgQ5y6O8CGWIEhLSHhqqHJR+y13tKP1GJxVY/VfU6RII/S910Qp/Ux8vghixnE3w97pPtE1zPqA+qlsAQUdxbUWbF5aiP+i2gNqPhA2hNMHt6JQZTxAayowuaMqYKLn9mDmM1As73lrVhixiwJMiHw6bPP9UcD8aQXckXuzBrwTz/HP20eOc2eLho0aryqQ==
+Received: from SA1P222CA0177.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c4::25)
+ by SJ0PR12MB8167.namprd12.prod.outlook.com (2603:10b6:a03:4e6::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.26; Wed, 16 Aug
+ 2023 13:58:53 +0000
+Received: from SN1PEPF0002636B.namprd02.prod.outlook.com
+ (2603:10b6:806:3c4:cafe::6c) by SA1P222CA0177.outlook.office365.com
+ (2603:10b6:806:3c4::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.14 via Frontend
+ Transport; Wed, 16 Aug 2023 13:58:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SN1PEPF0002636B.mail.protection.outlook.com (10.167.241.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6699.14 via Frontend Transport; Wed, 16 Aug 2023 13:58:53 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Wed, 16 Aug 2023
+ 06:58:43 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.37; Wed, 16 Aug 2023 06:58:42 -0700
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server id 15.2.986.37 via Frontend
+ Transport; Wed, 16 Aug 2023 06:58:42 -0700
+From:   Asmaa Mnebhi <asmaa@nvidia.com>
+To:     <andy.shevchenko@gmail.com>, <linux-gpio@vger.kernel.org>,
+        <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <brgl@bgdev.pl>, <linux-kernel@vger.kernel.org>
+CC:     Asmaa Mnebhi <asmaa@nvidia.com>
+Subject: [PATCH v1 0/2] Fix Nvidia BlueField-3 GPIO access
+Date:   Wed, 16 Aug 2023 09:58:37 -0400
+Message-ID: <20230816135839.24011-1-asmaa@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230815203117.GA971582@hirez.programming.kicks-ass.net>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636B:EE_|SJ0PR12MB8167:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a08aca7-cf5a-49ca-bd37-08db9e60ed45
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hfuCAuiu4UNbobkaGvO71vE+xGmpWO1HovmxpCvjPxXHpwawiHFd6Qp+fLV/PN3Qvbzy70Wp9aenxesYVkaGJDfll8HDVp5t4raNBrN7SqJu15Dbx8Gx+XWKrM6G+ClmbbvYGx6QI3vAFwFdOHoMxciJeG1Ywch6W1mms1YVPEnIFRH0kIzLoWeNHTotl2WWYu1QwL6hLpVv+vvT5vvD7i79WYZ4DFTtuu2hUjd4sd/kg1+7+KflbdPJSbkWTBmLy42NkmSfWz8LLYCIB2ox12FlT2c+/JlQj2IbAJ+gh5TCTgWHqc0g5AFjShuK4zS/VfV0ECpoaEBCTwedMWMHoQNtFyE4rxlnukI/6u/vl2peHdAwdX1b0RtGimSSSuqaOcXBzQVvaykPBT6CModgdDZNI2M7i9QUl/xAmXFwei+zfEY5YlYAYJqj+3JUvS1KvTG+2YNpUt2OXZd0fORBk/Gu1MhvK2wYxr2L/v5rpvrUBsSQJQDynZYLItF4m3vqWjLwmnNZocE2kaBBcIEmxTHoATzLAaCvpg/1+WC86TMY0qfKpTL3Kp/xoj71ZqG/P5gxO8TxyciMF8ZTchn161esnl82XiIxy+lP9wPpI1DHznJt1v/MW4gL8joy2dHyEVYOwiZ5U+rQdMHwvEluXf29P74WN1QcWlkR0A42Q13iPPm1FWTenh9ww3EZh7WHqqOMakLqtFSPp9b/2kapeB4VWAFp/k4b6I086WppiJr3PJXde960Mtcuk34ZNlFiIGRxmpGGcuNCVc0Op7D4Mw==
+X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(346002)(376002)(136003)(1800799009)(451199024)(186009)(82310400011)(46966006)(36840700001)(40470700004)(7636003)(316002)(356005)(82740400003)(110136005)(70586007)(70206006)(36860700001)(41300700001)(5660300002)(47076005)(8676002)(4326008)(8936002)(2906002)(40460700003)(83380400001)(26005)(40480700001)(478600001)(426003)(336012)(86362001)(107886003)(7696005)(36756003)(6666004)(1076003)(2616005)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2023 13:58:53.6783
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a08aca7-cf5a-49ca-bd37-08db9e60ed45
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1PEPF0002636B.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8167
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 10:31:17PM +0200, Peter Zijlstra wrote:
+Fix Nvidia BlueField-3 GPIO access via libgpiod gpioset tool.
+gpioset tool fails to modify the GPIO value due to the following:
+1) the pinctrl-mlxbf3 driver defines mlxbf3_gpio_request_enable()
+   to enable software to take control over a gpio. Only then can
+   the gpio-mlxbf3 driver modify the direction and value of the
+   gpio. mlxbf3_gpio_disable_free() gives control back to hardware
+   and is called when the "gpioset" command is invoked.
+   This cancels out the effort to change the GPIO value and
+   direction. So mlxbf3_gpio_disable_free() needs to be removed.
+2) the gpio-mlxbf3 driver calls gpiochip_generic_request() which
+   calls mlxbf3_gpio_request_enable(). "pin_ranges" needs not to be
+   empty for mlxbf3_gpio_request_enable() to be invoked. So
+   gpio-mlxbf3 needs to populate "pin_ranges".
 
-> > Moreover, maybe some macro that can predict the API call from the type of
-> > the parameter?
-> 
-> The whole type inferrence in C is not extensible. That is, you get to
-> write a single _Generic() statement, and every case that is included in
-> it will work, but the moment you use a new type, one that is not
-> included in your giant _Generic() statement, you're out of luck.
+Asmaa Mnebhi (2):
+  pinctrl: mlxbf3: Remove gpio_disable_free()
+  gpio: mlxbf3: Support add_pin_ranges()
 
-Additionally, spinlock_t, does that map to spinlock, spinlock_irq or
-spinlock_irqsave ?
+ drivers/gpio/gpio-mlxbf3.c       | 20 ++++++++++++++++++++
+ drivers/pinctrl/pinctrl-mlxbf3.c | 14 --------------
+ 2 files changed, 20 insertions(+), 14 deletions(-)
+
+-- 
+2.30.1
+
