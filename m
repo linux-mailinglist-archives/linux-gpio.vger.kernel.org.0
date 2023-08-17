@@ -2,67 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11D7E77F629
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 14:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9472477F62F
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 14:16:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350711AbjHQMOW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Aug 2023 08:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58476 "EHLO
+        id S240887AbjHQMP4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 08:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350775AbjHQMOS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 08:14:18 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D332136
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 05:14:16 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-48719771d3fso539772e0c.0
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 05:14:16 -0700 (PDT)
+        with ESMTP id S1350791AbjHQMPy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 08:15:54 -0400
+Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818882112
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 05:15:53 -0700 (PDT)
+Received: by mail-ua1-x92b.google.com with SMTP id a1e0cc1a2514c-79d8edd6d99so2701291241.3
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 05:15:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692274456; x=1692879256;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692274552; x=1692879352;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qp2jFPd5H/9xqBM8BS9hQEvHXOE5m+c15k9g0RAPmQs=;
-        b=109doTdOPGel7wMM6UfGY1JZDmid+V04laFQMn/GFnVUCoUblIfUQOfzouhVGqhbxf
-         hvq54yg4t87eKAAqpsRc4QBoGqOdZAK7uZ1ycGAH0zSWoN3giEYZeCIGYM8EkngSWJ7Z
-         cgNc4IOs4pbmYKtorA4A7wXgsuBjXcrq1GoIRUhoLymXUndtg/7Iqgfq0dKDQn8bhrFj
-         l18TaFm/DDVtHC6buL3k0c/H7xCT9kpsAW77aHhYtALrShXagkNAq/EZsyoLjVPioPes
-         pXqv1f7hORA3mLxbCL5CQOnu5CgzbqElz62y31rDiXokmz+xYwDlu1RvO3At9t8gY4rO
-         eagg==
+        bh=GpoPG9r5aLlMUihxVNUoSLd7j+JxqcKSn36H4Uz/EpY=;
+        b=QSxcAdxK6wSmqFsOB6vBhCuyjy2/A+qN1AaDr+A0avXp/YC5wIhNk1oN+OOPst7xfT
+         2G/iGC375cKsbJ/Tm6ldBuA6MVxwnCnL7kzAcOf3kVi3ReAnMuxkogiLsZC5F0PgPVdP
+         k0fk5djKaWYMHzemnVeReyI/nt+iJ0oPFFe30DfZ/kOksIa//psfXz49nlnoNtNKdd5D
+         FGKrXDZKgzS0qlclqkJd2KR0FHVgk2j1UxiStJYxQ9GdsajH8LvarT+ZRH4obz8TB2oX
+         3KlgLyqDADyiJsC52R2J55+KH4lfpqK3YQfKUSRG+cUiMMUfhrnMk7pj6et5knzbzo4E
+         aOaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692274456; x=1692879256;
+        d=1e100.net; s=20221208; t=1692274552; x=1692879352;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qp2jFPd5H/9xqBM8BS9hQEvHXOE5m+c15k9g0RAPmQs=;
-        b=WKpst2PzAvnl32ITh6UtU4LD2ZW4hspwnRF7HKWAS2P3A3205UtbLzPYjlCDdpvchC
-         rtzOvKH51TZXCdwLTFj6rBH/RE3hJ+Mh/OvbcYl/sfeew1bQaq8xThDcS492sQmTojgt
-         dl4NlZBsgHYEsUQixw2ilxQgGL8F3SXMgEiw+9oAQHG5ejaG4XqPgWFuoDzNvWjGvnmT
-         iADzq5hSEerFMiq2mO53p4f5gkMUUNLEXaSE5tmuh/IHzYzUeJ8wc6hj6Z122cFfRFC9
-         Ov7Eegd6Vytzge4s03QB1fs+vJhGMhzDWi6HNeJ72ST5M1IhCe8+9WTsV+IvCIgjBU+t
-         w8oA==
-X-Gm-Message-State: AOJu0YyvjE7L3YznCOwVhBB0mZiFIYYWw+rQ5QNcX+6M8n4Njv2lgWk/
-        NgpihfbbmLP1Ovd8CPN9mVGYKRqTQSoFdTFZTTmYNA==
-X-Google-Smtp-Source: AGHT+IEM0kid+C1ABw0K4dQ5YTSG/4EfeBg6JureDmfYnzZJz/RpG5c4KTKXZLIN2joDPAl31cKupwmKfDz+BI+39gI=
-X-Received: by 2002:a05:6102:511e:b0:44b:f485:2727 with SMTP id
- bm30-20020a056102511e00b0044bf4852727mr2330114vsb.4.1692274455861; Thu, 17
- Aug 2023 05:14:15 -0700 (PDT)
+        bh=GpoPG9r5aLlMUihxVNUoSLd7j+JxqcKSn36H4Uz/EpY=;
+        b=hUaF7rmYfA+3BWbooJjwWhr5L2MFw91iTmQFyCuu1ueUVOWYKpELB035NUd3qsQQmp
+         t46nclS+Pvc7Lfu6ao8qZXxlZZ7mCIOrH0GzWSzUKhZESdNZFS7+wQsNhPGLjxubmzED
+         74knj7QFDetcVAYjITsMQoDARvTuB6+sOYuBBKCNIuI5Q9tVofbGH1wkTotU/idpX22x
+         eNGV0R9UQn0WSRgATG372ttBrBH5woMvsFpDnQO9jjb6yZ2NwAeBgRqZl6VsoqSNeU4F
+         ri7QXH8s7i96bgXSTWlRiT1FcUFVZXc7LH5+sGr2qjcPNz47GjhTX0ia5FPYZTHa8GZS
+         7jpw==
+X-Gm-Message-State: AOJu0YyXfGug8mQAURdxlQNbqVwX5XlDRhph6m7ReP0W8LsMTA7Yu3Uz
+        4NeWf0tlHbS2r5N9taO07HZchHNOPyh+5gI0k52UiA==
+X-Google-Smtp-Source: AGHT+IGTM4088o4qj1zm5IRZJM+9ZxZx6lPUqwnT25zoswoW2BrihSPfBo18GPPiGwFm85j/1N+b00aWLNC3zPh6ZIU=
+X-Received: by 2002:a67:f991:0:b0:447:583b:acaf with SMTP id
+ b17-20020a67f991000000b00447583bacafmr4723806vsq.31.1692274552670; Thu, 17
+ Aug 2023 05:15:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230815185650.152968-1-brgl@bgdev.pl> <ZN3wauUBENDd7aRU@smile.fi.intel.com>
-In-Reply-To: <ZN3wauUBENDd7aRU@smile.fi.intel.com>
+References: <20230812183635.5478-1-brgl@bgdev.pl> <ZNtT37d3eR6FcQyR@smile.fi.intel.com>
+ <CAMRc=McqdnBBSe1QhyNEFCs3E+Qb_K-z1dT+B8+n2KvWajj5hA@mail.gmail.com> <ZN3ncVjDn9ZXHOS5@smile.fi.intel.com>
+In-Reply-To: <ZN3ncVjDn9ZXHOS5@smile.fi.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 17 Aug 2023 14:14:04 +0200
-Message-ID: <CAMRc=MdUWXZVnjkPqH2BZvDY0v-OOysQ=NMjwQEi1rt+16NEQQ@mail.gmail.com>
-Subject: Re: [PATCH v5] gpio: consumer: new virtual driver
+Date:   Thu, 17 Aug 2023 14:15:41 +0200
+Message-ID: <CAMRc=MeNvd7_g0ZpCDt5pceLFm7bbsyx4G9XQ5GzP8qUR+vAwA@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: sim: simplify code with cleanup helpers
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,122 +70,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 12:03=E2=80=AFPM Andy Shevchenko
+On Thu, Aug 17, 2023 at 11:25=E2=80=AFAM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Tue, Aug 15, 2023 at 08:56:50PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > The GPIO subsystem has a serious problem with undefined behavior and
-> > use-after-free bugs on hot-unplug of GPIO chips. This can be considered=
- a
-> > corner-case by some as most GPIO controllers are enabled early in the
-> > boot process and live until the system goes down but most GPIO drivers
-> > do allow unbind over sysfs, many are loadable modules that can be (forc=
-e)
-> > unloaded and there are also GPIO devices that can be dynamically detach=
-ed,
-> > for instance CP2112 which is a USB GPIO expender.
-> >
-> > Bugs can be triggered both from user-space as well as by in-kernel user=
-s.
-> > We have the means of testing it from user-space via the character devic=
-e
-> > but the issues manifest themselves differently in the kernel.
-> >
-> > This is a proposition of adding a new virtual driver - a configurable
-> > GPIO consumer that can be configured over configfs (similarly to
-> > gpio-sim).
-> >
-> > The configfs interface allows users to create dynamic GPIO lookup table=
-s
-> > that are registered with the GPIO subsystem. Every config group
-> > represents a consumer device. Every sub-group represents a single GPIO
-> > lookup. The device can work in three modes: just keeping the line
-> > active, toggling it every second or requesting its interrupt and
-> > reporting edges. Every lookup allows to specify the key, offset and
-> > flags as per the lookup struct defined in linux/gpio/machine.h.
-> >
-> > The module together with gpio-sim allows to easily trigger kernel
-> > hot-unplug errors. A simple use-case is to create a simulated chip,
-> > setup the consumer to lookup one of its lines in 'monitor' mode, unbind
-> > the simulator, unbind the consumer and observe the fireworks in dmesg.
-> >
-> > This driver is aimed as a helper in tackling the hot-unplug problem in
-> > GPIO as well as basis for future regression testing once the fixes are
-> > upstream.
+> On Tue, Aug 15, 2023 at 09:09:55PM +0200, Bartosz Golaszewski wrote:
+> > On Tue, Aug 15, 2023 at 12:31=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Sat, Aug 12, 2023 at 08:36:35PM +0200, Bartosz Golaszewski wrote:
 >
 > ...
 >
-> > +     struct gpio_consumer_device *dev =3D lookup->parent;
-> > +
-> > +     guard(mutex)(&dev->lock);
-> > +
-> > +     return sprintf(page, "%s\n", lookup->key);
+> > > > -     mutex_lock(&chip->lock);
+> > > > -     __assign_bit(offset, chip->value_map, value);
+> > > > -     mutex_unlock(&chip->lock);
+> > > > +     scoped_guard(mutex, &chip->lock)
+> > > > +             __assign_bit(offset, chip->value_map, value);
+> > >
+> > > But this can also be guarded.
+> > >
+> > >         guard(mutex)(&chip->lock);
+> > >
+> > >         __assign_bit(offset, chip->value_map, value);
+> >
+> > Come on, this is total bikeshedding! I could produce ten arguments in
+> > favor of the scoped variant.
+> >
+> > Linus acked even the previous version and Peter says it looks right. I
+> > will queue it unless some *real* issues come up.
 >
-> ...
->
-> > +static ssize_t
-> > +gpio_consumer_lookup_config_offset_show(struct config_item *item, char=
- *page)
-> > +{
-> > +     struct gpio_consumer_lookup *lookup =3D to_gpio_consumer_lookup(i=
-tem);
-> > +     struct gpio_consumer_device *dev =3D lookup->parent;
-> > +     unsigned int offset;
-> > +
-> > +     scoped_guard(mutex, &dev->lock)
-> > +             offset =3D lookup->offset;
-> > +
-> > +     return sprintf(page, "%d\n", offset);
->
-> Consistently it can be simplified same way
->
->         guard(mutex)(&dev->lock);
->
->         return sprintf(page, "%d\n", lookup->offset);
->
-> BUT. Thinking about this more. With guard() we put sprintf() inside the l=
-ock,
-> which is suboptimal from runtime point of view. So, I think now that all =
-these
-> should actually use scoped_guard() rather than guard().
+> I still think this will be, besides being shorter and nicer to read,
+> more consistent with other simple use of "guard(); return ..." cases.
 >
 
-Precisely why I used a scoped guard here. Same elsewhere.
-
-> > +}
->
-> ...
->
-> > +     guard(mutex)(&dev->lock);
-> > +
-> > +     return lookup->flags;
->
-> ...
->
-> > +static ssize_t
-> > +gpio_consumer_lookup_config_transitory_show(struct config_item *item,
-> > +                                         char *page)
-> > +{
->
-> > +     enum gpio_lookup_flags flags;
-> > +
-> > +     flags =3D gpio_consumer_lookup_get_flags(item);
->
-> This is perfectly one line < 80 characters.
->
-> > +     return sprintf(page, "%s\n", flags & GPIO_TRANSITORY ? "1" : "0")=
-;
-> > +}
->
-
-There's nothing wrong with setting the variable on another line though.
+Scoped guards have the advantage of making it very obvious where the
+critical section ends. It's really down to personal preference,
+there's nothing wrong with either option.
 
 Bart
-
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
