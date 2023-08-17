@@ -2,138 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAF6D77F163
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 09:41:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BA6E77F1FF
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 10:23:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348568AbjHQHlX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Aug 2023 03:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42590 "EHLO
+        id S1348836AbjHQIWe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 04:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348631AbjHQHlU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 03:41:20 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 162A52D68
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 00:41:18 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-76d846a4b85so1966660241.1
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 00:41:18 -0700 (PDT)
+        with ESMTP id S1348903AbjHQIWa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 04:22:30 -0400
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF7E273C;
+        Thu, 17 Aug 2023 01:22:29 -0700 (PDT)
+Received: by mail-ot1-x32e.google.com with SMTP id 46e09a7af769-6bca38a6618so6213387a34.3;
+        Thu, 17 Aug 2023 01:22:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692258077; x=1692862877;
+        d=gmail.com; s=20221208; t=1692260548; x=1692865348;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u9r3O4i6tomLTAdIVe1UKhoSaTbKeyjF0f89um1mCl8=;
-        b=pHyxXUCABX6H+QXxNz5VxJABpQcdeMUmrTgoYAW3uOu6BkrfvNRXBFEQCp4OYQsaTA
-         wZ5bEu/vLtt41TtGhjJEg4Om/C70lVHTsX8tWW0Vrkq9Ph7pg+yaY43iQ1YqlhVc5/8R
-         VM8ww4ldDiYAJ44cL0pT5eojmzMvCyexKDYJy6FBDkZJI0zREueZtQ3pFHLw5ImW5FtR
-         JcFR9UTyKwM0Qob2X+WEpWAaHiCltkG0QUdXi7KcIkL5RGZBrGYwQydIMgiSv3J/vbKu
-         TC0xBCf+cBIUXDk6Piktilyh2TD4wyXFkKK1CyahIcbV55pAKsGn88uifFTLq5iZ8ZEN
-         5pcw==
+        bh=P5XC1NaMsVWs22A3D1qaphiBxnkMRdlhxzrGkP5toFU=;
+        b=EN3OgI2rxHemVBMzLD4yw6kQsQVvj/CuhY0cfxq1rO0HpI0WDbF5lKNxpCEPesu2wj
+         Ybp5YjZV8vWxt8LfMo4DepUjPeWqAxkULSlwUZQdu8plLuTbiHlz7zOhzLdNkfNWb5ft
+         IYKp4xxoda3JYrNjPqB3TLUVSDrxYHmH+wcCUJlZoAc6IsjpPrBmEJpzjrQn+NZDqMfZ
+         L4pCpV/5v/KPGVkreXuQFsqQMyUGztqWF9qeoFMgqBNXeI1daVy4ZHHBuvJNGXsCcQjZ
+         5wX94o92Lb6Xvyf8bRm89o1PMgy1bVboFzKX09KICCAFjaIBPnCM9zrj9usJ+JIbUZYd
+         o6ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692258077; x=1692862877;
+        d=1e100.net; s=20221208; t=1692260548; x=1692865348;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u9r3O4i6tomLTAdIVe1UKhoSaTbKeyjF0f89um1mCl8=;
-        b=hkUAE5e1GmE6FOM2JnQ6RkdZ64jUk8Gj7fJUCtUCEWhPrkiLtX5KczxeVHYtMwbA+0
-         3aIepAwjSpAufMQ+eTlaOQGYzonwKozwOoFpp7gGFzLbYg4hrjmkxPWrAQNw9euc9V+x
-         tRlVPL4PmHbCQlieC4Z6o/kdusw5koZ67r8lWVQ2/IWyIIHs9Z/RNWoS2K4YEby5trwE
-         eQzX2/XvSitzM60NfcSWnePMh2CM/YYSpWXPkOyxm8iexU3aljoS1AMBtDS26Yd9pdaH
-         ykeZsuOtEFvVPKgJB19WGvjFTaAg1cGWMRM6HOkaacA3te6ZI7G2NEwg+7Y0cRJgSy8w
-         5ETg==
-X-Gm-Message-State: AOJu0YymTIPFqKh6vxF9AbFpBUg00YCJfE6cYUD812RgxNC9s6tzv4Tu
-        S6BFW2PlxOR/Vh9WsONrwOo1YsrcZxyp3A76jRfVwg==
-X-Google-Smtp-Source: AGHT+IHNBqUCtrNQSr3V74uvRzR/HtZIM2+7YsSXHqauz6IoyG278m2Mf7QI8vwq0wjOZNnyRzFndDOTqyiV8w+yZww=
-X-Received: by 2002:a67:f550:0:b0:445:91b:385d with SMTP id
- z16-20020a67f550000000b00445091b385dmr3522420vsn.12.1692258077169; Thu, 17
- Aug 2023 00:41:17 -0700 (PDT)
+        bh=P5XC1NaMsVWs22A3D1qaphiBxnkMRdlhxzrGkP5toFU=;
+        b=OWJmhqoM224TaemF2XmWhUREWiOQbelVObelKbtxyuwD+N3pD4uWv973zIrbOuOKcx
+         U8w7eYHVeYgb5pB5fBsbr6RxpUhQR+W7fJrCaWCjDpeMNCPD7KsUe//WBPweDDiV37Nh
+         YAcrbYW5E9lXwkZOxWJensLLn/J25AtJbgxHXhbzGNiCe3s41d/5XN7joPeqQl2Zuv2/
+         MhYK4PWwsk5VNbXqr+libEdMap53TTZludF4aWtbFiNyZDpJt/WUF3BS3TgIoSS3EHnh
+         MwtRU3ii2DixQGhJC87ZdDGVgiVs1GvXS8o3/vjfLN7b7EhXFlzwLGDkpNKQBNwZZxaC
+         VZ6A==
+X-Gm-Message-State: AOJu0YzL/tuAhUroawbGc6QGdA56LpJEM8J62XJ5R9Mde4oNo6sz90VW
+        0j3YJl/xDuKlVMdmor7xfGBFe9m+FAHB0MnKn2YodN3R2UQuCQ==
+X-Google-Smtp-Source: AGHT+IHl6ny0Q80fuusWHH/sAgtDMBJjbrGxzHg75AynGBYtwByNXASXtr0N0cZTB68/qoQsgwWBZyc82m/LXVbwoMI=
+X-Received: by 2002:a05:6871:825:b0:1be:9a37:cf12 with SMTP id
+ q37-20020a056871082500b001be9a37cf12mr4614971oap.42.1692260548549; Thu, 17
+ Aug 2023 01:22:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230816122032.15548-1-brgl@bgdev.pl> <CACRpkdaTUi0r+nY12J8sLxmvfG2xRd+OMngcMiQkr5cqerevtA@mail.gmail.com>
- <ZN2k7gemanIpbyFh@sol> <CAMRc=MfwK6_m0N4cZqkpMX0Rka4WnWmtKTjq-cwbTR5+sjw9vw@mail.gmail.com>
- <ZN3OHqzT3grSdefP@sol>
-In-Reply-To: <ZN3OHqzT3grSdefP@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 17 Aug 2023 09:41:06 +0200
-Message-ID: <CAMRc=MfZ-5FKrtjrDTajHCu8n6q4dYyy-5R2AFDp2AKRem3YYw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] gpio: cdev: bail out of poll() if the device goes down
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230816154442.8417-1-asmaa@nvidia.com> <20230816154442.8417-3-asmaa@nvidia.com>
+ <CAHp75Vdp9TYTod6UBLxG_YrT_vD4azfyrM9dTrau8CPJuH_vrQ@mail.gmail.com> <CH2PR12MB38953114436B7B0768A1C321D715A@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB38953114436B7B0768A1C321D715A@CH2PR12MB3895.namprd12.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 17 Aug 2023 11:21:52 +0300
+Message-ID: <CAHp75VcEe-2+=2qXCFHp+cxN=nWcsc=oCVYUeinM_cMsPES+mQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpio: mlxbf3: Support add_pin_ranges()
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 9:37=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Thu, Aug 17, 2023 at 12:28=E2=80=AFAM Asmaa Mnebhi <asmaa@nvidia.com> wr=
+ote:
 >
-> On Thu, Aug 17, 2023 at 09:27:37AM +0200, Bartosz Golaszewski wrote:
-> > On Thu, Aug 17, 2023 at 6:41=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
-om> wrote:
-> > >
-> > > On Wed, Aug 16, 2023 at 11:41:06PM +0200, Linus Walleij wrote:
-> > > > On Wed, Aug 16, 2023 at 2:20=E2=80=AFPM Bartosz Golaszewski <brgl@b=
-gdev.pl> wrote:
-> > > >
-> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > >
-> > > > > Wake up all three wake queues (the one associated with the charac=
-ter
-> > > > > device file, the one for V1 line events and the V2 line request o=
-ne)
-> > > > > when the underlying GPIO device is unregistered. This way we won'=
-t get
-> > > > > stuck in poll() after the chip is gone as user-space will be forc=
-ed to
-> > > > > go back into a new system call and will see that gdev->chip is NU=
-LL.
-> > > > >
-> > > > > Bartosz Golaszewski (5):
-> > > > >   gpio: cdev: ignore notifications other than line status changes
-> > > > >   gpio: cdev: rename the notifier block and notify callback
-> > > > >   gpio: cdev: wake up chardev poll() on device unbind
-> > > > >   gpio: cdev: wake up linereq poll() on device unbind
-> > > > >   gpio: cdev: wake up lineevent poll() on device unbind
-> > > >
-> > > > I see why this is needed and while the whole notification chain
-> > > > is a bit clunky I really cannot think about anything better so:
-> > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > > >
-> > >
-> > > The issue I have is with the repurposing/reuse of the existing notifi=
-er
-> > > block that sends line changed events to the chardev.
-> > > Correct me if I'm wrong, but now all line requests will receive those
-> > > events as well.
-> > > They have no business receiving those events, and it scales badly.
-> > >
-> > > My preference would be for a separate nb for the chip removal to keep
-> > > those two classes of events distinct.
-> > >
+>  > > v1->v2:
+> > > - No changes.
 > >
-> > I would normally agree if there was a risk of abuse of those
-> > notifications by drivers but this is all private to gpiolib. And line
-> > requests that receive line state notifications simply ignore them.
-> > This isn't a bottleneck codepath IMO so where's the issue? We would be
-> > using a second notifier head of 40 bytes to struct gpio_device for no
-> > reason.
+> > Is this correct?
+> Ah my apologies, I added the wrong comment here. I put it in "v2 1/2".
+>
+> > > +static int mlxbf3_gpio_add_pin_ranges(struct gpio_chip *chip) {
+> > > +       unsigned int id =3D 0;
+> > > +       int ret;
+> > > +
+> > > +       if (chip->ngpio % MLXBF3_GPIO_MAX_PINS_PER_BLOCK)
+> > > +               id =3D 1;
 > >
+> > This id calculation seems wrong to me as I said in v1 review.
+> > Why do you think the above is what you want and not just working by luc=
+k?
 >
-> Yeah, this is a space/time trade-off, and you've gone with space over
-> time.  I would select time over space.
-> 40 bytes per device is negligable, and there is never a case where the
-> line request wants to see a change event - it either relates to a
-> different request, or it was triggered by the request itself.
-> Is there an echo in here ;-)?
->
+> I would like to get the gpio block id which can only be 0 or 1 on BlueFie=
+ld-3 (only 2 gpio blocks, one with 32 gpio pins and one with 24 gpio pins).
+> The above logic was an "easy" way for me to get the gpio block id. Then t=
+he pin_base for each gpio block is:
+> pin_base =3D id * MLXBF3_GPIO_MAX_PINS_PER_BLOCK
 
-Ok, I'll rework it for v2.
+It's fragile. Use a direct case switch for that, which will be more
+explicit and robust (however still can fail for any new chip
+revision/version where it might be a different GPIO layout).
 
-Bart
+--=20
+With Best Regards,
+Andy Shevchenko
