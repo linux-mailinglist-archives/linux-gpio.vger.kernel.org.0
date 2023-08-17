@@ -2,118 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5482D77EEE0
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 03:56:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 370E377EFEC
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 06:42:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347524AbjHQB4G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Aug 2023 21:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56726 "EHLO
+        id S1348018AbjHQElu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 00:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347467AbjHQBz5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Aug 2023 21:55:57 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B800E48;
-        Wed, 16 Aug 2023 18:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692237356; x=1723773356;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=an4OihAbsi8ksvlnSt9o6Jgc9iKxzwGw/cFTct/opko=;
-  b=g25BgoknmQK1Zz8Kg6HW3Oju1naaX2JExJX2qeiCu7q0Zz/H40eTvRvi
-   4nO4nXEMfc3ALXVHA9MYhmLhiUKjnhJhUJMxOzttlgNSI9lbIQg6Iumg0
-   qQPn8v9m0VmC0u4BGUVaKyFLOndu5lUG5unXsDGBbGwVF+HEFtAmg8vKf
-   66kohfXoJ1IinFMGfPoP2cxp+erMqTWRpfq7L0VEgI3dmATIiuvHqReI7
-   6uQd9kSoWtrxi7ZQwTsSBDGT4bAFfFG4iN72PYrW9qrp9fQhd6NTR5pQy
-   gs2vLZO0jnH2SSWXUl63bbbXtggP3QyMztHQ1+S2BN/qryGp9JuqWysla
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="376426060"
-X-IronPort-AV: E=Sophos;i="6.01,178,1684825200"; 
-   d="scan'208";a="376426060"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 18:55:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="848710883"
-X-IronPort-AV: E=Sophos;i="6.01,178,1684825200"; 
-   d="scan'208";a="848710883"
-Received: from lkp-server02.sh.intel.com (HELO a9caf1a0cf30) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Aug 2023 18:55:52 -0700
-Received: from kbuild by a9caf1a0cf30 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qWSEq-0000i1-05;
-        Thu, 17 Aug 2023 01:55:52 +0000
-Date:   Thu, 17 Aug 2023 09:55:09 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Asmaa Mnebhi <asmaa@nvidia.com>, andy.shevchenko@gmail.com,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, brgl@bgdev.pl,
-        linux-kernel@vger.kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Asmaa Mnebhi <asmaa@nvidia.com>
-Subject: Re: [PATCH v2 2/2] gpio: mlxbf3: Support add_pin_ranges()
-Message-ID: <202308170926.sCNjFYJH-lkp@intel.com>
-References: <20230816154442.8417-3-asmaa@nvidia.com>
+        with ESMTP id S1348037AbjHQElZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 00:41:25 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED40810E6;
+        Wed, 16 Aug 2023 21:41:24 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bdc19b782aso37331505ad.0;
+        Wed, 16 Aug 2023 21:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692247284; x=1692852084;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KXTa8Gdeix+AwTf+LsiQd7tn8eKSEaT9AUK0BaN6zjI=;
+        b=RYRIaSSBLRAMDVOmVybYk6u//bhwoF4obPRy7C4F382pRYfPVixhvIws20xIZV2BX4
+         eR9vzXi4xEhM7VrpNP65ihx7ytj5gzP+3T5EuHKXuUpPB92UGyxD+Ugd0Oh7gmG+JgW2
+         hp5OIDROIUKPtbxwAmMzlQm5kz3F97zPW+VZ/x+vq4Nr96hl9AdR7ob7nyr/GFrZZfBg
+         X3atUV7M+etAiHxuT17d003oYivhMe5MahDzfyQXC829KaxHPDM8qikBxrMcPDqQ7XRd
+         bvrrkNiQzpO7A71g4qU8jLXKERbtx99Y48ns/aLMT9M3tZjp7wlMOeCZmN5oiyGZqRg/
+         FN7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692247284; x=1692852084;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KXTa8Gdeix+AwTf+LsiQd7tn8eKSEaT9AUK0BaN6zjI=;
+        b=AfpU7TaRXNt9tUfz5HYDX86FPKwpdvbyCmnsLFF1QOZlGtBOeLgNgbPeCSbkfy7SSa
+         rcVVbYiCjbxbe0A9F3Oee37OMjRXmvkLtmLXl1JfRNDsYn/imt64E8RzIp/xONF4ftg1
+         xkaZs4Yiy1J0zmKln6ppk6Bwu4gb3/bTrGrgnhV3e/s/Smh1UAza/hscBkT3EJoE3gtw
+         +NfuSKPmYh4uEFqpSsTs5xVHAyKpIPsM/v6WHCd2SDiJiqUA+PlZ0t1108+WfLH8ukxj
+         ycoxE06Eun62TgrVXBEouaEnwpJt+L9RdAkRhwJyp2Kos/CqnVGh1qxRNRiYUoxwYYVe
+         UpPA==
+X-Gm-Message-State: AOJu0YxfZxSQrsUCCPPMm1qw5f9PUfxj2SzJMQ1AsbOSbiMido4xDr28
+        AQvuYr3aqsPaDcY7gYn2RRM=
+X-Google-Smtp-Source: AGHT+IG64SRkztdlJoF3i8ZR+Y8alyPt1NtfoLwETnZ2nIHuNr25PUFpMPiRypvUV9qZqgSrtllTzQ==
+X-Received: by 2002:a17:902:8c8d:b0:1bf:78d:5cde with SMTP id t13-20020a1709028c8d00b001bf078d5cdemr2119079plo.59.1692247284289;
+        Wed, 16 Aug 2023 21:41:24 -0700 (PDT)
+Received: from sol ([220.235.36.234])
+        by smtp.gmail.com with ESMTPSA id l7-20020a170902f68700b001b7f40a8959sm14021553plg.76.2023.08.16.21.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Aug 2023 21:41:23 -0700 (PDT)
+Date:   Thu, 17 Aug 2023 12:41:18 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 0/5] gpio: cdev: bail out of poll() if the device goes
+ down
+Message-ID: <ZN2k7gemanIpbyFh@sol>
+References: <20230816122032.15548-1-brgl@bgdev.pl>
+ <CACRpkdaTUi0r+nY12J8sLxmvfG2xRd+OMngcMiQkr5cqerevtA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230816154442.8417-3-asmaa@nvidia.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdaTUi0r+nY12J8sLxmvfG2xRd+OMngcMiQkr5cqerevtA@mail.gmail.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Asmaa,
+On Wed, Aug 16, 2023 at 11:41:06PM +0200, Linus Walleij wrote:
+> On Wed, Aug 16, 2023 at 2:20 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Wake up all three wake queues (the one associated with the character
+> > device file, the one for V1 line events and the V2 line request one)
+> > when the underlying GPIO device is unregistered. This way we won't get
+> > stuck in poll() after the chip is gone as user-space will be forced to
+> > go back into a new system call and will see that gdev->chip is NULL.
+> >
+> > Bartosz Golaszewski (5):
+> >   gpio: cdev: ignore notifications other than line status changes
+> >   gpio: cdev: rename the notifier block and notify callback
+> >   gpio: cdev: wake up chardev poll() on device unbind
+> >   gpio: cdev: wake up linereq poll() on device unbind
+> >   gpio: cdev: wake up lineevent poll() on device unbind
+> 
+> I see why this is needed and while the whole notification chain
+> is a bit clunky I really cannot think about anything better so:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
 
-kernel test robot noticed the following build warnings:
+The issue I have is with the repurposing/reuse of the existing notifier
+block that sends line changed events to the chardev.
+Correct me if I'm wrong, but now all line requests will receive those
+events as well.
+They have no business receiving those events, and it scales badly.
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next brgl/gpio/for-next linus/master v6.5-rc6 next-20230816]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+My preference would be for a separate nb for the chip removal to keep
+those two classes of events distinct.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Asmaa-Mnebhi/pinctrl-mlxbf3-Remove-gpio_disable_free/20230816-234711
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20230816154442.8417-3-asmaa%40nvidia.com
-patch subject: [PATCH v2 2/2] gpio: mlxbf3: Support add_pin_ranges()
-config: i386-buildonly-randconfig-r005-20230817 (https://download.01.org/0day-ci/archive/20230817/202308170926.sCNjFYJH-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce: (https://download.01.org/0day-ci/archive/20230817/202308170926.sCNjFYJH-lkp@intel.com/reproduce)
+Cheers,
+Kent.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308170926.sCNjFYJH-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpio/gpio-mlxbf3.c:164:6: warning: unused variable 'ret' [-Wunused-variable]
-           int ret;
-               ^
-   1 warning generated.
-
-
-vim +/ret +164 drivers/gpio/gpio-mlxbf3.c
-
-   160	
-   161	static int mlxbf3_gpio_add_pin_ranges(struct gpio_chip *chip)
-   162	{
-   163		unsigned int id = 0;
- > 164		int ret;
-   165	
-   166		if (chip->ngpio % MLXBF3_GPIO_MAX_PINS_PER_BLOCK)
-   167			id = 1;
-   168	
-   169		return gpiochip_add_pin_range(chip, "MLNXBF34:00",
-   170				chip->base, id * MLXBF3_GPIO_MAX_PINS_PER_BLOCK,
-   171				chip->ngpio);
-   172	}
-   173	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
