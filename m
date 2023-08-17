@@ -2,117 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0572D77F4A8
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 13:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 533DF77F4CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 13:11:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350099AbjHQLBB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Aug 2023 07:01:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55664 "EHLO
+        id S243530AbjHQLKj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 07:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350164AbjHQLAu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 07:00:50 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A20EA2D4A;
-        Thu, 17 Aug 2023 04:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692270049; x=1723806049;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZGk7RiEcgdAg1A/aGB9EIWVI5A1HCMU0JbtXo5dB29I=;
-  b=J3KO/clbDWnx/eZeLboMQTGLOJPUbHzI5fFcyvwSxSdAD7s7hAmJJd3T
-   zw9lnfD4BMtCKJLUna4nDSxX26XLIz+K1Ic/6MhE2CqjWG7hwCr7ACCZ4
-   q5/zZYVEWta78xQHJ6gucTL4dxOBqK3XnwydcM1V5On0u1jR0j5AkMkRG
-   +3AoqVXOuTN4DBn12Tu2SZ2zFZoivgJjmoyhaX8MRbROA8g++MMEZJIvi
-   +t/lEAwMphZIEM3JobksOroKyWVgiIjauMXoLOvtlYnF9Hx/8fsL3YgMn
-   77VZqkHP+y4HXifKEbj9UbIr1flWfjO6yffaBYxyc9Cy6lrMmNTMIbQlE
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="439130936"
-X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
-   d="scan'208";a="439130936"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 04:00:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="800009768"
-X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
-   d="scan'208";a="800009768"
-Received: from lkp-server02.sh.intel.com (HELO a9caf1a0cf30) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Aug 2023 04:00:45 -0700
-Received: from kbuild by a9caf1a0cf30 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qWak8-000143-1U;
-        Thu, 17 Aug 2023 11:00:44 +0000
-Date:   Thu, 17 Aug 2023 19:00:01 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Asmaa Mnebhi <asmaa@nvidia.com>, andy.shevchenko@gmail.com,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, brgl@bgdev.pl,
-        linux-kernel@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, Asmaa Mnebhi <asmaa@nvidia.com>
-Subject: Re: [PATCH v2 2/2] gpio: mlxbf3: Support add_pin_ranges()
-Message-ID: <202308171834.7ikT2B4p-lkp@intel.com>
-References: <20230816154442.8417-3-asmaa@nvidia.com>
+        with ESMTP id S1350192AbjHQLKM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 07:10:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB58230D7;
+        Thu, 17 Aug 2023 04:09:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7953661113;
+        Thu, 17 Aug 2023 11:09:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC783C433C8;
+        Thu, 17 Aug 2023 11:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692270594;
+        bh=m+iOFlhLTce7hvaLnYnzvoWQ7/UQ3oXDTw1op5hP3gk=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=XK+CGoMyEE7Y1Ld3ZPYRnzrkZ7dNkvty8wLkIjZErBzZc1xQvE9T57HY+YVJsFdHu
+         8MxBGV+cQE80gnumUUDEHh1LjttEW4B9SoYzPCArpQ8zfer1oIzeU5AnEdw9BhtzHe
+         dZzUaFbiHCHid1+hl/I5M65sVoUir2aCdPNfYDCkugI7dWnSslWNTIqF9jyBN/+ads
+         PTEFxaE4DAzoX+cujbJPFKmrm4GATRroVZauXaE+NPYZwHsMUGEEz7ykjj02jyoe5I
+         9CelBVTmWr0iJdeGc+SHKfGqd5WFenf9YzQROCsE+1KcyyfE1GbhmB9YC+/sFmAgnH
+         PtbzyGPf1Gafw==
+From:   Lee Jones <lee@kernel.org>
+To:     broonie@kernel.org, lee@kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, linus.walleij@linaro.org, vkoul@kernel.org,
+        lgirdwood@gmail.com, yung-chuan.liao@linux.intel.com,
+        sanyog.r.kale@intel.com, pierre-louis.bossart@linux.intel.com,
+        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
+References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
+Subject: Re: (subset) [PATCH v7 0/6] Add cs42l43 PC focused SoundWire CODEC
+Message-Id: <169227059141.987802.3881975345148652106.b4-ty@kernel.org>
+Date:   Thu, 17 Aug 2023 12:09:51 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230816154442.8417-3-asmaa@nvidia.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.2
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Asmaa,
+On Fri, 04 Aug 2023 11:45:56 +0100, Charles Keepax wrote:
+> This patch chain adds support for the Cirrus Logic cs42l43 PC focused
+> SoundWire CODEC. The chain is currently based of Lee's for-mfd-next
+> branch.
+> 
+> This series is mostly just a resend keeping pace with the kernel under
+> it, except for a minor fixup in the ASoC stuff.
+> 
+> [...]
 
-kernel test robot noticed the following build warnings:
+Applied, thanks!
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next brgl/gpio/for-next linus/master v6.5-rc6 next-20230816]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[1/6] soundwire: bus: Allow SoundWire peripherals to register IRQ handlers
+      commit: 89e63e62ad14dbe528257882856c08365e5bb337
+[2/6] dt-bindings: mfd: cirrus,cs42l43: Add initial DT binding
+      commit: 940cdb69aeb4aa3dde97bd46a5d8422f8a0f1236
+[3/6] mfd: cs42l43: Add support for cs42l43 core driver
+      commit: c4962e013792df36dceacd692fef0f6803517b3f
+[4/6] pinctrl: cs42l43: Add support for the cs42l43
+      commit: df393be615ae61993ac0c32edc13dff27b7e925d
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Asmaa-Mnebhi/pinctrl-mlxbf3-Remove-gpio_disable_free/20230816-234711
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20230816154442.8417-3-asmaa%40nvidia.com
-patch subject: [PATCH v2 2/2] gpio: mlxbf3: Support add_pin_ranges()
-config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20230817/202308171834.7ikT2B4p-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230817/202308171834.7ikT2B4p-lkp@intel.com/reproduce)
+--
+Lee Jones [李琼斯]
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308171834.7ikT2B4p-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/gpio/gpio-mlxbf3.c: In function 'mlxbf3_gpio_add_pin_ranges':
->> drivers/gpio/gpio-mlxbf3.c:164:13: warning: unused variable 'ret' [-Wunused-variable]
-     164 |         int ret;
-         |             ^~~
-
-
-vim +/ret +164 drivers/gpio/gpio-mlxbf3.c
-
-   160	
-   161	static int mlxbf3_gpio_add_pin_ranges(struct gpio_chip *chip)
-   162	{
-   163		unsigned int id = 0;
- > 164		int ret;
-   165	
-   166		if (chip->ngpio % MLXBF3_GPIO_MAX_PINS_PER_BLOCK)
-   167			id = 1;
-   168	
-   169		return gpiochip_add_pin_range(chip, "MLNXBF34:00",
-   170				chip->base, id * MLXBF3_GPIO_MAX_PINS_PER_BLOCK,
-   171				chip->ngpio);
-   172	}
-   173	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
