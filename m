@@ -2,65 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 842A677F2E8
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 11:14:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCE0777F321
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 11:22:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349355AbjHQJNa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Aug 2023 05:13:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39910 "EHLO
+        id S1349483AbjHQJWJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 05:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349365AbjHQJN1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 05:13:27 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAFCB8;
-        Thu, 17 Aug 2023 02:13:25 -0700 (PDT)
+        with ESMTP id S1349486AbjHQJVz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 05:21:55 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249721FE2;
+        Thu, 17 Aug 2023 02:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692263605; x=1723799605;
+  t=1692264114; x=1723800114;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ZINmkco5D4zvjnt45wlcOTjfWOWG/CABUQCqHmGR4Sg=;
-  b=Py3kVMbLqXASVvbxqsGGBz1uwJ31WdlAcEkPcwK+cXftnt92qlS3pgF3
-   fUgzYh/PevgqFsDsxLPf4NmBtjPoV0TlyWCy9dLwNFMdh/cWNWZHOSxZf
-   N6CPFF28cEo6uVvPaYj2KkAgqelYdICn6uW6/UbuzasXk0gP59DqVds0H
-   OLg3RTUxUID2kKaQYPiFBOW3jhjFsHBmd+NuMBznLuEIMEnfYTcBI68BP
-   7Atp473w6YOGePWuPFg49fQq+akdjEfKK1Rzq0tLHqFZn8TyDy3v4f9fJ
-   OiZOfD+tWEvMk8oPKXD/lPSg7UC36E16HidVP7tGOvGw3q8PGxoIOB9ha
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="375522891"
+  bh=/Ej4qyZf0t+T5TOHw2Any1k3eMHzzTm3DotCIhPdXpA=;
+  b=FwhtHTJvSVAV2vWNcTZaxqEn4LIr8ELHeNrqemBzEmCViA2RMDxuoOLA
+   7XdjILx0ktRpRr5RP5+z4G63xrI3KP8/Hjl+oQon//vQT26OVSaml3UE9
+   +C4qxo2C8cGbvT08D0K/8O+e1HtFEVhxbWG0m36TuCkXPdSByUjLMfRUr
+   QBELFlLPjincZH6VzbnrVuf72PesDND/5cAw0qopt164SKDT5jD0vkZKi
+   dc3HZxf5PV0q96J92ofe9ZMcFv4wKETI1N8UquXeO0KzcPd+ho0X0tMpK
+   qDDiI7wD+BmZLxAXxFPBN+CUB1n60D6ZZhgyCximK6LHxR4cGiCprfMQ6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="436664065"
 X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
-   d="scan'208";a="375522891"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 02:13:25 -0700
+   d="scan'208";a="436664065"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 02:21:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="763983672"
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="848820018"
 X-IronPort-AV: E=Sophos;i="6.01,179,1684825200"; 
-   d="scan'208";a="763983672"
-Received: from lkp-server02.sh.intel.com (HELO a9caf1a0cf30) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 17 Aug 2023 02:13:22 -0700
-Received: from kbuild by a9caf1a0cf30 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qWZ4D-0000ze-2R;
-        Thu, 17 Aug 2023 09:13:21 +0000
-Date:   Thu, 17 Aug 2023 17:12:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+   d="scan'208";a="848820018"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Aug 2023 02:21:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qWZCP-004xap-26;
+        Thu, 17 Aug 2023 12:21:49 +0300
+Date:   Thu, 17 Aug 2023 12:21:49 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 5/5] gpio: cdev: wake up lineevent poll() on device unbind
-Message-ID: <202308171736.864z7YNW-lkp@intel.com>
-References: <20230816122032.15548-6-brgl@bgdev.pl>
+Subject: Re: [PATCH 2/2] gpio: sim: simplify code with cleanup helpers
+Message-ID: <ZN3mraFtdDhDM6Sy@smile.fi.intel.com>
+References: <20230809131442.25524-1-brgl@bgdev.pl>
+ <20230809131442.25524-2-brgl@bgdev.pl>
+ <CACRpkdavsv3nJnhtdqW8ANAVfxbgHdM-SpcfOv4p_t-7EOaOHQ@mail.gmail.com>
+ <20230815155253.GK212435@hirez.programming.kicks-ass.net>
+ <ZNugkmhj1Joygorj@smile.fi.intel.com>
+ <20230815203117.GA971582@hirez.programming.kicks-ass.net>
+ <20230816124757.GB982867@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230816122032.15548-6-brgl@bgdev.pl>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+In-Reply-To: <20230816124757.GB982867@hirez.programming.kicks-ass.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,67 +73,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+On Wed, Aug 16, 2023 at 02:47:57PM +0200, Peter Zijlstra wrote:
+> On Tue, Aug 15, 2023 at 10:31:17PM +0200, Peter Zijlstra wrote:
+> 
+> > > Moreover, maybe some macro that can predict the API call from the type of
+> > > the parameter?
+> > 
+> > The whole type inferrence in C is not extensible. That is, you get to
+> > write a single _Generic() statement, and every case that is included in
+> > it will work, but the moment you use a new type, one that is not
+> > included in your giant _Generic() statement, you're out of luck.
+> 
+> Additionally, spinlock_t, does that map to spinlock, spinlock_irq or
+> spinlock_irqsave ?
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.5-rc6 next-20230817]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-cdev-ignore-notifications-other-than-line-status-changes/20230816-202408
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20230816122032.15548-6-brgl%40bgdev.pl
-patch subject: [PATCH 5/5] gpio: cdev: wake up lineevent poll() on device unbind
-config: x86_64-randconfig-x016-20230817 (https://download.01.org/0day-ci/archive/20230817/202308171736.864z7YNW-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce: (https://download.01.org/0day-ci/archive/20230817/202308171736.864z7YNW-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308171736.864z7YNW-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpio/gpiolib-cdev.c:1835: warning: Function parameter or member 'nb' not described in 'lineevent_state'
-
-
-vim +1835 drivers/gpio/gpiolib-cdev.c
-
-925ca36913fc7d Kent Gibson         2020-06-16  1807  
-925ca36913fc7d Kent Gibson         2020-06-16  1808  /*
-925ca36913fc7d Kent Gibson         2020-06-16  1809   * GPIO line event management
-925ca36913fc7d Kent Gibson         2020-06-16  1810   */
-925ca36913fc7d Kent Gibson         2020-06-16  1811  
-925ca36913fc7d Kent Gibson         2020-06-16  1812  /**
-925ca36913fc7d Kent Gibson         2020-06-16  1813   * struct lineevent_state - contains the state of a userspace event
-925ca36913fc7d Kent Gibson         2020-06-16  1814   * @gdev: the GPIO device the event pertains to
-925ca36913fc7d Kent Gibson         2020-06-16  1815   * @label: consumer label used to tag descriptors
-925ca36913fc7d Kent Gibson         2020-06-16  1816   * @desc: the GPIO descriptor held by this event
-925ca36913fc7d Kent Gibson         2020-06-16  1817   * @eflags: the event flags this line was requested with
-925ca36913fc7d Kent Gibson         2020-06-16  1818   * @irq: the interrupt that trigger in response to events on this GPIO
-925ca36913fc7d Kent Gibson         2020-06-16  1819   * @wait: wait queue that handles blocking reads of events
-925ca36913fc7d Kent Gibson         2020-06-16  1820   * @events: KFIFO for the GPIO events
-925ca36913fc7d Kent Gibson         2020-06-16  1821   * @timestamp: cache for the timestamp storing it between hardirq
-925ca36913fc7d Kent Gibson         2020-06-16  1822   * and IRQ thread, used to bring the timestamp close to the actual
-925ca36913fc7d Kent Gibson         2020-06-16  1823   * event
-925ca36913fc7d Kent Gibson         2020-06-16  1824   */
-925ca36913fc7d Kent Gibson         2020-06-16  1825  struct lineevent_state {
-925ca36913fc7d Kent Gibson         2020-06-16  1826  	struct gpio_device *gdev;
-925ca36913fc7d Kent Gibson         2020-06-16  1827  	const char *label;
-925ca36913fc7d Kent Gibson         2020-06-16  1828  	struct gpio_desc *desc;
-925ca36913fc7d Kent Gibson         2020-06-16  1829  	u32 eflags;
-925ca36913fc7d Kent Gibson         2020-06-16  1830  	int irq;
-925ca36913fc7d Kent Gibson         2020-06-16  1831  	wait_queue_head_t wait;
-925ca36913fc7d Kent Gibson         2020-06-16  1832  	DECLARE_KFIFO(events, struct gpioevent_data, 16);
-35c059f377b978 Bartosz Golaszewski 2023-08-16  1833  	struct notifier_block nb;
-925ca36913fc7d Kent Gibson         2020-06-16  1834  	u64 timestamp;
-925ca36913fc7d Kent Gibson         2020-06-16 @1835  };
-925ca36913fc7d Kent Gibson         2020-06-16  1836  
+Thank you for a good explanation.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With Best Regards,
+Andy Shevchenko
+
+
