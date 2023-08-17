@@ -2,107 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E806377FB52
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 17:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CAD677FC14
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 18:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345588AbjHQP5m convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 17 Aug 2023 11:57:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55428 "EHLO
+        id S1352300AbjHQQ1p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 12:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353436AbjHQP5U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 11:57:20 -0400
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 792A230FE;
-        Thu, 17 Aug 2023 08:57:17 -0700 (PDT)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-58c55d408daso34465227b3.2;
-        Thu, 17 Aug 2023 08:57:17 -0700 (PDT)
+        with ESMTP id S1353665AbjHQQ1R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 12:27:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DEE35AD
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 09:26:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692289576;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EZk7pCD0HPe+ABrfYsTMs6MpHKEmTin7ICiAaY/ju7w=;
+        b=Ufd0IMVlLI1+anV0BzbY5a8Je75dLfVU8Uev167p11nFs6WiH93DLtkRwl2Hx5nD+vF/Wc
+        NvtMDhr8DYhh5LpmoG9bYCxui8ZdeWqcDnN85GoKGSQaSv4uBJf4o1AoSsf5HM5merduWL
+        dm1zLbfZ/LdcS4SMwGsDrxeR8/MaEMo=
+Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
+ [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-rGpvZSzPP8q7H21hHVhn9g-1; Thu, 17 Aug 2023 12:26:13 -0400
+X-MC-Unique: rGpvZSzPP8q7H21hHVhn9g-1
+Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-589f986ab8aso10817b3.1
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 09:26:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692287836; x=1692892636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1692289573; x=1692894373;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tYoTZXUCf1mgLspDfiO8MvWSdGhcImID4N9VyIOGIZ4=;
-        b=Oxm/BcwfoihmY2FvF+vrYBg/ZvwvHQoRELTyCiJ4B4f/ehe/hTt+bfRFsa1JF0E5Q3
-         Ws+XPXwhM/zjnPjtGxjYim4aVWtl4Tbhco20xBfjHHvQAFyFcQlpiQ4jQQpWgV9vmzua
-         e05pl89kXiYWZEK87vSBbZkhvYgx3cX9eeqYEPmnw85GdHt/OGNitGfM36FDeovu08+V
-         X38XUduWtBUgEzSMlOPvMGx7/cKwocRZjFsqnqVaeVODtV2oPkOLjtOSTD5N1Lduen8A
-         0RY6kYAdx526JDdxV6y5wQOa8zwuzmAziFYYJkZHSkEj9+m09caJ/xnouNuE5CVZHmvd
-         vqUA==
-X-Gm-Message-State: AOJu0YyTL4mf4fXio78NAb3yss1KjbNPTKnF0katfG2UhPePniydbo3s
-        efwgYttaMoFCIk0p0LWNzMn4u4+S/wb5NpdC
-X-Google-Smtp-Source: AGHT+IHGvklfpCzwrD3NX5R3aAspD6vAs0/AnjSdzPvBzNmwYxRpT4KGcMuUF+1lGD7ESBrHYgk9cw==
-X-Received: by 2002:a0d:ea91:0:b0:586:b686:8234 with SMTP id t139-20020a0dea91000000b00586b6868234mr6611399ywe.8.1692287836521;
-        Thu, 17 Aug 2023 08:57:16 -0700 (PDT)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
-        by smtp.gmail.com with ESMTPSA id n186-20020a8172c3000000b0058605521e6esm4687447ywc.125.2023.08.17.08.57.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Aug 2023 08:57:16 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-d733844772eso15167276.3;
-        Thu, 17 Aug 2023 08:57:15 -0700 (PDT)
-X-Received: by 2002:a25:b090:0:b0:d53:f88a:dc09 with SMTP id
- f16-20020a25b090000000b00d53f88adc09mr6207195ybj.2.1692287835140; Thu, 17 Aug
- 2023 08:57:15 -0700 (PDT)
+        bh=EZk7pCD0HPe+ABrfYsTMs6MpHKEmTin7ICiAaY/ju7w=;
+        b=LzsnE8D3F0ZjgxmcUGTPgczvOwVi3YNtF3Aim2QZAJg5cliFwiOjJGDYH21E18VJP+
+         JDdLb96dJKD0ArmLnvxZPPGDZh+MF7MBBfQO3/pl8LzGpSU5Rg/Ku0pFkQawZi5il+nD
+         D1cCJ78Y4VGGuN+B7uKn5Ygmd8PdIxXRsAalLnmRuZsQ+yvPBLKohWQ9TXkZfsPjQjAc
+         BOLusVMRnn5nbcq10UmZJoqJ3fsNWWfl69Unevmv3fBw3hZ2SG5LXQTdOgbqd+Iynqfr
+         Hqp3PgCdnieu/qObRZ/X2erMjtRCoB02pXP0jyI1By8evZWcEgHsuBF3ygcpQkqxqtFc
+         CnXw==
+X-Gm-Message-State: AOJu0YytQlsg+h00Kb2/NeWZwlWAdqk17dbjz2SvLuH6OPUgvsmdQqAi
+        N0AjvUvafJDyI8TMm6H0Cje8OrRZmNP3BTEM+zC8COFCMWWZh1vPVv+woMncB9Cg1ZjJuYoC7g+
+        x9ExRcJ3N7x4kpH7nlJXxaw==
+X-Received: by 2002:a81:9289:0:b0:581:7958:5bda with SMTP id j131-20020a819289000000b0058179585bdamr4117560ywg.1.1692289572679;
+        Thu, 17 Aug 2023 09:26:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGFDMsUg7Qvc0ShK/beubOLSc6c6/DQghAOnIqHeSrnHVzvTsNVwwDg01IycrQ1PQJjVGdmfg==
+X-Received: by 2002:a81:9289:0:b0:581:7958:5bda with SMTP id j131-20020a819289000000b0058179585bdamr4117535ywg.1.1692289572426;
+        Thu, 17 Aug 2023 09:26:12 -0700 (PDT)
+Received: from brian-x1 (c-73-214-169-22.hsd1.pa.comcast.net. [73.214.169.22])
+        by smtp.gmail.com with ESMTPSA id y8-20020a0dd608000000b00589e84acafasm1079736ywd.48.2023.08.17.09.26.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Aug 2023 09:26:11 -0700 (PDT)
+Date:   Thu, 17 Aug 2023 12:26:10 -0400
+From:   Brian Masney <bmasney@redhat.com>
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     andersson@kernel.org, linus.walleij@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: qcom-pmic-gpio: silence -EPROBE_DEFER message
+ on probe
+Message-ID: <ZN5KIlI+RDu92jsi@brian-x1>
+References: <20230817145941.1091418-1-bmasney@redhat.com>
+ <a3431eaf-053a-4e1c-b082-e87a3aaefbf3@linaro.org>
 MIME-Version: 1.0
-References: <20230815131558.33787-1-biju.das.jz@bp.renesas.com>
- <20230815131558.33787-2-biju.das.jz@bp.renesas.com> <CAMuHMdV852knZ6UoGO-_B=xir=uUJZx2O1CHL+nsK0_BB_hStg@mail.gmail.com>
- <CACRpkdbWT333HNgSc0HMUvgDBkJdEvb23ZSHsQd-yfCOu3N=Ng@mail.gmail.com> <CAMuHMdW658cXSAHow3FoZU1DvXioktP68fBK2nQaGGFw0DDmtg@mail.gmail.com>
-In-Reply-To: <CAMuHMdW658cXSAHow3FoZU1DvXioktP68fBK2nQaGGFw0DDmtg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 17 Aug 2023 17:57:02 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUzNR4vdcu_hxp=mQ0VTWOdcdeg6g5uFw0P2HG+5rGKRg@mail.gmail.com>
-Message-ID: <CAMuHMdUzNR4vdcu_hxp=mQ0VTWOdcdeg6g5uFw0P2HG+5rGKRg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] pinctrl: renesas: rzg2l: Fix NULL pointer
- dereference in rzg2l_dt_subnode_to_map()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        stable@kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3431eaf-053a-4e1c-b082-e87a3aaefbf3@linaro.org>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Thu, Aug 17, 2023 at 05:01:19PM +0200, Konrad Dybcio wrote:
+> On 17.08.2023 16:59, Brian Masney wrote:
+> > The following message shows up one or more times when booting a Qualcomm
+> > SA8775 Development board:
+> > 
+> >     qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: can't add gpio chip
+> > 
+> > Convert this over to use dev_err_probe() to silence this message.
+> > 
+> > Signed-off-by: Brian Masney <bmasney@redhat.com>
+> > ---
+> That looks odd, why would it ever defer?
+> 
+> SPMI should be up by the time it gets a chance to probe.
 
-On Thu, Aug 17, 2023 at 3:54 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Aug 17, 2023 at 3:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Thu, Aug 17, 2023 at 2:44 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > need protection by a lock.  If no one objects, I will back out that
-> > > change myself, queue this patch in renesas-pinctrl-for-v6.6, and send
-> > > a PR tomorrow.
-> >
-> > Shouldn't this even go in for v6.5?
-> > Or is it non-urgent?
-> >
-> > (Maybe I already asked, I have teflon-memory.)
->
-> If you're still taking fixes for v6.5, I can do that.
-> Else, it will have to wait for a stable backport after v6.6-rc1.
+You replied within the same minute of me posting that patch, which is
+the fastest review I've had to date on an upstream kernel list. Before
+we continue, please verify:
 
-IOW, please let me know if I should move these 3 commits to a fixes
-branch. BTW, they conflict with commit 060f03e95454a0f4 ("pinctrl:
-Explicitly include correct DT includes") in pinctrl/for-next...
+              [ ] I am not a robot
 
-https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/log/?h=renesas-pinctrl
+:)
 
-Thanks!
+So SPMI is up and probes normally the first time, and is up by time this
+driver probes. I think the probe deferral is happening somewhere in
+pinctrl, however I am not sure exactly where. I added some tracers to
+the kernel command line and here's some relevant log messages:
 
-Gr{oetje,eeting}s,
+    device: 'c440000.spmi:pmic@2:gpio@8800': device_add
+    bus: 'platform': add device c440000.spmi:pmic@2:gpio@8800
+    PM: Adding info for platform:c440000.spmi:pmic@2:gpio@8800
+    bus: 'platform': __driver_probe_device: matched device c440000.spmi:pmic@2:gpio@8800 with driver qcom-spmi-gpio
+    bus: 'platform': really_probe: probing driver qcom-spmi-gpio with device c440000.spmi:pmic@2:gpio@8800
+    qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: no pinctrl handle
+    qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: try to register 12 pins ...
+    pinctrl core: registered pin 0 (gpio1) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 1 (gpio2) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 2 (gpio3) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 3 (gpio4) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 4 (gpio5) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 5 (gpio6) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 6 (gpio7) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 7 (gpio8) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 8 (gpio9) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 9 (gpio10) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 10 (gpio11) on c440000.spmi:pmic@2:gpio@8800
+    pinctrl core: registered pin 11 (gpio12) on c440000.spmi:pmic@2:gpio@8800
+    qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: no hogs found
+    qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: error -EPROBE_DEFER: can't add gpio chip
+    qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: Driver qcom-spmi-gpio requests probe deferral
+    platform c440000.spmi:pmic@2:gpio@8800: Added to deferred list
 
-                        Geert
+The second time it probes the device is successfully added.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Brian
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
