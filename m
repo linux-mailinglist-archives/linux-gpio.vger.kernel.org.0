@@ -2,63 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC0E877F0CB
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 09:01:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAA4777F0DA
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 09:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348333AbjHQHAs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Aug 2023 03:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47436 "EHLO
+        id S240745AbjHQHDb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 03:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348343AbjHQHAa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 03:00:30 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E1B1FD0
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 00:00:28 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-cfcebc33d04so6897415276.2
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 00:00:28 -0700 (PDT)
+        with ESMTP id S1348371AbjHQHDX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 03:03:23 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F7701FE3
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 00:03:22 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d6b1025fc7aso3603046276.3
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 00:03:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692255627; x=1692860427;
+        d=linaro.org; s=google; t=1692255801; x=1692860601;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hr/xLuRqHPiIp7tvo55AtM5IbQFVYhSzAqbDSIpKDYQ=;
-        b=E0aIGzws7LZnOQoMDIQLZ5QQCvwK3FIktoBLHnRyargWuUNjpbXKtSPYb07sIMv8cC
-         GffDGGFgQUn+C9SidEWqAkqEtKIKWluKX00Bgl/pVhWjxRxNy2Tma1x4gNAtqfpUaoV0
-         jZzMwpQG9049n2/8xzs92awHZRPpTLMqZ1yyn1yCCowLj5e+IkKsQrLRyRZhbVwk/7z5
-         6fhUkccil7QxApuBpEKZzGTmyCil2BKjUsbKAh3VYpWvISuSDijkQX/tFI9bxgWDvk22
-         bn56iwM2O6LUL4AFib+GRk4TO73PF805B3fYvI2tPz9GZpMWIxg0YKVbOMzPxOuxXuPW
-         +yyw==
+        bh=7avfeamG6iWWfTOtg1OnHs5e+jyQ3+PF63+3RSy+ZNY=;
+        b=aesoNAiPj499lKGIzB7bNr54KVIoSJsEXkhmzrQoTcfXaA397PhbJcdMq8ocVt8sb1
+         b1Sc+vB+94tdi2fbLbsY8bqJ/kjF3OAZiDj6wrY20y7cJdfbvLj2v+Yfa7a70Aqix0wQ
+         kidH1dHkXMRNTpG86qq25sh/3cN9mXEY58H/lO0/e62qHvbCPwdfJ5N+lRtw3HdIaTaq
+         vAJbAAjNuq+9pcJlFQ/4g4ND/M7AUnpEVPgcBC8ptcIa+APBPLf2LIEXOmkV1sQQGZac
+         qJNDfuKZ2UaznXHcIuWelTBYzIO91VzMls8SjwG4zoogtKBwjbH8L1340wzABnwFOE6b
+         AnDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692255627; x=1692860427;
+        d=1e100.net; s=20221208; t=1692255801; x=1692860601;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hr/xLuRqHPiIp7tvo55AtM5IbQFVYhSzAqbDSIpKDYQ=;
-        b=XSN5AbfFqIHXL+pdARYSBdjuQmPtRGtqywY2GaN7JR2Tjggbnc5hTwlJiyDS/R/hGL
-         7p1yP7X5jRXtbU7a6hnJzO4Xf9JHrtOyTrujq0+RPwhIA/pH10ImnP0sp7FwB7T5yjCE
-         HRgyLJ1winNZ1M8fgtzSKj4/YYHkU8wz5vxcV1cungA13i3cakjPxKdCij+JV7sfmUx1
-         o7Uq7CINL75cczL+psVbWP3QAgMAv1tY7qewTZQeEGL6npxFh/2rFYzVfNwQUXYke0Oz
-         9Hg2zcVBUix6JKjQPb+Vgtn3YtqE9FWA9W+grQ3EZO+YcRmudkcedPyOXOA/kXjgmsE2
-         pLQA==
-X-Gm-Message-State: AOJu0YzYkIsvrJCA4Q25ZdTpGcq5mX6lXbw1WU/9opGWI6QtjTNs6xXv
-        BP/eEceGgqooE4Kfw8Vo8Lr69W4tmmzWBc4A7IN55w==
-X-Google-Smtp-Source: AGHT+IFA7jqQ3lKHYZ3TPhUsP6rkndiWbfY2uwFAshtkh2s4HzLjAg6woMvQ1l73WBWdTHuAIZfkrok2wV75tpUlxzQ=
-X-Received: by 2002:a25:dc87:0:b0:d62:a199:fb18 with SMTP id
- y129-20020a25dc87000000b00d62a199fb18mr4535478ybe.60.1692255627601; Thu, 17
- Aug 2023 00:00:27 -0700 (PDT)
+        bh=7avfeamG6iWWfTOtg1OnHs5e+jyQ3+PF63+3RSy+ZNY=;
+        b=j04FJv80pJqlFgZ6Qx2wXcIQ9IlD5HFFo/8JLKvllea/21PCC0KAkHrajxfafH83Uu
+         0f2vRw2VSUU9TudNRdtGHZ/es0OKTjFBtOtCMZXWf5Zlv7gN7OPhgTDpT9HMBHxbkkvh
+         2intSjaGa+NqmLjPn74RwaXbCYhAcvs74e3D6+EGaD2qzTklPGbT6RiDlaHJdBIQ6czt
+         NzquIwUJXJxD5BnveJTpXHC8x3rUuTadPIlOG2m6KZvM6tGHwNGEALmIf7MNNlLQ1nN0
+         nARXvaXJdn6k6jHJsPweFoSJ8RSHei+0F/ewGnDlVw+pvn09p4aTQfpgxedYShWOMDk7
+         zBkg==
+X-Gm-Message-State: AOJu0YxBppTmN0GG3/84i3D8GMFaw5bR4KiOyLGK5MDkki5saENxI71O
+        hDAqxLvSCnAdKXb7aJwADGLw0v5MtHzARgsBfpC27Q==
+X-Google-Smtp-Source: AGHT+IGDnRoZkjFE+pzPjoUJsL58my27gTcWLZaoxQzesMZi1Q8a9WWRHdCTt4tKbGw0pjF8h1pvGTej++I4c7CD2PA=
+X-Received: by 2002:a25:bb4d:0:b0:d10:c4ea:a6b1 with SMTP id
+ b13-20020a25bb4d000000b00d10c4eaa6b1mr3725106ybk.38.1692255801526; Thu, 17
+ Aug 2023 00:03:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230816122032.15548-1-brgl@bgdev.pl> <CACRpkdaTUi0r+nY12J8sLxmvfG2xRd+OMngcMiQkr5cqerevtA@mail.gmail.com>
- <ZN2k7gemanIpbyFh@sol>
-In-Reply-To: <ZN2k7gemanIpbyFh@sol>
+References: <1692225111-19216-1-git-send-email-wentong.wu@intel.com> <1692225111-19216-5-git-send-email-wentong.wu@intel.com>
+In-Reply-To: <1692225111-19216-5-git-send-email-wentong.wu@intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 17 Aug 2023 09:00:16 +0200
-Message-ID: <CACRpkdaTn+Hj6_tiS1GGvwfcyeH5UGD6Q0K0pDpaV1Dk+WVRvA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] gpio: cdev: bail out of poll() if the device goes down
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Thu, 17 Aug 2023 09:03:10 +0200
+Message-ID: <CACRpkda4Wrih_HPz6KjNf5rQ3A7jSRoPpMpQbm+ZWNv5P3WccA@mail.gmail.com>
+Subject: Re: [PATCH v9 4/4] gpio: update Intel LJCA USB GPIO driver
+To:     Wentong Wu <wentong.wu@intel.com>
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, mka@chromium.org,
+        oneukum@suse.com, lee@kernel.org, wsa@kernel.org,
+        kfting@nuvoton.com, broonie@kernel.org, maz@kernel.org,
+        brgl@bgdev.pl, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
+        sakari.ailus@linux.intel.com, srinivas.pandruvada@intel.com,
+        linux-drivers-review@eclists.intel.com, zhifeng.wang@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,13 +74,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 6:41=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+On Thu, Aug 17, 2023 at 12:32=E2=80=AFAM Wentong Wu <wentong.wu@intel.com> =
 wrote:
 
-> My preference would be for a separate nb for the chip removal to keep
-> those two classes of events distinct.
+> This driver communicate with LJCA GPIO module with specific
+> protocol through interfaces exported by LJCA USB driver.
+> Update the driver according to LJCA USB driver's changes.
+>
+> Signed-off-by: Wentong Wu <wentong.wu@intel.com>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-That's a good point. Bart do you think you can rework it as such?
+This patch does several things at the same time, consider the
+"one technical step per patch" approach, for some definition
+of a "technical step". The upside is that git bisect gets better
+precision when something goes sidewise.
+
+However it's no big deal for me as I'm not hung up on process
+and I bet you have tested the result, so:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
