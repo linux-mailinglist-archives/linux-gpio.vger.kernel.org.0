@@ -2,112 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 370E377EFEC
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 06:42:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC0E877F0CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Aug 2023 09:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348018AbjHQElu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Aug 2023 00:41:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51320 "EHLO
+        id S1348333AbjHQHAs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 03:00:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348037AbjHQElZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 00:41:25 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED40810E6;
-        Wed, 16 Aug 2023 21:41:24 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bdc19b782aso37331505ad.0;
-        Wed, 16 Aug 2023 21:41:24 -0700 (PDT)
+        with ESMTP id S1348343AbjHQHAa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 03:00:30 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E1B1FD0
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 00:00:28 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-cfcebc33d04so6897415276.2
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Aug 2023 00:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692247284; x=1692852084;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KXTa8Gdeix+AwTf+LsiQd7tn8eKSEaT9AUK0BaN6zjI=;
-        b=RYRIaSSBLRAMDVOmVybYk6u//bhwoF4obPRy7C4F382pRYfPVixhvIws20xIZV2BX4
-         eR9vzXi4xEhM7VrpNP65ihx7ytj5gzP+3T5EuHKXuUpPB92UGyxD+Ugd0Oh7gmG+JgW2
-         hp5OIDROIUKPtbxwAmMzlQm5kz3F97zPW+VZ/x+vq4Nr96hl9AdR7ob7nyr/GFrZZfBg
-         X3atUV7M+etAiHxuT17d003oYivhMe5MahDzfyQXC829KaxHPDM8qikBxrMcPDqQ7XRd
-         bvrrkNiQzpO7A71g4qU8jLXKERbtx99Y48ns/aLMT9M3tZjp7wlMOeCZmN5oiyGZqRg/
-         FN7w==
+        d=linaro.org; s=google; t=1692255627; x=1692860427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hr/xLuRqHPiIp7tvo55AtM5IbQFVYhSzAqbDSIpKDYQ=;
+        b=E0aIGzws7LZnOQoMDIQLZ5QQCvwK3FIktoBLHnRyargWuUNjpbXKtSPYb07sIMv8cC
+         GffDGGFgQUn+C9SidEWqAkqEtKIKWluKX00Bgl/pVhWjxRxNy2Tma1x4gNAtqfpUaoV0
+         jZzMwpQG9049n2/8xzs92awHZRPpTLMqZ1yyn1yCCowLj5e+IkKsQrLRyRZhbVwk/7z5
+         6fhUkccil7QxApuBpEKZzGTmyCil2BKjUsbKAh3VYpWvISuSDijkQX/tFI9bxgWDvk22
+         bn56iwM2O6LUL4AFib+GRk4TO73PF805B3fYvI2tPz9GZpMWIxg0YKVbOMzPxOuxXuPW
+         +yyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692247284; x=1692852084;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KXTa8Gdeix+AwTf+LsiQd7tn8eKSEaT9AUK0BaN6zjI=;
-        b=AfpU7TaRXNt9tUfz5HYDX86FPKwpdvbyCmnsLFF1QOZlGtBOeLgNgbPeCSbkfy7SSa
-         rcVVbYiCjbxbe0A9F3Oee37OMjRXmvkLtmLXl1JfRNDsYn/imt64E8RzIp/xONF4ftg1
-         xkaZs4Yiy1J0zmKln6ppk6Bwu4gb3/bTrGrgnhV3e/s/Smh1UAza/hscBkT3EJoE3gtw
-         +NfuSKPmYh4uEFqpSsTs5xVHAyKpIPsM/v6WHCd2SDiJiqUA+PlZ0t1108+WfLH8ukxj
-         ycoxE06Eun62TgrVXBEouaEnwpJt+L9RdAkRhwJyp2Kos/CqnVGh1qxRNRiYUoxwYYVe
-         UpPA==
-X-Gm-Message-State: AOJu0YxfZxSQrsUCCPPMm1qw5f9PUfxj2SzJMQ1AsbOSbiMido4xDr28
-        AQvuYr3aqsPaDcY7gYn2RRM=
-X-Google-Smtp-Source: AGHT+IG64SRkztdlJoF3i8ZR+Y8alyPt1NtfoLwETnZ2nIHuNr25PUFpMPiRypvUV9qZqgSrtllTzQ==
-X-Received: by 2002:a17:902:8c8d:b0:1bf:78d:5cde with SMTP id t13-20020a1709028c8d00b001bf078d5cdemr2119079plo.59.1692247284289;
-        Wed, 16 Aug 2023 21:41:24 -0700 (PDT)
-Received: from sol ([220.235.36.234])
-        by smtp.gmail.com with ESMTPSA id l7-20020a170902f68700b001b7f40a8959sm14021553plg.76.2023.08.16.21.41.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Aug 2023 21:41:23 -0700 (PDT)
-Date:   Thu, 17 Aug 2023 12:41:18 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        d=1e100.net; s=20221208; t=1692255627; x=1692860427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hr/xLuRqHPiIp7tvo55AtM5IbQFVYhSzAqbDSIpKDYQ=;
+        b=XSN5AbfFqIHXL+pdARYSBdjuQmPtRGtqywY2GaN7JR2Tjggbnc5hTwlJiyDS/R/hGL
+         7p1yP7X5jRXtbU7a6hnJzO4Xf9JHrtOyTrujq0+RPwhIA/pH10ImnP0sp7FwB7T5yjCE
+         HRgyLJ1winNZ1M8fgtzSKj4/YYHkU8wz5vxcV1cungA13i3cakjPxKdCij+JV7sfmUx1
+         o7Uq7CINL75cczL+psVbWP3QAgMAv1tY7qewTZQeEGL6npxFh/2rFYzVfNwQUXYke0Oz
+         9Hg2zcVBUix6JKjQPb+Vgtn3YtqE9FWA9W+grQ3EZO+YcRmudkcedPyOXOA/kXjgmsE2
+         pLQA==
+X-Gm-Message-State: AOJu0YzYkIsvrJCA4Q25ZdTpGcq5mX6lXbw1WU/9opGWI6QtjTNs6xXv
+        BP/eEceGgqooE4Kfw8Vo8Lr69W4tmmzWBc4A7IN55w==
+X-Google-Smtp-Source: AGHT+IFA7jqQ3lKHYZ3TPhUsP6rkndiWbfY2uwFAshtkh2s4HzLjAg6woMvQ1l73WBWdTHuAIZfkrok2wV75tpUlxzQ=
+X-Received: by 2002:a25:dc87:0:b0:d62:a199:fb18 with SMTP id
+ y129-20020a25dc87000000b00d62a199fb18mr4535478ybe.60.1692255627601; Thu, 17
+ Aug 2023 00:00:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230816122032.15548-1-brgl@bgdev.pl> <CACRpkdaTUi0r+nY12J8sLxmvfG2xRd+OMngcMiQkr5cqerevtA@mail.gmail.com>
+ <ZN2k7gemanIpbyFh@sol>
+In-Reply-To: <ZN2k7gemanIpbyFh@sol>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 17 Aug 2023 09:00:16 +0200
+Message-ID: <CACRpkdaTn+Hj6_tiS1GGvwfcyeH5UGD6Q0K0pDpaV1Dk+WVRvA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] gpio: cdev: bail out of poll() if the device goes down
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 0/5] gpio: cdev: bail out of poll() if the device goes
- down
-Message-ID: <ZN2k7gemanIpbyFh@sol>
-References: <20230816122032.15548-1-brgl@bgdev.pl>
- <CACRpkdaTUi0r+nY12J8sLxmvfG2xRd+OMngcMiQkr5cqerevtA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaTUi0r+nY12J8sLxmvfG2xRd+OMngcMiQkr5cqerevtA@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 16, 2023 at 11:41:06PM +0200, Linus Walleij wrote:
-> On Wed, Aug 16, 2023 at 2:20 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> 
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Wake up all three wake queues (the one associated with the character
-> > device file, the one for V1 line events and the V2 line request one)
-> > when the underlying GPIO device is unregistered. This way we won't get
-> > stuck in poll() after the chip is gone as user-space will be forced to
-> > go back into a new system call and will see that gdev->chip is NULL.
-> >
-> > Bartosz Golaszewski (5):
-> >   gpio: cdev: ignore notifications other than line status changes
-> >   gpio: cdev: rename the notifier block and notify callback
-> >   gpio: cdev: wake up chardev poll() on device unbind
-> >   gpio: cdev: wake up linereq poll() on device unbind
-> >   gpio: cdev: wake up lineevent poll() on device unbind
-> 
-> I see why this is needed and while the whole notification chain
-> is a bit clunky I really cannot think about anything better so:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
+On Thu, Aug 17, 2023 at 6:41=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
 
-The issue I have is with the repurposing/reuse of the existing notifier
-block that sends line changed events to the chardev.
-Correct me if I'm wrong, but now all line requests will receive those
-events as well.
-They have no business receiving those events, and it scales badly.
+> My preference would be for a separate nb for the chip removal to keep
+> those two classes of events distinct.
 
-My preference would be for a separate nb for the chip removal to keep
-those two classes of events distinct.
+That's a good point. Bart do you think you can rework it as such?
 
-Cheers,
-Kent.
-
+Yours,
+Linus Walleij
