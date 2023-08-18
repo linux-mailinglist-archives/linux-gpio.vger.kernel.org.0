@@ -2,78 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE0278063C
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 09:19:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B44B780643
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 09:21:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244330AbjHRHTH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 03:19:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55914 "EHLO
+        id S229879AbjHRHUn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 03:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358152AbjHRHSx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 03:18:53 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2685930DF
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 00:18:52 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id 3f1490d57ef6-d299ed34bacso2423963276.1
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 00:18:52 -0700 (PDT)
+        with ESMTP id S1358196AbjHRHUc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 03:20:32 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC99130F6
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 00:20:28 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-bc379e4c1cbso624933276.2
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 00:20:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692343131; x=1692947931;
+        d=linaro.org; s=google; t=1692343228; x=1692948028;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=enTJBS8wTh1nxTe/T9iI4asg7ZNOFqCWqP/AK42Kk20=;
-        b=M1Qa6F6MHI++ebLHjL52l6yQFWrxGbaCo37q342++tD3UzsJrIUpG1onarDhT1osWP
-         bEVsuUhgkiiKPkgdRgSuteWlsiDHvO05LZJW8QHInVNlPWmCHaPLd2+j+VBuexQQe4NH
-         KVxHY5tfX30jQNx1mNffcHVvP5m3bFjkgJpbioMClJ+GcILGMhw9l9A4Gv3r+7Adxxja
-         DRxC9qze/biNIbAhKNSiDSc1QgyuWQLQIz+fcYhk4sZLs5t5QXKNnuU8OtK/T6a1m86F
-         4t/jIYv5vo1R0a99tvhp/6Y9Z+N/b3OHtHqBCnEkzsT4sYIFHtc0jzh1BMCabpeMuYua
-         S70A==
+        bh=RVNINBfhI6v1OuGUQEk8EPNY2D2i8J6KxQOBkK8fRKE=;
+        b=vtKHEIfodbbk9YOeCdsweZjrbmsDIETtff/h4h7g05cuFSQzU7+2B0H8ncEKIO2Dp7
+         8Fgf8gBbbkIPBhgWUH+qm3iZ4NoU5kbA7WqoeI2g/NHpGLwglqZxcMJL3jBD7LFVACeF
+         Rg+L0yqtEyNaM8UxESefXeSAA4iS4QW5WV1ZWN1f8+4+uOEJM1ZgPt1JNed//pG+SXZ4
+         FzKPD0X0ssGI5dzDGjqvZWdUhh3z/yBaO7jZ+MGHmHh+lA59yg5DIsyYuKVq/qKLNeq8
+         avrhzIZ4MUGi5jT+PqylLD3ddjUseuFRUbL+zhikPkZlaWedfMpmwlWDnye6FOvLbXxC
+         mv4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692343131; x=1692947931;
+        d=1e100.net; s=20221208; t=1692343228; x=1692948028;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=enTJBS8wTh1nxTe/T9iI4asg7ZNOFqCWqP/AK42Kk20=;
-        b=LAWmKcfcY55KuJKLSX+vWiSARlNUY9sNizzgc0HfIYOnuJpYl1fHAkL4TFYa17E4mZ
-         vSmvlPmwhTZdwMCOzzoMkGLJ7BMxIM14DbBCXmRpyplQ5q5nsmdgxqNEiuaaFmirrC5X
-         UrCXr4CQXeiK8kd3Kzr252lf0morS2EhJGmADNydQYEvQiH3yvShacUnJs+NeO3w8vJg
-         qQEDEJlGkSiCSkQD/oQoOF2jGTemTaGp0dHfjs6xNQoGUzXLjnkRACQ3mZc5wyLy3A+D
-         i2X4t3BjrVu1OjsufFDQ8HZbDJLHPYowuVfeEFpKOkFyj2LNFp/ol6nWIeGyAGRO5tvb
-         fHxw==
-X-Gm-Message-State: AOJu0YxW62y0xwu736oWM91y27Z6XXafUojg1W4ffPknWdX8uRLbAs3u
-        RE0rSBaL3Wz7RxRRrQcRoow+ZB2OHf3rlc/POmUkcQ==
-X-Google-Smtp-Source: AGHT+IFqQQDYlaVK/njGJqMp/NfBpTtTF85jqtSqD/Ox915rgUv/UVNZI1uAeDkh95YYIKDoqC9n9CQTQnf912PnPKw=
-X-Received: by 2002:a25:a464:0:b0:d71:c79c:86c1 with SMTP id
- f91-20020a25a464000000b00d71c79c86c1mr5249886ybi.32.1692343131394; Fri, 18
- Aug 2023 00:18:51 -0700 (PDT)
+        bh=RVNINBfhI6v1OuGUQEk8EPNY2D2i8J6KxQOBkK8fRKE=;
+        b=HZoSM7HJExkEEFzolWZIK/7O6FRbGvNt/AIWOqKA2E8y14zIwLNQ6gjb0tI0GBD+64
+         LK7/tkLLIEI0aYGIhjEpG87UWbukNPBBS0yO0BDtjTHjP3bIBnrEbGnnE1+DEu0Bk0ta
+         j83fUnO5LOaIt+PMT8n57fEH7qOqA/8bFoPGTfK8hRmZYLBa8Sm8uP0wEKlrXmA12xAS
+         NnOaT42oQPAp72w6amYBhdYbZQNTLPs/htcNGdrwrJRZiuK5nygmKh3nhreM/ZGvsNMo
+         VhrpeKnDj8TOwWOzZr8cBQWW8c5USDFibt62UmWfmHrMf/cxEHr5dWEAskiGAqlJaP+t
+         6jsQ==
+X-Gm-Message-State: AOJu0YzPDbqIoadqABP/M22WDZkpFsvIttsPlPeUbWL5YDqdupIsefLk
+        ptENCXORVNMknPPDxCeoFhZV9mBa7s0dRyVw83MoIw==
+X-Google-Smtp-Source: AGHT+IGYF92sQJQ2p+S/Z25wOBxgzaE5QXpiSKLqWsfuzauonRXqEivasJTEX6QNEnPrNI851mx4jtt918kg6E0wUaw=
+X-Received: by 2002:a25:b116:0:b0:d3f:2238:8872 with SMTP id
+ g22-20020a25b116000000b00d3f22388872mr1701651ybj.63.1692343227823; Fri, 18
+ Aug 2023 00:20:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230817022018.3527570-1-ruanjinjie@huawei.com>
- <AM0PR04MB6289593A2149C9411FA9D5858F1AA@AM0PR04MB6289.eurprd04.prod.outlook.com>
- <6b508343-7b7f-0fd5-d83f-92dc88a9510d@sionneau.net> <20230818053254.GK5650@pengutronix.de>
-In-Reply-To: <20230818053254.GK5650@pengutronix.de>
+References: <20230817184958.25349-1-brgl@bgdev.pl>
+In-Reply-To: <20230817184958.25349-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 18 Aug 2023 09:18:39 +0200
-Message-ID: <CACRpkdbikkc+oepJqZsUz27MTOHLMp-QQPdgRZ7XQGTG-=aAKA@mail.gmail.com>
-Subject: Re: [PATCH -next v2] I2C: Fix return value check for devm_pinctrl_get()
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Yann Sionneau <yann@sionneau.net>, Leo Li <leoyang.li@nxp.com>,
-        Ruan Jinjie <ruanjinjie@huawei.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, Wolfram Sang <wsa@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux@armlinux.org.uk,
-        linux-gpio@vger.kernel.org,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 18 Aug 2023 09:20:16 +0200
+Message-ID: <CACRpkdafsASGZCK24waSix8xwzWTrNyTCkxDu4phx7q-9KtLdw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] gpio: cdev: bail out of poll() if the device goes down
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -86,21 +70,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 7:33=E2=80=AFAM Sascha Hauer <s.hauer@pengutronix.d=
-e> wrote:
+On Thu, Aug 17, 2023 at 8:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-> NULL is returned on purpose. When PINCTRL is disabled NULL becomes a
-> valid pinctrl cookie which can be passed to the other stub functions.
-> With this drivers using pinctrl can get through their probe function
-> without an error when PINCTRL is disabled.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> The same approach is taken by the clk and regulator API.
+> Wake up all three wake queues (the one associated with the character
+> device file, the one for V1 line events and the V2 line request one)
+> when the underlying GPIO device is unregistered. This way we won't get
+> stuck in poll() after the chip is gone as user-space will be forced to
+> go back into a new system call and will see that gdev->chip is NULL.
 >
-> It is correct to test the return value of devm_pinctrl_get() with
-> IS_ERR(), only the commit message of these patches is a bit inaccurate.
+> v1 -> v2:
+> - not much is left from v1, this time we don't repurpose the existing
+>   gpio_device notifier but add a new one so that cdev structures don't
+>   get unwanted events
 
-Sascha is spot on, maybe copyedit some of the above
-into the commit message and resend?
+This is nice, thanks for quick respin!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
