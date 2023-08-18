@@ -2,145 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1FF378038F
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 03:54:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E19780420
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 05:03:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357118AbjHRByX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Aug 2023 21:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58466 "EHLO
+        id S1357386AbjHRDDS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Aug 2023 23:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351230AbjHRBxy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 21:53:54 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB25100;
-        Thu, 17 Aug 2023 18:53:53 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RRlGk5XHtzVk4T;
-        Fri, 18 Aug 2023 09:51:42 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Fri, 18 Aug 2023 09:53:49 +0800
-Message-ID: <fe0d14a3-a890-8602-5be7-4e58ef0d8d1a@huawei.com>
-Date:   Fri, 18 Aug 2023 09:53:49 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH -next v2] I2C: Fix return value check for
- devm_pinctrl_get()
-Content-Language: en-US
-To:     Yann Sionneau <yann@sionneau.net>, Leo Li <leoyang.li@nxp.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, Wolfram Sang <wsa@kernel.org>,
+        with ESMTP id S1357384AbjHRDC7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Aug 2023 23:02:59 -0400
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857C41BB;
+        Thu, 17 Aug 2023 20:02:58 -0700 (PDT)
+Received: from local
+        by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+         (Exim 4.96)
+        (envelope-from <daniel@makrotopia.org>)
+        id 1qWpl3-00054P-1n;
+        Fri, 18 Aug 2023 03:02:41 +0000
+Date:   Fri, 18 Aug 2023 04:02:35 +0100
+From:   Daniel Golle <daniel@makrotopia.org>
+To:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        <linux@armlinux.org.uk>
-CC:     <linux-gpio@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20230817022018.3527570-1-ruanjinjie@huawei.com>
- <AM0PR04MB6289593A2149C9411FA9D5858F1AA@AM0PR04MB6289.eurprd04.prod.outlook.com>
- <6b508343-7b7f-0fd5-d83f-92dc88a9510d@sionneau.net>
-From:   Ruan Jinjie <ruanjinjie@huawei.com>
-In-Reply-To: <6b508343-7b7f-0fd5-d83f-92dc88a9510d@sionneau.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500008.china.huawei.com (7.221.188.139)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Rob Herring <robh@kernel.org>,
+        Daniel Golle <daniel@makrotopia.org>,
+        Sam Shih <sam.shih@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] pinctrl: mediatek: fix pull_type data for MT7981
+Message-ID: <7bcc8ead25dbfabc7f5a85d066224a926fbb4941.1692327317.git.daniel@makrotopia.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+MediaTek has released pull_type data for MT7981 in their SDK.
+Use it and set functions to configure pin bias.
 
+Fixes: 6c83b2d94fcc ("pinctrl: add mt7981 pinctrl driver")
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+ drivers/pinctrl/mediatek/pinctrl-mt7981.c | 44 +++++++----------------
+ 1 file changed, 13 insertions(+), 31 deletions(-)
 
-On 2023/8/18 7:07, Yann Sionneau wrote:
-> Hi,
-> 
-> Le 17/08/2023 à 19:30, Leo Li a écrit :
-> 
->>> The devm_pinctrl_get() function returns error pointers and never returns
->>> NULL. Update the checks accordingly.
->> Not exactly.  It can return NULL when CONFIG_PINCTRL is not defined. 
->> We probably should fix that API too.
->>
->> include/linux/pinctrl/consumer.h:
->> static inline struct pinctrl * __must_check devm_pinctrl_get(struct
->> device *dev)
->> {
->>          return NULL;
->> }
-> 
-> So, as Leo pointed out it seems devm_pinctrl_get() can in fact return
-> NULL, when CONFIG_PINCTRL is not defined.
-> 
-> What do we do about this?
-> 
-> Proposals:
-> 
-> 1/ make sure all call sites of devm_pinctrl_get() do check for error
-> with IS_ERR *and* check for NULL => therefore using IS_ERR_OR_NULL
-
-I think it's the best.
-
-> 
-> 2/ change the fallback implementation in
-> include/linux/pinctrl/consumer.h to return ERR_PTR(-Esomething) (which
-> errno?)
-
-It seems a convention to return NULL if the related macro is not defined.
-
-> 
-> 3/ another solution?
-
-Make I2C_IMX and I2C_AT91 config depends on PINCTRL config is another
-option. However it seems that the function call devm_pinctrl_get() has
-an optional recovery feature from the following notes and dev_info(). So
-this dependency is not necessary.
-
-1378 /*
-1379  * We switch SCL and SDA to their GPIO function and do some bitbanging
-1380  * for bus recovery. These alternative pinmux settings can be
-1381  * described in the device tree by a separate pinctrl state "gpio". If
-1382  * this is missing this is not a big problem, the only implication is
-1383  * that we can't do bus recovery.
-1384  */
-1385 static int i2c_imx_init_recovery_info(struct imx_i2c_struct *i2c_imx,
-1386         struct platform_device *pdev)
-1387 {
-1388     struct i2c_bus_recovery_info *rinfo = &i2c_imx->rinfo;
-1389
-1390     i2c_imx->pinctrl = devm_pinctrl_get(&pdev->dev);
-
-828 static int at91_init_twi_recovery_gpio(struct platform_device *pdev,
-829                        struct at91_twi_dev *dev)
-830 {
-831     struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
-832
-833     rinfo->pinctrl = devm_pinctrl_get(&pdev->dev);
-834     if (!rinfo->pinctrl || IS_ERR(rinfo->pinctrl)) {
-835         dev_info(dev->dev, "can't get pinctrl, bus recovery not
-supported\n");
-836         return PTR_ERR(rinfo->pinctrl);
-837     }
-
-
-> 
-> Regards,
-> 
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7981.c b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
+index 18abc57800111..0fd2c0c451f95 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt7981.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
+@@ -457,37 +457,15 @@ static const unsigned int mt7981_pull_type[] = {
+ 	MTK_PULL_PUPD_R1R0_TYPE,/*34*/ MTK_PULL_PUPD_R1R0_TYPE,/*35*/
+ 	MTK_PULL_PUPD_R1R0_TYPE,/*36*/ MTK_PULL_PUPD_R1R0_TYPE,/*37*/
+ 	MTK_PULL_PUPD_R1R0_TYPE,/*38*/ MTK_PULL_PUPD_R1R0_TYPE,/*39*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*40*/ MTK_PULL_PUPD_R1R0_TYPE,/*41*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*42*/ MTK_PULL_PUPD_R1R0_TYPE,/*43*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*44*/ MTK_PULL_PUPD_R1R0_TYPE,/*45*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*46*/ MTK_PULL_PUPD_R1R0_TYPE,/*47*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*48*/ MTK_PULL_PUPD_R1R0_TYPE,/*49*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*50*/ MTK_PULL_PUPD_R1R0_TYPE,/*51*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*52*/ MTK_PULL_PUPD_R1R0_TYPE,/*53*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*54*/ MTK_PULL_PUPD_R1R0_TYPE,/*55*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*56*/ MTK_PULL_PUPD_R1R0_TYPE,/*57*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*58*/ MTK_PULL_PUPD_R1R0_TYPE,/*59*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*60*/ MTK_PULL_PUPD_R1R0_TYPE,/*61*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*62*/ MTK_PULL_PUPD_R1R0_TYPE,/*63*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*64*/ MTK_PULL_PUPD_R1R0_TYPE,/*65*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*66*/ MTK_PULL_PUPD_R1R0_TYPE,/*67*/
+-	MTK_PULL_PUPD_R1R0_TYPE,/*68*/ MTK_PULL_PU_PD_TYPE,/*69*/
+-	MTK_PULL_PU_PD_TYPE,/*70*/ MTK_PULL_PU_PD_TYPE,/*71*/
+-	MTK_PULL_PU_PD_TYPE,/*72*/ MTK_PULL_PU_PD_TYPE,/*73*/
+-	MTK_PULL_PU_PD_TYPE,/*74*/ MTK_PULL_PU_PD_TYPE,/*75*/
+-	MTK_PULL_PU_PD_TYPE,/*76*/ MTK_PULL_PU_PD_TYPE,/*77*/
+-	MTK_PULL_PU_PD_TYPE,/*78*/ MTK_PULL_PU_PD_TYPE,/*79*/
+-	MTK_PULL_PU_PD_TYPE,/*80*/ MTK_PULL_PU_PD_TYPE,/*81*/
+-	MTK_PULL_PU_PD_TYPE,/*82*/ MTK_PULL_PU_PD_TYPE,/*83*/
+-	MTK_PULL_PU_PD_TYPE,/*84*/ MTK_PULL_PU_PD_TYPE,/*85*/
+-	MTK_PULL_PU_PD_TYPE,/*86*/ MTK_PULL_PU_PD_TYPE,/*87*/
+-	MTK_PULL_PU_PD_TYPE,/*88*/ MTK_PULL_PU_PD_TYPE,/*89*/
+-	MTK_PULL_PU_PD_TYPE,/*90*/ MTK_PULL_PU_PD_TYPE,/*91*/
+-	MTK_PULL_PU_PD_TYPE,/*92*/ MTK_PULL_PU_PD_TYPE,/*93*/
+-	MTK_PULL_PU_PD_TYPE,/*94*/ MTK_PULL_PU_PD_TYPE,/*95*/
+-	MTK_PULL_PU_PD_TYPE,/*96*/ MTK_PULL_PU_PD_TYPE,/*97*/
+-	MTK_PULL_PU_PD_TYPE,/*98*/ MTK_PULL_PU_PD_TYPE,/*99*/
+-	MTK_PULL_PU_PD_TYPE,/*100*/
++	MTK_PULL_PU_PD_TYPE,/*40*/ MTK_PULL_PU_PD_TYPE,/*41*/
++	MTK_PULL_PU_PD_TYPE,/*42*/ MTK_PULL_PU_PD_TYPE,/*43*/
++	MTK_PULL_PU_PD_TYPE,/*44*/ MTK_PULL_PU_PD_TYPE,/*45*/
++	MTK_PULL_PU_PD_TYPE,/*46*/ MTK_PULL_PU_PD_TYPE,/*47*/
++	MTK_PULL_PU_PD_TYPE,/*48*/ MTK_PULL_PU_PD_TYPE,/*49*/
++	MTK_PULL_PU_PD_TYPE,/*50*/ MTK_PULL_PU_PD_TYPE,/*51*/
++	MTK_PULL_PU_PD_TYPE,/*52*/ MTK_PULL_PU_PD_TYPE,/*53*/
++	MTK_PULL_PU_PD_TYPE,/*54*/ MTK_PULL_PU_PD_TYPE,/*55*/
++	MTK_PULL_PU_PD_TYPE,/*56*/
+ };
+ 
+ static const struct mtk_pin_reg_calc mt7981_reg_cals[] = {
+@@ -1014,6 +992,10 @@ static struct mtk_pin_soc mt7981_data = {
+ 	.ies_present = false,
+ 	.base_names = mt7981_pinctrl_register_base_names,
+ 	.nbase_names = ARRAY_SIZE(mt7981_pinctrl_register_base_names),
++	.bias_disable_set = mtk_pinconf_bias_disable_set,
++	.bias_disable_get = mtk_pinconf_bias_disable_get,
++	.bias_set = mtk_pinconf_bias_set,
++	.bias_get = mtk_pinconf_bias_get,
+ 	.pull_type = mt7981_pull_type,
+ 	.bias_set_combo = mtk_pinconf_bias_set_combo,
+ 	.bias_get_combo = mtk_pinconf_bias_get_combo,
+-- 
+2.41.0
