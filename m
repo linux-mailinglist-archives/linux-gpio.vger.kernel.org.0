@@ -2,56 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC12E780D9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 16:10:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5EBB780DFC
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 16:26:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239086AbjHROKV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 10:10:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38696 "EHLO
+        id S1348620AbjHROZ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 10:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377652AbjHROKN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 10:10:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97431170E;
-        Fri, 18 Aug 2023 07:10:12 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="353411250"
-X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
-   d="scan'208";a="353411250"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 07:10:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="738126593"
-X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
-   d="scan'208";a="738126593"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 18 Aug 2023 07:10:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1qX0Ap-00BDcD-2M;
-        Fri, 18 Aug 2023 17:09:59 +0300
-Date:   Fri, 18 Aug 2023 17:09:59 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Li Zetao <lizetao1@huawei.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, j-keerthy@ti.com,
-        vz@mleia.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org,
-        shubhrajyoti.datta@amd.com, srinivas.neeli@amd.com,
-        michal.simek@amd.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH -next 05/11] gpio: mb86s7x: Use helper function
- devm_clk_get_optional_enabled()
-Message-ID: <ZN97t+kYIDsN9Tg8@smile.fi.intel.com>
-References: <20230818093018.1051434-1-lizetao1@huawei.com>
- <20230818093018.1051434-6-lizetao1@huawei.com>
+        with ESMTP id S1348084AbjHROZ1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 10:25:27 -0400
+Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93572D4A;
+        Fri, 18 Aug 2023 07:25:25 -0700 (PDT)
+Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-1c4c6717e61so589320fac.1;
+        Fri, 18 Aug 2023 07:25:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692368725; x=1692973525;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RBL4ltIIW/RZGmyXJIvtwShlgX2Xe5UDc+ZZ5Bj8UuI=;
+        b=QFYyftYhW6RzPbFzvHifdi4haxOlWdZ43SsDaXDUVejV2cVQ/jT1V431izBW5gGkcZ
+         3bmEHOq6kjn2D+QwKGRT2cu/QqiCHl6EUUFZ2JLiOfVw1PNpWs0EoOTz/o4ZEIwZ234P
+         U3h0Kv8FjXoJ4ndQngCbx5pIXXmZKym131uSnyEeGPs62qXAEi51dNcRxBx6ryTXx5NC
+         HP63Vbulahdj1CpfrCbGhB1uW+ADEbxuwMo9PRAySM914DUWczoZZoQ5i08ACNitJGkS
+         /IY1Z1bTL91OIRMSWT4LUS0kFKbeLtIbQ1zdf1hffdokE/123LPKmNZvUEdgakQgtxmj
+         6BGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692368725; x=1692973525;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RBL4ltIIW/RZGmyXJIvtwShlgX2Xe5UDc+ZZ5Bj8UuI=;
+        b=Gme1qSnlHE5zG+8wKMR+BbSdObURdbe4q1qRfzc1nWIMBwMMd/ud7Mja8BT5il49NV
+         i9ICvTU2vcBDh2fv4rigP6w5HYkodiKKCuwLo9tbSY+uwwgFz/1AxC+aRrG4K6sVv3Ms
+         KNOsyRC7MZFJcyk3n4q0WOFvas0zqQwo39KG4T2z0Pnb/fG7qRy/T99yxXKcTLpmLa74
+         YZ/q/gY8jmd1EhTfm5GINGrLuuRzAsDk/Ka+UWQ6uYrCSkfa7KdP3ypiercfN/38E2rS
+         d5RCzIUDHN1/zI7XRjdKvmikFSGvSf0YB4hzyUvM2yTJ/cUUxmLwD2o/YkPNG7Ijw2FY
+         igNw==
+X-Gm-Message-State: AOJu0YzTVCrNUlM1y9nRvJ9Mx05wxvgL1KaaZSsU94RrxqjrcIP8xFCu
+        MCvEpscTUI7AVYkI4IUEbun6pjN9/nCTjyX8Cbg=
+X-Google-Smtp-Source: AGHT+IGHL7antrqn5wCJT+a1t2ARJz0cXc1jnpzrhBtNj2GWzju8VdOjYaJzVi1IS1mPpkfNjH17m8B7gCKkqsQBaQE=
+X-Received: by 2002:a05:6870:ac24:b0:1c8:c27f:7dbb with SMTP id
+ kw36-20020a056870ac2400b001c8c27f7dbbmr3314161oab.41.1692368725262; Fri, 18
+ Aug 2023 07:25:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230818093018.1051434-6-lizetao1@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no
+References: <20230818122909.7122-1-asmaa@nvidia.com> <20230818122909.7122-3-asmaa@nvidia.com>
+In-Reply-To: <20230818122909.7122-3-asmaa@nvidia.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 18 Aug 2023 17:24:49 +0300
+Message-ID: <CAHp75VcZ43Zf4co=cVAPNUqHrhJ_zm=Gg7L=v1DYGxntr+Lkfw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] gpio: mlxbf3: Support add_pin_ranges()
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, brgl@bgdev.pl,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,18 +69,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 05:30:12PM +0800, Li Zetao wrote:
-> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
-> prepared and enabled clocks"), devm_clk_get_optional() and
-> clk_prepare_enable() can now be replaced by
-> devm_clk_get_optional_enabled() when the driver enables (and possibly
-> prepares) the clocks for the whole lifetime of the device. Moreover,
-> it is no longer necessary to unprepare and disable the clocks explicitly.
+On Fri, Aug 18, 2023 at 3:29=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
+te:
+>
+> Support add_pin_ranges() so that pinctrl_gpio_request() can be called.
+> The GPIO value is not modified when the user runs the "gpioset" tool.
+> This is because when gpiochip_generic_request is invoked by the gpio-mlxb=
+f3
+> driver, "pin_ranges" is empty so it skips "pinctrl_gpio_request()".
+> pinctrl_gpio_request() is essential in the code flow because it changes t=
+he
+> mux value so that software has control over modifying the GPIO value.
+> Adding add_pin_ranges() creates a dependency on the pinctrl-mlxbf3.c driv=
+er.
+>
+> Fixes: cd33f216d24 ("gpio: mlxbf3: Add gpio driver support")
+> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
 
-With this the clk member in the private struct is not needed anymore.
+You ignored my tag, why?
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
-
-
