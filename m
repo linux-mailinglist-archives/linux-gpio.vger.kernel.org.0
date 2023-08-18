@@ -2,84 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30510780D2D
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 15:57:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88558780D4D
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 16:00:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351152AbjHRN4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 09:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46928 "EHLO
+        id S245311AbjHROAY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 10:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377535AbjHRN4T (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 09:56:19 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41D81706;
-        Fri, 18 Aug 2023 06:55:56 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="459458908"
-X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
-   d="scan'208";a="459458908"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 06:55:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="908891296"
-X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
-   d="scan'208";a="908891296"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 18 Aug 2023 06:55:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1qWzx2-00AjO6-0a;
-        Fri, 18 Aug 2023 16:55:44 +0300
-Date:   Fri, 18 Aug 2023 16:55:43 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Li Zetao <lizetao1@huawei.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, j-keerthy@ti.com,
-        vz@mleia.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org,
-        shubhrajyoti.datta@amd.com, srinivas.neeli@amd.com,
-        michal.simek@amd.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH -next 06/11] gpio: mvebu: Use helper function
- devm_clk_get_enabled()
-Message-ID: <ZN94X3PAFo/sp5Vq@smile.fi.intel.com>
-References: <20230818093018.1051434-1-lizetao1@huawei.com>
- <20230818093018.1051434-7-lizetao1@huawei.com>
+        with ESMTP id S1377692AbjHROAU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 10:00:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5AEC3C3F;
+        Fri, 18 Aug 2023 06:59:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A15667CC5;
+        Fri, 18 Aug 2023 13:59:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B704EC433C9;
+        Fri, 18 Aug 2023 13:59:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692367162;
+        bh=QmgqfANqunFsl3QUOMKT/jwcOpjyJ8Qzz1C4HPJaFqw=;
+        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+        b=ChdSZ5XpicUNnIRAmqWiFaQmNwfZ7MttJfBorDUXrsjxFLdVAow1qlEnnBDMq3Fqp
+         kcttPfaOQGC7z6/i0HJc2b9QYzoCb+IpFsJd2bxOx4X4tRr1tnXtV0axEan322hrJl
+         sOHTowReJkpdSd6FliExg7zGGSow5Ijn7D2f2acR8eo4l+bp4Cxr40WDXD/jfjGX0X
+         ewUwSK877Ab5k6o+mi9ffH1JJAcZkHOGkMHj0QMYHT2YBEXb1hVv/fMh9Xedzc9r/O
+         S9T1P9UFHkIZRVkf7L24iq89Nf6hKzWpZ8DSu2b/cXh0CzhE0Hcy5ZTDobAZBpHoFF
+         67MlQsgDVZ3gQ==
+Message-ID: <1dd0bad4-fbb4-3861-9bc0-7a5f3067aeaf@kernel.org>
+Date:   Fri, 18 Aug 2023 15:59:18 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230818093018.1051434-7-lizetao1@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] pinctrl: qcom-pmic-gpio: silence -EPROBE_DEFER message on
+ probe
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Brian Masney <bmasney@redhat.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     andersson@kernel.org, linus.walleij@linaro.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230817145941.1091418-1-bmasney@redhat.com>
+ <a3431eaf-053a-4e1c-b082-e87a3aaefbf3@linaro.org> <ZN5KIlI+RDu92jsi@brian-x1>
+ <09df85cd-27c7-d64c-9792-41110bf32fce@kernel.org>
+In-Reply-To: <09df85cd-27c7-d64c-9792-41110bf32fce@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-10.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 05:30:13PM +0800, Li Zetao wrote:
-> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
-> prepared and enabled clocks"), devm_clk_get() and clk_prepare_enable()
-> can now be replaced by devm_clk_get_enabled() when the driver enables
-> (and possibly prepares) the clocks for the whole lifetime of the device.
-> Moreover, it is no longer necessary to unprepare and disable the clocks
-> explicitly.
+On 18/08/2023 15:51, Krzysztof Kozlowski wrote:
+>>     qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: no hogs found
+>>     qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: error -EPROBE_DEFER: can't add gpio chip
+>>     qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: Driver qcom-spmi-gpio requests probe deferral
+>>     platform c440000.spmi:pmic@2:gpio@8800: Added to deferred list
+>>
+>> The second time it probes the device is successfully added.
+> 
+> There is a bug in DTS. I'll send a patch.
 
-...
+https://lore.kernel.org/linux-arm-msm/20230818135538.47481-1-krzysztof.kozlowski@linaro.org/T/#u
 
-> -	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
->  	/* Not all SoCs require a clock.*/
-> -	if (!IS_ERR(mvchip->clk))
-> -		clk_prepare_enable(mvchip->clk);
-> +	mvchip->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-
-The clk is only used in the PWM part, move it there and remove clk member from
-the private struct.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
