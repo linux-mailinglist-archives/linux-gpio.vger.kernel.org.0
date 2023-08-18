@@ -2,108 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44025780876
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 11:31:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B528780A06
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 12:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359168AbjHRJbL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 05:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
+        id S1352668AbjHRK3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 06:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359189AbjHRJas (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 05:30:48 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B36C3AA2;
-        Fri, 18 Aug 2023 02:30:42 -0700 (PDT)
-Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RRxQj2Jnxz1GF9p;
-        Fri, 18 Aug 2023 17:29:17 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500012.china.huawei.com
- (7.221.188.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 18 Aug
- 2023 17:30:39 +0800
-From:   Li Zetao <lizetao1@huawei.com>
-To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <andy@kernel.org>,
-        <j-keerthy@ti.com>, <vz@mleia.com>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <grygorii.strashko@ti.com>,
-        <ssantosh@kernel.org>, <khilman@kernel.org>,
-        <shubhrajyoti.datta@amd.com>, <srinivas.neeli@amd.com>,
-        <michal.simek@amd.com>
-CC:     <lizetao1@huawei.com>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-pwm@vger.kernel.org>, <linux-omap@vger.kernel.org>
-Subject: [PATCH -next 11/11] gpio: zynq: Use helper function devm_clk_get_enabled()
-Date:   Fri, 18 Aug 2023 17:30:18 +0800
-Message-ID: <20230818093018.1051434-12-lizetao1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230818093018.1051434-1-lizetao1@huawei.com>
-References: <20230818093018.1051434-1-lizetao1@huawei.com>
+        with ESMTP id S1359520AbjHRK3F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 06:29:05 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87C012C;
+        Fri, 18 Aug 2023 03:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692354544; x=1723890544;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rlQaQCIqu5oJXVa89w+WCcXX20kESMPRP8hHfsmDbI4=;
+  b=dbHS7XT6PlO/MBS0WB/P2b8BWrOuqG87YKBuCEr8YpSOxRdYaZxs6K7B
+   6jceuP3LlFx5LMuf9Tgwo6A9BzU2tjSsHOOZG1JdLsGpC/YgC01gragO6
+   tWGeqb0enOrbeChI1d6z8jR4LlfcHj5TNPFSir+WBiDxUSrtToILp37aP
+   fUyNtCgwln9qTNjo9xnYieck2Efw2FnsPBGqFVTnF0Jwk5awCAZLPyyHW
+   EwczcNQRUGahkikhUOda7r7MdaaTeXLgOkHNHFFKi3u343hRZF3/z/K9q
+   izVd14z3EpsMC61qc5ve6i5ojq9oD8n+8qcMIpNuZCo/PNQ0crbDuox+A
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="370529073"
+X-IronPort-AV: E=Sophos;i="6.01,182,1684825200"; 
+   d="scan'208";a="370529073"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 03:29:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="735049926"
+X-IronPort-AV: E=Sophos;i="6.01,182,1684825200"; 
+   d="scan'208";a="735049926"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP; 18 Aug 2023 03:28:57 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qWwis-003hzY-36;
+        Fri, 18 Aug 2023 13:28:54 +0300
+Date:   Fri, 18 Aug 2023 13:28:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 2/6] gpio: cdev: open-code to_gpio_chardev_data()
+Message-ID: <ZN9H5jVjMSDfhCXz@smile.fi.intel.com>
+References: <20230817184958.25349-1-brgl@bgdev.pl>
+ <20230817184958.25349-3-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500012.china.huawei.com (7.221.188.12)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230817184958.25349-3-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
-prepared and enabled clocks"), devm_clk_get() and clk_prepare_enable()
-can now be replaced by devm_clk_get_enabled() when the driver enables
-(and possibly prepares) the clocks for the whole lifetime of the device.
-Moreover, it is no longer necessary to unprepare and disable the clocks
-explicitly.
+On Thu, Aug 17, 2023 at 08:49:54PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> This function is a wrapper around container_of(). It's used only once and
+> we will have a second notifier soon, so instead of having two flavors of
+> this helper, let's just open-code where needed.
 
-Signed-off-by: Li Zetao <lizetao1@huawei.com>
----
- drivers/gpio/gpio-zynq.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+...
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 0a7264aabe48..98cb38c95837 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -918,15 +918,10 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	chip->ngpio = gpio->p_data->ngpio;
- 
- 	/* Retrieve GPIO clock */
--	gpio->clk = devm_clk_get(&pdev->dev, NULL);
-+	gpio->clk = devm_clk_get_enabled(&pdev->dev, NULL);
- 	if (IS_ERR(gpio->clk))
--		return dev_err_probe(&pdev->dev, PTR_ERR(gpio->clk), "input clock not found.\n");
--
--	ret = clk_prepare_enable(gpio->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Unable to enable clock.\n");
--		return ret;
--	}
-+		return dev_err_probe(&pdev->dev, PTR_ERR(gpio->clk),
-+				     "input clock not found or unable to enable clock.\n");
- 
- 	spin_lock_init(&gpio->dirlock);
- 
-@@ -977,7 +972,6 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	pm_runtime_put(&pdev->dev);
- err_pm_dis:
- 	pm_runtime_disable(&pdev->dev);
--	clk_disable_unprepare(gpio->clk);
- 
- 	return ret;
- }
-@@ -997,7 +991,6 @@ static int zynq_gpio_remove(struct platform_device *pdev)
- 	if (ret < 0)
- 		dev_warn(&pdev->dev, "pm_runtime_get_sync() Failed\n");
- 	gpiochip_remove(&gpio->chip);
--	clk_disable_unprepare(gpio->clk);
- 	device_set_wakeup_capable(&pdev->dev, 0);
- 	pm_runtime_disable(&pdev->dev);
- 	return 0;
+> +	struct gpio_chardev_data *cdev = container_of(nb,
+> +						      struct gpio_chardev_data,
+> +						      lineinfo_changed_nb);
+
+This way it's slightly better.
+
+	struct gpio_chardev_data *cdev =
+		container_of(nb, struct gpio_chardev_data, lineinfo_changed_nb);
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
