@@ -2,72 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BE9A78064A
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 09:25:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B4C0780654
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 09:28:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358160AbjHRHYh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 03:24:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35430 "EHLO
+        id S1358174AbjHRH1z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 03:27:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358155AbjHRHYC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 03:24:02 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C06530E9
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 00:23:59 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-d6a5207d9d8so2461619276.0
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 00:23:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692343439; x=1692948239;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sz9K2Onn9bfdPHQOzQCpvpbaVuSxlfPcU0V/gxVc1x8=;
-        b=bdM1VMSqbQBDTDMOeZpLfaki3CWKXw+jA3z7OSR+YpzPl5YvDBW34kCagk4AN02GlA
-         Obw2rtIRv36w/kdfv6YX9MBZkSRmCBqocJjfDJOtErktGR6D6PO6uOHM7RE/mgMH95Qy
-         0h3rbzhFfhdGfbfEp73+A7bIgXO/xGm7kMIYFhk34M03AmWkynh+nw9Q7FNCABat/ew7
-         cAy9zAYHJJJpI+FWUyWcdx+wNqPKZMe4Zl2XShHow2wTg4oEJEwe5XCwIkI6CU5kVnYQ
-         8qQkpuZD26oSNFXfuUUWDC5qz6KMom8XXOmwLtyNOG8uWtvC6J5mmqrWe4DhzzTTWBDS
-         ZeaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692343439; x=1692948239;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sz9K2Onn9bfdPHQOzQCpvpbaVuSxlfPcU0V/gxVc1x8=;
-        b=AeilFYG9C5PHiKtarSuEmwPAHB1U7H5eEk6e3NWZmpGzk3P13fXrc9aGg9PAHhtPmG
-         v5agtxzH3K8IN+UYcoNie1mJWtVYaUAtQdtEYWH6K1ldcKi7JRt5ZBDCvKdcw4JAJJ/o
-         oTHC/iO5uhioHefjBNiSkH+ZTRNrZCOjR6dmvTDfnHG75wUBEkF+XJhvJq3njgzIDuk/
-         feQufizb4JAMgwnRjnMZ/I7dnlYPWmCf80GWHNB7X3AscopyCexK/XE1YghcilUFEVID
-         MhCNVaQB3dZT75nq5gTJEUPGB5Qn7FejSATHRU9Q6NHvX0T1ZxwVr8tfj8jXbKV9nfvp
-         /wzw==
-X-Gm-Message-State: AOJu0YxvRvilbAUa4ZyU61wSvWM/eMpHoDy2MLyQg+JN+4GrvbvVgFlw
-        lIouPIUOrQsTrGNF4Wjh/cCLKDOYD5fX4ukYf9kAmw==
-X-Google-Smtp-Source: AGHT+IHqkKgS6YVBwP4qI0oCi4uxhD3rHqRdi4aJZEjqBGn9de2hQzw+rH9P77hToYt5Jc5mptuYBhKewoUBmtL25C4=
-X-Received: by 2002:a25:b189:0:b0:d4a:499d:a881 with SMTP id
- h9-20020a25b189000000b00d4a499da881mr6183417ybj.9.1692343438796; Fri, 18 Aug
- 2023 00:23:58 -0700 (PDT)
+        with ESMTP id S1358198AbjHRH1f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 03:27:35 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0143C0C;
+        Fri, 18 Aug 2023 00:27:31 -0700 (PDT)
+Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RRtfh1lz7zFqkp;
+        Fri, 18 Aug 2023 15:24:28 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Fri, 18 Aug 2023 15:27:26 +0800
+Message-ID: <b423658a-e129-4aa5-3f7a-3bc477d4630b@huawei.com>
+Date:   Fri, 18 Aug 2023 15:27:26 +0800
 MIME-Version: 1.0
-References: <20230815131558.33787-1-biju.das.jz@bp.renesas.com>
- <20230815131558.33787-2-biju.das.jz@bp.renesas.com> <CAMuHMdV852knZ6UoGO-_B=xir=uUJZx2O1CHL+nsK0_BB_hStg@mail.gmail.com>
- <CACRpkdbWT333HNgSc0HMUvgDBkJdEvb23ZSHsQd-yfCOu3N=Ng@mail.gmail.com>
- <CAMuHMdW658cXSAHow3FoZU1DvXioktP68fBK2nQaGGFw0DDmtg@mail.gmail.com> <CAMuHMdUzNR4vdcu_hxp=mQ0VTWOdcdeg6g5uFw0P2HG+5rGKRg@mail.gmail.com>
-In-Reply-To: <CAMuHMdUzNR4vdcu_hxp=mQ0VTWOdcdeg6g5uFw0P2HG+5rGKRg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 18 Aug 2023 09:23:47 +0200
-Message-ID: <CACRpkdbUkvjjrvZ_XX14BqznytmQ=M4pWh7fLdZHH7qJUxiK2w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] pinctrl: renesas: rzg2l: Fix NULL pointer
- dereference in rzg2l_dt_subnode_to_map()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        stable@kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH -next v2] I2C: Fix return value check for
+ devm_pinctrl_get()
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+CC:     Yann Sionneau <yann@sionneau.net>, Leo Li <leoyang.li@nxp.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, Wolfram Sang <wsa@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        <linux@armlinux.org.uk>, <linux-gpio@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20230817022018.3527570-1-ruanjinjie@huawei.com>
+ <AM0PR04MB6289593A2149C9411FA9D5858F1AA@AM0PR04MB6289.eurprd04.prod.outlook.com>
+ <6b508343-7b7f-0fd5-d83f-92dc88a9510d@sionneau.net>
+ <20230818053254.GK5650@pengutronix.de>
+ <CACRpkdbikkc+oepJqZsUz27MTOHLMp-QQPdgRZ7XQGTG-=aAKA@mail.gmail.com>
+From:   Ruan Jinjie <ruanjinjie@huawei.com>
+In-Reply-To: <CACRpkdbikkc+oepJqZsUz27MTOHLMp-QQPdgRZ7XQGTG-=aAKA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.109.254]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500008.china.huawei.com (7.221.188.139)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,41 +69,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 5:57=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
-> On Thu, Aug 17, 2023 at 3:54=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> > On Thu, Aug 17, 2023 at 3:38=E2=80=AFPM Linus Walleij <linus.walleij@li=
-naro.org> wrote:
-> > > On Thu, Aug 17, 2023 at 2:44=E2=80=AFPM Geert Uytterhoeven <geert@lin=
-ux-m68k.org> wrote:
-> > > > need protection by a lock.  If no one objects, I will back out that
-> > > > change myself, queue this patch in renesas-pinctrl-for-v6.6, and se=
-nd
-> > > > a PR tomorrow.
-> > >
-> > > Shouldn't this even go in for v6.5?
-> > > Or is it non-urgent?
-> > >
-> > > (Maybe I already asked, I have teflon-memory.)
-> >
-> > If you're still taking fixes for v6.5, I can do that.
-> > Else, it will have to wait for a stable backport after v6.6-rc1.
->
-> IOW, please let me know if I should move these 3 commits to a fixes
-> branch.
 
-I'd say that is up to the driver maintainer, hehe :D
 
-I can only determine if changes to the core or my own drivers
-are urgent. I am hopefully sending some fixes today but if more
-urgent stuff need to go in, such is life.
+On 2023/8/18 15:18, Linus Walleij wrote:
+> On Fri, Aug 18, 2023 at 7:33 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> 
+>> NULL is returned on purpose. When PINCTRL is disabled NULL becomes a
+>> valid pinctrl cookie which can be passed to the other stub functions.
+>> With this drivers using pinctrl can get through their probe function
+>> without an error when PINCTRL is disabled.
+>>
+>> The same approach is taken by the clk and regulator API.
+>>
+>> It is correct to test the return value of devm_pinctrl_get() with
+>> IS_ERR(), only the commit message of these patches is a bit inaccurate.
+> 
+> Sascha is spot on, maybe copyedit some of the above
+> into the commit message and resend?
 
-> BTW, they conflict with commit 060f03e95454a0f4 ("pinctrl:
-> Explicitly include correct DT includes") in pinctrl/for-next...
+OK! I'll resend it.
 
-Yeah, we'll figure it out... I think. Worst case we toss some
-merge conflicts at Torvalds.
-
-Yours,
-Linus Walleij
+> 
+> Yours,
+> Linus Walleij
