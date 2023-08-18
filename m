@@ -2,83 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A38A780EDE
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 17:15:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B592780F6A
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 17:41:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352564AbjHRPPP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 11:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
+        id S1351616AbjHRPlO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 11:41:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378121AbjHRPO5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 11:14:57 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60B44231;
-        Fri, 18 Aug 2023 08:14:27 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="363278999"
-X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
-   d="scan'208";a="363278999"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 08:14:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="858726915"
-X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
-   d="scan'208";a="858726915"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP; 18 Aug 2023 08:14:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1qX1Am-00DNyr-0o;
-        Fri, 18 Aug 2023 18:14:00 +0300
-Date:   Fri, 18 Aug 2023 18:13:59 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Li Zetao <lizetao1@huawei.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, j-keerthy@ti.com,
-        vz@mleia.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org,
-        shubhrajyoti.datta@amd.com, srinivas.neeli@amd.com,
-        michal.simek@amd.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH -next 11/11] gpio: zynq: Use helper function
- devm_clk_get_enabled()
-Message-ID: <ZN+Kt2SxLDSAudYR@smile.fi.intel.com>
-References: <20230818093018.1051434-1-lizetao1@huawei.com>
- <20230818093018.1051434-12-lizetao1@huawei.com>
+        with ESMTP id S1378256AbjHRPku (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 11:40:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB862D58;
+        Fri, 18 Aug 2023 08:40:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3355D60202;
+        Fri, 18 Aug 2023 15:40:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10EB2C433CB;
+        Fri, 18 Aug 2023 15:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692373248;
+        bh=Sza0iKQ79SrdT2ka/ImFhnwgczlzzbMIPQJckqJEnlk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OJHylxsXmbe1O7TRHgPYtHiOQ9+g/EXekAGzeh2ERlsL2Bupn0cr+OLi0AbrpV7d0
+         YNpGNMcqqxYn1v/S/IzQBiKAlW4aOFCnojT2+FZwKbdbHRhsAQq5b3HiNYa86JnsxU
+         txVFGqvzAR/RZk+b9T6l2rThO7XoKkFiQ6ONypgOgntC6iMnZGe/rUzk0eZMXG6CjN
+         rpIKGK7EDt97PiHEiDaleqLPnGQI74L5rsBBq2LKC19XR+E0P8Lzn4LfIRYqMTEX2b
+         usCuAJ34ayhHYTF8rR0IlqUE4nCno3KFRZoMUdhWMk0fYEzZ9uApXTFW6g1HI1KMn/
+         5bcv1WmHriA9w==
+Date:   Fri, 18 Aug 2023 16:40:42 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Immutable branch between MFD, Pinctrl and soundwire due
+ for the v6.6 merge window
+Message-ID: <20230818154042.GX986605@google.com>
+References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230818093018.1051434-12-lizetao1@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 05:30:18PM +0800, Li Zetao wrote:
-> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
-> prepared and enabled clocks"), devm_clk_get() and clk_prepare_enable()
-> can now be replaced by devm_clk_get_enabled() when the driver enables
-> (and possibly prepares) the clocks for the whole lifetime of the device.
-> Moreover, it is no longer necessary to unprepare and disable the clocks
-> explicitly.
+Good afternoon,
 
-...
+The following changes since commit 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5:
 
-> -		return dev_err_probe(&pdev->dev, PTR_ERR(gpio->clk), "input clock not found.\n");
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(gpio->clk),
-> +				     "input clock not found or unable to enable clock.\n");
+  Linux 6.5-rc1 (2023-07-09 13:53:13 -0700)
 
-With this change dropped,
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pinctrl-soundwire-v6.6
+
+for you to fetch changes up to d5282a53929791071b17dde3eed52e40f76b101c:
+
+  pinctrl: cs42l43: Add support for the cs42l43 (2023-08-17 12:06:11 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, Pinctrl and soundwire due for the v6.6 merge window
+
+----------------------------------------------------------------
+Charles Keepax (3):
+      dt-bindings: mfd: cirrus,cs42l43: Add initial DT binding
+      mfd: cs42l43: Add support for cs42l43 core driver
+      pinctrl: cs42l43: Add support for the cs42l43
+
+Lucas Tanure (1):
+      soundwire: bus: Allow SoundWire peripherals to register IRQ handlers
+
+ .../devicetree/bindings/sound/cirrus,cs42l43.yaml  |  313 ++++++
+ MAINTAINERS                                        |    3 +
+ drivers/mfd/Kconfig                                |   23 +
+ drivers/mfd/Makefile                               |    3 +
+ drivers/mfd/cs42l43-i2c.c                          |   98 ++
+ drivers/mfd/cs42l43-sdw.c                          |  239 ++++
+ drivers/mfd/cs42l43.c                              | 1188 ++++++++++++++++++++
+ drivers/mfd/cs42l43.h                              |   28 +
+ drivers/pinctrl/cirrus/Kconfig                     |   11 +
+ drivers/pinctrl/cirrus/Makefile                    |    2 +
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c           |  609 ++++++++++
+ drivers/soundwire/bus.c                            |   32 +
+ drivers/soundwire/bus_type.c                       |   12 +
+ include/linux/mfd/cs42l43-regs.h                   | 1184 +++++++++++++++++++
+ include/linux/mfd/cs42l43.h                        |  102 ++
+ include/linux/soundwire/sdw.h                      |    9 +
+ 16 files changed, 3856 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42l43.yaml
+ create mode 100644 drivers/mfd/cs42l43-i2c.c
+ create mode 100644 drivers/mfd/cs42l43-sdw.c
+ create mode 100644 drivers/mfd/cs42l43.c
+ create mode 100644 drivers/mfd/cs42l43.h
+ create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs42l43.c
+ create mode 100644 include/linux/mfd/cs42l43-regs.h
+ create mode 100644 include/linux/mfd/cs42l43.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
