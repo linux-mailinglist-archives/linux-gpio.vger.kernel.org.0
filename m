@@ -2,89 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E91DC780AE8
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 13:18:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA8EC780B83
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 14:07:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243969AbjHRLSK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 07:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39600 "EHLO
+        id S1376724AbjHRMHE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 08:07:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376564AbjHRLR4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 07:17:56 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5FB7359F
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 04:17:52 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:6084:9231:6a:a447])
-        by albert.telenet-ops.be with bizsmtp
-        id azHp2A00W3wxJeQ06zHphk; Fri, 18 Aug 2023 13:17:49 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qWxU5-0017wq-T6;
-        Fri, 18 Aug 2023 13:17:49 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qWxUD-007byX-AQ;
-        Fri, 18 Aug 2023 13:17:49 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Fixes for v6.5 (take two)
-Date:   Fri, 18 Aug 2023 13:17:46 +0200
-Message-Id: <cover.1692357172.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S1344289AbjHRMGg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 08:06:36 -0400
+Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8452730E6
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 05:06:34 -0700 (PDT)
+Received: by mail-vs1-xe33.google.com with SMTP id ada2fe7eead31-44c07c2b89aso254552137.2
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 05:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692360393; x=1692965193;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qpnH469vEo7IU25SdSmcFE6MDeKiq05QJNZ2e7yCq2A=;
+        b=jaRF9lcvT7n4dJ9N+5RvOSpA2pO7bs1RD4FurBWyWGlo5oOg2k92s2jCFwm7taeiRj
+         Kkg7yzyeHDJpIwRrCiPORXJvm9e4A3N1hUKfwv74XZKqMdkeWx9dbNTillZGwGNMhGkw
+         z++0R42Aznbps7Tl9nkdJo5g1aQAP1Nnkov3HxFtzT4nJHGCBqKqU8oH7U/In/Ce/+bW
+         3HZoyxkMAsPs9ocNfC+yvaUsT/AecSptUxRKKEL0V+qVIkddGk9WAFzGvYNbvHlcyJOq
+         GhUglHZ+niPpZeCrju4Gm2EWgxwoEr4gpckQmrHGAhDK3bXJUPx1uivXVSEJ6OJft6Nl
+         xt0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692360393; x=1692965193;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qpnH469vEo7IU25SdSmcFE6MDeKiq05QJNZ2e7yCq2A=;
+        b=BeHj22osg0uwHaUS+UJJtFLJ1wFtV7YfQSZNCV0crp2I+ERaqH0NyQ8tt1mAn02ndi
+         RflSAmGF0AtuWmDcN+zSHUXd0U/qOxYKbeUHp4IMeRmz+61HcW/yUkoGd8fS37UMSwwm
+         06uwBHhFUXkbNr/N4KrMdLBuDjrLn9VSvf10KaRd1Wbp35QeqsUiep7V77aw68gviv8T
+         QilIssBBCk6ihpYihIq7qRr/s7lWQUFY3b2rnDar0HhcHcSlK+5uqN7SbXrYRi4tJzJa
+         vy5wIQLSIChpZW8KMCx1K5AYHfgVhYDpFcpcYJyv/DCrpebu+x/Uzqx37Qxa+xpEJnZD
+         ztfA==
+X-Gm-Message-State: AOJu0YwRdTDdMukNnK0mZNAEWo1EsuWzzvspM5dVmMPtQbmTy+IOIh3w
+        3qNqloIgrH4JpMssOSb7CjkT2f1giR8EgsDMT8iJpQ==
+X-Google-Smtp-Source: AGHT+IGSndSXwIqtFPOx6mILg8kcTF4ODJjHV8rDnU6qSQPVtk60LVHc2UyMx4l+wp0BfKHsstQSmimTYEMEO7NK86Q=
+X-Received: by 2002:a05:6102:483:b0:445:3bf:9387 with SMTP id
+ n3-20020a056102048300b0044503bf9387mr3046008vsa.4.1692360392187; Fri, 18 Aug
+ 2023 05:06:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+References: <20230817184958.25349-1-brgl@bgdev.pl> <ZN9JID53QpSz4epI@smile.fi.intel.com>
+In-Reply-To: <ZN9JID53QpSz4epI@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 18 Aug 2023 14:06:21 +0200
+Message-ID: <CAMRc=MfZ=GgcqKkDXkUgWC-bdCJECs0HfjRe9Ffy-Metwz6fFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] gpio: cdev: bail out of poll() if the device goes down
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
+On Fri, Aug 18, 2023 at 12:34=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Aug 17, 2023 at 08:49:52PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Wake up all three wake queues (the one associated with the character
+> > device file, the one for V1 line events and the V2 line request one)
+> > when the underlying GPIO device is unregistered. This way we won't get
+> > stuck in poll() after the chip is gone as user-space will be forced to
+> > go back into a new system call and will see that gdev->chip is NULL.
+>
+> Why can't you use the global device unbind notifications and filter out
+> what you are interested in?
+>
 
-The following changes since commit bfc374a145ae133613e05b9b89be561f169cb58d:
+There's no truly global device unbind notification - only per-bus.
+GPIO devices can reside on any bus, there are no limitations and so
+we'd have to subscribe to all of them.
 
-  pinctrl: renesas: rzg2l: Handle non-unique subnode names (2023-07-10 10:00:27 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-fixes-for-v6.5-tag2
-
-for you to fetch changes up to 8fcc1c40b747069644db6102c1d84c942c9d4d86:
-
-  pinctrl: renesas: rza2: Add lock around pinctrl_generic{{add,remove}_group,{add,remove}_function} (2023-08-18 13:01:41 +0200)
-
-----------------------------------------------------------------
-pinctrl: renesas: Fixes for v6.5 (take two)
-
-  - Fix race conditions in pinctrl group and function creation/remove
-    calls on the RZ/G2L, RZ/V2M, and RZ/A2 SoC families.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Biju Das (3):
-      pinctrl: renesas: rzg2l: Fix NULL pointer dereference in rzg2l_dt_subnode_to_map()
-      pinctrl: renesas: rzv2m: Fix NULL pointer dereference in rzv2m_dt_subnode_to_map()
-      pinctrl: renesas: rza2: Add lock around pinctrl_generic{{add,remove}_group,{add,remove}_function}
-
- drivers/pinctrl/renesas/pinctrl-rza2.c  | 17 +++++++++++++++--
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 15 ++++++++++++---
- drivers/pinctrl/renesas/pinctrl-rzv2m.c | 13 +++++++++++--
- 3 files changed, 38 insertions(+), 7 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Bart
