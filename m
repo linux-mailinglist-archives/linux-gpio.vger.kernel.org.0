@@ -2,145 +2,189 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6EEC780E06
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 16:29:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB0FD780E49
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 16:50:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377211AbjHRO2h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 10:28:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41018 "EHLO
+        id S1350214AbjHROtt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 10:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377757AbjHRO2M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 10:28:12 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on20623.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eaa::623])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44A8C3AA4;
-        Fri, 18 Aug 2023 07:28:11 -0700 (PDT)
+        with ESMTP id S1346049AbjHROtY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 10:49:24 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2044.outbound.protection.outlook.com [40.107.94.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1623E13D;
+        Fri, 18 Aug 2023 07:49:23 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kzBxzXZWRvv3P87VBGcfOQLUaGdfJgM2wg5Ag/i73OqHpvj7YsFYuQFsR13Wqvq1h947zzws5Y/ya8w2L5e6bP8s8FEQnEKxLuXTPo/+li5sNgTeV9XGp3drAY8tk+6DB4MQETajlqPv273lPNF+ZyEVeG+cCcHWIZ9we5ylN/BA0WPVbxzrM1+jS/K0TD9KK3crLS18ngcmwtzwKzY/rfWWMo6RR9/1vSdDdJE8eFd6O7/1Xpu9eiu03WmQ3834inymYgsoTVMqvope9nSvd85XN0A+cWL2ex3eE3y/CyObNTjNcQHLhpSqPHK1+TzF0ks2YolKXgqP3JPZdb6GOw==
+ b=ddXQiRq2R+aPBk7c9Ux84ygpx03NSeYKlp1EfpmS8EPZ9f4E6ttUTCFUQw4xxpxhTKnI2RYkjcD0aWIEItz251Q/69he10kcu58gh3DZigg/bi3LogJWHj5HoSdANcsful613iMvgfk0KMDWprHLRlvUailheZn13Q6qIShqYrjT5dVZYo/x60Zwq66UzuCwT+FAOBrGBdGMm9+38v2Q4yaJc97bWr7x5RfdzNWzxCcv6iWCyDspBgoXHwhSitw1L3o1z0UncryQ5CQZykPkNux94VQvewMExWR7LKMaCZpJTwLcddhdQFpOzUJFN6CSoOFr39mmdcG5XKnrIwb58g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hBxhzW8tzAw3aydRazZARxopLAreQk86Isw+nDBFHKk=;
- b=iqcqz5JGzhMSc4YK8sMlRRaH8rKmLDnhUuHegfuvb4J1aAbbpWhWyrvED9crNlr5RzajYxrW8S4u1mkhqQlX1vP7m88XTONgTZXy08hdtR9X00h2fPbmXVRtAUMKyyTRZYj/ydJA/mQRgvbU1LrpEAJx+ZFiaUoPSTcsqPLymuNjB8Ey3YRkGxW0BLqFmwq/lM1NClNdCpDr3fJFcWPzXvI70UMhgGtbIfzewUDRNvU4KxWFsMwhZkTtWMwzPAgMluGfWTux5k0P+NNpucf1RinS5qDXTpFMncs/z/PFaOCKiiuab4xTQSrIQxtHNG05CfRf/hbNL1+rhlv9IBGoYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=KqS1Zly3e8UdCu/ZcuU7Gt/aBD2XCjEIw6SWS+jfsQ8=;
+ b=KLGTb/xjoX7rlCDqC+F34SV0aXOe7xzleHfTgr4jwSyC4A4avg+/vu1ps5Mhgy8Cq80D924LoxxvdgYkUHJRQHtwkEufv9oJVkQIP3ik3sdOQ8WEnopRI9b45VIFqsB/Ypk0QKUs/wdGUDRBtEn/M19BLKWefGIv8kwgNQQiAoC0CSRFu0G996OUrbL7M14HwII3dpdlPg3P7EXtbPwBuqA2tVcOhDeqdUEEvXg6gtVp0sJfxxLU5+1J29rsMwHqA91NuC0UxM8FZn+LoiyDQPIZyFEPGXCj6CzuiHIv3jfXRUXbXS7QuY/JwQ2HEOPzzTrBVEG8a0nHtiJdwrrPsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hBxhzW8tzAw3aydRazZARxopLAreQk86Isw+nDBFHKk=;
- b=BiCShfhSS9kDgRWpa6gKPKH39Bb1N6K4dQdQgJ/ZWlohLwbxVcMZIClwar0AY4MJC41Kcl3CF7Sy5MBUK4KbgmedGkIadW9k+jOfCe/l/jInNh2g7sNz3Q4I+goNM9UPX95bCQohZ9GPIc+X0M+XlXSgi5L3c4gEep8AmWCGumg+tM595q8UB1TWlDVWd1j5f55zkc8xgl10oZMzDCH2j9+PG7IaNLJv6IqDIx0mGYDQxTt7qkGXmdixGJdiKeL/Jn66LwvSt2U2evqytXDjAxQy66ZZvDExKWp8CII3JoXuzQxV6Ne9M9V2pHCzeg8wim80LH8ehfXOZg1UXMQ3lw==
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
- by MW6PR12MB9020.namprd12.prod.outlook.com (2603:10b6:303:240::6) with
+ bh=KqS1Zly3e8UdCu/ZcuU7Gt/aBD2XCjEIw6SWS+jfsQ8=;
+ b=mrzRcl3vAmQ8xV/1uHb36VpsfRms2+/yYivXZxJk5k7a6IW5y3DgKN/IyzaK3x+liCDxl/DNVL5AgqBXokMLQT+zKnharKnIPc3XY9L9UoBuYIZDo5h4VwiutqUAz5IWU1MD591SuaVxSJISvj3BSRAC2OiszILPwgYAcDInm8E=
+Received: from BYAPR05CA0073.namprd05.prod.outlook.com (2603:10b6:a03:e0::14)
+ by SA1PR12MB5658.namprd12.prod.outlook.com (2603:10b6:806:235::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.31; Fri, 18 Aug
- 2023 14:28:08 +0000
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::ae25:4f33:8a19:32c9]) by CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::ae25:4f33:8a19:32c9%4]) with mapi id 15.20.6699.020; Fri, 18 Aug 2023
- 14:28:08 +0000
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 2/2] gpio: mlxbf3: Support add_pin_ranges()
-Thread-Topic: [PATCH v4 2/2] gpio: mlxbf3: Support add_pin_ranges()
-Thread-Index: AQHZ0c+nM+lIePZHfki1EcVrzQbB96/wG92AgAAAumA=
-Date:   Fri, 18 Aug 2023 14:28:08 +0000
-Message-ID: <CH2PR12MB389516E862515EA0A2A8C4E9D71BA@CH2PR12MB3895.namprd12.prod.outlook.com>
-References: <20230818122909.7122-1-asmaa@nvidia.com>
- <20230818122909.7122-3-asmaa@nvidia.com>
- <CAHp75VcZ43Zf4co=cVAPNUqHrhJ_zm=Gg7L=v1DYGxntr+Lkfw@mail.gmail.com>
-In-Reply-To: <CAHp75VcZ43Zf4co=cVAPNUqHrhJ_zm=Gg7L=v1DYGxntr+Lkfw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH2PR12MB3895:EE_|MW6PR12MB9020:EE_
-x-ms-office365-filtering-correlation-id: 841216b6-7e2c-4c72-16c7-08db9ff757e1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: stTmXAC/EniXX1/3R/3w73cuT0eF7eXwctJgf2svVHuG/wziNNASUKgucskj7nw2w23kSbosnFxUzAchFXm3g7p3+398c7Oy3G6SZx7rC245LHzyHX5YzzPWNuW1RsFvCMK2a01jFTk1sv5TdVIix6utxO9PQZgtieOeSchPFnkdhXobEy2nuJakdS1SyGyg/9QB0LNAEhoUxt1+4O2Snxgi7Csvc+P/vufJCpKYInBInSRCJ+10EQkgmplCgKqN4FH+Lv/uUmvFC9x3c+hBbV/EiegbRaLTxMSeLfaMUkW72OPmpdrn7SQp/buFKDW6aup5fXyb5IcAYazuGXrE+os8qw11xZloMuwzSRB8aPboRygI1akqjh6cFYiXhcFrN2t2BUqqa+lQzcAZIEr9V9px4yXOkZs5/jnTG6Q4MP1GA+D63PHlb1xmPjI7IfUGPXfDNle2zggWS/njLPMYFC5bECLhzaM52LPhEgVcqr7xVDV26EvV1UHzEY3RRoMtXMxNVjsup4Ofk2haEMOKZ+Eoiy4KYUkR24PoLP6SPKPZ0ONTqwA8+hdhcUfnz6qhn97efLCt2/JBYzQHm0kQi3eR/ot+Cmh5YJPIEGVsTTzM5634I+Vi1HJpzN55FBkk
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(366004)(396003)(39860400002)(451199024)(1800799009)(186009)(86362001)(33656002)(122000001)(38070700005)(38100700002)(55016003)(52536014)(76116006)(5660300002)(66556008)(478600001)(6506007)(66946007)(66446008)(66476007)(7696005)(54906003)(71200400001)(64756008)(316002)(6916009)(26005)(9686003)(4326008)(8676002)(8936002)(41300700001)(83380400001)(4744005)(2906002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Q0VPUDVkaWdNNDFCM05BSkk1Z2IzaGhjcjIxT1N1bXNQTTVUeC9EMldPakxC?=
- =?utf-8?B?aDhJQmY1OVdUd25qUG95MVB1RmJZYWxzdFdrSjhTUmdVTzlna1JLZHQyaVdk?=
- =?utf-8?B?cGJaZWtjMzBycW8remR5NmFzUXl6SUZDeTdhaStLZmZsOU53WTRtQ2tvRG9Z?=
- =?utf-8?B?ejlsK1Y3RWhnWCtkL0lPenZKYkQ2T1ZudjgvM0NaaE04cVNobXVScHVZREZy?=
- =?utf-8?B?KzN3L01wYU9UaEdwSGxNY3ZXb05WUGRjY0hDMW93QTBUdFg2Yk1rOTY5d1Vo?=
- =?utf-8?B?U2ZsTHErOWdWL0F4UVdWWGptWlFVUEJSUTZVekl6dDVvQi8zQWl6cEdMYWxC?=
- =?utf-8?B?YzQrd2xlWkoxQ0FTS2ZxaXlUSFFWUHkxMXFmemdIWjJrVGg0VnBqNlBTa3VE?=
- =?utf-8?B?bFAyeG5aNUZwRjJQZVpaS2NXL0IyQ3Ava0t2NDJ3dWE1LzdDOW1XWmV3eDFM?=
- =?utf-8?B?UWZ0UW9UcTJIcEpRVXdWSHZCRlZ4UmYxQTBrdzdnaThJL2gzWW9hVGVCNzhx?=
- =?utf-8?B?bGpDcnZYcjd3NjU1L2t0K2lnVFVHaCtWMHVNQ25qWWdxTzRQaGpva0t2b0tD?=
- =?utf-8?B?d0JWMjBaMlovYTNhQ2ZnYUg5MWJlSHRiQy84TDZ0YXlSOWExcmlYM09DSzVj?=
- =?utf-8?B?VHpxalBTZHhqTFE5K3NMWDFYMmk2Wm42cFFkeisvam1zU1lqQjJLM0xncmI2?=
- =?utf-8?B?Y24wdmJpWklra3pNcDlNbGRLY2tZMXg2SHRFb01BTXROUUMxWG1SUkJXeSsw?=
- =?utf-8?B?VStQQ3dZZDZGTHVNMzVVUHV0S1FxQ2YxaXNNZThLTyt4SVh1OGVzUW1HMXlU?=
- =?utf-8?B?Uk9GUUpWc0VSbXJtRnFyNG5OQ1dDN0NLckgzekhSVDA0blhSK3cvc1U2dG9j?=
- =?utf-8?B?OHIwM1pDc0dpeU1KZ1FSeHhPa2MzTC9CUm5kdHpLYVhxWGRCUC9EbjFxckk2?=
- =?utf-8?B?Y3lTRUQ5dGdHNzVuL2J4MUowSzBPYkZ2UTdwKzhPY05IYnNHL0RCZ0dCN1Fi?=
- =?utf-8?B?T2ZuQmJaR2g2bm90ZGNQODZqVCtRMEk1dWtqSHMzZ3lEd0kyM2t4ZmV6TEdQ?=
- =?utf-8?B?Vk9leGxSc1RvYktDMEUzQ0p4dnBWVDAvY1VaV2x2VlJweWlkQ1FGZS95OVhh?=
- =?utf-8?B?NXhwOWUyRlJQQnpDc05KbWh0S1NrTmlubnRuYXVlMTFldjFuTWdET2FUMmFN?=
- =?utf-8?B?TnI5UFduUG5PVHpQbUx1clJEQldtR2crQzhQSklIL1dnalNOTHJsc0c0blow?=
- =?utf-8?B?Y3ZKRG5zNnNGcjhxNElydWNFZjRCUjNpVnYwR3hpdk5WZ3hObnhMaEl2UlJS?=
- =?utf-8?B?c3JncjRmN3R1WnBCSDdjTVVJL1pQMzh3ZXY4aVFyc2d2cXAycG5VUmhYaVZp?=
- =?utf-8?B?c0c2Y1lWR0ZNRnZCaDBsOWxQbSsveVNrWmtzVFdmaGJiQnFrZFIxYVF4T2lh?=
- =?utf-8?B?YWFWMVg4V0ZxSWJFb2FSeEFFWXFBOVRDNDE2dWt2SWRiRk9jVUhCNzF6YjVl?=
- =?utf-8?B?SEtHVHJ2OHhDVFFaRFhtcG5aWHRkV1BERTVaY3phQXVvTEtleGhSVzI0Q0Ja?=
- =?utf-8?B?c1ROQVFEV0pyVTF4dE80ZkxyemFoVktXSHdLeXpvdGk1VXVESGxZb2hvYWVG?=
- =?utf-8?B?ZXRkdUN5YkRaajVySE9uNWtkb2ZhNFNzU01qZ0dTQXVaNEtSWEUzbXl4Smk3?=
- =?utf-8?B?eTRlYUhRcDlNWG82MUVWZkpGdVRqQlZheXJYTkxCekFiams3M3J4TGNPeHUz?=
- =?utf-8?B?Z3dCSkhoTlNhelp1LzFjSmpRaUdEcGFBMTR0QVg2bnBkUFdTM3lnRjRPYzlS?=
- =?utf-8?B?Ly9vbFZxV0FxQmVkWWNwZnVOQjZFZFJZbmZKREpkMTliZ2tQS21SRFVBaXNX?=
- =?utf-8?B?aWVuZ2pOSXNPczR5NTVUa0gvWTRNMkZBc2RJOW8zcDBORUZKN3E5TUZVUmhC?=
- =?utf-8?B?VnR4RHpXdWxZY0N1NDF3Zko3bWIyZWxEZEFxMU1aSFYxbjBQYzJXa1NTYnll?=
- =?utf-8?B?LzRVdVRFNnZ5MWl4bk5pQXBNYU1ZWWJhMzQ1Wi9Objg3U2FtMVpZTjdsSnJU?=
- =?utf-8?B?Q0V1RTV5bGY5Rk50dENtVlFnSWtRZ3dJMjVicG11SU8vU3BpSkIxM2ZlRm9x?=
- =?utf-8?Q?rf18=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 2023 14:49:19 +0000
+Received: from CO1PEPF000042AA.namprd03.prod.outlook.com
+ (2603:10b6:a03:e0:cafe::d9) by BYAPR05CA0073.outlook.office365.com
+ (2603:10b6:a03:e0::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.14 via Frontend
+ Transport; Fri, 18 Aug 2023 14:49:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000042AA.mail.protection.outlook.com (10.167.243.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6699.14 via Frontend Transport; Fri, 18 Aug 2023 14:49:19 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 18 Aug
+ 2023 09:49:17 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     <linus.walleij@linaro.org>, <Basavaraj.Natikar@amd.com>,
+        <Shyam-sundar.S-k@amd.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Mario Limonciello" <mario.limonciello@amd.com>,
+        Sachi King <nakato@nakato.io>, <stable@vger.kernel.org>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Shubhra Prakash Nandi <email2shubhra@gmail.com>,
+        Carsten Hatger <xmb8dsv4@gmail.com>
+Subject: [PATCH] pinctrl: amd: Mask wake bits on probe again
+Date:   Fri, 18 Aug 2023 09:48:50 -0500
+Message-ID: <20230818144850.1439-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 841216b6-7e2c-4c72-16c7-08db9ff757e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2023 14:28:08.2917
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AA:EE_|SA1PR12MB5658:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c3af051-7521-464e-69f6-08db9ffa4d71
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wVNBV3iVeHGJgJxE1PGI5uKO04SH+D1WshCVZms8u7/tYicPnLPvrmFbqh/x/FQVCa/PXss2179WasibI2HoKmTAs7M6emnb5XMOQhZCZEhOiigne9zfvfsEMoLRbT9TrRe3ybE42uiO7EfpGkzyAdfsprEfoebYFLmhDPj1vTP94JFkGsfckwMPxq2cUnTQLoU17LvgagBfkoTX0jmheTjnLay909qUo5QrGpXi2n6HALafEhgwpYIITI66edL2lzSIhN9ldMq6Fzvi6NIxcJTOHU7IuVjNd2R6mhwrVBa1Ov5X0Q5B9+zQEOzmJdjima+o/eCS0f241EKkD/FPjTM4NjJKWSpt7PQ8mDBTZXlNpmp0o+q/7qAvJuQfdT7D9pSEXiOAtnrws2Ier/U24bc1ADdx4qhEj7rzAa1RtaVhpFA6pz+IflZN1g62j7nYnu8cQoneGmE8SYo0OYNLRqifZp6ZCgYYgQoS3z+3lcURk9s09u08bNY7VAIkvwaJaQe14l5PMW1a310FvGsNAMV/jMqbH2C0ung2yC59STegiv0OfSCvK8yxoKemce5XjJbDo5OOAOwqXhWoHc83y1hqgA290NiwCOoZ0E32H9CcZIy7X5oYPTzTJet8giOE3CNc2SohraMGRJtn/hINM1gJ9ll+m0aM/PmdCqBT7mxnPDUMEYaZCIxAZuOsaNNh/IarDf0+UTo7NeLiJgdxnPF1etZzmVFbj6sXrA69R3lPZ6Yye5zMMTCsDvSsLeiCl5JOCzskPae4P7PXYkHInMbXw60QSemreHyDmddDKJ0=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(39860400002)(136003)(396003)(451199024)(82310400011)(1800799009)(186009)(40470700004)(36840700001)(46966006)(36756003)(86362001)(82740400003)(81166007)(356005)(40480700001)(966005)(16526019)(2616005)(5660300002)(44832011)(7696005)(70586007)(70206006)(6666004)(6636002)(54906003)(110136005)(316002)(26005)(41300700001)(1076003)(4326008)(8936002)(8676002)(40460700003)(478600001)(83380400001)(36860700001)(47076005)(426003)(2906002)(336012)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2023 14:49:19.1569
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: E4Uwv1E2Jva5497aWE+ZcXFysXBMqj5bssnnsYldVuKgjEHhdqySFoqetutYiTrzPjMyMtj0pXIFFYZ++p152A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB9020
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c3af051-7521-464e-69f6-08db9ffa4d71
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000042AA.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5658
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PiA+IFN1cHBvcnQgYWRkX3Bpbl9yYW5nZXMoKSBzbyB0aGF0IHBpbmN0cmxfZ3Bpb19yZXF1ZXN0
-KCkgY2FuIGJlIGNhbGxlZC4NCj4gPiBUaGUgR1BJTyB2YWx1ZSBpcyBub3QgbW9kaWZpZWQgd2hl
-biB0aGUgdXNlciBydW5zIHRoZSAiZ3Bpb3NldCIgdG9vbC4NCj4gPiBUaGlzIGlzIGJlY2F1c2Ug
-d2hlbiBncGlvY2hpcF9nZW5lcmljX3JlcXVlc3QgaXMgaW52b2tlZCBieSB0aGUNCj4gPiBncGlv
-LW1seGJmMyBkcml2ZXIsICJwaW5fcmFuZ2VzIiBpcyBlbXB0eSBzbyBpdCBza2lwcyAicGluY3Ry
-bF9ncGlvX3JlcXVlc3QoKSIuDQo+ID4gcGluY3RybF9ncGlvX3JlcXVlc3QoKSBpcyBlc3NlbnRp
-YWwgaW4gdGhlIGNvZGUgZmxvdyBiZWNhdXNlIGl0DQo+ID4gY2hhbmdlcyB0aGUgbXV4IHZhbHVl
-IHNvIHRoYXQgc29mdHdhcmUgaGFzIGNvbnRyb2wgb3ZlciBtb2RpZnlpbmcgdGhlIEdQSU8NCj4g
-dmFsdWUuDQo+ID4gQWRkaW5nIGFkZF9waW5fcmFuZ2VzKCkgY3JlYXRlcyBhIGRlcGVuZGVuY3kg
-b24gdGhlIHBpbmN0cmwtbWx4YmYzLmMgZHJpdmVyLg0KPiA+DQo+ID4gRml4ZXM6IGNkMzNmMjE2
-ZDI0ICgiZ3BpbzogbWx4YmYzOiBBZGQgZ3BpbyBkcml2ZXIgc3VwcG9ydCIpDQo+ID4gU2lnbmVk
-LW9mZi1ieTogQXNtYWEgTW5lYmhpIDxhc21hYUBudmlkaWEuY29tPg0KPiANCj4gWW91IGlnbm9y
-ZWQgbXkgdGFnLCB3aHk/DQoNCk9oLCB5b3UgYWxyZWFkeSBnYXZlIG1lIGEgIlJldmlld2VkLUJ5
-Ii4gU29ycnkgSSBtaXNzZWQgdGhhdC4gQW5kIFRoYW5rIHlvdSEgSSB3aWxsIHNlbmQgYSB2NSB3
-aXRoIHRoZSB0YWcuDQoNClRoYW5rcy4NCkFzbWFhDQo=
+Shubhra reports that their laptop is heating up over s2idle. Even though
+it's getting into the deepest state, it appears to be having spurious
+wakeup events.
+
+While debugging a tangential issue with the RTC Carsten reports that recent
+6.1.y based kernel face a similar problem.
+
+Looking at acpidump and GPIO register comparisons these spurious wakeup
+events are from the GPIO associated with the I2C touchpad on both laptops
+and occur even when the touchpad is not marked as a wake source by the
+kernel.
+
+This means that the boot firmware has programmed these bits and because
+Linux didn't touch them lead to spurious wakeup events from that GPIO.
+
+To fix this issue, restore most of the code that previously would clear all
+the bits associated with wakeup sources. This will allow the kernel to only
+program the wake up sources that are necessary.
+
+This is similar to what was done previously; but only the wake bits are
+cleared by default instead of interrupts and wake bits.  If any other
+problems are reported then it may make sense to clear interrupts again too.
+
+Cc: Sachi King <nakato@nakato.io>
+Cc: stable@vger.kernel.org
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>
+Fixes: 65f6c7c91cb2 ("pinctrl: amd: Revert "pinctrl: amd: disable and mask interrupts on probe"")
+Reported-by: "Shubhra Prakash Nandi" <email2shubhra@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217754
+Reported-by: "Carsten Hatger" <xmb8dsv4@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217626#c28
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/pinctrl/pinctrl-amd.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 20bd97a603d9c..74241b2ff21e3 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -862,6 +862,33 @@ static const struct pinconf_ops amd_pinconf_ops = {
+ 	.pin_config_group_set = amd_pinconf_group_set,
+ };
+ 
++static void amd_gpio_irq_init(struct amd_gpio *gpio_dev)
++{
++	struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
++	unsigned long flags;
++	u32 pin_reg, mask;
++	int i;
++
++	mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3) |
++		BIT(WAKE_CNTRL_OFF_S4);
++
++	for (i = 0; i < desc->npins; i++) {
++		int pin = desc->pins[i].number;
++		const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
++
++		if (!pd)
++			continue;
++
++		raw_spin_lock_irqsave(&gpio_dev->lock, flags);
++
++		pin_reg = readl(gpio_dev->base + pin * 4);
++		pin_reg &= ~mask;
++		writel(pin_reg, gpio_dev->base + pin * 4);
++
++		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
++	}
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
+ {
+@@ -1099,6 +1126,9 @@ static int amd_gpio_probe(struct platform_device *pdev)
+ 		return PTR_ERR(gpio_dev->pctrl);
+ 	}
+ 
++	/* Disable and mask interrupts */
++	amd_gpio_irq_init(gpio_dev);
++
+ 	girq = &gpio_dev->gc.irq;
+ 	gpio_irq_chip_set_chip(girq, &amd_gpio_irqchip);
+ 	/* This will let us handle the parent IRQ in the driver */
+-- 
+2.34.1
+
