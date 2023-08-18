@@ -2,117 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B592780F6A
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 17:41:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C1A0781026
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 18:19:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351616AbjHRPlO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 11:41:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59880 "EHLO
+        id S1378474AbjHRQSn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 12:18:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378256AbjHRPku (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 11:40:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB862D58;
-        Fri, 18 Aug 2023 08:40:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3355D60202;
-        Fri, 18 Aug 2023 15:40:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10EB2C433CB;
-        Fri, 18 Aug 2023 15:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692373248;
-        bh=Sza0iKQ79SrdT2ka/ImFhnwgczlzzbMIPQJckqJEnlk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OJHylxsXmbe1O7TRHgPYtHiOQ9+g/EXekAGzeh2ERlsL2Bupn0cr+OLi0AbrpV7d0
-         YNpGNMcqqxYn1v/S/IzQBiKAlW4aOFCnojT2+FZwKbdbHRhsAQq5b3HiNYa86JnsxU
-         txVFGqvzAR/RZk+b9T6l2rThO7XoKkFiQ6ONypgOgntC6iMnZGe/rUzk0eZMXG6CjN
-         rpIKGK7EDt97PiHEiDaleqLPnGQI74L5rsBBq2LKC19XR+E0P8Lzn4LfIRYqMTEX2b
-         usCuAJ34ayhHYTF8rR0IlqUE4nCno3KFRZoMUdhWMk0fYEzZ9uApXTFW6g1HI1KMn/
-         5bcv1WmHriA9w==
-Date:   Fri, 18 Aug 2023 16:40:42 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     broonie@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com,
-        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
-        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        patches@opensource.cirrus.com, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Immutable branch between MFD, Pinctrl and soundwire due
- for the v6.6 merge window
-Message-ID: <20230818154042.GX986605@google.com>
-References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1378565AbjHRQSQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 12:18:16 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F5E30E9
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 09:18:14 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 143AB320095F
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 12:18:09 -0400 (EDT)
+Received: from imap45 ([10.202.2.95])
+  by compute2.internal (MEProxy); Fri, 18 Aug 2023 12:18:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+        cc:content-type:content-type:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm1; t=1692375489; x=1692461889; bh=tiLrdKNxB9Ie3Vhk/xjZaqCdp
+        iVCabJUfJ/RlfRigkc=; b=tiG1PHWP4A3RzpTa85W1dORXZWLXvYwVZEKC8l8YF
+        RXrj/3JoSyj4BmGUNY4Ni9MZ3oTMca5NSrN65fY/mMQZEk0X9a3qN/hHOf5G/jMN
+        rWcnd23aUugXeLHdi/hmT1bD5RSbcOjWSWUuI6aJlJweh4ITOo4xJD4SkuApvW86
+        p7nZ31pnKSFc/vJKkO0pon3Gxc2vJy4vT7lwpekGFy8NZYL68slr4AfIOTLqTKxK
+        VtfqJfW/DUKwLtfW+9Anm7GcEZhyh5OAPRlTFktRVi8cVUswe1IciNSYcgpwL5/U
+        e+TOg4qY8yQTWn2tXbBZZ8Jb+kTn4h6O9KDbuYJI1m6HQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1692375489; x=1692461889; bh=tiLrdKNxB9Ie3Vhk/xjZaqCdpiVCabJUfJ/
+        RlfRigkc=; b=hFVdGpI1Adjcb7CvZ68O0QK2jmrD06AJH4HtHNpuX8oP+NCQl4e
+        Of35N35qCCOeQdqPZqbl3DImVsm+EyuTS6q4zs8Y86dQUKTfOP033fHj6JQ2WPZM
+        UPrKUcXAiTi+/Hz2Mjn3Al9CIGF6EgmsThnnHARow8n3UVb7u6hHqLuF9LZibm+X
+        qsbJxwkVQZJc+N8qEGIumqYBYH5uyDCK4hBsA6OJSJlU5qaw56FxpkOAgL54cfvM
+        1pfsYhCJT1bQtX1II5wmmyWH/TXlK0knDmRrhvMvsxuhtDFRwZqfUlBCw+QcVaVa
+        omO4IFIb1S6ZpiNju5CbFDhFZQzDsKuKTDg==
+X-ME-Sender: <xms:wZnfZHYMow7bivnKZYk8ugyxV-Ai8CCq67KqJO8dlwKbGeqkei8kQw>
+    <xme:wZnfZGZuXNFv9rHYSPUxKFmebjwSJug1AotuDvVvOmEBBe26ONDn7E7IIx1eKJz8r
+    8vkGA08OA1uLnm1uA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedruddufedguddtudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhepofgfggfkfffhvffutgesthdtre
+    dtreertdenucfhrhhomhepfdetlhgvgigrnhguvghrucfkvhgrnhhovhdfuceorghmihhv
+    rghnohhvsehfrghsthhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhephfduvedvvd
+    eggfehudetgfevhfeuuefgtdegvdfggfejueeihfejteegffefjeelnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghmihhvrghnohhvsehfrg
+    hsthhmrghilhdrtghomh
+X-ME-Proxy: <xmx:wZnfZJ_98mC5X02YAormciuUwvq_9ohMXt9JC5bLbT6qZeaoI3XbKg>
+    <xmx:wZnfZNpCyoxCwiFfABIPcaPJzZhuHYF2nSlGmbg6vDQLBBpJNuM7kA>
+    <xmx:wZnfZCoXapPwrC9MG58BXurzgOurKNgxy38zh0Qdkxt9aZgHhUIhuA>
+    <xmx:wZnfZP1PIMuID3vEk_U7icsnyewU7mDyOzGiKmPaGHg92vMP8RQcRg>
+Feedback-ID: i30c842cc:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 4CE11272007B; Fri, 18 Aug 2023 12:18:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+Mime-Version: 1.0
+Message-Id: <4bfea609-96e7-4b81-9855-09f571dec8bc@app.fastmail.com>
+Date:   Fri, 18 Aug 2023 09:17:48 -0700
+From:   "Alexander Ivanov" <amivanov@fastmail.com>
+To:     linux-gpio@vger.kernel.org
+Subject: gpio-it87: gpiod_get*() always return -ENOENT
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Good afternoon,
+Hello,
 
-The following changes since commit 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5:
+Appologies if submitting to wrong list.
 
-  Linux 6.5-rc1 (2023-07-09 13:53:13 -0700)
+I am developing a driver for PCIe-based device that needs to receive external signals through on-board GPIOs. The target platform is Intel-based board and running Fedora 34 kernel 5.11.12-300.fc34.x86_64 and has GPIO devices driver by gpio-it87.
 
-are available in the Git repository at:
+# gpiodetect
+gpiochip0 [INT34BB:00] (312 lines)
+gpiochip1 [gpio_it87] (64 lines)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pinctrl-soundwire-v6.6
+8 of available 64 lines are connected to a header on the board:
 
-for you to fetch changes up to d5282a53929791071b17dde3eed52e40f76b101c:
+# gpioinfo 1
+        ...
+        line  49:  "it87_gp71"       unused   input  active-high
+        line  50:  "it87_gp72"       unused   input  active-high
+        line  51:  "it87_gp73"       unused   input  active-high
+        line  52:  "it87_gp74"       unused   input  active-high
+        line  53:  "it87_gp75"       unused   input  active-high
+        line  54:  "it87_gp76"       unused   input  active-high
+        line  55:  "it87_gp77"       unused   input  active-high
+        ...
 
-  pinctrl: cs42l43: Add support for the cs42l43 (2023-08-17 12:06:11 +0100)
+These lines are verified with logic analyzer and `gpioset 1 nn=0|1`
 
-----------------------------------------------------------------
-Immutable branch between MFD, Pinctrl and soundwire due for the v6.6 merge window
+The PCIe device driver defines these lines as:
 
-----------------------------------------------------------------
-Charles Keepax (3):
-      dt-bindings: mfd: cirrus,cs42l43: Add initial DT binding
-      mfd: cs42l43: Add support for cs42l43 core driver
-      pinctrl: cs42l43: Add support for the cs42l43
+static struct gpiod_lookup_table gpio_it87_gpios = {
+        .dev_id = "gpio_it87",
+        .table = {
+                GPIO_LOOKUP("gpio-it87", 48, "it87_gp70", GPIO_ACTIVE_HIGH),
+                GPIO_LOOKUP("gpio-it87", 49, "it87_gp71", GPIO_ACTIVE_HIGH),
+                GPIO_LOOKUP("gpio-it87", 50, "it87_gp72", GPIO_ACTIVE_HIGH),
+                GPIO_LOOKUP("gpio-it87", 51, "it87_gp73", GPIO_ACTIVE_HIGH),
+                GPIO_LOOKUP("gpio-it87", 52, "it87_gp74", GPIO_ACTIVE_HIGH),
+                GPIO_LOOKUP("gpio-it87", 53, "it87_gp75", GPIO_ACTIVE_HIGH),
+                GPIO_LOOKUP("gpio-it87", 54, "it87_gp76", GPIO_ACTIVE_HIGH),
+                GPIO_LOOKUP("gpio-it87", 55, "it87_gp77", GPIO_ACTIVE_HIGH),
+                {},
+        },
+};
 
-Lucas Tanure (1):
-      soundwire: bus: Allow SoundWire peripherals to register IRQ handlers
+and then adds them to lookup table, eg.:
 
- .../devicetree/bindings/sound/cirrus,cs42l43.yaml  |  313 ++++++
- MAINTAINERS                                        |    3 +
- drivers/mfd/Kconfig                                |   23 +
- drivers/mfd/Makefile                               |    3 +
- drivers/mfd/cs42l43-i2c.c                          |   98 ++
- drivers/mfd/cs42l43-sdw.c                          |  239 ++++
- drivers/mfd/cs42l43.c                              | 1188 ++++++++++++++++++++
- drivers/mfd/cs42l43.h                              |   28 +
- drivers/pinctrl/cirrus/Kconfig                     |   11 +
- drivers/pinctrl/cirrus/Makefile                    |    2 +
- drivers/pinctrl/cirrus/pinctrl-cs42l43.c           |  609 ++++++++++
- drivers/soundwire/bus.c                            |   32 +
- drivers/soundwire/bus_type.c                       |   12 +
- include/linux/mfd/cs42l43-regs.h                   | 1184 +++++++++++++++++++
- include/linux/mfd/cs42l43.h                        |  102 ++
- include/linux/soundwire/sdw.h                      |    9 +
- 16 files changed, 3856 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42l43.yaml
- create mode 100644 drivers/mfd/cs42l43-i2c.c
- create mode 100644 drivers/mfd/cs42l43-sdw.c
- create mode 100644 drivers/mfd/cs42l43.c
- create mode 100644 drivers/mfd/cs42l43.h
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs42l43.c
- create mode 100644 include/linux/mfd/cs42l43-regs.h
- create mode 100644 include/linux/mfd/cs42l43.h
+gpiod_add_lookup_table(&gpio_it87_gpios);
 
--- 
-Lee Jones [李琼斯]
+However, none of those lines are available at
+
+struct desc *gpio = gpiod_get(dev, "it87_gp70", GPIOD_IN);
+
+Above returns -ENOENT for any of those lines.
+I believe it is due to incorrct lookup definions in gpio_it87_gpios above, however, I cannot figure out what is wrong there. 
+
+Thanks,
+--Alex
