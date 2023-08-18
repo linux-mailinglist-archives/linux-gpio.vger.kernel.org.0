@@ -2,77 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA1DF78131D
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 20:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79F0F78132F
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 21:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379541AbjHRSzm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 14:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52324 "EHLO
+        id S1379511AbjHRTBf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 15:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379527AbjHRSz3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 14:55:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361743A98;
-        Fri, 18 Aug 2023 11:55:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C7858611CF;
-        Fri, 18 Aug 2023 18:55:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3913BC433C8;
-        Fri, 18 Aug 2023 18:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692384927;
-        bh=8u62R3MeM8AltBt/wl6OjeJnRdhf4srCxdWNr0Os1kw=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=hmWWeM/khNBYNvX4Q8WGw9QVokCLzqzIB7zSQE6O3kU79JZls1eUoI9A00TNd6liF
-         TLm9rM752TQMXoE8Q8wi62UxmfTrEdAz6CTDNqLnN0Ysh3iKAUXsW9NwNw3BmAPcjq
-         j3eEKru9RTEobOvmcR38FCTkxsdlB1BkA67+Eyh14dtZjLV/66TCbSFN9bd6LEByia
-         7HMQ/FsFs/VeD8KnBUmdZ7yufyGmtezfG0Hz0O1bTmMNEUGmkBcrnoSzrbF+NU68dh
-         YumgSlUf1yX+lY2rI707xeI4Xw+vVSfdH4dxBdjNn5pcBIdcBTr33ia0gk334lUlXJ
-         j4D/Eolh8OOkQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 21162C395DC;
-        Fri, 18 Aug 2023 18:55:27 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v6.5-rc7
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20230818181649.20814-1-brgl@bgdev.pl>
-References: <20230818181649.20814-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230818181649.20814-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.5-rc7
-X-PR-Tracked-Commit-Id: 3386fb86ecdef0d39ee3306aea8ec290e61b934f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3e13eee10521b236b6b96a0e1d7f29c6bf2fd989
-Message-Id: <169238492712.16005.6989992896963565949.pr-tracker-bot@kernel.org>
-Date:   Fri, 18 Aug 2023 18:55:27 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        with ESMTP id S1379562AbjHRTBO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 15:01:14 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACFAA30F6
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 12:01:12 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3fe12baec61so11933235e9.2
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 12:01:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692385271; x=1692990071;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ExYK1kYhxn5KPsD+IcjfzF6s7qsUsIZxW0+eQjzIynM=;
+        b=FTEil+JpDeyExcASvR2TIxlpfeKIoy0xpo21NSCYx/4FUoPC5mX8UJAHxtxqXlq3ID
+         N7Bm9VN0uQ+rpny0W+DyGiko5yHILVMwMMgHEuPTqVgPukDt34x3WqnIv6KZ7u7R4vI0
+         ksfFNi6ifY9ZK05Qswx5BODywkJEotyHAMxkqBNlbNVaFxftzbLBX27hiAfLfIsBpDew
+         Rzf/YVc7+VnDnDppB918hDB39IGKQG385+TLUzsVMgapnX0bSjzto1M32dGvLuzqO3Kc
+         bJ61yCKKKF0VwX02vmksOe3uGk5y+vCLnadEDga6AzeFfDc5ZcsU/yrMaqAr04Snmssq
+         DAvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692385271; x=1692990071;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ExYK1kYhxn5KPsD+IcjfzF6s7qsUsIZxW0+eQjzIynM=;
+        b=kmCI6w0nHKfLbqXAs0bSE9ratvZPYcZrWJD3/eW4lKwJefTyYe4LIWmpo+MNgZQpm1
+         Glb4wgKpMC2a6McbQPvZmaPlkNhkihRiyJ3pvbI7CzjrfrUaOipQjWumFyP2CpFRLO0+
+         2EW8vN7LIGpyzni0YiMZtK6v+ry80oEaaAUAMmYUnGb3t+hK1bzCoTMIOa5g1qP8fvCj
+         fJl4xTjROTZp67GiD2eKQNtTQl9s4NGCjWcT6dlGIj57zjJ27pjw6qt8Vk4m+9H26m30
+         xelg+Q71FvG3qG0J2G9GxqOKFRiiNffaq2PsBLWBSfJjx3Nkj/mCc+ps+jiaCAepDLbS
+         +yCQ==
+X-Gm-Message-State: AOJu0Yzlg+QzNZ5RFHqj5wDGXCa5lRBTc79Wy/vVUN29Yu8d0RYEw3zS
+        WlaDm2E7Xjejv0LIRFmVYkBEKw==
+X-Google-Smtp-Source: AGHT+IGafrw+J+nMKxJ+bVCGdx71rij2ppv9FFCnJtp3E7rVKZ2+RqLKN/e/1fyQTUoTkyEYBRrh7A==
+X-Received: by 2002:a1c:ed04:0:b0:3fa:9823:407 with SMTP id l4-20020a1ced04000000b003fa98230407mr72249wmh.18.1692385271099;
+        Fri, 18 Aug 2023 12:01:11 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d1c5:9f1f:6f05:38a3])
+        by smtp.gmail.com with ESMTPSA id 10-20020a05600c228a00b003fe4ca8decdsm7263541wmf.31.2023.08.18.12.01.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Aug 2023 12:01:10 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: [PATCH] gpiolib: tie module references to GPIO devices, not requested descs
+Date:   Fri, 18 Aug 2023 21:01:08 +0200
+Message-Id: <20230818190108.22031-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Fri, 18 Aug 2023 20:16:49 +0200:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.5-rc7
+After a deeper look at commit 3386fb86ecde ("gpiolib: fix reference
+leaks when removing GPIO chips still in use") I'm now convinced that
+gpiolib gets module reference counting wrong.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3e13eee10521b236b6b96a0e1d7f29c6bf2fd989
+As we only take the reference to the owner module when a descriptor is
+requested and put it when it's freed, we can easily trigger a crash by
+removing a module which registered a driver bound to a GPIO chip which
+is unused as nothing prevents us from doing so.
 
-Thank you!
+For correct behavior, we should take the reference to the module when
+we're creating a GPIO device and only put it when that device is
+released as it's at this point that we can safely remove the module's
+code from memory.
 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 76e0c38026c3..cb0072d2d137 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -583,6 +583,7 @@ static void gpiodev_release(struct device *dev)
+ 	list_del(&gdev->list);
+ 	spin_unlock_irqrestore(&gpio_lock, flags);
+ 
++	module_put(gdev->owner);
+ 	ida_free(&gpio_ida, gdev->id);
+ 	kfree_const(gdev->label);
+ 	kfree(gdev->descs);
+@@ -753,6 +754,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	else
+ 		gdev->owner = THIS_MODULE;
+ 
++	ret = try_module_get(gdev->owner);
++	if (!ret)
++		goto err_free_dev_name;
++
+ 	/*
+ 	 * Try the device properties if the driver didn't supply the number
+ 	 * of GPIO lines.
+@@ -769,7 +774,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 			 */
+ 			ngpios = 0;
+ 		else if (ret)
+-			goto err_free_dev_name;
++			goto err_put_module;
+ 
+ 		gc->ngpio = ngpios;
+ 	}
+@@ -777,7 +782,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	if (gc->ngpio == 0) {
+ 		chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+ 		ret = -EINVAL;
+-		goto err_free_dev_name;
++		goto err_put_module;
+ 	}
+ 
+ 	if (gc->ngpio > FASTPATH_NGPIO)
+@@ -787,7 +792,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	gdev->descs = kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERNEL);
+ 	if (!gdev->descs) {
+ 		ret = -ENOMEM;
+-		goto err_free_dev_name;
++		goto err_put_module;
+ 	}
+ 
+ 	gdev->label = kstrdup_const(gc->label ?: "unknown", GFP_KERNEL);
+@@ -937,6 +942,8 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	kfree_const(gdev->label);
+ err_free_descs:
+ 	kfree(gdev->descs);
++err_put_module:
++	module_put(gdev->owner);
+ err_free_dev_name:
+ 	kfree(dev_name(&gdev->dev));
+ err_free_ida:
+@@ -2101,20 +2108,16 @@ static int validate_desc(const struct gpio_desc *desc, const char *func)
+ 
+ int gpiod_request(struct gpio_desc *desc, const char *label)
+ {
+-	int ret = -EPROBE_DEFER;
++	int ret;
+ 
+ 	VALIDATE_DESC(desc);
+ 
+-	if (try_module_get(desc->gdev->owner)) {
+-		ret = gpiod_request_commit(desc, label);
+-		if (ret)
+-			module_put(desc->gdev->owner);
+-		else
+-			gpio_device_get(desc->gdev);
+-	}
+-
++	ret = gpiod_request_commit(desc, label);
+ 	if (ret)
+-		gpiod_dbg(desc, "%s: status %d\n", __func__, ret);
++		return ret;
++
++	gpio_device_get(desc->gdev);
++	gpiod_dbg(desc, "%s: status %d\n", __func__, ret);
+ 
+ 	return ret;
+ }
+@@ -2177,7 +2180,6 @@ void gpiod_free(struct gpio_desc *desc)
+ 	if (!gpiod_free_commit(desc))
+ 		WARN_ON(extra_checks);
+ 
+-	module_put(desc->gdev->owner);
+ 	gpio_device_put(desc->gdev);
+ }
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.39.2
+
