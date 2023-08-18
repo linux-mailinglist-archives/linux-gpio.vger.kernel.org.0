@@ -2,66 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B4C0780654
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 09:28:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47DF27806A2
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Aug 2023 09:52:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358174AbjHRH1z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 03:27:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50456 "EHLO
+        id S1358281AbjHRHwB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Aug 2023 03:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358198AbjHRH1f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 03:27:35 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0143C0C;
-        Fri, 18 Aug 2023 00:27:31 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RRtfh1lz7zFqkp;
-        Fri, 18 Aug 2023 15:24:28 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemi500008.china.huawei.com (7.221.188.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Fri, 18 Aug 2023 15:27:26 +0800
-Message-ID: <b423658a-e129-4aa5-3f7a-3bc477d4630b@huawei.com>
-Date:   Fri, 18 Aug 2023 15:27:26 +0800
+        with ESMTP id S1358350AbjHRHvY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 03:51:24 -0400
+Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAB83C27
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 00:51:08 -0700 (PDT)
+Received: by mail-vk1-xa29.google.com with SMTP id 71dfb90a1353d-48a6164cccdso182151e0c.3
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Aug 2023 00:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692345067; x=1692949867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x9DA4IDcpAmXOv7d2oJD3d3UaFajAPi9XbDwAsxLsm4=;
+        b=H/If5wZ5hyuUbDm3DCwvLp4uS1ViBbkr6yYyQD0+EBvELt+ZAAwzlpjmPVtXmxEd6B
+         b4BBan/5ld6yIVhgIOIAUfE5Yl4Lzjk/cL+UvBYmzCyTry6IiF5pzugOTEPS25yBf3jY
+         zLC7XzfdYrM0KmXNG9mG6pOi8dRTIqk8c+W9GECXd25JOzn4VAUbuyjC86nYrigq2qdU
+         F/3kMdJ2JtKi597QwzCI1RGEIz6lDsQ5w1k7G7L/X16cYNuRmJgrIPjwOYJJYpDtzAio
+         icPfT8tVk2bi2cgl6+KtyC6X8fDI/E0B3rfCKA2GrOzBc7qvNpqcRcpBe0yTQVsYuU7X
+         qB/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692345067; x=1692949867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x9DA4IDcpAmXOv7d2oJD3d3UaFajAPi9XbDwAsxLsm4=;
+        b=g2hUfJN1BlrYizT02y5zI+Rvz55jb2BxpT0L8Kh89mtvI0PSG0y3LixO/pIZmdCGsC
+         MvTnnLtU77B8uANJkgeBci9WGvKFgT4YpQ1ulf26a8ExGfB18k//pZnKOI/HB+jX2gXN
+         02ifpgG1MPDjrZAO5+8tVT9CGjYH8CXBEOiO0rsbBYJKljSKZ9XBMd678fuiD2OxHL7n
+         LItQEIkdvRQ+pXi1vxg+TNBRbHKeenwhZ0YgwrC6BtId+hxSQ4x8Olpqj1qYHnHun6Pg
+         KrNkt1c4q75kLp1IvDtTi7hL1aF4kV0vGlp5xLEX9Y/A+Ckn+YewVVFL14eNfYbKgx7d
+         Cl2w==
+X-Gm-Message-State: AOJu0YxVrHep2ecNPKNYXwaYkKx4AvLKhX2L6lerhQLda7GutYjcUoQS
+        ljtX6OQs81VbO4Y8kQm8qIurIC/SbB+lFbPKldeqJw==
+X-Google-Smtp-Source: AGHT+IFdpboaxI+SV82u7O4mzVAkPe1ey6AP6pmPdhnAvT1jjSLLINrEjIFAIeiqJzJFdhi1y7bc2mHcxN6SJePxphY=
+X-Received: by 2002:a1f:bfc6:0:b0:481:36b0:aa01 with SMTP id
+ p189-20020a1fbfc6000000b0048136b0aa01mr1869663vkf.6.1692345067644; Fri, 18
+ Aug 2023 00:51:07 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH -next v2] I2C: Fix return value check for
- devm_pinctrl_get()
-Content-Language: en-US
+References: <20230812183635.5478-1-brgl@bgdev.pl>
+In-Reply-To: <20230812183635.5478-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 18 Aug 2023 09:50:56 +0200
+Message-ID: <CAMRc=Me=WPRGRhGcNVpVUnYvU8T=-C82QYVHhTffLcJaFq7rnw@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: sim: simplify code with cleanup helpers
 To:     Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-CC:     Yann Sionneau <yann@sionneau.net>, Leo Li <leoyang.li@nxp.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>, Wolfram Sang <wsa@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        <linux@armlinux.org.uk>, <linux-gpio@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20230817022018.3527570-1-ruanjinjie@huawei.com>
- <AM0PR04MB6289593A2149C9411FA9D5858F1AA@AM0PR04MB6289.eurprd04.prod.outlook.com>
- <6b508343-7b7f-0fd5-d83f-92dc88a9510d@sionneau.net>
- <20230818053254.GK5650@pengutronix.de>
- <CACRpkdbikkc+oepJqZsUz27MTOHLMp-QQPdgRZ7XQGTG-=aAKA@mail.gmail.com>
-From:   Ruan Jinjie <ruanjinjie@huawei.com>
-In-Reply-To: <CACRpkdbikkc+oepJqZsUz27MTOHLMp-QQPdgRZ7XQGTG-=aAKA@mail.gmail.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.254]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500008.china.huawei.com (7.221.188.139)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,26 +69,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sat, Aug 12, 2023 at 8:36=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Use macros defined in linux/cleanup.h to automate resource lifetime
+> control in gpio-sim.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
+I queued v3.
 
-On 2023/8/18 15:18, Linus Walleij wrote:
-> On Fri, Aug 18, 2023 at 7:33 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> 
->> NULL is returned on purpose. When PINCTRL is disabled NULL becomes a
->> valid pinctrl cookie which can be passed to the other stub functions.
->> With this drivers using pinctrl can get through their probe function
->> without an error when PINCTRL is disabled.
->>
->> The same approach is taken by the clk and regulator API.
->>
->> It is correct to test the return value of devm_pinctrl_get() with
->> IS_ERR(), only the commit message of these patches is a bit inaccurate.
-> 
-> Sascha is spot on, maybe copyedit some of the above
-> into the commit message and resend?
-
-OK! I'll resend it.
-
-> 
-> Yours,
-> Linus Walleij
+Bart
