@@ -2,97 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 824C67816D0
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Aug 2023 04:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75D827817DF
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Aug 2023 09:05:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244342AbjHSCrf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Aug 2023 22:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51668 "EHLO
+        id S1343918AbjHSHDx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 19 Aug 2023 03:03:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244326AbjHSCrD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Aug 2023 22:47:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 092193C00;
-        Fri, 18 Aug 2023 19:47:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BC88163AFF;
-        Sat, 19 Aug 2023 02:47:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3ADC433C7;
-        Sat, 19 Aug 2023 02:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692413221;
-        bh=oU+6WMg6c2UrnTMLgklxjc7ykpSmhNqopEee8qwkVPk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UA/UNvXwmLrhSEAhg7lPYmOjNAVVkUkN9pybSImmVxT+0lHuWrCcaZDmCSoYrvjyf
-         YhhI8bWGwgB+/99XZjtcruhpCWdBrpxn6MzuLWby7GqJRFG8rl8Cp+0RQ1VUqQk3jF
-         mEoMvMZpzs2YDyofEWA2JeQE+79wztJn67eSs7aVEPegNN3LeoWHQEXUhIZblTGeku
-         CuQQZAb6wJZuVe6I1lmEZcIgOQSfklhXfzmvPyJ2w9ky5Jtg3bfDWdjkqgDwrb5fbq
-         HkwvaKBtm+RCRcUr1M0AFhFV57+Nb9oY7HsEgtMxvTIkF/G+3ZTn+MWUggMWo2BOeq
-         9NRqhAAGGxXfw==
-Date:   Fri, 18 Aug 2023 19:46:58 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Herve Codina <herve.codina@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 21/28] net: wan: Add framer framework support
-Message-ID: <20230818194658.369da77a@kernel.org>
-In-Reply-To: <5f671caf19be0a9bb7ea7b96a6c86381e243ca4c.1692376361.git.christophe.leroy@csgroup.eu>
-References: <cover.1692376360.git.christophe.leroy@csgroup.eu>
-        <5f671caf19be0a9bb7ea7b96a6c86381e243ca4c.1692376361.git.christophe.leroy@csgroup.eu>
+        with ESMTP id S1343962AbjHSHDV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Aug 2023 03:03:21 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB11E423A
+        for <linux-gpio@vger.kernel.org>; Sat, 19 Aug 2023 00:03:17 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 46e09a7af769-6bcf2fd5d69so1341731a34.1
+        for <linux-gpio@vger.kernel.org>; Sat, 19 Aug 2023 00:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692428597; x=1693033397;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :reply-to:mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9kydyMnwD//o0quRqImkimRYfrWW9k+FT8t/oHoxyE8=;
+        b=nLON0lFU1HFxhxnwtvUZc9wvmWS7rbdnt2RdpqIoCtsDwWwHx0Gyjn1xZGSC5eb2FC
+         WmmpNW+ObIBj4H3oVA528E09LKJ9Oh4DAMKSu6pEL6PL1RhqFN61P9gLSK/8SD4vx9bP
+         JUWK2MGIfhLYg/xJvX06ahmCeb/lUSvcNrFKmvYLJLEYQO5IwjUSUqLNIk0w8cK+2/XQ
+         dSqtK5eCnXC+wrkDAzHrF00pkROWtcttibp6ntDQXOVUlo6vsHjNyWdY7UHT1JYeF2xL
+         PB0ef0uQvzc5mw6gaoXP2KOWKvpRua/iGaOI4B4VGugPnWVRf5iIcCLUY0NkKk3Xl8rO
+         5wkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692428597; x=1693033397;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9kydyMnwD//o0quRqImkimRYfrWW9k+FT8t/oHoxyE8=;
+        b=G1bLT3SCTPzJdTOMeK4dHehK+giiygVzOXPKcppGulrv69gi10M169nvSFxOAM4wN1
+         CzvnPCpzV0dU5Xtz5KpSDqqTGE6sZ3jgDbLsowxxWa2RcNamPWdWmv/1r1fygpVo7zHJ
+         o2zG4vX4mZPItlDEv5bprY1rvzGCG6975+ib/nolpnMf/xaOinjrlQQHicU0WsnWrPQJ
+         3VH3QvRiLZoRVG3jW28juGJLyUlP4L8vYjkuOev6PMIQIDIRDVMb6AulvbnrnUz+p/Ti
+         P6MX+G05bHTbiKfWci0BDc0JdtmeVwR2spW/hS+LkkqPi3g3iB9XwVnWQXh232dDlBf9
+         p5dw==
+X-Gm-Message-State: AOJu0YzdfaKH4whr7yZ78OxnUp4QrMwg34OwcuORGi46MWf47zDtFK9l
+        7SmR/25qpKg7OOh5zyKJ1adaItQ8zf3qzLzAiYj4VU/OF3xRow==
+X-Google-Smtp-Source: AGHT+IHBFHux9W7amy752XAKQ4G+pXj9K8KLABgekYkKVjTaNiUovhqWPJjy5q7mdLIzANUAVG24gzrYlmHT6Kjn7Kk=
+X-Received: by 2002:a81:8782:0:b0:589:a9fc:ffcd with SMTP id
+ x124-20020a818782000000b00589a9fcffcdmr1407212ywf.20.1692428576106; Sat, 19
+ Aug 2023 00:02:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Reply-To: razumkoykhailo@gmail.com
+Sender: mrtombaba@gmail.com
+Received: by 2002:a05:7000:5395:b0:4f4:2174:eed4 with HTTP; Sat, 19 Aug 2023
+ 00:02:55 -0700 (PDT)
+From:   "Mr.Razum Khailo" <razumkoykhailo@gmail.com>
+Date:   Sat, 19 Aug 2023 00:02:55 -0700
+X-Google-Sender-Auth: TD1SbUwALQWUaG93zNo0ky4SaO8
+Message-ID: <CADXgghn2t3mU_VvtZDjHwnbadg2QnVcJ30yFd0kN8SL6NDhY1g@mail.gmail.com>
+Subject: Greetings from Ukraine,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,LOTS_OF_MONEY,
+        MILLION_USD,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:343 listed in]
+        [list.dnswl.org]
+        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [mrtombaba[at]gmail.com]
+        *  2.0 MILLION_USD BODY: Talks about millions of dollars
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  2.4 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  2.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 18 Aug 2023 18:39:15 +0200 Christophe Leroy wrote:
-> From: Herve Codina <herve.codina@bootlin.com>
-> 
-> A framer is a component in charge of an E1/T1 line interface.
-> Connected usually to a TDM bus, it converts TDM frames to/from E1/T1
-> frames. It also provides information related to the E1/T1 line.
-
-Okay, progress is being made, now it builds patch by patch.
-Still some kdoc warnings remain (W=1 build only catches
-kdoc warnings in sources, you gotta run ./scripts/kernel-doc -none
-explicitly on the headers):
-
-include/linux/framer/framer.h:27: warning: Enum value 'FRAMER_IFACE_E1' not described in enum 'framer_iface'
-include/linux/framer/framer.h:27: warning: Enum value 'FRAMER_IFACE_T1' not described in enum 'framer_iface'
-include/linux/framer/framer.h:35: warning: expecting prototype for enum framer_clock_mode. Prototype was for enum framer_clock_type instead
-include/linux/framer/framer.h:47: warning: expecting prototype for struct framer_configuration. Prototype was for struct framer_config instead
-include/linux/framer/framer.h:60: warning: cannot understand function prototype: 'enum framer_event '
-include/linux/framer/framer.h:89: warning: Function parameter or member 'notify_status_work' not described in 'framer'
-include/linux/framer/framer.h:89: warning: Function parameter or member 'notifier_list' not described in 'framer'
-include/linux/framer/framer.h:89: warning: Function parameter or member 'polling_work' not described in 'framer'
--- 
-pw-bot: cr
+R3JlZXRpbmdzwqBmcm9twqBVa3JhaW5lLA0KDQpNci7CoFJhenVta292wqBNeWtoYWlsbyzCoGFu
+wqBlbnRyZXByZW5ldXLCoGJ1c2luZXNzbWFuwqBmcm9twqBPZGVzc2ENClVrcmFpbmUuwqBXaXRo
+aW7CoGHCoHllYXLCoHBsdXPCoHNvbWXCoG1vbnRoc8Kgbm93LMKgbW9yZcKgdGhhbsKgOC4ywqBt
+aWxsaW9uDQpwZW9wbGXCoGFyb3VuZMKgdGhlwqBjaXRpZXPCoG9mwqBtecKgY291bnRyecKgVWty
+YWluZcKgaGF2ZcKgYmVlbsKgZXZhY3VhdGVkwqB0bw0KYcKgc2FmZcKgbG9jYXRpb27CoGFuZMKg
+b3V0wqBvZsKgdGhlwqBjb3VudHJ5LMKgbW9zdMKgZXNwZWNpYWxsecKgY2hpbGRyZW7CoHdpdGgN
+CnRoZWlywqBwYXJlbnRzLMKgbnVyc2luZ8KgbW90aGVyc8KgYW5kwqBwcmVnbmFudMKgd29tZW4s
+wqBhbmTCoHRob3NlwqB3aG/CoGhhdmUNCmJlZW7CoHNlcmlvdXNsecKgd291bmRlZMKgYW5kwqBu
+ZWVkwqB1cmdlbnTCoG1lZGljYWzCoGF0dGVudGlvbi7CoEnCoHdhc8KgYW1vbmcNCnRob3NlwqB0
+aGF0wqB3ZXJlwqBhYmxlwqB0b8KgZXZhY3VhdGXCoHRvwqBvdXLCoG5laWdoYm91cmluZ8KgY291
+bnRyaWVzwqBhbmTCoEnigJltDQpub3fCoGluwqB0aGXCoHJlZnVnZWXCoGNhbXDCoG9mwqBUZXLC
+oEFwZWzCoEdyb25pbmdlbsKgaW7CoHRoZcKgTmV0aGVybGFuZHMuDQoNCknCoG5lZWTCoGHCoGZv
+cmVpZ27CoHBhcnRuZXLCoHRvwqBlbmFibGXCoG1lwqB0b8KgdHJhbnNwb3J0wqBtecKgaW52ZXN0
+bWVudA0KY2FwaXRhbMKgYW5kwqB0aGVuwqByZWxvY2F0ZcKgd2l0aMKgbXnCoGZhbWlseSzCoGhv
+bmVzdGx5wqBpwqB3aXNowqBJwqB3aWxsDQpkaXNjdXNzwqBtb3JlwqBhbmTCoGdldMKgYWxvbmcu
+wqBJwqBuZWVkwqBhwqBwYXJ0bmVywqBiZWNhdXNlwqBtecKgaW52ZXN0bWVudA0KY2FwaXRhbMKg
+aXPCoGluwqBtecKgaW50ZXJuYXRpb25hbMKgYWNjb3VudC7CoEnigJltwqBpbnRlcmVzdGVkwqBp
+bsKgYnV5aW5nDQpwcm9wZXJ0aWVzLMKgaG91c2VzLMKgYnVpbGRpbmfCoHJlYWzCoGVzdGF0ZXMs
+wqBtecKgY2FwaXRhbMKgZm9ywqBpbnZlc3RtZW50DQppc8KgKCQzMMKgTWlsbGlvbsKgVVNEKcKg
+LsKgVGhlwqBmaW5hbmNpYWzCoGluc3RpdHV0aW9uc8KgaW7CoG15wqBjb3VudHJ5DQpVa3JhaW5l
+wqBhcmXCoGFsbMKgc2hvdMKgZG93bsKgZHVlwqB0b8KgdGhlwqBjcmlzaXPCoG9mwqB0aGlzwqB3
+YXLCoG9uwqBVa3JhaW5lDQpzb2lswqBiecKgdGhlwqBSdXNzaWFuwqBmb3JjZXMuwqBNZWFud2hp
+bGUswqBpZsKgdGhlcmXCoGlzwqBhbnnCoHByb2ZpdGFibGUNCmludmVzdG1lbnTCoHRoYXTCoHlv
+dcKgaGF2ZcKgc2/CoG11Y2jCoGV4cGVyaWVuY2XCoGluwqB5b3VywqBjb3VudHJ5LMKgdGhlbsKg
+d2UNCmNhbsKgam9pbsKgdG9nZXRoZXLCoGFzwqBwYXJ0bmVyc8Kgc2luY2XCoEnigJltwqBhwqBm
+b3JlaWduZXIuDQoNCknCoGNhbWXCoGFjcm9zc8KgeW91csKgZS1tYWlswqBjb250YWN0wqB0aHJv
+dWdowqBwcml2YXRlwqBzZWFyY2jCoHdoaWxlwqBpbsKgbmVlZA0Kb2bCoHlvdXLCoGFzc2lzdGFu
+Y2XCoGFuZMKgScKgZGVjaWRlZMKgdG/CoGNvbnRhY3TCoHlvdcKgZGlyZWN0bHnCoHRvwqBhc2vC
+oHlvdcKgaWYNCnlvdcKga25vd8KgYW55wqBsdWNyYXRpdmXCoGJ1c2luZXNzwqBpbnZlc3RtZW50
+wqBpbsKgeW91csKgY291bnRyecKgacKgY2FuDQppbnZlc3TCoG15wqBtb25lecKgc2luY2XCoG15
+wqBjb3VudHJ5wqBVa3JhaW5lwqBzZWN1cml0ecKgYW5kwqBlY29ub21pYw0KaW5kZXBlbmRlbnTC
+oGhhc8KgbG9zdMKgdG/CoHRoZcKgZ3JlYXRlc3TCoGxvd2VywqBsZXZlbCzCoGFuZMKgb3VywqBj
+dWx0dXJlwqBoYXMNCmxvc3TCoGluY2x1ZGluZ8Kgb3VywqBoYXBwaW5lc3PCoGhhc8KgYmVlbsKg
+dGFrZW7CoGF3YXnCoGZyb23CoHVzLsKgT3VywqBjb3VudHJ5DQpoYXPCoGJlZW7CoG9uwqBmaXJl
+wqBmb3LCoG1vcmXCoHRoYW7CoGHCoHllYXLCoG5vdy4NCg0KSWbCoHlvdcKgYXJlwqBjYXBhYmxl
+wqBvZsKgaGFuZGxpbmfCoHRoaXPCoGJ1c2luZXNzwqBwYXJ0bmVyc2hpcCzCoGNvbnRhY3TCoG1l
+DQpmb3LCoG1vcmXCoGRldGFpbHMswqBJwqB3aWxswqBhcHByZWNpYXRlwqBpdMKgaWbCoHlvdcKg
+Y2FuwqBjb250YWN0wqBtZQ0KaW1tZWRpYXRlbHkuwqBZb3XCoG1hecKgYXPCoHdlbGzCoHRlbGzC
+oG1lwqBhwqBsaXR0bGXCoG1vcmXCoGFib3V0wqB5b3Vyc2VsZi4NCkNvbnRhY3TCoG1lwqB1cmdl
+bnRsecKgdG/CoGVuYWJsZcKgdXPCoHRvwqBwcm9jZWVkwqB3aXRowqB0aGXCoGJ1c2luZXNzLsKg
+ScKgd2lsbA0KYmXCoHdhaXRpbmfCoGZvcsKgeW91csKgcmVzcG9uc2UuwqBNecKgc2luY2VyZcKg
+YXBvbG9naWVzwqBmb3LCoHRoZQ0KaW5jb252ZW5pZW5jZS4NCg0KDQpUaGFua8KgeW91IQ0KDQpN
+ci4gUmF6dW1rb3bCoE15a2hhaWxvLg0K
