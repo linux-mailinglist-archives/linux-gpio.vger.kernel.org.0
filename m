@@ -2,56 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8944781EE8
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Aug 2023 19:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB830781EF3
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Aug 2023 19:16:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjHTRGC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Aug 2023 13:06:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55500 "EHLO
+        id S230267AbjHTRQJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Aug 2023 13:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229842AbjHTRF6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Aug 2023 13:05:58 -0400
+        with ESMTP id S229854AbjHTRQH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Aug 2023 13:16:07 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E1DDB;
-        Sun, 20 Aug 2023 10:01:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE694F0;
+        Sun, 20 Aug 2023 10:15:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 87C9560A5F;
-        Sun, 20 Aug 2023 17:01:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4479C433C7;
-        Sun, 20 Aug 2023 17:01:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6BD2F61D5B;
+        Sun, 20 Aug 2023 17:15:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AD4FC433C8;
+        Sun, 20 Aug 2023 17:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692550883;
-        bh=GrmVmUCNHZLjAMLjKnEE1iUKm6LGfXEq1xM6/ekCLjE=;
+        s=k20201202; t=1692551718;
+        bh=Zkfqr6SI88EBqD7f2xXuMdFWLsYnT+jNapbN+UhZwXU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eyEhTzLZC/w9QeySc9DAyHw/rlMO+Epjm5VXjxguvIL1kVrjLjq5LWbd+4ZkvuhdF
-         JScrn78OBcwt38FNFHexVIDgVZORHvojH5ACXNU905mes2LfkI3ZJCE2sIgXzuVlRq
-         DDIokqKKJw3hTiKmgvBxrFxJ1NPyUBIM6J1E/sUmpayL4GE0zdVKvtgY3N0fzTCCqK
-         HOv/LeqnNLHAZZeLF3smn8G1lsis2xn78UXae1uaiRqrzMnfMPZAQAwphJu/yxwWUW
-         PDaMZq4wQUaIadtZCySDfNXn81bzMvsbwXCwDUpNC+r5bCsvzxAm5Tk1rOdKKXu1SJ
-         VdHMcRUuo8Lsw==
-Date:   Sun, 20 Aug 2023 19:01:18 +0200
-From:   Andi Shyti <andi.shyti@kernel.org>
-To:     Wentong Wu <wentong.wu@intel.com>
-Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, mka@chromium.org,
-        oneukum@suse.com, lee@kernel.org, wsa@kernel.org,
-        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
-        maz@kernel.org, brgl@bgdev.pl, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
-        sakari.ailus@linux.intel.com, srinivas.pandruvada@intel.com,
-        linux-drivers-review@eclists.intel.com, zhifeng.wang@intel.com
-Subject: Re: [PATCH v9 2/4] i2c: Add support for Intel LJCA USB I2C driver
-Message-ID: <20230820170118.vdhtror3cfizbkfh@intel.intel>
-References: <1692225111-19216-1-git-send-email-wentong.wu@intel.com>
- <1692225111-19216-3-git-send-email-wentong.wu@intel.com>
+        b=qcYbvMBsLDLwA0p1ML9ed9neCvmJ7zBgkux6racwXUMZZVDiaH6DY9dKrCsPxqXmm
+         jDmoSSrcwPzwxcuWvZw8JCmaPiP4+CkWMr63Gbzs6NFLNMjuT3uykobNYXv/bk+lqc
+         PvRARadbFhoxXh7t6NUX5W+JSv3/q9DN7V9zNkrWs4p2FyyMFFyaNRPelyeRE0svQF
+         CjdUagjVJdChTfi0yau4sv+w7+4JN7aqsDX/VBmzisOeEGKLhcOnDs2bPj09ocok7N
+         m+/l7EwNYsxKIpPD/Aj+fi236KH5xRkpGKO95YhLHsvvTIxsLtU7ugi4QHPX0OrFaU
+         pKtT9hUh4Mn2Q==
+Date:   Sun, 20 Aug 2023 19:15:11 +0200
+From:   Simon Horman <horms@kernel.org>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Herve Codina <herve.codina@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 21/28] net: wan: Add framer framework support
+Message-ID: <ZOJKH0xHpQc4HdUP@vergenet.net>
+References: <cover.1692376360.git.christophe.leroy@csgroup.eu>
+ <5f671caf19be0a9bb7ea7b96a6c86381e243ca4c.1692376361.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1692225111-19216-3-git-send-email-wentong.wu@intel.com>
+In-Reply-To: <5f671caf19be0a9bb7ea7b96a6c86381e243ca4c.1692376361.git.christophe.leroy@csgroup.eu>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,79 +75,172 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Weontong,
+On Fri, Aug 18, 2023 at 06:39:15PM +0200, Christophe Leroy wrote:
+> From: Herve Codina <herve.codina@bootlin.com>
+> 
+> A framer is a component in charge of an E1/T1 line interface.
+> Connected usually to a TDM bus, it converts TDM frames to/from E1/T1
+> frames. It also provides information related to the E1/T1 line.
+> 
+> The framer framework provides a set of APIs for the framer drivers
+> (framer provider) to create/destroy a framer and APIs for the framer
+> users (framer consumer) to obtain a reference to the framer, and
+> use the framer.
+> 
+> This basic implementation provides a framer abstraction for:
+>  - power on/off the framer
+>  - get the framer status (line state)
+>  - be notified on framer status changes
+>  - get/set the framer configuration
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-patch looks good, just few minor comments.
+Hi Christophe and Herve,
 
-[...]
+some minor feedback from my side.
 
-> +static u8 ljca_i2c_format_slave_addr(u8 slave_addr, u8 type)
+...
+
+> diff --git a/drivers/net/wan/framer/framer-core.c b/drivers/net/wan/framer/framer-core.c
+
+...
+
+> +/**
+> + * framer_create() - create a new framer
+> + * @dev: device that is creating the new framer
+> + * @node: device node of the framer. default to dev->of_node.
+> + * @ops: function pointers for performing framer operations
+> + *
+> + * Called to create a framer using framer framework.
+> + */
+> +struct framer *framer_create(struct device *dev, struct device_node *node,
+> +			     const struct framer_ops *ops)
 > +{
-> +	return (slave_addr << 1) | type;
-> +}
-
-this is used only once, you could eventually ger rid of it and
-use explicitely in the start function.
-
-[...]
-
-> +static int ljca_i2c_start(struct ljca_i2c_dev *ljca_i2c, u8 slave_addr,
-> +			  enum ljca_xfer_type type)
-> +{
-> +	struct ljca_i2c_rw_packet *w_packet =
-> +			(struct ljca_i2c_rw_packet *)ljca_i2c->obuf;
-> +	struct ljca_i2c_rw_packet *r_packet =
-> +			(struct ljca_i2c_rw_packet *)ljca_i2c->ibuf;
-> +	s16 rp_len;
 > +	int ret;
+> +	int id;
+> +	struct framer *framer;
+
+Please arrange local variable declarations for Networking code
+using reverse xmas tree order - longest line to shortest.
+
+https://github.com/ecree-solarflare/xmastree is helpful here.
+
+...
+
+> diff --git a/include/linux/framer/framer-provider.h b/include/linux/framer/framer-provider.h
+
+...
+
+> +/**
+> + * struct framer_ops - set of function pointers for performing framer operations
+> + * @init: operation to be performed for initializing the framer
+> + * @exit: operation to be performed while exiting
+> + * @power_on: powering on the framer
+> + * @power_off: powering off the framer
+> + * @flags: OR-ed flags (FRAMER_FLAG_*) to ask for core functionality
+> + *          - @FRAMER_FLAG_POLL_STATUS:
+> + *            Ask the core to perfom a polling to get the framer status and
+
+nit: perfom -> perform
+
+     checkpatch.pl --codespell is your friend here
+
+> + *            notify consumers on change.
+> + *            The framer should call @framer_notify_status_change() when it
+> + *            detects a status change. This is usally done using interrutps.
+
+nit: usally -> usually
+     interrutps -> interrupts
+
+...
+
+> diff --git a/include/linux/framer/framer.h b/include/linux/framer/framer.h
+> new file mode 100644
+> index 000000000000..0bee7135142f
+> --- /dev/null
+> +++ b/include/linux/framer/framer.h
+> @@ -0,0 +1,199 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Generic framer header file
+> + *
+> + * Copyright 2023 CS GROUP France
+> + *
+> + * Author: Herve Codina <herve.codina@bootlin.com>
+> + */
 > +
-> +	memset(w_packet, 0, sizeof(*w_packet));
-
-do you really need to set this to '0' as you are initializing the
-header
-
-> +	w_packet->id = ljca_i2c->i2c_info->id;
-> +	w_packet->len = cpu_to_le16(sizeof(*w_packet->data));
-> +	w_packet->data[0] = ljca_i2c_format_slave_addr(slave_addr, type);
+> +#ifndef __DRIVERS_FRAMER_H
+> +#define __DRIVERS_FRAMER_H
 > +
-> +	ret = ljca_transfer(ljca_i2c->ljca, LJCA_I2C_START, w_packet,
-> +			    struct_size(w_packet, data, 1), r_packet,
-> +			    LJCA_I2C_BUF_SIZE);
-> +	if (ret < 0)
-> +		return ret;
-> +	else if (ret < sizeof(*r_packet))
-> +		return -EIO;
+> +#include <linux/err.h>
+> +#include <linux/mutex.h>
+> +#include <linux/notifier.h>
+> +#include <linux/of.h>
+> +#include <linux/device.h>
+> +#include <linux/workqueue.h>
 > +
-> +	rp_len = le16_to_cpu(r_packet->len);
-> +	if (rp_len < 0 || r_packet->id != w_packet->id) {
-> +		dev_err(&ljca_i2c->adap.dev,
-> +			"i2c start failed len: %d id: %d %d\n",
-> +			rp_len, r_packet->id, w_packet->id);
-> +		return -EIO;
-> +	}
+> +/**
+> + * enum framer_iface - Framer interface
+
+As this is a kernel-doc, please include documentation for
+the defined constants: FRAMER_IFACE_E1 and FRAMER_IFACE_T1.
+
+As flagged by: ./scripts/kernel-doc -none
+
+> + */
+> +enum framer_iface {
+> +	FRAMER_IFACE_E1,      /* E1 interface */
+> +	FRAMER_IFACE_T1,      /* T1 interface */
+> +};
 > +
-> +	return 0;
-> +}
+> +/**
+> + * enum framer_clock_mode - Framer clock mode
+
+Likewise here too.
+
+Also, nit: framer_clock_mode -> framer_clock_type
+
+> + */
+> +enum framer_clock_type {
+> +	FRAMER_CLOCK_EXT, /* External clock */
+> +	FRAMER_CLOCK_INT, /* Internal clock */
+> +};
 > +
-> +static int ljca_i2c_stop(struct ljca_i2c_dev *ljca_i2c, u8 slave_addr)
+> +/**
+> + * struct framer_configuration - Framer configuration
 
-the return value here is not used anywhere, what about making
-this function void and printing a warning in case of failure?
+nit: framer_configuration -> framer_config
 
-[...]
+> + * @line_iface: Framer line interface
+> + * @clock_mode: Framer clock type
+> + * @clock_rate: Framer clock rate
+> + */
+> +struct framer_config {
+> +	enum framer_iface iface;
+> +	enum framer_clock_type clock_type;
+> +	unsigned long line_clock_rate;
+> +};
+> +
+> +/**
+> + * struct framer_status - Framer status
+> + * @link_is_on: Framer link state. true, the link is on, false, the link is off.
+> + */
+> +struct framer_status {
+> +	bool link_is_on;
+> +};
+> +
+> +/**
+> + * framer_event - event available for notification
 
-> +static int ljca_i2c_probe(struct auxiliary_device *auxdev,
-> +			  const struct auxiliary_device_id *aux_dev_id)
-> +{
+nit: framer_event -> enum framer_event
 
-[...]
+A~d please document FRAMER_EVENT_STATUS in the kernel doc too.
 
-> +	ret = ljca_i2c_init(ljca_i2c, ljca_i2c->i2c_info->id);
-> +	if (ret) {
-> +		dev_err(&auxdev->dev, "i2c init failed id: %d\n",
-> +			ljca_i2c->i2c_info->id);
-> +		return -EIO;
+> + */
+> +enum framer_event {
+> +	FRAMER_EVENT_STATUS,	/* Event notified on framer_status changes */
+> +};
 
-please use dev_err_probe();
-
-Andi
+...
