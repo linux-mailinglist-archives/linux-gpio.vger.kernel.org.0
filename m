@@ -2,64 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5433D78246B
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 09:26:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A25F78247A
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 09:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233620AbjHUH0J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 03:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
+        id S233712AbjHUHba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 03:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231646AbjHUH0I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 03:26:08 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31A6B1
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 00:26:05 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-d749f57cb22so1066213276.3
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 00:26:05 -0700 (PDT)
+        with ESMTP id S233455AbjHUHb3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 03:31:29 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F45B5
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 00:31:28 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-d746d030a86so1964370276.1
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 00:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692602765; x=1693207565;
+        d=linaro.org; s=google; t=1692603087; x=1693207887;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N+rE6meNwqWac3G4k6sNGIx2jUyibWVh8hjz7HQuPrY=;
-        b=s1Zm8bn5NqYKIvs3Zi+mMQ41rJPBLFlZRkQQAHy7VXLKM//E158wT4xfkK5nMLx8p9
-         7hYTehNFHUkr8ESExDlGN8npU3rkhCUxemaR1kSrGnQySNlP2sDGUK2uCHgO8d40uPWF
-         FmqX7Phhys95uuN6yYb1nJk7EoL++vI0UL8glUoU5vfAiGI6YAFhsMKRQdSbllK/2hGj
-         +k7ElsYdKt/U7h0l58g0LTC2/5ka1WzwsKz8YUiWghvwxVoDJ0bICt8N/vfA9OotAYEC
-         8xzirWiCLl7qxDCajFdGUmdcSgNGggScSPOIyrT6bG9jcOeAfRrywRjBaWcXQcPvUHbY
-         z2SA==
+        bh=vjXKvBEbZDyxZVHAS3SQL17XsSTcqLGs2/W2EigwZCI=;
+        b=eTOFoAafMTe+/yueTy7En94GrirWgoV9pf9/kfZMjzmmDZuc2dB2F3YwJu3O1dvJZt
+         4xEhgKy2MvkqooZgJR2kRcytaB4QdQWfqN1OywvSuL2BYJ/hYiuSTXZBDxKV0dEqaYeQ
+         GEXMe5PeBplRtZmCKpZktuODqFmn93NgIwIanCZvtGQEI75htZgtTIamXAoMKUntNSn6
+         WujBRTSRf0RVuPqLTWFgbRP3Od+EHUXfQcrNLD1WBzQDnuaxiRSxQXHJcvtwv311iDoF
+         bHQZfEUtUYJUdDZVsKtrSTg/Xs7AyFcm00TLtiwghVx2xI1ZdDbNxmQ8UpHiOwLq6zGq
+         CElw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692602765; x=1693207565;
+        d=1e100.net; s=20221208; t=1692603087; x=1693207887;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N+rE6meNwqWac3G4k6sNGIx2jUyibWVh8hjz7HQuPrY=;
-        b=LwLDJg3xKkHy1GOpB6iclpunG6ECuUouKDdawJG06FQUvEizi5x63JNSN3oW+fihqk
-         10dmo4f3r7EfLrtGu3gufZIs2GWysyFGpGxYHjTV1QhjVGmyuVyBovUMXVKQ5BojwXrk
-         agtLJX/bWI/0NTj9dA5LPfI0XW4Kcls7HRr+2UFJsVqf/wwd6TY8UPp72nsgt2EGKuYD
-         wjGAACAQHLrBf6gtSXHwExsVRt699asPW/Tshw+o37z8hbiiDAtdR1+ol5TuFr9wt5WC
-         XLuccHE/YeAixNt8/SSJ7GOvSHslnpMluzdJDBqy/JI2qOnS7fcrWxHO/JqCgHjA/8kn
-         wCMw==
-X-Gm-Message-State: AOJu0YzXAvey3sE7Fhz/j0XV+NYs1VeFh3ON8T+eAejOlf2fygND224L
-        bWoMhNSh8hX6sxXi6ywFybW0pOjw1tA4nQVCdUkEZpohHRBWYoAy
-X-Google-Smtp-Source: AGHT+IHsw1qMAqe28F2s7Wg6FQ9bbA42/D6ramMw5ZI5K+ot6Q1NYtJOqc8q+x6cSmNyJOQHtlAL+Kd/2JyG+pp5hJM=
-X-Received: by 2002:a5b:991:0:b0:d07:60bd:89f4 with SMTP id
- c17-20020a5b0991000000b00d0760bd89f4mr6980082ybq.37.1692602765123; Mon, 21
- Aug 2023 00:26:05 -0700 (PDT)
+        bh=vjXKvBEbZDyxZVHAS3SQL17XsSTcqLGs2/W2EigwZCI=;
+        b=fQy0pSYltAO43u4h8AMq5dELfy5/KNWoL4jHjz33CBQjS2npqJYj0uXVznwSKtSw68
+         cFasb+EBFQ+30YNhrLdces16CPlEk7fHhY0z4khh1xL5ip9Y0zjy/mTqhs5CWPIydUHg
+         TvJVGmu7a59GHV5SK910RPJA9G6I4Z5Cg3/xo1TIrIMVPigsgUG1iE3M87ziAz/DfgFk
+         IkRGjYuvmDMks86eJRyDbkulh01yWV3vakpwpLTJNMSvMMB68Cyj6ehuBrBhswVvoOkA
+         1+rmK5LXsZGhv9HV0DqqMeMRVLu4Bb9YpdeCkkvoADN8xVOiShZdGDUVwag08FdVibeC
+         NmtA==
+X-Gm-Message-State: AOJu0Ywl48uSxz7DpupILuJc/jMx23L+XdUbOemaHg4Qmr665RTp+fYh
+        jqAK8PsQ56mzbssF0wjTdxcNrkBCwvpRtNfl3O5xYQ==
+X-Google-Smtp-Source: AGHT+IF7JgN+OInt84SdnnMFNzjcQlY9oYruZ3M0klPFKvPHhqbi/BsugQpfOs2q3Y+oyewPlvlH+B0B4+EEmFF/BUc=
+X-Received: by 2002:a25:8502:0:b0:d4e:3ffe:79d4 with SMTP id
+ w2-20020a258502000000b00d4e3ffe79d4mr6277728ybk.61.1692603087458; Mon, 21 Aug
+ 2023 00:31:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230506085928.933737-1-haibo.chen@nxp.com> <20230506085928.933737-2-haibo.chen@nxp.com>
- <CACRpkdYUGwEn-4T+Ay-KckO3ChFNqOrdVuP93u=gs5uc9fY0yw@mail.gmail.com> <DB7PR04MB40102AA686099ED666C93EF5901EA@DB7PR04MB4010.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB40102AA686099ED666C93EF5901EA@DB7PR04MB4010.eurprd04.prod.outlook.com>
+References: <20230818164314.8505-1-asmaa@nvidia.com>
+In-Reply-To: <20230818164314.8505-1-asmaa@nvidia.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 21 Aug 2023 09:25:54 +0200
-Message-ID: <CACRpkdZ-2Lyk_c8EJfS=YHK81wt2RAWnZAg+vxvZZijYFwmDDA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: mxc: switch to dynamic allocat GPIO base
-To:     Bough Chen <haibo.chen@nxp.com>
-Cc:     "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>
+Date:   Mon, 21 Aug 2023 09:31:16 +0200
+Message-ID: <CACRpkdZu8BL49QD5DudxW42hrLxmOqUDGeHgTRYF5JBjVMha-g@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] Fix Nvidia BlueField-3 GPIO access
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, brgl@bgdev.pl,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -71,20 +68,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 4:47=E2=80=AFAM Bough Chen <haibo.chen@nxp.com> wro=
+On Fri, Aug 18, 2023 at 6:43=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
 te:
 
-> Hi Linus and Bartosz,
->
-> For this patch, still not in the main trunk (Linux 6.5-rc7) and linux-nex=
-t(next-20230818).
-> Can you help apply or any comment?
+> Fix Nvidia BlueField-3 GPIO access via libgpiod gpioset tool.
+> gpioset tool fails to modify the GPIO value due to the following:
+> 1) the pinctrl-mlxbf3 driver defines mlxbf3_gpio_request_enable()
+>    to enable software to take control over a gpio. Only then can
+>    the gpio-mlxbf3 driver modify the direction and value of the
+>    gpio. mlxbf3_gpio_disable_free() gives control back to hardware
+>    and is called when the "gpioset" command is invoked.
+>    This cancels out the effort to change the GPIO value and
+>    direction. So mlxbf3_gpio_disable_free() needs to be removed.
+> 2) the gpio-mlxbf3 driver calls gpiochip_generic_request() which
+>    calls mlxbf3_gpio_request_enable(). "pin_ranges" needs not to be
+>    empty for mlxbf3_gpio_request_enable() to be invoked. So
+>    gpio-mlxbf3 needs to populate "pin_ranges".
 
-As pointed out by Bartosz you cannot just mechanically switch the base
-to -1.
-
-You also need to convince us that this doesn't break any systems, and if
-it does, fix them so they don't break before submitting this patch.
+This patch set looks good to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
