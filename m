@@ -2,74 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58C337825A2
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 10:38:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F304782670
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 11:43:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232915AbjHUIir (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 04:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
+        id S233326AbjHUJn1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 05:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232246AbjHUIiq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 04:38:46 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBFDECD;
-        Mon, 21 Aug 2023 01:38:07 -0700 (PDT)
+        with ESMTP id S230107AbjHUJn0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 05:43:26 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C89A1;
+        Mon, 21 Aug 2023 02:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692607087; x=1724143087;
+  t=1692611005; x=1724147005;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=zOJg0d1CLejbRhwfPLo/bKpaBzBoG/QHB8TE91t3uOw=;
-  b=WK4HReo4p9XRQt+90912+qlJ5fYo7rR1GrJx0g1WBD8xIt0VUuYFXraL
-   1MhtByVp/1e7AkKFLBmL6+eEPOHMmXZV591/VzW5YVb8wdPCse+R9UH85
-   zvgjOhP/RjKPVCL5GsHg59f7qMl4vDXmgX9dWbSQvPST3QXR5KKchrGyH
-   LQMD2nOvwsIDmKuHYXmRiZcHrMIhFmYE+tK32Mpdchpa8FlB8OMnu+Auj
-   +yETsTbn7DqJURHOcC/fv+ASDatP7mHFAQIufIufIdOebxOEKkRVLf1RR
-   VxzNWzg7SXv1vPHrP4Hl7FJjuT7tJjyoTfxmIcnBMUfHVf49kOpnHJmKV
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="404537308"
+  bh=h21lF5LTe7/PzxfMJq5TNFM6Jcep3pRFpY375l+KoMo=;
+  b=HxcVbcnaKuo/OZjRmUdYzMzdTXLK8fCqw2oa3R7uD7nPlL5RbyZcrUKh
+   vsux1pi/FecHHhrWH1G+hqZ9UjlGELf91NplvcegyhTuN1A8SZSK2M0oM
+   jwTGDxWnoDbmYP57JN3E9yrxkB1BwpiKAzLHitC50Tz9bjYRY275w0U5m
+   G5ixgHldDTBGGjlUhYv4MrFwl2TDAIDCaKsdn3BkFuqjeykHgVT5wCBVe
+   YaMiwCjfcc4HhQJ4MMoy+KPR5TmGPRvf7M9YD2vrthRgetdAHncEtWWBc
+   zn3HTe0HufZJhU+HH0LbJD20L3WHfqM8bQhfgOOeAHqHOC2KYHfQEqtJj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="370980094"
 X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="404537308"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 01:37:42 -0700
+   d="scan'208";a="370980094"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 02:43:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="770862015"
-X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="770862015"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 21 Aug 2023 01:37:39 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 72EC61A5; Mon, 21 Aug 2023 11:37:38 +0300 (EEST)
-Date:   Mon, 21 Aug 2023 11:37:38 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Raag Jadav <raag.jadav@intel.com>
-Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH v1] pinctrl: cherryview: use ACPI_HANDLE() to pass handle
-Message-ID: <20230821083738.GI3465@black.fi.intel.com>
-References: <20230821063002.29807-1-raag.jadav@intel.com>
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="879457956"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Aug 2023 02:43:27 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qY1RR-008BxD-3C;
+        Mon, 21 Aug 2023 12:43:21 +0300
+Date:   Mon, 21 Aug 2023 12:43:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpiolib: tie module references to GPIO devices, not
+ requested descs
+Message-ID: <ZOMxue7lvHFWMCCb@smile.fi.intel.com>
+References: <20230818190108.22031-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230821063002.29807-1-raag.jadav@intel.com>
+In-Reply-To: <20230818190108.22031-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 12:00:02PM +0530, Raag Jadav wrote:
-> Use ACPI_HANDLE() to pass handle to acpi_*_address_space_handler() APIs.
+On Fri, Aug 18, 2023 at 09:01:08PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> After a deeper look at commit 3386fb86ecde ("gpiolib: fix reference
+> leaks when removing GPIO chips still in use") I'm now convinced that
+> gpiolib gets module reference counting wrong.
+> 
+> As we only take the reference to the owner module when a descriptor is
+> requested and put it when it's freed, we can easily trigger a crash by
+> removing a module which registered a driver bound to a GPIO chip which
+> is unused as nothing prevents us from doing so.
+> 
+> For correct behavior, we should take the reference to the module when
+> we're creating a GPIO device and only put it when that device is
+> released as it's at this point that we can safely remove the module's
+> code from memory.
 
-Please explain here that this actually fixes a bug on the remove path
-where we pass an incorrect pointer. Please adjust the $subject
-accordingly.
+Two cases to consider:
+1) legacy gpio_*() APIs, do they suppose to create a GPIO device?
+2) IRQ request without GPIO being requested, is it the case?
 
-> Fixes: a0b028597d59 ("pinctrl: cherryview: Add support for GMMR GPIO opregion")
+Seems to me that the 1) is the case, while 2) is not.
 
-Add also Cc: stable@vger.kernel.org
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
