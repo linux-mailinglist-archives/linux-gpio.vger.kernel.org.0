@@ -2,99 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05A637823B9
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 08:30:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BFC2782463
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 09:22:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbjHUGae (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 02:30:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46166 "EHLO
+        id S230021AbjHUHWk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 03:22:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230302AbjHUGad (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 02:30:33 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A06AA2;
-        Sun, 20 Aug 2023 23:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692599432; x=1724135432;
-  h=from:to:cc:subject:date:message-id;
-  bh=5lzfZO+xFA5roDkaZTlGOhC+nKCTgnNKMEScm1jZJdk=;
-  b=OWfJHTJxtMOLHi49wfsCNhL8NIZG9gYraPDxJB0Gpo5b+7+BIlidmjJc
-   9zBR8Hthd1NLUpAIzE9fQqmfZ8LRTGNY2rF3B6Tj2ndSYfF6pfzek+go7
-   ecLtOt1sCbOs2uF5hlj8k7t6jxO5NrTh4/5s4h11UH4zENh47WnaKl2u0
-   bPN3ToghqZHHVhsKsM2cWfxak27R0a2sqgPl3+qXMSU8P/tHSrA5LmRSr
-   fBW/XceK02EwAlYVVwXBv4SaT9aXW9/kD1gLpDzj++scOt+2Oy7WpQEsn
-   AZ4yHiMlIFGPdvf27jE52KBd7tzCtbpnVTBGtCfoBc9RV+88tvY3PLgIH
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="353824780"
-X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="353824780"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2023 23:30:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="729301350"
-X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="729301350"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2023 23:30:28 -0700
-From:   Raag Jadav <raag.jadav@intel.com>
-To:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
-        andriy.shevchenko@linux.intel.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
-        Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1] pinctrl: cherryview: use ACPI_HANDLE() to pass handle
-Date:   Mon, 21 Aug 2023 12:00:02 +0530
-Message-Id: <20230821063002.29807-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233024AbjHUHWj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 03:22:39 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA104F3
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 00:22:13 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-c5ffb6cda23so3029163276.0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 00:22:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692602526; x=1693207326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZgI1MYhv8309+bCWxdxoJqdqvZCrtsQ/VE9m30u9HF4=;
+        b=u5QT6x/FxMVr+1aoFCgsJDj0QEzfuHcrI2+VtQeO3v/dDMfnEXre6eKjslbAPuUGTR
+         aDUsBu03dfbFVS8OhYUJcmZRNRxDOJQK6WxjkipX7+Fd0mFDQ5MV5BjVeGuHVtrGJNbJ
+         ABD+WhvSqFyI0oNdtM/dDZBfYoqbEG8UatfAl8s4MibiV1a0vVRj7TTPWy3g6zF6Zlnv
+         Hnx7JSh5IjFD1Zj9/8hUuYRLDQAMHhlxn4UXcU4/t3qc+6D+q93GHHvFJ7feucAIuzzw
+         Ytn4kIvomeBgbEXGMAFSY06730ouBsxWljY/tT5fZycl1G5UNmE9iI7QTtvC2zGFK9Jf
+         7sSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692602526; x=1693207326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZgI1MYhv8309+bCWxdxoJqdqvZCrtsQ/VE9m30u9HF4=;
+        b=OLBt6rcMcP85Wkp0nhz3AowQu/g6cysb6b0naDpfutuZuU7CqgjexhW12mmsxV4E4+
+         XEdcizuiqZWZY2JCE7yHPtap6OiMpIFiOX9smDQKeXXvndkxh568dMuSmri1w4fK8BZ4
+         lkcIpV53ZkvOTpy5oJeVEw1hooN20K6XkirigV0XxlGa0m9w48stYcz+j2CRq+JY6EUC
+         8NxuIXVGZ4ePUQucibpJ7JifoDOY8naUkJ+xdGbRVZtAMtAeiU3aGB7Aw6tMqsas5scX
+         P+8czNW2K7tX0raL2honB1X+luDg6//jd4aSlg5UkeZxhZtb/nPVJDA6JN9RmuQlpXuR
+         oqnQ==
+X-Gm-Message-State: AOJu0YyUV0eNJadDZLjMhBbeg8uo20q5HtiyNeB8a57s/MCr3LEx92un
+        /yJwZEShSbJgGeGfvs0iwmkNmcrqUXEAVptW7Q5AYw==
+X-Google-Smtp-Source: AGHT+IF/JTlr0dFi7ImP5aRW58ulW03tzkcnFFuhr9AUEC0SHkebzyrNv7zePScJNAsfPiEBnyQ9/wv9Y8G7TlIDK6A=
+X-Received: by 2002:a25:abeb:0:b0:d5b:1dd9:8e3f with SMTP id
+ v98-20020a25abeb000000b00d5b1dd98e3fmr6148796ybi.41.1692602526568; Mon, 21
+ Aug 2023 00:22:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1692376360.git.christophe.leroy@csgroup.eu>
+ <5f671caf19be0a9bb7ea7b96a6c86381e243ca4c.1692376361.git.christophe.leroy@csgroup.eu>
+ <CACRpkdamyFvzqrQ1=k04CbfEJn1azOF+yP5Ls2Qa3Ux6WGq7_A@mail.gmail.com> <fc5f1daa-58a1-fb86-65ba-c6b236051d45@csgroup.eu>
+In-Reply-To: <fc5f1daa-58a1-fb86-65ba-c6b236051d45@csgroup.eu>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 21 Aug 2023 09:21:54 +0200
+Message-ID: <CACRpkdaiW1QgQAjaC3hTsTjwvuWw9OUwXGsH2t3X8k+ueuBN4A@mail.gmail.com>
+Subject: Re: [PATCH v4 21/28] net: wan: Add framer framework support
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Herve Codina <herve.codina@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use ACPI_HANDLE() to pass handle to acpi_*_address_space_handler() APIs.
+On Mon, Aug 21, 2023 at 7:19=E2=80=AFAM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+> Le 20/08/2023 =C3=A0 23:06, Linus Walleij a =C3=A9crit :
+> > On Fri, Aug 18, 2023 at 6:41=E2=80=AFPM Christophe Leroy
+> > <christophe.leroy@csgroup.eu> wrote:
+> >
+> >> From: Herve Codina <herve.codina@bootlin.com>
+> >>
+> >> A framer is a component in charge of an E1/T1 line interface.
+> >> Connected usually to a TDM bus, it converts TDM frames to/from E1/T1
+> >> frames. It also provides information related to the E1/T1 line.
+> >>
+> >> The framer framework provides a set of APIs for the framer drivers
+> >> (framer provider) to create/destroy a framer and APIs for the framer
+> >> users (framer consumer) to obtain a reference to the framer, and
+> >> use the framer.
+> >>
+> >> This basic implementation provides a framer abstraction for:
+> >>   - power on/off the framer
+> >>   - get the framer status (line state)
+> >>   - be notified on framer status changes
+> >>   - get/set the framer configuration
+> >>
+> >> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> >> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> >
+> > I had these review comments, you must have missed them?
+> > https://lore.kernel.org/netdev/CACRpkdZQ9_f6+9CseV1L_wGphHujFPAYXMjJfjU=
+rzSZRakOBzg@mail.gmail.com/
+> >
+>
+> As I said in the cover letter, this series only fixes critical build
+> failures that happened when CONFIG_MODULES is set. The purpose was to
+> allow robots to perform their job up to the end. Other feedback and
+> comments will be taken into account by Herv=C3=A9 when he is back from ho=
+lidays.
 
-Fixes: a0b028597d59 ("pinctrl: cherryview: Add support for GMMR GPIO opregion")
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/pinctrl/intel/pinctrl-cherryview.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Ah I see. I completely missed this.
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 2c619fcf93ca..5a50bee48873 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1650,7 +1650,6 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
- 	struct intel_community_context *cctx;
- 	struct intel_community *community;
- 	struct device *dev = &pdev->dev;
--	struct acpi_device *adev = ACPI_COMPANION(dev);
- 	struct intel_pinctrl *pctrl;
- 	acpi_status status;
- 	unsigned int i;
-@@ -1718,7 +1717,7 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	status = acpi_install_address_space_handler(adev->handle,
-+	status = acpi_install_address_space_handler(ACPI_HANDLE(dev),
- 					community->acpi_space_id,
- 					chv_pinctrl_mmio_access_handler,
- 					NULL, pctrl);
-@@ -1735,7 +1734,7 @@ static int chv_pinctrl_remove(struct platform_device *pdev)
- 	struct intel_pinctrl *pctrl = platform_get_drvdata(pdev);
- 	const struct intel_community *community = &pctrl->communities[0];
- 
--	acpi_remove_address_space_handler(ACPI_COMPANION(&pdev->dev),
-+	acpi_remove_address_space_handler(ACPI_HANDLE(&pdev->dev),
- 					  community->acpi_space_id,
- 					  chv_pinctrl_mmio_access_handler);
- 
--- 
-2.17.1
-
+Yours,
+Linus Walleij
