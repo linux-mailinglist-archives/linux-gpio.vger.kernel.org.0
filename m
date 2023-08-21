@@ -2,105 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F515782872
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 14:01:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5242B7828AF
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 14:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234128AbjHUMBM convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 21 Aug 2023 08:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
+        id S232667AbjHUMMU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 08:12:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232800AbjHUMBM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 08:01:12 -0400
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D416DE9;
-        Mon, 21 Aug 2023 05:01:08 -0700 (PDT)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-59231a1ca9eso4289017b3.1;
-        Mon, 21 Aug 2023 05:01:08 -0700 (PDT)
+        with ESMTP id S232662AbjHUMMU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 08:12:20 -0400
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A04F0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:12:12 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id a1e0cc1a2514c-79df1303d01so1021028241.0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692619931; x=1693224731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NCkbxK8SDHIlpboWoSgSQlBN5th7HtJtXxIERiulQiM=;
+        b=APSyrpMPYPetYFPwGu8psh4/T58NHYXfo9EmQxVEB2eEqAtwPDsGR3yPcXtsEoDizg
+         w1F8zZDM7Ptgp0oFHZ2Hv7K0RJ//2OdiynAnnVqrADpivsx2HvPJ3EMezJLjKanSq2wy
+         yv3eYRNpLIZqZv1ePBKU5YvnlGXSq0YXZia2PpZdjJ/LsaRSmhezJXTQxVLByq4+RzOS
+         DVCA7B//1n0TmHBocoy5pXrEnNg2cJsRIOxPu/E6Lg0C2ha+BT9MfZsU4a34l2Mc7vR2
+         prDXeGEyloWpFbrL8/UaIrpNkvaHxkjUj0mwwuCyYnB8iO0FmwTjKdxGRiRgarandfsU
+         jATA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692619268; x=1693224068;
+        d=1e100.net; s=20221208; t=1692619931; x=1693224731;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oUUJ2/PRflFLbJIM097SQqKNn2Udb4Em6AFpSfljQKM=;
-        b=Xs1I1Bv4hIsYOvhC1G3PNzQydshwLaND1SvecruEHscDwxgEH3bTDAf13f3NLSTC4S
-         pUkWpocnIPhbrCA4YMR+/5+etP1AeVy43lelOaC3jR+IaDc+Zu53xK3orS90At5oCJwF
-         NTC5Ss3SGpj6llggflZUC4KvpDOSs5Oc0gDkMj1SdXN69Vt5B3mXIvqdWUOFSHiVJ4cB
-         NRC1dvyf3BOfIvPKTHMt1GUEbEQf7pAiPTLO0Y9klkkU4UW4PKW+CIStM4GrfeIlntEk
-         RiqlNLEXLXZ19Zy9R4DbKDCppXRDitfhUrvXJfMS6gabZiTSVUySUrp1s6NQHk/sD/Vu
-         t6hA==
-X-Gm-Message-State: AOJu0YwL6lfeafBcUE9wVF6lQiCY/BYEt+BdKn+zb14pNSLt4sIoU0x6
-        dweCUOUHaNs7l0CE2bpRu8TE4T+dnt8y8A==
-X-Google-Smtp-Source: AGHT+IGmDSzPhFYwMdcIrHFIzxQtJC76YO8IEpS2URkdLJE9bBDTmIfVHkmsg+iK0EDMfwrhU5i7QQ==
-X-Received: by 2002:a05:690c:3409:b0:58a:4b31:cbaf with SMTP id fn9-20020a05690c340900b0058a4b31cbafmr5495027ywb.35.1692619267911;
-        Mon, 21 Aug 2023 05:01:07 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id b67-20020a0dd946000000b005773b750d95sm2172330ywe.28.2023.08.21.05.01.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Aug 2023 05:01:07 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-d7484cfdc11so1581536276.1;
-        Mon, 21 Aug 2023 05:01:07 -0700 (PDT)
-X-Received: by 2002:a25:ca54:0:b0:d13:e334:241b with SMTP id
- a81-20020a25ca54000000b00d13e334241bmr6529985ybg.21.1692619267052; Mon, 21
- Aug 2023 05:01:07 -0700 (PDT)
+        bh=NCkbxK8SDHIlpboWoSgSQlBN5th7HtJtXxIERiulQiM=;
+        b=dj0K03/GkKzVxerHCgQwQ1YaN3m0abAZ7P2MnJr8uih/+Iytn369to48624WFflFgJ
+         m+5rFqkCri9Lliz2D0JxL4vUa/g4/h4Mq7koEHblMfRmIwjcJuG0GfTzVvReA6McKqUs
+         EFH2/CKP1hFYqzIVicTrYj3Pl7MsRBu304TLRLm/zn0QuFzyA2tw2mTotNd4MIZvIFcu
+         l5Q/7iOTY5B0nOxfD3/NCi1os7UkfzbHmJLEAV9JoAbjmjXBJ53ruRZ4ZFkMztuZaLjy
+         dhiHYD+ghaP08KwjzrYhuzhWc6qDbVc2K/2yx6rZXLtyTtuBPxnLhoSFZlpL7zc8VvK6
+         95hw==
+X-Gm-Message-State: AOJu0YzGSrs5ZUUCaUer/BspfOuE5rx/bBsCbk5zRiziMWAzzkbdl7c3
+        EhWjTdnIhL99kJVAcUIeY3FkeO50uju0p8HZ9OKjmg==
+X-Google-Smtp-Source: AGHT+IGHcHrwZNfxOKdf2tsjJKS8zYT08VjF5/gr7zXAHlAkKDYkTuAjyI5dqrEVndNjZDgESvqCukBqG1iovoR8L2s=
+X-Received: by 2002:a67:ce9a:0:b0:443:9248:3410 with SMTP id
+ c26-20020a67ce9a000000b0044392483410mr5577281vse.32.1692619931538; Mon, 21
+ Aug 2023 05:12:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230819010928.916438-1-robh@kernel.org> <CACRpkda94qc1Mc_yz+c2rYFdyhXsX-XRFTntv1fiw=HrpDqAOg@mail.gmail.com>
-In-Reply-To: <CACRpkda94qc1Mc_yz+c2rYFdyhXsX-XRFTntv1fiw=HrpDqAOg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 21 Aug 2023 14:00:56 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVUJ0U0ftjr+s=2p8gYwwEtxaKe7vGpm7CxCiGPq92y4g@mail.gmail.com>
-Message-ID: <CAMuHMdVUJ0U0ftjr+s=2p8gYwwEtxaKe7vGpm7CxCiGPq92y4g@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2: Use
- 'additionalProperties' for child nodes
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230818093018.1051434-1-lizetao1@huawei.com> <20230818093018.1051434-8-lizetao1@huawei.com>
+In-Reply-To: <20230818093018.1051434-8-lizetao1@huawei.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 21 Aug 2023 14:12:00 +0200
+Message-ID: <CAMRc=MesfV23yvYoXebuDJXuUxPAV2D8fNQcND0WQxexydgoAQ@mail.gmail.com>
+Subject: Re: [PATCH -next 07/11] gpio: mxc: Use helper function devm_clk_get_optional_enabled()
+To:     Li Zetao <lizetao1@huawei.com>
+Cc:     linus.walleij@linaro.org, andy@kernel.org, j-keerthy@ti.com,
+        vz@mleia.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org,
+        shubhrajyoti.datta@amd.com, srinivas.neeli@amd.com,
+        michal.simek@amd.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-omap@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Fri, Aug 18, 2023 at 11:30=E2=80=AFAM Li Zetao <lizetao1@huawei.com> wro=
+te:
+>
+> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
+> prepared and enabled clocks"), devm_clk_get_optional() and
+> clk_prepare_enable() can now be replaced by
+> devm_clk_get_optional_enabled() when the driver enables (and possibly
+> prepares) the clocks for the whole lifetime of the device. Moreover,
+> it is no longer necessary to unprepare and disable the clocks explicitly.
+>
+> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+> ---
+>  drivers/gpio/gpio-mxc.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index 004c6ad7ce52..4cb455b2bdee 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -452,16 +452,10 @@ static int mxc_gpio_probe(struct platform_device *p=
+dev)
+>                 return port->irq;
+>
+>         /* the controller clock is optional */
+> -       port->clk =3D devm_clk_get_optional(&pdev->dev, NULL);
+> +       port->clk =3D devm_clk_get_optional_enabled(&pdev->dev, NULL);
+>         if (IS_ERR(port->clk))
+>                 return PTR_ERR(port->clk);
+>
+> -       err =3D clk_prepare_enable(port->clk);
+> -       if (err) {
+> -               dev_err(&pdev->dev, "Unable to enable clock.\n");
+> -               return err;
+> -       }
+> -
+>         if (of_device_is_compatible(np, "fsl,imx7d-gpio"))
+>                 port->power_off =3D true;
+>
+> @@ -535,7 +529,6 @@ static int mxc_gpio_probe(struct platform_device *pde=
+v)
+>  out_bgio:
+>         pm_runtime_disable(&pdev->dev);
+>         pm_runtime_put_noidle(&pdev->dev);
+> -       clk_disable_unprepare(port->clk);
+>         dev_info(&pdev->dev, "%s failed with errno %d\n", __func__, err);
+>         return err;
+>  }
+> --
+> 2.34.1
+>
 
-On Mon, Aug 21, 2023 at 12:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Sat, Aug 19, 2023 at 3:09 AM Rob Herring <robh@kernel.org> wrote:
-> > A schema under 'additionalProperties' works better for matching any
-> > property/node other than the ones explicitly listed. Convert the schema
-> > to use that rather than the wildcard and if/then schema.
-> >
-> > Drop 'phandle' properties which never need to be explicitly listed while
-> > we're here.
-> >
-> > Signed-off-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> Looks good to me, but Geert usually handles Renesas stuff so not
-> applying unless I get asked explicitly to do so.
-
-Unless some new bugs show up (hold wood etc.), I do not plan to
-send more pin control PRs for v6.5 or v6.6, so please take it.
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bart
