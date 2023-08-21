@@ -2,191 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 557FF782B7D
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 16:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9B85782CE0
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 17:04:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232701AbjHUOS4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 10:18:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
+        id S236034AbjHUPEO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 11:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235814AbjHUOSz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 10:18:55 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 502ED19A
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 07:18:31 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-31ad9155414so3029464f8f.3
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 07:18:31 -0700 (PDT)
+        with ESMTP id S234503AbjHUPEN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 11:04:13 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B611E8
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 08:04:12 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-d746ea563f9so2306159276.1
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 08:04:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692627509; x=1693232309;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1wCqI5mdx+hSWHqLVvTuuBRE/sn8f7dnVbK7+8/dfUQ=;
-        b=3QAJ3j6k7eEcPlCLONXeeJGFdDoEgay1LkgB992m/xz4YYZ4LG80WcAljys7i5jTE/
-         PJpkfD3KBbjPKntC1BppnseQAae8uPec+iyfwzv28IIZNdMivds2fFrZ9AUPKJjJw7j3
-         sOV+x8Uh7qr9XElLZPUI/aV03qTyvdFytfcP2vLESkQl5ZDWvKyRtcK1XnrN2wMW/dvr
-         z8zh0zJwE1oyZq62z9B5KN+hibbm748HImRiCkp9GdRa7o+j4PTKMINLgWLulikMrVxn
-         LgBgZERJEM4vm76x9UpLZal6MITYh6S3TT5ZL2zvO7nsjCHwNOuICKeH8PYckRdSMTXK
-         Xnsg==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692630251; x=1693235051;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HPT7vlsay38RGsLaWzuQCbvS7i7JDhRWagtPvVNEU2k=;
+        b=UKYLr1Sl9i0jU9sz+WTnmwg0FDu2FWwGNz5d9VxjqTx3wpXHOdabyMxnWJBjU6hxsi
+         +2x9MRE6ssP5u4gcO6xL27W7Iumn0PqYF2FAkyLCgDzkhVMVuAaVVW7RD+eQw4/6U9cC
+         BcMsGO8IJr15bp2XGNWDd18peQcjUHZ8b/WPIU4MomO8NoVoEiasskqsXAfOy0JgdeQV
+         jSYR79MDOQlENMDSPfGQz3TiaJuKnV+FRcU03HqX/mRggkupYO8jH+gc5fzvWjW03dMB
+         hj7RjOTXUmSQDqxcih78w+0Vp4fVfbtHqwVeT7RsvY4cri1omPBYYaLSPikMQF5Qqmiv
+         UfIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692627509; x=1693232309;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1wCqI5mdx+hSWHqLVvTuuBRE/sn8f7dnVbK7+8/dfUQ=;
-        b=jdAnpBK4FIKdACmQlPwf/+0RvNwtb0r28X/8+Is+SuLaQc+7mcih/SBZWF8QTa/95P
-         DP4ewGJ61N5zaoS6Rbw+/uyqXbBjFugjR0fKa7AuzUqpTo2CQPzZKvaRN55rW6EmWwBT
-         owF9NadLSdRZpLfh2ljiVdnKLqA/RKsE5XY0myBww+OmVv40/2N84dfD0D/a1WhXEd3N
-         XCDFJy5t5rerzQObuy0QctOEwCrhlWCaGa0iurMKkVwhkxHSngcbWo5vUVpVLk+QfsYk
-         oUy/jYjlE2UAN5sJL/6v1BYgRk0c0sYrX4RbTOH7I6+cshL1Vg7jFIZWzXfC00Gmf4Un
-         JqwQ==
-X-Gm-Message-State: AOJu0Yx5Pmwl2uH2trreH6fMQoIuDfNUD7l1oe8ZjJ3MDELdpNU2GVv8
-        nF36YDTjqCl/XBCqr1SS/cKZ2lIcri1oQ8TCWsEGkw==
-X-Google-Smtp-Source: AGHT+IFPtwZ/p0P25Rmg/uFWDCn/cES3Rz0rGjTnasHcfXzNPwPxLEJn9m8RJHlZISMIu9RGn1ZJEA==
-X-Received: by 2002:a5d:6111:0:b0:313:e971:53af with SMTP id v17-20020a5d6111000000b00313e97153afmr4851884wrt.32.1692627509400;
-        Mon, 21 Aug 2023 07:18:29 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:677:995b:9c07:d7fc])
-        by smtp.gmail.com with ESMTPSA id i12-20020adffdcc000000b0031ae8d86af4sm10193704wrs.103.2023.08.21.07.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 07:18:29 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: provide and use gpiod_line_state_notify()
-Date:   Mon, 21 Aug 2023 16:18:27 +0200
-Message-Id: <20230821141827.18061-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20221208; t=1692630251; x=1693235051;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HPT7vlsay38RGsLaWzuQCbvS7i7JDhRWagtPvVNEU2k=;
+        b=FDzmCPn83WklbbP4b0WhgWi6yqJeyE6FYC3cTa76nluwsqBQSciZkeJZpFCtBI2Pov
+         Dh1mdhXWqwaXDKdrU8tDgkpSZ82w1D3/1QP53sANZVZR7hZimJevJ7XvJ7cqbLARR2Fb
+         1lLbyWrJJMpKnRxlj1KuP+BiRILUGqg3wFEnqeWX8bDWmhCvgQ6wEm5Nq6jhDmCQksPD
+         0pPCiQf1bqDuCMmGdSohsScyY/04TNiAiipAq2YJ5TW7L4TCdvn2G0eD7LUouspEmlmz
+         2nJLr9JZT2saNzJubLvplAH1ZTSEjeeI2kSLDlYl30QAJKZEcNpzLAVCS09jelgGczRL
+         J3kg==
+X-Gm-Message-State: AOJu0YxJAGTKJktQeJAyZPggm/OQY2YEInvDI953sI/kHLjBihG92vpr
+        UMV1h1kAUtqFyYmxArHvdOwFOLjUYCzve4RDNgaONw==
+X-Google-Smtp-Source: AGHT+IGF9r2WO+GcLD9n2tqoJoPLXbeAWeEt8cSGR+xGKtXm8xrGa2nXVi4fGPKYUHXAylIaFF3uLchmn/6Xdmhw1Eg=
+X-Received: by 2002:a25:aa26:0:b0:d56:7556:93f1 with SMTP id
+ s35-20020a25aa26000000b00d56755693f1mr7703142ybi.29.1692630251449; Mon, 21
+ Aug 2023 08:04:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230818164314.8505-1-asmaa@nvidia.com> <20230818164314.8505-3-asmaa@nvidia.com>
+ <CAMRc=Mccsc=RY5Evw4-k8LYDrfuxFoWsn6wajybY4SY_89fjNw@mail.gmail.com> <CH2PR12MB38950DCD03CFB45E4DB34E32D71EA@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB38950DCD03CFB45E4DB34E32D71EA@CH2PR12MB3895.namprd12.prod.outlook.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 21 Aug 2023 17:04:00 +0200
+Message-ID: <CAMRc=MeLfvM28czSrKpmMxmvbDeHi2rxtm+_FCKV24H9C-RBnA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] gpio: mlxbf3: Support add_pin_ranges()
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Aug 21, 2023 at 2:55=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
+te:
+>
+> > > +MODULE_SOFTDEP("pre: pinctrl-mlxbf3");
+> > >  MODULE_DESCRIPTION("NVIDIA BlueField-3 GPIO Driver");
+> > > MODULE_AUTHOR("Asmaa Mnebhi <asmaa@nvidia.com>");
+> > > MODULE_LICENSE("Dual BSD/GPL");
+> > > --
+> > > 2.30.1
+> > >
+> >
+> > It's not clear to me whether this depends on patch 1? If only at run-ti=
+me then I
+> > guess Linus and I can take the two patches through ours respective tree=
+s?
+>
+> Indeed from a build point of view, there is no dependency so you could ta=
+ke the 2 patches through your respective tree. However, at run-time, the gp=
+io-mlxbf3.c driver fails to load without the pinctrl-mlxbf3.c driver. Shoul=
+d I add a "depends on" in the Kconfig? Then you will have to include both p=
+atches in your tree.
+>
 
-Wrap the calls to blocking_notifier_call_chain() for the line state
-notifier with a helper that allows us to use fewer lines of code and
-simpler syntax.
+Linus, are you fine with me taking this patch? It will not break the
+build and with you taking the other one, next will be fine too.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib-cdev.c | 17 +++++------------
- drivers/gpio/gpiolib.c      | 12 ++++++++----
- drivers/gpio/gpiolib.h      |  1 +
- 3 files changed, 14 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 35dcaf78aed6..e39d344feb28 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -230,9 +230,7 @@ static long linehandle_set_config(struct linehandle_state *lh,
- 				return ret;
- 		}
- 
--		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
--					     GPIO_V2_LINE_CHANGED_CONFIG,
--					     desc);
-+		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
- 	}
- 	return 0;
- }
-@@ -414,8 +412,7 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 				goto out_free_lh;
- 		}
- 
--		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
--					     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
-+		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
- 
- 		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
- 			offset);
-@@ -1420,9 +1417,7 @@ static long linereq_set_config_unlocked(struct linereq *lr,
- 
- 		WRITE_ONCE(line->edflags, edflags);
- 
--		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
--					     GPIO_V2_LINE_CHANGED_CONFIG,
--					     desc);
-+		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
- 	}
- 	return 0;
- }
-@@ -1737,8 +1732,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
- 
- 		lr->lines[i].edflags = edflags;
- 
--		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
--					     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
-+		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
- 
- 		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
- 			offset);
-@@ -2156,8 +2150,7 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 	if (ret)
- 		goto out_free_le;
- 
--	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
--				     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
-+	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
- 
- 	irq = gpiod_to_irq(desc);
- 	if (irq <= 0) {
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 0737952882cd..43162fd71d92 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2160,8 +2160,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
- 	}
- 
- 	spin_unlock_irqrestore(&gpio_lock, flags);
--	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
--				     GPIOLINE_CHANGED_RELEASED, desc);
-+	gpiod_line_state_notify(desc, GPIOLINE_CHANGED_RELEASED);
- 
- 	return ret;
- }
-@@ -3729,6 +3728,12 @@ int gpiod_set_array_value_cansleep(unsigned int array_size,
- }
- EXPORT_SYMBOL_GPL(gpiod_set_array_value_cansleep);
- 
-+void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action)
-+{
-+	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-+				     action, desc);
-+}
-+
- /**
-  * gpiod_add_lookup_table() - register GPIO device consumers
-  * @table: table of consumers to register
-@@ -3996,8 +4001,7 @@ static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 		return ERR_PTR(ret);
- 	}
- 
--	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
--				     GPIOLINE_CHANGED_REQUESTED, desc);
-+	gpiod_line_state_notify(desc, GPIOLINE_CHANGED_REQUESTED);
- 
- 	return desc;
- }
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 54012605b4a4..0d81ac3bbb40 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -146,6 +146,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- extern spinlock_t gpio_lock;
- extern struct list_head gpio_devices;
- 
-+void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action);
- 
- /**
-  * struct gpio_desc - Opaque descriptor for a GPIO
--- 
-2.39.2
-
+Bart
