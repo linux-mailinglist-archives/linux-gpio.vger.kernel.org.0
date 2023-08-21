@@ -2,165 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD23782D55
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 17:33:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D397D782D57
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 17:34:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232452AbjHUPdr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 11:33:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43670 "EHLO
+        id S236392AbjHUPeJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 11:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235487AbjHUPdr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 11:33:47 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C55E2
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 08:33:45 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-31c479ede21so1074138f8f.2
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 08:33:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692632024; x=1693236824;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c8R1/slw2ObDAER9IEfUgOB80CoZbmunAI+YkW3aWCw=;
-        b=3/2Udm2k0WRG4OwIudeOQicDI/IsQoZ7sqFCfFwknq4HCZ1dBHbl+YbuSns1Vokt4/
-         Syx9EfOasPSOKJgz0QE+oHtAJ5NqmgnBIJ9PMTKhIsfPhma6K1pkLbgZ9UKPFj2xaudP
-         LfmHBfdylcrdmLVqpvx/c65pmMykCgd6Ltb4cJP5GkoTWOJ8B8xWeusTVWbxYqK24SOS
-         ceqZ7yubGwsI1uTnIn2JYVoDzIa5j2tJVjpnmPIA7cmUy2Re4IZ9LFBE+eoUQtGgcreB
-         BNati6WRfbODEHin+idl6dAdu7krn5ylGlNOYphBZD/0cd4v4jNwiSg4qK0ScFMe5OHa
-         70iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692632024; x=1693236824;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c8R1/slw2ObDAER9IEfUgOB80CoZbmunAI+YkW3aWCw=;
-        b=ccksxOIcDFqVgDN74rfp5Yf/EizR3BSNKwhJWFhtlVr9+szTasuoy5ROWKMPQdUDY9
-         gtQJSpub1T7YjfGXPDxZGHdefSARScYlFhAco0Z5Z3VZStzS5R5uIJTi/rskoftSRffs
-         m1Hny9ZqEgG2Kb6Hasrvp8dCL/2hF9arDOtnjeSV5vUyreWBlcrifxnnmCH2Q08KoNsH
-         LV4Xe5MbUNGaYvePmbi75mCrY30zYMjYX3j2HX7/xreQyVyrzLIo8p9R21SOMlQ9bG73
-         3qemb50RH8vOjidYDRCMRuTmMAkpObl+Yq2mkXlU2ys4EpJ7r5LKpcVxeHGByFXu7GVh
-         k5xg==
-X-Gm-Message-State: AOJu0Yy4AiNNoIITYMsNGfuzqayjK/TqSQPQT4wPYvTQ9w9hJ2R3A9E6
-        7a+kCrKnJL+rfFghs6aQbXx5hFYJFi13B4hZDoQ87A==
-X-Google-Smtp-Source: AGHT+IGGwAhHolhP4hUrSPoxGxw5r7IPDLLkCF71hcVgj5yGI8+uoo5+NA0vuy3gLrBLIkCslk7yvA==
-X-Received: by 2002:adf:f287:0:b0:315:7d2f:fc36 with SMTP id k7-20020adff287000000b003157d2ffc36mr5066885wro.20.1692632023873;
-        Mon, 21 Aug 2023 08:33:43 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:677:995b:9c07:d7fc])
-        by smtp.gmail.com with ESMTPSA id w18-20020a5d4052000000b0031c5ce91ad6sm1256601wrp.97.2023.08.21.08.33.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 08:33:43 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S235487AbjHUPeJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 11:34:09 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3648F4;
+        Mon, 21 Aug 2023 08:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692632047; x=1724168047;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kXlM/pwJGzRIMSIfVIy6urX8rZiLt3tsyIjFnb54JgE=;
+  b=eeaQm6UKHkUmLXMgg8LlP46HXzoa81mYCM3RqD/bvtR2jGjRQn+/XyNr
+   Xx1uQB0RJCT2eK3cyBs2pGViKyn0E2KYdW4HPPmv4I7dWRUK8K3tuqzNP
+   CHx5hU0/prAPoKgu2pU6271Jhd4bBnNUnbnCwjbT/QVhp1jiE/3M9Ymdh
+   tSiCHIWgJ+r5FKrpp2oznDNoxJwhKC7ryCFWzt1oKY5hv49ZSDVNOCP5K
+   EyKHx4SemodrgwNamyIWLTDcyTdyZ+JO0YxQaun8IPQ02kNEx8oaPsoWJ
+   qWMkWEZzHVfw2PKRx2j4ILo3xTVgKEb+ZeST4ubltA4odcpj6zzQaAVBf
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="372520836"
+X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
+   d="scan'208";a="372520836"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 08:34:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="982518254"
+X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
+   d="scan'208";a="982518254"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP; 21 Aug 2023 08:33:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qY6uj-002ZBE-04;
+        Mon, 21 Aug 2023 18:33:57 +0300
+Date:   Mon, 21 Aug 2023 18:33:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod v1.6.x][PATCH] tests: mockup: unbind mockup devices before unloading the module
-Date:   Mon, 21 Aug 2023 17:33:39 +0200
-Message-Id: <20230821153339.26305-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+Subject: Re: [PATCH] gpiolib: provide and use gpiod_line_state_notify()
+Message-ID: <ZOOD5BrhsX3O6TQG@smile.fi.intel.com>
+References: <20230821141827.18061-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230821141827.18061-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Aug 21, 2023 at 04:18:27PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Wrap the calls to blocking_notifier_call_chain() for the line state
+> notifier with a helper that allows us to use fewer lines of code and
+> simpler syntax.
 
-gpio-mockup relies on the GPIO devices being registered in module's __init
-function and them being unregistered in __exit. This works with the GPIO
-subsystem as it only takes a reference to the underlying owner module when
-a GPIO descriptor is requested and not when the GPIO device is
-instantiated.
+This change I like, no questions asked.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This behavior may change in the future in the kernel so make the behavior
-of libgpiomockup more correct and have it unbind all mockup devices over
-sysfs before unloading the module.
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 17 +++++------------
+>  drivers/gpio/gpiolib.c      | 12 ++++++++----
+>  drivers/gpio/gpiolib.h      |  1 +
+>  3 files changed, 14 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index 35dcaf78aed6..e39d344feb28 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -230,9 +230,7 @@ static long linehandle_set_config(struct linehandle_state *lh,
+>  				return ret;
+>  		}
+>  
+> -		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -					     GPIO_V2_LINE_CHANGED_CONFIG,
+> -					     desc);
+> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+>  	}
+>  	return 0;
+>  }
+> @@ -414,8 +412,7 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+>  				goto out_free_lh;
+>  		}
+>  
+> -		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -					     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
+> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
+>  
+>  		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
+>  			offset);
+> @@ -1420,9 +1417,7 @@ static long linereq_set_config_unlocked(struct linereq *lr,
+>  
+>  		WRITE_ONCE(line->edflags, edflags);
+>  
+> -		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -					     GPIO_V2_LINE_CHANGED_CONFIG,
+> -					     desc);
+> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+>  	}
+>  	return 0;
+>  }
+> @@ -1737,8 +1732,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>  
+>  		lr->lines[i].edflags = edflags;
+>  
+> -		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -					     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
+> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
+>  
+>  		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
+>  			offset);
+> @@ -2156,8 +2150,7 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+>  	if (ret)
+>  		goto out_free_le;
+>  
+> -	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -				     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
+> +	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
+>  
+>  	irq = gpiod_to_irq(desc);
+>  	if (irq <= 0) {
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 0737952882cd..43162fd71d92 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2160,8 +2160,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+>  	}
+>  
+>  	spin_unlock_irqrestore(&gpio_lock, flags);
+> -	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -				     GPIOLINE_CHANGED_RELEASED, desc);
+> +	gpiod_line_state_notify(desc, GPIOLINE_CHANGED_RELEASED);
+>  
+>  	return ret;
+>  }
+> @@ -3729,6 +3728,12 @@ int gpiod_set_array_value_cansleep(unsigned int array_size,
+>  }
+>  EXPORT_SYMBOL_GPL(gpiod_set_array_value_cansleep);
+>  
+> +void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action)
+> +{
+> +	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
+> +				     action, desc);
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- tests/mockup/gpio-mockup.c | 50 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+action can be on previous line, but this is the logical split, so fine as is.
 
-diff --git a/tests/mockup/gpio-mockup.c b/tests/mockup/gpio-mockup.c
-index fa27bd7..387e449 100644
---- a/tests/mockup/gpio-mockup.c
-+++ b/tests/mockup/gpio-mockup.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2019 Bartosz Golaszewski <bgolaszewski@baylibre.com>
-  */
- 
-+#include <dirent.h>
- #include <errno.h>
- #include <libkmod.h>
- #include <libudev.h>
-@@ -357,6 +358,51 @@ err_out:
- 	return -1;
- }
- 
-+static int dir_filter(const struct dirent *entry)
-+{
-+	return !strncmp(entry->d_name, "gpio-mockup.", 12);
-+}
-+
-+static void free_dirs(struct dirent **entries, size_t count)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < count; i++)
-+		free(entries[i]);
-+	free(entries);
-+}
-+
-+static int unbind_devices(void)
-+{
-+	struct dirent **entries;
-+	int i, count, fd;
-+	ssize_t ret;
-+
-+	count = scandir("/sys/bus/platform/drivers/gpio-mockup", &entries,
-+			dir_filter, alphasort);
-+	if (count < 0)
-+		return -1;
-+
-+	fd = open("/sys/bus/platform/drivers/gpio-mockup/unbind", O_WRONLY);
-+	if (fd < 0) {
-+		free_dirs(entries, count);
-+		return -1;
-+	}
-+
-+	for (i = 0; i < count; i++) {
-+		ret = write(fd, entries[i]->d_name, strlen(entries[i]->d_name));
-+		if (ret < 0) {
-+			close(fd);
-+			free_dirs(entries, count);
-+			return -1;
-+		}
-+	}
-+
-+	close(fd);
-+	free_dirs(entries, count);
-+	return 0;
-+}
-+
- EXPORT int gpio_mockup_remove(struct gpio_mockup *ctx)
- {
- 	unsigned int i;
-@@ -367,6 +413,10 @@ EXPORT int gpio_mockup_remove(struct gpio_mockup *ctx)
- 		return -1;
- 	}
- 
-+	rv = unbind_devices();
-+	if (rv)
-+		return -1;
-+
- 	rv = kmod_module_remove_module(ctx->module, 0);
- 	if (rv)
- 		return -1;
+> +}
+> +
+>  /**
+>   * gpiod_add_lookup_table() - register GPIO device consumers
+>   * @table: table of consumers to register
+> @@ -3996,8 +4001,7 @@ static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+>  		return ERR_PTR(ret);
+>  	}
+>  
+> -	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
+> -				     GPIOLINE_CHANGED_REQUESTED, desc);
+> +	gpiod_line_state_notify(desc, GPIOLINE_CHANGED_REQUESTED);
+>  
+>  	return desc;
+>  }
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index 54012605b4a4..0d81ac3bbb40 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -146,6 +146,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+>  extern spinlock_t gpio_lock;
+>  extern struct list_head gpio_devices;
+>  
+> +void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action);
+>  
+>  /**
+>   * struct gpio_desc - Opaque descriptor for a GPIO
+> -- 
+> 2.39.2
+> 
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
