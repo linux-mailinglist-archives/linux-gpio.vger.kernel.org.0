@@ -2,95 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F304782670
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 11:43:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87A427826B5
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 12:00:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233326AbjHUJn1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 05:43:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52754 "EHLO
+        id S234530AbjHUKAp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 06:00:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230107AbjHUJn0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 05:43:26 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C89A1;
-        Mon, 21 Aug 2023 02:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692611005; x=1724147005;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=h21lF5LTe7/PzxfMJq5TNFM6Jcep3pRFpY375l+KoMo=;
-  b=HxcVbcnaKuo/OZjRmUdYzMzdTXLK8fCqw2oa3R7uD7nPlL5RbyZcrUKh
-   vsux1pi/FecHHhrWH1G+hqZ9UjlGELf91NplvcegyhTuN1A8SZSK2M0oM
-   jwTGDxWnoDbmYP57JN3E9yrxkB1BwpiKAzLHitC50Tz9bjYRY275w0U5m
-   G5ixgHldDTBGGjlUhYv4MrFwl2TDAIDCaKsdn3BkFuqjeykHgVT5wCBVe
-   YaMiwCjfcc4HhQJ4MMoy+KPR5TmGPRvf7M9YD2vrthRgetdAHncEtWWBc
-   zn3HTe0HufZJhU+HH0LbJD20L3WHfqM8bQhfgOOeAHqHOC2KYHfQEqtJj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="370980094"
-X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
-   d="scan'208";a="370980094"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 02:43:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
-   d="scan'208";a="879457956"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Aug 2023 02:43:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qY1RR-008BxD-3C;
-        Mon, 21 Aug 2023 12:43:21 +0300
-Date:   Mon, 21 Aug 2023 12:43:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        with ESMTP id S232473AbjHUKAo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 06:00:44 -0400
+Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE69BCA
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 03:00:42 -0700 (PDT)
+Received: by mail-vk1-xa2b.google.com with SMTP id 71dfb90a1353d-48d2e2e05e7so186573e0c.3
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 03:00:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692612042; x=1693216842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2t3uCIPsl1iINeIMvwEyX0kxSd+RFCfqpS5u/vlUKTQ=;
+        b=t55VeJ/+tl1wh7B287pa9FXc2OHka2rWMvVFuHyILMs5Ik9VUahnTgvzKclhS296T9
+         o0xAZMLlirNMP2KYgrle9qm55MBnaGzIC9J3d1h4EYBCVndHGQS62ImhjotXvacA66sl
+         sjsECUvm6tTadybO5nFVTiUwrercN8FREu0gh/j+6gSoQqZIN7GyknXUzyaufqVP1QLs
+         5rzhRGqLXXJxSRdndWR4RsVedTeStu8N9kXOLK3mSpZTzNrX1YWeBfKI0yTs1rZpy0ZF
+         PDb1bSwuPKO0E6TA+36ZFLGwaiFeAkTLsHfG6/DbxBfQvurr8GeUCikU4n5Sd18x8Y/3
+         PKlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692612042; x=1693216842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2t3uCIPsl1iINeIMvwEyX0kxSd+RFCfqpS5u/vlUKTQ=;
+        b=LLfL4IKag59qJgQ7KznRBM8gLaygEIiRqAHG15juuEOkF2ZjyDi/HB4KN5S7KSVvo3
+         Z4n3T59o4f9qhNNmiUPath0rq1WnZaVC1x3+MtWFsG58pzuvteXVh8Xv2RILgS3LGwn0
+         Apvoyz96QUYcRMyx6DfTdjmxEcvRZZpcgHzqpKxWbpUR+3V1Uk72bwJOxsZZ+0UCflc9
+         PutVXJ+rkgWve3Slvzn/OLhWmI21HA8UOcMefwq3HoqpiDT7UD5ZPYHsVv3wku3IGFV9
+         GR2TQW6V05J7YxP6Laar9A2blMcoqU8eMQyjeHasuXc1Ed3Kt9yiW7cDXZd3K7yutdPX
+         P7Mw==
+X-Gm-Message-State: AOJu0YwQ0YsaPkVuOeKn2QhWIg0zAOYYQCwhcykhXY6s1oC4AZiq3RRo
+        GgEpYMroU1Pz8eSkYIVn0Ay8ykL8gqoS53RJyBESlg==
+X-Google-Smtp-Source: AGHT+IGYXmGhN/DODmuPopOeFVUxe6RUYwsmZ0blG+xptOBAK7cMQAC1nDdxg7BVHqE47I4Q0NOl9ooyPHIcPtYcS48=
+X-Received: by 2002:a05:6122:98c:b0:48d:b7c:56c8 with SMTP id
+ g12-20020a056122098c00b0048d0b7c56c8mr3877386vkd.0.1692612041871; Mon, 21 Aug
+ 2023 03:00:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230818190108.22031-1-brgl@bgdev.pl> <ZOMxue7lvHFWMCCb@smile.fi.intel.com>
+In-Reply-To: <ZOMxue7lvHFWMCCb@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 21 Aug 2023 12:00:30 +0200
+Message-ID: <CAMRc=Mci-HjN8-Gta7G604grUCzDKmOYDxJ1PJU=x=AmfHohKA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: tie module references to GPIO devices, not
+ requested descs
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpiolib: tie module references to GPIO devices, not
- requested descs
-Message-ID: <ZOMxue7lvHFWMCCb@smile.fi.intel.com>
-References: <20230818190108.22031-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230818190108.22031-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 09:01:08PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> After a deeper look at commit 3386fb86ecde ("gpiolib: fix reference
-> leaks when removing GPIO chips still in use") I'm now convinced that
-> gpiolib gets module reference counting wrong.
-> 
-> As we only take the reference to the owner module when a descriptor is
-> requested and put it when it's freed, we can easily trigger a crash by
-> removing a module which registered a driver bound to a GPIO chip which
-> is unused as nothing prevents us from doing so.
-> 
-> For correct behavior, we should take the reference to the module when
-> we're creating a GPIO device and only put it when that device is
-> released as it's at this point that we can safely remove the module's
-> code from memory.
+On Mon, Aug 21, 2023 at 11:43=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Aug 18, 2023 at 09:01:08PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > After a deeper look at commit 3386fb86ecde ("gpiolib: fix reference
+> > leaks when removing GPIO chips still in use") I'm now convinced that
+> > gpiolib gets module reference counting wrong.
+> >
+> > As we only take the reference to the owner module when a descriptor is
+> > requested and put it when it's freed, we can easily trigger a crash by
+> > removing a module which registered a driver bound to a GPIO chip which
+> > is unused as nothing prevents us from doing so.
+> >
+> > For correct behavior, we should take the reference to the module when
+> > we're creating a GPIO device and only put it when that device is
+> > released as it's at this point that we can safely remove the module's
+> > code from memory.
+>
+> Two cases to consider:
+> 1) legacy gpio_*() APIs, do they suppose to create a GPIO device?
 
-Two cases to consider:
-1) legacy gpio_*() APIs, do they suppose to create a GPIO device?
-2) IRQ request without GPIO being requested, is it the case?
+Legacy uses descriptors under the hood so there must be a GPIO device.
 
-Seems to me that the 1) is the case, while 2) is not.
+> 2) IRQ request without GPIO being requested, is it the case?
 
--- 
-With Best Regards,
-Andy Shevchenko
+I need to double-check and also test this but it seems to me that
+right now if you do this (request an irq from a GPIO irqchip), the
+reference count of the module will not be increased. With this change
+it will have already been at 1 until the GPIO device backing this irq
+will go down. So it should actually fix another use-after-free bug.
+But don't take my word for it, I will test it later when I have the
+time.
 
+There's another issue that will become visible with this patch -
+namely the modules that register devices from their init functions,
+will no longer allow unloading until the device is unbound first. This
+is not wrong wrong as module's init is not the place to register
+devices, platform or otherwise but I'm wondering if it counts as
+breaking someone's setup?
 
+Bart
+
+>
+> Seems to me that the 1) is the case, while 2) is not.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
