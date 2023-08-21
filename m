@@ -2,70 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F9D77828CF
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 14:18:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E6067828FE
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 14:28:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234636AbjHUMSC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 08:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38460 "EHLO
+        id S234865AbjHUM2G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 08:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231500AbjHUMSC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 08:18:02 -0400
-Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE747CC
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:18:00 -0700 (PDT)
-Received: by mail-ua1-x932.google.com with SMTP id a1e0cc1a2514c-7a02252eb5dso597669241.1
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:18:00 -0700 (PDT)
+        with ESMTP id S234885AbjHUM2F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 08:28:05 -0400
+Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B08FCF
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:28:03 -0700 (PDT)
+Received: by mail-vs1-xe2f.google.com with SMTP id ada2fe7eead31-44d3b9bc4c3so1107005137.0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692620280; x=1693225080;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692620882; x=1693225682;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XKkqJ2D+VYmFpqgXIvrMOHKS8idoVbV815zLuujvJZs=;
-        b=YIqtFhVFWX+SbtXg0CB8V/ecOt3HTYUkL+zNlaUq4xauI4O5ombFF+UXPYh1xKAnwv
-         hX5Hoi0c7nRk2vchMn9FY12TS4FQWDLbTOGSYhSfIBWOia/7C0vefYOp0MeOsvTC1FBE
-         twXBWQMqAcVXPO/vH8p9AgDVV/1dx4BL76Hw1C3C5ahwMFrOvvDIpYT0C3azLL6cV2cD
-         /ImBXm/iM7QOFvAFhzZSAozkd+FRNa4nTPSsYpFJGlaxkW2mQGe5k/e0NQuQt6yfwj7J
-         s0Bp+q1gGnKh1Awvf3dogVd8jWadEjDAEbMN+iVH1mHcglBjv0kMnF/gE06YNcNLoJZR
-         RfYg==
+        bh=aOpajm3cCWmy6wmv8U6HMhoxWqJVZlf2EuaP2Zg/6bs=;
+        b=wZQYJaxKI6mbzSaHcp5Wnm/tPi+iMA/cW5x/y7nQmQDQgpz4RU1GyzXpD6OFSsRyJ/
+         R2XKZvnCG068a7FV9ZIXP951yytmQYx9zVmlpy9IIuKuzoU8cx8QnwEiF34zycGRR0/5
+         My9N7HCcjS5GGyeufBrIlNAndFcMlEKHGjUh5OSU1wA003AmnzZcCwgfsiJcUZWN54GJ
+         Rx0zKlb05Dlf39WYmPHSV5H44PLIwb8e0HKank2o3223IV998p0ai5TfAuzRX+tKXsny
+         HRsh0Htjj8tFBDp82JQa5IHlFfJb+/ZdVqXRj6oBZiP3OvevA7st2HEmaNIM9tgxaiNR
+         cN9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692620280; x=1693225080;
+        d=1e100.net; s=20221208; t=1692620882; x=1693225682;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XKkqJ2D+VYmFpqgXIvrMOHKS8idoVbV815zLuujvJZs=;
-        b=UJozb38VoFWtXpx3zWfSk1GHoCN7nKhDBuICzYFM2F+jdaD0zh1P84vosamjlMG/13
-         JhIIdJYHhZqxECU3JQ7ZtOeqPwjYEFJh7ceC+4fMlAwB+BCk7qTlLf6hmieJe15lJudx
-         jBagpyZcMxJij5Sp8Syg7lNhjuaScohXyj3XwnKU6NRAx19neRh5DVd1cAdbyTAeOpu/
-         BhicVK3IVYxhUeBkeQAAg8J3fDDXv5PJW8RvqoUoBhn7n9REkEkxyUkUTaoiqvgY0XL8
-         pgpvdbkYPIfiFthulcDDq0yxjFdwT5887bEEuLY0bc+DtP964cRsVb6Ii87yp1qjEk65
-         xX8A==
-X-Gm-Message-State: AOJu0Ywqm64pb4bbuiim7Y+9wWNe1ktXB7KWM+5Sc7G+1G/FgNTQ6yXE
-        SXgReAO5ZsTKLixonp8uFUUmdl/PQuRfX2GtBkBvjw==
-X-Google-Smtp-Source: AGHT+IGcqJGwYRyNganLabVsKBovtI5E+Kj3jh5UkDOLGsB5Bm8B/LZ1IeAgNEscpo/ZIn2ODYoBy019wgMqpbrTk08=
-X-Received: by 2002:a67:eb06:0:b0:44d:5298:5bfc with SMTP id
- a6-20020a67eb06000000b0044d52985bfcmr902841vso.17.1692620279900; Mon, 21 Aug
- 2023 05:17:59 -0700 (PDT)
+        bh=aOpajm3cCWmy6wmv8U6HMhoxWqJVZlf2EuaP2Zg/6bs=;
+        b=T3XOcz/jCysNOrk2op1yHIh/y390MxAOWN6wUTJriwHmluleNXk+V8VEyAdBisG5+t
+         ZgwueimZaul5wletJ2eB4qGtw3jKygmf1aFcHrBLzRs/XpYZmxr/7eZQHa4yh1lEArNg
+         pTp1jXWKra1NUyuGmMDPyAyIcVcYY9HJB9/sSPkXpN7jgrLahllYt10Evoa63IZzgXlp
+         RbooQinXpZPWvEagEvq0P3c8E7sb85PDnMd9M+QPvFDe+I2EAxjb0NcSjNJhLAtwTMno
+         gQYyxYAMwEf5sEnQERpiNLnmsBJj7AUnFYzLVnjp6KJns12rS5sSiADSm9322MJ/buXf
+         jJLg==
+X-Gm-Message-State: AOJu0YyaQFe+OZNj+qbgCaQZu4N9po44M3Ro4c/3owKsZ1yYoIV6FDbW
+        Je6Va3juDJs/cC79/EndFUjgjuPZ6VYKqhr8XlWoCA==
+X-Google-Smtp-Source: AGHT+IHY4dCGJNVWAnbeuo65q9Pi/9BMAbFluoL1XIBZeEzZj8CMFt6+5Mg05hyn/+GwsrWspVWbGyJzLfn4+LhykvI=
+X-Received: by 2002:a05:6102:7d7:b0:44d:5506:c5a7 with SMTP id
+ y23-20020a05610207d700b0044d5506c5a7mr353100vsg.6.1692620882431; Mon, 21 Aug
+ 2023 05:28:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230506085928.933737-1-haibo.chen@nxp.com> <DB7PR04MB40102AA686099ED666C93EF5901EA@DB7PR04MB4010.eurprd04.prod.outlook.com>
- <CACRpkdZ-2Lyk_c8EJfS=YHK81wt2RAWnZAg+vxvZZijYFwmDDA@mail.gmail.com>
- <12270129.O9o76ZdvQC@steina-w> <CACRpkdZc8H=bnTfLjUzMS3zEWGTZdHbSuBz0yf_wdfp9MkNnkQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZc8H=bnTfLjUzMS3zEWGTZdHbSuBz0yf_wdfp9MkNnkQ@mail.gmail.com>
+References: <20230727095432.82591-1-okan.sahin@analog.com> <20230727095432.82591-2-okan.sahin@analog.com>
+ <CAMRc=MeLaadEVM1UBaGSJ=cUcJ=ub7_kOc=97t37+oU6+RMuhA@mail.gmail.com> <PH7PR03MB7391911157B3AEAAC9DA44B3E71EA@PH7PR03MB7391.namprd03.prod.outlook.com>
+In-Reply-To: <PH7PR03MB7391911157B3AEAAC9DA44B3E71EA@PH7PR03MB7391.namprd03.prod.outlook.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 21 Aug 2023 14:17:48 +0200
-Message-ID: <CAMRc=MfBDBrd1C9tOUcu_+eocB-xXt26fBDLSUNFyos2d6E15w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: mxc: switch to dynamic allocat GPIO base
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Bough Chen <haibo.chen@nxp.com>,
+Date:   Mon, 21 Aug 2023 14:27:51 +0200
+Message-ID: <CAMRc=MeCm+Jsn+N4FEdYC-RSLn68OE7dRUJ6HiS0YcMX+rz7fg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: gpio: ds4520: Add ADI DS4520
+To:     "Sahin, Okan" <Okan.Sahin@analog.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,48 +73,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 12:21=E2=80=AFPM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
+On Mon, Aug 21, 2023 at 12:09=E2=80=AFPM Sahin, Okan <Okan.Sahin@analog.com=
+> wrote:
 >
-> On Mon, Aug 21, 2023 at 9:44=E2=80=AFAM Alexander Stein
-> <alexander.stein@ew.tq-group.com> wrote:
-> > Am Montag, 21. August 2023, 09:25:54 CEST schrieb Linus Walleij:
-> > > On Mon, Aug 21, 2023 at 4:47=E2=80=AFAM Bough Chen <haibo.chen@nxp.co=
-m> wrote:> > Hi
-> > Linus and Bartosz,
-> > > >
-> > > > For this patch, still not in the main trunk (Linux 6.5-rc7) and
-> > > > linux-next(next-20230818). Can you help apply or any comment?
-> > >
-> > > As pointed out by Bartosz you cannot just mechanically switch the bas=
-e
-> > > to -1.
-> > >
-> > > You also need to convince us that this doesn't break any systems, and=
- if
-> > > it does, fix them so they don't break before submitting this patch.
+>
+> >On Thu, Jul 27, 2023 at 11:55=E2=80=AFAM Okan Sahin <okan.sahin@analog.c=
+om> wrote:
+> >>
+> >> Add ADI DS4520 devicetree document.
+> >>
+> >> Signed-off-by: Okan Sahin <okan.sahin@analog.com>
+> >> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >> ---
+> >>  .../bindings/gpio/adi,ds4520-gpio.yaml        | 51 ++++++++++++++++++=
++
+> >>  1 file changed, 51 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/gpio/adi,ds4520-
+> >gpio.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/gpio/adi,ds4520-gpio.ya=
+ml
+> >b/Documentation/devicetree/bindings/gpio/adi,ds4520-gpio.yaml
+> >> new file mode 100644
+> >> index 000000000000..25b3198c4d3e
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/gpio/adi,ds4520-gpio.yaml
+> >> @@ -0,0 +1,51 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id:
+>
+> ...
+>
+> >>
 > >
-> > I think it's hard to tell if something breaks, this driver is used in a=
- lot of
-> > boards. AFAIR some people are relying on the assumption of fixed order.=
- Using
-> > dynamic allocation this not ensured. A possible fix is to use aliases [=
-1].
+> >Applied this and the driver, thanks!
+> >
+> >Bart
 >
-> Hm I might have been to grumpy!
+> Hi Bart,
 >
-> It looks like any boardfiles using gpio-mxc have been eliminated
-> so this driver is now only used in device tree-boots? Right?
+> When will it be released? I could not find your tree that's why I am aski=
+ng it.
 >
-> Then I feel a lot better about it.
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Yours,
-> Linus Walleij
+> Regards,
+> Okan Sahin
 
-I will not be queueing it for v6.6 as merge window opens in a week, I
-want to give it more time in next and see if anyone complains so it'll
-make it for v6.7.
+It will be released in v6.6 in around 3 months (see
+Documentation/process). My tree is listed in the MAINTAINERS file.
 
 Bart
