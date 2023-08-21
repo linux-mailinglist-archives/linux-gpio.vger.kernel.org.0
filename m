@@ -2,201 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D397D782D57
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 17:34:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38A73782EE0
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 18:57:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236392AbjHUPeJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 11:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
+        id S233938AbjHUQ5R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 12:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235487AbjHUPeJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 11:34:09 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3648F4;
-        Mon, 21 Aug 2023 08:34:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692632047; x=1724168047;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kXlM/pwJGzRIMSIfVIy6urX8rZiLt3tsyIjFnb54JgE=;
-  b=eeaQm6UKHkUmLXMgg8LlP46HXzoa81mYCM3RqD/bvtR2jGjRQn+/XyNr
-   Xx1uQB0RJCT2eK3cyBs2pGViKyn0E2KYdW4HPPmv4I7dWRUK8K3tuqzNP
-   CHx5hU0/prAPoKgu2pU6271Jhd4bBnNUnbnCwjbT/QVhp1jiE/3M9Ymdh
-   tSiCHIWgJ+r5FKrpp2oznDNoxJwhKC7ryCFWzt1oKY5hv49ZSDVNOCP5K
-   EyKHx4SemodrgwNamyIWLTDcyTdyZ+JO0YxQaun8IPQ02kNEx8oaPsoWJ
-   qWMkWEZzHVfw2PKRx2j4ILo3xTVgKEb+ZeST4ubltA4odcpj6zzQaAVBf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="372520836"
-X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
-   d="scan'208";a="372520836"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 08:34:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="982518254"
-X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
-   d="scan'208";a="982518254"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Aug 2023 08:33:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qY6uj-002ZBE-04;
-        Mon, 21 Aug 2023 18:33:57 +0300
-Date:   Mon, 21 Aug 2023 18:33:56 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpiolib: provide and use gpiod_line_state_notify()
-Message-ID: <ZOOD5BrhsX3O6TQG@smile.fi.intel.com>
-References: <20230821141827.18061-1-brgl@bgdev.pl>
+        with ESMTP id S232740AbjHUQ5R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 12:57:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A999100;
+        Mon, 21 Aug 2023 09:57:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 18E73620E7;
+        Mon, 21 Aug 2023 16:57:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D07C433C7;
+        Mon, 21 Aug 2023 16:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692637034;
+        bh=g4MJjIAVMlnPsdA6QHRst4Po2TwWEXM1AKPvoTZLmWw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QQNqxOMU4BUdmVTLLhIh+r4VtiJ56HgDWBNklFThS2M1sxckZQU9bsLk7GZEHEvsb
+         EkijTZLH48pjGoLHgPZi0Lq5iOEhIWOJ3DVbD5g/6s91AmN7m/J0asXQ+f3XyXVLJg
+         WZNb0HqgF7qB8ruxDsOi4+RlXNQwvlOrGwQYGC4pS1MiqTaZhpl+syGImkKwf0JJls
+         tkDJn3rlSEtIsjEDyZomqBLfZdrKEulCk5A/BDivEpMEJzLVjXr9NlDmaYFR2/OwBC
+         qwqg2yPNMjqazHE/NGJv3UNb79N1bj5l/NhFEhDservRuBf0BfMG5pT8UvzDQQk2ym
+         IAAzYsiWJ+FNQ==
+Received: (nullmailer pid 1886744 invoked by uid 1000);
+        Mon, 21 Aug 2023 16:57:12 -0000
+Date:   Mon, 21 Aug 2023 11:57:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v4 4/4] dt-bindings: firmware: arm,scmi: Add support for
+ pinctrl protocol
+Message-ID: <20230821165712.GA1876025-robh@kernel.org>
+References: <cover.1691518313.git.oleksii_moisieiev@epam.com>
+ <1dcf25b5c6b16b7138534e3c13827287f7c644cf.1691518314.git.oleksii_moisieiev@epam.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230821141827.18061-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1dcf25b5c6b16b7138534e3c13827287f7c644cf.1691518314.git.oleksii_moisieiev@epam.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 04:18:27PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Aug 08, 2023 at 06:25:36PM +0000, Oleksii Moisieiev wrote:
+> Add new SCMI v3.2 pinctrl protocol bindings definitions and example.
 > 
-> Wrap the calls to blocking_notifier_call_chain() for the line state
-> notifier with a helper that allows us to use fewer lines of code and
-> simpler syntax.
-
-This change I like, no questions asked.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> 
 > ---
->  drivers/gpio/gpiolib-cdev.c | 17 +++++------------
->  drivers/gpio/gpiolib.c      | 12 ++++++++----
->  drivers/gpio/gpiolib.h      |  1 +
->  3 files changed, 14 insertions(+), 16 deletions(-)
+> Changes v3 -> v4
+>   - reworked protocol@19 format
+> ---
+>  .../bindings/firmware/arm,scmi.yaml           | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
 > 
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 35dcaf78aed6..e39d344feb28 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -230,9 +230,7 @@ static long linehandle_set_config(struct linehandle_state *lh,
->  				return ret;
->  		}
+> diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> index 5824c43e9893..5318fe72354e 100644
+> --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> @@ -233,6 +233,39 @@ properties:
+>        reg:
+>          const: 0x18
 >  
-> -		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-> -					     GPIO_V2_LINE_CHANGED_CONFIG,
-> -					     desc);
-> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
->  	}
->  	return 0;
->  }
-> @@ -414,8 +412,7 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
->  				goto out_free_lh;
->  		}
->  
-> -		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-> -					     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
-> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
->  
->  		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
->  			offset);
-> @@ -1420,9 +1417,7 @@ static long linereq_set_config_unlocked(struct linereq *lr,
->  
->  		WRITE_ONCE(line->edflags, edflags);
->  
-> -		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-> -					     GPIO_V2_LINE_CHANGED_CONFIG,
-> -					     desc);
-> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
->  	}
->  	return 0;
->  }
-> @@ -1737,8 +1732,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
->  
->  		lr->lines[i].edflags = edflags;
->  
-> -		blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-> -					     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
-> +		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
->  
->  		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
->  			offset);
-> @@ -2156,8 +2150,7 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->  	if (ret)
->  		goto out_free_le;
->  
-> -	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-> -				     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
-> +	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_REQUESTED);
->  
->  	irq = gpiod_to_irq(desc);
->  	if (irq <= 0) {
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 0737952882cd..43162fd71d92 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2160,8 +2160,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
->  	}
->  
->  	spin_unlock_irqrestore(&gpio_lock, flags);
-> -	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-> -				     GPIOLINE_CHANGED_RELEASED, desc);
-> +	gpiod_line_state_notify(desc, GPIOLINE_CHANGED_RELEASED);
->  
->  	return ret;
->  }
-> @@ -3729,6 +3728,12 @@ int gpiod_set_array_value_cansleep(unsigned int array_size,
->  }
->  EXPORT_SYMBOL_GPL(gpiod_set_array_value_cansleep);
->  
-> +void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action)
-> +{
-> +	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-> +				     action, desc);
+> +  protocol@19:
+> +    type: object
+> +    allOf:
+> +      - $ref: "#/$defs/protocol-node"
+> +      - $ref: "../pinctrl/pinctrl.yaml"
 
-action can be on previous line, but this is the logical split, so fine as is.
+/schemas/pinctrl/...
 
-> +}
+And drop the quotes.
+
+> +    unevaluatedProperties: false
 > +
->  /**
->   * gpiod_add_lookup_table() - register GPIO device consumers
->   * @table: table of consumers to register
-> @@ -3996,8 +4001,7 @@ static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
->  		return ERR_PTR(ret);
->  	}
+> +    properties:
+> +      reg:
+> +        const: 0x19
+> +
+> +      '#pinctrl-cells':
+
+Use either ' or ". You've used both. Go with whatever the rest of the 
+doc uses.
+
+> +        const: 0
+> +
+> +    patternProperties:
+> +      '-pins$':
+> +        type: object
+> +        allOf:
+> +          - $ref: "../pinctrl/pincfg-node.yaml#"
+> +          - $ref: "../pinctrl/pinmux-node.yaml#"
+
+Full path and no quotes.
+
+Surely there's some restrictions on which properties are valid and 
+contraints on the values?
+
+> +        unevaluatedProperties: false
+> +
+> +        description:
+> +          A pin multiplexing sub-node describe how to configure a
+> +          set of pins is some desired function.
+> +          A single sub-node may define several pin configurations.
+> +          This sub-node is using default pinctrl bindings to configure
+> +          pin multiplexing and using SCMI protocol to apply specified
+> +          configuration using SCMI protocol.
+> +
+> +    required:
+> +      - reg
+> +
+>  additionalProperties: false
 >  
-> -	blocking_notifier_call_chain(&desc->gdev->line_state_notifier,
-> -				     GPIOLINE_CHANGED_REQUESTED, desc);
-> +	gpiod_line_state_notify(desc, GPIOLINE_CHANGED_REQUESTED);
+>  $defs:
+> @@ -384,6 +417,26 @@ examples:
+>              scmi_powercap: protocol@18 {
+>                  reg = <0x18>;
+>              };
+> +
+> +            scmi_pinctrl: protocol@19 {
+> +                reg = <0x19>;
+> +                #pinctrl-cells = <0>;
+> +
+> +                i2c2-pins {
+> +                    groups = "i2c2_a", "i2c2_b";
+> +                    function = "i2c2";
+> +                };
+> +
+> +                mdio-pins {
+> +                    groups = "avb_mdio";
+> +                    drive-strength = <24>;
+> +                };
+> +
+> +                keys_pins: keys-pins {
+> +                    pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+> +                    bias-pull-up;
+> +                };
+> +            };
+>          };
+>      };
 >  
->  	return desc;
->  }
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index 54012605b4a4..0d81ac3bbb40 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -146,6 +146,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
->  extern spinlock_t gpio_lock;
->  extern struct list_head gpio_devices;
->  
-> +void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action);
->  
->  /**
->   * struct gpio_desc - Opaque descriptor for a GPIO
 > -- 
-> 2.39.2
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 2.25.1
