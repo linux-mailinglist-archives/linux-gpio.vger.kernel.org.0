@@ -2,104 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C5EE782A13
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 15:12:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEF7B782A9A
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 15:34:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235256AbjHUNMc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 09:12:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48544 "EHLO
+        id S235429AbjHUNei (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 09:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232017AbjHUNMb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 09:12:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50366E1
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 06:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692623502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8jlzIYKgKmR2UBRoCBcFv7SS0ZLgGsr3htxCffkKfOg=;
-        b=ev8pSrPaTv2QnhIV/i4HmSlh62cVgwhI1yeRsPBSDn8PG3sSz75BwebuTOvn0/Bcgimc02
-        ZCeIqGguMgjDd0ePP7WhDTsFgqlv3Ai6XCiqblNvc3x3IDyFRnduIvTmNAVUIl1kAjSdjn
-        OBMOL414xylCKM0VPiphUqAwpt0+vKk=
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
- [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-221-W8_62G0JMVOx4iKG4sN07w-1; Mon, 21 Aug 2023 09:11:41 -0400
-X-MC-Unique: W8_62G0JMVOx4iKG4sN07w-1
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-58fbc0e0c6dso27130157b3.0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 06:11:41 -0700 (PDT)
+        with ESMTP id S235401AbjHUNei (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 09:34:38 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79F8B4
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 06:34:36 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id ada2fe7eead31-44d4d997dcfso380288137.0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 06:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692624876; x=1693229676;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yll92B/PAYlyoza4UB0EV1Mtne7mI3UI9dNYvsAMgXo=;
+        b=fqE1oXc2tokPYR6p00XvlFV9tSlXbU2bXqlh8cosNkRqCnhFW53Ky5NIFsEVR5fB6d
+         mxZ1WmMF+nJMEraBjn8S4iV701LbMEkrMVtEPBllyIppwwbHc89hpx4FS4xZrZIPyDbT
+         ARBjKeWLZZCiZOB+J4M+3QEPkM3zLu32WivRutKJBlXNnlLXlFdNyWjzWR2kJoBwwVO3
+         6sPbI3np8oF+f4o/0BoUTRwMbd6vz8pE65TuVGObQKoDms0J1XuZMdw6RXihW2XkGzcd
+         OVkoyS4CfAEtCnhIwW0CX/0miug3uGcAtM10ALazu6+Kzw1HU0YBkSqjtDztuYVL5Uvv
+         da3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692623500; x=1693228300;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1692624876; x=1693229676;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8jlzIYKgKmR2UBRoCBcFv7SS0ZLgGsr3htxCffkKfOg=;
-        b=W+/6Zt83ElmBLohaIHTxx8CCZUapkVLHsWnR1FRq3ICpdGbkRsa7WH9meaf8cO+N4W
-         saKZTYCjx4XA3NwWYCPl3JDpVlrwSvlWLJTDGVYnlSOaxETgvhCg8Zu6FmkJh7gl1Xoi
-         ny5UE86hAGmiexWrCFBKK5+UyWI/eYKJalv8r+nJuuYVclJz6mG0EE5gWwivPJWI/avS
-         qGMNzHMS1OGy9cGYYG6RmQur27upzGvDPW3oCwp7oDBvvllKQCgmgehB3LMN0U/RyXCX
-         gUV8W1yo+whgrxjYCOi7zx94zeF8RgDpRsAXkfgb3SsZWoimckfsyhxf1oNHD29sJmax
-         pwgw==
-X-Gm-Message-State: AOJu0YyJAD3MWnC/8qSqEycULRcwvSEJnRL78o0t2sEup0+WegYCjR3j
-        bsb0JZIX6UVh3b0LpgCeh2UuwJLDB6P7EJQfeLMyRmg7/8DL/dXHmbGclozWCbqt0gAGxn6Wx/S
-        /u7rLZjsxw7KcYjDjGPyeug==
-X-Received: by 2002:a0d:dfd1:0:b0:57a:897e:abce with SMTP id i200-20020a0ddfd1000000b0057a897eabcemr9208173ywe.7.1692623500703;
-        Mon, 21 Aug 2023 06:11:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYvkFaI4yVV4NClUb0bxAuCbQrwyZPApNnu6TfahyfIVJgPfoUnef2NcETLjYTx5bvN/PN+A==
-X-Received: by 2002:a0d:dfd1:0:b0:57a:897e:abce with SMTP id i200-20020a0ddfd1000000b0057a897eabcemr9208148ywe.7.1692623500477;
-        Mon, 21 Aug 2023 06:11:40 -0700 (PDT)
-Received: from brian-x1 (c-73-214-169-22.hsd1.pa.comcast.net. [73.214.169.22])
-        by smtp.gmail.com with ESMTPSA id z1-20020a818901000000b005869d9535dcsm2231861ywf.55.2023.08.21.06.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 06:11:39 -0700 (PDT)
-Date:   Mon, 21 Aug 2023 09:11:37 -0400
-From:   Brian Masney <bmasney@redhat.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Konrad Dybcio <konrad.dybcio@linaro.org>, andersson@kernel.org,
-        linus.walleij@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom-pmic-gpio: silence -EPROBE_DEFER message
- on probe
-Message-ID: <ZONiidFpXf7MR6y9@brian-x1>
-References: <20230817145941.1091418-1-bmasney@redhat.com>
- <a3431eaf-053a-4e1c-b082-e87a3aaefbf3@linaro.org>
- <ZN5KIlI+RDu92jsi@brian-x1>
- <09df85cd-27c7-d64c-9792-41110bf32fce@kernel.org>
- <1dd0bad4-fbb4-3861-9bc0-7a5f3067aeaf@kernel.org>
+        bh=yll92B/PAYlyoza4UB0EV1Mtne7mI3UI9dNYvsAMgXo=;
+        b=ZSb1HejFqaVMWaFBPKcqHguOvnJFltuUYr/jlrGhYGbPgg75pbs86afMN88n7DOoJd
+         uACO0LPcRGOHlXNI0KRb5+OSAXT0gWNM2KUyGjWMOCK2bWmE02HNS61lK/KdoYBrV2xg
+         KEaIsIkzCM4fhQcuv9s3aJxyWd4RmJJi0nNjGiwp5kz3KqUb/a6owETNnrI3Ph98gOxj
+         Bi57o3EdDpfGCrUuabb4M9OODW0snmslzLJXnaZ3LGak+b55XamirCej1JRTasIYjdte
+         vXAvZDkuYmcFrWOMixbRlZE10uibCBDmAOV+BYmXoMnHLhWFlxT7cSzToAYL99qag3SD
+         YD6A==
+X-Gm-Message-State: AOJu0Yzi3lXDnfXcZB2NXQ/3jLyuKY6Cst2GGJTW2JE16bdCYFJZRyyP
+        POryBZykvjW3uHJip8v54K/Dy3PDujohnilDCL0nhw==
+X-Google-Smtp-Source: AGHT+IGwLeL8AjLk0tHOuG124+jxLTDDgZM0CE7ukF8CF1AGmLexcebYDHKKMwJ+TNJVxtyv3jzF4/JA0eifyO5Xn+s=
+X-Received: by 2002:a67:de12:0:b0:44d:55a4:2279 with SMTP id
+ q18-20020a67de12000000b0044d55a42279mr968534vsk.6.1692624876003; Mon, 21 Aug
+ 2023 06:34:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1dd0bad4-fbb4-3861-9bc0-7a5f3067aeaf@kernel.org>
-User-Agent: Mutt/2.2.9 (2022-11-12)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230817184958.25349-1-brgl@bgdev.pl> <20230817184958.25349-5-brgl@bgdev.pl>
+ <ZN9IYYgD6q/H3EuG@smile.fi.intel.com>
+In-Reply-To: <ZN9IYYgD6q/H3EuG@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 21 Aug 2023 15:34:25 +0200
+Message-ID: <CAMRc=Md+F=S1ipwNPjZQ+Kp=t7Py_Y=-SmFtbpOQa-xGYWsBPw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] gpio: cdev: wake up chardev poll() on device unbind
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 03:59:18PM +0200, Krzysztof Kozlowski wrote:
-> On 18/08/2023 15:51, Krzysztof Kozlowski wrote:
-> >>     qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: no hogs found
-> >>     qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: error -EPROBE_DEFER: can't add gpio chip
-> >>     qcom-spmi-gpio c440000.spmi:pmic@2:gpio@8800: Driver qcom-spmi-gpio requests probe deferral
-> >>     platform c440000.spmi:pmic@2:gpio@8800: Added to deferred list
-> >>
-> >> The second time it probes the device is successfully added.
-> > 
-> > There is a bug in DTS. I'll send a patch.
-> 
-> https://lore.kernel.org/linux-arm-msm/20230818135538.47481-1-krzysztof.kozlowski@linaro.org/T/#u
+On Fri, Aug 18, 2023 at 12:31=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Aug 17, 2023 at 08:49:56PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Add a notifier block to the gpio_chardev_data structure and register it
+> > with the gpio_device's device notifier. Upon reception of an event, wak=
+e
+> > up the wait queue so that the user-space be forced out of poll() and ne=
+ed
+> > to go into a new system call which will then fail due to the chip being
+> > gone.
+>
+> ...
+>
+> > +     struct gpio_chardev_data *cdev =3D container_of(nb,
+> > +                                                   struct gpio_chardev=
+_data,
+> > +                                                   device_unregistered=
+_nb);
+>
+>         struct gpio_chardev_data *cdev =3D
+>                 container_of(nb, struct gpio_chardev_data, device_unregis=
+tered_nb);
+>
 
-Thanks for sending that. I didn't look at the DTS. Let's just drop the
-patch that I posted here since that message may help someone in the
-future identify this same type of issue for another platform.
+Ah, this goes over 80 chars. I will leave it as it is, I will fix the
+other one when applying.
 
-Brian
+Bart
 
+> ?
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
