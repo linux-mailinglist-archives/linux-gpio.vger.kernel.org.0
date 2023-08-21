@@ -2,65 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 756F3782946
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 14:39:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FEBF782952
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 14:42:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234956AbjHUMjD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 08:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44676 "EHLO
+        id S235023AbjHUMmH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 08:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231758AbjHUMjD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 08:39:03 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F0FC2
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:39:00 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-78a5384a5daso701638241.0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:39:00 -0700 (PDT)
+        with ESMTP id S235022AbjHUMmG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 08:42:06 -0400
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082D291
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:42:05 -0700 (PDT)
+Received: by mail-ua1-x933.google.com with SMTP id a1e0cc1a2514c-79b4d2c0621so691209241.2
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Aug 2023 05:42:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692621540; x=1693226340;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692621724; x=1693226524;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OmV/mQgttZiD5+/KFAqCw9SpurlcxE+hr5x79h/UGWo=;
-        b=2d6HlQ8r9gDTXZYNEv6VOKM7VLs9c0n4xcHA6waXKVvYfZgpbiE7FrNN0jSjN1bSQ6
-         iX6ga1s0vGN83Jyb5Af5uCaCPjqlI9rqiM/nMZjozsY6AZd1oPL3V6ujltQwtUNdj3DR
-         0UhvhOy4i/mXU/cB0Ap3mRuj4Pz0LSk8QWNvBI26RAKEpNK1+BIKUjRkDRtzvOKDhfjz
-         MyioRWK3pFtdRT0dvvt83qNu+nUbYPDeSgPJbx8HUR+qqP+1GT+La9E8RmpELO28Hx/m
-         4dEJWjCO76G7ynlYo/G332zDwOparZUEKvOf38lZk3oySDO7aLjSjiYiZqHDw9HJMS7/
-         M0RA==
+        bh=9/XUKnH0ODMsj7aJ2rH2loczLALoUCOwlJiRi5R0GRw=;
+        b=2VMC4Et+gZb2nhck9gfQ7jcfJTDmTXeFwR/gYdD2xbhlQwucu9eJan7yiURvjfugI/
+         qVzMVR7nIeVAPQS+yBsCC8DuvVnlylgTruS7lJjvxsk8yy2ib4a/VcKZfAJQVIORbsSc
+         4Ak/QiOY4oIZEPmrccPMUDuX8TwXncyKQttcVJOOqzqKJtxt1LKjiAikqV/pbpumM4aJ
+         UtivtOTrWlwjONxWOS3r9u2rf3M+tR1YBO2L7ApjAI0nbApFh66wspIpfifYKLM10kfe
+         kffhNopBdaUtoCeQKmmPNiFdzdQB78+l6mXKGB8GjrSf4mQ29HrOJV0bxeqQoELx4ovl
+         2NYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692621540; x=1693226340;
+        d=1e100.net; s=20221208; t=1692621724; x=1693226524;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OmV/mQgttZiD5+/KFAqCw9SpurlcxE+hr5x79h/UGWo=;
-        b=fcJ6QTc32BXxQy0OWYuMduD7LK1XrI1uQbf9bg9LthaCUlLhXlK65NhnR3p6dSxvMG
-         KQAPMiH8CXBQB5i5jQlXiBrdE0fdMAHZQFN3pdKum9OvY79PS+kdAofP2dhKSlUnnO7/
-         bGEl2mCtKYlREgaKylNZb7H/6E+qKnQbIOyNrF7XhEIIJ/lV2rVFP3lI0CmMyZGGgfkd
-         JeCkhhcJ6sptOlBGJ+JaGAN4IuZak+VNa2Oq8B1PwmJv3lZoktSHzjX/AsQMzKf74G0K
-         PtL1+PYVH//uMiipkbEBfIPA/czygxNPNJcOix1eYfkmMevcWutW8u87akd1SHGxNVme
-         bRjA==
-X-Gm-Message-State: AOJu0YyIGnAAxkcTsEwv3+VG3RiLey5plW2OQQo46ZD7GQptaim3n1GO
-        jgRbFVC9xS8bhfu7rWQckGwnBlnWAt2FwlFr57V3vQ==
-X-Google-Smtp-Source: AGHT+IFZU8UDDCuwx63KXvqAvjirNOb8YmlXDwnhi5j+FeTjihTGtpCOuyoxPMcc1i/2joq/uPvC0L1FTPgsgxdFMIM=
-X-Received: by 2002:a67:e25a:0:b0:447:ba75:9c81 with SMTP id
- w26-20020a67e25a000000b00447ba759c81mr2582523vse.28.1692621539741; Mon, 21
- Aug 2023 05:38:59 -0700 (PDT)
+        bh=9/XUKnH0ODMsj7aJ2rH2loczLALoUCOwlJiRi5R0GRw=;
+        b=PU5ycbclBmXgGGfGy6s+xGhVApKn5FqVqbcnbaXGcCDY0A91ULoknJVn3f0LD85mVt
+         vI1P+t6EpzvN6O8H6OtLK0EQIXO6CiniedkE5lYjTe5lXAzY4sbtb3se08EiHIMGrTPV
+         wi1/F7PH+Dw2f/DqhKBuobMFz2DaT+1S0zxx/Z/CRUeCa3HwaYwprZD8mcqzUg+ocWXU
+         RY39joxl3ibfVD4XQaTc2ePyg+gg3AeQaYn6bVmmizKnxjXcPLcj0WINrmw1iQnGnnlJ
+         f+KHSuFrVYP+DViIXn3NnpnXSAR2RQPPbRv1EJoINZxxOenD0wcqgYQ3Q0oZTmUtT9uz
+         bi2w==
+X-Gm-Message-State: AOJu0Yz65AVMUXMKzys4XLMLUDGgBETR8vxko0pTj4Onf7A4ne0wJAY0
+        fJmFRpkTrskNjpPd014PQPftaqmGlLHxkKEbW5ELuSDHgsKUMXvEOsc=
+X-Google-Smtp-Source: AGHT+IFeTlzQ49lQSO4nLHVwpJ1/aco2mrW93aFGnKhTYAhfDwMRdC3G43F6dClNQP1Fxsl2q3tlFyRTAgiMKtoDGu4=
+X-Received: by 2002:a67:f74c:0:b0:445:228e:62db with SMTP id
+ w12-20020a67f74c000000b00445228e62dbmr2724787vso.8.1692621724150; Mon, 21 Aug
+ 2023 05:42:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230818164314.8505-1-asmaa@nvidia.com> <20230818164314.8505-3-asmaa@nvidia.com>
-In-Reply-To: <20230818164314.8505-3-asmaa@nvidia.com>
+References: <20230817184356.25020-1-brgl@bgdev.pl> <ZN826UBEktlq42bE@smile.fi.intel.com>
+In-Reply-To: <ZN826UBEktlq42bE@smile.fi.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 21 Aug 2023 14:38:49 +0200
-Message-ID: <CAMRc=Mccsc=RY5Evw4-k8LYDrfuxFoWsn6wajybY4SY_89fjNw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] gpio: mlxbf3: Support add_pin_ranges()
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-kernel@vger.kernel.org
+Date:   Mon, 21 Aug 2023 14:41:53 +0200
+Message-ID: <CAMRc=Me-82Dv+t+Y0RF29nL-WvmAjiHFWE9pYKiqZ8sjgRth4w@mail.gmail.com>
+Subject: Re: [PATCH v6] gpio: consumer: new virtual driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,102 +69,176 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 6:43=E2=80=AFPM Asmaa Mnebhi <asmaa@nvidia.com> wro=
-te:
+On Fri, Aug 18, 2023 at 11:16=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Support add_pin_ranges() so that pinctrl_gpio_request() can be called.
-> The GPIO value is not modified when the user runs the "gpioset" tool.
-> This is because when gpiochip_generic_request is invoked by the gpio-mlxb=
-f3
-> driver, "pin_ranges" is empty so it skips "pinctrl_gpio_request()".
-> pinctrl_gpio_request() is essential in the code flow because it changes t=
-he
-> mux value so that software has control over modifying the GPIO value.
-> Adding add_pin_ranges() creates a dependency on the pinctrl-mlxbf3.c driv=
-er.
+> On Thu, Aug 17, 2023 at 08:43:56PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > The GPIO subsystem has a serious problem with undefined behavior and
+> > use-after-free bugs on hot-unplug of GPIO chips. This can be considered=
+ a
+> > corner-case by some as most GPIO controllers are enabled early in the
+> > boot process and live until the system goes down but most GPIO drivers
+> > do allow unbind over sysfs, many are loadable modules that can be (forc=
+e)
+> > unloaded and there are also GPIO devices that can be dynamically detach=
+ed,
+> > for instance CP2112 which is a USB GPIO expender.
+> >
+> > Bugs can be triggered both from user-space as well as by in-kernel user=
+s.
+> > We have the means of testing it from user-space via the character devic=
+e
+> > but the issues manifest themselves differently in the kernel.
+> >
+> > This is a proposition of adding a new virtual driver - a configurable
+> > GPIO consumer that can be configured over configfs (similarly to
+> > gpio-sim).
+> >
+> > The configfs interface allows users to create dynamic GPIO lookup table=
+s
+> > that are registered with the GPIO subsystem. Every config group
+> > represents a consumer device. Every sub-group represents a single GPIO
+> > lookup. The device can work in three modes: just keeping the line
+> > active, toggling it every second or requesting its interrupt and
+> > reporting edges. Every lookup allows to specify the key, offset and
+> > flags as per the lookup struct defined in linux/gpio/machine.h.
+> >
+> > The module together with gpio-sim allows to easily trigger kernel
+> > hot-unplug errors. A simple use-case is to create a simulated chip,
+> > setup the consumer to lookup one of its lines in 'monitor' mode, unbind
+> > the simulator, unbind the consumer and observe the fireworks in dmesg.
+> >
+> > This driver is aimed as a helper in tackling the hot-unplug problem in
+> > GPIO as well as basis for future regression testing once the fixes are
+> > upstream.
 >
-> Fixes: cd33f216d24 ("gpio: mlxbf3: Add gpio driver support")
-> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
-> v4->v5:
-> - Add "Reviewed-By" Tag
-> v3->v4:
-> - Drop the common define for MLXBF3_GPIO_MAX_PINS_BLOCK0
-> v2->v3:
-> - Replace boolean logic by clear switch statement logic in
->   mlxbf3_gpio_add_pin_ranges()
-> v1->v2:
-> - Cleanup mlxbf3_gpio_add_pin_ranges()
+> ...
 >
->  drivers/gpio/gpio-mlxbf3.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> > @@ -46,6 +46,7 @@ obj-$(CONFIG_GPIO_BT8XX)            +=3D gpio-bt8xx.o
+> >  obj-$(CONFIG_GPIO_CADENCE)           +=3D gpio-cadence.o
+> >  obj-$(CONFIG_GPIO_CLPS711X)          +=3D gpio-clps711x.o
+> >  obj-$(CONFIG_GPIO_SNPS_CREG)         +=3D gpio-creg-snps.o
+> > +obj-$(CONFIG_GPIO_CONSUMER)          +=3D gpio-consumer.o
 >
-> diff --git a/drivers/gpio/gpio-mlxbf3.c b/drivers/gpio/gpio-mlxbf3.c
-> index e30cee108986..0a5f241a8352 100644
-> --- a/drivers/gpio/gpio-mlxbf3.c
-> +++ b/drivers/gpio/gpio-mlxbf3.c
-> @@ -19,6 +19,8 @@
->   * gpio[1]: HOST_GPIO32->HOST_GPIO55
->   */
->  #define MLXBF3_GPIO_MAX_PINS_PER_BLOCK 32
-> +#define MLXBF3_GPIO_MAX_PINS_BLOCK0    32
-> +#define MLXBF3_GPIO_MAX_PINS_BLOCK1    24
+> Order?
 >
->  /*
->   * fw_gpio[x] block registers and their offset
-> @@ -158,6 +160,26 @@ static const struct irq_chip gpio_mlxbf3_irqchip =3D=
- {
->         GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
+> >  obj-$(CONFIG_GPIO_CRYSTAL_COVE)              +=3D gpio-crystalcove.o
+> >  obj-$(CONFIG_GPIO_CS5535)            +=3D gpio-cs5535.o
+> >  obj-$(CONFIG_GPIO_DA9052)            +=3D gpio-da9052.o
 >
-> +static int mlxbf3_gpio_add_pin_ranges(struct gpio_chip *chip)
-> +{
-> +       unsigned int id;
-> +
-> +       switch(chip->ngpio) {
-> +       case MLXBF3_GPIO_MAX_PINS_BLOCK0:
-> +               id =3D 0;
-> +               break;
-> +       case MLXBF3_GPIO_MAX_PINS_BLOCK1:
-> +               id =3D 1;
-> +               break;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +
-> +       return gpiochip_add_pin_range(chip, "MLNXBF34:00",
-> +                       chip->base, id * MLXBF3_GPIO_MAX_PINS_PER_BLOCK,
-> +                       chip->ngpio);
-> +}
-> +
->  static int mlxbf3_gpio_probe(struct platform_device *pdev)
->  {
->         struct device *dev =3D &pdev->dev;
-> @@ -197,6 +219,7 @@ static int mlxbf3_gpio_probe(struct platform_device *=
-pdev)
->         gc->request =3D gpiochip_generic_request;
->         gc->free =3D gpiochip_generic_free;
->         gc->owner =3D THIS_MODULE;
-> +       gc->add_pin_ranges =3D mlxbf3_gpio_add_pin_ranges;
+> ...
 >
->         irq =3D platform_get_irq(pdev, 0);
->         if (irq >=3D 0) {
-> @@ -243,6 +266,7 @@ static struct platform_driver mlxbf3_gpio_driver =3D =
-{
->  };
->  module_platform_driver(mlxbf3_gpio_driver);
+> > +             return dev_err_probe(dev, ret,
+> > +                                  "Failed to read GPIO line names\n");
 >
-> +MODULE_SOFTDEP("pre: pinctrl-mlxbf3");
->  MODULE_DESCRIPTION("NVIDIA BlueField-3 GPIO Driver");
->  MODULE_AUTHOR("Asmaa Mnebhi <asmaa@nvidia.com>");
->  MODULE_LICENSE("Dual BSD/GPL");
-> --
-> 2.30.1
+> With one line it takes 83 characters (and note, that long before checkpat=
+ch
+> went for 100, the string literals at the end of a long line were accepted=
+)...
+>
+> ...
+>
+> > +                             return dev_err_probe(dev, ret,
+> > +                                             "Failed to request GPIO l=
+ine interrupt\n");
+>
+> And here with broken indentation you got 91.
+> Can you be consistent?
+>
+> (I prefer as you know less LoCs)
+>
+> ...
+>
+> > +static ssize_t
+> > +gpio_consumer_lookup_config_drive_store(struct config_item *item,
+> > +                                     const char *page, size_t count)
+> > +{
+> > +     struct gpio_consumer_lookup *lookup =3D to_gpio_consumer_lookup(i=
+tem);
+> > +     struct gpio_consumer_device *dev =3D lookup->parent;
+> > +
+> > +     guard(mutex)(&dev->lock);
+> > +
+> > +     if (gpio_consumer_device_is_live_unlocked(dev))
+> > +             return -EBUSY;
+> > +
+> > +     if (sysfs_streq(page, "push-pull")) {
+> > +             lookup->flags &=3D ~(GPIO_OPEN_DRAIN | GPIO_OPEN_SOURCE);
+> > +     } else if (sysfs_streq(page, "open-drain")) {
+> > +             lookup->flags &=3D ~GPIO_OPEN_SOURCE;
+> > +             lookup->flags |=3D GPIO_OPEN_DRAIN;
+> > +     } else if (sysfs_streq(page, "open-source")) {
+> > +             lookup->flags &=3D ~GPIO_OPEN_DRAIN;
+> > +             lookup->flags |=3D GPIO_OPEN_SOURCE;
+> > +     } else {
+>
+> > +             count =3D -EINVAL;
+>
+> Strictly speaking this is incorrect.
+> You need
+>
+>         ssize_t ret;
+>         ...
+>         ret =3D count;
+>         if (...)
+>                 ret =3D -EINVAL;
+>
+> > +     }
+> > +
+> > +     return count;
+> > +}
+>
+> > +static ssize_t
+> > +gpio_consumer_lookup_config_pull_store(struct config_item *item,
+> > +                                    const char *page, size_t count)
+> > +{
+>
+> As per above.
+>
+> > +}
+>
+> ...
+>
+> > +             curr->chip_hwnum =3D lookup->offset < 0 ?
+> > +                                     U16_MAX : lookup->offset;
+>
+> I found this way better
+>
+>                 curr->chip_hwnum =3D
+>                         lookup->offset < 0 ? U16_MAX : lookup->offset;
+>
+>
+> ...
+>
+> > +     return ret ?: count;
+>
+> Also possible way in the above mentioned cases.
+>
+> ...
+>
+>
+> I'm not going to bikeshed, I believe you can fix above accordingly,
+> either way
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 >
 
-It's not clear to me whether this depends on patch 1? If only at
-run-time then I guess Linus and I can take the two patches through
-ours respective trees?
+Actually when experimenting more, I started thinking we could improve
+the driver even more. Expose a sysfs interface that would allow to
+control the GPIOs from the kernel on user-space's behalf. For
+instance: change value, change direction, toggle active-low watch for
+interrupts (and log them to a sysfs buffer) etc.
+
+I won't be queueing it for v6.6, I want to spend some more time on it.
+
+Thanks for the reviews.
 
 Bart
+
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
