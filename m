@@ -2,247 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 083AA78235B
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 08:02:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05A637823B9
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Aug 2023 08:30:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233272AbjHUGC0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Aug 2023 02:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37336 "EHLO
+        id S229644AbjHUGae (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Aug 2023 02:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232851AbjHUGCY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 02:02:24 -0400
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D72EAB
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Aug 2023 23:02:19 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id XxzOqfCA7kHhaXxzPqKRsh; Mon, 21 Aug 2023 08:02:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1692597738;
-        bh=4jclUITBl2I0woVUAlLiABdGcbM1YRalF8t7jBmWRak=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=skuSMWggGom9rpc6vnr/umRw99kEOjARwSRubdqmbXFu0wEIBBaqO1nKhY0+BnsDI
-         l7Khl/sHc3i1GaQxUPcO7dqNw4cfl1IFT11x3kNlCOn2rSv4BaZPVoleMgoriOzoBY
-         +hngr0rjj3do019kAEttonO51Ip35wnSa4vLQgvEumzcki1339Yqqtf45bmPzD4qSY
-         J+X8Pb9X0eqgHvRuLOQjFQ97DUENaMQJBCFZOZm533tpLxwpj2ChTipatR2ZmpTBSI
-         E8mBQxDldjtwREZtsLpz83MSf8JV07AITt/b5U8yGOEa612OpnubZdT8DEBHg1f5HC
-         8khKkdt5E7MWg==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 21 Aug 2023 08:02:18 +0200
-X-ME-IP: 86.243.2.178
-Message-ID: <fcc6fed6-4234-559d-f3fb-f3c86482e6b0@wanadoo.fr>
-Date:   Mon, 21 Aug 2023 08:02:10 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4 21/28] net: wan: Add framer framework support
-Content-Language: fr
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Herve Codina <herve.codina@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        alsa-devel@alsa-project.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <cover.1692376360.git.christophe.leroy@csgroup.eu>
- <5f671caf19be0a9bb7ea7b96a6c86381e243ca4c.1692376361.git.christophe.leroy@csgroup.eu>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <5f671caf19be0a9bb7ea7b96a6c86381e243ca4c.1692376361.git.christophe.leroy@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S230302AbjHUGad (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Aug 2023 02:30:33 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A06AA2;
+        Sun, 20 Aug 2023 23:30:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692599432; x=1724135432;
+  h=from:to:cc:subject:date:message-id;
+  bh=5lzfZO+xFA5roDkaZTlGOhC+nKCTgnNKMEScm1jZJdk=;
+  b=OWfJHTJxtMOLHi49wfsCNhL8NIZG9gYraPDxJB0Gpo5b+7+BIlidmjJc
+   9zBR8Hthd1NLUpAIzE9fQqmfZ8LRTGNY2rF3B6Tj2ndSYfF6pfzek+go7
+   ecLtOt1sCbOs2uF5hlj8k7t6jxO5NrTh4/5s4h11UH4zENh47WnaKl2u0
+   bPN3ToghqZHHVhsKsM2cWfxak27R0a2sqgPl3+qXMSU8P/tHSrA5LmRSr
+   fBW/XceK02EwAlYVVwXBv4SaT9aXW9/kD1gLpDzj++scOt+2Oy7WpQEsn
+   AZ4yHiMlIFGPdvf27jE52KBd7tzCtbpnVTBGtCfoBc9RV+88tvY3PLgIH
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="353824780"
+X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
+   d="scan'208";a="353824780"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2023 23:30:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10808"; a="729301350"
+X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
+   d="scan'208";a="729301350"
+Received: from inlubt0316.iind.intel.com ([10.191.20.213])
+  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2023 23:30:28 -0700
+From:   Raag Jadav <raag.jadav@intel.com>
+To:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+        andriy.shevchenko@linux.intel.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
+        Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v1] pinctrl: cherryview: use ACPI_HANDLE() to pass handle
+Date:   Mon, 21 Aug 2023 12:00:02 +0530
+Message-Id: <20230821063002.29807-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le 18/08/2023 à 18:39, Christophe Leroy a écrit :
-> From: Herve Codina <herve.codina@bootlin.com>
-> 
-> A framer is a component in charge of an E1/T1 line interface.
-> Connected usually to a TDM bus, it converts TDM frames to/from E1/T1
-> frames. It also provides information related to the E1/T1 line.
-> 
-> The framer framework provides a set of APIs for the framer drivers
-> (framer provider) to create/destroy a framer and APIs for the framer
-> users (framer consumer) to obtain a reference to the framer, and
-> use the framer.
-> 
-> This basic implementation provides a framer abstraction for:
->   - power on/off the framer
->   - get the framer status (line state)
->   - be notified on framer status changes
->   - get/set the framer configuration
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
+Use ACPI_HANDLE() to pass handle to acpi_*_address_space_handler() APIs.
 
-Hi,
+Fixes: a0b028597d59 ("pinctrl: cherryview: Add support for GMMR GPIO opregion")
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-should there be a V5, some nits below.
-
-...
-
-> +int framer_power_off(struct framer *framer)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&framer->mutex);
-> +	if (framer->power_count == 1 && framer->ops->power_off) {
-> +		ret =  framer->ops->power_off(framer);
-
-                      ~~
-Useless extra space
-
-> +		if (ret < 0) {
-> +			dev_err(&framer->dev, "framer poweroff failed --> %d\n", ret);
-> +			mutex_unlock(&framer->mutex);
-> +			return ret;
-> +		}
-> +	}
-> +	--framer->power_count;
-> +	mutex_unlock(&framer->mutex);
-> +	framer_pm_runtime_put(framer);
-> +
-> +	if (framer->pwr)
-> +		regulator_disable(framer->pwr);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +struct framer *framer_create(struct device *dev, struct device_node *node,
-> +			     const struct framer_ops *ops)
-> +{
-> +	int ret;
-> +	int id;
-> +	struct framer *framer;
-> +
-> +	if (WARN_ON(!dev))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/* get_status() is mandatory if the provider ask for polling status */
-> +	if (WARN_ON((ops->flags & FRAMER_FLAG_POLL_STATUS) && !ops->get_status))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	framer = kzalloc(sizeof(*framer), GFP_KERNEL);
-> +	if (!framer)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	id = ida_simple_get(&framer_ida, 0, 0, GFP_KERNEL);
-
-ida_alloc()?
-(ida_simple_get() is deprecated)
-
-> +	if (id < 0) {
-> +		dev_err(dev, "unable to get id\n");
-> +		ret = id;
-> +		goto free_framer;
-> +	}
-> +
-> +	device_initialize(&framer->dev);
-> +	mutex_init(&framer->mutex);
-> +	INIT_WORK(&framer->notify_status_work, framer_notify_status_work);
-> +	INIT_DELAYED_WORK(&framer->polling_work, framer_polling_work);
-> +	BLOCKING_INIT_NOTIFIER_HEAD(&framer->notifier_list);
-> +
-> +	framer->dev.class = framer_class;
-> +	framer->dev.parent = dev;
-> +	framer->dev.of_node = node ? node : dev->of_node;
-> +	framer->id = id;
-> +	framer->ops = ops;
-> +
-> +	ret = dev_set_name(&framer->dev, "framer-%s.%d", dev_name(dev), id);
-> +	if (ret)
-> +		goto put_dev;
-> +
-> +	/* framer-supply */
-> +	framer->pwr = regulator_get_optional(&framer->dev, "framer");
-> +	if (IS_ERR(framer->pwr)) {
-> +		ret = PTR_ERR(framer->pwr);
-> +		if (ret == -EPROBE_DEFER)
-> +			goto put_dev;
-> +
-> +		framer->pwr = NULL;
-> +	}
-> +
-> +	ret = device_add(&framer->dev);
-> +	if (ret)
-> +		goto put_dev;
-> +
-> +	if (pm_runtime_enabled(dev)) {
-> +		pm_runtime_enable(&framer->dev);
-> +		pm_runtime_no_callbacks(&framer->dev);
-> +	}
-> +
-> +	return framer;
-> +
-> +put_dev:
-> +	put_device(&framer->dev);  /* calls framer_release() which frees resources */
-> +	return ERR_PTR(ret);
-> +
-> +free_framer:
-> +	kfree(framer);
-> +	return ERR_PTR(ret);
-> +}
-
-...
-
-> +void framer_provider_of_unregister(struct framer_provider *framer_provider)
-> +{
-> +	mutex_lock(&framer_provider_mutex);
-> +	list_del(&framer_provider->list);
-> +	of_node_put(framer_provider->dev->of_node);
-> +	kfree(framer_provider);
-> +	mutex_unlock(&framer_provider_mutex);
-
-If it make sense, of_node_put() and kfree() could maybe be out of the 
-mutex, in order to match how things are done in 
-__framer_provider_of_register().
-
-> +}
-
-...
-
-> +static void framer_release(struct device *dev)
-> +{
-> +	struct framer *framer;
-> +
-> +	framer = dev_to_framer(dev);
-> +	regulator_put(framer->pwr);
-> +	ida_simple_remove(&framer_ida, framer->id);
-
-ida_free()?
-(ida_simple_remove() is deprecated)
-
-> +	kfree(framer);
-> +}
-
-...
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 2c619fcf93ca..5a50bee48873 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1650,7 +1650,6 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
+ 	struct intel_community_context *cctx;
+ 	struct intel_community *community;
+ 	struct device *dev = &pdev->dev;
+-	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	struct intel_pinctrl *pctrl;
+ 	acpi_status status;
+ 	unsigned int i;
+@@ -1718,7 +1717,7 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	status = acpi_install_address_space_handler(adev->handle,
++	status = acpi_install_address_space_handler(ACPI_HANDLE(dev),
+ 					community->acpi_space_id,
+ 					chv_pinctrl_mmio_access_handler,
+ 					NULL, pctrl);
+@@ -1735,7 +1734,7 @@ static int chv_pinctrl_remove(struct platform_device *pdev)
+ 	struct intel_pinctrl *pctrl = platform_get_drvdata(pdev);
+ 	const struct intel_community *community = &pctrl->communities[0];
+ 
+-	acpi_remove_address_space_handler(ACPI_COMPANION(&pdev->dev),
++	acpi_remove_address_space_handler(ACPI_HANDLE(&pdev->dev),
+ 					  community->acpi_space_id,
+ 					  chv_pinctrl_mmio_access_handler);
+ 
+-- 
+2.17.1
 
