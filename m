@@ -2,225 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B9D4783AEC
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 09:31:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52E11783B25
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 09:51:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233362AbjHVHbb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Aug 2023 03:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50778 "EHLO
+        id S233548AbjHVHvb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Aug 2023 03:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232802AbjHVHba (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 03:31:30 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B956D130;
-        Tue, 22 Aug 2023 00:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692689488; x=1724225488;
-  h=from:to:cc:subject:date:message-id;
-  bh=3BYZu9n4dVZV2dz0cvespv/7zchBpnF7YiYEuX3chcA=;
-  b=mim1Eo/FOLiJRb3qfDq/8Ggz6pVpJyOEpw3OaIduwBhOt1n64Fou+pLo
-   n253HeZk7WlXFzNH4OKgjf2e43ocHqops7BMdZq4uJPD1AFzWtKDdVTDB
-   Sl994fE1/yIJw/xtJSPd+FklZan9jQ20IH83aiPh3+Qjr/rrby5jKbQKU
-   DOsZ6EVYu8ydaraOOdrYNihC8VXxGfWEogbzbyV5pVMzApc7faLFYmgq2
-   xFS8Fp4qU8fnel+B4B5r9jd2lfjkJ2MkWt3ZHn3Yp/u+mSclVaaxc8zs+
-   1v9p+IGccSyNq2ZOtySBqR4pMavV3+l+UJXDpDvHrmgW9fXUHw+jfRsgt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="437722371"
-X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
-   d="scan'208";a="437722371"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 00:31:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="850506464"
-X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
-   d="scan'208";a="850506464"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Aug 2023 00:31:25 -0700
-From:   Raag Jadav <raag.jadav@intel.com>
-To:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
-        andriy.shevchenko@linux.intel.com
+        with ESMTP id S233534AbjHVHva (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 03:51:30 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 781B7193
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 00:51:28 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3fef3c3277bso13199845e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 00:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692690687; x=1693295487;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AFj6sGKtm8EW1WwQribx51bsNun9Wg8aa3Yb6vNZvPQ=;
+        b=rgpodcbkxCXvXko9npX+V329LhecS/4hp0kjfXrxixWX9XsgJGcc5HCNQY9Ly0nIqW
+         LcKvWWE8O4nRm3NCozGdvCGIRGwM8icFozmUG1efKRfddM5q173oLRKW3AuKaxgcRtHM
+         B4g1TYZH47n4E6kUPMhnaS1iOozxv9CPZ9bzTQjtfTzcC0s+jM+o8aqRc3iOMbxitUXn
+         oolhyuiElERpEe9MpavEAAQsdAtD/2sPsMRv5rRmP1UOlEkOg937kH2m+yYHYwX/CghE
+         gVjyjb2IvpktUbhm1Ho/QaSqY29orgmbUZ/Uurhj1/ttMmc4aGovdGU4peWJ2d6mN6hP
+         6uMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692690687; x=1693295487;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AFj6sGKtm8EW1WwQribx51bsNun9Wg8aa3Yb6vNZvPQ=;
+        b=d2ACkwesytaxU4Xrwk8EKToU1XfSkR6HT4GVEI06I9IeKPDeW9/69PDjFi0izvYv3D
+         WwBENmSmJ13OCmTJObJpZAW5cfMZ+iJBFVe9yUTZMc+3jzmavr5hS+nc0faruoVBXZZA
+         tIt8DqM1m0svoXcWMnzWildEQB6c743z8r5lzG7r8Z5EaRnVlwJ81Le+St77iuYPPYwv
+         E/nO8qylSpY5E6HPtfNWgqX+epPF6y/8T29AKVrPmL6GSuLIrsgddTYGmgxLlYT1rAnp
+         7Vt5EzzPNk18IB7E8u6bleeu2N6/Ay3avgjk3vGDbN/Tk+kkXwVAIGlbKvZXbPiYhanb
+         2r+Q==
+X-Gm-Message-State: AOJu0YyblOWLNBlpkOFOHzvjEc9tJd+/YJbN1MhJB3a9TI0U4i0Jyy74
+        dszHVx+8nsh8C0zSGw+Zb7HAgA==
+X-Google-Smtp-Source: AGHT+IF4pmy/7Qwdjn4KZqLvpDf39XWVpd61gSofWAqbnhWky1pEpUdWVdJkrPQG4L2cwuqtJSSszQ==
+X-Received: by 2002:a05:600c:215a:b0:3fb:ab56:a66c with SMTP id v26-20020a05600c215a00b003fbab56a66cmr5863572wml.10.1692690686831;
+        Tue, 22 Aug 2023 00:51:26 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:6042:edc2:a9e7:ea8b])
+        by smtp.gmail.com with ESMTPSA id v25-20020a7bcb59000000b003fe4548188bsm11057739wmj.48.2023.08.22.00.51.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Aug 2023 00:51:26 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
-        Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1] pinctrl: intel: consolidate ACPI dependency
-Date:   Tue, 22 Aug 2023 13:00:56 +0530
-Message-Id: <20230822073056.10208-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH 1/2] gpio: sim: dispose of irq mappings before destroying the irq_sim domain
+Date:   Tue, 22 Aug 2023 09:51:21 +0200
+Message-Id: <20230822075122.6900-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since all the Intel specific platform drivers depend on ACPI, we can
-consolidate their config dependency.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+If a GPIO simulator device is unbound with interrupts still requested,
+we will hit a use-after-free issue in __irq_domain_deactivate_irq(). The
+owner of the irq domain must dispose of all mappings before destroying
+the domain object.
+
+Fixes: cb8c474e79be ("gpio: sim: new testing module")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pinctrl/intel/Kconfig | 20 +-------------------
- 1 file changed, 1 insertion(+), 19 deletions(-)
+ drivers/gpio/gpio-sim.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
-index f42a83e29b8b..d66f4f6932d8 100644
---- a/drivers/pinctrl/intel/Kconfig
-+++ b/drivers/pinctrl/intel/Kconfig
-@@ -1,11 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0
- # Intel pin control drivers
- menu "Intel pinctrl drivers"
--	depends on X86 || COMPILE_TEST
-+	depends on ACPI && (X86 || COMPILE_TEST)
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index f1f6f1c32987..27515384aa10 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -291,6 +291,18 @@ static void gpio_sim_mutex_destroy(void *data)
+ 	mutex_destroy(lock);
+ }
  
- config PINCTRL_BAYTRAIL
- 	bool "Intel Baytrail GPIO pin control"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  driver for memory mapped GPIO functionality on Intel Baytrail
-@@ -17,7 +16,6 @@ config PINCTRL_BAYTRAIL
++static void gpio_sim_dispose_mappings(void *data)
++{
++	struct gpio_sim_chip *chip = data;
++	unsigned int i, irq;
++
++	for (i = 0; i < chip->gc.ngpio; i++) {
++		irq = irq_find_mapping(chip->irq_sim, i);
++		if (irq)
++			irq_dispose_mapping(irq);
++	}
++}
++
+ static void gpio_sim_sysfs_remove(void *data)
+ {
+ 	struct gpio_sim_chip *chip = data;
+@@ -406,6 +418,10 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
+ 	if (IS_ERR(chip->irq_sim))
+ 		return PTR_ERR(chip->irq_sim);
  
- config PINCTRL_CHERRYVIEW
- 	tristate "Intel Cherryview/Braswell pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  Cherryview/Braswell pinctrl driver provides an interface that
-@@ -25,7 +23,6 @@ config PINCTRL_CHERRYVIEW
- 
- config PINCTRL_LYNXPOINT
- 	tristate "Intel Lynxpoint pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  Lynxpoint is the PCH of Intel Haswell. This pinctrl driver
-@@ -42,7 +39,6 @@ config PINCTRL_INTEL
- 
- config PINCTRL_ALDERLAKE
- 	tristate "Intel Alder Lake pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -50,7 +46,6 @@ config PINCTRL_ALDERLAKE
- 
- config PINCTRL_BROXTON
- 	tristate "Intel Broxton pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  Broxton pinctrl driver provides an interface that allows
-@@ -58,7 +53,6 @@ config PINCTRL_BROXTON
- 
- config PINCTRL_CANNONLAKE
- 	tristate "Intel Cannon Lake PCH pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -66,7 +60,6 @@ config PINCTRL_CANNONLAKE
- 
- config PINCTRL_CEDARFORK
- 	tristate "Intel Cedar Fork pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -74,7 +67,6 @@ config PINCTRL_CEDARFORK
- 
- config PINCTRL_DENVERTON
- 	tristate "Intel Denverton pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -82,7 +74,6 @@ config PINCTRL_DENVERTON
- 
- config PINCTRL_ELKHARTLAKE
- 	tristate "Intel Elkhart Lake SoC pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -90,7 +81,6 @@ config PINCTRL_ELKHARTLAKE
- 
- config PINCTRL_EMMITSBURG
- 	tristate "Intel Emmitsburg pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -98,7 +88,6 @@ config PINCTRL_EMMITSBURG
- 
- config PINCTRL_GEMINILAKE
- 	tristate "Intel Gemini Lake SoC pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -106,7 +95,6 @@ config PINCTRL_GEMINILAKE
- 
- config PINCTRL_ICELAKE
- 	tristate "Intel Ice Lake PCH pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -114,7 +102,6 @@ config PINCTRL_ICELAKE
- 
- config PINCTRL_JASPERLAKE
- 	tristate "Intel Jasper Lake PCH pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -122,7 +109,6 @@ config PINCTRL_JASPERLAKE
- 
- config PINCTRL_LAKEFIELD
- 	tristate "Intel Lakefield SoC pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -130,7 +116,6 @@ config PINCTRL_LAKEFIELD
- 
- config PINCTRL_LEWISBURG
- 	tristate "Intel Lewisburg pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -138,7 +123,6 @@ config PINCTRL_LEWISBURG
- 
- config PINCTRL_METEORLAKE
- 	tristate "Intel Meteor Lake pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-@@ -146,7 +130,6 @@ config PINCTRL_METEORLAKE
- 
- config PINCTRL_SUNRISEPOINT
- 	tristate "Intel Sunrisepoint pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  Sunrisepoint is the PCH of Intel Skylake. This pinctrl driver
-@@ -155,7 +138,6 @@ config PINCTRL_SUNRISEPOINT
- 
- config PINCTRL_TIGERLAKE
- 	tristate "Intel Tiger Lake pinctrl and GPIO driver"
--	depends on ACPI
- 	select PINCTRL_INTEL
- 	help
- 	  This pinctrl driver provides an interface that allows configuring
-
-base-commit: 83f7586f3b365330765a24eb40f99a1c1a43d38e
++	ret = devm_add_action_or_reset(dev, gpio_sim_dispose_mappings, chip);
++	if (ret)
++		return ret;
++
+ 	mutex_init(&chip->lock);
+ 	ret = devm_add_action_or_reset(dev, gpio_sim_mutex_destroy,
+ 				       &chip->lock);
 -- 
-2.17.1
+2.39.2
 
