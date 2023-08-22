@@ -2,99 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B3E1784071
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 14:12:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 059D478408C
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 14:17:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235593AbjHVMMK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Aug 2023 08:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58488 "EHLO
+        id S235643AbjHVMRF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Aug 2023 08:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232943AbjHVMMK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 08:12:10 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 010D5193;
-        Tue, 22 Aug 2023 05:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692706329; x=1724242329;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bMNqRaTXKeMhSmYsxEJBGG9KPMjo7EzITadHa8MbaRQ=;
-  b=mwKP9eQBpkfy6LXFVw0eAw3OvTFi8A5RqsxWoGU+/Nz2i6Y7/V7NSOEP
-   aT9Qyxe9qCg+xJXScuADSxAkZ0wWitEBi3jgS2bfFNF5oGYpy09upq0mH
-   vwGW/9u+Srt6j4dUyw9L57S6RWkd4CaPadrEBt3pKnLQgcnY10Lf/yPn2
-   SqTas2JV4q+BCfhK1Y+1ZsVVx8l5GvJR9Bpepan4b2qcb3CWgAisbuxyT
-   1JavzX3juWw1NECPnyeNyEItetoGLmIbN8XJKwjm8x+PmFVRD+YoGkXmx
-   HLA+N30EWauUnTq/MS3/SLNmugK5BHTfXxogcZSJ8ILdK2s2SiFPIqn7+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="371284424"
-X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
-   d="scan'208";a="371284424"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 05:12:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="739285939"
-X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
-   d="scan'208";a="739285939"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 22 Aug 2023 05:12:05 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qYQEu-009akW-14;
-        Tue, 22 Aug 2023 15:12:04 +0300
-Date:   Tue, 22 Aug 2023 15:12:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        with ESMTP id S235638AbjHVMRE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 08:17:04 -0400
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A71DCE2
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 05:16:57 -0700 (PDT)
+Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-79dc53034a8so1111743241.3
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 05:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692706616; x=1693311416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HR8csb+pfbfmMWIfz29AGSv8lUUOlaxU8/bfAatlZTA=;
+        b=HbXpqb/1BjS2BkfrAbGPVMSmFbvDAaUxhEXyC0hsXdDddBZj9cLsZ0HsgHLLoEtV8C
+         y0Mo2mr8fa7tia5sU8oGxKCbTWapq+GPDXNSEsk5VdLRgNoXvhyFooJrMNhmadNoQuB7
+         kVIxNF9ow3hkz1QJMkhYMLid9XpVyK9StCPm6wiJ3nAi8UZHFoF555CZRcCXU3XQpx3M
+         tm51MdX5b/j7FGKZCC9nBPrLegSQHYSRtPXJ/nc3pxVZWooYDU72F/APCgZ/k8Lcdqmc
+         HESsurWvQtYUeeNP4O+S9VUpsbnkO0tsy4bqkytqsYAtEoot4u2ENtEEYdDpTAip75ht
+         fvcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692706616; x=1693311416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HR8csb+pfbfmMWIfz29AGSv8lUUOlaxU8/bfAatlZTA=;
+        b=TUy++ibXkQrNJ1lhcEgY9UNUiUzo8uVEEqbbPH2K4BVdvFGDvzWeVHuZeLna8N0iVV
+         S3AFAJWGdNN7l8yUnQ+X7EBU5nOpo8BcGbDLTOE7u2wvNxtY+y25gq0qtHXhKXWEsHfA
+         066SSObDnB0TWJVwF8tzF0uU2ojKgKg2I1xH4NbQn5U9Y66rSLomsRD6Y5KTOyBuUqQl
+         90t5ybSbsr2y1BFYMDu7PnrTSygATeWvS/flyg78rH4s/pF2F0K5W/d7TTFT5PCvJa/b
+         XlmcMZWHZS+u5q+bS0+CLgQ6qbF7HNozLk89H1ylgQXl8//Km3ER3bB9d0ONi02dsjgm
+         RGTw==
+X-Gm-Message-State: AOJu0Yxr0Ef4fCbtr7aJGjkDivRW2YBIrswvGJGD9feTlsVTQa5YF31a
+        PVJEm3Pfo7wA9wfQlJVOb97B6xrwfIg406q/CKaNeMY7mJkDZxgx6zY=
+X-Google-Smtp-Source: AGHT+IEvZD5dKlUJQSqC05PoFL/paEsxxejYH4Qf7pxXk4/CJ7DGKb5wRHcAgvBpJZbjWmONFze1qEGP/AN57bzpXXo=
+X-Received: by 2002:a67:eb92:0:b0:443:8034:be4b with SMTP id
+ e18-20020a67eb92000000b004438034be4bmr4098876vso.35.1692706615188; Tue, 22
+ Aug 2023 05:16:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230822075122.6900-1-brgl@bgdev.pl> <ZOSmFGZHrLq3I+zF@smile.fi.intel.com>
+In-Reply-To: <ZOSmFGZHrLq3I+zF@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 22 Aug 2023 14:16:44 +0200
+Message-ID: <CAMRc=MenZDhrVb9BgJ3R+NqyvoHJR2stjeXouSRWTkecgo160g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: sim: dispose of irq mappings before destroying
+ the irq_sim domain
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 1/2] gpio: sim: dispose of irq mappings before destroying
- the irq_sim domain
-Message-ID: <ZOSmFGZHrLq3I+zF@smile.fi.intel.com>
-References: <20230822075122.6900-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230822075122.6900-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 22, 2023 at 09:51:21AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> If a GPIO simulator device is unbound with interrupts still requested,
-> we will hit a use-after-free issue in __irq_domain_deactivate_irq(). The
-> owner of the irq domain must dispose of all mappings before destroying
-> the domain object.
+On Tue, Aug 22, 2023 at 2:12=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Aug 22, 2023 at 09:51:21AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > If a GPIO simulator device is unbound with interrupts still requested,
+> > we will hit a use-after-free issue in __irq_domain_deactivate_irq(). Th=
+e
+> > owner of the irq domain must dispose of all mappings before destroying
+> > the domain object.
+>
+> ...
+>
+> > +static void gpio_sim_dispose_mappings(void *data)
+> > +{
+> > +     struct gpio_sim_chip *chip =3D data;
+> > +     unsigned int i, irq;
+> > +
+> > +     for (i =3D 0; i < chip->gc.ngpio; i++) {
+> > +             irq =3D irq_find_mapping(chip->irq_sim, i);
+>
+> > +             if (irq)
+>
+> This duplicates check in the following call.
+>
 
-...
+Ah so it can be a direct call:
 
-> +static void gpio_sim_dispose_mappings(void *data)
-> +{
-> +	struct gpio_sim_chip *chip = data;
-> +	unsigned int i, irq;
-> +
-> +	for (i = 0; i < chip->gc.ngpio; i++) {
-> +		irq = irq_find_mapping(chip->irq_sim, i);
+    irq_dispose_mapping(irq_find_mapping(chip->irq_sim, i));
 
-> +		if (irq)
+?
 
-This duplicates check in the following call.
+Bart
 
-> +			irq_dispose_mapping(irq);
-> +	}
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> > +                     irq_dispose_mapping(irq);
+> > +     }
+> > +}
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
