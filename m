@@ -2,87 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0616C783D29
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 11:42:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 257E6783EA7
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 13:20:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234424AbjHVJmH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Aug 2023 05:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42080 "EHLO
+        id S234650AbjHVLUk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Aug 2023 07:20:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234427AbjHVJmH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 05:42:07 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD86CC9
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 02:42:01 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-48d165bd108so588269e0c.0
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 02:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692697321; x=1693302121;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RlrZc/v97on3iVIkMHvJhtbqFEB90Kl148r1FUXo47Q=;
-        b=HRvL/2m0zeq5XcmR3e6F/XjnhYl66r4rcAtDUsC0BxtFiPYLlDONI+FS8IqRwyTRBz
-         Q7seBGGbtkc+sjlEGEfd4m1/7ji822ZihQI/nI/J930HuFqsXr9Wwo61KqG9eI16LJsZ
-         zXNJYX3/v9E9xuQu6ddqGGbMY8JnidwTI5VvVFMdC9RcTUr5uQryuOuVaKCJoiI3zWf4
-         MmXXbQl0j51zC6Txuxf75Eef0ItITFL1rfyhjbFzJeStGspZ9HC3Or0ivjqdbze5tQOi
-         rhJnVgkk2RrYKArHDbwfXW9N5qtkjo4LA7ViJ1I5g9Y07PvoB+6zkiljjxabPSfi+kVf
-         Zb5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692697321; x=1693302121;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RlrZc/v97on3iVIkMHvJhtbqFEB90Kl148r1FUXo47Q=;
-        b=KD/BfhVUG+AiGJu5MHTgcSj3LLV6rwlSnHKL6Cl7EOIihAbNiSJQBGbLigjlHqf9ZR
-         vYQLP/mIGMJi1PAsgYKGNQ2lZJJMUSxDOpKaadPEJLe/EFVaAummv9MzKxYzbWUIdsvQ
-         GLulxABAZlCtXslALlrr1y0twBpFm7ekJSLRHfeQ7AZP84cqXlkhUie/mmGRSAVFtvk/
-         JRyaLj0s4S0XlXPIAe08q7e1z4VDbjztHPo0aPf9V3+gK6UnvNRDE4JomEK9grXmXJmk
-         ETrEV8HhbBxhXmvHWV9noWFC0ttznmeVwgIcez8qWBeNfA2TygSHfh3mmcFgxpG5YgXM
-         CD8g==
-X-Gm-Message-State: AOJu0YxbXLj0fUw+TfBeqPD12UbyqTiZPl9K2T4iMJIajNd8DskCJrAf
-        ZJbQ82DLEQuY1aa5foblIqO9Cfk9YMIyZNopKqvCdw==
-X-Google-Smtp-Source: AGHT+IFW8Z/t2lgQ06nzLJZ6QPZTPQj1hJ7FeMOi3zmTsKSMMWLSckf3xN9aPekD0PS80MEaGwhn56WJXIGiOGvh2l0=
-X-Received: by 2002:a1f:e002:0:b0:48f:280a:1d5a with SMTP id
- x2-20020a1fe002000000b0048f280a1d5amr2720764vkg.1.1692697320854; Tue, 22 Aug
- 2023 02:42:00 -0700 (PDT)
+        with ESMTP id S233448AbjHVLUj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 07:20:39 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA231BE;
+        Tue, 22 Aug 2023 04:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692703238; x=1724239238;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AjVL2Iu3A5MGQLZNkGOUWI3Hvef+G0HOPDfP0Lhj3/c=;
+  b=jUK3OeJnkKYc1+UOOU5E/kdqfmEFvuawdG6V3CkwEHPUthYR9Xh0/wpV
+   CP9vyX9towH1yIjwE9A2Qq7sijzDo1fHvyJXxaLuVeDgF8zQ5KQ95m0UI
+   m6BnIissjc2Z7m0ChP02XahOi4DbfhQ5yQ2/Tdi/vfQjAThjwZ4fQqDnJ
+   K2S1Lp7cgcLDdQ7ARjTum0avkkkYsX3fgHcFuRgOY3hhOqtqyDW4xmzoE
+   pyvhxb5X7KrWEk4O5M4SNUF4uZmO00N8kotx71mn8LZoQ7s00LcATMmLB
+   XGxLWRl8NgC46rrww9ijAFN/j+8m1XC31QeO/YO6TI1Q2rCnS7Ydiq3ys
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="440218566"
+X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
+   d="scan'208";a="440218566"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 04:20:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="713125548"
+X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
+   d="scan'208";a="713125548"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 22 Aug 2023 04:20:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 2C8E2D87; Tue, 22 Aug 2023 14:20:34 +0300 (EEST)
+Date:   Tue, 22 Aug 2023 14:20:34 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Raag Jadav <raag.jadav@intel.com>
+Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: cherryview: fix address_space_handler()
+ argument
+Message-ID: <20230822112034.GN3465@black.fi.intel.com>
+References: <20230822072340.8783-1-raag.jadav@intel.com>
 MIME-Version: 1.0
-References: <20230819180443.16718-1-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20230819180443.16718-1-biju.das.jz@bp.renesas.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 22 Aug 2023 11:41:49 +0200
-Message-ID: <CAMRc=Mf3m4Rvs8w8VgvqA=mn26+kbPCdTGich00pW+W3E=Gmnw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pcf857x: Extend match data support for OF tables
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230822072340.8783-1-raag.jadav@intel.com>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Aug 19, 2023 at 8:04=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
->
-> The driver has OF match table, but still it uses an ID lookup table for
-> retrieving match data. Currently, the driver is working on the
-> assumption that an I2C device registered via OF will always match a
-> legacy I2C device ID. Extend match data support for OF tables by using
-> i2c_get_match_data() instead of the ID lookup for both OF/ID matches by
-> making similar OF/ID tables.
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
+On Tue, Aug 22, 2023 at 12:53:40PM +0530, Raag Jadav wrote:
+> First argument of acpi_*_address_space_handler() APIs is acpi_handle of
+> the device, which is incorrectly passed in driver ->remove() path here.
+> Fix it by passing the appropriate argument and while at it, make both
+> API calls consistent using ACPI_HANDLE().
+> 
+> Fixes: a0b028597d59 ("pinctrl: cherryview: Add support for GMMR GPIO opregion")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 
-Applied, thanks!
-
-Bart
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
