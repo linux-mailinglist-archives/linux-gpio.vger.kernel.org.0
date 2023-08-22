@@ -2,203 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9A4C7844C7
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 16:55:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E68A784560
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 17:22:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236986AbjHVOz1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Aug 2023 10:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60776 "EHLO
+        id S237029AbjHVPW5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Aug 2023 11:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233629AbjHVOz0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 10:55:26 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2052.outbound.protection.outlook.com [40.107.8.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1616198;
-        Tue, 22 Aug 2023 07:55:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nVuo8A24PCw6Rl38JfcYoVJJCAVBmgTBDkr08WfryThY2wu8r8JEyLynZf6+eS/RqPoRzXy3Xgnq3nIld7trJFG4ll/vUpxMieyYxktbvUEh+dc2voIQoWjrbHI84iYv1uZ6uKpZydVm2Sq9m9WNUxJOk6UDf4vAkYq8fu5/7GQhjj9NZtH1iSmO2D1nbLuLiDYtkFkx9VPRGd5EjnchOltDoswkmx0sBZTQIGpafImZ/6TPZd+Nrrex0qD1YKBk22s95mJdH5gG1rxJu8FN7NHKOvaO8oaYjxSjF69+QlvAwdacBNwUd4a7EHH6ACMpD0ai/RHikeYpllCVziWZAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aVqB6QIr0Oy194tvuxVk0WB6vOoANW0evRTgIrd85a4=;
- b=mhbgSoGKr9LK5Js4stcpv6o0sB3NyE9SAWOCNjrQ+MaTfgWZhJ49UvoJPQSBiWYpCXCcSk/hSq0N7NaaoM0LHP4hyH0d2sWR+XVe0GyRccXqF1AtG+rz6ko5s5rz4K1FHCakuHkATx0+lYXO9xwQ1i1GYlDA0INDQM0gaPoEGEeR8PoyNdARCACx0YrPcB4dCy2z2Q5VStDIHGyTUZMmfWichYj6p+CXFEA4AkEaQmKQ8uGt8Sr3Uq6l3NJgkNt0UUndRulFLddwBEvs0AqFZfdPFXcyZoEo8QNZt/hSX9X7b6zw+/EBZs97IfBOa5+EPLNSZPEvwGKJ6USAdfZI9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aVqB6QIr0Oy194tvuxVk0WB6vOoANW0evRTgIrd85a4=;
- b=PY0VteW8P8i6pRQbtFxcHy+DsToKlbwsl1JlDUWqUzemwNunANhS1uGVdAvzWFo0l2TKYVWGyUVnDhZ4OeEmr9wui62FDfJCtrbjL5Zi2KbqYQ73DjKyYwALVBSbRM08DCtmM6cvh7DLgWB+wjwZONj5Msp3IbquIqVO3CvHXlk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from GV1PR04MB9070.eurprd04.prod.outlook.com (2603:10a6:150:21::14)
- by AS8PR04MB8547.eurprd04.prod.outlook.com (2603:10a6:20b:422::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.24; Tue, 22 Aug
- 2023 14:55:18 +0000
-Received: from GV1PR04MB9070.eurprd04.prod.outlook.com
- ([fe80::fd28:f7a2:1bc1:53a0]) by GV1PR04MB9070.eurprd04.prod.outlook.com
- ([fe80::fd28:f7a2:1bc1:53a0%6]) with mapi id 15.20.6699.022; Tue, 22 Aug 2023
- 14:55:17 +0000
-Date:   Tue, 22 Aug 2023 17:55:12 +0300
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     Sean Anderson <sean.anderson@seco.com>
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?utf-8?B?RmVybuKUnMOtbmRleg==?= Rojas <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
-Message-ID: <20230822145512.pc6qd4ovvnw4y3en@LXL00007.wbi.nxp.com>
-References: <20230612163353.dwouatvqbuo6h4ea@skbuf>
- <1dd01fe2-08a8-ec2f-1184-a58b2f55ba85@seco.com>
- <20230613142754.wr5njtjo4tbloqwu@skbuf>
- <20230811150826.urp2hzl3tahesrjx@skbuf>
- <26623d0c-8a5a-614b-7df7-69214aaec524@seco.com>
- <20230811163637.bs7a46juasjgnmf4@skbuf>
- <20230821124952.mraqqp7pxlo56gkh@skbuf>
- <a2e3fcad-9857-f1b3-8ada-efb2013a4bf5@seco.com>
- <20230821181349.hls6pukp5d6rc5av@LXL00007.wbi.nxp.com>
- <73d59dd2-88f0-3c1a-0de2-de2e050cba5a@seco.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73d59dd2-88f0-3c1a-0de2-de2e050cba5a@seco.com>
-X-ClientProxiedBy: VI1P194CA0051.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:803:3c::40) To GV1PR04MB9070.eurprd04.prod.outlook.com
- (2603:10a6:150:21::14)
+        with ESMTP id S236845AbjHVPW5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 11:22:57 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14DB1B0
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 08:22:54 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id ffacd0b85a97d-31c5327e5e8so1316307f8f.1
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 08:22:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692717773; x=1693322573;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3iYVw+zE33iGEGgZkL2OTTW5qQuIEbe9J8maXgT3tvA=;
+        b=HRIuTNqwWahTO8wOvckmTC3bIz/O05jocYJ1geTY+ue/lTfEmxpr9oj/yISd4Y9m9O
+         Q4iyd0Ss3K4+MlQcwfeeBHDIyvFxZSEv6PWH760nCFonZh5qmrvVgarjbq24f2XUj5vG
+         fGieRLsVPfLaOnu0n4uDG6vc3hDKPF71IzKa0DmvBdIXouY9sL9neozx6R/RooGUlxQ6
+         JPBBXcWh1WSQaGmHXA68r4EDhQYwnCZ0/3uVZZVnlMIDLy3SERDws2B+wpM6mu4YZXC8
+         PJRRQBKziPSyuYA159UZAr/s5Gydb0PlxOoooMWefxdP7V2dxAhf7zSgviTDvL8KX9qi
+         /YYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692717773; x=1693322573;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3iYVw+zE33iGEGgZkL2OTTW5qQuIEbe9J8maXgT3tvA=;
+        b=HbEFa8KDmp6+wlKqp9NvB5IkbWcy9biRKRAOmCCUTLYxwj2sEo1q13DbqlhvwpmSQS
+         acStu+ZYswIO8Viw+IsVgbn17yxwgzlyIPw56EdokKgzzc+RXu7iCOhnzxWMt7RKEG3l
+         aA2XIKZKC726VnruHbpOkPreapLhPANMqxJ46ItOD1omr23Fv99NPXX/12vDh7lRKX1q
+         laQICIoXbY8wWVZ2bOd3VhCMxlezbCs3xY3q4uX2S4m7GRuRnJhhhq8WSB1kiu5KL/Dz
+         ohtgqmTloWbEs/PymjiakV40lyLsTYM/Cy8lxY+/vkqLTs8NmekVZNgEh3cQXkvI8skC
+         4Ebg==
+X-Gm-Message-State: AOJu0Yw6I2Spudl/YYXhuYhke5vkazdF9yaYw1TgwYd0QIdhpPlmvNsi
+        b2YTXrhddu4hp6cwzfivPyMUIQ==
+X-Google-Smtp-Source: AGHT+IHTgHZKWR8m9u2lx0rcTpz+vGmzab0M/imuEXDxse1WPmxfU4cmlo1QRY52al01CRlGXI/Xfw==
+X-Received: by 2002:a5d:4b47:0:b0:317:417e:a467 with SMTP id w7-20020a5d4b47000000b00317417ea467mr6910866wrs.6.1692717773127;
+        Tue, 22 Aug 2023 08:22:53 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:ca21:e0f4:e967:fd3d])
+        by smtp.gmail.com with ESMTPSA id b14-20020a5d4b8e000000b0031434c08bb7sm16129920wrt.105.2023.08.22.08.22.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Aug 2023 08:22:52 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] HID: cp2112: make the irqchip immutable
+Date:   Tue, 22 Aug 2023 17:22:44 +0200
+Message-Id: <20230822152244.214394-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV1PR04MB9070:EE_|AS8PR04MB8547:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54584efa-0dff-41a4-178c-08dba31fcca5
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QUz2pvSPJ8nkLvCZguMDVEOIoeZzTzgoBR5iaEi4y3K7Lkx7K95UJCVSXj2kDGkoYDTJ2f9zG+hbQeCaGj5NOAHu7qu2RKjtQfQ9GGwhwc1dtepTA31yvVc7rhakulyIIHytzVpOhb6PdCrNYimjHGiOzfPOtUut77kT0LOGOrLlEs8CiNF0fA4hSll1lbCVI4JsqYBW0cklqn4/KHZtAgeA8kl6FwmbbnQwZCW7R7u8/pLv87RCqbtB5wpLBeWEFsdhA6Okof/SHNenUFVQ7xtJr9jme3gEniC2PTGXEy1BbS8CWFe8OeestrVoMCH84CPyT1iHZeTDz4ygkPw9jtWn2MjwYBLXdFlZM3q3CoaTTc1Bggo4ZnBRBYm2zo2kWVbRvbI0xHq2bVXw01nC/3rW4zdwVVgAhEwlqfnrtQRoTeYkdyT7HmRrrhVgJRE66jM6m1Lu7kes4WqLtBLWSoi1ZEy7F+Bitn2KxND6EdMehmr9EFE48WNNvyKrPXp0JjIoR1fpsxWOzudZcNJzWthz2WSdQ2iylA156pTQvX4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR04MB9070.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(376002)(39860400002)(346002)(366004)(1800799009)(186009)(451199024)(54906003)(6916009)(66476007)(66556008)(6512007)(316002)(66946007)(8676002)(8936002)(4326008)(966005)(41300700001)(1076003)(478600001)(6666004)(38100700002)(6486002)(53546011)(6506007)(83380400001)(2906002)(7416002)(86362001)(44832011)(5660300002)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vlzlZgil1aNwyhrB2b9V7gLe81GcMP+g9pCLRPZ45Xnfocn3RsogTp8fxyTD?=
- =?us-ascii?Q?YxMTsbsxJ3pqzRhBQZHj7SEJAhvwZtJMbFq2y8NLBhrMLuyxyQ9mdvYqcsxv?=
- =?us-ascii?Q?qVyVCwDAFz27Dd2Db7fAm579tm0beU9OFU52DZsScMHk2782rf5jOxIaragT?=
- =?us-ascii?Q?VPLRLbC+/Iy8rNc2CrkUU/mZLRz7lnBKVHDrJdzX6FKRcJ1NCrByvJAv5fwG?=
- =?us-ascii?Q?JCed244xDNWFgGD4AFwYATpcoNlHn7tLOEkZsCcrzlIdzFQj9rgsSJemHXNt?=
- =?us-ascii?Q?eDQH4OTD6U7/jeo3ICIDk8UT1mDEUp8XUueKvftc/PP0ZOrgLH35KRSrKCZ/?=
- =?us-ascii?Q?ZLidJxUUgmEnkRPSuCsvSzhTTf1g/rYNVvW2oW9RNhWomF5BlOYI4ISQuCwh?=
- =?us-ascii?Q?XwasCL4d9nBM3hshyvMzrRpYjagzkkpd13hw1HfvU356JWamcXg/+PAmb5B4?=
- =?us-ascii?Q?xDddnl9FztLX2rUDVzOu6df7bY7dQJ1wXf/Vjb7keu/Dpr8uddyx1hwZ0Hcj?=
- =?us-ascii?Q?Kk6luiW3z2QDQpH3LWP7kVCM3hmn2pCh+z0O4cHoEihSHLwL2uCfhYai7LzD?=
- =?us-ascii?Q?J9pQJAJtOCUhzf52LhOHdpBr0ndq580QgATZ5FD+L5J5KaUf9+Dm1ludgiZ2?=
- =?us-ascii?Q?Anib4qwtT6AKeBErRseM/u9LInMbfMY7U2RUMtKkmh4RTN9p2pKOr3Zek8KT?=
- =?us-ascii?Q?vsV/kqpqsfEQJWPcjNLlDfTiSS2GM9z4CJK5kNoYAeHy0tYsA/lprFxn4Ey3?=
- =?us-ascii?Q?1SY/5u7TcRazNb3FRcvv91KZwdFlPsAEZsiGduet4wnOSmJvqPk8n8QBbLbD?=
- =?us-ascii?Q?BKPgJj0bbp0w23N0p6mzEdMfNR/gRLfxshSEttcXn3pjSmMIipc/zjND0ULu?=
- =?us-ascii?Q?DvkMOyRJV8dDNJRPRqG0ozgx1gA2S9OzObZvmRsMEjHH+TTTva21AjQe6Bux?=
- =?us-ascii?Q?QgRsl7nIOeIbxj846ftgfapYWM3FqdbSwanC2VwpPm3mRQbXILf4i8NZ+xI8?=
- =?us-ascii?Q?yVpn8vp0XTxHfMIbPCBGrLmh0eKnFRV4TczGMdWg31dmxUIol2Z88XP2rzhj?=
- =?us-ascii?Q?glGfPRNBwqMnELnbAhmapJe/BnyaWglz9uumS9Yc+Aqlc9aLXFhestEeR3HP?=
- =?us-ascii?Q?QvISoPyxOIMh+r4T/aA9Oprd9T/4QvWH1WB2I+pEd3VYEvG9AVkOes0zzmAg?=
- =?us-ascii?Q?kB7Kdj7ZMvzzhq89LWdgFne9GbyyRZDfyYgqlDY0oup4ql4ZWLhNrx/APaRx?=
- =?us-ascii?Q?ZUYhxFwFv8Kk8k3OgYglu3w6jWMnEy3S0A0SP5Ikkx5JhiN2kQ/rQaizoDDf?=
- =?us-ascii?Q?afFTYpCc35xraFLwKg5gJPJVhlHiHwb7MmMflI2mqKXZwsxATS3d12DzQmue?=
- =?us-ascii?Q?JYlDk6PWPv0jndkPaSyscrz20g8k0SJoii1SK6XR1BJN3Buocp63v4IBTzK1?=
- =?us-ascii?Q?G4ABpaJuCHKO+J20isE2w7ofmSYwnplA8XWz5R6oNnM0Anl60P7jN9v9MQdd?=
- =?us-ascii?Q?sNMsCV9Q30+UqUsYG8S71vcnSBBkhcRPBz0LlgNh5oJ0n5v6pzfvLvubGTVl?=
- =?us-ascii?Q?wyG5Nv5iBK5/5rcAVZFFbqeLLkz0eGLTXiQnbjRR?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54584efa-0dff-41a4-178c-08dba31fcca5
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR04MB9070.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2023 14:55:17.8808
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mPR8Y+BRCl4En17NB8tef9OvHdiTZUoVrcnhtbZSfX/b5+0fJnQ9IUKwFKlcijgoxe/yC83jwCh7EOvXkE3NjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8547
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 02:46:53PM -0400, Sean Anderson wrote:
-> On 8/21/23 14:13, Ioana Ciornei wrote:
-> > On Mon, Aug 21, 2023 at 01:45:44PM -0400, Sean Anderson wrote:
-> >> Well, we have two pieces of information we need
-> >> 
-> >> - What values do we need to program in the PCCRs to select a particular
-> >>   mode? This includes whether to e.g. set the KX bits.
-> >> - Implied by the above, what protocols are supported on which lanes?
-> >>   This is not strictly necessary, but will certainly solve a lot of
-> >>   headscratching.
-> >> 
-> >> This information varies between different socs, and different serdes on
-> >> the same socs. We can't really look at the RCW or the clocks and figure
-> >> out what we need to program. So what are our options?
-> >> 
-> >> - We can have a separate compatible for each serdes on each SoC (e.g.
-> >>   "fsl,lynx-10g-a"). This was rejected by the devicetree maintainers.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I previously took this statement at face value and didn't further
-investigate. After a bit of digging through the first versions of this
-patch set it's evident that you left out a big piece of information.
+This make the GPIO irqchip exposed by the CP2112 driver use an immutable
+irq_chip struct thus addressing the following warning on probe:
 
-The devicetree maintainers have indeed rejected compatible strings of
-the "fsl,<soc-name>-serdes-<instance>" form but they also suggested to
-move the numbering to a property instead:
+  (cp2112_gpio): not an immutable chip, please consider fixing it!
 
-https://lore.kernel.org/all/db9d9455-37af-1616-8f7f-3d752e7930f1@linaro.org/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/hid/hid-cp2112.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-But instead of doing that, you chose to move all the different details
-that vary between SerDes blocks/SoCs from the driver to the DTS. I don't
-see that this was done in response to explicit feedback.
+diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
+index 27cadadda7c9..01f2a7211033 100644
+--- a/drivers/hid/hid-cp2112.c
++++ b/drivers/hid/hid-cp2112.c
+@@ -163,7 +163,6 @@ struct cp2112_device {
+ 	atomic_t read_avail;
+ 	atomic_t xfer_avail;
+ 	struct gpio_chip gc;
+-	struct irq_chip irq;
+ 	u8 *in_out_buffer;
+ 	struct mutex lock;
+ 
+@@ -1082,6 +1081,7 @@ static void cp2112_gpio_irq_mask(struct irq_data *d)
+ 	struct cp2112_device *dev = gpiochip_get_data(gc);
+ 
+ 	__clear_bit(d->hwirq, &dev->irq_mask);
++	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+ }
+ 
+ static void cp2112_gpio_irq_unmask(struct irq_data *d)
+@@ -1089,6 +1089,7 @@ static void cp2112_gpio_irq_unmask(struct irq_data *d)
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct cp2112_device *dev = gpiochip_get_data(gc);
+ 
++	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
+ 	__set_bit(d->hwirq, &dev->irq_mask);
+ }
+ 
+@@ -1228,6 +1229,18 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
+ 	return ret;
+ }
+ 
++static const struct irq_chip cp2112_irq_chip = {
++	.name		= "cp2112-gpio",
++	.irq_startup	= cp2112_gpio_irq_startup,
++	.irq_shutdown	= cp2112_gpio_irq_shutdown,
++	.irq_ack	= cp2112_gpio_irq_ack,
++	.irq_mask	= cp2112_gpio_irq_mask,
++	.irq_unmask	= cp2112_gpio_irq_unmask,
++	.irq_set_type	= cp2112_gpio_irq_type,
++	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
++};
++
+ static int cp2112_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ {
+ 	struct cp2112_device *dev;
+@@ -1337,17 +1350,8 @@ static int cp2112_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 	dev->gc.can_sleep		= 1;
+ 	dev->gc.parent			= &hdev->dev;
+ 
+-	dev->irq.name = "cp2112-gpio";
+-	dev->irq.irq_startup = cp2112_gpio_irq_startup;
+-	dev->irq.irq_shutdown = cp2112_gpio_irq_shutdown;
+-	dev->irq.irq_ack = cp2112_gpio_irq_ack;
+-	dev->irq.irq_mask = cp2112_gpio_irq_mask;
+-	dev->irq.irq_unmask = cp2112_gpio_irq_unmask;
+-	dev->irq.irq_set_type = cp2112_gpio_irq_type;
+-	dev->irq.flags = IRQCHIP_MASK_ON_SUSPEND;
+-
+ 	girq = &dev->gc.irq;
+-	girq->chip = &dev->irq;
++	gpio_irq_chip_set_chip(girq, &cp2112_irq_chip);
+ 	/* The event comes from the outside so no parent handler */
+ 	girq->parent_handler = NULL;
+ 	girq->num_parents = 0;
+-- 
+2.39.2
 
-> >> - We can have one compatible for each SoC, and determine the serdes
-> >>   based on the address. I would like to avoid this...
-> > 
-> > To me this really seems like a straightforward approach.
-> 
-> Indeed it would be straightforward, but what's the point of having a
-> devicetree in the first place then? We could just go back to being a
-> (non-dt) platform device.
-> 
-
-I am confused why you are now so adamant to have these details into the
-DTS. Your first approach was to put them into the driver, not the DTS:
-
-https://lore.kernel.org/netdev/20220628221404.1444200-5-sean.anderson@seco.com/
-
-And this approach could still work now and get accepted by the device
-tree maintainers. The only change that would be needed is to add a
-property like "fsl,serdes-block-id = <1>".
-
-> >> - We can stick all the details which vary between serdes/socs into the
-> >>   device tree. This is very flexible, since supporting new SoCs is
-> >>   mostly a matter of adding a new compatible and writing a new
-> >>   devicetree. On the other hand, if you have a bug in your devicetree,
-> >>   it's not easy to fix it in the kernel.
-> >> - Just don't support protocol switching. The 28G driver does this, which
-> >>   is why it only has one compatible. However, supporting protocol
-> >>   switching is a core goal of this driver, so dropping support is not an
-> >>   option.
-> >> 
-
-Ioana
