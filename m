@@ -2,153 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E68A784560
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 17:22:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF9FA784578
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 17:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237029AbjHVPW5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Aug 2023 11:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52098 "EHLO
+        id S237080AbjHVP2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Aug 2023 11:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236845AbjHVPW5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 11:22:57 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14DB1B0
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 08:22:54 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id ffacd0b85a97d-31c5327e5e8so1316307f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 08:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692717773; x=1693322573;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3iYVw+zE33iGEGgZkL2OTTW5qQuIEbe9J8maXgT3tvA=;
-        b=HRIuTNqwWahTO8wOvckmTC3bIz/O05jocYJ1geTY+ue/lTfEmxpr9oj/yISd4Y9m9O
-         Q4iyd0Ss3K4+MlQcwfeeBHDIyvFxZSEv6PWH760nCFonZh5qmrvVgarjbq24f2XUj5vG
-         fGieRLsVPfLaOnu0n4uDG6vc3hDKPF71IzKa0DmvBdIXouY9sL9neozx6R/RooGUlxQ6
-         JPBBXcWh1WSQaGmHXA68r4EDhQYwnCZ0/3uVZZVnlMIDLy3SERDws2B+wpM6mu4YZXC8
-         PJRRQBKziPSyuYA159UZAr/s5Gydb0PlxOoooMWefxdP7V2dxAhf7zSgviTDvL8KX9qi
-         /YYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692717773; x=1693322573;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3iYVw+zE33iGEGgZkL2OTTW5qQuIEbe9J8maXgT3tvA=;
-        b=HbEFa8KDmp6+wlKqp9NvB5IkbWcy9biRKRAOmCCUTLYxwj2sEo1q13DbqlhvwpmSQS
-         acStu+ZYswIO8Viw+IsVgbn17yxwgzlyIPw56EdokKgzzc+RXu7iCOhnzxWMt7RKEG3l
-         aA2XIKZKC726VnruHbpOkPreapLhPANMqxJ46ItOD1omr23Fv99NPXX/12vDh7lRKX1q
-         laQICIoXbY8wWVZ2bOd3VhCMxlezbCs3xY3q4uX2S4m7GRuRnJhhhq8WSB1kiu5KL/Dz
-         ohtgqmTloWbEs/PymjiakV40lyLsTYM/Cy8lxY+/vkqLTs8NmekVZNgEh3cQXkvI8skC
-         4Ebg==
-X-Gm-Message-State: AOJu0Yw6I2Spudl/YYXhuYhke5vkazdF9yaYw1TgwYd0QIdhpPlmvNsi
-        b2YTXrhddu4hp6cwzfivPyMUIQ==
-X-Google-Smtp-Source: AGHT+IHTgHZKWR8m9u2lx0rcTpz+vGmzab0M/imuEXDxse1WPmxfU4cmlo1QRY52al01CRlGXI/Xfw==
-X-Received: by 2002:a5d:4b47:0:b0:317:417e:a467 with SMTP id w7-20020a5d4b47000000b00317417ea467mr6910866wrs.6.1692717773127;
-        Tue, 22 Aug 2023 08:22:53 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:ca21:e0f4:e967:fd3d])
-        by smtp.gmail.com with ESMTPSA id b14-20020a5d4b8e000000b0031434c08bb7sm16129920wrt.105.2023.08.22.08.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Aug 2023 08:22:52 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S237072AbjHVP2h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 11:28:37 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5378ECE5;
+        Tue, 22 Aug 2023 08:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692718116; x=1724254116;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QXVKbTtjOz/qJfqj3L9zMmXS/t80FKowJQj0k4cD2fQ=;
+  b=eYfDravU3onQAc5gZ6oVtyAoCoHL/1YCVOZnmR0EigmqV44lcSmxNe+7
+   pqWp9pO+KOfCd0z1gCmH18WcvEl5rBsUsg0+A7cLtLChFKkxC7ncaAV9M
+   S+Cd4/Wk6Ues3B5dEToTFA22v04G+v40VWOpJ4J4sAm6Xscc5gWXo4meh
+   CPqiM6MCFk4Jru2liIvcBLOZZCu6Z7+DsJgzUDN6e7bdv6kmC/CdKbIxB
+   qGyUi8g6Ec/0RABnqReDe8VwCk4qePVQGLGWrosSUHFtbKL4kx+V180j9
+   alQWeeG0OnOFNHvktxu7yApeZ5bAQapD5zwsvVeZaZncCVTNjR9iw5d3s
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="358900819"
+X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
+   d="scan'208";a="358900819"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 08:28:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="765780409"
+X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
+   d="scan'208";a="765780409"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008.jf.intel.com with ESMTP; 22 Aug 2023 08:28:33 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qYTJ1-00GIG5-1l;
+        Tue, 22 Aug 2023 18:28:31 +0300
+Date:   Tue, 22 Aug 2023 18:28:31 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-input@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] HID: cp2112: make the irqchip immutable
-Date:   Tue, 22 Aug 2023 17:22:44 +0200
-Message-Id: <20230822152244.214394-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+Subject: Re: [PATCH] HID: cp2112: make the irqchip immutable
+Message-ID: <ZOTUHzKKBNcjQLRi@smile.fi.intel.com>
+References: <20230822152244.214394-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230822152244.214394-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Aug 22, 2023 at 05:22:44PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> This make the GPIO irqchip exposed by the CP2112 driver use an immutable
+> irq_chip struct thus addressing the following warning on probe:
+> 
+>   (cp2112_gpio): not an immutable chip, please consider fixing it!
 
-This make the GPIO irqchip exposed by the CP2112 driver use an immutable
-irq_chip struct thus addressing the following warning on probe:
+https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/commit/?h=for-next&id=3e2977c425ad2789ca18084fff913cceacae75a2
 
-  (cp2112_gpio): not an immutable chip, please consider fixing it!
+Can you test HID for-next for this hardware?
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/hid/hid-cp2112.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/hid/hid-cp2112.c b/drivers/hid/hid-cp2112.c
-index 27cadadda7c9..01f2a7211033 100644
---- a/drivers/hid/hid-cp2112.c
-+++ b/drivers/hid/hid-cp2112.c
-@@ -163,7 +163,6 @@ struct cp2112_device {
- 	atomic_t read_avail;
- 	atomic_t xfer_avail;
- 	struct gpio_chip gc;
--	struct irq_chip irq;
- 	u8 *in_out_buffer;
- 	struct mutex lock;
- 
-@@ -1082,6 +1081,7 @@ static void cp2112_gpio_irq_mask(struct irq_data *d)
- 	struct cp2112_device *dev = gpiochip_get_data(gc);
- 
- 	__clear_bit(d->hwirq, &dev->irq_mask);
-+	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
- }
- 
- static void cp2112_gpio_irq_unmask(struct irq_data *d)
-@@ -1089,6 +1089,7 @@ static void cp2112_gpio_irq_unmask(struct irq_data *d)
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct cp2112_device *dev = gpiochip_get_data(gc);
- 
-+	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
- 	__set_bit(d->hwirq, &dev->irq_mask);
- }
- 
-@@ -1228,6 +1229,18 @@ static int __maybe_unused cp2112_allocate_irq(struct cp2112_device *dev,
- 	return ret;
- }
- 
-+static const struct irq_chip cp2112_irq_chip = {
-+	.name		= "cp2112-gpio",
-+	.irq_startup	= cp2112_gpio_irq_startup,
-+	.irq_shutdown	= cp2112_gpio_irq_shutdown,
-+	.irq_ack	= cp2112_gpio_irq_ack,
-+	.irq_mask	= cp2112_gpio_irq_mask,
-+	.irq_unmask	= cp2112_gpio_irq_unmask,
-+	.irq_set_type	= cp2112_gpio_irq_type,
-+	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- static int cp2112_probe(struct hid_device *hdev, const struct hid_device_id *id)
- {
- 	struct cp2112_device *dev;
-@@ -1337,17 +1350,8 @@ static int cp2112_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 	dev->gc.can_sleep		= 1;
- 	dev->gc.parent			= &hdev->dev;
- 
--	dev->irq.name = "cp2112-gpio";
--	dev->irq.irq_startup = cp2112_gpio_irq_startup;
--	dev->irq.irq_shutdown = cp2112_gpio_irq_shutdown;
--	dev->irq.irq_ack = cp2112_gpio_irq_ack;
--	dev->irq.irq_mask = cp2112_gpio_irq_mask;
--	dev->irq.irq_unmask = cp2112_gpio_irq_unmask;
--	dev->irq.irq_set_type = cp2112_gpio_irq_type;
--	dev->irq.flags = IRQCHIP_MASK_ON_SUSPEND;
--
- 	girq = &dev->gc.irq;
--	girq->chip = &dev->irq;
-+	gpio_irq_chip_set_chip(girq, &cp2112_irq_chip);
- 	/* The event comes from the outside so no parent handler */
- 	girq->parent_handler = NULL;
- 	girq->num_parents = 0;
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
