@@ -2,113 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1A75783A52
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 09:08:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F6E783AD3
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Aug 2023 09:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233178AbjHVHI2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Aug 2023 03:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
+        id S233233AbjHVH14 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Aug 2023 03:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233191AbjHVHIZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 03:08:25 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD95ECC7
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 00:08:20 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-78a5384a5daso1023977241.0
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Aug 2023 00:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692688100; x=1693292900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2dzpiJWmjhBHJZVOntDh9DCFQCdymj4+iYdAizm0EOQ=;
-        b=MXwYYb8/u6sgiZkBKOK2InJrbA3v3TINKKGtkKkLsUoAnn3EbhUmgO2gVoWDE0mujX
-         t9wJeRucJmUd8XjfVtBPxRSsHIupOiNAFl5P6bz9MPB1bKUEZo7GWe25kmrYV8zDUBso
-         f4jNhtADsT9dIzXB9JIOK1Z9KYPnh4vTQTEoe5kz2N1gPw+qqFL0N+mei2WE4nfJF6T2
-         siUgkCzuyHBpmwPV13H/iow5rBSeWw5WqB5NK3NAPsqGy0CPO/McIDjPkXe6LEVvDjGR
-         7+UabwPMKObPzMKTJDMqBv/ERNU3LJXR6IromGKdfyzTkRmHxTtRvG/K7Oxd2PkTwgxi
-         cDgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692688100; x=1693292900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2dzpiJWmjhBHJZVOntDh9DCFQCdymj4+iYdAizm0EOQ=;
-        b=JVEm+j0lQffVl0f67DaltysMWTA5HyFfdGlc8MQlCGNIYGdEny0N8VOf2EYdG+Nx14
-         tAMxYKxJjjoDK2pbleKNoDUfvBuTvReqo6MhEEJxivYNftKsaWwV7OILapzOYHyM+Tqh
-         iyNOx8W3wRvfoYls+hJoKVdd1Js+CnL5Sj7Nqj5mQwDRjRHqu9zc9YoJ2X9HG6WaMAko
-         XOJgqBE5Tk+8zMzjb7haftFon9QtlPIQxs8bz7VVUnVXa1/Kc9Ka5knyTMs2yKQhMoG6
-         d1NeBrxKo/WgImpAumUMBIOs3M+gLOnBKkSbqJXODzt9YF1JHIIcgOgxWk7rPwJjudDc
-         KDLQ==
-X-Gm-Message-State: AOJu0Yx8ovn63esl5kWhn1fzXvXOEyayKrFSWIAPhki1P2JnR+uahVU3
-        MfqW8QR9HAfpLidNPnZArvpABR1c5ce+1lNSu7XJCA==
-X-Google-Smtp-Source: AGHT+IH+f33qGFPwCbTLBHh5IHXvpoPQnv9wW2fNLLYFFf+YxlyrLc4vh2VT7GAxr7AzKIGvidEGAH2Vfkpnp6M7BLM=
-X-Received: by 2002:a67:b603:0:b0:443:b014:e5af with SMTP id
- d3-20020a67b603000000b00443b014e5afmr4026173vsm.6.1692688099790; Tue, 22 Aug
- 2023 00:08:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230821153339.26305-1-brgl@bgdev.pl> <ZOP/n30hYR/8zN60@sol>
-In-Reply-To: <ZOP/n30hYR/8zN60@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 22 Aug 2023 09:08:08 +0200
-Message-ID: <CAMRc=Mep_AZPht6cQFQ-Pz8UJC-q1r4F29SJ=+_WgJX1cz5wtw@mail.gmail.com>
-Subject: Re: [libgpiod v1.6.x][PATCH] tests: mockup: unbind mockup devices
- before unloading the module
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S233142AbjHVH1t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Aug 2023 03:27:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1CEE133;
+        Tue, 22 Aug 2023 00:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692689264; x=1724225264;
+  h=from:to:cc:subject:date:message-id;
+  bh=bpf4SKdwRPcbz0UwMeMNuyan9Jo3cwQxDYxRkC1tqhw=;
+  b=ZSheP9o2vWNqvKNofX+5fjN4fn1+RRAyxyGx6X8Fns8c6Wq0nGgdDlpz
+   oc6AfJlAidYtiOS8I1rJ70OfJ4wT2X7bidfYWqA5KBEoer2ACmLbCKTqM
+   YUAjU3CYHd75VRPu+rxvTiZQx6JCsrvHa5F37X2lNV6MoEID5onrbGf8G
+   quu8C03r2xtKjj7odMvODI1ljWaTiJnm5BobLMPlbzTrnbrWyMuo62mXe
+   0LjLWbVgSVJz1VyNZkHfayA/FLjVzjag+mQTA3SbVM5LEdu0E5y0Mc8nT
+   uLSYBLZpkm4tgO9FPOP1ECuSyh7wKoZbZhtGLIZODfKIbRjahEPATeyRA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="376538405"
+X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
+   d="scan'208";a="376538405"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 00:24:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="685941229"
+X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
+   d="scan'208";a="685941229"
+Received: from inlubt0316.iind.intel.com ([10.191.20.213])
+  by orsmga003.jf.intel.com with ESMTP; 22 Aug 2023 00:24:04 -0700
+From:   Raag Jadav <raag.jadav@intel.com>
+To:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+        andriy.shevchenko@linux.intel.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
+        Raag Jadav <raag.jadav@intel.com>, stable@vger.kernel.org
+Subject: [PATCH v2] pinctrl: cherryview: fix address_space_handler() argument
+Date:   Tue, 22 Aug 2023 12:53:40 +0530
+Message-Id: <20230822072340.8783-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 22, 2023 at 2:21=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Mon, Aug 21, 2023 at 05:33:39PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > gpio-mockup relies on the GPIO devices being registered in module's __i=
-nit
-> > function and them being unregistered in __exit. This works with the GPI=
-O
-> > subsystem as it only takes a reference to the underlying owner module w=
-hen
-> > a GPIO descriptor is requested and not when the GPIO device is
-> > instantiated.
-> >
-> > This behavior may change in the future in the kernel so make the behavi=
-or
-> > of libgpiomockup more correct and have it unbind all mockup devices ove=
-r
-> > sysfs before unloading the module.
-> >
->
-> Never knew that unbinding was even an option.
-> Maybe update gpio-mockup's documentation?
->
+First argument of acpi_*_address_space_handler() APIs is acpi_handle of
+the device, which is incorrectly passed in driver ->remove() path here.
+Fix it by passing the appropriate argument and while at it, make both
+API calls consistent using ACPI_HANDLE().
 
-Yeah, I might once we agree on that reference counting patch.
+Fixes: a0b028597d59 ("pinctrl: cherryview: Add support for GMMR GPIO opregion")
+Cc: stable@vger.kernel.org
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
+Changes since v1:
+- Update subject and commit message
 
-> Just clarifying what the potential impact of the existing libgpiomockup
-> behaviour and future kernel behaviour is - the kernel may log errors but
-> otherwise correctly handle userspace unloading behaving badly?
-> So this patch is pre-emptory noise reduction?
->
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-No, it's a bug-fix-in-advance. gpio-mockup will fail to unload (until
-we unbind all devices anyway) if we couple the module's reference with
-struct gpio_device. So will every driver that registers devices from
-its module_init() function and tears them down in module_exit(). But
-these drivers are wrong to do so in the first place and unloading them
-sound like a rare thing to do anyway, so I'm willing to give it a try.
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 7ffe4dafeebb..2bb574cf01d9 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1650,7 +1650,6 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
+ 	struct intel_community_context *cctx;
+ 	struct intel_community *community;
+ 	struct device *dev = &pdev->dev;
+-	struct acpi_device *adev = ACPI_COMPANION(dev);
+ 	struct intel_pinctrl *pctrl;
+ 	acpi_status status;
+ 	unsigned int i;
+@@ -1718,7 +1717,7 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	status = acpi_install_address_space_handler(adev->handle,
++	status = acpi_install_address_space_handler(ACPI_HANDLE(dev),
+ 					community->acpi_space_id,
+ 					chv_pinctrl_mmio_access_handler,
+ 					NULL, pctrl);
+@@ -1735,7 +1734,7 @@ static int chv_pinctrl_remove(struct platform_device *pdev)
+ 	struct intel_pinctrl *pctrl = platform_get_drvdata(pdev);
+ 	const struct intel_community *community = &pctrl->communities[0];
+ 
+-	acpi_remove_address_space_handler(ACPI_COMPANION(&pdev->dev),
++	acpi_remove_address_space_handler(ACPI_HANDLE(&pdev->dev),
+ 					  community->acpi_space_id,
+ 					  chv_pinctrl_mmio_access_handler);
+ 
+-- 
+2.17.1
 
-Bartosz
