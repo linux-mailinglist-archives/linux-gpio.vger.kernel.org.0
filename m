@@ -2,125 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5385978596E
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 15:35:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61F6578597A
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 15:39:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235629AbjHWNfR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Aug 2023 09:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        id S231805AbjHWNjs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Aug 2023 09:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233141AbjHWNfR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 09:35:17 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EDAC8CDF;
-        Wed, 23 Aug 2023 06:35:00 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B3361042;
-        Wed, 23 Aug 2023 06:35:41 -0700 (PDT)
-Received: from pluto (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3CF73F740;
-        Wed, 23 Aug 2023 06:34:58 -0700 (PDT)
-Date:   Wed, 23 Aug 2023 14:34:55 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S234769AbjHWNjs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 09:39:48 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6343198;
+        Wed, 23 Aug 2023 06:39:46 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-26f3e26e59cso2537856a91.0;
+        Wed, 23 Aug 2023 06:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692797986; x=1693402786;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NOK5CRwsaqs85wt6f2CGJEL5j+Al2yb9ep0E5pLTroM=;
+        b=bJLHAqQ5GZGeUGLTMgxzu6PG/h4EcSTPT67BPy7RnqnAlv7C9B3fssI97ZvfThO5iy
+         kdiZEh/pdRMCqJZNnQ3WOY65dKULMxBQsdqQsV9DJ49+VOTJdtzUpoXEzVmET9XyUJt5
+         RenohtVCeDqthFdOuWi1JPsByhsmxvDomR3zGhEe8S2Q/Na1ZZrHW04bE1YOzicaAcjP
+         IQ3HEAnws3KHRwHXPOoObT9H3SXJNN5POcQV6ROoI9E+L6ojac6Q+MEbv8YGlnNRYiMb
+         jr2ObCRM/gX/rzw8H22XzZRVbyzUkzabDO1RNc63uZd31kk1ghEKLccMlqsvF1gCvs7B
+         4VPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692797986; x=1693402786;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NOK5CRwsaqs85wt6f2CGJEL5j+Al2yb9ep0E5pLTroM=;
+        b=lJFz+ZFaJUQUln9Z1UFo3E6ItnALN953F8gblh4VHGvPIRdFacDTSLt4xbw17phFm4
+         +awhWuklhCkD/2PqGcECI7/EHnGmN0qS83HyrSFcPaWnaOdfuCnsPyRGywU0tizAiOPu
+         UnS2lQItzrvn1M87yO1JnK61kSBz0it6xmFHpE4Vo12lBJkToXmQVgX/rk5kGgJUESdj
+         0CFiK9DV1fS9/G5G1axlu7rDULvJ0gTUwp6IzpDYabc3jISmKNKu0tZTCL791vOc3KLF
+         z4fHY4ZcyHzu+UZU6IjMtayBERg6H+HZ97jaSWLQrLccr+bBaS5AH+UjJsUZAwNcfWUf
+         qnAA==
+X-Gm-Message-State: AOJu0YypqqtE/oomj3rf7ENHsK/jPqKvndmZnZhQbQAzFVKQUPhU/ag9
+        L2ZgNrlQ0Ulxgro9NDTltPU=
+X-Google-Smtp-Source: AGHT+IGjcViQKH3GHOWrPKrXnL7/axkeVL2dFUz1FSPB4G3KOxDlRDcMkp1/S2uPhYGLgxC46dQ0Wg==
+X-Received: by 2002:a17:90a:1508:b0:26d:23c3:9f30 with SMTP id l8-20020a17090a150800b0026d23c39f30mr18203197pja.14.1692797986143;
+        Wed, 23 Aug 2023 06:39:46 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v23-20020a17090ae99700b00263e4dc33aasm11337417pjy.11.2023.08.23.06.39.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Aug 2023 06:39:45 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 23 Aug 2023 06:39:44 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v4 3/4] pinctrl: Implementation of the generic
- scmi-pinctrl driver
-Message-ID: <ZOYK_x6yc59pDwzA@pluto>
-References: <cover.1691518313.git.oleksii_moisieiev@epam.com>
- <a6cefa60500cd46313ad6cda4f13f4985c0f5237.1691518314.git.oleksii_moisieiev@epam.com>
- <ZOWHWLVtKXwRug+Z@octopus>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: use capital "OR" for multiple licenses in
+ SPDX
+Message-ID: <f1197557-7d27-453b-b9df-c6dbb3e0f377@roeck-us.net>
+References: <20230823084540.112602-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZOWHWLVtKXwRug+Z@octopus>
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230823084540.112602-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 01:13:12PM +0900, AKASHI Takahiro wrote:
-> Hi Oleksii,
+On Wed, Aug 23, 2023 at 10:45:40AM +0200, Krzysztof Kozlowski wrote:
+> Documentation/process/license-rules.rst and checkpatch expect the SPDX
+> identifier syntax for multiple licenses to use capital "OR".  Correct it
+> to keep consistent format and avoid copy-paste issues.
 > 
-
-Hi AKASHI, Oleksii,
-
-> On Tue, Aug 08, 2023 at 06:25:35PM +0000, Oleksii Moisieiev wrote:
-> > scmi-pinctrl driver implements pinctrl driver interface and using
-> > SCMI protocol to redirect messages from pinctrl subsystem SDK to
-> > SCMI platform firmware, which does the changes in HW.
-> > 
-> > Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-
-[snip]
-
-> > +static int pinctrl_scmi_pinconf_get(struct pinctrl_dev *pctldev, unsigned int _pin,
-> > +				    unsigned long *config)
-> > +{
-> > +	int ret;
-> > +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> > +	enum pin_config_param config_type;
-> > +	unsigned long config_value;
-> > +
-> > +	if (!config)
-> > +		return -EINVAL;
-> > +
-> > +	config_type = pinconf_to_config_param(*config);
-> > +
-> > +	ret = pinctrl_ops->config_get(pmx->ph, _pin, PIN_TYPE, config_type, &config_value);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	*config = pinconf_to_config_packed(config_type, config_value);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pinctrl_scmi_pinconf_set(struct pinctrl_dev *pctldev,
-> > +				    unsigned int _pin,
-> > +				    unsigned long *configs,
-> > +				    unsigned int num_configs)
-> > +{
-> > +	int i, ret;
-> > +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> > +	enum pin_config_param config_type;
-> > +	unsigned long config_value;
-> > +
-> > +	if (!configs || num_configs == 0)
-> > +		return -EINVAL;
-> > +
-> > +	for (i = 0; i < num_configs; i++) {
-> > +		config_type = pinconf_to_config_param(configs[i]);
-> > +		config_value = pinconf_to_config_argument(configs[i]);
+> Correct also the format // -> .* in few Allwinner binding headers as
+> pointed out by checkpatch:
 > 
-> The generic pinconf parameters defined as "enum pin_config_param"
-> do not exactly match with a set of SCMI's configuration types defined
-> in Table 23 in the section 4.11.2.6 "PINCTRL_CONFIG_GET".
-> pinconf_to_config_param() simply masks the lowest 8 bits of the input
-> value, but doesn't convert anything.
+>   WARNING: Improper SPDX comment style for 'include/dt-bindings/reset/sun50i-h6-ccu.h', please use '/*' instead
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Rebased on next-20230822, so might not apply cleanly.  What does not
+> apply, can be skipped and I will fix it after next RC.
+> ---
+[ ... ]
+>  Documentation/devicetree/bindings/hwmon/jedec,jc42.yaml         | 2 +-
+>  Documentation/devicetree/bindings/hwmon/lltc,ltc4151.yaml       | 2 +-
+>  Documentation/devicetree/bindings/hwmon/lm75.yaml               | 2 +-
+>  Documentation/devicetree/bindings/hwmon/microchip,mcp3021.yaml  | 2 +-
+>  Documentation/devicetree/bindings/hwmon/national,lm90.yaml      | 2 +-
+>  Documentation/devicetree/bindings/hwmon/nxp,mc34vr500.yaml      | 2 +-
+>  Documentation/devicetree/bindings/hwmon/sensirion,sht15.yaml    | 2 +-
+>  Documentation/devicetree/bindings/hwmon/ti,tmp102.yaml          | 2 +-
+>  Documentation/devicetree/bindings/hwmon/ti,tmp108.yaml          | 2 +-
 
-Indeed the SCMI Types table and the Linux Pinctrl subsystem types are
-similar but not really the same; some kind of conversion/mapping will be
-needed.
+For the above:
 
-Some trivial conversion layer will be needed also in order to address
-here any of the possible future changes in the Linux pinctrl subsystem
-definitions without having to change the SCMI server side
-(that typically is fw...and that anyway is bound to the SCMI spec)
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Thanks,
-Cristian
-
+Guenter
