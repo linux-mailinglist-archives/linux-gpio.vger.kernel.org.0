@@ -2,76 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61F6578597A
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 15:39:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29E8F785B7F
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 17:09:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231805AbjHWNjs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Aug 2023 09:39:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40506 "EHLO
+        id S234731AbjHWPJQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Aug 2023 11:09:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234769AbjHWNjs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 09:39:48 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6343198;
-        Wed, 23 Aug 2023 06:39:46 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-26f3e26e59cso2537856a91.0;
-        Wed, 23 Aug 2023 06:39:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692797986; x=1693402786;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NOK5CRwsaqs85wt6f2CGJEL5j+Al2yb9ep0E5pLTroM=;
-        b=bJLHAqQ5GZGeUGLTMgxzu6PG/h4EcSTPT67BPy7RnqnAlv7C9B3fssI97ZvfThO5iy
-         kdiZEh/pdRMCqJZNnQ3WOY65dKULMxBQsdqQsV9DJ49+VOTJdtzUpoXEzVmET9XyUJt5
-         RenohtVCeDqthFdOuWi1JPsByhsmxvDomR3zGhEe8S2Q/Na1ZZrHW04bE1YOzicaAcjP
-         IQ3HEAnws3KHRwHXPOoObT9H3SXJNN5POcQV6ROoI9E+L6ojac6Q+MEbv8YGlnNRYiMb
-         jr2ObCRM/gX/rzw8H22XzZRVbyzUkzabDO1RNc63uZd31kk1ghEKLccMlqsvF1gCvs7B
-         4VPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692797986; x=1693402786;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NOK5CRwsaqs85wt6f2CGJEL5j+Al2yb9ep0E5pLTroM=;
-        b=lJFz+ZFaJUQUln9Z1UFo3E6ItnALN953F8gblh4VHGvPIRdFacDTSLt4xbw17phFm4
-         +awhWuklhCkD/2PqGcECI7/EHnGmN0qS83HyrSFcPaWnaOdfuCnsPyRGywU0tizAiOPu
-         UnS2lQItzrvn1M87yO1JnK61kSBz0it6xmFHpE4Vo12lBJkToXmQVgX/rk5kGgJUESdj
-         0CFiK9DV1fS9/G5G1axlu7rDULvJ0gTUwp6IzpDYabc3jISmKNKu0tZTCL791vOc3KLF
-         z4fHY4ZcyHzu+UZU6IjMtayBERg6H+HZ97jaSWLQrLccr+bBaS5AH+UjJsUZAwNcfWUf
-         qnAA==
-X-Gm-Message-State: AOJu0YypqqtE/oomj3rf7ENHsK/jPqKvndmZnZhQbQAzFVKQUPhU/ag9
-        L2ZgNrlQ0Ulxgro9NDTltPU=
-X-Google-Smtp-Source: AGHT+IGjcViQKH3GHOWrPKrXnL7/axkeVL2dFUz1FSPB4G3KOxDlRDcMkp1/S2uPhYGLgxC46dQ0Wg==
-X-Received: by 2002:a17:90a:1508:b0:26d:23c3:9f30 with SMTP id l8-20020a17090a150800b0026d23c39f30mr18203197pja.14.1692797986143;
-        Wed, 23 Aug 2023 06:39:46 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v23-20020a17090ae99700b00263e4dc33aasm11337417pjy.11.2023.08.23.06.39.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Aug 2023 06:39:45 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Wed, 23 Aug 2023 06:39:44 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S236813AbjHWPJQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 11:09:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE5710C6;
+        Wed, 23 Aug 2023 08:08:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BCD8365C76;
+        Wed, 23 Aug 2023 15:08:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F57DC433C8;
+        Wed, 23 Aug 2023 15:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692803313;
+        bh=JGq8R5xqMtVVPKuMWihL6epOl3sHKR796hDF3Zg8PRI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AgUMlqXeSZn9cIBPJHzrYuqoR9CfPf7w1J35N89LVKzerPtWBP161+ACprGAFW5/v
+         IL7h3KTkSzk0EdhbVgwyTTtPRZxuvg9UL69qY3BfBa9SdqyecMWashK7SKFw/XPP8p
+         j4cO04tenaWxJyLO3cF/RF2r3hblzL3tl7JDDOjVRoBpa2fNmU96W+v9BjORE56XtB
+         TsSrQuE8BNkHl5n4qc/0+pMOnIciH0sDukvosZD3wrroQGgywB31TdG+nUJA9Tx1RM
+         T2jk2XQV1mr7qOUOqRUOG3HGmpsqIBAi+RhZEerhWUXb2eTNgZ93QKBOgbeKBD7+b2
+         dm4etpY/Wz7Mg==
+Date:   Wed, 23 Aug 2023 16:08:28 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: use capital "OR" for multiple licenses in
- SPDX
-Message-ID: <f1197557-7d27-453b-b9df-c6dbb3e0f377@roeck-us.net>
-References: <20230823084540.112602-1-krzysztof.kozlowski@linaro.org>
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v4 1/2] gpio: dt-bindings: add more loongson gpio chip
+ support
+Message-ID: <20230823-certainty-grimace-a8365c0cfb02@spud>
+References: <20230823033427.23072-1-zhuyinbo@loongson.cn>
+ <20230823033427.23072-2-zhuyinbo@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="S5CS9eIFPcjBP7ZC"
 Content-Disposition: inline
-In-Reply-To: <20230823084540.112602-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+In-Reply-To: <20230823033427.23072-2-zhuyinbo@loongson.cn>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,36 +63,80 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 10:45:40AM +0200, Krzysztof Kozlowski wrote:
-> Documentation/process/license-rules.rst and checkpatch expect the SPDX
-> identifier syntax for multiple licenses to use capital "OR".  Correct it
-> to keep consistent format and avoid copy-paste issues.
-> 
-> Correct also the format // -> .* in few Allwinner binding headers as
-> pointed out by checkpatch:
-> 
->   WARNING: Improper SPDX comment style for 'include/dt-bindings/reset/sun50i-h6-ccu.h', please use '/*' instead
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
+
+--S5CS9eIFPcjBP7ZC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 23, 2023 at 11:34:26AM +0800, Yinbo Zhu wrote:
+> This patch was to add loongson 2k0500, 2k2000 and 3a5000 gpio chip
+> dt-bindings support in yaml file.
+>=20
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
 > ---
-> 
-> Rebased on next-20230822, so might not apply cleanly.  What does not
-> apply, can be skipped and I will fix it after next RC.
-> ---
-[ ... ]
->  Documentation/devicetree/bindings/hwmon/jedec,jc42.yaml         | 2 +-
->  Documentation/devicetree/bindings/hwmon/lltc,ltc4151.yaml       | 2 +-
->  Documentation/devicetree/bindings/hwmon/lm75.yaml               | 2 +-
->  Documentation/devicetree/bindings/hwmon/microchip,mcp3021.yaml  | 2 +-
->  Documentation/devicetree/bindings/hwmon/national,lm90.yaml      | 2 +-
->  Documentation/devicetree/bindings/hwmon/nxp,mc34vr500.yaml      | 2 +-
->  Documentation/devicetree/bindings/hwmon/sensirion,sht15.yaml    | 2 +-
->  Documentation/devicetree/bindings/hwmon/ti,tmp102.yaml          | 2 +-
->  Documentation/devicetree/bindings/hwmon/ti,tmp108.yaml          | 2 +-
+>  .../bindings/gpio/loongson,ls-gpio.yaml       | 23 +++++++++++++++----
+>  1 file changed, 19 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml=
+ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> index fb86e8ce6349..97472f1529a0 100644
+> --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+> @@ -11,9 +11,24 @@ maintainers:
+> =20
+>  properties:
+>    compatible:
+> -    enum:
+> -      - loongson,ls2k-gpio
+> -      - loongson,ls7a-gpio
+> +    oneOf:
+> +      - enum:
+> +          - loongson,ls2k-gpio
+> +          - loongson,ls2k0500-gpio0
+> +          - loongson,ls2k0500-gpio1
+> +          - loongson,ls2k2000-gpio0
+> +          - loongson,ls2k2000-gpio1
+> +          - loongson,ls2k2000-gpio2
+> +          - loongson,ls3a5000-gpio
+> +          - loongson,ls7a-gpio
 
-For the above:
+> +      - items:
+> +          - enum:
+> +              - loongson,ls2k1000-gpio
+> +          - const: loongson,ls2k-gpio
+> +      - items:
+> +          - enum:
+> +              - loongson,ls7a1000-gpio
+> +          - const: loongson,ls7a-gpio
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Are there going to be more controllers that are compatible with
+"ls7a-gpio"? If not, you can simplify both of these to have 2 const:
+entries, like:
 
-Guenter
+      - items:
+          - const: loongson,ls2k1000-gpio
+          - const: loongson,ls2k-gpio
+
+      - items:
+          - const: loongson,ls7a1000-gpio
+          - const: loongson,ls7a-gpio
+
+Either way,
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks for sticking at this one :)
+
+
+--S5CS9eIFPcjBP7ZC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZOYg7AAKCRB4tDGHoIJi
+0ij2AP9ycHxBMjGFNyFLGzGwvUA07stB9ZrZ2pb+C9RmwNpyDQEAtx55RIZwst6D
+6NfmIIFXVf90D/AxjXJOvwcllY1Q1gU=
+=VESe
+-----END PGP SIGNATURE-----
+
+--S5CS9eIFPcjBP7ZC--
