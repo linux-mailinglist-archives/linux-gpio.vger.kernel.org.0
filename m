@@ -2,67 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 944837856BB
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 13:32:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C911E7857BB
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 14:15:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233781AbjHWLcN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Aug 2023 07:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46984 "EHLO
+        id S233750AbjHWMPP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Aug 2023 08:15:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232030AbjHWLcN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 07:32:13 -0400
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4FEE5A;
-        Wed, 23 Aug 2023 04:32:11 -0700 (PDT)
-Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-5711f6dff8cso140523eaf.3;
-        Wed, 23 Aug 2023 04:32:11 -0700 (PDT)
+        with ESMTP id S233519AbjHWMPO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 08:15:14 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E47DCD1
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Aug 2023 05:15:12 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-d746ea563f9so4192538276.1
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Aug 2023 05:15:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692790331; x=1693395131;
+        d=linaro.org; s=google; t=1692792911; x=1693397711;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BESIYsoydvZiBIe9fSP1rmQvOVRq1L1S9N0ieUFEhq4=;
-        b=ss8a1Oo9Rij/yq7kt5hv/6q+mnEJZqhsFQ9PzskBglvzR2EIZWu6VaaOTSifB63qmi
-         hVh+7EfC40vYUQDm2K2gpmQo7tbBikyQVBg7rhLj5tls9u3XZNrI9yFbpY4b5bdDun41
-         2mc7qH10Vb+ft+s20M9+Cwab/HDJVIPrXcGbwvI4tZyXvkjBdeNB4UN9hjNyhYOfURyK
-         /Snk/ju45H0jdegNGD9uMfFyxzvXXZXi8E1d4lJ4ZrwCgEy/PpY/KQ1KMkd+tdlPS/H/
-         iAGihiowcxoA9YH+ynxA4bCrLXm0xD/rAXhIktro7jPge3CeSxm+nn6dz/8vVBaMMoIg
-         Ikxg==
+        bh=0N2gnvcEfGb3L+QEwC+N38b9ItEwrmfrslDJ70apZRE=;
+        b=KvEB3qKN8VzcKjqujVsocMw0sRuVeLhCp/KM+QEqtq5mdYjWS+/Xbey3x0VhW2vxXz
+         VpTfTvsCMtcZL9UXJtIr6ifbntVhGAzDURD898eT8D+vsinNENQn5JRbPoa8quLBMgDU
+         pG7Icamv1V9xAVdOs2cILcbbaTHRft9hc+8T3CZwhjCL3BVsq2gpAIyQNfyJE+2A7t37
+         FKHwN3wuT/Pad75An0kTaCsolWpRDZRHmGrnMg3UAp8KcoRcyplidXycGiapECsZ3cM7
+         sdoi8xM9p7HaSzcfpzdAqKTqeqTEYyA5sdX33QZaVuksD5nUEHAO8n8jzSkKUIdmAglW
+         K7YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692790331; x=1693395131;
+        d=1e100.net; s=20221208; t=1692792911; x=1693397711;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BESIYsoydvZiBIe9fSP1rmQvOVRq1L1S9N0ieUFEhq4=;
-        b=iT+jrbef0VR2G6RrEl80cV9yw0NwEe9FNAo1ZnQY6SHar/uOrHmEkCgAp7X+bWcQ2C
-         QSOa0jUV1NXiM8cvai9qJV4FyzS6VBBTPeF2/QY55/xrudnc6k+ARUhNrjgXVNQTD6ZH
-         V7RpRq1FsYblO8CIrkgoQ9EROvxO+7gfwCLgC/sFNwSPK3DDo40vUsibiPTk6pQOWNVT
-         D7yYMKmK5DPF0wNhYwEbXSV9+mrQwoC87JCnbJnJTzJ13Nh5EAeq9Gyl466fdefrBb/d
-         sw3amYL7f8MLEPtgRSLl6mDi68k5uHyO5NRFzkniNN2dGTg9c6Bn2VrWkeVIURXa/yCs
-         L1gg==
-X-Gm-Message-State: AOJu0YyjNvGX8yZjHYeXR4pWN4vrp71LUzOCSxUPhBlkI01Cc2UOimaR
-        S9nJd8Utf2ere8Xq1FN8E4oi0399X+v75tSdViPpZqGrSLpGLg==
-X-Google-Smtp-Source: AGHT+IG6rFbjqA4R3FXmRn0GW7RP1j0BHun38i1fbHL1hrlaMoXT9zLIqp0TAUthZYck+p+HjViAPpJpMYhW8mdpUrE=
-X-Received: by 2002:a4a:275b:0:b0:56c:e856:8b2c with SMTP id
- w27-20020a4a275b000000b0056ce8568b2cmr10832032oow.9.1692790330668; Wed, 23
- Aug 2023 04:32:10 -0700 (PDT)
+        bh=0N2gnvcEfGb3L+QEwC+N38b9ItEwrmfrslDJ70apZRE=;
+        b=LHirbTtcOBdyeULEjVQ5THFsHkoe/O3JO4YD+LOmhp2Cnx7bTk4BzQxZGmzQrLSaHZ
+         ZBPecQgSc5ydzzsfrKC/iDmsM/hrrQLcY52G2HpRvI/uoFWfNJEVt1SKf9EemETNPT2p
+         mg8NbkI2WkdwjW8ns6gI1/KCEFH1CZDyVy+wCHOCj5soJoP9+yqF8K+2PyANd8ogoPBU
+         F/WXN3GHsHg4xN/WHwQN1nHb3CBWUmZsOVBVtv9z6kulCfMI0tUQ3JR0zbvMUYfp1wxa
+         kUZnWXYfkF+mJxmmB3r6pmx8jyjRAlUeQRZZSSZLJLQTfFj3IM/SI54TZr+I6rw2R4Vf
+         YTag==
+X-Gm-Message-State: AOJu0YyZEWq56rSBJ1qwcpHy/DNE32wVo4WanOPEE0snddFPkKPgavq+
+        jT3NSKIXW2VRQjbgbgtVL1PeV+032kkrGXVKb9MbtQ==
+X-Google-Smtp-Source: AGHT+IEozVHXH4Oln+v1G7Ein85g60u9KEJ8wZA2BteuvSIbfcJGpkjoSLO9O42JwgcVVVFGEFzwIBnJ3zMVc1ykWhk=
+X-Received: by 2002:a25:d78c:0:b0:d73:e979:d5c8 with SMTP id
+ o134-20020a25d78c000000b00d73e979d5c8mr13520994ybg.34.1692792911487; Wed, 23
+ Aug 2023 05:15:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230823085258.113701-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230823085258.113701-1-krzysztof.kozlowski@linaro.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 23 Aug 2023 14:31:34 +0300
-Message-ID: <CAHp75VdSaZTT8a-QFmiqPLYH-nK6ycZzV10CFFdv_LS3BVG_5w@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mlxbf3: use capital "OR" for multiple licenses in SPDX
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20230822152244.214394-1-brgl@bgdev.pl>
+In-Reply-To: <20230822152244.214394-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 23 Aug 2023 14:14:59 +0200
+Message-ID: <CACRpkdZWKDsHtYHqWSqz6QYp4TKT4OskWO7v6w=2v3NhvYWc4w@mail.gmail.com>
+Subject: Re: [PATCH] HID: cp2112: make the irqchip immutable
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Marc Zyngier <maz@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,15 +72,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 11:53=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Tue, Aug 22, 2023 at 5:22=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Documentation/process/license-rules.rst and checkpatch expect the SPDX
-> identifier syntax for multiple licenses to use capital "OR".  Correct it
-> to keep consistent format and avoid copy-paste issues.
+> This make the GPIO irqchip exposed by the CP2112 driver use an immutable
+> irq_chip struct thus addressing the following warning on probe:
+>
+>   (cp2112_gpio): not an immutable chip, please consider fixing it!
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks for fixing this. FWIW:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
---=20
-With Best Regards,
-Andy Shevchenko
+Marc Z, have you checked how we stand with immutable GPIO
+irqchips? We should be able to smoke it out to default behaviour
+soon I think.
+
+Yours,
+Linus Walleij
