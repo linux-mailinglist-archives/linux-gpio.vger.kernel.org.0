@@ -2,53 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADCD07851B3
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 09:37:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 441EF78521D
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 09:57:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233443AbjHWHg7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Aug 2023 03:36:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49024 "EHLO
+        id S231544AbjHWH5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Aug 2023 03:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231226AbjHWHg7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 03:36:59 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D1CE4E61;
-        Wed, 23 Aug 2023 00:36:36 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.201])
-        by gateway (Coremail) with SMTP id _____8BxY_ADt+Vk_SMbAA--.55458S3;
-        Wed, 23 Aug 2023 15:36:35 +0800 (CST)
-Received: from [10.20.42.201] (unknown [10.20.42.201])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX88At+VkqyBhAA--.39583S3;
-        Wed, 23 Aug 2023 15:36:33 +0800 (CST)
-Subject: Re: [PATCH v3 2/2] gpio: loongson: add firmware offset parse support
-To:     andy.shevchenko@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S230480AbjHWH5Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 03:57:24 -0400
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 723221BE;
+        Wed, 23 Aug 2023 00:57:22 -0700 (PDT)
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.77 with qID 37N7ugTH3031092, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+        by rtits2.realtek.com.tw (8.15.2/2.81/5.90) with ESMTPS id 37N7ugTH3031092
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 23 Aug 2023 15:56:42 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Wed, 23 Aug 2023 15:56:48 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Wed, 23 Aug 2023 15:56:48 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::e138:e7f1:4709:ff4d]) by
+ RTEXMBS04.realtek.com.tw ([fe80::e138:e7f1:4709:ff4d%5]) with mapi id
+ 15.01.2375.007; Wed, 23 Aug 2023 15:56:48 +0800
+From:   =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
-References: <20230807074043.31288-1-zhuyinbo@loongson.cn>
- <20230807074043.31288-3-zhuyinbo@loongson.cn>
- <ZNqhM18XoaqNdN99@surfacebook.localdomain>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <04c72d20-6f4d-b957-ee77-6bcbe279f8b2@loongson.cn>
-Date:   Wed, 23 Aug 2023 15:36:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 5/7] dt-bindings: pinctrl: realtek: add RTD1315E pinctrl binding
+Thread-Topic: [PATCH 5/7] dt-bindings: pinctrl: realtek: add RTD1315E pinctrl
+ binding
+Thread-Index: AQHZyS4KlrKw42BEDUewXNjTeqXxea/2B4ig
+Date:   Wed, 23 Aug 2023 07:56:48 +0000
+Message-ID: <ba502655bea5481aaee9209195f2bf79@realtek.com>
+References: <20230726090409.16606-1-tychang@realtek.com>
+ <20230726090409.16606-6-tychang@realtek.com>
+ <CACRpkdYzLiXSLpU63Nn84b+p3Nz5Ls-o94HsoAq514LvGkSiVg@mail.gmail.com>
+In-Reply-To: <CACRpkdYzLiXSLpU63Nn84b+p3Nz5Ls-o94HsoAq514LvGkSiVg@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.181.166]
+x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <ZNqhM18XoaqNdN99@surfacebook.localdomain>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxX88At+VkqyBhAA--.39583S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-        nUUI43ZEXa7xR_UUUUUUUUU==
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,111 +70,60 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-Hi andy,
-
-Sorry, I lost this email due to issues with my company's email server. I
-will adopt your suggestion in v5 version.
-
-ÔÚ 2023/8/15 ÉÏÎç5:48, andy.shevchenko@gmail.com Ð´µÀ:
-> Mon, Aug 07, 2023 at 03:40:43PM +0800, Yinbo Zhu kirjoitti:
->> Loongson GPIO controllers come in multiple variants that are compatible
->> except for certain register offset values.  Add support for device
->> properties allowing to specify them in ACPI or DT.
-> 
->> +	if (device_property_read_u32(dev, "ngpios", &ngpios) || !ngpios)
->> +		return -EINVAL;
->> +
->> +	ret = DIV_ROUND_UP(ngpios, 8);
->> +	switch (ret) {
->> +	case 1 ... 2:
->> +		io_width = ret;
->> +		break;
->> +	case 3 ... 4:
->> +		io_width = 0x4;
->> +		break;
->> +	case 5 ... 8:
->> +		io_width = 0x8;
->> +		break;
->> +	default:
->> +		dev_err(dev, "unsupported io width\n");
->> +		return -EINVAL;
->> +	}
-> 
-> Why? We have bgpio_init() handle this.
-> https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git/commit/?h=gpio/for-next&id=55b2395e4e92adc492c6b30ac109eb78250dcd9d
-
-
-okay, I got it.
-
-> 
-> ...
-> 
->> +	lgpio->chip.can_sleep = 0;
-> 
-> It's boolean, use boolean initializer.
-
-
-okay, I got it.
-
-> 
-> ...
-> 
->> +	if (lgpio->chip_data->label)
->> +		lgpio->chip.label = lgpio->chip_data->label;
->> +	else
->> +		lgpio->chip.label = kstrdup(to_platform_device(dev)->name, GFP_KERNEL);
-> 
-> No error check? Not a devm_*() variant, so leaking memory?
-
-
-This code had been removed in v4.
-
-> 
-> ...
-> 
->> +	{
->> +		.id = "LOON0007",
->> +	},
-> 
-> How does DSDT excerpt for this device look like?
-
-
-LOON0007 and LOON000A are similar, LOON000A is for 2k2000 gpio0.
-
-      Device (GPO0)
-         {
-             Name (_HID, "LOON000A")  // _HID: Hardware ID
-             Name (_ADR, Zero)  // _ADR: Address
-             Name (_UID, One)  // _UID: Unique ID
-             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource 
-Settings
-             {
-                 QWordMemory (ResourceConsumer, PosDecode, MinFixed, 
-MaxFixed, NonCacheable, ReadWrite,
-                     0x0000000000000000, // Granularity
-                     0x000000001FE00500, // Range Minimum
-                     0x000000001FE00520, // Range Maximum
-                     0x0000000000000000, // Translation Offset
-                     0x0000000000000021, // Length
-                     ,, , AddressRangeMemory, TypeStatic)
-             })
-             Name (_DSD, Package (0x02)  // _DSD: Device-Specific Data
-             {
-                 ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301") /* 
-Device Properties for _DSD */,
-                 Package (0x01)
-                 {
-                     Package (0x02)
-                     {
-                         "ngpios",
-                         0x20
-                     }
-                 }
-             })
-         }
-
-
-Thanks,
-Yinbo
-
+SGkgTGludXMsDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQoNCj4NCj5IaSBUWSBDaGFuZywN
+Cj4NCj50aGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+DQo+T24gV2VkLCBKdWwgMjYsIDIwMjMgYXQg
+MTE6MDbigK9BTSBUWSBDaGFuZyA8dHljaGFuZ0ByZWFsdGVrLmNvbT4gd3JvdGU6DQo+DQo+PiBB
+ZGQgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIFJURDEzMTVFLg0KPj4NCj4+IFNpZ25lZC1vZmYt
+Ynk6IFRZIENoYW5nIDx0eWNoYW5nQHJlYWx0ZWsuY29tPg0KPg0KPk1heWJlIHlvdSBjb3VsZCB3
+cml0ZSBhIHNob3J0IHBhcmFncmFwaCBhYm91dCB0aGUgUlREMTMxNUUgc28gd2Uga25vdyB3aGF0
+DQo+dGhpcyBpcz8gSSBndWVzcyBpdCBpcyBzb21lIFNvQyB3aXRoIHNvbWUgaW50ZW5kZWQgdXNl
+IGNhc2U/DQo+DQoNCkkgd2lsbCBhZGQgaXQgaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0KPiguLi4p
+DQo+PiArZGVzY3JpcHRpb246IHwNCj4+ICsgIEJpbmRpbmcgZm9yIFJlYWx0ZWsgREhDIFJURDEz
+MTVFIFNvQyBwaW4gY29udHJvbC4NCj4NCj5TYW1lIHRleHQgc2hvdWxkIGdvIGhlcmUgaW4gdGhh
+dCBjYXNlLg0KPg0KPj4gKyAgICAgICAgcmVhbHRlayxwZHJpdmU6DQo+PiArICAgICAgICAgIGRl
+c2NyaXB0aW9uOiB8DQo+PiArICAgICAgICAgICAgQW4gaW50ZWdlciBkZXNjcmliaW5nIHRoZSBs
+ZXZlbCB0byBhZGp1c3QgUE1PUyBvdXRwdXQgZHJpdmluZw0KPmNhcGFiaWxpdHkuDQo+PiArICAg
+ICAgICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KPj4g
+KyAgICAgICAgICBtaW5pbXVtOiAwDQo+PiArICAgICAgICAgIG1heGltdW06IDcNCj4+ICsNCj4+
+ICsgICAgICAgIHJlYWx0ZWssbmRyaXZlOg0KPj4gKyAgICAgICAgICBkZXNjcmlwdGlvbjogfA0K
+Pj4gKyAgICAgICAgICAgIEFuIGludGVnZXIgZGVzY3JpYmluZyB0aGUgbGV2ZWwgdG8gYWRqdXN0
+IE5NT1Mgb3V0cHV0IGRyaXZpbmcNCj5jYXBhYmlsaXR5Lg0KPj4gKyAgICAgICAgICAkcmVmOiAv
+c2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzINCj4+ICsgICAgICAgICAgbWlu
+aW11bTogMA0KPj4gKyAgICAgICAgICBtYXhpbXVtOiA3DQo+DQo+SSB3b3VsZCByZW5hbWUgdGhl
+c2UgcmVhbHRlayxkcml2ZS1zdHJlbmd0aC1wIGFuZCByZWFsdGVrLGRyaXZlLXN0cmVuZ3RoLW4u
+DQoNClN1cmUsIEkgdGhpbmsgbmFtaW5nIHRoZW0gbGlrZSB0aGF0IG1ha2VzIGl0IGNsZWFyZXIu
+DQoNCj4NCj5Zb3UgbmVlZCB0byBleHBsYWluIHdoYXQgaXMgbWVhbnQgd2l0aCBQTU9TIGFuZCBO
+TU9TIGhlcmUuIElmIGl0IGlzIHdoYXQgSSB0aGluaw0KPml0IGlzLCBJIHRoaW5rIHNvbWUgQVND
+SUkgYXJ0IHdvdWxkIGJlIGhhbmR5IQ0KPg0KPllvdSBjYW4gcmV1c2UgbXkgQVNDSUkgYXJ0IGZy
+b20gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2dwaW8vZHJpdmVyLnJzdDoNCj4NCj4gICAgICAg
+ICAgICAgICAgICAgICBWREQNCj4gICAgICAgICAgICAgICAgICAgICAgfA0KPiAgICAgICAgICAg
+IE9EICAgIHx8LS0rDQo+ICAgICAgICAgKy0tLyAtLS1vfHwgICAgIFAtTU9TLUZFVA0KPiAgICAg
+ICAgIHwgICAgICAgIHx8LS0rDQo+ICAgIElOIC0tKyAgICAgICAgICAgICstLS0tLSBvdXQNCj4g
+ICAgICAgICB8ICAgICAgICB8fC0tKw0KPiAgICAgICAgICstLS8gLS0tLXx8ICAgICBOLU1PUy1G
+RVQNCj4gICAgICAgICAgICBPUyAgICB8fC0tKw0KPiAgICAgICAgICAgICAgICAgICAgICB8DQo+
+ICAgICAgICAgICAgICAgICAgICAgR05EDQo+DQo+TWF5YmUgeW91IHdhbm5hIGRlbGV0ZSB0aGUg
+T0Qgc3dpdGNoIGlmIHRoZXNlIGRyaXZlcnMgZG9uJ3Qgc3VwcG9ydCB0aGF0Lg0KPg0KPldoYXQg
+ZG9lcyB0aGUgdmFsdWVzIDAuLjcgYWN0dWFsbHkgY29ycmVzcG9uZCB0bz8gSXMgaXQgdGhlIG51
+bWJlciBvZg0KPnRyYW5zaXN0b3JzL2RyaXZlciBzdGFnZXMgc2ltcGx5PyBUaGVuIHdyaXRlIHRo
+YXQuDQo+DQo+V2UgbmVlZCB0byB0aGluayB3aGV0aGVyIHRoaXMgaXMgc28gZ2VuZXJpY2FsbHkg
+dXNlZnVsIHRoYXQgaXQgc2hvdWxkIHNpbXBseSBiZQ0KPmRyaXZlLXN0cmVuZ3RoLXBtb3MgYW5k
+IGRyaXZlLXN0cmVuZ3RoLW5tb3MsIHNpbXBseSBwdXQsIGFzIG90aGVyIFNvQ3MgbWF5DQo+aW1w
+bGVtZW50IHRoZSBzYW1lLiBXaGF0IGRvIHBlb3BsZSB0aGluaz8NCj4NCg0KSSB3aWxsIGFkZCB0
+aGVzZSBpbiB0aGUgbmV4dCB2ZXJzaW9uLiBUaGUgdmFsdWVzIDAuLjcgaXMgdGhlIGxldmVsIG9m
+IHRoZSBkcml2aW5nIHN0cmVuZ3RoLiANClRoZXNlIGxldmVzIGNhbiBpbXBhY3QgdGhlIHJpc2lu
+Zy9mYWxsaW5nIHRpbWUgb2YgdGhlIHdhdmVmb3JtLCBhc3Npc3RpbmcgaW4gYWNoaWV2aW5nDQp0
+aGUgZGVzaXJlZCB0cmFuc2ZlciBzcGVlZC4NCg0KPj4gKyAgICAgICAgcmVhbHRlayxkY3ljbGU6
+DQo+PiArICAgICAgICAgIGRlc2NyaXB0aW9uOiB8DQo+PiArICAgICAgICAgICAgQW4gaW50ZWdl
+ciBkZXNjcmliaW5nIHRoZSBsZXZlbCB0byBhZGp1c3Qgb3V0cHV0IGR1dHkgY3ljbGUuDQo+PiAr
+ICAgICAgICAgICAgVmFsaWQgYXJndW1lbnRzIGFyZSBkZXNjcmliZWQgYXMgYmVsb3c6DQo+PiAr
+ICAgICAgICAgICAgMDogMG5zDQo+PiArICAgICAgICAgICAgMjogKyAwLjI1bnMNCj4+ICsgICAg
+ICAgICAgICAzOiArIDAuNW5zDQo+PiArICAgICAgICAgICAgNDogLTAuMjVucw0KPj4gKyAgICAg
+ICAgICAgIDU6IC0wLjVucw0KPj4gKyAgICAgICAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1s
+Iy9kZWZpbml0aW9ucy91aW50MzINCj4+ICsgICAgICAgICAgZW51bTogWyAwLCAyLCAzLCA0LCA1
+IF0NCj4NCj5UaGlzIGRvZXMgbm90IGV4cGxhaW4gdGhlIGR1dHkgY3ljbGUgb2YgKndoYXQqPw0K
+Pg0KPkl0IGxvb2tzIHJlYWxseSB1c2VmdWwgc28gcGxlYXNlIGV4cGxhaW4gdGhvcm91Z2hseSB3
+aGF0IGl0IGRvZXMuDQo+DQo+SSBndWVzcyB0aGlzIGlzIG5vdCBQV00gYmVjYXVzZSB0aGVuIHlv
+dSBjb3VsZCB1c2UgUElOX0NPTkZJR19NT0RFX1BXTS4NCj4NCg0KVGhpcyBpcyBub3QgUFdNLiBU
+aGUgZHV0eSBjeWNsZSBoZXJlIGlzIHRvIGFkanVzdCB0aGUgcHJvcG9ydGlvbiBvZiBwb3NpdGl2
+ZSBhbmQgbmVnYXRpdmUgd2F2ZWZvcm1zLCBhbmQgaXMgYWRqdXN0ZWQgaW4gbmFub3NlY29uZChu
+cykuDQoNCj5Zb3VycywNCj5MaW51cyBXYWxsZWlqDQo+DQoNClRoYW5rcywNClRZIENoYW5nDQo=
