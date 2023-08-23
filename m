@@ -2,128 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C464B78588B
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 15:11:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5385978596E
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Aug 2023 15:35:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232537AbjHWNLt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Aug 2023 09:11:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
+        id S235629AbjHWNfR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Aug 2023 09:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231472AbjHWNLt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 09:11:49 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D89E51;
-        Wed, 23 Aug 2023 06:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692796307; x=1724332307;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C0oPlxHPZRbdXx8eP6dtgFIGoNChzCBCKIdc/q6TJcc=;
-  b=ATMCoJZBCWv40x6MWCUcuBqLoYw9hztV14b1LjnEtx8dfYU1Aizo/WGj
-   YRiS6BmIQl3NarhiqyuGA92pqLomgpYNK1CYyPxy78dHzN8Q6HJMCoTJ5
-   BHLpKsSs/2j73yXsYEXzP7gDXd4NF80mz5qVv0gZiiG4eZAklFCtfsXOQ
-   Q4P5D0ussshIWOBg3gyU4MIQPFXJI7SGQxaAKOf7cwq7FD/SJF2ZUpNPA
-   r9+ZDGpnbnKtzDlpTOVnsbfcNygLOzSD0wckK155B/FosmmJTOu+Y7+cK
-   M338hxnOQuan9+tlMGzS5InC2mv4tkCGVXaxMNojMYciJOPiX613CLdUB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="371569745"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="371569745"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 06:11:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="686452026"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="686452026"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP; 23 Aug 2023 06:11:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qYneB-008bo4-0D;
-        Wed, 23 Aug 2023 16:11:43 +0300
-Date:   Wed, 23 Aug 2023 16:11:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 1/2] gpio: sim: dispose of irq mappings before
- destroying the irq_sim domain
-Message-ID: <ZOYFjtt/+9hPw4u0@smile.fi.intel.com>
-References: <20230822192943.493182-1-brgl@bgdev.pl>
+        with ESMTP id S233141AbjHWNfR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Aug 2023 09:35:17 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EDAC8CDF;
+        Wed, 23 Aug 2023 06:35:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B3361042;
+        Wed, 23 Aug 2023 06:35:41 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3CF73F740;
+        Wed, 23 Aug 2023 06:34:58 -0700 (PDT)
+Date:   Wed, 23 Aug 2023 14:34:55 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v4 3/4] pinctrl: Implementation of the generic
+ scmi-pinctrl driver
+Message-ID: <ZOYK_x6yc59pDwzA@pluto>
+References: <cover.1691518313.git.oleksii_moisieiev@epam.com>
+ <a6cefa60500cd46313ad6cda4f13f4985c0f5237.1691518314.git.oleksii_moisieiev@epam.com>
+ <ZOWHWLVtKXwRug+Z@octopus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230822192943.493182-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <ZOWHWLVtKXwRug+Z@octopus>
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 22, 2023 at 09:29:42PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> If a GPIO simulator device is unbound with interrupts still requested,
-> we will hit a use-after-free issue in __irq_domain_deactivate_irq(). The
-> owner of the irq domain must dispose of all mappings before destroying
-> the domain object.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Fixes: cb8c474e79be ("gpio: sim: new testing module")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
-> v1 -> v2:
-> - drop the return value check of irq_find_mapping()
-> 
->  drivers/gpio/gpio-sim.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index f1f6f1c32987..8fb11a5395eb 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -291,6 +291,15 @@ static void gpio_sim_mutex_destroy(void *data)
->  	mutex_destroy(lock);
->  }
->  
-> +static void gpio_sim_dispose_mappings(void *data)
-> +{
-> +	struct gpio_sim_chip *chip = data;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < chip->gc.ngpio; i++)
-> +		irq_dispose_mapping(irq_find_mapping(chip->irq_sim, i));
-> +}
-> +
->  static void gpio_sim_sysfs_remove(void *data)
->  {
->  	struct gpio_sim_chip *chip = data;
-> @@ -406,6 +415,10 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
->  	if (IS_ERR(chip->irq_sim))
->  		return PTR_ERR(chip->irq_sim);
->  
-> +	ret = devm_add_action_or_reset(dev, gpio_sim_dispose_mappings, chip);
-> +	if (ret)
-> +		return ret;
-> +
->  	mutex_init(&chip->lock);
->  	ret = devm_add_action_or_reset(dev, gpio_sim_mutex_destroy,
->  				       &chip->lock);
-> -- 
-> 2.39.2
+On Wed, Aug 23, 2023 at 01:13:12PM +0900, AKASHI Takahiro wrote:
+> Hi Oleksii,
 > 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Hi AKASHI, Oleksii,
 
+> On Tue, Aug 08, 2023 at 06:25:35PM +0000, Oleksii Moisieiev wrote:
+> > scmi-pinctrl driver implements pinctrl driver interface and using
+> > SCMI protocol to redirect messages from pinctrl subsystem SDK to
+> > SCMI platform firmware, which does the changes in HW.
+> > 
+> > Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+
+[snip]
+
+> > +static int pinctrl_scmi_pinconf_get(struct pinctrl_dev *pctldev, unsigned int _pin,
+> > +				    unsigned long *config)
+> > +{
+> > +	int ret;
+> > +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> > +	enum pin_config_param config_type;
+> > +	unsigned long config_value;
+> > +
+> > +	if (!config)
+> > +		return -EINVAL;
+> > +
+> > +	config_type = pinconf_to_config_param(*config);
+> > +
+> > +	ret = pinctrl_ops->config_get(pmx->ph, _pin, PIN_TYPE, config_type, &config_value);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	*config = pinconf_to_config_packed(config_type, config_value);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int pinctrl_scmi_pinconf_set(struct pinctrl_dev *pctldev,
+> > +				    unsigned int _pin,
+> > +				    unsigned long *configs,
+> > +				    unsigned int num_configs)
+> > +{
+> > +	int i, ret;
+> > +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> > +	enum pin_config_param config_type;
+> > +	unsigned long config_value;
+> > +
+> > +	if (!configs || num_configs == 0)
+> > +		return -EINVAL;
+> > +
+> > +	for (i = 0; i < num_configs; i++) {
+> > +		config_type = pinconf_to_config_param(configs[i]);
+> > +		config_value = pinconf_to_config_argument(configs[i]);
+> 
+> The generic pinconf parameters defined as "enum pin_config_param"
+> do not exactly match with a set of SCMI's configuration types defined
+> in Table 23 in the section 4.11.2.6 "PINCTRL_CONFIG_GET".
+> pinconf_to_config_param() simply masks the lowest 8 bits of the input
+> value, but doesn't convert anything.
+
+Indeed the SCMI Types table and the Linux Pinctrl subsystem types are
+similar but not really the same; some kind of conversion/mapping will be
+needed.
+
+Some trivial conversion layer will be needed also in order to address
+here any of the possible future changes in the Linux pinctrl subsystem
+definitions without having to change the SCMI server side
+(that typically is fw...and that anyway is bound to the SCMI spec)
+
+Thanks,
+Cristian
 
