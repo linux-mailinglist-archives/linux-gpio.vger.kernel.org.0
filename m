@@ -2,147 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B68E787B3C
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 00:11:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8883F787BE3
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 01:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243848AbjHXWKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Aug 2023 18:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
+        id S238934AbjHXXQs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Aug 2023 19:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243844AbjHXWKV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Aug 2023 18:10:21 -0400
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05hn2237.outbound.protection.outlook.com [52.100.174.237])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAF61B9;
-        Thu, 24 Aug 2023 15:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=79WQMo1An+kEjfD00O/FIsavhTriaIzAE1XWuOS+3hA=;
- b=TBwNzf3XKNPB7c8XLAMgR6IWsB7cuX7kJSU1iDUUJZfmsl4Gz/Tu4eSZU0xDha4VivD5Mn1fxvGD1aZopyL679vvtQyqk0f7mXf7Q1YT+8wHqv4+L7bn+p+IhOFoQ3oUPz6nY2vLe7OWsW2SGDUfs/ymPR/2vB9s3P27ZXotvH0Atcl3qQZ5GXGBirhMubpjeqHZ8H8GDmJs6qpELJTxiiLumnXTSCDOQxzKA+QkpQCWSmfwlm/Hqm06KK9oVhzVR6mdmv/MMPFmNPuKQbqsi3uX18XdzP7a5qj0n57WJLneVJj633Toc/LGAs9YV/cjWm5AYnFM3eP8efH9GsC/+A==
-Received: from DB3PR08CA0010.eurprd08.prod.outlook.com (2603:10a6:8::23) by
- AM7PR03MB6264.eurprd03.prod.outlook.com (2603:10a6:20b:13d::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6699.27; Thu, 24 Aug 2023 22:10:14 +0000
-Received: from DB8EUR05FT015.eop-eur05.prod.protection.outlook.com
- (2603:10a6:8:0:cafe::e2) by DB3PR08CA0010.outlook.office365.com
- (2603:10a6:8::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.30 via Frontend
- Transport; Thu, 24 Aug 2023 22:10:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.160.56.85)
- smtp.mailfrom=seco.com; dkim=pass (signature was verified)
- header.d=seco.com;dmarc=pass action=none header.from=seco.com;
-Received-SPF: Pass (protection.outlook.com: domain of seco.com designates
- 20.160.56.85 as permitted sender) receiver=protection.outlook.com;
- client-ip=20.160.56.85; helo=inpost-eu.tmcas.trendmicro.com; pr=C
-Received: from inpost-eu.tmcas.trendmicro.com (20.160.56.85) by
- DB8EUR05FT015.mail.protection.outlook.com (10.233.238.127) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6723.16 via Frontend Transport; Thu, 24 Aug 2023 22:10:14 +0000
-Received: from outmta (unknown [192.168.82.135])
-        by inpost-eu.tmcas.trendmicro.com (Trend Micro CAS) with ESMTP id DE6A0200813A8;
-        Thu, 24 Aug 2023 22:10:13 +0000 (UTC)
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (unknown [104.47.17.175])
-        by repre.tmcas.trendmicro.com (Trend Micro CAS) with ESMTPS id 66CCA2008006E;
-        Thu, 24 Aug 2023 22:10:08 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aim7+34kmdpnPLquMdpMRc6Nsn2oyUjqA8iEUgrxtZ+pJCplXJw4CvoAGHv2L4HA1mNEUw3heDouacQ0q2ztldFJvCp2kVRGK7GYsGaD4BA99ZMksNM1OxNW7+TvDUp2Eh83A11WBHXCns4LSY3q8fboaHoG3yU1S6mJXVlEeW2swa+a7kYXE/WzyGJCMsbGxzf7rpY6bCpnHjbI9EvzxUOX/DOx9V4EyUWJnr/yeubBL4vX7YyvDwA+fSJjLWTlRl8QjH7DtP/ss7IigV0i3b5CNcHKlVSzYf9wT83eE7O6DXVdHb94ngTLXc4S1RCcU85HTBhmOVxR1yxYQmNcAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=79WQMo1An+kEjfD00O/FIsavhTriaIzAE1XWuOS+3hA=;
- b=TOBsdNoED18bv+w/PUjLXmP1XEz13SIGIpYPuR95Jitc/AuWvA0X469zRrr0nGZMgPB4dLg/AgsxkdhZNkbLZxV6eIyHFMvYPVNA+SAD0SEnG5z77ke3GUnK6v8DpMSSvULGbHdL6ans3Nsje0J7FGryGmlbcasYlYJyvEmo1zNmp8YbWvpmqgyq8m0n90ESznegISB+RdFnVp4czxHu6mnUQOGyhVuDAeo3QZNQeUcQFxJK9a6YYYm9H3daMs05CbS2+cSnmq3zyeO/hZpTa88smvIcg+LzB6V6HaBZJxDkjxsghoyV6WaZ3Ephm+jsNhFundDK1F1VOodWoy8gmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
- dkim=pass header.d=seco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=79WQMo1An+kEjfD00O/FIsavhTriaIzAE1XWuOS+3hA=;
- b=TBwNzf3XKNPB7c8XLAMgR6IWsB7cuX7kJSU1iDUUJZfmsl4Gz/Tu4eSZU0xDha4VivD5Mn1fxvGD1aZopyL679vvtQyqk0f7mXf7Q1YT+8wHqv4+L7bn+p+IhOFoQ3oUPz6nY2vLe7OWsW2SGDUfs/ymPR/2vB9s3P27ZXotvH0Atcl3qQZ5GXGBirhMubpjeqHZ8H8GDmJs6qpELJTxiiLumnXTSCDOQxzKA+QkpQCWSmfwlm/Hqm06KK9oVhzVR6mdmv/MMPFmNPuKQbqsi3uX18XdzP7a5qj0n57WJLneVJj633Toc/LGAs9YV/cjWm5AYnFM3eP8efH9GsC/+A==
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=seco.com;
-Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
- by AM7PR03MB6673.eurprd03.prod.outlook.com (2603:10a6:20b:1b1::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Thu, 24 Aug
- 2023 22:10:06 +0000
-Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
- ([fe80::21bd:6579:b3d1:e5f7]) by DB9PR03MB8847.eurprd03.prod.outlook.com
- ([fe80::21bd:6579:b3d1:e5f7%5]) with mapi id 15.20.6699.027; Thu, 24 Aug 2023
- 22:10:00 +0000
-Message-ID: <54621dd6-275b-fd9d-a158-6871f1a04fd1@seco.com>
-Date:   Thu, 24 Aug 2023 18:09:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.1
-Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
-Content-Language: en-US
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?UTF-8?B?RmVybuKUnMOtbmRleiBSb2phcw==?= <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <26623d0c-8a5a-614b-7df7-69214aaec524@seco.com>
- <20230811163637.bs7a46juasjgnmf4@skbuf>
- <20230821124952.mraqqp7pxlo56gkh@skbuf>
- <a2e3fcad-9857-f1b3-8ada-efb2013a4bf5@seco.com>
- <20230821181349.hls6pukp5d6rc5av@LXL00007.wbi.nxp.com>
- <73d59dd2-88f0-3c1a-0de2-de2e050cba5a@seco.com>
- <20230821195823.ns55h3livxgol7fp@skbuf>
- <a66c9abf-5351-62b6-5573-cae38e6768e2@seco.com>
- <20230821224834.ppk4hmjyajupy7va@skbuf>
- <a4828cf7-9cac-286f-0aba-fcd1688c8422@seco.com>
- <20230821235917.mzawnkoi7oj4zgm6@skbuf>
-From:   Sean Anderson <sean.anderson@seco.com>
-In-Reply-To: <20230821235917.mzawnkoi7oj4zgm6@skbuf>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BL0PR02CA0053.namprd02.prod.outlook.com
- (2603:10b6:207:3d::30) To DB9PR03MB8847.eurprd03.prod.outlook.com
- (2603:10a6:10:3dd::13)
+        with ESMTP id S244102AbjHXXQo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Aug 2023 19:16:44 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE53C1BD8;
+        Thu, 24 Aug 2023 16:16:33 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-411f5dd7912so1752091cf.3;
+        Thu, 24 Aug 2023 16:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692918993; x=1693523793;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DwYEG6LDZeYZEz4nJF4sLmiV7XAaDp0hMayPMcMAPoY=;
+        b=U3DADakTWFVqLJ/Qm8fJMc4K7Bp+Y2y5d0Kak0y6EznFUvFg0oMS/Mq9j7Ax86A+sk
+         EhgcS+MuxgEAuIY+btx2CoxuGUl3HJ42GWT+tuBKrFNSPGxl/Bx3EV+0R0K3Sf7NTycg
+         KNKPN4IW42K7xl+7FmiP3F/sZCnPTBhuNts7aZgoG1/oyje6lulxmhVpz0+j52LdeQZu
+         +volZsrWpkAQBVNn4HFn1zsC8XpKXrUNA91N/+MTccaR8eMpgu08c6VeaS/PSJSINXIi
+         4aOzNgVP1Ot+i4lvt9Ib0HykuEqv4TbNCFJcPtRNE0EqdGcu1qjYdSRarQbjQhQCXJ+O
+         jXzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692918993; x=1693523793;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DwYEG6LDZeYZEz4nJF4sLmiV7XAaDp0hMayPMcMAPoY=;
+        b=ajfhoqUYqEj7HAT4f65OcWYGtM+3sKfa43Wu91TqapI4GukbbpwTIUE1XXYPgQvvZl
+         bURjsvOFgjgXby8bXh7tZeAPet4jBWJ/XkkXdFqjrtTA27ObMQ8+kXJpLWfJzrPUomDf
+         KxPUujJbTLPhAWVN2luScsFffPDRs+ajKo14GP26MCLRW5N+ckmI6uGy1yxMhKmIR+lR
+         QsYtKHXVVIxVSjO7T27fC7hpZYJzQp8daR3yK+6jFDDNArunDy5/YaMT+n6Swne9/eW9
+         QInSb1OhEqv0ekpnBWCa63SdlbkVpE0c2WVipA4y+obaIwo4/3sHqMRw7LHjbn5vf+Vo
+         iZXg==
+X-Gm-Message-State: AOJu0YzRIDBt4daYbJmD5W9ZsJCAme3bVPoQ3P9goA9zUXjDr3jQsFK/
+        y7hCRqQijptfq5pJYWG9v17KdqKK4dmP+rPk
+X-Google-Smtp-Source: AGHT+IGB+hJ2GhXbKsbDYhTpNakLTpH6zYFeumCU9LHE6UxCU37meDEE9+N8OCLVnnwtaqpBzoZ3qw==
+X-Received: by 2002:a05:622a:13:b0:412:217:3d3d with SMTP id x19-20020a05622a001300b0041202173d3dmr4086554qtw.68.1692918992980;
+        Thu, 24 Aug 2023 16:16:32 -0700 (PDT)
+Received: from [192.168.0.16] (modemcable063.135-226-192.mc.videotron.ca. [192.226.135.63])
+        by smtp.gmail.com with ESMTPSA id eo9-20020a05622a544900b004054b435f8csm151322qtb.65.2023.08.24.16.16.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Aug 2023 16:16:32 -0700 (PDT)
+From:   Liam Beguin <liambeguin@gmail.com>
+Subject: [PATCH 0/2] gpio: pca953x: add support for TCA9538
+Date:   Thu, 24 Aug 2023 19:16:24 -0400
+Message-Id: <20230824-tca9538-v1-0-ee3bf2065065@gmail.com>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|AM7PR03MB6673:EE_|DB8EUR05FT015:EE_|AM7PR03MB6264:EE_
-X-MS-Office365-Filtering-Correlation-Id: 810daba8-3d73-42e2-bed7-08dba4eee451
-X-TrendMicro-CAS-OUT-LOOP-IDENTIFIER: 656f966764b7fb185830381c646b41a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: Xi8IaRb8efHNhChiX9wqVwb3hgrjvYpcIGB2Egp8N0XhCeqwAFxHdjm2C0w+nZgscwQfv0JxiJ2JcPxHRogAixlfyp1H7rvqHFm4z7qA5jWM5HZcmh1D1Y56qth0XnTRPvjtbCNDNSpZptJog0n4XeSAXsopBGH8SQUiFH+ECQbeUZu/qfoc9PEwOiaRtuh3JakXfClT8vjo03DgR555YXByDf7xNYBK56h9iidOna22Kg+EF1UMfmmkgtqKp42jp43/LiZUD1pmQgtmD5WrqhVWk5SQ+jy8DZbT31FSEO51WfT/0ytsSEqFfwlKnBsiptMv0IMPRh5BBR67FGuFmVJXzVVXG2CV1NPjJdSwljhW5az1Hp8HkhAje4VbFj/VGqP/fBUybHWv4EVha2hHQlsF5w9iUl2G80JO4U174muQF0O3e3ivq5i9T7JKbPXCxXBbvrF0N6k3dVqtQpPKUdIh4cLRTtPz8oEuil4mmCZrQgVTX3VEO7fR3KnCiPliZY2oD3TlqlHU9jAE/rZPZXx5CYagiTSXyJJsxjYfujAtiyZuMP9n/aTQthyMLFrJtiix7LbFRWphaMzwj19WZ7vW5Dwii0wXeJSDJP9u9TCdiTn9g16OlCUf12m8ERHlUOR/OLTMaL6jzQE+yhR5b/dBzmkI9nUJ/YuWwz5jRWIlSLHMlHXrAU/21PQiolKl
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(346002)(396003)(136003)(39850400004)(186009)(1800799009)(451199024)(66476007)(54906003)(66946007)(66556008)(316002)(6916009)(478600001)(26005)(6666004)(38350700002)(38100700002)(41300700001)(31696002)(6506007)(53546011)(6486002)(86362001)(52116002)(2906002)(6512007)(31686004)(4326008)(8676002)(8936002)(2616005)(5660300002)(7416002)(44832011)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR03MB6673
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB8EUR05FT015.eop-eur05.prod.protection.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 280fc6de-da17-4c96-83d6-08dba4eedb8d
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Cr10FIPobyKAN3bFuwPu+idIZMqCR+e3lgWu1b24poVeBvyrfl/sm3qVKuM49452UH+NAHZMBZWdPypLyxttv7PsyQmsSUtpQrJxCkLNxGkSkeeCYChRskeyZYGxHC7y0UGgAVsq9u6MaLo1DcONIAtZLurxv6KrJ8ItdnyemA8N2dKhbM0LlfBqmpVY3Y/9F6HTdoBVy2NHt7sBqmlCRnyrHvADP1jt3EMq1KFCoGAAxCmhZVGXcsf5YqJBhHp/BPO1tUmCEVHer+LmqgBlDPRuKOz78BR/iPJc4xymCcPrwncH3HPdTK7e9XIV0nRFyWZN7Gh9bg2I8vtqojxMVPMhDQ3zqpK9ykAVqOW56fDO6y9tBhfGTw+Y3HGnL80PK+nSC7hK2sFjsrrpCG+s7RSJevhQNK9eIwD0xgxgNgenT0rmMuEYVswpY5gPDec8MgWVKAw0OzdZXbMhWsgx9kmocf2WWpgPFo2fExirkAlUIm805abtArpYpw5dKCl+LARp6jxb2uQymMRSm2ktm7mp4go69id1yx74c4I1HA9G9hFosGVkfxc5Io/6YoNYcLA8hMG1D2yyPYWZF2sfNdtn+2klkfK7wLStegT7qgKrCcH5ZlK6BQg/vGdsn030ltkqRVOAi9fI8Y8/p+rAQWilQHNO9BEyH7wNtUhNMlx0i7lh/aQUIhu4GNLZ082RBLYCtO2s/vc/+gOpTp8IG02Plux1qQca4F4qnqNAJQf4Kg4ZWZmvKJGEKH2qHCf4V/Yt4UFAnOJk4vZbAYftE1phoQcfrzVQbd8fwwBKvSC5j91OspwVY+709R0RbgZ/
-X-Forefront-Antispam-Report: CIP:20.160.56.85;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:inpost-eu.tmcas.trendmicro.com;PTR:inpost-eu.tmcas.trendmicro.com;CAT:NONE;SFS:(13230031)(376002)(39850400004)(396003)(136003)(346002)(82310400011)(186009)(1800799009)(451199024)(5400799018)(36840700001)(46966006)(2616005)(5660300002)(34070700002)(4326008)(8676002)(8936002)(336012)(47076005)(36756003)(7416002)(44832011)(36860700001)(26005)(40480700001)(82740400003)(7596003)(356005)(7636003)(6666004)(70586007)(70206006)(54906003)(6916009)(316002)(478600001)(31686004)(53546011)(41300700001)(6512007)(6506007)(2906002)(86362001)(6486002)(31696002)(43740500002)(12100799039);DIR:OUT;SFP:1501;
-X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2023 22:10:14.2166
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 810daba8-3d73-42e2-bed7-08dba4eee451
-X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bebe97c3-6438-442e-ade3-ff17aa50e733;Ip=[20.160.56.85];Helo=[inpost-eu.tmcas.trendmicro.com]
-X-MS-Exchange-CrossTenant-AuthSource: DB8EUR05FT015.eop-eur05.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR03MB6264
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMjk52QC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDCyMT3ZLkREtTYwtdk5SkNIsUS+M0w6REJaDqgqLUtMwKsEnRsbW1APT
+ WVU9ZAAAA
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, Liam Beguin <liambeguin@gmail.com>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1692918991; l=617;
+ i=liambeguin@gmail.com; s=20230824; h=from:subject:message-id;
+ bh=scvdto5C4eFjmVE9YDbdg1AXIpzLa9wYd8YkecsvFsM=;
+ b=rQm4YAcFv70cq7EjPRrWvxdHWs2dOqFezleNy3Ngfgwst9MEl1AW1XD9EwTjIH16/xreb/ZFp
+ 4X5PUpbDM4pD65aINcuCdkRLhfK4yTx2dwOF+QD/fWy6G9fdDq1I5yx
+X-Developer-Key: i=liambeguin@gmail.com; a=ed25519;
+ pk=x+XyGOzOACLmUQ7jTEZhMy+lL3K5nhtUH6Oxt+tHkUQ=
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -150,25 +85,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 8/21/23 19:59, Vladimir Oltean wrote:
-> On Mon, Aug 21, 2023 at 07:39:15PM -0400, Sean Anderson wrote:
->> Well, I think we should take the opportunity to think about the hardware
->> which exists and how we plan to model it. IMO grouping lanes into a
->> single phy simplifies both the phy driver and the mac driver.
-> 
-> Ok, but ungrouped for backplane and grouped for !backplane? For the KR
-> link modes, parallel link training, with separate consumers per lanes in
-> a group, will be needed per lane.
+The TCA9538 is an 8 bit version of the already supported TCA9539.
+This chip also has interrupt support.
 
-Hm, this is the sort of thing I hadn't considered since separate link
-training isn't necessary for lynx 10g. But couldn't this be done by
-adding a "lane" parameter to phy_configure_opts_xgkr?
+Signed-off-by: Liam Beguin <liambeguin@gmail.com>
+---
+Liam Beguin (2):
+      gpio: pca953x: add support for TCA9538
+      dt-bindings: gpio: pca95xx: document new tca9538 chip
 
-Although, I am not sure how the driver is supposed to figure out what
-coefficients to use. c73 implies that the training frame should be sent
-on each lane. So I expected that there would be four copies of the
-link coefficient registers. However, when reading the LX2160ARM, I only
-saw one set of registers (e.g. 26.6.3.3). So is link training done
-serially? I didn't see anything like a "lane select" field.
+ Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 1 +
+ drivers/gpio/gpio-pca953x.c                              | 2 ++
+ 2 files changed, 3 insertions(+)
+---
+base-commit: a5e505a99ca748583dbe558b691be1b26f05d678
+change-id: 20230824-tca9538-4dbf8d93f1ba
 
---Sean
+Best regards,
+-- 
+Liam Beguin <liambeguin@gmail.com>
+
