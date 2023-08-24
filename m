@@ -2,95 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1732F786B17
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Aug 2023 11:06:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C23D786AC9
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Aug 2023 10:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231564AbjHXJFo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Aug 2023 05:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60924 "EHLO
+        id S231282AbjHXI4A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Aug 2023 04:56:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240604AbjHXJF1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Aug 2023 05:05:27 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0162619A1
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Aug 2023 02:05:22 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-d77f869dccfso497369276.3
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Aug 2023 02:05:22 -0700 (PDT)
+        with ESMTP id S236581AbjHXIzw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Aug 2023 04:55:52 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DE210E4
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Aug 2023 01:55:50 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4ff88239785so10030997e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Aug 2023 01:55:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692867921; x=1693472721;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oz0lX7obyRYwFXDDijisdLNdcDWsD7huiQfK6bLDL+s=;
-        b=Y4k2G7rUKYYr6TfQBfx67NJK4eAav+BB+nUOF6RphvYOT6JuXG9mpwoXwekh9zmb1f
-         XRA5RKT1+2TO6WlaTLbuXvN7/oWgEb68yEDRQw+GHmcf3w2n6HncvPCD+6/NWuP5sb8N
-         LNJ/s+nVmLHXPGtSLKLp4mSYpA50+B8Jg5s1u5kogxF+ZLeOiK105OgnEUURREhbKBJc
-         HDUn0gBMtZPGDy00wHsor8bqJsReloLy1p51pQlBo5xFgj/sI2uMzmj9weQLnFQwldM/
-         emE8aTcKNrabznb/7rv0b5rM0pq8rB3qSQMOF+PmQSQEnS0eu5VNJ95O/DUUmcT1sYpX
-         o0WQ==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692867348; x=1693472148;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+6GA2aSSzjMIpYzS9IyphBftmr15QYQINEEJHnRuPlg=;
+        b=HK5OHNsjOXmSg54H0vmXIKUU7xtCKB+PI5mVI5O/uyeRX63OQyA+8DPXQZ+FNNAwzA
+         gtWVJ7avEWjCii8rWu6w6setTlOCjfrSm/whPNgMQ4Ruo2tpODLw38yjDX5KICc2nclg
+         vlYreC/HHRndRHqcMimZ5VDXNhtvOaZ6sDfgkssWiVC41F8+inal5xt0ksEjWC7LcGlF
+         NJyrNo0hSat6YaS9FeoVMOUcaolrpZQNqLJaLSeXCxb4iPkcCWGtIgZXmKnkHtkproWY
+         bxDEyGRy6XJclv9PaSohpDMXu/+jONicNtjGSNyC9s+IlLTqL6II3UfnSom7vUTML6D4
+         t+1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692867921; x=1693472721;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oz0lX7obyRYwFXDDijisdLNdcDWsD7huiQfK6bLDL+s=;
-        b=LGK9AwYg9uo7sHFD2odaun729IWCFXyh+miveHDZf2EBRhgb3qDVhGSK5pQYjl2nD8
-         dW9uTR/zuV8sQsT49kXMIdU6WZe7Hmp0+r48cHjVxqNW0cRGOzWgnNlGua1vNLUdh5Il
-         sa07uo+/f+KBc78kI2QH+qRIjxowx5HFocZDwBErfQkX3klLit97NvWytY/8T+GzOZw0
-         UR+zTel7pDaPO3uoeZmB9vwyyq1kOJ2HvDEWwbliob4DBUknj5QFH5uUOAxlxBLxMHnl
-         hyvRh3qyLRn5zvnuGgBnO4/kLi28Kt+aSsMhuPgXkVCH5HQaRxww+Gf31fKiLNi5XHd3
-         ivVQ==
-X-Gm-Message-State: AOJu0YwG/5g/FlrhMvI3Mja3sGejqG5lCaPgKPfe8HNcDBLPJN/lGtqv
-        UnFlJrEBMgohiC/qohh7oRMqApoq80xH6ikcMrqRSA==
-X-Google-Smtp-Source: AGHT+IGO5uHQDq4lmkD/OXBfXWOFXFDEC59MvVmxu2+oSwdNQOmJXNPTBg6ZAwq+rdanXvgyYiPX5NPQz3vl9go+Wwc=
-X-Received: by 2002:a25:320d:0:b0:d14:6e28:69a4 with SMTP id
- y13-20020a25320d000000b00d146e2869a4mr13981058yby.29.1692867921757; Thu, 24
- Aug 2023 02:05:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230821153339.26305-1-brgl@bgdev.pl>
-In-Reply-To: <20230821153339.26305-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 24 Aug 2023 10:47:17 +0200
-Message-ID: <CACRpkdb0y20JOdmzqMdEZB1_LbSKSY1nOtzhfvyf=eC3o2_p=Q@mail.gmail.com>
-Subject: Re: [libgpiod v1.6.x][PATCH] tests: mockup: unbind mockup devices
- before unloading the module
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        d=1e100.net; s=20221208; t=1692867348; x=1693472148;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+6GA2aSSzjMIpYzS9IyphBftmr15QYQINEEJHnRuPlg=;
+        b=VDc3hLBtlDMMTi0zK0MyZEUVTUvnpbAGSaakO2W9M+8oHVcc0r8XRBZ8Y3nsdaW/mU
+         nboMKHz+kzk10a6GUaMPNpKr1JBy3m2DeUT4nJyqzx4ZgLVH+f/zV6qS3NSNViZK49TE
+         NONwZtUDdbUEY1pi7tufcnhDH6SoQBG9HtBZTiduwJQy0I+RLelgCtyyHWxiF5Kv01u0
+         Y4hUkLpHUa6O0VIPY1iChpRR3ik2o4M4U/Z2OUZhxDawd2Y1mVEBEpHyJGlHCH0D82yg
+         yAnRBuynWYekkzsiRVgj3FO167vzzUi/3Zxj6Q9u9u7hUQ4DUwkZNVuhrOqMbFlPY+KF
+         969Q==
+X-Gm-Message-State: AOJu0Ywk6o4hkexL9XyDYzYFYod5FIgekhzb9lFggcuKMocYW7SjeJRI
+        dwETJZ1L6GEW/+esoYaWOFReFGlTINr7KvfFVOY=
+X-Google-Smtp-Source: AGHT+IFWXDT3TqF+psIqd+hSiyZ6asUmU93AmVQQUGQ0Oc5a8zhMSy2rP+ao4X3JpENaKqIPqsym/w==
+X-Received: by 2002:a05:6512:3e9:b0:4ff:95c:e158 with SMTP id n9-20020a05651203e900b004ff095ce158mr8804640lfq.64.1692867347584;
+        Thu, 24 Aug 2023 01:55:47 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:2a30:8709:b99d:e2bd])
+        by smtp.gmail.com with ESMTPSA id o10-20020a1c750a000000b003fe29dc0ff2sm2021347wmc.21.2023.08.24.01.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Aug 2023 01:55:47 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Subject: [PATCH v2] gpiolib: notify user-space about line state changes triggered by kernel
+Date:   Thu, 24 Aug 2023 10:55:44 +0200
+Message-Id: <20230824085544.110417-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 5:33=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> gpio-mockup relies on the GPIO devices being registered in module's __ini=
-t
-> function and them being unregistered in __exit. This works with the GPIO
-> subsystem as it only takes a reference to the underlying owner module whe=
-n
-> a GPIO descriptor is requested and not when the GPIO device is
-> instantiated.
->
-> This behavior may change in the future in the kernel so make the behavior
-> of libgpiomockup more correct and have it unbind all mockup devices over
-> sysfs before unloading the module.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+We currently only emit CHANGED_CONFIG events when the user-space changes
+GPIO config. We won't be notified if changes come from in-kernel. Let's
+call the notifier chain whenever kernel users change direction or any of
+the active-low, debounce or consumer name settings. We don't notify the
+user-space about the persistence as the uAPI has no notion of it.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+v1 -> v2:
+- use the gpiod_line_state_notify() helper
+- reorder the code in gpiod_set_debounce() for better readability
 
-Yours,
-Linus Walleij
+ drivers/gpio/gpiolib.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 40a0022ea719..1cb7731550ca 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2439,6 +2439,7 @@ int gpiod_direction_input(struct gpio_desc *desc)
+ 	}
+ 	if (ret == 0) {
+ 		clear_bit(FLAG_IS_OUT, &desc->flags);
++		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+ 		ret = gpio_set_bias(desc);
+ 	}
+ 
+@@ -2484,8 +2485,10 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
+ 		gc->set(gc, gpio_chip_hwgpio(desc), val);
+ 	}
+ 
+-	if (!ret)
++	if (!ret) {
+ 		set_bit(FLAG_IS_OUT, &desc->flags);
++		gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
++	}
+ 	trace_gpio_value(desc_to_gpio(desc), 0, val);
+ 	trace_gpio_direction(desc_to_gpio(desc), 0, ret);
+ 	return ret;
+@@ -2672,9 +2675,16 @@ EXPORT_SYMBOL_GPL(gpiod_set_config);
+ int gpiod_set_debounce(struct gpio_desc *desc, unsigned int debounce)
+ {
+ 	unsigned long config;
++	int ret;
+ 
+ 	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
+-	return gpiod_set_config(desc, config);
++	ret = gpiod_set_config(desc, config);
++	if (ret)
++		return ret;
++
++	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
++
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(gpiod_set_debounce);
+ 
+@@ -2723,6 +2733,7 @@ void gpiod_toggle_active_low(struct gpio_desc *desc)
+ {
+ 	VALIDATE_DESC_VOID(desc);
+ 	change_bit(FLAG_ACTIVE_LOW, &desc->flags);
++	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+ }
+ EXPORT_SYMBOL_GPL(gpiod_toggle_active_low);
+ 
+@@ -3330,6 +3341,7 @@ int gpiod_set_consumer_name(struct gpio_desc *desc, const char *name)
+ 
+ 	kfree_const(desc->label);
+ 	desc_set_label(desc, name);
++	gpiod_line_state_notify(desc, GPIO_V2_LINE_CHANGED_CONFIG);
+ 
+ 	return 0;
+ }
+-- 
+2.39.2
+
