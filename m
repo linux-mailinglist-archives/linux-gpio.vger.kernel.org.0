@@ -2,219 +2,280 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F1A77879B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Aug 2023 22:56:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D52AC7879FC
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Aug 2023 23:12:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243612AbjHXUzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Aug 2023 16:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56576 "EHLO
+        id S243306AbjHXVLl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Aug 2023 17:11:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243583AbjHXUzD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Aug 2023 16:55:03 -0400
-Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03hn2219.outbound.protection.outlook.com [52.100.13.219])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7A11993;
-        Thu, 24 Aug 2023 13:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UNug9JjPVrfiif0zjlA2eJ5XEnuv/GBqUbCrlYhFujI=;
- b=YRVUDpnULmXUyqbpFnvseF6hKCyMU1ud8CoQPmKlBZ89yZXLUPebfu1OHiRdpcDTkwJSmbNunDs6qdkwQYxIMmAGqy5PIeQcqK0CjpwPcrLwO4LdWM/934BPecIzwNvik5ox/4OsmzT5p4Lg97ovyLC0IOL8pc6WyZXRIO+mGi1RRfUqfaZP46OyVzvnD1MNXzlZ+dDxq6K2fkotpcF6ZAmA967QBRoGQU95nAMPvwk30Amc9LRtMGv4JMmrabwn/sq/vQ6U+wLAD66oEexVP46ktVo96n//txGGjMz0HjbRyMvoAPqDmkNB4ln31+UitI9J6vGqXEq1UkpNvtqUcA==
-Received: from AM0PR03CA0108.eurprd03.prod.outlook.com (2603:10a6:208:69::49)
- by VI1PR03MB10064.eurprd03.prod.outlook.com (2603:10a6:800:1cb::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Thu, 24 Aug
- 2023 20:54:55 +0000
-Received: from AM6EUR05FT010.eop-eur05.prod.protection.outlook.com
- (2603:10a6:208:69:cafe::95) by AM0PR03CA0108.outlook.office365.com
- (2603:10a6:208:69::49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27 via Frontend
- Transport; Thu, 24 Aug 2023 20:54:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.160.56.84)
- smtp.mailfrom=seco.com; dkim=pass (signature was verified)
- header.d=seco.com;dmarc=pass action=none header.from=seco.com;
-Received-SPF: Pass (protection.outlook.com: domain of seco.com designates
- 20.160.56.84 as permitted sender) receiver=protection.outlook.com;
- client-ip=20.160.56.84; helo=inpost-eu.tmcas.trendmicro.com; pr=C
-Received: from inpost-eu.tmcas.trendmicro.com (20.160.56.84) by
- AM6EUR05FT010.mail.protection.outlook.com (10.233.240.157) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6723.17 via Frontend Transport; Thu, 24 Aug 2023 20:54:55 +0000
-Received: from outmta (unknown [192.168.82.135])
-        by inpost-eu.tmcas.trendmicro.com (Trend Micro CAS) with ESMTP id E5955200813A8;
-        Thu, 24 Aug 2023 20:54:54 +0000 (UTC)
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (unknown [104.47.0.52])
-        by repre.tmcas.trendmicro.com (Trend Micro CAS) with ESMTPS id 3013B2008006E;
-        Thu, 24 Aug 2023 20:54:53 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JByejy3xwhhYaGt1V0BN25ADigkIVTeLzI1aGTkBqbM6CoaOmNWjSo2Po/Ez7Zt2jUGEpsu/Hl/viPrV/O04iqw9a0uXNManl0CWcdh9jzE0/uwGKQVzdyH4L9zB1AAl+5ffi6XvyBvAX19k4HlIiP/NL4ec2EtIgrUxvVWkUiMzQjW24nWV8krTtdS2RfNkmIyrwtlLPLwJAt0om6s8Q9dreFQ54av/CJquYQV7bhusQh0zxrWD/xWLamPgzQJNrL6FfZbVH2RuiUMtySzw8QT+R2NHxL0pOiN14Aq7nTUwp6hiTrSIza8D1V6T7TEhz2airSTCjAwfY4PPJ5CfYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UNug9JjPVrfiif0zjlA2eJ5XEnuv/GBqUbCrlYhFujI=;
- b=kBw1R+9eYRdI4oKq5jqAcYWUlx7QYAcnOKo219Ygb6u1+a8dbtH0MewXRi0tmwQA7sS0ZXUTs4PilMo8kjqBtfRwIEqJ1jteKnTAYa4KbJBe10yUmacZMGZ/61MDxN2go5qQ2TkKF6SNtojrqsJHQ7GISA7LhPYMC2N3iTFE8vjx1tr4M6qec7op+PIulpHftjRbVOYWKkL5ocDk021oKVJRdgBgTii6GaLFYmLR7iZzHlbKBAYsgidKLVswvLdj86PVa7uJOqpiKv8YjGOaX+wvaScGXi1s18HtSIbQysUBjdUXBMxu02DYnySM/YcDz6+GjRRWdr8U3h0l/XiAKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
- dkim=pass header.d=seco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UNug9JjPVrfiif0zjlA2eJ5XEnuv/GBqUbCrlYhFujI=;
- b=YRVUDpnULmXUyqbpFnvseF6hKCyMU1ud8CoQPmKlBZ89yZXLUPebfu1OHiRdpcDTkwJSmbNunDs6qdkwQYxIMmAGqy5PIeQcqK0CjpwPcrLwO4LdWM/934BPecIzwNvik5ox/4OsmzT5p4Lg97ovyLC0IOL8pc6WyZXRIO+mGi1RRfUqfaZP46OyVzvnD1MNXzlZ+dDxq6K2fkotpcF6ZAmA967QBRoGQU95nAMPvwk30Amc9LRtMGv4JMmrabwn/sq/vQ6U+wLAD66oEexVP46ktVo96n//txGGjMz0HjbRyMvoAPqDmkNB4ln31+UitI9J6vGqXEq1UkpNvtqUcA==
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=seco.com;
-Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
- by AS4PR03MB8410.eurprd03.prod.outlook.com (2603:10a6:20b:515::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Thu, 24 Aug
- 2023 20:54:51 +0000
-Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
- ([fe80::21bd:6579:b3d1:e5f7]) by DB9PR03MB8847.eurprd03.prod.outlook.com
- ([fe80::21bd:6579:b3d1:e5f7%5]) with mapi id 15.20.6699.027; Thu, 24 Aug 2023
- 20:54:50 +0000
-Message-ID: <72bd2b69-7dca-c253-2cb1-4b750b25949b@seco.com>
-Date:   Thu, 24 Aug 2023 16:54:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.1
-Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
-Content-Language: en-US
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
+        with ESMTP id S243448AbjHXVL1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Aug 2023 17:11:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7CA1BCA;
+        Thu, 24 Aug 2023 14:11:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D6276413D;
+        Thu, 24 Aug 2023 21:11:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A71CC433C8;
+        Thu, 24 Aug 2023 21:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692911483;
+        bh=XG9xLHZC9AhIzBvKGJ4Of38YYp/jhihhwc0lJqgRG3Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X2fFplalH4gcAC/XBdhAZvLq8kJnZ0bUAstwzR/WDoE43vn82rk8Hwkw0lVu3ynHN
+         /nXkXdwND1vFcF39koEeCCQvDbmzhr1nFx/r+ONo8mDZBS79mYhRMm4cDbLt5XS/35
+         9bToe3RMwRgTZDnSZXt8Jml6NyvlDplle3QbvRu4XICD6acjgZh3wj2lwUAG0+PxMj
+         oJyvXv9OTpBpZDrv6j8RPt3L/oCS27/yZaNLQ9yGMUJlc9wbdPaitSooET4Uzj6HLA
+         6MUT/f2Y5Z7nrPDSitV6VVoe9flWt4/pzBteMUMao2W09C4DMH32GjZlhQcmGISpYP
+         nS1rbgL0q2kHQ==
+Received: (nullmailer pid 1436647 invoked by uid 1000);
+        Thu, 24 Aug 2023 21:11:22 -0000
+Date:   Thu, 24 Aug 2023 16:11:21 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tzuyi Chang <tychang@realtek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        =?UTF-8?B?RmVybuKUnMOtbmRleiBSb2phcw==?= <noltari@gmail.com>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20230612163353.dwouatvqbuo6h4ea@skbuf>
- <1dd01fe2-08a8-ec2f-1184-a58b2f55ba85@seco.com>
- <20230613142754.wr5njtjo4tbloqwu@skbuf>
- <20230811150826.urp2hzl3tahesrjx@skbuf>
- <26623d0c-8a5a-614b-7df7-69214aaec524@seco.com>
- <20230811163637.bs7a46juasjgnmf4@skbuf>
- <20230821124952.mraqqp7pxlo56gkh@skbuf>
- <a2e3fcad-9857-f1b3-8ada-efb2013a4bf5@seco.com>
- <20230821181349.hls6pukp5d6rc5av@LXL00007.wbi.nxp.com>
- <73d59dd2-88f0-3c1a-0de2-de2e050cba5a@seco.com>
- <20230822145512.pc6qd4ovvnw4y3en@LXL00007.wbi.nxp.com>
-From:   Sean Anderson <sean.anderson@seco.com>
-In-Reply-To: <20230822145512.pc6qd4ovvnw4y3en@LXL00007.wbi.nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0134.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::19) To DB9PR03MB8847.eurprd03.prod.outlook.com
- (2603:10a6:10:3dd::13)
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/7] dt-bindings: pinctrl: realtek: add RTD1315E
+ pinctrl binding
+Message-ID: <20230824211121.GA1388146-robh@kernel.org>
+References: <20230824105703.19612-1-tychang@realtek.com>
+ <20230824105703.19612-6-tychang@realtek.com>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|AS4PR03MB8410:EE_|AM6EUR05FT010:EE_|VI1PR03MB10064:EE_
-X-MS-Office365-Filtering-Correlation-Id: d44b5ba4-a991-47e7-7016-08dba4e45eb4
-X-TrendMicro-CAS-OUT-LOOP-IDENTIFIER: 656f966764b7fb185830381c646b41a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: UUkFkkdlH5Y+I2x+N6v6Wx3Jz4XJdrqOrBC4QeEKB4U630D6IavYF0rzLHZsDYeuqJ+nLkCxjGrGjBFMKKdPKBhI7sW6ONmG1AqSm2NIAP/ZXiYtkckQ0NurMNrV0li9JQrEkfpQ6lwxEBtIU+JfB7+uplQDZ9+6KWPawVtq8ICPU7mUA4zVA9tx3e4fgl0dO7m32vIQkhkS5Xx4J0itYbGNotIoRSiA1ZHqKggiZq1HrftArwL271wGQxvjBSnWh/F39FD13wbXg52m/4OA+DjM6U7hx8K7xz/An2T1Dmd8MD7q3EFu1Ozbph/1xbopHB1KNmPxy5iYs/WD4vZLiqfNLjRYYT0dqt+6COLf7pILCAXrgMU3AAZOxJTZMBRCzZ/29FmDQYQiYdjpubD4LM84bkHOgXHvI4CAVvkIFwNFynIxFK7DKJluTc+LaBj3JhkHElmsX2vAOVboCAuZ9ZIKGrqEnhCEiyrmj1vZIjQL4jpy9sCcsN1W8CGDyWEEoz7rMB40qqumZ+ZuJ5asw/oblgQa8NLMuj245/WCHEctJrTfFyxCbTSQcYKAFIdx8eP8DEtjBcETjxCUtzvmkm6RZxkV556hOn0AuQfUqkhmTU+Ufmcw7Fa6Ioj4E+H9rWSdKOMTzX8AGaj05c9qdfs1jSx8mKXIQ+6lqYDtotE=
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(346002)(136003)(396003)(376002)(366004)(1800799009)(451199024)(186009)(44832011)(7416002)(83380400001)(6512007)(26005)(478600001)(2616005)(5660300002)(31686004)(966005)(2906002)(8936002)(4326008)(8676002)(38100700002)(38350700002)(6916009)(66476007)(66556008)(66946007)(86362001)(41300700001)(31696002)(54906003)(6506007)(52116002)(53546011)(6486002)(36756003)(316002)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR03MB8410
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM6EUR05FT010.eop-eur05.prod.protection.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 5e0c302e-63ca-464c-57ee-08dba4e45bc1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FnEEP9o2rJeWHy0waBUzcRajVlzWH4xOBtolpZ1WntA/aJaIcZ45x5FKVWU3BrVurdSK/YMdXUMEDFSM4lvQcfrjRqfcarxbfEMvG6eqHcklWamiCSGrDyPTmOGfqYCl1CN5EMacU2oqS2bueZSV0sqlH+Rc2KrhR+rSRnJzYZ69gJFkBwUDW+y6v1ZZHvI3JiOKU4STyduLVe1AbtPlA/VTzW6krKbXn7CfrZ+MVeUANWAwW4hXqGCsyhGMufC/cmqCDdm3RZ+TjEmXOx9zErWo3BQmbimVjZOra7KA7mwyRoo2DT1UJ9toNg3Bvo5TsM+MGV7u1eLvZJUDaWtm59mCeLLjcYUuFSzIffWYL7I0SkrEykJ9DUyUBqrC/ak9PLnqenVLa9npV18f4abDrfJtQpc4x03DXBa26QMz+4IPDp9eekbmYt6wGAwVQzxc25qqoRPHdSVK7ddPldsSpNZvIzMo3cVWq+I8gD6V1c3NyV7043sb+VO+TZ674pU5nutCMLADkXWmhXZeonGJYaNnExPlXjZh/aqajT8n55U0TEHpcRdtgR3kyEsC2VpHbJldl0N4SK2pXhebe63MDzGadiJIcpe6wO99cAbveUelDan1WV9yxo1ZXqfQkCSkNIrJzi540vRoe1U4VrbnUj/tsvW5G0R1Tq45SWb30Tvz32CyR6Mc4rIAGu3fl9HJ3JAIhy77te+F24lXP4lgBOFa2QjmFSN76FvnBt9313KnC+IvC5xjDG6R6TNZVirSx+K1daAieH1wr/cnE2pOpPdPehJpTOBesEL4x5qeNxU=
-X-Forefront-Antispam-Report: CIP:20.160.56.84;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:inpost-eu.tmcas.trendmicro.com;PTR:inpost-eu.tmcas.trendmicro.com;CAT:NONE;SFS:(13230031)(136003)(396003)(346002)(39850400004)(376002)(1800799009)(5400799018)(82310400011)(186009)(451199024)(46966006)(36840700001)(2616005)(4326008)(8676002)(8936002)(83380400001)(5660300002)(34070700002)(336012)(36756003)(36860700001)(47076005)(7416002)(44832011)(40480700001)(26005)(82740400003)(7596003)(7636003)(6666004)(70206006)(70586007)(54906003)(6916009)(316002)(478600001)(966005)(31686004)(356005)(41300700001)(2906002)(6512007)(6486002)(53546011)(31696002)(86362001)(6506007)(43740500002)(12100799039);DIR:OUT;SFP:1501;
-X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2023 20:54:55.0970
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d44b5ba4-a991-47e7-7016-08dba4e45eb4
-X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bebe97c3-6438-442e-ade3-ff17aa50e733;Ip=[20.160.56.84];Helo=[inpost-eu.tmcas.trendmicro.com]
-X-MS-Exchange-CrossTenant-AuthSource: AM6EUR05FT010.eop-eur05.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR03MB10064
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230824105703.19612-6-tychang@realtek.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 8/22/23 10:55, Ioana Ciornei wrote:
-> On Mon, Aug 21, 2023 at 02:46:53PM -0400, Sean Anderson wrote:
->> On 8/21/23 14:13, Ioana Ciornei wrote:
->> > On Mon, Aug 21, 2023 at 01:45:44PM -0400, Sean Anderson wrote:
->> >> Well, we have two pieces of information we need
->> >> 
->> >> - What values do we need to program in the PCCRs to select a particular
->> >>   mode? This includes whether to e.g. set the KX bits.
->> >> - Implied by the above, what protocols are supported on which lanes?
->> >>   This is not strictly necessary, but will certainly solve a lot of
->> >>   headscratching.
->> >> 
->> >> This information varies between different socs, and different serdes on
->> >> the same socs. We can't really look at the RCW or the clocks and figure
->> >> out what we need to program. So what are our options?
->> >> 
->> >> - We can have a separate compatible for each serdes on each SoC (e.g.
->> >>   "fsl,lynx-10g-a"). This was rejected by the devicetree maintainers.
+On Thu, Aug 24, 2023 at 06:57:01PM +0800, Tzuyi Chang wrote:
+> Add device tree bindings for RTD1315E.
 > 
-> I previously took this statement at face value and didn't further
-> investigate. After a bit of digging through the first versions of this
-> patch set it's evident that you left out a big piece of information.
+> Signed-off-by: Tzuyi Chang <tychang@realtek.com>
+> ---
+> v1 to v2 change:
+> 1. Add a description for RTD1315E.
+> 2. Rename realtek,pdrive, realtekmndrive and realtek,dcycle.
+> 3. Add a description for PMOS and NMOS driving strength.
+> 4. Remove the wildcard in the compatible strings.
+> 5. Use '-pins$' to be node name pattern.
+> ---
+>  .../pinctrl/realtek,rtd1315e-pinctrl.yaml     | 191 ++++++++++++++++++
+>  1 file changed, 191 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1315e-pinctrl.yaml
 > 
-> The devicetree maintainers have indeed rejected compatible strings of
-> the "fsl,<soc-name>-serdes-<instance>" form but they also suggested to
-> move the numbering to a property instead:
-> 
-> https://cas5-0-urlprotect.trendmicro.com:443/wis/clicktime/v1/query?url=https%3a%2f%2flore.kernel.org%2fall%2fdb9d9455%2d37af%2d1616%2d8f7f%2d3d752e7930f1%40linaro.org%2f&umid=2d629417-3b95-49e4-8cdb-34737cc93582&auth=d807158c60b7d2502abde8a2fc01f40662980862-895c2dfe1c33719569d44ae2b51e21f626f39d39
-> 
-> But instead of doing that, you chose to move all the different details
-> that vary between SerDes blocks/SoCs from the driver to the DTS. I don't
-> see that this was done in response to explicit feedback.
-> 
->> >> - We can have one compatible for each SoC, and determine the serdes
->> >>   based on the address. I would like to avoid this...
->> > 
->> > To me this really seems like a straightforward approach.
->> 
->> Indeed it would be straightforward, but what's the point of having a
->> devicetree in the first place then? We could just go back to being a
->> (non-dt) platform device.
->> 
-> 
-> I am confused why you are now so adamant to have these details into the
-> DTS. Your first approach was to put them into the driver, not the DTS:
-> 
-> https://cas5-0-urlprotect.trendmicro.com:443/wis/clicktime/v1/query?url=https%3a%2f%2flore.kernel.org%2fnetdev%2f20220628221404.1444200%2d5%2dsean.anderson%40seco.com%2f&umid=2d629417-3b95-49e4-8cdb-34737cc93582&auth=d807158c60b7d2502abde8a2fc01f40662980862-64ea8fa45172282f676b7463a5401e8a7c5bdcbf
-> 
-> And this approach could still work now and get accepted by the device
-> tree maintainers. The only change that would be needed is to add a
-> property like "fsl,serdes-block-id = <1>".
+> diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd1315e-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1315e-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..babd87d05f32
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1315e-pinctrl.yaml
+> @@ -0,0 +1,191 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2023 Realtek Semiconductor Corporation
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/realtek,rtd1315e-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Realtek DHC RTD1315E Pin Controller
+> +
+> +maintainers:
+> +  - TY Chang <tychang@realtek.com>
+> +
+> +description:
+> +  The Realtek DHC RTD1315E is a high-definition media processor SoC. The
+> +  RTD1315E pin controller is used to control pin function, pull up/down
+> +  resistor, drive strength, schmitt trigger and power source.
+> +
+> +properties:
+> +  compatible:
+> +    const: realtek,rtd1315e-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  '-pins$':
+> +    if:
+> +      type: object
+> +    then:
 
-https://lore.kernel.org/linux-phy/1c2bbc12-0aa5-6d2a-c701-577ce70f7502@linaro.org/
+Drop the if/then. "-pins" should always be a node (object).
 
-Despite what he says in your link, I explicitly proposed doing exactly
-that and he rejected it. I suspect that despite accusing me of
-"twisting" the conversation, he did not clearly remember that
-exchange...
-
-That said, maybe we could do something like 
-
-serdes: phy@1ea0000 {
-	compatible = "fsl,ls1046a-serdes";
-	reg = <0x1ea0000 0x1000>, <0x1eb0000 0x1000>;
-};
-
---Sean
+> +      allOf:
+> +        - $ref: pincfg-node.yaml#
+> +        - $ref: pinmux-node.yaml#
+> +
+> +      properties:
+> +        pins:
+> +          items:
+> +            enum: [ gpio_0, gpio_1, emmc_rst_n, emmc_dd_sb, emmc_clk, emmc_cmd,
+> +                    gpio_6, gpio_7, gpio_8, gpio_9, gpio_10, gpio_11, gpio_12,
+> +                    gpio_13, gpio_14, gpio_15, gpio_16, gpio_17, gpio_18, gpio_19,
+> +                    gpio_20, emmc_data_0, emmc_data_1, emmc_data_2, usb_cc2, gpio_25,
+> +                    gpio_26, gpio_27, gpio_28, gpio_29, gpio_30, gpio_31, gpio_32,
+> +                    gpio_33, gpio_34, gpio_35, hif_data, hif_en, hif_rdy, hif_clk,
+> +                    gpio_dummy_40, gpio_dummy_41, gpio_dummy_42, gpio_dummy_43,
+> +                    gpio_dummy_44, gpio_dummy_45, gpio_46, gpio_47, gpio_48, gpio_49,
+> +                    gpio_50, usb_cc1, emmc_data_3, emmc_data_4, ir_rx, ur0_rx, ur0_tx,
+> +                    gpio_57, gpio_58, gpio_59, gpio_60, gpio_61, gpio_62, gpio_dummy_63,
+> +                    gpio_dummy_64, gpio_dummy_65, gpio_66, gpio_67, gpio_68, gpio_69,
+> +                    gpio_70, gpio_71, gpio_72, gpio_dummy_73, emmc_data_5, emmc_data_6,
+> +                    emmc_data_7, gpio_dummy_77, gpio_78, gpio_79, gpio_80, gpio_81,
+> +                    ur2_loc, gspi_loc, hi_width, sf_en, arm_trace_dbg_en,
+> +                    ejtag_aucpu_loc, ejtag_acpu_loc, ejtag_vcpu_loc, ejtag_scpu_loc,
+> +                    dmic_loc, vtc_dmic_loc, vtc_tdm_loc, vtc_i2si_loc, tdm_ai_loc,
+> +                    ai_loc, spdif_loc, hif_en_loc, scan_switch, wd_rset, boot_sel,
+> +                    reset_n, testmode ]
+> +
+> +        function:
+> +          enum: [ gpio, nf, emmc, ao, gspi_loc0, gspi_loc1, uart0, uart1,
+> +                  uart2_loc0, uart2_loc1, i2c0, i2c1, i2c4, i2c5, pcie1,
+> +                  etn_led, etn_phy, spi, pwm0_loc0, pwm0_loc1, pwm1_loc0,
+> +                  pwm1_loc1, pwm2_loc0, pwm2_loc1, pwm3_loc0, pwm3_loc1,
+> +                  spdif_optical_loc0, spdif_optical_loc1, usb_cc1, usb_cc2,
+> +                  sd, dmic_loc0, dmic_loc1, ai_loc0, ai_loc1, tdm_ai_loc0,
+> +                  tdm_ai_loc1, hi_loc0, hi_m, vtc_i2so, vtc_i2si_loc0,
+> +                  vtc_i2si_loc1, vtc_dmic_loc0, vtc_dmic_loc1, vtc_tdm_loc0,
+> +                  vtc_tdm_loc1, dc_fan, pll_test_loc0, pll_test_loc1,
+> +                  ir_rx, uart2_disable, gspi_disable, hi_width_disable,
+> +                  hi_width_1bit, sf_disable, sf_enable, scpu_ejtag_loc0,
+> +                  scpu_ejtag_loc1, scpu_ejtag_loc2, scpu_ejtag_loc3,
+> +                  acpu_ejtag_loc0, acpu_ejtag_loc1, acpu_ejtag_loc2,
+> +                  vcpu_ejtag_loc0, vcpu_ejtag_loc1, vcpu_ejtag_loc2,
+> +                  aucpu_ejtag_loc0, aucpu_ejtag_loc1, aucpu_ejtag_loc2,
+> +                  gpu_ejtag, iso_tristate, dbg_out0, dbg_out1, standby_dbg,
+> +                  spdif, arm_trace_debug_disable, arm_trace_debug_enable,
+> +                  aucpu_ejtag_disable, acpu_ejtag_disable, vcpu_ejtag_disable,
+> +                  scpu_ejtag_disable, vtc_dmic_loc_disable, vtc_tdm_disable,
+> +                  vtc_i2si_disable, tdm_ai_disable, ai_disable, spdif_disable,
+> +                  hif_disable, hif_enable, test_loop, pmic_pwrup ]
+> +
+> +
+> +        drive-strength:
+> +          enum: [4, 8]
+> +
+> +        bias-pull-down: true
+> +
+> +        bias-pull-up: true
+> +
+> +        bias-disable: true
+> +
+> +        input-schmitt-enable: true
+> +
+> +        input-schmitt-disable: true
+> +
+> +        drive-push-pull: true
+> +
+> +        power-source:
+> +          description: |
+> +            Valid arguments are described as below:
+> +            0: power supply of 1.8V
+> +            1: power supply of 3.3V
+> +          enum: [0, 1]
+> +
+> +        realtek,drive-strength-p:
+> +          description: |
+> +            Some of pins can be driven using the P-MOS and N-MOS transistor to
+> +            achieve finer adjustments. The block-diagram representation is as
+> +            follows:
+> +                           VDD
+> +                            |
+> +                        ||--+
+> +                 +-----o||     P-MOS-FET
+> +                 |      ||--+
+> +            IN --+          +----- out
+> +                 |      ||--+
+> +                 +------||     N-MOS-FET
+> +                        ||--+
+> +                            |
+> +                           GND
+> +            The driving strength of the P-MOS/N-MOS transistors impacts the
+> +            waveform's rise/fall times. Greater driving strength results in
+> +            shorter rise/fall times. Each P-MOS and N-MOS transistor offers
+> +            8 configurable levels (0 to 7), with higher values indicating
+> +            greater driving strength, contributing to achieving the desired
+> +            speed.
+> +
+> +            The realtek,drive-strength-p is used to control the driving strength
+> +            of the P-MOS output.
+> +          $ref: /schemas/types.yaml#/definitions/uint32
+> +          minimum: 0
+> +          maximum: 7
+> +
+> +        realtek,drive-strength-n:
+> +          description: |
+> +            Similar to the realtek,drive-strength-p, the realtek,drive-strength-n
+> +            is used to control the driving strength of the N-MOS output.
+> +          $ref: /schemas/types.yaml#/definitions/uint32
+> +          minimum: 0
+> +          maximum: 7
+> +
+> +        realtek,duty-cycle:
+> +          description: |
+> +            An integer describing the level to adjust output duty cycle, controlling
+> +            the proportion of positive and negative waveforms in nanoseconds.
+> +            Valid arguments are described as below:
+> +            0: 0ns
+> +            2: + 0.25ns
+> +            3: + 0.5ns
+> +            4: -0.25ns
+> +            5: -0.5ns
+> +          $ref: /schemas/types.yaml#/definitions/uint32
+> +          enum: [ 0, 2, 3, 4, 5 ]
+> +
+> +      required:
+> +        - pins
+> +
+> +      additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +     pinctrl@4e000 {
+> +         compatible = "realtek,rtd1315e-pinctrl";
+> +         reg = <0x4e000 0x130>;
+> +
+> +         emmc-hs200-pins {
+> +             pins = "emmc_clk",
+> +                    "emmc_cmd",
+> +                    "emmc_data_0",
+> +                    "emmc_data_1",
+> +                    "emmc_data_2",
+> +                    "emmc_data_3",
+> +                    "emmc_data_4",
+> +                    "emmc_data_5",
+> +                    "emmc_data_6",
+> +                    "emmc_data_7";
+> +             function = "emmc";
+> +             realtek,drive-strength-p = <0x2>;
+> +             realtek,drive-strength-n = <0x2>;
+> +         };
+> +
+> +         i2c-0-pins {
+> +             pins = "gpio_12",
+> +                    "gpio_13";
+> +             function = "i2c0";
+> +             drive-strength = <4>;
+> +         };
+> +     };
+> -- 
+> 2.41.0
+> 
