@@ -2,57 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05EAC787A09
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Aug 2023 23:14:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B68E787B3C
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 00:11:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238096AbjHXVNv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Aug 2023 17:13:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60304 "EHLO
+        id S243848AbjHXWKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Aug 2023 18:10:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243599AbjHXVNX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Aug 2023 17:13:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14471BC9;
-        Thu, 24 Aug 2023 14:13:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 558FD6568B;
-        Thu, 24 Aug 2023 21:13:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D11C433C7;
-        Thu, 24 Aug 2023 21:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692911600;
-        bh=bMNOF1IPmHkhD94US03s4hH9eZypWFFxL/sGQXlActw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fNw/ZxCLq0HE2J8t4T0ww3spNTHZBDczgIzuQUZitzHW3hOEEw26/IF/skkvlEOJR
-         f5ITOLHq745e9A2aL0kToZtERA2GyE9LnMNf8zRpjbf2yXD0KcYiK5HVT0x5KFks95
-         2t5BaLHgQg0GtghBsSh+Le+153T43fwuLs3MIOuqtVZa+vS/Ef4iBEz+X6j8Q14aQs
-         x6H4ppzqmFugWCejsIUYGZtO1H06RGhoAsvjpM849J55Btpu5VwqUiKjwum/cBq6kl
-         aFEduEyRVBK0Jh/LLfmqTHYOZ+ZfsoCS1wzDXn2xfJoAjtnoHMG1SlPADeVObDZw+X
-         5o9fa50YUX5Qg==
-Received: (nullmailer pid 1438783 invoked by uid 1000);
-        Thu, 24 Aug 2023 21:13:18 -0000
-Date:   Thu, 24 Aug 2023 16:13:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Tzuyi Chang <tychang@realtek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S243844AbjHXWKV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Aug 2023 18:10:21 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05hn2237.outbound.protection.outlook.com [52.100.174.237])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAF61B9;
+        Thu, 24 Aug 2023 15:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=79WQMo1An+kEjfD00O/FIsavhTriaIzAE1XWuOS+3hA=;
+ b=TBwNzf3XKNPB7c8XLAMgR6IWsB7cuX7kJSU1iDUUJZfmsl4Gz/Tu4eSZU0xDha4VivD5Mn1fxvGD1aZopyL679vvtQyqk0f7mXf7Q1YT+8wHqv4+L7bn+p+IhOFoQ3oUPz6nY2vLe7OWsW2SGDUfs/ymPR/2vB9s3P27ZXotvH0Atcl3qQZ5GXGBirhMubpjeqHZ8H8GDmJs6qpELJTxiiLumnXTSCDOQxzKA+QkpQCWSmfwlm/Hqm06KK9oVhzVR6mdmv/MMPFmNPuKQbqsi3uX18XdzP7a5qj0n57WJLneVJj633Toc/LGAs9YV/cjWm5AYnFM3eP8efH9GsC/+A==
+Received: from DB3PR08CA0010.eurprd08.prod.outlook.com (2603:10a6:8::23) by
+ AM7PR03MB6264.eurprd03.prod.outlook.com (2603:10a6:20b:13d::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6699.27; Thu, 24 Aug 2023 22:10:14 +0000
+Received: from DB8EUR05FT015.eop-eur05.prod.protection.outlook.com
+ (2603:10a6:8:0:cafe::e2) by DB3PR08CA0010.outlook.office365.com
+ (2603:10a6:8::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.30 via Frontend
+ Transport; Thu, 24 Aug 2023 22:10:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 20.160.56.85)
+ smtp.mailfrom=seco.com; dkim=pass (signature was verified)
+ header.d=seco.com;dmarc=pass action=none header.from=seco.com;
+Received-SPF: Pass (protection.outlook.com: domain of seco.com designates
+ 20.160.56.85 as permitted sender) receiver=protection.outlook.com;
+ client-ip=20.160.56.85; helo=inpost-eu.tmcas.trendmicro.com; pr=C
+Received: from inpost-eu.tmcas.trendmicro.com (20.160.56.85) by
+ DB8EUR05FT015.mail.protection.outlook.com (10.233.238.127) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6723.16 via Frontend Transport; Thu, 24 Aug 2023 22:10:14 +0000
+Received: from outmta (unknown [192.168.82.135])
+        by inpost-eu.tmcas.trendmicro.com (Trend Micro CAS) with ESMTP id DE6A0200813A8;
+        Thu, 24 Aug 2023 22:10:13 +0000 (UTC)
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (unknown [104.47.17.175])
+        by repre.tmcas.trendmicro.com (Trend Micro CAS) with ESMTPS id 66CCA2008006E;
+        Thu, 24 Aug 2023 22:10:08 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aim7+34kmdpnPLquMdpMRc6Nsn2oyUjqA8iEUgrxtZ+pJCplXJw4CvoAGHv2L4HA1mNEUw3heDouacQ0q2ztldFJvCp2kVRGK7GYsGaD4BA99ZMksNM1OxNW7+TvDUp2Eh83A11WBHXCns4LSY3q8fboaHoG3yU1S6mJXVlEeW2swa+a7kYXE/WzyGJCMsbGxzf7rpY6bCpnHjbI9EvzxUOX/DOx9V4EyUWJnr/yeubBL4vX7YyvDwA+fSJjLWTlRl8QjH7DtP/ss7IigV0i3b5CNcHKlVSzYf9wT83eE7O6DXVdHb94ngTLXc4S1RCcU85HTBhmOVxR1yxYQmNcAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=79WQMo1An+kEjfD00O/FIsavhTriaIzAE1XWuOS+3hA=;
+ b=TOBsdNoED18bv+w/PUjLXmP1XEz13SIGIpYPuR95Jitc/AuWvA0X469zRrr0nGZMgPB4dLg/AgsxkdhZNkbLZxV6eIyHFMvYPVNA+SAD0SEnG5z77ke3GUnK6v8DpMSSvULGbHdL6ans3Nsje0J7FGryGmlbcasYlYJyvEmo1zNmp8YbWvpmqgyq8m0n90ESznegISB+RdFnVp4czxHu6mnUQOGyhVuDAeo3QZNQeUcQFxJK9a6YYYm9H3daMs05CbS2+cSnmq3zyeO/hZpTa88smvIcg+LzB6V6HaBZJxDkjxsghoyV6WaZ3Ephm+jsNhFundDK1F1VOodWoy8gmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
+ dkim=pass header.d=seco.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=79WQMo1An+kEjfD00O/FIsavhTriaIzAE1XWuOS+3hA=;
+ b=TBwNzf3XKNPB7c8XLAMgR6IWsB7cuX7kJSU1iDUUJZfmsl4Gz/Tu4eSZU0xDha4VivD5Mn1fxvGD1aZopyL679vvtQyqk0f7mXf7Q1YT+8wHqv4+L7bn+p+IhOFoQ3oUPz6nY2vLe7OWsW2SGDUfs/ymPR/2vB9s3P27ZXotvH0Atcl3qQZ5GXGBirhMubpjeqHZ8H8GDmJs6qpELJTxiiLumnXTSCDOQxzKA+QkpQCWSmfwlm/Hqm06KK9oVhzVR6mdmv/MMPFmNPuKQbqsi3uX18XdzP7a5qj0n57WJLneVJj633Toc/LGAs9YV/cjWm5AYnFM3eP8efH9GsC/+A==
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=seco.com;
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
+ by AM7PR03MB6673.eurprd03.prod.outlook.com (2603:10a6:20b:1b1::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Thu, 24 Aug
+ 2023 22:10:06 +0000
+Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::21bd:6579:b3d1:e5f7]) by DB9PR03MB8847.eurprd03.prod.outlook.com
+ ([fe80::21bd:6579:b3d1:e5f7%5]) with mapi id 15.20.6699.027; Thu, 24 Aug 2023
+ 22:10:00 +0000
+Message-ID: <54621dd6-275b-fd9d-a158-6871f1a04fd1@seco.com>
+Date:   Thu, 24 Aug 2023 18:09:52 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: [PATCH v14 00/15] phy: Add support for Lynx 10G SerDes
+Content-Language: en-US
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/7] dt-bindings: pinctrl: realtek: add RTD1319D
- pinctrl binding
-Message-ID: <20230824211318.GB1388146-robh@kernel.org>
-References: <20230824105703.19612-1-tychang@realtek.com>
- <20230824105703.19612-7-tychang@realtek.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        =?UTF-8?B?RmVybuKUnMOtbmRleiBSb2phcw==?= <noltari@gmail.com>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, Li Yang <leoyang.li@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <26623d0c-8a5a-614b-7df7-69214aaec524@seco.com>
+ <20230811163637.bs7a46juasjgnmf4@skbuf>
+ <20230821124952.mraqqp7pxlo56gkh@skbuf>
+ <a2e3fcad-9857-f1b3-8ada-efb2013a4bf5@seco.com>
+ <20230821181349.hls6pukp5d6rc5av@LXL00007.wbi.nxp.com>
+ <73d59dd2-88f0-3c1a-0de2-de2e050cba5a@seco.com>
+ <20230821195823.ns55h3livxgol7fp@skbuf>
+ <a66c9abf-5351-62b6-5573-cae38e6768e2@seco.com>
+ <20230821224834.ppk4hmjyajupy7va@skbuf>
+ <a4828cf7-9cac-286f-0aba-fcd1688c8422@seco.com>
+ <20230821235917.mzawnkoi7oj4zgm6@skbuf>
+From:   Sean Anderson <sean.anderson@seco.com>
+In-Reply-To: <20230821235917.mzawnkoi7oj4zgm6@skbuf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL0PR02CA0053.namprd02.prod.outlook.com
+ (2603:10b6:207:3d::30) To DB9PR03MB8847.eurprd03.prod.outlook.com
+ (2603:10a6:10:3dd::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230824105703.19612-7-tychang@realtek.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|AM7PR03MB6673:EE_|DB8EUR05FT015:EE_|AM7PR03MB6264:EE_
+X-MS-Office365-Filtering-Correlation-Id: 810daba8-3d73-42e2-bed7-08dba4eee451
+X-TrendMicro-CAS-OUT-LOOP-IDENTIFIER: 656f966764b7fb185830381c646b41a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: Xi8IaRb8efHNhChiX9wqVwb3hgrjvYpcIGB2Egp8N0XhCeqwAFxHdjm2C0w+nZgscwQfv0JxiJ2JcPxHRogAixlfyp1H7rvqHFm4z7qA5jWM5HZcmh1D1Y56qth0XnTRPvjtbCNDNSpZptJog0n4XeSAXsopBGH8SQUiFH+ECQbeUZu/qfoc9PEwOiaRtuh3JakXfClT8vjo03DgR555YXByDf7xNYBK56h9iidOna22Kg+EF1UMfmmkgtqKp42jp43/LiZUD1pmQgtmD5WrqhVWk5SQ+jy8DZbT31FSEO51WfT/0ytsSEqFfwlKnBsiptMv0IMPRh5BBR67FGuFmVJXzVVXG2CV1NPjJdSwljhW5az1Hp8HkhAje4VbFj/VGqP/fBUybHWv4EVha2hHQlsF5w9iUl2G80JO4U174muQF0O3e3ivq5i9T7JKbPXCxXBbvrF0N6k3dVqtQpPKUdIh4cLRTtPz8oEuil4mmCZrQgVTX3VEO7fR3KnCiPliZY2oD3TlqlHU9jAE/rZPZXx5CYagiTSXyJJsxjYfujAtiyZuMP9n/aTQthyMLFrJtiix7LbFRWphaMzwj19WZ7vW5Dwii0wXeJSDJP9u9TCdiTn9g16OlCUf12m8ERHlUOR/OLTMaL6jzQE+yhR5b/dBzmkI9nUJ/YuWwz5jRWIlSLHMlHXrAU/21PQiolKl
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(346002)(396003)(136003)(39850400004)(186009)(1800799009)(451199024)(66476007)(54906003)(66946007)(66556008)(316002)(6916009)(478600001)(26005)(6666004)(38350700002)(38100700002)(41300700001)(31696002)(6506007)(53546011)(6486002)(86362001)(52116002)(2906002)(6512007)(31686004)(4326008)(8676002)(8936002)(2616005)(5660300002)(7416002)(44832011)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR03MB6673
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB8EUR05FT015.eop-eur05.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 280fc6de-da17-4c96-83d6-08dba4eedb8d
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Cr10FIPobyKAN3bFuwPu+idIZMqCR+e3lgWu1b24poVeBvyrfl/sm3qVKuM49452UH+NAHZMBZWdPypLyxttv7PsyQmsSUtpQrJxCkLNxGkSkeeCYChRskeyZYGxHC7y0UGgAVsq9u6MaLo1DcONIAtZLurxv6KrJ8ItdnyemA8N2dKhbM0LlfBqmpVY3Y/9F6HTdoBVy2NHt7sBqmlCRnyrHvADP1jt3EMq1KFCoGAAxCmhZVGXcsf5YqJBhHp/BPO1tUmCEVHer+LmqgBlDPRuKOz78BR/iPJc4xymCcPrwncH3HPdTK7e9XIV0nRFyWZN7Gh9bg2I8vtqojxMVPMhDQ3zqpK9ykAVqOW56fDO6y9tBhfGTw+Y3HGnL80PK+nSC7hK2sFjsrrpCG+s7RSJevhQNK9eIwD0xgxgNgenT0rmMuEYVswpY5gPDec8MgWVKAw0OzdZXbMhWsgx9kmocf2WWpgPFo2fExirkAlUIm805abtArpYpw5dKCl+LARp6jxb2uQymMRSm2ktm7mp4go69id1yx74c4I1HA9G9hFosGVkfxc5Io/6YoNYcLA8hMG1D2yyPYWZF2sfNdtn+2klkfK7wLStegT7qgKrCcH5ZlK6BQg/vGdsn030ltkqRVOAi9fI8Y8/p+rAQWilQHNO9BEyH7wNtUhNMlx0i7lh/aQUIhu4GNLZ082RBLYCtO2s/vc/+gOpTp8IG02Plux1qQca4F4qnqNAJQf4Kg4ZWZmvKJGEKH2qHCf4V/Yt4UFAnOJk4vZbAYftE1phoQcfrzVQbd8fwwBKvSC5j91OspwVY+709R0RbgZ/
+X-Forefront-Antispam-Report: CIP:20.160.56.85;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:inpost-eu.tmcas.trendmicro.com;PTR:inpost-eu.tmcas.trendmicro.com;CAT:NONE;SFS:(13230031)(376002)(39850400004)(396003)(136003)(346002)(82310400011)(186009)(1800799009)(451199024)(5400799018)(36840700001)(46966006)(2616005)(5660300002)(34070700002)(4326008)(8676002)(8936002)(336012)(47076005)(36756003)(7416002)(44832011)(36860700001)(26005)(40480700001)(82740400003)(7596003)(356005)(7636003)(6666004)(70586007)(70206006)(54906003)(6916009)(316002)(478600001)(31686004)(53546011)(41300700001)(6512007)(6506007)(2906002)(86362001)(6486002)(31696002)(43740500002)(12100799039);DIR:OUT;SFP:1501;
+X-OriginatorOrg: seco.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2023 22:10:14.2166
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 810daba8-3d73-42e2-bed7-08dba4eee451
+X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bebe97c3-6438-442e-ade3-ff17aa50e733;Ip=[20.160.56.85];Helo=[inpost-eu.tmcas.trendmicro.com]
+X-MS-Exchange-CrossTenant-AuthSource: DB8EUR05FT015.eop-eur05.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR03MB6264
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,224 +150,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 06:57:02PM +0800, Tzuyi Chang wrote:
-> Add device tree bindings for RTD1319D.
+On 8/21/23 19:59, Vladimir Oltean wrote:
+> On Mon, Aug 21, 2023 at 07:39:15PM -0400, Sean Anderson wrote:
+>> Well, I think we should take the opportunity to think about the hardware
+>> which exists and how we plan to model it. IMO grouping lanes into a
+>> single phy simplifies both the phy driver and the mac driver.
 > 
-> Signed-off-by: Tzuyi Chang <tychang@realtek.com>
-> ---
-> v1 to v2 change:
-> 1. Add a description for RTD1319D.
-> 2. Rename realtek,pdrive, realtekmndrive and realtek,dcycle.
-> 3. Add a description for PMOS and NMOS driving strength.
-> 4. Remove the wildcard in the compatible strings.
-> 5. Use '-pins$' to be node name pattern.
-> ---
->  .../pinctrl/realtek,rtd1319d-pinctrl.yaml     | 189 ++++++++++++++++++
->  1 file changed, 189 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1319d-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd1319d-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1319d-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..8653d42ac1f3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd1319d-pinctrl.yaml
-> @@ -0,0 +1,189 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2023 Realtek Semiconductor Corporation
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/realtek,rtd1319d-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Realtek DHC RTD1319D Pin Controller
-> +
-> +maintainers:
-> +  - TY Chang <tychang@realtek.com>
-> +
-> +description:
-> +  The Realtek DHC RTD1319D is a high-definition media processor SoC. The
-> +  RTD1319D pin controller is used to control pin function, pull up/down
-> +  resistor, drive strength, schmitt trigger and power source.
-> +
-> +properties:
-> +  compatible:
-> +    const: realtek,rtd1319d-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  '^.*$':
+> Ok, but ungrouped for backplane and grouped for !backplane? For the KR
+> link modes, parallel link training, with separate consumers per lanes in
+> a group, will be needed per lane.
 
-In case it was not obvious, my comment to use '-pins' applies here and 
-to the next patch.
+Hm, this is the sort of thing I hadn't considered since separate link
+training isn't necessary for lynx 10g. But couldn't this be done by
+adding a "lane" parameter to phy_configure_opts_xgkr?
 
-> +    if:
+Although, I am not sure how the driver is supposed to figure out what
+coefficients to use. c73 implies that the training frame should be sent
+on each lane. So I expected that there would be four copies of the
+link coefficient registers. However, when reading the LX2160ARM, I only
+saw one set of registers (e.g. 26.6.3.3). So is link training done
+serially? I didn't see anything like a "lane select" field.
 
-As does dropping if/then.
-
-> +      type: object
-> +    then:
-> +      allOf:
-> +        - $ref: pincfg-node.yaml#
-> +        - $ref: pinmux-node.yaml#
-> +
-> +      properties:
-> +        pins:
-> +          items:
-> +            enum: [ gpio_0, gpio_1, gpio_2, gpio_3, gpio_4, gpio_5, gpio_6, gpio_7,
-> +                    gpio_8, gpio_9, gpio_10, gpio_11, gpio_12, gpio_13, gpio_14,
-> +                    gpio_15, gpio_16, gpio_17, gpio_18, gpio_19, gpio_20, gpio_21,
-> +                    gpio_22, gpio_23, usb_cc2, gpio_25, gpio_26, gpio_27, gpio_28,
-> +                    gpio_29, gpio_30, gpio_31, gpio_32, gpio_33, gpio_34, gpio_35,
-> +                    hif_data, hif_en, hif_rdy, hif_clk, gpio_40, gpio_41, gpio_42,
-> +                    gpio_43, gpio_44, gpio_45, gpio_46, gpio_47, gpio_48, gpio_49,
-> +                    gpio_50, usb_cc1, gpio_52, gpio_53, ir_rx, ur0_rx, ur0_tx,
-> +                    gpio_57, gpio_58, gpio_59, gpio_60, gpio_61, gpio_62, gpio_63,
-> +                    gpio_64, emmc_rst_n, emmc_dd_sb, emmc_clk, emmc_cmd, emmc_data_0,
-> +                    emmc_data_1, emmc_data_2, emmc_data_3, emmc_data_4, emmc_data_5,
-> +                    emmc_data_6, emmc_data_7, dummy, gpio_78, gpio_79, gpio_80,
-> +                    gpio_81, ur2_loc, gspi_loc, hi_width, sf_en, arm_trace_dbg_en,
-> +                    ejtag_aucpu_loc, ejtag_acpu_loc, ejtag_vcpu_loc, ejtag_scpu_loc,
-> +                    dmic_loc, ejtag_secpu_loc, vtc_dmic_loc, vtc_tdm_loc, vtc_i2si_loc,
-> +                    tdm_ai_loc, ai_loc, spdif_loc, hif_en_loc, sc0_loc, sc1_loc,
-> +                    scan_switch, wd_rset, boot_sel, reset_n, testmode ]
-> +
-> +        function:
-> +          enum: [ gpio, nf, emmc, tp0, tp1, sc0, sc0_data0, sc0_data1, sc0_data2,
-> +                  sc1, sc1_data0, sc1_data1, sc1_data2, ao, gspi_loc0, gspi_loc1,
-> +                  uart0, uart1, uart2_loc0, uart2_loc1, i2c0, i2c1, i2c3, i2c4,
-> +                  i2c5, pcie1, sdio, etn_led, etn_phy, spi, pwm0_loc0, pwm0_loc1,
-> +                  pwm1_loc0, pwm1_loc1, pwm2_loc0, pwm2_loc1, pwm3_loc0, pwm3_loc1,
-> +                  qam_agc_if0, qam_agc_if1, spdif_optical_loc0, spdif_optical_loc1,
-> +                  usb_cc1, usb_cc2, vfd, sd, dmic_loc0, dmic_loc1, ai_loc0, ai_loc1,
-> +                  tdm_ai_loc0, tdm_ai_loc1, hi_loc0, hi_m, vtc_i2so, vtc_i2si_loc0,
-> +                  vtc_i2si_loc1, vtc_dmic_loc0, vtc_dmic_loc1, vtc_tdm_loc0,
-> +                  vtc_tdm_loc1, dc_fan, pll_test_loc0, pll_test_loc1, ir_rx,
-> +                  uart2_disable, gspi_disable, hi_width_disable, hi_width_1bit,
-> +                  sf_disable, sf_enable, scpu_ejtag_loc0, scpu_ejtag_loc1,
-> +                  scpu_ejtag_loc2, acpu_ejtag_loc0, acpu_ejtag_loc1, acpu_ejtag_loc2,
-> +                  vcpu_ejtag_loc0, vcpu_ejtag_loc1, vcpu_ejtag_loc2, secpu_ejtag_loc0,
-> +                  secpu_ejtag_loc1, secpu_ejtag_loc2, aucpu_ejtag_loc0, aucpu_ejtag_loc1,
-> +                  aucpu_ejtag_loc2, iso_tristate, dbg_out0, dbg_out1, standby_dbg,
-> +                  spdif, arm_trace_debug_disable, arm_trace_debug_enable,
-> +                  aucpu_ejtag_disable, acpu_ejtag_disable, vcpu_ejtag_disable,
-> +                  scpu_ejtag_disable, secpu_ejtag_disable, vtc_dmic_loc_disable,
-> +                  vtc_tdm_disable, vtc_i2si_disable, tdm_ai_disable, ai_disable,
-> +                  spdif_disable, hif_disable, hif_enable, test_loop, pmic_pwrup ]
-> +
-> +        drive-strength:
-> +          enum: [4, 8]
-> +
-> +        bias-pull-down: true
-> +
-> +        bias-pull-up: true
-> +
-> +        bias-disable: true
-> +
-> +        input-schmitt-enable: true
-> +
-> +        input-schmitt-disable: true
-> +
-> +        drive-push-pull: true
-> +
-> +        power-source:
-> +          description: |
-> +            Valid arguments are described as below:
-> +            0: power supply of 1.8V
-> +            1: power supply of 3.3V
-> +          enum: [0, 1]
-> +
-> +        realtek,drive-strength-p:
-> +          description: |
-> +            Some of pins can be driven using the P-MOS and N-MOS transistor to
-> +            achieve finer adjustments. The block-diagram representation is as
-> +            follows:
-> +                           VDD
-> +                            |
-> +                        ||--+
-> +                 +-----o||     P-MOS-FET
-> +                 |      ||--+
-> +            IN --+          +----- out
-> +                 |      ||--+
-> +                 +------||     N-MOS-FET
-> +                        ||--+
-> +                            |
-> +                           GND
-> +            The driving strength of the P-MOS/N-MOS transistors impacts the
-> +            waveform's rise/fall times. Greater driving strength results in
-> +            shorter rise/fall times. Each P-MOS and N-MOS transistor offers
-> +            8 configurable levels (0 to 7), with higher values indicating
-> +            greater driving strength, contributing to achieving the desired
-> +            speed.
-> +
-> +            The realtek,drive-strength-p is used to control the driving strength
-> +            of the P-MOS output.
-> +          $ref: /schemas/types.yaml#/definitions/uint32
-> +          minimum: 0
-> +          maximum: 7
-> +
-> +        realtek,drive-strength-n:
-> +          description: |
-> +            Similar to the realtek,drive-strength-p, the realtek,drive-strength-n
-> +            is used to control the driving strength of the N-MOS output.
-> +          $ref: /schemas/types.yaml#/definitions/uint32
-> +          minimum: 0
-> +          maximum: 7
-> +
-> +        realtek,duty-cycle:
-> +          description: |
-> +            An integer describing the level to adjust output duty cycle, controlling
-> +            the proportion of positive and negative waveforms in nanoseconds.
-> +            Valid arguments are described as below:
-> +            0: 0ns
-> +            2: + 0.25ns
-> +            3: + 0.5ns
-> +            4: -0.25ns
-> +            5: -0.5ns
-> +          $ref: /schemas/types.yaml#/definitions/uint32
-> +          enum: [ 0, 2, 3, 4, 5 ]
-> +
-> +      required:
-> +        - pins
-> +
-> +      additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +     pinctrl@4e000 {
-> +         compatible = "realtek,rtd1319d-pinctrl";
-> +         reg = <0x4e000 0x130>;
-> +
-> +         emmc-hs200-pins {
-> +             pins = "emmc_clk",
-> +                    "emmc_cmd",
-> +                    "emmc_data_0",
-> +                    "emmc_data_1",
-> +                    "emmc_data_2",
-> +                    "emmc_data_3",
-> +                    "emmc_data_4",
-> +                    "emmc_data_5",
-> +                    "emmc_data_6",
-> +                    "emmc_data_7";
-> +             function = "emmc";
-> +             realtek,drive-strength-p = <0x2>;
-> +             realtek,drive-strength-n = <0x2>;
-> +         };
-> +
-> +         i2c-0-pins {
-> +             pins = "gpio_12",
-> +                    "gpio_13";
-> +             function = "i2c0";
-> +             drive-strength = <4>;
-> +         };
-> +     };
-> -- 
-> 2.41.0
-> 
+--Sean
