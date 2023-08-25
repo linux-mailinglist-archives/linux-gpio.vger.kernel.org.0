@@ -2,67 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87D0C788383
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 11:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4253A788449
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 12:09:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233576AbjHYJ1W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Aug 2023 05:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41616 "EHLO
+        id S234699AbjHYKJP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Aug 2023 06:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244235AbjHYJ1T (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Aug 2023 05:27:19 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C671FC3
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Aug 2023 02:27:16 -0700 (PDT)
-Received: from canpemm500007.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RXF0Q6fTqzVkF6;
-        Fri, 25 Aug 2023 17:24:54 +0800 (CST)
-Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
- (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 25 Aug
- 2023 17:27:13 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <linus.walleij@linaro.org>, <andriy.shevchenko@linux.intel.com>
-CC:     <linux-gpio@vger.kernel.org>, <yuehaibing@huawei.com>
-Subject: [PATCH -next] pinctrl: lantiq: Remove unsued declaration ltq_pinctrl_unregister()
-Date:   Fri, 25 Aug 2023 17:27:06 +0800
-Message-ID: <20230825092706.14680-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        with ESMTP id S240728AbjHYKJA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Aug 2023 06:09:00 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5FC210A;
+        Fri, 25 Aug 2023 03:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692958139; x=1724494139;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GX6ONpq0yKRKkuwTZxFQGv7Lr78g0MrzChGMnUkWTQ4=;
+  b=htRHZY2eMAJw8ZbnZjtFWLbXc0uR8/2U1ivN7VaJ6+FKLXNW1DNCPV2n
+   mt+8xjCwzfnK783b8EqdSg19qZh5t28RQ139oSgCYtEMrxLq8yKj44/2P
+   At+Zdt2nmT4bIifqxj4BKCNncETHqJwrlffa+nuNzbg0ULwEBcpMwDWtP
+   PQuUBZ1+Q/8Zt8HR9XLHOOIJmDN/6TyQ+L0k7QpfNMcihf5UvnZ2m53WI
+   l4XYvLFmZ8X+bcNcH5Mya2qvP9twVJADuOLfeJZVOEPC6Qd0TYjW6narW
+   uZhQQd15ajFeUbVFefabPnZPTRDm7Ccy2IxFfrPp2rpOk9wNT9I3SyBgS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="355010067"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="355010067"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 03:08:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="911240050"
+X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
+   d="scan'208";a="911240050"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 25 Aug 2023 03:08:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qZTkM-00CM62-0M;
+        Fri, 25 Aug 2023 13:08:54 +0300
+Date:   Fri, 25 Aug 2023 13:08:53 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linhua Xu <Linhua.xu@unisoc.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        lh xu <xulh0829@gmail.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Subject: Re: [PATCH 1/6] pinctrl: sprd: Modify the probe function parameters
+Message-ID: <ZOh9tUvqtdOEnl+e@smile.fi.intel.com>
+References: <20230825031826.31599-1-Linhua.xu@unisoc.com>
+ <20230825031826.31599-2-Linhua.xu@unisoc.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.215]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500007.china.huawei.com (7.192.104.62)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230825031826.31599-2-Linhua.xu@unisoc.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Fri, Aug 25, 2023 at 11:18:21AM +0800, Linhua Xu wrote:
+> From: Linhua Xu <Linhua.Xu@unisoc.com>
+> 
+> For UNISOC pin controller, the offset values of the common register and
+> misc register will be different. Thus put these in the probe function
+> parameters.
 
-Commit 3f8c50c9b110 ("OF: pinctrl: MIPS: lantiq: implement lantiq/xway pinctrl support")
-declared but never implemented it, so can be removed.
+...
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/pinctrl/pinctrl-lantiq.h | 1 -
- 1 file changed, 1 deletion(-)
+> +#define	PINCTRL_REG_OFFSET		0x20
 
-diff --git a/drivers/pinctrl/pinctrl-lantiq.h b/drivers/pinctrl/pinctrl-lantiq.h
-index efb25fc34f14..1ac49ae638de 100644
---- a/drivers/pinctrl/pinctrl-lantiq.h
-+++ b/drivers/pinctrl/pinctrl-lantiq.h
-@@ -198,5 +198,4 @@ enum ltq_pin {
- 
- extern int ltq_pinctrl_register(struct platform_device *pdev,
- 				   struct ltq_pinmux_info *info);
--extern int ltq_pinctrl_unregister(struct platform_device *pdev);
- #endif	/* __PINCTRL_LANTIQ_H */
+0x0020
+
+> +#define	PINCTRL_REG_MISC_OFFSET		0x4020
+
+...
+
+>  		if (pin->type == GLOBAL_CTRL_PIN) {
+> -			pin->reg = (unsigned long)sprd_pctl->base +
+> -				PINCTRL_REG_LEN * reg;
+> +			pin->reg = (unsigned long)(sprd_pctl->base +
+> +				(unsigned long)(PINCTRL_REG_LEN * reg));
+
+Please, make sure you get rid of castings completely. They are weird
+for the start and may lead to bugs.
+
+>  			pin->bit_offset = sprd_soc_pin_info[i].bit_offset;
+>  			pin->bit_width = sprd_soc_pin_info[i].bit_width;
+>  			ctrl_pin++;
+>  		} else if (pin->type == COMMON_PIN) {
+>  			pin->reg = (unsigned long)sprd_pctl->base +
+> -				PINCTRL_REG_OFFSET + PINCTRL_REG_LEN *
+> +				sprd_pctl->common_pin_offset + PINCTRL_REG_LEN *
+>  				(i - ctrl_pin);
+>  			com_pin++;
+>  		} else if (pin->type == MISC_PIN) {
+>  			pin->reg = (unsigned long)sprd_pctl->base +
+> -				PINCTRL_REG_MISC_OFFSET + PINCTRL_REG_LEN *
+> +				sprd_pctl->misc_pin_offset + PINCTRL_REG_LEN *
+>  				(i - ctrl_pin - com_pin);
+>  		}
+
+Ditto.
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
