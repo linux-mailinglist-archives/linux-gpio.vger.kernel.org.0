@@ -2,76 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC88788D72
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 18:52:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53CC3788FB5
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 22:20:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344094AbjHYQwA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Aug 2023 12:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53460 "EHLO
+        id S229481AbjHYUTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Aug 2023 16:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344121AbjHYQvf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Aug 2023 12:51:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5404B2130;
-        Fri, 25 Aug 2023 09:51:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DCDEE6634F;
-        Fri, 25 Aug 2023 16:51:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 50EB5C433C8;
-        Fri, 25 Aug 2023 16:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692982283;
-        bh=sT9SNOfcJ33p0wR94jOmytXoxQlblJiM7P1yB0EOrm0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=kcaIr/Vjung5vtaDPEgTFgygR8qlyCHLDKJl0taiG417T0PMT8bO2TFNA84Otopqa
-         6Qz/BnRnZ7XHtGhI+kySWBxMaIOzkm3sVI4zhlX9hrAch9cHi2R6GM5zZTUUI00RoK
-         +MiFFR/ldZqp2DLA6EJaUacpijY4g2bG97ZpJga0Z47eo0A2DxQcmcaRqVH/o6xADo
-         hXJePb/YTJslWgSR8M8ttfgmbIhszbTt2L5Phzg0JrTBPohZRDa7wlGi2JsTzJqT9/
-         ercDqwtdqKN/1ktjJAtk7U1jyOlPHQqpmQnoyTut20CMY1wt+wlYj5qeMWKBtwpaNn
-         +kfriJ1mPYJCA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3AB93E33083;
-        Fri, 25 Aug 2023 16:51:23 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v6.5
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20230825130155.11639-1-brgl@bgdev.pl>
-References: <20230825130155.11639-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230825130155.11639-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.5
-X-PR-Tracked-Commit-Id: 6e39c1ac688161b4db3617aabbca589b395242bc
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 98c6b8a558d26d3c334986146d9d03ece5f25dec
-Message-Id: <169298228323.13860.8717097223556864960.pr-tracker-bot@kernel.org>
-Date:   Fri, 25 Aug 2023 16:51:23 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229500AbjHYUTG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Aug 2023 16:19:06 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8E7171A
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Aug 2023 13:19:05 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-44d4d997dcfso618903137.0
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Aug 2023 13:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692994744; x=1693599544;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3Lgfl+sBrI7iGkdGMvxvYsN+wTvmFwozsU3ZwujNh7g=;
+        b=WgHEY4fx1GfMBmktefs4eR0VpBBN+P84BxZ9qWN3khf42dVJD+NthQM/Ya646MN2cs
+         8Kmpf+GFP126yYFtK86A9+fj9I3HpDNOK4/cT9bH9Nzjzk7WrwbyOlCk5BppMavQIsAF
+         esHk96wOO51yztQk1y793Ue+TDmBx2WAY8rZ9m+8sDEF9etLI58VV1S5qKY4X5TwabCz
+         fmvJCNtNN8nEpyRWVU8KxShcpvTNVQzM/BgQmta0xG1XaWEPoNprVjjd1nNQCyGJCqr6
+         aKUUvNFhjxwe3CwrHZCSozs+iUBDLREHegRXlp73dgirlx5gs5R2AaQnt7hl2J4+BN2L
+         8YGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692994744; x=1693599544;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3Lgfl+sBrI7iGkdGMvxvYsN+wTvmFwozsU3ZwujNh7g=;
+        b=TwH5wMpJXuCweXb7Nhr/J5TTB+YK8mWzeZlIKiqTXGrCjyueWq1hUomnheNkQFX+Na
+         +nZc4wKJurD6We8+6NlSAbXlKC7BpLTIMBfyNiLgPZBVP57c6uMSWbdw/5VA3gtS4asL
+         wBQvoYyeqp8sxQSklCPtSB4lM6c1TT7DkB7i7jZNNO6DioVk9ts34dSkloKkvvPbkWeY
+         75vmLVGzyyd3ugKXLAb7tBSZ2JE22bJdNofks6XxNgwpcy7AJ8ogQQ5/vtncdszgMOlB
+         LvqKeOnhTRI94/2bv+Ie3h7L7js8ryWZKqYLssHKfSRKeer2P7N/ExEDrI4JgT6dtVIA
+         FvtQ==
+X-Gm-Message-State: AOJu0YxlxhupKEMrpQqk0h3L7txiCE7H4kKujLc1aRBt8St+v0AXWE+t
+        pvIKvnYL/SVrd+MvveWK586saWL5NKLVaiJ7Lah/VUy5no1Xuq1SOxw=
+X-Google-Smtp-Source: AGHT+IEFgDgxT2uIq35FNml4FxDBUCOnCLPLz0r5uLmXn0E3wjeED0Du5LpSDSMy3w6jzZHkFFYgGJ9daS2esVpcun0=
+X-Received: by 2002:a05:6102:3655:b0:44e:906d:58b with SMTP id
+ s21-20020a056102365500b0044e906d058bmr7433384vsu.14.1692994744314; Fri, 25
+ Aug 2023 13:19:04 -0700 (PDT)
+MIME-Version: 1.0
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 25 Aug 2023 22:18:53 +0200
+Message-ID: <CAMRc=MdBBhczdoS97FhdYWVjh+VnzW5CAcEjeDuDOAvzPQ=TqA@mail.gmail.com>
+Subject: [ANNOUNCE] libgpiod v2.0.2 released
+To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Fri, 25 Aug 2023 15:01:55 +0200:
+I've just tagged and uploaded a new bugfix release for libgpiod v2.0.
+It fixes a couple
+crashes and minor bugs in tests. Details can be found in NEWS and the tarball
+and git tag in their usual places[1][2].
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.5
+Bart
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/98c6b8a558d26d3c334986146d9d03ece5f25dec
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+[1] https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
+[2] git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
