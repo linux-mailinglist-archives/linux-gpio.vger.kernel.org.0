@@ -2,80 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DBEFB7884D0
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 12:21:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19B387884F5
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 12:32:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234876AbjHYKVC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Aug 2023 06:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
+        id S240294AbjHYKbr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Aug 2023 06:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244501AbjHYKUu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Aug 2023 06:20:50 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E1D2111;
-        Fri, 25 Aug 2023 03:20:41 -0700 (PDT)
+        with ESMTP id S241882AbjHYKb1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Aug 2023 06:31:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7294C133
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Aug 2023 03:31:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692958841; x=1724494841;
+  t=1692959484; x=1724495484;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=/ChN0TZycIWtVLs/mIq104bmkKs4G9waM/je8eiAFAs=;
-  b=IkiZymGDPSu0IhfH2kkkj4K51LI7KGNn3ndHFFVDP1g7AML6tgXjqPJk
-   8zi+kw/dOzmco+rHw4NBrHgRnevlsbQUSvlJMDFwW2lJbzBoDwSSv7GsB
-   2ur/aB2v6Xc3s/TpP+loexYlVPEkcWHaIUI+dOi7ia/9175XTO1VDsXAX
-   BC5XruRZ14gHmQh58e29qMpDlRsDy4IU2OmQ2tmAZmLAvPItqddd5Bz2d
-   yMizOZG4urSgLr/v+ZVQGtQP5IeacJzbboxswQq2jUMZYCD/tt6JuGHQz
-   2iUwmXo+Y9XsE6iwtjuUHxpaf1hEB5U7nRH0jhcsoEZ44wHCbKy0IMmla
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="374658700"
+  bh=qE2FXJd+W/DJXUhTV/KaLCSXSXkJJX3lOpvtFLyhkFk=;
+  b=SHo2MTW++nsFKK+9EDTiahNhLEh6eSuRZ9gZFaKAs+Cs6bUpgAJVAlBZ
+   OnXrTFsrDfqQZ3NSDe0qN84wgxXy8V6V09JHkBz1r1R5T0E3AsM3c3+qB
+   z6ekkd4V05YCeVkEMKtHDwhFR/HdAduszIYCLqcUbHEY+YIFdo+IQyci/
+   7hNZv4JxGx9TrN3t/IUWau4zweZLq7LjhzOYa6jljTVTxVxjMG1+md1O3
+   +FeJL+p61hQBS+k7znQUfsjwFMyu86qRtkI+nD4wdrDv2IPu+5okGPJrz
+   EIBDiMxNd1xyXy1RkM75VnNxJJTpYJ2c0PFe6baGOoxeNG4khnpPe62FF
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="359682453"
 X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="374658700"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 03:20:40 -0700
+   d="scan'208";a="359682453"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 03:31:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="802920717"
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="911246351"
 X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="802920717"
+   d="scan'208";a="911246351"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Aug 2023 03:20:37 -0700
+  by orsmga005.jf.intel.com with ESMTP; 25 Aug 2023 03:29:58 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qZTvg-00Ckve-0w;
-        Fri, 25 Aug 2023 13:20:36 +0300
-Date:   Fri, 25 Aug 2023 13:20:36 +0300
+        id 1qZU4j-00D5D5-14;
+        Fri, 25 Aug 2023 13:29:57 +0300
+Date:   Fri, 25 Aug 2023 13:29:57 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linhua Xu <Linhua.xu@unisoc.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        lh xu <xulh0829@gmail.com>,
-        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Subject: Re: [PATCH 6/6] pinctrl: sprd: Add pinctrl support for UMS9621
-Message-ID: <ZOiAdJEMQjgfpaiF@smile.fi.intel.com>
-References: <20230825031826.31599-1-Linhua.xu@unisoc.com>
- <20230825031826.31599-7-Linhua.xu@unisoc.com>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH -next] pinctrl: lantiq: Remove unsued declaration
+ ltq_pinctrl_unregister()
+Message-ID: <ZOiCpYQ9zr/EFW0C@smile.fi.intel.com>
+References: <20230825092706.14680-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230825031826.31599-7-Linhua.xu@unisoc.com>
+In-Reply-To: <20230825092706.14680-1-yuehaibing@huawei.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 11:18:26AM +0800, Linhua Xu wrote:
-> From: Linhua Xu <Linhua.Xu@unisoc.com>
+On Fri, Aug 25, 2023 at 05:27:06PM +0800, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
 > 
-> This patch adds the pin control driver for UNISOC UMS9621 platform.
+> Commit 3f8c50c9b110 ("OF: pinctrl: MIPS: lantiq: implement lantiq/xway pinctrl support")
+> declared but never implemented it, so can be removed.
 
-Same comments as per previous patch.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
 With Best Regards,
