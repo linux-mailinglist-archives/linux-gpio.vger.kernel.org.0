@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0E1C788577
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 13:18:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8769078857B
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Aug 2023 13:19:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230237AbjHYLSU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Aug 2023 07:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36124 "EHLO
+        id S233287AbjHYLSw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Aug 2023 07:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235081AbjHYLSC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Aug 2023 07:18:02 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92FD419AC
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Aug 2023 04:18:00 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-79da1a3e2e2so327617241.1
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Aug 2023 04:18:00 -0700 (PDT)
+        with ESMTP id S236902AbjHYLS0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Aug 2023 07:18:26 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F411FCA
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Aug 2023 04:18:23 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-791b8525b59so323711241.1
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Aug 2023 04:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692962279; x=1693567079;
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692962302; x=1693567102;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tVBvWGIx0J6gjaJv6/fpMatRyh7moH4juddmleDwCWc=;
-        b=tGHvNl5TgnXTwHoQmaJvDb+jU/gVieHiPM1C1fVtx0biLmYYARhu/5it4G1+Ad+kcK
-         79MQRz3JntogmwW0ZmU+I0i5U0cwHRcZ8adR7/J0URJEPjPe+ouCFPdSulDQjVHIttS9
-         vU1Zbk9zsg8RGKJtnh71Nw8n5MqOO8FFBGgbulk7VrJY13j3uIgoo4ZFxSeFhXfCrNU1
-         /juNeb5TLjk7M1C3jte5TvBEyryNrugWjzSGOmHIDQOt/iZR1NsDzi2NJc1wbzPWYfdp
-         eL295Doy5oMsW+Lb3lUY2m1YPEs37VY0qLT0DHeNv/UqAENoGPFdsHe8fXt1ChqxsAhR
-         XUbQ==
+        bh=xWKrrSx4g72KNJv8vfPkVXuC0ZK0bilFToBW/WhDgH4=;
+        b=wiC2b2iY2ns4+6bRTnChH6buoE3SQC2PTPoPfFYKHSRyrP57WYUj2LzIOgkbHWC/77
+         3qrlGvudaR8VbqxHQ5JGD6vA3ylBcrXbpcHFQTNVbAy5eNF8ijUfISdyvDCutxTsSnjX
+         CNyjqgVv1VHLAa9aLbjTYPaN2iVck3ncthrz5jaDQDI7+G3GhwcjEn2dYr1TjtVBExEj
+         3Tgv0HMjIIPztYVO5iyTNsr622TnEWM7ElTf9j9vIqvb26eFcr2h8Gm+ItOzcn0oqsh2
+         phpjYPBnnyrSVhQ8AH76YC8KUHa1FDQeCp9RQP9MtSHJlxBg5smcdR+uk4HO+pwIt2qd
+         hFZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692962279; x=1693567079;
+        d=1e100.net; s=20221208; t=1692962302; x=1693567102;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tVBvWGIx0J6gjaJv6/fpMatRyh7moH4juddmleDwCWc=;
-        b=WwQLVHGD+JLE7HfUcPu+0CG4KEuKcwLU7XdXc2FUzif0BLBXMZ+Mnl+bd8X+1hr4ju
-         LoO0r3xmssxDXZExJpVcdMt4uCjAJPrMy1EG1NuP3gUizRVEMtVNdtaMp0/9iWf1MP4N
-         wLyHoA1uq95yQ0F6f1TMs5U/CNQoWIxZ41P6uTgQhDcqXUICoUUhw0keep026WWcX+S1
-         zUmvvzXBUTqnWzS67BZAwktjwetMbUxqSf3l66JQbNqhot5Rbhejr30A9Vm6AG8YMFFg
-         gfdPK2Gwkf1RXd4MFpRtJkJqnIAss80r3+SmhKgXwNMHdjCzsLRILOHykc8aJRPLezw4
-         lg4Q==
-X-Gm-Message-State: AOJu0YyDm4c82lBLBZyOC+f7d5OkNtwt1ONGtpf+ZwDDhnZaRGXUkFqm
-        XkrQNEL4ath7ZF6oTs7H1nIhq4AMsyNz/qLNNxDByQ==
-X-Google-Smtp-Source: AGHT+IFrsh4nH0axFm6B30a2vIPLZ9mvamfoMJCkPypS2B7UyvDDG3R+endcC6Z0M2T6ivTDDBAbdW7w1sz9pQGSX40=
-X-Received: by 2002:a05:6102:4ae:b0:44e:9113:ac58 with SMTP id
- r14-20020a05610204ae00b0044e9113ac58mr4630476vsa.6.1692962279430; Fri, 25 Aug
- 2023 04:17:59 -0700 (PDT)
+        bh=xWKrrSx4g72KNJv8vfPkVXuC0ZK0bilFToBW/WhDgH4=;
+        b=gwlysDGYAUkWZFydCGhr+ZfRAIvGjyHhi5QgsUly1m0sEQLe4biVBwLYYH6E2k09CL
+         QzlQH2NlxTx1tRGIgd9lF/REAJaryZLxaT2spG7swkhuDlO0T15jZD9Slsyd/h/2i4ot
+         limatkLvDBd8GN4ptGPgmxQwHIzFZKw1Emwhu5vVbctgFV0sDbdRFezegtHEMd+TxMPf
+         cd+noIHzkoHnbFj31u/PVzaPMoxgpQxVIw31pZU2/LHADt3uPSYid/rBXTpksNEYz5s1
+         Kjqh2+Vh8ir6ns8iqZG014RzhjdCHfKBWHz0SF7LDPK4Aaef4zZhyya4akbj9a80C+d+
+         uskw==
+X-Gm-Message-State: AOJu0Yzmp5yWYdV/s+agUxlcWF3HzRq08cGnX2bKMcg5E6a5QLE6ivTF
+        +5TZD035cvGmxDgGFj+GXxQ3Fjrsd61u9cjX+tAgGA==
+X-Google-Smtp-Source: AGHT+IEgwcG3WQA8jodQelsSwZ3u6fbblw91gZ/1p6Qw3GMUPOQrKaehGcII9s0yiY9sRhqebF21IusxSGn2g8WR39I=
+X-Received: by 2002:a67:fb99:0:b0:44d:626b:94da with SMTP id
+ n25-20020a67fb99000000b0044d626b94damr8984206vsr.32.1692962302520; Fri, 25
+ Aug 2023 04:18:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230824-tca9538-v1-0-ee3bf2065065@gmail.com> <20230824-tca9538-v1-2-ee3bf2065065@gmail.com>
-In-Reply-To: <20230824-tca9538-v1-2-ee3bf2065065@gmail.com>
+References: <20230824-tca9538-v1-0-ee3bf2065065@gmail.com> <20230824-tca9538-v1-1-ee3bf2065065@gmail.com>
+In-Reply-To: <20230824-tca9538-v1-1-ee3bf2065065@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 25 Aug 2023 13:17:48 +0200
-Message-ID: <CAMRc=MedSOpY-n_pZ7ZECc=xEPMz-VNXFfWRvQ7-zM_YHfECNw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: gpio: pca95xx: document new tca9538 chip
+Date:   Fri, 25 Aug 2023 13:18:11 +0200
+Message-ID: <CAMRc=MdmM8PgGUdaxCFQo_SJHKJ9CO3tRScY8XNcKc71BV_ZHQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: pca953x: add support for TCA9538
 To:     Liam Beguin <liambeguin@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -76,32 +76,46 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Aug 25, 2023 at 1:16=E2=80=AFAM Liam Beguin <liambeguin@gmail.com> =
 wrote:
 >
-> The previous patch added support for this chip. Add its name to the list
-> of allowed compatibles.
+> The TCA9538 is an 8 bit version of the already supported TCA9539.
+> This chip also has interrupt support.
 >
 > Signed-off-by: Liam Beguin <liambeguin@gmail.com>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpio/gpio-pca953x.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/D=
-ocumentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-> index fa116148ee90..99febb8ea1b6 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-> @@ -66,6 +66,7 @@ properties:
->                - ti,tca6408
->                - ti,tca6416
->                - ti,tca6424
-> +              - ti,tca9538
->                - ti,tca9539
->                - ti,tca9554
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index a806a3c1b801..71a750363738 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -108,6 +108,7 @@ static const struct i2c_device_id pca953x_id[] =3D {
+>         { "tca6408", 8  | PCA953X_TYPE | PCA_INT, },
+>         { "tca6416", 16 | PCA953X_TYPE | PCA_INT, },
+>         { "tca6424", 24 | PCA953X_TYPE | PCA_INT, },
+> +       { "tca9538", 8  | PCA953X_TYPE | PCA_INT, },
+>         { "tca9539", 16 | PCA953X_TYPE | PCA_INT, },
+>         { "tca9554", 8  | PCA953X_TYPE | PCA_INT, },
+>         { "xra1202", 8  | PCA953X_TYPE },
+> @@ -1354,6 +1355,7 @@ static const struct of_device_id pca953x_dt_ids[] =
+=3D {
+>         { .compatible =3D "ti,tca6408", .data =3D OF_953X( 8, PCA_INT), }=
+,
+>         { .compatible =3D "ti,tca6416", .data =3D OF_953X(16, PCA_INT), }=
+,
+>         { .compatible =3D "ti,tca6424", .data =3D OF_953X(24, PCA_INT), }=
+,
+> +       { .compatible =3D "ti,tca9538", .data =3D OF_953X( 8, PCA_INT), }=
+,
+>         { .compatible =3D "ti,tca9539", .data =3D OF_953X(16, PCA_INT), }=
+,
 >
+>         { .compatible =3D "onnn,cat9554", .data =3D OF_953X( 8, PCA_INT),=
+ },
 >
 > --
 > 2.39.0
 >
 
-Applied with commit message tweaked.
+Applied, thanks!
 
 Bart
