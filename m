@@ -2,40 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3169D78991C
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Aug 2023 22:45:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40C197899C8
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Aug 2023 01:15:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbjHZUpL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Aug 2023 16:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54992 "EHLO
+        id S229861AbjHZXPC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Aug 2023 19:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjHZUpB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Aug 2023 16:45:01 -0400
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B178DBA;
-        Sat, 26 Aug 2023 13:44:58 -0700 (PDT)
-Received: from local
-        by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-         (Exim 4.96)
-        (envelope-from <daniel@makrotopia.org>)
-        id 1qa09K-0004GO-0C;
-        Sat, 26 Aug 2023 20:44:50 +0000
-Date:   Sat, 26 Aug 2023 21:44:31 +0100
-From:   Daniel Golle <daniel@makrotopia.org>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pinctrl: mediatek: mt7981: add additional uart groups
-Message-ID: <11db447f257231e08065989100311df57b7f1f1c.1693082594.git.daniel@makrotopia.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S229588AbjHZXOd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Aug 2023 19:14:33 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22984100;
+        Sat, 26 Aug 2023 16:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693091671; x=1724627671;
+  h=from:to:cc:subject:date:message-id;
+  bh=ofq7kvPSmVmBs3RP9yhV1HHd3N3h9v8sDQXmLdiV/LU=;
+  b=gQomBhpUhoRSi0dO9DIty/ep8PWAFidQ3Yzbdh/MsTis08UXqtIJyAF6
+   9N6iCacXrBOpCx6zv1JosT3zWZ1Xb9sh2TIrqJ4Tlr4LszLPxa9DvhG1N
+   7jdCRckKYqeRCWvtV3L+oMkMOaNOEwKZMp+Ig64zBgbQ1agnnJPGlhRUw
+   XRgF6uNYkkqq1o9OuJ5yoqeBddHSkpbxMYuKVKfP5sscgFxIAIoBpBbnT
+   K3yD821WoU1w6UCwua3+sG2B7/gzDkFXzEMaVKojwionEmTpDP3/qMMh7
+   ouU164jMjN7/6Pc7Pez8LG6cFOgc8cw8dvsBXrsN6IehC0dX81NYHaJsF
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10814"; a="438851458"
+X-IronPort-AV: E=Sophos;i="6.02,204,1688454000"; 
+   d="scan'208";a="438851458"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2023 16:14:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10814"; a="911642688"
+X-IronPort-AV: E=Sophos;i="6.02,204,1688454000"; 
+   d="scan'208";a="911642688"
+Received: from shsensorbuild2.sh.intel.com ([10.239.134.197])
+  by orsmga005.jf.intel.com with ESMTP; 26 Aug 2023 16:14:25 -0700
+From:   Wentong Wu <wentong.wu@intel.com>
+To:     gregkh@linuxfoundation.org, arnd@arndb.de, mka@chromium.org,
+        oneukum@suse.com, lee@kernel.org, wsa@kernel.org,
+        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
+        maz@kernel.org, brgl@bgdev.pl, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
+        sakari.ailus@linux.intel.com, srinivas.pandruvada@intel.com
+Cc:     zhifeng.wang@intel.com, Wentong Wu <wentong.wu@intel.com>
+Subject: [PATCH v10 0/4] Add Intel LJCA device driver
+Date:   Sun, 27 Aug 2023 07:13:59 +0800
+Message-Id: <1693091643-20867-1-git-send-email-wentong.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -43,68 +61,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add uart2_0_tx_rx (pin 4, 5) and uart1_2 (pins 9, 10) groups to the
-pinctrl driver for the MediaTek MT7981 SoC.
+Add driver for Intel La Jolla Cove Adapter (LJCA) device. This is a
+USB-GPIO, USB-I2C and USB-SPI device. We add 4 drivers to support this
+device: a USB driver, a GPIO chip driver, a I2C controller driver and
+a SPI controller driver.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 ---
- drivers/pinctrl/mediatek/pinctrl-mt7981.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+v10:
+ - remove ljca_i2c_format_slave_addr
+ - remove memset before write write w_packet
+ - make ljca_i2c_stop void and print err message in case failure
+ - use dev_err_probe in ljca_i2c_probe function
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7981.c b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
-index 0fd2c0c451f95..7e59a44078590 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt7981.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
-@@ -611,6 +611,9 @@ static int mt7981_wo0_jtag_1_funcs[] = { 5, 5, 5, 5, 5, };
- static int mt7981_uart2_0_pins[] = { 4, 5, 6, 7, };
- static int mt7981_uart2_0_funcs[] = { 3, 3, 3, 3, };
- 
-+static int mt7981_uart2_0_tx_rx_pins[] = { 4, 5, };
-+static int mt7981_uart2_0_tx_rx_funcs[] = { 3, 3, };
-+
- /* GBE_LED0 */
- static int mt7981_gbe_led0_pins[] = { 8, };
- static int mt7981_gbe_led0_funcs[] = { 3, };
-@@ -731,6 +734,9 @@ static int mt7981_uart1_0_funcs[] = { 4, 4, 4, 4, };
- static int mt7981_uart1_1_pins[] = { 26, 27, 28, 29, };
- static int mt7981_uart1_1_funcs[] = { 2, 2, 2, 2, };
- 
-+static int mt7981_uart1_2_pins[] = { 9, 10, };
-+static int mt7981_uart1_2_funcs[] = { 2, 2, };
-+
- /* UART2 */
- static int mt7981_uart2_1_pins[] = { 22, 23, 24, 25, };
- static int mt7981_uart2_1_funcs[] = { 3, 3, 3, 3, };
-@@ -805,6 +811,8 @@ static const struct group_desc mt7981_groups[] = {
- 	PINCTRL_PIN_GROUP("wo0_jtag_0", mt7981_wo0_jtag_0),
- 	/* @GPIO(4,7) WM_JTAG(3) */
- 	PINCTRL_PIN_GROUP("uart2_0", mt7981_uart2_0),
-+	/* @GPIO(4,5) WM_JTAG(4) */
-+	PINCTRL_PIN_GROUP("uart2_0_tx_rx", mt7981_uart2_0_tx_rx),
- 	/* @GPIO(8) GBE_LED0(3) */
- 	PINCTRL_PIN_GROUP("gbe_led0", mt7981_gbe_led0),
- 	/* @GPIO(4,6) PTA_EXT(4) */
-@@ -861,6 +869,8 @@ static const struct group_desc mt7981_groups[] = {
- 	PINCTRL_PIN_GROUP("uart1_0", mt7981_uart1_0),
- 	/* @GPIO(26,29): UART1(2) */
- 	PINCTRL_PIN_GROUP("uart1_1", mt7981_uart1_1),
-+	/* @GPIO(9,10): UART1(2) */
-+	PINCTRL_PIN_GROUP("uart1_2", mt7981_uart1_2),
- 	/* @GPIO(22,25): UART1(3) */
- 	PINCTRL_PIN_GROUP("uart2_1", mt7981_uart2_1),
- 	/* @GPIO(22,24) PTA_EXT(4) */
-@@ -922,9 +932,9 @@ static const struct group_desc mt7981_groups[] = {
-  */
- static const char *mt7981_wa_aice_groups[] = { "wa_aice1", "wa_aice2", "wm_aice1_1",
- 	"wa_aice3", "wm_aice1_2", };
--static const char *mt7981_uart_groups[] = { "wm_uart_0", "uart2_0",
--	"net_wo0_uart_txd_0", "net_wo0_uart_txd_1", "net_wo0_uart_txd_2",
--	"uart1_0", "uart1_1", "uart2_1", "wm_aurt_1", "wm_aurt_2", "uart0", };
-+static const char *mt7981_uart_groups[] = { "net_wo0_uart_txd_0", "net_wo0_uart_txd_1",
-+	"net_wo0_uart_txd_2", "uart0", "uart1_0", "uart1_1", "uart1_2", "uart2_0",
-+	"uart2_0_tx_rx", "uart2_1", "wm_uart_0", "wm_aurt_1", "wm_aurt_2", };
- static const char *mt7981_dfd_groups[] = { "dfd", "dfd_ntrst", };
- static const char *mt7981_wdt_groups[] = { "watchdog", "watchdog1", };
- static const char *mt7981_pcie_groups[] = { "pcie_pereset", "pcie_clk", "pcie_wake", };
+v9:
+ - overhaul usb-ljca driver to make it more structured and easy understand
+ - fix memory leak issue for usb-ljca driver
+ - add spinlock to protect tx_buf and ex_buf
+ - change exported APIs for usb-ljca driver
+ - unify prefix for structures and functions for i2c-ljca driver
+ - unify prefix for structures and functions for spi-ljca driver
+ - unify prefix for structures and functions for gpio-ljca driver
+ - update gpio-ljca, i2c-ljca and spi-ljca drivers according to usb-ljca's changes
+
+Wentong Wu (4):
+  usb: Add support for Intel LJCA device
+  i2c: Add support for Intel LJCA USB I2C driver
+  spi: Add support for Intel LJCA USB SPI driver
+  gpio: update Intel LJCA USB GPIO driver
+
+ drivers/gpio/Kconfig          |   4 +-
+ drivers/gpio/gpio-ljca.c      | 242 +++++++------
+ drivers/i2c/busses/Kconfig    |  11 +
+ drivers/i2c/busses/Makefile   |   1 +
+ drivers/i2c/busses/i2c-ljca.c | 332 +++++++++++++++++
+ drivers/spi/Kconfig           |  11 +
+ drivers/spi/Makefile          |   1 +
+ drivers/spi/spi-ljca.c        | 297 +++++++++++++++
+ drivers/usb/misc/Kconfig      |  14 +
+ drivers/usb/misc/Makefile     |   1 +
+ drivers/usb/misc/usb-ljca.c   | 817 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/usb/ljca.h      | 113 ++++++
+ 12 files changed, 1741 insertions(+), 103 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-ljca.c
+ create mode 100644 drivers/spi/spi-ljca.c
+ create mode 100644 drivers/usb/misc/usb-ljca.c
+ create mode 100644 include/linux/usb/ljca.h
+
 -- 
-2.41.0
+2.7.4
+
