@@ -2,81 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D9B878A0DA
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Aug 2023 20:05:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8468478A109
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Aug 2023 20:35:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbjH0SE2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Aug 2023 14:04:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40938 "EHLO
+        id S229500AbjH0SfZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Aug 2023 14:35:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230483AbjH0SET (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Aug 2023 14:04:19 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E44139
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Aug 2023 11:04:15 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-5007c8308c3so3884259e87.0
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Aug 2023 11:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693159453; x=1693764253;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gVnsqblWQkwO3gPfAsGjnlwJGNuNWvof44bXfeUPon4=;
-        b=XthCKJDJ+miNktFmTB1qst8pbgiWx0eJCLyU8/bHE4iCC8KJFOYek3vgneXmUjj8yd
-         F3CwGFiQhUlB9/kd5gOGzHLBgR1GaNjeHpMdsZDzyowmOqwB+KTRodgPnsJ0ek2x5M4i
-         Y6hbdWFXyNWdb2ce8hBxAysNOjlQ77WWNIPSTrJHhhH/dbl1H2MflI33yGAQ4yNQ3uG9
-         WLAPOyl9e6XfRnx/nfkvvCRGYWxlwkOc29d3mDyd8/OQB6PDFOVofEsL+k4BpgrePySH
-         qjGEsT8KbV8rIaIr1MfE+fgEbCodJEJ/cvblk1BVy5IvUjujPSZz/QjV4HJNlaUMfwZQ
-         2a2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693159453; x=1693764253;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gVnsqblWQkwO3gPfAsGjnlwJGNuNWvof44bXfeUPon4=;
-        b=fEh245RDQsUdV50ZDhjwVZtxGI1rQ5eNCO1C7gNmzK/Npt5JSESb2zHAjHPfMWf7A4
-         JthcWHrfEgWUwbXcyJW75baI8UChnKByIFZvX3MJQXhmt64YLujyShBfUX96fESRfAdM
-         3zUtR7TDNxQWKVmhH1lVqICWX/7WfPj3Tfv+JGgdekGmJhA+HQdkYCQUuwrHe6g42mf9
-         dEn3CMbEKVdy7yhEjKWpNWhXketCfwIAX9FT37/4d3z3c/gsByPp/4MDnZfc2euJiO60
-         lsZEB6AfwxBy8WZSc6bSxyvRXPbqCC7BL/+am5hFI7gI5OyDxiWGuU+Kzx2cVVxyIBo+
-         5law==
-X-Gm-Message-State: AOJu0Yw/QyMMJKOs9AkQ9p7hfdZav4VUERid5H5ry3xJiHoaJdqoWCNC
-        5eHhUhEyl/d+qHHrw9LxaJxjgA==
-X-Google-Smtp-Source: AGHT+IG30d/KpP8cEvTO0ka59sjlKPUk+qeSYW9X0JaYYBH5ESIkTjswQQdnDXTO1zf7kJFi6SmaKw==
-X-Received: by 2002:a05:6512:1042:b0:4fe:d0f:1f1e with SMTP id c2-20020a056512104200b004fe0d0f1f1emr20474537lfb.25.1693159453433;
-        Sun, 27 Aug 2023 11:04:13 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.225])
-        by smtp.gmail.com with ESMTPSA id l5-20020a056402124500b005222c6fb512sm3586828edw.1.2023.08.27.11.04.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Aug 2023 11:04:12 -0700 (PDT)
-Message-ID: <ddaa0a85-111b-5289-b8eb-afae5e5ab1df@linaro.org>
-Date:   Sun, 27 Aug 2023 20:04:11 +0200
+        with ESMTP id S230239AbjH0SfC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Aug 2023 14:35:02 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC0A125
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Aug 2023 11:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=s31663417; t=1693161292; x=1693766092; i=j.neuschaefer@gmx.net;
+ bh=q8qOp91ajXQ5N9ULNRPI1Tf3vxfmBnNWKVwv/CAFwbU=;
+ h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+ b=bT9Qwe9znZshjBzKoP6gFMMsuEf/XRxWfeVJQ6+jGDwaW3n3jaheQGDaL+ht5j/xi11o9BI
+ 25bIHEoXISX/LAGKcYt6Oi7ZkzcNvEOMRkQ7g9ckjsqfalMvEtkc+13dlKa3icfVGviZX9vyd
+ /OpRubhl2mTKVIWO8xJbTCIFB+vHQ08aRHg6Z6BKwKaZCwv/di7mYMcY2uZbunOd3qEI6iaZT
+ 2bz2rT2sjPBUCoCAR0dxZG6v3xBUOI1nen645K82l+mswoR9L11e8iJtgaL/v8gkhgxnlAp65
+ HpFO8VDoK0TNUqQWZiHfMMllTH8xuN9QdxMN4X7wX/ztukIH3V/Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from probook ([94.218.119.195]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mjj87-1ppDDL1N5X-00lFl5; Sun, 27
+ Aug 2023 20:34:52 +0200
+Date:   Sun, 27 Aug 2023 20:34:50 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: nuvoton: Use
+ pinconf_generic_dt_node_to_map_all()
+Message-ID: <ZOuXSiR9UXtK/SlV@probook>
+References: <81e9ab48f78d63153b23a163b3349b3059d2b7fc.1692871558.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH RESEND v5 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl
- and GPIO documentation
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, linus.walleij@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        avifishman70@gmail.com, tali.perry1@gmail.com, joel@jms.id.au,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        j.neuschaefer@gmx.net, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230809185722.248787-1-tmaimon77@gmail.com>
- <20230809185722.248787-2-tmaimon77@gmail.com>
- <20230821170941.GA1915730-robh@kernel.org>
- <CAP6Zq1i+P8Jh2_G9gJMdtCKcVF6m9vkWAP5rJXBCJ1aNfc2Bvw@mail.gmail.com>
- <53987f0f-dfda-3572-1545-755072328be4@linaro.org>
- <CAP6Zq1gcWHXUL=uuzkYkJ6VWwoS-9G_aEK2HizfAWr6oZZdzWQ@mail.gmail.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAP6Zq1gcWHXUL=uuzkYkJ6VWwoS-9G_aEK2HizfAWr6oZZdzWQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PKD5bpRMmb7VTSB6"
+Content-Disposition: inline
+In-Reply-To: <81e9ab48f78d63153b23a163b3349b3059d2b7fc.1692871558.git.geert+renesas@glider.be>
+X-Provags-ID: V03:K1:d69BVgB5H7PHo2Zzpeu8DcinnvOHZzwUjVWSbNyYaTjPZFIWKXe
+ OqCRYybb2WMPXES3yefN69c7p6Ig5sFxY0eEdLYYHA5z7y9Io8iRwKhmKtKpRbU66hdOvcb
+ hOrRc+C8jdaI2VkhVUW7MERYrLuo7I9+7mJMdgTWw7rttXWyhFNLlFWnd2KQWiKJKc9GiD4
+ nLxGyMhvBKcaIRmfBygQA==
+UI-OutboundReport: notjunk:1;M01:P0:TVBqo0FURwM=;7uqFbybbjp0ufF2BlEVJyHc/UaE
+ WUcyuC/drBe4Cham4ettxNH0mZ3M5fmZwmvtIcHNz6xxdFa0KAXDfevl6QzviQd4T1P6DbU1D
+ X6fayN64nJ/M/c5CMspM5x3pjjcSiNzU2iyetikyEXc+ORSm+Ns4/BsZGOnt30KCwEJICbtAE
+ MMo11v18njURik1sm2LtdHkOEb0Ep9kuPopPQIF0S0FEDcPuvUI5m+whOJhb0K7htzyBCZjvn
+ SWB/id3EgNv9aqgzzGEv/B30CgMp4s4CYijkQfsb5l2Er9IZbS7kyXhuBB2jl7U0PcVWAEt3y
+ VsPmppNM79RCtXqd6IgrZWjSLFEigKVHSvht6VC4JnhH7huURdSSps6S06khY6PHNhPtMqJyR
+ 843kzSNXd+my9TBhue5OKUwS5D9TdKCIKwEsS+RDg50LhXHRlVPEVjdrd4qhkYnwH/S2EF4Kw
+ dsmRmTP1md9iQzOnNLmRSSgww0MUH9lEilDC8f01jqYa8udSbxnTM6mWtl/8eKD3RTN/mcIeI
+ xDlSqV1RDS0AnEvNgzL8OdUDTCcAgU9sC6Sv/lEX0yAmw6VMozehuXPcjaZBEXbRSh23CnMVB
+ l+Mlp5YfRJgDFkYzvEGJDFNFN1r7covaTfH6UDVpT+b1MkVVSTYyulAypYJObrtvKN7gd21Rp
+ PeF7PnKC4ziXBL/2DKFFJQQ/8KBy+9S3nT02SxZ4ZeNPEmGtchqT1KAWKfEXpzwmrNAWQxMKJ
+ qE8aabZ0ulzMjGlBv9bKVmORMUWhRg/Q35TVQuZO1Ri5pgBrd+pwqAFZphMEZUsDzkaVSXatf
+ aQuEHtj4q+nYvOZr8EYSWMsWNEti8N+kSo4AOvIYVMS8YvkuG+cDzQ2TpQXdtvxtq2Xy9p+eJ
+ A5IPrnGq7eCTltToexuK6YKnBjiHZ9x3/e0V8u/I8aSoo+M/WwP+BXZ0a7g100mx+ZWu3w47q
+ rXCCLR/K771Og6ba6DRS7BDQK8s=
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -85,54 +77,116 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 27/08/2023 17:30, Tomer Maimon wrote:
-> Hi Krzysztof,
-> 
-> Thanks for your comment
-> 
-> On Sun, 27 Aug 2023 at 14:13, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 27/08/2023 11:44, Tomer Maimon wrote:
->>>>> +      pinctrl: pinctrl@f0800260 {
->>>>> +        compatible = "nuvoton,npcm845-pinctrl";
->>>>> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
->>>>> +        #address-cells = <1>;
->>>>> +        #size-cells = <1>;
->>>>> +        nuvoton,sysgcr = <&gcr>;
->>>>> +
->>>>> +        gpio0: gpio@f0010000 {
->>>>
->>>> unit-address should be 0.
->>>>
->>>> Otherwise,
->>> The unit-address is correct f0010000
->>
->> Then how does it pass W=1 builds? How unit address can be f0010000 but
->> reg is 0? Really...
-> Maybe because the ranges are ranges = <0x0 0x0 0xf0010000 0x8000>?
 
-And how does this mapping should cause the unit address to not match the
-reg? What type of rule is it?
+--PKD5bpRMmb7VTSB6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Except also incorrect address in pinctrl node.. but your DTS
-nuvoton-common-npcm8xx.dtsi has so many other bugs (duplicated nodes,
-not matching, unit addresses), that I don't wonder that you do not see
-other errors. But that's not a reason to add more. Rob gave you quite
-specific advice, so I really do not understand why do you keep arguing
-with it?
+On Thu, Aug 24, 2023 at 12:07:44PM +0200, Geert Uytterhoeven wrote:
+> Use the pinconf_generic_dt_node_to_map_all() helper instead of
+> open-coding the same operation, to avoid having to provide custom
+> pinctrl_ops.dt_node_to_map() callbacks.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> This does sacrifice a debug print in the process. Does anyone care?
+> ---
+>  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 15 +--------------
+>  drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 12 +-----------
+>  2 files changed, 2 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/=
+nuvoton/pinctrl-npcm7xx.c
+> index 843ffcd968774774..8bdd0124e2eb9467 100644
+> --- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+> +++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+> @@ -1588,19 +1588,6 @@ static int npcm7xx_get_group_pins(struct pinctrl_d=
+ev *pctldev,
+>  	return 0;
+>  }
+> =20
+> -static int npcm7xx_dt_node_to_map(struct pinctrl_dev *pctldev,
+> -				  struct device_node *np_config,
+> -				  struct pinctrl_map **map,
+> -				  u32 *num_maps)
+> -{
+> -	struct npcm7xx_pinctrl *npcm =3D pinctrl_dev_get_drvdata(pctldev);
+> -
+> -	dev_dbg(npcm->dev, "dt_node_to_map: %s\n", np_config->name);
+> -	return pinconf_generic_dt_node_to_map(pctldev, np_config,
+> -					      map, num_maps,
+> -					      PIN_MAP_TYPE_INVALID);
+> -}
+> -
+>  static void npcm7xx_dt_free_map(struct pinctrl_dev *pctldev,
+>  				struct pinctrl_map *map, u32 num_maps)
+>  {
+> @@ -1612,7 +1599,7 @@ static const struct pinctrl_ops npcm7xx_pinctrl_ops=
+ =3D {
+>  	.get_group_name =3D npcm7xx_get_group_name,
+>  	.get_group_pins =3D npcm7xx_get_group_pins,
+>  	.pin_dbg_show =3D npcm7xx_pin_dbg_show,
+> -	.dt_node_to_map =3D npcm7xx_dt_node_to_map,
+> +	.dt_node_to_map =3D pinconf_generic_dt_node_to_map_all,
+>  	.dt_free_map =3D npcm7xx_dt_free_map,
+>  };
+> =20
+> diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/=
+nuvoton/pinctrl-wpcm450.c
+> index 2d1c1652cfd9d373..6e88ef1ed020fa88 100644
+> --- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+> +++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+> @@ -858,16 +858,6 @@ static int wpcm450_get_group_pins(struct pinctrl_dev=
+ *pctldev,
+>  	return 0;
+>  }
+> =20
+> -static int wpcm450_dt_node_to_map(struct pinctrl_dev *pctldev,
+> -				  struct device_node *np_config,
+> -				  struct pinctrl_map **map,
+> -				  u32 *num_maps)
+> -{
+> -	return pinconf_generic_dt_node_to_map(pctldev, np_config,
+> -					      map, num_maps,
+> -					      PIN_MAP_TYPE_INVALID);
+> -}
+> -
+>  static void wpcm450_dt_free_map(struct pinctrl_dev *pctldev,
+>  				struct pinctrl_map *map, u32 num_maps)
+>  {
+> @@ -878,7 +868,7 @@ static const struct pinctrl_ops wpcm450_pinctrl_ops =
+=3D {
+>  	.get_groups_count =3D wpcm450_get_groups_count,
+>  	.get_group_name =3D wpcm450_get_group_name,
+>  	.get_group_pins =3D wpcm450_get_group_pins,
+> -	.dt_node_to_map =3D wpcm450_dt_node_to_map,
+> +	.dt_node_to_map =3D pinconf_generic_dt_node_to_map_all,
+>  	.dt_free_map =3D wpcm450_dt_free_map,
+
+Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
 
-> I didn't get any warning regarding the unit-address
-> bash-4.2$ make ARCH=arm64 dt_binding_check W=1
+Thanks!
 
-DTS, not binding.
+--PKD5bpRMmb7VTSB6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-BTW, your patches have errors. Please fix them:
-patch:226: new blank line at EOF.
-warning: 1 line adds whitespace errors.
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmTrlyoACgkQCDBEmo7z
+X9uPSQ//XIKtTViuLh2vSpypCuSDz9Q8K2Uy6R09VxFYXaj/h6XqNMZX36pdn2Q4
+5dOej4HHqSG4mB553yK03wtglRJi3fx3NTmrjgU+TxynKCkX1EEJRe+F1vbnlods
+DMd7sy7QnKz4vqepI02GG25qhBY1WmnpotdeBCq6yY9QyOroco2wnmIUq3VWxFJI
+rL2TMns//8+ZKnPsb/L2xh96xlwtyItCIRMzMZv+SDiy69vYxUolLnLgFP1G/mii
++qgLq6epM1c+4u2rKxxsN2JUsH4rWL5xnmcU/R6xoxsrgdMFDCItRVcMFdRadHf4
+6ikYPGnLO0oyKpaUdc5fmXvUF9PrtEAyEDThsAoI7CBFYrcCQzYygJDuTeZGIGWk
+TPGviT7HrQtf02QM5CaSTwu8F670T7OiL6hbAp1V2U/klH+mRF7u9lEi7aBpGi8r
+HlKYLfq+fztiyjNJd0z2Qgzc4T0rmePB6rKRS3MjHg0Wvt800fJff2gttNU5JR45
+PuzXKBq2nwhUlod0rPnI1U+UbPufkUfl4bNF4lkfIOCKvEjtR41lzi2yTbJeoDPW
+rQ8yn/djNBK4/cqFStHmvghTeQuWmzQYeScaG2HFLvRVz5rQfbcBe/p3ctHooML+
+vVaUnjw2Nfis0Q1UdSp9Q2350Oa3VW+buCbAtbJFtXgdMA7f2/Y=
+=UZto
+-----END PGP SIGNATURE-----
 
-Best regards,
-Krzysztof
-
+--PKD5bpRMmb7VTSB6--
