@@ -2,149 +2,233 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1456678A113
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Aug 2023 20:49:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F9A778A168
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Aug 2023 22:37:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbjH0Sq6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Aug 2023 14:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59466 "EHLO
+        id S229733AbjH0Ugj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Aug 2023 16:36:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbjH0Sq1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Aug 2023 14:46:27 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087C7EB;
-        Sun, 27 Aug 2023 11:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1693161981; x=1693766781; i=j.neuschaefer@gmx.net;
- bh=vfCrl3xTZlAlJ4jDNXucspu42u1OeEtKo9/uQ35+XNg=;
- h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
- b=ubJ3uHXRZFform7vw2uF9RHHDqO6P57ZfBEy2QwTE9C8AWAc6Cm3FpmrcEKhs+j8Z4KC5ut
- +kZsr14wxNnUulKwfgw6PbYkWVq6yunxpZdWRNcaAExjDpZ3UMJA3N3FTqDla6YuokQpSAy0z
- vNeRlrlOsc2oS187XMgg11Bm7z7OPPWsK2Ks7ysrLi5ZYk2i4T9tLpZec3UcWYh0MUP2uiqVP
- 0Tax0z/N89pFOSxcJ0J2oEkzSKOv4E250BRorw5QVZOLra6cj7PdwNZEFr90RHq6sBeLxkvdR
- DzKBJLPrjixGMXxWB+Cji1bUw0J+MojiY1q5RIA7F/FfW3FH0Q1g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from probook ([94.218.119.195]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMobU-1qJuLw495A-00Ii0I; Sun, 27
- Aug 2023 20:46:21 +0200
-Date:   Sun, 27 Aug 2023 20:46:18 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Mikhail Kobuk <m.kobuk@ispras.ru>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        lvc-project@linuxtesting.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        openbmc@lists.ozlabs.org,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>
-Subject: Re: [PATCH] pinctrl: nuvoton: wpcm450: fix out of bounds write
-Message-ID: <ZOuZ+n3PZWqxsG35@probook>
-References: <20230825101532.6624-1-m.kobuk@ispras.ru>
+        with ESMTP id S229853AbjH0Ugf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Aug 2023 16:36:35 -0400
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2081.outbound.protection.outlook.com [40.107.255.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC0D128;
+        Sun, 27 Aug 2023 13:36:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CT74JyoBVImvf+gUB+HNNv+Uk+ChR1vmfqaS2/mrz8ZAZdORKDKBfki5rqlhMXlKnxISlrbWPwCj96HDXsfBsKyDgZtGv4EieZiTSFzYvR3uSWOe6ffPncokOeBvW6s5mh4iBRJvKMNk3vcdNmJwPjDwt7V3qSSpKeETylXgwF6ZpQAWqiZ9lz2GC7ZKArBSyU4ZTlobARBiA3pmPtJX9nwZ7jZM7O8ARUgmzmO9w/sT7oiV0HXGhOgSoY9uCzGgDMUnYeyrOygL8rllZak/4k+Aup45Pr9qGYclrq59UUwYhNrJOye0KAaygWok6k/qhkGCNYzmNzHIKYIYzkd9NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UcKaXGUbTIwgwWBf9MoobrMEwMoCtB+WXuvo2wiYiuE=;
+ b=TYw5BJugArvzuceCq3AjsQlc4k/N2HciOKBQzAvDtZTnh8D9x1sXG4RR6B/figAxCvdUKB1biM0mch9f/wj6UR5SSa2B31sz21fLD/Nz0KNGxtR4h9dBdqOXHdqrYyeKdacaueBGZDTXgNVa4uYdmXtUBC6Er2r5J3SCwf5VRSUAombdyI4eFHt4+Jbg7L2kni3C/DIzhSg2o+nExq6lub2qS8fV6S/Z+0GQgVZSeBOWc0b4fKaoTjmyPEp+Daf/WynO853sceg7zRySDtOmu3bQbctfJ2lNM7C10YLoFNu47fLD+qFlOwFjwEyq8YpCnzil/WM8pkC1RyAsEkuWDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 211.75.126.7) smtp.rcpttodomain=gmail.com smtp.mailfrom=nuvoton.com;
+ dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UcKaXGUbTIwgwWBf9MoobrMEwMoCtB+WXuvo2wiYiuE=;
+ b=bJRdVQNDaC1sMuvxlrIG+ppKFnXtvgqddG4eRl4A1xD8XCvxewfyRl9busWbWXOLfWAAGHzDIWSwxByN7wJY/L9SPGRq9b/VIjGmXUoIeCNvVqHeej1sS1NinN+xFqD1m9pTXEnmIFzYt96V4mtLq4L/7BGQzdc5anw+pylmCCo=
+Received: from SG2PR04CA0157.apcprd04.prod.outlook.com (2603:1096:4::19) by
+ JH0PR03MB7594.apcprd03.prod.outlook.com (2603:1096:990:9::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6699.34; Sun, 27 Aug 2023 20:36:28 +0000
+Received: from SG1PEPF000082E1.apcprd02.prod.outlook.com
+ (2603:1096:4:0:cafe::df) by SG2PR04CA0157.outlook.office365.com
+ (2603:1096:4::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34 via Frontend
+ Transport; Sun, 27 Aug 2023 20:36:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 211.75.126.7)
+ smtp.mailfrom=nuvoton.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: Pass (protection.outlook.com: domain of nuvoton.com designates
+ 211.75.126.7 as permitted sender) receiver=protection.outlook.com;
+ client-ip=211.75.126.7; helo=NTHCCAS01.nuvoton.com; pr=C
+Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
+ SG1PEPF000082E1.mail.protection.outlook.com (10.167.240.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6699.15 via Frontend Transport; Sun, 27 Aug 2023 20:36:26 +0000
+Received: from NTHCCAS02.nuvoton.com (10.1.9.121) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 28 Aug
+ 2023 04:36:26 +0800
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS02.nuvoton.com
+ (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.14; Mon, 28 Aug
+ 2023 04:36:25 +0800
+Received: from taln60.nuvoton.co.il (10.191.1.180) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Mon, 28 Aug 2023 04:36:25 +0800
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id C9F306473F; Sun, 27 Aug 2023 23:36:24 +0300 (IDT)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <avifishman70@gmail.com>, <tali.perry1@gmail.com>,
+        <joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
+        <benjaminfair@google.com>, <j.neuschaefer@gmx.net>
+CC:     <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v6 0/2] pinctrl: nuvoton: add pinmux and GPIO driver for NPCM8XX
+Date:   Sun, 27 Aug 2023 23:36:10 +0300
+Message-ID: <20230827203612.173562-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="R079PLSdubHOUllH"
-Content-Disposition: inline
-In-Reply-To: <20230825101532.6624-1-m.kobuk@ispras.ru>
-X-Provags-ID: V03:K1:siUKjmJQMOOsosCdZvA+NvPJoj4rupQ6qsUddR4Exd5YARSKzD+
- HK5apaMUtP530gLVsxDkQa8Bzt09WyoU3TFvkicyyLcaU23AqbEKoIpnv19cfGK034jVdzv
- ZkFOr40iHkBuZZgnUVZjUVPl7RFEf568k8OoILaMeEYKOX7PHmx/hloVj1aHPuMXJf9oobj
- nkvyFzxLQXkXu/7HqP2Ww==
-UI-OutboundReport: notjunk:1;M01:P0:jDVIOE0RUD4=;u+RS0RRyx0ZYt28yQ9wu7oJVKVo
- tzwtjf6n5tExaojB5pyHxKR0Jyf4RRx+bv9hXlBa58nDL/Jh7Yoca0qSfVRiwPU5NZoyjcATx
- 3RXqdws3+hqKGju4kqdlMqFhZMUR6kyXvei8cZlDpIS+PiwZDOBixBswO9omr+jaIXGAiZ7bi
- ruRA3Y+Yod7KoyA2egRseb+U1Gz0RRnhA5OV6THYBzpnaElTcb/I56nRqIYXMeUc+2BrfTytD
- ETBIb1v0vA9CEUrTznpFuEW3yJW/MH2ezRn3w4MEeW8cGMemswWOJhiTYQh6ZmW8o6RYJjHAx
- BfATn9rbPieEqSJ+G6a9hKW7NgIlcWecSjMwTf4qhRHktSwkdp0Rc32aF+zkDYRvEuJ8SGf2/
- 8DVWu45xvdapeSd/repljTi8u7GeBGNBJNsGyXCluQ22HKsbBI9T3BkQlijxpEgY6kaBa6lcw
- qBQADBDjWsPL7I5Bs8+9VONgAAlKgpOeDLoxylNQkvTNnKrTviT/OYfSr2Cd5nDqU/SUe0CuM
- w/dn8VB5i+cx6Y4OoyQbUurfGWssSsDEfiEnBJCP7VYLKCZMfcGC9E8stQ7TRzhlpjHeBIUPI
- i8JISvn7I57vrvbV+eqShJa0Q7JcKVauGSWaqS5nFe8EBN/ZQFBW9kHj705+gOXBEFDBD+uGb
- zAiqGqhPf+shiCD+EIMZGZ+ezF6SWsbA7T/6B7Es7RUR8XJc668xw1lnA83r0ZM66lG1tF7fk
- RPiEFwAn9q1eChHV4FOLTc1CmPhgR1FzuritbuRwZLWDXzK+CrgL1BIgptcATBU2ix6BmIRQ2
- +TdZ2oM/I/eLAst/7LQl9F6yRzEkfbiDeXGXbrLOnyHLPH1kV9NGJJ2cju0fc9FJLKDr7W1/D
- /m8OmyCUriSaELBdHLTqn0n4f8ZCz/e9S/dJqnFb0cGb13rkX28ZmkcFzeMPDAG3w/PL6GwRU
- KKnvKg==
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E1:EE_|JH0PR03MB7594:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71633b5f-60db-4365-1e69-08dba73d4967
+X-MS-Exchange-SenderADCheck: 0
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Q1Z0cVl1R1EvY2pqbkhxeDJzM2I1QlczdmZPMVhiWE45ekdxK2V1Q05NSE5Q?=
+ =?utf-8?B?ZEpMazZhYStybG50VGc2VjJWUlBsTndFL0NGYlJ2cTFzQ1N3eVpRRmozZEZC?=
+ =?utf-8?B?TDIyMHlXMWxlSGgxQmN0MUlGVFNabW9PYkNNZzB5U09rSEl4emNmQ0Vib3Vq?=
+ =?utf-8?B?SHF5RkJDQ0M4cDBhb3ZmL3hMQnRoNEk0c0VwKzJDVkhwVzFwTzJvdmRRSmo0?=
+ =?utf-8?B?MEgzanFRdFZEYlRic1NTMm5DUjRNSkF0c2ZXQW0yRTFvcFJDckN3VmdMYjhx?=
+ =?utf-8?B?Y01JZy93Z2VoRThncW8vcWVIRkZDWG9abmtjMVYzak9wTGJsZTBPZzlxRHVK?=
+ =?utf-8?B?UU4ySDRzaDAvMDlNNkJacHJPTFpzeXg0Zmc3Y21CZUpaRlZZZVV1cmhrQVBT?=
+ =?utf-8?B?Y2FPSzAwcDlYd1pXY2ovaUR4d2R4cjFZUUw3ZFBjY0dpeEkrc1JRMFVzM25O?=
+ =?utf-8?B?YzY0eXNyZHRlWXB3Zm41M1RTRmVOOXFNRFJ0dHJPTDN6UTB0Wlg0bnBtUE1P?=
+ =?utf-8?B?Y2o2R1djUmw0T1lvS1FIZE9pRzl2RTczWU5yRkRHZjBNRE5vMG9odUc2dUw0?=
+ =?utf-8?B?Rml3MjNzSXltL2lYWkNVdE05bE9OeFE2UWFHNXIybExBTFZBMlplbUJobDZn?=
+ =?utf-8?B?OVRza0FUd2orQmIxT2tRN0NacFc3MWozY2sveTFCVWMwSjBBNmZuTjVPR211?=
+ =?utf-8?B?WW5LZlVsNy96eWwwSThKYnRiZ2dXV3JYM0syblo3cTdoclVqUFlxYmMxN052?=
+ =?utf-8?B?SHBuOXV2Ui82MmROMFpUYVdnQkI0dVdmV2ZsU1QyMTZNTW9aODQxSEtYSkZn?=
+ =?utf-8?B?Z0N2Z0lWRDhLZVhTZ25FUlNFMnBBVUxDdmNGd2hIOE9kNFRjYkZpQlZ1WEh5?=
+ =?utf-8?B?eHJHNzBOMkZQMnhBNER2U09ZRG5rWE1kaVo4OEpIWUJrR1JacVZoUld5V1p2?=
+ =?utf-8?B?R0o5RmJVWmpvb2FJVHVrRGZ6TlJxZmxLRnhWd2pyekF5UUdVenN0Zjc4bURy?=
+ =?utf-8?B?MnpYcmtGZExpSXc0R3Y2a3ZUV3gyeDF0c00vOUtoSEdZM3oxQm5SZU9uTUlm?=
+ =?utf-8?B?cXVQNm1kUVEzYTJqMDhTVlJDQUNpR2loSEhNSDd3dmRDSk85ZkZRZHdrQ2xB?=
+ =?utf-8?B?b2NkYTBCUy9IQkx1OE9rVE9TYUtkUkNodFdzOWw1eWM4VndCd0tHaFdicHNz?=
+ =?utf-8?B?SzBsSDVoR1F4UUJhaHNQUHNHY0NZUDZXdFQxRDYwbGR6WmwvWFpoMHNpZnNo?=
+ =?utf-8?B?TllXWFdqaHF5elhnMmVVNEVDenAxU0hOODhmcTNhNmU2bmMzcmdWM1NVZnNM?=
+ =?utf-8?Q?JAXq1uObeCXq0=3D?=
+X-Forefront-Antispam-Report: CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(136003)(39860400002)(376002)(82310400011)(186009)(61400799006)(48200799006)(451199024)(36840700001)(46966006)(40470700004)(76482006)(70586007)(70206006)(110136005)(36756003)(55446002)(40480700001)(316002)(54906003)(42186006)(966005)(478600001)(81166007)(356005)(921005)(82740400003)(40460700003)(7416002)(41300700001)(2906002)(5660300002)(8936002)(8676002)(4326008)(47076005)(42882007)(73392003)(1076003)(82202003)(26005)(6266002)(336012)(2616005)(83380400001)(36860700001)(83170400001)(12101799020)(6666004)(45356006)(32563001)(35450700002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2023 20:36:26.8301
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71633b5f-60db-4365-1e69-08dba73d4967
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E1.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB7594
+X-Spam-Status: No, score=1.8 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        DKIM_SIGNED,DKIM_VALID,FORGED_GMAIL_RCVD,FREEMAIL_FORGED_FROMDOMAIN,
+        FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,NML_ADSP_CUSTOM_MED,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,RCVD_IN_VALIDITY_RPBL,
+        SPF_HELO_PASS,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This patch set adds pinmux and GPIO controller for the Arbel NPCM8XX 
+Baseboard Management Controller (BMC).
 
---R079PLSdubHOUllH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Arbel BMC NPCM8XX pinctrl driver based on Poleg NPCM7XX, except the
+pin mux mapping difference the NPCM8XX GPIO supports adjust debounce
+period time.
 
-On Fri, Aug 25, 2023 at 01:15:28PM +0300, Mikhail Kobuk wrote:
-> Write into 'pctrl->gpio_bank' happens before the check for GPIO index
-> validity, so out of bounds write may happen.
+Arbel BMC NPCM8XX Pinmux functions accessible only for pin groups 
+and pin configuration parameters available only for individual pins.
 
-Good point.
+Arbel BMC NPCM8XX has eight identical GPIO modules,
+each module has 32 GPIO ports.
 
-Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+Most of the GPIO ports are multiplexed with other system functions.
 
-Thanks!
+The NPCM8XX pinctrl and GPIO driver were tested on NPCM845 evaluation board.
 
+Addressed comments from:
+ - Rob Herring: https://lore.kernel.org/lkml/20230821170941.GA1915730-robh@kernel.org/
+ - Krzysztof Kozlowski: https://lore.kernel.org/lkml/ddaa0a85-111b-5289-b8eb-afae5e5ab1df@linaro.org/
 
->=20
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->=20
-> Fixes: a1d1e0e3d80a ("pinctrl: nuvoton: Add driver for WPCM450")
-> Signed-off-by: Mikhail Kobuk <m.kobuk@ispras.ru>
-> Reviewed-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-> ---
->  drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/=
-nuvoton/pinctrl-wpcm450.c
-> index 2d1c1652cfd9..8a9961ac8712 100644
-> --- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-> +++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-> @@ -1062,13 +1062,13 @@ static int wpcm450_gpio_register(struct platform_=
-device *pdev,
->  		if (ret < 0)
->  			return ret;
-> =20
-> -		gpio =3D &pctrl->gpio_bank[reg];
-> -		gpio->pctrl =3D pctrl;
-> -
->  		if (reg >=3D WPCM450_NUM_BANKS)
->  			return dev_err_probe(dev, -EINVAL,
->  					     "GPIO index %d out of range!\n", reg);
-> =20
-> +		gpio =3D &pctrl->gpio_bank[reg];
-> +		gpio->pctrl =3D pctrl;
-> +
->  		bank =3D &wpcm450_banks[reg];
->  		gpio->bank =3D bank;
-> =20
-> --=20
-> 2.42.0
->=20
+Changes since version 5:
+- Pin controller dt-binding
+	- Modify gpio unit-address.
+	- Remove blank line at EOF.
 
---R079PLSdubHOUllH
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since version 4:
+- Pin controller driver
+	- Modify DS definition.
 
------BEGIN PGP SIGNATURE-----
+- Pin controller dt-binding
+	- Modify -mux pattern.
+	- Remove tabs.
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmTrmdgACgkQCDBEmo7z
-X9sfNg/+JMEeSuR+27aDQ0RK06u4N58JgUVNTW7QY2Y/Q3L/s/SnqbtHdt5+fy/y
-3OSCbm8x9e5GkwWvrfel6V8lw6LH05U+Q3y69N2yDTONzxUdjvpMtPApCU/IAf0o
-TaoMHnF2kbEjLvxCy16MtXXu7/cb+/qs8+ZXPvhwB9uZB1Dwneya4bU+TZIgUlHY
-06Lwc5fYXumglMlATdxNi7JlUvMID7K+Fa/VrexK8RGFQIV9IGg3hnk2sL/6k2Ov
-bW9s0rDmA64f7AwUd/VpoHIIJrqHY3CcJoqsyybNhyCXMAD6gDniHz4xVLG4APaR
-e5j+IaUKFs5jVKnJ6XO+B/60r7LEucQHHxW+7deaa++sqanJZNrv/5KnJJscZgec
-2qKw/4mLouuD9I5sWjF9EFjFNzcmmjzpfa9RN1omP68MtERXDT+4jAYaMZDSfK2h
-eD4fDldrqYCUcfQdM2T1VG8T0rTNBF6RG48ezzJ5sFM7QYeKn3sElhqt6p6Ns1K0
-04I+8kdz4h6AUf7JrE7JuXpWAPObSR9g4hh/+Dw3aAxw82KmGTULFKGmWDYDPrWQ
-y4MSW4HGYLhnmXsa8Z7TSK2cVgupYB7NQ+vaPpOpLe5q/28EbiIBngewNxGVButP
-ZqzgL0QFoczYgk4APhdr15Q6ZQ+9VM4Av69MFknms31aOp0HldI=
-=93BM
------END PGP SIGNATURE-----
+Changes since version 3:
+- Pin controller driver
+	- Remove unused line in Kconfig.
+	- Add GPIO 183-189 GPIO support.
+	- Add SPI1 CS pins.
+	- Modify SMB23b pin list.
+	- Remove unused module pins.
+	- Fix PIN-CONFIG_OUTPUT setting.
 
---R079PLSdubHOUllH--
+- Pin controller dt-binding
+        - Modify pin and function items.
+        - Use consistent quotes.
+        - drop unneseccary quote.
+        - pincrtl node name modify to pinctrl@f0800260 since
+          the pin controller handling was done in 0xf0800260 
+          offset.
+
+Changes since version 2:
+- Pin controller driver
+        - Modify kernel configuration.
+        - Adding and removing include files.
+        - Using the same register format size.
+        - Reducing lines by command combination.
+        - Remove unnecessary parentheses use.
+        - Use GENMASK and BIT macros.
+        - Using traditional patterns.
+
+ - Pin controller dt-binding
+        - Modify GPIO description.
+        - pintcrtl node name, Sorry, I know we have a long discussion about it.
+          Still, I think the best header pinctrl node name is pinctrl@f0800000. 
+          because the pin mux is handled through the GCR.
+	  BTW, same pinctrl header name is used in the NPCM7XX pinctrl version.
+	  https://elixir.bootlin.com/linux/v6.0-rc6/source/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi#L560
+
+Changes since version 1:
+ - Pin controller driver
+	- Remove unnecessary debug prints and comments.
+	- Use fwnode functions.
+	- Remove Redundant 'else'.
+	- Use switch case instead of else if.
+	- Use GENMASK and BIT macros.
+	- Use dev_err_probe in probe error.
+	- Use callback GPIO range.
+	- Add GCR phandle property.
+	- Parameter order in reversed xmas
+
+ - Pin controller dt-binding
+	- Modify name from pin to mux.
+	- Add phandle property.
+
+Tomer Maimon (2):
+  dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO documentation
+  pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver
+
+ .../pinctrl/nuvoton,npcm845-pinctrl.yaml      |  214 ++
+ drivers/pinctrl/nuvoton/Kconfig               |   14 +
+ drivers/pinctrl/nuvoton/Makefile              |    1 +
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c     | 2491 +++++++++++++++++
+ 4 files changed, 2720 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+
+-- 
+2.33.0
+
