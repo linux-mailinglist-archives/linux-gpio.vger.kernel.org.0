@@ -2,82 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5346878B057
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Aug 2023 14:32:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5728E78B261
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Aug 2023 15:57:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232563AbjH1Mb2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Aug 2023 08:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41708 "EHLO
+        id S231425AbjH1N5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Aug 2023 09:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232646AbjH1Ma5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Aug 2023 08:30:57 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B04191
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 05:30:41 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-529fb2c6583so4161629a12.1
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 05:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693225835; x=1693830635;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mo967Rgiw4nyHlVYxonQZRRFO6y9+PWWVMXpzUNgKwc=;
-        b=tvbyefGWknb6USqi5c727TPcM+Amz7JtPi59qvuFRyDXDdvnzQ1np+nmOy7XBfoIXW
-         mxBT4KKLFRZViC1YBw0cMnRwUkPZncI+7x2xDp3b9JT3dQs+KNbUXT3gEMq0csvQxV2W
-         UWAObV+hZ+2cE30TVMKPeCnI3nZo53hlgtKN5emAeGIFmFzdjrqFG6RFzD3k9sFbMOUC
-         HPcM/pLyvCrsCVIQFhzRIOEBRiERwyvpyFGvku7SYsXhWLLCcBLpffJf2h1pZpS3EZzF
-         s11jR3/3G9sbjg/ZjsDVHuu2GGIe9V/Ed9mkeUptLSJefhkTdLQDP1baQI+DD4ECeq8E
-         6qWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693225835; x=1693830635;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mo967Rgiw4nyHlVYxonQZRRFO6y9+PWWVMXpzUNgKwc=;
-        b=XXHxs9gfCYfC2xdkVn/9K/UOX9+gIs95YqtHCWOuDaPQ9dSfPNGp7UTkAnC6cQBDcg
-         JUXCGWSRABUbrWVP5JKkgbj5tVgzPSfLBv2NBTgDJxoALKLVA7JvUjiiPGNUt4c4sWWB
-         C8pM0ENyUjyCZsv3n1eFOgBVBGBN1etyjXKwOqg3Z5MJKXiaoxiUdJHDkBd144nVgBM8
-         whtvH/DLopKrIzz+hQGWRU8W+QuQo+p2/zHFw+LpcisBYcvJ92fSGKKRIkn2npnagY/p
-         9uilm0tSHW64TF39Bdd9hSy6aYtD3MVry7qGxp9dBVuPSQNZ7X7ueSJDReCLTn0qRbWn
-         jZbA==
-X-Gm-Message-State: AOJu0Yyh+MxtfCaDReISkjBqDln/S8eKCl2DHlZovt2bQfKmf4WXpVZm
-        bGdQ079clTFzyk8fRSxhoVIXiQ==
-X-Google-Smtp-Source: AGHT+IF6HtqOEyYERQUDp2ejE0SrCV+ncA7gavu19vIftq1RoQdBSjjFs83WO0ZIHBsjzH/lpo6+iw==
-X-Received: by 2002:a17:907:78d6:b0:9a1:cbe5:7586 with SMTP id kv22-20020a17090778d600b009a1cbe57586mr10982714ejc.35.1693225835459;
-        Mon, 28 Aug 2023 05:30:35 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.225])
-        by smtp.gmail.com with ESMTPSA id 17-20020a170906059100b0098e2969ed44sm4532161ejn.45.2023.08.28.05.30.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Aug 2023 05:30:34 -0700 (PDT)
-Message-ID: <6aae4d40-e922-4e63-02a4-e56385af6069@linaro.org>
-Date:   Mon, 28 Aug 2023 14:30:33 +0200
+        with ESMTP id S230504AbjH1N4n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Aug 2023 09:56:43 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CABC4
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 06:56:40 -0700 (PDT)
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1qacjM-0007Hz-Rt; Mon, 28 Aug 2023 15:56:36 +0200
+Message-ID: <f891bb06-4fc6-7b4b-464d-50235c1cff48@pengutronix.de>
+Date:   Mon, 28 Aug 2023 15:56:35 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v6 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
- documentation
+ Thunderbird/102.13.0
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Subject: Re: [PATCH 2/2] gpio: mxc: switch to dynamic allocat GPIO base
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Bough Chen <haibo.chen@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+References: <20230506085928.933737-1-haibo.chen@nxp.com>
+ <DB7PR04MB40102AA686099ED666C93EF5901EA@DB7PR04MB4010.eurprd04.prod.outlook.com>
+ <CACRpkdZ-2Lyk_c8EJfS=YHK81wt2RAWnZAg+vxvZZijYFwmDDA@mail.gmail.com>
+ <12270129.O9o76ZdvQC@steina-w>
+ <CACRpkdZc8H=bnTfLjUzMS3zEWGTZdHbSuBz0yf_wdfp9MkNnkQ@mail.gmail.com>
+ <CAMRc=MfBDBrd1C9tOUcu_+eocB-xXt26fBDLSUNFyos2d6E15w@mail.gmail.com>
 Content-Language: en-US
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        avifishman70@gmail.com, tali.perry1@gmail.com, joel@jms.id.au,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        j.neuschaefer@gmx.net, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-References: <20230827203612.173562-1-tmaimon77@gmail.com>
- <20230827203612.173562-2-tmaimon77@gmail.com>
- <eccc6a7a-b30f-8c77-77cb-5deef47a1954@linaro.org>
- <CAP6Zq1jj0WDbtL1zhr=tVyh2GPRy6-=oHjVURmJzNRm3n0HBNg@mail.gmail.com>
- <c984d558-11b5-d5ea-9819-7641129de584@linaro.org>
- <5c0d985a-0492-778c-46b9-80899e52134c@linaro.org>
- <CAP6Zq1iX4Rqob0SM-F2SuRYa3QxE4KC8wPzTNQVpTN8JBUPFkA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAP6Zq1iX4Rqob0SM-F2SuRYa3QxE4KC8wPzTNQVpTN8JBUPFkA@mail.gmail.com>
+In-Reply-To: <CAMRc=MfBDBrd1C9tOUcu_+eocB-xXt26fBDLSUNFyos2d6E15w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -86,23 +60,73 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/08/2023 13:43, Tomer Maimon wrote:
+Hello,
+
+Cc += i.MX maintainers as this file isn't matched by the MAINTAINERS entry.
+
+On 21.08.23 14:17, Bartosz Golaszewski wrote:
+> On Mon, Aug 21, 2023 at 12:21 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >>
->>> Which leds to second
->>> question - how pinctrl could have @0? It's already taken by SoC! So your
->>> DTS here - unit address and ranges - are clearly wrong.
+>> On Mon, Aug 21, 2023 at 9:44 AM Alexander Stein
+>> <alexander.stein@ew.tq-group.com> wrote:
+>>> Am Montag, 21. August 2023, 09:25:54 CEST schrieb Linus Walleij:
+>>>> On Mon, Aug 21, 2023 at 4:47 AM Bough Chen <haibo.chen@nxp.com> wrote:> > Hi
+>>> Linus and Bartosz,
+>>>>>
+>>>>> For this patch, still not in the main trunk (Linux 6.5-rc7) and
+>>>>> linux-next(next-20230818). Can you help apply or any comment?
+>>>>
+>>>> As pointed out by Bartosz you cannot just mechanically switch the base
+>>>> to -1.
+>>>>
+>>>> You also need to convince us that this doesn't break any systems, and if
+>>>> it does, fix them so they don't break before submitting this patch.
 >>>
->>>
->>>> BTW, I have run both dt_binding_check and W=1 dtbs_check, and didn't
->>>> see an issue related to the pinctrl: pinctrl@f0800260, do I need to
->>>> add another flag to see the issue?
->>>
->>> Did you read my message last time? I said - it's about DTS, not the binding.
-> yes, understood doesn't the dtbs_check check the DTS?
+>>> I think it's hard to tell if something breaks, this driver is used in a lot of
+>>> boards. AFAIR some people are relying on the assumption of fixed order. Using
+>>> dynamic allocation this not ensured. A possible fix is to use aliases [1].
+>>
+>> Hm I might have been to grumpy!
+>>
+>> It looks like any boardfiles using gpio-mxc have been eliminated
+>> so this driver is now only used in device tree-boots? Right?
+>>
+>> Then I feel a lot better about it.
+>>
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> Yours,
+>> Linus Walleij
+> 
+> I will not be queueing it for v6.6 as merge window opens in a week, I
+> want to give it more time in next and see if anyone complains so it'll
+> make it for v6.7.
 
-Yes, it does, and the first error is being reported (just like several
-others for your DTS...). The second about gpio node, I think is not.
+IMO, this should not be merged. I would hate to do a kernel update and
+see the kernel toggle some unrelated GPIO, because probe order changes.
+This will eventually happen to somebody and if they're unlucky, it will
+break something.
 
-Best regards,
-Krzysztof
+For systems, where the order was never fixed, I agree it's on them, but
+for i.MX, it has been fixed since inception AFAIK and I fail to see
+what strong reason there is to justify breaking their setups in such
+a manner.
+
+Yes, the sysfs interface will eventually go away and fixed numbering
+with it but that has been announced long in advance and when that happens,
+updated systems with legacy scripts will cease to do GPIO until fixed
+and not essentially toggling GPIOs at random.
+
+Thanks,
+Ahmad
+
+> 
+> Bart
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
 
