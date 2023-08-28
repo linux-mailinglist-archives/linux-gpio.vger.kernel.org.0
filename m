@@ -2,70 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB29378B835
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Aug 2023 21:25:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8732078BB5F
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Aug 2023 01:12:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229834AbjH1TYp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Aug 2023 15:24:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32832 "EHLO
+        id S232675AbjH1XLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Aug 2023 19:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233427AbjH1TYi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Aug 2023 15:24:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1691411A;
-        Mon, 28 Aug 2023 12:24:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9ECF064FE9;
-        Mon, 28 Aug 2023 19:24:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82665C433C7;
-        Mon, 28 Aug 2023 19:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693250673;
-        bh=oO7Hnc8vjJIujNtucRloJMsZPg4jDEEzZi+T0wLOka4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tqruw12qT4a9cuifJ7lGZI49Lzmaftwq4BwYMR6D5rVbX9azYJW6weL908DXeNfoQ
-         eIMijvNSmBAylNGy7xJmWtF/nELen6vpZaKUOfvU2XfNjuAd450HC2Ce0H+BpRdAMy
-         4OTb0AYw2xjbTyx3GAUvPTKizEwFnkeAZmrUqy+zHMXu9E5HTv745Jl49hX5TfpyU5
-         uyEGnqbxIHyagLp5BKBM78YahD0GjBmm9999GiGUA4uxfK4qDt4QOwNr6FZNgIS5Z1
-         dKDy9mr6hUkqB5BNMf1bh1ETWgWG8XoJtoUhp6+NoEKyUDXx7NBYVscL7OuZfmC01t
-         OO1zwHEtOIABQ==
-Date:   Mon, 28 Aug 2023 21:24:30 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Wentong Wu <wentong.wu@intel.com>
-Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, mka@chromium.org,
-        oneukum@suse.com, lee@kernel.org, kfting@nuvoton.com,
-        broonie@kernel.org, linus.walleij@linaro.org, maz@kernel.org,
-        brgl@bgdev.pl, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
-        sakari.ailus@linux.intel.com, srinivas.pandruvada@intel.com,
-        zhifeng.wang@intel.com
-Subject: Re: [PATCH v10 2/4] i2c: Add support for Intel LJCA USB I2C driver
-Message-ID: <ZOz0bgJUZuAcUBWf@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Wentong Wu <wentong.wu@intel.com>, gregkh@linuxfoundation.org,
-        arnd@arndb.de, mka@chromium.org, oneukum@suse.com, lee@kernel.org,
-        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
-        maz@kernel.org, brgl@bgdev.pl, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
-        sakari.ailus@linux.intel.com, srinivas.pandruvada@intel.com,
-        zhifeng.wang@intel.com
-References: <1693091643-20867-1-git-send-email-wentong.wu@intel.com>
- <1693091643-20867-3-git-send-email-wentong.wu@intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JghyezFaQDHryAZP"
-Content-Disposition: inline
-In-Reply-To: <1693091643-20867-3-git-send-email-wentong.wu@intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S234353AbjH1XLa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Aug 2023 19:11:30 -0400
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46344199
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 16:11:27 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id C192E32009FE
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 19:11:24 -0400 (EDT)
+Received: from imap45 ([10.202.2.95])
+  by compute2.internal (MEProxy); Mon, 28 Aug 2023 19:11:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+        cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1693264284; x=1693350684; bh=kO
+        rvlIau6H9GZuMH4qmvA/1ss7hhG246erMpRPTT0qQ=; b=uEKr9zEHjBKpLe7hqK
+        C6CbGaf84hGG2BWbT3ykpjyYO6p4nUJKuAggTPpSW1kmt2VjgrVgRi5ySlGSzsWK
+        TxB36jsbeD2ZLnHO0wWNvSqp8lybTFTSkeulGFeE0Sx0Dzbsj+aKOfMaCqgI5a6T
+        xHralqPIfJcOHZwZ6IJtRljwE6jLWH4Ekz+mP6/587hlSlCARJofoqu2e4sDAb96
+        O6p+Kmc6uImnFhZ2skaDAAQWmTrvK3PWCozFmNEEwRCOyqljI0RR8U+RdKvAU9D2
+        Yj6w6k4I4ts3Gb29B2DUr5KaqodqI0sSweT1nqACgR8Rxw3fpiSDAPUBJll8YnCy
+        Op3w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1693264284; x=1693350684; bh=kOrvlIau6H9GZ
+        uMH4qmvA/1ss7hhG246erMpRPTT0qQ=; b=E1w02QTL0ojYjflHDmbbtNuT4X4DA
+        bjIxu4IdYNUD+ygYkShFrB2dLoJAqyijD3au/3zDkf4bBhsVgLECL8JJszkazHcy
+        GgQKFfrsTA1U1CW3jd9kbVICCAhKX5D5+xZn6mfGtV740xR0/4uEP/9AHNgqFxZX
+        V0J2Bk2SXagQ9Jql+tIAtA/iU/TEDIAXmdDFWOcp6dd3llDN1C7CsCoArKmZlPa9
+        QtAl2uhb3URo1M3Y+kW8G33UOcL5D6c7450p7s7eqXhNlgzZYy+SfJRm36KYf4td
+        NtXdIvFsJSvpb3I8HZE7PgsBSOPeFVen1TpGtU8oDqoLlJUwsYTCVfP/w==
+X-ME-Sender: <xms:nCntZF7b8ElzrgS4DsvEM-P21OFUG_e2IRQHsZtC8hp8txvDKMjtJA>
+    <xme:nCntZC73QecM3GseLSMoXM7cs-hj-rfqei7K-jQjZi6OJQTYhnQBxKXqMvfS4OW0o
+    ILDMRWQnng9d2vtzw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudefhedgudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefofgggkfgjfhffhffvufgtsehttd
+    ertderredtnecuhfhrohhmpedftehlvgigrghnuggvrhcukfhvrghnohhvfdcuoegrmhhi
+    vhgrnhhovhesfhgrshhtmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeevleduje
+    eitdefjeelkedtveegfeffvdevvedvkeffjefgudejteejgeeigeeiteenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrmhhivhgrnhhovhesfh
+    grshhtmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:nCntZMfq8XRS3VfEwXK-jCsgyXqiAEv9ut6fzvy9u60yXdgAxWo4jg>
+    <xmx:nCntZOIsR2oJwDPUdoezsYd7epzqh3ov_GfnV1CToF9Yj50qFNsUIw>
+    <xmx:nCntZJLsPMsO6G-kUCG6lE3qYZLF7BcN_rEV3HtUR7buCweMpkSR3w>
+    <xmx:nCntZOUTMsMaWC0M0cUiFFIgDRkCvJFKXI0wu8f4Bk-_9Iya1jwq9w>
+Feedback-ID: i30c842cc:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0B881272007B; Mon, 28 Aug 2023 19:11:24 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-701-g9b2f44d3ee-fm-20230823.001-g9b2f44d3
+Mime-Version: 1.0
+Message-Id: <4f58a027-3bdd-46b9-8385-f902f251aeba@app.fastmail.com>
+In-Reply-To: <4bfea609-96e7-4b81-9855-09f571dec8bc@app.fastmail.com>
+References: <4bfea609-96e7-4b81-9855-09f571dec8bc@app.fastmail.com>
+Date:   Mon, 28 Aug 2023 16:11:02 -0700
+From:   "Alexander Ivanov" <amivanov@fastmail.com>
+To:     linux-gpio@vger.kernel.org
+Subject: Re: gpio-it87: gpiod_get*() always return -ENOENT
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,147 +82,67 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---JghyezFaQDHryAZP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-thank you for your patches!
-
-=2E..
-
-> +static int ljca_i2c_start(struct ljca_i2c_dev *ljca_i2c, u8 slave_addr,
-> +			  enum ljca_xfer_type type)
-> +{
-> +	struct ljca_i2c_rw_packet *w_packet =3D
-> +			(struct ljca_i2c_rw_packet *)ljca_i2c->obuf;
-> +	struct ljca_i2c_rw_packet *r_packet =3D
-> +			(struct ljca_i2c_rw_packet *)ljca_i2c->ibuf;
-> +	s16 rp_len;
-> +	int ret;
-> +
-> +	w_packet->id =3D ljca_i2c->i2c_info->id;
-> +	w_packet->len =3D cpu_to_le16(sizeof(*w_packet->data));
-> +	w_packet->data[0] =3D (slave_addr << 1) | type;
-> +
-> +	ret =3D ljca_transfer(ljca_i2c->ljca, LJCA_I2C_START, w_packet,
-> +			    struct_size(w_packet, data, 1), r_packet,
-> +			    LJCA_I2C_BUF_SIZE);
-> +	if (ret < 0 || ret < sizeof(*r_packet))
-> +		return ret < 0 ? ret : -EIO;
-> +
-> +	rp_len =3D le16_to_cpu(r_packet->len);
-> +	if (rp_len < 0 || r_packet->id !=3D w_packet->id) {
-> +		dev_err(&ljca_i2c->adap.dev,
-> +			"i2c start failed len: %d id: %d %d\n",
-> +			rp_len, r_packet->id, w_packet->id);
-
-All dev_err look more like dev_dbg to me. They are not helpful for the
-regular user, I'd think.
-
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-=2E..
-
-> +static int ljca_i2c_pure_read(struct ljca_i2c_dev *ljca_i2c, u8 *data, u=
-8 len)
-> +{
-> +	struct ljca_i2c_rw_packet *w_packet =3D
-> +			(struct ljca_i2c_rw_packet *)ljca_i2c->obuf;
-> +	struct ljca_i2c_rw_packet *r_packet =3D
-> +			(struct ljca_i2c_rw_packet *)ljca_i2c->ibuf;
-> +	s16 rp_len;
-> +	int ret;
-> +
-> +	if (len > LJCA_I2C_MAX_XFER_SIZE)
-> +		return -EINVAL;
-
-You can remove this check. You already have a quirk structure, so the
-core will do it for you.
-
-=2E..
-
-> +static int ljca_i2c_pure_write(struct ljca_i2c_dev *ljca_i2c, u8 *data, =
-u8 len)
-> +{
-> +	struct ljca_i2c_rw_packet *w_packet =3D
-> +			(struct ljca_i2c_rw_packet *)ljca_i2c->obuf;
-> +	struct ljca_i2c_rw_packet *r_packet =3D
-> +			(struct ljca_i2c_rw_packet *)ljca_i2c->ibuf;
-> +	s16 rplen;
-> +	int ret;
-> +
-> +	if (len > LJCA_I2C_MAX_XFER_SIZE)
-> +		return -EINVAL;
-
-You can remove this check. You already have a quirk structure, so the
-core will do it for you.
-
-=2E..
-
-> +static u32 ljca_i2c_func(struct i2c_adapter *adap)
-> +{
-> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-> +}
-
-Have you successfully tried SMBUS_QUICK (e.g. with scanning a bus with
-'i2cdetect')?
-
-=2E..
-=20
-> +static int ljca_i2c_probe(struct auxiliary_device *auxdev,
-> +			  const struct auxiliary_device_id *aux_dev_id)
-> +{
-> +	struct ljca_client *ljca =3D auxiliary_dev_to_ljca_client(auxdev);
-> +	struct ljca_i2c_dev *ljca_i2c;
-> +	int ret;
-> +
-> +	ljca_i2c =3D devm_kzalloc(&auxdev->dev, sizeof(*ljca_i2c), GFP_KERNEL);
-> +	if (!ljca_i2c)
-> +		return -ENOMEM;
-> +
-> +	ljca_i2c->ljca =3D ljca;
-> +	ljca_i2c->i2c_info =3D dev_get_platdata(&auxdev->dev);
-> +
-> +	ljca_i2c->adap.owner =3D THIS_MODULE;
-> +	ljca_i2c->adap.class =3D I2C_CLASS_HWMON;
-
-Just to make sure: you want class based instantiation here because you
-have no other way of describing clients? I guess it makes sense for USB,
-just wanted to ask.
-
-Other than that, it looks good!
-
-All the best,
-
-   Wolfram
+On Fri, 18 Aug 2023 09:17 -07:00, Alexander Ivanov <amivanov@fastmail.com> wrote:
+> Hello,
+>
+> Appologies if submitting to wrong list.
+>
+> I am developing a driver for PCIe-based device that needs to receive 
+> external signals through on-board GPIOs. The target platform is 
+> Intel-based board and running Fedora 34 kernel 5.11.12-300.fc34.x86_64 
+> and has GPIO devices driver by gpio-it87.
+>
+> # gpiodetect
+> gpiochip0 [INT34BB:00] (312 lines)
+> gpiochip1 [gpio_it87] (64 lines)
+>
+> 8 of available 64 lines are connected to a header on the board:
+>
+> # gpioinfo 1
+>         ...
+>         line  49:  "it87_gp71"       unused   input  active-high
+>         line  50:  "it87_gp72"       unused   input  active-high
+>         line  51:  "it87_gp73"       unused   input  active-high
+>         line  52:  "it87_gp74"       unused   input  active-high
+>         line  53:  "it87_gp75"       unused   input  active-high
+>         line  54:  "it87_gp76"       unused   input  active-high
+>         line  55:  "it87_gp77"       unused   input  active-high
+>         ...
+>
+> These lines are verified with logic analyzer and `gpioset 1 nn=0|1`
+>
+> The PCIe device driver defines these lines as:
+>
+> static struct gpiod_lookup_table gpio_it87_gpios = {
+>         .dev_id = "gpio_it87",
+>         .table = {
+>                 GPIO_LOOKUP("gpio-it87", 48, "it87_gp70", GPIO_ACTIVE_HIGH),
+>                 GPIO_LOOKUP("gpio-it87", 49, "it87_gp71", GPIO_ACTIVE_HIGH),
+>                 GPIO_LOOKUP("gpio-it87", 50, "it87_gp72", GPIO_ACTIVE_HIGH),
+>                 GPIO_LOOKUP("gpio-it87", 51, "it87_gp73", GPIO_ACTIVE_HIGH),
+>                 GPIO_LOOKUP("gpio-it87", 52, "it87_gp74", GPIO_ACTIVE_HIGH),
+>                 GPIO_LOOKUP("gpio-it87", 53, "it87_gp75", GPIO_ACTIVE_HIGH),
+>                 GPIO_LOOKUP("gpio-it87", 54, "it87_gp76", GPIO_ACTIVE_HIGH),
+>                 GPIO_LOOKUP("gpio-it87", 55, "it87_gp77", GPIO_ACTIVE_HIGH),
+>                 {},
+>         },
+> };
+>
+> and then adds them to lookup table, eg.:
+>
+> gpiod_add_lookup_table(&gpio_it87_gpios);
+>
+> However, none of those lines are available at
+>
+> struct desc *gpio = gpiod_get(dev, "it87_gp70", GPIOD_IN);
+>
+> Above returns -ENOENT for any of those lines.
+> I believe it is due to incorrct lookup definions in gpio_it87_gpios 
+> above, however, I cannot figure out what is wrong there. 
+>
 
 
---JghyezFaQDHryAZP
-Content-Type: application/pgp-signature; name="signature.asc"
+Any suggestions on how to resolve the problem?
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmTs9G0ACgkQFA3kzBSg
-KbaXrhAAnD+ANaPFvZLW0bURxLj0iE/tsZJc9Cn+4yE719RBdzvLLg9rY2oCN4TU
-pkft37jYRyjwTVG3V3ZpzMqjtKPAWTuREPUl20OfE1FojYQzk3dyiwx1yZRkEurW
-LSd634QsdI49fdJv3WRzcxZsm4UgPXREkp6MpOONGx/yhDoWNc2VglmK5taXD/Mb
-R/ug/oKuEEw+5ogpGDimHhY/kAvMaDmnjwke00yyeB+b0tp1ep49Jl9L8HzQm7HN
-M1EWxYxtETFmanjs5ro1czyDBP88YyFzpv7HzU8KbO7qw0XWvRqwlcq3W1qyHjxQ
-8P0w2I5A3ID6T2S2/BNYIYNAAljYWyCb4nNqNba8CcYm+qzoFdULDp5O9LR0wX/2
-SDCRCHyB+0qf69tpd/ht9LyZp9LcunevDT1UiPEqLvRdEEJqlmFwIndSMhJ4SfsL
-Wa8MOzZvF2z9DwGjQ/AgIfNBG4Kb1tBa9XSzd7EKEnCKtrRY45qHNCNqSWkpTDqi
-7xpqBIJf/dKlMMuPUf86cAwQRQHnO3OvHgBb8Pn5V9skxU52ycOx3YxcLEgej4Qy
-4aed5AKHDxvYRnB5AdnNnltcA0Bnkz/azawSBJZqjjvfk7wYW3Px9naXFU2eELuB
-Sp/X4ggHCj7YbsO6qucShg5yBHtn8BxHawMxWJFH/dGMK25Ly/0=
-=FryW
------END PGP SIGNATURE-----
-
---JghyezFaQDHryAZP--
+Thanks,
+--Alex
