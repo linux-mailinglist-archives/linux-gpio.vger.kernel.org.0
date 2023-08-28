@@ -2,61 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E8F878AC19
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Aug 2023 12:37:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34E2E78AC67
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Aug 2023 12:40:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231575AbjH1KhJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Aug 2023 06:37:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46704 "EHLO
+        id S231638AbjH1Kj4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Aug 2023 06:39:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231681AbjH1KhF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Aug 2023 06:37:05 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B52119
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 03:37:02 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-522bd411679so4043454a12.0
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 03:37:02 -0700 (PDT)
+        with ESMTP id S231693AbjH1Kjk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Aug 2023 06:39:40 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F152AB
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 03:39:37 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-5236b2b4cdbso4113708a12.3
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 03:39:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693219020; x=1693823820;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=linaro.org; s=google; t=1693219176; x=1693823976;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EXKNqL4IkjAZx8ALDSnWwXUafm6Syu0p3/vkPAUXVgM=;
-        b=v1k638whdHBo4hUCkngFzIYxCDBin0XvP/jkQsTWxH0jsnHSG3mIPEftiODHn3HiAZ
-         qZ+xDILXYkNkZ3Mz66WQkq9YjMY9f8HIO2bUzPtZx9/eXFUxI1osaWP8MyU/tYgBXGnd
-         eb+bRB63ZcnA6kxjXBzOTDtTdQ/ZUAY+3znT8C85+MZtVv5VDeUKZj4Dx+/BzIRRgUn5
-         0sqg/eFSOB+GHDDLFvn0cMN32O/esIzKBLfH+6zGiWmagQndTwSRRUlCKzeLIOhnTn4B
-         SzYtvJ3ZmixCh5Eovbf1qbV3HktoZnRaikT7q+R1YVzVf5+cYyxz8WKLLpapa2vh5ZuM
-         zExw==
+        bh=EbEjmLs3QGz39aRMzKs8Sd0VII9u+eayDuhczUIkBCc=;
+        b=qzH8IW/9bJOId1PwuIVHVWgdvL3q8g/A85mFFHUilHyvwAUo9+ErZ6cykB9dlz6Mo7
+         q1yJUjhQkb2Ze2xoZ7OR58A2OkggDhupqjAP0j1KW/jFzD9GeMd4KybjFdEn4AjeT7o2
+         NznptOyByTzZc5XSSeD8PtT9u5UoSgaJARmwnSGladd00kDAMgitAJaFcb/Tc0YqwnLQ
+         MX3KgwlKqtG0B7DyK4qHoUm+GtbfBMQm2pKgNuAto8AEhYsHI8MRxZ0PxkAaLjIEWpFy
+         TN9lGfbql4Yu+4pumOSKhdd6PQSh+/KSxxK4PPnLektYdkSgpnCLtuOinoj3VnaNe1mq
+         SnWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693219020; x=1693823820;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        d=1e100.net; s=20221208; t=1693219176; x=1693823976;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EXKNqL4IkjAZx8ALDSnWwXUafm6Syu0p3/vkPAUXVgM=;
-        b=C3A+Pi5UCY7rlCvmZRg0g/jjVi5RtZz92ZBQbMECTEoyE1FCmsuChbbVYyo1uTo+6c
-         ttwkR3f3yMTXaoTQvCkOPkCKTlxgATIpbcpR+PIuJgfEDLN6pVt/5YiMOdAGJLH7Ro3H
-         EeyOefPth6F+R3z6GL0BC5qnuqXvKYJU3fHwku7vbxinQ6VuTDWKPQhasWea1sdC8t5T
-         wrUhjQURC+sLYJbjC5TS2eaFQLl/nQyzATm3MoTN+jNIAaEdrOqZyj0dDM4Lf9UvdMLc
-         rhaLzS0Fxcg4sLRZpMFPobGnMrGhFuk8cQ3qO9YwfANBbVLZ+cnrZwgihc4MoxJMfBTU
-         RB3g==
-X-Gm-Message-State: AOJu0Yymnu0fN7WjHdLwhTTa5IxYGFnBeb6M998OEmfD912GlBN4hiiQ
-        AkKqniaMECGT9K9j5zTzpsY5TQ==
-X-Google-Smtp-Source: AGHT+IG3g61kWl/7b9A2JNiMon+0jr/1icvqwpp/HtI229jumk8p1OrSnYtrCpq97W05dbDwSl0LUg==
-X-Received: by 2002:a17:907:7607:b0:9a1:c9c5:5fa1 with SMTP id jx7-20020a170907760700b009a1c9c55fa1mr12153327ejc.4.1693219020668;
-        Mon, 28 Aug 2023 03:37:00 -0700 (PDT)
+        bh=EbEjmLs3QGz39aRMzKs8Sd0VII9u+eayDuhczUIkBCc=;
+        b=fxzScLLljnt2rZWYoWw6wHihyWKrxKFLfl2NuAanb+J1m3ygQG6/AGUwgAay4pZoRv
+         hKbwvQjshWO4F2EjRBJqnzGxYLDH+auo1zVGOxstJHk2CSkIJpi50uYvSxdOQn6MkEMB
+         01WJkiWY6BP4XiUXpWmkOMGH9m7Ke9XCyu9J5GFJiZy279Np6NnDJvtZL300rsWe/2qk
+         3I/sb0KAWYzyFQxju5RmbM2MYQl/C+GZdR4IceOR0xSu1GMsi39ThqGOgoez9OPwLwg1
+         5YB8sgjnRI8PiE24SBJr1c6dIkTmDRq8rBCD0PqIT6ukvCUuXiJnUYvDF2OuJqQEDdXN
+         qGQw==
+X-Gm-Message-State: AOJu0YzbwNKiIzB3VZevWDnchiY+KBH7ZYOu6WlZniY6GqB3mS8DPZJA
+        0YLq6WGSJ9cRurcYDkzL+xKfEw==
+X-Google-Smtp-Source: AGHT+IER1RoTJpN/WOl8lPgg7vlmqwVHY7D+CYcCIMJfB2n7O3GNWanGpZdgdieT4PyEMRlOc8xOcw==
+X-Received: by 2002:aa7:d058:0:b0:51b:d567:cfed with SMTP id n24-20020aa7d058000000b0051bd567cfedmr21575438edo.5.1693219175747;
+        Mon, 28 Aug 2023 03:39:35 -0700 (PDT)
 Received: from [192.168.0.22] ([77.252.47.225])
-        by smtp.gmail.com with ESMTPSA id f10-20020a170906138a00b0099d959f9536sm4594759ejc.12.2023.08.28.03.36.59
+        by smtp.gmail.com with ESMTPSA id y21-20020aa7c255000000b005257da6be23sm4302550edo.75.2023.08.28.03.39.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Aug 2023 03:37:00 -0700 (PDT)
-Message-ID: <c984d558-11b5-d5ea-9819-7641129de584@linaro.org>
-Date:   Mon, 28 Aug 2023 12:36:58 +0200
+        Mon, 28 Aug 2023 03:39:35 -0700 (PDT)
+Message-ID: <5c0d985a-0492-778c-46b9-80899e52134c@linaro.org>
+Date:   Mon, 28 Aug 2023 12:39:34 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.14.0
 Subject: Re: [PATCH v6 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
  documentation
 Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Tomer Maimon <tmaimon77@gmail.com>
 Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -69,13 +70,13 @@ References: <20230827203612.173562-1-tmaimon77@gmail.com>
  <20230827203612.173562-2-tmaimon77@gmail.com>
  <eccc6a7a-b30f-8c77-77cb-5deef47a1954@linaro.org>
  <CAP6Zq1jj0WDbtL1zhr=tVyh2GPRy6-=oHjVURmJzNRm3n0HBNg@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAP6Zq1jj0WDbtL1zhr=tVyh2GPRy6-=oHjVURmJzNRm3n0HBNg@mail.gmail.com>
+ <c984d558-11b5-d5ea-9819-7641129de584@linaro.org>
+In-Reply-To: <c984d558-11b5-d5ea-9819-7641129de584@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,80 +84,85 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/08/2023 12:26, Tomer Maimon wrote:
-> Hi Krzysztof,
-> 
-> Thanks for your comments
-> 
-> On Mon, 28 Aug 2023 at 10:10, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
+On 28/08/2023 12:36, Krzysztof Kozlowski wrote:
+> On 28/08/2023 12:26, Tomer Maimon wrote:
+>> Hi Krzysztof,
 >>
->> On 27/08/2023 22:36, Tomer Maimon wrote:
->>> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
->>> pinmux and GPIO controller.
+>> Thanks for your comments
+>>
+>> On Mon, 28 Aug 2023 at 10:10, Krzysztof Kozlowski
+>> <krzysztof.kozlowski@linaro.org> wrote:
 >>>
->>> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> ---
+>>> On 27/08/2023 22:36, Tomer Maimon wrote:
+>>>> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
+>>>> pinmux and GPIO controller.
+>>>>
+>>>> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>> ---
+>>>
+>>>
+>>>> +  '^pin':
+>>>> +    $ref: pincfg-node.yaml#
+>>>> +
+>>>> +    properties:
+>>>> +      pins:
+>>>> +        description:
+>>>> +          A list of pins to configure in certain ways, such as enabling
+>>>> +          debouncing
+>>>
+>>> What pin names are allowed?
+>> Do you mean to describe all the allowed pin items?
+>> for example:
+>>       items:
+>>         pattern:
+>> 'GPIO0/IOX1_DI/SMB6C_SDA/SMB18_SDA|GPIO1/IOX1_LD/SMB6C_SCL/SMB18_SCL'
+>> or
+>>       items:
+>>         pattern: '^GPIO([0-9]|[0-9][0-9]|[1-2][0-4][0-9]|25[0-6])$'
 >>
->>
->>> +  '^pin':
->>> +    $ref: pincfg-node.yaml#
->>> +
->>> +    properties:
->>> +      pins:
->>> +        description:
->>> +          A list of pins to configure in certain ways, such as enabling
->>> +          debouncing
->>
->> What pin names are allowed?
-> Do you mean to describe all the allowed pin items?
-> for example:
->       items:
->         pattern:
-> 'GPIO0/IOX1_DI/SMB6C_SDA/SMB18_SDA|GPIO1/IOX1_LD/SMB6C_SCL/SMB18_SCL'
-> or
->       items:
->         pattern: '^GPIO([0-9]|[0-9][0-9]|[1-2][0-4][0-9]|25[0-6])$'
+>> is good enough?
 > 
-> is good enough?
+> Something like this. Whichever is correct.
+> 
+>>>
+>>>> +
+>>>> +      bias-disable: true
+>>>> +
+> 
+>>>> +additionalProperties: false
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>> +    #include <dt-bindings/gpio/gpio.h>
+>>>> +
+>>>> +    soc {
+>>>> +      #address-cells = <2>;
+>>>> +      #size-cells = <2>;
+>>>> +
+>>>> +      pinctrl: pinctrl@f0800260 {
+>>>
+>>> Nothing improved here. Test your DTS. This is being reported - I checked.
+>> what do you suggest since the pinctrl doesn't have a reg parameter,
+>> maybe pinctrl: pinctrl@0?
+> 
+> It has ranges, so yes @0 looks correct here.
 
-Something like this. Whichever is correct.
-
->>
->>> +
->>> +      bias-disable: true
->>> +
-
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +    #include <dt-bindings/gpio/gpio.h>
->>> +
->>> +    soc {
->>> +      #address-cells = <2>;
->>> +      #size-cells = <2>;
->>> +
->>> +      pinctrl: pinctrl@f0800260 {
->>
->> Nothing improved here. Test your DTS. This is being reported - I checked.
-> what do you suggest since the pinctrl doesn't have a reg parameter,
-> maybe pinctrl: pinctrl@0?
-
-It has ranges, so yes @0 looks correct here. Which leds to second
-question - how pinctrl could have @0? It's already taken by SoC! So your
-DTS here - unit address and ranges - are clearly wrong.
-
-
-> BTW, I have run both dt_binding_check and W=1 dtbs_check, and didn't
-> see an issue related to the pinctrl: pinctrl@f0800260, do I need to
-> add another flag to see the issue?
-
-Did you read my message last time? I said - it's about DTS, not the binding.
+Wait, your address according to ranges is 0xf0010000, not 0x0, not
+0xf0800260...
 
 
+> Which leds to second
+> question - how pinctrl could have @0? It's already taken by SoC! So your
+> DTS here - unit address and ranges - are clearly wrong.
+> 
+> 
+>> BTW, I have run both dt_binding_check and W=1 dtbs_check, and didn't
+>> see an issue related to the pinctrl: pinctrl@f0800260, do I need to
+>> add another flag to see the issue?
+> 
+> Did you read my message last time? I said - it's about DTS, not the binding.
 
 Best regards,
 Krzysztof
