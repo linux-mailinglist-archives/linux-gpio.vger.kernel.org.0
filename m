@@ -2,78 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84F0178A64A
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Aug 2023 09:11:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD69E78A676
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Aug 2023 09:28:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbjH1HLH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Aug 2023 03:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45400 "EHLO
+        id S229498AbjH1H2A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Aug 2023 03:28:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjH1HLA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Aug 2023 03:11:00 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B3FD8
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 00:10:57 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-99bdcade7fbso359406266b.1
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 00:10:57 -0700 (PDT)
+        with ESMTP id S229765AbjH1H1g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Aug 2023 03:27:36 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7AC4139
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 00:27:32 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-48d0dbf4ec5so940185e0c.2
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Aug 2023 00:27:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693206656; x=1693811456;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zWhn4TLCrD9nnYOeDxCtGtHbvSHL8FcsnQppWoyo1ZQ=;
-        b=gz6VYD7cQSaCPEwUNZgwzM/ul0NvtDfRQCO3N4xGbmGYLoyXrp30hzbcCCSi1GbHv1
-         fo229owV2HnlbLRnnAdtpMlHtwF+Bnkc1J2rsT0ae/U7CR9jT7iCvkeIFKLM7w4BKFT3
-         WLWt0heF6JIgS1Tq96QJXN7NagjUdzAZr1my5Ao2JYFO/rgMTzB/DfPy2Y1iNVSo1JfC
-         Lb8+5ocFBN7aPl0/ZSBtQWgYttYD1jsg77tW0mgnvt7m28oBVezXqjEF+KuGYL4WFsOf
-         cLUup4wUViblHcreJJYwYY0SJfIL2dzCY51behwy3ny2qK9AHR43qeKMzRsJBgacDbJc
-         elRQ==
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1693207652; x=1693812452;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3aAdLCo7+5NsyJy4woVDAtzriNe/Ar/+QNUBkrNNwNk=;
+        b=sNMl2UDUX3JowQ3/XIWffWmHya5JO9YpTKjoq3J4anjxUN2AynbD5fBoqugGvh7GaI
+         Up1+bihyzpGLtim8dOksR1ahR/JnBOrqoI8+RF5JZVW6Ojhd4QJQ3tngsThX7MgonxsZ
+         jxAvSFq5qo2HKZ3lRXBsrvAUpu63EwkaMRLRTxUgB7srNhNWLk1nUyxhzzx8nojSE9kZ
+         6iotrIbLyN07GquyYlSi2FIxqX6NH+JlSpbRjB7+s0q8rwuyrDew2QkV5Vrr+9dl38OR
+         pyRvmeyGRn3dStLTw44AhUQPVJlrdBtMlBnyVaGR2eWyUvq1NiSTbWgPuz/HF9Vb6SZD
+         MokQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693206656; x=1693811456;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zWhn4TLCrD9nnYOeDxCtGtHbvSHL8FcsnQppWoyo1ZQ=;
-        b=e5COp56/nVqX8ffLScHrwdavyxNgaqkMcDE6ixJtJDuqfTCoU0SJ9vXYk8qXofA20A
-         8N8dcK2VV4mZGJvbDUwu8f25nP7VhyyJQKp67RSto4i/e/+YUCVlZ9PIfQw64i3nK1MJ
-         pi7NzSlKv41rzf/kTGQmJ/6hviJEdgPCRgHrD3Ey7GL+KutBAV4l3W4T/O2HMkoDN6yW
-         TTLlU8p1dqEQezZ+jDQFdZJaw8UY9QvCtkhQzK/cMwzaeejtf6M8fDM+/14Cn2vHL/rS
-         DAuw8q2q2jcFeRCGANzUxigTWR2WdD+DEkpvtkVOlCwSrjK+ccE6zKZT9d5HM1Nm7ooI
-         pL4w==
-X-Gm-Message-State: AOJu0Yx7YCpC9totNpY+ck6i1MBfyZoWVa9Xn5Y+uHwFnd33E/0CTwj9
-        AF9ilAvS+BR7sCGSNHUkd8JKWA==
-X-Google-Smtp-Source: AGHT+IEaCRRwj6SO7Oi8ML0+d8UnRRo5zK1JU0aNPKESlrbjf2ZzvRCrS2h+a1pGRnqMm/7ZRhUQGw==
-X-Received: by 2002:a17:906:7391:b0:9a1:c659:7c62 with SMTP id f17-20020a170906739100b009a1c6597c62mr11455127ejl.66.1693206656333;
-        Mon, 28 Aug 2023 00:10:56 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.225])
-        by smtp.gmail.com with ESMTPSA id h1-20020a1709062dc100b0098921e1b064sm4269753eji.181.2023.08.28.00.10.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Aug 2023 00:10:55 -0700 (PDT)
-Message-ID: <eccc6a7a-b30f-8c77-77cb-5deef47a1954@linaro.org>
-Date:   Mon, 28 Aug 2023 09:10:54 +0200
+        d=1e100.net; s=20221208; t=1693207652; x=1693812452;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3aAdLCo7+5NsyJy4woVDAtzriNe/Ar/+QNUBkrNNwNk=;
+        b=aMn1YTFO9eTB2LIiLaZSQWS89fMoq2gsCEPi9gb4wmKBOmBZty4C48xC8cRXGUo76N
+         NMD9VYzKB09SDfQvSVWnvxtYYs0NRRWGfzir0qR4OIpYnYqKTN0zMgeV/b1TKGqhfFre
+         KIR/IS/FGb9phmBf2wyw2pq7F1Z0/PIot034dOzwfE55FaOkeuigHen4oXJ7BAiOiwA4
+         Oo7se3Ct5lvu6HyIIaZGXXRyNLCq+enodi/xEV4adBz7M8qT5h15OOcwacBFnuF2Rxl8
+         VK+VBGhdU/viGdrGInYGsuqQWzRUulCZ1aYjhtEV06lUxmNp7hfmwxREGzgwXX9PhoC3
+         rT6A==
+X-Gm-Message-State: AOJu0YxqXeLYahMyfBp11y5rf06uzZoZo0uIcBo21WP7mTWLYr6Co5UH
+        e8dtW1lkXehnOPJM62Yfbk9oZQvDI6XsgAh+ktux2g==
+X-Google-Smtp-Source: AGHT+IEJylB1pZZ8U3hYbqpKHzzVTBvaaWl9vXTK7SDgTsScgcGSwsEgavbn7vGuUKghrUmhND4cgC8KZjPVxRypeBU=
+X-Received: by 2002:a1f:ea84:0:b0:48d:3933:f545 with SMTP id
+ i126-20020a1fea84000000b0048d3933f545mr13641569vkh.12.1693207651895; Mon, 28
+ Aug 2023 00:27:31 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v6 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
- documentation
-Content-Language: en-US
-To:     Tomer Maimon <tmaimon77@gmail.com>, linus.walleij@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, avifishman70@gmail.com, tali.perry1@gmail.com,
-        joel@jms.id.au, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, j.neuschaefer@gmx.net
-Cc:     openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-References: <20230827203612.173562-1-tmaimon77@gmail.com>
- <20230827203612.173562-2-tmaimon77@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230827203612.173562-2-tmaimon77@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <1693091643-20867-1-git-send-email-wentong.wu@intel.com> <1693091643-20867-5-git-send-email-wentong.wu@intel.com>
+In-Reply-To: <1693091643-20867-5-git-send-email-wentong.wu@intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 28 Aug 2023 09:27:21 +0200
+Message-ID: <CAMRc=MdfUuq3OePe9suXpFnE7T+A8_MYZmFX8Q3rHA4b4mYnFw@mail.gmail.com>
+Subject: Re: [PATCH v10 4/4] gpio: update Intel LJCA USB GPIO driver
+To:     Wentong Wu <wentong.wu@intel.com>
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, mka@chromium.org,
+        oneukum@suse.com, lee@kernel.org, wsa@kernel.org,
+        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
+        maz@kernel.org, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
+        sakari.ailus@linux.intel.com, srinivas.pandruvada@intel.com,
+        zhifeng.wang@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,102 +74,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 27/08/2023 22:36, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
-> pinmux and GPIO controller.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Sun, Aug 27, 2023 at 1:15=E2=80=AFAM Wentong Wu <wentong.wu@intel.com> w=
+rote:
+>
+> This driver communicate with LJCA GPIO module with specific
+> protocol through interfaces exported by LJCA USB driver.
+> Update the driver according to LJCA USB driver's changes.
+>
+> Signed-off-by: Wentong Wu <wentong.wu@intel.com>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
 
-
-> +  '^pin':
-> +    $ref: pincfg-node.yaml#
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          A list of pins to configure in certain ways, such as enabling
-> +          debouncing
-
-What pin names are allowed?
-
-> +
-> +      bias-disable: true
-> +
-> +      bias-pull-up: true
-> +
-> +      bias-pull-down: true
-> +
-> +      input-enable: true
-> +
-> +      output-low: true
-> +
-> +      output-high: true
-> +
-> +      drive-push-pull: true
-> +
-> +      drive-open-drain: true
-> +
-> +      input-debounce:
-> +        description:
-> +          Debouncing periods in microseconds, one period per interrupt
-> +          bank found in the controller
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        minItems: 1
-> +        maxItems: 4
-> +
-> +      slew-rate:
-> +        description: |
-> +          0: Low rate
-> +          1: High rate
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 1]
-> +
-> +      drive-strength:
-> +        enum: [ 0, 1, 2, 4, 8, 12 ]
-> +
-> +    additionalProperties: false
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - ranges
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - nuvoton,sysgcr
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      pinctrl: pinctrl@f0800260 {
-
-Nothing improved here. Test your DTS. This is being reported - I checked.
-
-> +        compatible = "nuvoton,npcm845-pinctrl";
-> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        nuvoton,sysgcr = <&gcr>;
-> +
-> +        gpio0: gpio@0 {
-> +          gpio-controller;
-> +          #gpio-cells = <2>;
-> +          reg = <0x0 0xB0>;
-
-Keep lowercase hex.
-
-
-Best regards,
-Krzysztof
-
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
