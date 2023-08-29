@@ -2,43 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7CC678C1F9
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Aug 2023 12:07:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1560678C34A
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Aug 2023 13:28:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231263AbjH2KHa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Aug 2023 06:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
+        id S231145AbjH2L1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Aug 2023 07:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233608AbjH2KH1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Aug 2023 06:07:27 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FBDB4
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Aug 2023 03:07:24 -0700 (PDT)
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1qavd4-0000wW-IH; Tue, 29 Aug 2023 12:07:22 +0200
-Message-ID: <92a02ebc-77ff-523d-68c5-34cd2d3b4a28@pengutronix.de>
-Date:   Tue, 29 Aug 2023 12:07:22 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Subject: Re: Getting legacy GPIO index by line name
+        with ESMTP id S232020AbjH2L1s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Aug 2023 07:27:48 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 87C49109;
+        Tue, 29 Aug 2023 04:27:43 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8CxyOgr1u1kxr0cAA--.22945S3;
+        Tue, 29 Aug 2023 19:27:39 +0800 (CST)
+Received: from [10.20.42.201] (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxX88p1u1khW1mAA--.50881S3;
+        Tue, 29 Aug 2023 19:27:38 +0800 (CST)
+Subject: Re: [PATCH v4 2/2] gpio: loongson: add more gpio chip support
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-References: <13109ef0-9c4c-1990-4580-661f86778923@pengutronix.de>
- <CACRpkdYPhQq2aR+QsAX7QyGB2V63dOAcf3r-BsG3y3GQ8E4ZKw@mail.gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
+References: <20230823033427.23072-1-zhuyinbo@loongson.cn>
+ <20230823033427.23072-3-zhuyinbo@loongson.cn>
+ <CACRpkdZJVjwOCGYhmzaPLWbcX0rgrDD-d2OX=TnmYs0F56fGug@mail.gmail.com>
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <fd2290b1-66d4-f646-c3c8-b65567eae74a@loongson.cn>
+Date:   Tue, 29 Aug 2023 19:27:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdZJVjwOCGYhmzaPLWbcX0rgrDD-d2OX=TnmYs0F56fGug@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-In-Reply-To: <CACRpkdYPhQq2aR+QsAX7QyGB2V63dOAcf3r-BsG3y3GQ8E4ZKw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-CM-TRANSID: AQAAf8AxX88p1u1khW1mAA--.50881S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
 X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -48,79 +56,75 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Linus,
 
-On 29.08.23 09:24, Linus Walleij wrote:
-> On Mon, Aug 28, 2023 at 4:21 PM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+
+在 2023/8/23 下午8:29, Linus Walleij 写道:
+> Hi Yinbo,
 > 
->> Much to my dismay, I've learnt that my script above doesn't work when the same device
->> registers multiple GPIO controllers. On my i.MX system with some PCA953x GPIO expanders,
->> it works ok, but on a STM32MP, were the pinctrl device registers all GPIO chips, the glob
->> will expand to more than once device.
+> thanks for the new patch, it's starting to look really good!
+> The main point with offsets in the match data is very nice.
+> 
+> On Wed, Aug 23, 2023 at 5:34 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+> 
+>> This patch was to add loongson 2k0500, 2k2000 and 3a5000 gpio chip
+>> driver support.
 >>
->> So my question is: What better way is there to get a legacy GPIO index from within
->> a shell script (or an alternative way to request a sysfs GPIO by label)?
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> (...)
 > 
-> Don't know if it answers your question, but when there are several GPIO
-> chips of the same device/driver the way to determine topology ("which
-> device is which") is to use the topology in sysfs, i.e. the directory path,
-> where each device will have some unique bus ID (such as the USB
-> instance number, the device tree address etc).
-
-I don't want to hardcode device tree paths or I2C addresses into shell scripts.
-I have added a GPIO line name in the DT and I want to use for looking up the
-legacy GPIO index.
-
-Let's take as an example, this GPIO that can be requested from an I2C expander:
-
-  $ gpiofind HDMI_RESET
-  gpiochip5 3
-That's the node for the I2C expander:
-
-  /sys/devices/platform/soc@0/30800000.bus/30a30000.i2c/i2c-1/1-003a
-
-Looking into it for gpio*, I see:
-
-/sys/devices/platform/soc@0/30800000.bus/30a30000.i2c/i2c-1/1-003a/gpio/gpiochip512
-/sys/devices/platform/soc@0/30800000.bus/30a30000.i2c/i2c-1/1-003a/gpiochip5
-
-gpio/gpiochip512/base is the file I need to read. gpiochip5 is the file I have.
-
-What I do is:
-
-  $ cat /sys/bus/gpio/devices/gpiochip5/../gpio/gpio*/base
-  512
-
-But that breaks down if gpio/ has multiple directories:
-
-root@stm32mp157c-lxa-mc1:~ ls /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip* -d
-/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip0    /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip48
-/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip112  /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip64
-/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip128  /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip80
-/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip16   /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip96
-/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip32
-
-
->> P.S: I know that most GPIO fiddling should've kernel driver consumers instead. That's under
->>      way too.
 > 
-> Thanks! :)
+>>   static int loongson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
+>>   {
+>> +       unsigned int u;
+>>          struct platform_device *pdev = to_platform_device(chip->parent);
+>> +       struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
+>> +
+>> +       if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
+>> +               u = readl(lgpio->reg_base + lgpio->chip_data->inten_offset + offset / 32 * 4);
+>> +               u |= BIT(offset % 32);
+>> +               writel(u, lgpio->reg_base + lgpio->chip_data->inten_offset + offset / 32 * 4);
 > 
->> [1]: I appreciate links to any WIP/planned systemd-gpiod or similar patches anyway. While new
->>      projects should do more fine grained control of GPIOs, migration of most users will
->>      likely benefit benefit from a single global consumer.
+> This offset / 32 * 4 is really hard to read.
+> What about
 > 
-> I think Bartosz was working at a GPIO daemon for central management at one
-> point, but in a controlled embedded system, I think other (custom) solutions for
-> a central entity are possible.
+> /* Get the register index from offset then multiply by bytes per register */
+> (offset / 32) * 4
+
+
+okay, I will add it.
+
 > 
-> Yours,
-> Linus Walleij
+>>          lgpio->reg_base = reg_base;
+>> +       if (device_property_read_u32(dev, "ngpios", &ngpios) || !ngpios)
+>> +               return -EINVAL;
+>> +
+>> +       ret = DIV_ROUND_UP(ngpios, 8);
+>> +       switch (ret) {
+>> +       case 1 ... 2:
+>> +               io_width = ret;
+>> +               break;
+>> +       case 3 ... 4:
+>> +               io_width = 0x4;
+>> +               break;
+>> +       case 5 ... 8:
+>> +               io_width = 0x8;
+>> +               break;
+>> +       default:
+>> +               dev_err(dev, "unsupported io width\n");
+>> +               return -EINVAL;
+>> +       }
+> 
+> Is it really a good idea to infer the register width from ngpios?
+> 
+> What about just putting this into the struct loongson_gpio_chip_data
+> as well? Certainly it will be fixed for a certain device.
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+Andy's suggestion seems to look better, We have bgpio_init() handle
+this switch case. I will remove this switch case.
+https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git/commit/?h=gpio/for-next&id=55b2395e4e92adc492c6b30ac109eb78250dcd9d
+
+Thanks,
+Yinbo
 
