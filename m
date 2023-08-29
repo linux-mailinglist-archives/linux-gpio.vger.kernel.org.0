@@ -2,85 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE9FA78C05B
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Aug 2023 10:37:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7CC678C1F9
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Aug 2023 12:07:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234191AbjH2IhB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Aug 2023 04:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38704 "EHLO
+        id S231263AbjH2KHa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Aug 2023 06:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232819AbjH2Igc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Aug 2023 04:36:32 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E197A4
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Aug 2023 01:36:30 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-58fa51a0d97so44881337b3.3
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Aug 2023 01:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693298189; x=1693902989;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgFH2PSqygb5Y1inm5vt/mBZLnesRl9vs2jreMsqLao=;
-        b=svLHUIX+u/y1imTatNOrD17yPTcavRgZIkOTvcPmf7c876irUkjQgdn6C1lDXPNCOA
-         oAESfWffBvbb8LOz+ePvnwrslM8osk/0g5LL1fs0in9ktF6ZnTAZcclOhxlLtdf1R1eH
-         X4W9jrf9zFzbFMpd/6Pq+rfv3mgAHZvRHtpy1HI4Ptz82eRL4uUeO7kd0FIroKUwLzBz
-         M0OAbNyQYubhpDia4hrozb1Z0Qlo+xVg3b5fC94vmJ1MOJZ84yHGBTaLQEXAFmUlWlLV
-         u4vzYo8WA19KZcWc+KmbKYAgvoR0lkXAF4IhJb2Hp4HB9XaYHH9pC61eo/MOTTRLY7do
-         4OyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693298189; x=1693902989;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KgFH2PSqygb5Y1inm5vt/mBZLnesRl9vs2jreMsqLao=;
-        b=PEaAJMW76MQ++w7wiO8DL6Zo4pnzpk7vff1i1bGvsM2hwE0uY2eyxgo4lsrjUxEB5R
-         l9kU7FEvcR2jfmzvorYqOthfmIGFSGpWQNb5BCwnCndg/Y3abtjJcHPqrnrTZmLAzaRb
-         ZvcrEQYAHx0M1Lm3Seg+2DzKAVDKtKKYRFJ6vci6ocYgE/rd8UAFcKRfCbxjtK4cGNjB
-         cxITk027kN8S2mtgf1ODk4kj4+GphEkCtaawY56o57bv4eXa8BQpIvbLsVyW6c6IRKFQ
-         oseOqsYa9qhTmbwe6cNgJgzQSipJ5KOZKGnAY2CuDALxZxi6HWodP7F5KPmtuvce0mx3
-         4AVA==
-X-Gm-Message-State: AOJu0Yw1rab/5xJUQsy1OuZubfj84cmtz6I3gd37Zjp1Y1X2zNTRXLwq
-        AYKimbHtf8Ej1xr3y+XqJ7ShrHSHY+XUJ/qzEFo=
-X-Google-Smtp-Source: AGHT+IE7b/9ZBeqeB74rzZoAgSVWREcqw2knZ4lKWkA9Wo6nRGs3adz2n5Kzp4yMbyAWM3PHQ6ZA5jw6S9SS4REfYCM=
-X-Received: by 2002:a81:4954:0:b0:559:f18d:ee94 with SMTP id
- w81-20020a814954000000b00559f18dee94mr26759135ywa.10.1693298189522; Tue, 29
- Aug 2023 01:36:29 -0700 (PDT)
+        with ESMTP id S233608AbjH2KH1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Aug 2023 06:07:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FBDB4
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Aug 2023 03:07:24 -0700 (PDT)
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1qavd4-0000wW-IH; Tue, 29 Aug 2023 12:07:22 +0200
+Message-ID: <92a02ebc-77ff-523d-68c5-34cd2d3b4a28@pengutronix.de>
+Date:   Tue, 29 Aug 2023 12:07:22 +0200
 MIME-Version: 1.0
-Received: by 2002:a05:7108:1f86:b0:326:40ca:4805 with HTTP; Tue, 29 Aug 2023
- 01:36:29 -0700 (PDT)
-Reply-To: jennifermbaya01@gmail.com
-From:   "Mrs.Jennifer Mbaya" <emmanuelladegnigbe158@gmail.com>
-Date:   Tue, 29 Aug 2023 09:36:29 +0100
-Message-ID: <CAB86gQ78Z9vEmX6VCwcP0jXyrtU7wyf66sJ2csYcYPEaXx0oRA@mail.gmail.com>
-Subject: Sanemejs
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Subject: Re: Getting legacy GPIO index by line name
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+References: <13109ef0-9c4c-1990-4580-661f86778923@pengutronix.de>
+ <CACRpkdYPhQq2aR+QsAX7QyGB2V63dOAcf3r-BsG3y3GQ8E4ZKw@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CACRpkdYPhQq2aR+QsAX7QyGB2V63dOAcf3r-BsG3y3GQ8E4ZKw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Sanemejs
+Hello Linus,
 
-Jus ieguvat balvu no Apvienoto Naciju Organizacijas, kas ir saistita ar
-starptautiskais valutas fonds, kura atradas jusu e-pasta adrese un fonds
-nodota mums jusu parsuti=C5=A1anai, tapec nosutiet savus datus parsuti=C5=
-=A1anai.
+On 29.08.23 09:24, Linus Walleij wrote:
+> On Mon, Aug 28, 2023 at 4:21 PM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+> 
+>> Much to my dismay, I've learnt that my script above doesn't work when the same device
+>> registers multiple GPIO controllers. On my i.MX system with some PCA953x GPIO expanders,
+>> it works ok, but on a STM32MP, were the pinctrl device registers all GPIO chips, the glob
+>> will expand to more than once device.
+>>
+>> So my question is: What better way is there to get a legacy GPIO index from within
+>> a shell script (or an alternative way to request a sysfs GPIO by label)?
+> 
+> Don't know if it answers your question, but when there are several GPIO
+> chips of the same device/driver the way to determine topology ("which
+> device is which") is to use the topology in sysfs, i.e. the directory path,
+> where each device will have some unique bus ID (such as the USB
+> instance number, the device tree address etc).
 
-Mes sanemam noradijumu parskaitit visus nenokartotos darijumus nakamaja lai=
-ka
-48=C2=A0stundas, vai ari jus jau esat sanemis savu naudu, ja neizpildiet to
-nekavejoties. Piezime:
-mums ir nepiecie=C5=A1ama jusu steidzama atbilde, =C5=A1is nav viens no tie=
-m
-interneta krapniekiem
-ara, tas ir COVID-19 atvieglojums.
-Jennifer Mbaya
+I don't want to hardcode device tree paths or I2C addresses into shell scripts.
+I have added a GPIO line name in the DT and I want to use for looking up the
+legacy GPIO index.
+
+Let's take as an example, this GPIO that can be requested from an I2C expander:
+
+  $ gpiofind HDMI_RESET
+  gpiochip5 3
+That's the node for the I2C expander:
+
+  /sys/devices/platform/soc@0/30800000.bus/30a30000.i2c/i2c-1/1-003a
+
+Looking into it for gpio*, I see:
+
+/sys/devices/platform/soc@0/30800000.bus/30a30000.i2c/i2c-1/1-003a/gpio/gpiochip512
+/sys/devices/platform/soc@0/30800000.bus/30a30000.i2c/i2c-1/1-003a/gpiochip5
+
+gpio/gpiochip512/base is the file I need to read. gpiochip5 is the file I have.
+
+What I do is:
+
+  $ cat /sys/bus/gpio/devices/gpiochip5/../gpio/gpio*/base
+  512
+
+But that breaks down if gpio/ has multiple directories:
+
+root@stm32mp157c-lxa-mc1:~ ls /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip* -d
+/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip0    /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip48
+/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip112  /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip64
+/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip128  /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip80
+/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip16   /sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip96
+/sys/bus/gpio/devices/gpiochip8/../gpio/gpiochip32
+
+
+>> P.S: I know that most GPIO fiddling should've kernel driver consumers instead. That's under
+>>      way too.
+> 
+> Thanks! :)
+> 
+>> [1]: I appreciate links to any WIP/planned systemd-gpiod or similar patches anyway. While new
+>>      projects should do more fine grained control of GPIOs, migration of most users will
+>>      likely benefit benefit from a single global consumer.
+> 
+> I think Bartosz was working at a GPIO daemon for central management at one
+> point, but in a controlled embedded system, I think other (custom) solutions for
+> a central entity are possible.
+> 
+> Yours,
+> Linus Walleij
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
