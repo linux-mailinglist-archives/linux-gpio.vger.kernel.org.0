@@ -2,368 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C59C78C387
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Aug 2023 13:44:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61B1278C3FE
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Aug 2023 14:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230005AbjH2Lnk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Aug 2023 07:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
+        id S230467AbjH2MNV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Aug 2023 08:13:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232345AbjH2LnV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Aug 2023 07:43:21 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49AC6109
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Aug 2023 04:43:07 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-401b393df02so41372265e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Aug 2023 04:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1693309386; x=1693914186;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tfZ7jTTtOJDQgXQtm1uAdU9eCcZqyeyVorm0CfJYHOI=;
-        b=I8E6o+imrrWY9se0+pzUUNmHHy6CIcZmqJInFOa7kOLK1llInJZPc4um9SAWQ6ThJ7
-         RwYb7muULdxl8rwUK+yCs6DuvsBT2hIrfc8QZnjoCUWZnrCP9G9jHejaNMFJ7Pmv0KsS
-         SaKcS+FA1rNjcivnjnfWkXkurAt7tiEwPzN3VBEyZur5EghBu7LCRVKC9LMPBPxTzcTV
-         m/YjxrmPDiFW3ugvX3wG3eAFlMZBlq7PqR+sHo1jY2Ui9TxYmEORi+5LiRbFR7Ek8ou9
-         r+wcmAoXvyyn7/apmqlCwZZBMerlOeCri1fOPqRzbazpqpW95GDnDYLbzqy3ez5do+vO
-         +XIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693309386; x=1693914186;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tfZ7jTTtOJDQgXQtm1uAdU9eCcZqyeyVorm0CfJYHOI=;
-        b=cj/1ydn7cr4vLyaAeWuB/VXkWBxgHhGmFNAXLgPwGdRdE5FCFsDEsPfpHKkoJF10g6
-         MZrSu4AvE6ZB/0nv/o14DgiDUhgKfoJqH6gRn+Ynt/dYKVuzzpLABe5lMAwJ/mdI7IpC
-         zLPpqtXzweKgU2MvyfgWhUJSpsYTCQZWOreElVIAt2XNQPdBWgpz3SLRLxGlcCFKKFna
-         4ZAZDozT4fqlwV1PnSHCEKFnHksfc/SCBgihawg5AX6Qsq/6v5v4eo/PXpCzMRxf8s6r
-         OiGHCMwdiB3VSi8ct9c+Qk5rHX3lyh4jqKG1fabo9VhD/pr+9mS27twN5sEBOYxFyR08
-         lFZg==
-X-Gm-Message-State: AOJu0Yw5z3Ror5UST0BDEQnfEYmBHpK0LlsF9MPaXJDoF62vUIvyNL8Y
-        ZpSu6wE2opQvYOeT65ItvTs0Mg==
-X-Google-Smtp-Source: AGHT+IGeFQ7tcxojiDVHSGNMDjzIBv4b3is86cnUF6y/tEYd7PGJv3imZ58geseOt760RA9z6YRNNg==
-X-Received: by 2002:a05:600c:3654:b0:3fb:b5dc:dab1 with SMTP id y20-20020a05600c365400b003fbb5dcdab1mr19791432wmq.39.1693309385573;
-        Tue, 29 Aug 2023 04:43:05 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:2a3f:6761:e8aa:5b5a])
-        by smtp.gmail.com with ESMTPSA id w24-20020a05600c2a1800b003fed9b1a1f4sm1000714wme.1.2023.08.29.04.43.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Aug 2023 04:43:05 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: updates for v6.6
-Date:   Tue, 29 Aug 2023 13:43:01 +0200
-Message-Id: <20230829114301.10450-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229615AbjH2MMu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Aug 2023 08:12:50 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 84D461AA;
+        Tue, 29 Aug 2023 05:12:44 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.201])
+        by gateway (Coremail) with SMTP id _____8Axueq64O1kg8EcAA--.48847S3;
+        Tue, 29 Aug 2023 20:12:42 +0800 (CST)
+Received: from [10.20.42.201] (unknown [10.20.42.201])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx5sy44O1kn3NmAA--.31049S3;
+        Tue, 29 Aug 2023 20:12:41 +0800 (CST)
+Subject: Re: [PATCH v4 1/2] gpio: dt-bindings: add more loongson gpio chip
+ support
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
+        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
+References: <20230823033427.23072-1-zhuyinbo@loongson.cn>
+ <20230823033427.23072-2-zhuyinbo@loongson.cn>
+ <20230823-certainty-grimace-a8365c0cfb02@spud>
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <a6eb9a3d-83b2-c344-13bb-29a25937117f@loongson.cn>
+Date:   Tue, 29 Aug 2023 20:12:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20230823-certainty-grimace-a8365c0cfb02@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-CM-TRANSID: AQAAf8Dx5sy44O1kn3NmAA--.31049S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+        nUUI43ZEXa7xR_UUUUUUUUU==
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Linus,
 
-Here's the pull-request from the GPIO subsystem for this merge window. We have
-a lot of code refactoring using common helpers and ended up removing more lines
-then we're adding this release cycle.
+在 2023/8/23 下午11:08, Conor Dooley 写道:
+> On Wed, Aug 23, 2023 at 11:34:26AM +0800, Yinbo Zhu wrote:
+>> This patch was to add loongson 2k0500, 2k2000 and 3a5000 gpio chip
+>> dt-bindings support in yaml file.
+>>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>>   .../bindings/gpio/loongson,ls-gpio.yaml       | 23 +++++++++++++++----
+>>   1 file changed, 19 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> index fb86e8ce6349..97472f1529a0 100644
+>> --- a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> +++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+>> @@ -11,9 +11,24 @@ maintainers:
+>>   
+>>   properties:
+>>     compatible:
+>> -    enum:
+>> -      - loongson,ls2k-gpio
+>> -      - loongson,ls7a-gpio
+>> +    oneOf:
+>> +      - enum:
+>> +          - loongson,ls2k-gpio
+>> +          - loongson,ls2k0500-gpio0
+>> +          - loongson,ls2k0500-gpio1
+>> +          - loongson,ls2k2000-gpio0
+>> +          - loongson,ls2k2000-gpio1
+>> +          - loongson,ls2k2000-gpio2
+>> +          - loongson,ls3a5000-gpio
+>> +          - loongson,ls7a-gpio
+> 
+>> +      - items:
+>> +          - enum:
+>> +              - loongson,ls2k1000-gpio
+>> +          - const: loongson,ls2k-gpio
+>> +      - items:
+>> +          - enum:
+>> +              - loongson,ls7a1000-gpio
+>> +          - const: loongson,ls7a-gpio
+> 
+> Are there going to be more controllers that are compatible with
+> "ls7a-gpio"? If not, you can simplify both of these to have 2 const:
+> entries, like:
+> 
+>        - items:
+>            - const: loongson,ls2k1000-gpio
+>            - const: loongson,ls2k-gpio
+> 
+>        - items:
+>            - const: loongson,ls7a1000-gpio
+>            - const: loongson,ls7a-gpio
+> 
+> Either way,
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Everything has been in next for at least a couple days with most stuff having
-spent weeks in there. Nothing really stands out, just small updates all over
-the place. Details are in the signed tag.
 
-Please pull,
-Bartosz
+okay, I got it.
 
-The following changes since commit 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5:
+Thanks,
+Yinbo
+> 
 
-  Linux 6.5-rc1 (2023-07-09 13:53:13 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.6
-
-for you to fetch changes up to 3d0957b07e27abd3237b1fe0c7f06485ba80852f:
-
-  gpio: pca953x: add support for TCA9538 (2023-08-25 13:16:54 +0200)
-
-----------------------------------------------------------------
-gpio updates for v6.6
-
-Core GPIOLIB updates:
-- wake-up poll() in user-space on device unbind
-- improve fwnode usage
-- interrupt domain handling improvements
-- correctly handle the ngpios property in gpio-mmio
-
-Driver cleanups:
-- remove unneeded calls to platform_set_drvdata() all around the place
-- remove unneeded of_match_ptr() expansions whenever a driver depends on
-  CONFIG_OF
-- remove redundant calls to dev_err_probe() from gpio-omap and gpio-davinci
-
-Driver improvements:
-- use autopointers and guards from cleanup.h in gpio-sim
-- shrink code in gpio-sim using some common helpers
-- convert the idio family of drivers to using gpio-regmap
-- convert gpio-ws16c48 to using gpio-regmap
-- use devres to simplify code in gpio-pisosr and gpio-mxc
-- update gpio-sifive: support IRQ wake, improve interrupt handling, allow
-  building as module
-- make gpio-ge and gpio-bcm-kona OF-independent (plus some minor tweaks)
-- add support for new models in gpio-pca953x and gpio-ds4520
-- add runtime PM support to gpio-mxc
-- fix a build warning in gpio-mxs
-- add support for adding pin ranges to gpio-mlxbf3
-- add counter/timer support to gpio-104-dio-48e
-- switch to dynamic GPIO base allocation in gpio-vf610
-- minor oneliners here and there
-
-Device-tree bindings updates:
-- enable the gpio-line-names property in snps,dw-apb and STMPE GPIO
-- document new models in fsl-imx-gpio, ds4520 and pca95xx
-- convert the bindings for brcm,kona-gpio to YAML
-
-----------------------------------------------------------------
-Alexander Stein (1):
-      dt-bindings: gpio: Add gpio-line-names to STMPE GPIO
-
-Alexandru Ardelean (1):
-      gpio: 74xx-mmio: remove unneeded platform_set_drvdata() call
-
-Andrei Coardos (16):
-      gpio: bcm-kona: remove unneeded platform_set_drvdata() call
-      gpio: exar: remove unneeded platform_set_drvdata() call
-      gpio: logicvc: remove unneeded platform_set_drvdata() call
-      gpio: eic-sprd: remove unneeded platform_set_drvdata() call
-      gpio: lp3943: remove unneeded platform_set_drvdata() call
-      gpio: max77620: remove unneeded platform_set_drvdata() call
-      gpio: palmas: remove unnecessary call to platform_set_drvdata()
-      gpio: pmic-eic-sprd: remove unnecessary call to platform_set_drvdata()
-      gpio: rc5t583: remove unneeded call to platform_set_drvdata()
-      gpio: sama5d2-piobu: remove unneeded call to platform_set_drvdata()
-      gpio: sch: remove unneeded call to platform_set_drvdata()
-      gpio: syscon: remove unneeded call to platform_set_drvdata()
-      gpio: timberdale: remove unneeded call to platform_set_drvdata()
-      gpio: tqmx86: remove unneeded call to platform_set_drvdata()
-      gpio: vx855: remove unneeded call to platform_set_drvdata()
-      gpio: zevio: remove unneeded call to platform_set_drvdata()
-
-Andrew Davis (1):
-      gpio: pisosr: Use devm_gpiochip_add_data() to simplify remove path
-
-Andy Shevchenko (16):
-      gpiolib: of: Don't use GPIO chip fwnode in of_gpiochip_*()
-      gpiolib: acpi: Don't use GPIO chip fwnode in acpi_gpiochip_find()
-      gpiolib: Do not alter GPIO chip fwnode member
-      gpiolib: Make gpiochip_hierarchy_add_domain() return domain
-      gpiolib: Factor out gpiochip_simple_create_domain()
-      gpiolib: Do not assign error pointer to the GPIO IRQ chip domain
-      gpiolib: Split out gpiochip_irqchip_add_allocated_domain() helper
-      gpiolib: Replace open coded gpiochip_irqchip_add_allocated_domain()
-      gpio: bcm-kona: Make driver OF-independent
-      gpio: bcm-kona: Drop unused pdev member in private data structure
-      gpio: ge: Add missing header
-      gpio: ge: Fix English spelling and grammar
-      gpio: ge: Make driver OF-independent
-      gpio: ge: Utilise temporary variable for struct device
-      gpio: ge: Replace GPLv2 boilerplate with SPDX
-      gpio: ge: Enable COMPILE_TEST for the driver
-
-Asmaa Mnebhi (2):
-      gpio: mmio: handle "ngpios" properly in bgpio_init()
-      gpio: mlxbf3: Support add_pin_ranges()
-
-Bartosz Golaszewski (15):
-      gpiolib: add missing include
-      gpio: sim: fix a typo in comment
-      gpiolib: order includes alphabetically in gpiolib.h
-      gpio: sim: use sysfs_streq() and avoid an strdup()
-      gpio: sim: simplify gpio_sim_device_config_live_store()
-      gpio: sim: replace memmove() + strstrip() with skip_spaces() + strim()
-      gpio: sim: simplify code with cleanup helpers
-      gpio: pca9570: fix kerneldoc
-      gpiolib: rename the gpio_device notifier
-      gpio: cdev: open-code to_gpio_chardev_data()
-      gpiolib: add a second blocking notifier to struct gpio_device
-      gpio: cdev: wake up chardev poll() on device unbind
-      gpio: cdev: wake up linereq poll() on device unbind
-      gpio: cdev: wake up lineevent poll() on device unbind
-      gpiolib: provide and use gpiod_line_state_notify()
-
-Biju Das (2):
-      gpio: pcf857x: Extend match data support for OF tables
-      gpio: pca953x: Use i2c_get_match_data()
-
-Geert Uytterhoeven (1):
-      gpio: mxc: Improve PM configuration
-
-Haibo Chen (1):
-      gpio: vf610: switch to dynamic allocat GPIO base
-
-Krzysztof Kozlowski (3):
-      dt-bindings: gpio: snps,dw-apb: allow gpio-line-names
-      gpio: mxs: fix Wvoid-pointer-to-enum-cast warning
-      gpio: mlxbf3: use capital "OR" for multiple licenses in SPDX
-
-Li Zetao (1):
-      gpio: mxc: Use helper function devm_clk_get_optional_enabled()
-
-Liam Beguin (2):
-      dt-bindings: gpio: pca95xx: document new tca9538 chip
-      gpio: pca953x: add support for TCA9538
-
-Okan Sahin (2):
-      dt-bindings: gpio: ds4520: Add ADI DS4520
-      gpio: ds4520: Add ADI DS4520 GPIO Expander Support
-
-Peng Fan (1):
-      dt-bindings: gpio: fsl-imx-gpio: support i.MX8QM/DXL
-
-Rajeshwar R Shinde (1):
-      gpio: imx-scu: Use ARRAY_SIZE for array length
-
-Rob Herring (1):
-      gpio: Explicitly include correct DT includes
-
-Ruan Jinjie (3):
-      gpio: omap: Remove redundant dev_err_probe() and zero value handle code
-      gpio: davinci: Remove redundant dev_err_probe()
-      gpio: ftgpio010: Do not check for 0 return after calling platform_get_irq()
-
-Samuel Holland (5):
-      gpio: sifive: Support IRQ wake
-      gpio: sifive: Directly use the device's fwnode
-      gpio: sifive: Look up IRQs only once during probe
-      gpio: sifive: Get the parent IRQ's domain from its irq_data
-      gpio: sifive: Allow building the driver as a module
-
-Shenwei Wang (2):
-      gpio: mxc: add runtime pm support
-      gpio: mxc: release the parent IRQ in runtime suspend
-
-Stanislav Jakubek (1):
-      dt-bindings: gpio: brcm,kona-gpio: convert to YAML
-
-William Breathitt Gray (7):
-      gpio: 104-dio-48e: Add Counter/Timer support
-      gpio: idio-16: Migrate to the regmap API
-      gpio: 104-idio-16: Migrate to the regmap API
-      gpio: pci-idio-16: Migrate to the regmap API
-      gpio: idio-16: Remove unused legacy interface
-      gpio: pcie-idio-24: Migrate to the regmap API
-      gpio: ws16c48: Migrate to the regmap API
-
-Zhu Wang (9):
-      gpio: tps65218: remove redundant of_match_ptr()
-      gpio: max732x: remove redundant CONFIG_OF and of_match_ptr()
-      gpio: altera-a10sr: remove redundant of_match_ptr
-      gpio: clps711x: remove redundant of_match_ptr()
-      gpio: ixp4xx: remove redundant of_match_ptr()
-      gpio: lpc32xx: remove redundant CONFIG_OF and of_match_ptr()
-      gpio: max3191x: remove redundant of_match_ptr()
-      gpio: raspberrypi-exp: remove redundant of_match_ptr()
-      gpio: xra1403: remove redundant of_match_ptr()
-
- .../devicetree/bindings/gpio/adi,ds4520-gpio.yaml  |  51 ++
- .../devicetree/bindings/gpio/brcm,kona-gpio.txt    |  52 --
- .../devicetree/bindings/gpio/brcm,kona-gpio.yaml   | 100 +++
- .../devicetree/bindings/gpio/fsl-imx-gpio.yaml     |   2 +
- .../devicetree/bindings/gpio/gpio-pca95xx.yaml     |   1 +
- .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml |   4 +
- .../devicetree/bindings/gpio/st,stmpe-gpio.yaml    |   4 +
- MAINTAINERS                                        |   2 +-
- drivers/gpio/Kconfig                               |  31 +-
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-104-dio-48e.c                    | 127 +++-
- drivers/gpio/gpio-104-idio-16.c                    | 286 ++-------
- drivers/gpio/gpio-74xx-mmio.c                      |   2 -
- drivers/gpio/gpio-altera-a10sr.c                   |   3 +-
- drivers/gpio/gpio-ath79.c                          |   3 +-
- drivers/gpio/gpio-bcm-kona.c                       |  24 +-
- drivers/gpio/gpio-brcmstb.c                        |   4 +-
- drivers/gpio/gpio-clps711x.c                       |   4 +-
- drivers/gpio/gpio-creg-snps.c                      |   2 +-
- drivers/gpio/gpio-davinci.c                        |   2 +-
- drivers/gpio/gpio-ds4520.c                         |  80 +++
- drivers/gpio/gpio-eic-sprd.c                       |   3 +-
- drivers/gpio/gpio-exar.c                           |   2 -
- drivers/gpio/gpio-ftgpio010.c                      |   4 +-
- drivers/gpio/gpio-ge.c                             |  66 +-
- drivers/gpio/gpio-grgpio.c                         |   2 +-
- drivers/gpio/gpio-hlwd.c                           |   2 +-
- drivers/gpio/gpio-idio-16.c                        | 254 ++++----
- drivers/gpio/gpio-idio-16.h                        |  79 +--
- drivers/gpio/gpio-imx-scu.c                        |   3 +-
- drivers/gpio/gpio-ixp4xx.c                         |   2 +-
- drivers/gpio/gpio-logicvc.c                        |   3 -
- drivers/gpio/gpio-lp3943.c                         |   2 -
- drivers/gpio/gpio-lpc32xx.c                        |   4 +-
- drivers/gpio/gpio-max3191x.c                       |   4 +-
- drivers/gpio/gpio-max732x.c                        |   6 +-
- drivers/gpio/gpio-max77620.c                       |   2 -
- drivers/gpio/gpio-mb86s7x.c                        |   2 +-
- drivers/gpio/gpio-mlxbf3.c                         |  26 +-
- drivers/gpio/gpio-mmio.c                           |   9 +-
- drivers/gpio/gpio-mpc5200.c                        |   2 +-
- drivers/gpio/gpio-mpc8xxx.c                        |   4 +-
- drivers/gpio/gpio-msc313.c                         |   1 -
- drivers/gpio/gpio-mxc.c                            | 118 +++-
- drivers/gpio/gpio-mxs.c                            |   3 +-
- drivers/gpio/gpio-omap.c                           |   8 +-
- drivers/gpio/gpio-palmas.c                         |   2 -
- drivers/gpio/gpio-pca953x.c                        |  20 +-
- drivers/gpio/gpio-pca9570.c                        |   2 +-
- drivers/gpio/gpio-pcf857x.c                        |  29 +-
- drivers/gpio/gpio-pci-idio-16.c                    | 294 ++-------
- drivers/gpio/gpio-pcie-idio-24.c                   | 677 ++++++++-------------
- drivers/gpio/gpio-pisosr.c                         |  28 +-
- drivers/gpio/gpio-pmic-eic-sprd.c                  |   3 +-
- drivers/gpio/gpio-pxa.c                            |   1 -
- drivers/gpio/gpio-raspberrypi-exp.c                |   4 +-
- drivers/gpio/gpio-rc5t583.c                        |   2 -
- drivers/gpio/gpio-rcar.c                           |   1 -
- drivers/gpio/gpio-rockchip.c                       |   2 +-
- drivers/gpio/gpio-sama5d2-piobu.c                  |   1 -
- drivers/gpio/gpio-sch.c                            |   2 -
- drivers/gpio/gpio-sifive.c                         |  48 +-
- drivers/gpio/gpio-sim.c                            | 285 +++------
- drivers/gpio/gpio-sprd.c                           |   2 +-
- drivers/gpio/gpio-stp-xway.c                       |   3 +-
- drivers/gpio/gpio-syscon.c                         |   3 -
- drivers/gpio/gpio-tegra.c                          |   2 +-
- drivers/gpio/gpio-tegra186.c                       |   2 +-
- drivers/gpio/gpio-timberdale.c                     |   2 -
- drivers/gpio/gpio-tps65218.c                       |   2 +-
- drivers/gpio/gpio-tps6586x.c                       |   2 +-
- drivers/gpio/gpio-tps65910.c                       |   2 +-
- drivers/gpio/gpio-tqmx86.c                         |   2 -
- drivers/gpio/gpio-ts4800.c                         |   3 +-
- drivers/gpio/gpio-ts4900.c                         |   2 +-
- drivers/gpio/gpio-uniphier.c                       |   1 -
- drivers/gpio/gpio-vf610.c                          |   4 +-
- drivers/gpio/gpio-vx855.c                          |   2 -
- drivers/gpio/gpio-wcd934x.c                        |   3 +-
- drivers/gpio/gpio-ws16c48.c                        | 552 ++++++-----------
- drivers/gpio/gpio-xilinx.c                         |   4 +-
- drivers/gpio/gpio-xra1403.c                        |   6 +-
- drivers/gpio/gpio-zevio.c                          |   2 -
- drivers/gpio/gpiolib-acpi.c                        |   2 +-
- drivers/gpio/gpiolib-cdev.c                        | 107 +++-
- drivers/gpio/gpiolib-of.c                          |   6 +-
- drivers/gpio/gpiolib.c                             | 203 +++---
- drivers/gpio/gpiolib.h                             |  20 +-
- 88 files changed, 1668 insertions(+), 2068 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/adi,ds4520-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/brcm,kona-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/brcm,kona-gpio.yaml
- create mode 100644 drivers/gpio/gpio-ds4520.c
