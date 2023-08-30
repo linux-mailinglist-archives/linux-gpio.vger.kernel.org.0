@@ -2,66 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E6C678DD35
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Aug 2023 20:54:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B78178DD26
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Aug 2023 20:54:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243411AbjH3SsU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Aug 2023 14:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51960 "EHLO
+        id S243389AbjH3SsH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Aug 2023 14:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243022AbjH3KIc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Aug 2023 06:08:32 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A531BF
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:08:28 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-5009969be25so8392855e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:08:28 -0700 (PDT)
+        with ESMTP id S243031AbjH3KIn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Aug 2023 06:08:43 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E67D01BE
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:08:39 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2bcc14ea414so82273571fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:08:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693390107; x=1693994907; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8Nxn5up4QextamTtIqwX1SELm1/pR8j6Wz4/nOgg0Fk=;
-        b=JoYBvOJcSozegsbQV/FmZWEE8MK24oh+oklOxl5RhYTi1Mqx+hbEk3FG12c1cnTTmm
-         omviN62AGBfvENZvLSp94GygoYvuCtrH/yAdx+5NC8sfV62/LMPAPTSzVN5YL5dG8ZOr
-         Jd3DibpzgwhRJ3+jhFP+VgBr8VR0R3EeZKmGuO/sr+hMCHzddzNHLlGzJpjR+bfS/zs7
-         WAgnF6R2yRH8TMZlcitYSYWaWXM3YZSVJmiEv2G4p2znGDSs+wf3IiGAz1GdN8q7MCjz
-         5FecveOcPv/GSJxlm6Ea6cPe4Glup0tDbzj09Jqe3QcdJPdz/9pZVcXFCZvyq8NErJ9v
-         eADw==
+        d=linaro.org; s=google; t=1693390118; x=1693994918; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=eAqOqp/qX5GAJ+lIepAXe1gVh2RwipsIy+5N0NkJlmY=;
+        b=QJr4zoDQkf4X4iBjfc3Bn1nBj3JbDav38sOhxLBQ+tT4qf1Ch5ndT+ogQUvvGy5T0Q
+         3eukfjzf/Dp269DaKZ3hciT+MNqG5qd0n/B/Sh8I4LAvK9j2iGQb11gyYtQNAj5LyCbh
+         J4RtaIXCEmhMjtmOxE6m0Yv+GTaK/+Ur/S8bZ9Hr1n6japARsiyFQbG0cGkwMwbhnV0t
+         DIJJ5LnzLe2XdBPycBlNlJqxgtqG7bM1H+XK/lfOOBYoF0cdM5CZx8CzUj0fkrSEqioR
+         8FqhymQLLnPPNOatZ+S6R9CprCzUceOIBfFQpkxwV5UVfLDsDPcymnBpa81qm0Gc2SfV
+         kkpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693390107; x=1693994907;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Nxn5up4QextamTtIqwX1SELm1/pR8j6Wz4/nOgg0Fk=;
-        b=DaK5LXer5gsdVzqy1o7qV9LNr+W85UGQ/7a/qn1G4oTt/sE9zNTQ6D/L7xzn1s3HbS
-         AYu2bD3bT834VvQAoO0IwM9yTQ7jrhrG+R9ZOZT/GYLyFxbIyRb5d8YWhZmFvZenk+Uy
-         kVpxuqt+jAB/6B4u2b/dPyLKD8zTBXqAnXn7BIutoGArLfIsjHaJutOCzLcCP+rJlYQF
-         KyIVdojLIyDYMa3eXvgTwN9VR3vljee0gqvpCQzf4xbwJcJBZJTR72dYVXE7XWb8DuQU
-         DCHZMDjbzRBN6BhBDjIbz0gPlVWnQElJ3rw+TWwYbCWPD+4AuFsSY0U+s79BX/b2VP0G
-         gTZg==
-X-Gm-Message-State: AOJu0Yw3I6re5GTDwsrAUj6kDgDbv6iyekYM6BYHg6KpYnO2LInnKaE6
-        uQWuMhvmNqosgDDilEKOp1KzAQ==
-X-Google-Smtp-Source: AGHT+IEy9l5e5D7iUZ81rJNqEUxrnyMDRnW81xox92SRBSuK5C6pMKRSp+8HSo+rFsIkbxdhltWdLA==
-X-Received: by 2002:a05:6512:3111:b0:4fd:fad6:5495 with SMTP id n17-20020a056512311100b004fdfad65495mr1017342lfb.18.1693390107091;
-        Wed, 30 Aug 2023 03:08:27 -0700 (PDT)
-Received: from [192.168.0.22] (77-252-46-238.static.ip.netia.com.pl. [77.252.46.238])
-        by smtp.gmail.com with ESMTPSA id i5-20020aa7dd05000000b0052333d7e320sm6591175edv.27.2023.08.30.03.08.25
+        d=1e100.net; s=20221208; t=1693390118; x=1693994918;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eAqOqp/qX5GAJ+lIepAXe1gVh2RwipsIy+5N0NkJlmY=;
+        b=XBISRAaJYx+UHHOqJOFZT23BWo5m25x3Hf6x7o59/Rz4LgiWg6t+eS2WhVl8u04yA9
+         qhItaQyFR2liL0cn9Rx9XBdyH66HBVTR1t64xHzGY/ozyjvv1rl8UilWrPystosL6BQ5
+         JJTp6Sr9nr97MX6jtHivJkCUU/Iy75lE5Z1Um+oIo87+nXPsXRw3m9koGy+R675y7zEO
+         GBvxz+nSwtpAwZ2g2XNUiPwK+8UroVWna3iWEvOg11pTyLCtp9Le1i+uBWVXxhI7c2VW
+         2DoV73vs1eB209MShVyDL2p2dmESJSG/oUHWFxn5wDLLs8TU0N9YVOxnSDIUms2SiNJ3
+         7bwg==
+X-Gm-Message-State: AOJu0YxqBR7lwrVdFETK31R/nQ1rzDlhWhb81m/5qRCH4HXiRJedxU6+
+        YefMLUC3lhkdmjSCQ+YJztj5Vw==
+X-Google-Smtp-Source: AGHT+IE92OQVS5oe/JHRvqZ82sm0hmHEr4wwSCTuDV2ycRxvzvLuWPDkeJhHOyLvY8B3+7xZS1jR4w==
+X-Received: by 2002:a2e:87d0:0:b0:2b6:fa3f:9230 with SMTP id v16-20020a2e87d0000000b002b6fa3f9230mr1401982ljj.46.1693390118195;
+        Wed, 30 Aug 2023 03:08:38 -0700 (PDT)
+Received: from [192.168.1.101] (abyl195.neoplus.adsl.tpnet.pl. [83.9.31.195])
+        by smtp.gmail.com with ESMTPSA id w16-20020a2e9990000000b002b6d7682050sm2537655lji.89.2023.08.30.03.08.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Aug 2023 03:08:26 -0700 (PDT)
-Message-ID: <8cb65ac9-a8f0-2df9-cd05-e6afdf8f7e36@linaro.org>
-Date:   Wed, 30 Aug 2023 12:08:25 +0200
+        Wed, 30 Aug 2023 03:08:37 -0700 (PDT)
+Message-ID: <160d6151-914b-4f2f-9f7c-d14cbb901619@linaro.org>
+Date:   Wed, 30 Aug 2023 12:08:35 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH 06/11] dt-bindings: pinctrl: qcom,sc7280: Allow
- gpio-reserved-ranges
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/11] arm64: dts: qcom: sc7280: Mark some nodes as
+ 'reserved'
 To:     Luca Weiss <luca.weiss@fairphone.com>,
         cros-qcom-dts-watchers@chromium.org,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
@@ -74,29 +72,66 @@ Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-pm@vger.kernel.org
 References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
- <20230830-fp5-initial-v1-6-5a954519bbad@fairphone.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230830-fp5-initial-v1-6-5a954519bbad@fairphone.com>
+ <20230830-fp5-initial-v1-1-5a954519bbad@fairphone.com>
+Content-Language: en-US
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20230830-fp5-initial-v1-1-5a954519bbad@fairphone.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/08/2023 11:58, Luca Weiss wrote:
-> Allow the gpio-reserved-ranges property on SC7280 TLMM.
+On 30.08.2023 11:58, Luca Weiss wrote:
+> With the standard Qualcomm TrustZone setup, components such as lpasscc,
+> pdc_reset and watchdog shouldn't be touched by Linux. Mark them with
+> the status 'reserved' and reeable them in the chrome-common dtsi.
 > 
 > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 > ---
+Could probably use /* Owned by ADSP firmware */ or /* Owned by Gunyah hyp */
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+the change lgtm though
 
-Best regards,
-Krzysztof
-
+Konrad
