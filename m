@@ -2,142 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 588A978DD3E
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Aug 2023 20:54:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DEA778DD22
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Aug 2023 20:54:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243478AbjH3Sse (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Aug 2023 14:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34698 "EHLO
+        id S242927AbjH3SsB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Aug 2023 14:48:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243360AbjH3Kpo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Aug 2023 06:45:44 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806A6CC9
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:45:41 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-500cefc3644so207251e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693392340; x=1693997140; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fT/ozBf9lp5RAcCZGbAfkxmq5EWCKLUOVIlRGJ+e7rE=;
-        b=JVs8lX1Su1ICcNnoB0jqqAS2B75Jh8bq/4tv0MnVldY2xbAt6SjbIHlgnNspOjcItz
-         LB5WrCtUIUj3d3zP7pNaD/SS3gSs/7rJEKOKO1YVoDYpbd73rHUP5UMtK3z/kQ94ZJ+/
-         lBUqMpFixMW1IrjFfH7cLIo/1XX+fhmZxWOF/yt9jnawQGgBRc39Iz5hvI7iOcB5oV9n
-         a6yt31gzYPhK7AdAt0DT76wBG/g87NU960OuOay19p8hvhWgdOLvEQoQ7PrTJB7Uy659
-         bew+O7lMyN+Ysu0A8NP374YH179eCDEFy49SrvuiEeghbC0nb/C6+YxiwOzjWetZCpZo
-         xDaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693392340; x=1693997140;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fT/ozBf9lp5RAcCZGbAfkxmq5EWCKLUOVIlRGJ+e7rE=;
-        b=LqaypDVgpNAcNppI3d9CUw9pyfj8xMoyhj5IctCbXmLiRyUn2hxRUPT3uGKTtcntNR
-         Lx8zKkViPd5GUYPy8i04bZkc+hObdy+TyegbS9kCf3noZCUcu5lU04meTs93Me4/klXn
-         l9iHrNbkC/kEgjSh7ljzCBZTJtPbhWKRwZawC2vs8osz3LqgokJVSqoLptsv0E6D/hSf
-         VrTcF6Txqcz0VLSJqmX+12TVRECUr8Q9magEaMsKCt9/bhpdvPatC3JX0gAtwt8SJ/IO
-         vWfOF0qBTNp7eagmWloZp1B9NPpZr8/4KaEaBZ47VHPXeFycVPtbPRROqgW/Susotq3u
-         xVqA==
-X-Gm-Message-State: AOJu0YzsplyT5UA0Ejlj83DVqD+AB8k0v46LWTg6+s0SaDTDqBG+dtV8
-        G+jFUtw9iNaFRHNm51c4e6YvvQ==
-X-Google-Smtp-Source: AGHT+IF1Bzc5p983+o6I1vBO6KSa4P7wHAmsv8YtZghMA+otHk7k6+kPCCfKX9dMUQW5mXfLnzLENA==
-X-Received: by 2002:a05:6512:310a:b0:4ff:8f12:c4d7 with SMTP id n10-20020a056512310a00b004ff8f12c4d7mr1357921lfb.31.1693392339844;
-        Wed, 30 Aug 2023 03:45:39 -0700 (PDT)
-Received: from [192.168.1.101] (abyl195.neoplus.adsl.tpnet.pl. [83.9.31.195])
-        by smtp.gmail.com with ESMTPSA id j17-20020a19f511000000b004ff6fa3f038sm2316808lfb.144.2023.08.30.03.45.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Aug 2023 03:45:39 -0700 (PDT)
-Message-ID: <1c95f61c-7460-43aa-9858-37e8799a1e5d@linaro.org>
-Date:   Wed, 30 Aug 2023 12:45:38 +0200
+        with ESMTP id S243812AbjH3Lr0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Aug 2023 07:47:26 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 957051B0;
+        Wed, 30 Aug 2023 04:47:23 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEE552F4;
+        Wed, 30 Aug 2023 04:48:02 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD9893F64C;
+        Wed, 30 Aug 2023 04:47:20 -0700 (PDT)
+Date:   Wed, 30 Aug 2023 12:47:18 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+        "oleksii_moisieiev@epam.com" <oleksii_moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        cristian.marussi@arm.com, Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC] scmi: pinctrl: support i.MX9
+Message-ID: <ZO8sRknW-6vdKoDd@pluto>
+References: <20230824070611.3335107-1-peng.fan@oss.nxp.com>
+ <CACRpkdYU7MRXRV3Uw1w300sdxv=9XT=P1vFFarHfpSM6BT20Hg@mail.gmail.com>
+ <DU0PR04MB9417B3CB9638F936DF19C523881DA@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <CACRpkdZKMsC1Wyi+nOf7idAWMTUe8w2XbtpWnbDKrCLD75ND1g@mail.gmail.com>
+ <DU0PR04MB94178923DFC8E71287E560E888E3A@DU0PR04MB9417.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/11] arm64: dts: qcom: sc7280: Mark some nodes as
- 'reserved'
-Content-Language: en-US
-To:     Luca Weiss <luca.weiss@fairphone.com>,
-        cros-qcom-dts-watchers@chromium.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
- <20230830-fp5-initial-v1-1-5a954519bbad@fairphone.com>
- <160d6151-914b-4f2f-9f7c-d14cbb901619@linaro.org>
- <CV5T9FXMWOAT.2ZXS0CZ8S0EUM@otso>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <CV5T9FXMWOAT.2ZXS0CZ8S0EUM@otso>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DU0PR04MB94178923DFC8E71287E560E888E3A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30.08.2023 12:35, Luca Weiss wrote:
-> On Wed Aug 30, 2023 at 12:08 PM CEST, Konrad Dybcio wrote:
->> On 30.08.2023 11:58, Luca Weiss wrote:
->>> With the standard Qualcomm TrustZone setup, components such as lpasscc,
->>> pdc_reset and watchdog shouldn't be touched by Linux. Mark them with
->>> the status 'reserved' and reeable them in the chrome-common dtsi.
->>>
->>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>> ---
->> Could probably use /* Owned by ADSP firmware */ or /* Owned by Gunyah hyp */
-> 
-> Do you know which one is more fitting for these nodes? I don't really
-> have a reference to if the ADSP or Gunyah (is this even used here?) owns
-> this.
-ADSP owns the audio hw, Gunyah owns the wdog
+On Fri, Aug 25, 2023 at 08:43:38AM +0000, Peng Fan wrote:
+> > Subject: Re: [RFC] scmi: pinctrl: support i.MX9
+> > 
+> > On Thu, Aug 24, 2023 at 2:47 PM Peng Fan <peng.fan@nxp.com> wrote:
+> > > Me:
 
-Konrad
+Hi Peng,
+
+> > 
+> > >> it is merely making things more complex and also slower
+> > > > bymaking the registers only accessible from this SCMI link.
+> > >
+> > > This is for safety reason, the pinctrl hardware must be handled by a
+> > > system manager entity. So mmio direct access not allowed from Cortex-A
+> > > side.
+> > 
+> > Yeah I understood as much. But I don't think that the firmware is really
+> > filtering any of the access, it will just poke into any pinctrl register as
+> > instructed anyway so what's the point. Just looks like a layer of indirection.
+> 
+> No, the firmware has a check on whether a pin is allowed to be configured
+> by the agent that wanna to configure the pin. 
+> 
+> > But I'm not your system manager, so it's not my decision.
+> > 
+> > > The SCMI firmware is very straightforward, there is no group or
+> > > function.
+> > >
+> > > It just accepts the format as this:
+> > > MUX_TYPE, MUX VALUE, CONF_TYPE, CONF_VAL, DAISY_TYPE, DAISY ID,
+> > > DAISY_CFG, DAISY_VALUE.
+> > >
+> > > Similar as linux MMIO format.
+> > >
+> > > Our i.MX95 platform will support two settings, one with SCMI firmware,
+> > > one without SCMI. These two settings will share the same pinctrl
+> > > header file.
+> > >
+> > > And to simplify the scmi firmware design(anyway I am not owner of the
+> > > firmware), to make pinctrl header shared w/o scmi, we take the current
+> > > in-upstream freescale imx binding format.
+> > 
+> > The SCMI people will have to state their position on this.
+> > Like what they consider conformance and what extensions are allowed. This
+> > is more a standardization question than an implementation question so it's
+> > not really my turf.
+> 
+> The i.MX95 SCMI firmware uses OEM extension type. So I just follow
+> what the firmware did and support it in linux. Anyway let's
+> wait Sudeep's reply.
+> 
+
+So my unsderstanding on this matter as of now is that:
+
+1. the current SCMI Pinctrl specification can support your usecase by using
+   OEM Types and multiple pins/values CONFIG_GET/SET commands
+
+2. the Kernel SCMI protocol layer (driver/firmware/arm_scmi/pinctrl.c)
+   is equally fine and can support your usecase, AFTER Oleksii fixes it to
+   align it to the latest v3.2-BETA2 specification changes.
+   IOW, this means that, using the SCMI Pinctrl protocol operations
+   exposed in scmi_protocol.h, from somewhere, you are able to properly
+   configure multiple pins/values with your specific OEM types.
+
+3. The SCMI Pinctrl driver (by Oleksii) built on top of the pinctrl protocol
+   operations is instead NOT suitable for your usecase since it uses the Linux
+   Generic Pinconf and IMX does not make use of it, and instead IMX has
+   its own bindings and related parsing logic.
+
+Am I right ?
+
+If this is the case, I would NOT try to abuse the current SCMI Pinctrl
+Generic driver (by Oleksii) by throwing into it a bunch of IMX specific DT
+parsing, also because you'll end-up NOT using most of the generic SCMI
+Pinctrl driver but just reusing a bit of the probe (customized with your
+own DT maps parsing)
+
+Instead, given that the spec[1.] and the protocol layer[2.] are fine for
+your use case and you indeed have already a custom way to parse your DT
+mappings, I would say that you could just write your own custom SCMI
+driver ( ? pinctrl-imx-scmi), distinct and much more simple than the generic one,
+that does its own IMX DT parsing and calls just the SCMI protocol operations
+that it needs in the way that your platform expects: so basically another
+Pinctrl SCMI driver that does not use the generic pinconf DT
+configuration BUT DO USE the underlying SCMI Pinctrl protocol (via its
+exposed protocol operations...)
+
+Not sure what Sudeep thinks about supporting multiple SCMI driver for the
+same protocol (we did it already for Sensors hwmon && iio), and if this
+approach won't need some sort of mutual exclusion mechanism in Kconfig to
+avoid loading both the generic and the custom IMX (even though they should
+be able to co-exist from the SCMI kernel/fw stack pint of view, as long as
+you dont mess-up the DTs and mixup generic pins with custom IMX pins...)
+
+Instead, adding an IMX-custom extension to what it was supposed to be a generic
+driver (as you propose) seems to me like a stretch of the generic Pinctrl driver
+that is not really worth, since you'll end up polluting the generic driver with
+some highly custom and specific IMX bits. while really NOT reusing so much of
+the generic driver at all.
+
+Thanks,
+Cristian
+
