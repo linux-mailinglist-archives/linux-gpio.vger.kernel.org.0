@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07E9B78DD4F
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Aug 2023 20:54:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F347D78DD2A
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Aug 2023 20:54:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243565AbjH3Sst (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Aug 2023 14:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38338 "EHLO
+        id S242945AbjH3SsN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Aug 2023 14:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243000AbjH3KD5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Aug 2023 06:03:57 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D971BE
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:03:53 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4ff09632194so8592487e87.2
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:03:53 -0700 (PDT)
+        with ESMTP id S243015AbjH3KHF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Aug 2023 06:07:05 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F8D1B0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:07:02 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-986d8332f50so699788566b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Aug 2023 03:07:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693389832; x=1693994632; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1693390021; x=1693994821; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=aA2Dayv4Oe/O8G7/FYwi9OP3/w4lpPEhlrM3LEd7RiU=;
-        b=DFZUkBlgMqHRmPlXC83xk7jbbdMkdRkXVZkJpxfjq/CLbcWtwknl2dZM6aerZ7MMW4
-         +vP2y2qni+baNx6Ab8Alu14IolWnxzIJKf4auunWfL4rhTWdKu9vALfIj39irIx8F3la
-         pRZeBEnTLFbX1tPD390apIR9sKETm4MR1eBAuhTtdaSCSLNxL+7iGddEdazmpsyZhU+S
-         a9Fm28LAvciFn9rl+ChWsrxOcsP3Xlk+hn4l1HUr97YpcHF26TBDxv5fvsT+vKeWc8L2
-         sZ2t+Xw84f6oiZlXq/wtOnwLzY2E2zhXx6ogdOwi92UAcSvaRGNotwFF1UJjYPVgIyru
-         1cFA==
+        bh=z0QDt8EBpEbkK9eM1eqblOra9xMFCfCG0zgEGNvO4kk=;
+        b=iknhdr+RtT51/E9pRpCGXYg8VKSsjn8eD6bbYy5EPLyBxYubJoc/ADhuQVfG8xjwdy
+         jBnl2TSrnrGB3ir9o9I5/aJUJRSHYqt2n6cZ2N1pW0/XMHC5usD7CWN27MuJT9ND6tBV
+         ob6lZjCu7fOefUDIhPQtU7waXbLAZhCClABdkXQQD5C0XxHwyvHiZF+QKiknZnZ4hHFI
+         nozbAycdbnrCu4dh38u3YdPHJKs/pU+DZOfG0zZvMMYbi21TBQsIJGc88TyTULI6mPw0
+         HHgAHTtHBevZZRUE6sXO0bzvJu9rcpVoVIuHrPnxEoX46mSYoWLVcqiNq0Eyk/Ys+gM9
+         1kYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693389832; x=1693994632;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1693390021; x=1693994821;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aA2Dayv4Oe/O8G7/FYwi9OP3/w4lpPEhlrM3LEd7RiU=;
-        b=LLQBxSnws7RSfTZ//AZUdXlz0narHRafil692zY2GStQ3Rf9SaC1TQsxwPTUqF5Rjy
-         BWAW4r0ouoeKgQDvaO3NR8yADotv+mFFZFoXDwNo/PZyEkAgFBatz/2zTg9Mwr46Ba4V
-         RgyLrm4iWC+CYkm/Ivs5gaFsFiHJwGAd9Sd42F5my6YLSs41fapvcIyGGr0fmdQLpl2l
-         tFITlZ13neYJPtrBMlJcY4+Y71n/h9kYJ94bSm2GzxWma7nDwwKFyeRAy1xLWHaBcwdx
-         yx9tiXc1VYzNPBJw/SwrIggm0I2//CSGrmRdDvfJ/4g4eojVwDIcP8VfGz7zz7mUThPB
-         7jug==
-X-Gm-Message-State: AOJu0YzojSnQ4y+AmGclhL4UT/K2PQ5BsSUO5iAdsb5BuNiZicZsNBvg
-        FvIPrywFEkKirZ3C5RFrH0l3dQ==
-X-Google-Smtp-Source: AGHT+IE3zXCljvqDSTqW4Fk1MJeyD7qTPp19ksqtWCrPK6ziygOgdXiN7RSHG5AANWY2Zv7kF+XIdw==
-X-Received: by 2002:a05:6512:2302:b0:4fb:8f79:631 with SMTP id o2-20020a056512230200b004fb8f790631mr1222638lfu.46.1693389832021;
-        Wed, 30 Aug 2023 03:03:52 -0700 (PDT)
+        bh=z0QDt8EBpEbkK9eM1eqblOra9xMFCfCG0zgEGNvO4kk=;
+        b=d92orEAxu/F+rszHJXj35ME4+ewdsPhl4mvx4YDXcXbwJgagrPMSB6XoWeQfisCwmw
+         UqPfkUE+BCy7ekrHz8sA6eiqlHZvFDJO+JCcamH/bZTlBzzIHZpgKx7c5Nm6vjOzjmWt
+         7PyWueoFqsx2vrk7Liaw3qlwmnQzq1BkriEb4/8zGoR0qu9cYEoH/4j6kpLA7nrXYSaI
+         w1jfLhLLrqbfulT9kcSBXQXaX28dqbu8yfCtxMO3+kUITJUqyXxPVtKx2nJOUbik+3Bd
+         KMu2zW9i193KPnSY11IBn+aMZurdukGHfqEkeCWILZbVya9Tus/jv6T1rndnokWxMkJ0
+         zgjw==
+X-Gm-Message-State: AOJu0YxhrchG2JFZJbz8LVSkrXt6fQmtUOCtJIWCMLPq4R/JNzp/93OD
+        cigKzjhVCOA25y7IhD1HZXHxZw==
+X-Google-Smtp-Source: AGHT+IFv/0eMRaF8EMn6yKSAU640SOXFjwBHm7nT9hJcJOrflNyyJnp5etXNA0N+OfyvOIj+/VbXmw==
+X-Received: by 2002:a17:907:9719:b0:99d:f5dd:6b3 with SMTP id jg25-20020a170907971900b0099df5dd06b3mr1572959ejc.76.1693390021173;
+        Wed, 30 Aug 2023 03:07:01 -0700 (PDT)
 Received: from [192.168.0.22] (77-252-46-238.static.ip.netia.com.pl. [77.252.46.238])
-        by smtp.gmail.com with ESMTPSA id n26-20020aa7c69a000000b0052567e6586bsm6661378edq.38.2023.08.30.03.03.50
+        by smtp.gmail.com with ESMTPSA id cl7-20020a170906c4c700b009a5f1d15642sm228320ejb.158.2023.08.30.03.06.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Aug 2023 03:03:51 -0700 (PDT)
-Message-ID: <eed9ddbb-08ac-238c-82b8-a575076c5d71@linaro.org>
-Date:   Wed, 30 Aug 2023 12:03:49 +0200
+        Wed, 30 Aug 2023 03:07:00 -0700 (PDT)
+Message-ID: <b82f4683-e8b5-b424-8f7a-6d2ba1cab61f@linaro.org>
+Date:   Wed, 30 Aug 2023 12:06:59 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.14.0
-Subject: Re: [PATCH 02/11] nvmem: qfprom: Mark core clk as optional
+Subject: Re: [PATCH 04/11] arm64: dts: qcom: pm7250b: make SID configurable
+Content-Language: en-US
 To:     Luca Weiss <luca.weiss@fairphone.com>,
         cros-qcom-dts-watchers@chromium.org,
         Andy Gross <agross@kernel.org>,
@@ -72,10 +73,9 @@ Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-pm@vger.kernel.org
 References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
- <20230830-fp5-initial-v1-2-5a954519bbad@fairphone.com>
-Content-Language: en-US
+ <20230830-fp5-initial-v1-4-5a954519bbad@fairphone.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230830-fp5-initial-v1-2-5a954519bbad@fairphone.com>
+In-Reply-To: <20230830-fp5-initial-v1-4-5a954519bbad@fairphone.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -89,18 +89,34 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 30/08/2023 11:58, Luca Weiss wrote:
-> On some platforms like sc7280 on non-ChromeOS devices the core clock
-> cannot be touched by Linux so we cannot provide it. Mark it as optional
-> as accessing qfprom works without it.
+> Like other Qualcomm PMICs the PM7250B can be used on different addresses
+> on the SPMI bus. Use similar defines like the PMK8350 to make this
+> possible.
 > 
 > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 > ---
->  drivers/nvmem/qfprom.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/pm7250b.dtsi | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pm7250b.dtsi b/arch/arm64/boot/dts/qcom/pm7250b.dtsi
+> index e8540c36bd99..3514de536baa 100644
+> --- a/arch/arm64/boot/dts/qcom/pm7250b.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm7250b.dtsi
+> @@ -7,6 +7,15 @@
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/spmi/spmi.h>
+>  
+> +/* This PMIC can be configured to be at different SIDs */
+> +#ifndef PM7250B_SID
+> +	#define PM7250B_SID 2
+> +#endif
 
-This should not be between DTS patches. DTS goes different tree than
-other driver changes. Please split your patchset and do not mix drivers
-and DTS.
+Why do you send the same patch as v1, without any reference to previous
+discussions?
+
+You got here feedback already.
+
+https://lore.kernel.org/linux-arm-msm/f52524da-719b-790f-ad2c-0c3f313d9fe9@linaro.org/
 
 Best regards,
 Krzysztof
