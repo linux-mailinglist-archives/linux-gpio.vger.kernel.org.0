@@ -2,89 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AAD578E8E3
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Aug 2023 10:56:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE41478E9F4
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Aug 2023 12:13:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232023AbjHaI4g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Aug 2023 04:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
+        id S232837AbjHaKNN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Aug 2023 06:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231590AbjHaI4f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Aug 2023 04:56:35 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3365DCE9;
-        Thu, 31 Aug 2023 01:56:33 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-26f6b2c8e80so426242a91.1;
-        Thu, 31 Aug 2023 01:56:33 -0700 (PDT)
+        with ESMTP id S1343768AbjHaKNM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Aug 2023 06:13:12 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44418E66
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Aug 2023 03:13:01 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-529fb2c6583so768874a12.1
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Aug 2023 03:13:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693472192; x=1694076992; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=fairphone.com; s=fair; t=1693476780; x=1694081580; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SqSAx1bRusuwtKPOf+mGzUiMZP0y9vtf9jLXX1JcNAM=;
-        b=XaFaODq0MVxBQ1xniBWlEgj9wWxcBu3nZoBsNryVmvShEuzsHxtv8jt+wVhhFSeFec
-         PNGy/6VFuMSgouKA+Vd7RvCW/L7LWtpDdfkSW6tevawkByIBa4dJ1DDXq0gkiWyrR9i3
-         DzE82apDoFq1niCD9VrBbN46f2VLELwSeQSHuQWmPScSTf63/JDP0s8z4ZTLoKQ7lYBW
-         pnRkRlZViesZG9lo7ljcMHjruDx+1Q2wqPfs1N6q0BXEPQOIgeiCqie1FjtUDdFgxcMJ
-         8ApEDFVRAGOFU4i0TOxbM1i8JWKHFjxErIwcA/N3iAak0vzR2sRQeM1ANHRqpvWhyI4h
-         5TFQ==
+        bh=e7v4YEHKe+eCw/TeGULI02ezKGrSX/6FZe8vszhKShU=;
+        b=GDZ07FpT+CNej/aZSh1Np170rhrgZlJvNr7rN2UfCQCEFdE+x0XoodqDWDnbK7AEaR
+         7vbJCYHNV9WoepvB26K4Na02Ai3SiwGPSONp7aPVTvCuko0DKAZxhGb5333X2dYucEco
+         3tgh+LSaeYPjOsC121NFuJAvWmdasM2Sw3YWwA76BOBV+bFDE1h7kssMqZDaX6hJ5zZh
+         t0Z85r0ZfgrBcxWXBsu5UcgVM4e4BLR0UjnTdMF6inOqmHqIBMsxmL1i7t4aBrirlRBv
+         LGa02fBEJxENZ575c6mrk1xDPeDNNdHwHp2FmxkwrLGheY6OAKxMI2I3Q63/eCX/f6mr
+         VRvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693472192; x=1694076992;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SqSAx1bRusuwtKPOf+mGzUiMZP0y9vtf9jLXX1JcNAM=;
-        b=eNsGjP/XNwQe3lOOuHYraPRT+31oW2U7TrIF/qhMvku7zFrzM2PS+gXJvCKRV+I97z
-         7c7RaXRgIFcb1/naYvmJWG/wr/buqSB3QVKpClXIT6JCgjcfMnVOHnr8VcVGsKrgrjJy
-         fEIW3dvJV6smd2X9ruti3lJ9Q/MyNtD0p+joZNgwAg4Gj/Z6UI5KmBnjzeeTGrBJCMn2
-         lPo28ErdvDWT5AJZJLECgaheHNapfJTrPwCabINkDnovkH75hTOFxMQawhI7dSGT+CAx
-         M96cHBeRGpo72RE9CKrIM3eYJIa5yLsVffp0b+bf87R8rs7vdXzoGWzOP28RKhKKZBh2
-         yF0A==
-X-Gm-Message-State: AOJu0YxmrdW13sblVekHwjJK21/hgqq7V0KJAIoUiQBJtIw+wDnV3KgR
-        1SzNDKRLbCAsgK36bkAmXfjltn0HkYI=
-X-Google-Smtp-Source: AGHT+IHNWYag3zb8L9EbQSCMBBQkUzJT0HHr8tZPfn9wzTui987x+cWy/dEn3JJnwLVfwPg5r/YutA==
-X-Received: by 2002:a17:90a:5d0b:b0:269:142e:c2ed with SMTP id s11-20020a17090a5d0b00b00269142ec2edmr4478360pji.37.1693472192495;
-        Thu, 31 Aug 2023 01:56:32 -0700 (PDT)
-Received: from localhost.localdomain ([113.196.136.192])
-        by smtp.googlemail.com with ESMTPSA id j16-20020a17090a061000b002676e961261sm3967923pjj.1.2023.08.31.01.56.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Aug 2023 01:56:32 -0700 (PDT)
-From:   Wells Lu <wellslutw@gmail.com>
-To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     wells.lu@sunplus.com, Wells Lu <wellslutw@gmail.com>
-Subject: [PATCH] regulator: rt5759: Fix cannot change operation mode.
-Date:   Thu, 31 Aug 2023 16:56:11 +0800
-Message-Id: <1693472171-30531-1-git-send-email-wellslutw@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        d=1e100.net; s=20221208; t=1693476780; x=1694081580;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=e7v4YEHKe+eCw/TeGULI02ezKGrSX/6FZe8vszhKShU=;
+        b=VmO+AleY4IJg6FGQ8CtslulQWxAXZ2TE2ZhB6f8blqYVoBPTmbktmr0ywnfkvmLyYi
+         OqFp2K2t2RL0CP6WelqPMLMBPnOKc1xFD03nygaBxyz4y/NKO/Qtiv7QLQouhp3v23HJ
+         esgnTyc51HIiP/hvB2vz5kHW2TJCndP9esHlnARjixxSuSW3K/xLRfjaqjheJ7tWyq9t
+         ioM/ZbfvoweTOAftjXtcQk/z7g+1Y/A60lzrhs9JYBX3IHoI07Jqsf9L1+TRVwdec/2d
+         /5kgiK/4TAU2vOfPPZGW5Aoaqy+DsLWGbbXDqfAbBlNUWCDSVHaru5NtCEMOnmZxqEwZ
+         WjdQ==
+X-Gm-Message-State: AOJu0YxggKL1gMFFDJHNLCP5V0ZROBZhiVKcNz66HtclSmkpMWJL5e8e
+        vu1C1Uriw9KLiW6gkWWHNLkhww==
+X-Google-Smtp-Source: AGHT+IEuYVCopo/jdrk+kN9i1QSXZe6VfZ6G0pxlPUpl/QjLI2c9L+8wfjA/Ey3Yg4SWpToT5CAN9w==
+X-Received: by 2002:a50:fc05:0:b0:525:680a:6b89 with SMTP id i5-20020a50fc05000000b00525680a6b89mr3661319edr.12.1693476779584;
+        Thu, 31 Aug 2023 03:12:59 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id x18-20020aa7d6d2000000b0052718577668sm608976edr.11.2023.08.31.03.12.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Aug 2023 03:12:59 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 31 Aug 2023 12:12:58 +0200
+Message-Id: <CV6NF0466658.20DGU7QKF2UBR@otso>
+Cc:     <~postmarketos/upstreaming@lists.sr.ht>,
+        <phone-devel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 04/11] arm64: dts: qcom: pm7250b: make SID configurable
+From:   "Luca Weiss" <luca.weiss@fairphone.com>
+To:     "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        "Andy Gross" <agross@kernel.org>,
+        "Bjorn Andersson" <andersson@kernel.org>,
+        "Konrad Dybcio" <konrad.dybcio@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        "Conor Dooley" <conor+dt@kernel.org>,
+        "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>
+X-Mailer: aerc 0.15.2
+References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
+ <20230830-fp5-initial-v1-4-5a954519bbad@fairphone.com>
+ <b82f4683-e8b5-b424-8f7a-6d2ba1cab61f@linaro.org>
+In-Reply-To: <b82f4683-e8b5-b424-8f7a-6d2ba1cab61f@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Wrong register was used in setting operaton mode function.
+On Wed Aug 30, 2023 at 12:06 PM CEST, Krzysztof Kozlowski wrote:
+> On 30/08/2023 11:58, Luca Weiss wrote:
+> > Like other Qualcomm PMICs the PM7250B can be used on different addresse=
+s
+> > on the SPMI bus. Use similar defines like the PMK8350 to make this
+> > possible.
+> >=20
+> > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> > ---
+> >  arch/arm64/boot/dts/qcom/pm7250b.dtsi | 23 ++++++++++++++++-------
+> >  1 file changed, 16 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/qcom/pm7250b.dtsi b/arch/arm64/boot/dt=
+s/qcom/pm7250b.dtsi
+> > index e8540c36bd99..3514de536baa 100644
+> > --- a/arch/arm64/boot/dts/qcom/pm7250b.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/pm7250b.dtsi
+> > @@ -7,6 +7,15 @@
+> >  #include <dt-bindings/interrupt-controller/irq.h>
+> >  #include <dt-bindings/spmi/spmi.h>
+> > =20
+> > +/* This PMIC can be configured to be at different SIDs */
+> > +#ifndef PM7250B_SID
+> > +	#define PM7250B_SID 2
+> > +#endif
+>
+> Why do you send the same patch as v1, without any reference to previous
+> discussions?
+>
+> You got here feedback already.
+>
+> https://lore.kernel.org/linux-arm-msm/f52524da-719b-790f-ad2c-0c3f313d9fe=
+9@linaro.org/
 
-Signed-off-by: Wells Lu <wellslutw@gmail.com>
----
- drivers/regulator/rt5759-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Krzysztof,
 
-diff --git a/drivers/regulator/rt5759-regulator.c b/drivers/regulator/rt5759-regulator.c
-index c2553dc..3a2eaa7 100644
---- a/drivers/regulator/rt5759-regulator.c
-+++ b/drivers/regulator/rt5759-regulator.c
-@@ -70,7 +70,7 @@ static int rt5759_set_mode(struct regulator_dev *rdev, unsigned int mode)
- 		return -EINVAL;
- 	}
- 
--	return regmap_update_bits(regmap, RT5759_REG_STATUS, RT5759_FPWM_MASK,
-+	return regmap_update_bits(regmap, RT5759_REG_DCDCCTRL, RT5759_FPWM_MASK,
- 				  mode_val);
- }
- 
--- 
-2.7.4
+I did mention that original patch in the cover letter of this series.
+I'm definitely aware of the discussion earlier this year there but also
+tried to get an update lately if there's any update with no response.
+
+If you want to block this patch, I'll have to remove pm7250b from the
+device dts, so we'll lose some functionality. Not sure what other
+approaches there could be.
+
+Regards
+Luca
+
+>
+> Best regards,
+> Krzysztof
 
