@@ -2,250 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 421D878F235
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Aug 2023 19:53:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 660E078F394
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Aug 2023 21:49:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345830AbjHaRxy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Aug 2023 13:53:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39858 "EHLO
+        id S231970AbjHaTt5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Aug 2023 15:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234217AbjHaRxx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Aug 2023 13:53:53 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2072.outbound.protection.outlook.com [40.107.100.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA4E12D;
-        Thu, 31 Aug 2023 10:53:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XTldJP5SkG1nm/bDYm3bGfyFD0gsfRyP9gQN1+Cr8IH7IWVMQaA1wygO9mWh/DYyLlcTmeWdNgxWGZTFtsRHLNsNseG3zLUIFgSc42MQC7i2zEFjEYpkO4hGW/0QsHBE6iKwo6R+vsesz9htiyfJXlJGpyFPdOVlhDOuChPx7az1Ttd3idMPLj7xqoTvIWNjmcyhuEcruLydu3UKViM3rTwAFTh6yvWSa19sslswEpTnItKBKMuBhuCQXJpFhvVs8GRRUwTLQlIaopxvrfTuYQ62Svk4ZxiZ4plubdZGobvbFHuHUhi4sPuY8b73lndyurco75Zc6T5b4uodHVm3Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uLMNFVv885sKpynxgAy1Ime6ocnDU2/uF2PfSl+8new=;
- b=foJgP2sZqli300bj70cbEuf3zgUjA8Yai9uKaGN1fjiDGD3lpmTzJp6xnVBlRl9OmbgClURnV0ErI5R1uREbHfEJN54D+60uue9n0hFful6vEXT58IJGnShSA/n8Bmo4g+y63z097LcAaLmCqOeMlNF3MLL+d+HRkSASNoxVwZSIlN7g74elAOGA94emr/kY1/+oy5AxVjxeh8F2yRNMXYnDK0bF2ZF3FnzOMJwHgRDEPy36/qnh9EGBddL8DQPsD/FXiIrWNJ2Nwro7bFG+qbLOqEuD8IKfiU2dKaKSzkbMuf6q2C6IU+BhbybiOC9oum3pCvkkpTVjXR9dd+0zsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uLMNFVv885sKpynxgAy1Ime6ocnDU2/uF2PfSl+8new=;
- b=W2ftDzWkbR+KTXvYOkFW8LhCaySInF3my2JojgGWgjS9I06Ug9TCRcB9nw1d/6m7MbQOiDi9Qc+u+cn8Z5NLU9KkFXv+rNk8S4UcGZJbpY6G4eGQzN2JV+9EgNJvGyGzQuTivu9wRV10ehrpMjf+2iwduzjpDRl4LUw6KNvBIWU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH3PR12MB7714.namprd12.prod.outlook.com (2603:10b6:610:14e::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.21; Thu, 31 Aug
- 2023 17:53:47 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6745.020; Thu, 31 Aug 2023
- 17:53:47 +0000
-Message-ID: <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
-Date:   Thu, 31 Aug 2023 12:53:44 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
-To:     Hans de Goede <hdegoede@redhat.com>, linus.walleij@linaro.org
-Cc:     Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        regressions@lists.linux.dev, lucapgl2001@gmail.com
-References: <20230829165627.156542-1-mario.limonciello@amd.com>
- <20230829165627.156542-4-mario.limonciello@amd.com>
- <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
- <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com>
- <811225f8-c505-7344-ac18-882472ee0348@redhat.com>
- <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com>
- <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
-Content-Language: en-US
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA0PR13CA0023.namprd13.prod.outlook.com
- (2603:10b6:806:130::28) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+        with ESMTP id S1346279AbjHaTt5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Aug 2023 15:49:57 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CCC7E5C
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Aug 2023 12:49:54 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-401b3ea0656so11920195e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Aug 2023 12:49:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693511392; x=1694116192; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XC4h7QPz634lMnRrF4WW/WFuYrL3CG+anMN89egIVWI=;
+        b=sHo/wNgAExZ/NEjtefyQFztxBSZ1Q7HFIU2BuxxAXJZrhAhLBfTWFHZieYmI4G/Sqx
+         WDzgRPJLxRCQEiaMgMaZ/lHt5y5sbo7LEalfvLVDHudK4niBsfQU/IgiVMrZViKGawTe
+         tamxWydfv3MOP2GtdNMkzNealGIU6xkfjysuF3LBmp+GPSe632CJesOxShoP6f0BY0Mg
+         rvQBbOYTggthw7ylOd9n9hyDQWVtIypR179Bj+G9ta7By5sPsFuHyO7IUHZE2gJxFl76
+         2JHlYM34QNA7JuXZ6R+LYbd5idsPdbwQop8ET9N5/OdBBGw2UOAupLwYqLGVfPMsVhRl
+         rtrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693511392; x=1694116192;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XC4h7QPz634lMnRrF4WW/WFuYrL3CG+anMN89egIVWI=;
+        b=X9cGjFv4Hvzj7tI6J6USQxp85W0cEvWv8RaXpeEtwh6BpmRlVvecZeG6kF5cEJfeGd
+         tbaDcchH61UkY6ACSElLuOwcgc3Njzxv/QgpvLthsCEV2lkfJecOEcKxXTolmTzoYuOS
+         E/ORpqiDrsIJPhd/uhAM0cqy50hY87pSo1LPX/52kPul21o+7g/yI0z03pYsBAfkni0d
+         HSxbd6aSUPPBieX6UfHwg/hW2V9gZRRlTN4gUVv0Daay1mfuPUAPaJsbn+lrbWlLj78C
+         0dgjidVpaITqhMQNNh7l2rWqnVNIznJ8Latd3rxasE9ATyVxNlpsBHdYFqu0PJfTuXEb
+         ZlOg==
+X-Gm-Message-State: AOJu0YxPveACtRSfjn+UtA8H1thciLWLW92nZXC+bpPsauPIcer09u5H
+        qR+HUGpBage9zrPNatavAJiuPA==
+X-Google-Smtp-Source: AGHT+IH0hYYVjHkuWRlFzUZ48R1rnlngflqv6+UTjWWB2+DGqaB9XWDjqOhrDuRXhqJ+BoNANV4Rpw==
+X-Received: by 2002:a05:600c:b52:b0:401:b3a5:ebf8 with SMTP id k18-20020a05600c0b5200b00401b3a5ebf8mr233462wmr.16.1693511391723;
+        Thu, 31 Aug 2023 12:49:51 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:a203:c11c:d490:8489])
+        by smtp.gmail.com with ESMTPSA id k33-20020a05600c1ca100b0040210a27e29sm2893779wms.32.2023.08.31.12.49.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Aug 2023 12:49:51 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [RFT PATCH] spi: bcm2835: reduce the abuse of the GPIO API
+Date:   Thu, 31 Aug 2023 21:49:34 +0200
+Message-Id: <20230831194934.19628-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB7714:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5ed6848-4972-4714-cc5b-08dbaa4b39a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wuyhZ13NgdYRc3JQhj2Ag4+X+q0oH5cPCX2w0yIqkX/l14LC5x342BNwSDdbLpVeDzJHWWKu+dGlsBgR2v7LtE4DAcFWPGwReYYLvZ13thWuy8A86VooEf8duNaCBRkHBSZBbvu+qizOgFyvwKTwUbg5RLyjPasaT4iSmQvy5HNylv3ZiuRHvrbWj+igjE28U+2RCSSTm3tVtZTY1CHjmi3NUXRWzDSx9pJku9na7BFqJCYpJEMvBlSaWV8KBxp1fQAC4BIiMkGPkHOz5/dZuggpQhySXvl0pKM92R6PIKfFkQizbPpc6gUAIPy/EvTSEcL2S7yx2LDsySkCdMd1331jTvpm7KEqweiEPt3GMcO6mkcj8y0WKm3FQOjCeWvcUHf8+e+cOlpUR+TW7+cV4J0IiVE7y5vKeEwNf7szwxPDgrlbBNiWdTL5jX4/lWpz39WrdPJJ2RuHxoSjHx0uhkn+wem5Wzu0Dby2yH9stfvJuDZ+PWRa1FrhC5Q058sHtOYaaMpJiLqzN6yFMFszMx4VpvjywVzRAwhiaJ6J+l26NqaYAwOei2zZz7jaqiCgd6Pi7ssD2Zh7acoxCsCRqixsElD6kvQC1aflrbCXNZgYZZNc5yaiHTvxwdzph0ZGx+Q3iCghRyXviJVkaEtTOsluzcab+JMiBE2QQytkZy8=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(136003)(39860400002)(366004)(376002)(1800799009)(186009)(451199024)(31686004)(6666004)(6506007)(6486002)(6512007)(36756003)(38100700002)(86362001)(31696002)(2616005)(2906002)(26005)(966005)(53546011)(83380400001)(478600001)(8936002)(4326008)(66946007)(8676002)(5660300002)(316002)(41300700001)(66476007)(44832011)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VWtqTzBVbytzOUFreWVVQ0RidVJ3dWhDbTMrTDNGVnJ6Q1ZZa3NkVUZHQ3o0?=
- =?utf-8?B?MjJqT2txZXl3RG5QM25jUXZ4bTVnbDcxUGl4UHdJcTZ0dEJyRGEzelN4eHkz?=
- =?utf-8?B?TGs4RXJBS2l6N1IrVjB1UXpUNVRPTklkWUFWbFRTdDBKeGpyNXVPaGFsenNs?=
- =?utf-8?B?UTk0TUxMM3Z2SjVSTVVZV0FCR3J1T1ZLOU9maDNLMy9FS3p6NkcrK29EUzVq?=
- =?utf-8?B?YkF4SmlBdHRjMXFkQjRhN2dKbmtGZXdSS1FkOCtPeTN5VDlCUU03dE95dEh6?=
- =?utf-8?B?NXN5dm1LcG1PSFU0Z1V1WnpNZmdROWJZSCsrQyt3dHdHTDhja1U5S1U5UEhX?=
- =?utf-8?B?cFdhWHFYY1BzVW9Ma1VCK1FyclVNa1FlSENpYjNPbUFVcHd6ZjBTdHdyVnBN?=
- =?utf-8?B?TjJ3Syt2ZVpHdEVsY3lnYi9VQkJiWUxKVWg3U0pyd0dXNTVKdlErWVVCVjU5?=
- =?utf-8?B?RkdId1lnVEtsS2hhYmxhVWN1bTkyelNiVVVNV2NuZ1F6Ui8xS2g5UGdIWVFD?=
- =?utf-8?B?eTRMVnFIVEcxSzBzNlVjVDZuLzI4QjNlVUdHdzdmeHRlS0VPeWlMNlcrM2JJ?=
- =?utf-8?B?VnU4b0tVN1lYODZXUmw5c0lnVXBTUytqV2ZHQlFqKzFVN01JNXJwaG1FMm9W?=
- =?utf-8?B?dCtZNzU4OGphRG5HM3JuWklBdGp1SERMdm1sT2IrOGdmWlBoNldLYjZEbk9G?=
- =?utf-8?B?cklGUDBodlkyVGEzTGNaZCtkbGZYTE5RTnNTQzRzOUk4WUpXeWw1UFRlN0pJ?=
- =?utf-8?B?VGNZNVVIeG9uRlhWclRTQnpYZFI5cGFEbzhtUFdUenkvQm5qK1FkL2J6a0Zx?=
- =?utf-8?B?TjBEQ1hqak5DVEp1MGR4QmErdEw5QjFYL250YVRTSXQ2Sk1RcHFNcmhDTDRH?=
- =?utf-8?B?R2VlTmxFT2V0djdkalJOSTJIWnl0cHBWMmhxd1dhRXk2MGNDV2hGd3RXcHZK?=
- =?utf-8?B?RHY5Mzc1QkZNWXFUUC9iUndGVzFSemZPNmZUcjNkekc4UHFPWkQ5NXJFVFRF?=
- =?utf-8?B?OVF2QTBabjU1V1BEaGFwa1o1S1hnOWIzeGVuVUhtb1dCWWJYK3VFWnhpaVRD?=
- =?utf-8?B?M0pKOFhGTzlRWkNQL2lVYkdYdlNiMmNuRk5TUEVmOGd3N0sxNVRwUE1FM3dv?=
- =?utf-8?B?U1RmQnpzLzRKMWIyZktwM0xtRHY3SmdEeEtEVEZyQUMvVU1vMzBRSys3N2VY?=
- =?utf-8?B?NDJQS0E3T0hFOGJ1MkhpVkhpTlFvUHBwdENQTFFlTlcyUFRNSlhRWnlxOXp5?=
- =?utf-8?B?Q05USWRaeTNISHlDdE04cSs0UlBsY1VyK3ovOVluc29ZNjd4aWQxVVdUV05Q?=
- =?utf-8?B?bVU3b01DUTdLWVFRVGloZG1nS3dQVkFQYUYyQXpWc3JUcnNjOG81ZnY1K29r?=
- =?utf-8?B?emt2Z0ZNSTkvemNoV2dZTmo3NzIyR3RTQ3VaSUpPTlFSVUJTMUczQUN5YUV2?=
- =?utf-8?B?eGdmS0tzTHRpRW1WdU8xbk4wd29EYkl2WkNGY05WdHU1SWFnS2swSER3N3Qr?=
- =?utf-8?B?YWFab1M3V2RnNVZrRXIrMEV4dnlCWUhaZ0t4emJ6WW41bVdTczZEei93L2ZD?=
- =?utf-8?B?VWIra3R5V3FqS0xGMGtlNkVvWHJLWTBNRnI4Ulo4Ylc2cHhQcUpwMEViSVE0?=
- =?utf-8?B?K09sM25ZQ3VqVEVFUnRueENsbUU1WFRKSVE2cDBWalZEcFJRWlBiekwyeDVW?=
- =?utf-8?B?cjRlVWQ2ZUI2YUlNY1NlTExDZG13TmlEOW9BMGFOYnJKcFJmbnVCaTFqVkxF?=
- =?utf-8?B?cjBFTy9XSXRQT2tveENhZkdKaDBvcFczYlN3Y1VZK1JaMjVzMDhNTVl1aTNE?=
- =?utf-8?B?TUZHZzl6VDhvUmFCTFNZOE1aZkh6Y1g1UWhMSTJqcldEeDQ0VDlKWnVQdm1i?=
- =?utf-8?B?SnRWbUd2Kzg3SkVPbFl4TWhVc2tuMjB1bGlPSTJBZHhoQlQ4a25xdHl6WWIz?=
- =?utf-8?B?MzdJdW53Z2daZzVrckdkVndib1NRa1J3dFhDb3RvVVZTeERnQkxPamsxZFJY?=
- =?utf-8?B?V05sU3VMWVM3SzBZczZPSlZJMHY0WCt6RlkrdnZDZk12b0Nia3VQcVRrTHNs?=
- =?utf-8?B?U2ZIbmZCRmswVzhWMDdBaG0xbzEwZVpIMEVNaHNtMmtzSGszczRDbmhha3c1?=
- =?utf-8?Q?97Uv3KjJNRcqqHxTWDvt/jyAI?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5ed6848-4972-4714-cc5b-08dbaa4b39a4
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2023 17:53:47.1581
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PWi5l25F8dB8fBNbqR5xkU1NqIZtQqOuptjLhnTfgwnpq7rtyfY7o3BT7VGFuH7Rp3P4QQXeyCvZOIuN3o/WNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7714
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 8/30/2023 11:18, Hans de Goede wrote:
-> Hi,
-> 
-> On 8/30/23 17:47, Mario Limonciello wrote:
->> On 8/30/2023 10:37, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 8/29/23 23:37, Mario Limonciello wrote:
->>>> On 8/29/2023 14:54, Hans de Goede wrote:
->>>>> Hi Mario,
->>>>>
->>>>> On 8/29/23 18:56, Mario Limonciello wrote:
->>>>>> Lenovo ideapad 5 doesn't use interrupts for GPIO 0, and so internally
->>>>>> debouncing with WinBlue debounce behavior means that the GPIO doesn't
->>>>>> clear until a separate GPIO is used (such as touchpad).
->>>>>>
->>>>>> Prefer to use legacy debouncing to avoid problems.
->>>>>>
->>>>>> Reported-by: Luca Pigliacampo <lucapgl2001@gmail.com>
->>>>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217833
->>>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>>>
->>>>> I'm not happy to see yet another DMI quirk solution here.
->>>>>
->>>>> and I guess you're not happy with this either...
->>>>
->>>> Yeah I was really hoping the first patch was enough for the issue.
->>>>
->>>> If we can't come up with anything else we can potentially drop patches 2 and 3. Even patch 1 alone will "significantly" improve the situation.
->>>>
->>>> The other option I considered is to hardcode WinBlue debounce behavior "off" in Linux.
->>>>
->>>> I don't think this is a good idea though though because we will likely trade bugs because the debounce values in the AML for systems using _AEI aren't actually used in Windows and might not have good values.
->>>
->>> What if we turn off the WinBlue debounce behavior for GPIO0 and then just hardcode some sane debounce values for it, overriding whatever the DSDT _AEI entries contain ?
->>>
->>
->> I don't think this is a good idea.
->>
->> Some vendors GPIO0 doesn't connect to the power button but instead to the EC.  If it's connected to the EC, the EC might instead trigger GPIO0 for lid or power button or whatever they decided for a design specific way.
->>
->> I'd worry that we're going to end up with inconsistent results if they have their own debouncing put in place in the EC *because* they were relying upon the Winblue debounce behavior.
->>
->> After all - this was fixed because of https://bugzilla.kernel.org/show_bug.cgi?id=217315
-> 
-> Ok, that is fair.
-> 
-> 
->>>>> Are we sure there is no other way? Did you check an acpidump
->>>>> for the laptop and specifically for its ACPI powerbutton handling?
->>>>
->>>> I'm not sure there is another way or not, but yes there is an acpidump attached to the bug in case you or anyone else has some ideas.
->>>>
->>>>>
->>>>> I would expect the ACPI powerbutton handler to somehow clear
->>>>> the bit, like how patch 1/3 clears it from the GPIO chip's
->>>>> own IRQ handler.
->>>>>
->>>>> I see that drivers/acpi/button.c does:
->>>>>
->>>>> static u32 acpi_button_event(void *data)
->>>>> {
->>>>>            acpi_os_execute(OSL_NOTIFY_HANDLER, acpi_button_notify_run, data);
->>>>>            return ACPI_INTERRUPT_HANDLED;
->>>>> }
->>>>>
->>>>> So unless I'm misreading something here, there is some AML being
->>>>> executed on power-button events. So maybe there is something wrong
->>>>> with how Linux interprets that AML ?
->>>>>
->>>> The relevant ACPI spec section is here:
->>>>
->>>> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/04_ACPI_Hardware_Specification/ACPI_Hardware_Specification.html#control-method-power-button
->>>>
->>>> I did look at the acpidump.  GPE 08 notifies \_SB.PWRB (a PNP0C0C device) with 0x2.  According to the spec this is specifically for letting the system know the power button is waking up the system from G1.
->>>
->>> Sorry, the acpi_os_execute() function name gave me the impression that this would actually call some ACPI defined function, since normally in acpi speak execute refers to an ACPI table defined method.
->>>
->>> But that is not the case here it is just a wrapper to deferred-exec the passed in function pointer.
->>>
->>> To be clear I was hoping that there was an ACPI defined (AML code) function which would maybe clear the GPIO for us and that that was maybe not working due to e.g. some opregion not being implemented by Linux. But no AML code is being executed at all, so this is all a red herring.
->>>
->>> Regards,
->>>
->>> Hans
->>>
->>>
->>
->> Something we could do is add an extra callback for ACPI button driver to call the GPIO controller IRQ handler.  Worst case the IRQ handler does nothing, best case it fixes this issue.
->> I'm not sure how we'd tie it to something spec compliant.
-> 
-> I was actually thinking the same thing. I think we should discuss going this route
-> (ACPI button driver to call the GPIO controller IRQ handler) with Rafael.
-> 
-> We can use the existing acpi_notifier_call_chain() mechanism and:
-> 
-> 1. Have the button code call acpi_notifier_call_chain() on the PNP0C0C
-> event on button presses.
-> 
-> 2. Have the AMD pinctrl driver register a notifier_block with
-> register_acpi_notifier() and then check if the source is a PNP0C0C
-> device based on the device_class of the acpi_bus_event struct
-> passed to the notifier and if it is check if GPIO0 needs
-> clearing.
-> 
-> I think this is preferable over the DMI quirk route, because this should
-> fix the same issue also on other affected models which we don't know
-> about.
-> 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Linus - please disregard version 1.
+Currently the bcm2835 SPI driver uses functions meant for GPIO providers
+exclusively to locate the GPIO chip it gets its CS pins from and request
+the relevant pin. I don't know the background and what bug forced this.
+I can however propose a slightly better solution that allows the driver
+to request the GPIO correctly using a temporary lookup table.
 
-I provided Luca a new series that implements this approach that Hans and 
-I discussed and they confirmed it works.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+This is only build-tested. It should work, but it would be great if
+someone from broadcom could test this.
 
-I have some minor modifications to it to narrow where it's applied so we 
-don't have needless notifications and will send it for review after the 
-new modifications are tested as well.
+ drivers/spi/spi-bcm2835.c | 54 ++++++++++++++++++++++-----------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index e7bb2714678a..3c422f0e1087 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -11,6 +11,7 @@
+  * spi-atmel.c, Copyright (C) 2006 Atmel Corporation
+  */
+ 
++#include <linux/cleanup.h>
+ #include <linux/clk.h>
+ #include <linux/completion.h>
+ #include <linux/debugfs.h>
+@@ -26,9 +27,10 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/gpio/machine.h> /* FIXME: using chip internals */
+-#include <linux/gpio/driver.h> /* FIXME: using chip internals */
++#include <linux/gpio/machine.h> /* FIXME: using GPIO lookup tables */
+ #include <linux/of_irq.h>
++#include <linux/overflow.h>
++#include <linux/slab.h>
+ #include <linux/spi/spi.h>
+ 
+ /* SPI register offsets */
+@@ -117,6 +119,7 @@ MODULE_PARM_DESC(polling_limit_us,
+ struct bcm2835_spi {
+ 	void __iomem *regs;
+ 	struct clk *clk;
++	struct gpio_desc *cs_gpio;
+ 	unsigned long clk_hz;
+ 	int irq;
+ 	struct spi_transfer *tfr;
+@@ -1156,11 +1159,6 @@ static void bcm2835_spi_handle_err(struct spi_controller *ctlr,
+ 	bcm2835_spi_reset_hw(bs);
+ }
+ 
+-static int chip_match_name(struct gpio_chip *chip, void *data)
+-{
+-	return !strcmp(chip->label, data);
+-}
+-
+ static void bcm2835_spi_cleanup(struct spi_device *spi)
+ {
+ 	struct bcm2835_spidev *target = spi_get_ctldata(spi);
+@@ -1221,7 +1219,7 @@ static int bcm2835_spi_setup(struct spi_device *spi)
+ 	struct spi_controller *ctlr = spi->controller;
+ 	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
+ 	struct bcm2835_spidev *target = spi_get_ctldata(spi);
+-	struct gpio_chip *chip;
++	struct gpiod_lookup_table *lookup __free(kfree) = NULL;
+ 	int ret;
+ 	u32 cs;
+ 
+@@ -1288,29 +1286,37 @@ static int bcm2835_spi_setup(struct spi_device *spi)
+ 	}
+ 
+ 	/*
+-	 * Translate native CS to GPIO
++	 * TODO: The code below is a slightly better alternative to the utter
++	 * abuse of the GPIO API that I found here before. It creates a
++	 * temporary lookup table, assigns it to the SPI device, gets the GPIO
++	 * descriptor and then releases the lookup table.
+ 	 *
+-	 * FIXME: poking around in the gpiolib internals like this is
+-	 * not very good practice. Find a way to locate the real problem
+-	 * and fix it. Why is the GPIO descriptor in spi->cs_gpiod
+-	 * sometimes not assigned correctly? Erroneous device trees?
++	 * Still the real problem is unsolved. Looks like the cs_gpiods table
++	 * is not assigned correctly from DT?
+ 	 */
++	lookup = kzalloc(struct_size(lookup, table, 1), GFP_KERNEL);
++	if (!lookup) {
++		ret = -ENOMEM;
++		goto err_cleanup;
++	}
+ 
+-	/* get the gpio chip for the base */
+-	chip = gpiochip_find("pinctrl-bcm2835", chip_match_name);
+-	if (!chip)
+-		return 0;
++	lookup->dev_id = dev_name(&spi->dev);
++	lookup->table[0].key = "pinctrl-bcm2835";
++	lookup->table[0].chip_hwnum = (8 - (spi_get_chipselect(spi, 0)));
++	lookup->table[0].con_id = "cs";
++	lookup->table[0].flags = GPIO_LOOKUP_FLAGS_DEFAULT;
+ 
+-	spi_set_csgpiod(spi, 0, gpiochip_request_own_desc(chip,
+-							  8 - (spi_get_chipselect(spi, 0)),
+-							  DRV_NAME,
+-							  GPIO_LOOKUP_FLAGS_DEFAULT,
+-							  GPIOD_OUT_LOW));
+-	if (IS_ERR(spi_get_csgpiod(spi, 0))) {
+-		ret = PTR_ERR(spi_get_csgpiod(spi, 0));
++	gpiod_add_lookup_table(lookup);
++
++	bs->cs_gpio = devm_gpiod_get(&spi->dev, "cs", GPIOD_OUT_LOW);
++	gpiod_remove_lookup_table(lookup);
++	if (IS_ERR(bs->cs_gpio)) {
++		ret = PTR_ERR(bs->cs_gpio);
+ 		goto err_cleanup;
+ 	}
+ 
++	spi_set_csgpiod(spi, 0, bs->cs_gpio);
++
+ 	/* and set up the "mode" and level */
+ 	dev_info(&spi->dev, "setting up native-CS%i to use GPIO\n",
+ 		 spi_get_chipselect(spi, 0));
+-- 
+2.39.2
 
