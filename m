@@ -2,151 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5B0F78F481
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Aug 2023 23:23:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02CA678F5D6
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 00:52:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347557AbjHaVXS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Aug 2023 17:23:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45804 "EHLO
+        id S236522AbjHaWwU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Aug 2023 18:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243661AbjHaVXS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Aug 2023 17:23:18 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A487610EA
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Aug 2023 14:22:46 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2bccda76fb1so24028581fa.2
-        for <linux-gpio@vger.kernel.org>; Thu, 31 Aug 2023 14:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693516949; x=1694121749; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1AoFu3YY2A2D/Vht+AXgb+PkLNyMfnsxtR7/rrK95mo=;
-        b=YCa+9+JNjTPz7bpvY8+epdEyMY5+APK1AMHkcycFk45Iy5pu67HRM/wrtFz3IJ9klU
-         F4+Y+QBRd+vMqLqHal6MsOkBMBnx1kYwVV4x/3Fn1YmOAZdil3sSEvNHPb3kjTe480i1
-         en1ySOl4rikx3mG441FEU9tgl3pkwROtyQwfx/Dpe2Su6D5Wtfr5bV8ljmgA8nqDnmYi
-         8tpOe2rQ4Dh1TIWucIMgaYNjjTD4gx/71waDXCgA6qHwb+lmeondPDRqHrDRhDN6lqaD
-         G83mR0vfEdATeN3Nm/OFfRTzgASAzIwHiQUYjUhtbeY/6ihGm90mTbOUxTmU1eqbp7kd
-         bNmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693516949; x=1694121749;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1AoFu3YY2A2D/Vht+AXgb+PkLNyMfnsxtR7/rrK95mo=;
-        b=QLLH+tAbx6vK7k3q9eIstW2AH9/NqMX9E0CAHNJZzCooylrcIHu5A2xIJMMxoD5e+5
-         OJ/VQkRYyZWz31CMoaDcPYw2ubOAx0W+EKi/h7hKtgfGyXrGiCd9EXGDh9k+27UhPocZ
-         NrbaE+mdoq3+4QJeqBk0LoNkgElpVc72NZv5UAQPyXjpBf4R6oflqvTgXm3IY4M7BKSU
-         SIY0gZykMHFpkKje0PZxR9Ssb+rDhN43Scmsp2ygGYCLiDjt4LEj66KV5pzgakHsxN4T
-         dd32XGBL2y4Q2aVa8xVF/3bui2p0jjiMNkntNgfbk8Cz8+V36Tv6AxQhztaFYyvY9j1E
-         TSwA==
-X-Gm-Message-State: AOJu0Yzej/mkgJwS03CtnYIBjTFWzrgnZvErEehNsmfrwy/a2bBmeK4r
-        FOdFApIpgqJW1UmKSTE3LrSU0g==
-X-Google-Smtp-Source: AGHT+IGFPvcXmKwK9xVDDjCOUvIZGOIn3s3MnWew1g7JSFY9e4DGWfZWv+T6bb12+VwAzMEdVmsGzA==
-X-Received: by 2002:a05:651c:8f:b0:2b9:ee3e:2412 with SMTP id 15-20020a05651c008f00b002b9ee3e2412mr314104ljq.22.1693516948990;
-        Thu, 31 Aug 2023 14:22:28 -0700 (PDT)
-Received: from [192.168.1.101] (abxh154.neoplus.adsl.tpnet.pl. [83.9.1.154])
-        by smtp.gmail.com with ESMTPSA id m6-20020a2e9106000000b002b6e15ccf88sm499933ljg.135.2023.08.31.14.22.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Aug 2023 14:22:28 -0700 (PDT)
-Message-ID: <36c90f71-3e74-4aab-aec7-4ad222ac8665@linaro.org>
-Date:   Thu, 31 Aug 2023 23:22:27 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] pinctrl: qcom: sm6115: Add MPM pin mappings
-Content-Language: en-US
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
+        with ESMTP id S229577AbjHaWwT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Aug 2023 18:52:19 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F27CF;
+        Thu, 31 Aug 2023 15:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693522336; x=1725058336;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=FuQPMXB2hrMkwbwe+y0VdlVr+7bGItkbctGZUbDvjS4=;
+  b=QJWhZsmdpXgcsMFGGmsTODGDZqese6kGrxA5xlOUwcDpg+BZFo1DBEan
+   siqNhHlSmPzYqLzf03/7DOJaeq0GGaDfmdd8XyxwEjPIHxZu6M5lyUtUH
+   Pc+oaC6iEGXPLd1gLJmGjNGSdgsTlLhqvbtPeZZ19k1dTANoYFLb6rWeN
+   kZl78mJAXSImvq1x8zlsg49G31VSlgeC56TzhlidFSR+z4/ILpW2DiRIl
+   3tVqanM9sMDNOpuMp8/c9s2mI3Hsb89aM4U2Jhq46dz6NNqIgxmgNEcyu
+   N3MbaZHL6SYP+UHvw3qMhyTpflPfkC952HI69H/XiOphAL/v5VNckHC+3
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="355582688"
+X-IronPort-AV: E=Sophos;i="6.02,218,1688454000"; 
+   d="scan'208";a="355582688"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2023 15:52:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="854462866"
+X-IronPort-AV: E=Sophos;i="6.02,218,1688454000"; 
+   d="scan'208";a="854462866"
+Received: from lkp-server01.sh.intel.com (HELO 5d8055a4f6aa) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 31 Aug 2023 15:52:11 -0700
+Received: from kbuild by 5d8055a4f6aa with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qbqWH-0000ct-1M;
+        Thu, 31 Aug 2023 22:52:09 +0000
+Date:   Fri, 1 Sep 2023 06:51:26 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230809-topic-mpm_mappings-v1-0-5e17dd76b3c8@linaro.org>
- <20230809-topic-mpm_mappings-v1-3-5e17dd76b3c8@linaro.org>
- <ZNSPi3mDScn9ZMNJ@gerhold.net>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
- BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
- HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
- TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
- zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
- MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
- t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
- UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
- aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
- kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
- Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
- R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
- BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
- yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
- xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
- 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
- GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
- mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
- x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
- BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
- mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
- Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
- xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
- AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
- 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
- jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
- cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
- jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
- cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
- bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
- YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
- bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
- nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
- izWDgYvmBE8=
-In-Reply-To: <ZNSPi3mDScn9ZMNJ@gerhold.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH] spi: bcm2835: reduce the abuse of the GPIO API
+Message-ID: <202309010647.GUOYgT4J-lkp@intel.com>
+References: <20230831194934.19628-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230831194934.19628-1-brgl@bgdev.pl>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10.08.2023 09:19, Stephan Gerhold wrote:
-> On Wed, Aug 09, 2023 at 09:38:56PM +0200, Konrad Dybcio wrote:
->> Add pin <-> wakeirq mappings to allow for waking up the AP from sleep
->> through MPM-connected pins.
->>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->> ---
->>  drivers/pinctrl/qcom/pinctrl-sm6115.c | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-sm6115.c b/drivers/pinctrl/qcom/pinctrl-sm6115.c
->> index 2a06025f4885..4e91c75ad952 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-sm6115.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-sm6115.c
->> @@ -867,6 +867,16 @@ static const struct msm_pingroup sm6115_groups[] = {
->>  	[120] = SDC_QDSD_PINGROUP(sdc2_data, SOUTH, 0x73000, 9, 0),
->>  };
->>  
->> +static const struct msm_gpio_wakeirq_map sm6115_mpm_map[] = {
->> +	{ 0, 84 }, { 3, 75 }, { 4, 16 }, { 6, 59 }, { 8, 63 }, { 11, 17 }, { 13, 18 },
->> +	{ 14, 51 }, { 17, 20 }, { 18, 52 }, { 19, 53 }, { 24, 6 }, { 25, 71 }, { 27, 73 },
->> +	{ 28, 41 }, { 31, 27 }, { 32, 54 }, { 33, 55 }, { 34, 56 }, { 35, 57 }, { 36, 58 },
->> +	{ 39, 28 }, { 46, 29 }, { 62, 60 }, { 63, 61 }, { 64, 62 }, { 65, 30 }, { 66, 31 },
->> +	{ 67, 32 }, { 69, 33 }, { 70, 34 }, { 72, 72 }, { 75, 35 }, { 79, 36 }, { 80, 21 },
->> +	{ 81, 38 }, { 83, 9 }, { 84, 39 }, { 85, 40 }, { 86, 19 }, { 87, 42 }, { 88, 43 },
->> +	{ 89, 45 }, { 91, 74 }, { 93, 46 }, { 94, 47 }, { 95, 48 }, { 96, 49 }, { 97, 50 },
->> +};
-> 
-> Did you omit the mappings for GPIO 99-112 here on purpose?
-> 
-> The order here looks fine BTW. Maybe downstream changed the order and
-> you got confused? :)
-I checked more downstreams and still couldn't find it, I'll skip it
-for now.
+Hi Bartosz,
 
-Konrad
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on broonie-spi/for-next]
+[also build test WARNING on linus/master next-20230831]
+[cannot apply to v6.5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/spi-bcm2835-reduce-the-abuse-of-the-GPIO-API/20230901-035139
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+patch link:    https://lore.kernel.org/r/20230831194934.19628-1-brgl%40bgdev.pl
+patch subject: [RFT PATCH] spi: bcm2835: reduce the abuse of the GPIO API
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230901/202309010647.GUOYgT4J-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230901/202309010647.GUOYgT4J-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309010647.GUOYgT4J-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/spi/spi-bcm2835.c:146: warning: Function parameter or member 'cs_gpio' not described in 'bcm2835_spi'
+
+
+vim +146 drivers/spi/spi-bcm2835.c
+
+f8043872e79614 Chris Boot          2013-03-11   77  
+ff245d90ebed8d Martin Sperl        2019-04-23   78  /* define polling limits */
+cbd632ea8ee4ae Jason Yan           2020-09-12   79  static unsigned int polling_limit_us = 30;
+ff245d90ebed8d Martin Sperl        2019-04-23   80  module_param(polling_limit_us, uint, 0664);
+ff245d90ebed8d Martin Sperl        2019-04-23   81  MODULE_PARM_DESC(polling_limit_us,
+ff245d90ebed8d Martin Sperl        2019-04-23   82  		 "time in us to run a transfer in polling mode\n");
+ff245d90ebed8d Martin Sperl        2019-04-23   83  
+acf0f856959937 Lukas Wunner        2018-11-08   84  /**
+acf0f856959937 Lukas Wunner        2018-11-08   85   * struct bcm2835_spi - BCM2835 SPI controller
+acf0f856959937 Lukas Wunner        2018-11-08   86   * @regs: base address of register map
+acf0f856959937 Lukas Wunner        2018-11-08   87   * @clk: core clock, divided to calculate serial clock
+c45c1e82bba130 Alexandru Tachici   2021-07-17   88   * @clk_hz: core clock cached speed
+acf0f856959937 Lukas Wunner        2018-11-08   89   * @irq: interrupt, signals TX FIFO empty or RX FIFO ¾ full
+3bd7f6589f67f0 Lukas Wunner        2018-11-08   90   * @tfr: SPI transfer currently processed
+afe7e36360f4c9 Robin Murphy        2020-06-16   91   * @ctlr: SPI controller reverse lookup
+acf0f856959937 Lukas Wunner        2018-11-08   92   * @tx_buf: pointer whence next transmitted byte is read
+acf0f856959937 Lukas Wunner        2018-11-08   93   * @rx_buf: pointer where next received byte is written
+acf0f856959937 Lukas Wunner        2018-11-08   94   * @tx_len: remaining bytes to transmit
+acf0f856959937 Lukas Wunner        2018-11-08   95   * @rx_len: remaining bytes to receive
+3bd7f6589f67f0 Lukas Wunner        2018-11-08   96   * @tx_prologue: bytes transmitted without DMA if first TX sglist entry's
+3bd7f6589f67f0 Lukas Wunner        2018-11-08   97   *	length is not a multiple of 4 (to overcome hardware limitation)
+3bd7f6589f67f0 Lukas Wunner        2018-11-08   98   * @rx_prologue: bytes received without DMA if first RX sglist entry's
+3bd7f6589f67f0 Lukas Wunner        2018-11-08   99   *	length is not a multiple of 4 (to overcome hardware limitation)
+3bd7f6589f67f0 Lukas Wunner        2018-11-08  100   * @tx_spillover: whether @tx_prologue spills over to second TX sglist entry
+154f7da56f1ecb Martin Sperl        2019-04-23  101   * @debugfs_dir: the debugfs directory - neede to remove debugfs when
+154f7da56f1ecb Martin Sperl        2019-04-23  102   *      unloading the module
+154f7da56f1ecb Martin Sperl        2019-04-23  103   * @count_transfer_polling: count of how often polling mode is used
+154f7da56f1ecb Martin Sperl        2019-04-23  104   * @count_transfer_irq: count of how often interrupt mode is used
+154f7da56f1ecb Martin Sperl        2019-04-23  105   * @count_transfer_irq_after_polling: count of how often we fall back to
+154f7da56f1ecb Martin Sperl        2019-04-23  106   *      interrupt mode after starting in polling mode.
+154f7da56f1ecb Martin Sperl        2019-04-23  107   *      These are counted as well in @count_transfer_polling and
+154f7da56f1ecb Martin Sperl        2019-04-23  108   *      @count_transfer_irq
+154f7da56f1ecb Martin Sperl        2019-04-23  109   * @count_transfer_dma: count how often dma mode is used
+00be843bc1c3c7 Yang Yingliang      2023-07-28  110   * @target: SPI target currently selected
+8259bf667a0f9e Lukas Wunner        2019-09-11  111   *	(used by bcm2835_spi_dma_tx_done() to write @clear_rx_cs)
+8259bf667a0f9e Lukas Wunner        2019-09-11  112   * @tx_dma_active: whether a TX DMA descriptor is in progress
+8259bf667a0f9e Lukas Wunner        2019-09-11  113   * @rx_dma_active: whether a RX DMA descriptor is in progress
+8259bf667a0f9e Lukas Wunner        2019-09-11  114   *	(used by bcm2835_spi_dma_tx_done() to handle a race)
+2b8279aec1829d Lukas Wunner        2019-09-11  115   * @fill_tx_desc: preallocated TX DMA descriptor used for RX-only transfers
+2b8279aec1829d Lukas Wunner        2019-09-11  116   *	(cyclically copies from zero page to TX FIFO)
+2b8279aec1829d Lukas Wunner        2019-09-11  117   * @fill_tx_addr: bus address of zero page
+acf0f856959937 Lukas Wunner        2018-11-08  118   */
+f8043872e79614 Chris Boot          2013-03-11  119  struct bcm2835_spi {
+f8043872e79614 Chris Boot          2013-03-11  120  	void __iomem *regs;
+f8043872e79614 Chris Boot          2013-03-11  121  	struct clk *clk;
+1098696c0d4d2d Bartosz Golaszewski 2023-08-31  122  	struct gpio_desc *cs_gpio;
+c45c1e82bba130 Alexandru Tachici   2021-07-17  123  	unsigned long clk_hz;
+f8043872e79614 Chris Boot          2013-03-11  124  	int irq;
+3bd7f6589f67f0 Lukas Wunner        2018-11-08  125  	struct spi_transfer *tfr;
+afe7e36360f4c9 Robin Murphy        2020-06-16  126  	struct spi_controller *ctlr;
+f8043872e79614 Chris Boot          2013-03-11  127  	const u8 *tx_buf;
+f8043872e79614 Chris Boot          2013-03-11  128  	u8 *rx_buf;
+e34ff011c70e5f Martin Sperl        2015-03-26  129  	int tx_len;
+e34ff011c70e5f Martin Sperl        2015-03-26  130  	int rx_len;
+3bd7f6589f67f0 Lukas Wunner        2018-11-08  131  	int tx_prologue;
+3bd7f6589f67f0 Lukas Wunner        2018-11-08  132  	int rx_prologue;
+b31a9299bca66c Lukas Wunner        2018-11-29  133  	unsigned int tx_spillover;
+154f7da56f1ecb Martin Sperl        2019-04-23  134  
+154f7da56f1ecb Martin Sperl        2019-04-23  135  	struct dentry *debugfs_dir;
+154f7da56f1ecb Martin Sperl        2019-04-23  136  	u64 count_transfer_polling;
+154f7da56f1ecb Martin Sperl        2019-04-23  137  	u64 count_transfer_irq;
+154f7da56f1ecb Martin Sperl        2019-04-23  138  	u64 count_transfer_irq_after_polling;
+154f7da56f1ecb Martin Sperl        2019-04-23  139  	u64 count_transfer_dma;
+8259bf667a0f9e Lukas Wunner        2019-09-11  140  
+00be843bc1c3c7 Yang Yingliang      2023-07-28  141  	struct bcm2835_spidev *target;
+8259bf667a0f9e Lukas Wunner        2019-09-11  142  	unsigned int tx_dma_active;
+8259bf667a0f9e Lukas Wunner        2019-09-11  143  	unsigned int rx_dma_active;
+2b8279aec1829d Lukas Wunner        2019-09-11  144  	struct dma_async_tx_descriptor *fill_tx_desc;
+2b8279aec1829d Lukas Wunner        2019-09-11  145  	dma_addr_t fill_tx_addr;
+ec679bda639fe8 Lukas Wunner        2021-05-27 @146  };
+ec679bda639fe8 Lukas Wunner        2021-05-27  147  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
