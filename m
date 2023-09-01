@@ -2,145 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C9CB7902D1
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 22:29:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83D8C790381
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Sep 2023 00:03:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244443AbjIAU3X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 16:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58918 "EHLO
+        id S236732AbjIAWDW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 18:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242521AbjIAU3W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 16:29:22 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9FD4E7E;
-        Fri,  1 Sep 2023 13:29:19 -0700 (PDT)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 381ItjDG005899;
-        Fri, 1 Sep 2023 20:29:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=2FYXvMmpReuPlYSmTDcvNg1rIzAmGZtkeMDCuhzAtGw=;
- b=RpGMbsimYgMc3eNR7ei7vHPVzYUwHYGYWfqvFd5Hm0dfsshzelWMpDIZ1rnuLnmPTBJW
- QrE9r0G9055pwpCfvVOPDMYtRHxC1oQjdFF+Gqzr4/3Fj+LWLC7Ub9J9K4ZZKtKtFbum
- sHYN6I0cLw7UKq0OoSob97cywjNlU+qDOZ1qNg1FPayvbNvP7zzH3hwGYkQ+kG9Bx9jv
- pkoE04KD1f8QglapQUr69SaBGB43NBDRiCuHqw/3ZSvJVuKYp2UadZBnGPAgApX2FtyJ
- dkQahInoVqPNSAkfaD2bOsDEwD7LSCXJ9CVg7yTTQ0XSZVrP7POVtWlVknMqnRdcBF39 TQ== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3suc22hupp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 Sep 2023 20:29:05 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 381KT4X3011614
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 1 Sep 2023 20:29:04 GMT
-Received: from [10.110.95.146] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Fri, 1 Sep
- 2023 13:29:04 -0700
-Message-ID: <deeefaf8-2ac9-cee0-eed4-687e36ac6f10@quicinc.com>
-Date:   Fri, 1 Sep 2023 13:29:03 -0700
+        with ESMTP id S1350798AbjIAVwC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 17:52:02 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695F41988;
+        Fri,  1 Sep 2023 14:10:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693602654; x=1725138654;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nyCvpEli0+8FWE4zEnhnuy+DIxr5WwG7YAQEEFHoj0A=;
+  b=FlvJcQXwSj8QLYLyruD4iV8I60dw3x02XHJUcW4gJzg/UDtDhnnqUOdj
+   Zs5KBPYteJNQj3fXI1+K0voJIP8fG8jSsBpo01MuCD3d9OQHWMNyUL/nT
+   UdmRUBrmLpDyfnD5nrNxiWA+RYu6wTuCNJ3IBiMqRI4mTISbJ9nFcbwyJ
+   ehD/63e6wQhOW3BMtwvMn9pKENWQodtRSeJ0xcBKthx+m35nMR8DlZTYO
+   BwhqglpFV7056Q82ueIPkzdTKIu0DmwxY2ZgAbt61bx2gxy8pt8VjLeOw
+   ZxigA937ZnBZcc0WUU4lzRC4Y1KrnztweuZQgFQQ4b8FIK7/bFwJpNWvI
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="380099637"
+X-IronPort-AV: E=Sophos;i="6.02,220,1688454000"; 
+   d="scan'208";a="380099637"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 14:10:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="805580889"
+X-IronPort-AV: E=Sophos;i="6.02,220,1688454000"; 
+   d="scan'208";a="805580889"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 14:10:42 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qcBPc-005lmA-0Z;
+        Sat, 02 Sep 2023 00:10:40 +0300
+Date:   Sat, 2 Sep 2023 00:10:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
+Message-ID: <ZPJTT/l9fX1lhu6O@smile.fi.intel.com>
+References: <20230901183240.102701-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 02/11] nvmem: qfprom: Mark core clk as optional
-Content-Language: en-US
-To:     Luca Weiss <luca.weiss@fairphone.com>,
-        Doug Anderson <dianders@chromium.org>
-CC:     <cros-qcom-dts-watchers@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>,
-        <phone-devel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-pm@vger.kernel.org>
-References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
- <20230830-fp5-initial-v1-2-5a954519bbad@fairphone.com>
- <CAD=FV=WS2hgY=bQjLOs3Fdp8pbZyMsaS-0BpoxPq90Etfi+Xuw@mail.gmail.com>
- <CV5YJVXIL8OT.1ZWW3KVCHPTA5@otso>
-From:   Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <CV5YJVXIL8OT.1ZWW3KVCHPTA5@otso>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9Ar9RfHXW3BZTXygIUaxyBxzbbtd8VRn
-X-Proofpoint-ORIG-GUID: 9Ar9RfHXW3BZTXygIUaxyBxzbbtd8VRn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-01_17,2023-08-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- clxscore=1011 mlxscore=0 impostorscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 lowpriorityscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309010192
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230901183240.102701-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 8/30/2023 7:43 AM, Luca Weiss wrote:
-> On Wed Aug 30, 2023 at 4:30 PM CEST, Doug Anderson wrote:
->> Hi,
->>
->> On Wed, Aug 30, 2023 at 2:58 AM Luca Weiss <luca.weiss@fairphone.com> wrote:
->>>
->>> On some platforms like sc7280 on non-ChromeOS devices the core clock
->>> cannot be touched by Linux so we cannot provide it. Mark it as optional
->>> as accessing qfprom works without it.
->>>
->>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>> ---
->>>  drivers/nvmem/qfprom.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> Are you actually testing burning fuses from the OS, or are you just
->> using the nvmem in "read-only" mode? From comments in the bindings, if
->> you're trying to burn the fuses then the clock is required. If things
->> are in read-only mode then the clock isn't required.
+On Fri, Sep 01, 2023 at 08:32:40PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Hi Doug,
+> We access internals of struct gpio_device and struct gpio_desc because
+> it's easier but it can actually be avoided and we're working towards a
+> better encapsulation of GPIO data structures across the kernel so let's
+> start at home.
 > 
-> I definitely don't plan on burning any fuses on this phone. Not even
-> sure that's allowed by the TZ / boot stack.
+> Instead of checking gpio_desc flags, let's just track the requests of
+> GPIOs in the driver. We also already store the information about
+> direction of simulated lines.
 > 
->>
->> When I compare to the driver, it seems like the driver assumes that if
->> more than one memory region is provided then you must be supporting
->> burning fuses. The bindings agree that having 4 memory regions
->> specified means that the nvmem supports burning and 1 memory region
->> specified means read-only. The extra 3 memory regions in the nvmem are
->> all about fuse burning, I believe.
->>
->> So maybe the right fix here is to just change your dts to specify one
->> memory region?
+> For kobjects needed by sysfs callbacks: we can leverage the fact that
+> once created for a software node, struct device is accessible from that
+> fwnode_handle. We don't need to dereference gpio_device.
 > 
-> I got feedback from Konrad that this here would be the preferred
-> approach compared to having a different dts for ChromeOS vs non-ChromeOS
-> devices. I don't feel strongly to either, for me it's also okay to
-> remove the extra memory regions and only have the main one used on
-> regular qcom devices.
-> 
-> Let me know what you think.
+> While at it: fix one line break and remove the untrue part about
+> configfs callbacks using dev_get_drvdata() from a comment.
 
-I would prefer to re-use the sc7280 DT as well. Thank you for your patches. We plan to use your patches for platform on the same part. 
+...
+
+> -static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
+
+Why is this?
+
+> +static int gpio_sim_request(struct gpio_chip *gc, unsigned int offset)
+>  {
+>  	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
+>  
+>  	scoped_guard(mutex, &chip->lock)
+> +		__set_bit(offset, chip->request_map);
+> +
+> +	return 0;
+> +}
+> +
+> +static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
+> +
+> +	scoped_guard(mutex, &chip->lock) {
+>  		__assign_bit(offset, chip->value_map,
+>  			     !!test_bit(offset, chip->pull_map));
+> +		__clear_bit(offset, chip->request_map);
+> +	}
+>  }
+
+Seems to me like you. shuffled the order of the two functions.
+Can you leave _free() at the same location in the file?
+
+...
+
+> -	/* Used by sysfs and configfs callbacks. */
+> -	dev_set_drvdata(&gc->gpiodev->dev, chip);
+> +	/* Used by sysfs callbacks. */
+> +	dev_set_drvdata(swnode->dev, chip);
+
+dev pointer of firmware node is solely for dev links. Is it the case here?
+Seems to me you luckily abuse it.
 
 -- 
----Trilok Soni
+With Best Regards,
+Andy Shevchenko
+
 
