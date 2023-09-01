@@ -2,114 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89AD178FD00
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 14:15:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C80A378FD55
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 14:34:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232645AbjIAMP5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 08:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43972 "EHLO
+        id S1349479AbjIAMeV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 08:34:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349372AbjIAMP5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 08:15:57 -0400
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F449E7B
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 05:15:52 -0700 (PDT)
-Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-d7bb34576b9so1482583276.3
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 05:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693570551; x=1694175351; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZKQJzdrwVynBj+i/KLrgcZw6v08VJmYn3Jbn1ugOea4=;
-        b=u4EYzcj7WRCe50N1iDyZxN1+j8HWYEA1RrcN6w9eoFyNnmbVGTvEvd63hNKMboft0p
-         nRiQEFE4KO7xe/namXhRgqKyLqw2llMj6c7bbb+XHwvMk0PAR+5zrDIqqv4p+WAuL3/O
-         Qmg2A+D9EIbr5ywgTxQKeMTML4zcODtw5XZrI6kPAks96jdv2XUoQuZ3ZNEuerGnoVPY
-         H3DdCXmZdtE+8fZowzyJae761VODdyoesU4rj85ytlXLQ20gDRetVLUgo4tDUYJUQ6Ll
-         gziVu6kAKIuEW/0NJGESVXoyXLCKjZxRgzVscPv3fONI0coxOn60mUFOS3JH/gPXKA5n
-         Gd2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693570551; x=1694175351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZKQJzdrwVynBj+i/KLrgcZw6v08VJmYn3Jbn1ugOea4=;
-        b=IzjuCZtLpCP75dhsh425zyfXtbh1H2nfuoFb47ihMQfjG9cILSLQNUKYAJNQLE+cta
-         29CkqIAYhUTHW5+rtUzFZC6lO2gCI+C+E/DzuUEmA2Bf0GiG5TctUt5Ars0O1vF5T9KC
-         jAadRlgb6OdI5BPSKAEvK+AS+ucXrLIFtLn79+uzTP5KrX8escIhkPnKqOjnnn2eKukE
-         /7VSgp6HzdBhegSW9IINCUDkVQyfLFdf6MjQkAu6DFdqNMFxFe7Y3oU9H7J25h3VXMcy
-         4yLPRsOKl+NxYLt6+JzXdxMttvPA7AGNqbmyVwugGPyVBibJ8Mq5y7rBeJMRGLv/8f1Y
-         HwAQ==
-X-Gm-Message-State: AOJu0YyzFBFpMoGgn8/CA6MDaIZfNxpUukp1cs7znprWU0BWga1rMpse
-        R7w63iXWp6mTNXPd/P83q3DwrD8IBy+fADhc6RQbpQ==
-X-Google-Smtp-Source: AGHT+IEGIJ2ghvCH0Ox2nia398Yqxzna/6LWbQzpvZgwZKocqcwbT3A7SbPs9h3C7RVL5XV/nxF1X5cIH7DZCApTsGU=
-X-Received: by 2002:a05:6902:120e:b0:d77:e463:7c0e with SMTP id
- s14-20020a056902120e00b00d77e4637c0emr2955849ybu.50.1693570551371; Fri, 01
- Sep 2023 05:15:51 -0700 (PDT)
+        with ESMTP id S238417AbjIAMeU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 08:34:20 -0400
+X-Greylist: delayed 577 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 01 Sep 2023 05:34:17 PDT
+Received: from mail.bugwerft.de (mail.bugwerft.de [46.23.86.59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1C6F910CF;
+        Fri,  1 Sep 2023 05:34:17 -0700 (PDT)
+Received: from hq-00595.fritz.box (unknown [176.126.217.202])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id C227D280203;
+        Fri,  1 Sep 2023 12:24:37 +0000 (UTC)
+From:   Daniel Mack <daniel@zonque.org>
+To:     linux-gpio@vger.kernel.org, manikanta.guntupalli@amd.com
+Cc:     linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
+        stable@kernel.org
+Subject: [PATCH] gpio: zynq: restore zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
+Date:   Fri,  1 Sep 2023 14:24:24 +0200
+Message-ID: <20230901122424.247070-1-daniel@zonque.org>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-References: <20230901111548.12733-1-brgl@bgdev.pl>
-In-Reply-To: <20230901111548.12733-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 1 Sep 2023 14:15:39 +0200
-Message-ID: <CACRpkdYLcOZQ9r46aBwesh-H392C_0AWC8n2ikuwUknfEhoNNA@mail.gmail.com>
-Subject: Re: [RFT PATCH v2] spi: bcm2835: reduce the abuse of the GPIO API
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 1, 2023 at 1:15=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
+warning") ditched the open-coded resource allocation handlers in favor
+of the generic ones. These generic handlers don't maintain the PM
+runtime anymore, which causes a regression in that level IRQs are no
+longer reported.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Currently the bcm2835 SPI driver uses functions that are available
-> exclusively to GPIO providers as a way to handle a platform quirk. Let's
-> use a slightly better alternative that avoids poking around in GPIOLIB's
-> internals and use GPIO lookup tables.
->
-> Link: https://www.spinics.net/lists/linux-gpio/msg36218.html
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Restore the original handlers to fix this.
 
-> +#include <linux/cleanup.h>
-(...)
-> -       struct gpio_chip *chip;
-> +       struct gpiod_lookup_table *lookup __free(kfree) =3D NULL;
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
+Cc: stable@kernel.org
+---
+ drivers/gpio/gpio-zynq.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-Whoa!
-This is really neat.
-As noted, it will confuse static checkers at no end, but they just have
-to adopt. (CC to Dan C if he now runs into this.)
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index 0a7264aabe48..324e942c0650 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -575,6 +575,26 @@ static int zynq_gpio_set_wake(struct irq_data *data, unsigned int on)
+ 	return 0;
+ }
+ 
++static int zynq_gpio_irq_reqres(struct irq_data *d)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
++	int ret;
++
++	ret = pm_runtime_resume_and_get(chip->parent);
++	if (ret < 0)
++		return ret;
++
++	return gpiochip_reqres_irq(chip, d->hwirq);
++}
++
++static void zynq_gpio_irq_relres(struct irq_data *d)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
++
++	gpiochip_relres_irq(chip, d->hwirq);
++	pm_runtime_put(chip->parent);
++}
++
+ /* irq chip descriptor */
+ static const struct irq_chip zynq_gpio_level_irqchip = {
+ 	.name		= DRIVER_NAME,
+@@ -584,9 +604,10 @@ static const struct irq_chip zynq_gpio_level_irqchip = {
+ 	.irq_unmask	= zynq_gpio_irq_unmask,
+ 	.irq_set_type	= zynq_gpio_set_irq_type,
+ 	.irq_set_wake	= zynq_gpio_set_wake,
++	.irq_request_resources = zynq_gpio_irq_reqres,
++	.irq_release_resources = zynq_gpio_irq_relres,
+ 	.flags		= IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED |
+ 			  IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
+-	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+ static const struct irq_chip zynq_gpio_edge_irqchip = {
+@@ -597,8 +618,9 @@ static const struct irq_chip zynq_gpio_edge_irqchip = {
+ 	.irq_unmask	= zynq_gpio_irq_unmask,
+ 	.irq_set_type	= zynq_gpio_set_irq_type,
+ 	.irq_set_wake	= zynq_gpio_set_wake,
++	.irq_request_resources = zynq_gpio_irq_reqres,
++	.irq_release_resources = zynq_gpio_irq_relres,
+ 	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
+-	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+ static void zynq_gpio_handle_bank_irq(struct zynq_gpio *gpio,
+-- 
+2.41.0
 
-> +       gpiod_add_lookup_table(lookup);
-
-Maybe we should mention the obvious advantage to the previous
-hack: if there is a "cs-gpios" in the device tree, it will take precedence,
-because gpiod_find_and_request() will try gpiod_find_by_fwnode()
-*first* and only if this fails it will fall back to gpiod_find().
-
-Hm, maybe we should go and fix these device trees? :P
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
