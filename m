@@ -2,167 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8570478FA66
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 11:02:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4A7478FA7E
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 11:11:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348695AbjIAJCl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 05:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54228 "EHLO
+        id S231508AbjIAJLQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 05:11:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348701AbjIAJCi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 05:02:38 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1D610DE
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 02:02:34 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-99c93638322so355917566b.1
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 02:02:34 -0700 (PDT)
+        with ESMTP id S1348728AbjIAJLP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 05:11:15 -0400
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8B610D4
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 02:11:10 -0700 (PDT)
+Received: by mail-vs1-xe35.google.com with SMTP id ada2fe7eead31-44d3a5cd2f9so773252137.3
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 02:11:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693558953; x=1694163753; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693559470; x=1694164270; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8VJAln+FxvaL2Dzcsz1PZfKm9ZVCQjWZvz3A9Btztd4=;
-        b=lqQBikyJ8SLnMIUe3umd+3N5EQ9ddqFCwlEQv+AaSP1brQhmLsadx7hRUWKAJaLOsJ
-         mgtlhUCiIFv3gdPlQOp3W0idtTf18dvWjq8xtLaeUv/2zoIDWMtmyRi9GOlDXA/1ZNvU
-         3dLOCheECrwk2uSwX5o4wDvpolc/gG4v4IsEAGJ0/DvIwBryB34KA+iSy3IFVBMZkSd7
-         ueKd3rw9oSOL7Bl2/2CfDxLPP8yaD9TRMgf0wQ5IRXln2KXOztsBan+90CF78WX4Hb+K
-         a0O8eGvigAnJ1XSTb5UNRITD+CgVsRwvUliP4QvP7hLRxMWx+FYPlA2Y1+rCtS2OvCxR
-         P3eQ==
+        bh=S9rKBMswQzz0G5a9PjRthbbnFOV1fulh2gaLeF06Hns=;
+        b=DuZzgk3byLcJ8s6cdxiJUHfKObGlFQV3dxfb3xTrBa1qGbBJ3PLzN9TmuZj3ItVbj5
+         o/ZZYzVHv4TcRIU1fTPGCgq4xqA4gGMpXH4ptlSnhTb3tLizLwJ0r16HBAezDJMrZ4xU
+         6VBChQqDn3VUA1gRKTBZTJL1zmU6jwYalvsBr7BzeS5G0aP7+kVA7ApLOuGIUZ4Je2h8
+         2m2jYIvB0JcKGG5CV4ZjEBj4na6G3FFXgXJRUAHhreLRGBeW4jwZiKWqSxpE54qECPZv
+         IAVvpokZF8qYk5ZnCWk4FmOArz47jqC0hIhvj78lnTnP1Bs1WgrCmgH1SWE3wmsxWdft
+         KPfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693558953; x=1694163753;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1693559470; x=1694164270;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8VJAln+FxvaL2Dzcsz1PZfKm9ZVCQjWZvz3A9Btztd4=;
-        b=X3Ylbr7zMERZ0F1/Ir13lqw5mjxLiwki1yZs3k2B7o4IRUUqPFME/fI57W/oNQtTQD
-         KKVMK8q9Q2ddrMVqrOtn5rFWv2TtTgBMQr+ueSZjMLZsnvU9LBnmcko1qx9cUfPzHDqJ
-         mGMn+WnrRbPfrNI0StwcDCHrbwMiEhd5gqOvgKGTllohJT6yhf/uYURfBw8cjpzlcGKk
-         H3Fmt14474dDmEuGmFZKixJUkvqCEvjCH78vlbgQlKLixJFmrvhPTDocA/DN1MPn2Vz0
-         vqljR81CdPI3g51XOrteZ4/tPixjw2ZYMnEpmm25vEFB2FAC49COF3OYrI/TJP6pvZk0
-         1U4w==
-X-Gm-Message-State: AOJu0YzvrtCictZiBGutdj2dPaC7YdS8TadPG0scX3YC7c4vf3XhGTHJ
-        JmizhaMri1heIzQrW0Z3Tml+hw==
-X-Google-Smtp-Source: AGHT+IHMqvAKaaMztMMy4iFQEJuNgzItxXUvYDtTEYmOaPl8nMUOVjn+s5wvrZm2Kp43g4Esm7n6LQ==
-X-Received: by 2002:a17:907:3e1f:b0:9a5:9b93:d60d with SMTP id hp31-20020a1709073e1f00b009a59b93d60dmr5190862ejc.36.1693558953152;
-        Fri, 01 Sep 2023 02:02:33 -0700 (PDT)
-Received: from krzk-bin.. (77-252-46-238.static.ip.netia.com.pl. [77.252.46.238])
-        by smtp.gmail.com with ESMTPSA id ov22-20020a170906fc1600b00992c92af6f4sm1753687ejb.144.2023.09.01.02.02.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 02:02:32 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] pinctrl: qcom: lpass-lpi: allow slew rate bit in main pin config register
-Date:   Fri,  1 Sep 2023 11:02:24 +0200
-Message-Id: <20230901090224.27770-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230901090224.27770-1-krzysztof.kozlowski@linaro.org>
-References: <20230901090224.27770-1-krzysztof.kozlowski@linaro.org>
+        bh=S9rKBMswQzz0G5a9PjRthbbnFOV1fulh2gaLeF06Hns=;
+        b=YQqIKtKWEQp33ZJw4lABtowiX2Q/BpTnDmmVWh6sIhjGAZHqzpcFr4ONQWvbZfYtxz
+         U6AJA/MqYT9g5B3VNOHKisQlZrgFJGaUiMbg0U7PdQPxeciPe6I+faItVjZ1RkdfWTga
+         Eks2g+59YkaBp+Yoi92/cCDXzbhhrNxmP5kv787fwX8hyudibEhzfHW/jK4oiaV8q0FK
+         +7WEtjn6MLDydqgMrUYBCe8sSbP6LNUgmUe2uVU1cJot/I1mdRSfUoYctVRbr5K6gK8/
+         tnMAK0VYeNaW09ORNnWYR0BYpTs4n+sVbYOBmcQyjjqxxOzJ/kJcoBNpgVxFlH3ClpxP
+         rjlA==
+X-Gm-Message-State: AOJu0YzjLVZn9Shfk/bEfoRs0lNFGIfPBiJCCeAM2Th45PwxJ9tkOxqc
+        DP62V+9vQ+gaZ9hh5uHI1gyKHWZ2oAIH6wM46Pm4tA==
+X-Google-Smtp-Source: AGHT+IEKr5RdYRfaffLSGE3W9HNWoR6YhpztFAQFhe2/IObk5hfyiGPyxEFZvYD4yyF+fPlxtNBJ+LokjcVhTLp0190=
+X-Received: by 2002:a67:be1a:0:b0:44d:4b8d:31e5 with SMTP id
+ x26-20020a67be1a000000b0044d4b8d31e5mr1728632vsq.35.1693559470027; Fri, 01
+ Sep 2023 02:11:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20230529025011.2806-1-xingtong_wu@163.com> <20230529025011.2806-2-xingtong_wu@163.com>
+ <CACRpkdaLyEmdhutqsMUoV3ObW8bFePtNGHFqr5qiKV3w0ripug@mail.gmail.com> <d3780074-a5af-92ef-9aa3-1b321a14233c@163.com>
+In-Reply-To: <d3780074-a5af-92ef-9aa3-1b321a14233c@163.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 1 Sep 2023 11:10:59 +0200
+Message-ID: <CAMRc=MdsFpOC0mDRvFjeDa_FuhV=7Z-7Y5rHaERgqu305_u6VQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other
+ gpio pins
+To:     "xingtong.wu" <xingtong_wu@163.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xingtong.wu@siemens.com, andy.shevchenko@gmail.com,
+        simon.guinot@sequanux.org,
+        "Schaffner, Tobias" <tobias.schaffner@siemens.com>,
+        "Haeussler, Gerd" <gerd.haeussler.ext@siemens.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Existing Qualcomm SoCs have the LPASS pin controller slew rate control
-in separate register, however this will change with upcoming Qualcomm
-SoCs.  The slew rate will be part of the main register for pin
-configuration, thus second device IO address space is not needed.
+On Thu, Aug 31, 2023 at 9:28=E2=80=AFAM xingtong.wu <xingtong_wu@163.com> w=
+rote:
+>
+> On 2023/5/29 21:02, Linus Walleij wrote:
+> > On Mon, May 29, 2023 at 4:55=E2=80=AFAM <xingtong_wu@163.com> wrote:
+> >
+> >> From: "xingtong.wu" <xingtong.wu@siemens.com>
+> >>
+> >> switch pin base from static to automatic allocation to
+> >> avoid conflicts and align with other gpio chip drivers
+> >>
+> >> Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > If this platform does not have a ton of userspace using the obsolete
+> > sysfs this should be fine to apply. I say let's apply and see what happ=
+ens.
+> >
+> > Yours,
+> > Linus Walleij
+>
+> Hi
+>
+> Seems the issue happened again, the module "gpio-f7188x" register
+> gpio_chip failed because of the base value conflict. I hope the patch
+> can be merged soon, I'm afraid that you forgot it...
+>
+> The log is below:
+> [    6.872049] gpio-f7188x: Unsupported Fintek device 0x0303
+> [    6.872137] gpio-f7188x: Found nct6126d at 0x4e
+> [    6.899965] gpiochip_find_base: cannot find free range
+> [    6.899967] gpiochip_add_data_with_key: GPIOs 0..7 (gpio-f7188x-6) fai=
+led to register, -28
+> [    6.899970] gpio-f7188x gpio-f7188x: Failed to register gpiochip 6: -2=
+8
+> [    6.903329] simatic_ipc_batt simatic_ipc_batt: cannot find GPIO chip g=
+pio-f7188x-6, deferring
+>
+> There is a gpio_chip created by "pinctrl-tigerlake":
+> /sys/class/gpio/gpiochip49# ls -l
+> total 0
+> -r--r--r--. 1 root root 4096 Aug 31 06:40 base
+> lrwxrwxrwx. 1 root root    0 Aug 31 06:40 device -> ../../../INT34C6:00
+> -r--r--r--. 1 root root 4096 Aug 31 06:40 label
+> -r--r--r--. 1 root root 4096 Aug 31 06:40 ngpio
+> drwxr-xr-x. 2 root root    0 Aug 31 06:40 power
+> lrwxrwxrwx. 1 root root    0 Aug 31 06:38 subsystem -> ../../../../../cla=
+ss/gpio
+> -rw-r--r--. 1 root root 4096 Aug 31 06:38 uevent
+>
+> The base value is 49, label =3D INT34C6:00, ngpio =3D 463
+>
+> The issue arose by chance, because the driver "pinctrl-tigerlake" apply g=
+pio_chip->base
+> randomly, this time it apply the base value 49, so it have conflict to he=
+re:
+> https://github.com/torvalds/linux/blob/master/drivers/gpio/gpio-f7188x.c#=
+L283
+>
+> But sometime it apply other base values, so the issue do not happen.
+>
+> BRs,
+> Xing Tong Wu
+>
 
-Prepare for supporting new SoCs by adding flag customizing the driver
-behavior for slew rate.
+Ah, it fell through the cracks. I will queue it right after the merge windo=
+w.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 20 ++++++++++++++------
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.h |  7 +++++++
- 2 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index e2df2193a802..40eb58a3a8cd 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -190,6 +190,7 @@ static int lpi_config_set_slew_rate(struct lpi_pinctrl *pctrl,
- 				    const struct lpi_pingroup *g,
- 				    unsigned int group, unsigned int slew)
- {
-+	void __iomem *reg;
- 	unsigned long sval;
- 	int slew_offset;
- 
-@@ -203,12 +204,17 @@ static int lpi_config_set_slew_rate(struct lpi_pinctrl *pctrl,
- 	if (slew_offset == LPI_NO_SLEW)
- 		return 0;
- 
-+	if (pctrl->data->flags & LPI_FLAG_SLEW_RATE_SAME_REG)
-+		reg = pctrl->tlmm_base + LPI_TLMM_REG_OFFSET * group + LPI_GPIO_CFG_REG;
-+	else
-+		reg = pctrl->slew_base + LPI_SLEW_RATE_CTL_REG;
-+
- 	mutex_lock(&pctrl->lock);
- 
--	sval = ioread32(pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
-+	sval = ioread32(reg);
- 	sval &= ~(LPI_SLEW_RATE_MASK << slew_offset);
- 	sval |= slew << slew_offset;
--	iowrite32(sval, pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
-+	iowrite32(sval, reg);
- 
- 	mutex_unlock(&pctrl->lock);
- 
-@@ -452,10 +458,12 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(pctrl->tlmm_base),
- 				     "TLMM resource not provided\n");
- 
--	pctrl->slew_base = devm_platform_ioremap_resource(pdev, 1);
--	if (IS_ERR(pctrl->slew_base))
--		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
--				     "Slew resource not provided\n");
-+	if (!(data->flags & LPI_FLAG_SLEW_RATE_SAME_REG)) {
-+		pctrl->slew_base = devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(pctrl->slew_base))
-+			return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
-+					     "Slew resource not provided\n");
-+	}
- 
- 	ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
- 	if (ret)
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-index 29047bb80bb8..8a4cd8aef38c 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-@@ -60,6 +60,12 @@ struct pinctrl_pin_desc;
- 		.nfuncs = 5,				\
- 	}
- 
-+/*
-+ * Slew rate control is done in the same register as rest of the
-+ * pin configuration.
-+ */
-+#define LPI_FLAG_SLEW_RATE_SAME_REG			BIT(0)
-+
- struct lpi_pingroup {
- 	struct group_desc group;
- 	unsigned int pin;
-@@ -82,6 +88,7 @@ struct lpi_pinctrl_variant_data {
- 	int ngroups;
- 	const struct lpi_function *functions;
- 	int nfunctions;
-+	unsigned int flags;
- };
- 
- int lpi_pinctrl_probe(struct platform_device *pdev);
--- 
-2.34.1
-
+Bart
