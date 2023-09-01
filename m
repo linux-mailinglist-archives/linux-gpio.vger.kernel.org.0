@@ -2,90 +2,242 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B2B278FFCE
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 17:19:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A53CD79020E
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 20:32:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350162AbjIAPTK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 11:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45936 "EHLO
+        id S1350590AbjIAScs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 14:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232634AbjIAPTH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 11:19:07 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF59E65;
-        Fri,  1 Sep 2023 08:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693581544; x=1725117544;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bVJnvfmSHtW0c89b0k6r1M1NsQxoGs4Q0Pyfh+Gc9FI=;
-  b=IaUFhVi6U0sDMSjvddpXQoRxYbizr7MpgSPvKn3ZDU6+62KEwiJz9ecW
-   cZO6vfNAxOQ8LOuuXBvrPMHrK2exH99Im63I1s8TY944CzkRpzg/O+HUD
-   0ieL9OSQ08umD6uMLLL22xhu+pHy/PmaIdIgW07bj8JzVf7ZUEPjE3BHV
-   rNN6+mN2XCszp7H1IGXtzh28RauEetQistTDNwqHsE2E4AOaclCqNgwFX
-   iXmKW3/QmN3Q2kOtZ7LMM85co3o2Qe2yNT2k5r7t/owwYvaw8GqIQtIul
-   Ntfidm8Rdl9bKCONQqgtU+ZMI0a0Nsqo2amwxhqEQN9/2kICxYbw3JBmY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="376171071"
-X-IronPort-AV: E=Sophos;i="6.02,220,1688454000"; 
-   d="scan'208";a="376171071"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 08:19:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="739964130"
-X-IronPort-AV: E=Sophos;i="6.02,220,1688454000"; 
-   d="scan'208";a="739964130"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO intel.com) ([10.252.59.74])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 08:18:55 -0700
-Date:   Fri, 1 Sep 2023 17:18:50 +0200
-From:   Andi Shyti <andi.shyti@linux.intel.com>
-To:     Wentong Wu <wentong.wu@intel.com>
-Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, mka@chromium.org,
-        oneukum@suse.com, lee@kernel.org, wsa@kernel.org,
-        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
-        maz@kernel.org, brgl@bgdev.pl, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
-        sakari.ailus@linux.intel.com, bartosz.golaszewski@linaro.org,
-        srinivas.pandruvada@intel.com, zhifeng.wang@intel.com
-Subject: Re: [PATCH v12 4/4] gpio: update Intel LJCA USB GPIO driver
-Message-ID: <ZPIA2mMtNRakNqqd@ashyti-mobl2.lan>
-References: <1693546577-17824-1-git-send-email-wentong.wu@intel.com>
- <1693546577-17824-5-git-send-email-wentong.wu@intel.com>
+        with ESMTP id S1350587AbjIAScs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 14:32:48 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D82BCD8
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 11:32:44 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-31c479ede21so1968313f8f.2
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 11:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693593163; x=1694197963; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OAz0KgVu87lEXbvrXDdrxHlFUVSjyb+PiIQULpTmeH4=;
+        b=s45mkDJZ25XKoOzJvussXOQ817w/NwJ0MuyWX5AHqs8+Fy27qGykdtT4maDsTZprdV
+         MjeQfqqMyS1FgtI2JUuKK3BfLftp4nz7f02Y+o9KOm3RGCGLA5kM7vKpvxVlZw73LcsM
+         aM8gAsZPR/xBs/SUSkU3Ew6rhuVAQ9/scJa6eSXpWn1CLFjr1lC0w/omCrS6qKt68kAD
+         EuUY7uceUV1+62aU+THgAKhtIp0gCWJpk4Ct0jCffydwnEqb29jheg6kO/sPLf84dxTb
+         jSo8Pl6qG0+qnYuFfPbdZM8TRmnaVctDBz50axPsYIy5HFBzUGo306QN3qC6fZMxZ1L1
+         rcmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693593163; x=1694197963;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OAz0KgVu87lEXbvrXDdrxHlFUVSjyb+PiIQULpTmeH4=;
+        b=F5KWQlp2KmxYrBEbFWCspnYqffSpM772jRcN3LAZMqs7dW7Nv6mFOWmzCugBp3ICpi
+         ilhk1FnycF8dtOmZNZf6qxtXZVOfkXGH3XkLEguH/B/Cv3Yd2ih18x4C/+jhzEflv4Mg
+         Le0d8rlGnvc0vgfD9ojnJrzh4DqXPliby/SJQAkj4NDig71WpuGcDva9I7HtG+Gkcxvg
+         n+2xzXFh7iP2bISiFAGOGwYaQwUxSl82p/Y3pUaTm6oQRGL+gAaQgOFhf9dUcRF/krfR
+         NuSxrXsbovJa6n0lcoYSWcOqCjVbVwWVQ4byb983vQ6wUWkUJ1xVXAxjMiby1GOm7JrT
+         JRAA==
+X-Gm-Message-State: AOJu0YxqBv+hOttChvghgfYxw0YK7/Ah8gtIQ5YDqDDiCkqMDVD+/JBX
+        B97k3u0EnXD5mTzNJfbDUQih7B8mGBEER4RfEeQ=
+X-Google-Smtp-Source: AGHT+IHdcZv0aMC9hpKaw8d1Qby49feQRcpuBsplRoFoMasrDgWUCyPsOvbDhHM/3t7hALHQh4OU0w==
+X-Received: by 2002:a5d:4d49:0:b0:319:6ce2:e5a3 with SMTP id a9-20020a5d4d49000000b003196ce2e5a3mr2435096wru.26.1693593162956;
+        Fri, 01 Sep 2023 11:32:42 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e94b:1054:6760:aa27])
+        by smtp.gmail.com with ESMTPSA id bl1-20020adfe241000000b00317b5c8a4f1sm5972281wrb.60.2023.09.01.11.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 Sep 2023 11:32:42 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
+Date:   Fri,  1 Sep 2023 20:32:40 +0200
+Message-Id: <20230901183240.102701-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1693546577-17824-5-git-send-email-wentong.wu@intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Wentong,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Fri, Sep 01, 2023 at 01:36:17PM +0800, Wentong Wu wrote:
-> This driver communicate with LJCA GPIO module with specific
-> protocol through interfaces exported by LJCA USB driver.
-> Update the driver according to LJCA USB driver's changes.
-> 
-> Signed-off-by: Wentong Wu <wentong.wu@intel.com>
-> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+We access internals of struct gpio_device and struct gpio_desc because
+it's easier but it can actually be avoided and we're working towards a
+better encapsulation of GPIO data structures across the kernel so let's
+start at home.
 
-I am not understanding this patch... Looks like a collection of
-random to relevant changes you did in gpio-ljca.c.
+Instead of checking gpio_desc flags, let's just track the requests of
+GPIOs in the driver. We also already store the information about
+direction of simulated lines.
 
-I'm not able to review this, can you please split it in minor
-changes?
+For kobjects needed by sysfs callbacks: we can leverage the fact that
+once created for a software node, struct device is accessible from that
+fwnode_handle. We don't need to dereference gpio_device.
 
-Meanwhile the previous patches should be able to work without
-this one, right?
+While at it: fix one line break and remove the untrue part about
+configfs callbacks using dev_get_drvdata() from a comment.
 
-Andi
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-sim.c | 49 +++++++++++++++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index 271db3639a78..5f52d77567a1 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -12,6 +12,7 @@
+ #include <linux/completion.h>
+ #include <linux/configfs.h>
+ #include <linux/device.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/gpio/machine.h>
+ #include <linux/idr.h>
+@@ -30,8 +31,6 @@
+ #include <linux/string_helpers.h>
+ #include <linux/sysfs.h>
+ 
+-#include "gpiolib.h"
+-
+ #define GPIO_SIM_NGPIO_MAX	1024
+ #define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
+ #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
+@@ -40,6 +39,8 @@ static DEFINE_IDA(gpio_sim_ida);
+ 
+ struct gpio_sim_chip {
+ 	struct gpio_chip gc;
++	struct fwnode_handle *swnode;
++	unsigned long *request_map;
+ 	unsigned long *direction_map;
+ 	unsigned long *value_map;
+ 	unsigned long *pull_map;
+@@ -63,16 +64,11 @@ static int gpio_sim_apply_pull(struct gpio_sim_chip *chip,
+ 			       unsigned int offset, int value)
+ {
+ 	int irq, irq_type, ret;
+-	struct gpio_desc *desc;
+-	struct gpio_chip *gc;
+-
+-	gc = &chip->gc;
+-	desc = &gc->gpiodev->descs[offset];
+ 
+ 	guard(mutex)(&chip->lock);
+ 
+-	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
+-	    !test_bit(FLAG_IS_OUT, &desc->flags)) {
++	if (test_bit(offset, chip->request_map) &&
++	    test_bit(offset, chip->direction_map)) {
+ 		if (value == !!test_bit(offset, chip->value_map))
+ 			goto set_pull;
+ 
+@@ -99,8 +95,8 @@ static int gpio_sim_apply_pull(struct gpio_sim_chip *chip,
+ 
+ set_value:
+ 	/* Change the value unless we're actively driving the line. */
+-	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
+-	    !test_bit(FLAG_IS_OUT, &desc->flags))
++	if (!test_bit(offset, chip->request_map) ||
++	    test_bit(offset, chip->direction_map))
+ 		__assign_bit(offset, chip->value_map, value);
+ 
+ set_pull:
+@@ -181,7 +177,7 @@ static int gpio_sim_get_direction(struct gpio_chip *gc, unsigned int offset)
+ }
+ 
+ static int gpio_sim_set_config(struct gpio_chip *gc,
+-				  unsigned int offset, unsigned long config)
++			       unsigned int offset, unsigned long config)
+ {
+ 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
+ 
+@@ -204,13 +200,25 @@ static int gpio_sim_to_irq(struct gpio_chip *gc, unsigned int offset)
+ 	return irq_create_mapping(chip->irq_sim, offset);
+ }
+ 
+-static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
++static int gpio_sim_request(struct gpio_chip *gc, unsigned int offset)
+ {
+ 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
+ 
+ 	scoped_guard(mutex, &chip->lock)
++		__set_bit(offset, chip->request_map);
++
++	return 0;
++}
++
++static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	scoped_guard(mutex, &chip->lock) {
+ 		__assign_bit(offset, chip->value_map,
+ 			     !!test_bit(offset, chip->pull_map));
++		__clear_bit(offset, chip->request_map);
++	}
+ }
+ 
+ static ssize_t gpio_sim_sysfs_val_show(struct device *dev,
+@@ -295,7 +303,7 @@ static void gpio_sim_sysfs_remove(void *data)
+ {
+ 	struct gpio_sim_chip *chip = data;
+ 
+-	sysfs_remove_groups(&chip->gc.gpiodev->dev.kobj, chip->attr_groups);
++	sysfs_remove_groups(&chip->swnode->dev->kobj, chip->attr_groups);
+ }
+ 
+ static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
+@@ -352,7 +360,7 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
+ 		chip->attr_groups[i] = attr_group;
+ 	}
+ 
+-	ret = sysfs_create_groups(&chip->gc.gpiodev->dev.kobj,
++	ret = sysfs_create_groups(&chip->swnode->dev->kobj,
+ 				  chip->attr_groups);
+ 	if (ret)
+ 		return ret;
+@@ -387,6 +395,12 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
++	chip->swnode = swnode;
++
++	chip->request_map = devm_bitmap_zalloc(dev, num_lines, GFP_KERNEL);
++	if (!chip->request_map)
++		return -ENOMEM;
++
+ 	chip->direction_map = devm_bitmap_alloc(dev, num_lines, GFP_KERNEL);
+ 	if (!chip->direction_map)
+ 		return -ENOMEM;
+@@ -432,6 +446,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
+ 	gc->get_direction = gpio_sim_get_direction;
+ 	gc->set_config = gpio_sim_set_config;
+ 	gc->to_irq = gpio_sim_to_irq;
++	gc->request = gpio_sim_request;
+ 	gc->free = gpio_sim_free;
+ 	gc->can_sleep = true;
+ 
+@@ -439,8 +454,8 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Used by sysfs and configfs callbacks. */
+-	dev_set_drvdata(&gc->gpiodev->dev, chip);
++	/* Used by sysfs callbacks. */
++	dev_set_drvdata(swnode->dev, chip);
+ 
+ 	return gpio_sim_setup_sysfs(chip);
+ }
+-- 
+2.39.2
+
