@@ -2,93 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E16878FC55
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 13:35:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E929A78FCF8
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 14:12:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349187AbjIALf2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 07:35:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58702 "EHLO
+        id S1347289AbjIAMMn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 08:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349189AbjIALf1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 07:35:27 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D4A10D5
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 04:35:24 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-31c3df710bdso1495728f8f.1
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 04:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693568123; x=1694172923; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=t18hQG54uxNXt/UqPwS8SvH0lWIXtL7YjsP7g7CB7ZY=;
-        b=LVYb2naVW5ChtuMMvV168AbEQQVfvTOCeEuZdaBs5oF6kyfM31eFXYDSuBbGxJ6jbq
-         ypoqsYehK6ogcBTLiSo3+nyQ04i4LQUqqIaP91Vin4qmXVBYzpp9qgoEmtHo12oZzKhH
-         BVU2PlXK7s2LsTtSt2Zph5vzfQkm/22TA0TbksYm1oXdw3ZOflghBiHwSe+bqP3FIplw
-         tVJHAh/j+E6oSurQE0wXt3t6EgmFwAUJCs6rgAwtzr/BRG3iOSPJr6vPMVzYl1Guk1nu
-         sww9quiAEwVACUfMRmxRkPz5b/4QaDaMZpkaGpkPgfF4KN4hI3QZXni98Beu12tJAvc/
-         kTWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693568123; x=1694172923;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t18hQG54uxNXt/UqPwS8SvH0lWIXtL7YjsP7g7CB7ZY=;
-        b=GlLBjKlPMWF+4aL9BqPzGvQBtLJb66+ZimpinFgCBnYHEkEDHL1iONqN/32WVF6ZYP
-         /veLMZW7coqfM/ZrrWQXtQ0klS862HoOhmsQV3gyRWNgT9mH/tss63orE7qW8yhFgHc7
-         xGt8TcbL7jU30B3P8idBRi9rgCuo6lwPCzdLxrUbPe56lB3v/9pW4FtHgU6hZfRQGcTv
-         isuyxf4LwogB50ODFPcTAde5FCtBWfTAMWgpTxOJMd6EIC5Zo4rAEc8yaaQuyedWq6LA
-         rIJVhG+KFb8wHkqlRFyL85JTtJ69mOldN4UV6yqtrKUpCXYB5DBEXiVVKO6uzlAMCQaZ
-         JObw==
-X-Gm-Message-State: AOJu0YxeifhDN3VsBcq/buT3NuHPSf845GC3Kq2Dxj8rOxnip/bOlkYR
-        aChD3C1AQPwwZHLko212wfPFAA==
-X-Google-Smtp-Source: AGHT+IGnLv8hI55wMvsH7Av2hSWd6AFLA/Vz8mb0KZSnXfPP2Uj4hMrjrSe5g+8Efc3jep+DUz5Zkg==
-X-Received: by 2002:a5d:4408:0:b0:31a:d4a9:bdac with SMTP id z8-20020a5d4408000000b0031ad4a9bdacmr1815657wrq.11.1693568123087;
-        Fri, 01 Sep 2023 04:35:23 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e94b:1054:6760:aa27])
-        by smtp.gmail.com with ESMTPSA id l16-20020adfe9d0000000b00317e77106dbsm4955439wrn.48.2023.09.01.04.35.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 04:35:22 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S232105AbjIAMMn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 08:12:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AECCF3;
+        Fri,  1 Sep 2023 05:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693570360; x=1725106360;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JT0cba5ZbZYJsb7HCImJ6UnYKJtUBT74iXKfgEcKKxY=;
+  b=ZxtSEAwD1DBhN/1qePk9tci0cUpAPG8QJ4XiDToz7ZGTR9vbIPJufccn
+   gihyGY4saoGkuhBJamdcR0d7UuN8jfYjug9uL385jU7UTOKGgnfLLLpwi
+   tMFz4RHzQMg2BMcgT/aTcmBCNaN9XYqo6v215VBONFtv8JlNFauGTH9gG
+   pO4ptZM+3ZFDj7PQuECki+a53iC0P4dZyaGgaYxYLLVI5Fnc+1fg+PlSM
+   L2hC84LO0Q2PoY+TKMwJ7cRq4PqPVpbYnxpq1qdgo5KVf8Pazq4k5En8A
+   saPCmXxcKL7o9x+x3lnDyIM3tUWL9RoY57a8LbNwaKL86zyEkQuGSPW2J
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="462574043"
+X-IronPort-AV: E=Sophos;i="6.02,219,1688454000"; 
+   d="scan'208";a="462574043"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 05:12:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="743086938"
+X-IronPort-AV: E=Sophos;i="6.02,219,1688454000"; 
+   d="scan'208";a="743086938"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 05:12:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qc30t-005fPW-2h;
+        Fri, 01 Sep 2023 15:12:35 +0300
+Date:   Fri, 1 Sep 2023 15:12:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: remove stray newline in gpio/driver.h
-Date:   Fri,  1 Sep 2023 13:35:20 +0200
-Message-Id: <20230901113520.13352-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+Subject: Re: [PATCH] gpiolib: remove unnecessary extern specifiers from the
+ driver header
+Message-ID: <ZPHVM7DYpig0Joyd@smile.fi.intel.com>
+References: <20230901113458.13323-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230901113458.13323-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Sep 01, 2023 at 01:34:58PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> 'extern' doesn't do anything for function declarations. Remove it.
 
-Fix a double newline in the GPIO provider header.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- include/linux/gpio/driver.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index c312bf3e0369..8f0859ba7065 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -765,7 +765,6 @@ struct gpio_desc *gpiochip_get_desc(struct gpio_chip *gc, unsigned int hwnum);
- int gpiochip_lock_as_irq(struct gpio_chip *gc, unsigned int offset);
- void gpiochip_unlock_as_irq(struct gpio_chip *gc, unsigned int offset);
- 
--
- struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
- 
- #else /* CONFIG_GPIOLIB */
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
