@@ -2,209 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C592E78FF80
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 16:54:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3C9B78FFA3
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 17:05:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346411AbjIAOyR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 10:54:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60074 "EHLO
+        id S1350110AbjIAPFA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 11:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232246AbjIAOyR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 10:54:17 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1877310EF
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 07:54:13 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-99357737980so256463666b.2
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 07:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1693580051; x=1694184851; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fGIf0DvU1nNDMRQMSdHFG62jcR9LpXuu4Dt0E23j3FE=;
-        b=Ma8bpEQqH0mof24DOG2yWlhGtezYZJCJ917wD7KEcVFKSgK5dZJ7CWslrzpzSA1pLk
-         fmNfSMHwIytkUIYPNi7zpINRizvKhQRQhzVRlFOxsHPKRPBwkZWgLHZcIL++QTL/1Kdm
-         sUkNpLjheMwp78TcI4/FdiYt8VJqYsatrrrBGUAUBsuHOVRA48nTo0aCYX/psnyYAM9K
-         ZTappGw3+/jV9NlvDIpNOSyJarNfrRetvDbGGp5ZI9rt4bbOagOldBCTiV9+SxVaqskM
-         4l2Zqz5zMBxbL0U4r9PMvnHtGmXmrnVLoD3J6jRTiN97K/fZE9rjBgOSUR/CDtNgK6IO
-         CG7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693580051; x=1694184851;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fGIf0DvU1nNDMRQMSdHFG62jcR9LpXuu4Dt0E23j3FE=;
-        b=c2XqrJyCprsrK2ipRWLWfjlUJLFy5sCT/h5wM1wQDofKll2WlV+c5EiVM7Ez1/h/Pn
-         glj0OSBWMgcCXUKO6xPpCg9cyu4rHxwLLQmGJjqT8stLZfTPEcX8Zq6q+wGZ0E3PbPqB
-         RmOojb52m3jlPHLc028m1b7x05k2jRTFxyRWBW/iRtDwEsfufqB07/WiaMzqETyYhZPa
-         lKVKHU6A9by0FjF7DDI6g4QvBZuXcq7kw6LlBi5RTki7U7O/DCsn1hRrnvKjoSHX4uob
-         Z9BR9tu7wC73s/prbTvgzZMTAuwXFZod6HHyUG7tzmKHMz8Q4AvV5QxUuHwWjlHXxqiI
-         d1uw==
-X-Gm-Message-State: AOJu0YwgFatoXANCIjZlpD0WezD2UgcYLZr3ENz+uGKpB7vlaXLSkyxT
-        /bbVsLUZEeoR5r375jEbLwVTbw==
-X-Google-Smtp-Source: AGHT+IH/PKF9WiFbxkACIWEMDcNjmfTt2sIKeCiPxxjLVl4tKzZFX/ZFQnqHbTEEgjwuW8OqCuflFA==
-X-Received: by 2002:a17:907:272a:b0:9a1:d67c:b4f3 with SMTP id d10-20020a170907272a00b009a1d67cb4f3mr1798284ejl.77.1693580051449;
-        Fri, 01 Sep 2023 07:54:11 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id fx4-20020a170906b74400b009887f4e0291sm2052275ejb.27.2023.09.01.07.54.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Sep 2023 07:54:11 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 01 Sep 2023 16:54:09 +0200
-Message-Id: <CV7O0TYYEFA8.1Q42JITFSW77Q@otso>
-Subject: Re: [PATCH 02/11] nvmem: qfprom: Mark core clk as optional
-From:   "Luca Weiss" <luca.weiss@fairphone.com>
-To:     "Doug Anderson" <dianders@chromium.org>
-Cc:     <cros-qcom-dts-watchers@chromium.org>,
-        "Andy Gross" <agross@kernel.org>,
-        "Bjorn Andersson" <andersson@kernel.org>,
-        "Konrad Dybcio" <konrad.dybcio@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        "Conor Dooley" <conor+dt@kernel.org>,
-        "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Viresh Kumar" <viresh.kumar@linaro.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>,
-        <phone-devel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-pm@vger.kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
- <20230830-fp5-initial-v1-2-5a954519bbad@fairphone.com>
- <CAD=FV=WS2hgY=bQjLOs3Fdp8pbZyMsaS-0BpoxPq90Etfi+Xuw@mail.gmail.com>
- <CV5YJVXIL8OT.1ZWW3KVCHPTA5@otso>
- <CAD=FV=XhdORH=naTtoc+kCC4A7UdAJKwq=Te6B3qvXNGBwBieg@mail.gmail.com>
-In-Reply-To: <CAD=FV=XhdORH=naTtoc+kCC4A7UdAJKwq=Te6B3qvXNGBwBieg@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S243098AbjIAPFA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 11:05:00 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D9D10D2;
+        Fri,  1 Sep 2023 08:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693580696; x=1725116696;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4CyzzoubUESIDkAYvz+WoP396Qy3+MhZcGKRw8iCwoQ=;
+  b=CKaOmpH3NVBF0nwT1vKLfktyFPu+ldH922NLbX2FEp8ZlSg0PO7LzXdc
+   o8OOORJaMV8qFgtcH+O+tO0qsDp+k3Kr3tE/FlEf7sVh6U+aouUh0I+Qp
+   cxHfrvmP4/UstZQs3VKPFLK1USrc1ISFa3Upwo4dhML2h6cZEF7CSgFRt
+   n6y3bZ1ETov42cJjjBMPk6255zImh4yOS34GHjjeB1xX5FmE7gMZMVhiW
+   GFOAyn+LR/4/ogotZlUmEarF5PnVaNSzdYo2p8c6sVtes1TChvOoZpp72
+   IYPHTgElQJE7Akkx2szkzdvpGVxjB6zYx/04kmXHAxhvpwMgbYg1D5PCH
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="376167646"
+X-IronPort-AV: E=Sophos;i="6.02,220,1688454000"; 
+   d="scan'208";a="376167646"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 08:04:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="739960122"
+X-IronPort-AV: E=Sophos;i="6.02,220,1688454000"; 
+   d="scan'208";a="739960122"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO intel.com) ([10.252.59.74])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 08:04:39 -0700
+Date:   Fri, 1 Sep 2023 17:04:36 +0200
+From:   Andi Shyti <andi.shyti@linux.intel.com>
+To:     Wentong Wu <wentong.wu@intel.com>
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, mka@chromium.org,
+        oneukum@suse.com, lee@kernel.org, wsa@kernel.org,
+        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
+        maz@kernel.org, brgl@bgdev.pl, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
+        sakari.ailus@linux.intel.com, bartosz.golaszewski@linaro.org,
+        srinivas.pandruvada@intel.com, zhifeng.wang@intel.com
+Subject: Re: [PATCH v12 1/4] usb: Add support for Intel LJCA device
+Message-ID: <ZPH9hLjQ9GrmfvXh@ashyti-mobl2.lan>
+References: <1693546577-17824-1-git-send-email-wentong.wu@intel.com>
+ <1693546577-17824-2-git-send-email-wentong.wu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1693546577-17824-2-git-send-email-wentong.wu@intel.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed Aug 30, 2023 at 4:57 PM CEST, Doug Anderson wrote:
-> Hi,
->
-> On Wed, Aug 30, 2023 at 7:43=E2=80=AFAM Luca Weiss <luca.weiss@fairphone.=
-com> wrote:
-> >
-> > On Wed Aug 30, 2023 at 4:30 PM CEST, Doug Anderson wrote:
-> > > Hi,
-> > >
-> > > On Wed, Aug 30, 2023 at 2:58=E2=80=AFAM Luca Weiss <luca.weiss@fairph=
-one.com> wrote:
-> > > >
-> > > > On some platforms like sc7280 on non-ChromeOS devices the core cloc=
-k
-> > > > cannot be touched by Linux so we cannot provide it. Mark it as opti=
-onal
-> > > > as accessing qfprom works without it.
-> > > >
-> > > > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> > > > ---
-> > > >  drivers/nvmem/qfprom.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > Are you actually testing burning fuses from the OS, or are you just
-> > > using the nvmem in "read-only" mode? From comments in the bindings, i=
-f
-> > > you're trying to burn the fuses then the clock is required. If things
-> > > are in read-only mode then the clock isn't required.
-> >
-> > Hi Doug,
-> >
-> > I definitely don't plan on burning any fuses on this phone. Not even
-> > sure that's allowed by the TZ / boot stack.
-> >
-> > >
-> > > When I compare to the driver, it seems like the driver assumes that i=
-f
-> > > more than one memory region is provided then you must be supporting
-> > > burning fuses. The bindings agree that having 4 memory regions
-> > > specified means that the nvmem supports burning and 1 memory region
-> > > specified means read-only. The extra 3 memory regions in the nvmem ar=
-e
-> > > all about fuse burning, I believe.
-> > >
-> > > So maybe the right fix here is to just change your dts to specify one
-> > > memory region?
-> >
-> > I got feedback from Konrad that this here would be the preferred
-> > approach compared to having a different dts for ChromeOS vs non-ChromeO=
-S
-> > devices. I don't feel strongly to either, for me it's also okay to
-> > remove the extra memory regions and only have the main one used on
-> > regular qcom devices.
-> >
-> > Let me know what you think.
->
-> I don't hate the idea of leaving the extra memory regions in the dts.
-> They do describe the hardware, after all, even if the main OS can't
-> actually access those memory regions. ...though the same could also be
-> said about the clock you've removed. Said another way: if you want to
-> fully describe the hardware then the dts should have the extra memory
-> regions and the clock. If you are OK w/ just describing the hardware
-> in the way that the OS has access to then the dts should not have the
-> extra memory regions and not have the clock. Does that sound right?
+Hi Wentong,
 
-Not sure which of those memory regions are actually accessible on this
-board, but honestly I don't even want to try accessing it. Blowing fuses
-is not my wish there ;)
+On Fri, Sep 01, 2023 at 01:36:14PM +0800, Wentong Wu wrote:
+> Implements the USB part of Intel USB-I2C/GPIO/SPI adapter device
+> named "La Jolla Cove Adapter" (LJCA).
+> 
+> The communication between the various LJCA module drivers and the
+> hardware will be muxed/demuxed by this driver. Three modules (
+> I2C, GPIO, and SPI) are supported currently.
+> 
+> Each sub-module of LJCA device is identified by type field within
+> the LJCA message header.
+> 
+> The sub-modules of LJCA can use ljca_transfer() to issue a transfer
+> between host and hardware. And ljca_register_event_cb is exported
+> to LJCA sub-module drivers for hardware event subscription.
+> 
+> The minimum code in ASL that covers this board is
+> Scope (\_SB.PCI0.DWC3.RHUB.HS01)
+>     {
+>         Device (GPIO)
+>         {
+>             Name (_ADR, Zero)
+>             Name (_STA, 0x0F)
+>         }
+> 
+>         Device (I2C)
+>         {
+>             Name (_ADR, One)
+>             Name (_STA, 0x0F)
+>         }
+> 
+>         Device (SPI)
+>         {
+>             Name (_ADR, 0x02)
+>             Name (_STA, 0x0F)
+>         }
+>     }
+> 
+> Signed-off-by: Wentong Wu <wentong.wu@intel.com>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-On downstream the node is just described like the following:
+looks good:
 
-	qfprom: qfprom@780000 {
-		compatible =3D "qcom,qfprom";
-		reg =3D <0x780000 0x7000>;
-		...
-	};
+Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com> 
 
-So we have 0x780000 - 0x786fff here.
-
-In sc7280.dtsi we have the following:
-
-	qfprom: efuse@784000 {
-		compatible =3D "qcom,sc7280-qfprom", "qcom,qfprom";
-		reg =3D <0 0x00784000 0 0xa20>,
-			  <0 0x00780000 0 0xa20>,
-			  <0 0x00782000 0 0x120>,
-			  <0 0x00786000 0 0x1fff>;
-		...
-	};
-
-So I guess this:
-* 0x780000 - 0x780a1f
-* 0x782000 - 0x78211f
-* 0x784000 - 0x784a1f
-* 0x786000 - 0x787ffe
-
-So at least the last memory region seems to be partially out of range
-according to downstream.
-
-So after reading all of this I tried running this commmand on the phone
-and the phone reboots into 900e mode.
-
-  $ cat /sys/devices/platform/soc@0/784000.efuse/qfprom0/nvmem
-
-I guess normally this should work? So if I interpret this correctly, the
-Linux driver thinks it can access more than it can/should. But also
-should probably try this command on another chipset to see if it works
-on any really?
-
-Regards
-Luca
-
->
-> If somehow you do end up with something like your patch, though,
-> you're still missing a bit. Specifically, you don't want to "enable
-> writing" a few lines below if you didn't get the clock, right?
->
-> -Doug
-
+Andi
