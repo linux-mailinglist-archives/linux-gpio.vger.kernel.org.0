@@ -2,144 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4A7478FA7E
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 11:11:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CAD578FAB0
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 11:23:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231508AbjIAJLQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 05:11:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57168 "EHLO
+        id S243477AbjIAJXE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 05:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348728AbjIAJLP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 05:11:15 -0400
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8B610D4
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 02:11:10 -0700 (PDT)
-Received: by mail-vs1-xe35.google.com with SMTP id ada2fe7eead31-44d3a5cd2f9so773252137.3
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 02:11:10 -0700 (PDT)
+        with ESMTP id S241904AbjIAJXD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 05:23:03 -0400
+Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFC01710
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 02:22:45 -0700 (PDT)
+Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-48d0ceedda1so675808e0c.3
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 02:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693559470; x=1694164270; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1693560165; x=1694164965; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S9rKBMswQzz0G5a9PjRthbbnFOV1fulh2gaLeF06Hns=;
-        b=DuZzgk3byLcJ8s6cdxiJUHfKObGlFQV3dxfb3xTrBa1qGbBJ3PLzN9TmuZj3ItVbj5
-         o/ZZYzVHv4TcRIU1fTPGCgq4xqA4gGMpXH4ptlSnhTb3tLizLwJ0r16HBAezDJMrZ4xU
-         6VBChQqDn3VUA1gRKTBZTJL1zmU6jwYalvsBr7BzeS5G0aP7+kVA7ApLOuGIUZ4Je2h8
-         2m2jYIvB0JcKGG5CV4ZjEBj4na6G3FFXgXJRUAHhreLRGBeW4jwZiKWqSxpE54qECPZv
-         IAVvpokZF8qYk5ZnCWk4FmOArz47jqC0hIhvj78lnTnP1Bs1WgrCmgH1SWE3wmsxWdft
-         KPfA==
+        bh=qTzp72FaKt5+/KYDM8z5KPWPzrLcXSZRzOQh4gdj+Z4=;
+        b=DKP0jPhDppKBefv24NPt1TH7Bx/GTyNnCz/Lfa4qd3pbbb4ci7qa3vcBQmpOXj/qQs
+         jUJIJykTD5DBQyi71dyR6IacsV1HJdYlNC3+rcl5ycFP8O2SNQK/riQmA+xzIkSLtEiB
+         1MH57j9JO4+Y0RnOriTG9F+ZsVc3hFqixrHL5NYovhBNAqPaOVO174BXm85Rm8Pv8ChN
+         Vav0h3rvr2OvyhWeyYR1Y2CbPRstDbtPRi7BBwXCCezLApdShfZaT9Tf7rZ08tPK+auw
+         O8gaw/Hzu2krxkgBbgCaRKIzrNRyEwcW0mmeosBERobsV5EnYFIE9YjqfIdF3CbWyM1r
+         LpOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693559470; x=1694164270;
+        d=1e100.net; s=20221208; t=1693560165; x=1694164965;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S9rKBMswQzz0G5a9PjRthbbnFOV1fulh2gaLeF06Hns=;
-        b=YQqIKtKWEQp33ZJw4lABtowiX2Q/BpTnDmmVWh6sIhjGAZHqzpcFr4ONQWvbZfYtxz
-         U6AJA/MqYT9g5B3VNOHKisQlZrgFJGaUiMbg0U7PdQPxeciPe6I+faItVjZ1RkdfWTga
-         Eks2g+59YkaBp+Yoi92/cCDXzbhhrNxmP5kv787fwX8hyudibEhzfHW/jK4oiaV8q0FK
-         +7WEtjn6MLDydqgMrUYBCe8sSbP6LNUgmUe2uVU1cJot/I1mdRSfUoYctVRbr5K6gK8/
-         tnMAK0VYeNaW09ORNnWYR0BYpTs4n+sVbYOBmcQyjjqxxOzJ/kJcoBNpgVxFlH3ClpxP
-         rjlA==
-X-Gm-Message-State: AOJu0YzjLVZn9Shfk/bEfoRs0lNFGIfPBiJCCeAM2Th45PwxJ9tkOxqc
-        DP62V+9vQ+gaZ9hh5uHI1gyKHWZ2oAIH6wM46Pm4tA==
-X-Google-Smtp-Source: AGHT+IEKr5RdYRfaffLSGE3W9HNWoR6YhpztFAQFhe2/IObk5hfyiGPyxEFZvYD4yyF+fPlxtNBJ+LokjcVhTLp0190=
-X-Received: by 2002:a67:be1a:0:b0:44d:4b8d:31e5 with SMTP id
- x26-20020a67be1a000000b0044d4b8d31e5mr1728632vsq.35.1693559470027; Fri, 01
- Sep 2023 02:11:10 -0700 (PDT)
+        bh=qTzp72FaKt5+/KYDM8z5KPWPzrLcXSZRzOQh4gdj+Z4=;
+        b=QRMDaiJTcbgTZHDjQX7Y7Aaur6BQV4QE2f4WUNLNWIpz7aYbBKMBi8ONKbL//8GdmB
+         HdpN5IU3G6FMd75x+/+yRaJsvHAFQi5H3Evx47ONhIbYU1a1fsw0uEmRCJTAyNLYfmC+
+         iWAea0p39N5v5XFb6Wcd8+FmGVReBWKYMmm77te/IwpdWc5SmmxBMQ7UR50pzKJCqfWa
+         UMbLY2Y2/idWCBw0400xFrJvS1xDzQWTEUaL1Y9e6BKBjA9wCqEkZXOYHWYMGq918GSQ
+         7gygxmgUdNrLi8q8xaKamOOd3lHy2RI7TXsrBffVywY6ObYmkoBAP5Y0qhk3Sjx3OJI8
+         Xp+A==
+X-Gm-Message-State: AOJu0Ywk1aijeUQnvlWX02PgzTp6CkQD/Ds3zQMr7330Ty5vG96p7jWf
+        nw402zYtcaMAC/Hz2B8HwUjwkEmvPLM8izAzoWmShA==
+X-Google-Smtp-Source: AGHT+IHgf/l7rJMgcfAQ+Vq3h78H7E8n/a6xIfzX4cXBx29aryy4DTZC33H/caPyyuOBKvHszof11uB8sFAE/YnDh9U=
+X-Received: by 2002:a1f:cac7:0:b0:48d:eaa:45cf with SMTP id
+ a190-20020a1fcac7000000b0048d0eaa45cfmr1973675vkg.1.1693560164877; Fri, 01
+ Sep 2023 02:22:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230529025011.2806-1-xingtong_wu@163.com> <20230529025011.2806-2-xingtong_wu@163.com>
- <CACRpkdaLyEmdhutqsMUoV3ObW8bFePtNGHFqr5qiKV3w0ripug@mail.gmail.com> <d3780074-a5af-92ef-9aa3-1b321a14233c@163.com>
-In-Reply-To: <d3780074-a5af-92ef-9aa3-1b321a14233c@163.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 1 Sep 2023 11:10:59 +0200
-Message-ID: <CAMRc=MdsFpOC0mDRvFjeDa_FuhV=7Z-7Y5rHaERgqu305_u6VQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio-f7188x: fix base values conflicts with other
- gpio pins
-To:     "xingtong.wu" <xingtong_wu@163.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xingtong.wu@siemens.com, andy.shevchenko@gmail.com,
-        simon.guinot@sequanux.org,
-        "Schaffner, Tobias" <tobias.schaffner@siemens.com>,
-        "Haeussler, Gerd" <gerd.haeussler.ext@siemens.com>
+References: <20230831194934.19628-1-brgl@bgdev.pl> <ZPEhS0uBWABpaE+/@smile.fi.intel.com>
+ <CAMRc=Md-6i+nqDtYiUUtZExA32c0nJxhevYsiZqmd1PP8aaMng@mail.gmail.com> <ZPGnFHgtK1wE6Ppf@smile.fi.intel.com>
+In-Reply-To: <ZPGnFHgtK1wE6Ppf@smile.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 1 Sep 2023 11:22:33 +0200
+Message-ID: <CACRpkdbGdCFb9a5bV_aBMd3eee3N5EdWy+Bkpct-YfHUgHysVw@mail.gmail.com>
+Subject: Re: [RFT PATCH] spi: bcm2835: reduce the abuse of the GPIO API
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 9:28=E2=80=AFAM xingtong.wu <xingtong_wu@163.com> w=
-rote:
->
-> On 2023/5/29 21:02, Linus Walleij wrote:
-> > On Mon, May 29, 2023 at 4:55=E2=80=AFAM <xingtong_wu@163.com> wrote:
-> >
-> >> From: "xingtong.wu" <xingtong.wu@siemens.com>
-> >>
-> >> switch pin base from static to automatic allocation to
-> >> avoid conflicts and align with other gpio chip drivers
-> >>
-> >> Signed-off-by: xingtong.wu <xingtong.wu@siemens.com>
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > If this platform does not have a ton of userspace using the obsolete
-> > sysfs this should be fine to apply. I say let's apply and see what happ=
-ens.
-> >
-> > Yours,
-> > Linus Walleij
->
-> Hi
->
-> Seems the issue happened again, the module "gpio-f7188x" register
-> gpio_chip failed because of the base value conflict. I hope the patch
-> can be merged soon, I'm afraid that you forgot it...
->
-> The log is below:
-> [    6.872049] gpio-f7188x: Unsupported Fintek device 0x0303
-> [    6.872137] gpio-f7188x: Found nct6126d at 0x4e
-> [    6.899965] gpiochip_find_base: cannot find free range
-> [    6.899967] gpiochip_add_data_with_key: GPIOs 0..7 (gpio-f7188x-6) fai=
-led to register, -28
-> [    6.899970] gpio-f7188x gpio-f7188x: Failed to register gpiochip 6: -2=
-8
-> [    6.903329] simatic_ipc_batt simatic_ipc_batt: cannot find GPIO chip g=
-pio-f7188x-6, deferring
->
-> There is a gpio_chip created by "pinctrl-tigerlake":
-> /sys/class/gpio/gpiochip49# ls -l
-> total 0
-> -r--r--r--. 1 root root 4096 Aug 31 06:40 base
-> lrwxrwxrwx. 1 root root    0 Aug 31 06:40 device -> ../../../INT34C6:00
-> -r--r--r--. 1 root root 4096 Aug 31 06:40 label
-> -r--r--r--. 1 root root 4096 Aug 31 06:40 ngpio
-> drwxr-xr-x. 2 root root    0 Aug 31 06:40 power
-> lrwxrwxrwx. 1 root root    0 Aug 31 06:38 subsystem -> ../../../../../cla=
-ss/gpio
-> -rw-r--r--. 1 root root 4096 Aug 31 06:38 uevent
->
-> The base value is 49, label =3D INT34C6:00, ngpio =3D 463
->
-> The issue arose by chance, because the driver "pinctrl-tigerlake" apply g=
-pio_chip->base
-> randomly, this time it apply the base value 49, so it have conflict to he=
-re:
-> https://github.com/torvalds/linux/blob/master/drivers/gpio/gpio-f7188x.c#=
-L283
->
-> But sometime it apply other base values, so the issue do not happen.
->
-> BRs,
-> Xing Tong Wu
->
+On Fri, Sep 1, 2023 at 10:55=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Ah, it fell through the cracks. I will queue it right after the merge windo=
-w.
+> > I'm not sure this is a good candidate for the GPIOLIB quirks. This is
+> > the SPI setup callback (which makes me think - I should have used
+> > gpiod_get(), not devm_gpiod_get() and then put the descriptor in
+> > .cleanup()) and not probe. It would be great to get some background on
+> > why this is even needed in the first place. The only reason I see is
+> > booting the driver with an invalid device-tree that doesn't assign the
+> > GPIO to the SPI controller.
+>
+> Maybe Lukas knows more?
 
-Bart
+He does!
+The background can be found here:
+https://www.spinics.net/lists/linux-gpio/msg36218.html
+(hm this "spinics" archive should be imported to lore...)
+
+Yours,
+Linus Walleij
