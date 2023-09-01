@@ -2,75 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 571B378FC2A
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 13:16:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38C4378FC42
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 13:29:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242960AbjIALQC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 07:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38422 "EHLO
+        id S1349153AbjIAL3j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 07:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240366AbjIALQC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 07:16:02 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72FA01710
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 04:15:55 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3fef56f7223so17672515e9.3
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 04:15:55 -0700 (PDT)
+        with ESMTP id S1347220AbjIAL3i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 07:29:38 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C741BF
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 04:29:35 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-31768ce2e81so1570851f8f.1
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 04:29:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693566954; x=1694171754; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693567774; x=1694172574; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXKeOLDoyy5/kC3fUdlXL9lLNwTUvGaVFBeNIEjZIMQ=;
-        b=wItsgk2lVTkrdudb0s+W0fc/IXvfIrdODovm3iV3yIeGU0B8aS0yVO5Y4gjKltEMOv
-         qfgdcFxiotpvjsTO/4XV9eBw18shHD0PVJSA81IbW8sH6zCh1mjYS7vm1E2/S2hNGHZt
-         UICi58i5uRzpMdxsS2lOSqOn2bRUfCo+YbI5Sq7fHBX+SZuTVrGRxhrKfMy1MTXsy7Ro
-         sxuth+yutzO9qGFh9nqrekTOJYbLXPhY8VfgCavJOVs+qmRxUt2LP6ht2GMaHWQmTnxP
-         lGIca916IXI9/pojYgdxDZvlOaKFCRJftjOBRb+T5TCHP1t5FCzQekLOUVCXDm8Dt6PL
-         KqaQ==
+        bh=9EaAex4HlOHqeKyfOLHzXuy4iCLTeRj26vS5muyi5kk=;
+        b=ZVk69ldn7qfnYFWaGOiL09ufKbMcQ9oMzCWxBIocC5cbtTTHpcxtJl8IMxxoAWVwTx
+         qwpD817KqANiosenxXz+/sg1IX12B8oHe/Rjq9s8uqEcFEQigYncXdewccrxgmEHl5u9
+         1cBu/kFlXsoQF8f/ZQ97jtIJL6ZnnI8MJJ/e+aFrLtvdJmPbKlxiYaMdLfSkXcDRVGZG
+         hMzDSqR2C16mXivfd/s4SA5397+ZyzRMtXBejuY8D3CXlP3eJblf/tjO985S8i2c55KG
+         5kwJInhi4qGHsZrkIIjztGKxRUifk4ogz96pJf2AQMvh96rqfVEq+LftmmTjSTNCGP+I
+         Jrpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693566954; x=1694171754;
+        d=1e100.net; s=20221208; t=1693567774; x=1694172574;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JXKeOLDoyy5/kC3fUdlXL9lLNwTUvGaVFBeNIEjZIMQ=;
-        b=BmfZREfOr3M871APPCiLbFoFiDbi5lMdVKAYWl/RUW+ndFAZPjOXoNODE6h1dPZbl8
-         XTmjjeD6FN/vPJG0JGq9IyTZpl3IRFJG0SSklOHnR8/ef3BM20QCSMKHvn336ITSsS5o
-         TF1pZz1U47E/egfm7Dd3wDbt5iX13xLkm9ulwQlSMA6JCEQV7w4meVJjmV3HFJnWXddi
-         C8te27MuudIgfcYWGBd2/foWFs/i9z5WDbHA4uR4aNMRSt9gP0JH2Ev9+dc4/3mbhsD3
-         XHlhlmuGJ/C3Jw2qGt7BKb6QD/9n3wRkJhIs9sk1AlVbIXMnwSe66uJMpKmrF+mGbRzG
-         J3Qw==
-X-Gm-Message-State: AOJu0Yz6Tkc5egd/ZUMKRFFVPL6X0FGR6rHODicyzt4Blur7F7+pDP2N
-        GHoS9UlONMzNS9BTcwNsNMT9Ww==
-X-Google-Smtp-Source: AGHT+IE+Q3n8iF3DTTB+G/JNTL/+AMsHyYDbREZ9/1BFcmOOL2dovB8KiBgpxGdxnlcSGkTBS0CL8g==
-X-Received: by 2002:a5d:4e0e:0:b0:316:fc86:28ae with SMTP id p14-20020a5d4e0e000000b00316fc8628aemr1394230wrt.15.1693566953774;
-        Fri, 01 Sep 2023 04:15:53 -0700 (PDT)
+        bh=9EaAex4HlOHqeKyfOLHzXuy4iCLTeRj26vS5muyi5kk=;
+        b=SFtBE7YZOJemeVi+QpXENatJHtI2BCBbtx6eE+BCNWwHQLmaYX66u163bnzA1lGfIO
+         gVM9LchkF+b/IRfpMN0iZaAeRXfH0QW/OIvDqDgeUccL+hsMRBc/YfV2zHbmqw0Cw5MZ
+         oc/S5RBrJFpSZ+xQ2x2b0zwjVSQD823BgqlI1pt2tKU3lgMdpxSM4IMb+u8ld/3PigCD
+         W3Rez1eswgLrFDiZVZqqIw0Qe8/BEMFBBJc0+EiMMa9Y3GUtildidlJSOorGthVn8XRl
+         tfarAIB0jsoTFNHeToRprsUMNs5Z/cxepoqGsYPP0Ma+q/9TvhGdn0ahIEqVeUH+sBsh
+         4xIg==
+X-Gm-Message-State: AOJu0YwLOwqrrhW8kqU+z4GNklJF65vwXQJJZGYIBpQEbw68a74LPRO8
+        wjIsoEQ6MMAnuGLApuu8qz6NXFv67KpZsM9C9oM=
+X-Google-Smtp-Source: AGHT+IFvZdfTdbE53d6bsED4ru0wj144SrZBLOBWESjwyDL+nb/yc40a2WDeQwIfEz4tDXvrERf8yQ==
+X-Received: by 2002:a5d:5344:0:b0:317:4cf8:35f9 with SMTP id t4-20020a5d5344000000b003174cf835f9mr1418808wrv.16.1693567773941;
+        Fri, 01 Sep 2023 04:29:33 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e94b:1054:6760:aa27])
-        by smtp.gmail.com with ESMTPSA id s2-20020a5d4242000000b003197c2316ecsm4943457wrr.112.2023.09.01.04.15.52
+        by smtp.gmail.com with ESMTPSA id a28-20020a5d457c000000b00317f70240afsm4963426wrc.27.2023.09.01.04.29.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 04:15:53 -0700 (PDT)
+        Fri, 01 Sep 2023 04:29:33 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [RFT PATCH v2] spi: bcm2835: reduce the abuse of the GPIO API
-Date:   Fri,  1 Sep 2023 13:15:48 +0200
-Message-Id: <20230901111548.12733-1-brgl@bgdev.pl>
+Subject: [PATCH 0/3] pinctrl: da9062: don't pull in internal GPIOLIB headers
+Date:   Fri,  1 Sep 2023 13:29:23 +0200
+Message-Id: <20230901112926.13216-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -79,156 +72,22 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Currently the bcm2835 SPI driver uses functions that are available
-exclusively to GPIO providers as a way to handle a platform quirk. Let's
-use a slightly better alternative that avoids poking around in GPIOLIB's
-internals and use GPIO lookup tables.
+I'm removing instances of users of internal GPIOLIB headers which should
+not be included by anyone but GPIO core code. The pinctrl-da9062 driver
+uses gpiochip_get_desc() which we should put into the gpio/driver.h
+header as it does sometimes make sense for GPIO providers to get its own
+descriptors without having to go through gpiochip_request_own_desc().
 
-Link: https://www.spinics.net/lists/linux-gpio/msg36218.html
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-This is only build-tested. It should work, but it would be great if
-someone from broadcom could test this.
+Bartosz Golaszewski (3):
+  pinctrl: da9062: add missing include
+  gpiolib: make gpiochip_get_desc() public
+  pinctrl: da9062: don't include private GPIOLIB header
 
-v1 -> v2:
-- don't use devres for managing the GPIO but put it manually in .cleanup()
-- add a mailing list link explaining the background of the bug
-- fix kerneldoc
+ drivers/gpio/gpiolib.h           | 2 --
+ drivers/pinctrl/pinctrl-da9062.c | 7 +------
+ include/linux/gpio/driver.h      | 2 ++
+ 3 files changed, 3 insertions(+), 8 deletions(-)
 
- drivers/spi/spi-bcm2835.c | 59 +++++++++++++++++++++++----------------
- 1 file changed, 35 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index e7bb2714678a..e06738705075 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -11,6 +11,7 @@
-  * spi-atmel.c, Copyright (C) 2006 Atmel Corporation
-  */
- 
-+#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/debugfs.h>
-@@ -26,9 +27,10 @@
- #include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/gpio/consumer.h>
--#include <linux/gpio/machine.h> /* FIXME: using chip internals */
--#include <linux/gpio/driver.h> /* FIXME: using chip internals */
-+#include <linux/gpio/machine.h> /* FIXME: using GPIO lookup tables */
- #include <linux/of_irq.h>
-+#include <linux/overflow.h>
-+#include <linux/slab.h>
- #include <linux/spi/spi.h>
- 
- /* SPI register offsets */
-@@ -83,6 +85,7 @@ MODULE_PARM_DESC(polling_limit_us,
-  * struct bcm2835_spi - BCM2835 SPI controller
-  * @regs: base address of register map
-  * @clk: core clock, divided to calculate serial clock
-+ * @cs_gpio: chip-select GPIO descriptor
-  * @clk_hz: core clock cached speed
-  * @irq: interrupt, signals TX FIFO empty or RX FIFO ¾ full
-  * @tfr: SPI transfer currently processed
-@@ -117,6 +120,7 @@ MODULE_PARM_DESC(polling_limit_us,
- struct bcm2835_spi {
- 	void __iomem *regs;
- 	struct clk *clk;
-+	struct gpio_desc *cs_gpio;
- 	unsigned long clk_hz;
- 	int irq;
- 	struct spi_transfer *tfr;
-@@ -1156,15 +1160,11 @@ static void bcm2835_spi_handle_err(struct spi_controller *ctlr,
- 	bcm2835_spi_reset_hw(bs);
- }
- 
--static int chip_match_name(struct gpio_chip *chip, void *data)
--{
--	return !strcmp(chip->label, data);
--}
--
- static void bcm2835_spi_cleanup(struct spi_device *spi)
- {
- 	struct bcm2835_spidev *target = spi_get_ctldata(spi);
- 	struct spi_controller *ctlr = spi->controller;
-+	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
- 
- 	if (target->clear_rx_desc)
- 		dmaengine_desc_free(target->clear_rx_desc);
-@@ -1175,6 +1175,9 @@ static void bcm2835_spi_cleanup(struct spi_device *spi)
- 				 sizeof(u32),
- 				 DMA_TO_DEVICE);
- 
-+	gpiod_put(bs->cs_gpio);
-+	spi_set_csgpiod(spi, 0, NULL);
-+
- 	kfree(target);
- }
- 
-@@ -1221,7 +1224,7 @@ static int bcm2835_spi_setup(struct spi_device *spi)
- 	struct spi_controller *ctlr = spi->controller;
- 	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
- 	struct bcm2835_spidev *target = spi_get_ctldata(spi);
--	struct gpio_chip *chip;
-+	struct gpiod_lookup_table *lookup __free(kfree) = NULL;
- 	int ret;
- 	u32 cs;
- 
-@@ -1288,29 +1291,37 @@ static int bcm2835_spi_setup(struct spi_device *spi)
- 	}
- 
- 	/*
--	 * Translate native CS to GPIO
-+	 * TODO: The code below is a slightly better alternative to the utter
-+	 * abuse of the GPIO API that I found here before. It creates a
-+	 * temporary lookup table, assigns it to the SPI device, gets the GPIO
-+	 * descriptor and then releases the lookup table.
- 	 *
--	 * FIXME: poking around in the gpiolib internals like this is
--	 * not very good practice. Find a way to locate the real problem
--	 * and fix it. Why is the GPIO descriptor in spi->cs_gpiod
--	 * sometimes not assigned correctly? Erroneous device trees?
-+	 * More on the problem that it addresses:
-+	 *   https://www.spinics.net/lists/linux-gpio/msg36218.html
- 	 */
-+	lookup = kzalloc(struct_size(lookup, table, 1), GFP_KERNEL);
-+	if (!lookup) {
-+		ret = -ENOMEM;
-+		goto err_cleanup;
-+	}
- 
--	/* get the gpio chip for the base */
--	chip = gpiochip_find("pinctrl-bcm2835", chip_match_name);
--	if (!chip)
--		return 0;
-+	lookup->dev_id = dev_name(&spi->dev);
-+	lookup->table[0].key = "pinctrl-bcm2835";
-+	lookup->table[0].chip_hwnum = (8 - (spi_get_chipselect(spi, 0)));
-+	lookup->table[0].con_id = "cs";
-+	lookup->table[0].flags = GPIO_LOOKUP_FLAGS_DEFAULT;
- 
--	spi_set_csgpiod(spi, 0, gpiochip_request_own_desc(chip,
--							  8 - (spi_get_chipselect(spi, 0)),
--							  DRV_NAME,
--							  GPIO_LOOKUP_FLAGS_DEFAULT,
--							  GPIOD_OUT_LOW));
--	if (IS_ERR(spi_get_csgpiod(spi, 0))) {
--		ret = PTR_ERR(spi_get_csgpiod(spi, 0));
-+	gpiod_add_lookup_table(lookup);
-+
-+	bs->cs_gpio = gpiod_get(&spi->dev, "cs", GPIOD_OUT_LOW);
-+	gpiod_remove_lookup_table(lookup);
-+	if (IS_ERR(bs->cs_gpio)) {
-+		ret = PTR_ERR(bs->cs_gpio);
- 		goto err_cleanup;
- 	}
- 
-+	spi_set_csgpiod(spi, 0, bs->cs_gpio);
-+
- 	/* and set up the "mode" and level */
- 	dev_info(&spi->dev, "setting up native-CS%i to use GPIO\n",
- 		 spi_get_chipselect(spi, 0));
 -- 
 2.39.2
 
