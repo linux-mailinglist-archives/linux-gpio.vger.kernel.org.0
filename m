@@ -2,93 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3E7578FDB3
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 14:48:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ECB278FDE3
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 14:58:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230425AbjIAMs2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 08:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46244 "EHLO
+        id S245005AbjIAM6F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 08:58:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235386AbjIAMs2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 08:48:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6BE81731;
-        Fri,  1 Sep 2023 05:47:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693572472; x=1725108472;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=F3Mb862bybOKUxwgdziumdMDOO9BKtdGVT7nZEluCWo=;
-  b=UCBEr/1PdvM4QV5n+Jb8Duu4rRLcVVoRgEJpga7liWPuMwiMble47kYU
-   c7YXJNgf4lsyVDnCWNmQuRzu0fvVybd9NYuIUxTyS7DT6iIWZXBvxkYLx
-   MOHqvXuwbbcCp1+FWLbmPJY5nC2V1jtDfpwdw08CSgELy7ankHg5LqoHa
-   zvKOZ2ADo3eK42szI7OE5M+LusQoxX+eZhSIT9X0Q0L3KbMNlzqnOgh0s
-   NubfAaR/8VtA8r3py6jsCEwjMMm5f3vA7nDVUVs6dqtvXF922r0cFg5aU
-   5HxvDQSj71Ms0kVJnd1Kcw5Ig9/lWQLgd69UxSqaZOvcg3CNiMT/T2EWi
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="375112421"
-X-IronPort-AV: E=Sophos;i="6.02,219,1688454000"; 
-   d="scan'208";a="375112421"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 05:46:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10819"; a="689754234"
-X-IronPort-AV: E=Sophos;i="6.02,219,1688454000"; 
-   d="scan'208";a="689754234"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2023 05:46:18 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qc3XT-005fo4-2c;
-        Fri, 01 Sep 2023 15:46:15 +0300
-Date:   Fri, 1 Sep 2023 15:46:15 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S237256AbjIAM6F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 08:58:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F955E0;
+        Fri,  1 Sep 2023 05:58:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E62DD61DA1;
+        Fri,  1 Sep 2023 12:58:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6023EC433C8;
+        Fri,  1 Sep 2023 12:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693573081;
+        bh=RdPb4XfmBoPdgLciBy81PFwX6kWRVtgJtGzMBl1kvPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DsrpSTGw4elR2u8YKWrlE/1TN210UbEbk7Yaqz+qdUQpC7Q2T0RmJ94Y5tGZ/3r8Y
+         SribhQxamfqHE3sFtF/I0L7py5PjW0A55RQweqqWLNALnxQwDnVmm2YHQdleMRTTYX
+         cD3vyUJ777brbPwiB7hMvc+wNoLC/xexnQENCOxmqC0pXFxCRAedeLPGkmhIN+W4fQ
+         p7112RZRiUGd3VFe8wX3oSdNTnR3EQxq75XTEjy0dJYcSWJvVx7iOusVFOdN3mFVlB
+         VzkrO9y6LOBL2ZX+BZpmLgM2scISWTanBY0gd4M3ifvZxIODftSyOW21iwfuUbRwbO
+         8VJ3mzn/PExQg==
+Date:   Fri, 1 Sep 2023 13:57:54 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpiolib: remove stray newline in gpio/driver.h
-Message-ID: <ZPHdFz9qvu8W6EHC@smile.fi.intel.com>
-References: <20230901113520.13352-1-brgl@bgdev.pl>
- <ZPHVZQ3NmqWE1cYg@smile.fi.intel.com>
- <CAMRc=Mfinj1rCoOR5_VkEyp9X+=NryyyQtGg3=H5mq_vPz4ZHA@mail.gmail.com>
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [RFT PATCH v2] spi: bcm2835: reduce the abuse of the GPIO API
+Message-ID: <d57a99ce-77eb-409f-8371-95f2658fa0c0@sirena.org.uk>
+References: <20230901111548.12733-1-brgl@bgdev.pl>
+ <CACRpkdYLcOZQ9r46aBwesh-H392C_0AWC8n2ikuwUknfEhoNNA@mail.gmail.com>
+ <ba9803e9-3aff-42b9-87ad-4e6d75d36d87@sirena.org.uk>
+ <CAMRc=MdX3jtssO_zWCp9g5r00esGgASNeN437aJheRobVyqZcQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="UbHgzI4xkkVxHjkA"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mfinj1rCoOR5_VkEyp9X+=NryyyQtGg3=H5mq_vPz4ZHA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAMRc=MdX3jtssO_zWCp9g5r00esGgASNeN437aJheRobVyqZcQ@mail.gmail.com>
+X-Cookie: Dealer prices may vary.
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 01, 2023 at 02:29:19PM +0200, Bartosz Golaszewski wrote:
-> On Fri, Sep 1, 2023 at 2:13 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Fri, Sep 01, 2023 at 01:35:20PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > Fix a double newline in the GPIO provider header.
-> >
-> > Separate patch for this?!
-> > I would just fold it in the extern removal and that's it.
-> 
-> It's nowhere near the code I modified in the other one.
-> 
-> Just slap a reviewed-by on it and let's move on, more important
-> patches are coming up. :)
 
-You may apply this without my tag, nothing to review here, seriously.
+--UbHgzI4xkkVxHjkA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Fri, Sep 01, 2023 at 02:33:03PM +0200, Bartosz Golaszewski wrote:
+> On Fri, Sep 1, 2023 at 2:31=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
+> > On Fri, Sep 01, 2023 at 02:15:39PM +0200, Linus Walleij wrote:
+> > > On Fri, Sep 1, 2023 at 1:15=E2=80=AFPM Bartosz Golaszewski <brgl@bgde=
+v.pl> wrote:
 
+> > > > +       struct gpiod_lookup_table *lookup __free(kfree) =3D NULL;
 
+> > > This is really neat.
+> > > As noted, it will confuse static checkers at no end, but they just ha=
+ve
+> > > to adopt. (CC to Dan C if he now runs into this.)
+
+> > It also doesn't look amazing for humans, it's very not C like...
+
+> Once it's widely adopted, you'll see how much clearer and less prone
+> to bugs in error paths the code becomes with autopointers. It's 2023
+> dammit, if we can't have flying cars, let's at least get some RAII
+> into the kernel. :)
+
+I use RAII extensively with other languages, I also know that with C you
+have to be careful and look to make sure everything is freed.
+
+--UbHgzI4xkkVxHjkA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmTx39EACgkQJNaLcl1U
+h9DYSQf+Kt45phKyr2Mv/QTqMQDMfwNWLfKEDRASvlVuSaRZziL93qD2Z2RRYIuy
+fGq3od30msoIcAwrDwsjl6wRY2CaX+xHihrFwbcTVIDBbeTsAszXAfrTiC+WjGmg
+HvsgQ78GM1Q7My6TBtCKuQDu4BytC9TYSuqwFgPOfuVK/i56dbW4xcrfhU1Oj0QE
+/HmcWN+5AlCObF5jv/r0Oi2roWA6BReoFX8dodtiFTJGKFyS0sLsWeFQnHQst3oF
+Q4HnSdgGNzO04Nmqx/OCotlsP+bGo6uoM7gKAFBnZ9dJ9MGnFD0SrhDAiVSP6qn6
+4JKfMLyMbc5wQNYJdnaLG5CtAiqpBw==
+=Y5Dz
+-----END PGP SIGNATURE-----
+
+--UbHgzI4xkkVxHjkA--
