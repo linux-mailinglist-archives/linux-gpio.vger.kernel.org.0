@@ -2,242 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A53CD79020E
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 20:32:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C9CB7902D1
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Sep 2023 22:29:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350590AbjIAScs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Sep 2023 14:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33210 "EHLO
+        id S244443AbjIAU3X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Sep 2023 16:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350587AbjIAScs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 14:32:48 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D82BCD8
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Sep 2023 11:32:44 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-31c479ede21so1968313f8f.2
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Sep 2023 11:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693593163; x=1694197963; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OAz0KgVu87lEXbvrXDdrxHlFUVSjyb+PiIQULpTmeH4=;
-        b=s45mkDJZ25XKoOzJvussXOQ817w/NwJ0MuyWX5AHqs8+Fy27qGykdtT4maDsTZprdV
-         MjeQfqqMyS1FgtI2JUuKK3BfLftp4nz7f02Y+o9KOm3RGCGLA5kM7vKpvxVlZw73LcsM
-         aM8gAsZPR/xBs/SUSkU3Ew6rhuVAQ9/scJa6eSXpWn1CLFjr1lC0w/omCrS6qKt68kAD
-         EuUY7uceUV1+62aU+THgAKhtIp0gCWJpk4Ct0jCffydwnEqb29jheg6kO/sPLf84dxTb
-         jSo8Pl6qG0+qnYuFfPbdZM8TRmnaVctDBz50axPsYIy5HFBzUGo306QN3qC6fZMxZ1L1
-         rcmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693593163; x=1694197963;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OAz0KgVu87lEXbvrXDdrxHlFUVSjyb+PiIQULpTmeH4=;
-        b=F5KWQlp2KmxYrBEbFWCspnYqffSpM772jRcN3LAZMqs7dW7Nv6mFOWmzCugBp3ICpi
-         ilhk1FnycF8dtOmZNZf6qxtXZVOfkXGH3XkLEguH/B/Cv3Yd2ih18x4C/+jhzEflv4Mg
-         Le0d8rlGnvc0vgfD9ojnJrzh4DqXPliby/SJQAkj4NDig71WpuGcDva9I7HtG+Gkcxvg
-         n+2xzXFh7iP2bISiFAGOGwYaQwUxSl82p/Y3pUaTm6oQRGL+gAaQgOFhf9dUcRF/krfR
-         NuSxrXsbovJa6n0lcoYSWcOqCjVbVwWVQ4byb983vQ6wUWkUJ1xVXAxjMiby1GOm7JrT
-         JRAA==
-X-Gm-Message-State: AOJu0YxqBv+hOttChvghgfYxw0YK7/Ah8gtIQ5YDqDDiCkqMDVD+/JBX
-        B97k3u0EnXD5mTzNJfbDUQih7B8mGBEER4RfEeQ=
-X-Google-Smtp-Source: AGHT+IHdcZv0aMC9hpKaw8d1Qby49feQRcpuBsplRoFoMasrDgWUCyPsOvbDhHM/3t7hALHQh4OU0w==
-X-Received: by 2002:a5d:4d49:0:b0:319:6ce2:e5a3 with SMTP id a9-20020a5d4d49000000b003196ce2e5a3mr2435096wru.26.1693593162956;
-        Fri, 01 Sep 2023 11:32:42 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e94b:1054:6760:aa27])
-        by smtp.gmail.com with ESMTPSA id bl1-20020adfe241000000b00317b5c8a4f1sm5972281wrb.60.2023.09.01.11.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Sep 2023 11:32:42 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
-Date:   Fri,  1 Sep 2023 20:32:40 +0200
-Message-Id: <20230901183240.102701-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S242521AbjIAU3W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Sep 2023 16:29:22 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9FD4E7E;
+        Fri,  1 Sep 2023 13:29:19 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 381ItjDG005899;
+        Fri, 1 Sep 2023 20:29:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=2FYXvMmpReuPlYSmTDcvNg1rIzAmGZtkeMDCuhzAtGw=;
+ b=RpGMbsimYgMc3eNR7ei7vHPVzYUwHYGYWfqvFd5Hm0dfsshzelWMpDIZ1rnuLnmPTBJW
+ QrE9r0G9055pwpCfvVOPDMYtRHxC1oQjdFF+Gqzr4/3Fj+LWLC7Ub9J9K4ZZKtKtFbum
+ sHYN6I0cLw7UKq0OoSob97cywjNlU+qDOZ1qNg1FPayvbNvP7zzH3hwGYkQ+kG9Bx9jv
+ pkoE04KD1f8QglapQUr69SaBGB43NBDRiCuHqw/3ZSvJVuKYp2UadZBnGPAgApX2FtyJ
+ dkQahInoVqPNSAkfaD2bOsDEwD7LSCXJ9CVg7yTTQ0XSZVrP7POVtWlVknMqnRdcBF39 TQ== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3suc22hupp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 Sep 2023 20:29:05 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 381KT4X3011614
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 1 Sep 2023 20:29:04 GMT
+Received: from [10.110.95.146] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Fri, 1 Sep
+ 2023 13:29:04 -0700
+Message-ID: <deeefaf8-2ac9-cee0-eed4-687e36ac6f10@quicinc.com>
+Date:   Fri, 1 Sep 2023 13:29:03 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 02/11] nvmem: qfprom: Mark core clk as optional
+Content-Language: en-US
+To:     Luca Weiss <luca.weiss@fairphone.com>,
+        Doug Anderson <dianders@chromium.org>
+CC:     <cros-qcom-dts-watchers@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        <~postmarketos/upstreaming@lists.sr.ht>,
+        <phone-devel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-pm@vger.kernel.org>
+References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
+ <20230830-fp5-initial-v1-2-5a954519bbad@fairphone.com>
+ <CAD=FV=WS2hgY=bQjLOs3Fdp8pbZyMsaS-0BpoxPq90Etfi+Xuw@mail.gmail.com>
+ <CV5YJVXIL8OT.1ZWW3KVCHPTA5@otso>
+From:   Trilok Soni <quic_tsoni@quicinc.com>
+In-Reply-To: <CV5YJVXIL8OT.1ZWW3KVCHPTA5@otso>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 9Ar9RfHXW3BZTXygIUaxyBxzbbtd8VRn
+X-Proofpoint-ORIG-GUID: 9Ar9RfHXW3BZTXygIUaxyBxzbbtd8VRn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-01_17,2023-08-31_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ clxscore=1011 mlxscore=0 impostorscore=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309010192
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 8/30/2023 7:43 AM, Luca Weiss wrote:
+> On Wed Aug 30, 2023 at 4:30 PM CEST, Doug Anderson wrote:
+>> Hi,
+>>
+>> On Wed, Aug 30, 2023 at 2:58 AM Luca Weiss <luca.weiss@fairphone.com> wrote:
+>>>
+>>> On some platforms like sc7280 on non-ChromeOS devices the core clock
+>>> cannot be touched by Linux so we cannot provide it. Mark it as optional
+>>> as accessing qfprom works without it.
+>>>
+>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>>> ---
+>>>  drivers/nvmem/qfprom.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> Are you actually testing burning fuses from the OS, or are you just
+>> using the nvmem in "read-only" mode? From comments in the bindings, if
+>> you're trying to burn the fuses then the clock is required. If things
+>> are in read-only mode then the clock isn't required.
+> 
+> Hi Doug,
+> 
+> I definitely don't plan on burning any fuses on this phone. Not even
+> sure that's allowed by the TZ / boot stack.
+> 
+>>
+>> When I compare to the driver, it seems like the driver assumes that if
+>> more than one memory region is provided then you must be supporting
+>> burning fuses. The bindings agree that having 4 memory regions
+>> specified means that the nvmem supports burning and 1 memory region
+>> specified means read-only. The extra 3 memory regions in the nvmem are
+>> all about fuse burning, I believe.
+>>
+>> So maybe the right fix here is to just change your dts to specify one
+>> memory region?
+> 
+> I got feedback from Konrad that this here would be the preferred
+> approach compared to having a different dts for ChromeOS vs non-ChromeOS
+> devices. I don't feel strongly to either, for me it's also okay to
+> remove the extra memory regions and only have the main one used on
+> regular qcom devices.
+> 
+> Let me know what you think.
 
-We access internals of struct gpio_device and struct gpio_desc because
-it's easier but it can actually be avoided and we're working towards a
-better encapsulation of GPIO data structures across the kernel so let's
-start at home.
+I would prefer to re-use the sc7280 DT as well. Thank you for your patches. We plan to use your patches for platform on the same part. 
 
-Instead of checking gpio_desc flags, let's just track the requests of
-GPIOs in the driver. We also already store the information about
-direction of simulated lines.
-
-For kobjects needed by sysfs callbacks: we can leverage the fact that
-once created for a software node, struct device is accessible from that
-fwnode_handle. We don't need to dereference gpio_device.
-
-While at it: fix one line break and remove the untrue part about
-configfs callbacks using dev_get_drvdata() from a comment.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-sim.c | 49 +++++++++++++++++++++++++++--------------
- 1 file changed, 32 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 271db3639a78..5f52d77567a1 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -12,6 +12,7 @@
- #include <linux/completion.h>
- #include <linux/configfs.h>
- #include <linux/device.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/machine.h>
- #include <linux/idr.h>
-@@ -30,8 +31,6 @@
- #include <linux/string_helpers.h>
- #include <linux/sysfs.h>
- 
--#include "gpiolib.h"
--
- #define GPIO_SIM_NGPIO_MAX	1024
- #define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
- #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
-@@ -40,6 +39,8 @@ static DEFINE_IDA(gpio_sim_ida);
- 
- struct gpio_sim_chip {
- 	struct gpio_chip gc;
-+	struct fwnode_handle *swnode;
-+	unsigned long *request_map;
- 	unsigned long *direction_map;
- 	unsigned long *value_map;
- 	unsigned long *pull_map;
-@@ -63,16 +64,11 @@ static int gpio_sim_apply_pull(struct gpio_sim_chip *chip,
- 			       unsigned int offset, int value)
- {
- 	int irq, irq_type, ret;
--	struct gpio_desc *desc;
--	struct gpio_chip *gc;
--
--	gc = &chip->gc;
--	desc = &gc->gpiodev->descs[offset];
- 
- 	guard(mutex)(&chip->lock);
- 
--	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
--	    !test_bit(FLAG_IS_OUT, &desc->flags)) {
-+	if (test_bit(offset, chip->request_map) &&
-+	    test_bit(offset, chip->direction_map)) {
- 		if (value == !!test_bit(offset, chip->value_map))
- 			goto set_pull;
- 
-@@ -99,8 +95,8 @@ static int gpio_sim_apply_pull(struct gpio_sim_chip *chip,
- 
- set_value:
- 	/* Change the value unless we're actively driving the line. */
--	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
--	    !test_bit(FLAG_IS_OUT, &desc->flags))
-+	if (!test_bit(offset, chip->request_map) ||
-+	    test_bit(offset, chip->direction_map))
- 		__assign_bit(offset, chip->value_map, value);
- 
- set_pull:
-@@ -181,7 +177,7 @@ static int gpio_sim_get_direction(struct gpio_chip *gc, unsigned int offset)
- }
- 
- static int gpio_sim_set_config(struct gpio_chip *gc,
--				  unsigned int offset, unsigned long config)
-+			       unsigned int offset, unsigned long config)
- {
- 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
- 
-@@ -204,13 +200,25 @@ static int gpio_sim_to_irq(struct gpio_chip *gc, unsigned int offset)
- 	return irq_create_mapping(chip->irq_sim, offset);
- }
- 
--static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
-+static int gpio_sim_request(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
- 
- 	scoped_guard(mutex, &chip->lock)
-+		__set_bit(offset, chip->request_map);
-+
-+	return 0;
-+}
-+
-+static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
-+
-+	scoped_guard(mutex, &chip->lock) {
- 		__assign_bit(offset, chip->value_map,
- 			     !!test_bit(offset, chip->pull_map));
-+		__clear_bit(offset, chip->request_map);
-+	}
- }
- 
- static ssize_t gpio_sim_sysfs_val_show(struct device *dev,
-@@ -295,7 +303,7 @@ static void gpio_sim_sysfs_remove(void *data)
- {
- 	struct gpio_sim_chip *chip = data;
- 
--	sysfs_remove_groups(&chip->gc.gpiodev->dev.kobj, chip->attr_groups);
-+	sysfs_remove_groups(&chip->swnode->dev->kobj, chip->attr_groups);
- }
- 
- static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
-@@ -352,7 +360,7 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
- 		chip->attr_groups[i] = attr_group;
- 	}
- 
--	ret = sysfs_create_groups(&chip->gc.gpiodev->dev.kobj,
-+	ret = sysfs_create_groups(&chip->swnode->dev->kobj,
- 				  chip->attr_groups);
- 	if (ret)
- 		return ret;
-@@ -387,6 +395,12 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	if (!chip)
- 		return -ENOMEM;
- 
-+	chip->swnode = swnode;
-+
-+	chip->request_map = devm_bitmap_zalloc(dev, num_lines, GFP_KERNEL);
-+	if (!chip->request_map)
-+		return -ENOMEM;
-+
- 	chip->direction_map = devm_bitmap_alloc(dev, num_lines, GFP_KERNEL);
- 	if (!chip->direction_map)
- 		return -ENOMEM;
-@@ -432,6 +446,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	gc->get_direction = gpio_sim_get_direction;
- 	gc->set_config = gpio_sim_set_config;
- 	gc->to_irq = gpio_sim_to_irq;
-+	gc->request = gpio_sim_request;
- 	gc->free = gpio_sim_free;
- 	gc->can_sleep = true;
- 
-@@ -439,8 +454,8 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	/* Used by sysfs and configfs callbacks. */
--	dev_set_drvdata(&gc->gpiodev->dev, chip);
-+	/* Used by sysfs callbacks. */
-+	dev_set_drvdata(swnode->dev, chip);
- 
- 	return gpio_sim_setup_sysfs(chip);
- }
 -- 
-2.39.2
+---Trilok Soni
 
