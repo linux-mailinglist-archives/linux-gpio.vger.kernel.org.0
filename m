@@ -2,201 +2,234 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 205607906CB
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Sep 2023 11:09:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E024790793
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Sep 2023 13:28:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351922AbjIBJJy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Sep 2023 05:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36484 "EHLO
+        id S229479AbjIBL23 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Sep 2023 07:28:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351921AbjIBJJu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Sep 2023 05:09:50 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DC88B1709;
-        Sat,  2 Sep 2023 02:09:46 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="6.02,222,1688396400"; 
-   d="scan'208";a="178490891"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 02 Sep 2023 18:09:46 +0900
-Received: from localhost.localdomain (unknown [10.226.92.16])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id BC8D84005B30;
-        Sat,  2 Sep 2023 18:09:44 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Biju Das <biju.das.au@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 2/2] pinctrl: mcp23s08: Simplify probe()
-Date:   Sat,  2 Sep 2023 10:09:37 +0100
-Message-Id: <20230902090937.32195-3-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230902090937.32195-1-biju.das.jz@bp.renesas.com>
-References: <20230902090937.32195-1-biju.das.jz@bp.renesas.com>
+        with ESMTP id S237668AbjIBL22 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Sep 2023 07:28:28 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F2B10F2
+        for <linux-gpio@vger.kernel.org>; Sat,  2 Sep 2023 04:28:24 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2b95d5ee18dso50376731fa.1
+        for <linux-gpio@vger.kernel.org>; Sat, 02 Sep 2023 04:28:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1693654102; x=1694258902; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=VsfrFUgcxNOYobHwJHkKquAqgaoJylbXl5Nl82d+Atc=;
+        b=KucV5F4HrfPtaiGiGFNIdOfHWZ0KxpLhTKzBxkExzc9J976mmzdOgVjDeHyjag6oMz
+         b90h8r7g6RU2btaoCaBTTnawJpzq1UX/gApZNzUD7huJE2HDADJWS8GhECpZNX4blTwO
+         85iRsJsTpvP7NEoQwkX6Kn+vF2b0tl11QspizWMkhKmoX0rrrIcRkv9W7fp97UfUQZnl
+         UeQdltI949ll0383zyk41owofBZr3/49ZmKQ5RaV/S1zL71hWPoMt+vvW5t+5TJKZ7Xr
+         MCQ255Un2kkYtB9wjPXiD3tVIX7BAwpYHFwUodkKNWsKSUYER/CQmnQAhqkyJ07WWT6D
+         8CvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693654102; x=1694258902;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VsfrFUgcxNOYobHwJHkKquAqgaoJylbXl5Nl82d+Atc=;
+        b=YhhOdqqcFZ1id6G1/HBnpkxczYawNL/K/AR6ybCNzEHGhjt97w+t/u3TIbJmZ/sSOM
+         8TUf64UCS/slQDpI20u/0FR6+LDq5YiFtaqsQVueXc2BvwKHxjd6QUFjGo8GU2RbQH3N
+         lWFVEloIX6zvxRPQuwx83Q7WYebBzqJl4f7KfWeL3aID+klg0xH5iLH14inYI5LwM0xE
+         R2rV5MNFt7mVYgeWuQjSFPSq7CoaDRkuBS/IWEceAG8AyzjnoCgpMH6jVkyXxNB9qs+E
+         89Zz5PUAqyTj/FmCLpQtuIvWiHnQqICNPWf/W/8mdQP7kBKGT3KtrhNJXMgnuqNsGHN3
+         NHKQ==
+X-Gm-Message-State: AOJu0Yymv0OSZWfYitPWn0WVcWlh4tIlW8SK4AW52GabKJL5T0h9gmXt
+        E826kPH0ybW26sngyuoB4PRBBA==
+X-Google-Smtp-Source: AGHT+IGalkW48+qbpM2/vyVsGVSrEqPpmdwi+QuqK0KCQ5T6RGsTAlv/HYItmH9/2ed7UyUPUU+CJw==
+X-Received: by 2002:a2e:8718:0:b0:2bc:eafa:cfaa with SMTP id m24-20020a2e8718000000b002bceafacfaamr3173011lji.53.1693654101759;
+        Sat, 02 Sep 2023 04:28:21 -0700 (PDT)
+Received: from [192.168.1.101] (abxi170.neoplus.adsl.tpnet.pl. [83.9.2.170])
+        by smtp.gmail.com with ESMTPSA id p5-20020a2e9ac5000000b002b836d8c839sm1162345ljj.40.2023.09.02.04.28.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 Sep 2023 04:28:21 -0700 (PDT)
+Message-ID: <c11abae5-f8d8-468d-a651-ecbbbec9e9e6@linaro.org>
+Date:   Sat, 2 Sep 2023 13:28:19 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/11] nvmem: qfprom: Mark core clk as optional
+To:     Doug Anderson <dianders@chromium.org>,
+        Luca Weiss <luca.weiss@fairphone.com>
+Cc:     cros-qcom-dts-watchers@chromium.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
+ <20230830-fp5-initial-v1-2-5a954519bbad@fairphone.com>
+ <CAD=FV=WS2hgY=bQjLOs3Fdp8pbZyMsaS-0BpoxPq90Etfi+Xuw@mail.gmail.com>
+ <CV5YJVXIL8OT.1ZWW3KVCHPTA5@otso>
+ <CAD=FV=XhdORH=naTtoc+kCC4A7UdAJKwq=Te6B3qvXNGBwBieg@mail.gmail.com>
+ <CV7O0TYYEFA8.1Q42JITFSW77Q@otso>
+ <CAD=FV=UG-dFg7wZsn6n=pkejie0fr+G0q3CguNspGYxoC2ZBLw@mail.gmail.com>
+Content-Language: en-US
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
+ BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
+ HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
+ TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
+ zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
+ MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
+ t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
+ UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
+ aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
+ kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
+ Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
+ R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
+ BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
+ yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
+ xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
+ 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
+ GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
+ mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
+ x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
+ BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
+ mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
+ Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
+ xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
+ AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
+ 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
+ jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
+ cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
+ jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
+ cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
+ bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
+ YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
+ bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
+ nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
+ izWDgYvmBE8=
+In-Reply-To: <CAD=FV=UG-dFg7wZsn6n=pkejie0fr+G0q3CguNspGYxoC2ZBLw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add struct mcp23s08_i2c_info and simplify probe() by replacing
-match data 'type' with 'struct mcp23s08_i2c_info'.
+On 1.09.2023 17:08, Doug Anderson wrote:
+> Hi,
+> 
+> On Fri, Sep 1, 2023 at 7:54 AM Luca Weiss <luca.weiss@fairphone.com> wrote:
+>>
+>>>>> So maybe the right fix here is to just change your dts to specify one
+>>>>> memory region?
+>>>>
+>>>> I got feedback from Konrad that this here would be the preferred
+>>>> approach compared to having a different dts for ChromeOS vs non-ChromeOS
+>>>> devices. I don't feel strongly to either, for me it's also okay to
+>>>> remove the extra memory regions and only have the main one used on
+>>>> regular qcom devices.
+>>>>
+>>>> Let me know what you think.
+>>>
+>>> I don't hate the idea of leaving the extra memory regions in the dts.
+>>> They do describe the hardware, after all, even if the main OS can't
+>>> actually access those memory regions. ...though the same could also be
+>>> said about the clock you've removed. Said another way: if you want to
+>>> fully describe the hardware then the dts should have the extra memory
+>>> regions and the clock. If you are OK w/ just describing the hardware
+>>> in the way that the OS has access to then the dts should not have the
+>>> extra memory regions and not have the clock. Does that sound right?
+>>
+>> Not sure which of those memory regions are actually accessible on this
+>> board, but honestly I don't even want to try accessing it. Blowing fuses
+>> is not my wish there ;)
+>>
+>> On downstream the node is just described like the following:
+>>
+>>         qfprom: qfprom@780000 {
+>>                 compatible = "qcom,qfprom";
+>>                 reg = <0x780000 0x7000>;
+>>                 ...
+>>         };
+>>
+>> So we have 0x780000 - 0x786fff here.
+>>
+>> In sc7280.dtsi we have the following:
+>>
+>>         qfprom: efuse@784000 {
+>>                 compatible = "qcom,sc7280-qfprom", "qcom,qfprom";
+>>                 reg = <0 0x00784000 0 0xa20>,
+>>                           <0 0x00780000 0 0xa20>,
+>>                           <0 0x00782000 0 0x120>,
+>>                           <0 0x00786000 0 0x1fff>;
+>>                 ...
+>>         };
+>>
+>> So I guess this:
+>> * 0x780000 - 0x780a1f
+>> * 0x782000 - 0x78211f
+>> * 0x784000 - 0x784a1f
+>> * 0x786000 - 0x787ffe
+>>
+>> So at least the last memory region seems to be partially out of range
+>> according to downstream.
+> 
+> From the other discussion, it sounds as if you _can_ leave the clock
+> in the device tree and then use "clk_get_optional" here. IMO then, the
+> right answer is to use "clk_get_optional" but then also modify the
+> check below so that instead of:
+> 
+> /* Only enable writing if we have SoC data. */
+> if (priv->soc_data)
+>   econfig.reg_write = qfprom_reg_write;
+> 
+> It is:
+> 
+> /* Only enable writing if we have SoC data and a valid clock */
+> if (priv->soc_data && priv->secclk)
+>   econfig.reg_write = qfprom_reg_write;
+> 
+> 
+> Does that work for you?
+> 
+> 
+>> So after reading all of this I tried running this commmand on the phone
+>> and the phone reboots into 900e mode.
+>>
+>>   $ cat /sys/devices/platform/soc@0/784000.efuse/qfprom0/nvmem
+>>
+>> I guess normally this should work? So if I interpret this correctly, the
+>> Linux driver thinks it can access more than it can/should. But also
+>> should probably try this command on another chipset to see if it works
+>> on any really?
+> 
+> Presumably your firmware needs a different "sc7280_qfprom_keepout". If
+> that's true then I guess you'll have to undergo negotiations with the
+> DT bindings folks and the nvmem maintainer to figure out how to
+> specify that your firmware protects different things than the ChromeOS
+> firmware?
+Luca, if you feel like wasting some time, you can probably bruteforce
+this.
 
-While at it, replace dev_err()->dev_err_probe().
+I assume this keepout thing could be expanded in a generic way and
+made into a dt property.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- drivers/pinctrl/pinctrl-mcp23s08_i2c.c | 102 ++++++++++++-------------
- 1 file changed, 50 insertions(+), 52 deletions(-)
+Other than that, I think it'd be fine to skip that for now, as it
+sounds like it's functional so long as you don't intentionally access
+forbidden regs.
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08_i2c.c b/drivers/pinctrl/pinctrl-mcp23s08_i2c.c
-index 393d9b099cc5..61e92f68ec95 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08_i2c.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08_i2c.c
-@@ -8,10 +8,18 @@
- 
- #include "pinctrl-mcp23s08.h"
- 
-+struct mcp23s08_i2c_info {
-+	const struct regmap_config *regmap;
-+	const char *label;
-+	unsigned int type;
-+	u16 ngpio;
-+	bool reg_shift;
-+};
-+
- static int mcp230xx_probe(struct i2c_client *client)
- {
-+	const struct mcp23s08_i2c_info *info;
- 	struct device *dev = &client->dev;
--	unsigned int type;
- 	struct mcp23s08 *mcp;
- 	int ret;
- 
-@@ -19,41 +27,22 @@ static int mcp230xx_probe(struct i2c_client *client)
- 	if (!mcp)
- 		return -ENOMEM;
- 
--	type = (uintptr_t)i2c_get_match_data(client);
--	switch (type) {
--	case MCP_TYPE_008:
--		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x08_regmap);
--		mcp->reg_shift = 0;
--		mcp->chip.ngpio = 8;
--		mcp->chip.label = "mcp23008";
--		break;
--
--	case MCP_TYPE_017:
--		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x17_regmap);
--		mcp->reg_shift = 1;
--		mcp->chip.ngpio = 16;
--		mcp->chip.label = "mcp23017";
--		break;
--
--	case MCP_TYPE_018:
--		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x17_regmap);
--		mcp->reg_shift = 1;
--		mcp->chip.ngpio = 16;
--		mcp->chip.label = "mcp23018";
--		break;
--
--	default:
--		dev_err(dev, "invalid device type (%d)\n", type);
--		return -EINVAL;
--	}
-+	info = i2c_get_match_data(client);
-+	if (!info)
-+		return dev_err_probe(dev, -EINVAL, "invalid device type (%d)\n",
-+				     info->type);
- 
-+	mcp->reg_shift = info->reg_shift;
-+	mcp->chip.ngpio = info->ngpio;
-+	mcp->chip.label = info->label;
-+	mcp->regmap = devm_regmap_init_i2c(client, info->regmap);
- 	if (IS_ERR(mcp->regmap))
- 		return PTR_ERR(mcp->regmap);
- 
- 	mcp->irq = client->irq;
- 	mcp->pinctrl_desc.name = "mcp23xxx-pinctrl";
- 
--	ret = mcp23s08_probe_one(mcp, dev, client->addr, type, -1);
-+	ret = mcp23s08_probe_one(mcp, dev, client->addr, info->type, -1);
- 	if (ret)
- 		return ret;
- 
-@@ -62,36 +51,45 @@ static int mcp230xx_probe(struct i2c_client *client)
- 	return 0;
- }
- 
-+static const struct mcp23s08_i2c_info mcp23s08_i2c_0008 = {
-+	.regmap = &mcp23x08_regmap,
-+	.label = "mcp23008",
-+	.type = MCP_TYPE_008,
-+	.ngpio = 8,
-+	.reg_shift = 0,
-+};
-+
-+static const struct mcp23s08_i2c_info mcp23s08_i2c_0017 = {
-+	.regmap = &mcp23x17_regmap,
-+	.label = "mcp23017",
-+	.type = MCP_TYPE_017,
-+	.ngpio = 16,
-+	.reg_shift = 1,
-+};
-+
-+static const struct mcp23s08_i2c_info mcp23s08_i2c_0018 = {
-+	.regmap = &mcp23x17_regmap,
-+	.label = "mcp23018",
-+	.type = MCP_TYPE_018,
-+	.ngpio = 16,
-+	.reg_shift = 1,
-+};
-+
- static const struct i2c_device_id mcp230xx_id[] = {
--	{ "mcp23008", MCP_TYPE_008 },
--	{ "mcp23017", MCP_TYPE_017 },
--	{ "mcp23018", MCP_TYPE_018 },
-+	{ "mcp23008", (kernel_ulong_t)&mcp23s08_i2c_0008 },
-+	{ "mcp23017", (kernel_ulong_t)&mcp23s08_i2c_0017 },
-+	{ "mcp23018", (kernel_ulong_t)&mcp23s08_i2c_0018 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, mcp230xx_id);
- 
- static const struct of_device_id mcp23s08_i2c_of_match[] = {
--	{
--		.compatible = "microchip,mcp23008",
--		.data = (void *) MCP_TYPE_008,
--	},
--	{
--		.compatible = "microchip,mcp23017",
--		.data = (void *) MCP_TYPE_017,
--	},
--	{
--		.compatible = "microchip,mcp23018",
--		.data = (void *) MCP_TYPE_018,
--	},
-+	{ .compatible = "microchip,mcp23008", .data = &mcp23s08_i2c_0008 },
-+	{ .compatible = "microchip,mcp23017", .data = &mcp23s08_i2c_0017 },
-+	{ .compatible = "microchip,mcp23018", .data = &mcp23s08_i2c_0018 },
- /* NOTE: The use of the mcp prefix is deprecated and will be removed. */
--	{
--		.compatible = "mcp,mcp23008",
--		.data = (void *) MCP_TYPE_008,
--	},
--	{
--		.compatible = "mcp,mcp23017",
--		.data = (void *) MCP_TYPE_017,
--	},
-+	{ .compatible = "mcp,mcp23008", .data = &mcp23s08_i2c_0008 },
-+	{ .compatible = "mcp,mcp23017", .data = &mcp23s08_i2c_0017 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, mcp23s08_i2c_of_match);
--- 
-2.25.1
+Konrad
 
