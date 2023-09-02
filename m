@@ -2,184 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2DE779079D
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Sep 2023 13:45:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 127D4790847
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Sep 2023 16:40:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352044AbjIBLpn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Sep 2023 07:45:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
+        id S232140AbjIBOkV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Sep 2023 10:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352037AbjIBLpn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Sep 2023 07:45:43 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4F25E7E
-        for <linux-gpio@vger.kernel.org>; Sat,  2 Sep 2023 04:45:39 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2bcfdadd149so50583071fa.0
-        for <linux-gpio@vger.kernel.org>; Sat, 02 Sep 2023 04:45:39 -0700 (PDT)
+        with ESMTP id S232129AbjIBOkV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Sep 2023 10:40:21 -0400
+Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4CD910EF
+        for <linux-gpio@vger.kernel.org>; Sat,  2 Sep 2023 07:40:17 -0700 (PDT)
+Received: by mail-vs1-xe2f.google.com with SMTP id ada2fe7eead31-44d4d997dcfso14751137.0
+        for <linux-gpio@vger.kernel.org>; Sat, 02 Sep 2023 07:40:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693655138; x=1694259938; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zorMJs2VMBIVf26DDqKbZ6mYOJqpHE4v3AzFjSkIo58=;
-        b=C0VvNqwy+HFtsTOr0QwqPfaErpnJ+j+gbK+OgW5cm8ltddV0QZzA7EHkoRC0OZf5SR
-         rNU8NR/WmaKCdy8A/hKkysdtTlVFdesRIBgA/UASNPamtiTP2KtDTRBMhlaeT8YLdehX
-         TX1gF2g7KRZBBSE4OfaWG35xZGNzWFX0+Vv1RcZgH7ONyqsKxeggXkb16H4iHsZgXTkv
-         d2xg8J2UXSSbA9DkSVIyE4lAE/EJq/bFI2B8e9bwML/vMg2+HQA8tm20C5TzFl6zYUUt
-         uxHkBwsSdws+/5gDBNvz+LqVZuU6KnrF3wOtnm0DRJmPtVkUKEOw3yxiJvmD6/xYGAki
-         zvTg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693665617; x=1694270417; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rmvs943FMEQtbu1KacuFgagsI7Z/vptG6vhwuSDiOEg=;
+        b=UduDqpfQXcWy7bDhGA2q8bDFr/eE4cFiQjvxl2ZDTpRvWOXJOv8ydp2FjHQkvbyBZi
+         OGOwNp/bqW4OfrTPS2G82jOrXbu9RllJCHG7/zt0bp6lXHqB91Lfb9+oBeQM6DsmbwiF
+         xunRLASqWlGvy2xWyL3+6cim22o/XvhseOU3Cpuxeew7Szjscl8QrdFlnkTwfkuzXajW
+         Vh7wrYQbW2uRbKL3CdY1FFDibJO3o7tgCcrm8lOxc+EEvT3PGSxVYXyqSsFugYxfB3lO
+         TO3eAGWK5UOf3arOayZeA9ApPT8EKKMlSYtGSBCqO3XVBKBMZ4w6lyMifLa+sOSwlBm7
+         ZGRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693655138; x=1694259938;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zorMJs2VMBIVf26DDqKbZ6mYOJqpHE4v3AzFjSkIo58=;
-        b=KaMzQihjpSL1ruQBaHQxhepqcRZADsOT4At2XUroib23hCrTOYgye/mDpU5gLV9qPq
-         F8P7HZf5hRVH8/vuMrLlPDHeaoHDOuHlmx0qt5MuSs4ScwtAB4Qtke2LQ1iTjboVzsja
-         vP0Je2gw9h3LrI0fStNfWjI0hUJyI54DTeyvkDeC8dsF+iuS3jMEHRIiZFKl8jbXOvhS
-         ZDaN1t+3OlWUzdBXFBnaHkQCUXlf9+EIMnPxOFtqA+otSfJC4TqgJ6G+iDme0q87aWe3
-         eD/j+bdAzI6iQrd1VCuuAnLqnyJemfozTW0XHdcCfiy7xI5nETZWjD6uic+dySv2vvun
-         f9Wg==
-X-Gm-Message-State: AOJu0Yz9tOEidFXi0o9MgTarXSvp6fnSsR1A/9uA8ZQhgr+fLqrMgfTU
-        fybNeqn0+84XSshCRBrN2p7XHQ==
-X-Google-Smtp-Source: AGHT+IFqP05K7+DSnGRKSlA7ReM081tFrZrwpnWX1jlZNOk+CT3xMfqqzeSpSMMca0sSWBFoIRRtUQ==
-X-Received: by 2002:a2e:7d18:0:b0:2bc:e1a3:fbaa with SMTP id y24-20020a2e7d18000000b002bce1a3fbaamr3630421ljc.22.1693655137988;
-        Sat, 02 Sep 2023 04:45:37 -0700 (PDT)
-Received: from [192.168.1.101] (abxi170.neoplus.adsl.tpnet.pl. [83.9.2.170])
-        by smtp.gmail.com with ESMTPSA id v2-20020a2e9602000000b002b9fe77d00dsm1168719ljh.93.2023.09.02.04.45.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Sep 2023 04:45:37 -0700 (PDT)
-Message-ID: <5f05c76e-e74e-4954-a729-3ed2a1d33605@linaro.org>
-Date:   Sat, 2 Sep 2023 13:45:35 +0200
+        d=1e100.net; s=20221208; t=1693665617; x=1694270417;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rmvs943FMEQtbu1KacuFgagsI7Z/vptG6vhwuSDiOEg=;
+        b=HqKoOWg/ASHhewCIc1HrueIiGqelsMZMv6si6Ul4ivqmKqBCDsgB6XnizLJN7GBSqA
+         DIpyHAszmmchZKP/Sk9x/+QeevBD1OOfKTqW3CWEyGC8NFuj06BSJoZ9xvuvT4zZ/XfL
+         rDRCmdqtmNiwyFSwlB4RJlmiVNfHooUqMiYAvGDmVX3bpV6I5VZGKctKxGpc7rssCqps
+         RICmHqy9nPE0NVAFmTIQL34TbgyoHlae7ZKO8iWuHrOeTxdEJwdPrqeLVuxbwAvPmybG
+         YIztDUPQowN6C1NpxF4MwT2cdX0HMOYoecdfrqQdE85Np9e+BkXY+bUFX5PR2XzSSLiB
+         sEEg==
+X-Gm-Message-State: AOJu0YzFMiZ9wm0eG/ssSMI6dayS5P3PV7AEFo3YROsoCwaKgvlCIMB1
+        sgoyySteNiCIxIZf+qeFZPiAKxMNvOs7Jy+X0EPdFA==
+X-Google-Smtp-Source: AGHT+IHg7L1xeU8puyvHGovJX7vzUppkLBpLLUZGgzFIfE3T3JWZWCJhoWmAGkh5G1ByHO4s1X/+AMgJRoQNNWrKAto=
+X-Received: by 2002:a67:f7cd:0:b0:44d:40b1:9277 with SMTP id
+ a13-20020a67f7cd000000b0044d40b19277mr5576233vsp.12.1693665616757; Sat, 02
+ Sep 2023 07:40:16 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/11] arm64: dts: qcom: qcm6490: Add device-tree for
- Fairphone 5
-Content-Language: en-US
-To:     Luca Weiss <luca.weiss@fairphone.com>,
-        cros-qcom-dts-watchers@chromium.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
- <20230830-fp5-initial-v1-11-5a954519bbad@fairphone.com>
- <72c2fd33-613b-49be-b394-0663f459f0c5@linaro.org>
- <CV7NGPVH4U0W.PN2NOIO19Z7U@otso>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
- BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
- HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
- TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
- zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
- MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
- t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
- UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
- aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
- kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
- Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
- R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
- BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
- yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
- xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
- 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
- GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
- mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
- x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
- BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
- mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
- Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
- xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
- AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
- 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
- jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
- cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
- jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
- cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
- bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
- YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
- bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
- nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
- izWDgYvmBE8=
-In-Reply-To: <CV7NGPVH4U0W.PN2NOIO19Z7U@otso>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230901183240.102701-1-brgl@bgdev.pl> <ZPJTT/l9fX1lhu6O@smile.fi.intel.com>
+In-Reply-To: <ZPJTT/l9fX1lhu6O@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 2 Sep 2023 16:40:05 +0200
+Message-ID: <CAMRc=Mekf9Rek3_G2ttQY+yBvWM3+P4RAWVOQH99eajn38F+og@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1.09.2023 16:27, Luca Weiss wrote:
-> On Wed Aug 30, 2023 at 12:45 PM CEST, Konrad Dybcio wrote:
->> On 30.08.2023 11:58, Luca Weiss wrote:
->>> Add device tree for the Fairphone 5 smartphone which is based on
->>> the QCM6490 SoC.
->>>
->>> Supported features are, as of now:
->>> * Bluetooth
->>> * Debug UART
->>> * Display via simplefb
->>> * Flash/torch LED
->>> * Flip cover sensor
->>> * Power & volume buttons
->>> * RTC
->>> * SD card
->>> * USB
->>> * Various plumbing like regulators, i2c, spi, etc
->>>
->>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>> ---
-[...]
+On Fri, Sep 1, 2023 at 11:10=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Sep 01, 2023 at 08:32:40PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > We access internals of struct gpio_device and struct gpio_desc because
+> > it's easier but it can actually be avoided and we're working towards a
+> > better encapsulation of GPIO data structures across the kernel so let's
+> > start at home.
+> >
+> > Instead of checking gpio_desc flags, let's just track the requests of
+> > GPIOs in the driver. We also already store the information about
+> > direction of simulated lines.
+> >
+> > For kobjects needed by sysfs callbacks: we can leverage the fact that
+> > once created for a software node, struct device is accessible from that
+> > fwnode_handle. We don't need to dereference gpio_device.
+> >
+> > While at it: fix one line break and remove the untrue part about
+> > configfs callbacks using dev_get_drvdata() from a comment.
+>
+> ...
+>
+> > -static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
+>
+> Why is this?
+>
 
->>> +	panel: panel {
->>> +		compatible = "boe,rm692e5";
->> Undocumented compatbile
-> 
-> Not quite sure how to document this properly. This dummy panel node is
-> used for the simplefb/simpledrm so that user space can get panel
-> dimensions already.
-> 
-> This approach of a separate panel node was apparently preferred when the
-> functionality was upstreamed but of course as can be seen this panel
-> node is very barebones where many properties are not present which would
-> be needed with the full panel driver (once it's working).
-> 
-> Also for example for the bindings I think width-mm and height-mm won't
-> be needed anymore since that information will be provided by the driver
-> then.
-> 
-> Please let me know how/where to document this.
-As discussed offline, the workflow here would be to oneOf: (wink)
+Dunno, some git shenanigans?
 
-- wait until there's a proper driver and create a binding based on
-  what you know (because you have a working driver and can test it)
-  is necessary for it to function
+> > +static int gpio_sim_request(struct gpio_chip *gc, unsigned int offset)
+> >  {
+> >       struct gpio_sim_chip *chip =3D gpiochip_get_data(gc);
+> >
+> >       scoped_guard(mutex, &chip->lock)
+> > +             __set_bit(offset, chip->request_map);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
+> > +{
+> > +     struct gpio_sim_chip *chip =3D gpiochip_get_data(gc);
+> > +
+> > +     scoped_guard(mutex, &chip->lock) {
+> >               __assign_bit(offset, chip->value_map,
+> >                            !!test_bit(offset, chip->pull_map));
+> > +             __clear_bit(offset, chip->request_map);
+> > +     }
+> >  }
+>
+> Seems to me like you. shuffled the order of the two functions.
+> Can you leave _free() at the same location in the file?
+>
 
-- create the binding for that display panel + driver ic combo in
-  advance and pray that whatever you put there will be enough when
-  you take upon yourself to write the driver
+I didn't. Request comes before free but they're next to each other.
 
-I'd suggest dropping these properties (or keeping them downstream or
-something) for now, the display should not be terribly hard to bring
-up properly, let's hope that can be done soon!
+> ...
+>
+> > -     /* Used by sysfs and configfs callbacks. */
+> > -     dev_set_drvdata(&gc->gpiodev->dev, chip);
+> > +     /* Used by sysfs callbacks. */
+> > +     dev_set_drvdata(swnode->dev, chip);
+>
+> dev pointer of firmware node is solely for dev links. Is it the case here=
+?
+> Seems to me you luckily abuse it.
+>
 
-> I'm aware, but will work on this later since it's not useful without
-> USB-C role switching and working audio.
-You can still peek at it in like sysfs or so, but up to you.
+I don't think so. If anything we have a helper in the form of
+get_dev_from_fwnode() but it takes reference to the device while we
+don't need it - we know it'll be there because we created it.
 
+This information (struct device of the GPIO device) can also be
+retrieved by iterating over the device children of the top platform
+device and comparing their fwnodes against the one we got passed down
+from probe() but it's just so many extra steps.
 
-Konrad
+Or we can have a getter in gpio/driver.h for that but I don't want to
+expose another interface is we can simply use the fwnode.
+
+Bart
+
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
