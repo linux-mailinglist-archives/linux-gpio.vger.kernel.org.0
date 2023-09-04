@@ -2,200 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF0F7791721
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Sep 2023 14:33:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A64F779177D
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Sep 2023 14:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242468AbjIDMdd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Sep 2023 08:33:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
+        id S238132AbjIDMqE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Sep 2023 08:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242403AbjIDMdd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Sep 2023 08:33:33 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DCD1AD
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Sep 2023 05:33:29 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-40061928e5aso13641615e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Sep 2023 05:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693830808; x=1694435608; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AQvLgCuAgqbziPJyI5AF10Ce3IdzqK5TyvrPpNOUCxQ=;
-        b=pmh0iM6Ic7wbAnHbGU8j1qoZT9v0l8/4CsqZGSN3SdHPuSeP/r1hcDSTxvvpd60ibz
-         9dr2H61GT0/FNb+hLdOI/Kl+fo4N6djej0lreu8eqrTi2ZpCEacPD/ugEwo+Ktddey71
-         W3zyLlLGv3cXNpm4XhYHB7WgzyEj1jYE+AObxv8A8jUDrrvjI7Bg6lulUsRK6exYJ1fc
-         FXMViW33G5NdAx7wvM2RcR148/2PuTIUMTAserXFSwl7KwrcoP89N6P/7cX6H8R2yE+w
-         naFHxAfMVSn/+CAIxVHtgyxp3qkEwnbja/7wwTsmykkEk81jyV92UmStt6kJYYc6QC7W
-         b9lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693830808; x=1694435608;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AQvLgCuAgqbziPJyI5AF10Ce3IdzqK5TyvrPpNOUCxQ=;
-        b=OtNTMWnsLZNhm+QYveHMRqDy5lp/XbDIaICPUsQLBhQkFP7tJW4uuduidEvZs/RKNT
-         83JI+pqGyiBvqF3YU4zpqPUMct3BcUF+2jhhlWgSOCiwwammp/QiZ0BcNs4z6XGXrnuD
-         TQ9rTid+o4Dxf8KCK0Lm60ZRUfmLYYNEzSTXvP6epl5OZ70Ydhj21gwnurnRPxuLX5K6
-         z8I5rtmi27g/NhS1YsPyx7cSAJcUnf+QeXeVxvTdriD+r2avaizy9QlBa0NjqAf0mY33
-         2yEHEt+OoEoZ8MhsVOPujsn2jQTfzJAeGPkUedcSQL4gWLM77ZZx8EOdd45QHJ1fhsui
-         6gog==
-X-Gm-Message-State: AOJu0YzxiW7rsEYUpzE9H3X7WgMhuKT710bIY500EUd71nq05nsRWyhe
-        45O1tQiRMggLlLScoSx/SwTDog==
-X-Google-Smtp-Source: AGHT+IHVLkQLsjuX/lX2Jwzd6g9At3xYqiksd0MFKCcLfVDOApuXdlhZ2xpyZm74o48zpFztMZp+7w==
-X-Received: by 2002:adf:f144:0:b0:31a:d6cb:7f9d with SMTP id y4-20020adff144000000b0031ad6cb7f9dmr6793726wro.24.1693830807807;
-        Mon, 04 Sep 2023 05:33:27 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7663:60b7:3a19:b5c4])
-        by smtp.gmail.com with ESMTPSA id q12-20020adffecc000000b00316eb7770b8sm14518255wrs.5.2023.09.04.05.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Sep 2023 05:33:27 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S235031AbjIDMp5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Sep 2023 08:45:57 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AD1ACD5;
+        Mon,  4 Sep 2023 05:45:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693831553; x=1725367553;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Wa35J9ZX/nel6BiikunBPw+XkZUx/f4ld1V2g3fh7Q0=;
+  b=j9nsnUmGoxmRJ4UVyJmMH2wnX1LdzPp39Ew0nQVO8yG7viDQqLtaDjjs
+   ScnSzpPyUokyOcgOq6rnPYqPAfaWRDaLw83vqhyK9Y8VIF/B0+YHc6dua
+   3lQcweXx1gmzP5x7EptrgiQYzBo2q9Q7DYEKkQTCZeCdjydlzJL3+ue2w
+   zbGPH6mrfuIrVJe2Y5p3yEe1ch13sCR8jKtqcgrKG0F3XBX48KIWFgnz8
+   a4Vhf51k8sxssFNiCMA8CS87VqGI2niYbm+1cz7O6awt3MaqCmcGFin23
+   SOxseavOGXtSy+TzGXWvtFn8D9KY+jRQG5xDggKIDKwQbTi9O5bgRQs84
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="407589426"
+X-IronPort-AV: E=Sophos;i="6.02,226,1688454000"; 
+   d="scan'208";a="407589426"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 05:45:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="806251547"
+X-IronPort-AV: E=Sophos;i="6.02,226,1688454000"; 
+   d="scan'208";a="806251547"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 05:45:50 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qd8xf-006QSG-2q;
+        Mon, 04 Sep 2023 15:45:47 +0300
+Date:   Mon, 4 Sep 2023 15:45:47 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Jeffery <andrew@aj.id.au>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [RFT PATCH] gpio: eic-sprd: use atomic notifiers to notify all chips about irqs
-Date:   Mon,  4 Sep 2023 14:33:20 +0200
-Message-Id: <20230904123320.93980-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+Subject: Re: [PATCH] gpiolib: unexport gpiod_set_transitory()
+Message-ID: <ZPXRexqFQx9Q2BiR@smile.fi.intel.com>
+References: <20230903190657.12393-1-brgl@bgdev.pl>
+ <ZPWvJc90rmIAPR+r@smile.fi.intel.com>
+ <CAMRc=MdMiMPFvvpAg7DqStSb07Z8L5p0RAmcTimHN8YkcLPV=A@mail.gmail.com>
+ <ZPW9JuahVYSP1I6m@smile.fi.intel.com>
+ <CAMRc=MdzfvnYJt-SkMzYEwp4rKsaJLN_uoBNQ0seuai+im_b=Q@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <CAMRc=MdzfvnYJt-SkMzYEwp4rKsaJLN_uoBNQ0seuai+im_b=Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Sep 04, 2023 at 01:32:38PM +0200, Bartosz Golaszewski wrote:
+> On Mon, Sep 4, 2023 at 1:19 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
-Calling gpiochip_find() from interrupt handler in this driver is an
-abuse of the GPIO API. It only happens to work because nobody added a
-might_sleep() to it and the lock used by GPIOLIB is a spinlock.
+...
 
-Both will soon be changed as we're limiting both the number of
-interfaces allowed to be called from atomic context as well as making
-struct gpio_chip private to the GPIO code that owns it. We'll also
-switch to protecting the global GPIO device list with a mutex as there
-is no reason to allow changes to it from interrupt handlers.
+> This is still inconsistent with the rest of the public symbols -
+> especially those in gpio/driver.h. My long-term plan - before making
+> locking great again - is to limit the usage of any gpiochip_ symbols
+> to GPIO providers (as the chip is not guaranteed to be valid, unlike
+> gpio_device) and provide a bunch of gpio_device_ or gpiodev_
+> interfaces for use by those who *really* need it. Now am I going to
+> make up two distinct prefixes for public and non-public APIs? That
+> will be even more confusing IMO.
+> 
+> Just like in C++ you don't make up special names for public vs private
+> methods except for some deranged coding styles that also require you
+> to name arguments like "in_foo" and "out_bar".
 
-Instead of iterating over all SPRD chips and looking up each
-corresponding GPIO chip, let's make each SPRD GPIO controller register
-with a notifier chain. The chain will be called at interrupt so that
-every chip that already probed will be notified. The rest of the
-interrupt handling remains the same. This should result in faster code as
-we're avoiding iterating over the list of all GPIO devices.
+Yeah, I understand your point of view on this, but as I said
+"disagree and commit" (used to be corporate value at some point :-).
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-I only build-tested it. Please take it for a ride, I hope this works.
+On my side I criticized and proposed... It's your turn what to do
+with that, I'm not insisting on my way, I'm just telling I don't like
+yours, but I will survive, no hard feelings :-)
 
- drivers/gpio/gpio-eic-sprd.c | 44 ++++++++++++++++++++----------------
- 1 file changed, 25 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-index 5320cf1de89c..21a1afe358d6 100644
---- a/drivers/gpio/gpio-eic-sprd.c
-+++ b/drivers/gpio/gpio-eic-sprd.c
-@@ -9,6 +9,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/notifier.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
-@@ -91,12 +92,20 @@ enum sprd_eic_type {
- 
- struct sprd_eic {
- 	struct gpio_chip chip;
-+	struct notifier_block irq_nb;
- 	void __iomem *base[SPRD_EIC_MAX_BANK];
- 	enum sprd_eic_type type;
- 	spinlock_t lock;
- 	int irq;
- };
- 
-+static ATOMIC_NOTIFIER_HEAD(sprd_eic_irq_notifier);
-+
-+static struct sprd_eic *to_sprd_eic(struct notifier_block *nb)
-+{
-+	return container_of(nb, struct sprd_eic, irq_nb);
-+}
-+
- struct sprd_eic_variant_data {
- 	enum sprd_eic_type type;
- 	u32 num_eics;
-@@ -494,13 +503,6 @@ static void sprd_eic_toggle_trigger(struct gpio_chip *chip, unsigned int irq,
- 	sprd_eic_irq_unmask(data);
- }
- 
--static int sprd_eic_match_chip_by_type(struct gpio_chip *chip, void *data)
--{
--	enum sprd_eic_type type = *(enum sprd_eic_type *)data;
--
--	return !strcmp(chip->label, sprd_eic_label_name[type]);
--}
--
- static void sprd_eic_handle_one_type(struct gpio_chip *chip)
- {
- 	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-@@ -546,27 +548,29 @@ static void sprd_eic_handle_one_type(struct gpio_chip *chip)
- static void sprd_eic_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_chip *ic = irq_desc_get_chip(desc);
--	struct gpio_chip *chip;
--	enum sprd_eic_type type;
- 
- 	chained_irq_enter(ic, desc);
- 
- 	/*
- 	 * Since the digital-chip EIC 4 sub-modules (debounce, latch, async
--	 * and sync) share one same interrupt line, we should iterate each
--	 * EIC module to check if there are EIC interrupts were triggered.
-+	 * and sync) share one same interrupt line, we should notify all of
-+	 * them to let them check if there are EIC interrupts were triggered.
- 	 */
--	for (type = SPRD_EIC_DEBOUNCE; type < SPRD_EIC_MAX; type++) {
--		chip = gpiochip_find(&type, sprd_eic_match_chip_by_type);
--		if (!chip)
--			continue;
--
--		sprd_eic_handle_one_type(chip);
--	}
-+	atomic_notifier_call_chain(&sprd_eic_irq_notifier, 0, NULL);
- 
- 	chained_irq_exit(ic, desc);
- }
- 
-+static int sprd_eic_irq_notify(struct notifier_block *nb, unsigned long action,
-+			       void *data)
-+{
-+	struct sprd_eic *sprd_eic = to_sprd_eic(nb);
-+
-+	sprd_eic_handle_one_type(&sprd_eic->chip);
-+
-+	return NOTIFY_OK;
-+}
-+
- static const struct irq_chip sprd_eic_irq = {
- 	.name		= "sprd-eic",
- 	.irq_ack	= sprd_eic_irq_ack,
-@@ -653,7 +657,9 @@ static int sprd_eic_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	return 0;
-+	sprd_eic->irq_nb.notifier_call = sprd_eic_irq_notify;
-+	return atomic_notifier_chain_register(&sprd_eic_irq_notifier,
-+					      &sprd_eic->irq_nb);
- }
- 
- static const struct of_device_id sprd_eic_of_match[] = {
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
