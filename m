@@ -2,197 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4CBD791588
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Sep 2023 12:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A256E7915A2
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Sep 2023 12:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231425AbjIDKNA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Sep 2023 06:13:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39880 "EHLO
+        id S1349740AbjIDKT2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Sep 2023 06:19:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243886AbjIDKM7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Sep 2023 06:12:59 -0400
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25ACE1B5
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Sep 2023 03:12:56 -0700 (PDT)
-Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-7870821d9a1so802859241.1
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Sep 2023 03:12:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693822375; x=1694427175; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ksCsuoIwPCAp5DUzYypALLhC3L9hllQJaYwOdLWw3DQ=;
-        b=doyd7PIp7gC/ktdUYOSKV+WadE4npLiJU7GBBkEsG5xzLkr2ao2F6YbMURKPg3LKVj
-         nYvauCFT4pWRkGKAg+KepreNlWug3HMkcDB02uNfzkjAx/R1qCGkKXdnPpJEXgI+gBNm
-         bRt7yV56mDvY9txV5b8ZYyHtLy4zJ9l7koSzWk9M0Z3EwW2J919rL6EL0DlnmVGSDR+Y
-         xKZJpDBp9VTeHmqmN1KghG06kbe1imvv4qzj6P+l8H0bFPsDdrtyA1vQtwf4AgCROorw
-         jAaTRCxAAlL1m3SSGr3sA3WAqyu4CIhAtuG7fuz2RO8vLce3QKcoSRUrqMhoN7dvILSM
-         ndQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693822375; x=1694427175;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ksCsuoIwPCAp5DUzYypALLhC3L9hllQJaYwOdLWw3DQ=;
-        b=MMK6prUP5AVoG5N6459zcJwSLt8qlBy5Mbn8LnMX1oCojcUNyjCZ56x5rbIwEI1iJ9
-         aZlvBWTPYrI/6fH8iIcXcCJzu5xO01jniM0r3NnEXn/G/4ZyA9rLqCdxc9SIg3Ya3k4a
-         tcK+uoSkOtnSEEVXZEQ/AXGBF836Dn3WxwOdhYGswZo7w3pIFNP0VGH+pjFiPfgs/+ff
-         cBFZvlaHHtc+2qTGImIb5XDu6/zar2oSHZGEpNtn2NuTslEPD0DLUuiaFsHmjnSEbHRk
-         2zbNYItKMYX5brYKoN0/cwyGNt/AuqtvEEWHaQHehg80kULKr4ScsMMruzGyR1gcMz4z
-         qKRw==
-X-Gm-Message-State: AOJu0Yy2Rf7p7/F42LDdkDmqxtQs70Y3OQbsFhrviKPLH1Ucs0fbSacd
-        X64qhgZ9ie9zlTvbAr1zY1VGju3OGVYtnUzUujPRqQ==
-X-Google-Smtp-Source: AGHT+IEQmqSU1Z2ETMpuVCd8CbuDQ6TQk4Y89zgYkqzhGxK3XW7uof7R0vXQ1t259BZKHPfWiTF2FSSonc9UoxAG3yA=
-X-Received: by 2002:a05:6102:442a:b0:44d:3b54:c81b with SMTP id
- df42-20020a056102442a00b0044d3b54c81bmr8231330vsb.12.1693822375210; Mon, 04
- Sep 2023 03:12:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230901183240.102701-1-brgl@bgdev.pl> <ZPJTT/l9fX1lhu6O@smile.fi.intel.com>
- <CAMRc=Mekf9Rek3_G2ttQY+yBvWM3+P4RAWVOQH99eajn38F+og@mail.gmail.com>
- <ZPWcTMPiu4MSq+F7@smile.fi.intel.com> <CAMRc=MfZv70FXHyNw4yK90NL5-jjAJa6qbKc6SV2ZwbaJkKQqg@mail.gmail.com>
- <ZPWmDL6QJJMNi2qa@smile.fi.intel.com> <CAMRc=Mc0JgPUEpaes7WcbkMu5JyrpLW8N1+bM-+OJaB+pPX4ew@mail.gmail.com>
- <ZPWr3dRP5C1GSY9F@smile.fi.intel.com>
-In-Reply-To: <ZPWr3dRP5C1GSY9F@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 4 Sep 2023 12:12:44 +0200
-Message-ID: <CAMRc=Mfae+=HPPWzsG8bgK2CGOGY9GPkS5VZcwLyr_yY8A_y2g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        with ESMTP id S229460AbjIDKT1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Sep 2023 06:19:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E677F1B6;
+        Mon,  4 Sep 2023 03:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693822762; x=1725358762;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=x9gwmSu7l1tKKTY4O9ewxpOuxFGgmB7wkxku8KGG2AU=;
+  b=BveA4ZBse5Y1xv4WP3GyPvVs48hqH7r+KvaDyZktRKrdDkL5FD9yE6hq
+   ZNml2T8NQ5UjilW3YXjyOm6r67yJYDELVO4O/3Cpfje7mu1DxfwBCxAWv
+   7BcXHqUdQsVvKccUovjExU57vTfwUds61IAbCWWpxqe5QCZtQwL843IWD
+   +Ih5X54Kepm0hP3cudjYmdYqZSDZpR5AMUPy5acg+hkq1EJcdvhLxpOV0
+   wqStBHJsZaPryIIG6Fa48+s1i1fBGkCgJoToC0KI1LnbKsz78T60k7+Fr
+   a/DFMm8XzBsXyRr6cggo4z4Apg7FbOD/5acXwmSmAQKCfkd98v306Tgat
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10822"; a="361589627"
+X-IronPort-AV: E=Sophos;i="6.02,226,1688454000"; 
+   d="scan'208";a="361589627"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 03:19:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10822"; a="883987539"
+X-IronPort-AV: E=Sophos;i="6.02,226,1688454000"; 
+   d="scan'208";a="883987539"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 03:19:14 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qd6ft-006Oim-1R;
+        Mon, 04 Sep 2023 13:19:17 +0300
+Date:   Mon, 4 Sep 2023 13:19:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Jeffery <andrew@aj.id.au>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH] gpiolib: unexport gpiod_set_transitory()
+Message-ID: <ZPWvJc90rmIAPR+r@smile.fi.intel.com>
+References: <20230903190657.12393-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230903190657.12393-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 4, 2023 at 12:05=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Sep 04, 2023 at 11:47:54AM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Sep 4, 2023 at 11:40=E2=80=AFAM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Mon, Sep 04, 2023 at 11:22:32AM +0200, Bartosz Golaszewski wrote:
-> > > > On Mon, Sep 4, 2023 at 10:59=E2=80=AFAM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Sat, Sep 02, 2023 at 04:40:05PM +0200, Bartosz Golaszewski wro=
-te:
-> > > > > > On Fri, Sep 1, 2023 at 11:10=E2=80=AFPM Andy Shevchenko
-> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > > On Fri, Sep 01, 2023 at 08:32:40PM +0200, Bartosz Golaszewski=
- wrote:
->
-> ...
->
-> > > > > > > > -     /* Used by sysfs and configfs callbacks. */
-> > > > > > > > -     dev_set_drvdata(&gc->gpiodev->dev, chip);
-> > > > > > > > +     /* Used by sysfs callbacks. */
-> > > > > > > > +     dev_set_drvdata(swnode->dev, chip);
-> > > > > > >
-> > > > > > > dev pointer of firmware node is solely for dev links. Is it t=
-he case here?
-> > > > > > > Seems to me you luckily abuse it.
-> > > > > >
-> > > > > > I don't think so. If anything we have a helper in the form of
-> > > > > > get_dev_from_fwnode() but it takes reference to the device whil=
-e we
-> > > > > > don't need it - we know it'll be there because we created it.
-> > > > > >
-> > > > > > This information (struct device of the GPIO device) can also be
-> > > > > > retrieved by iterating over the device children of the top plat=
-form
-> > > > > > device and comparing their fwnodes against the one we got passe=
-d down
-> > > > > > from probe() but it's just so many extra steps.
-> > > > > >
-> > > > > > Or we can have a getter in gpio/driver.h for that but I don't w=
-ant to
-> > > > > > expose another interface is we can simply use the fwnode.
-> > > > >
-> > > > > dev pointer in the fwnode strictly speaking is optional. No-one, =
-except
-> > > > > its solely user, should rely on it (its presence and lifetime).
-> > > >
-> > > > Where is this documented? Because just by a quick glance into
-> > > > drivers/base/core.c I can tell that if a device has an fwnode then
-> > > > fwnode->dev gets assigned when the device is created and cleared wh=
-en
-> > > > it's removed (note: note even attached to driver, just
-> > > > created/removed). Seems like pretty reliable behavior to me.
-> > >
-> > > Yes, and even that member in fwnode is a hack in my opinion. We shoul=
-d not mix
-> > > layers and the idea in the future to get rid of the fwnode_handle to =
-be
-> > > _embedded_ into struct device. It should be separate entity, and devi=
-ce
-> > > instance may use it as a linked list. Currently we have a few problem=
-s because
-> > > of the this design mistake.
-> >
-> > I don't see how this would work if fwnodes can exist before struct
-> > device is even created.
->
-> That's whole idea behind swnodes. They (ideally) should be created _befor=
-e_
-> any other object they are being used with. This is how it works today.
->
+On Sun, Sep 03, 2023 at 09:06:57PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> There are no and never have been any users of gpiod_set_transitory()
+> outside the core GPIOLIB code. Make it private.
 
-Yes, this is what I meant: if fwnodes can be created before struct
-device (as it is now) and their life-time is separated then how could
-you possibly make the fwnode part of struct device?
+And rename to be gpio_desc_...()?
 
-> And doing swnode->dev =3D ... contradicts a lot: layering, lifetime objec=
-ts, etc.
->
+With this done,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-No it doesn't. We have the software node - the template for the
-device. It can only be populated with a single device entry. Once it's
-done, I don't see why you wouldn't want to assign this device to its
-corresponding software node. Provided locking is in place etc.
+The rationale has been explained in the other threads with renaming matters.
 
-> > They - after all - represent the actual
-> > physical device hierarchy which may or may not be populated at
-> > run-time depending on many factors.
->
-> No. This is a mistaken assumption.
->
+-- 
+With Best Regards,
+Andy Shevchenko
 
-How so?
 
-> > Once populated, being able to retrieve the software representation of
-> > the device (struct device) from the node from which it was populated
-> > sounds like a reasonable thing to do. What are those problems and are
-> > they even linked to this issue?
-> >
-> > > The get_dev_from_fwnode() is used only in devlink and I want to keep =
-it that way.
-> > > Nobody else should use it, really.
-> >
-> > I don't care all that much, I can get the device from the children of
-> > the platform device. Still comparing fwnodes, though this time the
-> > other way around.
->
-> Fine, but do not use dev pointer from fwnode, esp. software node.
->
-
-I will do it but I'd like to clarify the above at some point.
-
-Bart
-
-> > > We can discuss with Saravana, but I don't believe he can convince me =
-otherwise.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
