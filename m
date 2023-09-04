@@ -2,85 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F06379123F
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Sep 2023 09:33:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3219791244
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Sep 2023 09:34:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237485AbjIDHdD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Sep 2023 03:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55904 "EHLO
+        id S231968AbjIDHeW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Sep 2023 03:34:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352408AbjIDHdB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Sep 2023 03:33:01 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086DBCDB
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Sep 2023 00:32:44 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-d7bbaa8efa7so1001710276.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Sep 2023 00:32:43 -0700 (PDT)
+        with ESMTP id S229751AbjIDHeV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Sep 2023 03:34:21 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E073EBA
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Sep 2023 00:34:17 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b962535808so15882981fa.0
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Sep 2023 00:34:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693812763; x=1694417563; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DvNYnMU1q/NYMgMZD1mpM6fkhhhL4YTdzrZptcyKkqs=;
-        b=rBcdvLa34KoAj+iux5ckznlnABsHhckr7tXpBvEDc4yAMjQAKIvvJwskEUO4Yqt+Qx
-         f3zToSQOtnK5mZcvtVeXE1diiGJIZwePpJJzE8CxbQ0NbthvDmtE3+61Dcab9W3sXfnU
-         1zi4krxIv7T6Gn/52/YwPhR1dIJ5OotgVQG9MqMGb3wDnbji8zO9E9k3xj/tw80fcnjG
-         mSPtfhBbawu30OjlPjGt6GD0R3DMrgfiVUopry3tqF5qvSK7kQf3iQ3rdaNj9gqWKr2v
-         c37AKN0X2GsgkfVFe7th6KWYwSimw3PMV6OYjVfzZY6n1OgXZjv0wcF24wCeD8iOaZ9R
-         amMg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693812856; x=1694417656; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wt0Mmwz9w2PonkCnZSyYcOE7CQFgIX3d0lq7tuXYcFA=;
+        b=DUwzWJhDk0pQLEBu1HxyEQTkMZwHbeqZg2I0QhunIUayyp9mklXF044JdBLVBPDWFS
+         gBL/NGEMjfYL4LLg5Z322ytf7JPyifa6t8dgo8QCH75OglMzcQU5xdC91GYDNnl1d97y
+         UVNN4cXQwk4VBjYKFtCPa6Wg3eCZTQmYLtO4XlpLZ34Ch/yInGedDDrnNGsdk7AV7+/+
+         kum/Obh1TTH5kPBMVG8PD1jpkbydm5ubuYb0A/rZ3mgXYaen5kxSAmLkA/MDybmClQFz
+         8OQta1e1w6e3wIMrR9JgiSTFzQQwFQFuPnuwq6uBx1yQxixNeOqzHTeC32R+XL5ByHCh
+         rlkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693812763; x=1694417563;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DvNYnMU1q/NYMgMZD1mpM6fkhhhL4YTdzrZptcyKkqs=;
-        b=MmONbuPEc7Ia584DxLQX9QzUfUlsvSeL7UxXwVOmO9AegGdc0nKOEQdNJiNoFcI7mX
-         p2xtEI+rrEjR4hoffUo/z3MPpEXtaNNscgT8eTgIH4jW52ibBT6vnULkH2iRHRRUDKBm
-         MJK4S4y4eN8B90hO7hX4MRSkkraDQRwqYPfjwRpi9GwBeU4uOLb/QZg5BS8JyRvSjrF7
-         /kYwJ3LnA5B9Q4zNAtMBPFCLV8vqEOFL5UdJyRkrzRy4G7RT8Gr1KcRuTg8I2RKAqwun
-         Wq+3on4lYRuy2vHa4MAmMXghIZV5L4EMG7x99bLTkD2UK0MpU0I5eXqQiMDvJGd2S/lI
-         yy/Q==
-X-Gm-Message-State: AOJu0Yyv14KXPuhvlyCvaNPntBzHpsUb8Q3G7XFRuC6SdJ6Vsnj5p5Oe
-        0n+2Jx5brKRdpbNXWFzkML20sbTB0PdU9V7vkhmE/Q==
-X-Google-Smtp-Source: AGHT+IFubKUbIyBl/neDJNGHZm9GGu1Eyn9gRKMgeycHQQEJToscP2A2gpx8TIYyMbgsPuv3Xq+YlnwOrSRvTvQS6HM=
-X-Received: by 2002:a25:83cb:0:b0:d7f:466a:ea75 with SMTP id
- v11-20020a2583cb000000b00d7f466aea75mr498077ybm.4.1693812763251; Mon, 04 Sep
- 2023 00:32:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230903190657.12393-1-brgl@bgdev.pl>
-In-Reply-To: <20230903190657.12393-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Sep 2023 09:32:32 +0200
-Message-ID: <CACRpkdZjkQOh807XeeJ7MKmz5p-5wvRhaQ6LzzBta87akHHFYg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: unexport gpiod_set_transitory()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        d=1e100.net; s=20221208; t=1693812856; x=1694417656;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wt0Mmwz9w2PonkCnZSyYcOE7CQFgIX3d0lq7tuXYcFA=;
+        b=kK19djjt0INZdlYIM5WL3TAfhB69CzAPfO86Pmb6Lmv5dguK4r3sjatxxBKPCImW4C
+         zgvr/U9kxCHBTALj4A5xOGM8ie0US+3cdyYfS+Y2sR6rlRyo+/IfE5myqoYeyDXXl0cD
+         EtSUyJrIvw2vrfg+3P4v93+iqnol5xgceRk3G7ss2SQTQ+mL0fCZg6/wQyLsi/UX3HPQ
+         ea8AKAzVEuZMAkviyDnhiSmHWCbnYfM+gzRoLHSvbj2g2pVbMNxIvwYCmV2G1ZApOD3a
+         RZM4i9qKBtjE2yNDskP6JUXhvHv3mdMDFd1had5bdyzjtinXK/UuBNlVHQYuMWq7JLgU
+         Iz+A==
+X-Gm-Message-State: AOJu0Yw291qmZYh6dnkPgw4PucILObwayq7au/KrqcKKEU1ucp9ytrqc
+        iv55V8BUsryxVw5OUPsiZKvP5b1EyI3TWVZ/IZ8=
+X-Google-Smtp-Source: AGHT+IE76IlVjrmCcuzbvddoZuP/7IrnWV6CjE0yh2OMoUlGlTUBHsyRYxM3MLs/lzfLfFqsUc7WQw==
+X-Received: by 2002:a2e:9788:0:b0:2bc:e51e:b007 with SMTP id y8-20020a2e9788000000b002bce51eb007mr6380274lji.41.1693812856018;
+        Mon, 04 Sep 2023 00:34:16 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7663:60b7:3a19:b5c4])
+        by smtp.gmail.com with ESMTPSA id fj15-20020a05600c0c8f00b003fe2bea77ccsm13492733wmb.5.2023.09.04.00.34.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Sep 2023 00:34:15 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH 1/2] gpiolib: rename gpio_set_debounce_timeout() for consistency
+Date:   Mon,  4 Sep 2023 09:34:09 +0200
+Message-Id: <20230904073410.5880-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 3, 2023 at 9:07=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> There are no and never have been any users of gpiod_set_transitory()
-> outside the core GPIOLIB code. Make it private.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+All other functions that manipulate a struct gpio_desc use the gpiod_
+prefix. Follow this convention and rename gpio_set_debounce_timeout() to
+gpiod_set_debounce_timeout().
 
-Well spotted!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib-acpi.c | 5 +++--
+ drivers/gpio/gpiolib.c      | 4 ++--
+ drivers/gpio/gpiolib.h      | 2 +-
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index fbda452fb4d6..4a390d8f6544 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -341,7 +341,7 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
+ 		return desc;
+ 
+ 	/* ACPI uses hundredths of milliseconds units */
+-	ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout * 10);
++	ret = gpiod_set_debounce_timeout(desc, agpio->debounce_timeout * 10);
+ 	if (ret)
+ 		dev_warn(chip->parent,
+ 			 "Failed to set debounce-timeout for pin 0x%04X, err %d\n",
+@@ -1087,7 +1087,8 @@ int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name, in
+ 				return ret;
+ 
+ 			/* ACPI uses hundredths of milliseconds units */
+-			ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
++			ret = gpiod_set_debounce_timeout(desc,
++							 info.debounce * 10);
+ 			if (ret)
+ 				return ret;
+ 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index edffa0d2acaa..6fab0f211e67 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2377,7 +2377,7 @@ static int gpio_set_bias(struct gpio_desc *desc)
+ }
+ 
+ /**
+- * gpio_set_debounce_timeout() - Set debounce timeout
++ * gpiod_set_debounce_timeout() - Set debounce timeout
+  * @desc:	GPIO descriptor to set the debounce timeout
+  * @debounce:	Debounce timeout in microseconds
+  *
+@@ -2386,7 +2386,7 @@ static int gpio_set_bias(struct gpio_desc *desc)
+  *
+  * Returns 0 on success, or negative error code otherwise.
+  */
+-int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce)
++int gpiod_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce)
+ {
+ 	return gpio_set_config_with_argument_optional(desc,
+ 						      PIN_CONFIG_INPUT_DEBOUNCE,
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 9bff5c2cf720..9ea5b88ad304 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -219,7 +219,7 @@ static inline int gpiod_request_user(struct gpio_desc *desc, const char *label)
+ 
+ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
+ 		unsigned long lflags, enum gpiod_flags dflags);
+-int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce);
++int gpiod_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce);
+ int gpiod_hog(struct gpio_desc *desc, const char *name,
+ 		unsigned long lflags, enum gpiod_flags dflags);
+ int gpiochip_get_ngpios(struct gpio_chip *gc, struct device *dev);
+-- 
+2.39.2
+
