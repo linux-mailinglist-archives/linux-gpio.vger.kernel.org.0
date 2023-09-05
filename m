@@ -2,147 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8115D792DF7
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 20:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DF58792FA7
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 22:14:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231596AbjIESz6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 14:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48358 "EHLO
+        id S240862AbjIEUNf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 16:13:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238530AbjIESz3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 14:55:29 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2369DF4
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 11:55:05 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-3ff1c397405so28802905e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 11:55:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693940032; x=1694544832; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UrAFFOP3UXm+2vTLeazN1us+BKa1tnA/xN1dYjhLvHM=;
-        b=MQWbDF4rE965sDGpw+Z8xVUKRHWw3YwzcUYhTRpv6IjQmey/WoA0wHY8VDz3R0Gs38
-         ONt/xesxsRZkGk1oQAbVZ3/Xb76GeT7pfbvfb4yr9zqV/VjJ5K2WB6AlPVPvoo50v0VM
-         k8osQxqM9YtwOMW+1OwNpMmpWUQOpl+gVSuTgLVkExdc/SXvLBOJbw1sLo5ay63Ho/fb
-         YddhACrq0zNDPR8OLrpkxFlpuOCulETe0g8uTQKCP3PPXZZ52MdDVgn9LSEANBfDGdLV
-         nm2HV2DtdgVJ9nmvVVDfsHadpACFPjc9utovdDApP0UYgxae8AB0ZTtfWUDNP5Wf+vfS
-         eyUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693940032; x=1694544832;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UrAFFOP3UXm+2vTLeazN1us+BKa1tnA/xN1dYjhLvHM=;
-        b=AjOVcCoTMXZe6X/MVSfvWrR+qDRLcwAjIvW/ClfiqSUPIBTbmlEly0emksNb/cAvgV
-         wlIIUVKXyIafHoNdzsde/hY52ek9hMQDXdD4kbkVIR1hLYwe2ZuZ1rzi7ahuwgnoFaeX
-         HcdO1bts1tp5ZAdruJQyDePOzMJXZjPapwVIAog8cA1pGW8R68iRPI2/+16QcLZuxGbI
-         B+up+V2kNu/JoHGebCq+phNIomPRz0S8rgIeoDkqE1l0tF10PochFX7xeqEp4fvkhZCb
-         R0VIblVfCt+JJFG06QIfLCshoBRo2fWEXSILwcSaOz3BI4DW3rDqRQqfj3hYNyo4/APG
-         D2DQ==
-X-Gm-Message-State: AOJu0YzOh7eb8whT8yPQgpHo0pFv24E++t1dYh8gn0cv1FtUHSCnRdNs
-        blJHpaS9M81roz9BzVryK0HDYA==
-X-Google-Smtp-Source: AGHT+IG5rvnvzkhR7zSqbm37o4SyQS5DF2Q3QExpMFHirbdRnNeCry1xvOOt3d5Fk7gOho9h35WBqA==
-X-Received: by 2002:a05:600c:11ce:b0:3fe:2011:a7ce with SMTP id b14-20020a05600c11ce00b003fe2011a7cemr453840wmi.6.1693940031710;
-        Tue, 05 Sep 2023 11:53:51 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7a54:5dbc:6d09:48b7])
-        by smtp.gmail.com with ESMTPSA id 17-20020a05600c249100b003fbc30825fbsm17550010wms.39.2023.09.05.11.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 11:53:51 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S243373AbjIEUNO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 16:13:14 -0400
+X-Greylist: delayed 255 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 13:12:51 PDT
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52394F4
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 13:12:51 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8772EC433A9;
+        Tue,  5 Sep 2023 18:14:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693937644;
+        bh=EukprGs63gcH1dkK4J6/kt9pRzUKb0FoRiSL62w+Z4Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BQBHuJ/0XILzBQfiFc0erYNxhwXt0bRPrbRayhVpe9tFS5jPAHw6euTjUapt1QZr0
+         s+lbPe1OqLlGHh+oDRtNNmhkmppsvJCiT80SiIrhUF3IQ455OtcTcXaCLJNUT8y9HS
+         a2m4JQpE4+f+y7XieUiHU33xO295Wtj957ahgX4xbViGCRA9rP5G/9POuQXyggElFy
+         OjyN9lC38dv1QP4EX/LNx7Q3AgIwusoXpjQgauCiop4Gb4l+lyJvh5ipkOhA77gi5E
+         kcWa2Q2zacJTRY4HxA2MPOhmU97AOBwaujrR8ZDzwD/o1n70tLmGSmYtHhbZFsnkWd
+         Gd+sQMphnu1Ww==
+Received: (nullmailer pid 3741008 invoked by uid 1000);
+        Tue, 05 Sep 2023 18:14:02 -0000
+Date:   Tue, 5 Sep 2023 13:14:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de,
+        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 21/21] gpiolib: remove gpiochip_find()
-Date:   Tue,  5 Sep 2023 20:53:09 +0200
-Message-Id: <20230905185309.131295-22-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230905185309.131295-1-brgl@bgdev.pl>
-References: <20230905185309.131295-1-brgl@bgdev.pl>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: rockchip: Add io domain
+ properties
+Message-ID: <20230905181402.GA3673113-robh@kernel.org>
+References: <20230904115816.1237684-1-s.hauer@pengutronix.de>
+ <20230904115816.1237684-3-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230904115816.1237684-3-s.hauer@pengutronix.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Sep 04, 2023 at 01:58:15PM +0200, Sascha Hauer wrote:
+> Add rockchip,io-domains property to the Rockchip pinctrl driver. This
+> list of phandles points to the IO domain device(s) the pins of the
+> pinctrl driver are supplied from.
 
-With all users of gpiochip_find() converted to using gpio_device_find(),
-we can now remove this function from the kernel.
+Is there an actual need for multiple IO devices with multiple pinctrl 
+blocks? If not, you don't need a property, just lookup the IO domain 
+node by compatible.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c      | 22 ----------------------
- include/linux/gpio/driver.h |  3 ---
- 2 files changed, 25 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 90e8c3d8b6f6..bd700fb4871e 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1081,28 +1081,6 @@ void gpiochip_remove(struct gpio_chip *gc)
- }
- EXPORT_SYMBOL_GPL(gpiochip_remove);
- 
--/*
-- * FIXME: This will be removed soon.
-- *
-- * This function is depracated, don't use.
-- */
--struct gpio_chip *gpiochip_find(void *data,
--				int (*match)(struct gpio_chip *gc,
--					     void *data))
--{
--	struct gpio_device *gdev;
--	struct gpio_chip *gc = NULL;
--
--	gdev = gpio_device_find(data, match);
--	if (gdev) {
--		gc = gdev->chip;
--		gpio_device_put(gdev);
--	}
--
--	return gc;
--}
--EXPORT_SYMBOL_GPL(gpiochip_find);
--
- /**
-  * gpio_device_find() - find a specific GPIO device
-  * @data: data to pass to match function
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index bb9ec741bfda..7d2bf464478a 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -603,9 +603,6 @@ int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc,
- 				    void *data, struct lock_class_key *lock_key,
- 				    struct lock_class_key *request_key);
- 
--struct gpio_chip *gpiochip_find(void *data,
--				int (*match)(struct gpio_chip *gc, void *data));
--
- struct gpio_device *gpio_device_find(void *data,
- 				     int (*match)(struct gpio_chip *gc,
- 						  void *data));
--- 
-2.39.2
-
+> 
+> Also a rockchip,io-domain-boot-on property is added to pin groups
+> which can be used for pin groups which themselves are needed to access
+> the regulators an IO domain is driven from.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  .../bindings/pinctrl/rockchip,pinctrl.yaml          | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> index 10c335efe619e..92075419d29cf 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> @@ -62,6 +62,11 @@ properties:
+>        Required for at least rk3188 and rk3288. On the rk3368 this should
+>        point to the PMUGRF syscon.
+>  
+> +  rockchip,io-domains:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      Phandles to io domains
+> +
+>    "#address-cells":
+>      enum: [1, 2]
+>  
+> @@ -137,7 +142,13 @@ additionalProperties:
+>              - description:
+>                  The phandle of a node contains the generic pinconfig options
+>                  to use as described in pinctrl-bindings.txt.
+> -
+> +      rockchip,io-domain-boot-on:
+> +        type: boolean
+> +        description:
+> +          If true assume that the io domain needed for this pin group has been
+> +          configured correctly by the bootloader. This is needed to break cyclic
+> +          dependencies introduced when a io domain needs a regulator that can be
+> +          accessed through pins configured here.
+>  examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> -- 
+> 2.39.2
+> 
