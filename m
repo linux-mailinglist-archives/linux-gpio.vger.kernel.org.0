@@ -2,272 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E72D87927BA
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:37:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 563C37927FB
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:41:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245176AbjIEQUc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 12:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52302 "EHLO
+        id S231779AbjIEQTV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 12:19:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353863AbjIEIYX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 04:24:23 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE8FCC7
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 01:24:18 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-401b3ea0656so20956235e9.0
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 01:24:18 -0700 (PDT)
+        with ESMTP id S1353877AbjIEI2C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 04:28:02 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90D6CCB
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 01:27:55 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-4018af103bcso14249555e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 01:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693902257; x=1694507057; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=37Wb46QRhLkfUy6mtabtEvmTwG7hQsrkGmqZbmLQDlI=;
-        b=05/IFVFHvEkk7PR9lXevsR6rIXXlqSjhy5iesXuVsKDfUFZBE6TgLaTD781GDbkDDO
-         cB072bJb9ttdxL3xLHlyI+ctNGYNm/r8LjoeCSCQgy2N7VNI3/x1oLyZbZHQeamZqo3w
-         FtA8QTnOeiJBIN20Jti5Y4F6EjQlIGwFZctVN6wVdEHbihl4OzvqSFeGh6yJvezGoxbz
-         1CstwaopQTQxKsWYqvKwpYpdy9pE6a+69IOsMZTcvwSvyzMmvxizjw0OptEOxNqIsMwm
-         QMTnAXKpIMzvr9RTfwPb4+SArnu7Mdsi301PAfLVikmvAGrU9lbgitV28bSWGSNwearI
-         tC4w==
+        d=linaro.org; s=google; t=1693902474; x=1694507274; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yZOJVeABpFpne+4zxTVbLhiPldIS4DZuhrgZSQO5xhg=;
+        b=C7jRPpvPWdKNofhdUtxIkmuetQa24LV+ISujOD1s0qovUmBNySN/gzmGe7K50ny1EO
+         dMqdwWj3WkwqwPHF9Q9HS1osrF2/whi54U9+wviKwCRqYRMFUL2vOBq2bk0/JWUNUppb
+         JVDL8WbeCxGgO2VclnkxO1yXxQ57ve+5ASmo7o2haJBuLp1kIRt9l3DMZCpJcsqv38If
+         Ivf5BwtycJQzfh9qPqug81e+x064j/ARInbhzd8nW87vMel7Deg+na53fa5Nec8INQL9
+         bMBNNUmCPK1s5GOBERoMYnh3yZ2fnq6P3kaYXJPIYD0pNJnYWj/q2Fpgv6S/I4x0q4pf
+         aylQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693902257; x=1694507057;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=37Wb46QRhLkfUy6mtabtEvmTwG7hQsrkGmqZbmLQDlI=;
-        b=lovtxcWq15qo7XVjTKO6AIVxSYWU/neMJVAsuiQD22T2AYajkb7HsNbx/p/VBzY2IX
-         1OYCYGGRyJfYEHRCUFvaJcHGWP/NsbsJil8uTbJqlGh/VeMV4UNI+dNtrZqFIK55JzaQ
-         3bMoRqfb0T1d2mLxe+EdtIPjB00nJ3yl/l4Z31XKrUEwZzo+eGm62GHoV5atqqMjE9vt
-         kKTCvLXB6vi4lim7Von0fmHxsm1qgUqZNOP9yrbQx09VPue0IK8VTyiTiqz5V5KttP1U
-         PQYtRvGq9d58urvcIaN00f3P5HNJ7viSdNKseu3wyKCld+L4gukHC5LonVs52mH4sVvJ
-         4Izg==
-X-Gm-Message-State: AOJu0YxOPujqrMQ4PX6EBcD+GVcsH+osFxdRTKw6EQ8fDMrND2sE6Eo2
-        YUJy8BSRVzpWdMo7UuST9atn8g==
-X-Google-Smtp-Source: AGHT+IF5SvEjWYDh2J+BFnMqc4SxlIIJLgWa+aZl+0IXDpS8lOM00piRsWsEBPfQzh0wVDVsHB5pWg==
-X-Received: by 2002:a5d:4b87:0:b0:319:6f0e:fc0e with SMTP id b7-20020a5d4b87000000b003196f0efc0emr10134767wrt.30.1693902256866;
-        Tue, 05 Sep 2023 01:24:16 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7a54:5dbc:6d09:48b7])
-        by smtp.gmail.com with ESMTPSA id s12-20020a5d4ecc000000b0031423a8f4f7sm16860750wrv.56.2023.09.05.01.24.15
+        d=1e100.net; s=20221208; t=1693902474; x=1694507274;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yZOJVeABpFpne+4zxTVbLhiPldIS4DZuhrgZSQO5xhg=;
+        b=J0zXOn3XWp61IDYtZwUzIujv/DKiX3EpX5pPPCSsbHlWsp4w1Jfu+kBVVy1PjWPJKh
+         2Wl125Lhsm+aeefkhGgN7rUV0T9U126+MKFl4Ob/CgskmcPJ3MFeXAGYzrlKCKDgiKH1
+         i92annMfoQkqkyVNQoektdRM1SFJvUaX/9FtdDYUMVAD/h2zL6LKjjEKLKJuQihpTnoU
+         WvB1RT3X9KzuvEQiHJid2tG4oQ07S2yvP76gSToScxeXT55xcRewoh2ZNBBnRcwcYWyn
+         2JhVLy/pR8nsk9MVwf6CrT3FqmYtjL+dFYVlKwXjhzXkKaKtguro/XsoyJX4L4PldBjt
+         I10Q==
+X-Gm-Message-State: AOJu0YzUAZk1p34ro9ijKCANBAUYp2dGCs9oXUUvHRRf/MrFBzKxL4Xd
+        3zYzJURlYouib9atSTl+zGgrrg==
+X-Google-Smtp-Source: AGHT+IG/8oMolQYl3peTlkwkusxIIAHFH1Y84dqOJM5uxINZi5NFn9P2rlDqHiO5pvuSl/HD1+tYoQ==
+X-Received: by 2002:a05:600c:4656:b0:401:b24b:8279 with SMTP id n22-20020a05600c465600b00401b24b8279mr12036182wmo.1.1693902474406;
+        Tue, 05 Sep 2023 01:27:54 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id n9-20020a05600c294900b003feff926fc5sm16206338wmd.17.2023.09.05.01.27.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 01:24:16 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        Tue, 05 Sep 2023 01:27:53 -0700 (PDT)
+Date:   Tue, 5 Sep 2023 11:27:50 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v3] gpio: sim: don't fiddle with GPIOLIB private members
-Date:   Tue,  5 Sep 2023 10:24:13 +0200
-Message-Id: <20230905082413.21954-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+Subject: Re: [RFT PATCH v2] spi: bcm2835: reduce the abuse of the GPIO API
+Message-ID: <527c52aa-e9c6-41d5-a60d-60d79ab94439@kadam.mountain>
+References: <20230901111548.12733-1-brgl@bgdev.pl>
+ <CACRpkdYLcOZQ9r46aBwesh-H392C_0AWC8n2ikuwUknfEhoNNA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <CACRpkdYLcOZQ9r46aBwesh-H392C_0AWC8n2ikuwUknfEhoNNA@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Sep 01, 2023 at 02:15:39PM +0200, Linus Walleij wrote:
+> On Fri, Sep 1, 2023 at 1:15 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Currently the bcm2835 SPI driver uses functions that are available
+> > exclusively to GPIO providers as a way to handle a platform quirk. Let's
+> > use a slightly better alternative that avoids poking around in GPIOLIB's
+> > internals and use GPIO lookup tables.
+> >
+> > Link: https://www.spinics.net/lists/linux-gpio/msg36218.html
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> > +#include <linux/cleanup.h>
+> (...)
+> > -       struct gpio_chip *chip;
+> > +       struct gpiod_lookup_table *lookup __free(kfree) = NULL;
+> 
+> Whoa!
+> This is really neat.
 
-We access internals of struct gpio_device and struct gpio_desc because
-it's easier but it can actually be avoided and we're working towards a
-better encapsulation of GPIO data structures across the kernel so let's
-start at home.
+Yeah.  I like this stuff.  It should fix a lot of issues.  In some ways
+I prefer this kind of clean up to devm_ managed resources.
 
-Instead of checking gpio_desc flags, let's just track the requests of
-GPIOs in the driver. We also already store the information about
-direction of simulated lines.
+> As noted, it will confuse static checkers at no end, but they just have
+> to adopt. (CC to Dan C if he now runs into this.)
 
-For kobjects needed by sysfs callbacks: we can iterate over the children
-devices of the top-level platform device and compare their fwnodes
-against the one passed to the init function from probe.
+I think I updated Smatch to parse this correctly.  I've tested on this
+patch and it seems to work okay.  There probably will be some fall out
+in weird corners of Smatch.  Let me know if you see any problems.
 
-While at it: fix one line break and remove the untrue part about
-configfs callbacks using dev_get_drvdata() from a comment.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-v1 -> v2:
-- use get_dev_from_fwnode() instead of dereferencing fwnode directly
-
-v2 -> v3:
-- don't use fwnode internal fields, instead: iterate over the platform
-  device's children and locate the GPIO device
-
- drivers/gpio/gpio-sim.c | 66 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 48 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 271db3639a78..16a865e79559 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -12,6 +12,7 @@
- #include <linux/completion.h>
- #include <linux/configfs.h>
- #include <linux/device.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/machine.h>
- #include <linux/idr.h>
-@@ -30,8 +31,6 @@
- #include <linux/string_helpers.h>
- #include <linux/sysfs.h>
- 
--#include "gpiolib.h"
--
- #define GPIO_SIM_NGPIO_MAX	1024
- #define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
- #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
-@@ -40,6 +39,9 @@ static DEFINE_IDA(gpio_sim_ida);
- 
- struct gpio_sim_chip {
- 	struct gpio_chip gc;
-+	struct fwnode_handle *swnode;
-+	struct device *dev;
-+	unsigned long *request_map;
- 	unsigned long *direction_map;
- 	unsigned long *value_map;
- 	unsigned long *pull_map;
-@@ -63,16 +65,11 @@ static int gpio_sim_apply_pull(struct gpio_sim_chip *chip,
- 			       unsigned int offset, int value)
- {
- 	int irq, irq_type, ret;
--	struct gpio_desc *desc;
--	struct gpio_chip *gc;
--
--	gc = &chip->gc;
--	desc = &gc->gpiodev->descs[offset];
- 
- 	guard(mutex)(&chip->lock);
- 
--	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
--	    !test_bit(FLAG_IS_OUT, &desc->flags)) {
-+	if (test_bit(offset, chip->request_map) &&
-+	    test_bit(offset, chip->direction_map)) {
- 		if (value == !!test_bit(offset, chip->value_map))
- 			goto set_pull;
- 
-@@ -99,8 +96,8 @@ static int gpio_sim_apply_pull(struct gpio_sim_chip *chip,
- 
- set_value:
- 	/* Change the value unless we're actively driving the line. */
--	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
--	    !test_bit(FLAG_IS_OUT, &desc->flags))
-+	if (!test_bit(offset, chip->request_map) ||
-+	    test_bit(offset, chip->direction_map))
- 		__assign_bit(offset, chip->value_map, value);
- 
- set_pull:
-@@ -181,7 +178,7 @@ static int gpio_sim_get_direction(struct gpio_chip *gc, unsigned int offset)
- }
- 
- static int gpio_sim_set_config(struct gpio_chip *gc,
--				  unsigned int offset, unsigned long config)
-+			       unsigned int offset, unsigned long config)
- {
- 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
- 
-@@ -204,13 +201,25 @@ static int gpio_sim_to_irq(struct gpio_chip *gc, unsigned int offset)
- 	return irq_create_mapping(chip->irq_sim, offset);
- }
- 
-+static int gpio_sim_request(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
-+
-+	scoped_guard(mutex, &chip->lock)
-+		__set_bit(offset, chip->request_map);
-+
-+	return 0;
-+}
-+
- static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
- {
- 	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
- 
--	scoped_guard(mutex, &chip->lock)
-+	scoped_guard(mutex, &chip->lock) {
- 		__assign_bit(offset, chip->value_map,
- 			     !!test_bit(offset, chip->pull_map));
-+		__clear_bit(offset, chip->request_map);
-+	}
- }
- 
- static ssize_t gpio_sim_sysfs_val_show(struct device *dev,
-@@ -295,7 +304,7 @@ static void gpio_sim_sysfs_remove(void *data)
- {
- 	struct gpio_sim_chip *chip = data;
- 
--	sysfs_remove_groups(&chip->gc.gpiodev->dev.kobj, chip->attr_groups);
-+	sysfs_remove_groups(&chip->dev->kobj, chip->attr_groups);
- }
- 
- static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
-@@ -352,14 +361,25 @@ static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
- 		chip->attr_groups[i] = attr_group;
- 	}
- 
--	ret = sysfs_create_groups(&chip->gc.gpiodev->dev.kobj,
--				  chip->attr_groups);
-+	ret = sysfs_create_groups(&chip->dev->kobj, chip->attr_groups);
- 	if (ret)
- 		return ret;
- 
- 	return devm_add_action_or_reset(dev, gpio_sim_sysfs_remove, chip);
- }
- 
-+static int gpio_sim_chip_set_device(struct device *dev, void *data)
-+{
-+	struct gpio_sim_chip *chip = data;
-+
-+	if (chip->swnode == dev->fwnode) {
-+		chip->dev = dev;
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
- static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- {
- 	struct gpio_sim_chip *chip;
-@@ -387,6 +407,10 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	if (!chip)
- 		return -ENOMEM;
- 
-+	chip->request_map = devm_bitmap_zalloc(dev, num_lines, GFP_KERNEL);
-+	if (!chip->request_map)
-+		return -ENOMEM;
-+
- 	chip->direction_map = devm_bitmap_alloc(dev, num_lines, GFP_KERNEL);
- 	if (!chip->direction_map)
- 		return -ENOMEM;
-@@ -432,6 +456,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	gc->get_direction = gpio_sim_get_direction;
- 	gc->set_config = gpio_sim_set_config;
- 	gc->to_irq = gpio_sim_to_irq;
-+	gc->request = gpio_sim_request;
- 	gc->free = gpio_sim_free;
- 	gc->can_sleep = true;
- 
-@@ -439,8 +464,13 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	/* Used by sysfs and configfs callbacks. */
--	dev_set_drvdata(&gc->gpiodev->dev, chip);
-+	chip->swnode = swnode;
-+	ret = device_for_each_child(dev, chip, gpio_sim_chip_set_device);
-+	if (!ret)
-+		return -ENODEV;
-+
-+	/* Used by sysfs callbacks. */
-+	dev_set_drvdata(chip->dev, chip);
- 
- 	return gpio_sim_setup_sysfs(chip);
- }
--- 
-2.39.2
+regards,
+dan carpenter
 
