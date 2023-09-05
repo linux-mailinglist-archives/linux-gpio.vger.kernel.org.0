@@ -2,117 +2,192 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 563C37927FB
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:41:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44C9E7927DA
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:38:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231779AbjIEQTV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 12:19:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58388 "EHLO
+        id S243304AbjIEQUU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 12:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353877AbjIEI2C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 04:28:02 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90D6CCB
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 01:27:55 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-4018af103bcso14249555e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 01:27:55 -0700 (PDT)
+        with ESMTP id S1353888AbjIEIaw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 04:30:52 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5FE5CDB
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 01:30:47 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-501bd164fbfso876157e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 01:30:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693902474; x=1694507274; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yZOJVeABpFpne+4zxTVbLhiPldIS4DZuhrgZSQO5xhg=;
-        b=C7jRPpvPWdKNofhdUtxIkmuetQa24LV+ISujOD1s0qovUmBNySN/gzmGe7K50ny1EO
-         dMqdwWj3WkwqwPHF9Q9HS1osrF2/whi54U9+wviKwCRqYRMFUL2vOBq2bk0/JWUNUppb
-         JVDL8WbeCxGgO2VclnkxO1yXxQ57ve+5ASmo7o2haJBuLp1kIRt9l3DMZCpJcsqv38If
-         Ivf5BwtycJQzfh9qPqug81e+x064j/ARInbhzd8nW87vMel7Deg+na53fa5Nec8INQL9
-         bMBNNUmCPK1s5GOBERoMYnh3yZ2fnq6P3kaYXJPIYD0pNJnYWj/q2Fpgv6S/I4x0q4pf
-         aylQ==
+        d=fairphone.com; s=fair; t=1693902646; x=1694507446; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LWq30L/k6esO2m+8xJQ6plHCzdQIEU3cixCgpzG9F48=;
+        b=PXUS5OrCIr0hfIiE/RYFGI+eTfixlts42tgW5wCnRf0opXHzFIjtsXr6JyebIdn9tg
+         FBhI3Rqqee/Gl3C0da6tAxI6dCCXEQsjsVtuSr2n/p5xZGLu0vi5//ZskgqBM4Z53AdP
+         UBTfWJ35XhHIySddhkdM0qcNF8soWEqoGeFPw5Iak5/0zLUjsAMolwGVNsRdWCB6lpQY
+         p9RMVuACmnr0R14z8k1RuV8DV64dwrMxOQJtwxVyMP7nPkwp7feR04nkhRtKqX8gStDl
+         GALyse9Jh2L6M/GNvl34rZ5PAUGvFj0cIQx4fhKE/1joHr20rZDln+eGo2ZC8Slye1rm
+         1/iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693902474; x=1694507274;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yZOJVeABpFpne+4zxTVbLhiPldIS4DZuhrgZSQO5xhg=;
-        b=J0zXOn3XWp61IDYtZwUzIujv/DKiX3EpX5pPPCSsbHlWsp4w1Jfu+kBVVy1PjWPJKh
-         2Wl125Lhsm+aeefkhGgN7rUV0T9U126+MKFl4Ob/CgskmcPJ3MFeXAGYzrlKCKDgiKH1
-         i92annMfoQkqkyVNQoektdRM1SFJvUaX/9FtdDYUMVAD/h2zL6LKjjEKLKJuQihpTnoU
-         WvB1RT3X9KzuvEQiHJid2tG4oQ07S2yvP76gSToScxeXT55xcRewoh2ZNBBnRcwcYWyn
-         2JhVLy/pR8nsk9MVwf6CrT3FqmYtjL+dFYVlKwXjhzXkKaKtguro/XsoyJX4L4PldBjt
-         I10Q==
-X-Gm-Message-State: AOJu0YzUAZk1p34ro9ijKCANBAUYp2dGCs9oXUUvHRRf/MrFBzKxL4Xd
-        3zYzJURlYouib9atSTl+zGgrrg==
-X-Google-Smtp-Source: AGHT+IG/8oMolQYl3peTlkwkusxIIAHFH1Y84dqOJM5uxINZi5NFn9P2rlDqHiO5pvuSl/HD1+tYoQ==
-X-Received: by 2002:a05:600c:4656:b0:401:b24b:8279 with SMTP id n22-20020a05600c465600b00401b24b8279mr12036182wmo.1.1693902474406;
-        Tue, 05 Sep 2023 01:27:54 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id n9-20020a05600c294900b003feff926fc5sm16206338wmd.17.2023.09.05.01.27.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 01:27:53 -0700 (PDT)
-Date:   Tue, 5 Sep 2023 11:27:50 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFT PATCH v2] spi: bcm2835: reduce the abuse of the GPIO API
-Message-ID: <527c52aa-e9c6-41d5-a60d-60d79ab94439@kadam.mountain>
-References: <20230901111548.12733-1-brgl@bgdev.pl>
- <CACRpkdYLcOZQ9r46aBwesh-H392C_0AWC8n2ikuwUknfEhoNNA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdYLcOZQ9r46aBwesh-H392C_0AWC8n2ikuwUknfEhoNNA@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1693902646; x=1694507446;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LWq30L/k6esO2m+8xJQ6plHCzdQIEU3cixCgpzG9F48=;
+        b=FPK0z1oVf6eEOrhaaKn3hXpUy7l1vyO725JtEzZOlOJZK5GKIrS4q+vA5d0DeFnIrJ
+         0Rdtsp14VQYNnoPvtmJpQVEJTsikPBp1l2QSAo2z+SADwjuRpREd8p8Ujjtb2cdqQ2lj
+         o+lqEU5LKEmE4ojLVzNNheVkCZiy+KZkfMwWBtK425w93RYHUPgdmQnHin1kmol5PQhv
+         ooCBfOPCASHsK7rizjgIf5kN3ixpoNyPyBRxj+oP2GSyIe5SZaQcfwFzcajA2pl9spI0
+         Bn4HIjYXBgFjeMsCod1Z/HIgOj+EKvLgRLKauIFUjw1xD0CQhZpjv/l4PLMIxUGRF3hT
+         SXbw==
+X-Gm-Message-State: AOJu0YwwzzBe6eckqlFgv7hTNGgTqsGNjr5btqk8aZ4kZ3rDRmWOrxAh
+        ImxZ3oV+y/geTKa3uEjwZcdqrQ==
+X-Google-Smtp-Source: AGHT+IHnW0XedN1vSaHx1JHDD4mFf80P5Zlb6gBn9z9f8KVQh7bwaME+VxnDiJKWubHNVVg3SjkedQ==
+X-Received: by 2002:a05:6512:ea6:b0:4fe:e50:422d with SMTP id bi38-20020a0565120ea600b004fe0e50422dmr9421046lfb.25.1693902645843;
+        Tue, 05 Sep 2023 01:30:45 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id fj22-20020a0564022b9600b005256aaa6e7asm667460edb.78.2023.09.05.01.30.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Sep 2023 01:30:45 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 05 Sep 2023 10:30:44 +0200
+Message-Id: <CVAUDGBO4S08.1F0O66ZE6I4IG@otso>
+To:     "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+Cc:     <cros-qcom-dts-watchers@chromium.org>,
+        "Andy Gross" <agross@kernel.org>,
+        "Bjorn Andersson" <andersson@kernel.org>,
+        "Konrad Dybcio" <konrad.dybcio@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        "Conor Dooley" <conor+dt@kernel.org>,
+        "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>,
+        <~postmarketos/upstreaming@lists.sr.ht>,
+        <phone-devel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 04/11] arm64: dts: qcom: pm7250b: make SID configurable
+From:   "Luca Weiss" <luca.weiss@fairphone.com>
+X-Mailer: aerc 0.15.2
+References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
+ <20230830-fp5-initial-v1-4-5a954519bbad@fairphone.com>
+ <b82f4683-e8b5-b424-8f7a-6d2ba1cab61f@linaro.org>
+ <CV6NF0466658.20DGU7QKF2UBR@otso>
+ <CAA8EJpr1+W3f08X-FpiiVrJ98kg52HaMwbbKn=fG15Whm4C8aQ@mail.gmail.com>
+ <728003b9-db27-fdc0-e761-197a02a38c24@linaro.org>
+ <CAA8EJpoXreHpxZQ2G10n0OiQzUX4ffk=gvo87dAU4-r+Svqpeg@mail.gmail.com>
+In-Reply-To: <CAA8EJpoXreHpxZQ2G10n0OiQzUX4ffk=gvo87dAU4-r+Svqpeg@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 01, 2023 at 02:15:39PM +0200, Linus Walleij wrote:
-> On Fri, Sep 1, 2023 at 1:15 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> 
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu Aug 31, 2023 at 2:27 PM CEST, Dmitry Baryshkov wrote:
+> On Thu, 31 Aug 2023 at 14:54, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
 > >
-> > Currently the bcm2835 SPI driver uses functions that are available
-> > exclusively to GPIO providers as a way to handle a platform quirk. Let's
-> > use a slightly better alternative that avoids poking around in GPIOLIB's
-> > internals and use GPIO lookup tables.
+> > On 31/08/2023 13:33, Dmitry Baryshkov wrote:
+> > > On Thu, 31 Aug 2023 at 13:13, Luca Weiss <luca.weiss@fairphone.com> w=
+rote:
+> > >>
+> > >> On Wed Aug 30, 2023 at 12:06 PM CEST, Krzysztof Kozlowski wrote:
+> > >>> On 30/08/2023 11:58, Luca Weiss wrote:
+> > >>>> Like other Qualcomm PMICs the PM7250B can be used on different add=
+resses
+> > >>>> on the SPMI bus. Use similar defines like the PMK8350 to make this
+> > >>>> possible.
+> > >>>>
+> > >>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> > >>>> ---
+> > >>>>  arch/arm64/boot/dts/qcom/pm7250b.dtsi | 23 ++++++++++++++++------=
+-
+> > >>>>  1 file changed, 16 insertions(+), 7 deletions(-)
+> > >>>>
+> > >>>> diff --git a/arch/arm64/boot/dts/qcom/pm7250b.dtsi b/arch/arm64/bo=
+ot/dts/qcom/pm7250b.dtsi
+> > >>>> index e8540c36bd99..3514de536baa 100644
+> > >>>> --- a/arch/arm64/boot/dts/qcom/pm7250b.dtsi
+> > >>>> +++ b/arch/arm64/boot/dts/qcom/pm7250b.dtsi
+> > >>>> @@ -7,6 +7,15 @@
+> > >>>>  #include <dt-bindings/interrupt-controller/irq.h>
+> > >>>>  #include <dt-bindings/spmi/spmi.h>
+> > >>>>
+> > >>>> +/* This PMIC can be configured to be at different SIDs */
+> > >>>> +#ifndef PM7250B_SID
+> > >>>> +   #define PM7250B_SID 2
+> > >>>> +#endif
+> > >>>
+> > >>> Why do you send the same patch as v1, without any reference to prev=
+ious
+> > >>> discussions?
+> > >>>
+> > >>> You got here feedback already.
+> > >>>
+> > >>> https://lore.kernel.org/linux-arm-msm/f52524da-719b-790f-ad2c-0c3f3=
+13d9fe9@linaro.org/
+> > >>
+> > >> Hi Krzysztof,
+> > >>
+> > >> I did mention that original patch in the cover letter of this series=
+.
+> > >> I'm definitely aware of the discussion earlier this year there but a=
+lso
+> > >> tried to get an update lately if there's any update with no response=
+.
+> > >
+> > > I think the overall consensus was that my proposal is too complicated
+> > > for the DT files.
 > >
-> > Link: https://www.spinics.net/lists/linux-gpio/msg36218.html
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> > +#include <linux/cleanup.h>
-> (...)
-> > -       struct gpio_chip *chip;
-> > +       struct gpiod_lookup_table *lookup __free(kfree) = NULL;
-> 
-> Whoa!
-> This is really neat.
+> > I proposed to duplicate the entries. Do you keep QUP nodes in DTSI and
+> > customize per address? No.
+>
+> At the same time, we do keep SoC files separate from the board files.
+> Yes, I'm slightly exaggerating here.
+>
+> I think that for PMIC files it makes sense to extract common parts if
+> that eases reuse of the common parts.
 
-Yeah.  I like this stuff.  It should fix a lot of issues.  In some ways
-I prefer this kind of clean up to devm_ managed resources.
+Hi all,
 
-> As noted, it will confuse static checkers at no end, but they just have
-> to adopt. (CC to Dan C if he now runs into this.)
+what can I do for v2 now?
 
-I think I updated Smatch to parse this correctly.  I've tested on this
-patch and it seems to work okay.  There probably will be some fall out
-in weird corners of Smatch.  Let me know if you see any problems.
+1. Keep this patch as-is, and keep pm7250b in device dts.
 
-regards,
-dan carpenter
+2. Drop pm7250b patch and drop from device dts, until _someone_ figures
+out a solution talking to the PMIC on different SID.
+
+3. Something else like copy-pasting pm7250b.dtsi to pm7250-8.dtsi and
+changing the SID there, and using that in device dts.
+
+Please let me know what to do.
+
+Regards
+Luca
+
+>
+> >
+> > I definitely do not agree to these ifndef->define. Maybe using just
+> > define would work (so drop ifndef->define), because this makes it
+> > obvious and fail-safe if included in wrong place... except that it is
+> > still not the define we expect. This is not the coding style present in
+> > other DTSes.
+> >
+> > The true problem how these SPMI bindings were created. Requiring SID
+> > address in every child is clearly redundant and I think we do not follo=
+w
+> > such approach anywhere else.
+> >
+> > Best regards,
+> > Krzysztof
+> >
 
