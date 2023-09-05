@@ -2,106 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EE8479259D
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:23:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85D307926EA
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:34:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244933AbjIEQU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 12:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55064 "EHLO
+        id S239927AbjIEQTr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 12:19:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354551AbjIEMfj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 08:35:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED0981AD;
-        Tue,  5 Sep 2023 05:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693917335; x=1725453335;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=6lmLJ6H5zU3EUldRsqwHO7V8tPddeVLvBnfcVZaU8Ek=;
-  b=TWSg4ROTl4qbTNZ8rxM8TK59bTMFFKxvYueiNyDL7bx4S/6HUeLrFt9Q
-   LKnHrTwvdUvxKQqcQhJ36rg9wxBTK7aGR+jzwEoLfzJdZNDrx64fTNSyz
-   DIGI8fnWYcoVu/sGXnXhqqDLbapphXE//gdUvBV3b0tts/Xn0LwoQD9Sm
-   jPQX1dQnUuFnbQJTgfss0inWfPDWjxNGFjZysnX1v1w/daX/ZJxPrGiR5
-   fFFWKpcK+xYGOPJwzVmjD7Mut66VSc6hORXIoxL/BYfqjckg+sPaO6k/C
-   OBVtNmH3GtVcC4rb/tJbIwrqAmIqPj6uLNlvqVtzTSWCf2ljM5/11/ugg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="357090284"
-X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
-   d="scan'208";a="357090284"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 05:35:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="744256861"
-X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
-   d="scan'208";a="744256861"
-Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 05:35:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qdVHH-006gZh-0h;
-        Tue, 05 Sep 2023 15:35:31 +0300
-Date:   Tue, 5 Sep 2023 15:35:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3] gpio: sim: don't fiddle with GPIOLIB private members
-Message-ID: <ZPcgkmotz0kukTZJ@smile.fi.intel.com>
-References: <20230905082413.21954-1-brgl@bgdev.pl>
- <ZPcZfd5UtzMmIUvm@smile.fi.intel.com>
- <ZPcaVjOudGeLd5EP@smile.fi.intel.com>
- <CAMRc=McjfYqkX5jL=kwWnceHopebbgDr2XV_h5fjkG=7n7kD-Q@mail.gmail.com>
+        with ESMTP id S1354620AbjIEM4x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 08:56:53 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 089CF1A8;
+        Tue,  5 Sep 2023 05:56:48 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2b9338e4695so37616951fa.2;
+        Tue, 05 Sep 2023 05:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693918606; x=1694523406; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6UhzA8XSGVCuKKYnfBOKwjgBkteIxN0UPAGvmE+dfX0=;
+        b=mu90wKFv7POwPfWoN7x8dXtQXcEOZGh2Hnd3eBvhpMu9fuiXO59atiaSv2lxc1uEU/
+         rvPjW1ATv7hcOIxa+lMSpZSL/SPi04yxICJ5dWdvOLBjlIKAyHiMJMSMzv4pLHjCKsNw
+         CbnqJYAt2cVcChFnK8c3kNwEaMIz/Ni9uPNtYQmAaa/O+xna22HCMbeL+Lx5mm6J4sKn
+         0o7q/lVmfBr5SHgA7M/x/izey3eQmgaDNJrg/ltzHh5otRS4SwQJwigwlfClLddUee9d
+         W9e0W46w0x0R+X0XektDOMJ/CPJMbnjUJIcmuRva1a81O1ptEN53+e3o89jZAEe7lZFz
+         sBgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693918606; x=1694523406;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6UhzA8XSGVCuKKYnfBOKwjgBkteIxN0UPAGvmE+dfX0=;
+        b=Y/o2QH7m++nKugmXcKL8zDkgYuhIVjKxDZKOeqZz7j9feSU4DTEfNbH3a7xKjKQqk5
+         C2ZeZicTfMdKpJ5OyPqF02/HnBCnemgZmoLm4/K/g1ic62+qSij+mdmfAz5WKsX8bh5a
+         z9WOpLlivcpve/lhN7it+CBsuy9LGgoioNI5PyFjaGEDgKFVEzalOz+vd99uujnr9qNv
+         9IX2TfftUuh8JAjyJKMG9XbwFkWAAv10bg1FxzRB/U24QaHvA4LWHKHNln63aKzvkrAE
+         AiAeD2RPQYrSA6HtN/yk9LaaAFv7mUsv3mIMbBZGRxRpdFp5tEg4/Qk0xSNZPw0gnrEs
+         eIqg==
+X-Gm-Message-State: AOJu0Yxxl9UuEROLLchdVbeukOQpzkXmjSCRapXnnS77sH+Hdn48PVFV
+        4FUsjtVsgxoAXc0Zfbh6Kb8=
+X-Google-Smtp-Source: AGHT+IFN6dIuEYAFAeh9yLMH0Umds7V4Gz6vEzYtzLwlFLejVtQwSpZmueW/N3HZo5D5Mix6iYn1dw==
+X-Received: by 2002:a2e:8012:0:b0:2bd:1908:4432 with SMTP id j18-20020a2e8012000000b002bd19084432mr9333259ljg.3.1693918605899;
+        Tue, 05 Sep 2023 05:56:45 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2501:c701:2837:58dc:b622:9e39])
+        by smtp.gmail.com with ESMTPSA id l9-20020a1c7909000000b003fe1c332810sm20085767wme.33.2023.09.05.05.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 05:56:45 -0700 (PDT)
+From:   Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] pinctrl: renesas: pinctrl-rzg2l: Add validation of GPIO pin in rzg2l_gpio_request()
+Date:   Tue,  5 Sep 2023 13:56:03 +0100
+Message-Id: <20230905125603.74528-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McjfYqkX5jL=kwWnceHopebbgDr2XV_h5fjkG=7n7kD-Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 05, 2023 at 02:10:38PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Sep 5, 2023 at 2:09 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Sep 05, 2023 at 03:05:17PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Sep 05, 2023 at 10:24:13AM +0200, Bartosz Golaszewski wrote:
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-...
+Validate the GPIO pin request in rzg2l_gpio_request() callback using
+rzg2l_validate_gpio_pin() function. This stops any accidental usage
+of GPIO pins which are not supported by the SoCs.
 
-> > > > +   chip->swnode = swnode;
-> > > > +   ret = device_for_each_child(dev, chip, gpio_sim_chip_set_device);
-> > > > +   if (!ret)
-> > > > +           return -ENODEV;
-> > >
-> > > Can bus_find_device_by_fwnode() be used here?
-> >
-> > Answering to myself: you already mentioned that this should cover any bus,
-> > so the answer is "no".
-> 
-> I think I mentioned it under the gpio-consumer where it's true. Here
-> we are sure it's on the platform bus.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Then bus_find_device_by_fwnode() can be used here, no?
-
-> > But also we have device_find_child() if I understood the purpose of the above
-> > it should suit better, no?
-> 
-> Right, it's a better match.
-
-In either case be careful about reference counting on the returned dev.
-
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 37cdfe4b04f9..4ad08a4b786a 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -795,12 +795,18 @@ static const struct pinconf_ops rzg2l_pinctrl_confops = {
+ static int rzg2l_gpio_request(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
++	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[offset];
++	u64 *pin_data = pin->drv_data;
+ 	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
+ 	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
+ 	unsigned long flags;
+ 	u8 reg8;
+ 	int ret;
+ 
++	ret = rzg2l_validate_gpio_pin(pctrl, *pin_data, port, bit);
++	if (ret)
++		return ret;
++
+ 	ret = pinctrl_gpio_request(chip->base + offset);
+ 	if (ret)
+ 		return ret;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
