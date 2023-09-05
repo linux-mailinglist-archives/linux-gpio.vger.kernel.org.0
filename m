@@ -2,130 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D6AA792784
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:36:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43AD4792662
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:27:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238003AbjIEQTu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 12:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
+        id S243072AbjIEQUP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 12:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354410AbjIEL0t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 07:26:49 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD871AD
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 04:26:46 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-44e86f3e4b6so572041137.0
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 04:26:46 -0700 (PDT)
+        with ESMTP id S1354423AbjIELbo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 07:31:44 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323D11AD
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 04:31:40 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-401f68602a8so23476735e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 04:31:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693913205; x=1694518005; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RC3YFMsJSmvlacNFVM4d9QObfDtxdje+kbFA9klZN9A=;
-        b=Fo7ZeVz6+SLZf8/kYHv/gCukM+8SpRVjg1Dt/Ac19XDlN7gxWXRc/q0LDYk9Q8ctHm
-         EnW8puomAADwvkvC4BzbxZymUrsNpxcCgIkEAjF8U2N+N8x8CqKTWjgYT7h5kkf6meo3
-         4gnmGXaB/9vAMgjAairuKZnH5Ilur5Ya8Y3L2MqR0pHPgqrWB96RkcBI5bndx77fphLq
-         3wXooWoUzi5vCB9CkbkUqddhVnKW6kPD4pdY000VUrR+SVOhYgWHdco6IZLUFLHL6UuH
-         tLEio4H28doASHy0HUPiCLjv6NVQnZxve7k63j5Q7n2ca5bzg8z0a/xUlFeRXdSX4cSv
-         96Fg==
+        d=linaro.org; s=google; t=1693913498; x=1694518298; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ucSMS6f1i4AJkmKZWAiTc8WB+F0d5XaASaMmBm7ZJv0=;
+        b=vLBeAy8m9T9JIfk/d47cB5i8zfi83j9+DjUBWeHNpYmKa1wDd5/ldv32HD9TeFoP+i
+         3X60O5xuVzq+0CXfSsjl8PXLmbDYHk2jUmuvBkKYzHWnX4cpejmOQY42hRv6qZ88ycXB
+         jQxxVP36Ye6VbhmHlWTf0/9KLmx7ymd0m9/cyKhLFVIVqlFHnhQZKVHZ0pkPIXgP5w1E
+         nj9A+pBxn4B0vcjijqZ3DRbgAgRdfpiJzDRzm5o6VZUZhld++tWv7X6FJbql7FIL0UHp
+         /znsReTvQePi1kXcxj5Y99VnNIlJS9B6Cawq4xWe5QOIgWodGDkxBhlhcjJQULirTiax
+         gjQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693913205; x=1694518005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RC3YFMsJSmvlacNFVM4d9QObfDtxdje+kbFA9klZN9A=;
-        b=ilRQ23kqQ9AJNnoCMf4INeKlQyi1n+VqJ4spiNZ2XCiUS9UJ7V0CBKyrmVPbWPHey5
-         os9lg2y/b2GWpVv33ReQ/a6pCuNnuKrYiiqTiTvFduR9cnSsTamHHOGjUyYF0NN3Edkb
-         42vITQ9AsC8ITisxRZE4Z6kqiU9gS4SgOkCVwGPTVAjXzl1MZYJVkL3inX9Yyg2A/F/Q
-         bgNvtOq8wN0e4QorXzO7HCOS/2wqDS/P4TM8WxGcT293pi0dqN0xsDNJA0zb7viPkqyS
-         AmlI2raOzz4wdks+q+zSLEZ9C2Zkx6D+WSqTT5n0oK9jU1elkV48IBKPZ9hZyfGcV1KD
-         1jlQ==
-X-Gm-Message-State: AOJu0Yz2Z5YavI22BOCOkZPufl9gLHj+++EEVK2OYvxJhn21aXQ1e5ps
-        KO+dRqiO+6OYE5ek5FJes/nUp9BT/C44gy/7Zcpbdw==
-X-Google-Smtp-Source: AGHT+IGWKBuS/CgJoZ15ah67m0Cnr8Fe9lpMBdsC8lcKBo1P/kb7K67la8xwEvkJCglO3I3uGuGvey0sJpB0suOOY3E=
-X-Received: by 2002:a67:cd8d:0:b0:44d:6320:b713 with SMTP id
- r13-20020a67cd8d000000b0044d6320b713mr7909008vsl.0.1693913205119; Tue, 05 Sep
- 2023 04:26:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230904073410.5880-1-brgl@bgdev.pl> <20230904073410.5880-2-brgl@bgdev.pl>
- <ZPWjAUzqeAwF1wro@smile.fi.intel.com> <CAMRc=MeMYi0KbK=1RYGX2zbUjVZyQp-Y_aXfy6+EZcEtUSEU0A@mail.gmail.com>
- <ZPcEFXF9Fz762kzK@smile.fi.intel.com>
-In-Reply-To: <ZPcEFXF9Fz762kzK@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 5 Sep 2023 13:26:34 +0200
-Message-ID: <CAMRc=MctTGNe2v8bBKQp6Dh3EuhP+OmO8yxrMgrHT3+m2AGjnQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpiolib: rename gpio_chip_hwgpio() for consistency
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        d=1e100.net; s=20221208; t=1693913498; x=1694518298;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ucSMS6f1i4AJkmKZWAiTc8WB+F0d5XaASaMmBm7ZJv0=;
+        b=DGaKetUF8xm9ilIXZmr+oDpzFxhAIOczb5On4ioYbJY1wM8XqEmsXrJHvGvLdOrNfk
+         rjFkJqglG7jDv77uLQsO6oJBpDKxxq2GOEtjPAtgDwIfzUy6dpMM83EPGdDZnbB3A7IF
+         jv/4ohN38kf1AFdGeuqG3Auo9WYgD8rYwIvB+BdNBeJ/YFncVsJ1qO7FRtEKTq8NTdh2
+         PkREMcqzs/ydGt5BFAtetmK9s8k66MT4MVZ6OxB+9uDMzCVp5z4JFKPKIg2CWiv/0QP/
+         UW6LZlv59BWb3uAiGvsXQbU11ywhuJ/R7o/DoXQmPo+reOgVyYfsKNHPg7kU8GByjBuB
+         J49g==
+X-Gm-Message-State: AOJu0YxRfWq7xFyqsMAh42sy9X28nny8MHBLLajDehLLmgo1eou37Ilm
+        tMhruQPBezJ/o1uVYf5qScyLfA==
+X-Google-Smtp-Source: AGHT+IEpJmilH9Tppz6BKD/gVURbvbPERFqtmnEdu+ZGNvg+ETGDXFXfFdgWvlIP9ozV8luG9EA7aA==
+X-Received: by 2002:a1c:4b08:0:b0:3fe:d1b9:7ea9 with SMTP id y8-20020a1c4b08000000b003fed1b97ea9mr9575348wma.36.1693913498664;
+        Tue, 05 Sep 2023 04:31:38 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id m9-20020a7bcb89000000b003fe26244858sm19823929wmi.46.2023.09.05.04.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 04:31:38 -0700 (PDT)
+Date:   Tue, 5 Sep 2023 14:31:35 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     oe-kbuild@lists.linux.dev, Biju Das <biju.das.jz@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+        Biju Das <biju.das.jz@bp.renesas.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 2/2] pinctrl: mcp23s08: Simplify probe()
+Message-ID: <2ce09856-244a-4e3f-89ff-d9439ea06af9@kadam.mountain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230902090937.32195-3-biju.das.jz@bp.renesas.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 5, 2023 at 12:34=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Sep 05, 2023 at 10:37:32AM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Sep 4, 2023 at 11:27=E2=80=AFAM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Mon, Sep 04, 2023 at 09:34:10AM +0200, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > All other functions that manipulate a struct gpio_desc use the gpio=
-d_
-> > > > prefix. Follow this convention and rename gpio_chip_hwgpio() to
-> > > > gpiod_get_hwgpio().
-> > >
-> > > Same comment. Also, I don't think it's good idea as it steps on the e=
-xported
-> > > API's toes. I.o.w. I won't mix those two.
-> >
-> > Even if I agreed with your other comment, gpio_chip_hwgpio() is a
-> > terrible name and if I didn't know, I couldn't tell you what it does
-> > just from looking at the name.
->
-> That's can be improved, my previous comments were basically to avoid
-> mixing prefixes for internal and external APIs, let's say prefix them
-> similarly, but for internal with space and/or more verbose naming
->
->         gpiod_          gpio_desc_
->         gpiochip_       gpio_chip_
->         gdev_           gpio_device_
->
+Hi Biju,
 
-There's one more possibility. Have all exported symbols be prefixed
-with gpiod in one way or another and the internal symbols just drop
-the prefix so it would be like:
+kernel test robot noticed the following build warnings:
 
-gpiod_
-gpiochip_
-gpio_device_
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-and
+url:    https://github.com/intel-lab-lkp/linux/commits/Biju-Das/pinctrl-mcp23s08-Extend-match-support-for-OF-tables/20230902-171023
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20230902090937.32195-3-biju.das.jz%40bp.renesas.com
+patch subject: [PATCH 2/2] pinctrl: mcp23s08: Simplify probe()
+config: i386-randconfig-141-20230902 (https://download.01.org/0day-ci/archive/20230903/202309030751.GQvtrZnS-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230903/202309030751.GQvtrZnS-lkp@intel.com/reproduce)
 
-desc_
-chip_
-device_
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202309030751.GQvtrZnS-lkp@intel.com/
 
-Because for internal symbols we already know they refer to gpiolib.
+smatch warnings:
+drivers/pinctrl/pinctrl-mcp23s08_i2c.c:33 mcp230xx_probe() error: we previously assumed 'info' could be null (see line 31)
 
-Anyway, I'll drop the patches for now and let's revisit in the future
-when the consensus is reached.
+vim +/info +33 drivers/pinctrl/pinctrl-mcp23s08_i2c.c
 
-Bart
+8bb5811129f9e4 Uwe Kleine-König 2022-11-18  19  static int mcp230xx_probe(struct i2c_client *client)
+0f04a81784fe3d Andy Shevchenko  2020-04-07  20  {
+b5f259f6fc5912 Biju Das         2023-09-02  21  	const struct mcp23s08_i2c_info *info;
+0f04a81784fe3d Andy Shevchenko  2020-04-07  22  	struct device *dev = &client->dev;
+0f04a81784fe3d Andy Shevchenko  2020-04-07  23  	struct mcp23s08 *mcp;
+0f04a81784fe3d Andy Shevchenko  2020-04-07  24  	int ret;
+0f04a81784fe3d Andy Shevchenko  2020-04-07  25  
+0f04a81784fe3d Andy Shevchenko  2020-04-07  26  	mcp = devm_kzalloc(dev, sizeof(*mcp), GFP_KERNEL);
+0f04a81784fe3d Andy Shevchenko  2020-04-07  27  	if (!mcp)
+0f04a81784fe3d Andy Shevchenko  2020-04-07  28  		return -ENOMEM;
+0f04a81784fe3d Andy Shevchenko  2020-04-07  29  
+b5f259f6fc5912 Biju Das         2023-09-02  30  	info = i2c_get_match_data(client);
+b5f259f6fc5912 Biju Das         2023-09-02 @31  	if (!info)
+b5f259f6fc5912 Biju Das         2023-09-02  32  		return dev_err_probe(dev, -EINVAL, "invalid device type (%d)\n",
+b5f259f6fc5912 Biju Das         2023-09-02 @33  				     info->type);
+                                                                                     ^^^^^^^^^^
+info is NULL.
 
-> (as an example).
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+0f04a81784fe3d Andy Shevchenko  2020-04-07  34  
+b5f259f6fc5912 Biju Das         2023-09-02  35  	mcp->reg_shift = info->reg_shift;
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
