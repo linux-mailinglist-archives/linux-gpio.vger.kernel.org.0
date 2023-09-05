@@ -2,56 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FD5A79274B
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:35:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5385D7927FF
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:41:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238804AbjIEQUZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 12:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52418 "EHLO
+        id S229740AbjIEQTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 12:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354512AbjIEMJa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 08:09:30 -0400
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6411E1AB
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 05:09:27 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id 5614622812f47-3aa1446066aso1804185b6e.1
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 05:09:27 -0700 (PDT)
+        with ESMTP id S1354516AbjIEMK4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 08:10:56 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58BA512A
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 05:10:50 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-44e8ddf1f1aso2036381137.1
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 05:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693915766; x=1694520566; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1693915849; x=1694520649; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Fpl8PdcHUyXhdg581Pr7P2ixRHMIHFGIKvQFb4jyDKo=;
-        b=sJ/fTBdet8LkFz2uB8x6RUvblR09cBZA3GXHn7Vr/xJNiUsSgJSWPs6tONhMlwFOfZ
-         whYwQcgxT6553kXSKvtehKAWJkWSkViR9sOCP9R/iD7OO6GdJODrqRmqNcLCMIkMYeF+
-         T/Z6b2F4rhDsyINdmiCXlfbCPUxZY51O4kodIgKlVzSavKOxHKUNHCrifNh2mcN24eHU
-         4ICU6w1FdDbe/SZWuuC/xkERkB7NKTsEXvh8XRmsNY97Up4uO1Mi6uMo097Qp6LKQZB+
-         Gmpd2wrShbDmMq1f3PG3SOEStWPxwbhYsYwnQWDluUC3z8x5CWJcQtZJKiJXSnob80vN
-         dxwQ==
+        bh=ByQYrlg6Hr1sWKjfl7KMv/Ov1X/DbHEMOLisUi7M1Ps=;
+        b=fxq/tCupmv/nOG039/9BvceDZmOdl3BFA0L1HvnPKARgYgLupl6F2FSp+/9lIcL8Hn
+         dBpNlSpgXV4nkMFXZsTNOwbJaS6FDAUr4bw5UEt5ST2yYX1eVKqeMfs5sw7Yp1vVt3E9
+         lYQmBdSQRTHL4S0Gm3pFCX/uIhV5/Hc50MzjBm9NYzDcUeHai8Kqorgd8y+ucqzZ0U50
+         VxQz7tzG6/9HYTu88FkKsr0ju20OBzcftL5LtIfzQbsq2brqTvAqKA2eAmNDu4PexoYq
+         xH/K9cwAc9RAaU7t7r5jsBm88LtRNbWcfltz0CEhzaOcKJHaXN/srgYmSxeZiGM7yTiC
+         sWUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693915766; x=1694520566;
+        d=1e100.net; s=20221208; t=1693915849; x=1694520649;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Fpl8PdcHUyXhdg581Pr7P2ixRHMIHFGIKvQFb4jyDKo=;
-        b=M9GWiVVNBnFfeU5PhUbILli2RpQnQ4VBIzaYWSN17p1aer9bgM5Qhxhs9E8g7CK8Ad
-         4ce0qp1jaKoRvOyFQaiuqLgcb5FdpgficM8UeIwsfs7JIfr/pbyeImVzJ216QjFHZL7N
-         Q0VlAT1ehWuXMRcbZ1iPZTjpaSFA2wJ8gpUUF+BJuPGVL4iFdw1vzq+zPXVAVaxY18EW
-         mC51PftU3tXeSlcSjU2AXPPDnEWIur1KDMNdGcaKEMLVy28rhKHzH5zuEvYPO3JDiPfU
-         0Q7Ly2T6M+P7/IZG6JNB6VmZTEobHSakhqD6o3wk5g9ZF+8qXxVpYQ5L4i9FYBVXhkoG
-         GKKw==
-X-Gm-Message-State: AOJu0YwBdWeW77Z8+EHxxVx2ujOrPbYxXqumYmlRaiRh1S538wkML4oj
-        3VNjVuQ+OC8F0vDj7x+A7MXzE7UVB6csssTGhfn72A==
-X-Google-Smtp-Source: AGHT+IF9zcrS8LKzm6uHHdeppxKv0cPOMhqbqlgFXgvwTMW24s0LoHG8DAK9cA2YZKwCujua/+5uMRHi0yoPnbrd/uk=
-X-Received: by 2002:a05:6358:e485:b0:139:f5e9:4463 with SMTP id
- by5-20020a056358e48500b00139f5e94463mr13912752rwb.2.1693915766671; Tue, 05
- Sep 2023 05:09:26 -0700 (PDT)
+        bh=ByQYrlg6Hr1sWKjfl7KMv/Ov1X/DbHEMOLisUi7M1Ps=;
+        b=lN0ol2ppO/MnPRyQMn4iVLUJCG0J2kPpjdwMiUbdgBTRHpM8XEHZaj15vdB0oIK2Um
+         GwkRpqguBW6hlzSUu9H2cxwruI3q510S8j7OcB+XiGJo7jNF1+pVtlDYErzEscWv+j/k
+         w8hDFDngr+yF6B7nb5UjC7NucjJCKGnt4gQHQM9qg8buqqXQtLPEEyEgLYR6FM0LqKRu
+         u5v6pJQ2ZW1Dlh6/SUUEm118Hnxffw34XFZ8Szeb3xOfQ4tLSXhs+RooaJUVNZtIeSdF
+         3aIIepfzgr96y80Gcl3dVe/HIq0gguisHokCydDktZwXarz7AZ1L8jcn7f/BviWsfmAr
+         YaXA==
+X-Gm-Message-State: AOJu0YwI6vZxO+GdRr1HTltNTcXdu4T5gBdwGoYmIhwun9Hmf633lz93
+        lt2w4qKthGfgagz6olfqihUGiqbslzlQI9V+5A7OPw==
+X-Google-Smtp-Source: AGHT+IEIDe8QcwF4NCVvAh4n2QHR7c6zc20jFgCDper8N68SO8cyxneqQqWx+EiQVQWMnfeTiEiFMG1aT5aP6qIC0QQ=
+X-Received: by 2002:a05:6102:1481:b0:44d:6281:4fc2 with SMTP id
+ d1-20020a056102148100b0044d62814fc2mr9197302vsv.3.1693915849457; Tue, 05 Sep
+ 2023 05:10:49 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230905082413.21954-1-brgl@bgdev.pl> <ZPcZfd5UtzMmIUvm@smile.fi.intel.com>
-In-Reply-To: <ZPcZfd5UtzMmIUvm@smile.fi.intel.com>
+ <ZPcaVjOudGeLd5EP@smile.fi.intel.com>
+In-Reply-To: <ZPcaVjOudGeLd5EP@smile.fi.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 5 Sep 2023 14:09:15 +0200
-Message-ID: <CAMRc=Mc1K-xMzbtLSvZcSuXpLPmGkHekonjx5m_519OuxOxuxA@mail.gmail.com>
+Date:   Tue, 5 Sep 2023 14:10:38 +0200
+Message-ID: <CAMRc=McjfYqkX5jL=kwWnceHopebbgDr2XV_h5fjkG=7n7kD-Q@mail.gmail.com>
 Subject: Re: [PATCH v3] gpio: sim: don't fiddle with GPIOLIB private members
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -69,84 +70,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 5, 2023 at 2:05=E2=80=AFPM Andy Shevchenko
+On Tue, Sep 5, 2023 at 2:09=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Tue, Sep 05, 2023 at 10:24:13AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > We access internals of struct gpio_device and struct gpio_desc because
-> > it's easier but it can actually be avoided and we're working towards a
-> > better encapsulation of GPIO data structures across the kernel so let's
-> > start at home.
-> >
-> > Instead of checking gpio_desc flags, let's just track the requests of
-> > GPIOs in the driver. We also already store the information about
-> > direction of simulated lines.
-> >
-> > For kobjects needed by sysfs callbacks: we can iterate over the childre=
-n
-> > devices of the top-level platform device and compare their fwnodes
-> > against the one passed to the init function from probe.
-> >
-> > While at it: fix one line break and remove the untrue part about
-> > configfs callbacks using dev_get_drvdata() from a comment.
+> On Tue, Sep 05, 2023 at 03:05:17PM +0300, Andy Shevchenko wrote:
+> > On Tue, Sep 05, 2023 at 10:24:13AM +0200, Bartosz Golaszewski wrote:
 >
 > ...
 >
-> > v2 -> v3:
-> > - don't use fwnode internal fields, instead: iterate over the platform
-> >   device's children and locate the GPIO device
->
-> Thank you!
->
-> ...
->
-> > @@ -181,7 +178,7 @@ static int gpio_sim_get_direction(struct gpio_chip =
-*gc, unsigned int offset)
->
-> >  static int gpio_sim_set_config(struct gpio_chip *gc,
-> > -                               unsigned int offset, unsigned long conf=
-ig)
-> > +                            unsigned int offset, unsigned long config)
->
-> Looking at other prototypes, it can be
->
-> static int gpio_sim_set_config(struct gpio_chip *gc, unsigned int offset,
->                                unsigned long config)
->
-> ...
->
-> > +static int gpio_sim_chip_set_device(struct device *dev, void *data)
-> > +{
-> > +     struct gpio_sim_chip *chip =3D data;
->
-> > +     if (chip->swnode =3D=3D dev->fwnode) {
->
-> Please do not dereference fwnode from the struct device, we have an API!
-> device_match_fwnode()
->
-> > +             chip->dev =3D dev;
-> > +             return 1;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
->
-> ...
->
-> > +     chip->swnode =3D swnode;
-> > +     ret =3D device_for_each_child(dev, chip, gpio_sim_chip_set_device=
+> > > +   chip->swnode =3D swnode;
+> > > +   ret =3D device_for_each_child(dev, chip, gpio_sim_chip_set_device=
 );
-> > +     if (!ret)
-> > +             return -ENODEV;
+> > > +   if (!ret)
+> > > +           return -ENODEV;
+> >
+> > Can bus_find_device_by_fwnode() be used here?
 >
-> Can bus_find_device_by_fwnode() be used here?
+> Answering to myself: you already mentioned that this should cover any bus=
+,
+> so the answer is "no".
 >
 
-I can but then we're iterating over all platform devices and not just
-children of this GPIO simulator. If you think it's better for even
-less fwnode juggling then I can go with it.
+I think I mentioned it under the gpio-consumer where it's true. Here
+we are sure it's on the platform bus.
+
+> But also we have device_find_child() if I understood the purpose of the a=
+bove
+> it should suit better, no?
+>
+
+Right, it's a better match.
 
 Bart
 
