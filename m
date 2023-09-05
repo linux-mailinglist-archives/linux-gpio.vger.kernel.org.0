@@ -2,130 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ED5079260D
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:26:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C92F47925C4
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:24:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233253AbjIEQUI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 12:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57540 "EHLO
+        id S229685AbjIEQTZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 12:19:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354475AbjIEL7Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 07:59:24 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC7F1AB;
-        Tue,  5 Sep 2023 04:59:21 -0700 (PDT)
+        with ESMTP id S1354507AbjIEMF0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 08:05:26 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00214AC;
+        Tue,  5 Sep 2023 05:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693915161; x=1725451161;
+  t=1693915522; x=1725451522;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=TcBkexx1ijuD6/7qzSOMMmTOOVh0jXXDYPWa8+VyVY4=;
-  b=RKlXh3U0vw4fy6pE/3/82fyF0IQD15hvIZA7hne3ZUb/+CqL3l+ufJ/t
-   E+KaT6IZnWiy+sZp0K9/FJMGt4dCpBvl4lDsKdbYyf8PY7NJCmB5kMkRG
-   b4Iu+efmni5wrQyc/0CDI75MJVmOv0cT6HO3PCpme58Xl17Bg0buOVyc9
-   //2yASEAJHIRl2RXnQXrLYMT8ZldHCIh5KOY0gK0wLaH/rPkX7gOYOwfK
-   VkZP0FzoIhqGCe2Uez4/s3V80xvVgTvkZ3kEg9uacDEa2Yi6UkQJQjR51
-   zA7uH25tGh7ugnB2BQfLdMDfLz/1mdtIzl2zsgTrF23DNXCpIhQUbSyi8
+   mime-version:in-reply-to;
+  bh=JZkQmLtsdvjeiIiR+qBnIuO3R7CEPwo2RofTy+2Ty9Y=;
+  b=cnHrd8VDYAxnFM3bumRT+khy8lEy3JWbf8dY4GG2/c8TBmYFtSxUSNt7
+   xD2qRxomlztiX2mofE6CkdSfe76t+r9wlmkEIWEsGzgAeuzbCXtbBn4M0
+   1Rr79b/jIn6DgB4BCKoo1bN1QeEfBqAYiJvm62acnNJ89LGDw5J4rS0IQ
+   jTpzLhhCYTjUuW0/PxfLcoKzgHucgr51+u6ieCqoP7Fmk7VW2bw07ZbtI
+   EHw5MiT6KJP6lC9AaKVI6wA3QwHHYlnbhUzE9eK9LlNcl881q9QGnm3yU
+   CJ18uy58DQBQPtmhCtngKQMTfAhJOxRKiQwqdqS+Ec/3Q2/qa6+qG6un0
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="407764460"
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="374167122"
 X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
-   d="scan'208";a="407764460"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 04:59:21 -0700
+   d="scan'208";a="374167122"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 05:05:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="806575589"
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="914817844"
 X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
-   d="scan'208";a="806575589"
+   d="scan'208";a="914817844"
 Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 04:59:19 -0700
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 05:05:20 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qdUiD-006g0F-06;
-        Tue, 05 Sep 2023 14:59:17 +0300
-Date:   Tue, 5 Sep 2023 14:59:16 +0300
+        id 1qdUo1-006g4r-11;
+        Tue, 05 Sep 2023 15:05:17 +0300
+Date:   Tue, 5 Sep 2023 15:05:17 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] gpiolib: rename gpio_chip_hwgpio() for consistency
-Message-ID: <ZPcYFF7sSrriFYqV@smile.fi.intel.com>
-References: <20230904073410.5880-1-brgl@bgdev.pl>
- <20230904073410.5880-2-brgl@bgdev.pl>
- <ZPWjAUzqeAwF1wro@smile.fi.intel.com>
- <CAMRc=MeMYi0KbK=1RYGX2zbUjVZyQp-Y_aXfy6+EZcEtUSEU0A@mail.gmail.com>
- <ZPcEFXF9Fz762kzK@smile.fi.intel.com>
- <CAMRc=MctTGNe2v8bBKQp6Dh3EuhP+OmO8yxrMgrHT3+m2AGjnQ@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: sim: don't fiddle with GPIOLIB private members
+Message-ID: <ZPcZfd5UtzMmIUvm@smile.fi.intel.com>
+References: <20230905082413.21954-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MctTGNe2v8bBKQp6Dh3EuhP+OmO8yxrMgrHT3+m2AGjnQ@mail.gmail.com>
+In-Reply-To: <20230905082413.21954-1-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 05, 2023 at 01:26:34PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Sep 5, 2023 at 12:34 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Tue, Sep 05, 2023 at 10:37:32AM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Sep 4, 2023 at 11:27 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Mon, Sep 04, 2023 at 09:34:10AM +0200, Bartosz Golaszewski wrote:
-> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > >
-> > > > > All other functions that manipulate a struct gpio_desc use the gpiod_
-> > > > > prefix. Follow this convention and rename gpio_chip_hwgpio() to
-> > > > > gpiod_get_hwgpio().
-> > > >
-> > > > Same comment. Also, I don't think it's good idea as it steps on the exported
-> > > > API's toes. I.o.w. I won't mix those two.
-> > >
-> > > Even if I agreed with your other comment, gpio_chip_hwgpio() is a
-> > > terrible name and if I didn't know, I couldn't tell you what it does
-> > > just from looking at the name.
-> >
-> > That's can be improved, my previous comments were basically to avoid
-> > mixing prefixes for internal and external APIs, let's say prefix them
-> > similarly, but for internal with space and/or more verbose naming
-> >
-> >         gpiod_          gpio_desc_
-> >         gpiochip_       gpio_chip_
-> >         gdev_           gpio_device_
+On Tue, Sep 05, 2023 at 10:24:13AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> There's one more possibility. Have all exported symbols be prefixed
-> with gpiod in one way or another and the internal symbols just drop
-> the prefix so it would be like:
+> We access internals of struct gpio_device and struct gpio_desc because
+> it's easier but it can actually be avoided and we're working towards a
+> better encapsulation of GPIO data structures across the kernel so let's
+> start at home.
 > 
-> gpiod_
-> gpiochip_
-> gpio_device_
+> Instead of checking gpio_desc flags, let's just track the requests of
+> GPIOs in the driver. We also already store the information about
+> direction of simulated lines.
 > 
-> and
+> For kobjects needed by sysfs callbacks: we can iterate over the children
+> devices of the top-level platform device and compare their fwnodes
+> against the one passed to the init function from probe.
 > 
-> desc_
-> chip_
-> device_
-> 
-> Because for internal symbols we already know they refer to gpiolib.
+> While at it: fix one line break and remove the untrue part about
+> configfs callbacks using dev_get_drvdata() from a comment.
 
-With the above schema we have two caveats, one is not significant
-(as we have desc_to_gpio() and complimentary API). And another one
-is device/dev, which is conflicting with global. That's why I still
-prefer gpio_desc_ and so on.
+...
 
-> Anyway, I'll drop the patches for now and let's revisit in the future
-> when the consensus is reached.
+> v2 -> v3:
+> - don't use fwnode internal fields, instead: iterate over the platform
+>   device's children and locate the GPIO device
 
-Yes, let's focus on something more important now.
+Thank you!
+
+...
+
+> @@ -181,7 +178,7 @@ static int gpio_sim_get_direction(struct gpio_chip *gc, unsigned int offset)
+
+>  static int gpio_sim_set_config(struct gpio_chip *gc,
+> -				  unsigned int offset, unsigned long config)
+> +			       unsigned int offset, unsigned long config)
+
+Looking at other prototypes, it can be
+
+static int gpio_sim_set_config(struct gpio_chip *gc, unsigned int offset,
+			       unsigned long config)
+
+...
+
+> +static int gpio_sim_chip_set_device(struct device *dev, void *data)
+> +{
+> +	struct gpio_sim_chip *chip = data;
+
+> +	if (chip->swnode == dev->fwnode) {
+
+Please do not dereference fwnode from the struct device, we have an API!
+device_match_fwnode()
+
+> +		chip->dev = dev;
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +	chip->swnode = swnode;
+> +	ret = device_for_each_child(dev, chip, gpio_sim_chip_set_device);
+> +	if (!ret)
+> +		return -ENODEV;
+
+Can bus_find_device_by_fwnode() be used here?
 
 -- 
 With Best Regards,
