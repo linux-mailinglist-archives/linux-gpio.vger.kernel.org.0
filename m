@@ -2,124 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43AD4792662
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 193BD79286C
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243072AbjIEQUP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 12:20:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36134 "EHLO
+        id S242382AbjIEQUF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 12:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354423AbjIELbo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 07:31:44 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323D11AD
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 04:31:40 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-401f68602a8so23476735e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 04:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693913498; x=1694518298; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ucSMS6f1i4AJkmKZWAiTc8WB+F0d5XaASaMmBm7ZJv0=;
-        b=vLBeAy8m9T9JIfk/d47cB5i8zfi83j9+DjUBWeHNpYmKa1wDd5/ldv32HD9TeFoP+i
-         3X60O5xuVzq+0CXfSsjl8PXLmbDYHk2jUmuvBkKYzHWnX4cpejmOQY42hRv6qZ88ycXB
-         jQxxVP36Ye6VbhmHlWTf0/9KLmx7ymd0m9/cyKhLFVIVqlFHnhQZKVHZ0pkPIXgP5w1E
-         nj9A+pBxn4B0vcjijqZ3DRbgAgRdfpiJzDRzm5o6VZUZhld++tWv7X6FJbql7FIL0UHp
-         /znsReTvQePi1kXcxj5Y99VnNIlJS9B6Cawq4xWe5QOIgWodGDkxBhlhcjJQULirTiax
-         gjQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693913498; x=1694518298;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ucSMS6f1i4AJkmKZWAiTc8WB+F0d5XaASaMmBm7ZJv0=;
-        b=DGaKetUF8xm9ilIXZmr+oDpzFxhAIOczb5On4ioYbJY1wM8XqEmsXrJHvGvLdOrNfk
-         rjFkJqglG7jDv77uLQsO6oJBpDKxxq2GOEtjPAtgDwIfzUy6dpMM83EPGdDZnbB3A7IF
-         jv/4ohN38kf1AFdGeuqG3Auo9WYgD8rYwIvB+BdNBeJ/YFncVsJ1qO7FRtEKTq8NTdh2
-         PkREMcqzs/ydGt5BFAtetmK9s8k66MT4MVZ6OxB+9uDMzCVp5z4JFKPKIg2CWiv/0QP/
-         UW6LZlv59BWb3uAiGvsXQbU11ywhuJ/R7o/DoXQmPo+reOgVyYfsKNHPg7kU8GByjBuB
-         J49g==
-X-Gm-Message-State: AOJu0YxRfWq7xFyqsMAh42sy9X28nny8MHBLLajDehLLmgo1eou37Ilm
-        tMhruQPBezJ/o1uVYf5qScyLfA==
-X-Google-Smtp-Source: AGHT+IEpJmilH9Tppz6BKD/gVURbvbPERFqtmnEdu+ZGNvg+ETGDXFXfFdgWvlIP9ozV8luG9EA7aA==
-X-Received: by 2002:a1c:4b08:0:b0:3fe:d1b9:7ea9 with SMTP id y8-20020a1c4b08000000b003fed1b97ea9mr9575348wma.36.1693913498664;
-        Tue, 05 Sep 2023 04:31:38 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id m9-20020a7bcb89000000b003fe26244858sm19823929wmi.46.2023.09.05.04.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 04:31:38 -0700 (PDT)
-Date:   Tue, 5 Sep 2023 14:31:35 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     oe-kbuild@lists.linux.dev, Biju Das <biju.das.jz@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 2/2] pinctrl: mcp23s08: Simplify probe()
-Message-ID: <2ce09856-244a-4e3f-89ff-d9439ea06af9@kadam.mountain>
+        with ESMTP id S1354432AbjIELft (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 07:35:49 -0400
+X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 04:35:45 PDT
+Received: from s.wfbtzhsv.outbound-mail.sendgrid.net (s.wfbtzhsv.outbound-mail.sendgrid.net [159.183.224.104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28BC1AB
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 04:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=mime-version:subject:references:from:in-reply-to:to:cc:content-type:
+        content-transfer-encoding:cc:content-type:from:subject:to;
+        s=s1; bh=8Oon+UZVxMzjsZmhyhxxf4Iok+yFxg7JUkPTPozzk2Y=;
+        b=UVXSHcpHRkuysgyXTlsLgYFD5G8Zf+7iKD2zhOY93EMero2+yHxox8SQCGOt52IQsbmu
+        LFG86tfIhEG9SBKzMcjTS87Wr08UHxaVaQogNfYs7JVvDqPhoreHTP9FFGnawws9df7mj6
+        gF8V2GOKOo4yTnmrUATsP1JSxx5YAuNK+YXHfODzvk9sOiMcr94AY+F+QBGTAdgWxhcRNT
+        AsyHlKVqRDA5sFQe5qbAYVDFozpAz+F0Lt2Dwgh1XdEHxPfb7SKwakXtZjVNg56Ge/gCgt
+        50ipMMb5phMrP8fQlWDiy+ziLLN0+hi5IxX27I4crpuV+ih+2LPFRUZYCHYmya9g==
+Received: by filterdrecv-7765c6879f-mrb57 with SMTP id filterdrecv-7765c6879f-mrb57-1-64F71232-5
+        2023-09-05 11:34:10.187704852 +0000 UTC m=+2232639.625816428
+Received: from [192.168.1.50] (unknown)
+        by geopod-ismtpd-8 (SG) with ESMTP
+        id jd1KlkDuTLa2t2toI-Tyqw
+        Tue, 05 Sep 2023 11:34:09.834 +0000 (UTC)
+Message-ID: <ca8d3730-dc32-0192-d812-82cc58700260@kwiboo.se>
+Date:   Tue, 05 Sep 2023 11:34:10 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230902090937.32195-3-biju.das.jz@bp.renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH 0/3] Make Rockchip IO domains dependency from other
+ devices explicit
+Content-Language: en-US
+References: <20230904115816.1237684-1-s.hauer@pengutronix.de>
+From:   Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20230904115816.1237684-1-s.hauer@pengutronix.de>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h8rKZkhjZNKspq1qu?=
+ =?us-ascii?Q?L4Ur5DSU6M7CKd5T0Kq7NrTwxkY0tJnRNwRv890?=
+ =?us-ascii?Q?ix6HcaePIYyKW9zxu6ZLyGrpetznd+u1D035U6y?=
+ =?us-ascii?Q?ib6sEjiPSwu3G3BbBr8IDbWdbflKcB0m2Firm=2Fr?=
+ =?us-ascii?Q?EIBx1TbihNRTXyLZ5A5jF8P+6zeeaJRm4gbo23?=
+To:     Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-rockchip@lists.infradead.org
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de,
+        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+X-Entity-ID: P7KYpSJvGCELWjBME/J5tg==
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Biju,
+Hi Sascha,
 
-kernel test robot noticed the following build warnings:
+On 2023-09-04 13:58, Sascha Hauer wrote:
+> This is a continuation of the patch posted by Quentin Schulz here [1]
+> 
+> This series aims to solve a problem with Rockchip IO domains. On many
+> Rockchip SoCs the pins are driven by external supplies normally
+> controlled by regulators of a PMIC. There are multiple voltages allowed
+> for the regulators; additionally the chosen voltage has to be programmed
+> into SoC registers. There already is a driver [2] handling setting these
+> registers. The driver works by registering a notifier on the regulators.
+> Whenever a regulator is about to change its voltage then the notifier will
+> program the IO domain registers suitably for the new voltage.
+> 
+> The problem is that there is no dependency between pins and the IO
+> domain driver which means that it can happen that a pin is used before
+> the IO domain driver has been probed. In that case the pin can end up
+> being non functional as neither the regulator has been configured
+> correctly nor the SoC registers have been adjusted to the regulators
+> voltage.
+> 
+> One way to ensure correct probing order is to defer probing of devices
+> in the pinctrl driver until the IO domain driver has been probed. We
+> can't do this for all devices though, as that would introduce a cyclic
+> dependency when for example the I2C port needed to access the PMIC for
+> the regulators is part of a IO domain itself.
+> 
+> This series solves these problems similarly to Quentins patch. With
+> Quentins patch we would have to add rockchip,io-domain properties for
+> all pin group nodes we wish to honor the IO domain dependency for. We
+> could put these properties into the board dts files which would mean
+> that we either only add the properties to nodes which actually byte us,
+> or that we would have to add the properties to all possible pin groups
+> except the ones needed to access the PMIC. We could also put these
+> properties into the dtsi files, but that would mean a board has to add a
+> /delete-property/ rockchip,io-domain to the pin groups needed to access
+> the PMIC to avoid circular dependencies.
+> 
+> The approach chosen here is slightly different. First of all this series
+> doesn't change the current behaviour without board specific dts changes.
+> To activate the IO domain dependency handling, a board has to add a
+> rockchip,io-domains property to the pinctrl node. When this property is
+> present all pins are assumed to need the IO domain driver. Pin groups
+> needed to access the PMIC can then be given a rockchip,io-domain-boot-on
+> property. When this property is given then the IO domain is assumed to
+> be correctly configured by the boot loader. It should be added to all
+> pin groups needed to access the PMIC to avoid cyclic dependencies. Patch
+> 3/3 contains a usage example for the Radxa Rock-3a.
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+FYI, I have sent out a series that ports the IO domain driver to U-Boot.
+This was needed to have working Ethernet on RK356x devices that use a
+1.8V PHY. Initially only RK356x support have been ported but support for
+other SoCs should follow in the future. Vendor U-Boot also initialize
+the IO domain configuration based on the voltage reported by the
+supplying regulator.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Biju-Das/pinctrl-mcp23s08-Extend-match-support-for-OF-tables/20230902-171023
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20230902090937.32195-3-biju.das.jz%40bp.renesas.com
-patch subject: [PATCH 2/2] pinctrl: mcp23s08: Simplify probe()
-config: i386-randconfig-141-20230902 (https://download.01.org/0day-ci/archive/20230903/202309030751.GQvtrZnS-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230903/202309030751.GQvtrZnS-lkp@intel.com/reproduce)
+So at least for the example board IO domains should be configured when
+entering linux while booting using a future version of mainline U-Boot.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202309030751.GQvtrZnS-lkp@intel.com/
+https://lore.kernel.org/u-boot/20230821223020.3918620-1-jonas@kwiboo.se/
 
-smatch warnings:
-drivers/pinctrl/pinctrl-mcp23s08_i2c.c:33 mcp230xx_probe() error: we previously assumed 'info' could be null (see line 31)
+Regards,
+Jonas
 
-vim +/info +33 drivers/pinctrl/pinctrl-mcp23s08_i2c.c
-
-8bb5811129f9e4 Uwe Kleine-König 2022-11-18  19  static int mcp230xx_probe(struct i2c_client *client)
-0f04a81784fe3d Andy Shevchenko  2020-04-07  20  {
-b5f259f6fc5912 Biju Das         2023-09-02  21  	const struct mcp23s08_i2c_info *info;
-0f04a81784fe3d Andy Shevchenko  2020-04-07  22  	struct device *dev = &client->dev;
-0f04a81784fe3d Andy Shevchenko  2020-04-07  23  	struct mcp23s08 *mcp;
-0f04a81784fe3d Andy Shevchenko  2020-04-07  24  	int ret;
-0f04a81784fe3d Andy Shevchenko  2020-04-07  25  
-0f04a81784fe3d Andy Shevchenko  2020-04-07  26  	mcp = devm_kzalloc(dev, sizeof(*mcp), GFP_KERNEL);
-0f04a81784fe3d Andy Shevchenko  2020-04-07  27  	if (!mcp)
-0f04a81784fe3d Andy Shevchenko  2020-04-07  28  		return -ENOMEM;
-0f04a81784fe3d Andy Shevchenko  2020-04-07  29  
-b5f259f6fc5912 Biju Das         2023-09-02  30  	info = i2c_get_match_data(client);
-b5f259f6fc5912 Biju Das         2023-09-02 @31  	if (!info)
-b5f259f6fc5912 Biju Das         2023-09-02  32  		return dev_err_probe(dev, -EINVAL, "invalid device type (%d)\n",
-b5f259f6fc5912 Biju Das         2023-09-02 @33  				     info->type);
-                                                                                     ^^^^^^^^^^
-info is NULL.
-
-0f04a81784fe3d Andy Shevchenko  2020-04-07  34  
-b5f259f6fc5912 Biju Das         2023-09-02  35  	mcp->reg_shift = info->reg_shift;
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> Sascha
+> 
+> [1] https://lore.kernel.org/lkml/20220802095252.2486591-1-foss+kernel@0leil.net/
+> [2] drivers/soc/rockchip/io-domain.c
+> 
+> Sascha Hauer (3):
+>   pinctrl: rockchip: add support for io-domain dependency
+>   dt-bindings: pinctrl: rockchip: Add io domain properties
+>   arm64: dts: rockchip: rock-3a: add io domain properties
+> 
+>  .../bindings/pinctrl/rockchip,pinctrl.yaml    | 13 +++-
+>  .../boot/dts/rockchip/rk3568-rock-3a.dts      | 11 ++++
+>  drivers/pinctrl/pinctrl-rockchip.c            | 64 +++++++++++++++++++
+>  drivers/pinctrl/pinctrl-rockchip.h            |  3 +
+>  4 files changed, 90 insertions(+), 1 deletion(-)
+> 
 
