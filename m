@@ -2,155 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 193BD79286C
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:43:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ED5079260D
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Sep 2023 18:26:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242382AbjIEQUF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 12:20:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
+        id S233253AbjIEQUI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Sep 2023 12:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354432AbjIELft (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 07:35:49 -0400
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 04:35:45 PDT
-Received: from s.wfbtzhsv.outbound-mail.sendgrid.net (s.wfbtzhsv.outbound-mail.sendgrid.net [159.183.224.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28BC1AB
-        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 04:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=mime-version:subject:references:from:in-reply-to:to:cc:content-type:
-        content-transfer-encoding:cc:content-type:from:subject:to;
-        s=s1; bh=8Oon+UZVxMzjsZmhyhxxf4Iok+yFxg7JUkPTPozzk2Y=;
-        b=UVXSHcpHRkuysgyXTlsLgYFD5G8Zf+7iKD2zhOY93EMero2+yHxox8SQCGOt52IQsbmu
-        LFG86tfIhEG9SBKzMcjTS87Wr08UHxaVaQogNfYs7JVvDqPhoreHTP9FFGnawws9df7mj6
-        gF8V2GOKOo4yTnmrUATsP1JSxx5YAuNK+YXHfODzvk9sOiMcr94AY+F+QBGTAdgWxhcRNT
-        AsyHlKVqRDA5sFQe5qbAYVDFozpAz+F0Lt2Dwgh1XdEHxPfb7SKwakXtZjVNg56Ge/gCgt
-        50ipMMb5phMrP8fQlWDiy+ziLLN0+hi5IxX27I4crpuV+ih+2LPFRUZYCHYmya9g==
-Received: by filterdrecv-7765c6879f-mrb57 with SMTP id filterdrecv-7765c6879f-mrb57-1-64F71232-5
-        2023-09-05 11:34:10.187704852 +0000 UTC m=+2232639.625816428
-Received: from [192.168.1.50] (unknown)
-        by geopod-ismtpd-8 (SG) with ESMTP
-        id jd1KlkDuTLa2t2toI-Tyqw
-        Tue, 05 Sep 2023 11:34:09.834 +0000 (UTC)
-Message-ID: <ca8d3730-dc32-0192-d812-82cc58700260@kwiboo.se>
-Date:   Tue, 05 Sep 2023 11:34:10 +0000 (UTC)
+        with ESMTP id S1354475AbjIEL7Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 07:59:24 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC7F1AB;
+        Tue,  5 Sep 2023 04:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693915161; x=1725451161;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=TcBkexx1ijuD6/7qzSOMMmTOOVh0jXXDYPWa8+VyVY4=;
+  b=RKlXh3U0vw4fy6pE/3/82fyF0IQD15hvIZA7hne3ZUb/+CqL3l+ufJ/t
+   E+KaT6IZnWiy+sZp0K9/FJMGt4dCpBvl4lDsKdbYyf8PY7NJCmB5kMkRG
+   b4Iu+efmni5wrQyc/0CDI75MJVmOv0cT6HO3PCpme58Xl17Bg0buOVyc9
+   //2yASEAJHIRl2RXnQXrLYMT8ZldHCIh5KOY0gK0wLaH/rPkX7gOYOwfK
+   VkZP0FzoIhqGCe2Uez4/s3V80xvVgTvkZ3kEg9uacDEa2Yi6UkQJQjR51
+   zA7uH25tGh7ugnB2BQfLdMDfLz/1mdtIzl2zsgTrF23DNXCpIhQUbSyi8
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="407764460"
+X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
+   d="scan'208";a="407764460"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 04:59:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="806575589"
+X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
+   d="scan'208";a="806575589"
+Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 04:59:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qdUiD-006g0F-06;
+        Tue, 05 Sep 2023 14:59:17 +0300
+Date:   Tue, 5 Sep 2023 14:59:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/2] gpiolib: rename gpio_chip_hwgpio() for consistency
+Message-ID: <ZPcYFF7sSrriFYqV@smile.fi.intel.com>
+References: <20230904073410.5880-1-brgl@bgdev.pl>
+ <20230904073410.5880-2-brgl@bgdev.pl>
+ <ZPWjAUzqeAwF1wro@smile.fi.intel.com>
+ <CAMRc=MeMYi0KbK=1RYGX2zbUjVZyQp-Y_aXfy6+EZcEtUSEU0A@mail.gmail.com>
+ <ZPcEFXF9Fz762kzK@smile.fi.intel.com>
+ <CAMRc=MctTGNe2v8bBKQp6Dh3EuhP+OmO8yxrMgrHT3+m2AGjnQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 0/3] Make Rockchip IO domains dependency from other
- devices explicit
-Content-Language: en-US
-References: <20230904115816.1237684-1-s.hauer@pengutronix.de>
-From:   Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20230904115816.1237684-1-s.hauer@pengutronix.de>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h8rKZkhjZNKspq1qu?=
- =?us-ascii?Q?L4Ur5DSU6M7CKd5T0Kq7NrTwxkY0tJnRNwRv890?=
- =?us-ascii?Q?ix6HcaePIYyKW9zxu6ZLyGrpetznd+u1D035U6y?=
- =?us-ascii?Q?ib6sEjiPSwu3G3BbBr8IDbWdbflKcB0m2Firm=2Fr?=
- =?us-ascii?Q?EIBx1TbihNRTXyLZ5A5jF8P+6zeeaJRm4gbo23?=
-To:     Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-rockchip@lists.infradead.org
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de,
-        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-X-Entity-ID: P7KYpSJvGCELWjBME/J5tg==
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MctTGNe2v8bBKQp6Dh3EuhP+OmO8yxrMgrHT3+m2AGjnQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sascha,
+On Tue, Sep 05, 2023 at 01:26:34PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Sep 5, 2023 at 12:34 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Tue, Sep 05, 2023 at 10:37:32AM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Sep 4, 2023 at 11:27 AM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Sep 04, 2023 at 09:34:10AM +0200, Bartosz Golaszewski wrote:
+> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > >
+> > > > > All other functions that manipulate a struct gpio_desc use the gpiod_
+> > > > > prefix. Follow this convention and rename gpio_chip_hwgpio() to
+> > > > > gpiod_get_hwgpio().
+> > > >
+> > > > Same comment. Also, I don't think it's good idea as it steps on the exported
+> > > > API's toes. I.o.w. I won't mix those two.
+> > >
+> > > Even if I agreed with your other comment, gpio_chip_hwgpio() is a
+> > > terrible name and if I didn't know, I couldn't tell you what it does
+> > > just from looking at the name.
+> >
+> > That's can be improved, my previous comments were basically to avoid
+> > mixing prefixes for internal and external APIs, let's say prefix them
+> > similarly, but for internal with space and/or more verbose naming
+> >
+> >         gpiod_          gpio_desc_
+> >         gpiochip_       gpio_chip_
+> >         gdev_           gpio_device_
+> 
+> There's one more possibility. Have all exported symbols be prefixed
+> with gpiod in one way or another and the internal symbols just drop
+> the prefix so it would be like:
+> 
+> gpiod_
+> gpiochip_
+> gpio_device_
+> 
+> and
+> 
+> desc_
+> chip_
+> device_
+> 
+> Because for internal symbols we already know they refer to gpiolib.
 
-On 2023-09-04 13:58, Sascha Hauer wrote:
-> This is a continuation of the patch posted by Quentin Schulz here [1]
-> 
-> This series aims to solve a problem with Rockchip IO domains. On many
-> Rockchip SoCs the pins are driven by external supplies normally
-> controlled by regulators of a PMIC. There are multiple voltages allowed
-> for the regulators; additionally the chosen voltage has to be programmed
-> into SoC registers. There already is a driver [2] handling setting these
-> registers. The driver works by registering a notifier on the regulators.
-> Whenever a regulator is about to change its voltage then the notifier will
-> program the IO domain registers suitably for the new voltage.
-> 
-> The problem is that there is no dependency between pins and the IO
-> domain driver which means that it can happen that a pin is used before
-> the IO domain driver has been probed. In that case the pin can end up
-> being non functional as neither the regulator has been configured
-> correctly nor the SoC registers have been adjusted to the regulators
-> voltage.
-> 
-> One way to ensure correct probing order is to defer probing of devices
-> in the pinctrl driver until the IO domain driver has been probed. We
-> can't do this for all devices though, as that would introduce a cyclic
-> dependency when for example the I2C port needed to access the PMIC for
-> the regulators is part of a IO domain itself.
-> 
-> This series solves these problems similarly to Quentins patch. With
-> Quentins patch we would have to add rockchip,io-domain properties for
-> all pin group nodes we wish to honor the IO domain dependency for. We
-> could put these properties into the board dts files which would mean
-> that we either only add the properties to nodes which actually byte us,
-> or that we would have to add the properties to all possible pin groups
-> except the ones needed to access the PMIC. We could also put these
-> properties into the dtsi files, but that would mean a board has to add a
-> /delete-property/ rockchip,io-domain to the pin groups needed to access
-> the PMIC to avoid circular dependencies.
-> 
-> The approach chosen here is slightly different. First of all this series
-> doesn't change the current behaviour without board specific dts changes.
-> To activate the IO domain dependency handling, a board has to add a
-> rockchip,io-domains property to the pinctrl node. When this property is
-> present all pins are assumed to need the IO domain driver. Pin groups
-> needed to access the PMIC can then be given a rockchip,io-domain-boot-on
-> property. When this property is given then the IO domain is assumed to
-> be correctly configured by the boot loader. It should be added to all
-> pin groups needed to access the PMIC to avoid cyclic dependencies. Patch
-> 3/3 contains a usage example for the Radxa Rock-3a.
+With the above schema we have two caveats, one is not significant
+(as we have desc_to_gpio() and complimentary API). And another one
+is device/dev, which is conflicting with global. That's why I still
+prefer gpio_desc_ and so on.
 
-FYI, I have sent out a series that ports the IO domain driver to U-Boot.
-This was needed to have working Ethernet on RK356x devices that use a
-1.8V PHY. Initially only RK356x support have been ported but support for
-other SoCs should follow in the future. Vendor U-Boot also initialize
-the IO domain configuration based on the voltage reported by the
-supplying regulator.
+> Anyway, I'll drop the patches for now and let's revisit in the future
+> when the consensus is reached.
 
-So at least for the example board IO domains should be configured when
-entering linux while booting using a future version of mainline U-Boot.
+Yes, let's focus on something more important now.
 
-https://lore.kernel.org/u-boot/20230821223020.3918620-1-jonas@kwiboo.se/
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Regards,
-Jonas
-
-> 
-> Sascha
-> 
-> [1] https://lore.kernel.org/lkml/20220802095252.2486591-1-foss+kernel@0leil.net/
-> [2] drivers/soc/rockchip/io-domain.c
-> 
-> Sascha Hauer (3):
->   pinctrl: rockchip: add support for io-domain dependency
->   dt-bindings: pinctrl: rockchip: Add io domain properties
->   arm64: dts: rockchip: rock-3a: add io domain properties
-> 
->  .../bindings/pinctrl/rockchip,pinctrl.yaml    | 13 +++-
->  .../boot/dts/rockchip/rk3568-rock-3a.dts      | 11 ++++
->  drivers/pinctrl/pinctrl-rockchip.c            | 64 +++++++++++++++++++
->  drivers/pinctrl/pinctrl-rockchip.h            |  3 +
->  4 files changed, 90 insertions(+), 1 deletion(-)
-> 
 
