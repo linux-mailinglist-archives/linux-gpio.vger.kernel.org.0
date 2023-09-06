@@ -2,244 +2,310 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 804B779341F
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 05:30:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA0707934F9
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 07:43:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233863AbjIFDal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Sep 2023 23:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33180 "EHLO
+        id S232140AbjIFFn4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Sep 2023 01:43:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229783AbjIFDaj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Sep 2023 23:30:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90906128;
-        Tue,  5 Sep 2023 20:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693971034; x=1725507034;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=tFf8ZN/jCYAauSe3O5pe3KozXYO8IrjqDKKyR9wEpto=;
-  b=er31wYFHSsTjW9PUd7dvooIQJ+ce0QPjYXC4NibXXjB9XaF423AbmWyj
-   K54YCv6ZJPxNLBAwgCHyE+uL7ubh2AWV5TN5ei5fHcgQd0SCrIAVm7SPb
-   FdnpayNIbIOntV7Yp05sFvCW2Az6c49Nvkn4jupdvfjOF6fWcNQkRcvAy
-   qarbN4UaVZytPqe2XbE+itiYYcl0JkcWQzc887Oho3XJcUTjU6QI+W9X8
-   BpJqnCR2foPRwTeApmZNKoTEV8oNzcmGeNh6u2iebOP0PfChM8uipuZEG
-   LkvsOjSOPW60TNZz5k5UnjqsDtezynC8xUzqXncQdmV53/qhdAPXsxxwN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="357268939"
-X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
-   d="scan'208";a="357268939"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 20:30:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="691152533"
-X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
-   d="scan'208";a="691152533"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Sep 2023 20:30:02 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 5 Sep 2023 20:30:01 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 5 Sep 2023 20:30:00 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Tue, 5 Sep 2023 20:30:00 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Tue, 5 Sep 2023 20:30:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W7/GoKtHBLdTa8plnL9n5Ix+oRa6Tt9VO6qQ2vZsNx8bSQtI5OLlUsuiogcOgJwO3WyqB1OrtzplbRKjb8toeRPoYfxpu9Hjp6JAWtB+Ulp9Ze6x6XfQmgMVhGjRsQ7BpW8kL0HtXWn2LOpUxIu3hbXQcAjDNXkiMmRbE0N63gWF7h6MGHI4mt2p+BoHddk9GKBtEATcTlOYdtH83fG3VAsE6YEHf2HYkT0/d8RrGN++8U1ApuknQLilk5QQnpOfaimwRnnVYVbSGnhD7QWWuO3HpH84inRZ1qFh/qrTqmNId+GJgy2KKhQoBJX6/xyci3nkE7z9IwH/gHqRL6cPpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=noYCN0V0mTaq6ut0Dv4NZE7Tnrr0gyAJRi0jdA6F5DE=;
- b=h9aLKJv7XbRfmm80d1U6MP/5g9lgBsj8FIn+kUua1+Qyx9X5Bz5ardJ/g9Hpr/Jx1CDmwsGX59ArrR1vfOIx7yPR+cLYkdJlnzJSSaGVlkODMrzPvGn79bs8E6ibVIbrRgsli5DNpHu8BAcFw5uVMyYtC9YfnT+wM77la1d2/X5WuyoyHoNlg5ot2mrAgk2CKmgDMH6u+rJ3Lq7oerHbMTd/YZF/0qppoUSSrjn3lKtXjUKK0XhuEjee+tDanXsHFhHBwm2qZSm5ZqW8ffV2Kp7pxXhU/Y70RNsIdJeLYVjg02NOyUhWPwg34y8q/A3s9xf0qhZLl2S/DEz9CIjckw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com (2603:10b6:5:205::16)
- by PH0PR11MB7446.namprd11.prod.outlook.com (2603:10b6:510:26d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.32; Wed, 6 Sep
- 2023 03:29:58 +0000
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::e836:4003:6244:2466]) by DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::e836:4003:6244:2466%7]) with mapi id 15.20.6745.030; Wed, 6 Sep 2023
- 03:29:58 +0000
-From:   "Wu, Wentong" <wentong.wu@intel.com>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Oliver Neukum <oneukum@suse.com>
-CC:     "arnd@arndb.de" <arnd@arndb.de>,
-        "mka@chromium.org" <mka@chromium.org>,
-        "lee@kernel.org" <lee@kernel.org>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "kfting@nuvoton.com" <kfting@nuvoton.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "maz@kernel.org" <maz@kernel.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "andi.shyti@linux.intel.com" <andi.shyti@linux.intel.com>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "Wang, Zhifeng" <zhifeng.wang@intel.com>
-Subject: RE: [PATCH v14 1/4] usb: Add support for Intel LJCA device
-Thread-Topic: [PATCH v14 1/4] usb: Add support for Intel LJCA device
-Thread-Index: AQHZ3vLqt0FUDCDFkU6MTx3mqLWspbAKeKEAgAAuthCAAAzNAIAAxW/ggABzcACAAAC/YIAAFPkAgAEjpvA=
-Date:   Wed, 6 Sep 2023 03:29:57 +0000
-Message-ID: <DM6PR11MB431656D91661A2F7597DA8EC8DEFA@DM6PR11MB4316.namprd11.prod.outlook.com>
-References: <1693806261-12958-1-git-send-email-wentong.wu@intel.com>
- <1693806261-12958-2-git-send-email-wentong.wu@intel.com>
- <a8c8af1b-9399-6ca9-ea3d-b71e6ee68cad@suse.com>
- <DM6PR11MB43166D27FB15905CB02DBC5B8DE9A@DM6PR11MB4316.namprd11.prod.outlook.com>
- <7755c3ee-9d7e-8ae5-1cf7-a5247cc4e6e5@suse.com>
- <DM6PR11MB4316C70D7C14B56ED349F01F8DE8A@DM6PR11MB4316.namprd11.prod.outlook.com>
- <f6f8a9c4-faf1-f9da-e688-a29eb267fabc@suse.com>
- <DM6PR11MB4316F903C524668BA35707398DE8A@DM6PR11MB4316.namprd11.prod.outlook.com>
- <2023090530-cleft-chivalry-b59f@gregkh>
-In-Reply-To: <2023090530-cleft-chivalry-b59f@gregkh>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR11MB4316:EE_|PH0PR11MB7446:EE_
-x-ms-office365-filtering-correlation-id: 96154c4a-32a9-45b1-092d-08dbae898b6d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XSvKmMQoG1TumdVeI7uEju/xvIOkh5wT/4eOQolYzUJhi5oAAqqS5XrlDr1y6JIcQC+HOneKYrDJoO5BYPjMzcKF5yYMXdktHrzEBbzr1sHFVRtw+Aw8B7wwGs5D0KvftBV7eTbkJh7/PqL9E1X2ZFTzxMcuy78ZUF/DvAlzzeZzF9AwQy4md1dNj1w9i3HDDpWa6qcIItrfU0l02iwz1A8z6l3J1Ye1vEXMQZDUMIr8GCfElXcvtEzsh1cgQxTB/zIKun6D3eh8OZungJ6xsAvmeUWNFDFvxQiyW8VvU8sCLWludodHoqwZciBITMqSTWZvRt/xrcWG7REkCwbS+/eALoa8j9uhAX6qfHodNSrWFUlErR9uNRi8ubJuZbypR3hip25kSxVnSxzzBERM7y5mhrSCaJ3aV3b3m1fNmSD0vtGMJEPhZZMye1FsQe7F9RDiqVXweUma/ONYbgiDUE2cwOF/nhhje9Q4f4Q06DkxeRgpQ73Ja7DkCVoZWi32vx8jiVJvE5zoVzLsTa0yTm3SnftUFy6zTdXHgw+fjFRu0VCVOBEgJxt1wDl1gX2/dTk9d4TeJmXCrGfOtyCvhObuafNtNQbsVZXIlWFqpg6UixrpSK7q8J+o3FJ+G9yc
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4316.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(39860400002)(366004)(136003)(376002)(186009)(1800799009)(451199024)(41300700001)(7416002)(38100700002)(82960400001)(26005)(122000001)(71200400001)(33656002)(86362001)(53546011)(83380400001)(38070700005)(478600001)(7696005)(6506007)(9686003)(55016003)(66946007)(66476007)(76116006)(54906003)(316002)(2906002)(66556008)(66446008)(110136005)(64756008)(8676002)(8936002)(5660300002)(4326008)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?2ICHql8vnoE+BtqMbW7o1D+WVVK0hufx3RWtM5+169afM+LDyd6O3cCx70vr?=
- =?us-ascii?Q?uC0ZQXScuu6fDyZriQN8n7BkUPMIfw0u8rqSq1pWSWMhOUxzx6frluOr0hWO?=
- =?us-ascii?Q?icOkKut9ZynqpBpBqMXTpDidlWzdbIx9LPmQebXepExX1e0hZ9xh1rOZM8QC?=
- =?us-ascii?Q?Asys2A+6Ol4+aNq5OR9z388+8UD/2jPCOeK5WKn5xKS8crSg7ObUVorTvSjs?=
- =?us-ascii?Q?YHm4+QeVHPICr39F1lxtWzmitljVqMi9hBHOkSSac4V80g+cSnfJQK3QK/i2?=
- =?us-ascii?Q?im79yBaxQewDISu4mHZDtVOgHzKGyXaUQQhz0T8TeJvZ37W1G9GbmzkaqAgs?=
- =?us-ascii?Q?hO/fdfQJw0zottYuCeT4hpYMbw0IuGQDiNiHoBVRB7f1Mjtfif26+kxNI5T3?=
- =?us-ascii?Q?6tGJo16dAyZ6gNL7Wg0scQyaVQh3sQ0oWqHUUNYz0xpri1eP8daxaxuYWeoD?=
- =?us-ascii?Q?CmoT3Ii6zuTqUhIs2Wai2g7fSqxN9U5JKPloU3aBLWNu+2jP1oHtnTGLEtVF?=
- =?us-ascii?Q?5clU7tNC3qfNWQmhyCRIA7x7auIcktusIYsa+URKdea44QE3lOs/MRpQzZN2?=
- =?us-ascii?Q?PvCdRKTHUptB6dU+Q7D9CWenU/+sNQMJNFUwPVQrjZRgK8RiJmyh3OaRX8uk?=
- =?us-ascii?Q?NoiMNwDk8GCIpmC/OXVYSXwumqVp6pGBSon0I1hrAqxxrP9sHySzVgW5X8HU?=
- =?us-ascii?Q?rE1KQjIKyuSHLW4c6TAfMtPa4WK1W+wfxfX7ZG+jv0oCa4jiRIsjY5UOXKxN?=
- =?us-ascii?Q?BSbdy2Jxx8mWYu+gmvjuAw4MyFdCseZ0bs6n3kbTgP6PJe4yUMIcgXb1QyCU?=
- =?us-ascii?Q?Bh85LPTtvgBEPSLLqIP/qfT8G/IxiXOO0U0GvqPgq4mSvJ2A4fXfqFxnneat?=
- =?us-ascii?Q?dVOVtZ0sUVIvmrzdPHKTgnA67kDl2865UQpoteourKBHFEoeA5ld3XPwzg0G?=
- =?us-ascii?Q?F+xcYMD9thy/yCLysicvEXq4Ys+4wtcz4l0fEKg1RUXJHxdX3V6ys0qbijwF?=
- =?us-ascii?Q?bPCaTLuJp1+8ZbcptWVWDhzz4kAkX5iph1tV+cytLkECBFwvKtM+cpHXOQLo?=
- =?us-ascii?Q?Rp62KevQSo2BSIVhqh7KyS+556ui10Klnu4h/YClPSdxfI5fYeUpdJNR7drC?=
- =?us-ascii?Q?D1SyJyGCu2eC29jQeqUtZJ/dAwrORparJAjlO5yH3oCfF/R1x/Sbh21VaB24?=
- =?us-ascii?Q?rNLo9x70llTC/TlGJ7WyaMeqTnlb6W4Esdpkf2AxcPGD1+glPbQ4LXikZyKJ?=
- =?us-ascii?Q?tT970vpDQElNUJqrbN0Ng1dPvS2kgV2IsDp0dNzJP44YIVewWjYvZ3dyL+2d?=
- =?us-ascii?Q?xiK7xue84CIQT4Xg0dySK0F1fo0lU9z2MDUbohOaJ2lr/PnRoBrptwclKeXE?=
- =?us-ascii?Q?iukMns2UIwUyWDAVvuewWQj+W3P9PCXIdsyLvfPeCkFSI9WkZVAD2MbHQLfA?=
- =?us-ascii?Q?ZLKbIahTLMlXDpSIoo6mqJsxy5qgLXZ4Epr6/neUBvdrYCjLG5/uGORkPuIR?=
- =?us-ascii?Q?XFV9OeLJMHkCfNIeio3uHtjEVvtvH9wF0E6o3zZdke1Bgh0Su/87/mzYryWz?=
- =?us-ascii?Q?ZmlZ8WRcv0q1axRRCz21Xk2MUnqnQVHw6fIiLi72?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229596AbjIFFn4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 01:43:56 -0400
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CDAEA
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Sep 2023 22:43:52 -0700 (PDT)
+Received: by mail-io1-xd2a.google.com with SMTP id ca18e2360f4ac-792973a659fso24669739f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Sep 2023 22:43:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1693979031; x=1694583831; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OdFaYaGTjzlyGp7Qapnet5xSyB/GpvqUe5y44btANBM=;
+        b=UMwQ3U8IYVjv5Y6p74MBXm+5khh8gWW52bCVXHkPrd5ZgVL7ZTRWtDJtUHL+FDFKfd
+         eephL8zktmJZioCRTk/DUqFA9tEc2N18jOwyrBcaHtOPh8TpAxoX0697mKO/RjHhJZfY
+         zLyCAOuJC7e9NPQaJKQ3mBh7fhofQNcGu+/0+ar2lQZfRd5a8nHVATkrtSTH0DzByWkO
+         9ELUVV6StZHjPRSSH5Mw4mjO/R49obiKUk07XpDk4kl+VbrdOcuAMksKGR0/KDQeu6U4
+         1u6khW+KC0DFuzn42QsYO0qhYRykRWLHtRKPKmY83wTCS3eoaespcWYeYeGrNrxsCuPb
+         WCBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693979031; x=1694583831;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OdFaYaGTjzlyGp7Qapnet5xSyB/GpvqUe5y44btANBM=;
+        b=ThGE1+W2sWw/4wafpfxbFqsfd9CL/CVMXbYT5jTDGs5m88YaAwVvSLuCeRl5dsHOzk
+         5wWOy/M9N/mORkLdLoeacEMa//jZISOS1je+jnLZY0Y8wRJWlNU7dZYaRiBHvb0u1slZ
+         SyFfG/v355J77xBKJ6xVQbUQ+lTAr6dL+JvIUB9Lxni7iKi5Ngwuj1iSvSc0klj3ALs5
+         47ctv8zwvV9K/2Wv9F6QmpItWTEtkEjO+PNWBVo+Fvfy4XuOoqKXzaN6X43nsBwzXExn
+         8nttRGqo6v5P9LQEKjTp5Lotf23z/C7Q1KagAZLINCfNzvOgGC7tgp+FGda3QejaMumJ
+         c6aA==
+X-Gm-Message-State: AOJu0YzVEpt04xOO6f874jt1RkAr6YcG+G1Ux5NsckhKERTB/Ejmdvq0
+        1sm+7W4zDcLR1luEhDhlq/5PkQ==
+X-Google-Smtp-Source: AGHT+IH+UT9R50hhEf1jDx4bYkyvr1jfj+uVGxxCJ2ZKC45cLE2h43GejBGayPxDXc7cB/7SWmp0Rw==
+X-Received: by 2002:a92:cd06:0:b0:34e:e25:b12c with SMTP id z6-20020a92cd06000000b0034e0e25b12cmr12844747iln.0.1693979031171;
+        Tue, 05 Sep 2023 22:43:51 -0700 (PDT)
+Received: from octopus ([2400:4050:c3e1:100:8294:a07d:b7e9:4033])
+        by smtp.gmail.com with ESMTPSA id bf7-20020a17090b0b0700b00263cca08d95sm11752590pjb.55.2023.09.05.22.43.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 22:43:50 -0700 (PDT)
+Date:   Wed, 6 Sep 2023 14:43:46 +0900
+From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+        "oleksii_moisieiev@epam.com" <oleksii_moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC] scmi: pinctrl: support i.MX9
+Message-ID: <ZPgRkgkFj7rICE0h@octopus>
+Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+        "oleksii_moisieiev@epam.com" <oleksii_moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <20230824070611.3335107-1-peng.fan@oss.nxp.com>
+ <CACRpkdYU7MRXRV3Uw1w300sdxv=9XT=P1vFFarHfpSM6BT20Hg@mail.gmail.com>
+ <DU0PR04MB9417B3CB9638F936DF19C523881DA@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <CACRpkdZKMsC1Wyi+nOf7idAWMTUe8w2XbtpWnbDKrCLD75ND1g@mail.gmail.com>
+ <DU0PR04MB94178923DFC8E71287E560E888E3A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <ZO8sRknW-6vdKoDd@pluto>
+ <DU0PR04MB941726AF86EEB0BBB55B9A2A88E6A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <ZO9GLG5tQynYyAvR@pluto>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4316.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96154c4a-32a9-45b1-092d-08dbae898b6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2023 03:29:57.5801
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RiQpybwvHKs8eyr3YarOIT/57zSK/TEO2uwuMX2eqwvJKSSP5TVKPqOdZ6T7GfB5RfSgOT0xOdr39QwufBgRVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7446
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZO9GLG5tQynYyAvR@pluto>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> From: gregkh@linuxfoundation.org <gregkh@linuxfoundation.org>
-> On Tue, Sep 05, 2023 at 08:53:43AM +0000, Wu, Wentong wrote:
-> > > From: Oliver Neukum <oneukum@suse.com>
-> > >
-> > > On 05.09.23 04:20, Wu, Wentong wrote:
-> > >
-> > > Hi,
-> > >
-> > > >> That is that you will hang arbitrarily long in disconnect?
-> > > > This routine isn't called in an interrupt context, and it allows
-> > > > sleep or wait something before the real shutdown like many
-> > > > drivers' remove() or
-> > > > disconnect() do.
-> > >
-> > > It is, however, in the context of a kernel thread. We can wait, but
-> > > not for arbitrary periods.
-> >
-> > AFAIK, this is very common.
-> >
-> > >
-> > > > If we want to speed up the disconnect(), below changes is to
-> > > > complete the cmd_completion if usb_kill_urb() has been called, but
-> > > > there is still possibility ljca client init one more transfer
-> > > > before
-> > > > auxiliary_device_delete()
+On Wed, Aug 30, 2023 at 02:37:48PM +0100, Cristian Marussi wrote:
+> On Wed, Aug 30, 2023 at 12:48:37PM +0000, Peng Fan wrote:
+> > Hi Cristian,
+> > 
+> 
+> Hi,
+> 
+> > > Subject: Re: [RFC] scmi: pinctrl: support i.MX9
+> > > 
+> > > On Fri, Aug 25, 2023 at 08:43:38AM +0000, Peng Fan wrote:
+> > > > > Subject: Re: [RFC] scmi: pinctrl: support i.MX9
+> > > > >
+> > > > > On Thu, Aug 24, 2023 at 2:47 PM Peng Fan <peng.fan@nxp.com> wrote:
+> > > > > > Me:
+> > > 
+> > > Hi Peng,
+> > > 
+> > > > >
+> > > > > >> it is merely making things more complex and also slower
+> > > > > > > bymaking the registers only accessible from this SCMI link.
+> > > > > >
+> > > > > > This is for safety reason, the pinctrl hardware must be handled by
+> > > > > > a system manager entity. So mmio direct access not allowed from
+> > > > > > Cortex-A side.
+> > > > >
+> > > > > Yeah I understood as much. But I don't think that the firmware is
+> > > > > really filtering any of the access, it will just poke into any
+> > > > > pinctrl register as instructed anyway so what's the point. Just looks like a
+> > > layer of indirection.
 > > > >
-> > > > @@ -206,7 +206,11 @@ static void ljca_recv(struct urb *urb)
+> > > > No, the firmware has a check on whether a pin is allowed to be
+> > > > configured by the agent that wanna to configure the pin.
 > > > >
-> > > >          if (urb->status) {
-> > > >                  /* sync/async unlink faults aren't errors */
-> > > > -               if (urb->status =3D=3D -ENOENT || urb->status =3D=
-=3D -ECONNRESET ||
-> > > > +               if (urb->status =3D=3D -ENOENT) {
-> > > > +                       complete(&adap->cmd_completion);
-> > > > +                       return;
-> > >
-> > > I'd say you'd break suspend() by such a change.
-> > > You cannot complete in the interrupt handler, unless you can
-> > > determine why the URB is killed.
+> > > > > But I'm not your system manager, so it's not my decision.
+> > > > >
+> > > > > > The SCMI firmware is very straightforward, there is no group or
+> > > > > > function.
+> > > > > >
+> > > > > > It just accepts the format as this:
+> > > > > > MUX_TYPE, MUX VALUE, CONF_TYPE, CONF_VAL, DAISY_TYPE, DAISY
+> > > ID,
+> > > > > > DAISY_CFG, DAISY_VALUE.
+> > > > > >
+> > > > > > Similar as linux MMIO format.
+> > > > > >
+> > > > > > Our i.MX95 platform will support two settings, one with SCMI
+> > > > > > firmware, one without SCMI. These two settings will share the same
+> > > > > > pinctrl header file.
+> > > > > >
+> > > > > > And to simplify the scmi firmware design(anyway I am not owner of
+> > > > > > the firmware), to make pinctrl header shared w/o scmi, we take the
+> > > > > > current in-upstream freescale imx binding format.
+> > > > >
+> > > > > The SCMI people will have to state their position on this.
+> > > > > Like what they consider conformance and what extensions are allowed.
+> > > > > This is more a standardization question than an implementation
+> > > > > question so it's not really my turf.
+> > > >
+> > > > The i.MX95 SCMI firmware uses OEM extension type. So I just follow
+> > > > what the firmware did and support it in linux. Anyway let's wait
+> > > > Sudeep's reply.
+> > > >
+> > > 
+> > > So my unsderstanding on this matter as of now is that:
+> > > 
+> > > 1. the current SCMI Pinctrl specification can support your usecase by using
+> > >    OEM Types and multiple pins/values CONFIG_GET/SET commands
+> > 
+> > Yes, based on the Oleksii patchset with my local multiple configs support.
+> > 
+> 
+> Yes, I know, I pointed out on his series that the protocol has still to
+> be fixed to be aligned with the latest BETA2 spec (we changed the spec
+> on the fly while he was already posting indeed..)
+> 
+> > > 
+> > > 2. the Kernel SCMI protocol layer (driver/firmware/arm_scmi/pinctrl.c)
+> > >    is equally fine and can support your usecase, AFTER Oleksii fixes it to
+> > >    align it to the latest v3.2-BETA2 specification changes.
+> > >    IOW, this means that, using the SCMI Pinctrl protocol operations
+> > >    exposed in scmi_protocol.h, from somewhere, you are able to properly
+> > >    configure multiple pins/values with your specific OEM types.
+> > 
+> > Yes.
+> 
+> Good.
+> 
+> > 
+> > > 
+> > > 3. The SCMI Pinctrl driver (by Oleksii) built on top of the pinctrl protocol
+> > >    operations is instead NOT suitable for your usecase since it uses the Linux
+> > >    Generic Pinconf and IMX does not make use of it, and instead IMX has
+> > >    its own bindings and related parsing logic.
+> > 
+> > Yes.
+> > 
+> > > 
+> > > Am I right ?
+> > 
+> > You are right.
+> > 
+> > > 
+> > > If this is the case, I would NOT try to abuse the current SCMI Pinctrl Generic
+> > > driver (by Oleksii) by throwing into it a bunch of IMX specific DT parsing,
+> > > also because you'll end-up NOT using most of the generic SCMI Pinctrl driver
+> > > but just reusing a bit of the probe (customized with your own DT maps
+> > > parsing)
+> > 
+> > Only DT map to parse the dts and map to config array. Others are same,
+> > so need to export some symbols for pinctrl-scmi-imx.c driver if build imx
+> > scmi driver.
 > >
-> > With below status field in ljca_adapter to determine if it's killed by =
-disconnect().
-> >
-> > If this is preferred, I could cook the patch for review.
-> >
-> > If this is fixed, could you please help merge this usb-ljca driver so
-> > that it won't block others which depends on this driver?
->=20
-> Please relax, we can't do anything until after -rc1 is out, and for me, t=
-hat
-> includes reviewing the code.
+> 
+> Yes, but you are basically using some exported symbol to parse the DT in
+> your way and then you do not use anything of the various
+> functions/groups stuff...you just leverage some of the probing stuff and
+> then issue you OEM Type configs....I mean most of the picntrl-scmi
+> driver would be unused anyway in this scenario.
+> 
+> > > 
+> > > Instead, given that the spec[1.] and the protocol layer[2.] are fine for your
+> > > use case and you indeed have already a custom way to parse your DT
+> > > mappings, I would say that you could just write your own custom SCMI
+> > > driver ( ? pinctrl-imx-scmi), distinct and much more simple than the generic
+> > > one, that does its own IMX DT parsing and calls just the SCMI protocol
+> > > operations that it needs in the way that your platform expects: so basically
+> > > another Pinctrl SCMI driver that does not use the generic pinconf DT
+> > > configuration BUT DO USE the underlying SCMI Pinctrl protocol (via its
+> > > exposed protocol operations...)
+> > 
+> > I am ok with this approach, but I need use the other ID, saying 0x99, not 0x19,
+> > because 0x19 will bind with the pinctrl-scmi.c driver, I could not reuse
+> > this ID for i.MX pinctrl-scmi-imx driver. Otherwise there will be issue if both
+> > driver are built in kernel image.
+> > 
+> 
+> Ok here I lost you.
+> 
+> The protocol ID 0x19 is bound to the protocol layer and identifies the
+> standard Pinctrl protocol: usually you use a 0x99 to define and describe
+> you own specific NEW vendor protocol, BUT here you are saying you are fine to
+> use std Pinctrl spec AND the protocol operations as exposed in pinctrl.c, so
+> I dont see why you should use a new vendor protocol_id to basically
+> expose the same operations. (and I also dont see how you can do that
+> without hacks in the current codebase)
+> 
+> You CAN have multiple SCMI drivers using the same protocol at the same
+> time (even more than one protocol at the same time), even though we try
+> to avoid it if there are no good reason to have more than one driver, there
+> is nothing in the spec or in the current SCMI platform or agent stacks that
+> inhibits such scenario (and I use iot heavily for my offline testing
+> indeed.)
+> 
+> Look at:
+> 
+>  - drivers/hwmon/scmi-hwmon 
+>  - drivers/iio/common/scmi_sensors/scmi_iio.c
+> 
+> and you'll see that these 2 drivers uses the same SENSOR protocol, just for
+> different sensor types so they do not interfere one with each other.
 
-Thanks for your review.
+Then, how are those two devices identified in a device tree?
+That is the point in Peng's case and why he wants to have a dedicated
+protocol id (I don't agree to this, though.)
+If we follow Cristian's idea, we may want to have two dt nodes, say
+pinctrl-scmi-generic and pinctrl-scmi-imx, as phandles for other device
+nodes to refer to pins, respectively.
+I think there is currently no mechanism (or binding?) to allow this
+except adding a protocol id.
 
->=20
-> There is no rush, or deadline, here at all.  It will be merged when it is=
- acceptable.
+-Takahiro Akashi
 
-Understood, thanks
 
-BR,
-Wentong
->=20
-> thanks,
->=20
-> greg k-h
+> What happens is that the first driver using a protocol causes its
+> protocol_init to be called once for all.
+> 
+> This should work flawlessly like this, if this is not the case for some
+> reason, this will have to be fixed in the protocol implementation: you
+> are supposed to be able to grab the same protocol from different
+> drivers without any issue.
+> 
+> I agree that you have to be careful not to share the same pins across 2
+> different drivers using the same Pinctrl driver, but even if both driver
+> are compiled in, nothing is really happening until the related DT
+> binding are parsed, and so unless you mismatch your DT and assign same
+> pins to both the Generic SCMI Pinctrl and to the IMX SCMI Pinctrl I dont
+> see how they can interfere. You could indeed, have a set of pins managed
+> by your custom IMX driver and one distinct other set of pins handled by
+> the SCMI Generic driver by Oleksii, both magically handled by the same
+> SCMI Server backend :P !
+> 
+> BUT to be on the safe side you could anyway force a conflict in Kconfig
+> to mutually exclude one driver when the other is built and vice-versa.
+> 
+> Am I missing something ? Why would you need a new vendor ID to define a
+> new protocol without not really having any new protocol ?
+> 
+> Thanks,
+> Cristian
