@@ -2,139 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDFA5793E06
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 15:49:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35373793E65
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 16:10:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240662AbjIFNta (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Sep 2023 09:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53318 "EHLO
+        id S241234AbjIFOKl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Sep 2023 10:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233423AbjIFNt3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 09:49:29 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C1E10D3;
-        Wed,  6 Sep 2023 06:49:24 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1qdsuI-0002DX-9q; Wed, 06 Sep 2023 15:49:22 +0200
-Message-ID: <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
-Date:   Wed, 6 Sep 2023 15:49:21 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: zynq: restore
- zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
-Content-Language: en-US, de-DE
-To:     Daniel Mack <daniel@zonque.org>, linux-gpio@vger.kernel.org,
-        manikanta.guntupalli@amd.com
-Cc:     linux-kernel@vger.kernel.org, stable@kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        with ESMTP id S233888AbjIFOKk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 10:10:40 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639B51726;
+        Wed,  6 Sep 2023 07:10:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694009427; x=1725545427;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=F7bl2h3DX3KJUesLeL2e/fpx9L5jnQCY/nK4NgE/LN8=;
+  b=g3TfX+F5c9xs045JV9UkPGwPcOsj25+u2hqakhIJSlX5rsF/Xnj+2PbX
+   GFOUeqZxs1Omg3vIbqQoir+ARc9lysQGgTbH1lgVFKuzr2wIE3LQF5Dkl
+   LVPw/mEiJWCmdAR4HCu/aP9PXgiWO/3JSdpmPo/OaqRJcAyB+/2dFLsy4
+   fJ+zadFSrAZsoP2M8E4LWE7t6OvVY9G7h+fg3Z8loUTRNpqBR2VRVWPRh
+   gKhXFt91pM8pzQFuyWtfVd3rHmUWpC0yGL3FdxgGlD8yWVFGfkUdypJ9K
+   EQfqvoL8PafH9Q1XCCFqblVCAkFqmy9VY3mDMUPokCMjvYcGcMiit++O3
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="441049792"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="441049792"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:10:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="735068521"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="735068521"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:10:21 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qdtEY-006xYP-12;
+        Wed, 06 Sep 2023 17:10:18 +0300
+Date:   Wed, 6 Sep 2023 17:10:18 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230901122424.247070-1-daniel@zonque.org>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20230901122424.247070-1-daniel@zonque.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1694008164;3b961e7f;
-X-HE-SMSGID: 1qdsuI-0002DX-9q
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 02/21] gpiolib: provide gpio_device_find()
+Message-ID: <ZPiISpLoVx35PuYc@smile.fi.intel.com>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-3-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230905185309.131295-3-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-CCing Arnd (wrote the culprit), Linus (reviewed it), Bartosz (applied
-it), and the regressions mailing list
-
-On 01.09.23 14:24, Daniel Mack wrote:
-> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
-> warning") ditched the open-coded resource allocation handlers in favor
-> of the generic ones. These generic handlers don't maintain the PM
-> runtime anymore, which causes a regression in that level IRQs are no
-> longer reported.
+On Tue, Sep 05, 2023 at 08:52:50PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Restore the original handlers to fix this.
+> gpiochip_find() is wrong and its kernel doc is misleading as the
+> function doesn't return a reference to the gpio_chip but just a raw
+> pointer. The chip itself is not guaranteed to stay alive, in fact it can
+> be deleted at any point. Also: other than GPIO drivers themselves,
+> nobody else has any business accessing gpio_chip structs.
 > 
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
-> Cc: stable@kernel.org
+> Provide a new gpio_device_find() function that returns a real reference
+> to the opaque gpio_device structure that is guaranteed to stay alive for
+> as long as there are active users of it.
 
-This seems to be a regression report that comes straight with a fix, but
-there wasn't a single reply yet afaics. :-/ Maybe the extended list of
-recipients will get things moving. But to ensure this doesn't fall
-through the cracks, I'll add it to the list of tracked regressions.
+...
 
-#regzbot ^introduced f56914393537
-#regzbot title gpio: zynq: in that level IRQs are no longer reported
-#regzbot fix: gpio: zynq: restore
-zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
-#regzbot ignore-activity
+> +/**
+> + * gpio_device_find() - find a specific GPIO device
+> + * @data: data to pass to match function
+> + * @match: Callback function to check gpio_chip
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+> + * Returns:
+> + * New reference to struct gpio_device.
 
-> ---
->  drivers/gpio/gpio-zynq.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-> index 0a7264aabe48..324e942c0650 100644
-> --- a/drivers/gpio/gpio-zynq.c
-> +++ b/drivers/gpio/gpio-zynq.c
-> @@ -575,6 +575,26 @@ static int zynq_gpio_set_wake(struct irq_data *data, unsigned int on)
->  	return 0;
->  }
->  
-> +static int zynq_gpio_irq_reqres(struct irq_data *d)
+I believe this is wrong location of the Return section.
+AFAIU how kernel doc uses section markers, this entire description becomes
+a Return(s) section. Have you tried to render man/html/pdf and see this?
+
+> + * Similar to bus_find_device(). It returns a reference to a gpio_device as
+> + * determined by a user supplied @match callback. The callback should return
+> + * 0 if the device doesn't match and non-zero if it does. If the callback
+> + * returns non-zero, this function will return to the caller and not iterate
+> + * over any more gpio_devices.
+> + *
+> + * The callback takes the GPIO chip structure as argument. During the execution
+> + * of the callback function the chip is protected from being freed. TODO: This
+> + * actually has yet to be implemented.
+> + *
+> + * If the function returns non-NULL, the returned reference must be freed by
+> + * the caller using gpio_device_put().
+> + */
+> +struct gpio_device *gpio_device_find(void *data,
+
+> +				     int (*match)(struct gpio_chip *gc,
+> +						  void *data))
+
+One line?
+Or maybe a type for it? (gpio_match_fn, for example)
+
 > +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +	int ret;
+> +	struct gpio_device *gdev;
 > +
-> +	ret = pm_runtime_resume_and_get(chip->parent);
-> +	if (ret < 0)
-> +		return ret;
+> +	guard(spinlock_irqsave)(&gpio_lock);
 > +
-> +	return gpiochip_reqres_irq(chip, d->hwirq);
+> +	list_for_each_entry(gdev, &gpio_devices, list) {
+> +		if (gdev->chip && match(gdev->chip, data))
+> +			return gpio_device_get(gdev);
+> +	}
+> +
+> +	return NULL;
 > +}
-> +
-> +static void zynq_gpio_irq_relres(struct irq_data *d)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-> +
-> +	gpiochip_relres_irq(chip, d->hwirq);
-> +	pm_runtime_put(chip->parent);
-> +}
-> +
->  /* irq chip descriptor */
->  static const struct irq_chip zynq_gpio_level_irqchip = {
->  	.name		= DRIVER_NAME,
-> @@ -584,9 +604,10 @@ static const struct irq_chip zynq_gpio_level_irqchip = {
->  	.irq_unmask	= zynq_gpio_irq_unmask,
->  	.irq_set_type	= zynq_gpio_set_irq_type,
->  	.irq_set_wake	= zynq_gpio_set_wake,
-> +	.irq_request_resources = zynq_gpio_irq_reqres,
-> +	.irq_release_resources = zynq_gpio_irq_relres,
->  	.flags		= IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED |
->  			  IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-> -	GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->  
->  static const struct irq_chip zynq_gpio_edge_irqchip = {
-> @@ -597,8 +618,9 @@ static const struct irq_chip zynq_gpio_edge_irqchip = {
->  	.irq_unmask	= zynq_gpio_irq_unmask,
->  	.irq_set_type	= zynq_gpio_set_irq_type,
->  	.irq_set_wake	= zynq_gpio_set_wake,
-> +	.irq_request_resources = zynq_gpio_irq_reqres,
-> +	.irq_release_resources = zynq_gpio_irq_relres,
->  	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-> -	GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->  
->  static void zynq_gpio_handle_bank_irq(struct zynq_gpio *gpio,
+
+...
+
+> +struct gpio_device *gpio_device_find(void *data,
+> +				     int (*match)(struct gpio_chip *gc,
+> +						  void *data));
+
+Ditto.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
