@@ -2,90 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8C1F7944BF
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 22:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D552679450C
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 23:22:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239623AbjIFUvA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Sep 2023 16:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37842 "EHLO
+        id S238397AbjIFVW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Sep 2023 17:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239478AbjIFUvA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 16:51:00 -0400
-Received: from mail.bugwerft.de (mail.bugwerft.de [46.23.86.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1D53ECEB;
-        Wed,  6 Sep 2023 13:50:53 -0700 (PDT)
-Received: from [10.251.0.9] (unknown [176.126.217.202])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 9247628029E;
-        Wed,  6 Sep 2023 20:50:50 +0000 (UTC)
-Message-ID: <6422b80a-7588-eeaa-360d-ae12c7628ee0@zonque.org>
-Date:   Wed, 6 Sep 2023 22:50:23 +0200
+        with ESMTP id S238252AbjIFVW4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 17:22:56 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3AD10F9
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Sep 2023 14:22:52 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-d7830c5b20aso336578276.0
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Sep 2023 14:22:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1694035372; x=1694640172; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5uziGe4B2DjwHP/aKWUqt9/G61qnXQ3dsygdd3tltV8=;
+        b=lfTjwylgm6P26/TZrKCj7LQO/EdAl5gZJR/0XySFWhrjHoIB3L2nmSngfIDdjkWHHf
+         3ykXpk6lmU+SH3Y29vhdb1MT+satQh/ICS1tFp2ZuIu1k5ejTOB2ZBhqSmEiSjch9gsF
+         uiXi7FLjfcBQhhTM7X/AnMlywFac7gl9DltJFPYYznmB1rWPzmxTjnQmzkFiD26UqUoJ
+         2r1zxV0hq5ZiWf8n6ZtOUm7zLqfA+J6IhqUNgLyKxV+uCvrUfGX039HkpYi4x+EVYnGZ
+         PhirVRwjJeBbGfoRb8MxJjZ9Db80ZjrxQ+xSshCnVNSQqnOyyrnxwUSl2dGzW5c1kL3h
+         HuEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694035372; x=1694640172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5uziGe4B2DjwHP/aKWUqt9/G61qnXQ3dsygdd3tltV8=;
+        b=XpHacAGTCPKGjv6+cAeRiwP5i05EDbiLOgx07iDgnjhfq+XJOpk+5eNCOIJJ/+PGaH
+         k+VlqaY7tT/4APmolHfBMXmPsFCPTgqdSbQN+US24KXv0GTLyiS6lOEV+97IezJRd/cd
+         2c31X86xAJVFuFrqm1JqBY9NDG4sGf8lLvsdvXfW9qothg86/VB0RlnanIbnkZQ8p6gq
+         1LGPAnJ7hHGY6bHB2WF6HxsNZxFRVYn9EuMYJpIhQaLxBvFzmRRJIn0ojJr3zPWV583f
+         OmdNqsluwszC7ZCm596q/0cYou3BuuF7bW3wW/3HwsVeFb6qVHI9sXkqQdaYZIlHc91B
+         lUKg==
+X-Gm-Message-State: AOJu0YxHCCuEJn2uScKmHRCWSCZxDPDmbPUalMkRL4p/7oXLZODV6bdj
+        3Wq0ywZVQvlbH1CRMtqM3JMjoPdauxM7y2LUdsjkwvxdVZ71/VfH
+X-Google-Smtp-Source: AGHT+IGjO1QCJ0gJb+KTyS7feLh70JSLzbWigS6P2Lnl8yFypB81P8q6GlreiPJTbPdprGKIbr/jjCySSLO79y/Y/dc=
+X-Received: by 2002:a25:e0c7:0:b0:d7b:9b9b:2fc3 with SMTP id
+ x190-20020a25e0c7000000b00d7b9b9b2fc3mr957513ybg.3.1694035372132; Wed, 06 Sep
+ 2023 14:22:52 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] gpio: zynq: restore
- zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        manikanta.guntupalli@amd.com
-Cc:     linux-kernel@vger.kernel.org, stable@kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230901122424.247070-1-daniel@zonque.org>
- <6406fb2e-afb2-461d-9bac-aa157cf6d16f@leemhuis.info>
- <93e5e75d-3cfc-485b-9f81-54c82c58e24e@app.fastmail.com>
-Content-Language: en-US
-From:   Daniel Mack <daniel@zonque.org>
-In-Reply-To: <93e5e75d-3cfc-485b-9f81-54c82c58e24e@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230906145045.139657-1-brgl@bgdev.pl>
+In-Reply-To: <20230906145045.139657-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 6 Sep 2023 23:22:40 +0200
+Message-ID: <CACRpkdYUOY8QzZgN9uEvrPTXuCt-FtT83PxRK07mwKL+fznh8g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: dwapb: don't include gpiolib.h
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 9/6/23 22:12, Arnd Bergmann wrote:
->> On 01.09.23 14:24, Daniel Mack wrote:
->>> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
->>> warning") ditched the open-coded resource allocation handlers in favor
->>> of the generic ones. These generic handlers don't maintain the PM
->>> runtime anymore, which causes a regression in that level IRQs are no
->>> longer reported.
->>>
->>> Restore the original handlers to fix this.
->>>
->>> Signed-off-by: Daniel Mack <daniel@zonque.org>
->>> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip warning")
->>> Cc: stable@kernel.org
->>
->> This seems to be a regression report that comes straight with a fix, but
->> there wasn't a single reply yet afaics. :-/ Maybe the extended list of
->> recipients will get things moving. But to ensure this doesn't fall
->> through the cracks, I'll add it to the list of tracked regressions.
-> 
-> I don't understand what the GPIOCHIP_IRQ_RESOURCE_HELPERS change
-> intended to do in the first place: Manikanta's patch changed the behavior
-> here with the addition of GPIOCHIP_IRQ_RESOURCE_HELPERS, while my patch
-> was a cleanup that removed the dead code.
+On Wed, Sep 6, 2023 at 4:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
-Manikanta's patch (f56914393537 "gpio: zynq: fix zynqmp_gpio not an
-immutable chip warning") did many things at once, the move to the
-generic resource handlers was just one of the changes. I can only guess
-that it intended to simply the code a bit, and the dropped pm runtime
-detail was just an oversight.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> The gpiolib.h is unnecessarily included in the driver. None of its
+> symbols are used so drop it.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Daniel's fix reverts both my cleanup patch and part of the original
-> change, which may or may not be what we want here.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Enabling the pm runtime is necessary on my boards, at least for level
-IRQs. Edge IRQs are still handled fine, interestingly.
-
-
-Thanks,
-Daniel
-
+Yours,
+Linus Walleij
