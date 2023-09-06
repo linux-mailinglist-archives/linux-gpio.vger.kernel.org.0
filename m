@@ -2,159 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2F83793FF8
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 17:08:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E06AF794069
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 17:32:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240849AbjIFPIg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Sep 2023 11:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38616 "EHLO
+        id S231925AbjIFPcJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Sep 2023 11:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238930AbjIFPIf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 11:08:35 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 755E11700
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Sep 2023 08:08:32 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3a81154c5f5so2465621b6e.1
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Sep 2023 08:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694012912; x=1694617712; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3gavJuxwmSmgP/RUUA9/YWvKZcfoiOmepb1zXwUNO4U=;
-        b=PWSEgOx9P+D4R6+bemBstJNujTZgaHLRVY6ovNYTKjOu0N1hjkdAjCvi7foajgC7Hs
-         HoqvsA0Sj/X4LJqM8o4yjhK73IwpnKPd+RbT52LVTbBh8Qh+2BjB47SQ2QgAlBbz+wvU
-         Rzdxa6UL824qTP9GLyzg6jbWgRhsxkl1pJepnkz4bAKCJGtEXUduSdhW9KwAaKImm+Pb
-         hCDfYT+kTW1KoICBnwkMpDNR+azPk3Y3Y9yGJuQAqTCh4MtlmkH+ZPptMRcDPgoyOXi0
-         gduTK96MOI+RoE6ya58sTDGUtbhN138MVPfMFkp1JCRS5SD8H0x+nFdR1q0FgVT/yNEn
-         /JMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694012912; x=1694617712;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3gavJuxwmSmgP/RUUA9/YWvKZcfoiOmepb1zXwUNO4U=;
-        b=edWDD3plL9t7tLbsUXs1e7CUd+NAia6ch/Gnmyr2j5u8gOHIi0qn2byiuLSHU5gTKN
-         jY16y3RlVvhl73646C12lwVw+0AF7aQJUwLSbH0N/s6TtncKGN0kycZ4+SjJ8y9R94Fj
-         kEWcmIWnXXEqF0X2u2YH5IxpC2qo8+B7+cYWTf9Q/N1kp1Lm2qdwHYenrNO1DvRvnvgE
-         DbEnKJLrWtaOUsUED1lAoVBraq7OSfJngdi6mEwsezSzIeN5TZngIf4YdSTKrM8XoLc3
-         sT1Nu+pY0b13D9pG9Bve9WYlok7NdeY9vNe9QXO2YoMH5AQE39rhjr86WEG5Jfwxhwie
-         qhzg==
-X-Gm-Message-State: AOJu0Yz+/cpRjjEzY9hAZkcbqxnyVq6YTDkfUHwtHcYhTyuzXuEb1C6l
-        oaWbsXX+CDmvDmzhp6QtdRYqVqg/HHy3MTb4uP46lw==
-X-Google-Smtp-Source: AGHT+IFjbgZTuKU6H3oUmJrgLNuCUDo2Pl8cy1udmxXL6qwaWoSUE6FZiCZ40D+0fOlDZWtBW7dnOJ7FxWJgQW7y4HA=
-X-Received: by 2002:a05:6808:10cc:b0:3a4:6a:6363 with SMTP id
- s12-20020a05680810cc00b003a4006a6363mr21321026ois.14.1694012911788; Wed, 06
- Sep 2023 08:08:31 -0700 (PDT)
+        with ESMTP id S230085AbjIFPcJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 11:32:09 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD868CE6;
+        Wed,  6 Sep 2023 08:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694014325; x=1725550325;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IiVDbALXXU+DoRCCfmT3TQFU3G0X433utKATBEiAfvU=;
+  b=RBNYnT6rWhcHYRMMx1uV193zM0yLv85AJigq34W7Od4//8LppYkLKKS5
+   QPlByDTsAwskkrGkC/22H/iFO+CuCxNOEfrElj6WoH9kHu3yY9Uqn0TkZ
+   1MEMuGxi4gp3o4WB5G/bxNVmthYkAlqfDGxR8K9HofFkYnLIvH5gYlZlj
+   93kyi7YOJj63cY3O4Lztg6AvXgcnJX/fW7UWNsCV1gCQxePj/4N02hj7w
+   kG8oe16WX9PtHPz2VUFsqOn4fvp7Hxd3lZt0UwHIYdZ0nXMcUVHEMC5Tn
+   XJMzPlxqjPZZWvcYPXXZFkkPUoIyj/Ba5eE0N2uWMR04t+miiweYoh3e7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="362128319"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="362128319"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 08:31:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="735102887"
+X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
+   d="scan'208";a="735102887"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 08:31:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qduV7-006yis-0h;
+        Wed, 06 Sep 2023 18:31:29 +0300
+Date:   Wed, 6 Sep 2023 18:31:28 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpio: mb86s7x: don't include gpiolib.h
+Message-ID: <ZPibUFb/A4G9UiYz@smile.fi.intel.com>
+References: <20230906145118.139678-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20230901122424.247070-1-daniel@zonque.org>
-In-Reply-To: <20230901122424.247070-1-daniel@zonque.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 6 Sep 2023 17:08:21 +0200
-Message-ID: <CAMRc=MfB6yN7NHwB+DJRWLREUeZCeSM=2c3-mx4VR2e4JxhiMA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: zynq: restore zynq_gpio_irq_reqres/zynq_gpio_irq_relres
- callbacks
-To:     Daniel Mack <daniel@zonque.org>
-Cc:     linux-gpio@vger.kernel.org, manikanta.guntupalli@amd.com,
-        linux-kernel@vger.kernel.org, stable@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230906145118.139678-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 1, 2023 at 2:34=E2=80=AFPM Daniel Mack <daniel@zonque.org> wrot=
-e:
->
-> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
-> warning") ditched the open-coded resource allocation handlers in favor
-> of the generic ones. These generic handlers don't maintain the PM
-> runtime anymore, which causes a regression in that level IRQs are no
-> longer reported.
->
-> Restore the original handlers to fix this.
->
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip w=
-arning")
-> Cc: stable@kernel.org
-> ---
->  drivers/gpio/gpio-zynq.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-> index 0a7264aabe48..324e942c0650 100644
-> --- a/drivers/gpio/gpio-zynq.c
-> +++ b/drivers/gpio/gpio-zynq.c
-> @@ -575,6 +575,26 @@ static int zynq_gpio_set_wake(struct irq_data *data,=
- unsigned int on)
->         return 0;
->  }
->
-> +static int zynq_gpio_irq_reqres(struct irq_data *d)
-> +{
-> +       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(d);
-> +       int ret;
-> +
-> +       ret =3D pm_runtime_resume_and_get(chip->parent);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       return gpiochip_reqres_irq(chip, d->hwirq);
-> +}
-> +
-> +static void zynq_gpio_irq_relres(struct irq_data *d)
-> +{
-> +       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(d);
-> +
-> +       gpiochip_relres_irq(chip, d->hwirq);
-> +       pm_runtime_put(chip->parent);
-> +}
-> +
->  /* irq chip descriptor */
->  static const struct irq_chip zynq_gpio_level_irqchip =3D {
->         .name           =3D DRIVER_NAME,
-> @@ -584,9 +604,10 @@ static const struct irq_chip zynq_gpio_level_irqchip=
- =3D {
->         .irq_unmask     =3D zynq_gpio_irq_unmask,
->         .irq_set_type   =3D zynq_gpio_set_irq_type,
->         .irq_set_wake   =3D zynq_gpio_set_wake,
-> +       .irq_request_resources =3D zynq_gpio_irq_reqres,
-> +       .irq_release_resources =3D zynq_gpio_irq_relres,
->         .flags          =3D IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED=
- |
->                           IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-> -       GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->
->  static const struct irq_chip zynq_gpio_edge_irqchip =3D {
-> @@ -597,8 +618,9 @@ static const struct irq_chip zynq_gpio_edge_irqchip =
-=3D {
->         .irq_unmask     =3D zynq_gpio_irq_unmask,
->         .irq_set_type   =3D zynq_gpio_set_irq_type,
->         .irq_set_wake   =3D zynq_gpio_set_wake,
-> +       .irq_request_resources =3D zynq_gpio_irq_reqres,
-> +       .irq_release_resources =3D zynq_gpio_irq_relres,
->         .flags          =3D IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-> -       GPIOCHIP_IRQ_RESOURCE_HELPERS,
->  };
->
->  static void zynq_gpio_handle_bank_irq(struct zynq_gpio *gpio,
-> --
-> 2.41.0
->
+On Wed, Sep 06, 2023 at 04:51:18PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> The gpiolib.h is unnecessarily included in the driver. None of its
+> symbols are used so drop it.
 
-Thanks Thorsten for bringing it to my attention.
+For this and all patches "gpio: *: don't include gpiolib.h"
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Daniel: please use scripts/get_maintainers.pl when sending patches.
-This was sent neither to my email address from the MAINTAINERS file
-nor to my linaro address.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Other than that, this looks good, applied for fixes.
 
-Bartosz
