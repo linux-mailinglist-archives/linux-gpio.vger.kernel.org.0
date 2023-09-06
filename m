@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B35DF793F40
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 16:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 443E9793F72
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 16:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241890AbjIFOra (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Sep 2023 10:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50106 "EHLO
+        id S237915AbjIFOuQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Sep 2023 10:50:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237665AbjIFOra (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 10:47:30 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4441733;
-        Wed,  6 Sep 2023 07:47:21 -0700 (PDT)
+        with ESMTP id S229564AbjIFOuP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 10:50:15 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398A810D0;
+        Wed,  6 Sep 2023 07:50:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694011641; x=1725547641;
+  t=1694011812; x=1725547812;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=+wfY4dLBSqJqYH1eCxjcFAXhA4C/3J/082gICwAh3j0=;
-  b=ghK7etziZqPENMCNQvwzCS7ygAOgdueW+tE38+Ww6ksvDkA4qr5BpEhc
-   OBu9qxG4lVgsYl31tAU5j2fEv/Qee3UXEUmX8EWFfEP34EhmmC9nrzCwS
-   kjTCf+ROOrc2zkByGx49ivz5NWiJaRe0BCoOFyv+5IucD4JiB9neSQS5t
-   PP9X5LLbDbV+31IlXGNwfSPZrZkkGNx0cHQuQBIkkDulGRC9YsK2ut3ux
-   d/lcyKoQBsLWYLh/87LCdCHBzIcNROzqv1Rm5+KnfsS35y75hp1u7k21g
-   1qg/kJ1IQlF5ZGvjrJLV+/QzC0aYoxQ/ZWySObnynBJm8WaO9hvblY8z9
+  bh=oXdfGzzZdVeNB8WOqcbJ3fq9pHu4f2PCymvo5LTc6HQ=;
+  b=hCFUxBVv/ZUMQCWrCAnZ1njtirp2xU3U6SBPWCg4hAkfF3qLKzylRirt
+   utFmyDlnjpnJtVdpuVK80z/etcEkTqHh5yLVBtjtmabPlVoy5GYmtWv6U
+   9YjMm5BSeciclmd339NOx6KB40payHbQYS++JsNgYO1w56YKHoIQai0EZ
+   GIVNS+0eU3ywmopta/Z/PSQynaraAhesVmecKE4HOdHHQD7whV+hLQhC1
+   XIeXFpC0qWvDnZ4d+iYG2dMK6vG/RKy94qgt1he07hwMoD6mXY0nFD2Xa
+   tJGkXqW8pC2HMUeI37Nu/ZbuwKRT8/88uUEL4Te2+f/D+aGxHd17CMCF4
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="408088687"
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="463461967"
 X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
-   d="scan'208";a="408088687"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:47:10 -0700
+   d="scan'208";a="463461967"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:48:55 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="856460670"
+X-IronPort-AV: E=McAfee;i="6600,9927,10825"; a="776642531"
 X-IronPort-AV: E=Sophos;i="6.02,232,1688454000"; 
-   d="scan'208";a="856460670"
+   d="scan'208";a="776642531"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:47:04 -0700
+  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 07:48:49 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qdto5-006y0f-0Q;
-        Wed, 06 Sep 2023 17:47:01 +0300
-Date:   Wed, 6 Sep 2023 17:47:00 +0300
+        id 1qdtpl-006y2X-2X;
+        Wed, 06 Sep 2023 17:48:45 +0300
+Date:   Wed, 6 Sep 2023 17:48:45 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
@@ -61,56 +61,34 @@ Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
         linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
         linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFT PATCH 14/21] hte: tegra194: don't access struct gpio_chip
-Message-ID: <ZPiQ5AvmjCiudnWK@smile.fi.intel.com>
+Subject: Re: [RFT PATCH 15/21] arm: omap1: ams-delta: stop using
+ gpiochip_find()
+Message-ID: <ZPiRTfN3ZbvcuE6I@smile.fi.intel.com>
 References: <20230905185309.131295-1-brgl@bgdev.pl>
- <20230905185309.131295-15-brgl@bgdev.pl>
+ <20230905185309.131295-16-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230905185309.131295-15-brgl@bgdev.pl>
+In-Reply-To: <20230905185309.131295-16-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 05, 2023 at 08:53:02PM +0200, Bartosz Golaszewski wrote:
+On Tue, Sep 05, 2023 at 08:53:03PM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Using struct gpio_chip is not safe as it will disappear if the
-> underlying driver is unbound for any reason. Switch to using reference
-> counted struct gpio_device and its dedicated accessors.
+> gpiochip_find() is going away as it's not hot-unplug safe. This platform
+> is not affected by any of the related problems as this GPIO controller
+> cannot really go away but in order to finally remove this function, we
+> need to convert it to using gpio_device_find() as well.
 
-...
-
-> +	struct gpio_device *gdev __free(gpio_device_put) = NULL;
-
-Using this requires cleanup.h to be included.
-Does any of the included GPIO headers guarantee that inclusion implicitly?
-Even though, it's a good practice to include headers of what we are using
-independently if other (library) headers include them. I.o.w. we can rely
-only on our headers (here HTE framework related) to guarantee any inclusions
-implicitly.
-
-This also applies to other users of the same construct.
-
-...
-
->  static int tegra_gpiochip_match(struct gpio_chip *chip, void *data)
->  {
->  	return chip->fwnode == of_node_to_fwnode(data);
->  }
-
-Not sure how many users of this kind of match, but it might be useful to have
-it by GPIO library
-
-	gpio_device_find_by_fwnode()
+Side question, have you used --patience when preparing this series?
 
 -- 
 With Best Regards,
