@@ -2,75 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89E89793FB9
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 16:56:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2F83793FF8
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Sep 2023 17:08:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233750AbjIFO4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Sep 2023 10:56:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38018 "EHLO
+        id S240849AbjIFPIg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Sep 2023 11:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235927AbjIFO4l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 10:56:41 -0400
-Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 457DE19BB
-        for <linux-gpio@vger.kernel.org>; Wed,  6 Sep 2023 07:56:24 -0700 (PDT)
-Received: by mail-vk1-xa2b.google.com with SMTP id 71dfb90a1353d-49059b1ca83so1276046e0c.2
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Sep 2023 07:56:24 -0700 (PDT)
+        with ESMTP id S238930AbjIFPIf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Sep 2023 11:08:35 -0400
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 755E11700
+        for <linux-gpio@vger.kernel.org>; Wed,  6 Sep 2023 08:08:32 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3a81154c5f5so2465621b6e.1
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Sep 2023 08:08:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694012183; x=1694616983; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694012912; x=1694617712; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0b+LrhpzD5zlDQ1f5MsWSMzQeSCCSm94gfnG0eru8no=;
-        b=MtkxY4AXWAtLYiDITObnjhqqBAd6yV6C/RcVat9RtgJpsKr4Pby1a8bAiUE032J2OI
-         RSr6th0q6mqw2uA0zinRN+wqXc4m4QqtYEL4gmIAGDOghicRCvtc0I3EGW0R/k02s9o9
-         7tYk0Q4XT0Z2xo0u20dGu994+P8YX2HFCaUfoTHMQyKIfGdRATgA2ZjzGjgHE6eP1yS5
-         dCq0W3bXozka2qnROw/XeWciDAflTzRkpXnwtqTE+P5D20hOc66OlsJ7FFtO6I1tWLGb
-         Vpmrru06iv8/ZyqJZ98DkhhwC+vLJSRagRnAl1x677v6ToML7Hu8NIXzjG/B7JFLPnZg
-         5oqg==
+        bh=3gavJuxwmSmgP/RUUA9/YWvKZcfoiOmepb1zXwUNO4U=;
+        b=PWSEgOx9P+D4R6+bemBstJNujTZgaHLRVY6ovNYTKjOu0N1hjkdAjCvi7foajgC7Hs
+         HoqvsA0Sj/X4LJqM8o4yjhK73IwpnKPd+RbT52LVTbBh8Qh+2BjB47SQ2QgAlBbz+wvU
+         Rzdxa6UL824qTP9GLyzg6jbWgRhsxkl1pJepnkz4bAKCJGtEXUduSdhW9KwAaKImm+Pb
+         hCDfYT+kTW1KoICBnwkMpDNR+azPk3Y3Y9yGJuQAqTCh4MtlmkH+ZPptMRcDPgoyOXi0
+         gduTK96MOI+RoE6ya58sTDGUtbhN138MVPfMFkp1JCRS5SD8H0x+nFdR1q0FgVT/yNEn
+         /JMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694012183; x=1694616983;
+        d=1e100.net; s=20221208; t=1694012912; x=1694617712;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0b+LrhpzD5zlDQ1f5MsWSMzQeSCCSm94gfnG0eru8no=;
-        b=GaGIwuw7tpcJiviqCkzTx45xgYR//bLHbaIbWkm+qBC3m08UCr8pvD/Q4iDpPXA0kz
-         tNxxN2p9EzbrDHvwVEGAYAFJF3Bc+ob9+PrUL/mQ6IYbnmZ6Bjx/xnM6t0WFBy+SIJKw
-         y0+F3k8hLgZluMLIfI0rpAkmcwmn/jpnLeHnZGvQ2MAl7pDyiM8IWBcA692cLjAcB8V3
-         SDQ+MmW24Lfa3yb2/cogy+f0+249eaWiAcjvFWMDdyLHCjtfGO+gojm275glfr/70znS
-         /ZcpQTocNFhUOTf77AbYblqKYZgveKkCuf5pw6cQH9KSOTFoAmE66GDr7c2363t/DkJ7
-         CRLg==
-X-Gm-Message-State: AOJu0YwEBHUluMbU7DRSu070A0nTbRemikAQMMIzPDVnBD27UhfCbRkn
-        JW9BTi9T3CBHhjuNkft1jK/Qqb9pDCDJ99le562v0A==
-X-Google-Smtp-Source: AGHT+IHFUAaQuXJCvoaHz5cxhv0bEhMufwh67QZ6cCxl5kH6KvbUhYeVa6KPRbL1zs6bpPHq6Ld1E0a7yk+msYaoihA=
-X-Received: by 2002:a1f:e402:0:b0:48d:2a1:5d26 with SMTP id
- b2-20020a1fe402000000b0048d02a15d26mr3439732vkh.4.1694012182436; Wed, 06 Sep
- 2023 07:56:22 -0700 (PDT)
+        bh=3gavJuxwmSmgP/RUUA9/YWvKZcfoiOmepb1zXwUNO4U=;
+        b=edWDD3plL9t7tLbsUXs1e7CUd+NAia6ch/Gnmyr2j5u8gOHIi0qn2byiuLSHU5gTKN
+         jY16y3RlVvhl73646C12lwVw+0AF7aQJUwLSbH0N/s6TtncKGN0kycZ4+SjJ8y9R94Fj
+         kEWcmIWnXXEqF0X2u2YH5IxpC2qo8+B7+cYWTf9Q/N1kp1Lm2qdwHYenrNO1DvRvnvgE
+         DbEnKJLrWtaOUsUED1lAoVBraq7OSfJngdi6mEwsezSzIeN5TZngIf4YdSTKrM8XoLc3
+         sT1Nu+pY0b13D9pG9Bve9WYlok7NdeY9vNe9QXO2YoMH5AQE39rhjr86WEG5Jfwxhwie
+         qhzg==
+X-Gm-Message-State: AOJu0Yz+/cpRjjEzY9hAZkcbqxnyVq6YTDkfUHwtHcYhTyuzXuEb1C6l
+        oaWbsXX+CDmvDmzhp6QtdRYqVqg/HHy3MTb4uP46lw==
+X-Google-Smtp-Source: AGHT+IFjbgZTuKU6H3oUmJrgLNuCUDo2Pl8cy1udmxXL6qwaWoSUE6FZiCZ40D+0fOlDZWtBW7dnOJ7FxWJgQW7y4HA=
+X-Received: by 2002:a05:6808:10cc:b0:3a4:6a:6363 with SMTP id
+ s12-20020a05680810cc00b003a4006a6363mr21321026ois.14.1694012911788; Wed, 06
+ Sep 2023 08:08:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230905185309.131295-1-brgl@bgdev.pl> <20230905185309.131295-16-brgl@bgdev.pl>
- <ZPiRTfN3ZbvcuE6I@smile.fi.intel.com>
-In-Reply-To: <ZPiRTfN3ZbvcuE6I@smile.fi.intel.com>
+References: <20230901122424.247070-1-daniel@zonque.org>
+In-Reply-To: <20230901122424.247070-1-daniel@zonque.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 6 Sep 2023 16:56:11 +0200
-Message-ID: <CAMRc=Md3gRyfizGxkGwCUhO1ahkgew5qURueKbJNmkBJJn7=EA@mail.gmail.com>
-Subject: Re: [RFT PATCH 15/21] arm: omap1: ams-delta: stop using gpiochip_find()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Wed, 6 Sep 2023 17:08:21 +0200
+Message-ID: <CAMRc=MfB6yN7NHwB+DJRWLREUeZCeSM=2c3-mx4VR2e4JxhiMA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: zynq: restore zynq_gpio_irq_reqres/zynq_gpio_irq_relres
+ callbacks
+To:     Daniel Mack <daniel@zonque.org>
+Cc:     linux-gpio@vger.kernel.org, manikanta.guntupalli@amd.com,
+        linux-kernel@vger.kernel.org, stable@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -82,21 +68,93 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 6, 2023 at 4:50=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Sep 1, 2023 at 2:34=E2=80=AFPM Daniel Mack <daniel@zonque.org> wrot=
+e:
 >
-> On Tue, Sep 05, 2023 at 08:53:03PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > gpiochip_find() is going away as it's not hot-unplug safe. This platfor=
-m
-> > is not affected by any of the related problems as this GPIO controller
-> > cannot really go away but in order to finally remove this function, we
-> > need to convert it to using gpio_device_find() as well.
+> Commit f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip
+> warning") ditched the open-coded resource allocation handlers in favor
+> of the generic ones. These generic handlers don't maintain the PM
+> runtime anymore, which causes a regression in that level IRQs are no
+> longer reported.
 >
-> Side question, have you used --patience when preparing this series?
+> Restore the original handlers to fix this.
+>
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> Fixes: f56914393537 ("gpio: zynq: fix zynqmp_gpio not an immutable chip w=
+arning")
+> Cc: stable@kernel.org
+> ---
+>  drivers/gpio/gpio-zynq.c | 26 ++++++++++++++++++++++++--
+>  1 file changed, 24 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+> index 0a7264aabe48..324e942c0650 100644
+> --- a/drivers/gpio/gpio-zynq.c
+> +++ b/drivers/gpio/gpio-zynq.c
+> @@ -575,6 +575,26 @@ static int zynq_gpio_set_wake(struct irq_data *data,=
+ unsigned int on)
+>         return 0;
+>  }
+>
+> +static int zynq_gpio_irq_reqres(struct irq_data *d)
+> +{
+> +       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(d);
+> +       int ret;
+> +
+> +       ret =3D pm_runtime_resume_and_get(chip->parent);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return gpiochip_reqres_irq(chip, d->hwirq);
+> +}
+> +
+> +static void zynq_gpio_irq_relres(struct irq_data *d)
+> +{
+> +       struct gpio_chip *chip =3D irq_data_get_irq_chip_data(d);
+> +
+> +       gpiochip_relres_irq(chip, d->hwirq);
+> +       pm_runtime_put(chip->parent);
+> +}
+> +
+>  /* irq chip descriptor */
+>  static const struct irq_chip zynq_gpio_level_irqchip =3D {
+>         .name           =3D DRIVER_NAME,
+> @@ -584,9 +604,10 @@ static const struct irq_chip zynq_gpio_level_irqchip=
+ =3D {
+>         .irq_unmask     =3D zynq_gpio_irq_unmask,
+>         .irq_set_type   =3D zynq_gpio_set_irq_type,
+>         .irq_set_wake   =3D zynq_gpio_set_wake,
+> +       .irq_request_resources =3D zynq_gpio_irq_reqres,
+> +       .irq_release_resources =3D zynq_gpio_irq_relres,
+>         .flags          =3D IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED=
+ |
+>                           IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
+> -       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>  };
+>
+>  static const struct irq_chip zynq_gpio_edge_irqchip =3D {
+> @@ -597,8 +618,9 @@ static const struct irq_chip zynq_gpio_edge_irqchip =
+=3D {
+>         .irq_unmask     =3D zynq_gpio_irq_unmask,
+>         .irq_set_type   =3D zynq_gpio_set_irq_type,
+>         .irq_set_wake   =3D zynq_gpio_set_wake,
+> +       .irq_request_resources =3D zynq_gpio_irq_reqres,
+> +       .irq_release_resources =3D zynq_gpio_irq_relres,
+>         .flags          =3D IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
+> -       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>  };
+>
+>  static void zynq_gpio_handle_bank_irq(struct zynq_gpio *gpio,
+> --
+> 2.41.0
 >
 
-Yes! Thanks for bringing it to my attention.
+Thanks Thorsten for bringing it to my attention.
 
-Bart
+Daniel: please use scripts/get_maintainers.pl when sending patches.
+This was sent neither to my email address from the MAINTAINERS file
+nor to my linaro address.
+
+Other than that, this looks good, applied for fixes.
+
+Bartosz
