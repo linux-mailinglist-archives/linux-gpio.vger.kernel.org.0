@@ -2,81 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A404797653
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Sep 2023 18:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D7D679788D
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Sep 2023 18:48:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233837AbjIGQGX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Sep 2023 12:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42276 "EHLO
+        id S242912AbjIGQs7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Sep 2023 12:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234203AbjIGQGN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Sep 2023 12:06:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1569893F9;
-        Thu,  7 Sep 2023 08:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694102229; x=1725638229;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=F1fILzBUvGq5yLs13dD/sx0JlCAtmCpOqemv/mVDb68=;
-  b=UC1tkyVFld72mG+llWBn1obGaepZIfYWgfHMNgRzf6/pJkfJYq+ucr5K
-   189cb0YmpmuoySYYYl3QFPcJkxUr4lWzlTg60O2gvt31i5JGdxbnfqU3X
-   Sdehu30MUwv6dl962oL+zpbTTyTEZClQ1cqm/l7LsYqDdB7DOxS5zbHbo
-   dhb6tBVBJ15ybQUZK6iuVadsViqxx/IBadC68rfYuo/f6SDF3lbIgpV8o
-   IppxL+59dLR28AEIbfX4Qe83nNqianp+1qWztxZPbqX+1vo5ho2kjbHed
-   mQ0IMZJ77xPJd+prh8GlG1eIxknwVRPK3W6hBZX78t/RGzKBtj5dqdq0J
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="381199667"
-X-IronPort-AV: E=Sophos;i="6.02,235,1688454000"; 
-   d="scan'208";a="381199667"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 08:48:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="832241238"
-X-IronPort-AV: E=Sophos;i="6.02,235,1688454000"; 
-   d="scan'208";a="832241238"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 08:48:52 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qeHFR-007MPH-3D;
-        Thu, 07 Sep 2023 18:48:49 +0300
-Date:   Thu, 7 Sep 2023 18:48:49 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 1/5] gpio: mockup: fix kerneldoc
-Message-ID: <ZPnw4XVLVwblUtLb@smile.fi.intel.com>
-References: <20230907145230.44085-1-brgl@bgdev.pl>
+        with ESMTP id S242173AbjIGQs6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Sep 2023 12:48:58 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C03DF1BFD;
+        Thu,  7 Sep 2023 09:48:34 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECB891042;
+        Thu,  7 Sep 2023 09:48:17 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2540E3F67D;
+        Thu,  7 Sep 2023 09:47:38 -0700 (PDT)
+Message-ID: <b34a6196-6c24-a664-611b-6055480880ee@arm.com>
+Date:   Thu, 7 Sep 2023 17:47:33 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230907145230.44085-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: rockchip: Add io domain
+ properties
+Content-Language: en-GB
+To:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Cc:     linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+References: <20230904115816.1237684-1-s.hauer@pengutronix.de>
+ <20230904115816.1237684-3-s.hauer@pengutronix.de>
+ <b4017947-9e16-7d97-a7b1-3e6964a1f7a9@arm.com>
+ <5166ca75-5454-8f64-4f61-fcc0f7a4c235@theobroma-systems.com>
+ <20230906101909.GB492117@pengutronix.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20230906101909.GB492117@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 04:52:26PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 06/09/2023 11:19 am, Sascha Hauer wrote:
+> On Wed, Sep 06, 2023 at 10:20:26AM +0200, Quentin Schulz wrote:
+>> Sascha, Robin,
+>>
+>> On 9/5/23 11:03, Robin Murphy wrote:
+>>> [You don't often get email from robin.murphy@arm.com. Learn why this is
+>>> important at https://aka.ms/LearnAboutSenderIdentification ]
+>>>
+>>>> +ï¿œï¿œï¿œï¿œï¿œï¿œï¿œ type: boolean
+>>>> +ï¿œï¿œï¿œï¿œï¿œï¿œï¿œ description:
+>>>> +ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ If true assume that the io domain needed for this pin
+>>>> group has been
+>>>> +ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ configured correctly by the bootloader. This is needed to
+>>>> break cyclic
+>>>> +ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ dependencies introduced when a io domain needs a
+>>>> regulator that can be
+>>>> +ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ accessed through pins configured here.
+>>>
+>>> This is describing a Linux implementation detail, not the binding
+>>> itself. There's no technical reason a DT consumer couldn't already
+>>> figure this much out from the existing topology (by observing that the
+>>> pinctrl consumer is a grandparent of the I/O domain's supply).
+>>>
+>>
+>> I am guessing you're suggesting to have some complex handling in the driver
+>> to detect those cyclic dependencies and ignore the IO domain dependency for
+>> the pinctrl pins where this happens?
 > 
-> The pull field of the line state struct is undocumented. Fix it.
+> I haven't read this as a suggestion, but only as an argument to make it
+> clear that I should describe the binding rather than anticipating
+> how it should be used.
+> 
+> I may have misunderstood it though.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Indeed it was more about the definition itself - an extra property isn't 
+*needed* to break the cycle since the cycle is already fully described 
+in DT, so anyone who can parse parents and phandles already has 
+sufficient information to detect it and break it at any point they 
+choose. However, as mentioned subsequently, breaking the cycle alone 
+isn't enough to guarantee that things will actually work in general.
 
-for the entire series.
+AFAICS what we fundamentally need to know is the initial voltage of the 
+supply regulator, to be able to short-circuit requiring the I/O domain 
+in order to query it from the regulator itself, and instead just 
+initialise the I/O domain directly. However that would still represent a 
+bunch of fiddly extra DT parsing, so for practical purposes it seems 
+reasonable to then short-cut that into directly describing the initial 
+setting of the I/O domain on the node itself, such that the consumer of 
+the binding can easily handle it all in a self-contained manner.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Cheers,
+Robin
 
-
+>> One of the issues we're having here too is that we lose granularity. There
+>> are multiple domains inside an IO domain device and here we make the whole
+>> pinctrl device depend on all domains from one IO domain device (there can be
+>> multiple ones) while it is factually (on the HW level) only dependent on one
+>> domain. Considering (if I remember correctly) Heiko highly suggested we
+>> think about adding child nodes to the IO domain devices to have a DT node
+>> per domain in the IO domain device, how would this work with the suggested
+>> DT binding?
+> 
+> I started implementing that. I have moved the IO domains into subnodes
+> of the IO domain controller and started adding phandles from the pin
+> groups in rk3568-pinctrl.dtsi to the corresponding IO domains. After a
+> couple of hours I had phandles for around a quarter of the existing
+> groups of only one SoC, so doing this for all SoCs would really be a
+> cumbersome job.
+> 
+> In the end I realized this doesn't solve any problem. Also adding the
+> properties I suggested doesn't prevent us from adding the more specific
+> dependencies from the pins to their actual IO domains later.
+> 
+> Sascha
+> 
