@@ -2,67 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61450797556
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Sep 2023 17:48:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADDC579754D
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Sep 2023 17:48:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233026AbjIGPqP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Sep 2023 11:46:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
+        id S232185AbjIGPqG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Sep 2023 11:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343796AbjIGPbU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Sep 2023 11:31:20 -0400
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0903E47
-        for <linux-gpio@vger.kernel.org>; Thu,  7 Sep 2023 08:30:49 -0700 (PDT)
-Received: by mail-ot1-x331.google.com with SMTP id 46e09a7af769-6b9a2416b1cso791431a34.2
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Sep 2023 08:30:49 -0700 (PDT)
+        with ESMTP id S244841AbjIGPZw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Sep 2023 11:25:52 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB45CF
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Sep 2023 08:25:29 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-401d80f4ef8so12220715e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Sep 2023 08:25:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694100607; x=1694705407; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yT2zLt+lggSVzXUG2wimOweNQHus7+eb32MpOdUPep0=;
-        b=LOeoXMYTWPXMSL17uhiEF+5I8Y7vA14hd5VBNYLx1zlLlVMV1aESVNC2ZtntkHxWdx
-         xzB4uuuEiciOSN25CQ9L4u37CrRDz3xQZ5VhvQLoV7dnKTfWLPn4Qepk4d0nrXJk4RoL
-         oHkxW9qhqAHgQFyukQklU3qf5QWjUb2J1zU6+GQ2XdquMQ3PEoysqS5+v5UyM3GahEa+
-         5iYUBiND+Gsgrmm1m9HVB2fzSQ+5Vf7qf2P4tvi2wMlj0armY+nRNcMBPkSkl/HH5lCS
-         qZDbrVMRc2UTJrmSnr1t3QoL9JlJGvQoGubA5Pp4gl3TPDG5AvR95RerAzQz767g2/U9
-         UqOA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694100321; x=1694705121; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HijaDWjtU9+MMMmQDH1Rm0HmHWsQfV4zHlVWc3shxSo=;
+        b=NcimMccUpdcJOzDBrDiQHRJa+Pf5tShg/1Q82rRNAOVvxHvrMu6KRaQFu8JCyk2RZU
+         aQSsS1wKcBAAhitatqxMJcp0OeSpdK5JYAASp5JpGdglVEZ6z8iTV1oaaQorB2YEkojD
+         VW4u0778OKCnE3bQqiIdFJzUG6vq4paoHQ3gibyd5irs+WGiaA0mrGihkeuj3lbUIsLJ
+         5rqqdMcHElt4OhOFc5GkrUKULSDW9us7oNxLUk45bEe6aJcDmBRlziZ6iY5QkqcnnYn6
+         r+Qc5Jkk5tljZm4dRc0cTLuTPTyCYoMfBv/NKyO0FPWwL5Ka6lVa9cxiEH6mHN8SG7ib
+         ZVWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694100607; x=1694705407;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yT2zLt+lggSVzXUG2wimOweNQHus7+eb32MpOdUPep0=;
-        b=Um5znxzGsd1tpVGW5VBpBol9BFtbP7pPYfyQvMeHzSY3a3x/mYe+4cNTA9I+/CnFOC
-         y/EZcIomINMj8sa8mRWYvh+i33+PGDijSL8mqzZcVxEtpgFXaLcAzZHEto01Aa+mxcP0
-         deeZqJWLnb11NdxjTmZPsqDvWZ4D6QUsD2pzo2i5SPgLGUtReIWHFIMks6vV88g2OBEi
-         hiRn9i5vQrs7sHTzg9Hm+4w6yVPE7LnXse4LHXQTX/4wBvY4d7LWGrOQLhX9q2c2q7BB
-         lHRwBWWOPm4wOM6C4kn4hk+OOyV00U0uCDUeN5y+YBz9XAmbvTnnozdOcmg//dcMCZkt
-         Qg+Q==
-X-Gm-Message-State: AOJu0Yw/C+Z6MnafZ6FVTWOk05ER315pP6e6TjJVxi6jwn1IKnrp9v5E
-        luOwhh8tGpJadb5p+XeE8Cpk3jvgtY8m9GgSYsn93PT0eP8ZA604It0=
-X-Google-Smtp-Source: AGHT+IEapBUe/2q4BqP1Fz3k3+uTpDMdMnbX48+PwRjLLwuQW6xXP+Kr1ttyV/Prp2f67wE2FiPm6I0EHEVM+H0MLdM=
-X-Received: by 2002:a25:8206:0:b0:d78:21e0:c06d with SMTP id
- q6-20020a258206000000b00d7821e0c06dmr18532493ybk.64.1694072708967; Thu, 07
- Sep 2023 00:45:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230901113458.13323-1-brgl@bgdev.pl>
-In-Reply-To: <20230901113458.13323-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Sep 2023 09:44:57 +0200
-Message-ID: <CACRpkdbDkBUhP-ZaWaErr3MqjGgSyei0EUD7PR3URs6h_ZWMUQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: remove unnecessary extern specifiers from the
- driver header
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        d=1e100.net; s=20221208; t=1694100321; x=1694705121;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HijaDWjtU9+MMMmQDH1Rm0HmHWsQfV4zHlVWc3shxSo=;
+        b=TfGAz/l5V5NlKFvWUu1DtEn0DZWL19UC5gVf5l4+tzS8xHIHh6RwAOvqQNDsPWkiR/
+         n90scuMD5v9366ODofL9LHvQ2BofScNx1scgATAhcHyP5O4t8h2ZJDv2j2UtShOl5Ylx
+         MwY4+UrNDIeUs3UCES8EKN0ZfJaaUIkWUz9LFTzhp3lsqQqYbJ3pkjoLrgORYD0eeeXq
+         uthcNWOksLLeNcw8XTRx0yfMYbRazDEBVHCcEjyCtY0moiOxgmR9Mphpk0sNdfGvOv76
+         N8ia6CXT7NA7Dh5FlLmGDIygYSObqkjr6MnS6aYfcFWYuQnHab7TEfy/jiqm30qFDqdV
+         Pgwg==
+X-Gm-Message-State: AOJu0Yy6ep4jvXIjp3yxrhh7s5Y1OMRnFi0oNqw5ZQtKimxZzTYDSsGn
+        xCIoSE0pbr++QJkQbRRWvIV3VnmmkSda0HQUnwk=
+X-Google-Smtp-Source: AGHT+IGMfrd68cQiTItvDb+O04EvbhJPhzV/s88UZI49HyvK3RoNa7kYSWHBGxozNXZDNyvX7p4BiA==
+X-Received: by 2002:a05:600c:224e:b0:401:b2c7:349d with SMTP id a14-20020a05600c224e00b00401b2c7349dmr4904033wmm.29.1694098353082;
+        Thu, 07 Sep 2023 07:52:33 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:56f5:e2d4:1e04:b28e])
+        by smtp.gmail.com with ESMTPSA id 2-20020a05600c020200b003feef82bbefsm2757588wmi.29.2023.09.07.07.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Sep 2023 07:52:32 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+Subject: [PATCH 1/5] gpio: mockup: fix kerneldoc
+Date:   Thu,  7 Sep 2023 16:52:26 +0200
+Message-Id: <20230907145230.44085-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,20 +69,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 1, 2023 at 1:35=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> 'extern' doesn't do anything for function declarations. Remove it.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+The pull field of the line state struct is undocumented. Fix it.
 
-Right I guess it should never be in headers, the one place
-where is makes sense is if you're suddenly exporting something
-in a C file, such as to expose it to assembly.
+Fixes: 2a9e27408e12 ("gpio: mockup: rework debugfs interface")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-mockup.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index b32063ac845a..17d4d48524b7 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -39,6 +39,8 @@
+  * struct gpio_pin_status - structure describing a GPIO status
+  * @dir:       Configures direction of gpio as "in" or "out"
+  * @value:     Configures status of the gpio as 0(low) or 1(high)
++ * @pull:      Configures the current pull of the GPIO as 0 (pull-down) or
++ *             1 (pull-up)
+  */
+ struct gpio_mockup_line_status {
+ 	int dir;
+-- 
+2.39.2
 
-Yours,
-Linus Walleij
