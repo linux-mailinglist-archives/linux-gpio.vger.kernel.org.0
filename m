@@ -2,109 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3DD7798278
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Sep 2023 08:40:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94FA5798333
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Sep 2023 09:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239548AbjIHGkE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Sep 2023 02:40:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
+        id S236121AbjIHHVN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Sep 2023 03:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239331AbjIHGkE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Sep 2023 02:40:04 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A225D10CF;
-        Thu,  7 Sep 2023 23:40:00 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3885VQVe003269;
-        Fri, 8 Sep 2023 06:39:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=M2acknc7Ju3MHs260Fsvkk1yOJKZ+LL1mkWlJRilsG0=;
- b=SmlLbmbtnx0yVpHzTTy0tqYiJghvM70iV+U8x34S2E8vFcVOrRQa4oqZvm5UHe1Cq5Bo
- nkKehDuT0bj8ISqGWXHdw+E9J2Nj6SXxJKU7XAM8AaDuHViLAUz5RQsJ9qdxnuJ4R1J6
- auUELIFbDWRMoBS1XkmvUpes49CTocUoldQVRWUaY047lHWAmkvE29JQsD9R7hIHBzjZ
- TiLffbrgfqf0LCw0g7kz+z4V3D/NSc9tutK3WM3KZQrUMV8bcpcj3+hWjF4H/NPpALAT
- ta+X+IpB1ps4PCf9kNGI8XmeXqixbddwV+QV9o7DH4N7N8283vz9MlXXHRUkzAfT757K zw== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sym369455-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Sep 2023 06:39:38 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3886daXT019216
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 8 Sep 2023 06:39:36 GMT
-Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Thu, 7 Sep 2023 23:39:25 -0700
-From:   Tengfei Fan <quic_tengfan@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>
-CC:     <arnd@arndb.de>, <geert+renesas@glider.be>,
-        <nfraprado@collabora.com>, <rafal@milecki.pl>, <peng.fan@nxp.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <quic_tsoni@quicinc.com>,
-        <quic_shashim@quicinc.com>, <quic_kaushalk@quicinc.com>,
-        <quic_tdas@quicinc.com>, <quic_tingweiz@quicinc.com>,
-        <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
-        Tengfei Fan <quic_tengfan@quicinc.com>
-Subject: [PATCH 3/3] arm64: defconfig: Enable pinctrl for SM4450
-Date:   Fri, 8 Sep 2023 14:38:43 +0800
-Message-ID: <20230908063843.26835-4-quic_tengfan@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230908063843.26835-1-quic_tengfan@quicinc.com>
-References: <20230908063843.26835-1-quic_tengfan@quicinc.com>
+        with ESMTP id S230143AbjIHHVM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Sep 2023 03:21:12 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838E61BC8
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Sep 2023 00:21:08 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1qeVnV-0007vb-OL; Fri, 08 Sep 2023 09:20:57 +0200
+Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <sha@pengutronix.de>)
+        id 1qeVnU-004pP2-DM; Fri, 08 Sep 2023 09:20:56 +0200
+Received: from sha by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1qeVnT-003Drf-GB; Fri, 08 Sep 2023 09:20:55 +0200
+Date:   Fri, 8 Sep 2023 09:20:55 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de,
+        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: rockchip: Add io domain
+ properties
+Message-ID: <20230908072055.GE637806@pengutronix.de>
+References: <20230904115816.1237684-1-s.hauer@pengutronix.de>
+ <20230904115816.1237684-3-s.hauer@pengutronix.de>
+ <b4017947-9e16-7d97-a7b1-3e6964a1f7a9@arm.com>
+ <20230906072121.GA492117@pengutronix.de>
+ <5165d26f-d5fe-13e9-7940-b73e27b2bea7@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: NHj9n_I_uLnVG6MwVC2mkL0J4C3Se9Vd
-X-Proofpoint-GUID: NHj9n_I_uLnVG6MwVC2mkL0J4C3Se9Vd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-08_03,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- priorityscore=1501 spamscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- bulkscore=0 impostorscore=0 clxscore=1015 mlxlogscore=646 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309080059
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5165d26f-d5fe-13e9-7940-b73e27b2bea7@arm.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the SM4450 pinctrl driver as built-in, this is
-necessary for the Qualcomm SM4450 platform to boot
-to shell.
+On Thu, Sep 07, 2023 at 05:35:26PM +0100, Robin Murphy wrote:
+> On 2023-09-06 08:21, Sascha Hauer wrote:
+> > On Tue, Sep 05, 2023 at 10:03:20AM +0100, Robin Murphy wrote:
+> > > On 2023-09-04 12:58, Sascha Hauer wrote:
+> > > > Add rockchip,io-domains property to the Rockchip pinctrl driver. This
+> > > > list of phandles points to the IO domain device(s) the pins of the
+> > > > pinctrl driver are supplied from.
+> > > > 
+> > > > Also a rockchip,io-domain-boot-on property is added to pin groups
+> > > > which can be used for pin groups which themselves are needed to access
+> > > > the regulators an IO domain is driven from.
+> > > > 
+> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > > > ---
+> > > >    .../bindings/pinctrl/rockchip,pinctrl.yaml          | 13 ++++++++++++-
+> > > >    1 file changed, 12 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> > > > index 10c335efe619e..92075419d29cf 100644
+> > > > --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> > > > +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> > > > @@ -62,6 +62,11 @@ properties:
+> > > >          Required for at least rk3188 and rk3288. On the rk3368 this should
+> > > >          point to the PMUGRF syscon.
+> > > > +  rockchip,io-domains:
+> > > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > > > +    description:
+> > > > +      Phandles to io domains
+> > > > +
+> > > >      "#address-cells":
+> > > >        enum: [1, 2]
+> > > > @@ -137,7 +142,13 @@ additionalProperties:
+> > > >                - description:
+> > > >                    The phandle of a node contains the generic pinconfig options
+> > > >                    to use as described in pinctrl-bindings.txt.
+> > > > -
+> > > > +      rockchip,io-domain-boot-on:
+> > > 
+> > > I don't think "on" is a particularly descriptive or useful property name for
+> > > something that has no "off" state.
+> > 
+> > In fact it has an "off" state. A IO Domain can be disabled in the SoC
+> > registers
+> 
+> Oh, is that a thing on newer SoCs? At least in the RK3399 TRM the only
+> I/O-domain-related control I can find is the 1.8V/3.0V logic level threshold
+> in GRF_IO_VSEL (plus the one outlier in PMUGRF_SOC_CON0).
 
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+I didn't realize that it's new, the RK3568 is the first Rockchip SoC I
+work on, but yes, on RK3568 we have three bits per domain. One bit is to
+enable 1.8V, one to enable 2.5V and one for 3.3V. I would assume that
+clearing all bits means disable, and whatever strange things may happen
+when multiple bits are set...
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5315789f4868..de94e1c50160 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -598,6 +598,7 @@ CONFIG_PINCTRL_SC8280XP=y
- CONFIG_PINCTRL_SDM660=y
- CONFIG_PINCTRL_SDM670=y
- CONFIG_PINCTRL_SDM845=y
-+CONFIG_PINCTRL_SM4450=y
- CONFIG_PINCTRL_SM6115=y
- CONFIG_PINCTRL_SM6125=y
- CONFIG_PINCTRL_SM6350=y
+Sascha
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
