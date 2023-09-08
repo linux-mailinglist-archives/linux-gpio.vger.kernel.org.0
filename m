@@ -2,73 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 261DD7985B6
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Sep 2023 12:22:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7044F798644
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Sep 2023 13:06:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242998AbjIHKWl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Sep 2023 06:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42698 "EHLO
+        id S230260AbjIHLGc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Sep 2023 07:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243019AbjIHKWk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Sep 2023 06:22:40 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8941C1FE2
-        for <linux-gpio@vger.kernel.org>; Fri,  8 Sep 2023 03:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694168523; x=1725704523;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=H9H1F/K+wwkCrH4BMLP/OC2KyvR+NLhkUuK17wV9Iac=;
-  b=Fxszu5b1+m9vQOrDamyL/VDTE7tYXwk0OtmR8oPXp+FqKeFkoB47OGXH
-   tflUTVxF6nMJRPIx3b/n6OATqvlj3Q8zW9Y44uYadkgxAqe0moy6EFZDl
-   ZIyYhRegrf3nHL0FgCprNLsvsPypPJb7cc4o4ZMM1cWWh5ADgvL/gwqjp
-   rcHx6euAirW76vxibQ8BK+e3iMGntQpW5o4crjh+Ggwp1/fOECj8MkZRs
-   lMVORzY17L+FSbqfKZ2dpDaOh59gt7hd0+gVpA3PfikIAptUAp0qRnmkV
-   YhRicdgmSeRqdyBzqqMqnG3Gmo47RdFVrtd9e0Ktm2aOb271/8ydmP3hz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="374995737"
-X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
-   d="scan'208";a="374995737"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2023 03:18:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="771706552"
-X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
-   d="scan'208";a="771706552"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2023 03:18:31 -0700
-Date:   Fri, 8 Sep 2023 13:18:28 +0300
-From:   Raag Jadav <raag.jadav@intel.com>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [bug report] pinctrl: baytrail: consolidate common mask operation
-Message-ID: <ZPr09Fj+q+cO3XIv@black.fi.intel.com>
-References: <d164d471-5432-4c3c-afdb-33dc8f53d043@moroto.mountain>
+        with ESMTP id S229826AbjIHLGb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Sep 2023 07:06:31 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A73311B
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Sep 2023 04:06:27 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-401b393df02so22513195e9.1
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Sep 2023 04:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694171185; x=1694775985; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fKhDC1+dJXvzLE48gG3JDe5bt95kZKTseJz3HDdmtqI=;
+        b=JkJj+of5xIuymvNuwlzXB8+VtMODBRk3sTQjfUxpboMQWvEQ2gzH6SrPe5JU4fLwaz
+         ed9TXr6YVGZ8kpXXTg3Nsc2xyFhJAuaSVy0uQQYGvaTcF2ZJ9cgSx5ujmOw7JLe/2WBZ
+         z/Q+Q6sX31jSi8NFwGieoCE1FrLskk71wdApFCe80wYDJoR4PPi42lt1LslcjHBtclcP
+         tiaTX0rhzZ2Ylgazn13lGE82aMqJbUwMSetX59i1AsOmYEED4xKRJJ1e1FlJZDip1gzB
+         Ljtg5Wt8pqx2xBEsth/tGnomkOpBERXLC1iRPKI5f5muIRJ8oY3HmVnov6YptmCWV9NP
+         J40A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694171185; x=1694775985;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fKhDC1+dJXvzLE48gG3JDe5bt95kZKTseJz3HDdmtqI=;
+        b=dFrqVv0LP3trJLk0ALiyO0jSh06ECx9R7vqbvHFd02cN2HiyA7YvOZqA52AFLHW5QC
+         9d7IUXQ6eDd8xccRKQRPFeIydcrFMdIMXialFgjLH3WPtGG2BW8P5Kfo+K7wbYw0o3vu
+         x/xvEWIaAOeYrxPXe2G2Xc/A6lLy1b48fJ8p2Vvdn0HBemIpaxR6LKs/YMpjODZFO71Q
+         TNkf4CsPtmrL4c6snlJSEMK6KzhOF+havsMXNFEjU/DvWURlnBoPRcoTiYDBrTxiv9jH
+         Aac0VrgWe0RizL1LyO3MdWgdnicwTXpRF7wI20v1LZw+IWHpd1WlqdBZhPk22JC54pcm
+         TpLg==
+X-Gm-Message-State: AOJu0YwSfc7p+EBQDwaEac6Q5NK4T+a5b1y2YX8usAFZfRIflpVpgjyr
+        1M37OObh3jNSG/xSY3EjMJNxSg==
+X-Google-Smtp-Source: AGHT+IGimABcUqVSDlcYiqilCaACwqh6ZzO7R9wh0ItpyEksOsa+RqaF1QaDUTjen7of4miXXtdhnQ==
+X-Received: by 2002:adf:e44b:0:b0:317:3f64:4901 with SMTP id t11-20020adfe44b000000b003173f644901mr1565273wrm.41.1694171185433;
+        Fri, 08 Sep 2023 04:06:25 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:6ad7:c094:c795:74f2])
+        by smtp.gmail.com with ESMTPSA id d10-20020a5d538a000000b0031c7682607asm1812089wrv.111.2023.09.08.04.06.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Sep 2023 04:06:25 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: fixes for v6.6-rc1
+Date:   Fri,  8 Sep 2023 13:06:22 +0200
+Message-Id: <20230908110622.9503-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d164d471-5432-4c3c-afdb-33dc8f53d043@moroto.mountain>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 12:53:54PM +0300, Dan Carpenter wrote:
-> Hello Raag Jadav,
-> 
-> The patch 4cfff5b7af8b: "pinctrl: baytrail: consolidate common mask
-> operation" from Aug 8, 2023 (linux-next), leads to the following
-> Smatch static checker warning:
-> 
-> 	drivers/pinctrl/intel/pinctrl-baytrail.c:1023 byt_pin_config_set()
-> 	error: uninitialized symbol 'db_pulse'.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Thanks for the report.
-I have a fix in internal review, will send it out soon.
+Linus,
 
-Raag
+Please pull the following regression fix for the upcoming RC.
+
+Thanks
+Bartosz
+
+The following changes since commit 65d6e954e37872fd9afb5ef3fc0481bb3c2f20f4:
+
+  Merge tag 'gfs2-v6.5-rc5-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2 (2023-09-05 13:00:28 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.6-rc1
+
+for you to fetch changes up to 180b10bd160b014448366e5bc86e0558f8acb74f:
+
+  gpio: zynq: restore zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks (2023-09-06 17:08:51 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.6-rc1
+
+- fix a regression in irqchip setup in gpio-zynq
+
+----------------------------------------------------------------
+Daniel Mack (1):
+      gpio: zynq: restore zynq_gpio_irq_reqres/zynq_gpio_irq_relres callbacks
+
+ drivers/gpio/gpio-zynq.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
