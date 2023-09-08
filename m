@@ -2,54 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53113797C23
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Sep 2023 20:42:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA30F79819C
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Sep 2023 07:52:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344257AbjIGSmC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Sep 2023 14:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50266 "EHLO
+        id S233305AbjIHFwT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Sep 2023 01:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344278AbjIGSmA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Sep 2023 14:42:00 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5B2E41703;
-        Thu,  7 Sep 2023 11:41:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E310F1007;
-        Thu,  7 Sep 2023 09:36:12 -0700 (PDT)
-Received: from [10.1.26.33] (010265703453.arm.com [10.1.26.33])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B2EA3F67D;
-        Thu,  7 Sep 2023 09:35:32 -0700 (PDT)
-Message-ID: <5165d26f-d5fe-13e9-7940-b73e27b2bea7@arm.com>
-Date:   Thu, 7 Sep 2023 17:35:26 +0100
+        with ESMTP id S230208AbjIHFwS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Sep 2023 01:52:18 -0400
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECF71BC5
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Sep 2023 22:52:12 -0700 (PDT)
+Received: from dlp.unisoc.com ([10.29.3.86])
+        by SHSQR01.spreadtrum.com with ESMTP id 3885q0fb009890;
+        Fri, 8 Sep 2023 13:52:00 +0800 (+08)
+        (envelope-from linhua.xu@unisoc.com)
+Received: from SHDLP.spreadtrum.com (shmbx04.spreadtrum.com [10.0.1.214])
+        by dlp.unisoc.com (SkyGuard) with ESMTPS id 4RhlXx5j1rz2Rb6KB;
+        Fri,  8 Sep 2023 13:49:05 +0800 (CST)
+Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx04.spreadtrum.com
+ (10.0.1.214) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Fri, 8 Sep
+ 2023 13:51:58 +0800
+From:   Linhua Xu <Linhua.xu@unisoc.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        lh xu <xulh0829@gmail.com>, Linhua Xu <Linhua.Xu@unisoc.com>,
+        Zhirong Qiu <zhirong.qiu@unisoc.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Subject: [PATCH V2 0/6] pinctrl: sprd: Modification of UNIOC Platform pinctrl Driver
+Date:   Fri, 8 Sep 2023 13:51:40 +0800
+Message-ID: <20230908055146.18347-1-Linhua.xu@unisoc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: rockchip: Add io domain
- properties
-Content-Language: en-GB
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de,
-        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-References: <20230904115816.1237684-1-s.hauer@pengutronix.de>
- <20230904115816.1237684-3-s.hauer@pengutronix.de>
- <b4017947-9e16-7d97-a7b1-3e6964a1f7a9@arm.com>
- <20230906072121.GA492117@pengutronix.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20230906072121.GA492117@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Type: text/plain
+X-Originating-IP: [10.13.2.29]
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ shmbx04.spreadtrum.com (10.0.1.214)
+X-MAIL: SHSQR01.spreadtrum.com 3885q0fb009890
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,79 +53,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2023-09-06 08:21, Sascha Hauer wrote:
-> On Tue, Sep 05, 2023 at 10:03:20AM +0100, Robin Murphy wrote:
->> On 2023-09-04 12:58, Sascha Hauer wrote:
->>> Add rockchip,io-domains property to the Rockchip pinctrl driver. This
->>> list of phandles points to the IO domain device(s) the pins of the
->>> pinctrl driver are supplied from.
->>>
->>> Also a rockchip,io-domain-boot-on property is added to pin groups
->>> which can be used for pin groups which themselves are needed to access
->>> the regulators an IO domain is driven from.
->>>
->>> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
->>> ---
->>>    .../bindings/pinctrl/rockchip,pinctrl.yaml          | 13 ++++++++++++-
->>>    1 file changed, 12 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
->>> index 10c335efe619e..92075419d29cf 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
->>> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
->>> @@ -62,6 +62,11 @@ properties:
->>>          Required for at least rk3188 and rk3288. On the rk3368 this should
->>>          point to the PMUGRF syscon.
->>> +  rockchip,io-domains:
->>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>> +    description:
->>> +      Phandles to io domains
->>> +
->>>      "#address-cells":
->>>        enum: [1, 2]
->>> @@ -137,7 +142,13 @@ additionalProperties:
->>>                - description:
->>>                    The phandle of a node contains the generic pinconfig options
->>>                    to use as described in pinctrl-bindings.txt.
->>> -
->>> +      rockchip,io-domain-boot-on:
->>
->> I don't think "on" is a particularly descriptive or useful property name for
->> something that has no "off" state.
-> 
-> In fact it has an "off" state. A IO Domain can be disabled in the SoC
-> registers
+From: Linhua Xu <Linhua.Xu@unisoc.com>
 
-Oh, is that a thing on newer SoCs? At least in the RK3399 TRM the only 
-I/O-domain-related control I can find is the 1.8V/3.0V logic level 
-threshold in GRF_IO_VSEL (plus the one outlier in PMUGRF_SOC_CON0).
+Recently, some bugs have been discovered during use, and patch2 and patch3
+are bug fixes. Also, this patchset add new features: patch1 is for
+compatibility with more platforms, patch4 add pinctrl support for UMS512,
+patch5 Increase the range of register values, patch6 add pinctrl support
+for UMS9621.
 
-> and also the corresponding regulator can be disabled.
+change in V2
+-Add comment for common_pin_offset and misc_pin_offset
+-Remove cast commits
+-Modify the mask definition into GENMASK form
+-Delete the three-speed configuration that modifies the original parameters
+-Add 1.8K resistor configuration
+-Delete depends on OF
+-Modify the format of sprd_pinctrl_of_match
+-Drop trailing comma in the terminator entry
+-Add bits.h header file
+-Add kernel.h header file
 
-...which is clearly a property of the regulator, not of its consumers ;)
+Linhua Xu (6):
+  pinctrl: sprd: Modify the probe function parameters
+  pinctrl: sprd: Fix the incorrect mask and shift definition
+  pinctrl: sprd: Modify pull-up parameters
+  pinctrl: sprd: Add pinctrl support for UMS512
+  pinctrl: sprd: Increase the range of register values
+  pinctrl: sprd: Add pinctrl support for UMS9621
 
-However it's also not a meaningful state in this context anyway, since 
-if the supply was actually off, and thus we were unable to communicate 
-with the PMIC to turn it on... oh dear.
+ drivers/pinctrl/sprd/Kconfig                |   22 +
+ drivers/pinctrl/sprd/Makefile               |    2 +
+ drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c  |    7 +-
+ drivers/pinctrl/sprd/pinctrl-sprd-ums512.c  |  878 +++++++++++++++
+ drivers/pinctrl/sprd/pinctrl-sprd-ums9621.c | 1117 +++++++++++++++++++
+ drivers/pinctrl/sprd/pinctrl-sprd.c         |   49 +-
+ drivers/pinctrl/sprd/pinctrl-sprd.h         |   33 +-
+ 7 files changed, 2071 insertions(+), 37 deletions(-)
+ create mode 100644 drivers/pinctrl/sprd/pinctrl-sprd-ums512.c
+ create mode 100644 drivers/pinctrl/sprd/pinctrl-sprd-ums9621.c
 
-Cheers,
-Robin.
+-- 
+2.17.1
 
->> Furthermore it's no help at all if the DT
->> consumer *is* the bootloader that's expected to configure this in the first
->> place. IMO it would seem a lot more sensible to have an integer (or enum)
->> property which describes the actual value for the initial I/O domain
->> setting.
-> 
-> I agree though that a particular setting instead of a boolean is better
-> and could help the bootloader.
-> 
->> Then Linux can choose to assume the presence of the property at all
->> implies that the bootloader should have set it up already, but also has the
->> option of actively enforcing it as well if we want to.
-> 
-> Ok.
-> 
-> Thanks,
->   Sascha
-> 
