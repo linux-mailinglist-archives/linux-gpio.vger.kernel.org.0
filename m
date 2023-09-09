@@ -2,207 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C156A79986A
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Sep 2023 15:12:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3103D79997E
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Sep 2023 18:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238314AbjIINM3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 Sep 2023 09:12:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46548 "EHLO
+        id S230252AbjIIQZP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 9 Sep 2023 12:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232018AbjIINM3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Sep 2023 09:12:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF58819C;
-        Sat,  9 Sep 2023 06:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694265144; x=1725801144;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=15t7zWA9xu82ZCsQXv78V6pCDtb/+pClxIL7uf0dfsk=;
-  b=TXFxw1n7C6Uhh8VgWrmHxr0u3qJKHVx8B7ppEc2faeRmY7e226UwgkwX
-   9v0PYmWqJs3tYIXocAgTpGWoa6bddZQGcINjq3TIuRmjM9kXkXL7Jc0bi
-   bPg3zKPA624ngI2iuCjFsWqUzIYhaGq/pgkYQccuoSmJXRiPEtObNSbDV
-   h9qFXeAEh56YoxrYoU7kHg7BFYYt36NcJa324l9dR9fwfhnNhrBKRFlXL
-   ZGmnLIaEPEkoe59R8WSbuZU0Zgkrqrmgqjpqu89LbKSuy0xlflD47zaC3
-   YXH+ySAWrn0zToBGXhqlpyJVKFqqsNIl55SUWprRUp35NGetj72MEX0df
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="376728905"
-X-IronPort-AV: E=Sophos;i="6.02,239,1688454000"; 
-   d="scan'208";a="376728905"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2023 06:12:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="866407085"
-X-IronPort-AV: E=Sophos;i="6.02,239,1688454000"; 
-   d="scan'208";a="866407085"
-Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 09 Sep 2023 06:12:21 -0700
-Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qexl5-0003Wz-1J;
-        Sat, 09 Sep 2023 13:12:19 +0000
-Date:   Sat, 9 Sep 2023 21:12:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jernej Skrabec <jernej.skrabec@gmail.com>, linus.walleij@linaro.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: pinmux: Use dev_err_probe() in pin_request()
-Message-ID: <202309092056.azXQNtDr-lkp@intel.com>
-References: <20230909063613.2867-3-jernej.skrabec@gmail.com>
+        with ESMTP id S1346306AbjIIONe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 Sep 2023 10:13:34 -0400
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD7DDCCA;
+        Sat,  9 Sep 2023 07:13:29 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 4217532008FD;
+        Sat,  9 Sep 2023 10:13:28 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Sat, 09 Sep 2023 10:13:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+        1694268807; x=1694355207; bh=nbOp7enOV3UefizK0seUV09PDl3g1xgVtOM
+        4dP2WEA0=; b=YHv+kCaKh+wWZ/Y2/qhZkJBLYkbrsXUkscQJnUIDy/TAAd7AvB1
+        3Wuyxw3z11/LeWAUWXCqwQ6lAX+ziNXMpbLnLHsvbjDd9zd8J13G8EiFpbQ49o+v
+        VI5xsLPCnyFx17savFhk7LhmT97GN6mMx19V6eBJBCZgCTlwMbDSEbz1uC185xlZ
+        oiufYMzFPvbN+/s6xckc0o2jFpaDMklvHiTEBl+d9nwqrBG2taTr2zLy0t1eqTPx
+        /POKw1QNQo++a6uWF5y6hs735yd0vsg9N98YoMsRGlCn4z0VoDHIZZxGEZlRF7v3
+        fdofrMrLVkQQ+wFnD5VPnBxcIU2ZFRPNoxA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1694268807; x=1694355207; bh=nbOp7enOV3UefizK0seUV09PDl3g1xgVtOM
+        4dP2WEA0=; b=q1YSKHpK1FVP33uiOek4PJX+L3XjjfUMOSGg6HjMM4+9J9IX41y
+        EsKS+NUvJEH08bQ/mKV02ZU34E7XGLc8AqQv41xVdf4NxcsltlVZeLdHdvjAoF1b
+        oK5inPFoRiZQWoWZlDFYPeeLNJO11Z4tyuWJiqV63fsd4uMQ0koOKT/Xtm6bha46
+        wsBkHWuQNbo6OptXxjUOFeu6Qd6VGgA+znzn2yoPdEUFAA75rlNKmBFEwf9KvoyR
+        LxSEhjGwwVitud/MPvuf2L/+eU2gWHNXNk/7QddSn+ORYhe6csTZEcJV0ZQ+hcqO
+        NT4BlJyfLEXhNzlpu3scn90kqY+pjWYg5pw==
+X-ME-Sender: <xms:h338ZHhwDVGrKf9f_hroAaYucF07sPPn6u3L4F03KYVwrvTYQ4SlIg>
+    <xme:h338ZEDPWpxc1u6I97qNU3Fipxu3LEUUteez4cr-DSXVePK_iuEwGm83c6yRn4t9X
+    _-BqU9tCP29qlH73A>
+X-ME-Received: <xmr:h338ZHEWPq9LW8EJaz1L38HentIWBlFd6GV-mJ778sc1zalncz4NFAWV9C8yQyJNIzX6e39XFnT-xGIn2wMkMLgduLZVPYocIAeL3gskcebgAVol9H5vdvIW_g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudehledgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpeduhffffefhffduudetvdffkeetveeiueegfeelleffiedtuddt
+    ffduhefgtdefgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhl
+    rghnugdrohhrgh
+X-ME-Proxy: <xmx:h338ZESAqFizQBY1AXNc8PCLrn5pKBFvybU-9g7pXKikURJgHQE8tg>
+    <xmx:h338ZEx575UiyHPImvVYDcH6BA0hemUZv6NKAOGKKvyKexHdrrYRag>
+    <xmx:h338ZK6J5zj-A97KCNM1L_MMqa5vAtHtV9gbc37rgk2dkOuVJYa8fQ>
+    <xmx:h338ZHypFkRg7uxvQBPMRMFk9d82SL5xb0_y8Tbqtx3QKGjzenhS0Q>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 9 Sep 2023 10:13:26 -0400 (EDT)
+Message-ID: <a16e8863-7b8c-9a73-b93f-c55f1bf6c792@sholland.org>
+Date:   Sat, 9 Sep 2023 09:13:25 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230909063613.2867-3-jernej.skrabec@gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux ppc64le; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v2] pinctrl: sunxi: h616: add extra gpio banks
+Content-Language: en-US
+To:     Mikhail Kalashnikov <iuncuim@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Andre Przywara <andre.przywara@arm.com>
+References: <20230909094529.6083-1-iuncuim@gmail.com>
+From:   Samuel Holland <samuel@sholland.org>
+In-Reply-To: <20230909094529.6083-1-iuncuim@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jernej,
+On 9/9/23 04:45, Mikhail Kalashnikov wrote:
+> From: iuncuim <iuncuim@gmail.com>
+> 
+> Some SoCs from the H616 family (such as the T507) have the same die but
+> more output pins that are used for additional peripherals. The T507 SoC
+> don't have a built-in multiphy like the AC200 or AC300 connected ti the
 
-kernel test robot noticed the following build warnings:
+typo: to
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next linus/master v6.5 next-20230908]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> bank A. With the T507 these pins can be freely used for any other application.
+> This patch adds the missing muxes on banks A, D and E.
+> 
+> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c | 380 +++++++++++++++++++-
+>  1 file changed, 366 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
+> index d6ca720ee..10d4e1ef1 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c
+> @@ -16,33 +16,81 @@
+>  #include "pinctrl-sunxi.h"
+>  
+>  static const struct sunxi_desc_pin h616_pins[] = {
+> -	/* Internal connection to the AC200 part */
+> +	/* Internally connected to the AC200 part in the H616 SoC */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 0),
+> -		  SUNXI_FUNCTION(0x2, "emac1")),	/* ERXD1 */
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "emac1"),		/* ERXD1 */
+> +		  SUNXI_FUNCTION(0x4, "i2c0"),		/* SCK */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PA_EINT0 */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 1),
+> -		  SUNXI_FUNCTION(0x2, "emac1")),	/* ERXD0 */
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "emac1"),		/* ERXD0 */
+> +		  SUNXI_FUNCTION(0x4, "i2c0"),		/* SDA */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),	/* PA_EINT1 */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 2),
+> -		  SUNXI_FUNCTION(0x2, "emac1")),	/* ECRS_DV */
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "emac1"),		/* ECRS_DV */
+> +		  SUNXI_FUNCTION(0x4, "i2c1"),		/* SCK */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),	/* PA_EINT2 */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 3),
+> -		  SUNXI_FUNCTION(0x2, "emac1")),	/* ERXERR */
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "emac1"),		/* ERXERR */
+> +		  SUNXI_FUNCTION(0x4, "i2c1"),		/* SDA */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),	/* PA_EINT3 */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 4),
+> -		  SUNXI_FUNCTION(0x2, "emac1")),	/* ETXD1 */
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "emac1"),		/* ETXD1 */
+> +		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),	/* PA_EINT4 */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 5),
+> -		  SUNXI_FUNCTION(0x2, "emac1")),	/* ETXD0 */
+> +		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> +		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> +		  SUNXI_FUNCTION(0x2, "emac1"),		/* ETXD0 */
+> +		  SUNXI_FUNCTION(0x3, "h_i2s0"),	/* DOUT0 */
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jernej-Skrabec/pinctrl-pinmux-Remove-duplicate-error-message-in-pin_request/20230909-143817
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20230909063613.2867-3-jernej.skrabec%40gmail.com
-patch subject: [PATCH 2/2] pinctrl: pinmux: Use dev_err_probe() in pin_request()
-config: arm-randconfig-001-20230909 (https://download.01.org/0day-ci/archive/20230909/202309092056.azXQNtDr-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230909/202309092056.azXQNtDr-lkp@intel.com/reproduce)
+For H616 we chose[1] to remove the "h_" prefix from the I2S function
+names, even though the interfaces are part of the audio hub and not
+discrete devices. Please remove it here as well for consistency.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309092056.azXQNtDr-lkp@intel.com/
+Regards,
+Samuel
 
-All warnings (new ones prefixed by >>):
+[1]:
+https://lore.kernel.org/linux-arm-kernel/20201214094430.m6h3pzhkm3kjl2cl@gilmour/
 
->> drivers/pinctrl/pinmux.c:191:31: warning: incompatible pointer to integer conversion passing 'char[23]' to parameter of type 'int' [-Wint-conversion]
-                   dev_err_probe(pctldev->dev, "pin-%d (%s) status %d\n",
-                                               ^~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/device.h:1218:64: note: passing argument to parameter 'err' here
-   __printf(3, 4) int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-                                                                  ^
->> drivers/pinctrl/pinmux.c:192:10: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'const char *' [-Wint-conversion]
-                                 pin, owner, status);
-                                 ^~~
-   include/linux/device.h:1218:81: note: passing argument to parameter 'fmt' here
-   __printf(3, 4) int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-                                                                                   ^
-   2 warnings generated.
-
-
-vim +191 drivers/pinctrl/pinmux.c
-
-   101	
-   102	/**
-   103	 * pin_request() - request a single pin to be muxed in, typically for GPIO
-   104	 * @pctldev: the associated pin controller device
-   105	 * @pin: the pin number in the global pin space
-   106	 * @owner: a representation of the owner of this pin; typically the device
-   107	 *	name that controls its mux function, or the requested GPIO name
-   108	 * @gpio_range: the range matching the GPIO pin if this is a request for a
-   109	 *	single GPIO pin
-   110	 */
-   111	static int pin_request(struct pinctrl_dev *pctldev,
-   112			       int pin, const char *owner,
-   113			       struct pinctrl_gpio_range *gpio_range)
-   114	{
-   115		struct pin_desc *desc;
-   116		const struct pinmux_ops *ops = pctldev->desc->pmxops;
-   117		int status = -EINVAL;
-   118	
-   119		desc = pin_desc_get(pctldev, pin);
-   120		if (desc == NULL) {
-   121			dev_err(pctldev->dev,
-   122				"pin %d is not registered so it cannot be requested\n",
-   123				pin);
-   124			goto out;
-   125		}
-   126	
-   127		dev_dbg(pctldev->dev, "request pin %d (%s) for %s\n",
-   128			pin, desc->name, owner);
-   129	
-   130		if ((!gpio_range || ops->strict) &&
-   131		    desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
-   132			dev_err(pctldev->dev,
-   133				"pin %s already requested by %s; cannot claim for %s\n",
-   134				desc->name, desc->mux_owner, owner);
-   135			goto out;
-   136		}
-   137	
-   138		if ((gpio_range || ops->strict) && desc->gpio_owner) {
-   139			dev_err(pctldev->dev,
-   140				"pin %s already requested by %s; cannot claim for %s\n",
-   141				desc->name, desc->gpio_owner, owner);
-   142			goto out;
-   143		}
-   144	
-   145		if (gpio_range) {
-   146			desc->gpio_owner = owner;
-   147		} else {
-   148			desc->mux_usecount++;
-   149			if (desc->mux_usecount > 1)
-   150				return 0;
-   151	
-   152			desc->mux_owner = owner;
-   153		}
-   154	
-   155		/* Let each pin increase references to this module */
-   156		if (!try_module_get(pctldev->owner)) {
-   157			dev_err(pctldev->dev,
-   158				"could not increase module refcount for pin %d\n",
-   159				pin);
-   160			status = -EINVAL;
-   161			goto out_free_pin;
-   162		}
-   163	
-   164		/*
-   165		 * If there is no kind of request function for the pin we just assume
-   166		 * we got it by default and proceed.
-   167		 */
-   168		if (gpio_range && ops->gpio_request_enable)
-   169			/* This requests and enables a single GPIO pin */
-   170			status = ops->gpio_request_enable(pctldev, gpio_range, pin);
-   171		else if (ops->request)
-   172			status = ops->request(pctldev, pin);
-   173		else
-   174			status = 0;
-   175	
-   176		if (status)
-   177			module_put(pctldev->owner);
-   178	
-   179	out_free_pin:
-   180		if (status) {
-   181			if (gpio_range) {
-   182				desc->gpio_owner = NULL;
-   183			} else {
-   184				desc->mux_usecount--;
-   185				if (!desc->mux_usecount)
-   186					desc->mux_owner = NULL;
-   187			}
-   188		}
-   189	out:
-   190		if (status)
- > 191			dev_err_probe(pctldev->dev, "pin-%d (%s) status %d\n",
- > 192				      pin, owner, status);
-   193	
-   194		return status;
-   195	}
-   196	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
