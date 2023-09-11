@@ -2,168 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 786A679B8E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:09:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36A7279BB25
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239710AbjIKUzW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43490 "EHLO
+        id S240286AbjIKU4W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:56:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236243AbjIKKDU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 06:03:20 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24243E68
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 03:03:16 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-563f8e8a53dso2932052a12.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 03:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1694426595; x=1695031395; darn=vger.kernel.org;
-        h=from:to:subject:content-transfer-encoding:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=N15r8bCunG5RSI8zq5FpyXIAsY3tRUVIZWtRIeFyoJw=;
-        b=Pm+PPPUvu9p7l//RUaeszXIIDvMnF18ub5ZhoLpUZwc4NNshtDRAVXnhRz5DklDT+W
-         NypeUH+9fB1lvGvb0w59skRX9H5m0R3mxkxUuVCJQG6K/JMiQe+S675PjhMuI/OTM1O/
-         d4sBUkn2FJE14v97vZctT7sYKLYGfylnLdQm0C6/PsmAHGHtFezU2t61Qp0JbZ8fHCbh
-         nxqmFkPqd33LvOECACdlhwdxCRZbhpha5Bhs/kn1rkh6SkCZLYv3b73HoajVEReLx0uU
-         opboVOCJRz+Iu/MaWsy6XZ1zY9xfVQwnOV1ZXKipxUZB7Wr6it4f7i8E77vJHIe5hmwP
-         MU0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694426595; x=1695031395;
-        h=from:to:subject:content-transfer-encoding:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N15r8bCunG5RSI8zq5FpyXIAsY3tRUVIZWtRIeFyoJw=;
-        b=wKodMFKo/Gv7WjUEZud8uXJbM12Dodw2jlfaTi+qTunSuWwqDtgmAykxF1FOh0sL8e
-         Jq92cKez8NJA3y885f4tWREh73xUogxBgrD1pMxtX2yXhR1oCDIiDKPaQvcDRyRkO3Gi
-         5bVMZHlfR7QfGIJJ6z8mmxSvA3newGE0XqNxBvAb9p7334+zRk+Z/EmIh+Vxg8B1UTyo
-         Xqkq+towaaUAaujrvSMAfXuiF42+4CMYrfOC0tTuuB6ZPvCY5LoJKmzAU5staRlokWTd
-         8lhgR57BXl8lSKpNSZ0mfk5VojwDVKlbuY5FSoaVrFSxeMtUYQGCmWmQIBPji/45YEIU
-         mDZA==
-X-Gm-Message-State: AOJu0YxkORCuT6fpLAvqQ/nF+UDb9Pc9KRt15A1MZlvUcYfZZhvBUjYF
-        rT8TtIDGfkvZvMYFd7T4anQYeYqKkPqGBlsgCJ4=
-X-Google-Smtp-Source: AGHT+IFRaVU0aTCmAyhxQL0DtLatolJCWkhtBedYqgYzB+0FxufTha5XsPF1zON99/MsUULbtB/iWw==
-X-Received: by 2002:a17:90a:f494:b0:263:9e9b:5586 with SMTP id bx20-20020a17090af49400b002639e9b5586mr6973577pjb.44.1694426595071;
-        Mon, 11 Sep 2023 03:03:15 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([20.171.243.82])
-        by smtp.gmail.com with ESMTPSA id l2-20020a17090a72c200b0025bd4db25f0sm5223805pjk.53.2023.09.11.03.03.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 03:03:14 -0700 (PDT)
-Message-ID: <64fee5e2.170a0220.ed172.ad66@mx.google.com>
-Date:   Mon, 11 Sep 2023 03:03:14 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S236272AbjIKKFb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 06:05:31 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85003E68;
+        Mon, 11 Sep 2023 03:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694426726; x=1725962726;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=00fLvhiMtv2ZiGvbKRwC5xfsj2n/I3VRQoCUrYTyoPk=;
+  b=jl2GuVQ0iTI0oRz0MkQVdaxATSUIUcHK+EK6YhVdHvcJgr9/D9jaWFjr
+   A0ptRbNEC0ApBO+JtBVMiFnMSCCOsTOZTdk5UD+iQDxVvje4Lqpz5pB08
+   rbtxdHxQWRuoF1DydnelJ+U8SGeQgSrVK5TlZKQNAvEsOZdiVitA0n+9N
+   BCZ7zruRf/ZgTd/SQDmUs9JWYzlhegseMge/UkDSffachRH+IbnEiEuQH
+   rA314T4LTrq4x7K8//h2yN56JKIA85KdDhjqiT+YNGNkrS8mFamlnHS9R
+   oItCnMlJ7jzIoTx5ZmUSpt/lEp46bwjfGZUqYm3xLfnbb5S7XemKSouiq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="363065949"
+X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
+   d="scan'208";a="363065949"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 03:05:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="866884962"
+X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
+   d="scan'208";a="866884962"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 03:05:18 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qfdn9-008HnB-00;
+        Mon, 11 Sep 2023 13:05:15 +0300
+Date:   Mon, 11 Sep 2023 13:05:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH 11/21] platform: x86: android-tablets: don't access
+ GPIOLIB private members
+Message-ID: <ZP7mWk/jx3FZjMih@smile.fi.intel.com>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-12-brgl@bgdev.pl>
+ <8f51b4a8-bb9c-4918-61a8-4ab402da1ed0@redhat.com>
+ <CAMRc=Mfmp3Nd5jwNWr=kc8RFO-arFDwEvLxj5Qu9_1OOXR2gHQ@mail.gmail.com>
+ <173bdafa-08da-7473-6711-61131986eb3c@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: devel
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: build
-X-Kernelci-Kernel: v6.6-rc1
-Subject: linusw/devel build: 8 builds: 0 failed, 8 passed,
- 4 warnings (v6.6-rc1)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <173bdafa-08da-7473-6711-61131986eb3c@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 8 builds: 0 failed, 8 passed, 4 warnings (v6.6-rc1)
+On Sat, Sep 09, 2023 at 04:17:53PM +0200, Hans de Goede wrote:
+> On 9/6/23 16:27, Bartosz Golaszewski wrote:
+> > On Wed, Sep 6, 2023 at 3:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-6.6-rc1/
+...
 
-Tree: linusw
-Branch: devel
-Git Describe: v6.6-rc1
-Git Commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 8 unique architectures
+> > This makes sense! Maybe we'd need a good-old board file setting up all
+> > non-described devices using the driver model?
+> 
+> Right, this is pretty much exactly what the x86-android-tablets
+> code does. Except that it does it for a bunch of boards in a single
+> .ko / driver. There is a lot of commonality between these boards,
+> so this allows sharing most of the code.
+> 
+> The driver uses DMI matching, with the match's driver_data pointing
+> to a description of which devices to instantiate and then the shared
+> code takes care of instantiating those.
+> 
+> About 90% of the data / code is __init or __initdata so both
+> the code to instantiate the devices as well as the per board
+> data is free-ed after module_init() has run.
 
-Warnings Detected:
+...which is nicely looked and isolated hack (or quirk if you prefer)
+that I like! Thanks, Hans, for maintaining that!
 
-arc:
-
-arm64:
-
-arm:
-
-i386:
-
-mips:
-
-riscv:
-
-sparc:
-    sparc64_defconfig (gcc-10): 4 warnings
-
-x86_64:
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Warnings summary:
-
-    2    WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version genera=
-tion failed, symbol will not be versioned.
-    2    <stdin>:1519:2: warning: #warning syscall clone3 not implemented [=
--Wcpp]
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
-tion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section m=
-ismatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section m=
-ismatches
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0=
- section mismatches
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 secti=
-on mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----------------------------------------------------------------------------=
------
-sparc64_defconfig (sparc, gcc-10) =E2=80=94 PASS, 0 errors, 4 warnings, 0 s=
-ection mismatches
-
-Warnings:
-    <stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version generation =
-failed, symbol will not be versioned.
-    <stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-    WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version generation =
-failed, symbol will not be versioned.
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 s=
-ection mismatches
-
----
-For more info write to <info@kernelci.org>
