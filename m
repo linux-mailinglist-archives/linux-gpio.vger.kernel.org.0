@@ -2,56 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3373E79B134
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:51:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC3DD79AF79
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:47:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240706AbjIKU4e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39504 "EHLO
+        id S241663AbjIKU5Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238315AbjIKNx4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 09:53:56 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186ADE40
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 06:53:52 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d80211e8df8so2818081276.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 06:53:52 -0700 (PDT)
+        with ESMTP id S238699AbjIKODK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 10:03:10 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DBB4CD7
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 07:03:05 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6beff322a97so3112426a34.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 07:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694440431; x=1695045231; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694440985; x=1695045785; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mLvWZ52i+dyCSAmh4Y03SqBKrmy28LwkDvJNO6anitE=;
-        b=MvHG5vX14o4i5NGt/nQqLnCm1YkFABsbQAx/8kX+mZjyKehzpB1ENwYPKw0tQ9sKbA
-         O9deuTjEwYtO8kqzzHGN+fAnGtytiJmIzZkVOqEEqV/AuIdijqul0pr4swVu6UehNIn7
-         mxrvC8ShDIjp9lQk4sH09Ygf5zz++yEv3OKWhSnsJ6LIOYjCbzqoGRUdfXnJWh/Ehct/
-         OsgEiFtrQlpAYyRh4yWcRVcY2kq4Ln4l9WpPP2YVABsmcKHZ6W88UxaLbdos6ZDRIMsO
-         ey+dUOMcx2MpY0oWkJJA8e4bYE4pU9JTSc9Ys6U1tKCr0o9Hi0FaOVnv3X+g9CxW4jf+
-         Zl2w==
+        bh=htSTLHjXjD8vt5EAYXqSVCO6HargxzSV7gX/AB30oB8=;
+        b=pQ8DucXuZEPvnGjYPK6Xp6eHioid+dT2sQzVmKr7+vDnV6OsM7bPZeg4uE8b79zsv5
+         obCWZrboJP2tNwW+xt6Si608UY1uBJcTAqIK7QtpmwX429uEytiJ2w1JSEUMGBR+bQxn
+         DUL8oyRp6vGnqKKJ33js55BqS2bOVPgd24IcsZrHBAkZU92ZFT/mMYkfNktvPLnM3i5H
+         sxkme+ZYw2zigoIehhygpTpYSsxcKOvIs1UKzxKzUMiVd71Fq4cb9XTDmMlPVdtNU4im
+         D0LQchJyidfyTyJKQkLWt87DLb3EZ8oTy+YpobA2Uv3IYGpj+J71umZgbfZncoRxwPBL
+         V3cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694440431; x=1695045231;
+        d=1e100.net; s=20230601; t=1694440985; x=1695045785;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mLvWZ52i+dyCSAmh4Y03SqBKrmy28LwkDvJNO6anitE=;
-        b=QIdHHoY4uiZO4Ip38r2taCTPtpknF8pedhHvwij1vKJ4Ft4Xh4Oh20a3Vm/Hdkid43
-         lXC+mLlrWX6Z+DWC05QfeNbEKDNIxMr9hmDvPRYh9qytgfOGALmbN7ZGo7gy9ceACOkK
-         tJTsVjUvvEHh1x3wpHVRp3IIsQX53wD8j0Qyv7xEKO4cvslsIhNbI1HeeF1h/lOem3PN
-         j5t5q4Dp1ykiGgpyZYW9i3+YuQHV07K3ojZ9D1rjv9FwqENlsUnQtIxAdnUpXjgBXhBk
-         2EOllm5dn5CKqbstf8VrE3vsoZcguWOXiYIAQ7w14KGTcT5YdGDH0w7xBX3oKqavzSWf
-         PXyg==
-X-Gm-Message-State: AOJu0YwcPd8Cn0HvAuf1BKxYOf6UZE863sqHSLGO1cKjaivjXgUxe9o4
-        F1YrccpXgdrT3d32qivE95d2QvANF/S6qenFSY6W/Q==
-X-Google-Smtp-Source: AGHT+IHp45MYsPkvvvVaXHQ4k98NIkrWPaOBthFZdZy9COqTKpRoYFrEK1u6n2IGbrTU5QDj2PG6u+wrSp/eBuXoh44=
-X-Received: by 2002:a25:502:0:b0:d12:ab1:d88a with SMTP id 2-20020a250502000000b00d120ab1d88amr9001432ybf.40.1694440431348;
- Mon, 11 Sep 2023 06:53:51 -0700 (PDT)
+        bh=htSTLHjXjD8vt5EAYXqSVCO6HargxzSV7gX/AB30oB8=;
+        b=rM9ygur9oh8A5CnzdTbVBD2Zpi70ObQ75sAglqKZgIkCZkwsNpV2+0GHk6mjyBtv6w
+         AQ9nRaynhpSVYgYX+6d6I1BRjD5WMhInWoCcqLA4/fhSWPtUU5ps1waC8MxJMY/hFjXx
+         WOgww1tJjBf83t2ZzNdqtE2w0FwlhoRkwHDvqTRVVelxXNpz9n5GELQjbfswuS2uHl2U
+         tLvGI9A7dAfqoGyOULGnD07kyBw51bRrJJ08uooGeGDWxiMz1nUc2mb2+Yf3cnONBoKT
+         /cOB4aE+uizgcUWqu9jSVuYjUeeWXdOW0/Ew0PZgnzkzjzF7UsxEL0JniT5FZberFxr9
+         hTGg==
+X-Gm-Message-State: AOJu0YxKZPPNyKARXpLMx6mOKorT5eb7B8WAtX4mZZ17eyReOXwhBzyc
+        zDmHRzWVTtpvOUHXq60NgPUUGPXiLlzt4AyfCbJ+gA==
+X-Google-Smtp-Source: AGHT+IE9jU1FIU4/f7jfsz9Rxe7QJ58u0dK8sOWYKbT++bpDZ1zCqq2z618I6/2zgrXrXtGljoG5HE5wpdQJfoU3BhM=
+X-Received: by 2002:a05:6830:457:b0:6b9:9e4f:5f4c with SMTP id
+ d23-20020a056830045700b006b99e4f5f4cmr9593916otc.29.1694440984758; Mon, 11
+ Sep 2023 07:03:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230828140849.21724-1-tmaimon77@gmail.com>
-In-Reply-To: <20230828140849.21724-1-tmaimon77@gmail.com>
+References: <20230828140849.21724-1-tmaimon77@gmail.com> <20230828140849.21724-3-tmaimon77@gmail.com>
+In-Reply-To: <20230828140849.21724-3-tmaimon77@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 11 Sep 2023 15:53:40 +0200
-Message-ID: <CACRpkdY0C7S_VjZ8CKxj9MOv401jUPesvwKwHyCfHM+p8jRSOg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] pinctrl: nuvoton: add pinmux and GPIO driver for NPCM8XX
+Date:   Mon, 11 Sep 2023 16:02:53 +0200
+Message-ID: <CACRpkdZk8dKGx2HUoRhkRo6DBkycKh5EkYiGWcFot3OOZnvdpg@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver
 To:     Tomer Maimon <tmaimon77@gmail.com>
 Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         conor+dt@kernel.org, avifishman70@gmail.com, tali.perry1@gmail.com,
@@ -70,19 +71,94 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 28, 2023 at 4:08=E2=80=AFPM Tomer Maimon <tmaimon77@gmail.com> =
+On Mon, Aug 28, 2023 at 4:09=E2=80=AFPM Tomer Maimon <tmaimon77@gmail.com> =
 wrote:
 
-> This patch set adds pinmux and GPIO controller for the Arbel NPCM8XX
-> Baseboard Management Controller (BMC).
+> Add pinctrl and GPIO controller driver support to Arbel BMC NPCM8XX SoC.
+>
+> Arbel BMC NPCM8XX pinctrl driver based on Poleg NPCM7XX, except the
+> pin mux mapping difference the NPCM8XX GPIO supports adjust debounce
+> period time.
+>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 
-Patches applied. I can send some more nitpicky comments about
-patch 2/2 but they are not serious enough to warrant a resend of the
-patches, it is better to touch it up in-tree, if at all.
+As mentioned the patch is already applied, consider the following
+as nitpicks you can address in followup patches.
 
-Good work with this driver, and also good patience since you
-iterated 7 versions and polished everything up so it's really nice
-and shiny now!
+> +struct npcm8xx_gpio {
+> +       struct gpio_chip        gc;
+> +       void __iomem            *base;
+> +       struct debounce_time    debounce;
+> +       int                     irqbase;
+
+You're not really using this are you? Delete it.
+Also the assignment further down: you do not use it I think.
+
+> +       int                     irq;
+
+You're not using this either. Delete it.
+
+> +       struct irq_chip         irq_chip;
+
+Not this either. Delete it.
+
+> +static int npcm8xx_dt_node_to_map(struct pinctrl_dev *pctldev,
+> +                                 struct device_node *np_config,
+> +                                 struct pinctrl_map **map,
+> +                                 u32 *num_maps)
+> +{
+> +       return pinconf_generic_dt_node_to_map(pctldev, np_config,
+> +                                             map, num_maps,
+> +                                             PIN_MAP_TYPE_INVALID);
+> +}
+> +
+> +static void npcm8xx_dt_free_map(struct pinctrl_dev *pctldev,
+> +                               struct pinctrl_map *map, u32 num_maps)
+> +{
+> +       kfree(map);
+> +}
+
+Can't you just call the generic functions directly?
+
+> +static const struct pinctrl_ops npcm8xx_pinctrl_ops =3D {
+> +       .get_groups_count =3D npcm8xx_get_groups_count,
+> +       .get_group_name =3D npcm8xx_get_group_name,
+> +       .get_group_pins =3D npcm8xx_get_group_pins,
+> +       .dt_node_to_map =3D npcm8xx_dt_node_to_map,
+> +       .dt_free_map =3D npcm8xx_dt_free_map,
+
+Here?
+
+(...)
+> +static int npcm8xx_gpio_request_enable(struct pinctrl_dev *pctldev,
+> +                                      struct pinctrl_gpio_range *range,
+> +                                      unsigned int offset)
+> +{
+> +       struct npcm8xx_pinctrl *npcm =3D pinctrl_dev_get_drvdata(pctldev)=
+;
+> +       const unsigned int *pin =3D &offset;
+> +       int mode =3D fn_gpio;
+> +
+> +       if (pin[0] >=3D 183 && pin[0] <=3D 189)
+> +               mode =3D pincfg[pin[0]].fn0;
+
+These magic numbers should really be definies.
+
+> +static void npcm8xx_gpio_request_free(struct pinctrl_dev *pctldev,
+> +                                     struct pinctrl_gpio_range *range,
+> +                                     unsigned int offset)
+> +{
+> +       struct npcm8xx_pinctrl *npcm =3D pinctrl_dev_get_drvdata(pctldev)=
+;
+> +       int virq;
+> +
+> +       virq =3D irq_find_mapping(npcm->domain, offset);
+> +       if (virq)
+> +               irq_dispose_mapping(virq);
+> +}
+
+I would just rename "virq" to "irq", it is a Linux IRQ, not really
+"virtual" which is what the "v" sometimes stand for.
 
 Yours,
 Linus Walleij
