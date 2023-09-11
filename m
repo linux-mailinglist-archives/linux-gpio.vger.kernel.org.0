@@ -2,118 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7886A79B371
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:00:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACBFB79AD08
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:38:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239509AbjIKUy7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46306 "EHLO
+        id S240744AbjIKU4f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237877AbjIKNRc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 09:17:32 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E7BEB;
-        Mon, 11 Sep 2023 06:17:28 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-401bbfc05fcso49214365e9.3;
-        Mon, 11 Sep 2023 06:17:28 -0700 (PDT)
+        with ESMTP id S238158AbjIKNnD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 09:43:03 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BADFCD7
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 06:42:59 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-591ba8bd094so41593147b3.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 06:42:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694438247; x=1695043047; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VlerAEPk5ZbRg5PAlIL60EpQx7Cq2EyqtsP8OX4iUb0=;
-        b=luLfubuqD9dno+nlaYd5BmXcLyl4KlzfBQHqFIb1DkzAAUuZAeEj8b7Q+GlGt48LB/
-         X8L9xqWoaRdvGYuzqs+yMy+UtfOkVjV2vUohOteiMc7KXSIbSDxOwZqhg9eQJhl5O/vM
-         w8hSVdlIm/47Qr3ZrhGqox/fHkSFdbuCXcg++yd0jLm7ZCtikGDlCWuU4c6Tiux3ETiE
-         rz458p+ld32wjf3hriUjil5GnebNmzzVVlky8gjlqJI+uuShf5k/zwE9vsXZxP/C9FAn
-         bRaeWhq8e33AHEumkZRrnX8YCY7IyrK2kVzdFN82QUNNt9JqxfCXRc7qc4lAUgZzRzgT
-         94Ug==
+        d=linaro.org; s=google; t=1694439778; x=1695044578; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oFi/sDA0mpFKVNKjPCaHuqfQrAl+HMj1tLlHcsCUpzI=;
+        b=X/P0sGl5IsstvIicFfhNUBc2sVnbkLrl2LSwqZeh4Bqv9RFU2xDrH5Y1TcGAsL8kgM
+         hC1O3VKKS6raUEr+wazo9l6n3E2EqAQw9q24TrcFNq+bAF8oValEkgOAD9YIAUqcKa4M
+         AlJFqpVLHDe/TBcAn4JuJsD4OYRrd/+++zunzGZcvdDgoKQT06NK1bUmYjfUbmTqNlfl
+         pdVgBZz2CfzhV56lK0POR3oEr0MfKQ5pVFeXfaqelrlI4ya51EnsVBCRzfMOHeBKPFRD
+         PB/O8RmXZFwACAQbGBgXKOaBaA0sC9msI5IKVbuY8ckquq3gnfv6YEpIlfjnjeJlVxIO
+         t/hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694438247; x=1695043047;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VlerAEPk5ZbRg5PAlIL60EpQx7Cq2EyqtsP8OX4iUb0=;
-        b=gNSD59TosZgqxJcrJtyDLLKbgsSn4JMEJ/Mmlv197LcGWrLgWqL8xxJHV71tqjYaBh
-         ZCMLgVxrHJYMUotMV7ups33SZZB+yHhSJWDm4tnHgqZNI51eC28noS1vy/jQf8IMU9rg
-         yxaEdkcn7lRYqetv7qPUE8sZMFtvJXzZxlKCrJ9Ekpc6hjOas3ruJVae9fh4tMzqvrLV
-         23EvRO/6cMZ9L5cbr/aSeJm/R67rmdK9gb93Q/HhSDEXVuMBM7bAgTiNS3pQllEam5W2
-         JzBWVnpePeDwPbYNRH/wdLD/8cOXVXBwp8SY4ZY4ijJZqWAMd9qstlEev2zTyz06NKs3
-         lzCQ==
-X-Gm-Message-State: AOJu0YxKLKlvgXkGh7VE+uURVdWnVBr68t/8xGLEsnR4jm7J68W2rPqP
-        DWVHZnJIC0+1QqDSfMiDL5scyk8+z41tWA==
-X-Google-Smtp-Source: AGHT+IEPI6QFXgxg449sbeQSA4HtBFOyu5itUrch2mlFiWIh68Lx1OCYtTJqQqRdsjLm00GVmiQudQ==
-X-Received: by 2002:a1c:7912:0:b0:401:bf56:8baf with SMTP id l18-20020a1c7912000000b00401bf568bafmr7934172wme.8.1694438246711;
-        Mon, 11 Sep 2023 06:17:26 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2501:c701:6716:11bf:1bf:eca1])
-        by smtp.gmail.com with ESMTPSA id l10-20020a1c790a000000b003fed70fb09dsm10057913wme.26.2023.09.11.06.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 06:17:26 -0700 (PDT)
-From:   Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] pinctrl: renesas: pinctrl-rzg2l: Add validation of GPIO pin in rzg2l_gpio_request()
-Date:   Mon, 11 Sep 2023 14:16:38 +0100
-Message-Id: <20230911131638.443055-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1694439778; x=1695044578;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oFi/sDA0mpFKVNKjPCaHuqfQrAl+HMj1tLlHcsCUpzI=;
+        b=eRdnWp1PPnJya08Ud76pOz/IRwweONJehrFDZo2YjAiAdjBBhvoUsIx28SfsUUmCnI
+         0VqayZeHW8vUHZprQ8JXl1rJ5wZZALWmfqFgRYXm2FXe8C6M/WlAtvVTvMdt6INfZt43
+         2wHM/HN8yx5K1GDux6XUeEoO1/ReN11C6/QHHl4JrItLd3sL/Re67CvDGNrZYW5UHeYo
+         3k9FX3E7g8DyjALp/qnzqSxEXBhIGR/Rxybl2bm3D0K/VwrJ/eRbdLWEO0DEZTzxD5Uj
+         qn2Gj+jRQsVprAn0KBRCsOqlAOpiEz+cPpYbAdBqhoD0MEKNt5vuqeuYM7B23QiNTZ2U
+         P1PQ==
+X-Gm-Message-State: AOJu0YwvT1Uabs5IKnIhG+60ZdGSaRH6vv/PtWmEayGjsJ1wiFiITXgX
+        Rbm2knMmkU0hc1Mw0dLtM+u/9zYbFqilz7zBqAYHfw==
+X-Google-Smtp-Source: AGHT+IGCJDBzxyJwSnVTJ9qNX6U7qPwshhy0jI3iEwukYIwvyM1e3VMTsSd/EeJtCJMKIXhBS0NicWPOBRg8RHaJi9E=
+X-Received: by 2002:a5b:68d:0:b0:d80:c94:3ea6 with SMTP id j13-20020a5b068d000000b00d800c943ea6mr8260405ybq.34.1694439778534;
+ Mon, 11 Sep 2023 06:42:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230825092706.14680-1-yuehaibing@huawei.com>
+In-Reply-To: <20230825092706.14680-1-yuehaibing@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 11 Sep 2023 15:42:47 +0200
+Message-ID: <CACRpkdaSKHGb1jMv+oxAir2UUiFv868upt4Jh97Y9SN7k7G6jw@mail.gmail.com>
+Subject: Re: [PATCH -next] pinctrl: lantiq: Remove unsued declaration ltq_pinctrl_unregister()
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, Aug 25, 2023 at 11:27=E2=80=AFAM Yue Haibing <yuehaibing@huawei.com=
+> wrote:
 
-Validate the GPIO pin request in rzg2l_gpio_request() callback using
-rzg2l_validate_gpio_pin() function. This stops any accidental usage
-of GPIO pins which are not supported by the SoCs.
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> Commit 3f8c50c9b110 ("OF: pinctrl: MIPS: lantiq: implement lantiq/xway pi=
+nctrl support")
+> declared but never implemented it, so can be removed.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
-v1->v2
-* Maintained reverse christmas tree order.
-* Included RB/TB tags from Claudiu.
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Patch applied for fixes, thanks for fixing this Yue!
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 37cdfe4b04f9..cc52a154d201 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -795,12 +795,18 @@ static const struct pinconf_ops rzg2l_pinctrl_confops = {
- static int rzg2l_gpio_request(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
-+	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[offset];
- 	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
- 	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
-+	u64 *pin_data = pin->drv_data;
- 	unsigned long flags;
- 	u8 reg8;
- 	int ret;
- 
-+	ret = rzg2l_validate_gpio_pin(pctrl, *pin_data, port, bit);
-+	if (ret)
-+		return ret;
-+
- 	ret = pinctrl_gpio_request(chip->base + offset);
- 	if (ret)
- 		return ret;
--- 
-2.34.1
-
+Yours,
+Linus Walleij
