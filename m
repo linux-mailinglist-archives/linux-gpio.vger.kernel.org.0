@@ -2,171 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA22279B7EB
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:07:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3391879C0D0
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:21:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240969AbjIKU4n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33154 "EHLO
+        id S240815AbjIKU4k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:56:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243529AbjIKRR2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 13:17:28 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9692F1AD;
-        Mon, 11 Sep 2023 10:17:23 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-502153ae36cso7506619e87.3;
-        Mon, 11 Sep 2023 10:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694452642; x=1695057442; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SI5vlgRKYRNHM1C+DkX5FIATlpw7hyOP/MciW4qezs4=;
-        b=CEG/GNZEFcoigcN1/Kzcm/xxVTvQTJ6YQIALk5DtwB/w/ZC7GjMaHXHBQb3jvYgdAJ
-         19LsGJaWP38DQYGHjRgcOdm1Biwcvkdm4PgRfHwzZQNEDCXI7T6vFK3OTdpGlhwx7qHw
-         MaNlrzZxHGBEZ/0FX1Wz5JpIXkHaAzwELbdOKgASxwfTlNwqI2h3p83QnOQi2fHVvs8d
-         1l/EvaFum7f74bcC2zJy8BECdumI4LfJ7xPhI6X9XqaiKlSP5R/davcWPbWTNhlfyVKF
-         GEgeJXFQZf9DJ28L8ozEYoCLGrpeJ/pzT2NdT0BaUIVv2SlNuoHtkeZ9JhZvO2r0gOSr
-         /oag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694452642; x=1695057442;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SI5vlgRKYRNHM1C+DkX5FIATlpw7hyOP/MciW4qezs4=;
-        b=k9+wLAlyboTMEMFzMVC1Fhw+TMdGmjAmgvlfJwvbDH+m1mFCDeBuZ74ZCFLh0C3ou3
-         GBZ6mOeeEqijviTQ/UNpSdy/hE5F1RbtQrGju2iiMZDh0XYmh8ikp97e94fOXjx6Wuny
-         /3JB8MqabhZCYETuaxUYcrPwRdWcuZQNBAt7hVmNYNuR9zQvg/UqHRivZIs8a+D1xmt3
-         7788tsZiSrpueMeuWpbqlZAHtSBC+0p3i9MwZ+TuiQeiIjZmq2ayG2eqt09LyaRWSkVV
-         MJLKew/nFRPXubFlS5RGhb0sdt5OqmpSvHUbnNtVp1T77EkVq56fiYt4uVtMeeOVSDLR
-         ThEw==
-X-Gm-Message-State: AOJu0Yz4Lxy8HsQqqxO99KU/mboIShSoxlL17mbV0agY6L4o23VzmKDO
-        XBIiYplsdp0uFzXV15nwKjc=
-X-Google-Smtp-Source: AGHT+IGQJHojqhRwH0OQBhk3JhUu00YPa6S2W1S/m1cP6oA0/UCR4y1XMC4AB9LxZ3CXkImsKxpW4Q==
-X-Received: by 2002:a05:6512:108d:b0:500:97e4:587e with SMTP id j13-20020a056512108d00b0050097e4587emr9273543lfg.44.1694452641413;
-        Mon, 11 Sep 2023 10:17:21 -0700 (PDT)
-Received: from dell.localnet (77-255-201-154.dynamic.inetia.pl. [77.255.201.154])
-        by smtp.gmail.com with ESMTPSA id kj13-20020a170907764d00b009a1b857e3a5sm5622150ejc.54.2023.09.11.10.17.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 10:17:20 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFT PATCH 15/21] arm: omap1: ams-delta: stop using gpiochip_find()
-Date:   Mon, 11 Sep 2023 19:17:18 +0200
-Message-ID: <4001581.3daJWjYHZt@dell>
-In-Reply-To: <CAMRc=Mfrk9q6fJyEAuxDXYPpbjVHeLJaTjHEcKiYHzrE3r+_7A@mail.gmail.com>
-References: <20230905185309.131295-1-brgl@bgdev.pl> <6555932.G0QQBjFxQf@dell>
- <CAMRc=Mfrk9q6fJyEAuxDXYPpbjVHeLJaTjHEcKiYHzrE3r+_7A@mail.gmail.com>
+        with ESMTP id S244059AbjIKTAQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 15:00:16 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E261B6;
+        Mon, 11 Sep 2023 12:00:11 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BGVEEt014128;
+        Mon, 11 Sep 2023 18:59:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=dUU7osbkw61qj+RvTLN9W0ZCzWjH8hArh+5ZtdeNY0g=;
+ b=dKCGXtTA552bIp5b6zR+Rz2fNHf4yQ2GCT4MR59ptCHqB3zpGUnvydZL3gMlUTle5X/E
+ 7thIKoPjeE0IpMRm36gZ212OHgkmx/6H/z484qyL7ubo9KqMkv+POHxfjdacRBEKkOKA
+ PeYH0tj2E9BMC+ONZt5FTuLL9XKvqT5CVzFPl7cajAxkrRuVPgfZrVUVAKuykxlhWcOH
+ hXADZvlp/a/nfVD7Mig8XU7/xSpFRnn9DMCvf5oHlbZ30tdk1ZvQCTXhZP/DhC3Gwjbp
+ c7Wum/2yFUhnz1xcstJGizGwlkDf3SAR9vxYHpmrQ+16DmXSVE+IEsDIue7Ww0Obpf4q LQ== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t22hygywu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 18:59:33 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BIxK6L032545
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 18:59:20 GMT
+Received: from [10.111.183.71] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Mon, 11 Sep
+ 2023 11:59:16 -0700
+Message-ID: <8fa1a316-13d7-4ed0-8737-d8124a0bb25e@quicinc.com>
+Date:   Mon, 11 Sep 2023 11:59:16 -0700
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6408794.j6PcuT4dK6";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
-        HK_RANDOM_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 07/17] soc: qcom: minidump: Add pending region
+ registration
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
+        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
+        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
+References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
+ <1694290578-17733-8-git-send-email-quic_mojha@quicinc.com>
+From:   Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <1694290578-17733-8-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: lsVEyNvjBNS1dXQMGMGRjbo3HPUvt27b
+X-Proofpoint-GUID: lsVEyNvjBNS1dXQMGMGRjbo3HPUvt27b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-11_14,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 mlxlogscore=629 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 suspectscore=0 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2308100000 definitions=main-2309110174
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---nextPart6408794.j6PcuT4dK6
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 11 Sep 2023 19:17:18 +0200
-Message-ID: <4001581.3daJWjYHZt@dell>
-MIME-Version: 1.0
+On 9/9/2023 1:16 PM, Mukesh Ojha wrote:
+> +/**
+> + * struct minidump_pregion - Minidump pending region
+> + * @list       : Pending region list pointer
+> + * @region     : APSS minidump client region
 
-Hi Bartosz,
+does kernel-doc parse this correctly? should not be whitespace between 
+@ID and ":"
 
-Dnia poniedzia=C5=82ek, 11 wrze=C5=9Bnia 2023 13:09:56 CEST Bartosz Golasze=
-wski pisze:
-> On Fri, Sep 8, 2023 at 8:07=E2=80=AFPM Janusz Krzysztofik <jmkrzyszt@gmai=
-l.com> wrote:
-> >
-> > Dnia czwartek, 7 wrze=C5=9Bnia 2023 09:31:01 CEST Linus Walleij pisze:
-> > > On Tue, Sep 5, 2023 at 8:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgde=
-v.pl> wrote:
-> > >
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > gpiochip_find() is going away as it's not hot-unplug safe. This pla=
-tform
-> > > > is not affected by any of the related problems as this GPIO control=
-ler
-> > > > cannot really go away but in order to finally remove this function,=
- we
-> > > > need to convert it to using gpio_device_find() as well.
-> > > >
-> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > I was cleaning this one just some merge cycle ago, now it
-> > > looks even better!
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Acked-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-> >
->=20
-> Janusz,
->=20
-> Is it fine if I take it through the GPIO tree?
-
-Yes, should be fine, I believe.  Tony, Aaro, any doubts?
-
-Thanks,
-Janusz
-
->=20
-> Bartosz
->=20
-> > Thanks,
-> > Janusz
-> >
-> > >
-> > > Yours,
-> > > Linus Walleij
-> > >
-> >
-> >
-> >
-> >
->=20
-
-
---nextPart6408794.j6PcuT4dK6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnyr6IsGnTYAeAkHJ2WqSnltsjBoFAmT/S54ACgkQ2WqSnlts
-jBqfwggAkqeTBmvDijSA5oujmDfSsAwfI3pBy3VlWvEHNLW4jys50C18KyynuMPa
-QyvA9s4AZQjeusGTcGaGzSJ7KtMFCmTba/RuaP1mHrH/D9aXB0QlAhdaSoKEWpFl
-2ClWbPt6nnGyMQ17eFTpip9HD4ylxRY/wT748JaWqWBQPsOaSDsq1ghsuQy/6Dy2
-aos/iIizgrK5rhgxxBYmxHi7mm0Pa0sMkr6h8nqash55cMpCEMQeZmSV+GpDZ+vz
-BevtWk7pY+j5WGhOYJNulyih6cdVOVU8J6LqpUCkvKDwK2DzjKFsPSxJ2g1qA7/C
-B/sE4gkeNsH/dCnyiX/Rv1Kd3ak3YA==
-=/Mjl
------END PGP SIGNATURE-----
-
---nextPart6408794.j6PcuT4dK6--
-
-
-
+refer to 
+<https://static.lwn.net/kerneldoc/doc-guide/kernel-doc.html#structure-union-and-enumeration-documentation>
