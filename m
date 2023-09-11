@@ -2,163 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC3DD79AF79
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:47:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2780F79B19B
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241663AbjIKU5Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56348 "EHLO
+        id S238841AbjIKUyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238699AbjIKODK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 10:03:10 -0400
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DBB4CD7
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 07:03:05 -0700 (PDT)
-Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6beff322a97so3112426a34.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 07:03:05 -0700 (PDT)
+        with ESMTP id S240364AbjIKOmf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 10:42:35 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF5BCF0
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 07:42:31 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-9a9cd066db5so576287366b.0
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 07:42:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694440985; x=1695045785; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=htSTLHjXjD8vt5EAYXqSVCO6HargxzSV7gX/AB30oB8=;
-        b=pQ8DucXuZEPvnGjYPK6Xp6eHioid+dT2sQzVmKr7+vDnV6OsM7bPZeg4uE8b79zsv5
-         obCWZrboJP2tNwW+xt6Si608UY1uBJcTAqIK7QtpmwX429uEytiJ2w1JSEUMGBR+bQxn
-         DUL8oyRp6vGnqKKJ33js55BqS2bOVPgd24IcsZrHBAkZU92ZFT/mMYkfNktvPLnM3i5H
-         sxkme+ZYw2zigoIehhygpTpYSsxcKOvIs1UKzxKzUMiVd71Fq4cb9XTDmMlPVdtNU4im
-         D0LQchJyidfyTyJKQkLWt87DLb3EZ8oTy+YpobA2Uv3IYGpj+J71umZgbfZncoRxwPBL
-         V3cg==
+        d=gmail.com; s=20221208; t=1694443349; x=1695048149; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3gbT0k9NdeYjyT+O+DqoAOe85gGtNhRbh0FKrOX1DjQ=;
+        b=geNsxDdVnD36+63qwxCJS5TxNl50Y3nacZ9NwdfJIvGD6m+K75i2imCx3prtRcBGIt
+         u26R84Vsqh8AKapTfZBBRLqxzRN+bHVvkhll0bNSh8MQZri6ovELFYr9Ez8sVsupznbV
+         35PDC3io/WtA2NEL1uh89snixZSKBxhBao2wwZgG1AkIKuBYvQkQ5LhOs5392bec+3So
+         NrtADXPYEJuWh2R/Y2fSiDT2/fcxNl+3CREtBztt/3YU8KhVaWUmcaxSbbsaBImhU/4/
+         vtD+2qw7UYCLXsZJxo1Ush6DU5247n3bfUrKVeI37ImaMekyXTPE3yYfKI/sCHIo1osy
+         3lEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694440985; x=1695045785;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=htSTLHjXjD8vt5EAYXqSVCO6HargxzSV7gX/AB30oB8=;
-        b=rM9ygur9oh8A5CnzdTbVBD2Zpi70ObQ75sAglqKZgIkCZkwsNpV2+0GHk6mjyBtv6w
-         AQ9nRaynhpSVYgYX+6d6I1BRjD5WMhInWoCcqLA4/fhSWPtUU5ps1waC8MxJMY/hFjXx
-         WOgww1tJjBf83t2ZzNdqtE2w0FwlhoRkwHDvqTRVVelxXNpz9n5GELQjbfswuS2uHl2U
-         tLvGI9A7dAfqoGyOULGnD07kyBw51bRrJJ08uooGeGDWxiMz1nUc2mb2+Yf3cnONBoKT
-         /cOB4aE+uizgcUWqu9jSVuYjUeeWXdOW0/Ew0PZgnzkzjzF7UsxEL0JniT5FZberFxr9
-         hTGg==
-X-Gm-Message-State: AOJu0YxKZPPNyKARXpLMx6mOKorT5eb7B8WAtX4mZZ17eyReOXwhBzyc
-        zDmHRzWVTtpvOUHXq60NgPUUGPXiLlzt4AyfCbJ+gA==
-X-Google-Smtp-Source: AGHT+IE9jU1FIU4/f7jfsz9Rxe7QJ58u0dK8sOWYKbT++bpDZ1zCqq2z618I6/2zgrXrXtGljoG5HE5wpdQJfoU3BhM=
-X-Received: by 2002:a05:6830:457:b0:6b9:9e4f:5f4c with SMTP id
- d23-20020a056830045700b006b99e4f5f4cmr9593916otc.29.1694440984758; Mon, 11
- Sep 2023 07:03:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694443349; x=1695048149;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3gbT0k9NdeYjyT+O+DqoAOe85gGtNhRbh0FKrOX1DjQ=;
+        b=SoHgGvoyd2l9pliaC1MG29W2jL44S+h4q4TuSuv/Lu0bTlsZs8U+xCoCMQYxNkRlXI
+         NwmnGAxI6AixZh4bMeXLZmEX6mdU63ojEI7rjcocOJ8EbuMnBjSH8tCrS0t7Pq3+8MMp
+         KFt6QZ1jYGjsyGeuR5VXMgNir9lDXLrMo046v60gp+jTrtev1Nz4Wt+aIgl+e4/h7X58
+         zKcZ+rSLbmVrjUQoqDVp0wLVEdlRsIod54asONGaCp9pT2f+bbyaOl7FMksJofqey701
+         XLcUZ6lL9rTGoj71io4D6c91uR67p/IvyhpUASGTY3YcOfPJAGBhrYOgaC380qb2ongd
+         N7Qw==
+X-Gm-Message-State: AOJu0Yz+smuTE5E1c5iGfqKC+xGUyelQPSob0huJl2QY1mMUxSnxwPcH
+        lUbPj9XB+tR+iKIG8HKeKeLayOFnooOl4HHiEBU=
+X-Google-Smtp-Source: AGHT+IFlSCKHXtB/02ULfk3ufQNPso4U6Y4W8sgOD3WItMii8XK+6+axMjZLdpiO3N07nUGN+YoiEOG3+WPtnccGhlE=
+X-Received: by 2002:a17:906:ef8f:b0:9a9:d5dd:dacd with SMTP id
+ ze15-20020a170906ef8f00b009a9d5dddacdmr8460952ejb.26.1694443349439; Mon, 11
+ Sep 2023 07:42:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230828140849.21724-1-tmaimon77@gmail.com> <20230828140849.21724-3-tmaimon77@gmail.com>
-In-Reply-To: <20230828140849.21724-3-tmaimon77@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 11 Sep 2023 16:02:53 +0200
-Message-ID: <CACRpkdZk8dKGx2HUoRhkRo6DBkycKh5EkYiGWcFot3OOZnvdpg@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, avifishman70@gmail.com, tali.perry1@gmail.com,
-        joel@jms.id.au, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, j.neuschaefer@gmx.net,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Received: by 2002:a05:7412:512:b0:e5:c6b1:e1 with HTTP; Mon, 11 Sep 2023
+ 07:42:28 -0700 (PDT)
+Reply-To: laurabr8@outlook.com
+From:   Laura McBrown <elizabethjohnson184@gmail.com>
+Date:   Mon, 11 Sep 2023 15:42:28 +0100
+Message-ID: <CAFDOM0ZMReZXUEs5dyB9qQzSzA8d2qB4BDy9Gh1zXCtVQBDjxQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 28, 2023 at 4:09=E2=80=AFPM Tomer Maimon <tmaimon77@gmail.com> =
-wrote:
+pozdravy tob=C4=9B
 
-> Add pinctrl and GPIO controller driver support to Arbel BMC NPCM8XX SoC.
->
-> Arbel BMC NPCM8XX pinctrl driver based on Poleg NPCM7XX, except the
-> pin mux mapping difference the NPCM8XX GPIO supports adjust debounce
-> period time.
->
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+S n=C3=A1le=C5=BEitou =C3=BActou a lidskost=C3=AD jsem byl nucen v=C3=A1m n=
+apsat z
+humanit=C3=A1rn=C3=ADch d=C5=AFvod=C5=AF. Jmenuji se pan=C3=AD Laura McBrow=
+n. Narodil jsem se v
+Baltimoru, Maryland. Jsem vdan=C3=A1 za pana Waltera McBrown, =C5=99editele
+spole=C4=8Dnosti J.C. Byli jsme man=C5=BEel=C3=A9 36 let bez d=C3=ADt=C4=9B=
+te. Zem=C5=99el po
+operaci srde=C4=8Dn=C3=ADch tepen.
 
-As mentioned the patch is already applied, consider the following
-as nitpicks you can address in followup patches.
+A ned=C3=A1vno mi m=C5=AFj doktor =C5=99ekl, =C5=BEe p=C5=99=C3=AD=C5=A1t=
+=C3=ADch =C5=A1est m=C4=9Bs=C3=ADc=C5=AF nevydr=C5=BE=C3=ADm kv=C5=AFli
+m=C3=A9mu probl=C3=A9mu s rakovinou (rakovina jater a mrtvice). Ne=C5=BE m=
+=C5=AFj man=C5=BEel
+loni zem=C5=99el, ulo=C5=BEil zde v bance =C4=8D=C3=A1stku 2,8 milionu dola=
+r=C5=AF. V sou=C4=8Dasn=C3=A9
+dob=C4=9B jsou tyto pen=C3=ADze st=C3=A1le v bance. Pot=C3=A9, co jsem znal=
+ sv=C5=AFj stav,
+rozhodl jsem se darovat tento fond ka=C5=BEd=C3=A9mu dobr=C3=A9mu bratrovi =
+nebo
+sest=C5=99e, kte=C5=99=C3=AD se boj=C3=AD Boha, kte=C5=99=C3=AD budou tento=
+ fond pou=C5=BE=C3=ADvat zp=C5=AFsobem,
+kter=C3=BD zde budu instruovat.
 
-> +struct npcm8xx_gpio {
-> +       struct gpio_chip        gc;
-> +       void __iomem            *base;
-> +       struct debounce_time    debounce;
-> +       int                     irqbase;
+ Chci n=C4=9Bkoho, kdo pou=C5=BEije tento fond podle p=C5=99=C3=A1n=C3=AD m=
+=C3=A9ho zesnul=C3=A9ho
+man=C5=BEela na bezmocn=C3=A9 privilegovan=C3=A9 lidi, sirot=C4=8Dince, vdo=
+vy a na =C5=A1=C3=AD=C5=99en=C3=AD
+slova Bo=C5=BE=C3=ADho. U=C4=8Dinil jsem toto rozhodnut=C3=AD, proto=C5=BEe=
+ nem=C3=A1m =C5=BE=C3=A1dn=C3=A9 d=C3=ADt=C4=9B,
+kter=C3=A9 by zd=C4=9Bdilo tento fond, a nechci pry=C4=8D, kde budou tyto p=
+en=C3=ADze
+pou=C5=BEity bezbo=C5=BEn=C3=BDm zp=C5=AFsobem. To je d=C5=AFvod, pro=C4=8D=
+ jsem se rozhodl p=C5=99edat
+v=C3=A1m tento fond.
 
-You're not really using this are you? Delete it.
-Also the assignment further down: you do not use it I think.
+ Neboj=C3=ADm se smrti, proto v=C3=ADm, kam jdu. Chci, abyste na m=C4=9B v=
+=C5=BEdy
+pamatovali ve sv=C3=BDch ka=C5=BEdodenn=C3=ADch modlitb=C3=A1ch kv=C5=AFli =
+m=C3=A9 nadch=C3=A1zej=C3=ADc=C3=AD
+operaci rakoviny. Odepi=C5=A1te co nejd=C5=99=C3=ADve, jak=C3=A9koli zpo=C5=
+=BEd=C4=9Bn=C3=AD ve va=C5=A1=C3=AD
+odpov=C4=9Bdi mi poskytne prostor pro z=C3=ADsk=C3=A1n=C3=AD dal=C5=A1=C3=
+=AD osoby pro stejn=C3=BD =C3=BA=C4=8Del.
+B=C5=AFh v=C3=A1m =C5=BEehnej, kdy=C5=BE naslouch=C3=A1te hlasu uva=C5=BEov=
+=C3=A1n=C3=AD,
 
-> +       int                     irq;
-
-You're not using this either. Delete it.
-
-> +       struct irq_chip         irq_chip;
-
-Not this either. Delete it.
-
-> +static int npcm8xx_dt_node_to_map(struct pinctrl_dev *pctldev,
-> +                                 struct device_node *np_config,
-> +                                 struct pinctrl_map **map,
-> +                                 u32 *num_maps)
-> +{
-> +       return pinconf_generic_dt_node_to_map(pctldev, np_config,
-> +                                             map, num_maps,
-> +                                             PIN_MAP_TYPE_INVALID);
-> +}
-> +
-> +static void npcm8xx_dt_free_map(struct pinctrl_dev *pctldev,
-> +                               struct pinctrl_map *map, u32 num_maps)
-> +{
-> +       kfree(map);
-> +}
-
-Can't you just call the generic functions directly?
-
-> +static const struct pinctrl_ops npcm8xx_pinctrl_ops =3D {
-> +       .get_groups_count =3D npcm8xx_get_groups_count,
-> +       .get_group_name =3D npcm8xx_get_group_name,
-> +       .get_group_pins =3D npcm8xx_get_group_pins,
-> +       .dt_node_to_map =3D npcm8xx_dt_node_to_map,
-> +       .dt_free_map =3D npcm8xx_dt_free_map,
-
-Here?
-
-(...)
-> +static int npcm8xx_gpio_request_enable(struct pinctrl_dev *pctldev,
-> +                                      struct pinctrl_gpio_range *range,
-> +                                      unsigned int offset)
-> +{
-> +       struct npcm8xx_pinctrl *npcm =3D pinctrl_dev_get_drvdata(pctldev)=
-;
-> +       const unsigned int *pin =3D &offset;
-> +       int mode =3D fn_gpio;
-> +
-> +       if (pin[0] >=3D 183 && pin[0] <=3D 189)
-> +               mode =3D pincfg[pin[0]].fn0;
-
-These magic numbers should really be definies.
-
-> +static void npcm8xx_gpio_request_free(struct pinctrl_dev *pctldev,
-> +                                     struct pinctrl_gpio_range *range,
-> +                                     unsigned int offset)
-> +{
-> +       struct npcm8xx_pinctrl *npcm =3D pinctrl_dev_get_drvdata(pctldev)=
-;
-> +       int virq;
-> +
-> +       virq =3D irq_find_mapping(npcm->domain, offset);
-> +       if (virq)
-> +               irq_dispose_mapping(virq);
-> +}
-
-I would just rename "virq" to "irq", it is a Linux IRQ, not really
-"virtual" which is what the "v" sometimes stand for.
-
-Yours,
-Linus Walleij
+pan=C3=AD Laura McBrown
