@@ -2,42 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D11379B43E
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 576CB79B2C2
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:59:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239675AbjIKUzS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41490 "EHLO
+        id S240879AbjIKU4m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236546AbjIKK4x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 06:56:53 -0400
+        with ESMTP id S236556AbjIKK5G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 06:57:06 -0400
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25000127;
-        Mon, 11 Sep 2023 03:56:48 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BAuEgF017396;
-        Mon, 11 Sep 2023 10:56:14 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A95F3;
+        Mon, 11 Sep 2023 03:57:01 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BAov3n011117;
+        Mon, 11 Sep 2023 10:56:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=qcppdkim1;
- bh=VuS5BngeDMoGs7HCNFTyrS6m+gpdRhA4rXrczTHM1kY=;
- b=EC8/+GRvaoPLT8rKSCl+rmvF4UjTXLgwaj3cd8sN2AcFuY5QU1Yl7Eo/oeJavi+TXiu0
- 9oJigAmM/kAtDJBv/8BmmSOhjKNtRnZBoIHTyw62V824olEd0slQntnM1UDmyqq1lAb+
- YFJeInJwLCxid5TP8Cok6UVA2nnWSSZ3KH4l/qSD317qxDWt5svCNeGHhUGQN13K5ixy
- RToHtIRIRHBs9I7e6EO6tQfZAlIw43lI0ExCUkN6Jk9pklXk4JaMcAvq93rM3QZ6EkIt
- mgqjwNp2edXmJfAz87VotieQfhG/BjW8uxAgPx1OKWVSBuu+SAI0TrQ7jEdmj/4yd7DI kw== 
+ bh=BciqlRm1IXuJGPGGFANUuS6+s1Ocn2xvnDLrENlUd70=;
+ b=YOtpL6iC9R4FChfnR4PXO2BcTiAkfs+JSz7WDX7bdwxDujJAOaPVpwCdzEskI2iNeE3/
+ BB/jO0srmLAimGgKHXC0C3m4ojxb2/n9WVo6XSyPHBVjcTHd6f00y/mKRRgmsDTbnCir
+ lexC1x0EK0yGaMW8do3vRBO9kLxY5Vg4AR/J5oK8RT/nf0zTbIDeNCqw93Yj/jjcN8Pp
+ k8fYTPhmq8Qtu2L+BZeU/2LDvDngm3nK8OxEVfJcuLU9sp5EzP7CiqrlBmMx78nFmrpl
+ JlWlk3PMlDgQQ5Vr326ubiX89FLXNGZwpySvgiPLru6HZm2jwKgiYTQffYDCOo2cokgj Cw== 
 Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0hfqkend-1
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0edmkqab-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:14 +0000
+        Mon, 11 Sep 2023 10:56:31 +0000
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuCVw006051
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuUpG006543
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:13 GMT
+        Mon, 11 Sep 2023 10:56:30 GMT
 Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
  nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Mon, 11 Sep 2023 03:56:02 -0700
+ 15.2.1118.36; Mon, 11 Sep 2023 03:56:20 -0700
 From:   Mukesh Ojha <quic_mojha@quicinc.com>
 To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
         <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
@@ -55,10 +55,11 @@ CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
         <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_mojha@quicinc.com>
-Subject: [REBASE PATCH v5 13/17] firmware: qcom_scm: provide a read-modify-write function
-Date:   Mon, 11 Sep 2023 16:23:55 +0530
-Message-ID: <1694429639-21484-14-git-send-email-quic_mojha@quicinc.com>
+        <quic_mojha@quicinc.com>,
+        Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+Subject: [REBASE PATCH v5 15/17] firmware: scm: Modify only the download bits in TCSR register
+Date:   Mon, 11 Sep 2023 16:23:57 +0530
+Message-ID: <1694429639-21484-16-git-send-email-quic_mojha@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
 References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
@@ -69,15 +70,15 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Vye1cCKDmzVPC6zrq9JQEZLYUW6sLD-J
-X-Proofpoint-GUID: Vye1cCKDmzVPC6zrq9JQEZLYUW6sLD-J
+X-Proofpoint-ORIG-GUID: vE-OmmTlA0fMtTl4BcpSQY1pdiC7iSC8
+X-Proofpoint-GUID: vE-OmmTlA0fMtTl4BcpSQY1pdiC7iSC8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- suspectscore=0 phishscore=0 mlxlogscore=854 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 clxscore=1015
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2308100000 definitions=main-2309110099
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
@@ -88,73 +89,66 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It was realized by Srinivas K. that there is a need of
-read-modify-write scm exported function so that it can
-be used by multiple clients.
+Crashdump collection is based on the DLOAD bit of TCSR register.
+To retain other bits, we read the register and modify only the
+DLOAD bit as the other bits have their own significance.
 
-Let's introduce qcom_scm_io_update_field() which masks
-out the bits and write the passed value to that
-bit-offset. Subsequent patch will use this function.
-
-Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
 Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 Tested-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com> # IPQ9574 and IPQ5332
 ---
- drivers/firmware/qcom_scm.c            | 20 ++++++++++++++++++++
- include/linux/firmware/qcom/qcom_scm.h |  2 ++
- 2 files changed, 22 insertions(+)
+ drivers/firmware/qcom_scm.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 06fe8aca870d..321133f0950d 100644
+index 321133f0950d..5cacae63ee2a 100644
 --- a/drivers/firmware/qcom_scm.c
 +++ b/drivers/firmware/qcom_scm.c
-@@ -74,6 +74,7 @@ static const char * const qcom_scm_convention_names[] = {
- };
+@@ -5,6 +5,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/bitfield.h>
++#include <linux/bits.h>
+ #include <linux/completion.h>
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
+@@ -26,6 +28,14 @@
+ static bool download_mode = IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
+ module_param(download_mode, bool, 0);
  
- static struct qcom_scm *__scm;
-+static DEFINE_SPINLOCK(lock);
++#define SCM_HAS_CORE_CLK	BIT(0)
++#define SCM_HAS_IFACE_CLK	BIT(1)
++#define SCM_HAS_BUS_CLK		BIT(2)
++
++#define QCOM_DLOAD_MASK		GENMASK(5, 4)
++#define QCOM_DLOAD_FULLDUMP	0x1
++#define QCOM_DLOAD_NODUMP	0x0
++
+ struct qcom_scm {
+ 	struct device *dev;
+ 	struct clk *core_clk;
+@@ -440,6 +450,7 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
  
- static int qcom_scm_clk_enable(void)
+ static void qcom_scm_set_download_mode(bool enable)
  {
-@@ -403,6 +404,25 @@ int qcom_scm_set_remote_state(u32 state, u32 id)
- }
- EXPORT_SYMBOL_GPL(qcom_scm_set_remote_state);
++	u32 val = enable ? QCOM_DLOAD_FULLDUMP : QCOM_DLOAD_NODUMP;
+ 	bool avail;
+ 	int ret = 0;
  
-+int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask, unsigned int val)
-+{
-+	unsigned int old, new;
-+	int ret;
-+
-+	spin_lock(&lock);
-+	ret = qcom_scm_io_readl(addr, &old);
-+	if (ret)
-+		goto unlock;
-+
-+	new = (old & ~mask) | (val & mask);
-+
-+	ret = qcom_scm_io_writel(addr, new);
-+unlock:
-+	spin_unlock(&lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(qcom_scm_io_update_field);
-+
- static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
- {
- 	struct qcom_scm_desc desc = {
-diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
-index 0c091a3f6d49..eb750286abb6 100644
---- a/include/linux/firmware/qcom/qcom_scm.h
-+++ b/include/linux/firmware/qcom/qcom_scm.h
-@@ -84,6 +84,8 @@ extern bool qcom_scm_pas_supported(u32 peripheral);
- 
- extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
- extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
-+extern int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask,
-+				    unsigned int val);
- 
- extern bool qcom_scm_restore_sec_cfg_available(void);
- extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
+@@ -449,8 +460,9 @@ static void qcom_scm_set_download_mode(bool enable)
+ 	if (avail) {
+ 		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+ 	} else if (__scm->dload_mode_addr) {
+-		ret = qcom_scm_io_writel(__scm->dload_mode_addr,
+-				enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
++		ret = qcom_scm_io_update_field(__scm->dload_mode_addr,
++					       QCOM_DLOAD_MASK,
++					       FIELD_PREP(QCOM_DLOAD_MASK, val));
+ 	} else {
+ 		dev_err(__scm->dev,
+ 			"No available mechanism for setting download mode\n");
 -- 
 2.7.4
 
