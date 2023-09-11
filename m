@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4474C79B5F6
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:04:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6567C79ADC7
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:40:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238526AbjIKUzZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49634 "EHLO
+        id S241749AbjIKU5R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235536AbjIKIwt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 04:52:49 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80DF61A5
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 01:52:44 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-d776e1f181bso3645108276.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 01:52:44 -0700 (PDT)
+        with ESMTP id S235539AbjIKIxa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 04:53:30 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8881A1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 01:53:25 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-d7bae413275so7381687276.0
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 01:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694422363; x=1695027163; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694422405; x=1695027205; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N+TBKfXcW4VNeT7h3JrMxAlQteRcuMFFm4dXlpFkqqk=;
-        b=qCWhxUxB92NKRMNnvDvHjVczsYel3m8v4+U/vXbhiUQIrJvlIdkXgIG/FSCrPTdtHc
-         9dAuIuZLIPNabti4CS7eFQqcNDZo+g/SD8GBw13xP+dzOEfGxXHAPw6ynvRfb+Ey/BUK
-         Hc5fk/PR83hhMfuEy8dKdfDZgQGW5YzTfOkLOkqiIH+98NPj96BdujAF8PRRwm4Ot7c1
-         AIJLi2gRehu9qH79M6CqpQDRAE8MUzeU1i/UAhiHKm/+Y18rrxqi9n1nSShdXBtdXhTC
-         rI7Zo5cFiF09b+gJLv8ekJGsyY9er2PAu6b7UxcqRfvAwEiTY3R5yEGbxXwm0VwajnEJ
-         Zy9Q==
+        bh=+uSuFkePcllXheKKrDKtEzRTd0oahV94Bg0tqz8sFvE=;
+        b=EbMFixh28wQ4GZwVv4qxTXqipReLUX44kj/GBs9Y3Kx1i/SQvQn3OJj1Zl59gX52Lx
+         Hjy/2uuPdX/VAXD3fIhJRcwEvlOHQdP1CI2fPCqKa/jFAHbA9a3a57XrYNjB1+6osOzX
+         Z0J3wHkunK4a6WvJJg6v5L9H332DAyi5Djbxk4VBKdyJyFgLgrJV9KQP9TCAhTh+Hx2V
+         jdP+hFcA5/M1YZ4oFC4llgfNgMx0XWWw8rLOWg6VVlas28Km3XQFsu9Fip8MU0xfMheH
+         hUossyIQORJQLlN6Oq5b/+8YZWwonak9Jc6fBJvN8lP13RX/GxYts/iDUpr2eaDKWvZu
+         BeSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694422363; x=1695027163;
+        d=1e100.net; s=20230601; t=1694422405; x=1695027205;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N+TBKfXcW4VNeT7h3JrMxAlQteRcuMFFm4dXlpFkqqk=;
-        b=jf0TVoWTHt5HcpJyMzF0iIuQlo61K1qeK/EEq7OkBiES77KN5KetdKj9MYOzyUgxzC
-         MG4zDtInM2LPZq7M9X8duBY8FpC1ur/I1AawPYZJKl7mB4Ql2WeY1A3C/pRAPc7+pdAW
-         k02d1/TTTZhkQKCFIhf7spIvTBNlL3oDBAS6BdE5C04sihMw8Bi/Atf5yuAlSTrwnZ7Z
-         S9mWvHKPeXj9EpE7fTgwsF667p1Pi8RLgNuWLhyl5gPkbbK+gFSwV83nV7xTvASRc828
-         W7ZnBHm2p8KKZZ/up208qzT5tl5uhOQPXk+Z5aWY5qHwg0TboWuFyD/BNhnCj5SOYzqi
-         ByKA==
-X-Gm-Message-State: AOJu0YxzX9yjoxTC0up07I83D+RUVAoPnTwkoUZZERKUo5+GdYfC56Vn
-        JLqDK4uYERM6RmGRJTwE7PyTFECtCOvAuYhCj6+ieQ==
-X-Google-Smtp-Source: AGHT+IG/7XXVErcSB7fRMvEak2L05rtVWPjY5fxZdBayCUIhiXjJE6hICBmuHJK0LCu4wfYW2GHb2Ql3VGOVdjSdOK8=
-X-Received: by 2002:a25:e74a:0:b0:d80:bef:3035 with SMTP id
- e71-20020a25e74a000000b00d800bef3035mr8806351ybh.52.1694422363761; Mon, 11
- Sep 2023 01:52:43 -0700 (PDT)
+        bh=+uSuFkePcllXheKKrDKtEzRTd0oahV94Bg0tqz8sFvE=;
+        b=olzB12DwOkaj/5RRPiSCUHn++I4Q5ZxxAp9NneWZkelafOSHSmLRH4fM0V9LV98tIY
+         mKa6S6DfdmW1yBFkfflbmJS40iKBDQzZ+uO1vIaAt9+uwplK7ndy3rNgq8NrVUbLbDNQ
+         /7LQi8ygvZ56S1+DjSx6iAHPRdsJh2/JGAAkELn2m1Hzn2tN8h9cWt4mNHMXRcMTCwAN
+         ZuwKIGaAzM/n4+HDseVdeybyUnn66ifrikD493vCxv772iAekfBVK7lCDJWwI/E96hPd
+         EUpngZda3VNir3TKeFZchOplxBy8UoxrM4adCMP2U5vM+UeahxwNz94rpsmi1Wjhj9Fc
+         xmSA==
+X-Gm-Message-State: AOJu0YwFUqh4VRZCmr/FNpwol2hCRifC9vxHAKBsMST5KDusikhtB4dV
+        qiOPiJAaPmG4u74ves+vz/Z3gYdAcncYphaPC1Od7g==
+X-Google-Smtp-Source: AGHT+IEpUVQ6pAi/5PvV7lvoYO9nqoagoZuqIl8EkSZivs/K/vJ4a0Wlk0i5y7BwzCtKeUmkF3ktqnt3UTq/4vNP5sA=
+X-Received: by 2002:a25:db0f:0:b0:d71:c79c:86c1 with SMTP id
+ g15-20020a25db0f000000b00d71c79c86c1mr12790563ybf.32.1694422404707; Mon, 11
+ Sep 2023 01:53:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230824105703.19612-1-tychang@realtek.com> <20230824105703.19612-7-tychang@realtek.com>
-In-Reply-To: <20230824105703.19612-7-tychang@realtek.com>
+References: <20230824105703.19612-1-tychang@realtek.com> <20230824105703.19612-8-tychang@realtek.com>
+In-Reply-To: <20230824105703.19612-8-tychang@realtek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 11 Sep 2023 10:52:32 +0200
-Message-ID: <CACRpkdbehdVKbcJjdGb-4_KuTwAJVuj1ucBihkg5tX+VJe1z5A@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] dt-bindings: pinctrl: realtek: add RTD1319D
+Date:   Mon, 11 Sep 2023 10:53:13 +0200
+Message-ID: <CACRpkdbSwF-9kuz4dLbRZiAFUB9qXvxAUXyin2BxLtq=hrzwSw@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] dt-bindings: pinctrl: realtek: add RTD1619B
  pinctrl binding
 To:     Tzuyi Chang <tychang@realtek.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -74,16 +74,11 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Thu, Aug 24, 2023 at 12:57=E2=80=AFPM Tzuyi Chang <tychang@realtek.com> =
 wrote:
 
-> Add device tree bindings for RTD1319D.
+> Add device tree bindings for RTD1619B.
 >
 > Signed-off-by: Tzuyi Chang <tychang@realtek.com>
-> ---
-> v1 to v2 change:
 
-My comments are addressed so:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-(Then you need to also fix Rob's comments.)
 
 Yours,
 Linus Walleij
