@@ -2,208 +2,310 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4291079B39A
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:00:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE0FE79B2E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:59:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239884AbjIKUzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
+        id S239087AbjIKUyg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235403AbjIKIeV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 04:34:21 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ABA18D
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 01:34:15 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-99c136ee106so515882866b.1
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 01:34:15 -0700 (PDT)
+        with ESMTP id S235532AbjIKIwX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 04:52:23 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD57A1A1;
+        Mon, 11 Sep 2023 01:52:18 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-68fb2e9ebcdso764353b3a.2;
+        Mon, 11 Sep 2023 01:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1694421254; x=1695026054; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XJm1KaNRweMkGVAymSAxQbFYuR9Q/QDHdaAfSIOtOtY=;
-        b=snoiVXErePqPv15Ov6YYqDsErLkyeRomEvttbFZlvfsaKz8W7DEzqzhqqOv4JPO58e
-         hueYhhGy4d//Ns30AaauvV6CiM8JrDN6bbz8/7uEHD9m8zqSaSxpk93orUy4uiROjT2A
-         XnDn+Du8jSzlH9TgsKmSwU0ka4kqIW5aw59TV5n7r3R7RHi5LwnIWBbCyt2gWT1g3VMW
-         CzE/MaW7BbgLmmQF4oTS3INXAQZflcmS/mn67R029HtPhkcZfrh4M5QCNNrlfV+LtRL4
-         eBjJlx2KAnMpzzNQnA/13u0L9gBRZ7puIXew2OogC76rmA12X/JOUCmIJkYuQgx9v3mS
-         fbaQ==
+        d=gmail.com; s=20221208; t=1694422338; x=1695027138; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b6ojjoj528580DYzIEP6XgoOL7aePsN/TYuceJeg3YE=;
+        b=EWaL/fbzRC/P2JYWjsEpRPKHxsQBmEY9Ngt0JJqQlk5pDLT1BV7yHK8vPK9OyZ3sUe
+         IQTxNYBFAWspBt9liEkRI+iS3C0EXtTrkCYI9g9Kora9pyayplcAHf5l4mJYYRWzrbWv
+         jBVnc8ouj5vqymrbVucyxuehWqSdckBcIWTZX0FyJtbPLZoJDK2lmln26v7euDbLY7xl
+         YkclZAlBsEs0aEZghbzAbhXF1WcWMIbk1DzQTYReQCYXlp2ySErgoAJtc/e+Z/V4y1kT
+         BLXKd2/ou/qXQUSLTYpzWMv5PSsWbXwyhEShiUvSmCPS9lPJIEaJAWLskdObP91SuBAj
+         E/6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694421254; x=1695026054;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XJm1KaNRweMkGVAymSAxQbFYuR9Q/QDHdaAfSIOtOtY=;
-        b=YwqYaWBjTAjxaj9SbdBw559/Hf8LGW2ZCKOgAhSvwe7A8lBsaO9vrINy/Ab+Tbp7BN
-         VfDh5L5qAY5EYTfvdRinnCUs67OIBQ2+BazH6UMqmwftIV0UKREmRRbzABYe3nckrOrW
-         aXJeBPPiyPgKBxjs+lYG3+zygNEHntXhUwMrwwSAuXfR52rB9zKnfVASr/TyBWDmzqeD
-         ZU3VaIBbeoXpnwRk2z62PqV/uaYsxM09INEy3QkQ5TPwPeyPvxRpzx3iSaFdMMXettK6
-         MZ6r2BlBjPItB9qqvPIqBPEBBD1nxergnjwCV3v/L48q4AT8QQJEMTXKJtIPzYc8xRLG
-         HjAA==
-X-Gm-Message-State: AOJu0YzIElUvZ4/iWJQ+h0bkBBw5ya2YHOHcsWOyJZesFOnvEICLRqcb
-        cT2VLEHINHEjbFcrVjMwfjC4HQ==
-X-Google-Smtp-Source: AGHT+IFj11zWwg4l2ZYoi5wwOlV3+q/kHSKszsCHlHHWLxUQKUTp28BwxRBudKWY2XQcGgljf2DGcg==
-X-Received: by 2002:a17:906:5a49:b0:9a2:24f9:fabe with SMTP id my9-20020a1709065a4900b009a224f9fabemr7402648ejc.66.1694421253741;
-        Mon, 11 Sep 2023 01:34:13 -0700 (PDT)
-Received: from localhost (k10064.upc-k.chello.nl. [62.108.10.64])
-        by smtp.gmail.com with ESMTPSA id w20-20020a1709064a1400b00991faf3810esm5046605eju.146.2023.09.11.01.34.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 01:34:13 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 11 Sep 2023 10:34:12 +0200
-Message-Id: <CVFY7D7ND3WS.2B2EYB4ZO86P@otso>
-From:   "Luca Weiss" <luca.weiss@fairphone.com>
-To:     "Luca Weiss" <luca.weiss@fairphone.com>,
-        "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-Cc:     <cros-qcom-dts-watchers@chromium.org>,
-        "Andy Gross" <agross@kernel.org>,
-        "Bjorn Andersson" <andersson@kernel.org>,
-        "Konrad Dybcio" <konrad.dybcio@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        "Conor Dooley" <conor+dt@kernel.org>,
-        "Srinivas Kandagatla" <srinivas.kandagatla@linaro.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Viresh Kumar" <viresh.kumar@linaro.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>,
-        <phone-devel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH 04/11] arm64: dts: qcom: pm7250b: make SID configurable
-X-Mailer: aerc 0.15.2
-References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
- <20230830-fp5-initial-v1-4-5a954519bbad@fairphone.com>
- <b82f4683-e8b5-b424-8f7a-6d2ba1cab61f@linaro.org>
- <CV6NF0466658.20DGU7QKF2UBR@otso>
- <CAA8EJpr1+W3f08X-FpiiVrJ98kg52HaMwbbKn=fG15Whm4C8aQ@mail.gmail.com>
- <728003b9-db27-fdc0-e761-197a02a38c24@linaro.org>
- <CAA8EJpoXreHpxZQ2G10n0OiQzUX4ffk=gvo87dAU4-r+Svqpeg@mail.gmail.com>
- <CVAUDGBO4S08.1F0O66ZE6I4IG@otso>
-In-Reply-To: <CVAUDGBO4S08.1F0O66ZE6I4IG@otso>
+        d=1e100.net; s=20230601; t=1694422338; x=1695027138;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b6ojjoj528580DYzIEP6XgoOL7aePsN/TYuceJeg3YE=;
+        b=wz+gtZt6B1kMuJMa4I3H9GeAzLbtqEs4e7MO2Uh2hI15z1Mauty7Po+2MSW2b0YFa0
+         gZG5kUoYo1NILBz2k8lpSgjSVaX+lk+Vzliur+4fW+/krF7ZtxoPD37KzHfmBLi69H1O
+         zxoNWUGq6OKwbBETzBojPDYv1atD2b6rrjwrC40xBTxTkzJHWsC7U1dASBOr6CyoGQ53
+         OzCIKpP2ZmH/A19FWKpDuzxW2j80Ve3oA2c0xs2x5Byv1/DjpPt/eWr3/EIW1n+N5RhH
+         Z5OXEs1I7kgI/EObiLx8k2PCZEQUUtCdxneReRLwNEVU40xfRaZu67GyazIA4hqlCkCM
+         7Q8w==
+X-Gm-Message-State: AOJu0YyyCG0bWnPyVgSlZcfTiNqRvq1mnwEjfYHHL0rm+RSt07BtNIdj
+        qptkLJaRrPAxosqzSrAGAoo=
+X-Google-Smtp-Source: AGHT+IGhmEWHLAYl0FOfBIxHzSVzPNiLLqpuyRPizVofbJudX36mjRJtfMF93gr9pzcoQUhJS9Y29Q==
+X-Received: by 2002:a05:6300:8005:b0:14b:f9e2:e16c with SMTP id an5-20020a056300800500b0014bf9e2e16cmr6459218pzc.62.1694422338167;
+        Mon, 11 Sep 2023 01:52:18 -0700 (PDT)
+Received: from debian.me ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id 5-20020a170902e9c500b001bb04755212sm5853976plk.228.2023.09.11.01.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 01:52:17 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+        id D1703830618D; Mon, 11 Sep 2023 15:52:13 +0700 (WIB)
+Date:   Mon, 11 Sep 2023 15:52:13 +0700
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
+        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
+        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
+Cc:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
+Subject: Re: [PATCH v5 00/17] Add Qualcomm Minidump kernel driver related
+ support
+Message-ID: <ZP7VPfVtvbmB5aQf@debian.me>
+References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ypI1W5o4Aub9n7jF"
+Content-Disposition: inline
+In-Reply-To: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue Sep 5, 2023 at 10:30 AM CEST, Luca Weiss wrote:
-> On Thu Aug 31, 2023 at 2:27 PM CEST, Dmitry Baryshkov wrote:
-> > On Thu, 31 Aug 2023 at 14:54, Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> > >
-> > > On 31/08/2023 13:33, Dmitry Baryshkov wrote:
-> > > > On Thu, 31 Aug 2023 at 13:13, Luca Weiss <luca.weiss@fairphone.com>=
- wrote:
-> > > >>
-> > > >> On Wed Aug 30, 2023 at 12:06 PM CEST, Krzysztof Kozlowski wrote:
-> > > >>> On 30/08/2023 11:58, Luca Weiss wrote:
-> > > >>>> Like other Qualcomm PMICs the PM7250B can be used on different a=
-ddresses
-> > > >>>> on the SPMI bus. Use similar defines like the PMK8350 to make th=
-is
-> > > >>>> possible.
-> > > >>>>
-> > > >>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> > > >>>> ---
-> > > >>>>  arch/arm64/boot/dts/qcom/pm7250b.dtsi | 23 ++++++++++++++++----=
----
-> > > >>>>  1 file changed, 16 insertions(+), 7 deletions(-)
-> > > >>>>
-> > > >>>> diff --git a/arch/arm64/boot/dts/qcom/pm7250b.dtsi b/arch/arm64/=
-boot/dts/qcom/pm7250b.dtsi
-> > > >>>> index e8540c36bd99..3514de536baa 100644
-> > > >>>> --- a/arch/arm64/boot/dts/qcom/pm7250b.dtsi
-> > > >>>> +++ b/arch/arm64/boot/dts/qcom/pm7250b.dtsi
-> > > >>>> @@ -7,6 +7,15 @@
-> > > >>>>  #include <dt-bindings/interrupt-controller/irq.h>
-> > > >>>>  #include <dt-bindings/spmi/spmi.h>
-> > > >>>>
-> > > >>>> +/* This PMIC can be configured to be at different SIDs */
-> > > >>>> +#ifndef PM7250B_SID
-> > > >>>> +   #define PM7250B_SID 2
-> > > >>>> +#endif
-> > > >>>
-> > > >>> Why do you send the same patch as v1, without any reference to pr=
-evious
-> > > >>> discussions?
-> > > >>>
-> > > >>> You got here feedback already.
-> > > >>>
-> > > >>> https://lore.kernel.org/linux-arm-msm/f52524da-719b-790f-ad2c-0c3=
-f313d9fe9@linaro.org/
-> > > >>
-> > > >> Hi Krzysztof,
-> > > >>
-> > > >> I did mention that original patch in the cover letter of this seri=
-es.
-> > > >> I'm definitely aware of the discussion earlier this year there but=
- also
-> > > >> tried to get an update lately if there's any update with no respon=
-se.
-> > > >
-> > > > I think the overall consensus was that my proposal is too complicat=
-ed
-> > > > for the DT files.
-> > >
-> > > I proposed to duplicate the entries. Do you keep QUP nodes in DTSI an=
-d
-> > > customize per address? No.
-> >
-> > At the same time, we do keep SoC files separate from the board files.
-> > Yes, I'm slightly exaggerating here.
-> >
-> > I think that for PMIC files it makes sense to extract common parts if
-> > that eases reuse of the common parts.
->
-> Hi all,
->
-> what can I do for v2 now?
->
-> 1. Keep this patch as-is, and keep pm7250b in device dts.
->
-> 2. Drop pm7250b patch and drop from device dts, until _someone_ figures
-> out a solution talking to the PMIC on different SID.
->
-> 3. Something else like copy-pasting pm7250b.dtsi to pm7250-8.dtsi and
-> changing the SID there, and using that in device dts.
->
-> Please let me know what to do.
->
-> Regards
-> Luca
 
-Hi,
+--ypI1W5o4Aub9n7jF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-if there's no feedback I'll keep this patch in v2 of this series and we
-can continue to discuss there (if necessary).
+On Sun, Sep 10, 2023 at 01:46:01AM +0530, Mukesh Ojha wrote:
+> Hi All,
+>=20
+> This is to continuation from the conversation happened at v4
+>=20
+> https://lore.kernel.org/lkml/632c5b97-4a91-c3e8-1e6c-33d6c4f6454f@quicinc=
+=2Ecom/
+>=20
+> https://lore.kernel.org/lkml/695133e6-105f-de2a-5559-555cea0a0462@quicinc=
+=2Ecom/
+>=20
+> We have put abstract on LPC on this topic as well as initiated a mail thr=
+ead
+> with other SoC vendors but did not get much traction on it.
+>=20
+> https://lore.kernel.org/lkml/0199db00-1b1d-0c63-58ff-03efae02cb21@quicinc=
+=2Ecom/
+>=20
+> We explored most of possiblity present in kernel to address this issue[1]=
+ but
+> solution like kdump/fadump does not seems safe/secure/performant from our
+> perspective.
+>=20
+> Hence, with this series we tried to make the minidump kernel driver, simp=
+le
+> and tied with pstore frontends, so that it collects the present available
+> frontends data like dmesg, ftrace, pmsg, ftrace., Also, we will be working
+> towards enhancing generic pstore to capture more debug data which will be
+> helpful for first hand of debugging that can benefit both other pstore us=
+ers
+> as well as us as minidump users.
+>=20
+> One of the proposal made here,
+> https://lore.kernel.org/lkml/1683561060-2197-1-git-send-email-quic_mojha@=
+quicinc.com/
+>=20
+> Looking forward for your comments.
+>=20
+> Thanks,
+> Mukesh
+>=20
+> [1]
+> Minidump is a best effort mechanism to collect useful and predefined data
+> for first level of debugging on end user devices running on Qualcomm SoCs.
+> It is built on the premise that System on Chip (SoC) or subsystem part of
+> SoC crashes, due to a range of hardware and software bugs. Hence, the
+> ability to collect accurate data is only a best-effort. The data collected
+> could be invalid or corrupted, data collection itself could fail, and so =
+on.
+>=20
+> Qualcomm devices in engineering mode provides a mechanism for generating
+> full system ramdumps for post mortem debugging. But in some cases it's
+> however not feasible to capture the entire content of RAM. The minidump
+> mechanism provides the means for selecting which snippets should be
+> included in the ramdump.
+>=20
+> The core of SMEM based minidump feature is part of Qualcomm's boot
+> firmware code. It initializes shared memory (SMEM), which is a part of
+> DDR and allocates a small section of SMEM to minidump table i.e also
+> called global table of content (G-ToC). Each subsystem (APSS, ADSP, ...)
+> has their own table of segments to be included in the minidump and all
+> get their reference from G-ToC. Each segment/region has some details
+> like name, physical address and it's size etc. and it could be anywhere
+> scattered in the DDR.
+>=20
+> Existing upstream Qualcomm remoteproc driver[1] already supports SMEM
+> based minidump feature for remoteproc instances like ADSP, MODEM, ...
+> where predefined selective segments of subsystem region can be dumped
+> as part of coredump collection which generates smaller size artifacts
+> compared to complete coredump of subsystem on crash.
+>=20
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/dri=
+vers/remoteproc/qcom_common.c#n142
+>=20
+> In addition to managing and querying the APSS minidump description,
+> the Linux driver maintains a ELF header in a segment. This segment
+> gets updated with section/program header whenever a new entry gets
+> registered.
+>=20
+> Changes in v5:
+>  - On suggestion from Pavan.k, to have single function call for minidump =
+collection
+>    from remoteproc driver, separated the logic to have separate minidump =
+file called
+>    qcom_rproc_minidump.c and also renamed the function from qcom_minidump=
+() to=20
+>    qcom_rproc_minidump(); however, dropped his suggestion about rework on=
+ lazy deletion
+>    during region unregister in this series, will pursue it in next series.
+>=20
+>  - To simplify the minidump driver, removed the complication for frontend=
+ and different
+>    backend from Greg suggestion, will pursue this once main driver gets m=
+ainlined.
+>=20
+>  - Move the dynamic ramoops region allocation from Device tree approach t=
+o command line
+>    approch with the introduction command line parsing and memblock reserv=
+ation during
+>    early boot up; Not added documentation about it yet, will add if it ge=
+ts positive
+>    response.
+>=20
+>  - Exporting linux banner from kernel to make minidump build also as modu=
+le, however,
+>    minidump is a debug module and should be kernel built to get most debu=
+g information
+>    from kernel.
+>=20
+>  - Tried to address comments given on dload patch series.=20
+>=20
+> Changes in v4: https://lore.kernel.org/lkml/1687955688-20809-1-git-send-e=
+mail-quic_mojha@quicinc.com/
+>  - Redesigned the driver and divided the driver into front end and backen=
+d (smem) so
+>    that any new backend can be attached easily to avoid code duplication.
+>  - Patch reordering as per the driver and subsystem to easier review of t=
+he code.
+>  - Removed minidump specific code from remoteproc to minidump smem based =
+driver.
+>  - Enabled the all the driver as modules.
+>  - Address comments made on documentation and yaml and Device tree file [=
+Krzysztof/Konrad]
+>  - Address comments made qcom_pstore_minidump driver and given its Device=
+ tree
+>    same set of properties as ramoops. [Luca/Kees]
+>  - Added patch for MAINTAINER file.
+>  - Include defconfig change as one patch as per [Krzysztof] suggestion.
+>  - Tried to remove the redundant file scope variables from the module as =
+per [Krzysztof] suggestion.
+>  - Addressed comments made on dload mode patch v6 version
+>    https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mo=
+jha@quicinc.com/
+>=20
+> Changes in v3: https://lore.kernel.org/lkml/1683133352-10046-1-git-send-e=
+mail-quic_mojha@quicinc.com/
+>  - Addressed most of the comments by Srini on v2 and refactored the minid=
+ump driver.
+>     - Added platform device support
+>     - Unregister region support.
+>  - Added update region for clients.
+>  - Added pending region support.
+>  - Modified the documentation guide accordingly.
+>  - Added qcom_pstore_ramdump client driver which happen to add ramoops pl=
+atform
+>    device and also registers ramoops region with minidump.
+>  - Added download mode patch series with this minidump series.
+>     https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_m=
+ojha@quicinc.com/
+>=20
+> Changes in v2: https://lore.kernel.org/lkml/1679491817-2498-1-git-send-em=
+ail-quic_mojha@quicinc.com/
+>  - Addressed review comment made by [quic_tsoni/bmasney] to add documenta=
+tion.
+>  - Addressed comments made by [srinivas.kandagatla]
+>  - Dropped pstore 6/6 from the last series, till i get conclusion to get =
+pstore
+>    region in minidump.
+>  - Fixed issue reported by kernel test robot.
+>=20
+> Changes in v1: https://lore.kernel.org/lkml/1676978713-7394-1-git-send-em=
+ail-quic_mojha@quicinc.com/
+>=20
+> Testing of the patches has been done on sm8450 target after enabling conf=
+ig like
+> CONFIG_PSTORE_RAM and CONFIG_PSTORE_CONSOLE and once the device boots up.
+>=20
+>  echo mini > /sys/module/qcom_scm/parameters/download_mode
+>=20
+> Try crashing it via devmem2 0xf11c000(this is known to create xpu violati=
+on and
+> and put the device in download mode) on command prompt.
+>=20
+> Default storage type is set to via USB, so minidump would be downloaded w=
+ith the
+> help of x86_64 machine (running PCAT tool) attached to Qualcomm device wh=
+ich has
+> backed minidump boot firmware support.
+>=20
+> This will make the device go to download mode and collect the minidump on=
+ to the
+> attached x86 machine running the Qualcomm PCAT tool(This comes as part Qu=
+alcomm
+> package manager kit).
+>=20
+> After that we will see a bunch of predefined registered region as binary =
+blobs files
+> starts with md_* downloaded on the x86 machine on given location in PCAT =
+tool from
+> the target device, more about this can be found in qualcomm minidump guid=
+e patch.
+>=20
 
-Regards
-Luca
+I tried to apply this series on top of 535a265d7f0dd50 (as suggested by
+`b4 am -l -g`), but it conflicts on patch [04/17]. Please specify the
+exact base commit or another series for which this series is based on.
 
->
-> >
-> > >
-> > > I definitely do not agree to these ifndef->define. Maybe using just
-> > > define would work (so drop ifndef->define), because this makes it
-> > > obvious and fail-safe if included in wrong place... except that it is
-> > > still not the define we expect. This is not the coding style present =
-in
-> > > other DTSes.
-> > >
-> > > The true problem how these SPMI bindings were created. Requiring SID
-> > > address in every child is clearly redundant and I think we do not fol=
-low
-> > > such approach anywhere else.
-> > >
-> > > Best regards,
-> > > Krzysztof
-> > >
+Thanks.
 
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--ypI1W5o4Aub9n7jF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZP7VOQAKCRD2uYlJVVFO
+o7CQAP9vjj875+yfOt9mTMP/2aP+Bk2gV8aoKpSZbVrr0OHt+wEAsUPrYs7dB28e
+9vo5VB+FpC5Y8n97acr+wNXUrD6klAk=
+=WCfb
+-----END PGP SIGNATURE-----
+
+--ypI1W5o4Aub9n7jF--
