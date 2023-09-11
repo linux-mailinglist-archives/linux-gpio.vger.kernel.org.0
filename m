@@ -2,118 +2,240 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2780F79B19B
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:57:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4086579B04E
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238841AbjIKUyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43216 "EHLO
+        id S239579AbjIKUz7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240364AbjIKOmf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 10:42:35 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF5BCF0
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 07:42:31 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-9a9cd066db5so576287366b.0
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 07:42:31 -0700 (PDT)
+        with ESMTP id S242753AbjIKQQD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 12:16:03 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E526CC3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 09:15:58 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-402c46c49f4so49910775e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 09:15:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694443349; x=1695048149; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3gbT0k9NdeYjyT+O+DqoAOe85gGtNhRbh0FKrOX1DjQ=;
-        b=geNsxDdVnD36+63qwxCJS5TxNl50Y3nacZ9NwdfJIvGD6m+K75i2imCx3prtRcBGIt
-         u26R84Vsqh8AKapTfZBBRLqxzRN+bHVvkhll0bNSh8MQZri6ovELFYr9Ez8sVsupznbV
-         35PDC3io/WtA2NEL1uh89snixZSKBxhBao2wwZgG1AkIKuBYvQkQ5LhOs5392bec+3So
-         NrtADXPYEJuWh2R/Y2fSiDT2/fcxNl+3CREtBztt/3YU8KhVaWUmcaxSbbsaBImhU/4/
-         vtD+2qw7UYCLXsZJxo1Ush6DU5247n3bfUrKVeI37ImaMekyXTPE3yYfKI/sCHIo1osy
-         3lEw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694448957; x=1695053757; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HV5y47B9k2tibzGJFcIzC3Wh2s45fqlwzyzXAYAyLZU=;
+        b=z8y66fNgAKCrE8HM53F80h2KHSbY1gumOB3bzhz6J59gV1adggHukPtDk7hUH3bQ3M
+         +JTuyhyZbJD4DorNMYMaE1ZJ7F2xvroixDHqmNzT9g7wzhZc+pz3eY+AXdFtM4Upo429
+         fY6kZk1FBc20n4X3w+O06oo9WOFm7c/Wq467OgkuuQMvL9Q51IdSEF6g67kq8QkQL1Bt
+         QeutQ3/KZ0I61lzYjJC9p2KF2OA2soxXelNBhNaRe2Og17gxc5/ZIh3uCtTmSHoxia/A
+         a6WdhM+2J1gjP6KejY9SKlOhNNrpOFYg17kgTpUUX+hduXsY5g9CWcFFoXRBxlwaIujn
+         R4XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694443349; x=1695048149;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1694448957; x=1695053757;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3gbT0k9NdeYjyT+O+DqoAOe85gGtNhRbh0FKrOX1DjQ=;
-        b=SoHgGvoyd2l9pliaC1MG29W2jL44S+h4q4TuSuv/Lu0bTlsZs8U+xCoCMQYxNkRlXI
-         NwmnGAxI6AixZh4bMeXLZmEX6mdU63ojEI7rjcocOJ8EbuMnBjSH8tCrS0t7Pq3+8MMp
-         KFt6QZ1jYGjsyGeuR5VXMgNir9lDXLrMo046v60gp+jTrtev1Nz4Wt+aIgl+e4/h7X58
-         zKcZ+rSLbmVrjUQoqDVp0wLVEdlRsIod54asONGaCp9pT2f+bbyaOl7FMksJofqey701
-         XLcUZ6lL9rTGoj71io4D6c91uR67p/IvyhpUASGTY3YcOfPJAGBhrYOgaC380qb2ongd
-         N7Qw==
-X-Gm-Message-State: AOJu0Yz+smuTE5E1c5iGfqKC+xGUyelQPSob0huJl2QY1mMUxSnxwPcH
-        lUbPj9XB+tR+iKIG8HKeKeLayOFnooOl4HHiEBU=
-X-Google-Smtp-Source: AGHT+IFlSCKHXtB/02ULfk3ufQNPso4U6Y4W8sgOD3WItMii8XK+6+axMjZLdpiO3N07nUGN+YoiEOG3+WPtnccGhlE=
-X-Received: by 2002:a17:906:ef8f:b0:9a9:d5dd:dacd with SMTP id
- ze15-20020a170906ef8f00b009a9d5dddacdmr8460952ejb.26.1694443349439; Mon, 11
- Sep 2023 07:42:29 -0700 (PDT)
+        bh=HV5y47B9k2tibzGJFcIzC3Wh2s45fqlwzyzXAYAyLZU=;
+        b=jBAhJD+5ZHckyDpZLydS5DKLB7ViGbon4k6YfB1o0u4Emb4EU/VcmfYNx5CS8AtuyH
+         hP5rwNPbqVX7v24Se3knD16LxJm7NqMqkXrM0oTLHQc7E8TQoEyepSMWCyEUxNRPY8Uv
+         yHclr4PfKTbFm2FQU18ustw/PqJkuA6m5ZHmX+6soi4qGrzJYoub4ooJkLRsA1c4uFyf
+         6UN36e8Xzr58GvhQgNCIh0Mu4scF0bpG4tzUrlwYlt//0WIM8KcM5Dha5wbAXe75NfI3
+         36zzFjG0W/7kRtIgY4f6OOLiwR+lMhrD6iHQy74a35Jaijcz17s+kH9Amnoe5y6M8M1t
+         y13A==
+X-Gm-Message-State: AOJu0YwR5RsRb4ajVa7u/hphHhdoi7cfRh8PBBGdL/ST26pcwAWAgAho
+        G5meO0PV80FUmXGIeUYXk2ON8Q==
+X-Google-Smtp-Source: AGHT+IH4VJSvvSxbVOwJYo159Cuu4FuAwlQeRg83/jubmlshB8+C2StDaNviQOqqFhUF8K4JCTIomg==
+X-Received: by 2002:a05:600c:2257:b0:3fe:ef11:d79f with SMTP id a23-20020a05600c225700b003feef11d79fmr8329151wmm.36.1694448956816;
+        Mon, 11 Sep 2023 09:15:56 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:c2b1:675e:119e:2497])
+        by smtp.gmail.com with ESMTPSA id u5-20020a05600c00c500b003fe2de3f94fsm10397693wmm.12.2023.09.11.09.15.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 09:15:56 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Mark Brown <broonie@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v3] spi: bcm2835: reduce the abuse of the GPIO API
+Date:   Mon, 11 Sep 2023 18:15:53 +0200
+Message-Id: <20230911161553.24313-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Received: by 2002:a05:7412:512:b0:e5:c6b1:e1 with HTTP; Mon, 11 Sep 2023
- 07:42:28 -0700 (PDT)
-Reply-To: laurabr8@outlook.com
-From:   Laura McBrown <elizabethjohnson184@gmail.com>
-Date:   Mon, 11 Sep 2023 15:42:28 +0100
-Message-ID: <CAFDOM0ZMReZXUEs5dyB9qQzSzA8d2qB4BDy9Gh1zXCtVQBDjxQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pozdravy tob=C4=9B
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-S n=C3=A1le=C5=BEitou =C3=BActou a lidskost=C3=AD jsem byl nucen v=C3=A1m n=
-apsat z
-humanit=C3=A1rn=C3=ADch d=C5=AFvod=C5=AF. Jmenuji se pan=C3=AD Laura McBrow=
-n. Narodil jsem se v
-Baltimoru, Maryland. Jsem vdan=C3=A1 za pana Waltera McBrown, =C5=99editele
-spole=C4=8Dnosti J.C. Byli jsme man=C5=BEel=C3=A9 36 let bez d=C3=ADt=C4=9B=
-te. Zem=C5=99el po
-operaci srde=C4=8Dn=C3=ADch tepen.
+Currently the bcm2835 SPI driver uses functions that are available
+exclusively to GPIO providers as a way to handle a platform quirk. Let's
+use a slightly better alternative that avoids poking around in GPIOLIB's
+internals and use GPIO lookup tables.
 
-A ned=C3=A1vno mi m=C5=AFj doktor =C5=99ekl, =C5=BEe p=C5=99=C3=AD=C5=A1t=
-=C3=ADch =C5=A1est m=C4=9Bs=C3=ADc=C5=AF nevydr=C5=BE=C3=ADm kv=C5=AFli
-m=C3=A9mu probl=C3=A9mu s rakovinou (rakovina jater a mrtvice). Ne=C5=BE m=
-=C5=AFj man=C5=BEel
-loni zem=C5=99el, ulo=C5=BEil zde v bance =C4=8D=C3=A1stku 2,8 milionu dola=
-r=C5=AF. V sou=C4=8Dasn=C3=A9
-dob=C4=9B jsou tyto pen=C3=ADze st=C3=A1le v bance. Pot=C3=A9, co jsem znal=
- sv=C5=AFj stav,
-rozhodl jsem se darovat tento fond ka=C5=BEd=C3=A9mu dobr=C3=A9mu bratrovi =
-nebo
-sest=C5=99e, kte=C5=99=C3=AD se boj=C3=AD Boha, kte=C5=99=C3=AD budou tento=
- fond pou=C5=BE=C3=ADvat zp=C5=AFsobem,
-kter=C3=BD zde budu instruovat.
+Link: https://www.spinics.net/lists/linux-gpio/msg36218.html
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+This is only build-tested. It should work, but it would be great if
+someone from broadcom could test this.
 
- Chci n=C4=9Bkoho, kdo pou=C5=BEije tento fond podle p=C5=99=C3=A1n=C3=AD m=
-=C3=A9ho zesnul=C3=A9ho
-man=C5=BEela na bezmocn=C3=A9 privilegovan=C3=A9 lidi, sirot=C4=8Dince, vdo=
-vy a na =C5=A1=C3=AD=C5=99en=C3=AD
-slova Bo=C5=BE=C3=ADho. U=C4=8Dinil jsem toto rozhodnut=C3=AD, proto=C5=BEe=
- nem=C3=A1m =C5=BE=C3=A1dn=C3=A9 d=C3=ADt=C4=9B,
-kter=C3=A9 by zd=C4=9Bdilo tento fond, a nechci pry=C4=8D, kde budou tyto p=
-en=C3=ADze
-pou=C5=BEity bezbo=C5=BEn=C3=BDm zp=C5=AFsobem. To je d=C5=AFvod, pro=C4=8D=
- jsem se rozhodl p=C5=99edat
-v=C3=A1m tento fond.
+Andy pointed out elsewhere that we can use GPIO_LOOKUP() even in
+dynamically allocated tables, hence v3.
 
- Neboj=C3=ADm se smrti, proto v=C3=ADm, kam jdu. Chci, abyste na m=C4=9B v=
-=C5=BEdy
-pamatovali ve sv=C3=BDch ka=C5=BEdodenn=C3=ADch modlitb=C3=A1ch kv=C5=AFli =
-m=C3=A9 nadch=C3=A1zej=C3=ADc=C3=AD
-operaci rakoviny. Odepi=C5=A1te co nejd=C5=99=C3=ADve, jak=C3=A9koli zpo=C5=
-=BEd=C4=9Bn=C3=AD ve va=C5=A1=C3=AD
-odpov=C4=9Bdi mi poskytne prostor pro z=C3=ADsk=C3=A1n=C3=AD dal=C5=A1=C3=
-=AD osoby pro stejn=C3=BD =C3=BA=C4=8Del.
-B=C5=AFh v=C3=A1m =C5=BEehnej, kdy=C5=BE naslouch=C3=A1te hlasu uva=C5=BEov=
-=C3=A1n=C3=AD,
+v1 -> v2:
+- don't use devres for managing the GPIO but put it manually in .cleanup()
+- add a mailing list link explaining the background of the bug
+- fix kerneldoc
 
-pan=C3=AD Laura McBrown
+v2 -> v3:
+- use GPIO_LOOKUP() macro for creating the lookup entry as it looks
+  better and results in less LOC
+
+ drivers/spi/spi-bcm2835.c | 60 +++++++++++++++++++++++----------------
+ 1 file changed, 35 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index e7bb2714678a..dfd9c4997052 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -11,6 +11,7 @@
+  * spi-atmel.c, Copyright (C) 2006 Atmel Corporation
+  */
+ 
++#include <linux/cleanup.h>
+ #include <linux/clk.h>
+ #include <linux/completion.h>
+ #include <linux/debugfs.h>
+@@ -26,9 +27,10 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/gpio/consumer.h>
+-#include <linux/gpio/machine.h> /* FIXME: using chip internals */
+-#include <linux/gpio/driver.h> /* FIXME: using chip internals */
++#include <linux/gpio/machine.h> /* FIXME: using GPIO lookup tables */
+ #include <linux/of_irq.h>
++#include <linux/overflow.h>
++#include <linux/slab.h>
+ #include <linux/spi/spi.h>
+ 
+ /* SPI register offsets */
+@@ -83,6 +85,7 @@ MODULE_PARM_DESC(polling_limit_us,
+  * struct bcm2835_spi - BCM2835 SPI controller
+  * @regs: base address of register map
+  * @clk: core clock, divided to calculate serial clock
++ * @cs_gpio: chip-select GPIO descriptor
+  * @clk_hz: core clock cached speed
+  * @irq: interrupt, signals TX FIFO empty or RX FIFO ¾ full
+  * @tfr: SPI transfer currently processed
+@@ -117,6 +120,7 @@ MODULE_PARM_DESC(polling_limit_us,
+ struct bcm2835_spi {
+ 	void __iomem *regs;
+ 	struct clk *clk;
++	struct gpio_desc *cs_gpio;
+ 	unsigned long clk_hz;
+ 	int irq;
+ 	struct spi_transfer *tfr;
+@@ -1156,15 +1160,11 @@ static void bcm2835_spi_handle_err(struct spi_controller *ctlr,
+ 	bcm2835_spi_reset_hw(bs);
+ }
+ 
+-static int chip_match_name(struct gpio_chip *chip, void *data)
+-{
+-	return !strcmp(chip->label, data);
+-}
+-
+ static void bcm2835_spi_cleanup(struct spi_device *spi)
+ {
+ 	struct bcm2835_spidev *target = spi_get_ctldata(spi);
+ 	struct spi_controller *ctlr = spi->controller;
++	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
+ 
+ 	if (target->clear_rx_desc)
+ 		dmaengine_desc_free(target->clear_rx_desc);
+@@ -1175,6 +1175,9 @@ static void bcm2835_spi_cleanup(struct spi_device *spi)
+ 				 sizeof(u32),
+ 				 DMA_TO_DEVICE);
+ 
++	gpiod_put(bs->cs_gpio);
++	spi_set_csgpiod(spi, 0, NULL);
++
+ 	kfree(target);
+ }
+ 
+@@ -1221,7 +1224,7 @@ static int bcm2835_spi_setup(struct spi_device *spi)
+ 	struct spi_controller *ctlr = spi->controller;
+ 	struct bcm2835_spi *bs = spi_controller_get_devdata(ctlr);
+ 	struct bcm2835_spidev *target = spi_get_ctldata(spi);
+-	struct gpio_chip *chip;
++	struct gpiod_lookup_table *lookup __free(kfree) = NULL;
+ 	int ret;
+ 	u32 cs;
+ 
+@@ -1288,29 +1291,36 @@ static int bcm2835_spi_setup(struct spi_device *spi)
+ 	}
+ 
+ 	/*
+-	 * Translate native CS to GPIO
++	 * TODO: The code below is a slightly better alternative to the utter
++	 * abuse of the GPIO API that I found here before. It creates a
++	 * temporary lookup table, assigns it to the SPI device, gets the GPIO
++	 * descriptor and then releases the lookup table.
+ 	 *
+-	 * FIXME: poking around in the gpiolib internals like this is
+-	 * not very good practice. Find a way to locate the real problem
+-	 * and fix it. Why is the GPIO descriptor in spi->cs_gpiod
+-	 * sometimes not assigned correctly? Erroneous device trees?
++	 * More on the problem that it addresses:
++	 *   https://www.spinics.net/lists/linux-gpio/msg36218.html
+ 	 */
++	lookup = kzalloc(struct_size(lookup, table, 1), GFP_KERNEL);
++	if (!lookup) {
++		ret = -ENOMEM;
++		goto err_cleanup;
++	}
++
++	lookup->dev_id = dev_name(&spi->dev);
++	lookup->table[0] = GPIO_LOOKUP("pinctrl-bcm2835",
++				       8 - (spi_get_chipselect(spi, 0)),
++				       "cs", GPIO_LOOKUP_FLAGS_DEFAULT);
+ 
+-	/* get the gpio chip for the base */
+-	chip = gpiochip_find("pinctrl-bcm2835", chip_match_name);
+-	if (!chip)
+-		return 0;
+-
+-	spi_set_csgpiod(spi, 0, gpiochip_request_own_desc(chip,
+-							  8 - (spi_get_chipselect(spi, 0)),
+-							  DRV_NAME,
+-							  GPIO_LOOKUP_FLAGS_DEFAULT,
+-							  GPIOD_OUT_LOW));
+-	if (IS_ERR(spi_get_csgpiod(spi, 0))) {
+-		ret = PTR_ERR(spi_get_csgpiod(spi, 0));
++	gpiod_add_lookup_table(lookup);
++
++	bs->cs_gpio = gpiod_get(&spi->dev, "cs", GPIOD_OUT_LOW);
++	gpiod_remove_lookup_table(lookup);
++	if (IS_ERR(bs->cs_gpio)) {
++		ret = PTR_ERR(bs->cs_gpio);
+ 		goto err_cleanup;
+ 	}
+ 
++	spi_set_csgpiod(spi, 0, bs->cs_gpio);
++
+ 	/* and set up the "mode" and level */
+ 	dev_info(&spi->dev, "setting up native-CS%i to use GPIO\n",
+ 		 spi_get_chipselect(spi, 0));
+-- 
+2.39.2
+
