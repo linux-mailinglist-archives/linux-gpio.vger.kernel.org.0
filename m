@@ -2,95 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62C9079BCCE
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:15:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 398A879BAA4
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:11:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242047AbjIKU5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47320 "EHLO
+        id S239686AbjIKUzU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:55:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237495AbjIKMyC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 08:54:02 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590ECCEB;
-        Mon, 11 Sep 2023 05:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694436838; x=1725972838;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6qH+94mdCDHsO5dlQVDj6sE7FIc2PGyqepOUsYk3jaI=;
-  b=cDMIJrjiS/3ntGlgPbOZeTvsCgrSc3hGw1O61wGWphXdOL3M2QO6IZuf
-   nj0bK+c3WIrhnID4+mK97qipg/Q/z7RJVKrJmdQvdKk2lyx4aLkcWRK1+
-   UqmEKddsXSiyQBVM6u7/pIAU4Jk23nogRXqAyP4mfeHJnrYeEksCAmDsF
-   zuJgaaGd1emxnYKEvWGG+0fGDqF0MtaXpIbQF9MAHyde4FtkqGwbzJDQR
-   RGWi7r+uim41BNzlmuz5J2+AXKjjwBz7j/SuEJ0qU9ZDPE1OM7cdjkM4m
-   +kF/ZVdgco36H3a/0445aA97tOQGJ2betiojmgPZ/kE0bQhXonlBghctG
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="444490143"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="444490143"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 05:53:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="743336362"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="743336362"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 05:53:56 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qfgQL-008KU3-05;
-        Mon, 11 Sep 2023 15:53:53 +0300
-Date:   Mon, 11 Sep 2023 15:53:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v5] gpio: sim: don't fiddle with GPIOLIB private members
-Message-ID: <ZP8N4M6cqyP9rS3W@smile.fi.intel.com>
-References: <20230911110740.16284-1-brgl@bgdev.pl>
+        with ESMTP id S238133AbjIKNlR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 09:41:17 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CFFCF0
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 06:41:12 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-d78328bc2abso4168134276.2
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 06:41:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1694439672; x=1695044472; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3nSmSHdLay9tWo1ueOBouSeDs8BbyLWV7Pc0CpX32Vg=;
+        b=fRx+MwvlaMHxRM8TIa8O3Dmjq+9Z7V3HFZu+twFoLTLJfkq4SBP2jauRjs2u+Jd9/3
+         KfBH/zjn8/K3dlw2Ix4kcBiyVc8mJsVoPWWX05x8yhTX0McdvEyOcmyskY4xT3lOV3fM
+         rmytmlssrHhbnSeGQyeRkiWWx+O1LKHe3O0U4IrnlqOH+8el/OCAPNoic9Uu0yB5x8xZ
+         g0RY7kZHWRKig/E/glt9PUeIT1mI6x1PKQgiJRwz6zhXzRUPczRwjAo+3RRJ4oJ5N8mr
+         5QGPr4D09UL2Azvc7I5zQWoxDIi/a1Ggu3/+SArSyu5gZ3b3G7yNJGJ4eC+0COID1hEe
+         CSeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694439672; x=1695044472;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3nSmSHdLay9tWo1ueOBouSeDs8BbyLWV7Pc0CpX32Vg=;
+        b=djHXdW4xneJ1k9NrlBe/TMZBBuwo8heoZLlpGXElKewIo1JaM84OBfT3pNbJJbsMv/
+         DqZMDRWMv/2kLuuCOmGGAxvQpxfAfky3XUfh86TRurcqx57Y+CTKRLcTCluzwaCIUXHN
+         pOWLDYUMCB+nrYtTNm3cWWl2NzXyzoWNDpLy9VS5tsfEB3zyUIIHLqwfWHeS4fLRjOeN
+         N2NQug4nluDEz/EBEWt2jQj2dKe5nt8kxfkFwIF0f+q9IUSBourNigc4URRzxvyg2nt8
+         lO1FF8Or0qzljxv2u/pWzXIhhWciHp87/fehhEv6ARbAg5vwzKgyxC5FjeliKdY6q7YE
+         0ayA==
+X-Gm-Message-State: AOJu0YzB9w1h2USylQCoSqAJJ8tm2oWTvxbgwiAKL6hfl/q36aSNlvR7
+        6hPKbbFv76XWiK56Rzw9/O5liJNn4PCZhZ6eLmfirg==
+X-Google-Smtp-Source: AGHT+IEWBodMRYoPw67CDfe1qi/gAWKjCx2VF+eFj06Y3kZgEZ3CDzO8HvC6ljEaTiF2RSH76zpapCoshLhrfKyRQsg=
+X-Received: by 2002:a25:410f:0:b0:d80:8497:72c7 with SMTP id
+ o15-20020a25410f000000b00d80849772c7mr3990786yba.15.1694439672060; Mon, 11
+ Sep 2023 06:41:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230911110740.16284-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230908055146.18347-1-Linhua.xu@unisoc.com>
+In-Reply-To: <20230908055146.18347-1-Linhua.xu@unisoc.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 11 Sep 2023 15:41:00 +0200
+Message-ID: <CACRpkdbUOM7KD2h+mSZ4xj7UCCe_Gj_Dzcc7hSmOfOftve_kyg@mail.gmail.com>
+Subject: Re: [PATCH V2 0/6] pinctrl: sprd: Modification of UNIOC Platform
+ pinctrl Driver
+To:     Linhua Xu <Linhua.xu@unisoc.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        lh xu <xulh0829@gmail.com>,
+        Zhirong Qiu <zhirong.qiu@unisoc.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 01:07:40PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> We access internals of struct gpio_device and struct gpio_desc because
-> it's easier but it can actually be avoided and we're working towards a
-> better encapsulation of GPIO data structures across the kernel so let's
-> start at home.
-> 
-> Instead of checking gpio_desc flags, let's just track the requests of
-> GPIOs in the driver. We also already store the information about
-> direction of simulated lines.
-> 
-> For kobjects needed by sysfs callbacks: we can iterate over the children
-> devices of the top-level platform device and compare their fwnodes
-> against the one passed to the init function from probe.
-> 
-> While at it: fix one line break and remove the untrue part about
-> configfs callbacks using dev_get_drvdata() from a comment.
+On Fri, Sep 8, 2023 at 7:52=E2=80=AFAM Linhua Xu <Linhua.xu@unisoc.com> wro=
+te:
 
-(Just wondering if you used --patience)
+> From: Linhua Xu <Linhua.Xu@unisoc.com>
+>
+> Recently, some bugs have been discovered during use, and patch2 and patch=
+3
+> are bug fixes. Also, this patchset add new features: patch1 is for
+> compatibility with more platforms, patch4 add pinctrl support for UMS512,
+> patch5 Increase the range of register values, patch6 add pinctrl support
+> for UMS9621.
+>
+> change in V2
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+V2 is starting to look good, please address Andy's comments, especially
+move the fixes first in the series so they can be queued as fixes
+if need be.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I would really appreciate if Baolin can review the patches as well as
+he knows this hardware very well and wrote the initial version.
 
-
+Yours,
+Linus Walleij
