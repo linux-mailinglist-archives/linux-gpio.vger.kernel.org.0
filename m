@@ -2,221 +2,332 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02DB079B765
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:06:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D419379BAFB
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:12:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241009AbjIKU4p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51160 "EHLO
+        id S241052AbjIKU4u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:56:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236719AbjIKLPy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 07:15:54 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727E2E40
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 04:15:47 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3ff7d73a6feso45340515e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 04:15:47 -0700 (PDT)
+        with ESMTP id S236754AbjIKLVH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 07:21:07 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 438BECDD
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 04:21:02 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6c0f4ad9eb1so166013a34.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 04:21:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694430946; x=1695035746; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7oYncRXl8MdgOuj5ecatA5YK1hlf20bUpcsVqj8+B7w=;
-        b=iy6Ly+qSIjUUd4/DUtUNVlBHa1u5LTfvhrT/hl4O1wLhMitDehJL8lXvytikvsFVcS
-         H/IAUTW7iN5XWLire2POO6epX+pXGgn4E1jMTwlhTDG8n8FR4auFzhs98SAplSxmp1PF
-         bCbAY+tCpf2+Udd+6x6m1+oZCxZmzbcRVDo1OptZ06DKeRET75y72J2q0sp08bLPoB+k
-         OxnYZYAJotbPiTq/56PeJKOhtcJoOhBkc2b9P1KJDV+DqEW2j0pagLTiXDdOSHI402xq
-         GAc7Vmi75iRRMsaf2Jmorz88gcd2/B4xIT1h+3+/oKVyP66b10KM/HrGpbTDYE+j8qt1
-         rWiA==
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1694431261; x=1695036061; darn=vger.kernel.org;
+        h=from:to:subject:content-transfer-encoding:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=AYfA7DXc23G6ybVpO85ZBVeWKUdxoWBlG9IbLmRfDhY=;
+        b=B8BU56Zbmijyxm79eYAl9A4DcoO70gK593YL0WmwMfXXmKo95eQOer5c9HfiizbfX0
+         sd2H7dyrtQtwy3QCBG+QY9vaZtwT20S/beLJKkgHiYv8RfAQZ72XokMIczR/qVct98Nb
+         B2Zg7Jjvfu03yIQC+X0v/s7WWo/aYzooNDl9VXklhQtJxaWK3SY4IYGMu31vBXqUlvva
+         xTjBbKveU610ZeqEiCYWC9c/lJYv96dCGeYQZ9LnLF9zie/5Fp0SWwWoFWy482LGMf+Y
+         BfziUiYBCRx9EM+0IZohe3pyHYIsMo9tsKT/1dZCSPiEpfNPPIXCOj9pKmV/Q7jC4sCr
+         88uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694430946; x=1695035746;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7oYncRXl8MdgOuj5ecatA5YK1hlf20bUpcsVqj8+B7w=;
-        b=Rcl7t4DlQk5/yAkewlNF9tbdGF+akuQW0Bm4DSl2Qi7PAP3+1941QHYVTs0mzAIfGK
-         y2tSIbTq7iCFbky60Ok6wlMUTXEvveK0EyRtkkvHwXjn/ehLuU8/7uMAuedMDMJ7dFZ/
-         PSjwckDYYDI3YDyaaawH2d515cKVkjke44uHTH4SMP59NkqRHb6rMFjqvmZRbm2Gsc+C
-         I8+33QOk6Bgn8h+nSOLw8mGHN3MPoCcN2oFVh3JFyV/6J2Z1ZMbO/n4izfKwsdf4br2z
-         quOmM6kV1N9odsZEdLy7nqM86EY7gJSSdupAUUMv0AhiQJTbOaTaz6yGGlAvaiJRChLr
-         q8cQ==
-X-Gm-Message-State: AOJu0Yzd0osphvu9wHXsEJwKGssJmyMOvmXjbSqDGhgKtRJI/I91InMA
-        97KL3XUHNtMqkRbGXfoD/Au1hA==
-X-Google-Smtp-Source: AGHT+IFMPWetHW3X3w0vf7JC2rs7SsnHakGdeLJ9bxL9NSEuCvaDE4Qf7g+s2Jq63JasENDVFi2WvA==
-X-Received: by 2002:a05:600c:6028:b0:402:f55e:ac11 with SMTP id az40-20020a05600c602800b00402f55eac11mr7826062wmb.20.1694430945795;
-        Mon, 11 Sep 2023 04:15:45 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.214.188])
-        by smtp.gmail.com with ESMTPSA id b13-20020a5d634d000000b0031c5e9c2ed7sm9783914wrw.92.2023.09.11.04.15.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 04:15:45 -0700 (PDT)
-Message-ID: <bd418fae-accc-bd79-969a-b3b5791efd35@linaro.org>
-Date:   Mon, 11 Sep 2023 13:15:43 +0200
+        d=1e100.net; s=20230601; t=1694431261; x=1695036061;
+        h=from:to:subject:content-transfer-encoding:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AYfA7DXc23G6ybVpO85ZBVeWKUdxoWBlG9IbLmRfDhY=;
+        b=knF2+gb6Ig1eX+iOCMO3uirmIAtPA6uXhk5CE9x7ttE9mIFzQCvs+cETPXvHqSOffE
+         uyx6+rCcU8m97t9xULAF6YtWugqyFY3KMq7rCUQVJNGJWfSaHEGSmet5y9hIW5OMvDoh
+         bI8m9bEUwotCpzweWcbdGnH4JJy0RrYgNPA8VdKxYr1JOjAOhAS0U5TQaO/vx56K4UkK
+         8hmZUionsmINGOxls5zdzUZwWg7ZBFlnCxZXvuCg4MtcFBAPWmFbpT/ZAI5wGf6qsBAt
+         awSp9u25u27xUZ5X84fyNLcl8OvWIFcrPUpkch3hScfDJTtqh5OgrjbS0UJuYGnNDYK7
+         ZJyA==
+X-Gm-Message-State: AOJu0YwOPZJgIcMiGuSYytbxOXbZZxKk3zSQngBkl1ewdTrEtphrDAIi
+        683+g0KfczvVkt6FSDPrBjgO23FhnQPqXtCxqgU=
+X-Google-Smtp-Source: AGHT+IFR0mVfuRw9ml7/rou5ze89HO/t5CVPBvpttvHIgvosv/w7j4NfOaabliN345UZAi4ja02DHQ==
+X-Received: by 2002:a9d:7752:0:b0:6bd:af4:274d with SMTP id t18-20020a9d7752000000b006bd0af4274dmr11115357otl.8.1694431261112;
+        Mon, 11 Sep 2023 04:21:01 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([20.171.243.82])
+        by smtp.gmail.com with ESMTPSA id f13-20020aa78b0d000000b0068c10187dc3sm5399128pfd.168.2023.09.11.04.21.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 04:21:00 -0700 (PDT)
+Message-ID: <64fef81c.a70a0220.c89bc.c0e8@mx.google.com>
+Date:   Mon, 11 Sep 2023 04:21:00 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 04/11] arm64: dts: qcom: pm7250b: make SID configurable
-Content-Language: en-US
-To:     Luca Weiss <luca.weiss@fairphone.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     cros-qcom-dts-watchers@chromium.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
- <20230830-fp5-initial-v1-4-5a954519bbad@fairphone.com>
- <b82f4683-e8b5-b424-8f7a-6d2ba1cab61f@linaro.org>
- <CV6NF0466658.20DGU7QKF2UBR@otso>
- <CAA8EJpr1+W3f08X-FpiiVrJ98kg52HaMwbbKn=fG15Whm4C8aQ@mail.gmail.com>
- <728003b9-db27-fdc0-e761-197a02a38c24@linaro.org>
- <CAA8EJpoXreHpxZQ2G10n0OiQzUX4ffk=gvo87dAU4-r+Svqpeg@mail.gmail.com>
- <CVAUDGBO4S08.1F0O66ZE6I4IG@otso> <CVFY7D7ND3WS.2B2EYB4ZO86P@otso>
- <cae7261a-6727-6163-1420-01039bfb8396@linaro.org>
- <CVFZZ0YSWQ6J.2AKRML6LWRMUH@otso>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CVFZZ0YSWQ6J.2AKRML6LWRMUH@otso>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: fixes
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: test
+X-Kernelci-Kernel: v6.6-rc1
+Subject: linusw/fixes baseline: 46 runs, 4 regressions (v6.6-rc1)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/09/2023 11:59, Luca Weiss wrote:
-> On Mon Sep 11, 2023 at 11:44 AM CEST, Krzysztof Kozlowski wrote:
->> On 11/09/2023 10:34, Luca Weiss wrote:
->>> On Tue Sep 5, 2023 at 10:30 AM CEST, Luca Weiss wrote:
->>>> On Thu Aug 31, 2023 at 2:27 PM CEST, Dmitry Baryshkov wrote:
->>>>> On Thu, 31 Aug 2023 at 14:54, Krzysztof Kozlowski
->>>>> <krzysztof.kozlowski@linaro.org> wrote:
->>>>>>
->>>>>> On 31/08/2023 13:33, Dmitry Baryshkov wrote:
->>>>>>> On Thu, 31 Aug 2023 at 13:13, Luca Weiss <luca.weiss@fairphone.com> wrote:
->>>>>>>>
->>>>>>>> On Wed Aug 30, 2023 at 12:06 PM CEST, Krzysztof Kozlowski wrote:
->>>>>>>>> On 30/08/2023 11:58, Luca Weiss wrote:
->>>>>>>>>> Like other Qualcomm PMICs the PM7250B can be used on different addresses
->>>>>>>>>> on the SPMI bus. Use similar defines like the PMK8350 to make this
->>>>>>>>>> possible.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->>>>>>>>>> ---
->>>>>>>>>>  arch/arm64/boot/dts/qcom/pm7250b.dtsi | 23 ++++++++++++++++-------
->>>>>>>>>>  1 file changed, 16 insertions(+), 7 deletions(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/arm64/boot/dts/qcom/pm7250b.dtsi b/arch/arm64/boot/dts/qcom/pm7250b.dtsi
->>>>>>>>>> index e8540c36bd99..3514de536baa 100644
->>>>>>>>>> --- a/arch/arm64/boot/dts/qcom/pm7250b.dtsi
->>>>>>>>>> +++ b/arch/arm64/boot/dts/qcom/pm7250b.dtsi
->>>>>>>>>> @@ -7,6 +7,15 @@
->>>>>>>>>>  #include <dt-bindings/interrupt-controller/irq.h>
->>>>>>>>>>  #include <dt-bindings/spmi/spmi.h>
->>>>>>>>>>
->>>>>>>>>> +/* This PMIC can be configured to be at different SIDs */
->>>>>>>>>> +#ifndef PM7250B_SID
->>>>>>>>>> +   #define PM7250B_SID 2
->>>>>>>>>> +#endif
->>>>>>>>>
->>>>>>>>> Why do you send the same patch as v1, without any reference to previous
->>>>>>>>> discussions?
->>>>>>>>>
->>>>>>>>> You got here feedback already.
->>>>>>>>>
->>>>>>>>> https://lore.kernel.org/linux-arm-msm/f52524da-719b-790f-ad2c-0c3f313d9fe9@linaro.org/
->>>>>>>>
->>>>>>>> Hi Krzysztof,
->>>>>>>>
->>>>>>>> I did mention that original patch in the cover letter of this series.
->>>>>>>> I'm definitely aware of the discussion earlier this year there but also
->>>>>>>> tried to get an update lately if there's any update with no response.
->>>>>>>
->>>>>>> I think the overall consensus was that my proposal is too complicated
->>>>>>> for the DT files.
->>>>>>
->>>>>> I proposed to duplicate the entries. Do you keep QUP nodes in DTSI and
->>>>>> customize per address? No.
->>>>>
->>>>> At the same time, we do keep SoC files separate from the board files.
->>>>> Yes, I'm slightly exaggerating here.
->>>>>
->>>>> I think that for PMIC files it makes sense to extract common parts if
->>>>> that eases reuse of the common parts.
->>>>
->>>> Hi all,
->>>>
->>>> what can I do for v2 now?
->>>>
->>>> 1. Keep this patch as-is, and keep pm7250b in device dts.
->>
->> This was NAKed by me. What Qualcomm SoC maintainers decide (or not
->> decide) about other options, should not cause the wrong solution to be
->> re-posted...
->>
->>>>
->>>> 2. Drop pm7250b patch and drop from device dts, until _someone_ figures
->>>> out a solution talking to the PMIC on different SID.
->>>>
->>>> 3. Something else like copy-pasting pm7250b.dtsi to pm7250-8.dtsi and
->>>> changing the SID there, and using that in device dts.
-> 
-> @Konrad, @Bjorn: Can you give any feedback here what's preferable?
-> Otherwise I'm just blocked on this series.
-> 
->>>>
->>>> Please let me know what to do.
->>>>
->>>> Regards
->>>> Luca
->>>
->>> Hi,
->>>
->>> if there's no feedback I'll keep this patch in v2 of this series and we
->>> can continue to discuss there (if necessary).
->>
->> Sorry, I still do not agree and there were no arguments convincing me to
->> change the mind.
->>
->> I gave you the solution from my perspective. Why do you decided to
->> ignore it and send it as is?
-> 
-> I get it that you are not final decider for qcom dts changes but it's
-> quite difficult for someone sending patches to not get any feedback what
-> other change to replace this is appropriate. I doubt it's a good idea to
-> just implement some random pm7250-8.dtsi or whatever to potentially
-> immediately get a response that that way is also bad.
-> 
-> That's why I'm trying to get some info before working on something and
-> sending it. Hopefully Bjorn or Konrad can add their thoughts above.
+linusw/fixes baseline: 46 runs, 4 regressions (v6.6-rc1)
 
-I understand, and it is frustrating. If such case happens the solution
-in upstream is not sending the same NAKed version but send something else.
+Regressions Summary
+-------------------
 
-> 
-> Also I don't recall me ever reading a "solution" from your side but
-> maybe I need to dig through the old emails again.
+platform           | arch  | lab           | compiler | defconfig | regress=
+ions
+-------------------+-------+---------------+----------+-----------+--------=
+----
+juno-uboot         | arm64 | lab-broonie   | gcc-10   | defconfig | 1      =
+    =
 
-Here:
-"I proposed to duplicate the entries. Do you keep QUP nodes in DTSI and
-customize per address? No."
+r8a77960-ulcb      | arm64 | lab-collabora | gcc-10   | defconfig | 1      =
+    =
 
-Dmitry responded that having PMICs extracted help re-using. He is right.
-But here you hit the limit of such re-usage.
+rk3399-rock-pi-4b  | arm64 | lab-collabora | gcc-10   | defconfig | 1      =
+    =
 
-Best regards,
-Krzysztof
+sun50i-h6-pine-h64 | arm64 | lab-collabora | gcc-10   | defconfig | 1      =
+    =
 
+
+  Details:  https://kernelci.org/test/job/linusw/branch/fixes/kernel/v6.6-r=
+c1/plan/baseline/
+
+  Test:     baseline
+  Tree:     linusw
+  Branch:   fixes
+  Describe: v6.6-rc1
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      0bb80ecc33a8fb5a682236443c1e740d5c917d1d =
+
+
+
+Test Regressions
+---------------- =
+
+
+
+platform           | arch  | lab           | compiler | defconfig | regress=
+ions
+-------------------+-------+---------------+----------+-----------+--------=
+----
+juno-uboot         | arm64 | lab-broonie   | gcc-10   | defconfig | 1      =
+    =
+
+
+  Details:     https://kernelci.org/test/plan/id/64fef35507a67209e5286d6c
+
+  Results:     60 PASS, 1 FAIL, 1 SKIP
+  Full config: defconfig
+  Compiler:    gcc-10 (aarch64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210=
+110)
+  Plain log:   https://storage.kernelci.org//linusw/fixes/v6.6-rc1/arm64/de=
+fconfig/gcc-10/lab-broonie/baseline-juno-uboot.txt
+  HTML log:    https://storage.kernelci.org//linusw/fixes/v6.6-rc1/arm64/de=
+fconfig/gcc-10/lab-broonie/baseline-juno-uboot.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/buildroo=
+t-baseline/20230623.0/arm64/rootfs.cpio.gz =
+
+
+
+  * baseline.bootrr.deferred-probe-empty: https://kernelci.org/test/case/id=
+/64fef35507a67209e5286da9
+        new failure (last pass: v6.1-rc1)
+
+    2023-09-11T11:00:23.565747  / # #
+    2023-09-11T11:00:23.668843  export SHELL=3D/bin/sh
+    2023-09-11T11:00:23.669668  #
+    2023-09-11T11:00:23.771713  / # export SHELL=3D/bin/sh. /lava-99073/env=
+ironment
+    2023-09-11T11:00:23.772494  =
+
+    2023-09-11T11:00:23.874503  / # . /lava-99073/environment/lava-99073/bi=
+n/lava-test-runner /lava-99073/1
+    2023-09-11T11:00:23.875867  =
+
+    2023-09-11T11:00:23.888781  / # /lava-99073/bin/lava-test-runner /lava-=
+99073/1
+    2023-09-11T11:00:23.956041  + export 'TESTRUN_ID=3D1_bootrr'
+    2023-09-11T11:00:23.956582  + cd /lava-99073/1/tests/1_bootrr =
+
+    ... (40 line(s) more)  =
+
+ =
+
+
+
+platform           | arch  | lab           | compiler | defconfig | regress=
+ions
+-------------------+-------+---------------+----------+-----------+--------=
+----
+r8a77960-ulcb      | arm64 | lab-collabora | gcc-10   | defconfig | 1      =
+    =
+
+
+  Details:     https://kernelci.org/test/plan/id/64feede30a536f95e6286e8a
+
+  Results:     4 PASS, 2 FAIL, 1 SKIP
+  Full config: defconfig
+  Compiler:    gcc-10 (aarch64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210=
+110)
+  Plain log:   https://storage.kernelci.org//linusw/fixes/v6.6-rc1/arm64/de=
+fconfig/gcc-10/lab-collabora/baseline-r8a77960-ulcb.txt
+  HTML log:    https://storage.kernelci.org//linusw/fixes/v6.6-rc1/arm64/de=
+fconfig/gcc-10/lab-collabora/baseline-r8a77960-ulcb.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/buildroo=
+t-baseline/20230623.0/arm64/rootfs.cpio.gz =
+
+
+
+  * baseline.bootrr.deferred-probe-empty: https://kernelci.org/test/case/id=
+/64feede30a536f95e6286e93
+        new failure (last pass: v6.2-rc1)
+
+    2023-09-11T10:41:29.940763  / # #
+
+    2023-09-11T10:41:30.042887  export SHELL=3D/bin/sh
+
+    2023-09-11T10:41:30.043598  #
+
+    2023-09-11T10:41:30.144946  / # export SHELL=3D/bin/sh. /lava-11494033/=
+environment
+
+    2023-09-11T10:41:30.145591  =
+
+
+    2023-09-11T10:41:30.246815  / # . /lava-11494033/environment/lava-11494=
+033/bin/lava-test-runner /lava-11494033/1
+
+    2023-09-11T10:41:30.247796  =
+
+
+    2023-09-11T10:41:30.248963  / # /lava-11494033/bin/lava-test-runner /la=
+va-11494033/1
+
+    2023-09-11T10:41:30.313560  + export 'TESTRUN_ID=3D1_bootrr'
+
+    2023-09-11T10:41:30.313688  + cd /lav<8>[   20.487117] <LAVA_SIGNAL_STA=
+RTRUN 1_bootrr 11494033_1.5.2.4.5>
+ =
+
+    ... (28 line(s) more)  =
+
+ =
+
+
+
+platform           | arch  | lab           | compiler | defconfig | regress=
+ions
+-------------------+-------+---------------+----------+-----------+--------=
+----
+rk3399-rock-pi-4b  | arm64 | lab-collabora | gcc-10   | defconfig | 1      =
+    =
+
+
+  Details:     https://kernelci.org/test/plan/id/64feee118b891d5e83286d79
+
+  Results:     5 PASS, 1 FAIL, 1 SKIP
+  Full config: defconfig
+  Compiler:    gcc-10 (aarch64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210=
+110)
+  Plain log:   https://storage.kernelci.org//linusw/fixes/v6.6-rc1/arm64/de=
+fconfig/gcc-10/lab-collabora/baseline-rk3399-rock-pi-4b.txt
+  HTML log:    https://storage.kernelci.org//linusw/fixes/v6.6-rc1/arm64/de=
+fconfig/gcc-10/lab-collabora/baseline-rk3399-rock-pi-4b.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/buildroo=
+t-baseline/20230623.0/arm64/rootfs.cpio.gz =
+
+
+
+  * baseline.bootrr.deferred-probe-empty: https://kernelci.org/test/case/id=
+/64feee118b891d5e83286d82
+        failing since 120 days (last pass: v6.1-rc1, first fail: v6.2-rc1)
+
+    2023-09-11T10:38:04.730529  / # #
+
+    2023-09-11T10:38:05.991177  export SHELL=3D/bin/sh
+
+    2023-09-11T10:38:06.002126  #
+
+    2023-09-11T10:38:06.002588  / # export SHELL=3D/bin/sh
+
+    2023-09-11T10:38:07.745882  / # . /lava-11494028/environment
+
+    2023-09-11T10:38:10.949972  /lava-11494028/bin/lava-test-runner /lava-1=
+1494028/1
+
+    2023-09-11T10:38:10.961329  . /lava-11494028/environment
+
+    2023-09-11T10:38:10.965549  / # /lava-11494028/bin/lava-test-runner /la=
+va-11494028/1
+
+    2023-09-11T10:38:11.017560  + export 'TESTRUN_ID=3D1_bootrr'
+
+    2023-09-11T10:38:11.018037  + cd /lava-11494028/1/tests/1_bootrr
+ =
+
+    ... (10 line(s) more)  =
+
+ =
+
+
+
+platform           | arch  | lab           | compiler | defconfig | regress=
+ions
+-------------------+-------+---------------+----------+-----------+--------=
+----
+sun50i-h6-pine-h64 | arm64 | lab-collabora | gcc-10   | defconfig | 1      =
+    =
+
+
+  Details:     https://kernelci.org/test/plan/id/64feedf50a536f95e6286e99
+
+  Results:     5 PASS, 1 FAIL, 1 SKIP
+  Full config: defconfig
+  Compiler:    gcc-10 (aarch64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210=
+110)
+  Plain log:   https://storage.kernelci.org//linusw/fixes/v6.6-rc1/arm64/de=
+fconfig/gcc-10/lab-collabora/baseline-sun50i-h6-pine-h64.txt
+  HTML log:    https://storage.kernelci.org//linusw/fixes/v6.6-rc1/arm64/de=
+fconfig/gcc-10/lab-collabora/baseline-sun50i-h6-pine-h64.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/buildroo=
+t-baseline/20230623.0/arm64/rootfs.cpio.gz =
+
+
+
+  * baseline.bootrr.deferred-probe-empty: https://kernelci.org/test/case/id=
+/64feedf50a536f95e6286ea2
+        new failure (last pass: v6.2-rc1)
+
+    2023-09-11T10:41:40.240661  / # #
+
+    2023-09-11T10:41:40.342745  export SHELL=3D/bin/sh
+
+    2023-09-11T10:41:40.343479  #
+
+    2023-09-11T10:41:40.444944  / # export SHELL=3D/bin/sh. /lava-11494021/=
+environment
+
+    2023-09-11T10:41:40.445658  =
+
+
+    2023-09-11T10:41:40.547093  / # . /lava-11494021/environment/lava-11494=
+021/bin/lava-test-runner /lava-11494021/1
+
+    2023-09-11T10:41:40.548288  =
+
+
+    2023-09-11T10:41:40.550483  / # /lava-11494021/bin/lava-test-runner /la=
+va-11494021/1
+
+    2023-09-11T10:41:40.633433  + export 'TESTRUN_ID=3D1_bootrr'
+
+    2023-09-11T10:41:40.633937  + cd /lava-11494021/1/tests/1_boot<8>[   19=
+.078338] <LAVA_SIGNAL_STARTRUN 1_bootrr 11494021_1.5.2.4.5>
+ =
+
+    ... (11 line(s) more)  =
+
+ =20
