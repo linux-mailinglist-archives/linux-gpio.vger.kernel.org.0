@@ -2,42 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB35F79C0A1
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:20:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5C5E79BF0E
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:18:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239740AbjIKUzX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:55:23 -0400
+        id S236251AbjIKUyz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:54:55 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236530AbjIKKza (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 06:55:30 -0400
+        with ESMTP id S236532AbjIKKzc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 06:55:32 -0400
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5BBF2;
-        Mon, 11 Sep 2023 03:55:25 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BAmQjQ022508;
-        Mon, 11 Sep 2023 10:55:02 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D81F1;
+        Mon, 11 Sep 2023 03:55:27 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B9fmxc007832;
+        Mon, 11 Sep 2023 10:55:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=qcppdkim1;
- bh=47U0wjkLNNzJMzGRtWIy9DXhXMW8cvfyRnreZaE9VOA=;
- b=ZqHcl/YCTG5QP7TbSQXjQnLBWP01iiyXExRlqLh/6aKXMjIo8E2E5PrscrslBPytJLdT
- 6vynw0tIyarHh1kER8SKsgKMZzrgC9N33QDe+dc5dAL/+7dhDSlukVdld5URcxAfxu8S
- 8VpV1+YIKXNcgtu6bVaKaX/HFXxxnRs+IbzyjHJZNdyT9Y6AhskeBiMQlNP/p809Lhmz
- D79lt3BNX9r4GCAThASsuXnUugVyyaFW0z+QW2JvevXL9+b5kiQaKXtYUtWPRMKOu9WH
- wg/YpsCiMf9zCqWBTe3craNRtLBKVNeWPQwDjWb3lVj54wfk5iPSHw7K2ocVzxe9MANd 9A== 
+ bh=t03UP7q891F/c5g/2wfXb+TlibZKK7FwWRcbw5U5eKA=;
+ b=Ho4hFkEokMgmCBaW03nkJmxZDwRVhB9HufpTQa42iWofQmsFDaxDVr+dBA8RPXgEvp11
+ zOBvKg+gwvLaIo2gnqlqWeUVvjm8TeWs9urt+C1MpYjfL+wfDtpLhbPNZV4ZPgvd/zG7
+ Gq7B95RsuuGt4PzpOYqNS1urVCN7ufeKXUdN5UfqOEycb+Y7IQ/nsG6DNYjty+oPlKB4
+ cy1KxXI9dUSuyK0qw8Pw4R0/Ju5vrs1GA6qXr7+NI3dreTY4TPiVIBxYwXp43YCmaGBi
+ 5q1N8UotK7P7FY/SwWwHfb3+zMX7ExbGKZq/opTe/PBT6r3ySC+QZ7Eq6RWeGw1lev51 Nw== 
 Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0h3du6t9-1
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t1u3yrs88-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Mon, 11 Sep 2023 10:55:02 +0000
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAt1uL032425
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAt1uO032425
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Mon, 11 Sep 2023 10:55:01 GMT
 Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
  nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Mon, 11 Sep 2023 03:54:18 -0700
+ 15.2.1118.36; Mon, 11 Sep 2023 03:54:44 -0700
 From:   Mukesh Ojha <quic_mojha@quicinc.com>
 To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
         <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
@@ -56,9 +56,9 @@ CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
         <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
         <quic_mojha@quicinc.com>
-Subject: [REBASE PATCH v5 01/17] docs: qcom: Add qualcomm minidump guide
-Date:   Mon, 11 Sep 2023 16:23:43 +0530
-Message-ID: <1694429639-21484-2-git-send-email-quic_mojha@quicinc.com>
+Subject: [REBASE PATCH v5 04/17] remoteproc: qcom: Remove minidump related data from qcom_common.c
+Date:   Mon, 11 Sep 2023 16:23:46 +0530
+Message-ID: <1694429639-21484-5-git-send-email-quic_mojha@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
 References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
@@ -69,16 +69,16 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ML-0oLKKeDCY_UT_3AXm2a1E5kKc1PrX
-X-Proofpoint-ORIG-GUID: ML-0oLKKeDCY_UT_3AXm2a1E5kKc1PrX
+X-Proofpoint-GUID: tjFQUm_2yuDC0uqVCtc9PxTbx7sDBJRy
+X-Proofpoint-ORIG-GUID: tjFQUm_2yuDC0uqVCtc9PxTbx7sDBJRy
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 phishscore=0 mlxlogscore=999 adultscore=0 spamscore=0
- suspectscore=0 impostorscore=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2308100000 definitions=main-2309110099
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309110099
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -88,307 +88,200 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the qualcomm minidump guide for the users which tries to cover
-the dependency, API use and the way to test and collect minidump
-on Qualcomm supported SoCs.
+As minidump specific data structure and functions move under
+config QCOM_RPROC_MINIDUMP, so remove minidump specific data
+from driver/remoteproc/qcom_common.c .
 
 Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- Documentation/admin-guide/index.rst         |   1 +
- Documentation/admin-guide/qcom_minidump.rst | 272 ++++++++++++++++++++++++++++
- 2 files changed, 273 insertions(+)
- create mode 100644 Documentation/admin-guide/qcom_minidump.rst
+ drivers/remoteproc/qcom_common.c | 160 ---------------------------------------
+ 1 file changed, 160 deletions(-)
 
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 43ea35613dfc..251d070486c2 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -120,6 +120,7 @@ configure specific aspects of kernel behavior to your liking.
-    perf-security
-    pm/index
-    pnp
-+   qcom_minidump
-    rapidio
-    ras
-    rtc
-diff --git a/Documentation/admin-guide/qcom_minidump.rst b/Documentation/admin-guide/qcom_minidump.rst
-new file mode 100644
-index 000000000000..20202da8ca40
---- /dev/null
-+++ b/Documentation/admin-guide/qcom_minidump.rst
-@@ -0,0 +1,272 @@
-+Qualcomm minidump feature
-+=========================
-+
-+Introduction
-+------------
-+
-+Minidump is a best effort mechanism to collect useful and predefined
-+data for first level of debugging on end user devices running on
-+Qualcomm SoCs. It is built on the premise that System on Chip (SoC)
-+or subsystem part of SoC crashes, due to a range of hardware and
-+software bugs. Hence, the ability to collect accurate data is only
-+a best-effort. The data collected could be invalid or corrupted, data
-+collection itself could fail, and so on.
-+
-+Qualcomm devices in engineering mode provides a mechanism for generating
-+full system RAM dumps for post-mortem debugging. But in some cases it's
-+however not feasible to capture the entire content of RAM. The minidump
-+mechanism provides the means for selected region should be included in
-+the ramdump.
-+
-+
-+::
-+
-+   +-----------------------------------------------+
-+   |   DDR                       +-------------+   |
-+   |                             |      SS0-ToC|   |
-+   | +----------------+     +----------------+ |   |
-+   | |Shared memory   |     |         SS1-ToC| |   |
-+   | |(SMEM)          |     |                | |   |
-+   | |                | +-->|--------+       | |   |
-+   | |G-ToC           | |   | SS-ToC  \      | |   |
-+   | |+-------------+ | |   | +-----------+  | |   |
-+   | ||-------------| | |   | |-----------|  | |   |
-+   | || SS0-ToC     | | | +-|<|SS1 region1|  | |   |
-+   | ||-------------| | | | | |-----------|  | |   |
-+   | || SS1-ToC     |-|>+ | | |SS1 region2|  | |   |
-+   | ||-------------| |   | | |-----------|  | |   |
-+   | || SS2-ToC     | |   | | |  ...      |  | |   |
-+   | ||-------------| |   | | |-----------|  | |   |
-+   | ||  ...        | |   |-|<|SS1 regionN|  | |   |
-+   | ||-------------| |   | | |-----------|  | |   |
-+   | || SSn-ToC     | |   | | +-----------+  | |   |
-+   | |+-------------+ |   | |                | |   |
-+   | |                |   | |----------------| |   |
-+   | |                |   +>|  regionN       | |   |
-+   | |                |   | |----------------| |   |
-+   | +----------------+   | |                | |   |
-+   |                      | |----------------| |   |
-+   |                      +>|  region1       | |   |
-+   |                        |----------------| |   |
-+   |                        |                | |   |
-+   |                        |----------------|-+   |
-+   |                        |  region5       |     |
-+   |                        |----------------|     |
-+   |                        |                |     |
-+   |  Region information    +----------------+     |
-+   | +---------------+                             |
-+   | |region name    |                             |
-+   | |---------------|                             |
-+   | |region address |                             |
-+   | |---------------|                             |
-+   | |region size    |                             |
-+   | +---------------+                             |
-+   +-----------------------------------------------+
-+       G-ToC: Global table of contents
-+       SS-ToC: Subsystem table of contents
-+       SS0-SSn: Subsystem numbered from 0 to n
-+
-+It depends on SoC where the underlying firmware is keeping the
-+minidump global table taking care of subsystem ToC part for
-+minidump like for above diagram, it is for shared memory sitting
-+in DDR and it is shared among various master however it is possible
-+that this could be implemented via memory mapped regions but the
-+general idea should remain same. Here, various subsystem could be
-+DSP's like ADSP/CDSP/MODEM etc, along with Application processor
-+(APSS) where Linux runs. DSP minidump gets collected when DSP's goes
-+for recovery followed by a crash. The minidump part of code for
-+that resides in ``qcom_rproc_minidump.c``.
-+
-+
-+SMEM as backend
-+----------------
-+
-+In this document, SMEM will be used as the backend implementation
-+of minidump.
-+
-+The core of minidump feature is part of Qualcomm's boot firmware code.
-+It initializes shared memory (SMEM), which is a part of DDR and
-+allocates a small section of it to minidump table, i.e. also called
-+global table of contents (G-ToC). Each subsystem (APSS, ADSP, ...) has
-+its own table of segments to be included in the minidump, all
-+references from a descriptor in SMEM (G-ToC). Each segment/region has
-+some details like name, physical address and its size etc. and it
-+could be anywhere scattered in the DDR.
-+
-+Qualcomm APSS Minidump kernel driver concept
-+--------------------------------------------
-+::
-+
-+Qualcomm APSS minidump kernel driver adds the capability to add Linux
-+region to be dumped as part of RAM dump collection. At the moment,
-+shared memory driver creates platform device for minidump driver and
-+give a means to APSS minidump to initialize itself on probe.
-+
-+This driver provides ``qcom_minidump_region_register`` and
-+``qcom_minidump_region_unregister`` API's to register and unregister
-+APSS minidump region. It also supports registration for the clients
-+who came before minidump driver was initialized. It maintains pending
-+list of clients who came before minidump and once minidump is initialized
-+it registers them in one go.
-+
-+To simplify post-mortem debugging, driver creates and maintain an ELF
-+header as first region that gets updated each time a new region gets
-+registered.
-+
-+The solution supports extracting the RAM dump/minidump produced either
-+over USB or stored to an attached storage device.
-+
-+Dependency of minidump kernel driver
-+------------------------------------
-+
-+It is to note that whole of minidump depends on Qualcomm boot firmware
-+whether it supports minidump or not. So, if the minidump SMEM ID is
-+present in shared memory, it indicates that minidump is supported from
-+boot firmware and it is possible to dump Linux (APSS) region as part
-+of minidump collection.
-+
-+How a kernel client driver can register region with minidump
-+------------------------------------------------------------
-+
-+Client driver can use ``qcom_minidump_region_register`` API's to register
-+and ``qcom_minidump_region_unregister`` to unregister their region from
-+minidump driver.
-+
-+Client needs to fill their region by filling ``qcom_minidump_region``
-+structure object which consists of the region name, region's virtual
-+and physical address and its size.
-+
-+Below, is one sample client driver snippet which tries to allocate a
-+region from kernel heap of certain size and it writes a certain known
-+pattern (that can help in verification after collection that we got
-+the exact pattern, what we wrote) and registers it with minidump.
-+
-+ .. code-block:: c
-+
-+  #include <soc/qcom/qcom_minidump.h>
-+  [...]
-+
-+
-+  [... inside a function ...]
-+  struct qcom_minidump_region region;
-+
-+  [...]
-+
-+  client_mem_region = kzalloc(region_size, GFP_KERNEL);
-+  if (!client_mem_region)
-+	return -ENOMEM;
-+
-+  [... Just write a pattern ...]
-+  memset(client_mem_region, 0xAB, region_size);
-+
-+  [... Fill up the region object ...]
-+  strlcpy(region.name, "REGION_A", sizeof(region.name));
-+  region.virt_addr = client_mem_region;
-+  region.phys_addr = virt_to_phys(client_mem_region);
-+  region.size = region_size;
-+
-+  ret = qcom_minidump_region_register(&region);
-+  if (ret < 0) {
-+	pr_err("failed to add region in minidump: err: %d\n", ret);
-+	return ret;
-+  }
-+
-+  [...]
-+
-+
-+Test
-+----
-+
-+Existing Qualcomm devices already supports entire RAM dump (also called
-+full dump) by writing appropriate value to Qualcomm's top control and
-+status register (tcsr) in ``driver/firmware/qcom_scm.c`` .
-+
-+SCM device Tree bindings required to support download mode
-+For example (sm8450) ::
-+
-+	/ {
-+
-+	[...]
-+
-+		firmware {
-+			scm: scm {
-+				compatible = "qcom,scm-sm8450", "qcom,scm";
-+				[... tcsr register ... ]
-+				qcom,dload-mode = <&tcsr 0x13000>;
-+
-+				[...]
-+			};
-+		};
-+
-+	[...]
-+
-+		soc: soc@0 {
-+
-+			[...]
-+
-+			tcsr: syscon@1fc0000 {
-+				compatible = "qcom,sm8450-tcsr", "syscon";
-+				reg = <0x0 0x1fc0000 0x0 0x30000>;
-+			};
-+
-+			[...]
-+		};
-+	[...]
-+
-+	};
-+
-+User of minidump can pass ``qcom_scm.download_mode="mini"`` to kernel
-+commandline to set the current download mode to minidump.
-+Similarly, ``"full"`` is passed to set the download mode to full dump
-+where entire RAM dump will be collected while setting it ``"full,mini"``
-+will collect minidump along with fulldump.
-+
-+Writing to sysfs node can also be used to set the mode to minidump::
-+
-+	echo "mini" > /sys/module/qcom_scm/parameter/download_mode
-+
-+Once the download mode is set, any kind of crash will make the device collect
-+respective dump as per set download mode.
-+
-+Dump collection
-+---------------
-+
-+	+-----------+
-+	|           |
-+	|           |         +------+
-+	|           |         |      |
-+	|           |         +--+---+ Product(Qualcomm SoC)
-+	+-----------+             |
-+	|+++++++++++|<------------+
-+	|+++++++++++|    usb cable
-+	+-----------+
-+            x86_64 PC
-+
-+The solution supports a product running with Qualcomm SoC (where minidump)
-+is supported from the firmware) connected to x86_64 host PC running PCAT
-+tool. It supports downloading the minidump produced from product to the
-+host PC over USB or to save the minidump to the product attached storage
-+device(UFS/eMMC/SD Card) into minidump dedicated partition.
-+
-+By default, dumps are downloaded via USB to the attached x86_64 PC running
-+PCAT (Qualcomm tool) software. Upon download, we will see a set of binary
-+blobs starting with name ``md_*`` in PCAT configured directory in x86_64
-+machine, so for above example from the client it will be ``md_REGION_A.BIN``.
-+This binary blob depends on region content to determine whether it needs
-+external parser support to get the content of the region, so for simple
-+plain ASCII text we don't need any parsing and the content can be seen
-+just opening the binary file.
-+
-+To collect the dump to attached storage type, one needs to write appropriate
-+value to IMEM register, in that case dumps are collected in rawdump
-+partition on the product device itself.
-+
-+One needs to read the entire rawdump partition and pull out content to
-+save it onto the attached x86_64 machine over USB. Later, this rawdump
-+can be passed to another tool (``dexter.exe`` [Qualcomm tool]) which
-+converts this into the similar binary blobs which we have got it when
-+download type was set to USB, i.e. a set of registered regions as blobs
-+and their name starts with ``md_*``.
-+
-+Replacing the ``dexter.exe`` with some open source tool can be added as future
-+scope of this document.
+diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+index 03e5f5d533eb..085fd73fa23a 100644
+--- a/drivers/remoteproc/qcom_common.c
++++ b/drivers/remoteproc/qcom_common.c
+@@ -17,7 +17,6 @@
+ #include <linux/rpmsg/qcom_smd.h>
+ #include <linux/slab.h>
+ #include <linux/soc/qcom/mdt_loader.h>
+-#include <linux/soc/qcom/smem.h>
+ 
+ #include "remoteproc_internal.h"
+ #include "qcom_common.h"
+@@ -26,61 +25,6 @@
+ #define to_smd_subdev(d) container_of(d, struct qcom_rproc_subdev, subdev)
+ #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, subdev)
+ 
+-#define MAX_NUM_OF_SS           10
+-#define MAX_REGION_NAME_LENGTH  16
+-#define SBL_MINIDUMP_SMEM_ID	602
+-#define MINIDUMP_REGION_VALID		('V' << 24 | 'A' << 16 | 'L' << 8 | 'I' << 0)
+-#define MINIDUMP_SS_ENCR_DONE		('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
+-#define MINIDUMP_SS_ENABLED		('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' << 0)
+-
+-/**
+- * struct minidump_region - Minidump region
+- * @name		: Name of the region to be dumped
+- * @seq_num:		: Use to differentiate regions with same name.
+- * @valid		: This entry to be dumped (if set to 1)
+- * @address		: Physical address of region to be dumped
+- * @size		: Size of the region
+- */
+-struct minidump_region {
+-	char	name[MAX_REGION_NAME_LENGTH];
+-	__le32	seq_num;
+-	__le32	valid;
+-	__le64	address;
+-	__le64	size;
+-};
+-
+-/**
+- * struct minidump_subsystem - Subsystem's SMEM Table of content
+- * @status : Subsystem toc init status
+- * @enabled : if set to 1, this region would be copied during coredump
+- * @encryption_status: Encryption status for this subsystem
+- * @encryption_required : Decides to encrypt the subsystem regions or not
+- * @region_count : Number of regions added in this subsystem toc
+- * @regions_baseptr : regions base pointer of the subsystem
+- */
+-struct minidump_subsystem {
+-	__le32	status;
+-	__le32	enabled;
+-	__le32	encryption_status;
+-	__le32	encryption_required;
+-	__le32	region_count;
+-	__le64	regions_baseptr;
+-};
+-
+-/**
+- * struct minidump_global_toc - Global Table of Content
+- * @status : Global Minidump init status
+- * @md_revision : Minidump revision
+- * @enabled : Minidump enable status
+- * @subsystems : Array of subsystems toc
+- */
+-struct minidump_global_toc {
+-	__le32				status;
+-	__le32				md_revision;
+-	__le32				enabled;
+-	struct minidump_subsystem	subsystems[MAX_NUM_OF_SS];
+-};
+-
+ struct qcom_ssr_subsystem {
+ 	const char *name;
+ 	struct srcu_notifier_head notifier_list;
+@@ -90,110 +34,6 @@ struct qcom_ssr_subsystem {
+ static LIST_HEAD(qcom_ssr_subsystem_list);
+ static DEFINE_MUTEX(qcom_ssr_subsys_lock);
+ 
+-static void qcom_minidump_cleanup(struct rproc *rproc)
+-{
+-	struct rproc_dump_segment *entry, *tmp;
+-
+-	list_for_each_entry_safe(entry, tmp, &rproc->dump_segments, node) {
+-		list_del(&entry->node);
+-		kfree(entry->priv);
+-		kfree(entry);
+-	}
+-}
+-
+-static int qcom_add_minidump_segments(struct rproc *rproc, struct minidump_subsystem *subsystem,
+-			void (*rproc_dumpfn_t)(struct rproc *rproc, struct rproc_dump_segment *segment,
+-				void *dest, size_t offset, size_t size))
+-{
+-	struct minidump_region __iomem *ptr;
+-	struct minidump_region region;
+-	int seg_cnt, i;
+-	dma_addr_t da;
+-	size_t size;
+-	char *name;
+-
+-	if (WARN_ON(!list_empty(&rproc->dump_segments))) {
+-		dev_err(&rproc->dev, "dump segment list already populated\n");
+-		return -EUCLEAN;
+-	}
+-
+-	seg_cnt = le32_to_cpu(subsystem->region_count);
+-	ptr = ioremap((unsigned long)le64_to_cpu(subsystem->regions_baseptr),
+-		      seg_cnt * sizeof(struct minidump_region));
+-	if (!ptr)
+-		return -EFAULT;
+-
+-	for (i = 0; i < seg_cnt; i++) {
+-		memcpy_fromio(&region, ptr + i, sizeof(region));
+-		if (le32_to_cpu(region.valid) == MINIDUMP_REGION_VALID) {
+-			name = kstrndup(region.name, MAX_REGION_NAME_LENGTH - 1, GFP_KERNEL);
+-			if (!name) {
+-				iounmap(ptr);
+-				return -ENOMEM;
+-			}
+-			da = le64_to_cpu(region.address);
+-			size = le64_to_cpu(region.size);
+-			rproc_coredump_add_custom_segment(rproc, da, size, rproc_dumpfn_t, name);
+-		}
+-	}
+-
+-	iounmap(ptr);
+-	return 0;
+-}
+-
+-void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
+-		void (*rproc_dumpfn_t)(struct rproc *rproc,
+-		struct rproc_dump_segment *segment, void *dest, size_t offset,
+-		size_t size))
+-{
+-	int ret;
+-	struct minidump_subsystem *subsystem;
+-	struct minidump_global_toc *toc;
+-
+-	/* Get Global minidump ToC*/
+-	toc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, NULL);
+-
+-	/* check if global table pointer exists and init is set */
+-	if (IS_ERR(toc) || !toc->status) {
+-		dev_err(&rproc->dev, "Minidump TOC not found in SMEM\n");
+-		return;
+-	}
+-
+-	/* Get subsystem table of contents using the minidump id */
+-	subsystem = &toc->subsystems[minidump_id];
+-
+-	/**
+-	 * Collect minidump if SS ToC is valid and segment table
+-	 * is initialized in memory and encryption status is set.
+-	 */
+-	if (subsystem->regions_baseptr == 0 ||
+-	    le32_to_cpu(subsystem->status) != 1 ||
+-	    le32_to_cpu(subsystem->enabled) != MINIDUMP_SS_ENABLED) {
+-		return rproc_coredump(rproc);
+-	}
+-
+-	if (le32_to_cpu(subsystem->encryption_status) != MINIDUMP_SS_ENCR_DONE) {
+-		dev_err(&rproc->dev, "Minidump not ready, skipping\n");
+-		return;
+-	}
+-
+-	/**
+-	 * Clear out the dump segments populated by parse_fw before
+-	 * re-populating them with minidump segments.
+-	 */
+-	rproc_coredump_cleanup(rproc);
+-
+-	ret = qcom_add_minidump_segments(rproc, subsystem, rproc_dumpfn_t);
+-	if (ret) {
+-		dev_err(&rproc->dev, "Failed with error: %d while adding minidump entries\n", ret);
+-		goto clean_minidump;
+-	}
+-	rproc_coredump_using_sections(rproc);
+-clean_minidump:
+-	qcom_minidump_cleanup(rproc);
+-}
+-EXPORT_SYMBOL_GPL(qcom_minidump);
+-
+ static int glink_subdev_start(struct rproc_subdev *subdev)
+ {
+ 	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
 -- 
 2.7.4
 
