@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA83479B5F8
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:04:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BD8879B081
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:49:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241601AbjIKU5N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:57:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47826 "EHLO
+        id S232341AbjIKUyj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:54:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236202AbjIKJzl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 05:55:41 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 799B0E67;
-        Mon, 11 Sep 2023 02:55:37 -0700 (PDT)
+        with ESMTP id S236206AbjIKJ5E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 05:57:04 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B663E67;
+        Mon, 11 Sep 2023 02:56:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694426137; x=1725962137;
+  t=1694426219; x=1725962219;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=0JcFDOUw0C238xlJbCbweIkrVkXKg1zh7PJyy8AyPxY=;
-  b=Gufs04b97kcySToqEwElpDD6IW5QH7ki6WKiCR2cPNhUOoMjjnGgTuhz
-   LlOgKCBfkV0F5WyfvuMuEdBC06z0H5CwYnmxTtvmWBPql+bNq5InAj3Jc
-   6yoY8dTeTUT+vrZkdw8qd5/Buj+BeZAMltHVKx/2f1Ztodmt8/neyT+aN
-   jCeMT1pQcOhb5vAdAVsxnmDYDruvefJIddMCSp7fa6I7O2b0XBaIznSkk
-   LY6QM+KQs56Q4oR3VDBH5eo/0QtOLOcpDV6p7ygRgbtY6InkMJR3JVH/Z
-   vr2IbSuG8Vc0CffFN758cPkXeCNUkSzcwMbL+lZwLUXRUlHSMqZKQCLBw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="444458285"
+  bh=ccQZ6EnQu6CIa4qQy8IVpBeF7c/wK9EQzEgUbK0W49o=;
+  b=dZrlgsMSh0TpyU355X8TOEnys/BiZwbTIQZZgbryD7p94/ae/NPAyG+3
+   yunQwMDXHYFtQI6V1rhghUfhhu9I8U1BVzxZA/LzdMijCERUcrI2XcY3P
+   UVc+swih/50JEIEPKCFA6u7Lpoersr0PRa+UMqzu0ahACSXliskUB4jxD
+   Min+NXyekbaOWnO7Qx5FRXvMmW1ZZwEqI5eMLDw66/6dgXJRiLEb4L1cz
+   3Z8PpFSOFE6wpaqf7AS4Tv+997LvPF2zVgsZI7fnFBxlm4a9raWgA7vBS
+   udtyDCZXlm361j6VPN4zHHEwqNV1MmFE9AwwyCksQ1vfU7aeH1WLZwo0J
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="363064646"
 X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
-   d="scan'208";a="444458285"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 02:55:36 -0700
+   d="scan'208";a="363064646"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 02:56:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="808781738"
+X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="866883398"
 X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
-   d="scan'208";a="808781738"
+   d="scan'208";a="866883398"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 02:55:33 -0700
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 02:56:56 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qfddi-008HfF-2S;
-        Mon, 11 Sep 2023 12:55:30 +0300
-Date:   Mon, 11 Sep 2023 12:55:30 +0300
+        id 1qfdf3-008HgA-19;
+        Mon, 11 Sep 2023 12:56:53 +0300
+Date:   Mon, 11 Sep 2023 12:56:53 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linhua Xu <Linhua.xu@unisoc.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -53,15 +53,14 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         lh xu <xulh0829@gmail.com>,
         Zhirong Qiu <zhirong.qiu@unisoc.com>,
         Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Subject: Re: [PATCH V2 5/6] pinctrl: sprd: Increase the range of register
- values
-Message-ID: <ZP7kErjprsXbe7wv@smile.fi.intel.com>
+Subject: Re: [PATCH V2 6/6] pinctrl: sprd: Add pinctrl support for UMS9621
+Message-ID: <ZP7kZUV2MQPYLZwM@smile.fi.intel.com>
 References: <20230908055146.18347-1-Linhua.xu@unisoc.com>
- <20230908055146.18347-6-Linhua.xu@unisoc.com>
+ <20230908055146.18347-7-Linhua.xu@unisoc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230908055146.18347-6-Linhua.xu@unisoc.com>
+In-Reply-To: <20230908055146.18347-7-Linhua.xu@unisoc.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
@@ -72,14 +71,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 01:51:45PM +0800, Linhua Xu wrote:
+On Fri, Sep 08, 2023 at 01:51:46PM +0800, Linhua Xu wrote:
 > From: Linhua Xu <Linhua.Xu@unisoc.com>
 > 
-> As the UNISOC pin controller version iterates, more registers are required
-> to meet new functional requirements. Thus modify them.
+> Add the pin control driver for UNISOC UMS9621 platform.
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/platform_device.h>
+> +
+
+...
+
+> +#define	PINCTRL_REG_OFFSET		0x44
+
+0x0044
+
+> +#define	PINCTRL_REG_MISC_OFFSET		0x444
+
+...
+
+> +static const struct of_device_id sprd_pinctrl_of_match[] = {
+> +	{ .compatible = "sprd,ums9621-pinctrl", },
+
+Inner comma is not needed.
+
+> +	{ }
+> +};
+
 
 -- 
 With Best Regards,
