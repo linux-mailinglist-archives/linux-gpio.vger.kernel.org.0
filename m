@@ -2,85 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7720D79B195
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 01:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF68879B4EE
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233005AbjIKUza (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:55:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37318 "EHLO
+        id S242068AbjIKU5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236653AbjIKLJ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 07:09:56 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D326CE5
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 04:09:51 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2b962c226ceso71483311fa.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 04:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694430590; x=1695035390; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ItV/PafZYbRtZG+3EH6sRu97i9Pet4QO+NBJ8/y2iuI=;
-        b=tg4h2AL9gT7/qUV0jFTrvkPJl9a/skFZyfbwb9lpcls46kdOpKy/0zULUF05nAJKrw
-         ITd7nMPZiaS5PsZzg1uTs9LpnOIGc5IQoXbM6B0QK8XpMLmTWz7Uvoa0s4ZTgz5Jq9t4
-         v0U5o8trLtrjzW4IH2vQo4mpKEbOiin4b62jWutcLNlCqZmZsOvN5+FxgDlk21bHCJDq
-         AGy8mFU5AJj5nVJ+LxeMb8183iNYaxF1hzP/jM4wDcZfI50R1cg8CQ5wa0RSetIfcJDN
-         Epx6SgrPMDqtOePCk98hrz6ZZ1pRWPxrXpWGXqxYXtz71fRYbYppSVB44eXGFYlNXoj4
-         UTNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694430590; x=1695035390;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ItV/PafZYbRtZG+3EH6sRu97i9Pet4QO+NBJ8/y2iuI=;
-        b=EYSChS+gOOXaTDiEvW9nZpbHsgYfcOmOKhPjRWV8q0vVMIuOmjPXKMsLK5cWagarfK
-         oaRUluiq6FT8GYc89MbcOwiPo3v1/8taJqnutPXIPlOMbO9svsnF5rTSGEuakLh0eOQ8
-         RDYSHJn2qA8FmNHR9uO2WS57jigZ711xrFEXqxjXKNxF39JZKWNJv9PU2ILgJxy+TAg+
-         8nCIxoJ3n0fhYAPCYYzaRZEViQpH2fLet29UPywhcf4DY7fVyqI1f2ZBZHS367k7+uyg
-         nu66SoCLZRHbGP4MOSkjd6PqwN7NV362F1i33ov+cb+rkWsbiC7R06FxIpB+zZxkrwOH
-         Vrpg==
-X-Gm-Message-State: AOJu0Yz37yg13/3SUeT+tv58k5pSwKUGvTV5sUrHc+RzMFVk/edzT7Jl
-        tsJL/AGMg/Eo1k2Bxw6SAv3m1A==
-X-Google-Smtp-Source: AGHT+IEA9FyfM8rXa+3k+u+doQWaGigDrU1zuRRVi1v3E2XELPt5LPr2HsZJRl0XxMdT23XFarwUrQ==
-X-Received: by 2002:a2e:8543:0:b0:2bd:180d:67b7 with SMTP id u3-20020a2e8543000000b002bd180d67b7mr6601812ljj.40.1694430589764;
-        Mon, 11 Sep 2023 04:09:49 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.214.188])
-        by smtp.gmail.com with ESMTPSA id lw7-20020a170906bcc700b009a168ab6ee2sm5129780ejb.164.2023.09.11.04.09.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 04:09:48 -0700 (PDT)
-Message-ID: <0041a391-12ba-2e1b-0954-fbc0e00be631@linaro.org>
-Date:   Mon, 11 Sep 2023 13:09:46 +0200
+        with ESMTP id S237438AbjIKMuw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 08:50:52 -0400
+Received: from muru.com (muru.com [72.249.23.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 40BA5CEB;
+        Mon, 11 Sep 2023 05:50:48 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6F29580A2;
+        Mon, 11 Sep 2023 12:50:47 +0000 (UTC)
+Date:   Mon, 11 Sep 2023 15:50:46 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH 15/21] arm: omap1: ams-delta: stop using
+ gpiochip_find()
+Message-ID: <20230911125046.GA5285@atomide.com>
+References: <20230905185309.131295-1-brgl@bgdev.pl>
+ <20230905185309.131295-16-brgl@bgdev.pl>
+ <CACRpkdaVUPNYVjAi2XsNKVhwmtk2qpVp62Lke4xeDOwhhBXLtg@mail.gmail.com>
+ <6555932.G0QQBjFxQf@dell>
+ <CAMRc=Mfrk9q6fJyEAuxDXYPpbjVHeLJaTjHEcKiYHzrE3r+_7A@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH v5 11/17] qcom_minidump: Register ramoops region with
- minidump
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
-        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
-        bmasney@redhat.com, quic_tsoni@quicinc.com
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
-References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
- <1694290578-17733-12-git-send-email-quic_mojha@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1694290578-17733-12-git-send-email-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mfrk9q6fJyEAuxDXYPpbjVHeLJaTjHEcKiYHzrE3r+_7A@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,51 +58,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/09/2023 22:16, Mukesh Ojha wrote:
-> Register all the pstore frontend with minidump, so that they can
-> be dumped as default Linux minidump region to be collected on
-> SoC where minidump is enabled.
+* Bartosz Golaszewski <brgl@bgdev.pl> [230911 11:10]:
+> On Fri, Sep 8, 2023 at 8:07 PM Janusz Krzysztofik <jmkrzyszt@gmail.com> wrote:
+> >
+> > Dnia czwartek, 7 września 2023 09:31:01 CEST Linus Walleij pisze:
+> > > On Tue, Sep 5, 2023 at 8:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > >
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > gpiochip_find() is going away as it's not hot-unplug safe. This platform
+> > > > is not affected by any of the related problems as this GPIO controller
+> > > > cannot really go away but in order to finally remove this function, we
+> > > > need to convert it to using gpio_device_find() as well.
+> > > >
+> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > I was cleaning this one just some merge cycle ago, now it
+> > > looks even better!
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Acked-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+> >
 > 
+> Janusz,
+> 
+> Is it fine if I take it through the GPIO tree?
 
-...
+Works for me at least:
 
-> +
-> +	record.type = type;
-> +	record.id = 0;
-> +	max_dump_cnt = 0;
-> +	name = pstore_type_to_name(record.type);
-> +	do {
-> +		ret = pstore_region_defined(&record, &virt, &phys, &size, &max_dump_cnt);
-> +		if (ret < 0)
-> +			break;
-> +
-> +		mdr_list = devm_kzalloc(dev, sizeof(struct md_region_list), GFP_KERNEL);
-
-sizeof(*)
-
-Please fix it everywhere in your code.
-
-> +		if (!mdr_list)
-> +			return -ENOMEM;
-> +
-> +		md_region = &mdr_list->md_region;
-> +		scnprintf(md_region->name, sizeof(md_region->name) - 1, "K%s%llu", name, record.id);
-> +		md_region->virt_addr = virt;
-> +		md_region->phys_addr = phys;
-> +		md_region->size = size;
-> +		ret = qcom_minidump_region_register(md_region);
-> +		if (ret) {
-> +			pr_err("failed to register minidump region\n");
-> +			break;
-> +		}
-> +
-> +		list_add(&mdr_list->list, &ramoops_region_list);
-> +	} while (record.id < max_dump_cnt && ++record.id);
-> +
-> +	return ret;
-> +}
-
-
-Best regards,
-Krzysztof
-
+Acked-by: Tony Lindgren <tony@atomide.com>
