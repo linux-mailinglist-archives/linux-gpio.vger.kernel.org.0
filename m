@@ -2,127 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CB7379BA83
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:11:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 786A679B8E3
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 02:09:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239586AbjIKUzL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 16:55:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35008 "EHLO
+        id S239710AbjIKUzW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 16:55:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236227AbjIKKAm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 06:00:42 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901C5E67;
-        Mon, 11 Sep 2023 03:00:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694426437; x=1725962437;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=/H0b/R+uNUqfiQLQRnj4GrCx/gkBli1h0d0agleOMDc=;
-  b=hIq1yAl6qvUQftrgIG0snElvkRvj5xggYmL60LNUm8NeVMTiD6eZ8bMZ
-   jR0jh/zo31bfwzg1ZKwfkm4s1OZcRiHajgB1j8t37o5ZkOfkuPVhGAvn8
-   xZtgMcM4l3obP6VN28GotsAh0RdqTgcIuRPOeZJhn9lN+jZnDy4XtyEp/
-   2jBLRNYP/zlAYDMC2W/wdgI3qv+lQsssFGnzG61YOEnbLrc0xJeBGsjak
-   /5nh9pdbW4HF872z0HdOZ9oL651nc36cizXdZTTBZzcuNeXqsF/UsnOT2
-   8/BL7WrLKEqDZZklbERAmgKJEYBe7cHqjwUvnx+5gUcPd7KuQlsU5x7Ux
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="380741891"
-X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
-   d="scan'208";a="380741891"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 03:00:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="990043201"
-X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
-   d="scan'208";a="990043201"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 03:00:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qfdiZ-008Hjf-0p;
-        Mon, 11 Sep 2023 13:00:31 +0300
-Date:   Mon, 11 Sep 2023 13:00:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4] gpio: sim: don't fiddle with GPIOLIB private members
-Message-ID: <ZP7lPn5BfAJj+soP@smile.fi.intel.com>
-References: <20230907082751.22996-1-brgl@bgdev.pl>
- <ZPnaoOUiYDR3yqGu@smile.fi.intel.com>
- <CAMRc=MfDOaRbgCH4OH8roLorRNYEscg1WhNFN_nDGyz9xRVWiQ@mail.gmail.com>
+        with ESMTP id S236243AbjIKKDU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 06:03:20 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24243E68
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 03:03:16 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-563f8e8a53dso2932052a12.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 03:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1694426595; x=1695031395; darn=vger.kernel.org;
+        h=from:to:subject:content-transfer-encoding:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=N15r8bCunG5RSI8zq5FpyXIAsY3tRUVIZWtRIeFyoJw=;
+        b=Pm+PPPUvu9p7l//RUaeszXIIDvMnF18ub5ZhoLpUZwc4NNshtDRAVXnhRz5DklDT+W
+         NypeUH+9fB1lvGvb0w59skRX9H5m0R3mxkxUuVCJQG6K/JMiQe+S675PjhMuI/OTM1O/
+         d4sBUkn2FJE14v97vZctT7sYKLYGfylnLdQm0C6/PsmAHGHtFezU2t61Qp0JbZ8fHCbh
+         nxqmFkPqd33LvOECACdlhwdxCRZbhpha5Bhs/kn1rkh6SkCZLYv3b73HoajVEReLx0uU
+         opboVOCJRz+Iu/MaWsy6XZ1zY9xfVQwnOV1ZXKipxUZB7Wr6it4f7i8E77vJHIe5hmwP
+         MU0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694426595; x=1695031395;
+        h=from:to:subject:content-transfer-encoding:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N15r8bCunG5RSI8zq5FpyXIAsY3tRUVIZWtRIeFyoJw=;
+        b=wKodMFKo/Gv7WjUEZud8uXJbM12Dodw2jlfaTi+qTunSuWwqDtgmAykxF1FOh0sL8e
+         Jq92cKez8NJA3y885f4tWREh73xUogxBgrD1pMxtX2yXhR1oCDIiDKPaQvcDRyRkO3Gi
+         5bVMZHlfR7QfGIJJ6z8mmxSvA3newGE0XqNxBvAb9p7334+zRk+Z/EmIh+Vxg8B1UTyo
+         Xqkq+towaaUAaujrvSMAfXuiF42+4CMYrfOC0tTuuB6ZPvCY5LoJKmzAU5staRlokWTd
+         8lhgR57BXl8lSKpNSZ0mfk5VojwDVKlbuY5FSoaVrFSxeMtUYQGCmWmQIBPji/45YEIU
+         mDZA==
+X-Gm-Message-State: AOJu0YxkORCuT6fpLAvqQ/nF+UDb9Pc9KRt15A1MZlvUcYfZZhvBUjYF
+        rT8TtIDGfkvZvMYFd7T4anQYeYqKkPqGBlsgCJ4=
+X-Google-Smtp-Source: AGHT+IFRaVU0aTCmAyhxQL0DtLatolJCWkhtBedYqgYzB+0FxufTha5XsPF1zON99/MsUULbtB/iWw==
+X-Received: by 2002:a17:90a:f494:b0:263:9e9b:5586 with SMTP id bx20-20020a17090af49400b002639e9b5586mr6973577pjb.44.1694426595071;
+        Mon, 11 Sep 2023 03:03:15 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([20.171.243.82])
+        by smtp.gmail.com with ESMTPSA id l2-20020a17090a72c200b0025bd4db25f0sm5223805pjk.53.2023.09.11.03.03.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 03:03:14 -0700 (PDT)
+Message-ID: <64fee5e2.170a0220.ed172.ad66@mx.google.com>
+Date:   Mon, 11 Sep 2023 03:03:14 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfDOaRbgCH4OH8roLorRNYEscg1WhNFN_nDGyz9xRVWiQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v6.6-rc1
+Subject: linusw/devel build: 8 builds: 0 failed, 8 passed,
+ 4 warnings (v6.6-rc1)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 02:39:28PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Sep 7, 2023 at 4:13 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Sep 07, 2023 at 10:27:51AM +0200, Bartosz Golaszewski wrote:
+linusw/devel build: 8 builds: 0 failed, 8 passed, 4 warnings (v6.6-rc1)
 
-...
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+6.6-rc1/
 
-> > >  #include <linux/completion.h>
-> > >  #include <linux/configfs.h>
-> > >  #include <linux/device.h>
-> >
-> > > +#include <linux/device/bus.h>
-> >
-> > No need, the device.h guarantees that.
-> 
-> Wait, wasn't you the one who always suggests including headers
-> directly if we're using any symbols defined in them? Like when I said
-> that we don't need to include linux/notifier.h because it's already
-> included in gpiolib.h and you argued the opposite? :)
-> 
-> device_match_fwnode() is defined in linux/device/bus.h so I thought
-> it's in order to include it.
+Tree: linusw
+Branch: devel
+Git Describe: v6.6-rc1
+Git Commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 8 unique architectures
 
-Yes, but I am not radical with it, I am for a compromise when some headers
-guarantee to include some others. That is the case I believe, I don't think
-device.h ever will be broken to the parts that are not include each other
-(too many things to change right now, if it happens, not in the feasible
- future).
+Warnings Detected:
 
-...
+arc:
 
-> > > +static int gpio_sim_dev_match_fwnode(struct device *dev, void *data)
-> > > +{
-> > > +     /*
-> > > +      * We can't pass this directly to device_find_child() due to pointer
-> > > +      * type mismatch.
-> > > +      */
-> >
-> > Not sure if this comment adds any value.
-> 
-> I disagree - I would have used device_match_fwnode() as argument
-> passed directly to device_find_child() but I cannot due to pointer
-> type mismatch error so we need this wrapper and it's useful to say
-> why.
+arm64:
 
-Yes, and we have dozen(s ?) of the similar wrappers without a comment.
-So, I'm still for removing it.
+arm:
 
-> > > +     return device_match_fwnode(dev, data);
-> > > +}
+i386:
 
--- 
-With Best Regards,
-Andy Shevchenko
+mips:
+
+riscv:
+
+sparc:
+    sparc64_defconfig (gcc-10): 4 warnings
+
+x86_64:
 
 
+Warnings summary:
+
+    2    WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version genera=
+tion failed, symbol will not be versioned.
+    2    <stdin>:1519:2: warning: #warning syscall clone3 not implemented [=
+-Wcpp]
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section m=
+ismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section m=
+ismatches
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0=
+ section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 secti=
+on mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---------------------------------------------------------------------------=
+-----
+sparc64_defconfig (sparc, gcc-10) =E2=80=94 PASS, 0 errors, 4 warnings, 0 s=
+ection mismatches
+
+Warnings:
+    <stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version generation =
+failed, symbol will not be versioned.
+    <stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+    WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version generation =
+failed, symbol will not be versioned.
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-10) =E2=80=94 PASS, 0 errors, 0 warnings, 0 s=
+ection mismatches
+
+---
+For more info write to <info@kernelci.org>
