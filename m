@@ -2,90 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 636F379C873
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 09:45:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDC8C79C892
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 09:50:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231689AbjILHpS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 03:45:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59014 "EHLO
+        id S231806AbjILHuX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 03:50:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230366AbjILHpR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 03:45:17 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A1C2E78
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:45:13 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-490cd6db592so1858307e0c.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:45:13 -0700 (PDT)
+        with ESMTP id S231802AbjILHuW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 03:50:22 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884E210C2
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:50:18 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-d80121cba8cso3678443276.0
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694504712; x=1695109512; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694505018; x=1695109818; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0/xqKTGt9/2jwXBObaDDzQ25OZV7MH4LGyijIsI0iws=;
-        b=JwEQOTcvn6CsobedRqjzF0+dldTcI+tAin+A2Y3keymR21hBcrvCoHzDqVn83gewVJ
-         JltU0UTMy3bCwYC+CV1BAOQM+8kwPWrADCXQDaQaP4jP8uwQOVzB5ykWlPRxZD+/8UqG
-         ZWfeuX+1o9LdcTCZ0ayad2nTJX+dCh4oH9TS40mvhJuHFsyE2uxq8YK3sD1agnEZ7w5o
-         jTkIjglq5/qAUFjhAFDwrqTZ3s+se8i9PEHXb+Fc5oIfJXZY1K/Ua+kbLsNxCsrBtcmX
-         9wFH4LoivNh4Y9jSSTVxCcf0faFuHpqxW2T4RP6pG8XMc/QRcDeCaXvIaqEG9T4/CExC
-         7PSg==
+        bh=/nIMhi3InVNLVngXoJNUnmobt2FTWHyrmQgIQ0m4PlQ=;
+        b=Ln03ZSGYlqC6wx9XDMgjLa1lMczq5y/s9zEPKMz2ISP4WdT4P4V6SdXeKjz3B7mFv/
+         DiMiAIUCllYJGoZKa7hQE+jOeLcvAEGgUQ9us8xa5Whp9kDzk7OgPo2p2N+5mijHHJlF
+         1vPh2/nqdVdonI5zKiMTAkDgiH1DYlmSHOJ4ffsu0h2uYUQSt1eEGmQMhj/G9xTyZT4e
+         tU5YHJIMMfop9BYcSXHDa+II5Lq4reP8yrDfWl2MqnfMu3fzJ3+zLXkeItuWPPGNRSHm
+         megJLPe0Z7E1Ms14U94tDli8QnJLdw2CHematrXYO7sV22jTuW8wIpx+1EuEqLWdONjA
+         bNcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694504712; x=1695109512;
+        d=1e100.net; s=20230601; t=1694505018; x=1695109818;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0/xqKTGt9/2jwXBObaDDzQ25OZV7MH4LGyijIsI0iws=;
-        b=rsuJl+/60ZfYcOWi2b9rrzpS1lfqKlvOvOT+zc9zqXUoo5aNIipRHZjEMt7PCX9GEC
-         SfS9dfUNLbrmhfxnd4c6xqkrJzFXMDQcUVQuWo6kxlB6tk15jrHP4GFqcj1JgrV4GGhV
-         UrWRQLN8r64Prr2CywLx+kzopUA9eVeFpttUegwWS5gn/MWk1u3vGmG7m+SGPykWhwH/
-         dPyg0wxwyBXNuaoVu8yIAfyhe8oWDK+ZXHQZYuJSjmS2eu1FdedTLIVe9lZKbhd6wPm0
-         dpdhJ3uv6Pw/8lmEhcdIsv69wVQLgMk6DCggDD3G8CrIzlB8mGT63HSpbneT0VOQ/Mmw
-         BW7g==
-X-Gm-Message-State: AOJu0YxlCwmWNc5eyC746Epf5CtXBcXmkAPhAM5VAFBWV6RY7+OBGK98
-        4jVp54D5Db+/aLGgWHReAeSSHHf8dATVCbryNqeZwg==
-X-Google-Smtp-Source: AGHT+IF8m9/dolIjze2DM/19manJbtvxU46XYYD/FPUgWfcyv/9Au2xW7fvpQiGn/pTlQ8Qm/S/sTFpl1d3TjulLc0g=
-X-Received: by 2002:a05:6122:40e:b0:495:bd33:d1f8 with SMTP id
- e14-20020a056122040e00b00495bd33d1f8mr8834996vkd.13.1694504712752; Tue, 12
- Sep 2023 00:45:12 -0700 (PDT)
+        bh=/nIMhi3InVNLVngXoJNUnmobt2FTWHyrmQgIQ0m4PlQ=;
+        b=WErnSkVhfJtd05H6ukZt3YsonguMu6nDnyYDh3zfeV9pO38bcWQeaEkqXwOaMz2BVx
+         JAx1fW4IHwRM8Ps3dAzrrG65oeFZbW+1nqQw9QEJuQ12fZg3Ox6LXZ2e5avWuC+kFY2e
+         f87OXlfPdemUycJx1ru8ZYtEiW6QZWjCYNGyLEaeMMiaDiSYphzlKHMmegEe7be2BtZT
+         r2hjctElsFhBZmiGRbvIHTnzF/PcDq7MM8ODDSbaz4GGwPfpG93ojxSZA05yEGNea7Q3
+         VQvvtwkWzPyqbs1VjytY8pYa/b52BzyLWkiybTzxICOD0YP4Ui12up/YUij51qTWYQL4
+         cadw==
+X-Gm-Message-State: AOJu0YyXQ6DKI8V1de3jQa+NWGmcArZimAqIviYodKFwgdv0UJlCHCeO
+        31iFMiJQxUtiIAr8+dphIb5pF18ulRshB2T5Ygamyg==
+X-Google-Smtp-Source: AGHT+IGB76quZ2BumgLQpY5sqm/yL75Y3ZBYaOXvKSvHJI5t1FoNoJ2RrrAjGAqgjLNq/WCussV3rJc85yOob/A59P4=
+X-Received: by 2002:a25:6b02:0:b0:d71:6f50:75f7 with SMTP id
+ g2-20020a256b02000000b00d716f5075f7mr10660463ybc.63.1694505017686; Tue, 12
+ Sep 2023 00:50:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230901112926.13216-1-brgl@bgdev.pl> <20230901112926.13216-2-brgl@bgdev.pl>
- <CACRpkdY4nqNv6Xt0hO13ohghWtxyTgUw7PNorDgfnye-CSmZ7g@mail.gmail.com>
-In-Reply-To: <CACRpkdY4nqNv6Xt0hO13ohghWtxyTgUw7PNorDgfnye-CSmZ7g@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 12 Sep 2023 09:45:02 +0200
-Message-ID: <CAMRc=McYrkeUWgMJgMA+BEHUeTDDASmYGTiGWz6_A_Tf8+CK4A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: da9062: add missing include
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230901134041.1165562-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230901134041.1165562-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 Sep 2023 09:50:06 +0200
+Message-ID: <CACRpkdboT46oadZJZTde=ze2vEvC9aUGjO5-MjDdVwCNijFqDw@mail.gmail.com>
+Subject: Re: [PATCH v1 01/10] gpio: pca953x: Drop unused fields in struct pca953x_platform_data
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 9:30=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Fri, Sep 1, 2023 at 1:29=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > gpiod_is_active_low() is defined in linux/gpio/consumer.h. It's only
-> > because we're pulling in the gpiolib.h private header that we get this
-> > declaration implicitly but let's fix it as that is going away soon.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> For allt three patches.
-> Just apply them to the GPIO tree, that's easiest!
->
-> Yours,
-> Linus Walleij
+On Fri, Sep 1, 2023 at 3:40=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Ok, queued, thanks!
+> New code should solely use firmware nodes for the specifics and
+> not any callbacks.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Bart
+Patches look good to me:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+for all patches.
+
+Patch 8 looks HTML on my gmail but I guess the problem
+is on my side.
+
+Yours,
+Linus Walleij
