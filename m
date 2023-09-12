@@ -2,83 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48C2679CDFC
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 12:18:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E24A779CE76
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 12:37:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233027AbjILKSf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 06:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
+        id S234163AbjILKhE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 06:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233902AbjILKSe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 06:18:34 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB491726;
-        Tue, 12 Sep 2023 03:18:30 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C03C433B9;
-        Tue, 12 Sep 2023 10:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694513909;
-        bh=uKvPIfnxCoZtHrrIPaG9nNRcDJHXgQGDDHfQe/MWQZY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AQYFILSsh4WNbTikyKtzLokfkY+RYdnG+CMwUDOF4KBxYbpQhedujXf88J52hQ7aF
-         LXdcFlB8e4yXzo/E1ZbP7gDQtTpVc9e3uNGD5t5AtILSNFV+dbdpLboAIf/QHuBeLz
-         JiQraaMpvFZr2mErtyQgWb9r0muXGjyqtOz2zoGnOThZlJw2epVIxJHTSlwPl03P17
-         NromokDPjkkgDl0Js/Aeksn6886MU//9WG5coE3g1sT9569WQKU4lMr4OPhtEOviKI
-         LMcRZ9OWgtXWG3+vpdMNGDuSb4bV6yKGvsYlTSKdz8lMnVUrEpt5WmB5XqBVdrcUSq
-         zcq5/G+WvKQDw==
-Date:   Tue, 12 Sep 2023 11:18:20 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        linus.walleij@linaro.org, andy.shevchenko@gmail.com,
-        vigneshr@ti.com, nm@ti.com, matthias.bgg@gmail.com,
-        kgene@kernel.org, alim.akhtar@samsung.com, bmasney@redhat.com,
-        quic_tsoni@quicinc.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
-Subject: Re: [REBASE PATCH v5 08/17] arm64: mm: Add dynamic ramoops region
- support through command line
-Message-ID: <20230912101820.GA10884@willie-the-truck>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-9-git-send-email-quic_mojha@quicinc.com>
+        with ESMTP id S234177AbjILKgx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 06:36:53 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C446144B9;
+        Tue, 12 Sep 2023 03:35:33 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="378246800"
+X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
+   d="scan'208";a="378246800"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 03:35:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="917389147"
+X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
+   d="scan'208";a="917389147"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 03:35:30 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy@kernel.org>)
+        id 1qg0jv-008YvE-39;
+        Tue, 12 Sep 2023 13:35:27 +0300
+Date:   Tue, 12 Sep 2023 13:35:27 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH 2/3] gpio: eic-sprd: use a helper variable for
+ &pdev->dev
+Message-ID: <ZQA+716X8EVmIRAt@smile.fi.intel.com>
+References: <20230912094519.22769-1-brgl@bgdev.pl>
+ <20230912094519.22769-2-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1694429639-21484-9-git-send-email-quic_mojha@quicinc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20230912094519.22769-2-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 04:23:50PM +0530, Mukesh Ojha wrote:
-> The reserved memory region for ramoops is assumed to be at a fixed
-> and known location when read from the devicetree. This may not be
-> required for something like Qualcomm's minidump which is interested
-> in knowing addresses of ramoops region but it does not put hard
-> requirement of address being fixed as most of it's SoC does not
-> support warm reset and does not use pstorefs at all instead it has
-> firmware way of collecting ramoops region if it gets to know the
-> address and register it with apss minidump table which is sitting
-> in shared memory region in DDR and firmware will have access to
-> these table during reset and collects it on crash of SoC.
+On Tue, Sep 12, 2023 at 11:45:18AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> So, add the support of reserving ramoops region to be dynamically
-> allocated early during boot if it is request through command line
-> via 'dyn_ramoops_size=' and fill up reserved resource structure and
-> export the structure, so that it can be read by ramoops driver.
-> 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->  arch/arm64/mm/init.c       | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+> Instead of dereferencing pdev everywhere, just store the address of the
+> underlying struct device in a local variable.
 
-Why does this need to be in the arch code? There's absolutely nothing
-arm64-specific here.
+...
 
-Will
+> -	return devm_add_action_or_reset(&pdev->dev,
+> -					sprd_eic_unregister_notifier,
+> +	return devm_add_action_or_reset(dev, sprd_eic_unregister_notifier,
+>  					&sprd_eic->irq_nb);
+
+Ping-pong style detected: Lines added / modified by previous patch in the same
+series got modified again.
+
+If you look at how I do that, I introduce the temporary variable with my new
+code and then reuse it later on.
+
+OTOH, I see that the first one is supposed to be backported (?) in such case
+perhaps it's fine.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
