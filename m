@@ -2,282 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA91579CBD8
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 11:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4768879C95A
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 10:10:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232026AbjILJbv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 05:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48568 "EHLO
+        id S232038AbjILIKa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 04:10:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233289AbjILIHE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 04:07:04 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B2D10DB
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 01:06:46 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-59b5484fbe6so41201357b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 01:06:45 -0700 (PDT)
+        with ESMTP id S232022AbjILIK3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 04:10:29 -0400
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07656E78
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 01:10:26 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-59234aaca15so54550137b3.3
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 01:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694506005; x=1695110805; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694506225; x=1695111025; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FtWP+e9BEXC7w+RUyN/G8YnHnlnT3vcX+sG9NK3ox/I=;
-        b=DEysX5LeZ/jYfjHDe2Zq6Uqme5ZHaJLzJe8GsYbgSLZbibMrlTmxNzRfFyBaj/0P1c
-         cz9czjQDVLaKktuMv0NIneO+Q0tse058LJ2G4Cbt3lYz1mmRS5syYjBs3So/91pNuEdE
-         EnLb2tayuxYxJ1fQn830xtXp8iQSfLlw2zpjvoVlucCVZ6x48nuEE+Dg4hKKZIzukjTG
-         9pyA7Grj6URtH18ua+i4dWXVf9Gqup9/x7gB7quj0EoXrP+wpQy2H0gr/s7hnr+5Dc9X
-         zh3QV30whKIpjsHIJ+dChCSNO7t3WYfPeYRZxmzBlktOq0gyFmTbx4aTAMXlTa8Xxk5Q
-         wIPA==
+        bh=D23QCFFdVljslwRPpscICFpYkj6MKZK1qKf0WOOnjMw=;
+        b=Zm/izVhX4Uq1hjjaoZlnPvIw0wCrR1Y+pA2KUPqoIwXQ+5jZSn609zfXJGez2pb6IE
+         Hrd9BNuYqu9MjnQuR9ynlTmu6+GEKyWMmtdJx+PJTP3tyAkcSD2Uig44PO157nE8+4qh
+         lSN0Ai07nO6o2CEu55vVwNoXqFZaDkgs6CthJ/jcOb83hOdMgnWRxLQhe0a+fWAZTjYo
+         TEGLZBChaxLOZYfxN5ac+wIinLaWXe/G0DKRb8PsKUxhyK0LLmSMfvqfh374rL4aZljG
+         hcnOmV1SvxVk9X+iv5A0tWj7tljbm2zQKEJf+rxmuhofQR5zPSj4CooXPerH4M80LxY9
+         PP0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694506005; x=1695110805;
+        d=1e100.net; s=20230601; t=1694506225; x=1695111025;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FtWP+e9BEXC7w+RUyN/G8YnHnlnT3vcX+sG9NK3ox/I=;
-        b=S5OG9tMQWYekd7Cuoyn8TqKVPnxkUyS0kH+76rxtsqBS9KfAVJO89YqawIiAT42s+w
-         6yBAK/bcRZCA9VL6NMh8Vc6i93flF02lx6BdZuHK1Xkgt/T1oHPs4+eArMwE7CKcAvCd
-         7oEvMNQ8w4jnNztAO5v/tbLkdkH1GZ46WurbRRTCxWkln5pAjUw8EDVFtzNJzA0gAn/j
-         G2oC7v5hM0CTI6aLaOGrSV5hBqebqRqk05dkyKRpzAXMIFcXv+Mw3YZwzcK0Hgoh/7P6
-         TLHWEnKvHGlyNzYYhhkRF/fAazLx0wE+oU/4HMovUKsVQcHTKczsIZ6OipLW6AEErGsv
-         /Rgw==
-X-Gm-Message-State: AOJu0YxCALZkjkBag2oVQkT2e9aXvsTntMxDMf4ZgfY+//AkNHTP+7mF
-        r9QSsfGGFDpVhYTLABzLc6ACwC7/fexOeYllZ8o0Aw==
-X-Google-Smtp-Source: AGHT+IEHrf6SFndkCb20FJCAo20fAKD8jp+yhf85lxl1eNtTsw7mK+na3Y1LgXrzLJhEEtRUNOqoM1uj91TQOZkad/w=
-X-Received: by 2002:a25:844c:0:b0:d09:377a:7bf7 with SMTP id
- r12-20020a25844c000000b00d09377a7bf7mr11592083ybm.16.1694506005187; Tue, 12
- Sep 2023 01:06:45 -0700 (PDT)
+        bh=D23QCFFdVljslwRPpscICFpYkj6MKZK1qKf0WOOnjMw=;
+        b=wIcO8jvc/TP0Dr91thf1O7d/dv+ZuXwCv/ZPyTRmEWebBLjB1F2l4nf1EckfvYnouP
+         ExeTfo0qurcFEy8BEw5hcNltQsCcbqKdEWwrFryP32vSmmHasqHeWx3u+Y28ja/+QT1T
+         acw2tTvB7bJcMzmKckI7qg6m6IqAorGOUXWnjVb4Q5Yn9yjmoXhjU+rsOZtqZOf4oul7
+         yaO+utF+Bfg/4rHCUs37n/1af9SPe7RoOQDICrb+0ZXc+9fngXXUGL4yCNckkzzSfkmo
+         XKc8Nzs3Xtp4f+EVfKpxf1k4+gfK63MG3ZDHzbSYhWuZWlDTCKnI2XdcxNueVWuIZwM0
+         tmpw==
+X-Gm-Message-State: AOJu0YyJ95TJMPubDBfNwya2aiJU231WkS1mNcdw/mrl2YWSe00qn5XH
+        uCxeyC4I/pSx7Tm7tZus3BKDvY2q2fnJeSBR1ID/BksogLKWZQZX
+X-Google-Smtp-Source: AGHT+IFUaI+x8sTgAhtsHEXehUsOGuNAlMUyXBI2fE5fjfuw8ZkM7Ny4FixFpCjeoF3FXKTZXWmOTSFch31+D42wVa4=
+X-Received: by 2002:a25:8051:0:b0:d78:538:8017 with SMTP id
+ a17-20020a258051000000b00d7805388017mr10943065ybn.61.1694506225296; Tue, 12
+ Sep 2023 01:10:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230904115816.1237684-1-s.hauer@pengutronix.de> <20230904115816.1237684-2-s.hauer@pengutronix.de>
-In-Reply-To: <20230904115816.1237684-2-s.hauer@pengutronix.de>
+References: <20230905122105.117000-1-hal.feng@starfivetech.com>
+In-Reply-To: <20230905122105.117000-1-hal.feng@starfivetech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 Sep 2023 10:06:34 +0200
-Message-ID: <CACRpkdYxRdToUM3JcEeNK_K87D5WDzzSLvVEbtqqdQEhz3k_Ow@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: rockchip: add support for io-domain dependency
-To:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de,
-        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-        Michael Riesch <michael.riesch@wolfvision.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
+Date:   Tue, 12 Sep 2023 10:10:14 +0200
+Message-ID: <CACRpkdaKYvs9Gc11Zx+Ev7ygNnpPOpe1G4fdMzyEmUO2-bAzvA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] Fix an irq issue and add system pm ops for
+ StarFive JH7110 pinctrl drivers
+To:     Hal Feng <hal.feng@starfivetech.com>
+Cc:     Andreas Schwab <schwab@suse.de>, Conor Dooley <conor@kernel.org>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Top posting to bring Saravana Kannan into this discussion.
+On Tue, Sep 5, 2023 at 2:22=E2=80=AFPM Hal Feng <hal.feng@starfivetech.com>=
+ wrote:
 
-This looks like a big hack to me, Saravana has been working
-tirelessly to make the device tree probe order "sort itself out"
-and I am pretty sure this issue needs to be fixed at the DT
-core level and not in a driver.
+> This patchset fixes some issues arising when CONFIG_PM is enabled
+> or suspending to disk.
+>
+> The first patch fixes failure to set irq after CONFIG_PM is enabled.
+>
+> The second patch adds system pm ops to save and restore context. So it ca=
+n
+> ensure that the pins configuration keep consistent with the one before
+> suspending.
 
-Saravana, can you advice how we should handle this properly?
+Patches applied for fixes!
 
 Yours,
 Linus Walleij
-
-On Mon, Sep 4, 2023 at 1:58=E2=80=AFPM Sascha Hauer <s.hauer@pengutronix.de=
-> wrote:
->
-> On some Rockchip SoCs, some SoC pins are split in what are called IO
-> domains.
->
-> An IO domain is supplied power externally, by regulators from a PMIC for
-> example. This external power supply is then used by the IO domain as
-> "supply" for the IO pins if they are outputs.
->
-> Each IO domain can configure which voltage the IO pins will be operating
-> on (1.8V or 3.3V).
->
-> There already exists an IO domain driver for Rockchip SoCs[1]. This
-> driver allows to explicit the relationship between the external power
-> supplies and IO domains[2]. This makes sure the regulators are enabled
-> by the Linux kernel so the IO domains are supplied with power and
-> correctly configured as per the supplied voltage.
-> This driver is a regulator consumer and does not offer any other
-> interface for device dependency.
->
-> However, IO pins belonging to an IO domain need to have this IO domain
-> configured correctly before they are being used otherwise they do not
-> operate correctly.
->
-> We currently do not have any knowledge about which pin is on which IO
-> domain, so we assume that all pins are on some IO domain and defer
-> probing of the pin consumers until the IO domain driver has been probed.
-> Some pins however are needed to access the regulators driving an IO
-> domain. Deferring probe for them as well would introduce a cyclic
-> dependency. To break out of this dependency a pin group can be supplied
-> a rockchip,io-domain-boot-on property. Probe won't be deferred for pin
-> groups with this property. rockchip,io-domain-boot-on should be added
-> to all pin groups needed to access the PMIC driving the IO domains.
->
-> [1] drivers/soc/rockchip/io-domain.c
-> [2] Documentation/devicetree/bindings/power/rockchip-io-domain.yaml
->
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  drivers/pinctrl/pinctrl-rockchip.c | 64 ++++++++++++++++++++++++++++++
->  drivers/pinctrl/pinctrl-rockchip.h |  3 ++
->  2 files changed, 67 insertions(+)
->
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl=
--rockchip.c
-> index 0276b52f37168..663bd9d6840a5 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -24,6 +24,8 @@
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
->  #include <linux/pinctrl/machine.h>
->  #include <linux/pinctrl/pinconf.h>
->  #include <linux/pinctrl/pinctrl.h>
-> @@ -2678,6 +2680,43 @@ static int rockchip_pmx_get_groups(struct pinctrl_=
-dev *pctldev,
->         return 0;
->  }
->
-> +static int rockchip_pmx_check_io_domain(struct rockchip_pinctrl *info, u=
-nsigned group)
-> +{
-> +       struct platform_device *pdev;
-> +       int i;
-> +
-> +       if (!info->io_domains)
-> +               return 0;
-> +
-> +       if (info->groups[group].io_domain_skip)
-> +               return 0;
-> +
-> +       for (i =3D 0; i < info->num_io_domains; i++) {
-> +               if (!info->io_domains[i])
-> +                       continue;
-> +
-> +               pdev =3D of_find_device_by_node(info->io_domains[i]);
-> +               if (!pdev) {
-> +                       dev_err(info->dev, "couldn't find IO domain devic=
-e\n");
-> +                       return -ENODEV;
-> +               }
-> +
-> +               if (!platform_get_drvdata(pdev)) {
-> +                       dev_err(info->dev, "IO domain device is not probe=
-d yet, deferring...(%s)",
-> +                               info->groups[group].name);
-> +                       return -EPROBE_DEFER;
-> +               }
-> +
-> +               of_node_put(info->io_domains[i]);
-> +               info->io_domains[i] =3D NULL;
-> +       }
-> +
-> +       devm_kfree(info->dev, info->io_domains);
-> +       info->io_domains =3D NULL;
-> +
-> +       return 0;
-> +}
-> +
->  static int rockchip_pmx_set(struct pinctrl_dev *pctldev, unsigned select=
-or,
->                             unsigned group)
->  {
-> @@ -2691,6 +2730,10 @@ static int rockchip_pmx_set(struct pinctrl_dev *pc=
-tldev, unsigned selector,
->         dev_dbg(dev, "enable function %s group %s\n",
->                 info->functions[selector].name, info->groups[group].name)=
-;
->
-> +       ret =3D rockchip_pmx_check_io_domain(info, group);
-> +       if (ret)
-> +               return ret;
-> +
->         /*
->          * for each pin in the pin group selected, program the correspond=
-ing
->          * pin function number in the config register.
-> @@ -3019,6 +3062,8 @@ static int rockchip_pinctrl_parse_groups(struct dev=
-ice_node *np,
->         if (!size || size % 4)
->                 return dev_err_probe(dev, -EINVAL, "wrong pins number or =
-pins and configs should be by 4\n");
->
-> +       grp->io_domain_skip =3D of_property_read_bool(np, "rockchip,io-do=
-main-boot-on");
-> +
->         grp->npins =3D size / 4;
->
->         grp->pins =3D devm_kcalloc(dev, grp->npins, sizeof(*grp->pins), G=
-FP_KERNEL);
-> @@ -3417,6 +3462,22 @@ static int rockchip_pinctrl_probe(struct platform_=
-device *pdev)
->                         return PTR_ERR(info->regmap_pmu);
->         }
->
-> +       info->num_io_domains =3D of_property_count_u32_elems(np, "rockchi=
-p,io-domains");
-> +       if (info->num_io_domains) {
-> +               int i;
-> +
-> +               info->io_domains =3D devm_kmalloc_array(dev, info->num_io=
-_domains,
-> +                                                     sizeof(*info->io_do=
-mains), GFP_KERNEL);
-> +               if (!info->io_domains)
-> +                       return -ENOMEM;
-> +
-> +               for (i =3D 0; i < info->num_io_domains; i++) {
-> +                       info->io_domains[i] =3D of_parse_phandle(np, "roc=
-kchip,io-domains", 0);
-> +                       if (!info->io_domains[i])
-> +                               return -EINVAL;
-> +               }
-> +       }
-> +
->         ret =3D rockchip_pinctrl_register(pdev, info);
->         if (ret)
->                 return ret;
-> @@ -3439,6 +3500,9 @@ static int rockchip_pinctrl_remove(struct platform_=
-device *pdev)
->
->         of_platform_depopulate(&pdev->dev);
->
-> +       for (i =3D 0; i < info->num_io_domains; i++)
-> +               of_node_put(info->io_domains[i]);
-> +
->         for (i =3D 0; i < info->ctrl->nr_banks; i++) {
->                 bank =3D &info->ctrl->pin_banks[i];
->
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl=
--rockchip.h
-> index 4759f336941ef..d2ac79b0a7bc4 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.h
-> +++ b/drivers/pinctrl/pinctrl-rockchip.h
-> @@ -435,6 +435,7 @@ struct rockchip_pin_group {
->         unsigned int                    npins;
->         unsigned int                    *pins;
->         struct rockchip_pin_config      *data;
-> +       bool                            io_domain_skip;
->  };
->
->  /**
-> @@ -462,6 +463,8 @@ struct rockchip_pinctrl {
->         unsigned int                    ngroups;
->         struct rockchip_pmx_func        *functions;
->         unsigned int                    nfunctions;
-> +       struct device_node              **io_domains;
-> +       int                             num_io_domains;
->  };
->
->  #endif
-> --
-> 2.39.2
->
