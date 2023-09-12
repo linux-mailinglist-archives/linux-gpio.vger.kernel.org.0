@@ -2,313 +2,548 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D12DB79CD7A
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 12:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD28979CD82
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 12:12:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233451AbjILKLm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 06:11:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41238 "EHLO
+        id S232412AbjILKMx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 06:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233499AbjILKLk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 06:11:40 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C27C010EB;
-        Tue, 12 Sep 2023 03:11:35 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.201])
-        by gateway (Coremail) with SMTP id _____8AxEvBWOQBl6oIlAA--.6809S3;
-        Tue, 12 Sep 2023 18:11:34 +0800 (CST)
-Received: from [10.20.42.201] (unknown [10.20.42.201])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxbS9VOQBlu6MAAA--.625S3;
-        Tue, 12 Sep 2023 18:11:33 +0800 (CST)
-Subject: Re: [PATCH v5 2/2] gpio: loongson: add more gpio chip support
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S231560AbjILKMv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 06:12:51 -0400
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::223])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C77F6CC3;
+        Tue, 12 Sep 2023 03:12:46 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 9938D6000A;
+        Tue, 12 Sep 2023 10:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1694513565;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/QMiitosqYs6E2rit/sKplsVIJuWT2DIDIlBwmBS+xM=;
+        b=VxBI/9SOVTULrpOr4muZBst37nfPrkS3AeuieTNuhHFSuqCzWgXgF/TuztRKAH/AhWYMnq
+        3elrZYeaKSgUGzqfAcJw/qe1e8RTySyifO+YZrllkvtl3VGUEZ7AkbgjlpemJTJIaFTCnk
+        3+Eh/8wK5Z7UAwWNlswVdPXFrZFNjxXtf8AsN4C4jN1ByLudvUmyaEtgh26zSw57nCizJ5
+        WSJvtytUOH1IgIzDVRgoz7S5e9Czvv01woPwcEI7UVM3witlUIecL5BsORE69s0vwPdCdW
+        ZJQEElyWqEYfL4YY95VKld9CIZMXz8e5dzI2eER9iUcAwtMivEh8gouuSvYt8Q==
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Herve Codina <herve.codina@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
-References: <20230829123524.17291-1-zhuyinbo@loongson.cn>
- <20230829123524.17291-3-zhuyinbo@loongson.cn>
- <CAMRc=Md6c+z09PuHT+DsXPBwrmDDF8gmLNUAbikgA8fbJHGWFg@mail.gmail.com>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <e808d62c-1ff0-2930-67fe-fb8302a2b87c@loongson.cn>
-Date:   Tue, 12 Sep 2023 18:11:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        alsa-devel@alsa-project.org, Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v5 10/31] net: wan: Add support for QMC HDLC
+Date:   Tue, 12 Sep 2023 12:12:36 +0200
+Message-ID: <20230912101236.225402-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230912081527.208499-1-herve.codina@bootlin.com>
+References: <20230912081527.208499-1-herve.codina@bootlin.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=Md6c+z09PuHT+DsXPBwrmDDF8gmLNUAbikgA8fbJHGWFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxbS9VOQBlu6MAAA--.625S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-        nUUI43ZEXa7xR_UUUUUUUUU==
+X-GND-Sasl: herve.codina@bootlin.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The QMC HDLC driver provides support for HDLC using the QMC (QUICC
+Multichannel Controller) to transfer the HDLC data.
 
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ drivers/net/wan/Kconfig        |  12 +
+ drivers/net/wan/Makefile       |   1 +
+ drivers/net/wan/fsl_qmc_hdlc.c | 422 +++++++++++++++++++++++++++++++++
+ 3 files changed, 435 insertions(+)
+ create mode 100644 drivers/net/wan/fsl_qmc_hdlc.c
 
-在 2023/9/12 下午5:02, Bartosz Golaszewski 写道:
-> On Tue, Aug 29, 2023 at 2:35 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
->>
->> This patch was to add loongson 2k0500, 2k2000 and 3a5000 gpio chip
->> driver support.
->>
->> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->> ---
->>   drivers/gpio/gpio-loongson-64bit.c | 125 ++++++++++++++++++++++++++---
->>   1 file changed, 113 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
->> index 06213bbfabdd..2608f7eeba3b 100644
->> --- a/drivers/gpio/gpio-loongson-64bit.c
->> +++ b/drivers/gpio/gpio-loongson-64bit.c
->> @@ -23,9 +23,10 @@ enum loongson_gpio_mode {
->>   struct loongson_gpio_chip_data {
->>          const char              *label;
->>          enum loongson_gpio_mode mode;
->> -       unsigned int            conf_offset;
->> -       unsigned int            out_offset;
->> -       unsigned int            in_offset;
->> +       u32                     conf_offset;
->> +       u32                     out_offset;
->> +       u32                     in_offset;
->> +       u32                     inten_offset;
-> 
-> Why are you doing this? If this change is needed, it warrants at least
-> a mention in the commit message.
-
-
-Hi Bart,
-
-These changes include add "inten_offset" and use use "u32" replaced
-"unsigned int", which type change was due to v3 has following code,
-
-but, in v5 gpio patch, no following code, so no need type change.
-
-104 +       if (device_property_read_u32(dev, 
-"loongson,gpio-conf-offset", (u32 *)&d->conf_offset)
-105 +           || device_property_read_u32(dev, 
-"loongson,gpio-in-offset", (u32 *)&d->in_offset)
-106 +           || device_property_read_u32(dev, 
-"loongson,gpio-out-offset", (u32 *)&d->out_offset)
-107 +           || device_property_read_u32(dev, 
-"loongson,gpio-ctrl-mode", (u32 *)&d->mode))
-
-
-I will add following change in v6.
-
---- a/drivers/gpio/gpio-loongson-64bit.c
-+++ b/drivers/gpio/gpio-loongson-64bit.c
-@@ -26,6 +26,7 @@ struct loongson_gpio_chip_data {
-         unsigned int            conf_offset;
-         unsigned int            out_offset;
-         unsigned int            in_offset;
-+       unsigned int            inten_offset;
-  };
-
-
-Change the commit log to the following:
-
-This patch was to add loongson 2k0500, 2k2000 and 3a5000 gpio chip
-driver support and define inten_offset attribute to enable gpio chip
-interrupt.
-
-Thanks,
-Yinbo
-
-> 
->>   };
->>
->>   struct loongson_gpio_chip {
->> @@ -117,19 +118,29 @@ static void loongson_gpio_set(struct gpio_chip *chip, unsigned int pin, int valu
->>
->>   static int loongson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
->>   {
->> +       unsigned int u;
->>          struct platform_device *pdev = to_platform_device(chip->parent);
->> +       struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
->> +
->> +       if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
->> +               /* Get the register index from offset then multiply by bytes per register */
->> +               u = readl(lgpio->reg_base + lgpio->chip_data->inten_offset + (offset / 32) * 4);
->> +               u |= BIT(offset % 32);
->> +               writel(u, lgpio->reg_base + lgpio->chip_data->inten_offset + (offset / 32) * 4);
->> +       } else {
->> +               writeb(1, lgpio->reg_base + lgpio->chip_data->inten_offset + offset);
->> +       }
->>
->>          return platform_get_irq(pdev, offset);
->>   }
->>
->>   static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgpio,
->> -                             struct device_node *np, void __iomem *reg_base)
->> +                             void __iomem *reg_base)
->>   {
->>          int ret;
->>          u32 ngpios;
->>
->>          lgpio->reg_base = reg_base;
->> -
->>          if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
->>                  ret = bgpio_init(&lgpio->chip, dev, 8,
->>                                  lgpio->reg_base + lgpio->chip_data->in_offset,
->> @@ -148,15 +159,15 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
->>                  lgpio->chip.direction_output = loongson_gpio_direction_output;
->>                  lgpio->chip.set = loongson_gpio_set;
->>                  lgpio->chip.parent = dev;
->> +               device_property_read_u32(dev, "ngpios", &ngpios);
->> +               lgpio->chip.ngpio = ngpios;
->>                  spin_lock_init(&lgpio->lock);
->>          }
->>
->> -       device_property_read_u32(dev, "ngpios", &ngpios);
->> -
->> -       lgpio->chip.can_sleep = 0;
->> -       lgpio->chip.ngpio = ngpios;
->>          lgpio->chip.label = lgpio->chip_data->label;
->> -       lgpio->chip.to_irq = loongson_gpio_to_irq;
->> +       lgpio->chip.can_sleep = false;
->> +       if (lgpio->chip_data->inten_offset)
->> +               lgpio->chip.to_irq = loongson_gpio_to_irq;
->>
->>          return devm_gpiochip_add_data(dev, &lgpio->chip, lgpio);
->>   }
->> @@ -165,7 +176,6 @@ static int loongson_gpio_probe(struct platform_device *pdev)
->>   {
->>          void __iomem *reg_base;
->>          struct loongson_gpio_chip *lgpio;
->> -       struct device_node *np = pdev->dev.of_node;
->>          struct device *dev = &pdev->dev;
->>
->>          lgpio = devm_kzalloc(dev, sizeof(*lgpio), GFP_KERNEL);
->> @@ -178,7 +188,7 @@ static int loongson_gpio_probe(struct platform_device *pdev)
->>          if (IS_ERR(reg_base))
->>                  return PTR_ERR(reg_base);
->>
->> -       return loongson_gpio_init(dev, lgpio, np, reg_base);
->> +       return loongson_gpio_init(dev, lgpio, reg_base);
->>   }
->>
->>   static const struct loongson_gpio_chip_data loongson_gpio_ls2k_data = {
->> @@ -187,6 +197,57 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k_data = {
->>          .conf_offset = 0x0,
->>          .in_offset = 0x20,
->>          .out_offset = 0x10,
->> +       .inten_offset = 0x30,
->> +};
->> +
->> +static const struct loongson_gpio_chip_data loongson_gpio_ls2k0500_data0 = {
->> +       .label = "ls2k0500_gpio",
->> +       .mode = BIT_CTRL_MODE,
->> +       .conf_offset = 0x0,
->> +       .in_offset = 0x8,
->> +       .out_offset = 0x10,
->> +       .inten_offset = 0xb0,
->> +};
->> +
->> +static const struct loongson_gpio_chip_data loongson_gpio_ls2k0500_data1 = {
->> +       .label = "ls2k0500_gpio",
->> +       .mode = BIT_CTRL_MODE,
->> +       .conf_offset = 0x0,
->> +       .in_offset = 0x8,
->> +       .out_offset = 0x10,
->> +       .inten_offset = 0x98,
->> +};
->> +
->> +static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data0 = {
->> +       .label = "ls2k2000_gpio",
->> +       .mode = BIT_CTRL_MODE,
->> +       .conf_offset = 0x0,
->> +       .in_offset = 0xc,
->> +       .out_offset = 0x8,
->> +};
->> +
->> +static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
->> +       .label = "ls2k2000_gpio",
->> +       .mode = BIT_CTRL_MODE,
->> +       .conf_offset = 0x0,
->> +       .in_offset = 0x20,
->> +       .out_offset = 0x10,
->> +};
->> +
->> +static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2 = {
->> +       .label = "ls2k2000_gpio",
->> +       .mode = BIT_CTRL_MODE,
->> +       .conf_offset = 0x84,
->> +       .in_offset = 0x88,
->> +       .out_offset = 0x80,
->> +};
->> +
->> +static const struct loongson_gpio_chip_data loongson_gpio_ls3a5000_data = {
->> +       .label = "ls3a5000_gpio",
->> +       .mode = BIT_CTRL_MODE,
->> +       .conf_offset = 0x0,
->> +       .in_offset = 0xc,
->> +       .out_offset = 0x8,
->>   };
->>
->>   static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
->> @@ -202,6 +263,30 @@ static const struct of_device_id loongson_gpio_of_match[] = {
->>                  .compatible = "loongson,ls2k-gpio",
->>                  .data = &loongson_gpio_ls2k_data,
->>          },
->> +       {
->> +               .compatible = "loongson,ls2k0500-gpio0",
->> +               .data = &loongson_gpio_ls2k0500_data0,
->> +       },
->> +       {
->> +               .compatible = "loongson,ls2k0500-gpio1",
->> +               .data = &loongson_gpio_ls2k0500_data1,
->> +       },
->> +       {
->> +               .compatible = "loongson,ls2k2000-gpio0",
->> +               .data = &loongson_gpio_ls2k2000_data0,
->> +       },
->> +       {
->> +               .compatible = "loongson,ls2k2000-gpio1",
->> +               .data = &loongson_gpio_ls2k2000_data1,
->> +       },
->> +       {
->> +               .compatible = "loongson,ls2k2000-gpio2",
->> +               .data = &loongson_gpio_ls2k2000_data2,
->> +       },
->> +       {
->> +               .compatible = "loongson,ls3a5000-gpio",
->> +               .data = &loongson_gpio_ls3a5000_data,
->> +       },
->>          {
->>                  .compatible = "loongson,ls7a-gpio",
->>                  .data = &loongson_gpio_ls7a_data,
->> @@ -215,6 +300,22 @@ static const struct acpi_device_id loongson_gpio_acpi_match[] = {
->>                  .id = "LOON0002",
->>                  .driver_data = (kernel_ulong_t)&loongson_gpio_ls7a_data,
->>          },
->> +       {
->> +               .id = "LOON0007",
->> +               .driver_data = (kernel_ulong_t)&loongson_gpio_ls3a5000_data,
->> +       },
->> +       {
->> +               .id = "LOON000A",
->> +               .driver_data = (kernel_ulong_t)&loongson_gpio_ls2k2000_data0,
->> +       },
->> +       {
->> +               .id = "LOON000B",
->> +               .driver_data = (kernel_ulong_t)&loongson_gpio_ls2k2000_data1,
->> +       },
->> +       {
->> +               .id = "LOON000C",
->> +               .driver_data = (kernel_ulong_t)&loongson_gpio_ls2k2000_data2,
->> +       },
->>          {}
->>   };
->>   MODULE_DEVICE_TABLE(acpi, loongson_gpio_acpi_match);
->> --
->> 2.20.1
->>
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index dcb069dde66b..8de99f4b647b 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -195,6 +195,18 @@ config FARSYNC
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called farsync.
+ 
++config FSL_QMC_HDLC
++	tristate "Freescale QMC HDLC support"
++	depends on HDLC
++	depends on CPM_QMC
++	help
++	  HDLC support using the Freescale QUICC Multichannel Controller (QMC).
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called fsl_qmc_hdlc.
++
++	  If unsure, say N.
++
+ config FSL_UCC_HDLC
+ 	tristate "Freescale QUICC Engine HDLC support"
+ 	depends on HDLC
+diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+index 5bec8fae47f8..f338f4830626 100644
+--- a/drivers/net/wan/Makefile
++++ b/drivers/net/wan/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_WANXL)		+= wanxl.o
+ obj-$(CONFIG_PCI200SYN)		+= pci200syn.o
+ obj-$(CONFIG_PC300TOO)		+= pc300too.o
+ obj-$(CONFIG_IXP4XX_HSS)	+= ixp4xx_hss.o
++obj-$(CONFIG_FSL_QMC_HDLC)	+= fsl_qmc_hdlc.o
+ obj-$(CONFIG_FSL_UCC_HDLC)	+= fsl_ucc_hdlc.o
+ obj-$(CONFIG_SLIC_DS26522)	+= slic_ds26522.o
+ 
+diff --git a/drivers/net/wan/fsl_qmc_hdlc.c b/drivers/net/wan/fsl_qmc_hdlc.c
+new file mode 100644
+index 000000000000..15e102547ff2
+--- /dev/null
++++ b/drivers/net/wan/fsl_qmc_hdlc.c
+@@ -0,0 +1,422 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Freescale QMC HDLC Device Driver
++ *
++ * Copyright 2023 CS GROUP France
++ *
++ * Author: Herve Codina <herve.codina@bootlin.com>
++ */
++
++#include <linux/dma-mapping.h>
++#include <linux/hdlc.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <soc/fsl/qe/qmc.h>
++
++struct qmc_hdlc_desc {
++	struct net_device *netdev;
++	struct sk_buff *skb; /* NULL if the descriptor is not in use */
++	dma_addr_t dma_addr;
++	size_t dma_size;
++};
++
++struct qmc_hdlc {
++	struct device *dev;
++	struct qmc_chan *qmc_chan;
++	struct net_device *netdev;
++	bool is_crc32;
++	spinlock_t tx_lock; /* Protect tx descriptors */
++	struct qmc_hdlc_desc tx_descs[8];
++	unsigned int tx_out;
++	struct qmc_hdlc_desc rx_descs[4];
++};
++
++static inline struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *netdev)
++{
++	return dev_to_hdlc(netdev)->priv;
++}
++
++static int qmc_hdlc_recv_queue(struct qmc_hdlc *qmc_hdlc, struct qmc_hdlc_desc *desc, size_t size);
++
++#define QMC_HDLC_RX_ERROR_FLAGS (QMC_RX_FLAG_HDLC_OVF | \
++				 QMC_RX_FLAG_HDLC_UNA | \
++				 QMC_RX_FLAG_HDLC_ABORT | \
++				 QMC_RX_FLAG_HDLC_CRC)
++
++static void qmc_hcld_recv_complete(void *context, size_t length, unsigned int flags)
++{
++	struct qmc_hdlc_desc *desc = context;
++	struct net_device *netdev = desc->netdev;
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(desc->netdev);
++	int ret;
++
++	dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_FROM_DEVICE);
++
++	if (flags & QMC_HDLC_RX_ERROR_FLAGS) {
++		netdev->stats.rx_errors++;
++		if (flags & QMC_RX_FLAG_HDLC_OVF) /* Data overflow */
++			netdev->stats.rx_over_errors++;
++		if (flags & QMC_RX_FLAG_HDLC_UNA) /* bits received not multiple of 8 */
++			netdev->stats.rx_frame_errors++;
++		if (flags & QMC_RX_FLAG_HDLC_ABORT) /* Received an abort sequence */
++			netdev->stats.rx_frame_errors++;
++		if (flags & QMC_RX_FLAG_HDLC_CRC) /* CRC error */
++			netdev->stats.rx_crc_errors++;
++		kfree_skb(desc->skb);
++	} else {
++		netdev->stats.rx_packets++;
++		netdev->stats.rx_bytes += length;
++
++		skb_put(desc->skb, length);
++		desc->skb->protocol = hdlc_type_trans(desc->skb, netdev);
++		netif_rx(desc->skb);
++	}
++
++	/* Re-queue a transfer using the same descriptor */
++	ret = qmc_hdlc_recv_queue(qmc_hdlc, desc, desc->dma_size);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "queue recv desc failed (%d)\n", ret);
++		netdev->stats.rx_errors++;
++	}
++}
++
++static int qmc_hdlc_recv_queue(struct qmc_hdlc *qmc_hdlc, struct qmc_hdlc_desc *desc, size_t size)
++{
++	int ret;
++
++	desc->skb = dev_alloc_skb(size);
++	if (!desc->skb)
++		return -ENOMEM;
++
++	desc->dma_size = size;
++	desc->dma_addr = dma_map_single(qmc_hdlc->dev, desc->skb->data,
++					desc->dma_size, DMA_FROM_DEVICE);
++	ret = dma_mapping_error(qmc_hdlc->dev, desc->dma_addr);
++	if (ret)
++		goto free_skb;
++
++	ret = qmc_chan_read_submit(qmc_hdlc->qmc_chan, desc->dma_addr, desc->dma_size,
++				   qmc_hcld_recv_complete, desc);
++	if (ret)
++		goto dma_unmap;
++
++	return 0;
++
++dma_unmap:
++	dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_FROM_DEVICE);
++free_skb:
++	kfree_skb(desc->skb);
++	desc->skb = NULL;
++	return ret;
++}
++
++static void qmc_hdlc_xmit_complete(void *context)
++{
++	struct qmc_hdlc_desc *desc = context;
++	struct net_device *netdev = desc->netdev;
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	struct sk_buff *skb;
++	unsigned long flags;
++
++	spin_lock_irqsave(&qmc_hdlc->tx_lock, flags);
++	dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_TO_DEVICE);
++	skb = desc->skb;
++	desc->skb = NULL; /* Release the descriptor */
++	if (netif_queue_stopped(netdev))
++		netif_wake_queue(netdev);
++	spin_unlock_irqrestore(&qmc_hdlc->tx_lock, flags);
++
++	netdev->stats.tx_packets++;
++	netdev->stats.tx_bytes += skb->len;
++
++	dev_consume_skb_any(skb);
++}
++
++static int qmc_hdlc_xmit_queue(struct qmc_hdlc *qmc_hdlc, struct qmc_hdlc_desc *desc)
++{
++	int ret;
++
++	desc->dma_addr = dma_map_single(qmc_hdlc->dev, desc->skb->data,
++					desc->dma_size, DMA_TO_DEVICE);
++	ret = dma_mapping_error(qmc_hdlc->dev, desc->dma_addr);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "failed to map skb\n");
++		return ret;
++	}
++
++	ret = qmc_chan_write_submit(qmc_hdlc->qmc_chan, desc->dma_addr, desc->dma_size,
++				    qmc_hdlc_xmit_complete, desc);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "qmc chan write returns %d\n", ret);
++		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_TO_DEVICE);
++		return ret;
++	}
++
++	return 0;
++}
++
++static netdev_tx_t qmc_hdlc_xmit(struct sk_buff *skb, struct net_device *netdev)
++{
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	struct qmc_hdlc_desc *desc;
++	unsigned long flags;
++	int ret;
++
++	spin_lock_irqsave(&qmc_hdlc->tx_lock, flags);
++	desc = &qmc_hdlc->tx_descs[qmc_hdlc->tx_out];
++	if (desc->skb) {
++		/* Should never happen.
++		 * Previous xmit should have already stopped the queue.
++		 */
++		netif_stop_queue(netdev);
++		spin_unlock_irqrestore(&qmc_hdlc->tx_lock, flags);
++		return NETDEV_TX_BUSY;
++	}
++	spin_unlock_irqrestore(&qmc_hdlc->tx_lock, flags);
++
++	desc->netdev = netdev;
++	desc->dma_size = skb->len;
++	desc->skb = skb;
++	ret = qmc_hdlc_xmit_queue(qmc_hdlc, desc);
++	if (ret) {
++		desc->skb = NULL; /* Release the descriptor */
++		if (ret == -EBUSY) {
++			netif_stop_queue(netdev);
++			return NETDEV_TX_BUSY;
++		}
++		dev_kfree_skb(skb);
++		netdev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
++
++	qmc_hdlc->tx_out = (qmc_hdlc->tx_out + 1) % ARRAY_SIZE(qmc_hdlc->tx_descs);
++
++	spin_lock_irqsave(&qmc_hdlc->tx_lock, flags);
++	if (qmc_hdlc->tx_descs[qmc_hdlc->tx_out].skb)
++		netif_stop_queue(netdev);
++	spin_unlock_irqrestore(&qmc_hdlc->tx_lock, flags);
++
++	return NETDEV_TX_OK;
++}
++
++static int qmc_hdlc_open(struct net_device *netdev)
++{
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	struct qmc_chan_param chan_param;
++	struct qmc_hdlc_desc *desc;
++	int ret;
++	int i;
++
++	ret = hdlc_open(netdev);
++	if (ret)
++		return ret;
++
++	chan_param.mode = QMC_HDLC;
++	/* HDLC_MAX_MRU + 4 for the CRC
++	 * HDLC_MAX_MRU + 4 + 8 for the CRC and some extraspace needed by the QMC
++	 */
++	chan_param.hdlc.max_rx_buf_size = HDLC_MAX_MRU + 4 + 8;
++	chan_param.hdlc.max_rx_frame_size = HDLC_MAX_MRU + 4;
++	chan_param.hdlc.is_crc32 = qmc_hdlc->is_crc32;
++	ret = qmc_chan_set_param(qmc_hdlc->qmc_chan, &chan_param);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "failed to set param (%d)\n", ret);
++		goto hdlc_close;
++	}
++
++	/* Queue as many recv descriptors as possible */
++	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->rx_descs); i++) {
++		desc = &qmc_hdlc->rx_descs[i];
++
++		desc->netdev = netdev;
++		ret = qmc_hdlc_recv_queue(qmc_hdlc, desc, chan_param.hdlc.max_rx_buf_size);
++		if (ret) {
++			if (ret == -EBUSY && i != 0)
++				break; /* We use all the QMC chan capability */
++			goto free_desc;
++		}
++	}
++
++	ret = qmc_chan_start(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "qmc chan start failed (%d)\n", ret);
++		goto free_desc;
++	}
++
++	netif_start_queue(netdev);
++
++	return 0;
++
++free_desc:
++	qmc_chan_reset(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
++	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->rx_descs); i++) {
++		desc = &qmc_hdlc->rx_descs[i];
++		if (!desc->skb)
++			continue;
++		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size,
++				 DMA_FROM_DEVICE);
++		kfree_skb(desc->skb);
++		desc->skb = NULL;
++	}
++hdlc_close:
++	hdlc_close(netdev);
++	return ret;
++}
++
++static int qmc_hdlc_close(struct net_device *netdev)
++{
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	struct qmc_hdlc_desc *desc;
++	int i;
++
++	netif_stop_queue(netdev);
++
++	qmc_chan_stop(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
++	qmc_chan_reset(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
++
++	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->tx_descs); i++) {
++		desc = &qmc_hdlc->tx_descs[i];
++		if (!desc->skb)
++			continue;
++		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size,
++				 DMA_TO_DEVICE);
++		kfree_skb(desc->skb);
++		desc->skb = NULL;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->rx_descs); i++) {
++		desc = &qmc_hdlc->rx_descs[i];
++		if (!desc->skb)
++			continue;
++		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size,
++				 DMA_FROM_DEVICE);
++		kfree_skb(desc->skb);
++		desc->skb = NULL;
++	}
++
++	hdlc_close(netdev);
++	return 0;
++}
++
++static int qmc_hdlc_attach(struct net_device *netdev, unsigned short encoding,
++			   unsigned short parity)
++{
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++
++	if (encoding != ENCODING_NRZ)
++		return -EINVAL;
++
++	switch (parity) {
++	case PARITY_CRC16_PR1_CCITT:
++		qmc_hdlc->is_crc32 = false;
++		break;
++	case PARITY_CRC32_PR1_CCITT:
++		qmc_hdlc->is_crc32 = true;
++		break;
++	default:
++		dev_err(qmc_hdlc->dev, "unsupported parity %u\n", parity);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct net_device_ops qmc_hdlc_netdev_ops = {
++	.ndo_open       = qmc_hdlc_open,
++	.ndo_stop       = qmc_hdlc_close,
++	.ndo_start_xmit = hdlc_start_xmit,
++	.ndo_siocwandev	= hdlc_ioctl,
++};
++
++static int qmc_hdlc_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct qmc_hdlc *qmc_hdlc;
++	struct qmc_chan_info info;
++	hdlc_device *hdlc;
++	int ret;
++
++	qmc_hdlc = devm_kzalloc(&pdev->dev, sizeof(*qmc_hdlc), GFP_KERNEL);
++	if (!qmc_hdlc)
++		return -ENOMEM;
++
++	qmc_hdlc->dev = &pdev->dev;
++	spin_lock_init(&qmc_hdlc->tx_lock);
++
++	qmc_hdlc->qmc_chan = devm_qmc_chan_get_bychild(qmc_hdlc->dev, np);
++	if (IS_ERR(qmc_hdlc->qmc_chan)) {
++		ret = PTR_ERR(qmc_hdlc->qmc_chan);
++		return dev_err_probe(qmc_hdlc->dev, ret, "get QMC channel failed\n");
++	}
++
++	ret = qmc_chan_get_info(qmc_hdlc->qmc_chan, &info);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "get QMC channel info failed %d\n", ret);
++		return ret;
++	}
++
++	if (info.mode != QMC_HDLC) {
++		dev_err(qmc_hdlc->dev, "QMC chan mode %d is not QMC_HDLC\n",
++			info.mode);
++		return -EINVAL;
++	}
++
++	qmc_hdlc->netdev = alloc_hdlcdev(qmc_hdlc);
++	if (!qmc_hdlc->netdev) {
++		dev_err(qmc_hdlc->dev, "failed to alloc hdlc dev\n");
++		return -ENOMEM;
++	}
++
++	hdlc = dev_to_hdlc(qmc_hdlc->netdev);
++	hdlc->attach = qmc_hdlc_attach;
++	hdlc->xmit = qmc_hdlc_xmit;
++	SET_NETDEV_DEV(qmc_hdlc->netdev, qmc_hdlc->dev);
++	qmc_hdlc->netdev->tx_queue_len = ARRAY_SIZE(qmc_hdlc->tx_descs);
++	qmc_hdlc->netdev->netdev_ops = &qmc_hdlc_netdev_ops;
++	ret = register_hdlc_device(qmc_hdlc->netdev);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "failed to register hdlc device (%d)\n", ret);
++		goto free_netdev;
++	}
++
++	platform_set_drvdata(pdev, qmc_hdlc);
++
++	return 0;
++
++free_netdev:
++	free_netdev(qmc_hdlc->netdev);
++	return ret;
++}
++
++static int qmc_hdlc_remove(struct platform_device *pdev)
++{
++	struct qmc_hdlc *qmc_hdlc = platform_get_drvdata(pdev);
++
++	unregister_hdlc_device(qmc_hdlc->netdev);
++	free_netdev(qmc_hdlc->netdev);
++
++	return 0;
++}
++
++static const struct of_device_id qmc_hdlc_id_table[] = {
++	{ .compatible = "fsl,qmc-hdlc" },
++	{} /* sentinel */
++};
++MODULE_DEVICE_TABLE(of, qmc_hdlc_driver);
++
++static struct platform_driver qmc_hdlc_driver = {
++	.driver = {
++		.name = "fsl-qmc-hdlc",
++		.of_match_table = qmc_hdlc_id_table,
++	},
++	.probe = qmc_hdlc_probe,
++	.remove = qmc_hdlc_remove,
++};
++module_platform_driver(qmc_hdlc_driver);
++
++MODULE_AUTHOR("Herve Codina <herve.codina@bootlin.com>");
++MODULE_DESCRIPTION("QMC HDLC driver");
++MODULE_LICENSE("GPL");
+-- 
+2.41.0
 
