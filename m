@@ -2,80 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD4A579C7AD
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 09:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 633EC79C7B7
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 09:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231446AbjILHGo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 03:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
+        id S231139AbjILHIw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 03:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231472AbjILHGl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 03:06:41 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4F310F1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:06:35 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d7e6d9665bcso4701776276.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:06:35 -0700 (PDT)
+        with ESMTP id S230182AbjILHIv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 03:08:51 -0400
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 065C3E78
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:08:48 -0700 (PDT)
+Received: by mail-ot1-x335.google.com with SMTP id 46e09a7af769-6c09f1f9df2so4009382a34.2
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:08:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694502394; x=1695107194; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694502527; x=1695107327; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FzLy3CeHuyStEoML6KUoaK0mtulfqNSCOCfn1i2FJJI=;
-        b=yRHqtYzBLQjgJuWE9K4sQopizatvQBSN4fNM08BcmBRCXYMVDF6BY4gKKgEjbH+YRu
-         wsSLsdJigci7K5o5uqSflL1dXiBqXfajOy70GYnDh4LhVkSEbwoTMC31WkGUm8EzNs4Z
-         hazGAxXQ6UCiYR8tesQJ0Mo6ECDWqYSe7KBQKh13ZAs8ZgFP3XOjPqSMA4jxTg5BfF+S
-         DTfmKL76qHXR6U4t2zuiWyTzZpwohgh/21wGFnmGpCxrtOm3tSd/XaM4U+cSrqs8fb5F
-         vvhs8y7XcxRHDdlgemgUCNeZgKNW8CTBcm/qSgHTtmFNow6XGlipSHfmjmRe/tyNB2Hg
-         BwGA==
+        bh=hv2L+KIK91RPAfSw2HE5xZRSf6YXmZwJ93Tmif92bV4=;
+        b=ZPLxvIO7m/wpbMggXrZCA0MgDeDF4lhohgq659wDL8HTV4jMEHST12M+ddIJB4Akin
+         XdFHSlpma10tdAlAPD4Yl8r4UwpBtCze/I/oT24nRwoN1co/I6VNp/wcxfOfj4dPUnsN
+         qLOAbNRMegITboSvKTMh1w+HbUS03DHbg03ChNwehVfLs7xLhr0Zi8dgL2TdnBjvwsTW
+         zodTMXABYcuauGRPkMNT7Otvd+hX0ld5g2veuJZ6bK2aQO5bN1Co0xSr4xSwiKtwF8iF
+         j3oZNJqzkSTjHYAcfLUBSVS77Ji2PTWBOyzKpSzhEDIkvujstLwL6wQHuY5xwNX/O48E
+         Qy+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694502394; x=1695107194;
+        d=1e100.net; s=20230601; t=1694502527; x=1695107327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FzLy3CeHuyStEoML6KUoaK0mtulfqNSCOCfn1i2FJJI=;
-        b=ts/ktE18Zyo/pAMezuM6Wqi3MNrWgtoCopr/uZNGuLSSEB7DwEnSwmh2psRDXMIrUI
-         TbqL+kLMbL7RSoi4ETXh/StMTLsvPbrPodakoTkUKSSrCmdnwXHDSrvQiSKygmx2QJ66
-         aRAggX4OX2uhcyAzl9mUu+uYzRworSexK014yeGLi1dPZNxDMEyHAEZWjztZBc6QjLch
-         eKsuOGREuy0EJEazIVs9S5/jnDtlA15rT3l3q3z0EqTWgIFPxnOptxIReodIg29jv7tl
-         3GgSooCxS/pH5f57D5MhzeP6kVTbgSivrsuei9aW2ck7iE+QJZ/tF2WMzZrrwcQB0L9k
-         rQrA==
-X-Gm-Message-State: AOJu0YzzGOWWLlxH+NADc86LmhZq91ySl8l7ZaTPVlQ8FGxm87ncqs86
-        gsRC+/hpPnXXj4ydqEXeIs3Ju4r388VoU4rglhDM/A==
-X-Google-Smtp-Source: AGHT+IFqwoCb2FlczC/jSfpRBfdCYvJDufpy2nX78o6xucJlsetiHtnY5ED7GaRC6DZThDKLINyW0KpFkVXeS7DJZzs=
-X-Received: by 2002:a5b:709:0:b0:d80:68d1:b826 with SMTP id
- g9-20020a5b0709000000b00d8068d1b826mr7109521ybq.6.1694502394406; Tue, 12 Sep
- 2023 00:06:34 -0700 (PDT)
+        bh=hv2L+KIK91RPAfSw2HE5xZRSf6YXmZwJ93Tmif92bV4=;
+        b=O+QOI7x/t5P47oGrYN3CTXAJ3E+FudugdNDVaxUQ6g2ISy2FSp2oTVpwP9t5vWlA1Q
+         6puKWelqqt7jJWrp8fTikRiPW1NrA5433ZUQILkxzUp5KKky63Ui4K/vOfOVuuZb2jQk
+         o0mtyqj2qxUZipIFHKFO0vMqq1GPEeNdyupXt7znhQ7hHf3jgvHnZ/AJUpaAIC3SGK+X
+         EtGgZhzBBjIq4b3dhbUzA5ZUAXK0j/DSZ4Jf1zkNiV8qdW6FikLdVECx6Lj4fTD0uh90
+         5By2/iNp5C9dc7Y3C2arxjatsJi/HLBOWboYdNN6ploEkdVmjLcwsFd0qD6LqPFEOl9p
+         S83A==
+X-Gm-Message-State: AOJu0YxGbJ4slxLoGU9OzmpBapB4nfElwItkTaPnUt59eDFyw6DJo0Z3
+        Hviw4k41xv8TumYrGF3AlNKxU4Pwyys6H1Qg5uXXlg==
+X-Google-Smtp-Source: AGHT+IHBe3WqmlJ9znIl9UDkcdScIM2fyekx+hlEsGTzORc2dGYHkEZ989cOo3htoGUENtuvxLjItVsneETXU9qweME=
+X-Received: by 2002:a9d:6e83:0:b0:6bf:1fed:95ce with SMTP id
+ a3-20020a9d6e83000000b006bf1fed95cemr11702047otr.22.1694502527347; Tue, 12
+ Sep 2023 00:08:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230829123524.17291-1-zhuyinbo@loongson.cn> <20230829123524.17291-3-zhuyinbo@loongson.cn>
-In-Reply-To: <20230829123524.17291-3-zhuyinbo@loongson.cn>
+References: <20230829165627.156542-1-mario.limonciello@amd.com>
+ <20230829165627.156542-4-mario.limonciello@amd.com> <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
+ <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com> <811225f8-c505-7344-ac18-882472ee0348@redhat.com>
+ <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com> <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
+ <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
+In-Reply-To: <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 Sep 2023 09:06:23 +0200
-Message-ID: <CACRpkdYrePd+m_ZoppG_XKVQEcgzom31pXhKHisCsFr=9O2NPg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] gpio: loongson: add more gpio chip support
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn
+Date:   Tue, 12 Sep 2023 09:08:36 +0200
+Message-ID: <CACRpkdYGxreyD8NVuKs2G44htR8EixdvGr3+ma=HrxHUP3NDQg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Shyam-sundar.S-k@amd.com,
+        Basavaraj.Natikar@amd.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+        lucapgl2001@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Aug 29, 2023 at 2:35=E2=80=AFPM Yinbo Zhu <zhuyinbo@loongson.cn> wr=
-ote:
+On Thu, Aug 31, 2023 at 7:53=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
 
-> This patch was to add loongson 2k0500, 2k2000 and 3a5000 gpio chip
-> driver support.
+> Linus - please disregard version 1.
+
+OK!
+
+> I provided Luca a new series that implements this approach that Hans and
+> I discussed and they confirmed it works.
 >
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> I have some minor modifications to it to narrow where it's applied so we
+> don't have needless notifications and will send it for review after the
+> new modifications are tested as well.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+OK standing by, I'll wait for Hans' ACK and then merge it for fixes.
 
 Yours,
 Linus Walleij
