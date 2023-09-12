@@ -2,110 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76AEE79CF16
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 13:01:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C6D279CF1C
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 13:03:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234180AbjILLBN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 07:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42924 "EHLO
+        id S233901AbjILLDY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 07:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234385AbjILLAU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 07:00:20 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6764610EA;
-        Tue, 12 Sep 2023 04:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694516413; x=1726052413;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=S7LI0Lcn1tZ9nSaNU+/wLNDgyjDl4hPoZ/HYUyLym8Q=;
-  b=dbRV3gd2/tOuWbPDk1lwlD0oae9xH0ffpy9vR8MyaVJRMRP07vne06rb
-   kS71goBxGTGQe92BfwTIZwdNModKoRlOh1jigIa7WAaHcr5yB7v9c7fcr
-   dyJAEIUTWtYnFSr1NrMUVn/C7GzU/e3GzsGe3dnv+/IFl2em/2Q6pDR3v
-   IBp7CSUilELssZIb7blRNP9kIweBXjjQ/wNGJ6eeaKYelgNfjBTIq+pQ6
-   d9RTIoR3T2oDwGaOPTzQhKm+D4MDUndtspuKG7bv67zpsixhkZjxgtXmV
-   XBaosEE+6X0PD3ALTF7zDnR78mZ80s6xGSJ1AD+DUYanj/8UQsQpAQfJF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="357771306"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="357771306"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 04:00:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="778747712"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="778747712"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 04:00:10 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qg17n-008ZCq-2F;
-        Tue, 12 Sep 2023 14:00:07 +0300
-Date:   Tue, 12 Sep 2023 14:00:07 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 05/11] gpiolib: provide gpio_device_get_desc()
-Message-ID: <ZQBEtxYO1hb4KJ1V@smile.fi.intel.com>
-References: <20230912100727.23197-1-brgl@bgdev.pl>
- <20230912100727.23197-6-brgl@bgdev.pl>
+        with ESMTP id S234593AbjILLCy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 07:02:54 -0400
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9731717;
+        Tue, 12 Sep 2023 04:02:34 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VrwdiHG_1694516551;
+Received: from 30.97.48.71(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VrwdiHG_1694516551)
+          by smtp.aliyun-inc.com;
+          Tue, 12 Sep 2023 19:02:31 +0800
+Message-ID: <5877cd0d-7a39-806a-e8f8-ef0c3c22dae3@linux.alibaba.com>
+Date:   Tue, 12 Sep 2023 19:02:37 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230912100727.23197-6-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [RFT PATCH 1/3] gpio: eic-sprd: unregister from the irq notifier
+ on remove()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230912094519.22769-1-brgl@bgdev.pl>
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20230912094519.22769-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 12:07:21PM +0200, Bartosz Golaszewski wrote:
+
+
+On 9/12/2023 5:45 PM, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Getting the GPIO descriptor directly from the gpio_chip struct is
-> dangerous as we don't take the reference to the underlying GPIO device.
-> In order to start working towards removing gpiochip_get_desc(), let's
-> provide a safer variant that works with an existing reference to struct
-> gpio_device.
+> This is a tristate module, it can be unloaded. We need to cleanup properly
+> and unregister from the interrupt notifier on driver detach.
+> 
+> Fixes: b32415652a4d ("gpio: eic-sprd: use atomic notifiers to notify all chips about irqs")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-...
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-> +struct gpio_desc *
-> +gpio_device_get_desc(struct gpio_device *gdev, unsigned int hwnum)
+> ---
+>   drivers/gpio/gpio-eic-sprd.c | 19 +++++++++++++++++--
+>   1 file changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+> index 21a1afe358d6..9b2f9ccf8d77 100644
+> --- a/drivers/gpio/gpio-eic-sprd.c
+> +++ b/drivers/gpio/gpio-eic-sprd.c
+> @@ -580,6 +580,14 @@ static const struct irq_chip sprd_eic_irq = {
+>   	.flags		= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
+>   	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>   };
+> +
+> +static void sprd_eic_unregister_notifier(void *data)
 > +{
-> +	struct gpio_chip *gc = gdev->chip;
-
-I prefer
-
-	struct gpio_chip *gc;
-
-> +	/*
-> +	 * FIXME: This will be locked once we protect gdev->chip everywhere
-> +	 * with SRCU.
-> +	 */
-
-	gc = gdev->chip;
-
-as it is more robust against changes in between and easier to read and
-understand in the code what's going on. With decoupled assignment in this case
-it's harder to see at the flash glance if the gc is parameter of the function
-or being derived from somewhere else.
-
-> +	if (!gc)
-> +		return ERR_PTR(-ENODEV);
->  
->  	if (hwnum >= gdev->ngpio)
->  		return ERR_PTR(-EINVAL);
->  
->  	return &gdev->descs[hwnum];
->  }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +	struct notifier_block *nb = data;
+> +
+> +	atomic_notifier_chain_unregister(&sprd_eic_irq_notifier, nb);
+> +}
+> +
+>   static int sprd_eic_probe(struct platform_device *pdev)
+>   {
+>   	const struct sprd_eic_variant_data *pdata;
+> @@ -658,8 +666,15 @@ static int sprd_eic_probe(struct platform_device *pdev)
+>   	}
+>   
+>   	sprd_eic->irq_nb.notifier_call = sprd_eic_irq_notify;
+> -	return atomic_notifier_chain_register(&sprd_eic_irq_notifier,
+> -					      &sprd_eic->irq_nb);
+> +	ret = atomic_notifier_chain_register(&sprd_eic_irq_notifier,
+> +					     &sprd_eic->irq_nb);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "Failed to register with the interrupt notifier");
+> +
+> +	return devm_add_action_or_reset(&pdev->dev,
+> +					sprd_eic_unregister_notifier,
+> +					&sprd_eic->irq_nb);
+>   }
+>   
+>   static const struct of_device_id sprd_eic_of_match[] = {
