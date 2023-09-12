@@ -2,63 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91CA579C417
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 05:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DF0479C421
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 05:28:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236363AbjILD0F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 23:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35452 "EHLO
+        id S237536AbjILD2G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Sep 2023 23:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236412AbjILDZt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 23:25:49 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAB4A6
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 20:08:13 -0700 (PDT)
+        with ESMTP id S236412AbjILD1p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 23:27:45 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 463E77AB8
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 20:16:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694488093; x=1726024093;
+  t=1694488575; x=1726024575;
   h=date:from:to:cc:subject:message-id;
-  bh=4heOQovBWSeiAHpvbvB+E5fO0x6wykUo1OBs/hkcSFY=;
-  b=Naw2DlK5Rkae7fdcFOGS1919CLGJ2j2NtTR5ze4SHBEuoabl6SbQ7UYO
-   L+DvsFl++ORiQdbOaKKAinMq2dLFCJpO6R6EkfJF17NCgORoGyJ6hVj/9
-   RYvocRE/XqxBaBfVkziW3cEon6d0qCqpvbB8sIy+kOCNRZTSj9KJCbTBj
-   MJtjPmZw2tWzUDVbu65an5NjY7NRc0522CZ+WdeYu1SL+DIl0tPAHE0OO
-   /62KOHe44SqYGG0TR3U5BdtMfNjDovvMhz5z58yx/dyCDCg+4SWsPbj+x
-   698ZgZXFrA5CKZMJR/17grDTpTDVLtIbxD7AFeji8P/3jDQWt/3XQk7nN
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="357698728"
+  bh=cZJwrT96NSVWEXM4acfHfjLMmGyEBZa3UEnNXsmoKOo=;
+  b=nphsrMLER7sNtKawzTG6V9WQzMgd26WHB8TjnECii65YXUMmlyzCneXL
+   hb+3mgCz6KS5fY5IJsE83EGgFrfdd0PrAR4A/mdP05CfmM3oTVCcsO4uQ
+   sVFIO08m+KB0jV6hyfqFtvRDyXMr0c8M2MgXfZQq5ebArNH7uxbM793eV
+   x9L6ngjBAnlEj6Rk+Hnp35Yoyi51s6iTMUFRo05oPjZ2+roZZmAlGo2B4
+   vHzBXQbfT2z9SYMO3+GOVjToXfJZhnSe5GPHOQo47RqD+sDjMG2Gxtu9a
+   SGunu+/93SctjJdvGdp/EzfaXHYTHE/xo9tbkQT0shkajQMywUOA/XGJl
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="464632658"
 X-IronPort-AV: E=Sophos;i="6.02,245,1688454000"; 
-   d="scan'208";a="357698728"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 20:08:13 -0700
+   d="scan'208";a="464632658"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 20:16:14 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="778628090"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="867199053"
 X-IronPort-AV: E=Sophos;i="6.02,245,1688454000"; 
-   d="scan'208";a="778628090"
+   d="scan'208";a="867199053"
 Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 11 Sep 2023 20:08:12 -0700
+  by orsmga004.jf.intel.com with ESMTP; 11 Sep 2023 20:16:13 -0700
 Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qftl3-0007CB-2M;
-        Tue, 12 Sep 2023 03:08:09 +0000
-Date:   Tue, 12 Sep 2023 11:08:09 +0800
+        id 1qftso-0007Cx-3C;
+        Tue, 12 Sep 2023 03:16:10 +0000
+Date:   Tue, 12 Sep 2023 11:15:33 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- acf4884a571709cad99f98aabe08b7cacd62dc80
-Message-ID: <202309121107.OjSiUpd4-lkp@intel.com>
+Subject: [linusw-gpio:b4/descriptors-asoc-max] BUILD SUCCESS
+ 4b9c5533a1b89f833db2100124f210863b88cf26
+Message-ID: <202309121131.bC7gRuvM-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: acf4884a571709cad99f98aabe08b7cacd62dc80  pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-asoc-max
+branch HEAD: 4b9c5533a1b89f833db2100124f210863b88cf26  ASoC: max98927: Drop pointless includes
 
-elapsed time: 728m
+elapsed time: 888m
 
-configs tested: 174
+configs tested: 180
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -101,6 +101,7 @@ csky                                defconfig   gcc
 hexagon               randconfig-001-20230912   clang
 hexagon               randconfig-002-20230912   clang
 hexagon              randconfig-r004-20230912   clang
+hexagon              randconfig-r026-20230912   clang
 hexagon              randconfig-r032-20230912   clang
 i386                             allmodconfig   gcc  
 i386                              allnoconfig   gcc  
@@ -145,6 +146,7 @@ microblaze           randconfig-r013-20230912   gcc
 mips                             allmodconfig   gcc  
 mips                              allnoconfig   gcc  
 mips                             allyesconfig   gcc  
+mips                 randconfig-r021-20230912   clang
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -157,6 +159,7 @@ parisc                           allmodconfig   gcc
 parisc                            allnoconfig   gcc  
 parisc                           allyesconfig   gcc  
 parisc                              defconfig   gcc  
+parisc               randconfig-r022-20230912   gcc  
 parisc64                            defconfig   gcc  
 powerpc                          allmodconfig   gcc  
 powerpc                           allnoconfig   gcc  
@@ -167,6 +170,7 @@ powerpc                     ppa8548_defconfig   clang
 powerpc                      ppc6xx_defconfig   gcc  
 powerpc              randconfig-r001-20230912   clang
 powerpc              randconfig-r005-20230912   clang
+powerpc              randconfig-r023-20230912   gcc  
 powerpc                        warp_defconfig   gcc  
 powerpc64            randconfig-r014-20230912   gcc  
 riscv                            allmodconfig   gcc  
@@ -239,6 +243,8 @@ x86_64                          rhel-8.3-rust   clang
 x86_64                               rhel-8.3   gcc  
 xtensa                            allnoconfig   gcc  
 xtensa                           allyesconfig   gcc  
+xtensa               randconfig-r024-20230912   gcc  
+xtensa               randconfig-r025-20230912   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
