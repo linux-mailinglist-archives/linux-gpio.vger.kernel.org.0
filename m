@@ -2,86 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FCE579C829
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 09:28:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C28E879C82D
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 09:30:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231520AbjILH2x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 03:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46742 "EHLO
+        id S231550AbjILHaN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 03:30:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbjILH2x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 03:28:53 -0400
-Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C778E78
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:28:49 -0700 (PDT)
-Received: by mail-vk1-xa32.google.com with SMTP id 71dfb90a1353d-493545b4eaeso1791595e0c.0
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:28:49 -0700 (PDT)
+        with ESMTP id S229906AbjILHaK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 03:30:10 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37209E73
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:30:06 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-d7830c5b20aso7266891276.0
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 00:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694503728; x=1695108528; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694503805; x=1695108605; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K4NbWWoBti8qk3UwKRcYmKazYR0a5hsSNCUeHFhe+5A=;
-        b=kQj2RPhUu51y9PS7z68Ez4tPMVbu53FYhJYgDDp4j8tKHpEtuJSQKTfHxLdIRt3dfF
-         S2Ru2B5BA7kZxuUc0yoUP4rCUjD+1PBcNEZkO7eoMuQFwMLbBJE2+BYHABhhCBSTefe1
-         YVfQLMYGbZI2g3ycp0oAJdmI3AVoI6507vbxfllMxnPmZVEt/eiPqBOtp7CLLURcYDv6
-         ynukNzWnQwqoK/zQQ9Rok4Slnp1IEZpXQUqpDLxBo8wM8bwU+Bp9QyPem1bgRh772Nt3
-         O0dHo+yE2zAS0BWUWOR1v5EPBuTIAzlsmg3n49UxubP7SKkrldTkvIHM8QTw2bmwyVq6
-         r6lA==
+        bh=unPVobRM22LDRXatS2haaX8kK4OxybTIEnwtiD0j4Ro=;
+        b=LcebRSBmD2CfJptfZhj0B7VomLDYysu72x6c4cIwSKNrNvHgXZ2mi+/yd7qTHb1CMf
+         SijqhVZZD60kRkti3kfJJkIkSn9hpnzOo6KFvGJOisUlqDW2bSfF8RkxZcvFe9+nnjpL
+         w4jk6oi+AkLfpyPZlzx1uyp73kbLyJJtBVEdr8fZQ9qVAQ7PGXTECE5eVohehAT9EmDn
+         Rwie1A9QY25HzMbAlbqxaJnCOxwZqXnjIaqz4c2NZxRyclR1UnqRV9e7+Z0gM0y4al7+
+         sTz6sL9q6qbME6Vw6M/9yeo4zd//C2kQuyv42ISwdvU6vbfhCOvf3MPbmd60eWA/lf6X
+         XbKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694503728; x=1695108528;
+        d=1e100.net; s=20230601; t=1694503805; x=1695108605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K4NbWWoBti8qk3UwKRcYmKazYR0a5hsSNCUeHFhe+5A=;
-        b=F68s82pWFdmxoGRGB2uk58gXYOefovQjW93d6KFGyP8yLomew9kstsbv8YJIvePZJe
-         mgEwuAgM9ers/I4WRzuU02xrKKHjzrePkqkQxUi2e4p13FdlSKryDraiTZaR6p+UI+cj
-         aE0jI26/tdjeNbMssqaXEudsOvNA5FY7TwOXWIKrZhidYyKYYO4+5fucfxjIHcXkp+HY
-         l1WO3DWAfL9zBZEiyZvgn+dbcnY5xHOtcT7fxtxXxVpgswI9DLmgBCmSp+yT+97NrRoW
-         dUkjVrUuEgJZ2kWXyfTXOoh4p/G00z5TxXmmBQvnFdl83g1NJbqhYNl1abACM0JD9jPA
-         NF4A==
-X-Gm-Message-State: AOJu0YwANxBOntkdiekJtBOjz7YlUYeF7WTfcuzhVWeOCU/B4MNkDDFe
-        D98UN8SO6/JC21XASSlnxactn17uZuO28z4Lq5fhpQ==
-X-Google-Smtp-Source: AGHT+IGwWT8jEs4Y1gAQoX8wjXepJ758gnjavisCGjeMcPF+e7GcXn9EvoIqgEsv58nESMgPk54zUQ7Di9W9WjCAmF0=
-X-Received: by 2002:a1f:de84:0:b0:48d:3b80:fba9 with SMTP id
- v126-20020a1fde84000000b0048d3b80fba9mr6255964vkg.11.1694503728376; Tue, 12
- Sep 2023 00:28:48 -0700 (PDT)
+        bh=unPVobRM22LDRXatS2haaX8kK4OxybTIEnwtiD0j4Ro=;
+        b=wGGmSDTwP1HuH0pq+fY2/hO1xtiyd9jAyudyoPUSblfDadDDp+RAtKhiBjfjJuMOFr
+         RBYBZRv73dZcW1BSXxqbr0z5ul9wN+a3zBUtV1D/POYlc7vm44cnFQt9JCkwcycxs1+a
+         RBfYssZg3irX7EzfL9WAEXQWhUpGNYOYqdwCsxtjLJqDBIGxjTIYiViR9as7BAYawY5n
+         WuVy33M0BitvfvC2yZTVu78PP2aMg6jcqLSEZeJCuHYEKMf1LdTIg1uM9O6I9UG7ASzK
+         KKLWcBJzasuHhpuTyMkdbhnUXuhH9OQImd3/kpecc/dOdXL8ZbRGwrovVCuygI5iKdxe
+         Fviw==
+X-Gm-Message-State: AOJu0YwTv1gYnGsPr4CsxVjHJ+tG6U+7g20vJ7uWTBbTtM+Qa7tOTEhw
+        JU1SEqx7jSlzIYtVc+DzpVtzG9OPMdeoDDVFum3P2Q==
+X-Google-Smtp-Source: AGHT+IFuMocdUdm0DQ7vAdItPne7ZF/NofX2VpqhARe6RacyjXh8MaYxl0YUcbuPEZM23kydIOPp++zktlGUwAvUyiw=
+X-Received: by 2002:a25:d30e:0:b0:d7b:9705:96e3 with SMTP id
+ e14-20020a25d30e000000b00d7b970596e3mr2336071ybf.8.1694503805439; Tue, 12 Sep
+ 2023 00:30:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <cc9f31c3-ad0a-a688-c202-ce432dc71daa@redhat.com>
-In-Reply-To: <cc9f31c3-ad0a-a688-c202-ce432dc71daa@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 12 Sep 2023 09:28:37 +0200
-Message-ID: <CAMRc=Md+gdTz-ejnTefLqe-YAktQX9GmzsrSV+VCsCCt+_dCvw@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable branch between pdx86 android tablets branch
- and GPIO due for the v6.7 merge window
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
+References: <20230901112926.13216-1-brgl@bgdev.pl> <20230901112926.13216-2-brgl@bgdev.pl>
+In-Reply-To: <20230901112926.13216-2-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 Sep 2023 09:29:54 +0200
+Message-ID: <CACRpkdY4nqNv6Xt0hO13ohghWtxyTgUw7PNorDgfnye-CSmZ7g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: da9062: add missing include
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 1:43=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
- wrote:
->
-> Hi Bart, Linus, et. al.,
->
-> As promised here is a pull-req for merging into the GPIO tree
-> this makes the x86-android-tablets code stop using gpiolib
-> private APIs (to provide a cleaner basis for Bart's gpiolib work).
->
-> Regards,
->
-> Hans
->
+On Fri, Sep 1, 2023 at 1:29=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
-Pulled, thanks!
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> gpiod_is_active_low() is defined in linux/gpio/consumer.h. It's only
+> because we're pulling in the gpiolib.h private header that we get this
+> declaration implicitly but let's fix it as that is going away soon.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Bart
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+For allt three patches.
+Just apply them to the GPIO tree, that's easiest!
+
+Yours,
+Linus Walleij
