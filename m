@@ -2,63 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB77979C655
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 07:50:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82CBB79C6C2
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 08:17:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229449AbjILFua (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 01:50:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49324 "EHLO
+        id S229481AbjILGRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 02:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjILFua (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 01:50:30 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6A34E75
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 22:50:26 -0700 (PDT)
+        with ESMTP id S229461AbjILGRd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 02:17:33 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF8DAF
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 23:17:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694497826; x=1726033826;
+  t=1694499449; x=1726035449;
   h=date:from:to:cc:subject:message-id;
-  bh=3R/jxGCo2y+SuJpbqakZ0HAe7FCDhbAIzdq89y5nlCA=;
-  b=SHqPawwcuEj3cpzdgnyMtyHmoWISABn0OiLJ34qYBo+b7F9SpBkLI78Y
-   9hldtOHXm+qFQ6CKEN4wb2rD/eEReqlFclFysroNMAUEkNpl5a3fbPhdh
-   Nr4z1YhJ7P/8Oiwpqi7YnymBqGaCPXa0Z3FwKEkZ4hbIVymEp0XxcG08w
-   ivzw5nP8H2zGoPQu19JCC3z7TVT2Q6bfKbNHTCaV0yEVfJm4V6HOeG7da
-   0qy2PBBKQQKfh6hrEDzdqxt48jqPTh5gS5lmtitseebai6kVfg9fRG7Xc
-   JyphXfj7JDZ8POA2YfdqWMcnNhZ6zIugMJrWQimgHrDWLq6uLWDLj8dcd
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="358559342"
+  bh=PWJmkEVXKMgKOQ3Xuwv6JXv7t4D9BKm0fpexI4AQO5Y=;
+  b=GsvFOnDU4+/iNhAbQ52pOl2BYIK9XCj7aTO6V5CIyHt2CpovSxWYUocf
+   jKHZzvJC1RgfYXf9LRsLQOTzKe1gIwastcqzqB1B30ncisZ/8i65OlE4W
+   Qi8hgdp7nlGGelvnRA0xhX5R6YCc5AYebH5tIiqEIdqNUPyb234prxXi8
+   HaR38Z+ygQZb+jEXz+fl/NMMlExWx0kvRqku+Al3JN0t629HQZw3s58TP
+   NSh6gc4xf2icnVFIQl2Frxrtf6A4sgXfWAdRGUOGbdFgX//HAV9DK7WYF
+   /cw4d2LxC5Akp5WGkEQLZ3ORbiNztvOtyox65Erqe/UDnugB00G7Dqu+U
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="442298571"
 X-IronPort-AV: E=Sophos;i="6.02,245,1688454000"; 
-   d="scan'208";a="358559342"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 22:50:26 -0700
+   d="scan'208";a="442298571"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 23:17:28 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="720270955"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="867250449"
 X-IronPort-AV: E=Sophos;i="6.02,245,1688454000"; 
-   d="scan'208";a="720270955"
+   d="scan'208";a="867250449"
 Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 11 Sep 2023 22:50:24 -0700
+  by orsmga004.jf.intel.com with ESMTP; 11 Sep 2023 23:17:27 -0700
 Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qfwI2-0007QF-0j;
-        Tue, 12 Sep 2023 05:50:22 +0000
-Date:   Tue, 12 Sep 2023 13:50:12 +0800
+        id 1qfwiD-0007U1-0m;
+        Tue, 12 Sep 2023 06:17:25 +0000
+Date:   Tue, 12 Sep 2023 14:17:00 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 00078e834e110a29cecd22ac5fbc49acbc839c44
-Message-ID: <202309121311.JrHjFsjs-lkp@intel.com>
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ b32415652a4d250c51c1f1cc59a02c58e7141417
+Message-ID: <202309121458.wMNuEdvT-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 00078e834e110a29cecd22ac5fbc49acbc839c44  pinctrl: lantiq: Remove unsued declaration ltq_pinctrl_unregister()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: b32415652a4d250c51c1f1cc59a02c58e7141417  gpio: eic-sprd: use atomic notifiers to notify all chips about irqs
 
-elapsed time: 890m
+elapsed time: 1069m
 
-configs tested: 175
+configs tested: 181
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -132,6 +132,7 @@ loongarch                        allyesconfig   gcc
 loongarch                           defconfig   gcc  
 loongarch             randconfig-001-20230912   gcc  
 loongarch            randconfig-r015-20230912   gcc  
+loongarch            randconfig-r024-20230912   gcc  
 m68k                             allmodconfig   gcc  
 m68k                              allnoconfig   gcc  
 m68k                             allyesconfig   gcc  
@@ -143,6 +144,7 @@ microblaze                        allnoconfig   gcc
 microblaze                       allyesconfig   gcc  
 microblaze                          defconfig   gcc  
 microblaze           randconfig-r013-20230912   gcc  
+microblaze           randconfig-r022-20230912   gcc  
 mips                             allmodconfig   gcc  
 mips                              allnoconfig   gcc  
 mips                             allyesconfig   gcc  
@@ -154,10 +156,12 @@ openrisc                         allmodconfig   gcc
 openrisc                          allnoconfig   gcc  
 openrisc                         allyesconfig   gcc  
 openrisc                            defconfig   gcc  
+openrisc             randconfig-r026-20230912   gcc  
 parisc                           allmodconfig   gcc  
 parisc                            allnoconfig   gcc  
 parisc                           allyesconfig   gcc  
 parisc                              defconfig   gcc  
+parisc               randconfig-r021-20230912   gcc  
 parisc64                            defconfig   gcc  
 powerpc                          allmodconfig   gcc  
 powerpc                           allnoconfig   gcc  
@@ -168,6 +172,7 @@ powerpc                     ppa8548_defconfig   clang
 powerpc                      ppc6xx_defconfig   gcc  
 powerpc              randconfig-r001-20230912   clang
 powerpc              randconfig-r005-20230912   clang
+powerpc              randconfig-r023-20230912   gcc  
 powerpc                        warp_defconfig   gcc  
 powerpc64            randconfig-r014-20230912   gcc  
 riscv                            allmodconfig   gcc  
@@ -234,6 +239,7 @@ x86_64                randconfig-073-20230912   clang
 x86_64                randconfig-074-20230912   clang
 x86_64                randconfig-075-20230912   clang
 x86_64                randconfig-076-20230912   clang
+x86_64               randconfig-r025-20230912   gcc  
 x86_64                          rhel-8.3-func   gcc  
 x86_64                    rhel-8.3-kselftests   gcc  
 x86_64                           rhel-8.3-ltp   gcc  
