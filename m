@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23AD879C5DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 06:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B80BA79C5E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 06:56:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbjILE4o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 00:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44648 "EHLO
+        id S229519AbjILE44 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 00:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229918AbjILEz7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 00:55:59 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B5FC2D47
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:53:23 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-52eed139ec2so5037633a12.2
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:53:23 -0700 (PDT)
+        with ESMTP id S230335AbjILE4K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 00:56:10 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7974E2D54
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:53:25 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-529fb04a234so6790725a12.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1694494402; x=1695099202; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1694494404; x=1695099204; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T0wmcdmkVNbn0/L3PZmaokyWaGN3oFJGgoH9joABJEY=;
-        b=JcyiNTbyQwRldigLuD+30Zvt28sMZYspMCFD8d+tsVn4GSuD9fgHkalT6M1nkTtEfe
-         NAZNaahE+pNGMH0XJF8oqAfsXIJ+2OywD+/LJQ5GELuK+P8wr8renCVIqeYAHhsDbUbS
-         3sTG43vsMG7nZb/gmT8YRnuy+ACy+7sn73FhtlkshkzcF9QtJGjgZ3DJKEkht3NLD9cO
-         h7UZE6ylymxJWklv7OK55KtFjYXttX+J9NbtHJ43lbFavbhhAsoN25g0uNUA1dGcToKC
-         78us+WPNzf410dm+teDx6DBFzs5mvYwBPMod0Rf7t4gggmw02ERqNwM2la9wKo9as/Yx
-         8PFw==
+        bh=zKyYCY5Eawqt55a4Xl0O7T3NyqsE5dk2eEFtaGmMqxE=;
+        b=jskZMDuumAdc4s/wKnwuviZ6RoCKGWCNmmUDPJoMVKrpOj0fSOtznA2CQTQIOXD6oN
+         AOZjCfovHoI3uNs2YYiUgdWUptoE1q7EzR2yM1pEtexz80FEOV1QOK4DloNVTpzdQ5C5
+         9eueBgTeaneUjmKTZr23SXNuKqBgGXWjJkBgd1Hn3RjQ80gFqMrog4SNO4bcT/1h5Jw8
+         g9D0WWvNgMOdTNUZn6nCvcio81KbZDwsJwvvMjx+aCeWU2OUlhP1ZwV4rlL3Xv926kPu
+         9eLWYTyZJQN0vN/XCDkKn3Pwag45gqJAfp4Nlm0kDxTgybKJs8yX1Z3Wh5VEC//wLEh3
+         P9Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694494402; x=1695099202;
+        d=1e100.net; s=20230601; t=1694494404; x=1695099204;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=T0wmcdmkVNbn0/L3PZmaokyWaGN3oFJGgoH9joABJEY=;
-        b=wo9KxL23l2T01+jJPwUIddXFyqsyDS96Vv36HhW1myKp7cdOJkW2yO03gBGvKtWfvc
-         7gs0abQRGXMbJUaBkQ8tyojY/oSYpb+397MAXzppUTz0okW+jzE8XzjCeLZfpUIrou8c
-         zTCn1Wml+cYdyxxZ1enSGfNuLZ0UvXE6qSOgc4wFiCRYOSqYshkSsj0wxt3yVvDMifPd
-         hLxjXxqotAWiQIhrVG+OHhVYj69u50rNp+yFZ8k8vmveq7lyzUMREUuh2tKO3U9rCEXy
-         rqeBsm6H6XPFq4oHkPulHrZra7ObKgXe4ezGEZFFKtJgxdKuB4jyUVv6iiu3r8GEJBhd
-         x6ew==
-X-Gm-Message-State: AOJu0YymRA8sY5w6bEjAsSMjoZAZjbZVC6lw507s2jIhamNrOeNDG2xl
-        nIyyUIBeGy9FcqTMCRufMYYT0g==
-X-Google-Smtp-Source: AGHT+IHIPViShMk+/t7cd11iyQpPz7PeJFn4FiDSD1OX75yRHQ2nJLSa6BJ+uD252JH202P3SGnqmA==
-X-Received: by 2002:a05:6402:1287:b0:523:2e30:aaee with SMTP id w7-20020a056402128700b005232e30aaeemr9655209edv.32.1694494402040;
-        Mon, 11 Sep 2023 21:53:22 -0700 (PDT)
+        bh=zKyYCY5Eawqt55a4Xl0O7T3NyqsE5dk2eEFtaGmMqxE=;
+        b=Sqft5QAEZ00ug3OnXFXeDku0cQI3Egn5Kx/YkhHnUycJd9Zk+z89S6I701IhHtUIW+
+         5qbqd2QT6185a5tvnZRrgkYecg/9yc/HVEJXQmqkLsZ47K8lpX+VysR/v3ycu6QhLHaB
+         +noMo51MoEI8qyA+iFlxuv30Q2y0TeHf/5lQVR2QiwD5CLS+rwyZyo6ChX3z2YHlgaZI
+         T2T0nLyMfyPQogv8l9hA9olNJbkOPGJ3G6LjKjKCk/U88iPvjStMp+jMmlA78rbQKVl/
+         sR0HzV4UcsE6gj1aCxJeBf1uB3JWSv53+ofYhA8QlotVSiVGCBbNxRKrHOPYHYkS6Pvt
+         kQtg==
+X-Gm-Message-State: AOJu0YyJEwO18l+vFtETX5TQP+VBnHJOECDKXSDZoX5tixv6Io/xGbUm
+        bP/l7X/QAUqwuGf1CNMojSP4NA==
+X-Google-Smtp-Source: AGHT+IG/66tUEndbVz1eoqV+N7JI0z1KvlhGtZm3CpGGgpR/XGPkb9QxGMHU5+zWq9ZYq5YA3iChmA==
+X-Received: by 2002:aa7:ce0d:0:b0:525:528d:836f with SMTP id d13-20020aa7ce0d000000b00525528d836fmr9879149edv.18.1694494404043;
+        Mon, 11 Sep 2023 21:53:24 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.145])
-        by smtp.gmail.com with ESMTPSA id f21-20020a05640214d500b0051e22660835sm5422415edx.46.2023.09.11.21.53.20
+        by smtp.gmail.com with ESMTPSA id f21-20020a05640214d500b0051e22660835sm5422415edx.46.2023.09.11.21.53.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 21:53:21 -0700 (PDT)
+        Mon, 11 Sep 2023 21:53:23 -0700 (PDT)
 From:   Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
@@ -67,9 +67,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 32/37] arm64: dts: renesas: add initial DTSI for RZ/G3S SoC
-Date:   Tue, 12 Sep 2023 07:51:52 +0300
-Message-Id: <20230912045157.177966-33-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH 33/37] arm64: dts: renesas: rzg3l-smarc-som: add initial support for RZ/G3S SMARC Carrier-II SoM
+Date:   Tue, 12 Sep 2023 07:51:53 +0300
+Message-Id: <20230912045157.177966-34-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
@@ -81,183 +81,188 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Add initial DTSI for RZ/G3S SoC. Files in commit has the following
-meaning:
-r9a08g045.dtsi		RZ/G3S family SoC common parts
-r9a08g045s33.dtsi	RZ/G3S R0A08G045S33 SoC specific parts
+Add initial support for RZ/G3S SMARC Carrier-II SoM. SoM contains the following
+devices:
+- RZ/G3S microcontroller: Renesas R9A08G045S33GBG
+- 9-channel PMIC: Renesas RAA215300
+- Clock Generator: Renesas 5L35023B
+- 128M QSPI Flash: Renesas AT25QL128A
+- 8G LPDDR4 SDRAM: Micron MT53D512M16D1DS-046
+- 64GB eMMC Flash: Micron MTFC64GBCAQTC
+- 2x Gigabit Ethernet Transceiver: Microchip KSZ9131RNX
+- 5x Current Monitors: Renesas ISL28025FR12Z
+
+The following interfaces are available on SoM board:
+- 2 uSD interfaces
+- 12-pin, 1.0mm pitch connector to the RZ/G3S ADC IO
+- 4-pin, 1.0mm pitch connector to the RZ/G3S I3C IO
+- JTAG connector
+
+At the moment the 24MHz output of 5L35023B, memory SD ch0 (with all its
+bits) were described in device tree.
+
+SD channel 0 of RZ/G3S is connected to an uSD card interface
+and an eMMC. The selection b/w them is done though a hardware switch.
+The DT will select b/w uSD and eMMC though SW_SD0_DEV_SEL build flag.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r9a08g045.dtsi    | 139 ++++++++++++++++++
- arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi |  14 ++
- 2 files changed, 153 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r9a08g045.dtsi
- create mode 100644 arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+ .../boot/dts/renesas/rzg3s-smarc-som.dtsi     | 147 ++++++++++++++++++
+ 1 file changed, 147 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
 new file mode 100644
-index 000000000000..7971e44a5a0a
+index 000000000000..ea53b9ff7b6f
 --- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-@@ -0,0 +1,139 @@
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+@@ -0,0 +1,147 @@
 +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +/*
-+ * Device Tree Source for the RZ/G3S SoC
++ * Device Tree Source for the R9A08G045S33 SMARC Carrier-II's SoM board.
 + *
 + * Copyright (C) 2023 Renesas Electronics Corp.
 + */
 +
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/r9a08g045-cpg.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
++
++/*
++ * Signals of SW_CONFIG switches:
++ * @SW_SD0_DEV_SEL:
++ *	0 - SD0 is connected to eMMC
++ *	1 - SD0 is connected to uSD0 card
++ */
++#define SW_SD0_DEV_SEL	1
 +
 +/ {
-+	compatible = "renesas,r9a08g045";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a55";
-+			reg = <0>;
-+			device_type = "cpu";
-+			#cooling-cells = <2>;
-+			next-level-cache = <&L3_CA55>;
-+			enable-method = "psci";
-+			clocks = <&cpg CPG_CORE R9A08G045_CLK_I>;
-+		};
-+
-+		L3_CA55: cache-controller-0 {
-+			compatible = "cache";
-+			cache-unified;
-+			cache-size = <0x40000>;
-+		};
++	aliases {
++		mmc0 = &sdhi0;
 +	};
 +
-+	extal_clk: extal-clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board. */
-+		clock-frequency = <0>;
++	chosen {
++		bootargs = "ignore_loglevel";
++		stdout-path = "serial0:115200n8";
 +	};
 +
-+	soc: soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		scif0: serial@1004b800 {
-+			compatible = "renesas,scif-r9a08g045", "renesas,scif-r9a07g044";
-+			reg = <0 0x1004b800 0 0x400>;
-+			interrupts = <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi",
-+					  "bri", "dri", "tei";
-+			clocks = <&cpg CPG_MOD R9A08G045_SCIF0_CLK_PCK>;
-+			clock-names = "fck";
-+			power-domains = <&cpg>;
-+			resets = <&cpg R9A08G045_SCIF0_RST_SYSTEM_N>;
-+			status = "disabled";
-+		};
-+
-+		cpg: clock-controller@11010000 {
-+			compatible = "renesas,r9a08g045-cpg";
-+			reg = <0 0x11010000 0 0x10000>;
-+			clocks = <&extal_clk>;
-+			clock-names = "extal";
-+			#clock-cells = <2>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <0>;
-+		};
-+
-+		sysc: system-controller@11020000 {
-+			compatible = "renesas,r9a08g045-sysc";
-+			reg = <0 0x11020000 0 0x10000>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "lpm_int", "ca55stbydone_int",
-+					  "cm33stbyr_int", "ca55_deny";
-+			status = "disabled";
-+		};
-+
-+		pinctrl: pinctrl@11030000 {
-+			compatible = "renesas,r9a08g045-pinctrl";
-+			reg = <0 0x11030000 0 0x10000>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 152>;
-+			clocks = <&cpg CPG_MOD R9A08G045_GPIO_HCLK>;
-+			power-domains = <&cpg>;
-+			resets = <&cpg R9A08G045_GPIO_RSTN>,
-+				 <&cpg R9A08G045_GPIO_PORT_RESETN>,
-+				 <&cpg R9A08G045_GPIO_SPARE_RESETN>;
-+		};
-+
-+		sdhi0: mmc@11c00000  {
-+			compatible = "renesas,sdhi-r9a08g045", "renesas,rcar-gen3-sdhi";
-+			reg = <0x0 0x11c00000 0 0x10000>;
-+			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD R9A08G045_SDHI0_IMCLK>,
-+				 <&cpg CPG_MOD R9A08G045_SDHI0_CLK_HS>,
-+				 <&cpg CPG_MOD R9A08G045_SDHI0_IMCLK2>,
-+				 <&cpg CPG_MOD R9A08G045_SDHI0_ACLK>;
-+			clock-names = "core", "clkh", "cd", "aclk";
-+			resets = <&cpg R9A08G045_SDHI0_IXRST>;
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@12400000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x0 0x12400000 0 0x40000>,
-+			      <0x0 0x12440000 0 0x60000>;
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>;
-+		};
++	memory@48000000 {
++		device-type = "memory";
++		/* First 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x0 0x38000000>;
 +	};
 +
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts-extended = <&gic GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+				      <&gic GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+				      <&gic GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+				      <&gic GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
++	reg_3p3v: regulator0 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
 +	};
++
++#if SW_SD0_DEV_SEL
++	vccq_sdhi0: regulator1 {
++		compatible = "regulator-gpio";
++		regulator-name = "SDHI0 VccQ";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		gpios = <&pinctrl RZG2L_GPIO(2, 2) GPIO_ACTIVE_HIGH>;
++		gpios-states = <1>;
++		states = <3300000 1>, <1800000 0>;
++	};
++#else
++	reg_1p8v: regulator1 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-1.8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++#endif
 +};
-diff --git a/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
-new file mode 100644
-index 000000000000..3351f26c7a2a
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/*
-+ * Device Tree Source for the RZ/G3S R9A08G045S33 SoC specific part
-+ *
-+ * Copyright (C) 2023 Renesas Electronics Corp.
-+ */
 +
-+/dts-v1/;
++&extal_clk {
++	clock-frequency = <24000000>;
++};
 +
-+#include "r9a08g045.dtsi"
++#if SW_SD0_DEV_SEL
++/* SD0 slot */
++&sdhi0 {
++	pinctrl-0 = <&sdhi0_pins>;
++	pinctrl-1 = <&sdhi0_uhs_pins>;
++	pinctrl-names = "default", "state_uhs";
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&vccq_sdhi0>;
++	bus-width = <4>;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	max-frequency = <125000000>;
++	status = "okay";
++};
++#else
++/* eMMC */
++&sdhi0 {
++	pinctrl-0 = <&sdhi0_emmc_pins>;
++	pinctrl-1 = <&sdhi0_emmc_pins>;
++	pinctrl-names = "default", "state_uhs";
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_1p8v>;
++	bus-width = <8>;
++	mmc-hs200-1_8v;
++	non-removable;
++	fixed-emmc-driver-type = <1>;
++	max-frequency = <125000000>;
++	status = "okay";
++};
++#endif
 +
-+/ {
-+	compatible = "renesas,r9a08g045s33", "renesas,r9a08g045";
++&pinctrl {
++	sd0-pwr-en-hog {
++		gpio-hog;
++		gpios = <RZG2L_GPIO(2, 1) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "sd0_pwr_en";
++	};
++
++	sdhi0_pins: sd0 {
++		data {
++			pins = "SD0_DATA0", "SD0_DATA1", "SD0_DATA2", "SD0_DATA3";
++			power-source = <3300>;
++		};
++
++		ctrl {
++			pins = "SD0_CLK", "SD0_CMD";
++			power-source = <3300>;
++		};
++
++		cd {
++			pinmux = <RZG2L_PORT_PINMUX(0, 0, 1)>; /* SD0_CD */
++		};
++	};
++
++	sdhi0_uhs_pins: sd0-uhs {
++		data {
++			pins = "SD0_DATA0", "SD0_DATA1", "SD0_DATA2", "SD0_DATA3";
++			power-source = <1800>;
++		};
++
++		ctrl {
++			pins = "SD0_CLK", "SD0_CMD";
++			power-source = <1800>;
++		};
++
++		cd {
++			pinmux = <RZG2L_PORT_PINMUX(0, 0, 1)>; /* SD0_CD */
++		};
++	};
++
++	sdhi0_emmc_pins: sd0-emmc {
++		pins = "SD0_DATA0", "SD0_DATA1", "SD0_DATA2", "SD0_DATA3",
++		       "SD0_DATA4", "SD0_DATA5", "SD0_DATA6", "SD0_DATA7",
++		       "SD0_CLK", "SD0_CMD", "SD0_RST#";
++		power-source = <1800>;
++	};
 +};
 -- 
 2.39.2
