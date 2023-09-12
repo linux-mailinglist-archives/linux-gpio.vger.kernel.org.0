@@ -2,301 +2,192 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7041F79C45D
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 05:50:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0CE479C4F0
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 06:52:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230357AbjILDuN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Sep 2023 23:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43302 "EHLO
+        id S229515AbjILEwW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 00:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230139AbjILDuM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Sep 2023 23:50:12 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D3CA4;
-        Mon, 11 Sep 2023 20:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694490608; x=1726026608;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=XlDXv7l9fpVAh9mi2ixAL4hrY/XZRlX5WPEuspmPdaA=;
-  b=kTzBD5YHP9Nzn9NaNTfNqxOoHfDjdVRMhLa3JltQ/RMqT9z5vjFTC6qF
-   cqtA5+0OPGJp4kdPkzUjDLkxNz9Xk81z3nj2f7FK0M222br9+j5ORFAZd
-   Tot4A5SNhLIaJSNDaTZn4q9tSFVI3x0nzVEIFsHpx0/GPvVbOlknCVI6s
-   Avn5D6Y2B8XM8yT8IVGh2nl1Pl6x+A5feTsdBzSdclkCoPNGqH51cDXbR
-   BP2bnmnyYd9CWcPPqJGblHq7sNooeVzgOBEvxz0Q4d2HOnt8RuWJjXzvP
-   YA1curzUFTH1YVimI9Sw7CF4lVZmUSElCkfHFTxl0bVfxDgfzst0SHmW5
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="444704375"
-X-IronPort-AV: E=Sophos;i="6.02,245,1688454000"; 
-   d="scan'208";a="444704375"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 20:50:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="833746172"
-X-IronPort-AV: E=Sophos;i="6.02,245,1688454000"; 
-   d="scan'208";a="833746172"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Sep 2023 20:50:06 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 11 Sep 2023 20:50:06 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Mon, 11 Sep 2023 20:50:05 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Mon, 11 Sep 2023 20:50:05 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Mon, 11 Sep 2023 20:50:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SwzHeKIt4cTaTLIvalvdUGTuH2uHpSB0A/fNmDrBslU0Vg8zrQo1GnLI/fVyz3wFVzSfTeLZZC1z1uluqKEZsE72FTUDfdbGUOPP3ClNcc48kZLet+5cjrfGn+KL+chYRnlNBZ9UpEKTOFbxWm+uw7T32+l68rzrqmd9b5TUES9GaNZTuYEFP4U+SFf1SacFiuJIECoOVcahZOUvixUHyAuQUKA1FK8h4Tn63w9UVJXQgy3na6thUyvvX9cWl5B46wbW3Nqc/Y/NqojaQCiuGlgE4BIqdhuskgBKRcPAe6nHwlHLOCWBnm32DHXvVF8ACi1Ob7deDVAgJa16PUTMIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e9jR9xmKb0AVlri16IYuq6UgxMMBEV7KabIkTV5PHsE=;
- b=TSMtN0S2RhxuPKtRa7qW+iU0dDZ58OgRiTRs/5v8U6/HN5d4dJvCYiXk3PAzvqUw+VgvVXMriLH0o1ZxcEJNvBS3uuxr7YzIkkbmD4A+sYdJtHtsoS8FuMsglVkJsU5Li4KZViAWAJdjKj4CHidw7K5KPwB8MDDc0Si49fMK//CkoP/qfCbt0IYeJ4CwV/1ONJ5njNukIeCA7NKJc7U5NCFj/0YouX9LkzWsJQIwbEPYjOZsGLzTDi0xnG3poBmL+4AIIlqQHsqmFqEyP+fKGZhGLHs4juqPd51FUWHry/SIHoYVYcK5JBFcDJH16+GovxolvenEj6uH731UWntQAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com (2603:10b6:5:205::16)
- by PH0PR11MB7543.namprd11.prod.outlook.com (2603:10b6:510:26c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.30; Tue, 12 Sep
- 2023 03:50:00 +0000
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::e836:4003:6244:2466]) by DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::e836:4003:6244:2466%7]) with mapi id 15.20.6768.036; Tue, 12 Sep 2023
- 03:49:59 +0000
-From:   "Wu, Wentong" <wentong.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>,
-        "mka@chromium.org" <mka@chromium.org>,
-        "oneukum@suse.com" <oneukum@suse.com>,
-        "lee@kernel.org" <lee@kernel.org>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "kfting@nuvoton.com" <kfting@nuvoton.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "maz@kernel.org" <maz@kernel.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "andi.shyti@linux.intel.com" <andi.shyti@linux.intel.com>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "Wang, Zhifeng" <zhifeng.wang@intel.com>
-Subject: RE: [PATCH v15 1/4] usb: Add support for Intel LJCA device
-Thread-Topic: [PATCH v15 1/4] usb: Add support for Intel LJCA device
-Thread-Index: AQHZ4HF+A3wMCVoqAkyEsPt16c0Su7AQ8p+AgAWjb2A=
-Date:   Tue, 12 Sep 2023 03:49:59 +0000
-Message-ID: <DM6PR11MB43167EC56EF719491A4867318DF1A@DM6PR11MB4316.namprd11.prod.outlook.com>
-References: <1693970580-18967-1-git-send-email-wentong.wu@intel.com>
- <1693970580-18967-2-git-send-email-wentong.wu@intel.com>
- <2023090854-verse-crabmeat-bf14@gregkh>
-In-Reply-To: <2023090854-verse-crabmeat-bf14@gregkh>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR11MB4316:EE_|PH0PR11MB7543:EE_
-x-ms-office365-filtering-correlation-id: 85f3dd3c-680c-4bf2-107d-08dbb3435672
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1lCAsnvq0G4+6yU7I4ytBmCkwWJxmJGQ1l98+OUbPXcMWMtodG3jZk1/wdTkz5rN5Axr0Jm1dS3W933mXf34p4JViLjJAlvQeo9SzlHSY8lUXkEm2s7SLqXvxz3fmNPKajTqc5UfC773StFqc84OqhZukFvfw7ZzexZJTVllerqCMtUUJZfBALuPodE1wf6qHRU89Ll2s3lNO4Wj6brSSk76L84HAWMkWrGaO6pJt8U8LeJhoVH95mLsT4suw+wu9zv5Bd+9I3zfC+j+HjU//7fhENSniK9NJJ/qIQLER/tJadFREzB/XCaBGbLHqwCI2f4e7o2hWNpVGh8o0IorGN9yhY/Bj57eLWsNW7ebjKPW6tqVibKbDVmoZlZnCEeTT6phLgIq38xft8kBHeXHk+pJQLtqicRQ51IlezugyikFZaOOKN8klNp/BrVXfNL/3iXPV3z7NzzaMPU6gLH3pBV0XfdOW00QFT812cUyrqA+oKdp46mPlxeLnv+cmYGm90bANAyjEtLK3mGFWxVx24sftCK6t1ZfgfcnHjdQ6Wg/dMSbkZ2JSQE51+e4rTrlnJIYshAKx9wSZK+jMWd2LmAs9Z8hjSrzib09EXQX03/6/LTUFGylNzwCG4HMaOo9
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4316.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(39860400002)(366004)(396003)(376002)(186009)(451199024)(1800799009)(6506007)(82960400001)(9686003)(71200400001)(7696005)(83380400001)(66946007)(478600001)(41300700001)(52536014)(66556008)(2906002)(66446008)(64756008)(6916009)(66476007)(54906003)(8936002)(76116006)(316002)(8676002)(5660300002)(26005)(7416002)(55016003)(86362001)(4326008)(38070700005)(33656002)(38100700002)(122000001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?5/1/12seP6bQba5MN+6k/M0dfcqWIUUADUGMsy1Hv+XUhBpmZd4x/6AYZ7v9?=
- =?us-ascii?Q?eg9Pf7LfC0G/qb66M0j5Hii1NHttWuVfljWpl3W5B5VhHqBNeVQ4VJJc697d?=
- =?us-ascii?Q?lXnjgW/ILAyLyTFFRSa0HREsgu5DalN5P+lG5rx+MtyU7zShd9vVpo7Iv3jU?=
- =?us-ascii?Q?pCO6fr0BvWcMGPtOx9bzw7tlalgUFtbLs0Zg0vCfs4ANxEmM47V+4c25zQiO?=
- =?us-ascii?Q?v81f5ZnB5/P27OWp5+25hIpVv/mjL3Pc3fMcIsoNWBWx6EfSrIDwyUkraAnI?=
- =?us-ascii?Q?Rny4k+aO543DixdyfjYa2JAKatLITB+/9pleTom0FDK5Cqg/swem2P1dwR1M?=
- =?us-ascii?Q?k16qN1Nbp8c2CXlgcMUboPqm5FQOjmDxdY3iLJmKuRlYCP6pNnv7EGh5zULI?=
- =?us-ascii?Q?yiq3yHg+kRBP609FL/xgw/uAorEEY2g6JyE63MJ0gQuGGDuUDnD85AB12ylq?=
- =?us-ascii?Q?oFOmN/iJt1YVB27WAmi5/MjdAcrHJ1BekN6qsyIQBrVtFwwgC2bnACZhQpJ8?=
- =?us-ascii?Q?hqE/YZ+IA2Xcx43G++CynSUboEWxFu5tVDyLYbqmIiHbW8DfIhqpcX0h2BGy?=
- =?us-ascii?Q?XLdeNpJZHQKNMQnmnlkAcnqxVmu3hV7lYp0WXYcvDunkq4Z1BYk7m0LpJMds?=
- =?us-ascii?Q?LoOE/aM49ai4vXp8HQhIcw1VlA3nXndKENJzfwlc4mydtE2P6LBmmbMTd6Oc?=
- =?us-ascii?Q?pwKNvGWiw+m9PHD7xEG4dcVuWR7B+dx+b+ZjKSUPtfSqmtq63dNk/adOFthn?=
- =?us-ascii?Q?5pdq+xDSoqhvDUQWZgcbnullm+DhuojKSLW2K/shyQdosYPj/RckW7eu76bw?=
- =?us-ascii?Q?SylUXJKL0fneh1z5ltAL1edOu+bfuMR7p52hhhRGjegUx54WTO3hvDmsmUcs?=
- =?us-ascii?Q?bx683MDt6hYBVKrUdDZycG8c/PXIHRKFFK4ZvR658gyl7pZMw/gt5LQm60rm?=
- =?us-ascii?Q?+M+xZKOyBBTcvjVMUBad01rU/KVAqkKFrXAjKcLqeuhICIanDgrnH0X2xDgX?=
- =?us-ascii?Q?O1XOtYFF/hgRh17HvRS9PJgd/Ss5f9NryqHxkTmPbo8ki4mm37q4g5O4x3xa?=
- =?us-ascii?Q?+IPZ5DQ7cFjRPwed4edljQiujgDZHrL2ugQkyELPzz3CJoIelHMRiVdIJP46?=
- =?us-ascii?Q?IaqVeLIgaRS/+GS/ItxCLCLgtuwTiJU6ceQkZgY2aVMbLwRFHJba3LTRFVrV?=
- =?us-ascii?Q?sVw3WKzMlvwvEDsGZTosjNYWHi9h3rExiWpArhFLxnGBL1abDYGdCeiGljyp?=
- =?us-ascii?Q?Nw30dyf/DfxkSr0KnWUl0nn/cJOQ/iBTLRsygCxvJSCpzaa4LHdr8mqOUuph?=
- =?us-ascii?Q?BC8VQNmibD2hvimldC2qKMrlmFfqu8nvEn8goWmoZq0XEG5MqO+of8mnLL5o?=
- =?us-ascii?Q?S8CDd2yDn9qQ+xn2PRK1iOmSmJjUibtkyj49mOxxLKs1LLQPHafFcIFDG5pR?=
- =?us-ascii?Q?4VrEita8p6qmZFNUTG/6UDhAlTV0Gg7Loj0rFcel4yropOH8DWmgSHxsm5uB?=
- =?us-ascii?Q?31uKzY/39JTTG8wovdCrvxl2c0ewwxLsiajRFZIi62ySjO5/upbc8akIWmQ8?=
- =?us-ascii?Q?AuTv4v3cNrM2Q2G1kpRf5PFY48myW8FlGNJpaJW3?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229446AbjILEwW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 00:52:22 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DACE5F
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:18 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-52c9be5e6f0so6218674a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1694494336; x=1695099136; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZL8AUPRM1aegmrc4Jg4uOM+4oALiCtGLkJY+J8Syis0=;
+        b=A22sv3d3DNDHoX7QPOiJI2uQWPQ2CkA+q3mvysmXlMBDsp6Ny+bDNpRUP29JrFlqfE
+         yf2GJTuj5Aiz5MEjr4tzU+k2Omnamfom57uPsg+sDqTiVIQJ8prQuJAO96UOdH6QPHIR
+         rT0bLAfezPTJVTz7f+Lph9M+HpiMvhlcWiBIdKWXQrDF3frkqJjmOds7Sr5jTAhtDA+Q
+         cQs4rdtUBhQMUi2yAckKQbFusUDF3Y1usdyNj9Plr/iRzGi6a4JAtvRnK1HB18Owud1U
+         i1SxYMF9GgrBIEVhbgBalE6O6H2AEaGCxqh+68fEXj5nddk0Fi81oDx2tBnLNGvjmmap
+         +B5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694494336; x=1695099136;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZL8AUPRM1aegmrc4Jg4uOM+4oALiCtGLkJY+J8Syis0=;
+        b=TRWhOxg6FPPCQ4hcb4R9TAy2eAdLsO7b8uzx7YdsrfBv16mZOliRPz0LcwaGpukGpZ
+         3tc7kEzW02ykzYJjo0aGIhLLh0cSiuRjZwZCmdsRR50nvqeC/Q9IfpUvhr1Nhe7Fzypi
+         +gLIwXMq+Xd4c49X4hqDgl1b3GsyohMIOoUGT7MFdlP/8tRJF2xUxUSXjTO2NvLmxUXP
+         JC/c8vpHJ3fACPAO05gLhs3PtWD5gQT9ii9ZILn4JjZshea3UyfGm7DHsSgXzs1GD8zJ
+         DeuZyDU3ckkxrmsH+OECVY1YsYocA3ADMGHz53shM253qQBZSJKqJMKwrJUVYDkGl+y+
+         T53Q==
+X-Gm-Message-State: AOJu0YyUtvbV1ffN4q7Z0o6PGOY4yD3paN5nxGh8C8v2bANgymgS7JED
+        O7X5fHCwUjilpmbkKZro79LTaA==
+X-Google-Smtp-Source: AGHT+IH/7FX3AG4GBKPNWl3bGJcnTxMw8eitbqLPSbHY6Kq8+B6wBqEBknJ7/dQ5zhBRhOc1jR5Sgg==
+X-Received: by 2002:a50:ec90:0:b0:522:6e3f:b65 with SMTP id e16-20020a50ec90000000b005226e3f0b65mr9982020edr.33.1694494336357;
+        Mon, 11 Sep 2023 21:52:16 -0700 (PDT)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.145])
+        by smtp.gmail.com with ESMTPSA id f21-20020a05640214d500b0051e22660835sm5422415edx.46.2023.09.11.21.52.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 21:52:16 -0700 (PDT)
+From:   Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
+        jirislaby@kernel.org, magnus.damm@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
+        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
+        nfraprado@collabora.com, rafal@milecki.pl,
+        wsa+renesas@sang-engineering.com
+Cc:     linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH 00/37] Add new Renesas RZ/G3S SoC and RZ/G3S SMARC EVK
+Date:   Tue, 12 Sep 2023 07:51:20 +0300
+Message-Id: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4316.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85f3dd3c-680c-4bf2-107d-08dbb3435672
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Sep 2023 03:49:59.7233
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TbI01sX7ocRtK+P+FkA/5a4t/6BJG9iF3Hjao+KLwHXJN8NKBrGDf/m0yUAMEL/FSoQytKTgyPsJ02iNxTJ3UA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7543
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Greg,
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Thanks for your review
+Hi,
 
-> From: Greg KH <gregkh@linuxfoundation.org>
->=20
-> > +struct ljca_adapter {
-> > +	struct usb_interface *intf;
-> > +	struct usb_device *usb_dev;
-> > +	struct device *dev;
-> > +
-> > +	unsigned int rx_pipe;
-> > +	unsigned int tx_pipe;
-> > +
-> > +	/* urb for recv */
-> > +	struct urb *rx_urb;
-> > +	/* buffer for recv */
-> > +	void *rx_buf;
-> > +	unsigned int rx_len;
-> > +
-> > +	/* external buffer for recv */
-> > +	void *ex_buf;
->=20
-> Shouldn't buffers be u8*?
+This patch series adds initial support for The Renesas RZ/G3S (R9A08G045{S33})
+SoC. The RZ/G3S device is a general-purpose microprocessor with a
+single-core Arm® Cortex®-A55 (1.1GHz) and a dual-core Arm® Cortex®-M33 (250MHz),
+perfect for an IOT gateway controller.
 
-Ack, this has been fixed in my local version.
+This includes:
+- SoC identification;
+- clocks (core clocks, pin controller clock, serial interface, SD ch0
+  clock) and corresponding resets;
+- minimal device tree for SoM and carrier boards.
 
->=20
-> > +
-> > +/* process command ack */
-> > +static void ljca_handle_cmd_ack(struct ljca_adapter *adap,
-> > +				struct ljca_msg *header)
-> > +{
-> > +	struct ljca_msg *tx_header =3D adap->tx_buf;
-> > +	unsigned int actual_len =3D 0;
-> > +	unsigned int ibuf_len;
-> > +	unsigned long flags;
-> > +	void *ibuf;
-> > +
-> > +	spin_lock_irqsave(&adap->lock, flags);
->=20
-> Why not use the functionality in cleanup.h for this lock?  Makes this fun=
-ction
-> much simpler.
+With this series Linux can boot from eMMC or SD card. The eMMC and uSD
+interface are multiplexed on the SoM; selection is made using a hardware
+switch.
 
-Ack, I understand the cleanup.h now, and use the functionality as much as I=
- can.
+Patches are gouped as follows:
+- 01-04 adds SoC identification support;
+- 05	is a simple cleanup on SoC identification support
+- 06-09	contain fixes on clock drivers identified while adding RZ/G3S
+	support
+- 10-14	clock cleanups identifies while adding support for RZ/G3S
+- 15-22	clock changes needed by RZ/G3S
+- 23-30	pinctrl changes needed by RZ/G3S
+- 31	document SDHI for RZ/G3S
+- 32-37 device tree support for RZ/G3S
 
->=20
-> > +
-> > +	if (tx_header->type !=3D header->type || tx_header->cmd !=3D header->=
-cmd)
-> {
-> > +		spin_unlock_irqrestore(&adap->lock, flags);
-> > +
->=20
-> No need for a blank line.
->=20
-> And how can these things happen?  No need to return an error if this is t=
-he case?
+Thank you,
+Claudiu Beznea
 
-Ack, removed the blank line and added error print here.
+Claudiu Beznea (37):
+  dt-bindings: serial: renesas,scif: document r9a08g045 support
+  dt-bindings: soc: renesas: document Renesas RZ/G3S SoC variants
+  dt-bindings: soc: renesas: renesas,rzg2l-sysc: document RZ/G3S SoC
+  soc: renesas: identify RZ/G3S SoC
+  soc: renesas: remove blank lines
+  clk: renesas: rzg2l: wait for status bit of SD mux before continuing
+  clk: renesas: rzg2l: lock around writes to mux register
+  clk: renesas: rzg2l: trust value returned by hardware
+  clk: renesas: rzg2l: fix computation formula
+  clk: renesas: rzg2l: use core->name for clock name
+  clk: renesas: rzg2l: simplify a bit the logic in
+    rzg2l_mod_clock_endisable()
+  clk: renesas: rzg2l: reduce the critical area
+  clk: renesas: rzg2l: use FIELD_GET() for PLL register fields
+  clk: renesas: rzg2l: use u32 for flag and mux_flags
+  clk: renesas: rzg2l: add support for RZ/G3S PLL
+  clk: renesas: rzg2l: add struct clk_hw_data
+  clk: renesas: rzg2l: remove CPG_SDHI_DSEL from generic header
+  clk: renesas: rzg2l: refactor sd mux driver
+  clk: renesas: rzg2l: add a divider clock for RZ/G3S
+  dt-bindings: clock: renesas,rzg2l-cpg: document RZ/G3S SoC
+  dt-bindings: clock: add r9a08g045 CPG clocks and resets definitions
+  clk: renesas: add minimal boot support for RZ/G3S SoC
+  pinctrl: renesas: rzg2l: index all registers based on port offset
+  pinctrl: renesas: rzg2l: adapt for different SD/PWPR register offsets
+  pinctrl: renesas: rzg2l: adapt function number for RZ/G3S
+  pinctrl: renesas: rzg2l: move ds and oi to SoC specific configuration
+  pinctrl: renesas: rzg2l: add support for different ds values on
+    different groups
+  pinctrl: renesas: rzg2l: make struct
+    rzg2l_pinctrl_data::dedicated_pins constant
+  dt-bindings: pinctrl: renesas: document RZ/G3S SoC
+  pinctrl: renesas: rzg2l: add support for RZ/G3S SoC
+  dt-bindings: mmc: renesas,sdhi: Document RZ/G3S support
+  arm64: dts: renesas: add initial DTSI for RZ/G3S SoC
+  arm64: dts: renesas: rzg3l-smarc-som: add initial support for RZ/G3S
+    SMARC Carrier-II SoM
+  arm64: dts: renesas: rzg3s-smarc: add initial device tree for RZ SMARC
+    Carrier-II Board
+  dt-bindings: arm: renesas: document SMARC Carrier-II EVK
+  arm64: dts: renesas: r9a08g045s33-smarc: add initial device tree for
+    RZ/G3S SMARC EVK board
+  arm64: defconfig: enable RZ/G3S (R9A08G045) SoC
 
->=20
-> > +static int ljca_send(struct ljca_adapter *adap, u8 type, u8 cmd,
-> > +		     const void *obuf, unsigned int obuf_len, void *ibuf,
-> > +		     unsigned int ibuf_len, bool ack, unsigned long timeout)
->=20
-> That's a lot of function parameters, whyh so many?
->=20
-> And why void *?  That should never be used in an internal function where =
-you
-> know the real type.
+ .../bindings/clock/renesas,rzg2l-cpg.yaml     |   1 +
+ .../devicetree/bindings/mmc/renesas,sdhi.yaml |   2 +
+ .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  26 +-
+ .../bindings/serial/renesas,scif.yaml         |   1 +
+ .../soc/renesas/renesas,rzg2l-sysc.yaml       |   1 +
+ .../bindings/soc/renesas/renesas.yaml         |   8 +
+ arch/arm64/boot/dts/renesas/Makefile          |   2 +
+ arch/arm64/boot/dts/renesas/r9a08g045.dtsi    | 139 ++++
+ .../boot/dts/renesas/r9a08g045s33-smarc.dts   |  17 +
+ arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi |  14 +
+ .../boot/dts/renesas/rzg3s-smarc-som.dtsi     | 147 ++++
+ arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi  |  28 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/clk/renesas/Kconfig                   |   7 +-
+ drivers/clk/renesas/Makefile                  |   1 +
+ drivers/clk/renesas/r9a07g043-cpg.c           |  19 +-
+ drivers/clk/renesas/r9a07g044-cpg.c           |  19 +-
+ drivers/clk/renesas/r9a08g045-cpg.c           | 217 ++++++
+ drivers/clk/renesas/rzg2l-cpg.c               | 495 ++++++++++--
+ drivers/clk/renesas/rzg2l-cpg.h               |  39 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 728 ++++++++++++++----
+ drivers/soc/renesas/Kconfig                   |   6 +
+ drivers/soc/renesas/renesas-soc.c             |  15 +-
+ include/dt-bindings/clock/r9a08g045-cpg.h     | 243 ++++++
+ 24 files changed, 1924 insertions(+), 252 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a08g045s33-smarc.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a08g045s33.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+ create mode 100644 drivers/clk/renesas/r9a08g045-cpg.c
+ create mode 100644 include/dt-bindings/clock/r9a08g045-cpg.h
 
-Ack, have switched void * to real type
+-- 
+2.39.2
 
->=20
-> > +{
->=20
-> > +#else
-> > +static void ljca_auxdev_acpi_bind(struct ljca_adapter *adap,
-> > +				  struct auxiliary_device *auxdev,
-> > +				  u64 adr, u8 id)
-> > +{
-> > +}
-> > +#endif
->=20
-> Can't this go in a .h file?  #ifdef in .c files are frowned apon.
-
-Ack, this has been removed=20
-
->=20
-> > --- /dev/null
-> > +++ b/include/linux/usb/ljca.h
-> > +
-> > +struct ljca_client {
-> > +	u8 type;
-> > +	u8 id;
-> > +	struct list_head link;
-> > +	struct auxiliary_device auxdev;
-> > +	struct ljca_adapter *adapter;
-> > +
-> > +	void *context;
-> > +	ljca_event_cb_t event_cb;
-> > +	/* lock to protect event_cb */
-> > +	spinlock_t event_cb_lock;
-> > +};
-> > +
-> > +struct ljca_gpio_info {
-> > +	unsigned int num;
-> > +	DECLARE_BITMAP(valid_pin_map, LJCA_MAX_GPIO_NUM); };
-> > +
-> > +struct ljca_i2c_info {
-> > +	u8 id;
-> > +	u8 capacity;
-> > +	u8 intr_pin;
-> > +};
-> > +
-> > +struct ljca_spi_info {
-> > +	u8 id;
-> > +	u8 capacity;
-> > +};
->=20
-> No documentation for these other public structures?
-
-Ack, This has been addressed. If no more comments, I will send out v16 for =
-review.
-
-Thanks
-Wentong
->=20
-> thanks,
->=20
-> greg k-h
