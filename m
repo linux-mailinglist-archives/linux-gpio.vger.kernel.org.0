@@ -2,77 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8380C79D299
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 15:45:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B70579D3B7
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 16:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234688AbjILNpu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 09:45:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
+        id S235936AbjILOcF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 10:32:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233774AbjILNpt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 09:45:49 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCCA210CE
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 06:45:45 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id 3f1490d57ef6-d7d50ba994eso4905270276.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 06:45:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694526345; x=1695131145; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=edAT/GH43omVL1UuMQMjzc2LFcLi9s8ggYJhioq2FPs=;
-        b=Ly8F6rqsZ2a/ErNhg3NQMZWYaGD0Agak2T0+J4VzKZwHG9M7brlS/uh5uGkqte86cg
-         +y68uvKyW8L5/2tQdhoTtvy5iyUiTtPCOopfthH+7loeArwNWHC4fVVC/W+dNqdr7FUP
-         fc71h42ECOy1+tcEexmvOZqWEq0wUFWMFkfKu9cJwf5y3GOBtkNo8KZSQ8TQDU3C2Bsy
-         fHiQ3NyhjT/DL3SWmy7QngMllHo3og06F0phz7FTYzv2D6qb0LieA44eJnAn0oRZ0yJU
-         rYfmGDNZcRSoNyhvG8SyLUJqpB59Hdds30Rmx5gkiJXKslMQX5fxMPLMD+ufQqJ9BLBW
-         7TWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694526345; x=1695131145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=edAT/GH43omVL1UuMQMjzc2LFcLi9s8ggYJhioq2FPs=;
-        b=k1fuvlli9tgPIKSdC/rMDaTxzcgphvFdpeJRO2IYzyBXlhtn0w1i3BMX8/FN31r02c
-         1ei4esYH/8zj0B20jjtAyBx5JwCD4jPvO8xzdDMUz+HVlZX/SQk9tFXfmyRPZNVRpwpD
-         pp85yYllFZvhs7yE9JSEB6UjxZFDgldb7kOeMGbxVJ3TAIy/Lzmm8tb8YkL8TxnxSvo8
-         e3/6DAjUmalf6lqVKimc7ghw0PGKO6V6XQjNoqbbr81vu9CIBIWafo2wbFpmvQLpyygQ
-         ClPHnbLqoe1awzvmZKcnAbEuX1HRixKmebsGIsNRlAMLfbPvcWoaN4xhgHmBtDzDySuP
-         yR0A==
-X-Gm-Message-State: AOJu0Yyi03LB66FvuLVxmzQm7+PYCapoMcDIBmBz6xdfNGpJyF01XXBB
-        4kxMryC2qI9cEO3l/GCUGVfvkSpWz30Ngzo0HpQNzQ==
-X-Google-Smtp-Source: AGHT+IGJI2UveXs72E5STp7ztC3GYt6jLOW7Z8QEofakoyL0YotL8uh8fujG1uiQtOK+mJyjU2+03A8pvZyjiJB/Mns=
-X-Received: by 2002:a25:ce03:0:b0:d09:f934:f2fe with SMTP id
- x3-20020a25ce03000000b00d09f934f2femr10648800ybe.18.1694526345012; Tue, 12
- Sep 2023 06:45:45 -0700 (PDT)
+        with ESMTP id S235949AbjILOb6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 10:31:58 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAA0118;
+        Tue, 12 Sep 2023 07:31:54 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C545DC433C7;
+        Tue, 12 Sep 2023 14:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694529113;
+        bh=nCDXCDraqsGo2IZGYAIOuK+jrylfUNs1NltItNEvSsQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IzfFF5eS0jKjFYDvO5isyKITSFx9Gnoou/xv7WTkxJg7qowQ87WM6A8bDeU4fZUs1
+         v+AU3kBJHoO/qvhkLBzY1LHIpY+mFTnKXIPiUxYl/w3RS3wkGKbFB69UBKlSVcpHoO
+         R9UMiesRBocyKoVCX9r61gVBb0m6a5HpXfKUD+oA6NSEynLpVPIsfvefLOWbcbq1lx
+         JGxEqnf0JXnj8shzNl1oXaeaaONd/2cX0VDR3d3YkhmkxsgAFwQcbMbGIsdIR/eV5I
+         SgC7qCUyKhiuK2IY0LWMINLlX//w2erE1Q9rltkmWhDbYoOgH/htDJbxJx4vH1fshy
+         XtHNCvawzd3Vg==
+Date:   Tue, 12 Sep 2023 15:31:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Herve Codina <herve.codina@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 28/31] pinctrl: Add support for the Lantic PEF2256
+ pinmux
+Message-ID: <71761f94-14ea-4e2a-a079-c74dfa32387a@sirena.org.uk>
+References: <20230912081527.208499-1-herve.codina@bootlin.com>
+ <20230912101505.225899-1-herve.codina@bootlin.com>
+ <CACRpkdbxdMZt4E1SF1v9as-jw=TpvS1mk2TQqAgywMBLbKaNoA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230912122850.164150-1-michael@walle.cc>
-In-Reply-To: <20230912122850.164150-1-michael@walle.cc>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 Sep 2023 15:45:33 +0200
-Message-ID: <CACRpkdYh1PN4mSmLQ-3SynhbjRs1Y_H=vaJHqv1ptf2UL_SQYg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: gpio-regmap: make myself a maintainer of it
-To:     Michael Walle <michael@walle.cc>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rHoxlvq7D/pkDAXf"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbxdMZt4E1SF1v9as-jw=TpvS1mk2TQqAgywMBLbKaNoA@mail.gmail.com>
+X-Cookie: Mickey Mouse wears a Spiro Agnew watch.
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 2:29=E2=80=AFPM Michael Walle <michael@walle.cc> wr=
-ote:
 
-> When I've upstreamed the gpio-regmap driver, I didn't have that much
-> experience with kernel maintenance, so I've just added myself as a
-> reviewer. I've gained quite some experience, so I'd like to step up
-> as a maintainer for it.
->
-> Signed-off-by: Michael Walle <michael@walle.cc>
+--rHoxlvq7D/pkDAXf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Tue, Sep 12, 2023 at 01:04:56PM +0200, Linus Walleij wrote:
+> On Tue, Sep 12, 2023 at 12:15=E2=80=AFPM Herve Codina <herve.codina@bootl=
+in.com> wrote:
 
-Yours,
-Linus Walleij
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+
+> I think SPDX mandates that you start the tag with C99 comments
+
+> // SPDX-License-Identifier: GPL-2.0-only
+
+Not for headers, they should use C style since they might be included in
+contexts where C++ isn't supported.
+
+--rHoxlvq7D/pkDAXf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUAdlAACgkQJNaLcl1U
+h9AGMQf/fLsnOOVZlCeXkVRLWX87qtu4s7nr7P5jfwyYxnA4Bhl8MwftHW5rxDOf
+TJcMOnHaQLx46ThWnYrWFopJsLO9g5x+NTP78wZTRCXJaJp4usJtpbNzUm4JAgfr
+wJ7T2LLNlVFW5eJfODg+A+sL23DKqJ0B6MwZDixKhNM0tRYibE5ULV+DGzqxyvgz
+yBkeRf5GWl9c4qVLP9Qg2VGx/9jbeOjiYGTd3LWeqJ6HxR8EItWZvKS72fGhOw+t
+dp3VMrMnK9/HtTllRrE+m9GWdtkjG+FjaBGfp8LhzJ1IvYZb+Hyic+EVrTIQ+aC3
+xmRd5GYPdrIG1w50Eci2Fa5Zqd4N4A==
+=vkfj
+-----END PGP SIGNATURE-----
+
+--rHoxlvq7D/pkDAXf--
