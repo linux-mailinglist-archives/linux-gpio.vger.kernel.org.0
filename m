@@ -2,88 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C00A579C9CB
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 10:24:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3255579C9E4
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 10:28:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232543AbjILIYM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 04:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53298 "EHLO
+        id S232564AbjILI2h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 04:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232634AbjILIYJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 04:24:09 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC5B10CE
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 01:24:05 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-d7eed15ad69so5020525276.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 01:24:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694507044; x=1695111844; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JTDlvFYbsx79XjnXV/v1eS2oK868sA5+g3OCAFf6938=;
-        b=FBhB4z6HcF6EizL+/lwxRnvBPsnUBCZNCJdmUZqMhF2t8tNtnTGFF+JCUzlHUG9Exo
-         EggToZqBJppvlFyjEBigx34yWBARuEWqMz4yka52D9EM9UM1QrISxBRPtWDZ29WUYe9q
-         d2krkdkVjxK27mY+IVp4h5OuRfx8EOC24+q01oOZ9zVKap5Gn+pmjs1tgIAXdxIMWl2s
-         hlUypNi+ZXFlGreD6ZHACbQH+jnwcETJOh0eM2WKZkO86QxIoS8ndf9uFvCult8qmb5z
-         WmJNShM2s+Z914AefMurd58mLEBMQpCYyRNyQgzLfOJXMC6Jyztx8eDTmu+++2h4nbhP
-         glxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694507044; x=1695111844;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JTDlvFYbsx79XjnXV/v1eS2oK868sA5+g3OCAFf6938=;
-        b=uLI3GK3LP1qJ/B7IXUzEjJpjeXtMXoIMLtFMlxFZakSzhu7YEt1GyIkIbdM7tzfZQp
-         t69USg9NCsDF9VcVUVHqJxcgoOtH/89cDmWC1DL7ra6v/INr/EeIfEaVtMzk5hWzKykn
-         KT/O3Vewz2qgvqyQvQMu8qXMaQDLD6fkKTvcPnqIEtshb07LEgTDd2jFC7BQJ/ajmBhM
-         Jlacv+ZGq6V44rbTgOiiqiEZ2ZybVrmtKcghIlogRvvh7kzDTvohW64EPq1CgXMgWGai
-         46/dKSIc6GNMvlxLGt8USBCQVViogm8mha6cd0XfGpMFYZ0yuzS1vHYVQghnN3hgTKjp
-         9FVg==
-X-Gm-Message-State: AOJu0YxaH2KjcnrvYBtnjPrlnaxR8K0oI+GEar1DkkBU0Ceht5XxnlNJ
-        DxWdMvE3gcg4rGJtUrnhXKxs4pqiZsgI+W/WOISVUg==
-X-Google-Smtp-Source: AGHT+IFd+7FzVpzIXwF6eF0XM98eCqwGR8vQyKfh9Y2GKm2qYYnTSN7eR9A+5PvS2Qu/0xw3IHJQEnNJumvhS4CTpxY=
-X-Received: by 2002:a25:d4c6:0:b0:d7b:95ff:14f with SMTP id
- m189-20020a25d4c6000000b00d7b95ff014fmr13092370ybf.61.1694507044304; Tue, 12
- Sep 2023 01:24:04 -0700 (PDT)
+        with ESMTP id S231509AbjILI2g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 04:28:36 -0400
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FF4B9;
+        Tue, 12 Sep 2023 01:28:32 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Vrw91XB_1694507309;
+Received: from 30.97.48.71(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Vrw91XB_1694507309)
+          by smtp.aliyun-inc.com;
+          Tue, 12 Sep 2023 16:28:29 +0800
+Message-ID: <50b7293c-8c4d-0162-2810-a74d59e7d03e@linux.alibaba.com>
+Date:   Tue, 12 Sep 2023 16:28:35 +0800
 MIME-Version: 1.0
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com> <1694429639-21484-15-git-send-email-quic_mojha@quicinc.com>
-In-Reply-To: <1694429639-21484-15-git-send-email-quic_mojha@quicinc.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 Sep 2023 10:23:53 +0200
-Message-ID: <CACRpkdYBH09emydQPaRUgEJuHdV0tk3=xeMXxD9UVP0GH2XZEw@mail.gmail.com>
-Subject: Re: [REBASE PATCH v5 14/17] pinctrl: qcom: Use qcom_scm_io_update_field()
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        will@kernel.org, andy.shevchenko@gmail.com, vigneshr@ti.com,
-        nm@ti.com, matthias.bgg@gmail.com, kgene@kernel.org,
-        alim.akhtar@samsung.com, bmasney@redhat.com,
-        quic_tsoni@quicinc.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH V2 2/6] pinctrl: sprd: Fix the incorrect mask and shift
+ definition
+To:     Linhua Xu <Linhua.xu@unisoc.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        lh xu <xulh0829@gmail.com>,
+        Zhirong Qiu <zhirong.qiu@unisoc.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+References: <20230908055146.18347-1-Linhua.xu@unisoc.com>
+ <20230908055146.18347-3-Linhua.xu@unisoc.com>
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20230908055146.18347-3-Linhua.xu@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 12:56=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.co=
-m> wrote:
 
-> Use qcom_scm_io_update_field() exported function in
-> pinctrl-msm driver.
->
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
-As long as the qcom maintainers agree on the rest of the patches:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On 9/8/2023 1:51 PM, Linhua Xu wrote:
+> From: Linhua Xu <Linhua.Xu@unisoc.com>
+> 
+> Pull-up and pull-down are mutually exclusive. When setting one of them,
+> the bit of the other needs to be clear. Now, there are cases where pull-up
+> and pull-down are set at the same time in the code, thus fix them.
+> 
+> Signed-off-by: Linhua Xu <Linhua.Xu@unisoc.com>
+> ---
+>   drivers/pinctrl/sprd/pinctrl-sprd.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+> index 25fb9ce9ad78..5b9126b2cde2 100644
+> --- a/drivers/pinctrl/sprd/pinctrl-sprd.c
+> +++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+> @@ -58,21 +58,21 @@
+>   #define DRIVE_STRENGTH_SHIFT		19
+>   
+>   #define SLEEP_PULL_DOWN			BIT(2)
+> -#define SLEEP_PULL_DOWN_MASK		0x1
+> +#define SLEEP_PULL_DOWN_MASK		GENMASK(1, 0)
+>   #define SLEEP_PULL_DOWN_SHIFT		2
+>   
+>   #define PULL_DOWN			BIT(6)
+> -#define PULL_DOWN_MASK			0x1
+> +#define PULL_DOWN_MASK			(GENMASK(1, 0) | BIT(6))
+>   #define PULL_DOWN_SHIFT			6
+>   
+>   #define SLEEP_PULL_UP			BIT(3)
+> -#define SLEEP_PULL_UP_MASK		0x1
+> -#define SLEEP_PULL_UP_SHIFT		3
+> +#define SLEEP_PULL_UP_MASK		GENMASK(1, 0)
+> +#define SLEEP_PULL_UP_SHIFT		2
+>   
+>   #define PULL_UP_4_7K			(BIT(12) | BIT(7))
+>   #define PULL_UP_20K			BIT(7)
+> -#define PULL_UP_MASK			0x21
+> -#define PULL_UP_SHIFT			7
+> +#define PULL_UP_MASK			(GENMASK(1, 0) | BIT(6))
+> +#define PULL_UP_SHIFT			6
 
-Yours,
-Linus Walleij
+This change looks weird, BIT(6) is for PULL_DOWN. So I am curious these 
+changes are backward compatibility?
+
+Now I can not access the SPRD Spec, Chunyan, can you help to confirm 
+these changes? Thanks.
+
+>   
+>   #define INPUT_SCHMITT			BIT(11)
+>   #define INPUT_SCHMITT_MASK		0x1
