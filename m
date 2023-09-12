@@ -2,91 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B41279D541
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 17:48:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05AD079D552
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 17:52:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbjILPs0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 11:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37126 "EHLO
+        id S231811AbjILPwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 11:52:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbjILPs0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 11:48:26 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7259D10DE;
-        Tue, 12 Sep 2023 08:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694533702; x=1726069702;
-  h=from:to:cc:subject:date:message-id;
-  bh=nRniEhkGgaYLkB/Q3NYFbVXAScl42/siOCo/bp1+ckk=;
-  b=T9MlFkRAw1+FlyhU6JvlvQ3xfUSlQqDjKOi9KQNsWcOD0vQbGrGKbDjE
-   hbMwTaYaKzmxeOsTDu+RpsQ4VNSpt0/lx0Fc/3hwipmfveSHXJAZZ3mQu
-   PsG4RJURl4AjoeHPHlXGoS0Xm2Nqh6RR3vTUsq+xpmKQ8hYk9sy1Sqsnv
-   MEoQtwhUkU2zWQcQMn6Gwfm+WhN9STAX/06D9W41VvbqdbEm8X/xn70tH
-   O4tCHUeQAO48obsvwsYGVUEhAE3vjst8tXjY4AlK6Z3iT3LuBbm53MVGn
-   MhuDy5yWz9GgDKhtVKQD6kY49FLaISQyuXQT+dmdZbBs4sNtP1dw7JBCR
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="375743992"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="375743992"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 08:48:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="1074592358"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="1074592358"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by fmsmga005.fm.intel.com with ESMTP; 12 Sep 2023 08:48:19 -0700
-From:   Raag Jadav <raag.jadav@intel.com>
-To:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, dan.carpenter@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com,
-        Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1] pinctrl: baytrail: fix debounce disable case
-Date:   Tue, 12 Sep 2023 21:18:15 +0530
-Message-Id: <20230912154815.28975-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S230442AbjILPwn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 11:52:43 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B2D10DE;
+        Tue, 12 Sep 2023 08:52:38 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-502b0d23f28so4873504e87.2;
+        Tue, 12 Sep 2023 08:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694533957; x=1695138757; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tQtE0noGpi8t4F+aYH7KnUIfvefZ2UQLdZn5htKQJvI=;
+        b=P8Va6E1qQeSUBPX1tWZChQLY9xC7jXyhRFv5HnXDke0dRbHvr53tJHbABCSWAgzsxZ
+         9bI+kCJhFXIdPrA6ypYGRGEfinxDDaEFj6DO+nCjgSr0bO4f2Jl85QWh4qaatdDw5Swp
+         7W9tFkTIxc9ZpktNnm67gSx8OtE1u9xgyRKi1KotGAyYHbivO2qsxaQHqEHg/Z17O83h
+         2s4Iaas6SAuGkCdPyU9xOZBkTeNj0EeWwZNsNDUIByBSACt8uNXK7Uo1C9JrDiQG9e9T
+         xCYvKOgU87Ev/x7M30z2U6suDMgOw6zd+PZdP1cDeUxhCLvxJ6y5vfu+VddTc2xuCt+T
+         Y03A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694533957; x=1695138757;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tQtE0noGpi8t4F+aYH7KnUIfvefZ2UQLdZn5htKQJvI=;
+        b=FzOeGAuVpKot8oei9d6M6wayI2Aa9CBJonUNVvSZ80Mr2ua3Eo+BuccuZhRAi0J0eM
+         ExTSa1AWOJcNIpTO64N0kFdMAHbNBo1yIYnxaRYEBbjBCoahT4GyfVHVvc3eOXCQZY3w
+         B4YS9xhT2naF+/7vy/EjCvqRD4AKFMzmi/MOlBgsGEtUt45Dsp7JLUCr8yBWx3IHNtRh
+         sJoHEHdBQLunhH2fFv2pw1C8pgcKDTAre6Pcq3kog9sOg/PPaeBqKEuczGwe3z+RgPq5
+         w1ZNb3ZgCI7rOMW7hZFu/Yq2NYfNEcbBpVjaPHSwh/el48/3bSzSgWIQwhQzf4nyxgOP
+         WzNQ==
+X-Gm-Message-State: AOJu0Yxc4KSaF03FsqDE7Bl6VOOFgG1LlU7vKOad6IsidTCe67wl1BBh
+        dhlrm9BzqKIcu2YCM98Cbco=
+X-Google-Smtp-Source: AGHT+IEGRX31wVxuK44UuB2IYh8MFNKcGd1rqWZcS7+tZahddr1EeYKop8jcYO1TlfatEuvx9Ep6Sw==
+X-Received: by 2002:ac2:4c94:0:b0:500:94c5:6e06 with SMTP id d20-20020ac24c94000000b0050094c56e06mr9173435lfl.56.1694533956701;
+        Tue, 12 Sep 2023 08:52:36 -0700 (PDT)
+Received: from jernej-laptop.localnet (82-149-12-148.dynamic.telemach.net. [82.149.12.148])
+        by smtp.gmail.com with ESMTPSA id n3-20020a1709061d0300b0099bd046170fsm7046720ejh.104.2023.09.12.08.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Sep 2023 08:52:36 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: pinmux: Use dev_err_probe() in pin_request()
+Date:   Tue, 12 Sep 2023 17:52:35 +0200
+Message-ID: <7566964.EvYhyI6sBW@jernej-laptop>
+In-Reply-To: <CACRpkdbTZYnehWiWFgY3KJLFdS47RpxOp-Cct4BDqgYCYtd2vw@mail.gmail.com>
+References: <20230909063613.2867-1-jernej.skrabec@gmail.com>
+ <20230909063613.2867-3-jernej.skrabec@gmail.com>
+ <CACRpkdbTZYnehWiWFgY3KJLFdS47RpxOp-Cct4BDqgYCYtd2vw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We don't need to update debounce pulse value in case debounce is to be
-disabled. Break such a case where arg value is zero.
+Dne torek, 12. september 2023 ob 10:15:31 CEST je Linus Walleij napisal(a):
+> Hi Jenej,
+>=20
+> thanks for your patch!
+>=20
+> On Sat, Sep 9, 2023 at 8:36=E2=80=AFAM Jernej Skrabec <jernej.skrabec@gma=
+il.com>=20
+wrote:
+> > Use dev_err_probe() when printing error message in pin_request() since
+> > it may fail with -EPROBE_DEFER.
+> >=20
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+>=20
+> (...)
+>=20
+> >         if (status)
+> >=20
+> > -               dev_err(pctldev->dev, "pin-%d (%s) status %d\n",
+> > -                       pin, owner, status);
+> > +               dev_err_probe(pctldev->dev, "pin-%d (%s) status %d\n",
+> > +                             pin, owner, status);
+> >=20
+> >         return status;
+>=20
+> That's not how you use dev_err_probe()
+>=20
+> Just replace all of the lines above with return dev_err_probe(...)
 
-Fixes: 4cfff5b7af8b ("pinctrl: baytrail: consolidate common mask operation")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/linux-gpio/d164d471-5432-4c3c-afdb-33dc8f53d043@moroto.mountain/
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+I already send v2 of this patch soon after I got report from kernel test=20
+robot.
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 6b45b165604c..c522fd2283f9 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -983,11 +983,18 @@ static int byt_pin_config_set(struct pinctrl_dev *pctl_dev,
- 
- 			break;
- 		case PIN_CONFIG_INPUT_DEBOUNCE:
--			if (arg)
-+			if (arg) {
- 				conf |= BYT_DEBOUNCE_EN;
--			else
-+			} else {
- 				conf &= ~BYT_DEBOUNCE_EN;
- 
-+				/*
-+				 * No need to update the pulse value.
-+				 * Debounce is going to be disabled.
-+				 */
-+				break;
-+			}
-+
- 			switch (arg) {
- 			case 375:
- 				db_pulse = BYT_DEBOUNCE_PULSE_375US;
--- 
-2.17.1
+Best regards,
+Jernej
+
+>=20
+> Yours,
+> Linus Walleij
+
+
+
 
