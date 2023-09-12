@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE17879C51E
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 06:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA12179C524
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 06:53:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229799AbjILExK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 00:53:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
+        id S229558AbjILExO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 00:53:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229811AbjILEwa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 00:52:30 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02BDE70
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:26 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-52f3ba561d9so5123340a12.1
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:26 -0700 (PDT)
+        with ESMTP id S229676AbjILEwd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 00:52:33 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080C7E78
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:29 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-5029e4bfa22so6036131e87.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1694494345; x=1695099145; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1694494347; x=1695099147; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CWV9f2XGMGZ1osmL6Dmo7EcLISauRJpn6Qrd8fgNooo=;
-        b=IDY/MvQXmCwdQaxZowq326AODqP5jDcnKI50MylXYv2f6wVY5NyQTSNmuwblNtfmbV
-         62qM1t9v27sUyQp630EYuOcRkbMqCo+/4EIKZzig43rAecnBkDjwxkZba7KlmCrZLdQW
-         u1aHFpQN+KXxyASj1iZHsSMMtc4yhIDpEc05uwxMsqEC32R8gTBepFoxdxG880tooVjH
-         J64jwhkmXyk8zFUd9E5PwV0g62KPFiF/WdAhz1RZlBfqzbnVybxE/TGMAfylq1IqP/sY
-         h6sX4GIKW2jaCwuMQx9/eBeoenEx13FLAAucb5kyV4l8USOhPNTwdQnTnhjz+eW/LrQI
-         ySMg==
+        bh=blF8ap3LXnoETV8kqGoGgVp41zZl+ItWO0Kpw1E4c38=;
+        b=k8D53/M4BFzDWOyZMnzfHLhOCvfEKxizrKB4sDtNFNyFIPTXSd7HuZQ5cs+497V6Ku
+         YmL0xj5KyQFtOTPqQyTb8nIpAXAO3q5UH5mtwGTX2yVuZwx/z9Toz4RyPYU1mHzBucxQ
+         b3OtX6oLsQvDBOVZIaL/XBCwBWTSn7ccnoem2cs+21sDgttNXscjfEB0uNJ2O0BNkRoC
+         1sW321ezY2kvZxd4WP7sEs77Gv6uW/Wlr5uq8lbwuYE2iiCtJGGouQX4EBmKYAbji6fC
+         yUdb5RxjkEPJqiZ7uFNCUv3ymvNWQsYA8FZ484UijaYy7UEyEvbideFSaU+VDdbrtTiV
+         gkgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694494345; x=1695099145;
+        d=1e100.net; s=20230601; t=1694494347; x=1695099147;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CWV9f2XGMGZ1osmL6Dmo7EcLISauRJpn6Qrd8fgNooo=;
-        b=BdC2WtqBucJsi1OY8AGNpU67COzUtagSB/geqQb8X7EEr46JfCCSvFlLk8EWXYBz5g
-         mB7iMV2Jid1mD3iySNuDcqRG0fK2KFxEQpugJn3vvvS+XKkhsN3kRGhnLO1DK8XjQimH
-         th81HZCApbf8gh4BVBj1dS5uLDBvqGAoTqp3/Zlx32JSdyEoBK6gHEx1QBxfrx7TRjIn
-         CPXre31eQgIonnvbqimuZ/Vdp2tCT++EwKRAe6uucnjutFWgjQoiZZYy0Oaccd4T31il
-         8PP7Xl9oo/8sc2p01ycbSp6yAPwWrDwkkzAQGJmKtYV+MwdNHZSQwHOlMhvhiblVOKax
-         znIg==
-X-Gm-Message-State: AOJu0Ywk+U707pOn685Oj8d6OKVVi6ZtcyFIpchALAdS9AZv8cojtAbo
-        gSguU88UTy/DIx+ffwxDJml2uA==
-X-Google-Smtp-Source: AGHT+IEXMvJ54B9tDieb/iBxe6vR9tpU1fSuBhk/VIriKpr9bHjIDviE+4AXLRRYhM0H6Kg7n9NlkA==
-X-Received: by 2002:aa7:d28a:0:b0:522:d801:7d07 with SMTP id w10-20020aa7d28a000000b00522d8017d07mr1984738edq.10.1694494345199;
-        Mon, 11 Sep 2023 21:52:25 -0700 (PDT)
+        bh=blF8ap3LXnoETV8kqGoGgVp41zZl+ItWO0Kpw1E4c38=;
+        b=gIiVnUeV3bFTFS/3GWUBhHn9JXXDyy+l94lKNXvl236uaeyfASnP09EDIc/vSh3arw
+         qeX250VZz4P2H7/KmD0jo2WjYzSrG9qcbqifS7IQXAY8JOkxr7HK881/VC4yV3q2FP0o
+         Tei5sTAmVia9iCUYWLVlFY7+RU8F0fj6m/R3IIz/1R7AX0oIwTe2qRJBmCXUi1+F69QE
+         W2Tb05aqVCBddtkiGTcRUROmapxLPy+nsckioHzcecrJolOaJR2hEyyZ7VXRnoZlBlwc
+         K6Z9+VkaJmJw71HW3nP2uAOchvBfRNx3+FKDeQGcALCLxSnKtqFEt3XPJ2V8uVscFDDR
+         R95g==
+X-Gm-Message-State: AOJu0Yw31PKLLxrik2vuq9wT4xi+2TopX4eh60xWO4eJNvt4yk0KObdQ
+        4Scxvi2QErLTIdciOlMIUbWrVw==
+X-Google-Smtp-Source: AGHT+IEpsVF589Hvbx0zf52CXpAXwmIg6kcwdC98hWk8TgGYV4S9HPh+LdArAWuydoaFIe/FI2lJBg==
+X-Received: by 2002:a05:6512:46b:b0:4f9:51ac:41eb with SMTP id x11-20020a056512046b00b004f951ac41ebmr7821277lfd.16.1694494347236;
+        Mon, 11 Sep 2023 21:52:27 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.145])
-        by smtp.gmail.com with ESMTPSA id f21-20020a05640214d500b0051e22660835sm5422415edx.46.2023.09.11.21.52.23
+        by smtp.gmail.com with ESMTPSA id f21-20020a05640214d500b0051e22660835sm5422415edx.46.2023.09.11.21.52.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 21:52:24 -0700 (PDT)
+        Mon, 11 Sep 2023 21:52:26 -0700 (PDT)
 From:   Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
@@ -67,9 +67,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 04/37] soc: renesas: identify RZ/G3S SoC
-Date:   Tue, 12 Sep 2023 07:51:24 +0300
-Message-Id: <20230912045157.177966-5-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH 05/37] soc: renesas: remove blank lines
+Date:   Tue, 12 Sep 2023 07:51:25 +0300
+Message-Id: <20230912045157.177966-6-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
@@ -81,76 +81,33 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Add support to identify the RZ/G3S (R9A08G045) SoC.
+Remove blank lines.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- drivers/soc/renesas/Kconfig       |  6 ++++++
- drivers/soc/renesas/renesas-soc.c | 13 +++++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/soc/renesas/renesas-soc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 5a75ab64d1ed..631b17c627a8 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -319,6 +319,12 @@ config ARCH_R9A07G054
- 	help
- 	  This enables support for the Renesas RZ/V2L SoC variants.
- 
-+config ARCH_R9A08G045
-+	bool "ARM64 Platform support for RZ/G3S"
-+	select ARCH_RZG2L
-+	help
-+	  This enables support for the Renesas RZ/G3S SoC variants.
-+
- config ARCH_R9A09G011
- 	bool "ARM64 Platform support for RZ/V2M"
- 	select PM
 diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
-index 42af7c09f743..1598b66ffb51 100644
+index 1598b66ffb51..c732d4a5b26a 100644
 --- a/drivers/soc/renesas/renesas-soc.c
 +++ b/drivers/soc/renesas/renesas-soc.c
-@@ -72,6 +72,10 @@ static const struct renesas_family fam_rzg2ul __initconst __maybe_unused = {
- 	.name	= "RZ/G2UL",
+@@ -12,7 +12,6 @@
+ #include <linux/string.h>
+ #include <linux/sys_soc.h>
+ 
+-
+ struct renesas_family {
+ 	const char name[16];
+ 	u32 reg;			/* CCCR or PRR, if not in DT */
+@@ -89,7 +88,6 @@ static const struct renesas_family fam_shmobile __initconst __maybe_unused = {
+ 	.reg	= 0xe600101c,		/* CCCR (Common Chip Code Register) */
  };
  
-+static const struct renesas_family fam_rzg3s __initconst __maybe_unused = {
-+	.name	= "RZ/G3S",
-+};
-+
- static const struct renesas_family fam_rzv2l __initconst __maybe_unused = {
- 	.name	= "RZ/V2L",
- };
-@@ -170,6 +174,11 @@ static const struct renesas_soc soc_rz_g2ul __initconst __maybe_unused = {
- 	.id     = 0x8450447,
- };
- 
-+static const struct renesas_soc soc_rz_g3s __initconst __maybe_unused = {
-+	.family = &fam_rzg3s,
-+	.id	= 0x85e0447,
-+};
-+
- static const struct renesas_soc soc_rz_v2l __initconst __maybe_unused = {
- 	.family = &fam_rzv2l,
- 	.id     = 0x8447447,
-@@ -386,6 +395,9 @@ static const struct of_device_id renesas_socs[] __initconst __maybe_unused = {
- #ifdef CONFIG_ARCH_R9A07G054
- 	{ .compatible = "renesas,r9a07g054",	.data = &soc_rz_v2l },
- #endif
-+#ifdef CONFIG_ARCH_R9A08G045
-+	{ .compatible = "renesas,r9a08g045",	.data = &soc_rz_g3s },
-+#endif
- #ifdef CONFIG_ARCH_R9A09G011
- 	{ .compatible = "renesas,r9a09g011",	.data = &soc_rz_v2m },
- #endif
-@@ -429,6 +441,7 @@ static const struct of_device_id renesas_ids[] __initconst = {
- 	{ .compatible = "renesas,r9a07g043-sysc",	.data = &id_rzg2l },
- 	{ .compatible = "renesas,r9a07g044-sysc",	.data = &id_rzg2l },
- 	{ .compatible = "renesas,r9a07g054-sysc",	.data = &id_rzg2l },
-+	{ .compatible = "renesas,r9a08g045-sysc",	.data = &id_rzg2l },
- 	{ .compatible = "renesas,r9a09g011-sys",	.data = &id_rzv2m },
- 	{ .compatible = "renesas,prr",			.data = &id_prr },
- 	{ /* sentinel */ }
+-
+ struct renesas_soc {
+ 	const struct renesas_family *family;
+ 	u32 id;
 -- 
 2.39.2
 
