@@ -2,82 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B25479D59B
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 18:02:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4089179D5AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 18:03:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236527AbjILQCe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 12:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34564 "EHLO
+        id S236540AbjILQDl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 12:03:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236407AbjILQCd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 12:02:33 -0400
+        with ESMTP id S236571AbjILQDj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 12:03:39 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 120221704;
-        Tue, 12 Sep 2023 09:02:28 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED07C433C7;
-        Tue, 12 Sep 2023 16:02:24 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A33D1711;
+        Tue, 12 Sep 2023 09:03:35 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0F51C433C8;
+        Tue, 12 Sep 2023 16:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694534548;
-        bh=9M8FAOyXY6Aot0630XJdXidY28/lh6QhrDiuvkNZzUk=;
+        s=k20201202; t=1694534614;
+        bh=jhQZ1CmXtmQWO+Zqfid8byzhjX8dmJ/fY3+CMaBl+js=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FTRmRxun5LSp7iD3J1UyiqTLEzKIXAjpktZfJY1IV7t/Nqkr7KUnG+FcGp7/J8h5I
-         W9kNGIpicuXD9+Mp1EzuTLhBo3wb+bfOGjzzPshR7jbqsRMZrsHGupcXimUgFipkcX
-         slpZknB/KUJ8fE1QzY4GwpX3Xg7P5UfNWgG3OEQWhij5CfDumDPvtllKyFKDOly3Ys
-         IY1UBaOXU+Yg50OnuI8qP5mTV1HMi+dgmqmkLRG4Cto1zSzERyNsc+OC4OA33cOTYL
-         tv8QJBADr2Hd4xH2+FVOTb/r+dUSucvWgYcpkYKAbfu+HJ9+C8AJr6YwtJnUWtSsG5
-         iGr3G1/U1aqKQ==
-Received: (nullmailer pid 864509 invoked by uid 1000);
-        Tue, 12 Sep 2023 16:02:23 -0000
-Date:   Tue, 12 Sep 2023 11:02:23 -0500
+        b=HhNgVPNthdM4cQM2e4oKGXVNinoAs+E8303SoK+GZ7VunwZ2Axsk3oCAxGOrDcxKT
+         8Ycjmrel1KVtlgv8HrYzzCBkmLW1yj0fgEHYvLV1TFyrC6TVwS39FsHB6hKyqlfkJp
+         105YzRenWiRl8eHK/piM79ojhTh3leSWrBUubJisln9I2Tw462imd/dLY+64gc7ztA
+         LE+b9lY6FAi6Vgu9z6A4vjT6FhiuOZlyXt43dWio53Nz0/pQFTAWqLL72SoTPTQLjG
+         AkZQuudvhS7omknoGMIgyTfRzEoDmKl4RoNn+9FYhJLk3EEjlIaLslYDcfOz1Nqhff
+         96ZvYGPjtR1Vw==
+Received: (nullmailer pid 865941 invoked by uid 1000);
+        Tue, 12 Sep 2023 16:03:30 -0000
+Date:   Tue, 12 Sep 2023 11:03:30 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Claudiu <claudiu.beznea@tuxon.dev>
-Cc:     ulf.hansson@linaro.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-        wsa+renesas@sang-engineering.com, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org,
-        robh+dt@kernel.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
-        nfraprado@collabora.com, krzysztof.kozlowski+dt@linaro.org,
-        linux-mmc@vger.kernel.org, neil.armstrong@linaro.org,
-        rafal@milecki.pl, linux-arm-kernel@lists.infradead.org,
-        conor+dt@kernel.org, mturquette@baylibre.com,
-        biju.das.jz@bp.renesas.com, linux-serial@vger.kernel.org,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-        magnus.damm@gmail.com, sboyd@kernel.org, quic_bjorande@quicinc.com,
-        catalin.marinas@arm.com, konrad.dybcio@linaro.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        will@kernel.org, geert+renesas@glider.be, jirislaby@kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 20/37] dt-bindings: clock: renesas,rzg2l-cpg: document
- RZ/G3S SoC
-Message-ID: <169453454306.864438.17337946061239259164.robh@kernel.org>
+Cc:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
+        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
+        nfraprado@collabora.com, rafal@milecki.pl,
+        wsa+renesas@sang-engineering.com,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH 21/37] dt-bindings: clock: add r9a08g045 CPG clocks and
+ resets definitions
+Message-ID: <20230912160330.GA864606-robh@kernel.org>
 References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-21-claudiu.beznea.uj@bp.renesas.com>
+ <20230912045157.177966-22-claudiu.beznea.uj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230912045157.177966-21-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20230912045157.177966-22-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On Tue, 12 Sep 2023 07:51:40 +0300, Claudiu wrote:
+On Tue, Sep 12, 2023 at 07:51:41AM +0300, Claudiu wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-> Add documentation for RZ/G3S CPG. RZ/G3S CPG module is almost identical
-> with the one available in RZ/G2{L, UL} the exception being some core
-> clocks as follows:
-> - SD clock is composed by a mux and a divider and the divider
->   has some limitation (div = 1 cannot be set if mux rate is 800MHz).
-> - there are 3 SD clocks
-> - OCTA and TSU clocks are specific to RZ/G3S
-> - PLL1/4/6 are specific to RZ/G3S with its own computation formula
-> Even with this RZ/G3S could use the same bindings as RZ/G2L.
+> Add RZ/G3S (R9A08G045) Clock Pulse Generator (CPG) core clocks, module
+> clocks and resets.
+
+This is part of the binding, so it can be squashed with the previous 
+patch. The ack there still stands.
+
 > 
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-
-Acked-by: Rob Herring <robh@kernel.org>
+>  include/dt-bindings/clock/r9a08g045-cpg.h | 243 ++++++++++++++++++++++
+>  1 file changed, 243 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/r9a08g045-cpg.h
 
