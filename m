@@ -2,94 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5F1079CC48
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 11:48:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7A1679CC7A
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 11:54:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232638AbjILJsn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 05:48:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46150 "EHLO
+        id S233111AbjILJy1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 05:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231274AbjILJsn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 05:48:43 -0400
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB401BE
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 02:48:39 -0700 (PDT)
-Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-7870821d9a1so3248433241.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 02:48:39 -0700 (PDT)
+        with ESMTP id S232997AbjILJy0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 05:54:26 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A271BB
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 02:54:22 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-31ad779e6b3so5449399f8f.2
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 02:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694512118; x=1695116918; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XegseyGbBhwk1GzmJtqKu3s4esIjMwTsj/hm4IRRIfo=;
-        b=qoKR+jaOCiFSEeZ/9seWwqcpiKb7omlqsCgSrFOCrRHVPJhbUneIa8dt1W2WXMzs7l
-         cT0YgDquNWwf58QVohDygdh0mLQleI1Cpxm/xnn1ftu08HBbD+YXXEuToUasxLYI39VI
-         MXWUf55leSztRDwXpUClsIPrDF39eRDkJHQ5nC+l1d3e5Za6L3VgyhU8g0xRA1yw2I6m
-         nNcm5GwgUP7j85nrXt3AbryTSSbBtytpcLpMILV+bZngvU1Jh4I/NuDn+NtoRtWTdduO
-         9aa19yhjtBl0+/MmvCSOEX+Fde1rcvqclbA0LVBqH3ikwv1VfLo1D9ZLUGuKURWu8FOn
-         vJ6Q==
+        d=linaro.org; s=google; t=1694512461; x=1695117261; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=quEjwIEwQhvi6S4NasXoKOetPehrd0RF3qKdIQ0l7t4=;
+        b=pFixrEGr0Vy244obJP3vN3izKAVNijZCFCPAw6O4FIC8d+s7qgL+wv+lVJW1j8n0nx
+         MS9+Ve/64bzjAGznChmIwrwrBftfijOHdeePG+T0jeY/O36V/T8vWkUmmIO628OHHHNl
+         z0Jsxe70T8dh/E3xzfAIWZjFKXUpiI82W9ASGHTqwuSphIfnbSuGRIx1/sqQdJHyho9g
+         wiCxSYrURnjbjrglQkYW1BrOcss/LdZHdHpaYx567rDOID32nxdHHxm8MmzFsU8ovx3v
+         0aFwh5/9ipMcdyxOfZ+0/p3bzqWMh++WPqfLH8lPTAeXrJnOzdFdcBhr2y0hcaY4R9l2
+         PuzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694512118; x=1695116918;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XegseyGbBhwk1GzmJtqKu3s4esIjMwTsj/hm4IRRIfo=;
-        b=jYzvffbGYmul/StN9vmYuu2r1Qt+BPyCyEZhgCg8JLGNh/eOtb33OwtbaWtPykGsJh
-         kabQHh7kmBsMRQYtacgyesYEFMRPZvgbcsVj9dktc+lru1tHBqA2UGfEyGN72ykkEBWT
-         967ApwOf81obCetyit2tCceHy8ioONlIe2YCST52gR7E6YssTHXjF4nDcvTR7hZx17cA
-         DFDlY4blrfTXBRl8Pov05Rx0bo3+KotY9qBCcpOo3ddQj53FZPlRhG7OWYs/71FNaOhG
-         pHNowRPH98MZ4k5qHpK0cM8nx5zOQHJW1Ls4tpXMwqyphKT+YOmOWA6RMTfIVQo2k/eg
-         YS1Q==
-X-Gm-Message-State: AOJu0YztuOQ4pIVN9K2+PyMO/u/bB3C1O6ZIgs5G7tvSeK6fY6cr3q4P
-        hJrbmLkSG9MU4CZpDP9uozEGDSmsSntYukcfimynYg==
-X-Google-Smtp-Source: AGHT+IEJwf3nugnFKEbsWlJdXzncq+YA9WBmt/gWJIffz95iuIU5iY+aqvxZEgfxykDF3xkesvO+tHW+zDPuL+uP6Xc=
-X-Received: by 2002:a67:ea87:0:b0:44d:5c17:d065 with SMTP id
- f7-20020a67ea87000000b0044d5c17d065mr1033528vso.13.1694512118510; Tue, 12 Sep
- 2023 02:48:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694512461; x=1695117261;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=quEjwIEwQhvi6S4NasXoKOetPehrd0RF3qKdIQ0l7t4=;
+        b=hQ3uff0ciy4vVGLECKe+mFDjx5g30G2UgQIhtsRZvY6buZRWDNfv3vn7x25Uelw5mU
+         NvJjQmQ9gDbbAtr2EhQcZVwRvqOi8Ny+jFo6Jcg2UwAh4E7Z8D3//od2kpD9S0XXXiXb
+         KBHaLDqLqA3CAOD80YkFqa1ldOTdPGuNpX4iEi98k8eTdFurTl/Q/Hd4Yn9WGi26Vb4h
+         G25LtV3bRRhJJMa+ILAojfNyJTtaiJvJfQQqtDco4aawppKpRf3pNdJyJEI6EmeNnB+A
+         Awqr6K+HrfDZzXq8u8Zt1kKim0u/u1JzxZGQjfhgA8svgrqBd0TdVbaL6CX3+SlbWSDz
+         XR3g==
+X-Gm-Message-State: AOJu0YyTFuKa7dw3tUXoqR1c9XXAV+nEqKdLlRE6mLlChpHs45dTPYFv
+        DEhm4WQqOElJ6u+qcl/922L8EA==
+X-Google-Smtp-Source: AGHT+IFnQg3ALYeJgAkk0jJC2jJChoqUbPD4jYDvz6vnfv5QkI7TVMzsvOUXJ6xATfIAfJduc6Y6Mg==
+X-Received: by 2002:a5d:494f:0:b0:319:7b57:8dc5 with SMTP id r15-20020a5d494f000000b003197b578dc5mr9302315wrs.54.1694512461287;
+        Tue, 12 Sep 2023 02:54:21 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.214.188])
+        by smtp.gmail.com with ESMTPSA id e10-20020adf9bca000000b003143cb109d5sm9999941wrc.14.2023.09.12.02.54.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Sep 2023 02:54:20 -0700 (PDT)
+Message-ID: <94770fc6-7d72-8283-5858-786685620d5c@linaro.org>
+Date:   Tue, 12 Sep 2023 11:54:17 +0200
 MIME-Version: 1.0
-References: <20230901134041.1165562-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdboT46oadZJZTde=ze2vEvC9aUGjO5-MjDdVwCNijFqDw@mail.gmail.com> <ZQAv8wJuS7t0RV+m@smile.fi.intel.com>
-In-Reply-To: <ZQAv8wJuS7t0RV+m@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 12 Sep 2023 11:48:27 +0200
-Message-ID: <CAMRc=MdgNxt4wobVLU5kqcnyW6J-=bMRLBk5cAmaEmucV-t0Pw@mail.gmail.com>
-Subject: Re: [PATCH v1 01/10] gpio: pca953x: Drop unused fields in struct pca953x_platform_data
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH v5 06/17] soc: qcom: Add Qualcomm APSS minidump kernel
+ driver
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
+        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
+        bmasney@redhat.com, quic_tsoni@quicinc.com
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
+References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
+ <1694290578-17733-7-git-send-email-quic_mojha@quicinc.com>
+ <3bb1e84f-3b65-0596-1b6b-6decb0ff53cc@linaro.org>
+ <0eeef9c4-14c0-8283-803b-4684854d4be6@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <0eeef9c4-14c0-8283-803b-4684854d4be6@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 11:31=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Sep 12, 2023 at 09:50:06AM +0200, Linus Walleij wrote:
-> > On Fri, Sep 1, 2023 at 3:40=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > > New code should solely use firmware nodes for the specifics and
-> > > not any callbacks.
-> > >
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> > Patches look good to me:
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > for all patches.
->
-> Thank you!
->
-> > Patch 8 looks HTML on my gmail but I guess the problem
-> > is on my side.
->
-> The entire series has been sent in the same way, it's quite unlikely that
-> the only patch got mangled while others are okay.
->
+On 12/09/2023 11:26, Mukesh Ojha wrote:
+>>
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	mutex_init(&md->md_lock);
+>>> +	ret = qcom_apss_md_table_init(md, &mdgtoc->subsystems[MINIDUMP_APSS_DESC]);
+>>> +	if (ret) {
+>>> +		dev_err(md->dev, "apss minidump initialization failed: %d\n", ret);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	/* First entry would be ELF header */
+>>> +	ret = qcom_md_add_elfheader(md);
+>>> +	if (ret) {
+>>> +		dev_err(md->dev, "Failed to add elf header: %d\n", ret);
+>>> +		memset(md->apss_data->md_ss_toc, 0, sizeof(struct minidump_subsystem));
+>>
+>> Why do you need it?
+> 
+> Earlier, i got comment about clearing the SS TOC(subsystem table of 
+> content) which is shared with other SS and it will have stale values.
 
-I'm using cmdg - a command-line interface to gmail - and all patches
-look fine. Surprisingly, the web interface indeed does mangle patch 8
-for some reason.
+OK, but then the entire code is poorly readable. First, any cleanup of
+qcom_apss_md_table_init() should be named similarly, e.g.
+qcom_apss_md_table_clean() or qcom_apss_md_table_exit() or whatever
+seems feasible.
 
-Bart
+Second, shouldn't writing to shared memory be the last step? Step which
+cannot fail and there is no cleanup afterwards (like
+platform_set_drvdata)? I don't enjoy looking at this interface...
+
+
+
+Best regards,
+Krzysztof
+
