@@ -2,92 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD6079D021
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 13:37:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A289779D116
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 14:29:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234435AbjILLg7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 07:36:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42144 "EHLO
+        id S235155AbjILM30 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 08:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234737AbjILLgU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 07:36:20 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B5E123
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 04:36:15 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-44d526f96fcso1852657137.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 04:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694518574; x=1695123374; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KkyklPGDuv9m5eJqTo8UfIe+p8AQ+CPh9TqWA+xsEsY=;
-        b=wQTszuIMQLqrfdVybcFJLEEqKjTf+mFLz9rmPB4pt5UJBu7W4odbVJ9UlHzpK621nz
-         QzBRKcEVWLy1FMoM0CBNF63zsuLG1Giepxg+qYJaHp/KFErvCDMrcxFmVzIfWt8wbaXC
-         04jxxfILo8JhAD6bSFAkD9GKFln5QVNgcrD7048ehzzQuPUp4Nq/T/uu786s3dBTOKSM
-         o5IIJjKhLpJJncEXO95GM+U1AfO7Qoe5lsJSv61oc0BJEnIj6t3DtMpTkNIq31wbLYRu
-         BAcrgKCE2Wx67KAue+ISWAMSjKBf2Uh4QR/XbjTLFuDerWmGbrwlgjaPnoqMfPh/kdpV
-         JTZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694518574; x=1695123374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KkyklPGDuv9m5eJqTo8UfIe+p8AQ+CPh9TqWA+xsEsY=;
-        b=IqnUoUMBBwZE6d/OC5lgf9xQmpBmaaXdygxPgWE1TXAKVo8VECI7UxAwq2wVyPKfmR
-         xceqwAZPKDSHGe/JP3raWZvsLRRuEg7LMyufrnSVoYd8sjC1JnCRrXdu8fdHZod4Cg/B
-         fHhMV/+XBAnPgErb5bc/TxycMNqeBFQ1vQ8/ld0Q4j4+zVsz4djcHDYs/Lh8h6iQqwNi
-         tFin9extt/9iIAOlUxV7rMwwlXPO6wDy8Layg7KC2lu9JWIHDfyNgybUPlelsHitW4Q9
-         rkTxbgjLmQe7LWiUg+YFKi+5WXGymM8E2iyqoJ8iOnKZ8yxjHV1u79gXqyZjq/l0LNwA
-         yJ0w==
-X-Gm-Message-State: AOJu0Yz4p90t8JPVfIgbu1cQEhxmpgsQ8PqssNNTBQQY8h3rHIjFwGZ1
-        3S+4JKy44Ivpb0vxz5qMvYsCs18LnKY/rjBVU9vLKw==
-X-Google-Smtp-Source: AGHT+IGjfDBklMzue4PESJ9TiuKC7nGDQU+XSLUDl1gzCHaxB4VVGDKYWL2qRjaBXpLHqpNzIl9sXX+QT4/jkbxyKeU=
-X-Received: by 2002:a67:e957:0:b0:44e:9219:136c with SMTP id
- p23-20020a67e957000000b0044e9219136cmr7663297vso.15.1694518574363; Tue, 12
- Sep 2023 04:36:14 -0700 (PDT)
+        with ESMTP id S235192AbjILM3K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 08:29:10 -0400
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906BC1722;
+        Tue, 12 Sep 2023 05:29:04 -0700 (PDT)
+Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id 53058D5D;
+        Tue, 12 Sep 2023 14:29:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1694521742;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=sY2JIgJ6gwjKjqWDcYYu9H0bpifdTCJ1bXAlJNUWe0Q=;
+        b=v+d5epCN884OlM26IN/dG7OiVctL2x1P58IeoHGckRk2KAwo11UmIe3mVqCdbyHu5R6SNW
+        9uXyC36pku1GCec7G5ArpAmAev/YSx7FrBGGRAs8plDnrqa53PMcSygGaAsjvk+q0B8J2n
+        UvZ/ZHH3cTx5WqpqPQNeBopWhu7fQx/yquDUlBKAPyPTpn3XaZLn5YNssgEL55XVAaa7+U
+        Wh9bfMPkvqlBzz6oZDePrGYEMThZ+23jsWOoW1NfIszzCDkiG7KGntetoyhy1W4iEnMnep
+        nl0L4ZZ02cVeM5WjRPN6ha2TvUqxRaO8cJg2hOuhryu9fGEyAWTFog+Zgs6zAw==
+From:   Michael Walle <michael@walle.cc>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] MAINTAINERS: gpio-regmap: make myself a maintainer of it
+Date:   Tue, 12 Sep 2023 14:28:50 +0200
+Message-Id: <20230912122850.164150-1-michael@walle.cc>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230912100727.23197-1-brgl@bgdev.pl> <20230912100727.23197-3-brgl@bgdev.pl>
- <ZQBMhAAgXw0LYa0Y@smile.fi.intel.com>
-In-Reply-To: <ZQBMhAAgXw0LYa0Y@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 12 Sep 2023 13:36:03 +0200
-Message-ID: <CAMRc=MdRVJyh-4qS3OVXEFNoMJ6YSAcz7Qs876PWQfiho8hvaQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/11] gpiolib: add support for scope-based management
- to gpio_device
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 1:33=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Sep 12, 2023 at 12:07:18PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > As the few users that need to get the reference to the GPIO device ofte=
-n
-> > release it right after inspecting its properties, let's add support for
-> > the automatic reference release to struct gpio_device.
->
-> ...
->
-> > +DEFINE_FREE(gpio_device_put, struct gpio_device *, if (_T) gpio_device=
-_put(_T));
->
-> Looks like this should be
->
->         if (!IS_ERR_OR_NULL(_T))
->
+When I've upstreamed the gpio-regmap driver, I didn't have that much
+experience with kernel maintenance, so I've just added myself as a
+reviewer. I've gained quite some experience, so I'd like to step up
+as a maintainer for it.
 
-Good catch, thanks!
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bart
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 69de688907ca..405f616e4960 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8872,7 +8872,7 @@ F:	drivers/gpio/gpio-mockup.c
+ F:	tools/testing/selftests/gpio/
+ 
+ GPIO REGMAP
+-R:	Michael Walle <michael@walle.cc>
++M:	Michael Walle <michael@walle.cc>
+ S:	Maintained
+ F:	drivers/gpio/gpio-regmap.c
+ F:	include/linux/gpio/regmap.h
+-- 
+2.39.2
+
