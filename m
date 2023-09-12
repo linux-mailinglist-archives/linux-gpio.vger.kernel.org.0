@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 593B979C4F4
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 06:52:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A286179C505
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 06:53:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbjILEw2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 00:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51344 "EHLO
+        id S229764AbjILEw3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 00:52:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjILEwY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 00:52:24 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99969E6F
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:20 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-31c5c06e8bbso5229750f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:20 -0700 (PDT)
+        with ESMTP id S229609AbjILEw2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 00:52:28 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82550E72
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:23 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-502153ae36cso8302692e87.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Sep 2023 21:52:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1694494339; x=1695099139; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1694494341; x=1695099141; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=70blZEKYbPkUhjmz5mQWqO3PukYEZHU7HfQH/TSApUo=;
-        b=kqfJUrg1n+l53/ypRls1jEYBEQS1yM5qC72Ce83Pw3OSGQAkUGD1/8DxeiKx6pKL/O
-         75RwVZ/Cjwgs4HQ29MeiI6n4d/Uf4TNyT9rjxyNDXvIUNLxIqi+hBQF/bKYlEm2/fI1B
-         +NhCoUqXP4M1WfChUkI0cXzUF5x/R+IK4VYTJTi7s+N/5aBee5ULv/ySPuOaoRd5u3DB
-         RgL15fkwQRAfR2VdN2rR4nWFzjT8bILkCynNm4MVv3C4/JiWV/nqdjm3sx1IJHWaCQg/
-         8eINlhMZo/fDx1fPojLruX7ffY9YNj87/N1wKYRNmfTvTXc9N5s3pDXGcjQF1IbjTGTa
-         od4Q==
+        bh=w90FUtPMI0czzU7H17II7VSdTXdjnYx+N94QP72v1PQ=;
+        b=dKVEIer5m8Q99AOMcFYgITometDGlilno5OUcCA4SYvXn4/ib4VgjN3iceE1MG5PcN
+         5QpFvKndsYgdrAZv5wzCj0aGx8uF6rz0QTh+C2BYhX/DzWzUWRQfW1BUPDbvQUC4V1Sw
+         MNgfi80Ne+I1oOkerKvIeHuXM8pU7DREbYgGyVbylC2hnnH2RlPlaWvB2nvCpu6XLtpb
+         FekDRtUzSOxpkok+rVJzM7RFs4AI3Z5TXexjk4b7h1ZbwVapnmpa+6yZ3f1f3ksZd69c
+         mF2wWTT/qCd8ELJYdg1qZvvUKY/5Cw0W7xFkQ055mEomGhVCp1Y1BRj6QEwDuN9oJ49w
+         ah7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694494339; x=1695099139;
+        d=1e100.net; s=20230601; t=1694494341; x=1695099141;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=70blZEKYbPkUhjmz5mQWqO3PukYEZHU7HfQH/TSApUo=;
-        b=JIwvyeCEnVgN8jj3LwfiFHWTd9uHQQ88WeB8V0xJgbqDPmkLMGLKjV7B+3ZBSJmo4R
-         iSPz4A2GcUc4dJ5xjEfi1Tuw+2mKX/b7SWCVZPSDwB4YQ8LwzxalDO8+gv3F9mQbUegS
-         49FtasKZQ6zHwx77HgdEeVEX2GrzOz/c7bNauViEMiwyRaYD1ibMGYDc9bL5Ip2/MBpP
-         hGXyjxkbyhq9A7zELxxKtH7PK/GfhCnwn1nUGvQuwm9okH0+Ocuuk8hFC5/b2iaBHl7A
-         3quKiL6HrpQJXkJShevFMUHgqL392KeiSRiIot9ir3PnpPqoKKObLn8umFAwEcViw/YY
-         Yb/A==
-X-Gm-Message-State: AOJu0YxXsV9+mlnivvGbYz8i9KPeOM1lEyTmwsu5HsH51V32ZzQJ8xOd
-        7+Tepyd1QOFyOuhvmES8N7Qn+Q==
-X-Google-Smtp-Source: AGHT+IHq4NsElZT5XJXLX6atbe5JezA+r31z/sk8n97Du/yTxrrOfNS/FcxRiNTwh32QYFqy3lq2Eg==
-X-Received: by 2002:a05:6000:ca:b0:319:8a21:6f9a with SMTP id q10-20020a05600000ca00b003198a216f9amr8919668wrx.63.1694494338959;
-        Mon, 11 Sep 2023 21:52:18 -0700 (PDT)
+        bh=w90FUtPMI0czzU7H17II7VSdTXdjnYx+N94QP72v1PQ=;
+        b=fR5oGmqd4NFIWj6+Pq744lxeHZXv4L4XxBr2Bio+GvX7ToRIwQcJYGVUJMnD3r5C8Y
+         GXWwgmBcXtWjlg1TTyyIUS+pED323ViRcB06i2KWFip6NBuUM0fD+0PSj10q/AKRagUz
+         RhTXHK0zgNEi0nmyuJFJVRZs69WdrDIRB6sOj7Uz3urAvjiG4r7pBKubIuVnquaq3Jru
+         bc8qGw5HL4duV6gEbm5pl7n3jh4BnmdEOHKw+XoNQpGbb1pZ9EpjU5brQIhuyM4vOQxz
+         INQSOcr4K6fzuKkueGY77S7BkUbsRiVPhzsoBgFfKZze7Qk00TES6aw1VjO9FPvXgmnk
+         oAcg==
+X-Gm-Message-State: AOJu0Yz41KQSskLyU8GytGGhFFjvca6z8ODXSnT4+UgkGGWZOgnX5oFv
+        5a5/rz5cmpqQ4d8pyS3t4tNrlA==
+X-Google-Smtp-Source: AGHT+IELmzsWU1otNTyeKxCyz+acJywZL+qAyX/1Qem3vil+a9S8qIts3JL61DCTWjnZD5Ll+knGnA==
+X-Received: by 2002:a05:6512:3713:b0:4f9:556b:93c2 with SMTP id z19-20020a056512371300b004f9556b93c2mr8048220lfr.1.1694494341080;
+        Mon, 11 Sep 2023 21:52:21 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.145])
-        by smtp.gmail.com with ESMTPSA id f21-20020a05640214d500b0051e22660835sm5422415edx.46.2023.09.11.21.52.16
+        by smtp.gmail.com with ESMTPSA id f21-20020a05640214d500b0051e22660835sm5422415edx.46.2023.09.11.21.52.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 21:52:18 -0700 (PDT)
+        Mon, 11 Sep 2023 21:52:20 -0700 (PDT)
 From:   Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
@@ -67,9 +67,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 01/37] dt-bindings: serial: renesas,scif: document r9a08g045 support
-Date:   Tue, 12 Sep 2023 07:51:21 +0300
-Message-Id: <20230912045157.177966-2-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH 02/37] dt-bindings: soc: renesas: document Renesas RZ/G3S SoC variants
+Date:   Tue, 12 Sep 2023 07:51:22 +0300
+Message-Id: <20230912045157.177966-3-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
@@ -81,27 +81,30 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Document support for the Serial Communication Interface with FIFO (SCIF)
-available in the Renesas RZ/G3S (R9A08G045) SoC. SCIF interface in
-Renesas RZ/G3S is similar to the one available in RZ/G2L.
+Document RZ/G3S (R9A08G045) SoC variants.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/serial/renesas,scif.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/soc/renesas/renesas.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,scif.yaml b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-index 99030fc18c45..4610a5bd580c 100644
---- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-+++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-@@ -79,6 +79,7 @@ properties:
-           - enum:
-               - renesas,scif-r9a07g043      # RZ/G2UL and RZ/Five
-               - renesas,scif-r9a07g054      # RZ/V2L
-+              - renesas,scif-r9a08g045      # RZ/G3S
-           - const: renesas,scif-r9a07g044   # RZ/G2{L,LC} fallback
+diff --git a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+index 53b95f348f8e..822faf081e84 100644
+--- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
++++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+@@ -474,6 +474,12 @@ properties:
+               - renesas,rzv2mevk2   # RZ/V2M Eval Board v2.0
+           - const: renesas,r9a09g011
  
-   reg:
++      - description: RZ/G3S (R9A08G045)
++        items:
++          - enum:
++              - renesas,r9a08g045s33 # PCIe support
++          - const: renesas,r9a08g045
++
+ additionalProperties: true
+ 
+ ...
 -- 
 2.39.2
 
