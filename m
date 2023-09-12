@@ -2,83 +2,200 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4768879C95A
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 10:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEF2479C967
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 10:13:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232038AbjILIKa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 04:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35314 "EHLO
+        id S231282AbjILINQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 04:13:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232022AbjILIK3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 04:10:29 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07656E78
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 01:10:26 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-59234aaca15so54550137b3.3
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Sep 2023 01:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694506225; x=1695111025; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D23QCFFdVljslwRPpscICFpYkj6MKZK1qKf0WOOnjMw=;
-        b=Zm/izVhX4Uq1hjjaoZlnPvIw0wCrR1Y+pA2KUPqoIwXQ+5jZSn609zfXJGez2pb6IE
-         Hrd9BNuYqu9MjnQuR9ynlTmu6+GEKyWMmtdJx+PJTP3tyAkcSD2Uig44PO157nE8+4qh
-         lSN0Ai07nO6o2CEu55vVwNoXqFZaDkgs6CthJ/jcOb83hOdMgnWRxLQhe0a+fWAZTjYo
-         TEGLZBChaxLOZYfxN5ac+wIinLaWXe/G0DKRb8PsKUxhyK0LLmSMfvqfh374rL4aZljG
-         hcnOmV1SvxVk9X+iv5A0tWj7tljbm2zQKEJf+rxmuhofQR5zPSj4CooXPerH4M80LxY9
-         PP0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694506225; x=1695111025;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D23QCFFdVljslwRPpscICFpYkj6MKZK1qKf0WOOnjMw=;
-        b=wIcO8jvc/TP0Dr91thf1O7d/dv+ZuXwCv/ZPyTRmEWebBLjB1F2l4nf1EckfvYnouP
-         ExeTfo0qurcFEy8BEw5hcNltQsCcbqKdEWwrFryP32vSmmHasqHeWx3u+Y28ja/+QT1T
-         acw2tTvB7bJcMzmKckI7qg6m6IqAorGOUXWnjVb4Q5Yn9yjmoXhjU+rsOZtqZOf4oul7
-         yaO+utF+Bfg/4rHCUs37n/1af9SPe7RoOQDICrb+0ZXc+9fngXXUGL4yCNckkzzSfkmo
-         XKc8Nzs3Xtp4f+EVfKpxf1k4+gfK63MG3ZDHzbSYhWuZWlDTCKnI2XdcxNueVWuIZwM0
-         tmpw==
-X-Gm-Message-State: AOJu0YyJ95TJMPubDBfNwya2aiJU231WkS1mNcdw/mrl2YWSe00qn5XH
-        uCxeyC4I/pSx7Tm7tZus3BKDvY2q2fnJeSBR1ID/BksogLKWZQZX
-X-Google-Smtp-Source: AGHT+IFUaI+x8sTgAhtsHEXehUsOGuNAlMUyXBI2fE5fjfuw8ZkM7Ny4FixFpCjeoF3FXKTZXWmOTSFch31+D42wVa4=
-X-Received: by 2002:a25:8051:0:b0:d78:538:8017 with SMTP id
- a17-20020a258051000000b00d7805388017mr10943065ybn.61.1694506225296; Tue, 12
- Sep 2023 01:10:25 -0700 (PDT)
+        with ESMTP id S230389AbjILINQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 04:13:16 -0400
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7183E73;
+        Tue, 12 Sep 2023 01:13:11 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Vrw-EDJ_1694506387;
+Received: from 30.97.48.71(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Vrw-EDJ_1694506387)
+          by smtp.aliyun-inc.com;
+          Tue, 12 Sep 2023 16:13:08 +0800
+Message-ID: <a56c28db-aa47-ca9c-cec8-3737c39a54b8@linux.alibaba.com>
+Date:   Tue, 12 Sep 2023 16:13:14 +0800
 MIME-Version: 1.0
-References: <20230905122105.117000-1-hal.feng@starfivetech.com>
-In-Reply-To: <20230905122105.117000-1-hal.feng@starfivetech.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 Sep 2023 10:10:14 +0200
-Message-ID: <CACRpkdaKYvs9Gc11Zx+Ev7ygNnpPOpe1G4fdMzyEmUO2-bAzvA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] Fix an irq issue and add system pm ops for
- StarFive JH7110 pinctrl drivers
-To:     Hal Feng <hal.feng@starfivetech.com>
-Cc:     Andreas Schwab <schwab@suse.de>, Conor Dooley <conor@kernel.org>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Jianlong Huang <jianlong.huang@starfivetech.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH V2 1/6] pinctrl: sprd: Modify the probe function
+ parameters
+To:     Linhua Xu <Linhua.xu@unisoc.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        lh xu <xulh0829@gmail.com>,
+        Zhirong Qiu <zhirong.qiu@unisoc.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+References: <20230908055146.18347-1-Linhua.xu@unisoc.com>
+ <20230908055146.18347-2-Linhua.xu@unisoc.com>
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20230908055146.18347-2-Linhua.xu@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 5, 2023 at 2:22=E2=80=AFPM Hal Feng <hal.feng@starfivetech.com>=
- wrote:
 
-> This patchset fixes some issues arising when CONFIG_PM is enabled
-> or suspending to disk.
->
-> The first patch fixes failure to set irq after CONFIG_PM is enabled.
->
-> The second patch adds system pm ops to save and restore context. So it ca=
-n
-> ensure that the pins configuration keep consistent with the one before
-> suspending.
 
-Patches applied for fixes!
+On 9/8/2023 1:51 PM, Linhua Xu wrote:
+> From: Linhua Xu <Linhua.Xu@unisoc.com>
+> 
+> For UNISOC pin controller, the offset values of the common register and
+> misc register will be different. Thus put these in the probe function
+> parameters.
+> 
+> Signed-off-by: Linhua Xu <Linhua.Xu@unisoc.com>
+> ---
+>   drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c |  7 +++++-
+>   drivers/pinctrl/sprd/pinctrl-sprd.c        | 27 +++++++++++++---------
+>   drivers/pinctrl/sprd/pinctrl-sprd.h        |  3 ++-
+>   3 files changed, 24 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c b/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
+> index d14f382f2392..05158c71ad77 100644
+> --- a/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
+> +++ b/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
+> @@ -10,6 +10,9 @@
+>   
+>   #include "pinctrl-sprd.h"
+>   
+> +#define	PINCTRL_REG_OFFSET		0x20
+> +#define	PINCTRL_REG_MISC_OFFSET		0x4020
+> +
+>   enum sprd_sc9860_pins {
+>   	/* pin global control register 0 */
+>   	SC9860_VIO28_0_IRTE = SPRD_PIN_INFO(0, GLOBAL_CTRL_PIN, 11, 1, 0),
+> @@ -926,7 +929,9 @@ static struct sprd_pins_info sprd_sc9860_pins_info[] = {
+>   static int sprd_pinctrl_probe(struct platform_device *pdev)
+>   {
+>   	return sprd_pinctrl_core_probe(pdev, sprd_sc9860_pins_info,
+> -				       ARRAY_SIZE(sprd_sc9860_pins_info));
+> +				       ARRAY_SIZE(sprd_sc9860_pins_info),
+> +				       PINCTRL_REG_OFFSET,
+> +				       PINCTRL_REG_MISC_OFFSET);
+>   }
+>   
+>   static const struct of_device_id sprd_pinctrl_of_match[] = {
+> diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+> index ca9659f4e4b1..25fb9ce9ad78 100644
+> --- a/drivers/pinctrl/sprd/pinctrl-sprd.c
+> +++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+> @@ -30,8 +30,6 @@
+>   #include "pinctrl-sprd.h"
+>   
+>   #define PINCTRL_BIT_MASK(width)		(~(~0UL << (width)))
+> -#define PINCTRL_REG_OFFSET		0x20
+> -#define PINCTRL_REG_MISC_OFFSET		0x4020
+>   #define PINCTRL_REG_LEN			0x4
+>   
+>   #define PIN_FUNC_MASK			(BIT(4) | BIT(5))
+> @@ -148,12 +146,16 @@ struct sprd_pinctrl_soc_info {
+>    * @pctl: pointer to the pinctrl handle
+>    * @base: base address of the controller
+>    * @info: pointer to SoC's pins description information
+> + * @common_pin_offset: offset value of common register
+> + * @misc_pin_offset: offset value of misc register
+>    */
+>   struct sprd_pinctrl {
+>   	struct device *dev;
+>   	struct pinctrl_dev *pctl;
+>   	void __iomem *base;
+>   	struct sprd_pinctrl_soc_info *info;
+> +	u32 common_pin_offset;
+> +	u32 misc_pin_offset;
+>   };
+>   
+>   #define SPRD_PIN_CONFIG_CONTROL		(PIN_CONFIG_END + 1)
+> @@ -1023,12 +1025,12 @@ static int sprd_pinctrl_add_pins(struct sprd_pinctrl *sprd_pctl,
+>   			ctrl_pin++;
+>   		} else if (pin->type == COMMON_PIN) {
+>   			pin->reg = (unsigned long)sprd_pctl->base +
+> -				PINCTRL_REG_OFFSET + PINCTRL_REG_LEN *
+> +				sprd_pctl->common_pin_offset + PINCTRL_REG_LEN *
+>   				(i - ctrl_pin);
+>   			com_pin++;
+>   		} else if (pin->type == MISC_PIN) {
+>   			pin->reg = (unsigned long)sprd_pctl->base +
+> -				PINCTRL_REG_MISC_OFFSET + PINCTRL_REG_LEN *
+> +				sprd_pctl->misc_pin_offset + PINCTRL_REG_LEN *
+>   				(i - ctrl_pin - com_pin);
+>   		}
+>   	}
+> @@ -1045,7 +1047,9 @@ static int sprd_pinctrl_add_pins(struct sprd_pinctrl *sprd_pctl,
+>   
+>   int sprd_pinctrl_core_probe(struct platform_device *pdev,
+>   			    struct sprd_pins_info *sprd_soc_pin_info,
+> -			    int pins_cnt)
+> +			    int pins_cnt,
+> +			    u32 common_pin_offset,
+> +			    u32 misc_pin_offset)
+>   {
+>   	struct sprd_pinctrl *sprd_pctl;
+>   	struct sprd_pinctrl_soc_info *pinctrl_info;
+> @@ -1069,6 +1073,8 @@ int sprd_pinctrl_core_probe(struct platform_device *pdev,
+>   
+>   	sprd_pctl->info = pinctrl_info;
+>   	sprd_pctl->dev = &pdev->dev;
+> +	sprd_pctl->common_pin_offset = common_pin_offset;
+> +	sprd_pctl->misc_pin_offset = misc_pin_offset;
+>   	platform_set_drvdata(pdev, sprd_pctl);
+>   
+>   	ret = sprd_pinctrl_add_pins(sprd_pctl, sprd_soc_pin_info, pins_cnt);
+> @@ -1077,12 +1083,6 @@ int sprd_pinctrl_core_probe(struct platform_device *pdev,
+>   		return ret;
+>   	}
+>   
+> -	ret = sprd_pinctrl_parse_dt(sprd_pctl);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "fail to parse dt properties\n");
+> -		return ret;
+> -	}
+> -
+>   	pin_desc = devm_kcalloc(&pdev->dev,
+>   				pinctrl_info->npins,
+>   				sizeof(struct pinctrl_pin_desc),
+> @@ -1100,6 +1100,11 @@ int sprd_pinctrl_core_probe(struct platform_device *pdev,
+>   	sprd_pinctrl_desc.name = dev_name(&pdev->dev);
+>   	sprd_pinctrl_desc.npins = pinctrl_info->npins;
+>   
+> +	ret = sprd_pinctrl_parse_dt(sprd_pctl);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "fail to parse dt properties\n");
+> +		return ret;
+> +	}
 
-Yours,
-Linus Walleij
+Why change this? If this change fixed anything, please mention it in the 
+commit log.
+
+>   	sprd_pctl->pctl = pinctrl_register(&sprd_pinctrl_desc,
+>   					   &pdev->dev, (void *)sprd_pctl);
+>   	if (IS_ERR(sprd_pctl->pctl)) {
+> diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.h b/drivers/pinctrl/sprd/pinctrl-sprd.h
+> index 69544a3cd635..a696f81ce663 100644
+> --- a/drivers/pinctrl/sprd/pinctrl-sprd.h
+> +++ b/drivers/pinctrl/sprd/pinctrl-sprd.h
+> @@ -52,7 +52,8 @@ struct sprd_pins_info {
+>   
+>   int sprd_pinctrl_core_probe(struct platform_device *pdev,
+>   			    struct sprd_pins_info *sprd_soc_pin_info,
+> -			    int pins_cnt);
+> +			    int pins_cnt, u32 common_pin_offset,
+> +			    u32 misc_pin_offset);
+
+IMO, I don't like this modification since it lacks scalability, and just 
+imagine that there might be more differences in SoC in the future. So 
+adding a SoC structure in sprd_pinctrl_of_match() and parsing it in the 
+sprd-pinctrl core seems the right way to go.
+
+>   int sprd_pinctrl_remove(struct platform_device *pdev);
+>   void sprd_pinctrl_shutdown(struct platform_device *pdev);
+>   
