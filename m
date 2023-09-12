@@ -2,82 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BE3B79D6C0
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 18:50:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA28879D76F
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 19:22:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237088AbjILQub (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 12:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
+        id S236978AbjILRWL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 13:22:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237090AbjILQu2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 12:50:28 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0EDD10E9;
-        Tue, 12 Sep 2023 09:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694537424; x=1726073424;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pmICX2sNV56aNUWsgFt6oKaBVKAaT6NCme0Ya3baEu4=;
-  b=mhQlcb3zCfqRbAReX11mx9zPL38n6QeoGI6ZC2miTAycbbeQQDLch7FN
-   FPzfji9pS7aewaL7eq+/mLOc7E2bk0aJL7hf2Or8HrR0ryvIX5CPmuz7h
-   H0UbTQMMjkvSaMs47IE450mbzJs5PnJwWn4T+A3qusXr0InLIyxJKF9h+
-   PhOcEBHxsL/LenPU1wmGgiglfLdI2PeRCmilF1bWb9tRTK4NuKCClMIW8
-   40gc4ljXH8hR9xfbSQEmwkYogQPSBb9t8ag+oOM9OOkTwoRNNPDmRQ29Q
-   pRwFc4QoWP8VAKFypzvlm0I9ful6Ww274fsEO1ykS+XWfxc4+vAsCeuYu
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="375762346"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="375762346"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 09:50:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="720485017"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="720485017"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 09:50:03 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qg6aO-008dWu-1A;
-        Tue, 12 Sep 2023 19:50:00 +0300
-Date:   Tue, 12 Sep 2023 19:50:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Raag Jadav <raag.jadav@intel.com>, linus.walleij@linaro.org,
-        dan.carpenter@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, pandith.n@intel.com
-Subject: Re: [PATCH v1] pinctrl: baytrail: fix debounce disable case
-Message-ID: <ZQCWuJbMzlV6t8Wa@smile.fi.intel.com>
-References: <20230912154815.28975-1-raag.jadav@intel.com>
- <20230912155443.GF1599918@black.fi.intel.com>
+        with ESMTP id S232252AbjILRWL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 13:22:11 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4184810D9;
+        Tue, 12 Sep 2023 10:22:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5492C433C8;
+        Tue, 12 Sep 2023 17:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694539326;
+        bh=rRrJDnsPwd8jMYw4Teztqav9PlNugqhsqBqwAuwaVlo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Iii5UWu1mdHxD2eSbuXqs6kx4AHgW0/LoRft/f7lyOXJm52Rgi8Ss5jvrOQ7BrJTL
+         HGjHS80pVjavTF4tfpykYr5T/7fkgKiE9YpmlWEPyBR3aNc+/hYiE191mnmhexl3o1
+         CRosDNzzFYjKhuhcjmbbUjN7j01k4T3tOUv4i5jUygNoHPfOGH8XZQUtk5OaNdJ9eW
+         pYLBfVy1Flo6/FS3VYYYvSj35AGFS9ADHfByzFRZStVVmWm0ObNv49tZznX+1faQlU
+         TpLaRb6QGs2E99A0+EPgis0PHVuXqBCvx2SRZ1SqYeDb/y2Uldr0StaNvnp99RkhVo
+         nBx3TcaF+l1Gw==
+Date:   Tue, 12 Sep 2023 18:21:58 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 08/31] dt-bindings: soc: fsl: cpm_qe: cpm1-scc-qmc:
+ Add support for QMC HDLC
+Message-ID: <20230912-capable-stash-c7a3e33078ac@spud>
+References: <20230912081527.208499-1-herve.codina@bootlin.com>
+ <20230912101018.225246-1-herve.codina@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bf5FPf5K5KaccQV9"
 Content-Disposition: inline
-In-Reply-To: <20230912155443.GF1599918@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20230912101018.225246-1-herve.codina@bootlin.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 06:54:43PM +0300, Mika Westerberg wrote:
-> On Tue, Sep 12, 2023 at 09:18:15PM +0530, Raag Jadav wrote:
-> > We don't need to update debounce pulse value in case debounce is to be
-> > disabled. Break such a case where arg value is zero.
-> > 
-> > Fixes: 4cfff5b7af8b ("pinctrl: baytrail: consolidate common mask operation")
-> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Closes: https://lore.kernel.org/linux-gpio/d164d471-5432-4c3c-afdb-33dc8f53d043@moroto.mountain/
-> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Pushed to my review and testing queue, thanks!
+--bf5FPf5K5KaccQV9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Tue, Sep 12, 2023 at 12:10:18PM +0200, Herve Codina wrote:
+> The QMC (QUICC mutichannel controller) is a controller present in some
+> PowerQUICC SoC such as MPC885.
+> The QMC HDLC uses the QMC controller to transfer HDLC data.
+>=20
+> Additionally, a framer can be connected to the QMC HDLC.
+> If present, this framer is the interface between the TDM bus used by the
+> QMC HDLC and the E1/T1 line.
+> The QMC HDLC can use this framer to get information about the E1/T1 line
+> and configure the E1/T1 line.
+>=20
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  .../bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml   | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-sc=
+c-qmc.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-=
+qmc.yaml
+> index 82d9beb48e00..b5073531f3f1 100644
+> --- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.y=
+aml
+> +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.y=
+aml
+> @@ -101,6 +101,16 @@ patternProperties:
+>            Channel assigned Rx time-slots within the Rx time-slots routed=
+ by the
+>            TSA to this cell.
+> =20
+> +      compatible:
+> +        const: fsl,qmc-hdlc
+> +
+> +      fsl,framer:
+> +        $ref: /schemas/types.yaml#/definitions/phandle
+> +        description:
+> +          phandle to the framer node. The framer is in charge of an E1/T=
+1 line
+> +          interface connected to the TDM bus. It can be used to get the =
+E1/T1 line
+> +          status such as link up/down.
 
+Sounds like this fsl,framer property should depend on the compatible
+being present, no?
 
+Thanks,
+Conor.
+
+> +
+>      required:
+>        - reg
+>        - fsl,tx-ts-mask
+> @@ -159,5 +169,8 @@ examples:
+>              fsl,operational-mode =3D "hdlc";
+>              fsl,tx-ts-mask =3D <0x00000000 0x0000ff00>;
+>              fsl,rx-ts-mask =3D <0x00000000 0x0000ff00>;
+> +
+> +            compatible =3D "fsl,qmc-hdlc";
+> +            fsl,framer =3D <&framer>;
+>          };
+>      };
+> --=20
+> 2.41.0
+>=20
+
+--bf5FPf5K5KaccQV9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZQCeNgAKCRB4tDGHoIJi
+0iOYAQDpq19XBQVxAut3ryCZTWFRliPi5kerZHMkKGzgUwIbKwEA+gnc9IR2Iao6
+Qt/bYjPuz9mjrBe0gcXcC3CDZicWwAE=
+=QoY/
+-----END PGP SIGNATURE-----
+
+--bf5FPf5K5KaccQV9--
