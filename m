@@ -2,364 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3638379D873
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 20:13:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6744779D88E
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Sep 2023 20:21:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231754AbjILSNp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Sep 2023 14:13:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41592 "EHLO
+        id S236897AbjILSVl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Sep 2023 14:21:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbjILSNp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 14:13:45 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62954115;
-        Tue, 12 Sep 2023 11:13:41 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D79C433C8;
-        Tue, 12 Sep 2023 18:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694542421;
-        bh=+KjlluOR/6k98E8AKxJtqM7fsI/LWIByAOdfKotn514=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ejV5wsM5w24eJR2tiv4CBwjdUJ6XQy3EY7mq5mWz+JwjGv6TkeqyHfPEZOkcI8MYM
-         wY/8KUzHWo5YqMYKQIvSYqigdTz08B2RNuCWMApTEhrYzESUOCKuiJIr6ZoKWGCwfc
-         5uVrtRpT7cRTB2ysvY6npM+t0ZJefn09piy+z9QS8u/mZnyuWEMciwPn8GRa+V08vZ
-         2Xphq7hHTTULtkCZYQ2/aTz8O9+TMQLh3FDXAVM6br5ERQijTnelFA27WDd9+/PilO
-         YEoewnZKG2jZiUQP4P5G700qVpvnVBsbn02GgPb/0k/Kb8NkEvatIjrLU2uqmHqMig
-         O+KMC2GS4TTig==
-Date:   Tue, 12 Sep 2023 19:13:32 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Herve Codina <herve.codina@bootlin.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        Simon Horman <horms@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 25/31] dt-bindings: net: Add the Lantiq PEF2256
- E1/T1/J1 framer
-Message-ID: <20230912-overplay-donated-080eb97803d6@spud>
-References: <20230912081527.208499-1-herve.codina@bootlin.com>
- <20230912101444.225809-1-herve.codina@bootlin.com>
+        with ESMTP id S233007AbjILSVk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Sep 2023 14:21:40 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2079.outbound.protection.outlook.com [40.107.244.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA735115;
+        Tue, 12 Sep 2023 11:21:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lC69xclRV6rNnrvG+3DV1uGMVCE0ZkSxzOzl6PRbk0I7g+VWaKWtwCqNrn1dsowz8VJ0r6FjNN1zMA061fq6+rOxGE7Dzkq6XKl9dyj7uFi3//RZIVtcRwnTx9rZF2gzITdn6fV/CTpVguX6ACeYaY3upd2/U/f6JgDI2738PUmshDZwBoPf7K630YU9+3Pp6zxo86vHKDBbGq/YbJByud+VA6mk8xZBM61K8Milnrk+FFA09AQWx4BqudtTIZdQY5VuFawOVvks6bTUOFYo7IAE3ynBgPUztAU1FahGLUB8OhTOJO+ZUyC5Gm/aSt7FNI7CL5pLHLW3T0rfs0gc9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bsv5dUtXUXWWtqCwy2qxROCcjm3Vxyenv+a5wm2OltE=;
+ b=QC12s9X4gWAvJbk1pV2bmOt4uL3fdd3gvAjb/NqmT7zL2zMgLCcn3nk6VAUmLsyj0Nlfn2qswP3NmnQxGEL0poogHCWAGEJMTrxx0RZ9JPkYBizbRxRFCM5Xgd+pER009+hy0lgCADr8TE4Up0wAtcxrvmuCeJyR5kXNCAyCBEj+d49wkz/c4In9DNyLA7nUAZAvDYoZj3no19DgVUjcSS7AFh6GYhvgEoJE53lN8zTYXTrnITTNB51HDDKijZ4NRiFsyIyTRvw4nxQlBvLcBL4JtCDOJQ2TBMSx3Xs2t/hZDuYibG5wbGgnBSUaWNr4C3uzslyBNYG4XpXt+3K8Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bsv5dUtXUXWWtqCwy2qxROCcjm3Vxyenv+a5wm2OltE=;
+ b=C5h33i2Na4rZu6DyjOFShoalsIVevCfuBZjW8WlkjrqrxOfNuFPKJp5AVhMguKYvBxo0zheYbuGqZb9LiC9Kc14WcDYg2ETi52vBWXxZTaYMrshdRArE6p2RkhSL/hPN/mGuI0hga+zckg74+OByldJjHMMVVhrmo8Ug3HMTWf8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CH3PR12MB9123.namprd12.prod.outlook.com (2603:10b6:610:1a4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 12 Sep
+ 2023 18:21:33 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::36f9:ffa7:c770:d146%7]) with mapi id 15.20.6768.029; Tue, 12 Sep 2023
+ 18:21:33 +0000
+Message-ID: <b9f879d5-55b8-401d-b154-8066cb66d20f@amd.com>
+Date:   Tue, 12 Sep 2023 13:21:30 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        regressions@lists.linux.dev, lucapgl2001@gmail.com
+References: <20230829165627.156542-1-mario.limonciello@amd.com>
+ <20230829165627.156542-4-mario.limonciello@amd.com>
+ <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
+ <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com>
+ <811225f8-c505-7344-ac18-882472ee0348@redhat.com>
+ <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com>
+ <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
+ <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
+ <CACRpkdYGxreyD8NVuKs2G44htR8EixdvGr3+ma=HrxHUP3NDQg@mail.gmail.com>
+ <4246946d-40e3-7df7-3fc4-9aa10e1dee10@redhat.com>
+Content-Language: en-US
+From:   Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <4246946d-40e3-7df7-3fc4-9aa10e1dee10@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR03CA0017.namprd03.prod.outlook.com
+ (2603:10b6:806:20::22) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="z36SKPc4SxdGzwAJ"
-Content-Disposition: inline
-In-Reply-To: <20230912101444.225809-1-herve.codina@bootlin.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB9123:EE_
+X-MS-Office365-Filtering-Correlation-Id: d6f2e35d-2ee8-4961-28b2-08dbb3bd17be
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wRlgTl6jeWqB8/95Jvblp2CjB4EglOyTDsgTfm+UoRtEvtJeRIlioWaEvgXQC2klsczpykLXnAIruCYR+P0q9UPXn59rGObzH1s9oZg6Y48cewUyytmjTTo6DlKGy8XmKxsvXdABfP87SeHcoEvnMPTm4F74SvQqeZnitDkvZ2F7AohWLUMDxlgVB6mdSm2oMB8qkL6Ok7eiOT3eTDr6yY+18/bXb5CU7Bbts3EIcHLmKjsXJC88fCeD31j8zU1vFIiASH9fdIbEfjrqfD+dqkklBg4Yr7gL4gYNZE0aWVqgN4CwoVgTMz0VygAhHe6rVdurXbTzyTls96V3XWBZZM4Vb+onq7UKzDrkbOPa2ww27YvH0eGVZu0HlNetes0RATD43NrMs3kE5BPr9Zesju2uf8coP+Vxcynd0gBM7G4QNo5U7pUxERr+ha9e4wZLvnuZGmmVJSoB1ukdYhs8E5S7Elj3w17TVM11IThEtOlpzKJHYAU73EQ0n8lh2fowYaXnb5G7+iT3jvuc6UbCk9sDoiURNCSuGiVz06Ne7DqoyXQzPxh13MIULsWDRLwRYLjfWYqfctf5RoPcCO9dazpVr3+iiV5GHkfBTRfrHm2SirCwSJ5ZGL7wAND8ZthhjU+QiaEeKQ+xXPVos+zaQA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(39860400002)(136003)(396003)(451199024)(186009)(1800799009)(6506007)(53546011)(66476007)(110136005)(316002)(5660300002)(6512007)(41300700001)(44832011)(66946007)(66556008)(2616005)(4326008)(8676002)(8936002)(26005)(31686004)(478600001)(6486002)(83380400001)(2906002)(4744005)(31696002)(86362001)(38100700002)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QVNRZE95V0RzdWVtOUd6dmtYaTZxUjhIY1NETjZRM21Lcks4Y2pRakF5V1Qr?=
+ =?utf-8?B?THJhMVBWNXNBUkltZU53NmN2OStQNTY2emQ3cm03dWlMdk1ZdlNqL3BiTnph?=
+ =?utf-8?B?S1FkeitMSk9LSzVLYW1VbUtaS1g1YTZKa1Zwc0tIWTZ0UFZVYkdPMnJRVFE4?=
+ =?utf-8?B?K2ZmNGRpUUZ0ZkxSU2dOK0JKS1ZLa1hFdmgwOHJhUXVxK3BwUmRqVTFDZVFh?=
+ =?utf-8?B?UWJHMjJPazhQWmkwdCtHbW56bU5MWG95MlRaUWNJc09iQVZveEY3VUpwdWRt?=
+ =?utf-8?B?Z1RKUGkxUngrMTFkSFh4MHhuR0NRak1HNm5jdWgra0hLTms3bmZ1MGg0Q2FF?=
+ =?utf-8?B?QWZYWllKVDR5aXhEVkU0a09TTTlCSCszQnkybysxZ3l1MWpiMUU1ajdMZHBv?=
+ =?utf-8?B?NFgrczhQS3ZiQmsxZ05QRGpSc3RVS29mdENEc2dJcVpVWTR5RmU1TjNiTTRq?=
+ =?utf-8?B?YW53OVFQdGNjVEdMN2c5ZjBKdDRhMWppTGZ6VGZ0RElHREQ0VFFZUWNlUEl6?=
+ =?utf-8?B?OFI5MkJmaGVjM0tDSGhwV3o0WEtYNU9DK1R4K0FQWE51WDVGcHNzK0Z6RlJx?=
+ =?utf-8?B?NEZkU1A1OVMwRHZkanc4MGM3dWU1MkhTbkRNMm1TS0tuOU9NVi9mUFZGVHV6?=
+ =?utf-8?B?S2I1bGJJRTAxLzhnNDU1bVJGNTdJQ0ZicE1GU1ZyczZmNys5WnhseUoxTkV5?=
+ =?utf-8?B?dVBSNUsxWlJPNkVkbXM2RzVPdkh4bklHbmNxVzFHZk9YekdUa29uUTFTK0FE?=
+ =?utf-8?B?OTBzWHRuRGtwMTBvZ1ZkU1UzSmFudTczcWUxcTU0QXJkeCsxWDVEbzdjVmNQ?=
+ =?utf-8?B?cnNYaTh2UjZTYXlvTk9VUEdYWVhhbWQxVy82eE9IMHppWXZxamhnWnhUMWlZ?=
+ =?utf-8?B?T0l1MGthVnE4b3cralMvQTBtTkd1NDJDVUZmWkh0Mks0U2dkRnAvL3k2NU1G?=
+ =?utf-8?B?aHk2aGVaRk82ODJSN0tTa3g0T09mUFRQSGNjWHg0eXBPVDRxcUozc1hJTzRp?=
+ =?utf-8?B?bmlvNG1EMkRQMkRYRWpsMkJDbGhmSDNiaEFaSnBrL0ZndURoUGNzSW9JNGtz?=
+ =?utf-8?B?cHRlTko3N1JWc0lLd0x1VlpHc3ZkNnVCcGIvYUZmYXluRDEzNFM5clRIWFc5?=
+ =?utf-8?B?aVJtV0ZhQzFkY1o5eTRZU1VwWldMUE1XV2RqZVRBeS84N21pUm40dlVONkwz?=
+ =?utf-8?B?dHNjeVNXR0lZd0lKV1JJcmU2RGQ2NzZpUlJHMjFhQkFxMXRoOG1DdDMyZkxk?=
+ =?utf-8?B?d01ha3dscnBuSVozSzFsL0hRNkloMW5iakVBUkRQS0U0cXhRUEtkdFNmOVAz?=
+ =?utf-8?B?WENlRjFadnB5Qy9XTThpSFhZUWt0VTdxZmhyMk5JU0x5akJGTEx6WUp1N1N5?=
+ =?utf-8?B?bEZVZjZZMFAzaExDT2FZV1lrM1BzSjNLaW1tVS9YV1VQaGhPR1BtVmtHSWRp?=
+ =?utf-8?B?Yy9iLzV4T0RLdWVBbi9OQlRYOTBiWXMzWmZGTktET29MbVQzbnQ4eDMyYnh4?=
+ =?utf-8?B?UkpldXlqMnNKRFV1ejZGSkdkenRGZStBaUNnbWtZM2Q3akZxS0tBSlFnS0VB?=
+ =?utf-8?B?eGNCU2hHdTNFR3ZQcmd1NDJrbnFucnFkcit0bzhkZWVOcERwWnZob3loNkZK?=
+ =?utf-8?B?bWxyWTlDcUVENDdxQkZ6MkJsN3h3QkhsZVlIM3RZSnU1ekF0YXJUYkJBZ0kv?=
+ =?utf-8?B?MXNDWi9YSkNPMzg5SmRiWFJsaWpMQTNxWU1Nczh0L2VkeVVpODRiWVdvekxL?=
+ =?utf-8?B?a3JKV0IxQVZYeUdZTGROU0p2VDF4VDdmVHBDTWtkVDM0Vkl4V0FrNDIxZzl2?=
+ =?utf-8?B?Rzd6N09Wak1tK1ZhYmpQTTQyandjTVFYZXNmSnJ5NUxvUjdVenkzME5ibDMy?=
+ =?utf-8?B?dHNMRDJoTThLNWlpL0F0ZTU5NENQbTVOQitFRkp0T1pKREdKRlF6WTFueHVD?=
+ =?utf-8?B?NnBSZUNTV1dXMG5OdzJjQW8vbmc2NGVBUll0a3lXQW1mVnlXQkNaaS9LRGpO?=
+ =?utf-8?B?Q0JIT1kwcjFhcEMwQ3EzS1JnaWdwVTA2WFFpYzJELzIzcE5vbnlLV2t5TXZ0?=
+ =?utf-8?B?QmR3NDhDNFNUVGMrTWIxM1pOL09lODNTVkdQbmwwN3hNOWc0dmpQd3BJTWRl?=
+ =?utf-8?Q?97CPcYwgX052e58ucQ+7tEI5E?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6f2e35d-2ee8-4961-28b2-08dbb3bd17be
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2023 18:21:33.3640
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m4IyKJBacMod7xg7TjoJTUfcWhmLUKX4XUB8wvULxqqqyhu5zSjvAd16PVz2NU8wiWlqOWIyEeecN1GLchfRFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9123
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 9/12/2023 03:58, Hans de Goede wrote:
+> Hi,
+> 
+> On 9/12/23 09:08, Linus Walleij wrote:
+>> On Thu, Aug 31, 2023 at 7:53 PM Mario Limonciello
+>> <mario.limonciello@amd.com> wrote:
+>>
+>>> Linus - please disregard version 1.
+>>
+>> OK!
+>>
+>>> I provided Luca a new series that implements this approach that Hans and
+>>> I discussed and they confirmed it works.
+>>>
+>>> I have some minor modifications to it to narrow where it's applied so we
+>>> don't have needless notifications and will send it for review after the
+>>> new modifications are tested as well.
+>>
+>> OK standing by, I'll wait for Hans' ACK and then merge it for fixes.
+> 
+> AFAICT Mario has not posted a new version (yet),
+> so there is nothing for me to ack (yet).
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
 
---z36SKPc4SxdGzwAJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Yo,
-
-I'm not au fait enough with this to leave particularly meaningful
-comments, so just some minor ones for you.
-
-On Tue, Sep 12, 2023 at 12:14:44PM +0200, Herve Codina wrote:
-> The Lantiq PEF2256 is a framer and line interface component designed to
-> fulfill all required interfacing between an analog E1/T1/J1 line and the
-> digital PCM system highway/H.100 bus.
->=20
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-
-Missing a co-developed-by?
-
-> ---
->  .../bindings/net/lantiq,pef2256.yaml          | 214 ++++++++++++++++++
->  1 file changed, 214 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/lantiq,pef2256.=
-yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/net/lantiq,pef2256.yaml b/=
-Documentation/devicetree/bindings/net/lantiq,pef2256.yaml
-> new file mode 100644
-> index 000000000000..c4f21678bf6a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/lantiq,pef2256.yaml
-> @@ -0,0 +1,214 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/lantiq,pef2256.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Lantiq PEF2256
-> +
-> +maintainers:
-> +  - Herve Codina <herve.codina@bootlin.com>
-> +
-> +description:
-> +  The Lantiq PEF2256, also known as Infineon PEF2256 or FALC56, is a fra=
-mer and
-> +  line interface component designed to fulfill all required interfacing =
-between
-> +  an analog E1/T1/J1 line and the digital PCM system highway/H.100 bus.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: lantiq,pef2256
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Master clock
-
-My OCD is rather upset by the inconsistent capitalisation used here :/
-
-> +      - description: System Clock Receive
-> +      - description: System Clock Transmit
-> +
-> +  clock-names:
-> +    items:
-> +      - const: mclk
-> +      - const: sclkr
-> +      - const: sclkx
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description:
-> +      GPIO used to reset the device.
-> +    maxItems: 1
-> +
-> +  pinctrl:
-> +    $ref: /schemas/pinctrl/pinctrl.yaml#
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +        $ref: /schemas/pinctrl/pinmux-node.yaml#
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          pins:
-> +            enum: [ RPA, RPB, RPC, RPD, XPA, XPB, XPC, XPD ]
-> +
-> +          function:
-> +            enum: [ SYPR, RFM, RFMB, RSIGM, RSIG, DLR, FREEZE, RFSP, LOS,
-> +                    SYPX, XFMS, XSIG, TCLK, XMFB, XSIGM, DLX, XCLK, XLT,
-> +                    GPI, GPOH, GPOL ]
-> +
-> +        required:
-> +          - pins
-> +          - function
-> +
-> +  lantiq,data-rate-bps:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [2048000, 4096000, 8192000, 16384000]
-
--kBps is a standard suffix, would it be worth using that instead here?
-What you have would fit as even multiples.
-Otherwise Rob, should dt-schema grow -bps as a standard suffix?
-
-> +    default: 2048000
-> +    description:
-> +      Data rate (bit per seconds) on the system highway.
-> +
-> +  lantiq,clock-falling-edge:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Data is sent on falling edge of the clock (and received on the ris=
-ing
-> +      edge). If 'clock-falling-edge' is not present, data is sent on the
-> +      rising edge (and received on the falling edge).
-> +
-> +  lantiq,channel-phase:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [0, 1, 2, 3, 4, 5, 6, 7]
-> +    default: 0
-> +    description: |
-> +      The pef2256 delivers a full frame (32 8bit time-slots in E1 and 24=
- 8bit
-
-Just a wee nit, s/8bit/8-bit/ :)
-
-Rest of this I don't really feel like I can really review.
-
-Thanks,
-Conor.
-
-> +      time-slots 8 8bit signaling in E1/J1) every 125us. This lead to a =
-data
-> +      rate of 2048000 bit/s. When lantiq,data-rate-bps is more than 2048=
-000
-> +      bit/s, the data (all 32 8bit) present in the frame are interleave =
-with
-> +      unused time-slots. The lantiq,channel-phase property allows to set=
- the
-> +      correct alignment of the interleave mechanism.
-> +      For instance, suppose lantiq,data-rate-bps =3D 8192000 (ie 4*20480=
-00), and
-> +      lantiq,channel-phase =3D 2, the interleave schema with unused time=
--slots
-> +      (nu) and used time-slots (XX) for TSi is
-> +        nu nu XX nu nu nu XX nu nu nu XX nu
-> +        <-- TSi --> <- TSi+1 -> <- TSi+2 ->
-> +      With lantiq,data-rate-bps =3D 8192000, and lantiq,channel-phase =
-=3D 1, the
-> +      interleave schema is
-> +        nu XX nu nu nu XX nu nu nu XX nu nu
-> +        <-- TSi --> <- TSi+1 -> <- TSi+2 ->
-> +      With lantiq,data-rate-bps =3D 4096000 (ie 2*2048000), and
-> +      lantiq,channel-phase =3D 1, the interleave schema is
-> +        nu    XX    nu    XX    nu    XX
-> +        <-- TSi --> <- TSi+1 -> <- TSi+2 ->
-> +
-> +patternProperties:
-> +  '^codec(-([0-9]|[1-2][0-9]|3[0-1]))?$':
-> +    type: object
-> +    $ref: /schemas/sound/dai-common.yaml
-> +    unevaluatedProperties: false
-> +    description:
-> +      Codec provided by the pef2256. This codec allows to use some of th=
-e PCM
-> +      system highway time-slots as audio channels to transport audio dat=
-a over
-> +      the E1/T1/J1 lines.
-> +      The time-slots used by the codec must be set and so, the properties
-> +      'dai-tdm-slot-num', 'dai-tdm-slot-width', 'dai-tdm-slot-tx-mask' a=
-nd
-> +      'dai-tdm-slot-rx-mask' must be present in the sound card node for
-> +      sub-nodes that involve the codec. The codec uses 8bit time-slots.
-> +      'dai-tdm-tdm-slot-with' must be set to 8.
-> +      The tx and rx masks define the pef2256 time-slots assigned to the =
-codec.
-> +
-> +    properties:
-> +      compatible:
-> +        const: lantiq,pef2256-codec
-> +
-> +      '#sound-dai-cells':
-> +        const: 0
-> +
-> +    required:
-> +      - compatible
-> +      - '#sound-dai-cells'
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    pef2256: framer@2000000 {
-> +      compatible =3D "lantiq,pef2256";
-> +      reg =3D <0x2000000 0x100>;
-> +      interrupts =3D <8 IRQ_TYPE_LEVEL_LOW>;
-> +      interrupt-parent =3D <&intc>;
-> +      clocks =3D <&clk_mclk>, <&clk_sclkr>, <&clk_sclkx>;
-> +      clock-names =3D "mclk", "sclkr", "sclkx";
-> +      reset-gpios =3D <&gpio 11 GPIO_ACTIVE_LOW>;
-> +      lantiq,data-rate-bps =3D <4096000>;
-> +
-> +      pinctrl {
-> +        pef2256_rpa_sypr: rpa-pins {
-> +          pins =3D "RPA";
-> +          function =3D "SYPR";
-> +        };
-> +        pef2256_xpa_sypx: xpa-pins {
-> +          pins =3D "XPA";
-> +          function =3D "SYPX";
-> +        };
-> +      };
-> +
-> +      pef2256_codec0: codec-0 {
-> +        compatible =3D "lantiq,pef2256-codec";
-> +        #sound-dai-cells =3D <0>;
-> +        sound-name-prefix =3D "PEF2256_0";
-> +      };
-> +
-> +      pef2256_codec1: codec-1 {
-> +        compatible =3D "lantiq,pef2256-codec";
-> +        #sound-dai-cells =3D <0>;
-> +        sound-name-prefix =3D "PEF2256_1";
-> +      };
-> +    };
-> +
-> +    sound {
-> +      compatible =3D "simple-audio-card";
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +      simple-audio-card,dai-link@0 { /* CPU DAI1 - pef2256 codec 1 */
-> +        reg =3D <0>;
-> +        cpu {
-> +          sound-dai =3D <&cpu_dai1>;
-> +        };
-> +        codec {
-> +          sound-dai =3D <&pef2256_codec0>;
-> +          dai-tdm-slot-num =3D <4>;
-> +          dai-tdm-slot-width =3D <8>;
-> +          /* TS 1, 2, 3, 4 */
-> +          dai-tdm-slot-tx-mask =3D <0 1 1 1 1>;
-> +          dai-tdm-slot-rx-mask =3D <0 1 1 1 1>;
-> +        };
-> +      };
-> +      simple-audio-card,dai-link@1 { /* CPU DAI2 - pef2256 codec 2 */
-> +        reg =3D <1>;
-> +        cpu {
-> +          sound-dai =3D <&cpu_dai2>;
-> +        };
-> +        codec {
-> +          sound-dai =3D <&pef2256_codec1>;
-> +          dai-tdm-slot-num =3D <4>;
-> +          dai-tdm-slot-width =3D <8>;
-> +          /* TS 5, 6, 7, 8 */
-> +          dai-tdm-slot-tx-mask =3D <0 0 0 0 0 1 1 1 1>;
-> +          dai-tdm-slot-rx-mask =3D <0 0 0 0 0 1 1 1 1>;
-> +        };
-> +      };
-> +    };
-> --=20
-> 2.41.0
->=20
-
---z36SKPc4SxdGzwAJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZQCqTAAKCRB4tDGHoIJi
-0jgGAQCQtuw1hpYCdUTegOuODiE+lWtlKu64rm1K8B1fCI0iowD/TI6P7jvAMzvX
-dTh+21rxne2p2anbBFZEn/MH6mQfKw0=
-=eds4
------END PGP SIGNATURE-----
-
---z36SKPc4SxdGzwAJ--
+Yeah it looked like we were about to have a new version to post last 
+week but there are some inconsistent results that we need to understand 
+still, especially with comparing to Windows.
