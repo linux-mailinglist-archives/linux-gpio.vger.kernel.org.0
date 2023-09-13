@@ -2,65 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54EF379F2A1
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 22:12:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D606579F2CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 22:23:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232063AbjIMUM5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 16:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51030 "EHLO
+        id S231918AbjIMUXv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 16:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231603AbjIMUM5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 16:12:57 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600711BC8
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 13:12:53 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-59bc956b029so2383777b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 13:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694635972; x=1695240772; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Su1HKHhLigyzqYlZO3Q6GiJPuDvWadoF+8eJgSHSJSM=;
-        b=aiRSgXPbdPszjUbrmOvfo8VAbkCooNj2DlaPadFcfWqONmI1e1Ks9j2Zmtg9KMhvVx
-         PX/x5k/D0b1WEwZtEzWZRkPA8IrfbYHsqP+tjC85HjqExhu7XheGk8CdHWuLCAz3ZOOM
-         VCuoKtlcFasz019GO6zGs8sPXIZkq+03b5o4kMViuZUBPfWD1EkVMI5jbh/AGXOoQe5Y
-         +rHm/yIuaKSCA/OMPD1AyTCabMcwJEvRXFYuODEV110l2EF96r0v5ZHKr67DsB0HExr7
-         FK463fHavC8jhL1xEhQSum117HDUvYlfT7mfteSZTabEAvtcsAgJS/4vcWp6RjQJUIQO
-         KsSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694635972; x=1695240772;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Su1HKHhLigyzqYlZO3Q6GiJPuDvWadoF+8eJgSHSJSM=;
-        b=DibfZtmn6MtQPNLs8RcltC2t0EZYKxARj+Ws3dmyJ5Ke39lQqW6WOmukMYL2WUlRPA
-         lCjg03InUpcGNvx8aWRYqV4m+hp4U31dqveU9LH3q8gRy49rGIan5DHZfmNCHwMsI4ZN
-         XnN30ueNSrMIzklNWwQqBD1xz6B7+6+nFWaQcv/JeB/hCaz9iaHP5h6aAYNlSXH3osVZ
-         3P8msTq1yWWn7W3Txrfhdnn/butxqNpPy0s1w4bazfFsOV46FY0PEi8urWK3uVP0R7jN
-         Uh9F2UJhVOGg/yq8ljkj4Tv7oyDG/Y90/nOERJIt+Y5V7+Fx204PIVU0+r+dTjZiJebR
-         Q/eg==
-X-Gm-Message-State: AOJu0YwBzkyiSwBKov6Dj5h6Qd616c1yrxGaJsNEArmEtMxWdH0pUGtE
-        KT+T/lc8neIK8c5j+XukJ4cPzVxOWKgDgQo9tDom+w==
-X-Google-Smtp-Source: AGHT+IGNdHiKi9h+VMupJWAnl7lkQjZz2lyGhzlQ4y/m/GOS5wCeU4E04eoE42Ydser353023glv4MnCjnMPMHjH7ys=
-X-Received: by 2002:a25:d246:0:b0:d81:6a54:48f0 with SMTP id
- j67-20020a25d246000000b00d816a5448f0mr2205331ybg.22.1694635972595; Wed, 13
- Sep 2023 13:12:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-3-brgl@bgdev.pl>
- <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
-In-Reply-To: <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 13 Sep 2023 22:12:40 +0200
-Message-ID: <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
-Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        with ESMTP id S232167AbjIMUXu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 16:23:50 -0400
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A645C1BC8;
+        Wed, 13 Sep 2023 13:23:45 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7AC2E240009;
+        Wed, 13 Sep 2023 20:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1694636623;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/dRlWZ4ip0P9gSRRVNtyMvezGlxc/WATurc5AdssgGA=;
+        b=ow2wxZiMqZilFqKiQdViBBKXgJ10OFn4QutLDJ8h5iKbCLUYsMCpLYwz44g75okO+hVLKP
+        fYAPH+Hipn+rJTW6OyvP5lnO3oBKBsUsGvAQ0BEQ0ZfwJwOKn97N+YEPNXgZx+tVi+QEoM
+        UaTSLemyUL/EQjpuVLvEgCyBrWG2xCkxiwdjZycMqoB+iord0lk4UQWV5M7DtX7kEnFaHD
+        kEfNXSKmxUZyO3fmf798qZoTx2rc8/tti4htwWlIYYKUdSMQrJLoPh/6SWJqWoCZYZrgsW
+        a6SKSmbf6HDufOEoQxAp83NCom5LQ0HSbs2RYME0xMhTOK30Q2SNNixNySpdEw==
+Date:   Wed, 13 Sep 2023 22:23:38 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Paul Cercueil <paul@crapouillou.net>,
         Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Daniel Scally <djrscally@gmail.com>,
@@ -71,38 +47,56 @@ Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
+Message-ID: <20230913222338.07d1625b@xps-13>
+In-Reply-To: <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
+References: <20230913115001.23183-1-brgl@bgdev.pl>
+        <20230913115001.23183-3-brgl@bgdev.pl>
+        <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
+        <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> >
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Use the new, less cumbersome interface for setting the GPIO as
-> > active-high that doesn't require first checking the current state.
->
-> ...
->
-> >          * here for older DTs so we can re-use the generic nand_gpio_wa=
-itrdy()
-> >          * helper, and be consistent with what other drivers do.
-> >          */
-> > -       if (of_machine_is_compatible("qi,lb60") &&
-> > -           gpiod_is_active_low(nand->busy_gpio))
-> > -               gpiod_toggle_active_low(nand->busy_gpio);
-> > +       if (of_machine_is_compatible("qi,lb60"))
-> > +               gpiod_set_active_high(nand->busy_gpio);
->
-> Why not moving this quirk to gpiolib-of.c?
+Hi Andy,
 
-That's a better idea here I think, it's clearly a quirk for a
-buggy device tree.
+linus.walleij@linaro.org wrote on Wed, 13 Sep 2023 22:12:40 +0200:
 
-Yours,
-Linus Walleij
+> On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote: =20
+> > >
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Use the new, less cumbersome interface for setting the GPIO as
+> > > active-high that doesn't require first checking the current state. =20
+> >
+> > ...
+> > =20
+> > >          * here for older DTs so we can re-use the generic nand_gpio_=
+waitrdy()
+> > >          * helper, and be consistent with what other drivers do.
+> > >          */
+> > > -       if (of_machine_is_compatible("qi,lb60") &&
+> > > -           gpiod_is_active_low(nand->busy_gpio))
+> > > -               gpiod_toggle_active_low(nand->busy_gpio);
+> > > +       if (of_machine_is_compatible("qi,lb60"))
+> > > +               gpiod_set_active_high(nand->busy_gpio); =20
+> >
+> > Why not moving this quirk to gpiolib-of.c? =20
+>=20
+> That's a better idea here I think, it's clearly a quirk for a
+> buggy device tree.
+
+Agreed, it's just for backward compatibility purposes in a single
+driver. I believe it should stay here.
+
+Thanks,
+Miqu=C3=A8l
