@@ -2,101 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D606579F2CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 22:23:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A99C979F321
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 22:48:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbjIMUXv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 16:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
+        id S230205AbjIMUsy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 16:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232167AbjIMUXu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 16:23:50 -0400
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A645C1BC8;
-        Wed, 13 Sep 2023 13:23:45 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7AC2E240009;
-        Wed, 13 Sep 2023 20:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1694636623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/dRlWZ4ip0P9gSRRVNtyMvezGlxc/WATurc5AdssgGA=;
-        b=ow2wxZiMqZilFqKiQdViBBKXgJ10OFn4QutLDJ8h5iKbCLUYsMCpLYwz44g75okO+hVLKP
-        fYAPH+Hipn+rJTW6OyvP5lnO3oBKBsUsGvAQ0BEQ0ZfwJwOKn97N+YEPNXgZx+tVi+QEoM
-        UaTSLemyUL/EQjpuVLvEgCyBrWG2xCkxiwdjZycMqoB+iord0lk4UQWV5M7DtX7kEnFaHD
-        kEfNXSKmxUZyO3fmf798qZoTx2rc8/tti4htwWlIYYKUdSMQrJLoPh/6SWJqWoCZYZrgsW
-        a6SKSmbf6HDufOEoQxAp83NCom5LQ0HSbs2RYME0xMhTOK30Q2SNNixNySpdEw==
-Date:   Wed, 13 Sep 2023 22:23:38 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
-Message-ID: <20230913222338.07d1625b@xps-13>
-In-Reply-To: <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
-References: <20230913115001.23183-1-brgl@bgdev.pl>
-        <20230913115001.23183-3-brgl@bgdev.pl>
-        <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
-        <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S231724AbjIMUsx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 16:48:53 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DAB1BCD
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 13:48:49 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-414ba610766so93201cf.0
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 13:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694638128; x=1695242928; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NcJlXTKC5xRoadtZAEon6CTFFsDGGrKsYv81Cvxlk0I=;
+        b=HbOtkv78djlgQ54jjnPro0kzZUtVYY5PK1WIpfi7ja5GYuS4dFMc8u9kwNhviJA19A
+         kd9hphcYv829ilxMW6EnU7asl29yePkam+GPUYR1jav7xniA/xeoLeOCYR8idae2HcQI
+         G7zNkzkHriRqNz2D8XP5XJlhGCmRnRuP/0uheu2yMZMRNw3nYoWuPKro5Gzyb+popFlP
+         dCDVuwUBpXcxefXrLqj0WbABhrs8OTUx2DVr5UQQtGlFE6EFpKaJuhMkGd/Ty0Pf/GgJ
+         ui3GCoUKqs/xW3jv+5B7AWsdPV4ZDzhBEclSgPdcTQpYrda0bx7rixLhJMR8+gmBHYeB
+         CwCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694638128; x=1695242928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NcJlXTKC5xRoadtZAEon6CTFFsDGGrKsYv81Cvxlk0I=;
+        b=hpOPcNdStKT+c+oJ+aTeM0NRxM4AYLkq0QA+HjvZySqLUsIgLKQpPvE3rbJapIErx5
+         7VQXX0EXuVXAy0c3wA8/rpJ0FX2d74icjvZ6OFRTc/z+W92Ay1koJLoFR0MlhsN6k4Yj
+         eZRsDtBW1reRNdiUDRmvCxp8uzBgab5mDNcmWhWBXfdbiGjp5/cgGvDBriLehEM3yWFG
+         HtF0tWxUz2Dhm2gv6w19XJFR84aYPqWphzYv9IaSjM09jrhe38jBfTPVSNz9gFpyms36
+         in11+rORV+jTGzqJNzWZiWxHsR/sn12IulfQjPOM8r0YSWvHsRzKPYq3T7IL9zWwOopE
+         j72Q==
+X-Gm-Message-State: AOJu0Yy+F/y6b9PljXCbUkc2pTgwz+fjIo1uFDqNQJVNFNEMjinleIN+
+        49le5PcSAHazx/Kx5tFJN2u/vsmrEzozlQlSNeyrGg==
+X-Google-Smtp-Source: AGHT+IHdxM3qDxSFcobWc9e/bvG3ZPvXwmfQ7UAt/NPVUh4yMwsb6+IvDj8bLAr1t8EZEfJbmhIvmyna9oRSeT6JHV8=
+X-Received: by 2002:a05:622a:51:b0:3ef:5f97:258f with SMTP id
+ y17-20020a05622a005100b003ef5f97258fmr434466qtw.16.1694638128380; Wed, 13 Sep
+ 2023 13:48:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20230904115816.1237684-1-s.hauer@pengutronix.de>
+ <20230904115816.1237684-2-s.hauer@pengutronix.de> <CACRpkdYxRdToUM3JcEeNK_K87D5WDzzSLvVEbtqqdQEhz3k_Ow@mail.gmail.com>
+ <CAGb2v65G-8EECNjqnpKCxqAD5nATAb0S7AA_WMiGXYOR1avrvg@mail.gmail.com> <20230913065843.GF637806@pengutronix.de>
+In-Reply-To: <20230913065843.GF637806@pengutronix.de>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 13 Sep 2023 13:48:12 -0700
+Message-ID: <CAGETcx8rO=aykjb6=5k0wpOyscqokNwSL6w-AHnodY7pNXyzGQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: rockchip: add support for io-domain dependency
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de,
+        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
-
-linus.walleij@linaro.org wrote on Wed, 13 Sep 2023 22:12:40 +0200:
-
-> On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote: =20
+On Tue, Sep 12, 2023 at 11:58=E2=80=AFPM Sascha Hauer <s.hauer@pengutronix.=
+de> wrote:
+>
+> On Wed, Sep 13, 2023 at 12:37:54PM +0800, Chen-Yu Tsai wrote:
+> > On Tue, Sep 12, 2023 at 4:07=E2=80=AFPM Linus Walleij <linus.walleij@li=
+naro.org> wrote:
 > > >
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > Top posting to bring Saravana Kannan into this discussion.
 > > >
-> > > Use the new, less cumbersome interface for setting the GPIO as
-> > > active-high that doesn't require first checking the current state. =20
+> > > This looks like a big hack to me, Saravana has been working
+> > > tirelessly to make the device tree probe order "sort itself out"
+> > > and I am pretty sure this issue needs to be fixed at the DT
+> > > core level and not in a driver.
 > >
-> > ...
-> > =20
-> > >          * here for older DTs so we can re-use the generic nand_gpio_=
-waitrdy()
-> > >          * helper, and be consistent with what other drivers do.
-> > >          */
-> > > -       if (of_machine_is_compatible("qi,lb60") &&
-> > > -           gpiod_is_active_low(nand->busy_gpio))
-> > > -               gpiod_toggle_active_low(nand->busy_gpio);
-> > > +       if (of_machine_is_compatible("qi,lb60"))
-> > > +               gpiod_set_active_high(nand->busy_gpio); =20
+> > We could merge all the IO domain stuff into the pinctrl node/driver,
+> > like is done for Allwinner? Maybe that would simplify things a bit?
+>
+> I thought about this as well. On Rockchip the pinctrl driver and the IO
+> domain driver even work on the same register space, so putting these
+> into a single node/driver would even feel more natural than what we have
+> now.
+
+Then we should try to do this and fix any issues blocking us.
+
+> However, with that the pinctrl node would get the supplies that the IO
+> domain node now has and we would never get into the probe of the pinctrl
+> driver due to the circular dependencies.
+
+From a fw_devlink perspective, the circular dependency shouldn't be a
+problem. It's smart enough to recognize all cycle possibilities (since
+6.3) and not enforce ordering between nodes in a cycle.
+
+So, this is really only a matter of pinctrl not trying to do
+regulator_get() in its probe function. You need to do the
+regulator_get() when the pins that depend on the io-domain are
+requested. And if the regulator isn't ready yet, return -EPROBE_DEFER?
+
+Is there something that prevents us from doing that?
+
 > >
-> > Why not moving this quirk to gpiolib-of.c? =20
->=20
-> That's a better idea here I think, it's clearly a quirk for a
-> buggy device tree.
+> > IIRC on Allwinner SoCs the PMIC pins don't have a separate power rail,
+> > or if they do they almost certainly use the default I/O rail that is
+> > always on, and so we omit it to work around the dependency cycle.
+>
+> I looked into sun50i as an example. This one has two pinctrl nodes, pio
+> and r_pio. Only the former has supplies whereas the latter, where the
+> PMIC is connected to, has (found in sun50i-a64-pinephone.dtsi):
+>
+> &r_pio {
+>         /*
+>          * FIXME: We can't add that supply for now since it would
+>          * create a circular dependency between pinctrl, the regulator
+>          * and the RSB Bus.
+>          *
+>          * vcc-pl-supply =3D <&reg_aldo2>;
+>          */
+> };
+>
+> At least it show me that I am not the first one who has this problem ;)
+>
+> We could add the supplies to the pingroup subnodes of the pinctrl driver
+> to avoid that, but as Saravana already menioned, that would feel like
+> overkill.
 
-Agreed, it's just for backward compatibility purposes in a single
-driver. I believe it should stay here.
+So my comment yesterday was that it'd be an overkill to make every
+struct pin_desc into a device. But if you can split that rockchip
+pinctrl into two devices, that should be okay and definitely not an
+overkill.
 
-Thanks,
-Miqu=C3=A8l
+Maybe something like:
+
+pinctrl {
+    compatible =3D "rockchip,rk3568-pinctrl";
+    i2c0 {
+                /omit-if-no-ref/
+                i2c0_xfer: i2c0-xfer {
+                        rockchip,pins =3D
+                                /* i2c0_scl */
+                                <0 RK_PB1 1 &pcfg_pull_none_smt>,
+                                /* i2c0_sda */
+                                <0 RK_PB2 1 &pcfg_pull_none_smt>;
+                };
+    }
+    ...
+    ...
+    pinctrl-io {
+        compatible =3D "rockchip,rk3568-pinctrl-io";
+        pmuio1-supply =3D <&vcc3v3_pmu>;
+        cam {
+            ....
+        }
+        ....
+        ....
+}
+
+So pinctrl will probe successfully and add it's child device
+pinctrl-io. i2c0 will probe once pinctrl is available. Then eventually
+the regulator will probe. And after all that, pinctrl-io would probe.
+
+This has no cycles and IMHO represents the hardware accurately. You
+have a pinctrl block and there's a sub component of it (pinctrl-io)
+that works differently and has additional dependencies.
+
+Any thoughts on this?
+
+-Saravana
