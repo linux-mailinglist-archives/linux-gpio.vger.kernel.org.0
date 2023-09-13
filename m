@@ -2,144 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A34A79EBA1
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 16:51:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0699A79EBAA
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 16:53:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241513AbjIMOvr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 10:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45336 "EHLO
+        id S241572AbjIMOxD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 10:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbjIMOvr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 10:51:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 63F21E7
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 07:50:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694616653;
+        with ESMTP id S230190AbjIMOxC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 10:53:02 -0400
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::223])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12C6B3;
+        Wed, 13 Sep 2023 07:52:57 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CF61860003;
+        Wed, 13 Sep 2023 14:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1694616776;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=48dU2hQLagIX9Pt08ex4VtPwEkzu69KnmACTk65vyqM=;
-        b=SmPunnbk63JOIeDlEFY4SyMEudQEApGoa9etxptuCXALxxDchcouYiMHLipQe5mXz7rBoh
-        oTtbGbz45x0WFDh/4iHsHppG5UiXj3VBS3jfsCltq4lbm5P8vmCIrvPTntsTAtlwM3I8v+
-        5mySHhLeq5+E+7eipkYfOxM7DvQQ/yU=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-180-2vNfCKjFPNWQilWukaRlBg-1; Wed, 13 Sep 2023 10:50:52 -0400
-X-MC-Unique: 2vNfCKjFPNWQilWukaRlBg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9ad8ab8bc9fso131855266b.0
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 07:50:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694616651; x=1695221451;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=48dU2hQLagIX9Pt08ex4VtPwEkzu69KnmACTk65vyqM=;
-        b=ggeHzMpv6AiMDsvCEESul98rXV9XWHBhcTBPYc5QqS97lBy1P8/W8PMoWrxbQ8Jm/Q
-         Sghy7oNazg8xIlcw3olv79KY4t8cRwuaZc1PE57sP6vgNnC073MP/Q+QLsXB4e5qbf7x
-         8m+dS1CvQ0xpp036OAdpAYR7FU3zD0sxA1iTXeVcwawEPNsFqVHtB0uTst3T2MS56hSq
-         /alK0DM+hAdIhaY8o5AQhWSyFXjO3my8ho8bY2MOYt2L32lSwFB4EbhxOscCHlQA1smn
-         +VTyArOHP4Yefld8SYbDubsjvIRu3yYNzBxVaD+GsSP9RAyyYhdZl1QlLViGO0pC15NS
-         3QzQ==
-X-Gm-Message-State: AOJu0YwBX1xOom1XaL6k6t9EAvKSrLmoe2D0PJ6c+erpl5kkkTFu/gIr
-        inumKarpG8FY0BsNf/m7l2Wa3Z4cVPnR96CIgDmtmIau7b2K5dss9VlNH/p5VwBFCUul4rylJ2c
-        VkhfnxIvqxkxwt+OO3bq40A==
-X-Received: by 2002:a17:906:74c7:b0:9aa:1020:8c39 with SMTP id z7-20020a17090674c700b009aa10208c39mr2278126ejl.18.1694616650914;
-        Wed, 13 Sep 2023 07:50:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhdz7s3zxkxrAka/iFct75EEOhxMraFKGaGoggnTBpq6sAIlALbnFygNuVs1AGvDyAjsOScA==
-X-Received: by 2002:a17:906:74c7:b0:9aa:1020:8c39 with SMTP id z7-20020a17090674c700b009aa10208c39mr2278116ejl.18.1694616650569;
-        Wed, 13 Sep 2023 07:50:50 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id n3-20020a17090695c300b0099bc8bd9066sm8613848ejy.150.2023.09.13.07.50.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Sep 2023 07:50:50 -0700 (PDT)
-Message-ID: <5cff2031-e25f-4222-4d1f-b0b7d87b355b@redhat.com>
-Date:   Wed, 13 Sep 2023 16:50:49 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 4/5] platform/x86: int3472/discrete: use
- gpiod_set_active_low()
-Content-Language: en-US, nl
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        bh=aC2RwGdKDnCnTcsXt08pnHkYtsoUowN+XP5X8ItFDzc=;
+        b=EWGGroVBltxzuCTMJt8gh/2G/eIS6B94Qbe3nrqz+sp5y/iQBhr+/O1HKlOYMDY3TE9PC4
+        L6RELowCewGfATaEd1BYi5ynfm7M+G1PkGyfClkGeqCeZ7brzmiVhltXORoJIwqFnz62AV
+        QMqNup3T4xnUR3CRAG4k1LtxYWyDKI9RySRBsblI79TYUm8eHqFqp+ilb87PZjqsuTVx6R
+        OvMePhchN2VhFn45J4AmUqmTFbk4FPvtWSv6ExxPgkEdHEYYNAgC70wnjn+uPT3yEP5nI+
+        IjbFoQl30h2z0mrZE0DUi/xfVs+AuF4ogRRsV4TWD7u4En8RdGI0CJTnCncG0w==
+Date:   Wed, 13 Sep 2023 16:52:50 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20230913115001.23183-1-brgl@bgdev.pl>
- <20230913115001.23183-5-brgl@bgdev.pl>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20230913115001.23183-5-brgl@bgdev.pl>
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 08/31] dt-bindings: soc: fsl: cpm_qe: cpm1-scc-qmc:
+ Add support for QMC HDLC
+Message-ID: <20230913165250.02bab2ad@bootlin.com>
+In-Reply-To: <20230913-unruly-recite-7dbbbd7e63e0@spud>
+References: <20230912081527.208499-1-herve.codina@bootlin.com>
+        <20230912101018.225246-1-herve.codina@bootlin.com>
+        <20230912-capable-stash-c7a3e33078ac@spud>
+        <20230913092640.76934b31@bootlin.com>
+        <20230913-unruly-recite-7dbbbd7e63e0@spud>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Wed, 13 Sep 2023 15:42:45 +0100
+Conor Dooley <conor@kernel.org> wrote:
 
-On 9/13/23 13:50, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> On Wed, Sep 13, 2023 at 09:26:40AM +0200, Herve Codina wrote:
+> > Hi Conor,
+> > 
+> > On Tue, 12 Sep 2023 18:21:58 +0100
+> > Conor Dooley <conor@kernel.org> wrote:
+> >   
+> > > On Tue, Sep 12, 2023 at 12:10:18PM +0200, Herve Codina wrote:  
+> > > > The QMC (QUICC mutichannel controller) is a controller present in some
+> > > > PowerQUICC SoC such as MPC885.
+> > > > The QMC HDLC uses the QMC controller to transfer HDLC data.
+> > > > 
+> > > > Additionally, a framer can be connected to the QMC HDLC.
+> > > > If present, this framer is the interface between the TDM bus used by the
+> > > > QMC HDLC and the E1/T1 line.
+> > > > The QMC HDLC can use this framer to get information about the E1/T1 line
+> > > > and configure the E1/T1 line.
+> > > > 
+> > > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > > > ---
+> > > >  .../bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml   | 13 +++++++++++++
+> > > >  1 file changed, 13 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+> > > > index 82d9beb48e00..b5073531f3f1 100644
+> > > > --- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+> > > > +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+> > > > @@ -101,6 +101,16 @@ patternProperties:
+> > > >            Channel assigned Rx time-slots within the Rx time-slots routed by the
+> > > >            TSA to this cell.
+> > > >  
+> > > > +      compatible:
+> > > > +        const: fsl,qmc-hdlc
+> > > > +
+> > > > +      fsl,framer:
+> > > > +        $ref: /schemas/types.yaml#/definitions/phandle
+> > > > +        description:
+> > > > +          phandle to the framer node. The framer is in charge of an E1/T1 line
+> > > > +          interface connected to the TDM bus. It can be used to get the E1/T1 line
+> > > > +          status such as link up/down.    
+> > > 
+> > > Sounds like this fsl,framer property should depend on the compatible
+> > > being present, no?  
+> > 
+> > Well from the implementation point of view, only the QMC HDLC driver uses this
+> > property.
+> > 
+> > From the hardware description point of view, this property means that the time slots
+> > handled by this channel are connected to the framer. So I think it makes sense for
+> > any channel no matter the compatible (even if compatible is not present).
+> > 
+> > Should I change and constraint the fsl,framer property to the compatible presence ?
+> > If so, is the following correct for this contraint ?
+> >    --- 8< ---
+> >    dependencies:
+> >      - fsl,framer: [ compatible ];
+> >    --- 8< ---  
 > 
-> Use the new polarity setter instead of the more cumbersome toggle
-> function.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/platform/x86/intel/int3472/clk_and_regulator.c | 2 +-
->  drivers/platform/x86/intel/int3472/led.c               | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> index ef4b3141efcd..31e520838b95 100644
-> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> @@ -183,7 +183,7 @@ int skl_int3472_register_gpio_clock(struct int3472_discrete_device *int3472,
->  	}
->  
->  	if (polarity == GPIO_ACTIVE_LOW)
-> -		gpiod_toggle_active_low(int3472->clock.ena_gpio);
-> +		gpiod_set_active_low(int3472->clock.ena_gpio);
->  
->  	/* Ensure the pin is in output mode and non-active state */
->  	gpiod_direction_output(int3472->clock.ena_gpio, 0);
-> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/x86/intel/int3472/led.c
-> index bca1ce7d0d0c..46c9c569df5e 100644
-> --- a/drivers/platform/x86/intel/int3472/led.c
-> +++ b/drivers/platform/x86/intel/int3472/led.c
-> @@ -32,7 +32,7 @@ int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
->  				     "getting privacy LED GPIO\n");
->  
->  	if (polarity == GPIO_ACTIVE_LOW)
-> -		gpiod_toggle_active_low(int3472->pled.gpio);
-> +		gpiod_set_active_low(int3472->pled.gpio);
->  
->  	/* Ensure the pin is in output mode and non-active state */
->  	gpiod_direction_output(int3472->pled.gpio, 0);
+> The regular sort of
+> if:
+> 	compatible:
+> 		contains:
+> 			const: foo
+> then:
+> 	required:
+> 		- fsl,framer
+> would fit the bill, no?
 
+Not sure.
+"fsl,framer" is an optional property (depending on the hardware we can have
+a framer or not).
 
-Thanks. I agree that the new API is much better:
-
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Feel free to merge this through the GPIO tree.
-
-Regards,
-
-Hans
-
-
-
+Hervé
