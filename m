@@ -2,242 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7944279E0CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 09:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC0F779E0C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 09:26:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238593AbjIMH11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 03:27:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
+        id S238572AbjIMH0x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 03:26:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238596AbjIMH11 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 03:27:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BF6701984
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 00:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694589993;
+        with ESMTP id S229884AbjIMH0x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 03:26:53 -0400
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70ACA1986;
+        Wed, 13 Sep 2023 00:26:48 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 26012E000C;
+        Wed, 13 Sep 2023 07:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1694590007;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=y+z/VJVoCY4LZ35ZR0Mzw7V+/Zr+JLFHRkK2GVRV/EU=;
-        b=dfInFt1hHbsOj1W2mn2/MSotPrMI/X9mhHzzYiD4MDqe3mZCKQefhKlhySXgEAvb2WxeWe
-        IoaHl9XrEoCW/HXNzrZq6befPnSM9XxcaCaL6pPdpBBEvc56/3NNE7yTZOiqd4RKy2aZh7
-        hU3P26IGG4NKbm60nAB/bZRMYxBq8CA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-314-Bds_UahUOO6WoJKcuFtsVg-1; Wed, 13 Sep 2023 03:26:32 -0400
-X-MC-Unique: Bds_UahUOO6WoJKcuFtsVg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9ad73eb9668so91794466b.0
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 00:26:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694589991; x=1695194791;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y+z/VJVoCY4LZ35ZR0Mzw7V+/Zr+JLFHRkK2GVRV/EU=;
-        b=biOZYbJnNwG9o/8wlbxMDRujE5EZX6xndZVeZHT02GVMCH90fuHDqhfKeC0qp4dRut
-         syjE7FNfCAcqskg0srleLa5+zyrHjxlqaD+vWMeq+jEx2/3UFwtMAcJARFD72LZK2k8s
-         hu5eztIkoxwk+GB0a8OhTprOVWmnCvR17jfUrV3afe7NpGWcx6zUDPNFw2ko1INQJ/PW
-         ybMEMrrGoSBrMniI+qrtvK99cjv+OrM1W+HINhy2UqpvoIEgx6eC4oVaHWnWV7OAU8Pk
-         EbulD9xeuxC7/wExaINZPjwuq2R+BEm/rT1Mqb7BZyE0bGBrTRYrUNfPQFxoPBRbBbpA
-         vVPQ==
-X-Gm-Message-State: AOJu0YzuQexVA1Epvg63nWgVlZZiC4mClMBLwu7QLFOFEcX0oZ8si/xe
-        dF47AoL39tl8tU3l8i83HiWIWUaPsctIcoaHst+mTLLMucepbqa/sZ+HesJERwVngUfe2No10i5
-        gMXz1GxtsTXlTTht2N2oLXQ==
-X-Received: by 2002:a17:906:3150:b0:9ad:a46c:66a2 with SMTP id e16-20020a170906315000b009ada46c66a2mr892527eje.11.1694589991110;
-        Wed, 13 Sep 2023 00:26:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHFZiNOK2Yzq5Yl/6Ha26/Um8kT7PCaxJDRjRJvq8ELbAzF48q+8/IwCFhaHoaB1/6hRAFoIw==
-X-Received: by 2002:a17:906:3150:b0:9ad:a46c:66a2 with SMTP id e16-20020a170906315000b009ada46c66a2mr892499eje.11.1694589990725;
-        Wed, 13 Sep 2023 00:26:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id v14-20020a17090690ce00b0099c53c44083sm7923202ejw.79.2023.09.13.00.26.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Sep 2023 00:26:30 -0700 (PDT)
-Message-ID: <764de5af-d589-9c43-be02-a9934eb9044b@redhat.com>
-Date:   Wed, 13 Sep 2023 09:26:28 +0200
+        bh=O+j8CLkeQqfE/jh3KUACTiWhEVCfAwwkGv+CICyZc1E=;
+        b=id5wBw+5IoW5nrGIWPBxMOPgujgtR6RcLR+FMdrunmLvgVotlzLE4P7GYyysXkHSpptRua
+        AUfDx7XqGPnc1pFdO+2bGGISGvLbBCzyXlMgzpVW7v7AYC53V4Eaa7Giqyjg+JY6+zA/6X
+        ae1i0V0aWjGLBf6bo0hPvjiAFVEw+x3XTs3VCD8PXidN9bityZlJLHPojdkWvSYwfW1nil
+        jAHS1xzlhg0SXt7dGRnbvV2Qsa4Q1uRXGy564WEw0irLFiw0glEyZRzK5O1GQJ3au0virI
+        6//y6UwVKL0i+itAqUc3X0+fgIxkEkCePNW0m4OkaNXvPS+DkPuU9xPTWVApzw==
+Date:   Wed, 13 Sep 2023 09:26:40 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 08/31] dt-bindings: soc: fsl: cpm_qe: cpm1-scc-qmc:
+ Add support for QMC HDLC
+Message-ID: <20230913092640.76934b31@bootlin.com>
+In-Reply-To: <20230912-capable-stash-c7a3e33078ac@spud>
+References: <20230912081527.208499-1-herve.codina@bootlin.com>
+        <20230912101018.225246-1-herve.codina@bootlin.com>
+        <20230912-capable-stash-c7a3e33078ac@spud>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v16 1/4] usb: Add support for Intel LJCA device
-To:     kernel test robot <lkp@intel.com>,
-        Wentong Wu <wentong.wu@intel.com>, gregkh@linuxfoundation.org,
-        arnd@arndb.de, mka@chromium.org, oneukum@suse.com, lee@kernel.org,
-        wsa@kernel.org, kfting@nuvoton.com, broonie@kernel.org,
-        linus.walleij@linaro.org, maz@kernel.org, brgl@bgdev.pl,
-        linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, heikki.krogerus@linux.intel.com,
-        andi.shyti@linux.intel.com, sakari.ailus@linux.intel.com,
-        bartosz.golaszewski@linaro.org, srinivas.pandruvada@intel.com
-Cc:     oe-kbuild-all@lists.linux.dev, zhifeng.wang@intel.com
-References: <1694569212-10080-2-git-send-email-wentong.wu@intel.com>
- <202309131427.AUBwVNBm-lkp@intel.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <202309131427.AUBwVNBm-lkp@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: herve.codina@bootlin.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi Conor,
 
-On 9/13/23 08:12, kernel test robot wrote:
-> Hi Wentong,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on wsa/i2c/for-next]
-> [also build test WARNING on broonie-spi/for-next linus/master v6.6-rc1 next-20230912]
-> [cannot apply to usb/usb-testing usb/usb-next usb/usb-linus]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Wentong-Wu/usb-Add-support-for-Intel-LJCA-device/20230913-094239
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
-> patch link:    https://lore.kernel.org/r/1694569212-10080-2-git-send-email-wentong.wu%40intel.com
-> patch subject: [PATCH v16 1/4] usb: Add support for Intel LJCA device
-> config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20230913/202309131427.AUBwVNBm-lkp@intel.com/config)
-> compiler: sparc64-linux-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230913/202309131427.AUBwVNBm-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202309131427.AUBwVNBm-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    drivers/usb/misc/usb-ljca.c: In function 'ljca_match_device_ids':
->    drivers/usb/misc/usb-ljca.c:389:27: error: implicit declaration of function 'acpi_device_uid'; did you mean 'dmi_device_id'? [-Werror=implicit-function-declaration]
->      389 |         const char *uid = acpi_device_uid(adev);
->          |                           ^~~~~~~~~~~~~~~
->          |                           dmi_device_id
->>> drivers/usb/misc/usb-ljca.c:389:27: warning: initialization of 'const char *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
->    drivers/usb/misc/usb-ljca.c:391:13: error: implicit declaration of function 'acpi_match_device_ids'; did you mean 'ljca_match_device_ids'? [-Werror=implicit-function-declaration]
->      391 |         if (acpi_match_device_ids(adev, wd->ids))
->          |             ^~~~~~~~~~~~~~~~~~~~~
->          |             ljca_match_device_ids
->    drivers/usb/misc/usb-ljca.c: In function 'ljca_auxdev_acpi_bind':
->    drivers/usb/misc/usb-ljca.c:429:16: error: implicit declaration of function 'acpi_find_child_device'; did you mean 'acpi_match_device'? [-Werror=implicit-function-declaration]
->      429 |         adev = acpi_find_child_device(parent, adr, false);
->          |                ^~~~~~~~~~~~~~~~~~~~~~
->          |                acpi_match_device
->>> drivers/usb/misc/usb-ljca.c:429:14: warning: assignment to 'struct acpi_device *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
->      429 |         adev = acpi_find_child_device(parent, adr, false);
->          |              ^
->    drivers/usb/misc/usb-ljca.c:458:9: error: implicit declaration of function 'acpi_dev_for_each_child'; did you mean 'device_for_each_child'? [-Werror=implicit-function-declaration]
->      458 |         acpi_dev_for_each_child(parent, ljca_match_device_ids, &wd);
->          |         ^~~~~~~~~~~~~~~~~~~~~~~
->          |         device_for_each_child
->    cc1: some warnings being treated as errors
+On Tue, 12 Sep 2023 18:21:58 +0100
+Conor Dooley <conor@kernel.org> wrote:
 
-Ok, so this need to have a "depends on ACPI" added to its Kconfig
-entry. There are other ways to fix it, but this driver will not
-be functional without ACPI anyways so "depends on ACPI" seems
-to be the best solution for this.
+> On Tue, Sep 12, 2023 at 12:10:18PM +0200, Herve Codina wrote:
+> > The QMC (QUICC mutichannel controller) is a controller present in some
+> > PowerQUICC SoC such as MPC885.
+> > The QMC HDLC uses the QMC controller to transfer HDLC data.
+> >=20
+> > Additionally, a framer can be connected to the QMC HDLC.
+> > If present, this framer is the interface between the TDM bus used by the
+> > QMC HDLC and the E1/T1 line.
+> > The QMC HDLC can use this framer to get information about the E1/T1 line
+> > and configure the E1/T1 line.
+> >=20
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > ---
+> >  .../bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml   | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-=
+scc-qmc.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-sc=
+c-qmc.yaml
+> > index 82d9beb48e00..b5073531f3f1 100644
+> > --- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc=
+.yaml
+> > +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc=
+.yaml
+> > @@ -101,6 +101,16 @@ patternProperties:
+> >            Channel assigned Rx time-slots within the Rx time-slots rout=
+ed by the
+> >            TSA to this cell.
+> > =20
+> > +      compatible:
+> > +        const: fsl,qmc-hdlc
+> > +
+> > +      fsl,framer:
+> > +        $ref: /schemas/types.yaml#/definitions/phandle
+> > +        description:
+> > +          phandle to the framer node. The framer is in charge of an E1=
+/T1 line
+> > +          interface connected to the TDM bus. It can be used to get th=
+e E1/T1 line
+> > +          status such as link up/down. =20
+>=20
+> Sounds like this fsl,framer property should depend on the compatible
+> being present, no?
+
+Well from the implementation point of view, only the QMC HDLC driver uses t=
+his
+property.
+
+=46rom the hardware description point of view, this property means that the t=
+ime slots
+handled by this channel are connected to the framer. So I think it makes se=
+nse for
+any channel no matter the compatible (even if compatible is not present).
+
+Should I change and constraint the fsl,framer property to the compatible pr=
+esence ?
+If so, is the following correct for this contraint ?
+   --- 8< ---
+   dependencies:
+     - fsl,framer: [ compatible ];
+   --- 8< ---
 
 Regards,
+Herv=C3=A9
 
-Hans
-
-
-
-
-
-> vim +389 drivers/usb/misc/usb-ljca.c
-> 
->    385	
->    386	static int ljca_match_device_ids(struct acpi_device *adev, void *data)
->    387	{
->    388		struct ljca_match_ids_walk_data *wd = data;
->  > 389		const char *uid = acpi_device_uid(adev);
->    390	
->    391		if (acpi_match_device_ids(adev, wd->ids))
->    392			return 0;
->    393	
->    394		if (!wd->uid)
->    395			goto match;
->    396	
->    397		if (!uid)
->    398			uid = "0";
->    399		else
->    400			uid = strchr(uid, wd->uid[0]);
->    401	
->    402		if (!uid || strcmp(uid, wd->uid))
->    403			return 0;
->    404	
->    405	match:
->    406		wd->adev = adev;
->    407	
->    408		return 1;
->    409	}
->    410	
->    411	/* bind auxiliary device to acpi device */
->    412	static void ljca_auxdev_acpi_bind(struct ljca_adapter *adap,
->    413					  struct auxiliary_device *auxdev,
->    414					  u64 adr, u8 id)
->    415	{
->    416		struct ljca_match_ids_walk_data wd = { 0 };
->    417		struct acpi_device *parent, *adev;
->    418		struct device *dev = adap->dev;
->    419		char uid[4];
->    420	
->    421		parent = ACPI_COMPANION(dev);
->    422		if (!parent)
->    423			return;
->    424	
->    425		/*
->    426		 * get auxdev ACPI handle from the ACPI device directly
->    427		 * under the parent that matches _ADR.
->    428		 */
->  > 429		adev = acpi_find_child_device(parent, adr, false);
->    430		if (adev) {
->    431			ACPI_COMPANION_SET(&auxdev->dev, adev);
->    432			return;
->    433		}
->    434	
->    435		/*
->    436		 * _ADR is a grey area in the ACPI specification, some
->    437		 * platforms use _HID to distinguish children devices.
->    438		 */
->    439		switch (adr) {
->    440		case LJCA_GPIO_ACPI_ADR:
->    441			wd.ids = ljca_gpio_hids;
->    442			break;
->    443		case LJCA_I2C1_ACPI_ADR:
->    444		case LJCA_I2C2_ACPI_ADR:
->    445			snprintf(uid, sizeof(uid), "%d", id);
->    446			wd.uid = uid;
->    447			wd.ids = ljca_i2c_hids;
->    448			break;
->    449		case LJCA_SPI1_ACPI_ADR:
->    450		case LJCA_SPI2_ACPI_ADR:
->    451			wd.ids = ljca_spi_hids;
->    452			break;
->    453		default:
->    454			dev_warn(dev, "unsupported _ADR\n");
->    455			return;
->    456		}
->    457	
->    458		acpi_dev_for_each_child(parent, ljca_match_device_ids, &wd);
->    459		if (wd.adev) {
->    460			ACPI_COMPANION_SET(&auxdev->dev, wd.adev);
->    461			return;
->    462		}
->    463	
->    464		parent = ACPI_COMPANION(dev->parent->parent);
->    465		if (!parent)
->    466			return;
->    467	
->    468		acpi_dev_for_each_child(parent, ljca_match_device_ids, &wd);
->    469		if (wd.adev)
->    470			ACPI_COMPANION_SET(&auxdev->dev, wd.adev);
->    471	}
->    472	
-> 
-
+>=20
+> Thanks,
+> Conor.
+>=20
+> > +
+> >      required:
+> >        - reg
+> >        - fsl,tx-ts-mask
+> > @@ -159,5 +169,8 @@ examples:
+> >              fsl,operational-mode =3D "hdlc";
+> >              fsl,tx-ts-mask =3D <0x00000000 0x0000ff00>;
+> >              fsl,rx-ts-mask =3D <0x00000000 0x0000ff00>;
+> > +
+> > +            compatible =3D "fsl,qmc-hdlc";
+> > +            fsl,framer =3D <&framer>;
+> >          };
+> >      };
+> > --=20
+> > 2.41.0
+> >  =20
