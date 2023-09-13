@@ -2,92 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 789D079EB30
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 16:35:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B64AD79EB40
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 16:39:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241355AbjIMOfo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 10:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
+        id S236167AbjIMOjy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 10:39:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241277AbjIMOfo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 10:35:44 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E3A91
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 07:35:39 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:f674:9611:cd05:f25a])
-        by baptiste.telenet-ops.be with bizsmtp
-        id lSbe2A0063fvA4V01Sberm; Wed, 13 Sep 2023 16:35:38 +0200
-Received: from geert (helo=localhost)
-        by ramsan.of.borg with local-esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qgQxu-003cyS-25;
-        Wed, 13 Sep 2023 16:35:38 +0200
-Date:   Wed, 13 Sep 2023 16:35:38 +0200 (CEST)
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S232390AbjIMOjy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 10:39:54 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38CA490;
+        Wed, 13 Sep 2023 07:39:50 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C64A7C433C8;
+        Wed, 13 Sep 2023 14:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694615989;
+        bh=RJoIfCcg3Gqvlc6Pv3L0lR4WCeRLMrROYaRGXX3uIAw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h0mv2ujnNPBV1QjbllewX4FCxcYj7UIsM7RYsumCnJYKKZxxARRvsgTPkchtVUrOG
+         Rml9dusWCC3tOaFcBAlQZ+HyhFi21PQ2icCnZXU3YytqIFh6XOGdkU+3kNu8TwDyhB
+         WJRDtBek5vWld2P/ShKcBo1SVBdzlme7UdBJijsO2e7k/u1AEtQ98HIez9iAnnMUp4
+         WtYw87YW09XXT8g6GAGAFdOQxLYlJqVfeq92qL/KbAHqYFGZFctKtSpKUUK5BmqQUq
+         W6tyh/Uvo62Cr0+7zVDD/qfL/7JXV4Zt19ttI2wt2FXW7Ioi+S8Uq74Ra8HfNT3oE4
+         dbw/bY7nHM5AQ==
+Date:   Wed, 13 Sep 2023 15:39:41 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Herve Codina <herve.codina@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 05/10] gpio: pca953x: Simplify code with cleanup
- helpers
-In-Reply-To: <20230901134041.1165562-5-andriy.shevchenko@linux.intel.com>
-Message-ID: <71232fcf-98c4-373a-805-141a349fd25@linux-m68k.org>
-References: <20230901134041.1165562-1-andriy.shevchenko@linux.intel.com> <20230901134041.1165562-5-andriy.shevchenko@linux.intel.com>
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 25/31] dt-bindings: net: Add the Lantiq PEF2256
+ E1/T1/J1 framer
+Message-ID: <20230913-faceless-sloppy-9c408191630a@spud>
+References: <20230912081527.208499-1-herve.codina@bootlin.com>
+ <20230912101444.225809-1-herve.codina@bootlin.com>
+ <20230912-overplay-donated-080eb97803d6@spud>
+ <20230912185405.GA1165807-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f/ltRk1gE1+sCzTa"
+Content-Disposition: inline
+In-Reply-To: <20230912185405.GA1165807-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
- 	Hi Andy,
 
-On Fri, 1 Sep 2023, Andy Shevchenko wrote:
-> Use macros defined in linux/cleanup.h to automate resource lifetime
-> control in gpio-pca953x.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--f/ltRk1gE1+sCzTa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch, which is now commit 8e471b784a720f6f
-("gpio: pca953x: Simplify code with cleanup helpers") in
-gpio/gpio/for-next.
+On Tue, Sep 12, 2023 at 01:54:05PM -0500, Rob Herring wrote:
+> > > +  lantiq,data-rate-bps:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    enum: [2048000, 4096000, 8192000, 16384000]
+> >=20
+> > -kBps is a standard suffix, would it be worth using that instead here?
+> > What you have would fit as even multiples.
+> > Otherwise Rob, should dt-schema grow -bps as a standard suffix?
+>=20
+> Yeah, I think that makes sense. I've added it now.
 
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -557,9 +554,8 @@ static int pca953x_gpio_get_value(struct gpio_chip *gc, unsigned off)
-> 	u32 reg_val;
-> 	int ret;
->
-> -	mutex_lock(&chip->i2c_lock);
-> -	ret = regmap_read(chip->regmap, inreg, &reg_val);
-> -	mutex_unlock(&chip->i2c_lock);
-> +	scoped_guard(mutex, &chip->i2c_lock)
-> +		ret = regmap_read(chip->regmap, inreg, &reg_val);
+Cool, thanks!
 
-I can't say I'm thrilled about the lack of curly braces.  I was also
-surprised to discover that checkpatch nor gcc W=1 complain about the
-indentation change.
-I know we don't use curly braces in single-statement for_each_*() loops,
-but at least these have the familiar "for"-prefix.  And having the scope
-is very important here, so using braces, this would stand out more.
+--f/ltRk1gE1+sCzTa
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Hence can we please get curly braces, like
+-----BEGIN PGP SIGNATURE-----
 
-     scoped_guard(mutex, &chip->i2c_lock) {
- 	    ret = regmap_read(chip->regmap, inreg, &reg_val);
-     }
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZQHJrQAKCRB4tDGHoIJi
+0iNbAQCQvNI/6rj3MUcE4cZYQRwXdY48ReUFl3upkSIAwL59UwEA5YVuiJyYj+pl
+y+M6tf6hogZBT32WxEtJnwijye97rQw=
+=lb0d
+-----END PGP SIGNATURE-----
 
-?
-
-Thanks! ;-)
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
+--f/ltRk1gE1+sCzTa--
