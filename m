@@ -2,141 +2,242 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAD3979E080
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 09:10:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7944279E0CF
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 09:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238479AbjIMHKc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 03:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45522 "EHLO
+        id S238593AbjIMH11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 03:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238367AbjIMHKb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 03:10:31 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37D921726;
-        Wed, 13 Sep 2023 00:10:27 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38D6Ld4e032251;
-        Wed, 13 Sep 2023 07:10:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=qqRVKtn6/zyJ17CeKnTMdnuTgtPxVETYhHbBrmlREPw=;
- b=ghG+PRtO5O0X6vZ4Xh3f9VBp8PMbtP+X2XnBsyoSIejQ5qwoEjmEda6/oSz54D5DG3uN
- s1O3DpdB1bng3T6r1l5K6GC3o9e9z8S7IL+2JEaiEhSAoJ+8WjRQJigGmb521gO3I1+B
- IGv2AM/0tE15ueO7oTqybrCgW3N3kwvogrJ+gxe+QUjN7+ZXYwyBlG3BMXpKFmnIUOua
- nX/gwKLrMpXwhw0nMdtAUiwGwFnPOBzcpC1Vt6LOsHxVmOyNR5JSFLYXSwIz+ncgdYJu
- NymOt6ejVAMxMI8OSarMc0QY6NKnk+jlwdGVJ6OtiKkny3MaH69SSRhPHKUP4Y2y8pPH bQ== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t2y8jrxe8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Sep 2023 07:10:01 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38D7A0vs000953
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Sep 2023 07:10:00 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Wed, 13 Sep
- 2023 00:09:48 -0700
-Message-ID: <fe7d618d-ca22-0fd4-efc0-cad52cb984bc@quicinc.com>
-Date:   Wed, 13 Sep 2023 12:39:45 +0530
+        with ESMTP id S238596AbjIMH11 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 03:27:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BF6701984
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 00:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694589993;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=y+z/VJVoCY4LZ35ZR0Mzw7V+/Zr+JLFHRkK2GVRV/EU=;
+        b=dfInFt1hHbsOj1W2mn2/MSotPrMI/X9mhHzzYiD4MDqe3mZCKQefhKlhySXgEAvb2WxeWe
+        IoaHl9XrEoCW/HXNzrZq6befPnSM9XxcaCaL6pPdpBBEvc56/3NNE7yTZOiqd4RKy2aZh7
+        hU3P26IGG4NKbm60nAB/bZRMYxBq8CA=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-314-Bds_UahUOO6WoJKcuFtsVg-1; Wed, 13 Sep 2023 03:26:32 -0400
+X-MC-Unique: Bds_UahUOO6WoJKcuFtsVg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9ad73eb9668so91794466b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 00:26:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694589991; x=1695194791;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y+z/VJVoCY4LZ35ZR0Mzw7V+/Zr+JLFHRkK2GVRV/EU=;
+        b=biOZYbJnNwG9o/8wlbxMDRujE5EZX6xndZVeZHT02GVMCH90fuHDqhfKeC0qp4dRut
+         syjE7FNfCAcqskg0srleLa5+zyrHjxlqaD+vWMeq+jEx2/3UFwtMAcJARFD72LZK2k8s
+         hu5eztIkoxwk+GB0a8OhTprOVWmnCvR17jfUrV3afe7NpGWcx6zUDPNFw2ko1INQJ/PW
+         ybMEMrrGoSBrMniI+qrtvK99cjv+OrM1W+HINhy2UqpvoIEgx6eC4oVaHWnWV7OAU8Pk
+         EbulD9xeuxC7/wExaINZPjwuq2R+BEm/rT1Mqb7BZyE0bGBrTRYrUNfPQFxoPBRbBbpA
+         vVPQ==
+X-Gm-Message-State: AOJu0YzuQexVA1Epvg63nWgVlZZiC4mClMBLwu7QLFOFEcX0oZ8si/xe
+        dF47AoL39tl8tU3l8i83HiWIWUaPsctIcoaHst+mTLLMucepbqa/sZ+HesJERwVngUfe2No10i5
+        gMXz1GxtsTXlTTht2N2oLXQ==
+X-Received: by 2002:a17:906:3150:b0:9ad:a46c:66a2 with SMTP id e16-20020a170906315000b009ada46c66a2mr892527eje.11.1694589991110;
+        Wed, 13 Sep 2023 00:26:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHFZiNOK2Yzq5Yl/6Ha26/Um8kT7PCaxJDRjRJvq8ELbAzF48q+8/IwCFhaHoaB1/6hRAFoIw==
+X-Received: by 2002:a17:906:3150:b0:9ad:a46c:66a2 with SMTP id e16-20020a170906315000b009ada46c66a2mr892499eje.11.1694589990725;
+        Wed, 13 Sep 2023 00:26:30 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id v14-20020a17090690ce00b0099c53c44083sm7923202ejw.79.2023.09.13.00.26.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Sep 2023 00:26:30 -0700 (PDT)
+Message-ID: <764de5af-d589-9c43-be02-a9934eb9044b@redhat.com>
+Date:   Wed, 13 Sep 2023 09:26:28 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v5 06/17] soc: qcom: Add Qualcomm APSS minidump kernel
- driver
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
- <1694290578-17733-7-git-send-email-quic_mojha@quicinc.com>
- <3bb1e84f-3b65-0596-1b6b-6decb0ff53cc@linaro.org>
- <0eeef9c4-14c0-8283-803b-4684854d4be6@quicinc.com>
- <94770fc6-7d72-8283-5858-786685620d5c@linaro.org>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <94770fc6-7d72-8283-5858-786685620d5c@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH v16 1/4] usb: Add support for Intel LJCA device
+To:     kernel test robot <lkp@intel.com>,
+        Wentong Wu <wentong.wu@intel.com>, gregkh@linuxfoundation.org,
+        arnd@arndb.de, mka@chromium.org, oneukum@suse.com, lee@kernel.org,
+        wsa@kernel.org, kfting@nuvoton.com, broonie@kernel.org,
+        linus.walleij@linaro.org, maz@kernel.org, brgl@bgdev.pl,
+        linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, heikki.krogerus@linux.intel.com,
+        andi.shyti@linux.intel.com, sakari.ailus@linux.intel.com,
+        bartosz.golaszewski@linaro.org, srinivas.pandruvada@intel.com
+Cc:     oe-kbuild-all@lists.linux.dev, zhifeng.wang@intel.com
+References: <1694569212-10080-2-git-send-email-wentong.wu@intel.com>
+ <202309131427.AUBwVNBm-lkp@intel.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <202309131427.AUBwVNBm-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 0R0xqRb59Cba6lgs1UtXK0Q91VYNBJeX
-X-Proofpoint-GUID: 0R0xqRb59Cba6lgs1UtXK0Q91VYNBJeX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-12_24,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- impostorscore=0 spamscore=0 mlxlogscore=929 malwarescore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 suspectscore=0
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2308100000 definitions=main-2309130059
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
+
+On 9/13/23 08:12, kernel test robot wrote:
+> Hi Wentong,
+> 
+> kernel test robot noticed the following build warnings:
+> 
+> [auto build test WARNING on wsa/i2c/for-next]
+> [also build test WARNING on broonie-spi/for-next linus/master v6.6-rc1 next-20230912]
+> [cannot apply to usb/usb-testing usb/usb-next usb/usb-linus]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Wentong-Wu/usb-Add-support-for-Intel-LJCA-device/20230913-094239
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
+> patch link:    https://lore.kernel.org/r/1694569212-10080-2-git-send-email-wentong.wu%40intel.com
+> patch subject: [PATCH v16 1/4] usb: Add support for Intel LJCA device
+> config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20230913/202309131427.AUBwVNBm-lkp@intel.com/config)
+> compiler: sparc64-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230913/202309131427.AUBwVNBm-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202309131427.AUBwVNBm-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/usb/misc/usb-ljca.c: In function 'ljca_match_device_ids':
+>    drivers/usb/misc/usb-ljca.c:389:27: error: implicit declaration of function 'acpi_device_uid'; did you mean 'dmi_device_id'? [-Werror=implicit-function-declaration]
+>      389 |         const char *uid = acpi_device_uid(adev);
+>          |                           ^~~~~~~~~~~~~~~
+>          |                           dmi_device_id
+>>> drivers/usb/misc/usb-ljca.c:389:27: warning: initialization of 'const char *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>    drivers/usb/misc/usb-ljca.c:391:13: error: implicit declaration of function 'acpi_match_device_ids'; did you mean 'ljca_match_device_ids'? [-Werror=implicit-function-declaration]
+>      391 |         if (acpi_match_device_ids(adev, wd->ids))
+>          |             ^~~~~~~~~~~~~~~~~~~~~
+>          |             ljca_match_device_ids
+>    drivers/usb/misc/usb-ljca.c: In function 'ljca_auxdev_acpi_bind':
+>    drivers/usb/misc/usb-ljca.c:429:16: error: implicit declaration of function 'acpi_find_child_device'; did you mean 'acpi_match_device'? [-Werror=implicit-function-declaration]
+>      429 |         adev = acpi_find_child_device(parent, adr, false);
+>          |                ^~~~~~~~~~~~~~~~~~~~~~
+>          |                acpi_match_device
+>>> drivers/usb/misc/usb-ljca.c:429:14: warning: assignment to 'struct acpi_device *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>      429 |         adev = acpi_find_child_device(parent, adr, false);
+>          |              ^
+>    drivers/usb/misc/usb-ljca.c:458:9: error: implicit declaration of function 'acpi_dev_for_each_child'; did you mean 'device_for_each_child'? [-Werror=implicit-function-declaration]
+>      458 |         acpi_dev_for_each_child(parent, ljca_match_device_ids, &wd);
+>          |         ^~~~~~~~~~~~~~~~~~~~~~~
+>          |         device_for_each_child
+>    cc1: some warnings being treated as errors
+
+Ok, so this need to have a "depends on ACPI" added to its Kconfig
+entry. There are other ways to fix it, but this driver will not
+be functional without ACPI anyways so "depends on ACPI" seems
+to be the best solution for this.
+
+Regards,
+
+Hans
 
 
-On 9/12/2023 3:24 PM, Krzysztof Kozlowski wrote:
-> On 12/09/2023 11:26, Mukesh Ojha wrote:
->>>
->>>> +		return -EINVAL;
->>>> +	}
->>>> +
->>>> +	mutex_init(&md->md_lock);
->>>> +	ret = qcom_apss_md_table_init(md, &mdgtoc->subsystems[MINIDUMP_APSS_DESC]);
->>>> +	if (ret) {
->>>> +		dev_err(md->dev, "apss minidump initialization failed: %d\n", ret);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	/* First entry would be ELF header */
->>>> +	ret = qcom_md_add_elfheader(md);
->>>> +	if (ret) {
->>>> +		dev_err(md->dev, "Failed to add elf header: %d\n", ret);
->>>> +		memset(md->apss_data->md_ss_toc, 0, sizeof(struct minidump_subsystem));
->>>
->>> Why do you need it?
->>
->> Earlier, i got comment about clearing the SS TOC(subsystem table of
->> content) which is shared with other SS and it will have stale values.
-> 
-> OK, but then the entire code is poorly readable. First, any cleanup of
-> qcom_apss_md_table_init() should be named similarly, e.g.
-> qcom_apss_md_table_clean() or qcom_apss_md_table_exit() or whatever
-> seems feasible.
 
-ACK on this.
 
-> 
-> Second, shouldn't writing to shared memory be the last step? Step which
-> cannot fail and there is no cleanup afterwards (like
-> platform_set_drvdata)? I don't enjoy looking at this interface...
 
-It can be done, if i shift adding elf header as first thing to first
-caller of qcom_minidump_region_register() but then i would have to 
-remove qcom_ramoops_minidump() from this probe in 11/17 patch.
+> vim +389 drivers/usb/misc/usb-ljca.c
+> 
+>    385	
+>    386	static int ljca_match_device_ids(struct acpi_device *adev, void *data)
+>    387	{
+>    388		struct ljca_match_ids_walk_data *wd = data;
+>  > 389		const char *uid = acpi_device_uid(adev);
+>    390	
+>    391		if (acpi_match_device_ids(adev, wd->ids))
+>    392			return 0;
+>    393	
+>    394		if (!wd->uid)
+>    395			goto match;
+>    396	
+>    397		if (!uid)
+>    398			uid = "0";
+>    399		else
+>    400			uid = strchr(uid, wd->uid[0]);
+>    401	
+>    402		if (!uid || strcmp(uid, wd->uid))
+>    403			return 0;
+>    404	
+>    405	match:
+>    406		wd->adev = adev;
+>    407	
+>    408		return 1;
+>    409	}
+>    410	
+>    411	/* bind auxiliary device to acpi device */
+>    412	static void ljca_auxdev_acpi_bind(struct ljca_adapter *adap,
+>    413					  struct auxiliary_device *auxdev,
+>    414					  u64 adr, u8 id)
+>    415	{
+>    416		struct ljca_match_ids_walk_data wd = { 0 };
+>    417		struct acpi_device *parent, *adev;
+>    418		struct device *dev = adap->dev;
+>    419		char uid[4];
+>    420	
+>    421		parent = ACPI_COMPANION(dev);
+>    422		if (!parent)
+>    423			return;
+>    424	
+>    425		/*
+>    426		 * get auxdev ACPI handle from the ACPI device directly
+>    427		 * under the parent that matches _ADR.
+>    428		 */
+>  > 429		adev = acpi_find_child_device(parent, adr, false);
+>    430		if (adev) {
+>    431			ACPI_COMPANION_SET(&auxdev->dev, adev);
+>    432			return;
+>    433		}
+>    434	
+>    435		/*
+>    436		 * _ADR is a grey area in the ACPI specification, some
+>    437		 * platforms use _HID to distinguish children devices.
+>    438		 */
+>    439		switch (adr) {
+>    440		case LJCA_GPIO_ACPI_ADR:
+>    441			wd.ids = ljca_gpio_hids;
+>    442			break;
+>    443		case LJCA_I2C1_ACPI_ADR:
+>    444		case LJCA_I2C2_ACPI_ADR:
+>    445			snprintf(uid, sizeof(uid), "%d", id);
+>    446			wd.uid = uid;
+>    447			wd.ids = ljca_i2c_hids;
+>    448			break;
+>    449		case LJCA_SPI1_ACPI_ADR:
+>    450		case LJCA_SPI2_ACPI_ADR:
+>    451			wd.ids = ljca_spi_hids;
+>    452			break;
+>    453		default:
+>    454			dev_warn(dev, "unsupported _ADR\n");
+>    455			return;
+>    456		}
+>    457	
+>    458		acpi_dev_for_each_child(parent, ljca_match_device_ids, &wd);
+>    459		if (wd.adev) {
+>    460			ACPI_COMPANION_SET(&auxdev->dev, wd.adev);
+>    461			return;
+>    462		}
+>    463	
+>    464		parent = ACPI_COMPANION(dev->parent->parent);
+>    465		if (!parent)
+>    466			return;
+>    467	
+>    468		acpi_dev_for_each_child(parent, ljca_match_device_ids, &wd);
+>    469		if (wd.adev)
+>    470			ACPI_COMPANION_SET(&auxdev->dev, wd.adev);
+>    471	}
+>    472	
+> 
 
--Mukesh
-> 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
