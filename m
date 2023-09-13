@@ -2,136 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3DD79E82E
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 14:39:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFAF579E977
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 15:36:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236490AbjIMMjh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 08:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40872 "EHLO
+        id S240952AbjIMNgv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 09:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbjIMMjh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 08:39:37 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1558319AC
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 05:39:33 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id ada2fe7eead31-44e86f3e4b6so2243061137.0
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 05:39:33 -0700 (PDT)
+        with ESMTP id S239451AbjIMNgv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 09:36:51 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 829CA19B1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 06:36:46 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2bcb0b973a5so110301991fa.3
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 06:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694608772; x=1695213572; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1694612205; x=1695217005; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ofo7sSePT/jaZ7VhEZ8Xa5CLpX5xgx/ZwhBkOWdddew=;
-        b=FS6PKu7cFaiKkXGoREvmNvcSSWrkorNOoAb4llWAGsgpSLVeeW4D/Gm++e0sgDRfyS
-         GBc0IFv3IqiDlzD7V1Pr6EYiCvtQas/PWj+QkoM5mKd1yYELakqwYdUWl2xAq8uhArXh
-         h7GL6P+ZtWmXtporIoYgenT5SSaWXfwd09MSxxBHsnfZseW4XfKU5T+r57b+XRh35x/I
-         DQkaWSQute483X7x8XwVGIlMJIZ6EhaWmd06OxHDG23iKaqye40V5kprbMb6FMVVdObJ
-         n11R2oTaGCL5dijA3BNyqZwY0FO6AE0vJwhnXistP4pdxMgmIFGUFPnbjNndB88k9Lew
-         zcPg==
+        bh=uzaLlzB69jnefmiMUmRm9hUyjxglCWHpETR7rLQZ5/k=;
+        b=h5E+dKSlvm19GFxpYp41fFKCiHjNYiHFygPRHmOO0oYxix8ZHsOxwysBRyxMjl1eVA
+         yCb0JTSxyKXLAhJ2Xp2TOByB6SHAKxwICf2+O2Q7w7YrQ2j6lBbEXV1xisj+JDx6WdTU
+         nuc+HE4ejqai2IJ69DCqxY1ug1YRPaLE1DezBl2Iu6oLSwJrKYogvNEHuFobntiI1+4c
+         vK6Kxzkt4huaoxs0iy1tz5MitFFwIJ2ut9SzNfO1s9f/Brnst2/hNycRQtwakqzobuOf
+         pJFaBMatCYOSqtwUODqD2aYDhDs/D96mfkNVE3utRUj9dS3hDjz+9nnmERxX6SApEACY
+         MO0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694608772; x=1695213572;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ofo7sSePT/jaZ7VhEZ8Xa5CLpX5xgx/ZwhBkOWdddew=;
-        b=N0ut7SUFkHmu2FOFppia8BXtAhE0/SfcQXnsZi+f6grz/Edt3K2EMjp4G1eEJIt3IH
-         NdiP2z/rUR5yL5Rx4uYFUXW2u/cXqcRrulWAiZwmKZ6s1kZhk4v17Fejzbynwj/agc0J
-         Ww1jx6Fkm3KKpML7/LJTWOtBoNbf+2QKeim5HxLMrJbDTnzfGwsq4YpmlDE+jbrNhHyU
-         8+XcU2RBAhqw6wGRVN3NqZN0lhVRaLYGmR5cFui9sj7oSiq5M4B646oMpYubmO6TaUbI
-         KzGY365XCGrBpbJNFKT9XYtJxpl55fwBAcVuRIBAIUWQUTGFh+rLY3bKIZ91vIa+7rDa
-         ak8w==
-X-Gm-Message-State: AOJu0Yz1cOh90wqIG57cgRxL+wEcoNNQFEjUZSwOuvTBHxMczsIIrUEP
-        gYfS0/zAAQJdzAzx0XyYLBpZ/k24z9lHUz/HU8D08A==
-X-Google-Smtp-Source: AGHT+IGdKI7ktabjI9KwOzEcCjHAPyvQReZHZJXN4jgvOMDrMNawaWOJWq7y+jd93g3lR7Fo2HZ29IzhmronhGMfaDk=
-X-Received: by 2002:a67:fa03:0:b0:447:779b:a357 with SMTP id
- i3-20020a67fa03000000b00447779ba357mr1865242vsq.32.1694608772217; Wed, 13 Sep
- 2023 05:39:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-4-brgl@bgdev.pl>
- <CACRpkdax-CrB42LeQ1bs3E7VqMncsgEwMs7b_v7J6R5AE+BjAg@mail.gmail.com>
-In-Reply-To: <CACRpkdax-CrB42LeQ1bs3E7VqMncsgEwMs7b_v7J6R5AE+BjAg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 13 Sep 2023 14:39:21 +0200
-Message-ID: <CAMRc=Mdt0wbjzbwBLK5m--VLV2WE5JybgrNYWXtbinPu_c=psw@mail.gmail.com>
-Subject: Re: [PATCH 3/5] mmc: slot-gpio: use gpiod_set_active_[low|high]()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20230601; t=1694612205; x=1695217005;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uzaLlzB69jnefmiMUmRm9hUyjxglCWHpETR7rLQZ5/k=;
+        b=i4wbL9nrRibgEnunf/vIshTL7OfOwD/erA/xy0RTRE0TsU+kQhQv3Jo1U4d87Ad38h
+         gNFhy+gqmh8dT3A1p3To5XOZFcw45nioSXOaj6fESA9y4WcRzw9+BrogWxkoQpoNjBer
+         pvvPWtekkeDmxq6beN+dHGZOVTVR4xteeqihwCen3sYOyA4rNnQKaiD8urCRH2ldTgm4
+         uDOhmMybKGGEwK66Wsf/1LjITMx7tEVeIiYdH06b1aT1kHoOatEcJP3wyi7U9FsjO3Ex
+         Y96QoO3R0yLA0YtkI7xPwDjO/+Y0m5p97OaATsKUi3qqwmbx87UBSOuUc5DSeH31GUMK
+         GSMw==
+X-Gm-Message-State: AOJu0YwbVdc+tzzcT4zz4QZCAzn+SIhn0eh1cnb77S9+Ytnk+mWS0zeY
+        3Xhl0rAsh03G/Ge36ZgNpoGcBioYPWcZLF7q1Xo=
+X-Google-Smtp-Source: AGHT+IEi9C35lFhcE1ivtOzjyKfKgcgwkhtWGoZqpDAG43LfdQkyk/02pj1DdE3kuRKjtbsT3HH1OQ==
+X-Received: by 2002:a05:6512:3e0a:b0:4f8:e4e9:499e with SMTP id i10-20020a0565123e0a00b004f8e4e9499emr2387168lfv.12.1694612204729;
+        Wed, 13 Sep 2023 06:36:44 -0700 (PDT)
+Received: from localhost (i5C74380B.versanet.de. [92.116.56.11])
+        by smtp.gmail.com with ESMTPSA id d10-20020a170906344a00b00977cad140a8sm8413401ejb.218.2023.09.13.06.36.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Sep 2023 06:36:44 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 13 Sep 2023 15:36:43 +0200
+Message-Id: <CVHTW377HBYV.1CKNHXYC75Q5N@ablu-work>
+Subject: Re: [libgpiod] Thread safety API contract
+Cc:     <linux-gpio@vger.kernel.org>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>,
+        =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+X-Mailer: aerc 0.15.2
+References: <CVHO091CC80Y.3KUOSLSOBVL0T@ablu-work>
+ <CAMRc=MdMKd+6-P-ma0E0f5yBTOGS_zVaBJD6wEywyjZ7JVE2YA@mail.gmail.com>
+In-Reply-To: <CAMRc=MdMKd+6-P-ma0E0f5yBTOGS_zVaBJD6wEywyjZ7JVE2YA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 2:24=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Wed, Sep 13, 2023 at 1:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
->
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed Sep 13, 2023 at 2:03 PM CEST, Bartosz Golaszewski wrote:
+> On Wed, Sep 13, 2023 at 11:47=E2=80=AFAM Erik Schilling
+> <erik.schilling@linaro.org> wrote:
 > >
-> > We have new, less cumbersome and clearer interfaces for controlling GPI=
-O
-> > polarity. Use them in the MMC code.
+> > Hi all!
 > >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Currently it looks like libgpiod does not document any kind of thread
+> > safety gurantee. However, the Python bindings tests
 >
-> I like the looks of the code better, obviously but this looks like this f=
-or
-> a reason unfortunately.
+> Indeed, the library is thread-aware but not thread-safe. Just like
+> what is recommended for low-level system libraries.
+
+Just to confirm:
+
+I assume this means: thread-aware in the sense that all created objects
+(chips, line_requests, ...) together may only be used by a single thread
+at once? So line_requests of a same chip may not be used across threads?
+
+> > (test_request_reconfigure_release_events) are using sequences like this=
+:
+> >
+> > Thread 1 creates chip + some watches
+> > Thread 1 creates Thread 2
+> > Thread 2 issues a request_lines on the chip
+> > Thread 2 reconfigures the line direction
+> > Thread 1 joins Thread 2
+> > Thread 1 closes the chip
+> >
+> > Implicitly this depends on a couple guarantees:
+> > 1. Calling chip-related functions does not require synchronisation
+> >    primitives (other than keeping the chip open).
+> >    -> wait_info_event, read_info_event and request_lines are called
+> >       concurrently
+> > 2. Requests may be modified by other threads
+> >    -> at least reconfiguring the direction is done
+> >
 >
-> See the following from
-> Documentation/devicetree/bindings/mmc/mmc-controller.yaml:
+> Well, this is just a test-case that's meant to trigger a line state
+> event. Now that you're mentioning this, it does look like I should
+> have used an entirely separate chip object. Good catch!
 >
->   # CD and WP lines can be implemented on the hardware in one of two
->   # ways: as GPIOs, specified in cd-gpios and wp-gpios properties, or
->   # as dedicated pins. Polarity of dedicated pins can be specified,
->   # using *-inverted properties. GPIO polarity can also be specified
->   # using the GPIO_ACTIVE_LOW flag. This creates an ambiguity in the
->   # latter case. We choose to use the XOR logic for GPIO CD and WP
->   # lines.  This means, the two properties are "superimposed," for
->   # example leaving the GPIO_ACTIVE_LOW flag clear and specifying the
->   # respective *-inverted property property results in a
->   # double-inversion and actually means the "normal" line polarity is
->   # in effect.
+> > Looking at the C implementations, it indeed looks? like this is a safe
+> > thing to do - with the current implementation.
+> >
 >
+> No it isn't. That is: maybe it is but it's not on purpose. There are
+> no thread-safety guarantees.
 
-I hate it, thanks. :)
+Right. Thats what I was trying to suggest with "- with the current
+implementation" suffix.
 
-> Will you still provide the desired "double inversion" after this patch?
+> > My question is: Is this an intentional gurantee that will be guranteed
+> > in future releases? I am trying to figure out whether the current
+> > contract exposed by the Rust bindings is correct and/or may need to
+> > be extended. So which guarantees are provided by the current and future
+> > C lib?
 >
+> None. Except reentrancy for all functions.
 
-Not in the current form. Would it work to go:
+Thanks for clarifying!
 
-if (override_active_level) {
-    if (!(host->caps2 & MMC_CAP2_CD_ACTIVE_HIGH))
-        gpiod_set_active_high(desc);
-    else
-        gpiod_set_active_low(desc);
-} else {
-    if (host->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
-        gpiod_set_active_high(desc);
-    else
-        gpiod_set_active_low(desc);
-}
+> > Currently, the Rust bindings are advertising that the chip may be `Send=
+`
+> > to other threads. This means one thread may forget about it and another
+> > thread receives it. In contrast, a request for a line is currently not
+> > allowed to be transferred to other threads (it is missing the `Send`
+> > marker).
+> >
+> > While in C and C++ thread-safety is typically not enforced by the
+> > compiler, Rust has mechanisms to do this. But I would like to document
+> > the C lib's situation before inventing rules for the Rust bindings :).
+> >
+>
+> I cannot help you with that but whatever rust does, it needs to keep
+> in mind the C objects need to be synchronized as they offer no
+> guarantees.
 
-?
+I will think of something in a calm moment :). I think we may need to
+prevent the chip from being moved to other threads while leaving child
+objects behind.
 
-Alternatively we could reimplement the toggle semantics locally in a
-helper function in order to get rid of it from GPIOLIB.
+Thanks
+- Erik
 
-Bart
+>
+> Bartosz
+>
+> > Trigger of my question was that we glossed over these details in
+> > vhost-device-gpio:
+> >
+> > https://github.com/rust-vmm/vhost-device/pull/435#issuecomment-17172056=
+20
+> >
+> > - Erik
+
