@@ -2,116 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77EA179F55F
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 01:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C41479F56F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 01:24:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230229AbjIMXRg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 19:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53462 "EHLO
+        id S233147AbjIMXYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 19:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233113AbjIMXRf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 19:17:35 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DD31BD0
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 16:17:31 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-573ccec985dso249853a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 16:17:31 -0700 (PDT)
+        with ESMTP id S233129AbjIMXYI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 19:24:08 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CAE1BCE
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 16:24:04 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1c1e128135aso2774365ad.3
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 16:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694647050; x=1695251850; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694647444; x=1695252244; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e1a1XS5FwL95wVQ3U0hOYK16YJk3gJb5vChvM9EJIak=;
-        b=NovGamzA9VvBNl1NvPwObRG4Yw8PVqhR4W2GbES9EwqPPd8vZ4mFtfrvBaSYXGLaA4
-         MAz6DE7lN9SXDmizvtRaBovZL69KvTwI6z/vEVlwZTg/wvvDDcU6p+r1DdhMEYVF7wG0
-         EwreFS0fKayZ4E+M2fxYwOseRYK3+5S9+DSOA=
+        bh=McEVX1hx5k8f+NcqiKTD/lVS9HGO2QYi1j8mbG944+c=;
+        b=nfSprJwJVGxMYiZX6YXuG9lWVv8JSryTkdx3gsOj8IG+vs8bj+7g7pgu9PHCjJda+B
+         /wut+R4zuX/TFDfRj6ed7mWP8vIdHsqE0u3CeFH2Djx71QM80nBglEwaLiEHPKfmfx/0
+         Qu45pTW7IOEdyVCNXH+oFD+1Q7kojdqfovvs0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694647050; x=1695251850;
+        d=1e100.net; s=20230601; t=1694647444; x=1695252244;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e1a1XS5FwL95wVQ3U0hOYK16YJk3gJb5vChvM9EJIak=;
-        b=xTerl6hh+B19GdmZsx1Ps0gAj34jsmFph+4UE6DQ/2/17BiWSt4p1vmWm+801Gj+xi
-         mFa3yWNcX/m6clpcSnpnR3wCJSO3hKS71e2OZAqj/nt/sZJAyODV+CfBIG1pQ8GqYldp
-         4wYYlnzpBLEFqaqhyaKnFS985+lfzSv7f+d66OTZeXIGESEEq3ngZlrqrt99MkMlBUIm
-         rdvAtaLzNOElfU1AwnB4JML41L0s8QLmcryxiYWsJIr6o1HQNClxQtMMboUfXVm314Hm
-         +V14j2qx2YERiIag7dOT7VXu4/hghdMgwr2+TU9WpwgmZRdHSAESrPxycLOpPT+yiZPm
-         V1NA==
-X-Gm-Message-State: AOJu0YylvKbxYBbu41cbHtChgCljaiZoV+18Fev2k2ELiUa6pdOUCXWu
-        Rvc0oFf8yLll4szXB7Tq5KCZIA==
-X-Google-Smtp-Source: AGHT+IGClTtKAGRhwBX0rTWyQayaNUFl7oUgqH9imWkdIjnn/sGMkGEiuN74YRWSvEaa6g5mBChF6w==
-X-Received: by 2002:a17:90a:a008:b0:26b:24ed:e0d9 with SMTP id q8-20020a17090aa00800b0026b24ede0d9mr3570072pjp.33.1694647050628;
-        Wed, 13 Sep 2023 16:17:30 -0700 (PDT)
+        bh=McEVX1hx5k8f+NcqiKTD/lVS9HGO2QYi1j8mbG944+c=;
+        b=v8tbaq9sBsNxSftKh/KWx07q80FM2Mqr8wBs1hPduTypxoMoJJod2hQsHzQWMsVU5U
+         AuZT85vqVwr3hgbY86qBzaoK3LixhTY0w3JyFfvxJcXTB2bw/TGasW1lLBFDNJBiSr+0
+         DW/RE+UzsjS0OEd+FlqUtthQzFh2J13H2JINKWwj7t6I5bo/x0i927LlMnzGBOYbCHAF
+         /A/7gv6cPszvSmLzvrKl0B/mxem1lcEYWmBFHXvwvuBHfXOzteCVnBFeEmwdQzEH4aDR
+         se8iKkzKqFfPx25BjcfFyX998QjkDQ6p3cjsLrKgMCEKc+OhLad3AzxIQCTXkaEboFs0
+         Y9rw==
+X-Gm-Message-State: AOJu0YydSdVm51k6IaMGFinRcrsMjZApWT0WNkMrfw5hDUC3xPl1OEOl
+        pMdXUl3+HcPGM01VD5VxQb0Xcg==
+X-Google-Smtp-Source: AGHT+IEhoRu0Lao0AX88usO4EFB8BidZ06eLDfk+p1OxG1nODfcmpktTieCBSCEMoiWnY1czPMaLqw==
+X-Received: by 2002:a17:902:d2c4:b0:1c0:d575:d28 with SMTP id n4-20020a170902d2c400b001c0d5750d28mr4287074plc.50.1694647444198;
+        Wed, 13 Sep 2023 16:24:04 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e15-20020a17090a684f00b0026b4d215627sm128652pjm.21.2023.09.13.16.17.29
+        by smtp.gmail.com with ESMTPSA id j21-20020a170902c3d500b001bb8895848bsm163538plj.71.2023.09.13.16.24.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 16:17:30 -0700 (PDT)
-Date:   Wed, 13 Sep 2023 16:17:29 -0700
+        Wed, 13 Sep 2023 16:24:03 -0700 (PDT)
+Date:   Wed, 13 Sep 2023 16:24:02 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com,
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        tony.luck@intel.com, gpiccoli@igalia.com,
         mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        linus.walleij@linaro.org, andy.shevchenko@gmail.com,
-        vigneshr@ti.com, nm@ti.com, matthias.bgg@gmail.com,
-        kgene@kernel.org, alim.akhtar@samsung.com, bmasney@redhat.com,
-        quic_tsoni@quicinc.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
+        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
+        bmasney@redhat.com, quic_tsoni@quicinc.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-mediatek@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
-Subject: Re: [REBASE PATCH v5 08/17] arm64: mm: Add dynamic ramoops region
- support through command line
-Message-ID: <202309131613.C0E12D0D14@keescook>
+Subject: Re: [REBASE PATCH v5 10/17] pstore: Add pstore_region_defined()
+ helper and export it
+Message-ID: <202309131620.34EB0F6972@keescook>
 References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-9-git-send-email-quic_mojha@quicinc.com>
- <20230912101820.GA10884@willie-the-truck>
+ <1694429639-21484-11-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230912101820.GA10884@willie-the-truck>
+In-Reply-To: <1694429639-21484-11-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 11:18:20AM +0100, Will Deacon wrote:
-> On Mon, Sep 11, 2023 at 04:23:50PM +0530, Mukesh Ojha wrote:
-> > The reserved memory region for ramoops is assumed to be at a fixed
-> > and known location when read from the devicetree. This may not be
-> > required for something like Qualcomm's minidump which is interested
-> > in knowing addresses of ramoops region but it does not put hard
-> > requirement of address being fixed as most of it's SoC does not
-> > support warm reset and does not use pstorefs at all instead it has
-> > firmware way of collecting ramoops region if it gets to know the
-> > address and register it with apss minidump table which is sitting
-> > in shared memory region in DDR and firmware will have access to
-> > these table during reset and collects it on crash of SoC.
-> > 
-> > So, add the support of reserving ramoops region to be dynamically
-> > allocated early during boot if it is request through command line
-> > via 'dyn_ramoops_size=' and fill up reserved resource structure and
-> > export the structure, so that it can be read by ramoops driver.
-> > 
-> > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> > ---
-> >  arch/arm64/mm/init.c       | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+On Mon, Sep 11, 2023 at 04:23:52PM +0530, Mukesh Ojha wrote:
+> There are users like Qualcomm minidump which is interested in
+> knowing the pstore frontend addresses and sizes from the backend
+> (ram) to be able to register it with firmware to finally collect
+> them during crash for debugging.
 > 
-> Why does this need to be in the arch code? There's absolutely nothing
-> arm64-specific here.
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> ---
+>  fs/pstore/platform.c   | 15 +++++++++++++++
+>  fs/pstore/ram.c        | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pstore.h |  6 ++++++
+>  3 files changed, 63 insertions(+)
+> 
+> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+> index e5bca9a004cc..fdac951059c1 100644
+> --- a/fs/pstore/platform.c
+> +++ b/fs/pstore/platform.c
+> @@ -139,6 +139,21 @@ enum pstore_type_id pstore_name_to_type(const char *name)
+>  }
+>  EXPORT_SYMBOL_GPL(pstore_name_to_type);
+>  
+> +int pstore_region_defined(struct pstore_record *record,
+> +			  void **virt, phys_addr_t *phys,
+> +			  size_t *size, unsigned int *max_dump_cnt)
+> +{
+> +	if (!psinfo)
+> +		return -EINVAL;
+> +
+> +	record->psi = psinfo;
 
-I would agree: this needs to be in ramoops itself, IMO. It should be a
-ramoops module argument, too.
+Uh, this makes no sense to me. If this is a real pstore_record, you
+cannot just assign psi here.
 
-It being unhelpful for systems that don't have an external consumer is
-certainly true, but I think it would still make more sense for this
-change to live entirely within ramoops. Specifically: you're
-implementing a pstore backend behavioral change. In the same way that
-patch 10 is putting the "output" side of this into pstore/, I'd expect
-the "input" side also in pstore/
+> +
+> +	return psinfo->region_info ?
+> +	       psinfo->region_info(record, virt, phys, size, max_dump_cnt) :
+> +	       -EINVAL;
 
-More comments there, though.
+Common code style for this kind of thing is usually like this:
+
+	if (!psinfo->region_info)
+		return -EINVAL;
+
+	return psinfo->region_info(...)
+
+> +}
+> +EXPORT_SYMBOL_GPL(pstore_region_defined);
+> +
+>  static void pstore_timer_kick(void)
+>  {
+>  	if (pstore_update_ms < 0)
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index ab551caa1d2a..62202f3ddf63 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -437,6 +437,47 @@ static int ramoops_pstore_erase(struct pstore_record *record)
+>  	return 0;
+>  }
+>  
+> +static int ramoops_region_info(struct pstore_record *record,
+> +			       void **virt, phys_addr_t *phys,
+> +			       size_t *size, unsigned int *max_dump_cnt)
+
+But there's a larger problem here -- "virt", "phys" and likely
+"max_dump_cnt" are aspects _specific to the ram backend_. This can't be
+a generic pstore interface.
+
+I'm not opposed to it being exposed only from ramoops, though.
+
+But I think you'll want a pstore generic way to iterate over the
+records...
 
 -- 
 Kees Cook
