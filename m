@@ -2,149 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4091A79E38C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 11:25:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D43F79E415
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 11:46:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239294AbjIMJZU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 05:25:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52168 "EHLO
+        id S239380AbjIMJqr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 05:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239264AbjIMJZT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 05:25:19 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063A21999;
-        Wed, 13 Sep 2023 02:25:16 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-68fb70fca9fso2843405b3a.2;
-        Wed, 13 Sep 2023 02:25:16 -0700 (PDT)
+        with ESMTP id S229644AbjIMJqq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 05:46:46 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67367199E
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 02:46:42 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-9a21b6d105cso842131466b.3
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 02:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694597115; x=1695201915; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NpFYAXnOqxjLWxlwZ45c7Msf6OlbS0bhBMJrCMsl3zg=;
-        b=nSnCf0cK4xpn5q4uEWbi4jgNyj0YzEsrtBBZ271rYq2sgh5We1k0YxkCtQ4fazBZos
-         ePABUdjDWp3xK7NGi+9pyFeYQ+QTnstMkVdat7uZJ5NbLR9n8dbjmW8xRKh/+ntPtm/t
-         oUGiR4lOAqjyCbO8F7DNfmFHHourggWUIRInKRKcg5U2dqbbjcVD+ZqM93L6n0T8nLsO
-         XMX8CsWd79cvTgVmZ7TgOcknUcS0XNVwiJ7feFCfM3xcVou08AeFHBLCddNMP+i935Bc
-         yKIfxiEyRC8B60TNfKYiBx4wnKx+/K3gLTEHH2+Q7etVfYAqgw/G544/zGAdvKpsDqwO
-         JXHg==
+        d=linaro.org; s=google; t=1694598401; x=1695203201; darn=vger.kernel.org;
+        h=message-id:from:to:cc:subject:date:content-transfer-encoding
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ioL+ngYgF6+Jep7NJ/REAwAea9/5PWSnpAtWqJWKAMc=;
+        b=B+P7l9neDxAZ1Bp5FF+ivVb7xaMuO5k8p6aLvVb/u1OkDZF1QQ3KLYG4ISfU3b+wB+
+         Vzr7x+KQpnCF0L6Il11TM05cix5qrkZP6JyK6LTQTIJNrTgPxeD9TMrc12rS/PRfyeuG
+         lWKSe3nlR2CumLTfGRAn24TF19IVqBnmQtsk1toB2tTtqmemotr2ErUHsnwdwhEFLKIA
+         9fYq9P4z4SwuuWQhzh6a7j/twvor64LfJCzKb9o3h5fuOlxc6OlazQxqb2au/5ie1sJz
+         szhJyD+XYVDMEbbGf2FapRoIso+9TZJNxKMIvE7XEbT94EHfht0zFbSRC+ipRVjSxiZ3
+         FlWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694597115; x=1695201915;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NpFYAXnOqxjLWxlwZ45c7Msf6OlbS0bhBMJrCMsl3zg=;
-        b=AIAkg9YnxQsQyiVbRqg5n1xUNLOyholxgx3Vu+bHGBI9x+wTDYBDKenAOFvotQJ90E
-         q34z4mzNhzLFtBFErH5UcizFWYzfXw+xv6MUoLPqzEruIez3z24qfkhmW8uBPfVuUsrI
-         Ic/yC2lctMPuDp9R6Wk0bwq61Qt8WTN/9oGEzmzja0XYalSglKYQ/sOcB+Az2gj7sVpi
-         fos8mUV+SRAe0qQU0nH7bktWS1CSAo44sPTvLXKvSunJkU6xAG4OQT3/Bg8Vq1xLxldA
-         wEbbVS5qx8lADAwmvchVdn9TQwnc7dpENfJIgR2yAz1NeB/n/vm1SMbnaw2zy6Gx6WRG
-         vVVg==
-X-Gm-Message-State: AOJu0Yxf/9b3naYXtLDUcMuj/0suPI5XXpl4TQQ0+GUKlt1Q+W2d3eQ0
-        SYGJeyE5PeKBdTZM1oZ3SXI=
-X-Google-Smtp-Source: AGHT+IG/3WIzQMbIKyGZtuuCHIWrLbl2lrCKitCBZEZyOjDkgyQfkCiMeKwYbJrLvyEtH8At6O8gvQ==
-X-Received: by 2002:a05:6a20:8f1f:b0:13f:c40c:379 with SMTP id b31-20020a056a208f1f00b0013fc40c0379mr2117577pzk.13.1694597115404;
-        Wed, 13 Sep 2023 02:25:15 -0700 (PDT)
-Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id i4-20020a170902eb4400b001b8b26fa6c1sm9914334pli.115.2023.09.13.02.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 02:25:14 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id 9D86780666AA; Wed, 13 Sep 2023 16:25:11 +0700 (WIB)
-Date:   Wed, 13 Sep 2023 16:25:11 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
-Cc:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-Subject: Re: [REBASE PATCH v5 01/17] docs: qcom: Add qualcomm minidump guide
-Message-ID: <ZQF_9-nX47QUCycO@debian.me>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-2-git-send-email-quic_mojha@quicinc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1694429639-21484-2-git-send-email-quic_mojha@quicinc.com>
+        d=1e100.net; s=20230601; t=1694598401; x=1695203201;
+        h=message-id:from:to:cc:subject:date:content-transfer-encoding
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ioL+ngYgF6+Jep7NJ/REAwAea9/5PWSnpAtWqJWKAMc=;
+        b=eP15bHvWRVFmbu4806j4krqc31lNgDjjWRd1Mr64W3m06D6ZsUJ7QbepDuVmno48ks
+         1DAcQqbZ25zSNKC28UBoZks+F0eWj0SOZFQ3gyBo8X0pnJ0wN1AoQxrZ429yZbULISin
+         wWeCigvMhFaqUl/eSYBo+rWEfdEGoRy3iLWnMPuPDVP00gG45neGBHlNYduCCoFEETI+
+         waXR2LMLn8K5H7wPnqRgnJ39TrdcJafbuoVpdwXm+E2QpVRo49faXPmeJX0RpXtaK+E2
+         z1IgXkKX/UMSc0Iut2MLbzYH3yksaaBYnfOW18ko7H7ODemRLdg6x10UgDhft3YUX0TG
+         y1Zw==
+X-Gm-Message-State: AOJu0YxeANm90V9Jxuo2EaKWprI3R3e61gHRVSzw1GraSp2CKXbYhcPY
+        OUxa+y5ke2MioPD/DreL8Ew084COAJjFiF2MKx8=
+X-Google-Smtp-Source: AGHT+IGMkDf5Xf5y9mrnF8YEXKb9pSnmPcrFqeBufmH9Su9YmucPBy8aCiqtmHSVlVGqUDlQbGh6PQ==
+X-Received: by 2002:a17:907:a056:b0:9a5:ca42:f3a9 with SMTP id gz22-20020a170907a05600b009a5ca42f3a9mr1197178ejc.2.1694598400824;
+        Wed, 13 Sep 2023 02:46:40 -0700 (PDT)
+Received: from localhost (i5C74380B.versanet.de. [92.116.56.11])
+        by smtp.gmail.com with ESMTPSA id sa30-20020a1709076d1e00b009ad75d318ffsm3066566ejc.17.2023.09.13.02.46.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Sep 2023 02:46:40 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 13 Sep 2023 11:46:39 +0200
+Subject: [libgpiod] Thread safety API contract
+Cc:     "Viresh Kumar" <viresh.kumar@linaro.org>,
+        =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
+To:     <linux-gpio@vger.kernel.org>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+Message-Id: <CVHO091CC80Y.3KUOSLSOBVL0T@ablu-work>
+X-Mailer: aerc 0.15.2
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 04:23:43PM +0530, Mukesh Ojha wrote:
-> +Qualcomm APSS Minidump kernel driver concept
-> +--------------------------------------------
-> +::
-> +
-> <snipped>...
-> +Dump collection
-> +---------------
-> +
-> +	+-----------+
-> +	|           |
-> +	|           |         +------+
-> +	|           |         |      |
-> +	|           |         +--+---+ Product(Qualcomm SoC)
-> +	+-----------+             |
-> +	|+++++++++++|<------------+
-> +	|+++++++++++|    usb cable
-> +	+-----------+
-> +            x86_64 PC
-> +
+Hi all!
 
-Sphinx reports htmldocs warnings:
+Currently it looks like libgpiod does not document any kind of thread
+safety gurantee. However, the Python bindings tests
+(test_request_reconfigure_release_events) are using sequences like this:
 
-/home/bagas/repo/linux-kernel/Documentation/admin-guide/qcom_minidump.rst:100: WARNING: Literal block expected; none found.
-/home/bagas/repo/linux-kernel/Documentation/admin-guide/qcom_minidump.rst:243: WARNING: Unexpected indentation.
-/home/bagas/repo/linux-kernel/Documentation/admin-guide/qcom_minidump.rst:234: WARNING: Malformed table.
+Thread 1 creates chip + some watches
+Thread 1 creates Thread 2
+Thread 2 issues a request_lines on the chip
+Thread 2 reconfigures the line direction
+Thread 1 joins Thread 2
+Thread 1 closes the chip
 
-+-----------+
-|           |
-|           |         +------+
-|           |         |      |
-|           |         +--+---+ Product(Qualcomm SoC)
-+-----------+             |
-|+++++++++++|<------------+
-|+++++++++++|    usb cable
-+-----------+
-/home/bagas/repo/linux-kernel/Documentation/admin-guide/qcom_minidump.rst:243: WARNING: Blank line required after table.
+Implicitly this depends on a couple guarantees:
+1. Calling chip-related functions does not require synchronisation
+   primitives (other than keeping the chip open).
+   -> wait_info_event, read_info_event and request_lines are called
+      concurrently
+2. Requests may be modified by other threads
+   -> at least reconfiguring the direction is done
 
-I have to apply the fixup:
+Looking at the C implementations, it indeed looks? like this is a safe
+thing to do - with the current implementation.
 
----- >8 ----
-diff --git a/Documentation/admin-guide/qcom_minidump.rst b/Documentation/admin-guide/qcom_minidump.rst
-index 20202da8ca40b9..5709a3853ae7ea 100644
---- a/Documentation/admin-guide/qcom_minidump.rst
-+++ b/Documentation/admin-guide/qcom_minidump.rst
-@@ -95,7 +95,6 @@ could be anywhere scattered in the DDR.
- 
- Qualcomm APSS Minidump kernel driver concept
- --------------------------------------------
--::
- 
- Qualcomm APSS minidump kernel driver adds the capability to add Linux
- region to be dumped as part of RAM dump collection. At the moment,
-@@ -231,6 +230,8 @@ respective dump as per set download mode.
- Dump collection
- ---------------
- 
-+::
-+
- 	+-----------+
- 	|           |
- 	|           |         +------+
+My question is: Is this an intentional gurantee that will be guranteed
+in future releases? I am trying to figure out whether the current
+contract exposed by the Rust bindings is correct and/or may need to
+be extended. So which guarantees are provided by the current and future
+C lib?
 
-Thanks.
+Currently, the Rust bindings are advertising that the chip may be `Send`
+to other threads. This means one thread may forget about it and another
+thread receives it. In contrast, a request for a line is currently not
+allowed to be transferred to other threads (it is missing the `Send`
+marker).
 
--- 
-An old man doll... just what I always wanted! - Clara
+While in C and C++ thread-safety is typically not enforced by the
+compiler, Rust has mechanisms to do this. But I would like to document
+the C lib's situation before inventing rules for the Rust bindings :).
+
+Trigger of my question was that we glossed over these details in
+vhost-device-gpio:
+
+https://github.com/rust-vmm/vhost-device/pull/435#issuecomment-1717205620
+
+- Erik
