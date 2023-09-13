@@ -2,96 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A3F79E4D0
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 12:25:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB1D379E724
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 13:50:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238574AbjIMK0A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 06:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48842 "EHLO
+        id S240485AbjIMLuY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 07:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236362AbjIMKZ7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 06:25:59 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF223D3;
-        Wed, 13 Sep 2023 03:25:55 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 040C1C433C8;
-        Wed, 13 Sep 2023 10:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694600755;
-        bh=4k2IeW5H9cEqbLtJFKkr6gJFeGtpZv+ntg6InyehTu4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MsMiX7Bq3wu/ubrt9go4Zl2qtpZZZdKThoIZMlsHjdv+fHu2fusSjJfXcdrTL0+1h
-         7c1jVIQcD03WR5z9RerPkcDNylNLW5Wq3XcKZ5bQYWy1wXrd9cTvRWfIPl3MwXFskV
-         XPH3kH0v1uj9MuRwolV+w+vLF0LjVfOEoRv4JRCNrGQpP+Jxjf6cG7TlggmqUuLepJ
-         Vat7PzDJUQrphDZ733Kkrcn9wU4VLMBBeNki+N7/G53aZI9TMUHiPzXSVDuhsMMjz9
-         Dmy5ALThLPMKpNRjZyQfJhkygiiY63lqSxswU6AkAvbbdNCesDQtNF2bRM3DaEuEmo
-         sHH75LxTD4r6w==
-Date:   Wed, 13 Sep 2023 11:25:46 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        linus.walleij@linaro.org, andy.shevchenko@gmail.com,
-        vigneshr@ti.com, nm@ti.com, matthias.bgg@gmail.com,
-        kgene@kernel.org, alim.akhtar@samsung.com, bmasney@redhat.com,
-        quic_tsoni@quicinc.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
-Subject: Re: [REBASE PATCH v5 08/17] arm64: mm: Add dynamic ramoops region
- support through command line
-Message-ID: <20230913102545.GA12021@willie-the-truck>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-9-git-send-email-quic_mojha@quicinc.com>
- <20230912101820.GA10884@willie-the-truck>
- <14bf3fca-f031-d000-6fd6-d82f4de9b255@quicinc.com>
+        with ESMTP id S235715AbjIMLuX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 07:50:23 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F8D1990
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 04:50:19 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-31dca134c83so6775390f8f.3
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 04:50:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694605818; x=1695210618; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wE2ORVq287JLkcnuWpgymLTUjppVm5JnqXblhoOF+yE=;
+        b=0OOsdDHBRtrLCVZElwuZ1wNqoib2sJOpZLkK56+PrfcUd3OBHx3EGYOp8VemCfHxcz
+         dKy1GmsVheKR+fs2u7NWbawiLo+QVOS6awLxDoxsyFjZkKSFsCBCZUIG6bGO+39RtqRu
+         Leyy7DgAfveKRcsG82LB0WUgz3SsHtrolpN0zR/VM5/bG61OCo9jSXWKHJJaXiJqElNh
+         7A2zDr8i4aMFDD/ETCuI86ZLswFQqki1Jjaj5qdF8sxbSWPMcmJv1MdQtDfA+3KAYejU
+         C7bH2zGLfVz2N8wg3+bVxHwh8qn/GclO0sPWHD6KI0ylQLA4xWzBBRm5jnuQLyQ7PCk7
+         z4qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694605818; x=1695210618;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wE2ORVq287JLkcnuWpgymLTUjppVm5JnqXblhoOF+yE=;
+        b=ovBICMZNfDjRUWaGhSGWbmN4XEjAhZjEFYBXsI7qo4U0QZsIk1WbY8rJWW+95Qc/vB
+         6WJfagFs72zeRfeK/XCm8CvSXEi7txTjqcbLMXtqCC3GrpAwx+kP0RqJAR8Vr+V9zJGl
+         R/d63DyrSBpPcfR3VjHlfCWNMotSuiudYOyX6x3/Z3ZIMNNPTs2IgFVsFrVIAZLsdWXV
+         ctdjmcO4vNoVFpsAkHWO1rQcRDbIFcXmp6Or7waTTnI0M/NBpmRZ6d5PKyLn4rOy1epZ
+         KAjCwgruTP+OmMlApWsDXnfRUiCrM0rnKHIkfsev3WybeyZZ0QRg+gB+9JHiwvyEMpRt
+         S2dw==
+X-Gm-Message-State: AOJu0YwJTqVUygaGI9l2QZjzitAdPPnM/UXLfV+koFcIZn79mYTG41IX
+        EjhFWJBesmtVZvH889+GFrFX9w==
+X-Google-Smtp-Source: AGHT+IFXSSuEq9wtyazcQ7l1hh+jAkGlzZwC0/98tI2tsHjMXKI3a8JB3xTIjBmtqjgeTD74oF6Sxg==
+X-Received: by 2002:adf:fe47:0:b0:31a:b3aa:d19b with SMTP id m7-20020adffe47000000b0031ab3aad19bmr1937928wrs.23.1694605817854;
+        Wed, 13 Sep 2023 04:50:17 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:3b50:bca5:a754:7463])
+        by smtp.gmail.com with ESMTPSA id j14-20020adfd20e000000b0031fc4c31d77sm1932689wrh.88.2023.09.13.04.50.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Sep 2023 04:50:17 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH 0/5] gpio: remove gpiod_toggle_active_low()
+Date:   Wed, 13 Sep 2023 13:49:56 +0200
+Message-Id: <20230913115001.23183-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14bf3fca-f031-d000-6fd6-d82f4de9b255@quicinc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 12:32:54PM +0530, Mukesh Ojha wrote:
-> Thanks for the response.
-> 
-> On 9/12/2023 3:48 PM, Will Deacon wrote:
-> > On Mon, Sep 11, 2023 at 04:23:50PM +0530, Mukesh Ojha wrote:
-> > > The reserved memory region for ramoops is assumed to be at a fixed
-> > > and known location when read from the devicetree. This may not be
-> > > required for something like Qualcomm's minidump which is interested
-> > > in knowing addresses of ramoops region but it does not put hard
-> > > requirement of address being fixed as most of it's SoC does not
-> > > support warm reset and does not use pstorefs at all instead it has
-> > > firmware way of collecting ramoops region if it gets to know the
-> > > address and register it with apss minidump table which is sitting
-> > > in shared memory region in DDR and firmware will have access to
-> > > these table during reset and collects it on crash of SoC.
-> > > 
-> > > So, add the support of reserving ramoops region to be dynamically
-> > > allocated early during boot if it is request through command line
-> > > via 'dyn_ramoops_size=' and fill up reserved resource structure and
-> > > export the structure, so that it can be read by ramoops driver.
-> > > 
-> > > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> > > ---
-> > >   arch/arm64/mm/init.c       | 94 ++++++++++++++++++++++++++++++++++++++++++++++
-> > 
-> > Why does this need to be in the arch code? There's absolutely nothing
-> > arm64-specific here.
-> 
-> Current clients of this cmdline would be only arm64, and that is the
-> reason of putting this here.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I don't think that's a strong enough justification, tbh. We should at
-least be able to compile this for other architectures using TEST_COMPILE
-and so somewhere under drivers/ makes more sense to me.
+The semantics of gpiod_toggle_active_low() are just bad and in almost
+all cases require users to check the current state anyway. Let's replace
+it with something clearer and more useful.
 
-Will
+For getting this upstream: I'm thinking that I should apply patch 1/5,
+provide other subsystems with an immutable tag and then we can apply
+patch 5/5 for the next release once first four are in master.
+
+Bartosz Golaszewski (5):
+  gpiolib: provide gpiod_set_active_[low/high]()
+  mtd: rawnand: ingenic: use gpiod_set_active_high()
+  mmc: slot-gpio: use gpiod_set_active_[low|high]()
+  platform/x86: int3472/discrete: use gpiod_set_active_low()
+  gpiolib: remove gpiod_toggle_active_low()
+
+ drivers/gpio/gpiolib.c                        | 21 ++++++++++++++-----
+ drivers/mmc/core/slot-gpio.c                  | 11 +++++-----
+ .../mtd/nand/raw/ingenic/ingenic_nand_drv.c   |  5 ++---
+ .../x86/intel/int3472/clk_and_regulator.c     |  2 +-
+ drivers/platform/x86/intel/int3472/led.c      |  2 +-
+ include/linux/gpio/consumer.h                 | 11 ++++++++--
+ 6 files changed, 34 insertions(+), 18 deletions(-)
+
+-- 
+2.39.2
+
