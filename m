@@ -2,64 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A37879E7B8
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 14:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 275DA79E7D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 14:24:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237918AbjIMMOj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 08:14:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46646 "EHLO
+        id S239538AbjIMMYo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 08:24:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240258AbjIMMOi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 08:14:38 -0400
-Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786FD19B6
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 05:14:34 -0700 (PDT)
-Received: by mail-vs1-xe36.google.com with SMTP id ada2fe7eead31-450f8f1368cso152495137.1
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 05:14:34 -0700 (PDT)
+        with ESMTP id S235846AbjIMMYo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 08:24:44 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F68D19AD
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 05:24:40 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-d7b8d2631fdso6423629276.3
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 05:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694607273; x=1695212073; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694607879; x=1695212679; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dNH09RVKlzC6zbBS1OPGS8SNq+HiOlHRmJhvVqI7zwg=;
-        b=ZkeSEMlcMrwpSzjBmdee+vqYsvFdj0OTAD6PigY6AFv/bvTDqDAgJLzJWhoGw62okY
-         FxMtFpDLJte+1fJhuwN7WQtbJID8U0rVr3HVbTODVaE/h7g9MD+M1NyCPyMcrtuvZvhW
-         OBQiYdqQepk7bxUev93JWYzuiankVbM4yOC1pKXIwQvrVhkr8SxZxHWUtAHXhX7i3Gsc
-         EVkNOoAwR1cNkVqbbZlos9HP/QJQczTKkExPQJtGrAN59GtIffQN11XbpGdJm0VHG82J
-         XjkVJmgRjsPd+iVGkMuZb1dL7Cbev7AmdeWVSnHxB9/8h7RcmA3776xhSPiH7dHldEJK
-         hVtA==
+        bh=vCKxnDesqkrsZ7yc2N/Fu7/OJ4drr6VqYcEJHvcodks=;
+        b=vxKbfQLARYe7n9PhA60DoNm/TpOCGp1cbwa8vsAyFYwt9+QX0e6Rd/v+qcx90xwS0v
+         /ujR3QhO8OqxjR4ovDwYatXhXKB2Yy0ePiL5I6TXJoSd/YtaseNrqvQWZ//ABUlwyD1C
+         4Pcr8elDKTrFT2MXB9jlVcAwLArzWqeBYhMzsLW39lBZFtcDBN48j9tR+fzUqB4KEiQe
+         H4CVs6zQeYvQQig6UMoWR8O0KRXyd7Aalk6wcYsMisQlzsCjewZCxDar6d0vNik/cuhY
+         HR8UcOebcA7eJdyy9Z0HDsCoNCzbQCK666ysqUjaN/mYdF057B8glJaRp+JUuGTq5BMl
+         Q5mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694607273; x=1695212073;
+        d=1e100.net; s=20230601; t=1694607879; x=1695212679;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dNH09RVKlzC6zbBS1OPGS8SNq+HiOlHRmJhvVqI7zwg=;
-        b=eRVEMoQeGhiRaXPL+qBdSVzR9L5MxCQKPMpMwH+72KgxsO0hbSOfwMZ/FrmN1KVfta
-         6GEQpzhdhNhFSp8wl7HXbfZ3wtNQPezLs6IMywmRXX1cQXu9VSG5FUnGzZCPV5X5i15S
-         W40G7w+LgzCaTXQOywM0l0qIGqq3sZi1T1vTVAtWkEmiCIXeThrIULBQBAWhJ5pNrh9l
-         6rTQVR2XHNXw/zBxR5JLuUyM+yPv6Zjcbpw8DdUJGv+wIKGMN6s/uHX626pvpoPDWrQG
-         q5eG7DheHtCsFDYfckCIY1dEfCBi/VZDxZKCo+a7IappoUK0QauWLvcYPYnHzBXFCxGF
-         3Beg==
-X-Gm-Message-State: AOJu0YyqUDrq9ROBDCnxMJ8Lo9Z0y9dUKjpg1FEf0UE4hp9HRXvDWJJG
-        qnZ6zGUZ3xb50Q2y9bYkeA5PLQ3wh87Z7OKyDYaY5A==
-X-Google-Smtp-Source: AGHT+IFB9MOD674QBFW3BfC7iwHqqcvuHPxTky7cci63LpW4Yt3DGOQ2wqX59JgllurgFttARD5PWXvOXY7uvJm1flY=
-X-Received: by 2002:a05:6102:301b:b0:44e:9113:ac58 with SMTP id
- s27-20020a056102301b00b0044e9113ac58mr1717040vsa.6.1694607273451; Wed, 13 Sep
- 2023 05:14:33 -0700 (PDT)
+        bh=vCKxnDesqkrsZ7yc2N/Fu7/OJ4drr6VqYcEJHvcodks=;
+        b=Dx8CNWvd90EgPmljVN7gfEAqcyUxYll2QcvOSQRCnEeHIL2hqmz3+8P3I5JWDdVcaF
+         mI45yk5aBlF65g4hdinf088uxY+ln0zFDcyBA7fVOHvL5vv7YcDZh36lRDw05SiQmgwU
+         Datqu62ZY2mVwM9yplzyIBbk7oRzKOrdAuD218ZLtF5t4xr5wSB9LpekF6cgWeAGpuma
+         BjpgWORhgU4RKbXZSC9IXTMu6lmtojCKMw1Q20FfBJKMxNCL/PJ1fTf7m5eAzlcOMx0W
+         cdd64stH5IimWn9gedk4JseprOpXPZM6apKwW97NHeqlH4cefLKOPPYDmBYKzgd3X82G
+         ZOtA==
+X-Gm-Message-State: AOJu0YwmjuyzGlnFBdg0rcs1BBFRZ6R0IeFEd1o+Y1BbphUww7mronEv
+        Bv3IGV4u0ksLScCLxHFC/1MZ4geXo5oOJPnRspBo6pCFb4+t3JR7b88=
+X-Google-Smtp-Source: AGHT+IE8wHWtBHQhWxeImNTh2xHB8xY4DlJAz5zyhEtTpEQcIyhnt6SupOHKd7UVSyFDSlkPFcRI5nGIciiQMYVkWDE=
+X-Received: by 2002:a25:da06:0:b0:d81:70b6:c24b with SMTP id
+ n6-20020a25da06000000b00d8170b6c24bmr686830ybf.19.1694607878656; Wed, 13 Sep
+ 2023 05:24:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230912094519.22769-1-brgl@bgdev.pl> <5877cd0d-7a39-806a-e8f8-ef0c3c22dae3@linux.alibaba.com>
-In-Reply-To: <5877cd0d-7a39-806a-e8f8-ef0c3c22dae3@linux.alibaba.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 13 Sep 2023 14:14:22 +0200
-Message-ID: <CAMRc=MdK9637mtuE=4fdMCWtNx6=oZcm6KfEyTZfktceDisENw@mail.gmail.com>
-Subject: Re: [RFT PATCH 1/3] gpio: eic-sprd: unregister from the irq notifier
- on remove()
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
+References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-4-brgl@bgdev.pl>
+In-Reply-To: <20230913115001.23183-4-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 13 Sep 2023 14:24:27 +0200
+Message-ID: <CACRpkdax-CrB42LeQ1bs3E7VqMncsgEwMs7b_v7J6R5AE+BjAg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] mmc: slot-gpio: use gpiod_set_active_[low|high]()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -67,71 +75,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 1:02=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
->
->
-> On 9/12/2023 5:45 PM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > This is a tristate module, it can be unloaded. We need to cleanup prope=
-rly
-> > and unregister from the interrupt notifier on driver detach.
-> >
-> > Fixes: b32415652a4d ("gpio: eic-sprd: use atomic notifiers to notify al=
-l chips about irqs")
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> LGTM.
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->
+On Wed, Sep 13, 2023 at 1:50=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Thanks, queued patches 1 and 2.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> We have new, less cumbersome and clearer interfaces for controlling GPIO
+> polarity. Use them in the MMC code.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Bart
+I like the looks of the code better, obviously but this looks like this for
+a reason unfortunately.
 
-> > ---
-> >   drivers/gpio/gpio-eic-sprd.c | 19 +++++++++++++++++--
-> >   1 file changed, 17 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.=
-c
-> > index 21a1afe358d6..9b2f9ccf8d77 100644
-> > --- a/drivers/gpio/gpio-eic-sprd.c
-> > +++ b/drivers/gpio/gpio-eic-sprd.c
-> > @@ -580,6 +580,14 @@ static const struct irq_chip sprd_eic_irq =3D {
-> >       .flags          =3D IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
-> >       GPIOCHIP_IRQ_RESOURCE_HELPERS,
-> >   };
-> > +
-> > +static void sprd_eic_unregister_notifier(void *data)
-> > +{
-> > +     struct notifier_block *nb =3D data;
-> > +
-> > +     atomic_notifier_chain_unregister(&sprd_eic_irq_notifier, nb);
-> > +}
-> > +
-> >   static int sprd_eic_probe(struct platform_device *pdev)
-> >   {
-> >       const struct sprd_eic_variant_data *pdata;
-> > @@ -658,8 +666,15 @@ static int sprd_eic_probe(struct platform_device *=
-pdev)
-> >       }
-> >
-> >       sprd_eic->irq_nb.notifier_call =3D sprd_eic_irq_notify;
-> > -     return atomic_notifier_chain_register(&sprd_eic_irq_notifier,
-> > -                                           &sprd_eic->irq_nb);
-> > +     ret =3D atomic_notifier_chain_register(&sprd_eic_irq_notifier,
-> > +                                          &sprd_eic->irq_nb);
-> > +     if (ret)
-> > +             return dev_err_probe(&pdev->dev, ret,
-> > +                                  "Failed to register with the interru=
-pt notifier");
-> > +
-> > +     return devm_add_action_or_reset(&pdev->dev,
-> > +                                     sprd_eic_unregister_notifier,
-> > +                                     &sprd_eic->irq_nb);
-> >   }
-> >
-> >   static const struct of_device_id sprd_eic_of_match[] =3D {
+See the following from
+Documentation/devicetree/bindings/mmc/mmc-controller.yaml:
+
+  # CD and WP lines can be implemented on the hardware in one of two
+  # ways: as GPIOs, specified in cd-gpios and wp-gpios properties, or
+  # as dedicated pins. Polarity of dedicated pins can be specified,
+  # using *-inverted properties. GPIO polarity can also be specified
+  # using the GPIO_ACTIVE_LOW flag. This creates an ambiguity in the
+  # latter case. We choose to use the XOR logic for GPIO CD and WP
+  # lines.  This means, the two properties are "superimposed," for
+  # example leaving the GPIO_ACTIVE_LOW flag clear and specifying the
+  # respective *-inverted property property results in a
+  # double-inversion and actually means the "normal" line polarity is
+  # in effect.
+
+Will you still provide the desired "double inversion" after this patch?
+
+Yours,
+Linus Walleij
