@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B478579F149
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 20:42:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4BCC79F1F8
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 21:24:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231258AbjIMSmH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Sep 2023 14:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
+        id S232322AbjIMTYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 15:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229797AbjIMSmH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 14:42:07 -0400
+        with ESMTP id S232192AbjIMTYJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 15:24:09 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43677A3;
-        Wed, 13 Sep 2023 11:42:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2F7B7;
+        Wed, 13 Sep 2023 12:24:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694630523; x=1726166523;
+  t=1694633045; x=1726169045;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ySvBneYbyUTIYVjc9ntDNQZxLyrK/wDV6Bnw1fCxoOQ=;
-  b=iLBeNq7csY0tfP2Jcz6HFJuwckwRwOC8ocI+P0pGFZJf1EDog99ava/a
-   YG4Jg84CYX0ljZyNt6dKU6zWB/XKsyCVW7txi4VmFa621oO091CV4fZkV
-   9WrrDj4O0qh+uGHLjhybu8Wsgo9txwnHXHCjzzBwISPzw4sKu+0KnmNIi
-   7GRtu3ob56JQ6CCjf5HACafxXiXvNVvV7F61lbK2BTl+BLsfINFUl1IXT
-   TBZz5O4V10b7qiTX7ml86VuT0+HJoMtQZpjYF6vIZI55aLwOdbtqEzu0e
-   z4X03IMJ4DuuMdWIAuU7YqhdYcIlQWu7F74avY0FFq0Qn3vZBMgHGoV1O
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="377663165"
-X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="377663165"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:42:02 -0700
+  bh=JKUb9rL4FzUyXqKQxYbktD4DL6Zic8jMxxL3DCtChfE=;
+  b=CVpz+bWK60Co1Dyl3SQfjTY9nefzJ5p7OiLphhGVI34e3NdMPurpQmx1
+   2bggxqBKyFWdkNFxEmPUCFT1U61IATBY/ei2DBdU8I5/7wk+IA+7VUMoj
+   wN2Lv7W8R7bj41S1BZSTJ/rY+BFNz3iEiPuNKi2cQi3limyZ92GfZg1nR
+   D0kyei/G+LLA/qYsXhi+mVf816AcZAbbCS1J8Y+YjlZMF7kQV5iA6G2s1
+   JiZHNS+CLcpnnVhW6VTDRb4V9dNUmmz/6Q9SM6GdIq4TQVvXfWxlE+ANf
+   laDg7XkFFlItXcNT6rQnif/T1NcMz/QVZEplxeaRHe5CmYaJXXA1kiH31
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="377673288"
+X-IronPort-AV: E=Sophos;i="6.02,144,1688454000"; 
+   d="scan'208";a="377673288"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 12:24:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="991040387"
-X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="991040387"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="917962143"
+X-IronPort-AV: E=Sophos;i="6.02,144,1688454000"; 
+   d="scan'208";a="917962143"
 Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Sep 2023 11:41:57 -0700
+  by orsmga005.jf.intel.com with ESMTP; 13 Sep 2023 12:23:59 -0700
 Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qgUoF-0000T3-0O;
-        Wed, 13 Sep 2023 18:41:55 +0000
-Date:   Thu, 14 Sep 2023 02:41:19 +0800
+        id 1qgVSu-0000Vl-1z;
+        Wed, 13 Sep 2023 19:23:56 +0000
+Date:   Thu, 14 Sep 2023 03:23:50 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -63,7 +63,7 @@ Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Subject: Re: [PATCH 1/5] gpiolib: provide gpiod_set_active_[low/high]()
-Message-ID: <202309140219.EH2Y6r52-lkp@intel.com>
+Message-ID: <202309140338.TPkz7l7g-lkp@intel.com>
 References: <20230913115001.23183-2-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -87,64 +87,55 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiol
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
 patch link:    https://lore.kernel.org/r/20230913115001.23183-2-brgl%40bgdev.pl
 patch subject: [PATCH 1/5] gpiolib: provide gpiod_set_active_[low/high]()
-config: alpha-defconfig (https://download.01.org/0day-ci/archive/20230914/202309140219.EH2Y6r52-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230914/202309140219.EH2Y6r52-lkp@intel.com/reproduce)
+config: m68k-defconfig (https://download.01.org/0day-ci/archive/20230914/202309140338.TPkz7l7g-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230914/202309140338.TPkz7l7g-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309140219.EH2Y6r52-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309140338.TPkz7l7g-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   In file included from include/linux/nvmem-provider.h:15,
-                    from include/linux/rtc.h:18,
-                    from include/linux/mc146818rtc.h:15,
-                    from drivers/block/floppy.c:183:
+   In file included from drivers/net/ethernet/smsc/smc91x.c:60:
    include/linux/gpio/consumer.h:505:1: error: expected ';', ',' or ')' before '{' token
      505 | {
          | ^
->> drivers/block/floppy.c:165:12: warning: 'print_unex' defined but not used [-Wunused-variable]
-     165 | static int print_unex = 1;
-         |            ^~~~~~~~~~
+>> drivers/net/ethernet/smsc/smc91x.c:47:19: warning: 'version' defined but not used [-Wunused-const-variable=]
+      47 | static const char version[] =
+         |                   ^~~~~~~
 
 
-vim +/print_unex +165 drivers/block/floppy.c
+vim +/version +47 drivers/net/ethernet/smsc/smc91x.c
 
-87f530d8f17336 Joe Perches            2010-03-10  163  
-^1da177e4c3f41 Linus Torvalds         2005-04-16  164  /* do print messages for unexpected interrupts */
-^1da177e4c3f41 Linus Torvalds         2005-04-16 @165  static int print_unex = 1;
-^1da177e4c3f41 Linus Torvalds         2005-04-16  166  #include <linux/module.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  167  #include <linux/sched.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  168  #include <linux/fs.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  169  #include <linux/kernel.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  170  #include <linux/timer.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  171  #include <linux/workqueue.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  172  #include <linux/fdreg.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  173  #include <linux/fd.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  174  #include <linux/hdreg.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  175  #include <linux/errno.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  176  #include <linux/slab.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  177  #include <linux/mm.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  178  #include <linux/bio.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  179  #include <linux/string.h>
-50297cbf07427b Marcelo Feitoza Parisi 2006-03-28  180  #include <linux/jiffies.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  181  #include <linux/fcntl.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  182  #include <linux/delay.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16 @183  #include <linux/mc146818rtc.h>	/* CMOS defines */
-^1da177e4c3f41 Linus Torvalds         2005-04-16  184  #include <linux/ioport.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  185  #include <linux/interrupt.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  186  #include <linux/init.h>
-b81e0c2372e65e Christoph Hellwig      2021-09-20  187  #include <linux/major.h>
-d052d1beff7069 Russell King           2005-10-29  188  #include <linux/platform_device.h>
-83f9ef463bcb4b Scott James Remnant    2009-04-02  189  #include <linux/mod_devicetable.h>
-b1c82b5c55851b Jes Sorensen           2006-03-23  190  #include <linux/mutex.h>
-d49375434ec011 Joe Perches            2010-03-10  191  #include <linux/io.h>
-d49375434ec011 Joe Perches            2010-03-10  192  #include <linux/uaccess.h>
-0cc15d03bcccdf Andi Kleen             2012-07-02  193  #include <linux/async.h>
-229b53c9bf4e11 Al Viro                2017-06-27  194  #include <linux/compat.h>
-^1da177e4c3f41 Linus Torvalds         2005-04-16  195  
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16 @47  static const char version[] =
+6389aa458ed995 drivers/net/ethernet/smsc/smc91x.c Ben Boeckel     2013-11-01  48  	"smc91x.c: v1.1, sep 22 2004 by Nicolas Pitre <nico@fluxnic.net>";
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  49  
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  50  /* Debugging level */
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  51  #ifndef SMC_DEBUG
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  52  #define SMC_DEBUG		0
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  53  #endif
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  54  
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  55  
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  56  #include <linux/module.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  57  #include <linux/kernel.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  58  #include <linux/sched.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  59  #include <linux/delay.h>
+c0e906a953f03c drivers/net/ethernet/smsc/smc91x.c Andy Shevchenko 2023-03-16 @60  #include <linux/gpio/consumer.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  61  #include <linux/interrupt.h>
+476c32c47a84fc drivers/net/smc91x.c               David Howells   2010-10-07  62  #include <linux/irq.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  63  #include <linux/errno.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  64  #include <linux/ioport.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  65  #include <linux/crc32.h>
+d052d1beff7069 drivers/net/smc91x.c               Russell King    2005-10-29  66  #include <linux/platform_device.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  67  #include <linux/spinlock.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  68  #include <linux/ethtool.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  69  #include <linux/mii.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  70  #include <linux/workqueue.h>
+682a1694115ec1 drivers/net/smc91x.c               Thomas Chou     2011-01-25  71  #include <linux/of.h>
+3f823c15d53dc7 drivers/net/ethernet/smsc/smc91x.c Tony Lindgren   2013-12-11  72  #include <linux/of_device.h>
+^1da177e4c3f41 drivers/net/smc91x.c               Linus Torvalds  2005-04-16  73  
 
 -- 
 0-DAY CI Kernel Test Service
