@@ -2,134 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D109579EC8C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 17:22:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C7DD79EC6F
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Sep 2023 17:18:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233676AbjIMPW2 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 13 Sep 2023 11:22:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49060 "EHLO
+        id S241606AbjIMPS3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Sep 2023 11:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230188AbjIMPW1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 11:22:27 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDED7CE;
-        Wed, 13 Sep 2023 08:22:23 -0700 (PDT)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-770ef353b8fso326351585a.0;
-        Wed, 13 Sep 2023 08:22:23 -0700 (PDT)
+        with ESMTP id S241765AbjIMPSF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Sep 2023 11:18:05 -0400
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E19B6CC3
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 08:17:55 -0700 (PDT)
+Received: by mail-ua1-x933.google.com with SMTP id a1e0cc1a2514c-7a0254de2fdso2439422241.1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Sep 2023 08:17:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694618275; x=1695223075; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MPmSfZUnEk1fSO+UfruiRwzSBYigAA/HrsqLK9/Kel4=;
+        b=sjIgyyuSCGltVHa9/NuplRKgp99zPBOT2154luVJ0s5W31gEflhNsfpmBHzg4urGmB
+         JF5bi0uUaP3QJuirO6rLDHMKlNy1Wc5XaMBHuIVjNkh/Lrh1L3ZOnZwYkZJdRQPh66Dp
+         37QG5JgVwJmMMbQGfVWYMZdB0gAZ+7i5btrDLYXR7fP3uxlxjI5aP8Yu++qZSvOrNnRh
+         zywMyzwbFY6lK/f6F6t0j5U5gQfTWOG8fVYYMjgiwZIsK1p9GMxQZVzm+KL+qBGX/MqZ
+         TzpI4MIymKpvr4xsfMeikCJZ1gIlIOzyYgTQ/0xalLy9y4HxP//i7Mz0q09ZERDifXSa
+         OLgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694618543; x=1695223343;
+        d=1e100.net; s=20230601; t=1694618275; x=1695223075;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7YO1tPkDOEwQyc/Dv+HaOfcjogh4Es5EpVUGisTZOW4=;
-        b=sHTB26XNZ8teze6yZ9Ixw9kqdAyYVWnLlDSTGSBflM3o/T8d/XnR0ltTMjN15mwhMe
-         vAch7EnHtODeg9nb4fnZvSlCSxj0nMzfH0NA6iQn2K/AKhZHCUpd1uu4/cBDRMt4/Hx2
-         zw4Rp7dEaHm5T8mKrygsErZOCXUBcHeq0m/IHBMUuapBhjadQoptgQYqi3Se4dpyxn1D
-         ZkN7TiLaUjfZCH9dJUpSCuT0K33qCgrcPNjE1suEoU2X6PpWnp0VAUfraAy9RcfsQL/h
-         5eHFyugAlBv5blCIvJp9geqtNvPX5Usbjh8YdTWKlDqYvTqCfqS6Yc0aP3DE74SNi0u1
-         JIpQ==
-X-Gm-Message-State: AOJu0YwYWS6hYq5QxE0zM8N8KayeOi75z2kpba2NetgULvXQ8O36SDxe
-        QUiFn5RQiBCW5EYYAhW9sPfNcX2Pe5D5KQ==
-X-Google-Smtp-Source: AGHT+IEWLMHZWuUElViNkfPsqVJNkVnRs/obn/xLwb7A1rORq0QfqkXdEdSkStvIeU9CQexjOYe1kg==
-X-Received: by 2002:a0c:e147:0:b0:64a:131f:b214 with SMTP id c7-20020a0ce147000000b0064a131fb214mr2907571qvl.12.1694618542767;
-        Wed, 13 Sep 2023 08:22:22 -0700 (PDT)
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com. [209.85.222.171])
-        by smtp.gmail.com with ESMTPSA id a17-20020a05620a125100b0076f039d87c6sm3966650qkl.82.2023.09.13.08.22.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Sep 2023 08:22:22 -0700 (PDT)
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-76dc77fd01fso436119885a.3;
-        Wed, 13 Sep 2023 08:22:22 -0700 (PDT)
-X-Received: by 2002:a25:ad08:0:b0:d7f:8e1e:a95f with SMTP id
- y8-20020a25ad08000000b00d7f8e1ea95fmr2686664ybi.6.1694618224901; Wed, 13 Sep
- 2023 08:17:04 -0700 (PDT)
+        bh=MPmSfZUnEk1fSO+UfruiRwzSBYigAA/HrsqLK9/Kel4=;
+        b=SCC0aqL3s2yP2sE3GcKYnhO/g8X/1vVgjGqd5wu+1egykXConyu8hmxFD2CrL021nK
+         ws4lfPNYCfPWMMt1nftPsgewF1qHVpMhwzcEo15ZNQp4WO0oZESLrTHvD3jJXVzbtcX0
+         AY8BbQ456OE49aG0Vrxc8K9IEkkBvnVIP6a0rIsZIVhjwgp6tFNsDzRCNE1jKubiygcS
+         e8JNWWTnJ/TohahQApqNOtxouFgxuKDor1zuH19A9PQ/PhqjBeZEMBUlTsalrC6XDnBG
+         Q6K7AfeVYhrmTUAAERdCcjgH1vbhsne2R1LvgKVJUmSvq59ntDl2BwrLbeRoz3c9hEUB
+         88pg==
+X-Gm-Message-State: AOJu0Yxpr+2glni3qZgOEEJ5f5qdIPZ+9TJzlzYjGyeBV9WNxjRQM2w9
+        3pYTfxONFX/TCj3gv6LVTdlXRLk6j7KtOOoumRDZ7mxuZEtMB6D5
+X-Google-Smtp-Source: AGHT+IFJXKYfP6F3Ijh6EZTurKE4/qx2XmqfHxa8nl+p6P8gG+Xnpwl7zftm5wcjX+4Dp4IYqllcJwpQ436C2L7Tnb4=
+X-Received: by 2002:a05:6102:1da:b0:44d:5c17:d06a with SMTP id
+ s26-20020a05610201da00b0044d5c17d06amr2361933vsq.35.1694618275001; Wed, 13
+ Sep 2023 08:17:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-36-claudiu.beznea.uj@bp.renesas.com>
- <20230912161635.GA877089-robh@kernel.org> <56cf08f2-5d8e-6098-6218-081d8f620abe@tuxon.dev>
-In-Reply-To: <56cf08f2-5d8e-6098-6218-081d8f620abe@tuxon.dev>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 13 Sep 2023 17:16:52 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWntLTk9ZmAF1voE-tdB+4vVzE804h=qsfaoN-8_6RN_Q@mail.gmail.com>
-Message-ID: <CAMuHMdWntLTk9ZmAF1voE-tdB+4vVzE804h=qsfaoN-8_6RN_Q@mail.gmail.com>
-Subject: Re: [PATCH 35/37] dt-bindings: arm: renesas: document SMARC
- Carrier-II EVK
-To:     claudiu beznea <claudiu.beznea@tuxon.dev>
-Cc:     Rob Herring <robh@kernel.org>, mturquette@baylibre.com,
-        sboyd@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, magnus.damm@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
-        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
-        nfraprado@collabora.com, rafal@milecki.pl,
-        wsa+renesas@sang-engineering.com,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <CVHO091CC80Y.3KUOSLSOBVL0T@ablu-work> <CAMRc=MdMKd+6-P-ma0E0f5yBTOGS_zVaBJD6wEywyjZ7JVE2YA@mail.gmail.com>
+ <CVHTW377HBYV.1CKNHXYC75Q5N@ablu-work> <CAMRc=MdR1coB9p1gvG2razQUeuwUJCaeDrTTm5o1ND+LJZ1SOg@mail.gmail.com>
+ <CVHULP4LSR1M.U8ZIY7UL0OU5@ablu-work>
+In-Reply-To: <CVHULP4LSR1M.U8ZIY7UL0OU5@ablu-work>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 13 Sep 2023 17:17:43 +0200
+Message-ID: <CAMRc=Mc4F_PKk3doS-MQUE0_=iRdQtJoWXO+mkhWcMBcudh--w@mail.gmail.com>
+Subject: Re: [libgpiod] Thread safety API contract
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Claudiu,
-
-On Wed, Sep 13, 2023 at 7:32 AM claudiu beznea <claudiu.beznea@tuxon.dev> wrote:
-> On 12.09.2023 19:16, Rob Herring wrote:
-> > On Tue, Sep 12, 2023 at 07:51:55AM +0300, Claudiu wrote:
-> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>
-> >> Document Renesas SMARC Carrier-II EVK board which is based on RZ/G3S
-> >> (R9A08G045) SoC. The SMARC Carrier-II EVK consists of RZ/G3S SoM module and
-> >> SMARC Carrier-II carrier board, the SoM module sits on top of carrier
-> >> board.
-> >>
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-
-Thanks for your patch!
-
-> >> --- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-> >> +++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
-> >> @@ -476,6 +476,8 @@ properties:
-> >>
-> >>        - description: RZ/G3S (R9A08G045)
-> >>          items:
-> >> +          - enum:
-> >> +              - renesas,smarc2-evk # SMARC Carrier-II EVK
-> >
-> > You just changed the existing binding...
-> >
-> >>            - enum:
-> >>                - renesas,r9a08g045s33 # PCIe support
-> >
-> > This is the SoM module?
+On Wed, Sep 13, 2023 at 4:10=E2=80=AFPM Erik Schilling
+<erik.schilling@linaro.org> wrote:
 >
-> No, this is a SoC variant which supports PCIe.
-
-Ideally, we need a compatible value for the SoM as well, as the SoM
-can be used stand-alone, or plugged in a different carrier board.
-
-For iWave Systems RZ/G1E SODIMM, we have that.
-For the existing RZ/G2L variants, we forgot, but it can still be added...
-
->
-> > You either need to squash this change or add
-> > another case with 3 entries and maintain the 2 entry case. (there's no
-> > way to express any entry at the beginning or middle can be optional)
+> On Wed Sep 13, 2023 at 3:45 PM CEST, Bartosz Golaszewski wrote:
+> > On Wed, Sep 13, 2023 at 3:36=E2=80=AFPM Erik Schilling
+> > <erik.schilling@linaro.org> wrote:
+> > >
+> > > On Wed Sep 13, 2023 at 2:03 PM CEST, Bartosz Golaszewski wrote:
+> > > > On Wed, Sep 13, 2023 at 11:47=E2=80=AFAM Erik Schilling
+> > > > <erik.schilling@linaro.org> wrote:
+> > > > >
+> > > > > Hi all!
+> > > > >
+> > > > > Currently it looks like libgpiod does not document any kind of th=
+read
+> > > > > safety gurantee. However, the Python bindings tests
+> > > >
+> > > > Indeed, the library is thread-aware but not thread-safe. Just like
+> > > > what is recommended for low-level system libraries.
+> > >
+> > > Just to confirm:
+> > >
+> > > I assume this means: thread-aware in the sense that all created objec=
+ts
+> > > (chips, line_requests, ...) together may only be used by a single thr=
+ead
+> > > at once? So line_requests of a same chip may not be used across threa=
+ds?
+> > >
 > >
-> >>            - const: renesas,r9a08g045
+> > They can be used across threads alright. Thread-aware means: no global
+> > state in the library, IOW two functions won't get in each other's way
+> > unless they work on the same object.
+>
+> Sorry, I did not phrase that question super well. A (hopefully) better
+> try:
+>
+> If I create a chip and then open two line_requests from that single
+> chip. Can I use these two line_requests concurrently on different
+> threads? Or do both of them (and the chip) have to share a single lock?
+>
+> My assumption was that everything derived from the same chip instance
+> must not run concurrently.
+>
 
-Gr{oetje,eeting}s,
+Ah sorry, I didn't understand your question. Actually using requests
+from a chip concurrently in a different thread is perfectly fine. The
+two structures are independent from each other in user-space and their
+work is synchronized in the kernel.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bart
