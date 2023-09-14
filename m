@@ -2,63 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA1BC7A091E
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 17:26:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2316D7A0963
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 17:35:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240951AbjINP0f convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 11:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38304 "EHLO
+        id S240877AbjINPfe convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 11:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240905AbjINP0e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 11:26:34 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD731FCC;
-        Thu, 14 Sep 2023 08:26:30 -0700 (PDT)
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3ab7fb1172cso573878b6e.3;
-        Thu, 14 Sep 2023 08:26:30 -0700 (PDT)
+        with ESMTP id S241105AbjINPfd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 11:35:33 -0400
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F481FD0;
+        Thu, 14 Sep 2023 08:35:29 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-59b5484fbe6so13317807b3.1;
+        Thu, 14 Sep 2023 08:35:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694705189; x=1695309989;
+        d=1e100.net; s=20230601; t=1694705728; x=1695310528;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Zjr+4JPeft5J8axsyk1Mf3l6qkBl6xOY0dnNNBTJUBQ=;
-        b=mpfBjIMZDv+5mG9ImwZC4DhwpSbriglD4DuYUB675F5cOSXO2Z0OZTu3zI5d2qgNDc
-         4zJ4ODUxaah1MUrT1tCKBRMKPPIIjMBkDW9mIqiTxK50mAEuvhONAsGYAz7LBkVmE7XJ
-         g0elAT19GLzVvGlgm0IdD3cjxo06yal4LPRzscxBPKelZQijvibuHVhU2JpjwOeB6K5h
-         nJTK84A4tvkmRJyGDlojSp3NaqMq/dLVCiNARbkKkV+hfz9bpylroJKyNg0EZSJwBjMN
-         PZnDOZIcR2S5mzTBHNa8CPhY8Cm0YDCTsSNEMrDMYUHy0N7sZQYNT+9eWRgVTzLnHM4N
-         yZpw==
-X-Gm-Message-State: AOJu0Yw6YHEzlEG/x9Fvocl3iO2Hf+Iw0BhBfgeUOglrYgb93uABvL/7
-        tLeAnndvhnIaC3xIA6MyLtw7N66V5Cq/qQ==
-X-Google-Smtp-Source: AGHT+IFwzNwD7eIsFKSCBxFquEW7uHOw3r/h6O4PRtNLelnAKLrh7d7UZU16T9bRuqB14GMvkJLyfg==
-X-Received: by 2002:a05:6808:200c:b0:3a8:a4bd:ceed with SMTP id q12-20020a056808200c00b003a8a4bdceedmr7260019oiw.9.1694705189003;
-        Thu, 14 Sep 2023 08:26:29 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id c17-20020a5b0bd1000000b00d3596aca5bcsm360223ybr.34.2023.09.14.08.26.26
+        bh=IGn0RiHyZw2DSAr2CB814hl7hb457z9EUqLLi0M5sq4=;
+        b=D0i5QRQF4F5/JAruezsRJtPSF1Z8GxakPn0a9+MofSxgBrbe7aVduxE4u0FJB/k9F5
+         4rEIt2ICgYvxfcAA21SRuy67Jc3wdrCQFb0xWmE4dp/wMAmZg0WR1e+PvHrLea7MLFRc
+         2JsSmjmEwp6ZSh1E5LR35lf8SyGe5yrzuJYpUuT0Df/dQjYgLHkWaEidMsUPxDu2H9vn
+         qCcX1Dld9voDkR7L38/JX5XK6rBL+4pAeEyzh0qQEYhSNUd5dLzBJx3uvvDWYXv5vLMB
+         CNp2V8mGUHh3c1XZxYLjnhA9wh4kngJOeWhTJlw9rk6t3mCOYpXqHUkKJOT4UyJkaeUa
+         0eKA==
+X-Gm-Message-State: AOJu0YzSTGlc42QfBGjbozq960yKwcF8h/6hRCQlSeuOBueYTiLdBxJL
+        Xd4TeUHiJZrzokrTVnXE4g8QV2cfI5FyjQ==
+X-Google-Smtp-Source: AGHT+IH9URVAm+Kzolb63Se6nxQZFZvGSr3JDIiEG+FuOnIdxeJmgpGQh80V+nC8dF2Cz80HwINKWw==
+X-Received: by 2002:a0d:df07:0:b0:59b:fda7:9d7f with SMTP id i7-20020a0ddf07000000b0059bfda79d7fmr1146235ywe.49.1694705728220;
+        Thu, 14 Sep 2023 08:35:28 -0700 (PDT)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id n124-20020a0dfd82000000b005925c896bc3sm377732ywf.53.2023.09.14.08.35.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 08:26:27 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-d81b42a3108so316446276.1;
-        Thu, 14 Sep 2023 08:26:26 -0700 (PDT)
-X-Received: by 2002:a25:d1d6:0:b0:d19:664:7425 with SMTP id
- i205-20020a25d1d6000000b00d1906647425mr5526179ybg.27.1694705186564; Thu, 14
- Sep 2023 08:26:26 -0700 (PDT)
+        Thu, 14 Sep 2023 08:35:27 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-d81b803b09aso237127276.2;
+        Thu, 14 Sep 2023 08:35:27 -0700 (PDT)
+X-Received: by 2002:a5b:ac2:0:b0:d0a:353b:b939 with SMTP id
+ a2-20020a5b0ac2000000b00d0a353bb939mr5402450ybr.52.1694705727063; Thu, 14 Sep
+ 2023 08:35:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-22-claudiu.beznea.uj@bp.renesas.com> <20230912160330.GA864606-robh@kernel.org>
-In-Reply-To: <20230912160330.GA864606-robh@kernel.org>
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-32-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20230912045157.177966-32-claudiu.beznea.uj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Sep 2023 17:26:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWxKFrTi7c0Df0cHLrVFt3=a7UOy0jnKxsG8PEuD=15Pg@mail.gmail.com>
-Message-ID: <CAMuHMdWxKFrTi7c0Df0cHLrVFt3=a7UOy0jnKxsG8PEuD=15Pg@mail.gmail.com>
-Subject: Re: [PATCH 21/37] dt-bindings: clock: add r9a08g045 CPG clocks and
- resets definitions
-To:     Rob Herring <robh@kernel.org>
-Cc:     Claudiu <claudiu.beznea@tuxon.dev>, mturquette@baylibre.com,
-        sboyd@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, magnus.damm@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
+Date:   Thu, 14 Sep 2023 17:35:14 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXMXfqG9whhgTwS9Ut8ZBAoEYsGBx_WX-BPE02kGbiR_Q@mail.gmail.com>
+Message-ID: <CAMuHMdXMXfqG9whhgTwS9Ut8ZBAoEYsGBx_WX-BPE02kGbiR_Q@mail.gmail.com>
+Subject: Re: [PATCH 31/37] dt-bindings: mmc: renesas,sdhi: Document RZ/G3S support
+To:     Claudiu <claudiu.beznea@tuxon.dev>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
         prabhakar.mahadev-lad.rj@bp.renesas.com,
         biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
         arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
@@ -75,27 +72,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Sep 12, 2023 at 6:03 PM Rob Herring <robh@kernel.org> wrote:
-> On Tue, Sep 12, 2023 at 07:51:41AM +0300, Claudiu wrote:
-> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >
-> > Add RZ/G3S (R9A08G045) Clock Pulse Generator (CPG) core clocks, module
-> > clocks and resets.
+On Tue, Sep 12, 2023 at 6:53 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> This is part of the binding, so it can be squashed with the previous
-> patch. The ack there still stands.
+> Document support for the SD Card/MMC interface on the Renesas
+> RZ/G3S (R9A08G045) SoC.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Usually we keep it as a separate patch, to be queued in an immutable
-branch, as it is included by both the clock driver and by DTS, but
-not by the yaml bindings file.
-
-> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > ---
-> >  include/dt-bindings/clock/r9a08g045-cpg.h | 243 ++++++++++++++++++++++
-> >  1 file changed, 243 insertions(+)
-> >  create mode 100644 include/dt-bindings/clock/r9a08g045-cpg.h
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
