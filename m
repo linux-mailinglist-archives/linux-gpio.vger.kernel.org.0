@@ -2,116 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 127947A07C9
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 16:48:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6C647A0866
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 17:03:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240728AbjINOsp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Sep 2023 10:48:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49288 "EHLO
+        id S234000AbjINPDf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Sep 2023 11:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240563AbjINOs2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 10:48:28 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5B12116
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 07:48:24 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-d776e1f181bso1067813276.3
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 07:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694702904; x=1695307704; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HuHnnCCpKec3KupkEaXCUwSfceD3r5v9lcKHYT+1ctU=;
-        b=uwOzEaRMlvkrX6eBWpjTmYYq/BIp35aWULXxX2pVTtglET3jtjxkAVOfYdwt22wd7J
-         pSGO7CeMaYRPidkO4KLxPl2tkhCI+pAFOs3tq+i4l4eSCJUnXbwD/zJNwoAxdBcVNsT1
-         yLPx5eGtt5WLnq4uOXEZiF5JAyCWPgrH3ns8qg4llIB6S4qSBK4HfSVVSn0k0614reaS
-         7XFG6H7hlO/rwk1Itq+cm7NhauRK5bfd1r0Ed03QLTNs9b9CYic0vQ4ZxHutkLnFF7YR
-         JX55qt8AGcP1IZLlKKbAK22Nq2SI9U8J1Cz7yOyD61xKh3qDgJyhueuNzA9SC44kuQcf
-         T4eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694702904; x=1695307704;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HuHnnCCpKec3KupkEaXCUwSfceD3r5v9lcKHYT+1ctU=;
-        b=E0X+6PVRDRbtkzcBv/4CPoOqf1/fBhBF76GxX3/BdRx3j7fFujqniVGRUtCDA3oUeg
-         Qk6YKtAIViKyEkfGV/ynG/6vyqkVKpeuUuCtYBDaflfXU7TX+XC/KOdVF3WYw/L1eh1y
-         6XbC87HNv1nNLiey4Rh7WbYFaTRClKWNClOXbG5rKsy41mGJhrGn0lRK3hSpPm/IYwGI
-         Z0fjYEpx9P+bXuMgwsOm+8T8e0IE5yCFQ6BwsMlNHApnSI8QUMtfEff+3foWs/cLH/Jr
-         B6iZlHsS+th9fCwEiaPHvQ+KpeXtVUOi9GvPLg/9TnWRl1qvINCJ+JY7cUeLEMAdptjy
-         2WWA==
-X-Gm-Message-State: AOJu0YxexilZzvQc8BADvaW5xaKrh5iXVjW57wbFl9uKHHUYiID9KHLZ
-        wOWZzT0bBYKVe+vNYmBUQamrUWkcDlZBEr1YBhbiIg==
-X-Google-Smtp-Source: AGHT+IGBWbsPXdVUyVGh6IoeKWogXMpeV+NV1QYCzoeda8qrpQjFBedRitaOXAtVUrf1hzUWZSmx3vAdawl5AXo2Qt4=
-X-Received: by 2002:a25:858b:0:b0:d4c:cbd2:f6f3 with SMTP id
- x11-20020a25858b000000b00d4ccbd2f6f3mr5416147ybk.53.1694702903830; Thu, 14
- Sep 2023 07:48:23 -0700 (PDT)
+        with ESMTP id S233654AbjINPDf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 11:03:35 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDAD1FC2;
+        Thu, 14 Sep 2023 08:03:31 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6D7C433C9;
+        Thu, 14 Sep 2023 15:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694703810;
+        bh=W3Y6Gm9/IGgV579HraWZyIC6jSTAdBWlzF8CdXDvIrE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jTz0CICJshUvrLKjdU+/bCj2Ns6Qc/YO8MYWzbwNg0PJGPHw/42/3YEBUCF/ekELD
+         QFrRldUu1VvTfVbAUkqix6ISsfxCRzYqUCFYtwYbEvQAHMKvSmOrOHXvryIQpk0fFD
+         Fc8Wta1JGgYvQHQZLQhsTq+mUh1UgMNDnq5mnUuHrP0Kqg+bKgU6tZm/KN7LoCPH6E
+         a/zQgM7I7m/Qz2ldYrZA4CRoqi5LieliP0ZfKLU2oCkkmaeCKsNoIt+0NWkEXDDzMF
+         gS2AZS0aGNYP1fXu3mHZLG6aY64RUxaJyL809CKE9MXS3AGs4r8HwEm4JQK4KVGbvC
+         rVel0+SPJN4ZA==
+Received: (nullmailer pid 1299783 invoked by uid 1000);
+        Thu, 14 Sep 2023 15:03:28 -0000
+Date:   Thu, 14 Sep 2023 10:03:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/5] dt-bindings: gpio: vf610: correct i.MX8ULP and
+ i.MX93 interrupts
+Message-ID: <20230914150328.GA1293008-robh@kernel.org>
+References: <20230914-vf610-gpio-v1-0-3ed418182a6a@nxp.com>
+ <20230914-vf610-gpio-v1-1-3ed418182a6a@nxp.com>
+ <4520fa76-8645-a438-ba7d-ef50c9781249@linaro.org>
 MIME-Version: 1.0
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-32-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20230912045157.177966-32-claudiu.beznea.uj@bp.renesas.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 14 Sep 2023 16:47:48 +0200
-Message-ID: <CAPDyKFq1n=QOt9WSnzH4juPZ-B7xWdwGnDcAYUo7_D=2PRj-WQ@mail.gmail.com>
-Subject: Re: [PATCH 31/37] dt-bindings: mmc: renesas,sdhi: Document RZ/G3S support
-To:     Claudiu <claudiu.beznea@tuxon.dev>
-Cc:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
-        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
-        nfraprado@collabora.com, rafal@milecki.pl,
-        wsa+renesas@sang-engineering.com,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4520fa76-8645-a438-ba7d-ef50c9781249@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 12 Sept 2023 at 06:53, Claudiu <claudiu.beznea@tuxon.dev> wrote:
->
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Document support for the SD Card/MMC interface on the Renesas
-> RZ/G3S (R9A08G045) SoC.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Thu, Sep 14, 2023 at 07:47:29AM +0200, Krzysztof Kozlowski wrote:
+> On 14/09/2023 04:20, Peng Fan (OSS) wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> > 
+> > i.MX8ULP and i.MX93 actually has two interrupts for each gpio
+> > controller, one for
+> 
+> ...
+> 
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - fsl,vf610-gpio
+> > +              - fsl,imx7ulp-gpio
+> > +    then:
+> > +      properties:
+> > +        interrupts:
+> > +          maxItems: 1
+> > +    else:
+> > +      properties:
+> > +        interrupts:
+> > +          maxItems: 2
+> 
+> Instead describe the items with "items:" and descriptions.
 
-Applied for next, thanks!
+Except not here, but in the top level 'interrupts' entry.
 
-Kind regards
-Uffe
+Rob
 
-
-> ---
->  Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> index 7756a8687eaf..94e228787630 100644
-> --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> @@ -59,6 +59,7 @@ properties:
->                - renesas,sdhi-r9a07g043 # RZ/G2UL
->                - renesas,sdhi-r9a07g044 # RZ/G2{L,LC}
->                - renesas,sdhi-r9a07g054 # RZ/V2L
-> +              - renesas,sdhi-r9a08g045 # RZ/G3S
->                - renesas,sdhi-r9a09g011 # RZ/V2M
->            - const: renesas,rcar-gen3-sdhi # R-Car Gen3 or RZ/G2
->        - items:
-> @@ -122,6 +123,7 @@ allOf:
->                - renesas,sdhi-r9a07g043
->                - renesas,sdhi-r9a07g044
->                - renesas,sdhi-r9a07g054
-> +              - renesas,sdhi-r9a08g045
->                - renesas,sdhi-r9a09g011
->      then:
->        properties:
-> --
-> 2.39.2
->
