@@ -2,78 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 977DC7A0A05
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 18:00:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 733587A0E96
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 21:55:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241341AbjINQAq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Sep 2023 12:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51596 "EHLO
+        id S229934AbjINTzv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Sep 2023 15:55:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241443AbjINQAo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 12:00:44 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A17A1FD5;
-        Thu, 14 Sep 2023 09:00:40 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DE8EC433CB;
-        Thu, 14 Sep 2023 16:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694707239;
-        bh=z65jDiJhYXiqCrF+31TXNYpOkgLv4DTepLv6il1TdHw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dkoXbS/9OdtDzucDaW3k1ZSAITVrqG9S2VNfizgl9rIwddQ8a6Y02/j81kyVsPTCv
-         pgE5jYBvdbyWOrrATe4JSdxjpIYWJ+r8nf6kSrEKBCLp49zXcEuaSwTi4aG4u/l3Ke
-         kZLRjxxsLV+3SfenXJ71RiTeeJkD1gbfywSCIvonWEhVYPrFAarqAfcytQ3PQduTwH
-         GLYa6w0dunqfoWk5gwCWsfigvaqVXWKavFZOsSgxSSbTsl3Iz5PuLDy4cTVwbqd10s
-         Sp8ma8Y5Ogoej+Fdrwi7Xg4ri96C3fI/YO1H1lFINehSy5QrS/1ZXP5mt51hdwCB/v
-         FdNGqrVKlxSkg==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     cros-qcom-dts-watchers@chromium.org,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Luca Weiss <luca.weiss@fairphone.com>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: (subset) [PATCH 00/11] Initial support for the Fairphone 5 smartphone
-Date:   Thu, 14 Sep 2023 09:04:27 -0700
-Message-ID: <169470744878.681825.1089291695542666982.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
-References: <20230830-fp5-initial-v1-0-5a954519bbad@fairphone.com>
+        with ESMTP id S229643AbjINTzu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 15:55:50 -0400
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860D726BB
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 12:55:46 -0700 (PDT)
+Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-44e8984b724so884053137.1
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 12:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694721345; x=1695326145; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gXvsIkg5W5kZfs+DNvZ5qg+c180aqSMtxSvU7mWnFz8=;
+        b=m0SzqUnpdyod+sf04xpoZmKPjblkBJNmfbZffWBAhwWDoaMxQyRBPOTbwhmc6Sizn5
+         q5foeEbnok18pO/XJ5BWQSdoK3/ompkIwYqdgggsJYFzGlHZaBK2RuNZfZQH1fMN/Xtr
+         9BV5oodBNClFpphEOFN4fqHBA2L/JV2YpckBhBHrKk7dKaFUzZrSHfvg6eXDybHzYpGp
+         wI9RHSd5TwiPyRoSqtLMeDT6nbN34N1yW7U2IQV4LRwaTDrbnHS9MMuwYvnJP1LSfucb
+         MbWrTa1axX/PVo3rgnuN94YUhZkJkhdtqF3tkaBxd9XJbjzZ+YfI4p56AnxIGVEKhW5f
+         UVzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694721345; x=1695326145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gXvsIkg5W5kZfs+DNvZ5qg+c180aqSMtxSvU7mWnFz8=;
+        b=CxBSeCJKu1IcXpdt9N2dcyWOosD/n4QPbAfrOMD8mUjpMXpd6C1gdeW3w+JiTEcohx
+         WSSXPV9v25MKgRSy409z/4ZUKjDWlS6VGELX0mvnkvSyKaNHEgTqeuEdgTvpFytBSf3t
+         WVaSJ5iTiw1Yzii3K6rFu9By3DhKCHImlgWbH9y1XZCEzg7FYAp1htcUfvnVkGZsD3WN
+         BE4ilrACul3lS7ge0Qn3OPqpz+EYNMMs13RYmHfg0nkMIBnpWeDh1uDGUb57nW3ChE8n
+         KhyYShrGzK12fmXjb1yoYa6pjdTO92YMdONQ+vqQ3EsE7iybysgPJ+pA5mM+UFqzNZMI
+         3iQw==
+X-Gm-Message-State: AOJu0YxVwr20iNQ9vUVGd8/xa/ej01sdD2DJgehg0jDdAFCnbTZ+IV+V
+        ws8CkoMR31a9XN4H6jnAplgeR+p6ebbvrt0LYaA8WQ==
+X-Google-Smtp-Source: AGHT+IEuwtjTxVRxEt//vIYG+8ayKmKrSHrk0njIa/gvUrYHhYrp9V/i5/Oo/3a5v5Ofqyy21JQg692vj2EjgHwZY6w=
+X-Received: by 2002:a67:e94c:0:b0:44d:453c:a837 with SMTP id
+ p12-20020a67e94c000000b0044d453ca837mr1673697vso.11.1694721345618; Thu, 14
+ Sep 2023 12:55:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20230912100727.23197-1-brgl@bgdev.pl> <20230912100727.23197-5-brgl@bgdev.pl>
+ <ZQBECsLHhuNRYr20@smile.fi.intel.com>
+In-Reply-To: <ZQBECsLHhuNRYr20@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 14 Sep 2023 21:55:34 +0200
+Message-ID: <CAMRc=Me0vzHjwVPMk99Orx2EZfM-OKiEZKC2Nzk6HQFz5P867A@mail.gmail.com>
+Subject: Re: [PATCH v2 04/11] gpiolib: provide gpio_device_find_by_label()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Sep 12, 2023 at 12:57=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Sep 12, 2023 at 12:07:20PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > By far the most common way of looking up GPIO devices is using their
+> > label. Provide a helpers for that to avoid every user implementing thei=
+r
+> > own matching function.
+>
+> ...
+>
+> > +static int gpio_chip_match_by_label(struct gpio_chip *gc, void *label)
+> > +{
+> > +     return gc->label && !strcmp(gc->label, label);
+>
+> When gc->label can be NULL?
+>
 
-On Wed, 30 Aug 2023 11:58:25 +0200, Luca Weiss wrote:
-> Add support to boot up mainline kernel on the QCM6490-based Fairphone 5
-> smartphone.
-> 
-> These patches only cover a part of the functionality brought up on
-> mainline so far, with the rest needing larger dts and driver changes or
-> depend on patches that are not yet merged. I will work on sending those
-> once these base patches here have settled.
-> 
-> [...]
+Whenever the driver doesn't assign it. The copy in gpio_device is set
+to "unknown" for display in logs/user-space but not the one in
+gpio_chip.
 
-Applied, thanks!
+Bart
 
-[07/11] dt-bindings: arm: qcom,ids: Add SoC ID for QCM6490
-        commit: ccfb4d8b606302d857a03ea29039e21029311335
-[08/11] soc: qcom: socinfo: Add SoC ID for QCM6490
-        commit: 59872d59d164ec67f295d6f96fe818b92973ee40
-
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+> > +}
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
