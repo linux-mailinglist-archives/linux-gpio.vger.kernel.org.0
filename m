@@ -2,120 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5273B79FFB4
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 11:09:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AE3D7A0008
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 11:30:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235826AbjINJJz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Sep 2023 05:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58432 "EHLO
+        id S236929AbjINJaT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Sep 2023 05:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237147AbjINJJh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 05:09:37 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2276B3A89;
-        Thu, 14 Sep 2023 02:08:57 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2ba1e9b1fa9so10622901fa.3;
-        Thu, 14 Sep 2023 02:08:57 -0700 (PDT)
+        with ESMTP id S235913AbjINJaS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 05:30:18 -0400
+Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429261BF1
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 02:30:14 -0700 (PDT)
+Received: by mail-ua1-x932.google.com with SMTP id a1e0cc1a2514c-7a512434bc9so1217264241.0
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 02:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694682535; x=1695287335; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=myXNrdTUEfnJ2uywIxDILlGjQxJb0RUxKt0pQrpz5qA=;
-        b=lmqSjLo4QTX694lvfaLsxMDWJlGp+M8sbgox0UW4uuRYVGHxD2rHmeM1kmuqsXBQjl
-         t+nZ82KZCLJfGNV3fR7nOvHSc3KDT951uVOlsPdDPAd8kAjhffQfXVH3LVp2901AmntY
-         xgcdb2kLDCqFwIPwkbSKDVRBDWCLLlNj3LhV+yO0XQh+0SpNxp8om36vRn2pwKsvoORC
-         sG1AZGznuKUZHCzkIJuFq3dlvOJ/wEYUWcq1L/w+PvJ+0c0yaKi94M1P386cZs2WVlc0
-         G3s9dP8WOCQgVV48XkJ2r6djxS0cjOwHZfzQ8/5KC7Qr/N241qo/WD++VX3MJ5nTqZMt
-         SUTw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694683813; x=1695288613; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p2ppFbBJ6eSrXngOvBl4Cb6zXMC/U2RNI6NUtLKD4qk=;
+        b=A5qFBXPuNfXapaDc1ES++K3Rar679LuNluYnHoBx4L14PSGbpK9ddRuMsWEoL7+Vee
+         lP3zM0IkQoM8uljFn+F4dbxumEu0ueiQgIq9/W4yvjXJM33GBy2/1L1yjrM4Ln5c1IZH
+         AvjAeo+h+ZuaKdmy0Aklm3m5XRVm0RyOmpTqwzRjoOOvstR1lQrb7r0vCkO3gmp/t5ie
+         l4wOVi6LbbOIoZGzd8Tv1Kim6pHPelF41P8+6SMPS5JV7ghq4kdx3Tftj/XGv/Jdwapd
+         IViDH4k83ORDqoNusi2GSdur//QOznyHDy7gZZR53WsNi0YeTMyYeWlNVgAO0l06PIfc
+         0pZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694682535; x=1695287335;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=myXNrdTUEfnJ2uywIxDILlGjQxJb0RUxKt0pQrpz5qA=;
-        b=iOcmAnBkaOzSLDpqjUfE1kmou8VbFfXfWO8F/nx7U/O4Arc6e0UBi9gRPpOjoHS0xk
-         hgbTNxNFnda99Sjiz0HM4Yu4aW3dTvu78+8eIjRhbIbQeZnS2RW0Vl/t3J8AAj3S2HqX
-         lsUQuyx3Mv7GF87O2m1olIC58J/HsetX5NZ4ukplT54xaw1bf1tdoS8+7xoSvZelTnJ9
-         PdXmWlH86S08cD7OdN3dXLqsQExl8w8XE9+u369stoverdPrqGkEp4MM096cMbrLYTXL
-         DN9LjaQiW/k80tnTqR/AUQWTvh30RSc5leDJJcfdvp7o5C/f5yF/2KQ1JN9819Ml06dp
-         Koww==
-X-Gm-Message-State: AOJu0YwnCaPyMozBD0k1sjj8LyMF8qA2BunV4Xdx6oCMb+AfGUtM1pkZ
-        hDy8u5qh1iWM5cBt6W3RmiOESMqO2QRJig==
-X-Google-Smtp-Source: AGHT+IFp2fWyTGFQ1Fj84/0q9IqOqinfqhJAJgpqjCg4C+5joAjuLN3cMBtNNAgv69Rv6rPZaNe/pg==
-X-Received: by 2002:a2e:9517:0:b0:2be:4d3a:ad6a with SMTP id f23-20020a2e9517000000b002be4d3aad6amr4114996ljh.26.1694682535015;
-        Thu, 14 Sep 2023 02:08:55 -0700 (PDT)
-Received: from [172.24.134.61] ([193.205.131.2])
-        by smtp.gmail.com with ESMTPSA id s24-20020a7bc398000000b003feee8d8011sm4277553wmj.41.2023.09.14.02.08.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 02:08:54 -0700 (PDT)
-Message-ID: <65ec6171-b47e-4d1e-9bd7-a61f2acfb959@gmail.com>
-Date:   Thu, 14 Sep 2023 11:08:52 +0200
+        d=1e100.net; s=20230601; t=1694683813; x=1695288613;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p2ppFbBJ6eSrXngOvBl4Cb6zXMC/U2RNI6NUtLKD4qk=;
+        b=ZrKrxOAEEpIgyCVBP5wjVtX9g+kYyozWXQwU1OD0Vek5/yjUpOM4N52CsWZ1bq0+VE
+         BA3MmyVRHfWZMIuyiA4xX0Qz9bC1PHhJeUIJVFwrQL25JKEnY6ef8r3BQpdcSvv1Y0um
+         renRtIm10T+ExUCXqCGjxsQ+vZaaenj5/wARGfzdCZ4DXIeqkOwQe64ng/Diw4hFz6zv
+         /p1XuJPn/cBh96o9CczKv9QVwBrQr6eGiZjgk32hCYicD66oVcEU7WuZdS3fNyTpTR0M
+         755u+s/Ej9cQjygDv9v8tiWOEGITAfb6ECZVm3R0rkzUMx4r6NLq2+r+XCWHuMDa0LtA
+         FUyA==
+X-Gm-Message-State: AOJu0YwCxzftPkQz+AnIvoK0i7FQNYVhp0VYWGYYax3K2RsTGKq91X+a
+        kNFHt08Tk01VLIbfGvvIsDmHvRqBRj+AGyNmpVt/Lw==
+X-Google-Smtp-Source: AGHT+IFdpKc86Ba4+Ce1Kw+37JilCE4JPGPOzMp6WOHfoT2BLvKGNI+DWUjLDVVh+a1NN/cT820cMVMpi35QbT24b9U=
+X-Received: by 2002:a05:6102:3169:b0:450:6ef1:e415 with SMTP id
+ l9-20020a056102316900b004506ef1e415mr582724vsm.13.1694683813313; Thu, 14 Sep
+ 2023 02:30:13 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pinctrl: amd: Add a quirk for Lenovo Ideapad 5
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, regressions@lists.linux.dev,
-        Shyam-sundar.S-k@amd.com, Basavaraj.Natikar@amd.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230829165627.156542-1-mario.limonciello@amd.com>
- <20230829165627.156542-4-mario.limonciello@amd.com>
- <1d891d34-053a-368d-cf47-bcaf35284c79@redhat.com>
- <07353676-bad0-44f8-a15a-4877f1898b6b@amd.com>
- <811225f8-c505-7344-ac18-882472ee0348@redhat.com>
- <d232c11d-901f-4ebc-b408-bed042ed8da9@amd.com>
- <6734c409-89f1-89a1-3096-4054be29faf1@redhat.com>
- <f0ceff1c-ba5f-4c6b-ac0e-c4195f477500@amd.com>
- <CACRpkdYGxreyD8NVuKs2G44htR8EixdvGr3+ma=HrxHUP3NDQg@mail.gmail.com>
- <4246946d-40e3-7df7-3fc4-9aa10e1dee10@redhat.com>
- <b9f879d5-55b8-401d-b154-8066cb66d20f@amd.com>
- <0522393f-9f0c-4c59-b961-9b8d865a645d@amd.com>
- <CACRpkdamAs=c6YBW2jgQ48kUPHqUGT=b89NSXYYttf0RbnpctQ@mail.gmail.com>
-Content-Language: en-US
-From:   Luca Pigliacampo <lucapgl2001@gmail.com>
-In-Reply-To: <CACRpkdamAs=c6YBW2jgQ48kUPHqUGT=b89NSXYYttf0RbnpctQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-3-brgl@bgdev.pl>
+ <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
+ <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
+ <20230913222338.07d1625b@xps-13> <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
+ <4de724a1630eda74f4f304dc224dc981eb3b0875.camel@crapouillou.net>
+In-Reply-To: <4de724a1630eda74f4f304dc224dc981eb3b0875.camel@crapouillou.net>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 14 Sep 2023 11:30:02 +0200
+Message-ID: <CAMRc=MfnPdr66OPSkkjjpZY2VY7wN4WO2uBPbpyExFH0F6e=1Q@mail.gmail.com>
+Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 9/14/23 10:43, Linus Walleij wrote:
-
-> On Wed, Sep 13, 2023 at 11:21 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
+On Thu, Sep 14, 2023 at 10:30=E2=80=AFAM Paul Cercueil <paul@crapouillou.ne=
+t> wrote:
 >
->> 2. In better news updating the BIOS fixed the issue in both Linux and
->> Windows, no kernel patches needed.
->>
->> So no further work will be done on this series.
-> Is it easy for users to update BIOS? I.e. does
-> fwupdmgr update work?
+> Hi,
 >
-> Or does it require flashing special USB drives with FAT filesystems...?
+> Le jeudi 14 septembre 2023 =C3=A0 10:02 +0300, Andy Shevchenko a =C3=A9cr=
+it :
+> > On Wed, Sep 13, 2023 at 11:23=E2=80=AFPM Miquel Raynal
+> > <miquel.raynal@bootlin.com> wrote:
+> > > linus.walleij@linaro.org wrote on Wed, 13 Sep 2023 22:12:40 +0200:
+> > > > On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski
+> > > > > <brgl@bgdev.pl> wrote:
+> >
+> > ...
+> >
+> > > > > Why not moving this quirk to gpiolib-of.c?
+> > > >
+> > > > That's a better idea here I think, it's clearly a quirk for a
+> > > > buggy device tree.
+> > >
+> > > Agreed, it's just for backward compatibility purposes in a single
+> > > driver. I believe it should stay here.
+> >
+> > I believe Linus was for moving.
 >
-> Because I'm not sure all users will do that. Or even be aware that
-> they should. In that case detecting the situation and emitting
-> a dev_err() telling the user to update their BIOS would be
-> desirable I think?
+> Which Linus? Because the one who's also the gpio maintainer just wrote
+> above that it was better to keep it in the driver.
 >
-> Yours,
-> Linus Walleij
 
-sadly it's not convenient,
+I'm also under the impression that Linus meant moving it to gpiolib-of.c. L=
+et's
 
-the only way lenovo offers to update the bios
+Linus: Could you clarify?
 
-is an executable to run on windows.
+Bart
 
-
-So a user should either have a dual boot
-
-or install windows on an external drive and boot from that,
-
-also the update process might wipe every boot entry beside windows.
-
-
-I read that some bios updaters also run on freedos, but i didn't try
-
+> Cheers,
+> -Paul
+>
+> >
+> > gpiolib-of.c contains a lot of quirks, including this one. Calling
+> > these new (or old) APIs for overriding polarity in many cases
+> > shouldn't be needed if were no issues with DT or something like that.
+> >
+>
