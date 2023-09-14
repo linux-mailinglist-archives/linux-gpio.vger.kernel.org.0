@@ -2,119 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0C9B79FCB9
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 09:05:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D551379FCD9
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 09:11:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235725AbjINHFE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Sep 2023 03:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
+        id S235878AbjINHLZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Sep 2023 03:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230141AbjINHFD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 03:05:03 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45640BB;
-        Thu, 14 Sep 2023 00:04:59 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id 5614622812f47-3aa14d8641cso372872b6e.3;
-        Thu, 14 Sep 2023 00:04:59 -0700 (PDT)
+        with ESMTP id S235856AbjINHLZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 03:11:25 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4612CCD
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 00:11:20 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-401b393ddd2so6833465e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 00:11:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694675098; x=1695279898; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzTdfD0LggvX1uBlCTC2vRtoepMYQzC2yBdB+oN7NDw=;
-        b=pUI10C79RkUXxD/yVaIHXn6IPHQ7bA22lRHxYbPsUjafKbkR9ezty6ly8T+4Z1mdmJ
-         Gc/kGq40vYZjsuTmDkkcSnIydBO7mT33onwziAdbOjnLMjOIl6anQowwRBph26xEULNs
-         nFLz11rXgUDn0IS9f9Ua/n/VLFi5rjhBeRMfkUQ9UrAiSGMq3KyMaylpq9XaDK5y82Ll
-         h4QTC1lZ8Oq6lNEJu5yg3N0PDGH9NhJIIyZdnW4mTSu6XtykSbblS5uZiS4DhDtA+VdN
-         Hsia23aHJxectydeLWFBoICbIUTaO5HZhiTFEne8yHi/pBP4MgM5Te90LL3KJeBl5wHB
-         w9UA==
+        d=linaro.org; s=google; t=1694675479; x=1695280279; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5h0ZuDwh1rf6DxeXFX2hTo7zsJWLjsfMyXea4lnDesA=;
+        b=yn+Mq0Gwxu96XJ0pRlPE3ZHPPEMARv/MUIyxzg9ZjQ2x+eC0yl9G7ybGOtO1VzxmSM
+         2RTK+7Kgtk6ZhpVU/Rto5VGGttTUp6H++SQ8IX0g913daaZddSqOoQ7zQQWb0cMS7kNe
+         C+4sHCLoPUzbc9pLMaqgygkM9i+GaAyJM8BcW6pE4v/i3yAXAakSrhdva8O0wsuU/Qzj
+         uKhVYEr1fg5xNMUXvdJxuldXbXey2m5B1qW+5SDWbZQjYnSfxV4V5WOEvCR9b2CRzBMr
+         zoXIw5n8YARfWt4/OgICDrFkUOw16zgiaTyLWzdD36RHxqLhxB6X2Dn7ZB/gBtPUO3Py
+         c1Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694675098; x=1695279898;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kzTdfD0LggvX1uBlCTC2vRtoepMYQzC2yBdB+oN7NDw=;
-        b=J9r8vFwkY7USU2M/wjQRqcCbd2+w7Vd+Hw5hVfzaCALz4jDa2s6mwsJBZxUtJeadnF
-         K+AxuN46FLHgfKdArIQOWhCX8z4XdYPPHcdZqEbSNWYPEeKxMBuGGg2L+ozzplI9+W6a
-         puEub6Xc1tXF+Odgbi4wmSUU80kuB0b7vHX0Ywjk6v0KaRBx+ItiasxhIDPr2TQihVSc
-         fOyvk5c3oxgFKXlSoODDVG6+zUGK6nhEHidezXQRyt0kizZtfZJQIkn81/2Bwud14jZX
-         UqGGCPZA8bSKiQbUVkkzeQ9SamZWrZLDu9wfECTOy8v8ZZddTy138Rpj/lch61vPCDhG
-         rb9g==
-X-Gm-Message-State: AOJu0Yw+7Sp13inJSHZ7zB2XFVZWr21Sjt5Xci/v3Qi/+UM7RQ3Eiypq
-        pCMXU8Q/rejNkDc3WL3G36ze80YFJ+ADwjpvUG4=
-X-Google-Smtp-Source: AGHT+IEzUZhYY4nwIJ6Dlm9qukCO/53xQ9HZuRBayIOhSRBl2gZChNyMJPFJoM0Y2E3e3o3puld+m0KaJ40spNNiqwQ=
-X-Received: by 2002:a05:6870:2397:b0:1c5:56f:ac08 with SMTP id
- e23-20020a056870239700b001c5056fac08mr5612105oap.12.1694675098534; Thu, 14
- Sep 2023 00:04:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694675479; x=1695280279;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5h0ZuDwh1rf6DxeXFX2hTo7zsJWLjsfMyXea4lnDesA=;
+        b=S5tX+HMGmnopGQZWTGsDtSwcoKjF1bCcwINkrWtRvhvok9ZTIOoxvXAM1kcfzacdwX
+         2pVEMd0PjjLWis8NnyooY6KMQD9ETO9yMZaHQzAEMb0oPZT5dVDJ1GA2iB2wmwFs589p
+         2Zny08clM59rScmg2b0665oh7NZR8zUjffCEH+BZYrh/K1zT+cwIUe+Pi0+RB9kmMlDT
+         Ahi2+q5c6vqOmO54D9vssVXkGbuj0LgUK3sJixQPCI6XaeYqcTidVkGqcG1ZtNLWK/zk
+         A4+eiMB5QHSoX99PwuYNGDDgvGgSpHBVpJ5+2Jiw1Wjs4nEkUNN5AiVnD4UnLqNs6m0o
+         FE6g==
+X-Gm-Message-State: AOJu0YyGkPX03TUOmYjdGiX0hEhXmo8tUCgOs77kShCUpGLAKFRUDA1d
+        Fv9AwbFUW1dwwTcj8dyQHxOkqg==
+X-Google-Smtp-Source: AGHT+IGepcioAmLDJ5yHj/4XT3khz32VPFxMtQxJjTkGxn1Sec0dfMWaMrgX4erCJapFuFurG6tFqg==
+X-Received: by 2002:adf:ee08:0:b0:319:8c35:37b with SMTP id y8-20020adfee08000000b003198c35037bmr4177430wrn.7.1694675479125;
+        Thu, 14 Sep 2023 00:11:19 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.214.188])
+        by smtp.gmail.com with ESMTPSA id m6-20020adfe946000000b0031980783d78sm918742wrn.54.2023.09.14.00.11.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Sep 2023 00:11:18 -0700 (PDT)
+Message-ID: <cc25b9ba-08e6-24e1-8e21-f3e43bb73311@linaro.org>
+Date:   Thu, 14 Sep 2023 09:11:16 +0200
 MIME-Version: 1.0
-References: <20230913115001.23183-1-brgl@bgdev.pl> <20230913115001.23183-3-brgl@bgdev.pl>
- <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
- <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
- <20230913222338.07d1625b@xps-13> <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 14 Sep 2023 10:04:22 +0300
-Message-ID: <CAHp75Vdn9a8a-E=RuByNL8B93cNHuusVrqE-RnH4f3+WgxJ22Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH 5/5] arm64: dts: imx93: update gpio node
+To:     Peng Fan <peng.fan@nxp.com>,
+        "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20230914-vf610-gpio-v1-0-3ed418182a6a@nxp.com>
+ <20230914-vf610-gpio-v1-5-3ed418182a6a@nxp.com>
+ <bc122417-6d59-4c1d-3f73-c20711f9a32f@linaro.org>
+ <DU0PR04MB941722CE1A9BF9F87946DE0A88F7A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <9fc4817d-00ae-aaf4-bfb6-b24361f55799@linaro.org>
+ <DU0PR04MB94177EF6250838FFFB5FD6D188F7A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <DU0PR04MB94177EF6250838FFFB5FD6D188F7A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 10:02=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Sep 13, 2023 at 11:23=E2=80=AFPM Miquel Raynal
-> <miquel.raynal@bootlin.com> wrote:
-> > linus.walleij@linaro.org wrote on Wed, 13 Sep 2023 22:12:40 +0200:
-> > > On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski <brgl@b=
-gdev.pl> wrote:
->
-> ...
->
-> > > > Why not moving this quirk to gpiolib-of.c?
-> > >
-> > > That's a better idea here I think, it's clearly a quirk for a
-> > > buggy device tree.
-> >
-> > Agreed, it's just for backward compatibility purposes in a single
-> > driver. I believe it should stay here.
->
-> I believe Linus was for moving.
->
-> gpiolib-of.c contains a lot of quirks, including this one. Calling
+On 14/09/2023 08:53, Peng Fan wrote:
+>> Subject: Re: [PATCH 5/5] arm64: dts: imx93: update gpio node
+>>
+>> On 14/09/2023 08:04, Peng Fan wrote:
+>>>> Subject: Re: [PATCH 5/5] arm64: dts: imx93: update gpio node
+>>>>
+>>>> On 14/09/2023 04:21, Peng Fan (OSS) wrote:
+>>>>> From: Peng Fan <peng.fan@nxp.com>
+>>>>>
+>>>>> Per binding doc, i.MX93 GPIO supports two interrupts, and not
+>>>>> compatible with i.MX7ULP. So update the node
+>>>>>
+>>>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>>>>> ---
+>>>>>  arch/arm64/boot/dts/freescale/imx93.dtsi | 20 ++++++++++++--------
+>>>>>  1 file changed, 12 insertions(+), 8 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/freescale/imx93.dtsi
+>>>>> b/arch/arm64/boot/dts/freescale/imx93.dtsi
+>>>>> index 6f85a05ee7e1..011c34a57c53 100644
+>>>>> --- a/arch/arm64/boot/dts/freescale/imx93.dtsi
+>>>>> +++ b/arch/arm64/boot/dts/freescale/imx93.dtsi
+>>>>> @@ -825,11 +825,12 @@ usdhc3: mmc@428b0000 {
+>>>>>  		};
+>>>>>
+>>>>>  		gpio2: gpio@43810080 {
+>>>>> -			compatible = "fsl,imx93-gpio", "fsl,imx7ulp-gpio";
+>>>>> +			compatible = "fsl,imx93-gpio", "fsl,imx8ulp-gpio";
+>>>>
+>>>> As your driver change points, it is breaking users, so no :(
+>>>
+>>> ok. Although i.MX93 GPIO is not compatible with i.MX7ULP from HW
+>>> perspective, the compatible string should keep as it is now and
+>>> binding
+>>
+>> If it is not compatible, then how could it work before?
+> 
+> i.MX7ULP reg:
+> 0h Port Data Output Register (PDOR) 
+> 4h Port Set Output Register (PSOR) 
+> 8h Port Clear Output Register (PCOR) 
+> Ch Port Toggle Output Register (PTOR) 
+> 10h Port Data Input Register (PDIR) 
+> 14h Port Data Direction Register (PDDR)
+> 
+> i.MX8ULP/93 has different registers address, but 
+> i.MX93 registers has 0x40 off as below:
+> 40h Port Data Output (PDOR)
+> 
+> Even linux i.MX7ULP gpio driver could work with i.MX8ULP/93
+> GPIO HW with dts node using an 0x40 offset + base addr
+> for i.MX93 gpio. I think from hw design, they are
+> not compatible. Besides the upper differences,
+> there are other differences.
 
-To be clear:
-"including one for the same issue"
+Sorry, I don't understand it. I asked how could they work before in
+Linux, if they are not compatible, and you pasted regs.
 
-> these new (or old) APIs for overriding polarity in many cases
-> shouldn't be needed if there were no issues with DT or something like tha=
-t.
+So again - if they are not compatible, how could it work? Or maybe it
+never worked? But then commit msg would say it.
 
-To be clear:
-The less we call these APIs from drivers the better. Ideally these
-APIs shouldn't have existed.
+Best regards,
+Krzysztof
 
---=20
-With Best Regards,
-Andy Shevchenko
