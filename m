@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F1467A0521
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 15:12:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56AAB7A0568
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 15:19:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238781AbjINNMb convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 09:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39628 "EHLO
+        id S239047AbjINNTp convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 09:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238719AbjINNM1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 09:12:27 -0400
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB76E1FDA;
-        Thu, 14 Sep 2023 06:12:23 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d8181087dc9so934550276.3;
-        Thu, 14 Sep 2023 06:12:23 -0700 (PDT)
+        with ESMTP id S239125AbjINNTc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 09:19:32 -0400
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E94D2118;
+        Thu, 14 Sep 2023 06:19:26 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-59be6bcf408so10975147b3.2;
+        Thu, 14 Sep 2023 06:19:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694697142; x=1695301942;
+        d=1e100.net; s=20230601; t=1694697565; x=1695302365;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/oWvZHVsTkVbLPbiv0w553loiJf0Vtu9uXJvexs6wx4=;
-        b=g0wH90TBFIX8WDQTUF1hlrgf3a35CnvNzUKXT7YGZenVUDKrCJ9X9seJ1u51o0zwNG
-         DWhbaraIxB83Z89mFB/gFmcEdhkva8nL3uzQLHDAXgILyoeFAoIkH6gVN8YCH9P4RENT
-         M0WcrgbYswmaG3R+uoBGIqdJSB286IG42vQP4aF6IusbuBae8a2277vIbW7akgDDfjvO
-         1jEvsVoB/ZkOsjfCC7PmFg6IzJmuzSMESO1lsUi1cog6JlMayZ0YQJ/hb4BuEz2In4Ax
-         8gUmL/IxIyWh65MLEwmQ1bbvZ4de6Vfr1q3AaHXChl2kjeJi3BRyc7P95w7sN2C4xP7e
-         tLow==
-X-Gm-Message-State: AOJu0Yyw/XuO+MEkFbFxN3X8uPJ1ToaaM27RkCNQvr5YOT4rHaK2CDrw
-        whf1Iw7tbSweytxnv+WD+vvA7RRhB4baUQ==
-X-Google-Smtp-Source: AGHT+IHLpejWN1ToSC21mHfiFO/oSUF/st7hYB1AGOqNhV5Ziw4khqR3hyYJeL82u26RaBHn2d8gFg==
-X-Received: by 2002:a25:ac03:0:b0:d0f:6f1d:89ec with SMTP id w3-20020a25ac03000000b00d0f6f1d89ecmr5214472ybi.35.1694697142452;
-        Thu, 14 Sep 2023 06:12:22 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id j73-20020a25234c000000b00babcd913630sm328997ybj.3.2023.09.14.06.12.21
+        bh=4uZJSTJpkTY7WDoLQQFFp+wNWgzUgYBYIubQOSDA1p4=;
+        b=d+GDl4HmOQuJucCMgKLXtlTYAaHozUBNEUHJfhAcLc9IA5olrnIdUAg18YKSUzPnTL
+         FtKp7FTb2lXFSUl1NTI0Msa0kzCpWzYdSveGz/I4KDoVqv6+Z7wXz2Oqnd0QSKGGasHc
+         spB1vnPynvMGzp9FePbu67aLbCZ4fT1GRE6hFn5POUMuvEnYoJHybHdKb197k87v5FxO
+         43C4sb7wxnrLbzaeIbxd9YGSfRSuKsaumkKxjzlNovdlFsTCSbFkJJ8fp44n+z9/EYu1
+         BdGcKfNZE1YnsDrHJANHtwwq8u+uaaC/28RVCyKOzn2cYi7cm5q2o3EkU3TI8VEcPmPj
+         bKvQ==
+X-Gm-Message-State: AOJu0YxSOtJ91M/+m8Eh/MFmaG109gAXcDnqrWU8O23ei7i3T4h7+5oP
+        6Sdok6pH53rBLA2YNPB+61RcivhJz1cKpg==
+X-Google-Smtp-Source: AGHT+IGeOj+7TvsOg0sYCahslHPaDV6RS/lHn+S2/o3KDQ6yeDkCQErAC2LuLGLdyhY61hcyAAcypA==
+X-Received: by 2002:a0d:c087:0:b0:599:da80:e1e6 with SMTP id b129-20020a0dc087000000b00599da80e1e6mr5484264ywd.34.1694697565168;
+        Thu, 14 Sep 2023 06:19:25 -0700 (PDT)
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
+        by smtp.gmail.com with ESMTPSA id f4-20020a0ddc04000000b005869ca8da8esm307222ywe.146.2023.09.14.06.19.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 06:12:21 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d8181087dc9so934514276.3;
-        Thu, 14 Sep 2023 06:12:21 -0700 (PDT)
-X-Received: by 2002:a25:c7d1:0:b0:d5c:4a6a:f5a4 with SMTP id
- w200-20020a25c7d1000000b00d5c4a6af5a4mr5646812ybe.24.1694697141289; Thu, 14
- Sep 2023 06:12:21 -0700 (PDT)
+        Thu, 14 Sep 2023 06:19:24 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d7ecdb99b7aso974501276.3;
+        Thu, 14 Sep 2023 06:19:24 -0700 (PDT)
+X-Received: by 2002:a5b:cca:0:b0:d7f:9215:6869 with SMTP id
+ e10-20020a5b0cca000000b00d7f92156869mr5228632ybr.55.1694697564530; Thu, 14
+ Sep 2023 06:19:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-13-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20230912045157.177966-13-claudiu.beznea.uj@bp.renesas.com>
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-14-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20230912045157.177966-14-claudiu.beznea.uj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Sep 2023 15:12:08 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVLx1d-6=5xx_GLAb7LxxRR9FwhAU56fxNc3b=9wj286g@mail.gmail.com>
-Message-ID: <CAMuHMdVLx1d-6=5xx_GLAb7LxxRR9FwhAU56fxNc3b=9wj286g@mail.gmail.com>
-Subject: Re: [PATCH 12/37] clk: renesas: rzg2l: reduce the critical area
+Date:   Thu, 14 Sep 2023 15:19:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWkOOPrwUX4iJCA5SqDGB+0WgU5yx_XzuoexKYu0Y=zkw@mail.gmail.com>
+Message-ID: <CAMuHMdWkOOPrwUX4iJCA5SqDGB+0WgU5yx_XzuoexKYu0Y=zkw@mail.gmail.com>
+Subject: Re: [PATCH 13/37] clk: renesas: rzg2l: use FIELD_GET() for PLL
+ register fields
 To:     Claudiu <claudiu.beznea@tuxon.dev>
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -72,39 +73,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Claudiu,
-
 On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> spinlock in rzg2l_mod_clock_endisable() is intended to protect the accesses
-> to hardware register. There is no need to protect the instructions that set
-> temporary variable which will be then written to register. Thus limit the
-> spinlock only to the hardware register access.
+> Use FIELD_GET() for PLL register fields. This is its purpose.
 >
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Thanks for your patch!
-
-> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> @@ -912,13 +912,13 @@ static int rzg2l_mod_clock_endisable(struct clk_hw *hw, bool enable)
->
->         dev_dbg(dev, "CLK_ON %u/%pC %s\n", CLK_ON_R(reg), hw->clk,
->                 enable ? "ON" : "OFF");
-> -       spin_lock_irqsave(&priv->rmw_lock, flags);
->
->         value = bitmask << 16;
->         if (enable)
->                 value |= bitmask;
-> -       writel(value, priv->base + CLK_ON_R(reg));
->
-> +       spin_lock_irqsave(&priv->rmw_lock, flags);
-> +       writel(value, priv->base + CLK_ON_R(reg));
->         spin_unlock_irqrestore(&priv->rmw_lock, flags);
-
-After this, it becomes obvious there is nothing to protect at all,
-so the locking can just be removed from this function?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk-for-v6.7.
 
 Gr{oetje,eeting}s,
 
