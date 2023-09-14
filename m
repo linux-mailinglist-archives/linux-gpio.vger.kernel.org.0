@@ -2,153 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D551379FCD9
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 09:11:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3424879FD24
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 09:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235878AbjINHLZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Sep 2023 03:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60898 "EHLO
+        id S232614AbjINHTk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Sep 2023 03:19:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235856AbjINHLZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 03:11:25 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4612CCD
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 00:11:20 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-401b393ddd2so6833465e9.0
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 00:11:20 -0700 (PDT)
+        with ESMTP id S232484AbjINHTi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 03:19:38 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BDBECF1
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 00:19:34 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-317c3ac7339so523813f8f.0
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 00:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694675479; x=1695280279; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1694675972; x=1695280772; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5h0ZuDwh1rf6DxeXFX2hTo7zsJWLjsfMyXea4lnDesA=;
-        b=yn+Mq0Gwxu96XJ0pRlPE3ZHPPEMARv/MUIyxzg9ZjQ2x+eC0yl9G7ybGOtO1VzxmSM
-         2RTK+7Kgtk6ZhpVU/Rto5VGGttTUp6H++SQ8IX0g913daaZddSqOoQ7zQQWb0cMS7kNe
-         C+4sHCLoPUzbc9pLMaqgygkM9i+GaAyJM8BcW6pE4v/i3yAXAakSrhdva8O0wsuU/Qzj
-         uKhVYEr1fg5xNMUXvdJxuldXbXey2m5B1qW+5SDWbZQjYnSfxV4V5WOEvCR9b2CRzBMr
-         zoXIw5n8YARfWt4/OgICDrFkUOw16zgiaTyLWzdD36RHxqLhxB6X2Dn7ZB/gBtPUO3Py
-         c1Jg==
+        bh=EuhVNGrFW68jxe2JJJtLZHWfPCfJOHNfdRCfgAWkxb8=;
+        b=v5wSoZSu1jJd8OnF4/bmqv7oaCKoSLtlHLYvOFmwd8AL7+aiwlmtL/2xBSfr+GnFTc
+         5Tz80xFJJtUO7PZSoFDzqaozXWyl4drdG+zhPVxtF1+J2tIX3SxtzuyRHtoQQtnsZwpa
+         XFy7b+Poo9CO/eK7RQIRfirKRDgiC6RoBdlOjYFmYDNku1gE1JHV1fFCeQZPsLjDAIW2
+         06IU04I1KaSv6HUU5PVjwhBmWGzsTwq5LmcXtxsmXOod3qOLxbM9Y82Aiv9j5N8ttDW2
+         GcoLUsvhV70QofjI8j8WBctBnPpC5q72MimW9774QsLotPdKB5lfZ3sH5Ef909OYGQqs
+         RMFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694675479; x=1695280279;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1694675972; x=1695280772;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5h0ZuDwh1rf6DxeXFX2hTo7zsJWLjsfMyXea4lnDesA=;
-        b=S5tX+HMGmnopGQZWTGsDtSwcoKjF1bCcwINkrWtRvhvok9ZTIOoxvXAM1kcfzacdwX
-         2pVEMd0PjjLWis8NnyooY6KMQD9ETO9yMZaHQzAEMb0oPZT5dVDJ1GA2iB2wmwFs589p
-         2Zny08clM59rScmg2b0665oh7NZR8zUjffCEH+BZYrh/K1zT+cwIUe+Pi0+RB9kmMlDT
-         Ahi2+q5c6vqOmO54D9vssVXkGbuj0LgUK3sJixQPCI6XaeYqcTidVkGqcG1ZtNLWK/zk
-         A4+eiMB5QHSoX99PwuYNGDDgvGgSpHBVpJ5+2Jiw1Wjs4nEkUNN5AiVnD4UnLqNs6m0o
-         FE6g==
-X-Gm-Message-State: AOJu0YyGkPX03TUOmYjdGiX0hEhXmo8tUCgOs77kShCUpGLAKFRUDA1d
-        Fv9AwbFUW1dwwTcj8dyQHxOkqg==
-X-Google-Smtp-Source: AGHT+IGepcioAmLDJ5yHj/4XT3khz32VPFxMtQxJjTkGxn1Sec0dfMWaMrgX4erCJapFuFurG6tFqg==
-X-Received: by 2002:adf:ee08:0:b0:319:8c35:37b with SMTP id y8-20020adfee08000000b003198c35037bmr4177430wrn.7.1694675479125;
-        Thu, 14 Sep 2023 00:11:19 -0700 (PDT)
+        bh=EuhVNGrFW68jxe2JJJtLZHWfPCfJOHNfdRCfgAWkxb8=;
+        b=i4S1a8QITZASAeCc4AKc0fWph1ScMac3G7gio8Psk3E+7GCRSA1weUVFKYSYTI/OIu
+         jygr4xgJZKB0EgdwO9JebnkSySKs6d/kQh8X+/7eP1Uqxfh0rhW03UysAVsiHm+i4+Ke
+         uYKefrWFE8qnMcTJpBXwwVcwyTItatH+7HeujJGcu9tqwf86fsAm73PRHGCbUeBRNIqH
+         Pk+pexudnM5wFK8pj/Tz72N3XZSS62AeBm8T0/rUbYnNEehlaSwShIo77ChwCZ1NlkMC
+         hTJnIQxbBUJMYWf6kraPoBy0iQkdJYTYRx9ztLbp32GZXt9WS1tjYguP4poXxzHMAvvw
+         QJRw==
+X-Gm-Message-State: AOJu0YyvjbK/fyNKXK35Wm3aoHbDsIfQs0J2zgWeMS+djZtbImPPOJbO
+        Chrr115oC7NIptSpMkB2vZxi6A==
+X-Google-Smtp-Source: AGHT+IH3nxwuXTTFge+SiA2fbG0x1vjEZPiN16+NTWzo1snCwvJ/WSzxrpwYFfBLDjDyKeinWZOfNA==
+X-Received: by 2002:a5d:4944:0:b0:31a:d6cb:7f9d with SMTP id r4-20020a5d4944000000b0031ad6cb7f9dmr4216926wrs.24.1694675972548;
+        Thu, 14 Sep 2023 00:19:32 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.214.188])
-        by smtp.gmail.com with ESMTPSA id m6-20020adfe946000000b0031980783d78sm918742wrn.54.2023.09.14.00.11.16
+        by smtp.gmail.com with ESMTPSA id n11-20020a5d484b000000b00317ddccb0d1sm935246wrs.24.2023.09.14.00.19.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 00:11:18 -0700 (PDT)
-Message-ID: <cc25b9ba-08e6-24e1-8e21-f3e43bb73311@linaro.org>
-Date:   Thu, 14 Sep 2023 09:11:16 +0200
+        Thu, 14 Sep 2023 00:19:32 -0700 (PDT)
+Message-ID: <ff4f2b93-7e22-8b15-aaad-b7d6f8b5517d@linaro.org>
+Date:   Thu, 14 Sep 2023 09:19:29 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.0
-Subject: Re: [PATCH 5/5] arm64: dts: imx93: update gpio node
-To:     Peng Fan <peng.fan@nxp.com>,
-        "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20230914-vf610-gpio-v1-0-3ed418182a6a@nxp.com>
- <20230914-vf610-gpio-v1-5-3ed418182a6a@nxp.com>
- <bc122417-6d59-4c1d-3f73-c20711f9a32f@linaro.org>
- <DU0PR04MB941722CE1A9BF9F87946DE0A88F7A@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <9fc4817d-00ae-aaf4-bfb6-b24361f55799@linaro.org>
- <DU0PR04MB94177EF6250838FFFB5FD6D188F7A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add compatibles for Amlogic T7
+ SoCs
 Content-Language: en-US
+To:     Huqiang Qin <huqiang.qin@amlogic.com>, linus.walleij@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, neil.armstrong@linaro.org,
+        khilman@baylibre.com, jbrunet@baylibre.com,
+        martin.blumenstingl@googlemail.com, brgl@bgdev.pl, andy@kernel.org
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230914054525.1180595-1-huqiang.qin@amlogic.com>
+ <20230914054525.1180595-2-huqiang.qin@amlogic.com>
+ <45637012-0972-fc7b-1276-163da363b962@linaro.org>
+ <cde944c4-acfe-b3fb-32b8-072740475e35@amlogic.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <DU0PR04MB94177EF6250838FFFB5FD6D188F7A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+In-Reply-To: <cde944c4-acfe-b3fb-32b8-072740475e35@amlogic.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/09/2023 08:53, Peng Fan wrote:
->> Subject: Re: [PATCH 5/5] arm64: dts: imx93: update gpio node
+On 14/09/2023 09:00, Huqiang Qin wrote:
+> Hi Krzysztof,
+> 
+> On 2023/9/14 14:16, Krzysztof Kozlowski wrote:
+> ...
+>>> diff --git a/include/dt-bindings/gpio/amlogic-t7-gpio.h b/include/dt-bindings/gpio/amlogic-t7-gpio.h
+>>> new file mode 100644
+>>> index 000000000000..2bab9a99501a
+>>> --- /dev/null
+>>> +++ b/include/dt-bindings/gpio/amlogic-t7-gpio.h
 >>
->> On 14/09/2023 08:04, Peng Fan wrote:
->>>> Subject: Re: [PATCH 5/5] arm64: dts: imx93: update gpio node
->>>>
->>>> On 14/09/2023 04:21, Peng Fan (OSS) wrote:
->>>>> From: Peng Fan <peng.fan@nxp.com>
->>>>>
->>>>> Per binding doc, i.MX93 GPIO supports two interrupts, and not
->>>>> compatible with i.MX7ULP. So update the node
->>>>>
->>>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->>>>> ---
->>>>>  arch/arm64/boot/dts/freescale/imx93.dtsi | 20 ++++++++++++--------
->>>>>  1 file changed, 12 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/freescale/imx93.dtsi
->>>>> b/arch/arm64/boot/dts/freescale/imx93.dtsi
->>>>> index 6f85a05ee7e1..011c34a57c53 100644
->>>>> --- a/arch/arm64/boot/dts/freescale/imx93.dtsi
->>>>> +++ b/arch/arm64/boot/dts/freescale/imx93.dtsi
->>>>> @@ -825,11 +825,12 @@ usdhc3: mmc@428b0000 {
->>>>>  		};
->>>>>
->>>>>  		gpio2: gpio@43810080 {
->>>>> -			compatible = "fsl,imx93-gpio", "fsl,imx7ulp-gpio";
->>>>> +			compatible = "fsl,imx93-gpio", "fsl,imx8ulp-gpio";
->>>>
->>>> As your driver change points, it is breaking users, so no :(
->>>
->>> ok. Although i.MX93 GPIO is not compatible with i.MX7ULP from HW
->>> perspective, the compatible string should keep as it is now and
->>> binding
->>
->> If it is not compatible, then how could it work before?
+>> Use compatible syntax.
 > 
-> i.MX7ULP reg:
-> 0h Port Data Output Register (PDOR) 
-> 4h Port Set Output Register (PSOR) 
-> 8h Port Clear Output Register (PCOR) 
-> Ch Port Toggle Output Register (PTOR) 
-> 10h Port Data Input Register (PDIR) 
-> 14h Port Data Direction Register (PDDR)
-> 
-> i.MX8ULP/93 has different registers address, but 
-> i.MX93 registers has 0x40 off as below:
-> 40h Port Data Output (PDOR)
-> 
-> Even linux i.MX7ULP gpio driver could work with i.MX8ULP/93
-> GPIO HW with dts node using an 0x40 offset + base addr
-> for i.MX93 gpio. I think from hw design, they are
-> not compatible. Besides the upper differences,
-> there are other differences.
+> The amlogic-t7-gpio.h is not a file in the dt-bindings/pinctrl/ directory.
+> Does it also need to be named according to the compatible name of pinctrl?
 
-Sorry, I don't understand it. I asked how could they work before in
-Linux, if they are not compatible, and you pasted regs.
+The convention, which we introduced since ~1-2 years, is to use the
+device compatible or binding filename as the headers filename. Now,
+where you put what does not affect it.
 
-So again - if they are not compatible, how could it work? Or maybe it
-never worked? But then commit msg would say it.
+
 
 Best regards,
 Krzysztof
