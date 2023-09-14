@@ -2,138 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9F5379FE52
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 10:28:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9152279FE69
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 10:30:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236489AbjINI2F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Sep 2023 04:28:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40136 "EHLO
+        id S236352AbjINIaW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Sep 2023 04:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236406AbjINI2D (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 04:28:03 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795A41FD0
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 01:27:51 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-31fd067e8d0so615424f8f.1
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 01:27:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694680070; x=1695284870; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q2WcVjPBs3fFe0/D2LShO9ZiZ6qQh5rdBuTf9oU5ymE=;
-        b=oJLXAsm2yGnSjjqW/qHTxV2ZnAfDyZcRpwr/PFZNL4l+rtzcPIi74cnXlp6AERk7QK
-         0XVFs83Jbz2l5ajn0Bj7emBibeFxOAx2EyuQR5QiTZKIwDmnbmAtcsnSwvR89NX+qlm1
-         hW7ohE8+Cpn1qTDqlRHc7O63vzsZsixLdxiUZkGIM2O8cKhhOCY1+Y8+tC/fgjMW8i5a
-         y07j20gVL5ENjVJSQj/+bUbRKr5Pk+yYzg90nmJPOn4SOcExSQG56xsTmDQm7c4pFehR
-         4iz4npPhqOvYkwVF1inxSfjypWQOOW+EztzCDDfAtIP4El7Ox/90QkwAydttcYbSnRJY
-         scQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694680070; x=1695284870;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=q2WcVjPBs3fFe0/D2LShO9ZiZ6qQh5rdBuTf9oU5ymE=;
-        b=kL8rE7mic/XcwlPZPRo/ZAY2xYMjY/0qdeFHjnatfOIg8d6psJk8Y1l8mNAGLLwDuQ
-         o/roYU308POBCzfVpcjsHScGEBQiqUKCRnJVQMBiNgp4pgRkeM3acoXyEbY1gnGWlnFu
-         OxkHnx2Xd6k7mp3ZEWtd4d6TuD2FzM6W708mUz+tVee7r8TijeIBlZAHLjmu/74w22ju
-         Kvj+f/4840x68VWMzlQsolN6aIOxXVwjCWVpotyksCOu8K3UNegpCCE9iAakRVS5SLmA
-         praCYFB/Xke5JMYtgUsalkb6tgjtKsabXuHzrGxE6hHIPaK+a58A9pXWj3PpGbAFUAAO
-         4YeA==
-X-Gm-Message-State: AOJu0YxKPHEE+hPcbCWVy7Tt5sGyHfcuXOTyvJLAaLSwKcD1vDQCW14W
-        tK8JuoAmoxEe1FQETi9h1CU23g==
-X-Google-Smtp-Source: AGHT+IEkZM5xkr565q68ZsFr7T1qMnViqvIK/JEj5NSuqG6hxI79hG6NM/YPOu3j0dE4vtkjhZkmLg==
-X-Received: by 2002:adf:ebcd:0:b0:31a:d4d0:6e98 with SMTP id v13-20020adfebcd000000b0031ad4d06e98mr3634619wrn.8.1694680069862;
-        Thu, 14 Sep 2023 01:27:49 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:c61:ffb9:3ed9:c494? ([2a01:e0a:982:cbb0:c61:ffb9:3ed9:c494])
-        by smtp.gmail.com with ESMTPSA id w16-20020adfec50000000b003141a3c4353sm1091493wrn.30.2023.09.14.01.27.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 01:27:49 -0700 (PDT)
-Message-ID: <56164dee-ceb7-4dac-a2c6-fae8fcfc00a6@linaro.org>
-Date:   Thu, 14 Sep 2023 10:27:48 +0200
+        with ESMTP id S235215AbjINIaW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 04:30:22 -0400
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E4BCD8;
+        Thu, 14 Sep 2023 01:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1694680215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=L3QNlCsd4KrtdLCl8FujpLR9D66KZlMKVr8PFtC9Zj8=;
+        b=tIBeXCzmhsYqsWsjrwpnqguwuBD5fXYC/Eb4uuoG7n3c3EEb7DyvSU4Y9dpM1IUgC0bySP
+        sG97FPryrWMEsDiLl/oJcqji3jRNgnJ6zBwkJCJXtRnpV2RmtcooQ8L6WNXv9o0oMYkE9c
+        SXsy27g2omhA+TmEn9Kgnnz6BYKzv5U=
+Message-ID: <4de724a1630eda74f4f304dc224dc981eb3b0875.camel@crapouillou.net>
+Subject: Re: [PATCH 2/5] mtd: rawnand: ingenic: use gpiod_set_active_high()
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Thu, 14 Sep 2023 10:30:13 +0200
+In-Reply-To: <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
+References: <20230913115001.23183-1-brgl@bgdev.pl>
+         <20230913115001.23183-3-brgl@bgdev.pl>
+         <CAHp75Ve8aK4Pfid1JYWH86mKy-Zb-G2QDPrJYmRzPCYOsn1TqQ@mail.gmail.com>
+         <CACRpkdYtYDJa6fo6RnizHNzUsyazBQxEaNMznaij8rBF4ie+ew@mail.gmail.com>
+         <20230913222338.07d1625b@xps-13>
+         <CAHp75Vd2a06rnGCEiJW0reN00amso0RyvgLT516nZiYLYZ-xcQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From:   neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 3/3] arm64: dts: Add pinctrl node for Amlogic T7 SoCs
-Content-Language: en-US, fr
-To:     Huqiang Qin <huqiang.qin@amlogic.com>, linus.walleij@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, khilman@baylibre.com, jbrunet@baylibre.com,
-        martin.blumenstingl@googlemail.com, brgl@bgdev.pl, andy@kernel.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230914054525.1180595-1-huqiang.qin@amlogic.com>
- <20230914054525.1180595-4-huqiang.qin@amlogic.com>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <20230914054525.1180595-4-huqiang.qin@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/09/2023 07:45, Huqiang Qin wrote:
-> Add pinctrl device.
-> 
-> Signed-off-by: Huqiang Qin <huqiang.qin@amlogic.com>
-> ---
->   arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-> index dae3465bd39b..a03c7667d2b6 100644
-> --- a/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi
-> @@ -155,6 +155,22 @@ watchdog@2100 {
->   				clocks = <&xtal>;
->   			};
->   
-> +			periphs_pinctrl: pinctrl@4000 {
-> +				compatible = "amlogic,t7-periphs-pinctrl";
-> +				#address-cells = <2>;
-> +				#size-cells = <2>;
-> +				ranges;
-> +
-> +				gpio: bank@4000 {
-> +					reg = <0x0 0x4000 0x0 0x0064>,
-> +					      <0x0 0x40c0 0x0 0x0220>;
-> +					reg-names = "mux", "gpio";
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
-> +					gpio-ranges = <&periphs_pinctrl 0 0 157>;
-> +				};
-> +			};
-> +
->   			uart_a: serial@78000 {
->   				compatible = "amlogic,t7-uart", "amlogic,meson-s4-uart";
->   				reg = <0x0 0x78000 0x0 0x18>;
+Hi,
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Le jeudi 14 septembre 2023 =C3=A0 10:02 +0300, Andy Shevchenko a =C3=A9crit=
+=C2=A0:
+> On Wed, Sep 13, 2023 at 11:23=E2=80=AFPM Miquel Raynal
+> <miquel.raynal@bootlin.com> wrote:
+> > linus.walleij@linaro.org=C2=A0wrote on Wed, 13 Sep 2023 22:12:40 +0200:
+> > > On Wed, Sep 13, 2023 at 10:05=E2=80=AFPM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Wed, Sep 13, 2023 at 2:50=E2=80=AFPM Bartosz Golaszewski
+> > > > <brgl@bgdev.pl> wrote:
+>=20
+> ...
+>=20
+> > > > Why not moving this quirk to gpiolib-of.c?
+> > >=20
+> > > That's a better idea here I think, it's clearly a quirk for a
+> > > buggy device tree.
+> >=20
+> > Agreed, it's just for backward compatibility purposes in a single
+> > driver. I believe it should stay here.
+>=20
+> I believe Linus was for moving.
+
+Which Linus? Because the one who's also the gpio maintainer just wrote
+above that it was better to keep it in the driver.
+
+Cheers,
+-Paul
+
+>=20
+> gpiolib-of.c contains a lot of quirks, including this one. Calling
+> these new (or old) APIs for overriding polarity in many cases
+> shouldn't be needed if were no issues with DT or something like that.
+>=20
+
