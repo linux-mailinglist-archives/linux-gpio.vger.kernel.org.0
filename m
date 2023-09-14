@@ -2,56 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14B127A037E
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 14:13:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FBA07A0398
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 14:19:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238395AbjINMNk convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 08:13:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
+        id S238076AbjINMTG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 08:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238119AbjINMNi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 08:13:38 -0400
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFACC1BF4;
-        Thu, 14 Sep 2023 05:13:34 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-d7b79a4899bso905775276.2;
-        Thu, 14 Sep 2023 05:13:34 -0700 (PDT)
+        with ESMTP id S234522AbjINMTG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 08:19:06 -0400
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 502EE1FC9;
+        Thu, 14 Sep 2023 05:19:02 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-59b4ec8d9c1so10295017b3.0;
+        Thu, 14 Sep 2023 05:19:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694693614; x=1695298414;
+        d=1e100.net; s=20230601; t=1694693941; x=1695298741;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wCvoAaFuPyjPU6jJg4KzcxsCGGRqqM79Y530FyBZVZI=;
-        b=nsm4AUelSdzZoMy5eLfIX4XFWnlT17GDxhS1j1OnHH+siBAE2IU/E6ljaKWm9Ngz2h
-         TsEYLE8/k6MQVxLcHwtNmpvB0MfumdjiPZXloG+1h7HEVLop6tQXOtLx2vIz+3LZZFNV
-         X4unHlFRsboKCAQGxC+dOiYajTpp0urPfPiXwYa+HgwcNwZyzhR1UVUKD3uyeZ1xMCIK
-         AmqJuGhysyB8vDEyf/javDXjO/O7Q/TklcL2X+PP+osIqGkGgdM1wtSGbuycuQRC5Dhj
-         fg4mweWEq+Ti1suKBtg2MNyKobMP6HdumVUNLceCqcxAv9TbhN+AbgDEMOOzot/ZmzAL
-         danw==
-X-Gm-Message-State: AOJu0YyjoJUrQQk10/EzlpNCOzRPSaLMJS85yvc2Tt0wV4XXggSCYQbt
-        kNhS+zSd/8WMXODUiK+9VrXH0dY13YpiFg==
-X-Google-Smtp-Source: AGHT+IElEcIVec6HYgwhxRS55oqpwnhGrAfZ+gRiC8cKpIyCcZl2dfeK63muj+9UbJignu95nNnQhA==
-X-Received: by 2002:a25:7497:0:b0:d78:3a4e:c19e with SMTP id p145-20020a257497000000b00d783a4ec19emr5246688ybc.24.1694693613689;
-        Thu, 14 Sep 2023 05:13:33 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id m196-20020a25d4cd000000b00d814d8dfd69sm304403ybf.27.2023.09.14.05.13.32
+        bh=MY7JVFz1bNlrjVrnjoxD6/0CcvRhM6TdVrF+6BcMksE=;
+        b=q5y1sKPpwLX0KM2RNEmFA4MB8YIF3vDdXnCO5DAmkLVtpNhsZVmiD90bsy19l1GnqN
+         xpNOJn9PoMNi2dfOKrMMhZOw+yIjR5KeYdpvn8VjwabRVE8+FQIGvbgRaOlmlb6iHyRp
+         h4xMp3F/cmphQLK9LT1HuQ1l1YTRS+huAZQYJkGLbW5uKcwEHaYFrYclqPELe7AFFUKG
+         he+1tvylE0uXa8i74Bmq9elCpaSZ6aIojRTtjGuq64dlBkED4Dt3O/KKkOEAamOSNGDO
+         unGZ+IWgovNveXFT1kRf6VC9WG5w5c8BDgl/RmbrIHBNR9uaLdbCoKoOZZOHTUn89SJE
+         G5dg==
+X-Gm-Message-State: AOJu0YxQP2t5u+4oHSheHOpS9v5WvH38TGoT01QtIpZ1s73EF+qOFL7U
+        KW4bxOF3uB3yHYfWKk88rg1jH7ay+Y+miA==
+X-Google-Smtp-Source: AGHT+IHDI3/+al5HUi8dKZXgD8BiFrxrHJDWa02JY2zlc6bSiAMHxJR/bBXKHYSah2mzcXOoyULAYg==
+X-Received: by 2002:a81:6c53:0:b0:592:1bab:52bd with SMTP id h80-20020a816c53000000b005921bab52bdmr5423379ywc.39.1694693941331;
+        Thu, 14 Sep 2023 05:19:01 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id i130-20020a0ddf88000000b0056d51c39c1fsm291307ywe.23.2023.09.14.05.18.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 05:13:32 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-d7b79a4899bso905708276.2;
-        Thu, 14 Sep 2023 05:13:32 -0700 (PDT)
-X-Received: by 2002:a25:d384:0:b0:d7b:8d0c:43ef with SMTP id
- e126-20020a25d384000000b00d7b8d0c43efmr5333188ybf.37.1694693611889; Thu, 14
- Sep 2023 05:13:31 -0700 (PDT)
+        Thu, 14 Sep 2023 05:18:59 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-d801c83325fso936861276.0;
+        Thu, 14 Sep 2023 05:18:58 -0700 (PDT)
+X-Received: by 2002:a25:7497:0:b0:d78:3a4e:c19e with SMTP id
+ p145-20020a257497000000b00d783a4ec19emr5260394ybc.24.1694693938512; Thu, 14
+ Sep 2023 05:18:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-8-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20230912045157.177966-8-claudiu.beznea.uj@bp.renesas.com>
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
+ <20230912045157.177966-9-claudiu.beznea.uj@bp.renesas.com> <8490f909-c0ad-5a6d-7a97-03c80a8b47ba@omp.ru>
+In-Reply-To: <8490f909-c0ad-5a6d-7a97-03c80a8b47ba@omp.ru>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Sep 2023 14:13:19 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXo14JwdJE+b1zdnJ7Re5cn8ugzxueD1a=-n=PUQz7VKw@mail.gmail.com>
-Message-ID: <CAMuHMdXo14JwdJE+b1zdnJ7Re5cn8ugzxueD1a=-n=PUQz7VKw@mail.gmail.com>
-Subject: Re: [PATCH 07/37] clk: renesas: rzg2l: lock around writes to mux register
-To:     Claudiu <claudiu.beznea@tuxon.dev>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+Date:   Thu, 14 Sep 2023 14:18:44 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXjhCth125PHKxrWJENFUhrvXfFJPLhL2ZRY6++azzczA@mail.gmail.com>
+Message-ID: <CAMuHMdXjhCth125PHKxrWJENFUhrvXfFJPLhL2ZRY6++azzczA@mail.gmail.com>
+Subject: Re: [PATCH 08/37] clk: renesas: rzg2l: trust value returned by hardware
+To:     Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc:     Claudiu <claudiu.beznea@tuxon.dev>, mturquette@baylibre.com,
+        sboyd@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
         ulf.hansson@linaro.org, linus.walleij@linaro.org,
         gregkh@linuxfoundation.org, jirislaby@kernel.org,
@@ -72,83 +74,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Claudiu,
-
-On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Tue, Sep 12, 2023 at 6:43 PM Sergey Shtylyov <s.shtylyov@omp.ru> wrote:
+> On 9/12/23 7:51 AM, Claudiu wrote:
 >
-> SD MUX output (SD0) is further divided by 4 in G2{L, UL}. The divided
-> clock is SD0_DIV4. SD0_DIV4 is registered with CLK_SET_RATE_PARENT which
-> means a rate request for it is propagated to the MUX and could reach
-> rzg2l_cpg_sd_clk_mux_set_parent() concurrently with the users of SD0.
-> Add proper locking to avoid concurrent access on SD MUX set rate
-> registers.
+> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > Initial value of CPG_PL2SDHI_DSEL bits 0..1 or 4..6 is 01b. Hardware user's
+> > manual (r01uh0914ej0130-rzg2l-rzg2lc.pdf) specifies that setting 0 is
+> > prohibited. The rzg2l_cpg_sd_clk_mux_get_parent() should just read
+> > CPG_PL2SDHI_DSEL, trust the value and return the proper clock parent index
+> > based on the read value. Do this.
+> >
+> > Fixes: eaff33646f4cb ("clk: renesas: rzg2l: Add SDHI clk mux support")
+> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+
+> > --- a/drivers/clk/renesas/rzg2l-cpg.c
+> > +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> > @@ -239,14 +239,8 @@ static u8 rzg2l_cpg_sd_clk_mux_get_parent(struct clk_hw *hw)
+> >
+> >       val >>= GET_SHIFT(hwdata->conf);
+> >       val &= GENMASK(GET_WIDTH(hwdata->conf) - 1, 0);
+> > -     if (val) {
+> > -             val--;
+> > -     } else {
+> > -             /* Prohibited clk source, change it to 533 MHz(reset value) */
+> > -             rzg2l_cpg_sd_clk_mux_set_parent(hw, 0);
+> > -     }
+> >
+> > -     return val;
+> > +     return val ? --val : val;
 >
-> Fixes: eaff33646f4cb ("clk: renesas: rzg2l: Add SDHI clk mux support")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>         return val ? val - 1 : 0;
 
-Thanks for your patch!
-
-> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> @@ -189,6 +189,7 @@ static int rzg2l_cpg_sd_clk_mux_set_parent(struct clk_hw *hw, u8 index)
->         u32 shift = GET_SHIFT(hwdata->conf);
->         const u32 clk_src_266 = 2;
->         u32 msk, val, bitmask;
-> +       unsigned long flags;
->         int ret;
->
->         /*
-> @@ -203,25 +204,27 @@ static int rzg2l_cpg_sd_clk_mux_set_parent(struct clk_hw *hw, u8 index)
->          * the index to value mapping is done by adding 1 to the index.
->          */
->         bitmask = (GENMASK(GET_WIDTH(hwdata->conf) - 1, 0) << shift) << 16;
-> +       spin_lock_irqsave(&priv->rmw_lock, flags);
->         if (index != clk_src_266) {
->                 writel(bitmask | ((clk_src_266 + 1) << shift), priv->base + off);
->
->                 msk = off ? CPG_CLKSTATUS_SELSDHI1_STS : CPG_CLKSTATUS_SELSDHI0_STS;
->
-> -               ret = readl_poll_timeout(priv->base + CPG_CLKSTATUS, val,
-> -                                        !(val & msk), 100,
-> -                                        CPG_SDHI_CLK_SWITCH_STATUS_TIMEOUT_US);
-> -               if (ret) {
-> -                       dev_err(priv->dev, "failed to switch clk source\n");
-> -                       return ret;
-> -               }
-> +               ret = readl_poll_timeout_atomic(priv->base + CPG_CLKSTATUS, val,
-> +                                               !(val & msk), 100,
-
-According to the read_poll_timeout_atomic() documentation,
-delay_us should be less than ~10us.
-
-> +                                               CPG_SDHI_CLK_SWITCH_STATUS_TIMEOUT_US);
-
-CPG_SDHI_CLK_SWITCH_STATUS_TIMEOUT_US = 20 ms, which is a long timeout
-for an atomic poll.
-
-> +               if (ret)
-> +                       goto unlock;
->         }
->
->         writel(bitmask | ((index + 1) << shift), priv->base + off);
->
-> -       ret = readl_poll_timeout(priv->base + CPG_CLKSTATUS, val,
-> -                                !(val & msk), 100,
-> -                                CPG_SDHI_CLK_SWITCH_STATUS_TIMEOUT_US);
-> +       ret = readl_poll_timeout_atomic(priv->base + CPG_CLKSTATUS, val,
-> +                                       !(val & msk), 100,
-> +                                       CPG_SDHI_CLK_SWITCH_STATUS_TIMEOUT_US);
-
-Likewise.
-
-> +unlock:
-> +       spin_unlock_irqrestore(&priv->rmw_lock, flags);
-> +
->         if (ret)
->                 dev_err(priv->dev, "failed to switch clk source\n");
-
-The rest LGTM.
+Definitely, mixing multiple users of the same variable and pre-decrement
+is ill-defined.
 
 Gr{oetje,eeting}s,
 
