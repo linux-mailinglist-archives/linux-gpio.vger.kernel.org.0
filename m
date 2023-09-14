@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 541737A04F6
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 15:06:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F1467A0521
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 15:12:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235746AbjINNGw convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 09:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
+        id S238781AbjINNMb convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 09:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238525AbjINNGw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 09:06:52 -0400
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F891FD8;
-        Thu, 14 Sep 2023 06:06:48 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5925e580e87so10731947b3.1;
-        Thu, 14 Sep 2023 06:06:48 -0700 (PDT)
+        with ESMTP id S238719AbjINNM1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 09:12:27 -0400
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB76E1FDA;
+        Thu, 14 Sep 2023 06:12:23 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d8181087dc9so934550276.3;
+        Thu, 14 Sep 2023 06:12:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694696807; x=1695301607;
+        d=1e100.net; s=20230601; t=1694697142; x=1695301942;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dHc0DpORXlGUIyJemXMGFwVrMRXG1k2BQKoTOugDHHg=;
-        b=nSnCrULD0xRPONVeIXpOGcYOD3VK7CYTIGIhbcix6oBrlHUv1znEG5FCdGtClrXkuH
-         eAVRZVcEYehQhDj8Di+eFJAr+5wyiAwioQ4PH/Jf8v5+YdT71M4qZdkQcSJCWe1o0E8z
-         YMKmZvFkr7GOD9Pk+C6+NYGayO1Tg+H564Ii10+w5G5cBQOyIN7qpFVQ9xY09wD80IGV
-         RsSsVHtMwqnfdBZfdsdIvClelZaUyz1+hpfV/68b0JgUGjZa3F407UMd4yuce1fNcGY+
-         OBr86ahmFxX0KT8+cH0iEY3Szg7Rqiyc6lvrNWEDLH09E8bL8CxvZckkGukU/1qoKBu8
-         XOiA==
-X-Gm-Message-State: AOJu0YwPB2KFNZ9xiPCFBcACgwLnzi6EydrFMEi3Qz3S4ck/OAGqqxRY
-        HOLcKBsDdTiKz1gfEezc8TE8AV8BJQr/4g==
-X-Google-Smtp-Source: AGHT+IFS9HoJ0Qyx9QUiGoaPAoioe4tpc9Q2XDgr11jN6FtP32a4AMfhhful3BVJwzCxVQ576y4bQA==
-X-Received: by 2002:a05:690c:250d:b0:59b:ec40:a121 with SMTP id dt13-20020a05690c250d00b0059bec40a121mr1597344ywb.3.1694696807118;
-        Thu, 14 Sep 2023 06:06:47 -0700 (PDT)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id t125-20020a0dd183000000b00597e912e67esm304748ywd.131.2023.09.14.06.06.46
+        bh=/oWvZHVsTkVbLPbiv0w553loiJf0Vtu9uXJvexs6wx4=;
+        b=g0wH90TBFIX8WDQTUF1hlrgf3a35CnvNzUKXT7YGZenVUDKrCJ9X9seJ1u51o0zwNG
+         DWhbaraIxB83Z89mFB/gFmcEdhkva8nL3uzQLHDAXgILyoeFAoIkH6gVN8YCH9P4RENT
+         M0WcrgbYswmaG3R+uoBGIqdJSB286IG42vQP4aF6IusbuBae8a2277vIbW7akgDDfjvO
+         1jEvsVoB/ZkOsjfCC7PmFg6IzJmuzSMESO1lsUi1cog6JlMayZ0YQJ/hb4BuEz2In4Ax
+         8gUmL/IxIyWh65MLEwmQ1bbvZ4de6Vfr1q3AaHXChl2kjeJi3BRyc7P95w7sN2C4xP7e
+         tLow==
+X-Gm-Message-State: AOJu0Yyw/XuO+MEkFbFxN3X8uPJ1ToaaM27RkCNQvr5YOT4rHaK2CDrw
+        whf1Iw7tbSweytxnv+WD+vvA7RRhB4baUQ==
+X-Google-Smtp-Source: AGHT+IHLpejWN1ToSC21mHfiFO/oSUF/st7hYB1AGOqNhV5Ziw4khqR3hyYJeL82u26RaBHn2d8gFg==
+X-Received: by 2002:a25:ac03:0:b0:d0f:6f1d:89ec with SMTP id w3-20020a25ac03000000b00d0f6f1d89ecmr5214472ybi.35.1694697142452;
+        Thu, 14 Sep 2023 06:12:22 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id j73-20020a25234c000000b00babcd913630sm328997ybj.3.2023.09.14.06.12.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 06:06:46 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-d7e741729a2so989118276.2;
-        Thu, 14 Sep 2023 06:06:46 -0700 (PDT)
-X-Received: by 2002:a5b:bc6:0:b0:d80:1a0a:e7a7 with SMTP id
- c6-20020a5b0bc6000000b00d801a0ae7a7mr5064343ybr.53.1694696806097; Thu, 14 Sep
- 2023 06:06:46 -0700 (PDT)
+        Thu, 14 Sep 2023 06:12:21 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d8181087dc9so934514276.3;
+        Thu, 14 Sep 2023 06:12:21 -0700 (PDT)
+X-Received: by 2002:a25:c7d1:0:b0:d5c:4a6a:f5a4 with SMTP id
+ w200-20020a25c7d1000000b00d5c4a6af5a4mr5646812ybe.24.1694697141289; Thu, 14
+ Sep 2023 06:12:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-12-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20230912045157.177966-12-claudiu.beznea.uj@bp.renesas.com>
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-13-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20230912045157.177966-13-claudiu.beznea.uj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Sep 2023 15:06:34 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWDa0pmCR3Ma3KWhRTyXk13qXt0wsu50M9CRhNn5SSJ0A@mail.gmail.com>
-Message-ID: <CAMuHMdWDa0pmCR3Ma3KWhRTyXk13qXt0wsu50M9CRhNn5SSJ0A@mail.gmail.com>
-Subject: Re: [PATCH 11/37] clk: renesas: rzg2l: simplify a bit the logic in rzg2l_mod_clock_endisable()
+Date:   Thu, 14 Sep 2023 15:12:08 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVLx1d-6=5xx_GLAb7LxxRR9FwhAU56fxNc3b=9wj286g@mail.gmail.com>
+Message-ID: <CAMuHMdVLx1d-6=5xx_GLAb7LxxRR9FwhAU56fxNc3b=9wj286g@mail.gmail.com>
+Subject: Re: [PATCH 12/37] clk: renesas: rzg2l: reduce the critical area
 To:     Claudiu <claudiu.beznea@tuxon.dev>
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -72,17 +72,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Claudiu,
+
 On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> The bitmask << 16 is anyway set on both branches of if thus move it
-> before the if and set the lower bits of registers only in case clock is
-> enabled.
+> spinlock in rzg2l_mod_clock_endisable() is intended to protect the accesses
+> to hardware register. There is no need to protect the instructions that set
+> temporary variable which will be then written to register. Thus limit the
+> spinlock only to the hardware register access.
 >
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk-for-v6.7.
+Thanks for your patch!
+
+> --- a/drivers/clk/renesas/rzg2l-cpg.c
+> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> @@ -912,13 +912,13 @@ static int rzg2l_mod_clock_endisable(struct clk_hw *hw, bool enable)
+>
+>         dev_dbg(dev, "CLK_ON %u/%pC %s\n", CLK_ON_R(reg), hw->clk,
+>                 enable ? "ON" : "OFF");
+> -       spin_lock_irqsave(&priv->rmw_lock, flags);
+>
+>         value = bitmask << 16;
+>         if (enable)
+>                 value |= bitmask;
+> -       writel(value, priv->base + CLK_ON_R(reg));
+>
+> +       spin_lock_irqsave(&priv->rmw_lock, flags);
+> +       writel(value, priv->base + CLK_ON_R(reg));
+>         spin_unlock_irqrestore(&priv->rmw_lock, flags);
+
+After this, it becomes obvious there is nothing to protect at all,
+so the locking can just be removed from this function?
 
 Gr{oetje,eeting}s,
 
