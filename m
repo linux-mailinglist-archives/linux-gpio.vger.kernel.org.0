@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56AAB7A0568
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 15:19:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9C567A0594
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 15:29:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239047AbjINNTp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 09:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38990 "EHLO
+        id S236415AbjINN37 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Sep 2023 09:29:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239125AbjINNTc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 09:19:32 -0400
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E94D2118;
-        Thu, 14 Sep 2023 06:19:26 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-59be6bcf408so10975147b3.2;
-        Thu, 14 Sep 2023 06:19:26 -0700 (PDT)
+        with ESMTP id S235397AbjINN36 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 09:29:58 -0400
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7001FD8;
+        Thu, 14 Sep 2023 06:29:54 -0700 (PDT)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5925e580f12so11411447b3.3;
+        Thu, 14 Sep 2023 06:29:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694697565; x=1695302365;
+        d=1e100.net; s=20230601; t=1694698193; x=1695302993;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4uZJSTJpkTY7WDoLQQFFp+wNWgzUgYBYIubQOSDA1p4=;
-        b=d+GDl4HmOQuJucCMgKLXtlTYAaHozUBNEUHJfhAcLc9IA5olrnIdUAg18YKSUzPnTL
-         FtKp7FTb2lXFSUl1NTI0Msa0kzCpWzYdSveGz/I4KDoVqv6+Z7wXz2Oqnd0QSKGGasHc
-         spB1vnPynvMGzp9FePbu67aLbCZ4fT1GRE6hFn5POUMuvEnYoJHybHdKb197k87v5FxO
-         43C4sb7wxnrLbzaeIbxd9YGSfRSuKsaumkKxjzlNovdlFsTCSbFkJJ8fp44n+z9/EYu1
-         BdGcKfNZE1YnsDrHJANHtwwq8u+uaaC/28RVCyKOzn2cYi7cm5q2o3EkU3TI8VEcPmPj
-         bKvQ==
-X-Gm-Message-State: AOJu0YxSOtJ91M/+m8Eh/MFmaG109gAXcDnqrWU8O23ei7i3T4h7+5oP
-        6Sdok6pH53rBLA2YNPB+61RcivhJz1cKpg==
-X-Google-Smtp-Source: AGHT+IGeOj+7TvsOg0sYCahslHPaDV6RS/lHn+S2/o3KDQ6yeDkCQErAC2LuLGLdyhY61hcyAAcypA==
-X-Received: by 2002:a0d:c087:0:b0:599:da80:e1e6 with SMTP id b129-20020a0dc087000000b00599da80e1e6mr5484264ywd.34.1694697565168;
-        Thu, 14 Sep 2023 06:19:25 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id f4-20020a0ddc04000000b005869ca8da8esm307222ywe.146.2023.09.14.06.19.24
+        bh=MMgnSEID+xkECrUs/n98woQl+ojuPd0/IiG5nfXIn2c=;
+        b=XzOelWPkiVoyl5RggkTcRd3uA415Z162tBB3CDrInXacj6nPzpABWMzAnB4PpROIua
+         nR2OvbrozuiwByoF79OQHRDCan6qXryQHUomw5kleQQzv29QBpZtP3sYxbss6G4i3LxE
+         97Xg53EqVldYoAxzJM//+QVFXFWZevXujZSnY9zxdP3K/1DfM/4A9plmlOmrCB0+GBm3
+         XA5jHgzZxV0WAX1y8GFy/NYTrvbiYOfLTy50/dM7PZ31+aHSyVJvDMF/gkRAk9DKGQX9
+         6qxmEiymL97L0V71FfS1AZwdmxa+3sYzzO1KCXZXT4U4ChqHnnShTZnSMbjZMvIGn/Dp
+         +OWg==
+X-Gm-Message-State: AOJu0YxRn2nJ1IhFRaj4ClhPlBwSXh4h7ibZXqSkuyZMCKL2ThaE198N
+        QZMCbJOix1H0a/ZZQ7wH85OUT6gcwbaAjw==
+X-Google-Smtp-Source: AGHT+IEqkaYIojyrujrVO1BiGM9aV1qiSgkX3ciD/0/s2n379RnWi+PZW1+3eZyfAzTGGaaNUj5fuw==
+X-Received: by 2002:a81:7287:0:b0:59b:8da4:dc1 with SMTP id n129-20020a817287000000b0059b8da40dc1mr5820380ywc.38.1694698193125;
+        Thu, 14 Sep 2023 06:29:53 -0700 (PDT)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id h125-20020a816c83000000b00582fae92aa7sm318186ywc.93.2023.09.14.06.29.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 06:19:24 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d7ecdb99b7aso974501276.3;
-        Thu, 14 Sep 2023 06:19:24 -0700 (PDT)
-X-Received: by 2002:a5b:cca:0:b0:d7f:9215:6869 with SMTP id
- e10-20020a5b0cca000000b00d7f92156869mr5228632ybr.55.1694697564530; Thu, 14
- Sep 2023 06:19:24 -0700 (PDT)
+        Thu, 14 Sep 2023 06:29:52 -0700 (PDT)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-59bd2e19c95so11653557b3.0;
+        Thu, 14 Sep 2023 06:29:52 -0700 (PDT)
+X-Received: by 2002:a0d:fe43:0:b0:589:c065:b419 with SMTP id
+ o64-20020a0dfe43000000b00589c065b419mr5624958ywf.34.1694698192345; Thu, 14
+ Sep 2023 06:29:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-14-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20230912045157.177966-14-claudiu.beznea.uj@bp.renesas.com>
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-15-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20230912045157.177966-15-claudiu.beznea.uj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Sep 2023 15:19:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWkOOPrwUX4iJCA5SqDGB+0WgU5yx_XzuoexKYu0Y=zkw@mail.gmail.com>
-Message-ID: <CAMuHMdWkOOPrwUX4iJCA5SqDGB+0WgU5yx_XzuoexKYu0Y=zkw@mail.gmail.com>
-Subject: Re: [PATCH 13/37] clk: renesas: rzg2l: use FIELD_GET() for PLL
- register fields
+Date:   Thu, 14 Sep 2023 15:29:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWRxaBsPAn0OR15WFua_5HZVPTmWabFnnex5gDLKjE9Cw@mail.gmail.com>
+Message-ID: <CAMuHMdWRxaBsPAn0OR15WFua_5HZVPTmWabFnnex5gDLKjE9Cw@mail.gmail.com>
+Subject: Re: [PATCH 14/37] clk: renesas: rzg2l: use u32 for flag and mux_flags
 To:     Claudiu <claudiu.beznea@tuxon.dev>
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -73,15 +72,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Claudiu,
+
 On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> Use FIELD_GET() for PLL register fields. This is its purpose.
+> flag and mux_flags are intended to keep bit masks. Use u32 type for it.
 >
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
+Thanks for your patch!
+
+> --- a/drivers/clk/renesas/rzg2l-cpg.h
+> +++ b/drivers/clk/renesas/rzg2l-cpg.h
+> @@ -92,8 +92,8 @@ struct cpg_core_clk {
+>         unsigned int conf;
+>         const struct clk_div_table *dtable;
+>         const char * const *parent_names;
+> -       int flag;
+> -       int mux_flags;
+> +       u32 flag;
+
+"flag" is used for several purposes, which expected different types:
+    - clk_init_data.flags is unsigned long,
+    - The clk_divider_flags parameter of clk_hw_register_divider_table() is u8,
+    - The clk_divider_flags parameter of __clk_hw_register_divider() is u8,
+    - The flags parameter of __devm_clk_hw_register_mux() is unsigned long.
+
+> +       u32 mux_flags;
+
+Actually the clk_mux_flags parameter of __devm_clk_hw_register_mux() is u8.
+
+>         int num_parents;
+>  };
+
+I guess u32 is fine for all.
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk-for-v6.7.
 
 Gr{oetje,eeting}s,
 
