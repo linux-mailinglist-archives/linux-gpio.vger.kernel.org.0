@@ -2,142 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E082F79FE2D
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 10:22:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8364279FE3D
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Sep 2023 10:25:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236216AbjINIWE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Sep 2023 04:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32914 "EHLO
+        id S236166AbjINIZS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Sep 2023 04:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235947AbjINIWD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 04:22:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1EFB61FC0
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 01:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694679671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gORgBWCz3hCk/bsvpm1Zfcrjb1Hz/L3M1pTUN8fqGWo=;
-        b=FrbIcTd2PwRN+LUPdKPp17Ebta46Svgd9tlSkn314tUuOpEAOOnfLU7l5z7kJSqCLNQx64
-        5YjrHttfbe+/22Hilu7HWP3w1QIm4q5zKzWVVnQpCpGNjci2GL4pjd1mR06ryR8aKBtjtk
-        4G8gkBj5Z3yuTPNFMDhjQZw03uuL21o=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-564-v8bax6f0MTGWVr6Te9DhZw-1; Thu, 14 Sep 2023 04:21:09 -0400
-X-MC-Unique: v8bax6f0MTGWVr6Te9DhZw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9ad8a967a30so57922766b.0
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 01:21:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694679668; x=1695284468;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gORgBWCz3hCk/bsvpm1Zfcrjb1Hz/L3M1pTUN8fqGWo=;
-        b=r4envJvBv8HMkueiuBUf3PIEzDaAMFp0bMKv0C1JJMcCcHx42THR99DP6ANUjPfLlr
-         LOp48qYsW5Fx+BTLAdXHp3WjOvGF4wkLfTeVXitsX0a9bD+b6Br0sIKwZYrJgXKQBdZb
-         FWwnfPlCnGDjc/OU59F/SVGq74AG4Iqgikaaxs8TTe2PbvsrH/G2GXq5whuZ6xEnr7Iz
-         fzdTX1inH4uJg6RfjpbgbIKZ9ex7UCpSX1epSeSu08jre3KEJthdqC7+nMfLBuXrf8O0
-         jDgdkZFBmAzkhaUgc9JTb4ZGC1d+njeLD17aBT0iPZjSPV7Gw8GLO21TukIScyKlfp9Q
-         ANqw==
-X-Gm-Message-State: AOJu0YyYrMNfEtPUCiamuX6Pw3bBAzfU0M1Vrcl/Jf6ivfmXw59vlQFf
-        pqQOTHZW32mCuaj4KwJK/npRptfiPKERvbzgq9vQAsJITqZy50ldsdWmaD5mJ6m3n8LdBdf8wDN
-        L3exp5emzWq7lCmHgOVKVGg==
-X-Received: by 2002:a17:906:3297:b0:9a5:ceab:f496 with SMTP id 23-20020a170906329700b009a5ceabf496mr4081137ejw.58.1694679668723;
-        Thu, 14 Sep 2023 01:21:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFIHVU/Fju08DmHRKzYeSJRU9Ob1ijnlRZaI7gxrw6vRuFB2bAZhoQPlpyfvbxJKGQRPZ+NXA==
-X-Received: by 2002:a17:906:3297:b0:9a5:ceab:f496 with SMTP id 23-20020a170906329700b009a5ceabf496mr4081120ejw.58.1694679668430;
-        Thu, 14 Sep 2023 01:21:08 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id x5-20020a1709065ac500b00993664a9987sm647322ejs.103.2023.09.14.01.21.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 01:21:07 -0700 (PDT)
-Message-ID: <05b9b252-653c-7cf7-9b96-59d9f662b81e@redhat.com>
-Date:   Thu, 14 Sep 2023 10:21:06 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v16 1/4] usb: Add support for Intel LJCA device
-Content-Language: en-US, nl
-To:     "Wu, Wentong" <wentong.wu@intel.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "arnd@arndb.de" <arnd@arndb.de>,
-        "mka@chromium.org" <mka@chromium.org>,
-        "lee@kernel.org" <lee@kernel.org>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "kfting@nuvoton.com" <kfting@nuvoton.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "maz@kernel.org" <maz@kernel.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "andi.shyti@linux.intel.com" <andi.shyti@linux.intel.com>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "Wang, Zhifeng" <zhifeng.wang@intel.com>
-References: <1694569212-10080-1-git-send-email-wentong.wu@intel.com>
- <1694569212-10080-2-git-send-email-wentong.wu@intel.com>
- <a3b75e11-9cf0-4ee3-be90-fba73bd5df3d@suse.com>
- <DM6PR11MB43162A9B2AC68B2686BBE2598DF7A@DM6PR11MB4316.namprd11.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <DM6PR11MB43162A9B2AC68B2686BBE2598DF7A@DM6PR11MB4316.namprd11.prod.outlook.com>
+        with ESMTP id S230413AbjINIZR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 04:25:17 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2091.outbound.protection.outlook.com [40.107.215.91])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BFC3CD8;
+        Thu, 14 Sep 2023 01:24:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CpwfTiEvbAMKGbVi5SSuIaeE110GRYQ+snh+8gAoiehexyllA2Ac5lWDdiEM85AJxdRTDoVSx5RtlwnrsPVbMGd68Fr22aIXyDA2Ndo0PhqpICTrbkkxovNYx952pZeDjetUv6UUDYmhT5IGZLlI3aqUAS5QviSSfFocBbtdVyCUcs5dINNgHp+UE1hiTvT5s8cArWWPPGuMLHuC1RSgKkMYD4qP3NP5w8bWgXM7jcUB8FbfD1p98NuJNawE3RPj64CfYBcf1Pv1/mv4LohTiLOiXehB14hR0jHBjvyILh1p/3ApsUBs58UKMspFYW5A4dmUz+WrEYlm4GMrY527kA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MEe2zblQeHjVc/fksVlQTg2mbk+F3sx4RFaxRFn/cHk=;
+ b=llzM/fVdx96SulBYGUPrxMwPIry9yQSP4NhXH5Rl0xlY6Sq5vfdIrXQyLeVxt2+Dc7w8v4TVYBnbDqZ/BTaleI9B6aK9zgLpJ7jpzn/As3UBGFLX41dBvKFDQ6QyapnQ5wVJAKRX1e6439Wr+sUyEQvN40HZ5GrSjr+C0CXlP0huHyWFKnNh+VjU73AcVGKa+832bTtCnqigOIqJxeFBSefEA59n+bv+5VBIIPichDMFG39iPrz7IDz+9vjobc+McHLaeiFdwBDZD8eODG1QxEJqpHn/aBBMUfApPgUWOPBcHVm2jnrAiowUzr2WtBzHgcfed7jfuRoBIGiiGxeWQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MEe2zblQeHjVc/fksVlQTg2mbk+F3sx4RFaxRFn/cHk=;
+ b=DnKxwgHZmMajbv7D1gw68GX5AA+/1Pv8do03VdIJELuwPxzDr5i/mwvVATYZXOdaIRQuN97dsljxWOS/UBq/KNHjPiXpz6Qf48cO0xD0oAvan0iILomHzl28FZdVU/EhakqELhNbffLqtqgdTEl+Vp7n4WFnVDQfwiw61VJYV4okkkvDuEJmhd8nWgfeZu+Tghf7KViOJQj5VhzM4yEMHpLov7+5OT+KfB0Sh1KJC/W3ucMYJYPgfZq+crAZE3RArxrJGVNd24Aoc4h3/dbRangh6I4NGaZvNceBYizn+qzUyPh0delABob70Sex7AklNIGy+PlRAvb0p3stjpk+eA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from SEZPR03MB7220.apcprd03.prod.outlook.com (2603:1096:101:ec::16)
+ by KL1PR03MB5555.apcprd03.prod.outlook.com (2603:1096:820:52::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.19; Thu, 14 Sep
+ 2023 08:24:26 +0000
+Received: from SEZPR03MB7220.apcprd03.prod.outlook.com
+ ([fe80::76a:707f:e748:75f3]) by SEZPR03MB7220.apcprd03.prod.outlook.com
+ ([fe80::76a:707f:e748:75f3%3]) with mapi id 15.20.6792.019; Thu, 14 Sep 2023
+ 08:24:25 +0000
+Message-ID: <bdc71fcc-2d72-a958-bb52-84f3fabb49cb@amlogic.com>
+Date:   Thu, 14 Sep 2023 16:24:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add compatibles for Amlogic T7
+ SoCs
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        neil.armstrong@linaro.org, khilman@baylibre.com,
+        jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+        brgl@bgdev.pl, andy@kernel.org
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230914054525.1180595-1-huqiang.qin@amlogic.com>
+ <20230914054525.1180595-2-huqiang.qin@amlogic.com>
+ <45637012-0972-fc7b-1276-163da363b962@linaro.org>
+ <cde944c4-acfe-b3fb-32b8-072740475e35@amlogic.com>
+ <ff4f2b93-7e22-8b15-aaad-b7d6f8b5517d@linaro.org>
+Content-Language: en-US
+From:   Huqiang Qin <huqiang.qin@amlogic.com>
+In-Reply-To: <ff4f2b93-7e22-8b15-aaad-b7d6f8b5517d@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYCP286CA0284.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c9::15) To SEZPR03MB7220.apcprd03.prod.outlook.com
+ (2603:1096:101:ec::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR03MB7220:EE_|KL1PR03MB5555:EE_
+X-MS-Office365-Filtering-Correlation-Id: 06ccea7c-7446-49e0-c6aa-08dbb4fc00ec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vfz3EWJv+b5KjTFHow2TZZsJPtZXb0pGGe0O1C1ZU4qidfgClp34+xj+M2wUa4TYp/+hQVoZEgbl786faidCW5ivqiewr94ga2aKUGyFi5xxfCohRUY3baGWJY7wNgYKgiuCLp/dIoKD19kpecnDz8dQQcxPE0ZKjKOVcsV2SYZ0Z7kwA+dNR/qKXQgVWdTx3Enyl3UzbIG5BOr8EovALkLH7ltaxx7OR4vpjYn7j4OrjSv4YGvR5rGDv8LbiuObz6j1xbFQDegnX9PTD7IiqHflwtUo/uc9psn8jHw94t7fSllpKb5up9MOIjoZafzhvXJQbdyFzlY1sos4iKmDiEkbRQLTiNwuqFDxHmHFIe2Rp5jhoVlWdPvX9pij7aN+sZXR1G/h+V4e3E8eNjdJfI2nBSLCLODkUUjgv2l9AFVQ/wRnnIZar8pijBAlYDO4Z4nzI13rkW7bZrkUJvaB6r7Nt0pQ2p5HdGy/DHUuMAa68En8FTjJwoS8BQBoaXoiuHIjdRLezEWMGhr+Pn5/uCk9yBbSjlEI5Iw3FDTjZ4PYQNt7o71pPWG4DEUMouXNQblNAidKMmQFsslFNb3bcyxzSNSN9t/H4TUczOV3ieyg4nIB+E3hkCJR2Mz00cowiMKChsC/jzppMH+w2Xk5lC7IQ0XWAWTWTSGDHsKN1mcXQFythQFk+/X1EU5Kwg5Ugrv8a/CCRWiegwkE1Mh938k2WuA0pTz01oOzMvI4rNXy2pQ4CySihUZMBHH+ItUF
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR03MB7220.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(6029001)(376002)(346002)(136003)(366004)(39850400004)(396003)(186009)(451199024)(1800799009)(31686004)(5660300002)(41300700001)(2616005)(26005)(2906002)(4744005)(4326008)(8936002)(8676002)(7416002)(44832011)(36756003)(31696002)(6512007)(6506007)(6486002)(6666004)(38350700002)(38100700002)(86362001)(53546011)(316002)(478600001)(66556008)(66946007)(66476007)(921005)(52116002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RzZaNzJUMUtkY3BKL3cyaDIyTENKbmVETVdoaithRzg5UnA3T2ROckhYZGRS?=
+ =?utf-8?B?NFQzd3Iwd3FTSXd0NkUwN2RzNHlFekwwNEVGMWt3VVhhMmYyMnlHekJQeEhu?=
+ =?utf-8?B?emJkODA3QnFiMTYrU0EvVVZMM0JVbFZqaFVsYjJ0MWI4OEd3blBxU1dEaWNW?=
+ =?utf-8?B?WTRObVBiM0VvMDVNYlFEOEJacGVjazRGVS9oMnJkcnlmZlhsOFhkbmxzNGxm?=
+ =?utf-8?B?cGtYYkxXUE5uVU9GRHhyVG1OdytWcFN1bFJROTNTZFE5dGdGcGVzWFZ2czNS?=
+ =?utf-8?B?ZzhNamRIS2tLNGc1U3QrZTdrOXEzdzVyQVRKRTRmaFNjS2NWSW9IWmhCOG03?=
+ =?utf-8?B?M1VTSlhsVFhwbUV6WFNBZEQwbFV0Z0R5SHhBR3lLNitGVDZncEZRcnJ2amNE?=
+ =?utf-8?B?QVV2MzRXOHdFOVJOMklwQTc2MzBsTFF3U3ZaSUxJZzV5TXl5MVE1RFZ5Q0NY?=
+ =?utf-8?B?SmViOXV1K3c1cXU3NzJmcjRpaDZoWG5rWUpkY01tQkJRSUE2MkwvbTlQT0U1?=
+ =?utf-8?B?dGUzbGFYcmZialRnbitWL2xENDYxeTIrVnhaWmNvcVhwYndoT2VQc3hNTDBT?=
+ =?utf-8?B?UHVvbU9wWFdBclQvYmNWb0tkWktESEdsSTdWR0lEVmdtcm1FUmo1WnBQZldp?=
+ =?utf-8?B?ZjY3Ri9tZExLcU9jZ0xKWDJIS256VWdqMEVMa2FaTjFEMHVIVWJMdzc3cEhq?=
+ =?utf-8?B?SlJpSHRibDl0aVdSU0FncFkrWGQyRkQveFV1VC8yZVMvNnpIVTNLRktWWEo4?=
+ =?utf-8?B?dklGV3VHazlvOTNtR2haUlJHNlNoTm51Z3A2cFdCaE82S0t5QWJOS0FKclF0?=
+ =?utf-8?B?SmRrekZMVklmaWFnUTIyc2J5dnAvNkhMV2VkMHFmZkN4dWFDSFJTbGFBcSs3?=
+ =?utf-8?B?dWl3eHA2UEV0SER6Yy9XNE5iYnU2QlNRVmxpMkJmbWNIWk1IRXp0MEJrM2Nx?=
+ =?utf-8?B?SDVIODJMNUJCWXh3WTVFeDdFZWJtcWYxSU94UWViYXJIeVRWMG9PL0RjSTV2?=
+ =?utf-8?B?dG1pQUk2T2pBWWlOU2NsbGp2M1VjV0xubklUWldlTFlaTERoM1daYWltUWtK?=
+ =?utf-8?B?akJKU2wwSzJFRGxuSWF1WmxzMGtUTXYrT2hCRVpOSlp1NU8wTUcycEFocW9R?=
+ =?utf-8?B?RXRsS2VKQk1sTmNnSHcrSVhnOS9FWTk1M0Vjd21MYWcxNGE5RG1oUytyeWZR?=
+ =?utf-8?B?LzduSXpHSzVtMmJpWHI1Y1lrR0xMdTRpdVNHVjZ4ci9USWtIUEpTY3d2eERC?=
+ =?utf-8?B?ZVhOUWJETytDeThRUjdITUdLZHRGMm92bWNwZFRBbVA1bCtlZUlnZWhsY1Jl?=
+ =?utf-8?B?MmNscmFKV05wem1mTVhzdmg5aHdIU3B4UExLU21pbjdZNXdjQmRZeFJ5WXd0?=
+ =?utf-8?B?RDNFWWthUDZmWEpkdFQ5ZjVsM01aZXBxNmtHbktLZlY0UGJtNVREZW5WeG5M?=
+ =?utf-8?B?UU5QZTJUQ213ZVBvYjJ2VVJTZ0IxcEswN1ZOaTNpSjRXeWY4bnJuTHl1SGNK?=
+ =?utf-8?B?MmQxU1hzaFo1elJ2NlljSyt4Wlh6K0c4c1hLd0wrZG1ERDlWdTBFazZjdUJB?=
+ =?utf-8?B?VVU4UVNVb2JjU0JNVGthN1M1ZGk3ZEhiYW9GWW1kaktZWjJBL1BSc1dmMWUz?=
+ =?utf-8?B?UCsvejhBUTAzNnljV0FROER3SmF2QVhWR1VXSkVYbTRpT0d0M0xOSUQ5all4?=
+ =?utf-8?B?NHRaTTFRU1MzU2hoZXVuVUZIZVdab3VjcU15Z1l5S0NETGVkUEUzazQzZzhh?=
+ =?utf-8?B?MkdyaHA0dzJDQW1UZGw5TmFjSnUxbkU1Q0lGTS9lZUlYanhlbFFxTGhNTTZ3?=
+ =?utf-8?B?aFdMYTY2a2xwR3ZMbHJXSkxwNmMzcGlLcndzdzU5UitWTWhyUThzd0c0SFI0?=
+ =?utf-8?B?SkYycXVUd25vVXZnVmtkdUQyRE9PcjF4V05KVDlMSXloM2dVamVva2tKM05k?=
+ =?utf-8?B?UzUwenhOQ3lFWlI5K2czeWhrNGM5WU01aU9MVCs5MCtqOU5UYU80ZWRNN2Mw?=
+ =?utf-8?B?REVRYUNTQWxVdjFXYmF6WkVndlA4cDFrdUxhQ0trUnkzdlNzR2NFb1hwblZr?=
+ =?utf-8?B?eUlpdW1pMEpQOTVRQjJsTlc5bjUwcXAvZlNTcmVBakkwMUNrYmNyUTdCeS8y?=
+ =?utf-8?B?UDd3ZUgxZnZjcnFTTUxjeEJtQ0p4c0dyWU8wVWhqeWl5ZUNrYlpLSjZ5WUM3?=
+ =?utf-8?B?YUE9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06ccea7c-7446-49e0-c6aa-08dbb4fc00ec
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR03MB7220.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2023 08:24:25.2087
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HQicvrZx353I+PO/2BMWDcI5jEGfWYisFf+oKxbRnviWCU9qTmLnM3DXer4H2xYEqXl5zES1POiGR/6kIuOekg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB5555
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 9/14/23 03:05, Wu, Wentong wrote:
->> From: Oliver Neukum <oneukum@suse.com>
->>
->> On 13.09.23 03:40, Wentong Wu wrote:
->>
->>> +struct ljca_bank_descriptor {
->>> +	u8 bank_id;
->>> +	u8 pin_num;
->>> +
->>> +	/* 1 bit for each gpio, 1 means valid */
->>> +	u32 valid_pins;
->>
->> No endianness?
+On 2023/9/14 15:19, Krzysztof Kozlowski wrote:
+> [ EXTERNAL EMAIL ]
 > 
-> On both sides, the endianness is same.
+> On 14/09/2023 09:00, Huqiang Qin wrote:
+>> Hi Krzysztof,
+>>
+>> On 2023/9/14 14:16, Krzysztof Kozlowski wrote:
+>> ...
+>>>> diff --git a/include/dt-bindings/gpio/amlogic-t7-gpio.h b/include/dt-bindings/gpio/amlogic-t7-gpio.h
+>>>> new file mode 100644
+>>>> index 000000000000..2bab9a99501a
+>>>> --- /dev/null
+>>>> +++ b/include/dt-bindings/gpio/amlogic-t7-gpio.h
+>>>
+>>> Use compatible syntax.
+>>
+>> The amlogic-t7-gpio.h is not a file in the dt-bindings/pinctrl/ directory.
+>> Does it also need to be named according to the compatible name of pinctrl?
+> 
+> The convention, which we introduced since ~1-2 years, is to use the
+> device compatible or binding filename as the headers filename. Now,
+> where you put what does not affect it.
+> 
 
-Right, but normally USB drivers are also written so that they can work on big-endian CPUs.
+Okay, got it, I will modify it in the next version.
 
-I realize that this driver will likely never be used with a big-endian CPU but still it is good practice to make the driver work on big-endian CPUs too. Even if it is just to set a good example when other drivers copy the code.
-
-So this should be:
-
-struct ljca_bank_descriptor {
-	u8 bank_id;
-	u8 pin_num;
-
-	/* 1 bit for each gpio, 1 means valid */
-	__le32 valid_pins;
-} __packed;
-
-And then when reading valid_pins you should use:
-
-	u32 valid_pins = get_unaligned_le32(&ljca_bank_descriptor.valid_pins);
-
-On x86_64 the compiler should optimize all of this away to
-just a regular read.
-
-Regards,
-
-Hans
+Thanks
 
 
+Best regards,
+Huqiang Qin
