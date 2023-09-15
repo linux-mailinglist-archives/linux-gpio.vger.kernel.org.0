@@ -2,86 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31CB07A15BC
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 07:51:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 699A07A1673
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 08:51:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232151AbjIOFvz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Sep 2023 01:51:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56190 "EHLO
+        id S232351AbjIOGvl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Sep 2023 02:51:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231997AbjIOFvy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Sep 2023 01:51:54 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742AC2716
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 22:51:46 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-52f9a45b4bdso2016079a12.3
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 22:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1694757105; x=1695361905; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RAviJiHnDWn37yrY/+TDS6dv356bJe/3IP+axIRqyaY=;
-        b=PrUxW2H8unYtNgDLDeqdFYWFgVpt/4cUd3x7liLJvrutVZVewvdFn8vZQkUsh32tSz
-         ZXBIvEDbXswEYTir+wlToCQYaSglOSki/p1hSjqIxrlZ98tevtYKwMSOtX5vCCy7GYZY
-         GLjmYY+8I8mOpLIzkBOdpa2o03l82+nU7GBqo0X8pgYRfIOEv20P4M1UAVGCBRjfz/JF
-         c10y2w4bDG4IeIpbiqJE7DMu5lXfMzZ1NDVZ7VvZbxENFDgFV0fYMGml8jO4ekkKowBH
-         7yXGxICf/yzY1VtbMJOl5ODVZPEH3srPhVkglre8iNFPIkdvwL37gJpAFpjL8ODJBd5m
-         e5cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694757105; x=1695361905;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RAviJiHnDWn37yrY/+TDS6dv356bJe/3IP+axIRqyaY=;
-        b=sHpHJhPiCD8MYo+7K4xiE6GRzrHv8qz6ePtU0/TX1kUfNVgVpf9NX9u2Txc08CMa8y
-         Owyy1lyyuw4PkXsDpXEHiKPtInCKGneiie15ToVgFXPsa3VR/kQpvikwhYDTqEdXYGu3
-         1az0wXdt230bMsSxoB2bzC8fx9ciyh61obJU4UKzl7ydFi5NYXhBNZkQ1jaraTe1YpXk
-         encs+FlqCShseUT12kRdTvEzyc6AEuFiocKG2tCczrmGQoZi6dguxLmhODGk4FvsbE47
-         G4ZFKIYCOFo96SOZftddndeRhelAFPhYPLeLiCmHFTTsdbcPPBCzATwz19RD/twUXSyj
-         0Pnw==
-X-Gm-Message-State: AOJu0Yx4/88mFy6c/WRECycyS0nRb2LHLiYN5lWlpP+Jb/giSbCkXWZE
-        YOuquI0UCDx6Zp45grmCAVC3oA==
-X-Google-Smtp-Source: AGHT+IF8/RuLa2dvtV/6+atyydlIiT0muAbHJl0SRDscKsAC1bMSvB/A1IkkRbsxTp4mEQITtSGTeA==
-X-Received: by 2002:a05:6402:164b:b0:523:2e63:b9b with SMTP id s11-20020a056402164b00b005232e630b9bmr571283edx.24.1694757104741;
-        Thu, 14 Sep 2023 22:51:44 -0700 (PDT)
-Received: from [192.168.32.2] ([82.78.167.145])
-        by smtp.gmail.com with ESMTPSA id u24-20020a056402065800b005231e3d89efsm1747955edx.31.2023.09.14.22.51.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 22:51:44 -0700 (PDT)
-Message-ID: <f0aa7983-0300-ce21-8726-41d033f6afbe@tuxon.dev>
-Date:   Fri, 15 Sep 2023 08:51:41 +0300
+        with ESMTP id S232403AbjIOGvj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Sep 2023 02:51:39 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317AE2707
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Sep 2023 23:51:34 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1qh2fg-0006XC-V7; Fri, 15 Sep 2023 08:51:20 +0200
+Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <sha@pengutronix.de>)
+        id 1qh2fg-006TUD-5a; Fri, 15 Sep 2023 08:51:20 +0200
+Received: from sha by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1qh2fg-007DWU-2j; Fri, 15 Sep 2023 08:51:20 +0200
+Date:   Fri, 15 Sep 2023 08:51:20 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de,
+        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+        Michael Riesch <michael.riesch@wolfvision.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH 1/3] pinctrl: rockchip: add support for io-domain
+ dependency
+Message-ID: <20230915065120.GQ637806@pengutronix.de>
+References: <20230904115816.1237684-1-s.hauer@pengutronix.de>
+ <20230904115816.1237684-2-s.hauer@pengutronix.de>
+ <CACRpkdYxRdToUM3JcEeNK_K87D5WDzzSLvVEbtqqdQEhz3k_Ow@mail.gmail.com>
+ <CAGb2v65G-8EECNjqnpKCxqAD5nATAb0S7AA_WMiGXYOR1avrvg@mail.gmail.com>
+ <20230913065843.GF637806@pengutronix.de>
+ <CAGETcx8rO=aykjb6=5k0wpOyscqokNwSL6w-AHnodY7pNXyzGQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 12/37] clk: renesas: rzg2l: reduce the critical area
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
-        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
-        nfraprado@collabora.com, rafal@milecki.pl,
-        wsa+renesas@sang-engineering.com,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-13-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdVLx1d-6=5xx_GLAb7LxxRR9FwhAU56fxNc3b=9wj286g@mail.gmail.com>
-From:   claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdVLx1d-6=5xx_GLAb7LxxRR9FwhAU56fxNc3b=9wj286g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <CAGETcx8rO=aykjb6=5k0wpOyscqokNwSL6w-AHnodY7pNXyzGQ@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,48 +74,143 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Sep 13, 2023 at 01:48:12PM -0700, Saravana Kannan wrote:
+> On Tue, Sep 12, 2023 at 11:58 PM Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> >
+> > On Wed, Sep 13, 2023 at 12:37:54PM +0800, Chen-Yu Tsai wrote:
+> > > On Tue, Sep 12, 2023 at 4:07 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > >
+> > > > Top posting to bring Saravana Kannan into this discussion.
+> > > >
+> > > > This looks like a big hack to me, Saravana has been working
+> > > > tirelessly to make the device tree probe order "sort itself out"
+> > > > and I am pretty sure this issue needs to be fixed at the DT
+> > > > core level and not in a driver.
+> > >
+> > > We could merge all the IO domain stuff into the pinctrl node/driver,
+> > > like is done for Allwinner? Maybe that would simplify things a bit?
+> >
+> > I thought about this as well. On Rockchip the pinctrl driver and the IO
+> > domain driver even work on the same register space, so putting these
+> > into a single node/driver would even feel more natural than what we have
+> > now.
+> 
+> Then we should try to do this and fix any issues blocking us.
+> 
+> > However, with that the pinctrl node would get the supplies that the IO
+> > domain node now has and we would never get into the probe of the pinctrl
+> > driver due to the circular dependencies.
+> 
+> From a fw_devlink perspective, the circular dependency shouldn't be a
+> problem. It's smart enough to recognize all cycle possibilities (since
+> 6.3) and not enforce ordering between nodes in a cycle.
+> 
+> So, this is really only a matter of pinctrl not trying to do
+> regulator_get() in its probe function. You need to do the
+> regulator_get() when the pins that depend on the io-domain are
+> requested. And if the regulator isn't ready yet, return -EPROBE_DEFER?
 
-
-On 14.09.2023 16:12, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> spinlock in rzg2l_mod_clock_endisable() is intended to protect the accesses
->> to hardware register. There is no need to protect the instructions that set
->> temporary variable which will be then written to register. Thus limit the
->> spinlock only to the hardware register access.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Thanks for your patch!
-> 
->> --- a/drivers/clk/renesas/rzg2l-cpg.c
->> +++ b/drivers/clk/renesas/rzg2l-cpg.c
->> @@ -912,13 +912,13 @@ static int rzg2l_mod_clock_endisable(struct clk_hw *hw, bool enable)
->>
->>         dev_dbg(dev, "CLK_ON %u/%pC %s\n", CLK_ON_R(reg), hw->clk,
->>                 enable ? "ON" : "OFF");
->> -       spin_lock_irqsave(&priv->rmw_lock, flags);
->>
->>         value = bitmask << 16;
->>         if (enable)
->>                 value |= bitmask;
->> -       writel(value, priv->base + CLK_ON_R(reg));
->>
->> +       spin_lock_irqsave(&priv->rmw_lock, flags);
->> +       writel(value, priv->base + CLK_ON_R(reg));
->>         spin_unlock_irqrestore(&priv->rmw_lock, flags);
-> 
-> After this, it becomes obvious there is nothing to protect at all,
-> so the locking can just be removed from this function?
-
-I tend to be paranoid when writing to hardware resources thus I kept it.
-Would you prefer to remove it at all?
+That's basically what my series does already, I return -EPROBE_DEFER
+from the pinctrl driver when a pin is requested and the IO domain is not
+yet ready.
 
 > 
-> Gr{oetje,eeting}s,
+> Is there something that prevents us from doing that?
+
+No. We could do that, but it wouldn't buy us anthing. I am glad to hear
+that fw_devlink can break the circular dependencies. With this we could
+add the supplies to the pinctrl node and the pinctrl driver would still
+be probed.
+
+With the IO domain supplies added to the pinctrl node our binding would
+be cleaner, but still we would have to defer probe of many requested
+pins until finally the I2C driver providing access to the PMIC comes
+along. We also still need a "Do not defer probe for these pins" property
+in the pingrp needed for the I2C driver.
+
+I would consider this being a way to cleanup the bindings, but not a
+solution at DT core level that Linus was aiming at.
+
 > 
->                         Geert
+> > >
+> > > IIRC on Allwinner SoCs the PMIC pins don't have a separate power rail,
+> > > or if they do they almost certainly use the default I/O rail that is
+> > > always on, and so we omit it to work around the dependency cycle.
+> >
+> > I looked into sun50i as an example. This one has two pinctrl nodes, pio
+> > and r_pio. Only the former has supplies whereas the latter, where the
+> > PMIC is connected to, has (found in sun50i-a64-pinephone.dtsi):
+> >
+> > &r_pio {
+> >         /*
+> >          * FIXME: We can't add that supply for now since it would
+> >          * create a circular dependency between pinctrl, the regulator
+> >          * and the RSB Bus.
+> >          *
+> >          * vcc-pl-supply = <&reg_aldo2>;
+> >          */
+> > };
+> >
+> > At least it show me that I am not the first one who has this problem ;)
+> >
+> > We could add the supplies to the pingroup subnodes of the pinctrl driver
+> > to avoid that, but as Saravana already menioned, that would feel like
+> > overkill.
 > 
+> So my comment yesterday was that it'd be an overkill to make every
+> struct pin_desc into a device. But if you can split that rockchip
+> pinctrl into two devices, that should be okay and definitely not an
+> overkill.
+> 
+> Maybe something like:
+> 
+> pinctrl {
+>     compatible = "rockchip,rk3568-pinctrl";
+>     i2c0 {
+>                 /omit-if-no-ref/
+>                 i2c0_xfer: i2c0-xfer {
+>                         rockchip,pins =
+>                                 /* i2c0_scl */
+>                                 <0 RK_PB1 1 &pcfg_pull_none_smt>,
+>                                 /* i2c0_sda */
+>                                 <0 RK_PB2 1 &pcfg_pull_none_smt>;
+>                 };
+>     }
+>     ...
+>     ...
+>     pinctrl-io {
+>         compatible = "rockchip,rk3568-pinctrl-io";
+>         pmuio1-supply = <&vcc3v3_pmu>;
+>         cam {
+>             ....
+>         }
+>         ....
+>         ....
+> }
+> 
+> So pinctrl will probe successfully and add it's child device
+> pinctrl-io. i2c0 will probe once pinctrl is available. Then eventually
+> the regulator will probe. And after all that, pinctrl-io would probe.
+> 
+> This has no cycles and IMHO represents the hardware accurately. You
+> have a pinctrl block and there's a sub component of it (pinctrl-io)
+> that works differently and has additional dependencies.
+> 
+> Any thoughts on this?
+
+By making the IO domain device a child node of the pinctrl node we
+wouldn't need a phandle from the pinctrl node to the IO domain node
+anymore, but apart from that the approach is equivalent to what we have
+already.
+
+Given that fw_devlink allows us to add the supplies directly to the
+pinctrl node, I would prefer doing that. But as said, it doesn't solve
+the problem.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
