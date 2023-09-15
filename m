@@ -2,88 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F25967A1133
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 00:41:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C21D7A135C
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 03:58:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbjINWlX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Sep 2023 18:41:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36386 "EHLO
+        id S231265AbjIOB6r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Sep 2023 21:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbjINWlW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 18:41:22 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1C4F1FD6;
-        Thu, 14 Sep 2023 15:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sY6+WRs8v3ZXwrxEQ5TKWY1rAEmHsBMwUCCrGHWwa9w=; b=pBHD5ZtLHgQr7IWGRfTiPluwWh
-        8YxeN9vCZe2WEx0WuI4YsQ+Z61IfVYtwFXfXz0ZgpUB+VDxYfxYDEy0DESWVU3gEC0CnDcYq/6kA1
-        wq0E6ltyTzuCgAW64+LuGdtflA0tZz3m4dYFEZr03UnhQDIF38qk1P0V2ndHQLAWs7eV6JeC2iSEk
-        kQR82HwPUrYvhV5waHJmkx9vZ2Jj89iPVe5TupdWX2/i1mdydO1+0EedVq5sAOMnPRDeorteRt0To
-        Lp5pLNvQdI94pQ4NnACdQEQVv9FSbjfCGoti6T7/dwJjU2Xz094LgfWbvUAWH1Pm2XI0pdH700lBE
-        548fZf8A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qgv1J-008EpV-2d;
-        Thu, 14 Sep 2023 22:41:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E781D30036C; Fri, 15 Sep 2023 00:41:10 +0200 (CEST)
-Date:   Fri, 15 Sep 2023 00:41:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mitchell Levy <levymitchell0@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>
-Subject: Re: guard coding style (was: Re: [PATCH v1 05/10] gpio: pca953x:
- Simplify code with cleanup helpers)
-Message-ID: <20230914224110.GA24799@noisy.programming.kicks-ass.net>
-References: <20230901134041.1165562-1-andriy.shevchenko@linux.intel.com>
- <20230901134041.1165562-5-andriy.shevchenko@linux.intel.com>
- <71232fcf-98c4-373a-805-141a349fd25@linux-m68k.org>
- <CAMRc=Merdmv_gFm58y1iHWmYmT=t_OmXyQgOXCxqwr7wsmjjYQ@mail.gmail.com>
- <CAMuHMdVYDSPGP48OXxi-s4GFegfzUu900ASBnRmMo=18UzmCrQ@mail.gmail.com>
- <CAMJwLczd7oZ3JPqKNW-qOiB0S2WRsqV7TVFWGD=yysK0nmZrSQ@mail.gmail.com>
- <20230914222639.GB5492@noisy.programming.kicks-ass.net>
+        with ESMTP id S231234AbjIOB6r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Sep 2023 21:58:47 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE022722;
+        Thu, 14 Sep 2023 18:58:42 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38F1wd9K012149;
+        Fri, 15 Sep 2023 01:58:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=HoCgcgl+aCgjFCVJXKNMCqYwXYxwcfuRMm+pt4uqlts=;
+ b=d1Z2zIoYgzta+acURONtsnjrcq07hlezAtFY4yZTXu4Mu9NEh5HS6Sp8da39wkaVObCA
+ /JWfPQ6wyfTcczmQrxlp6ZpibxxwTapsbFrqmQTpzc08vKko8A4+XCIOaifZpDkx3Ze0
+ wN7BWnrAkb9DtOr0s1fmHDBOhX5wdlGo4jJGC3MRKQpcMnQyCZaX7pHXQ69NsBObjXPE
+ ZfqqVvWyilVT19cYO1TCipzA+oWTZDh+kncSf2X0XmT6ILIohHs/T25qEDFFaeTeTVxI
+ kZrxlFWQq30wjwmyadtH8OrlaAiXzIE/uL5zOiIGd4GFAxYuGmGYQPHtRWY6hFP7AfaX lA== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t4e2ag01s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Sep 2023 01:58:38 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38F1wbIa006657
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Sep 2023 01:58:37 GMT
+Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Thu, 14 Sep 2023 18:58:30 -0700
+From:   Tengfei Fan <quic_tengfan@quicinc.com>
+To:     <andersson@kernel.org>, <agross@kernel.org>,
+        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_tsoni@quicinc.com>, <quic_shashim@quicinc.com>,
+        <quic_kaushalk@quicinc.com>, <quic_tdas@quicinc.com>,
+        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH v2 0/2] pinctl: qcom: Add SM4450 pinctrl driver 
+Date:   Fri, 15 Sep 2023 09:58:06 +0800
+Message-ID: <20230915015808.18296-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230914222639.GB5492@noisy.programming.kicks-ass.net>
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: r661Y_ZTWe3kufpvvqOZzY48f-h5VH7U
+X-Proofpoint-ORIG-GUID: r661Y_ZTWe3kufpvvqOZzY48f-h5VH7U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-15_02,2023-09-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 mlxlogscore=706 adultscore=0
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309150015
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 12:26:39AM +0200, Peter Zijlstra wrote:
-> On Thu, Sep 14, 2023 at 01:51:01PM -0700, Mitchell Levy wrote:
-> 
-> > The more I think on this issue, the more I go back and forth. If we
-> > only had guard(...), the only way to approximate scoped guard would be
-> > to either just do what the macro does (i.e., a dummy for loop that
-> > only runs once) or use an anonymous scope, e.g.,
-> > {
-> >     guard(...);
-> >     my_one_statement();
-> > }
-> > Since this is how I've previously used std::lock_guard in C++, this
-> > pattern feels very familiar to me, and the scoped_guard feels almost
-> > like syntax sugar for this. As such, I feel like including the braces
-> > is most natural because, as Geert mentioned, it emphasizes the scope
-> > that "should" (in my brain, at least) be there.
-> 
-> AFAIC the anonymous scope thing doesn't much happen in kernel coding
-> style -- although I'm sure it's there, the code-base is simply too vast
-> to not have it *somewhere*.
+Add Sm4450 pinctrl driver for support enable uart console.
 
-The kernel typical style would be:
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
+v1 -> v2:
+  - update right platform name
+  - update gpio-reserved-ranges have right maxItems
+  - update gpio-line-names have right maxItems
+  - add min/maxItems for pins properties
+  - redo dt_binding_check check
+  - delete reserved gpios setting
+  - combine separate pinctrl functions
 
-	do {
-		...
-	} while (0)
+previous discussion here:
+[1] https://lore.kernel.org/linux-arm-msm/20230908063843.26835-1-quic_tengfan@quicinc.com/
 
-to create a 'pointless' scope. Apparently this is also what I've done in
-some conversions where a conditional lock was involved.
+Tengfei Fan (2):
+  dt-bindings: pinctrl: qcom: Add SM4450 pinctrl
+  pinctrl: qcom: Add SM4450 pinctrl driver
+
+ .../bindings/pinctrl/qcom,sm4450-tlmm.yaml    |  132 +++
+ drivers/pinctrl/qcom/Kconfig.msm              |    8 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-sm4450.c         | 1013 +++++++++++++++++
+ 4 files changed, 1154 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4450.c
+
+
+base-commit: 98897dc735cf6635f0966f76eb0108354168fb15
+-- 
+2.17.1
+
