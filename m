@@ -2,117 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E507E7A1742
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 09:25:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FE727A1779
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 09:30:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232774AbjIOHZD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Sep 2023 03:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
+        id S232195AbjIOHal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Sep 2023 03:30:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232778AbjIOHY4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Sep 2023 03:24:56 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D848B1BCD
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Sep 2023 00:24:46 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2bcb89b4767so27385821fa.3
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Sep 2023 00:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694762685; x=1695367485; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BRVUxrzWSNf4X4G5XhrnO7+YTsERSGVJqcBKf82PDow=;
-        b=wuXq56X/7R0rorv4p7eJ18zrkwxBN4wVhb166mNFCxH5ra8veLmLUriAlJirjVMMTH
-         Kg67D6QY5YBdAzZTaOa7proveCJJKNCgl1XF0kD1EcY6gJP7gThwnFWVg3uUrLCTbdc3
-         RHnrCCHbiOdvoCZWJR1AlYREBWr330H8RaseikEaYZWvZL/OYmVAHkiFQQ4zWiP2zHBp
-         sq75EjgeL1NY9lljo8dbHnb/FHQWoMM36S8UzEkX3FTuYyBDqIr7bYWm78jrx2TDIycA
-         Anw4/OCOJL63f2R435dt3E3aRbBUb1GQq8zoySUCJ4ho8GsA4IeHhtoNVA430craQE4h
-         cFKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694762685; x=1695367485;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BRVUxrzWSNf4X4G5XhrnO7+YTsERSGVJqcBKf82PDow=;
-        b=JUvEAzwAMX+gxq7g9jpODMFpds63wmeNhzHKAcRs+Hzw0PjhZqS/3tJZi/FjYOwVhs
-         DvpY9k1ES78luUPXS0HRaGR+8fbrtdMpDlwJf+p3YtSdcvgLXv3Qaat80d1XXzog8ylD
-         xQORV9EGiLzdZbgvCuu9ALdvY2P9wNzOGoHZ7sLZOTqyVnypqrizihyMp49mkL+UPtPR
-         qkEsmYr4dhSk2POQN2i7FFdLDU4tjOlQrfb0KaHZou0WxJmwU6yhNGSfvmz/KdZl1b7I
-         4XejtJbGiBwE0AeW4/vBQpEtxyU5yIHs8hS9h1CBSa7BZUWrgkSWRtxNxi6rKqSzBhar
-         wzNw==
-X-Gm-Message-State: AOJu0Yw1YGBQ4wdB6fpjyecxcj/6qnnTVCkYvUJr9lO1V6sOeBaQF2fS
-        RJoTdPy4fTERQ6h51Qmv4+INJA==
-X-Google-Smtp-Source: AGHT+IGsyFGl3ShsoIVQDC6tL2uthtFYR1zLnmKmxUvMkJKuE45n7hu3NNEjQ1tFcwkD+8okp5gr2A==
-X-Received: by 2002:a2e:a285:0:b0:2bc:f4ee:ca57 with SMTP id k5-20020a2ea285000000b002bcf4eeca57mr704099lja.48.1694762685121;
-        Fri, 15 Sep 2023 00:24:45 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.214.188])
-        by smtp.gmail.com with ESMTPSA id fi26-20020a170906da1a00b0099bc8db97bcsm1995609ejb.131.2023.09.15.00.24.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Sep 2023 00:24:44 -0700 (PDT)
-Message-ID: <c199fb5e-927c-aa39-ff3a-3a7906fadec0@linaro.org>
-Date:   Fri, 15 Sep 2023 09:24:41 +0200
+        with ESMTP id S230454AbjIOHak (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Sep 2023 03:30:40 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB35819A0;
+        Fri, 15 Sep 2023 00:30:30 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38F5ojZZ027770;
+        Fri, 15 Sep 2023 07:30:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=0aoJQXs5a5YpMC9TB/mzvmcpBsQ1TKgx4DzZPRCsOgs=;
+ b=LoGyzvll83UFWLAz3ModENzqRJPPIKwSZFAdCRnMQvzkwdvprXgAPwvqneR0uGYRsZJR
+ QILpTic3nCTUjtrLFlAfdzMkWECAGIMbdXqPGCuu21xjb4AjmfP/xXV20l+dZz0gqc7L
+ ZOlXqy8/HNe5gH8OytzCanhJCj+2ENYJQcmZeFw4dH2EOXG9t34zrdUO29W4VpMMPQ28
+ QC2xLNflb4md1mb5Lb2i1Dx7878+jO82eNU0zC0+Eq2uQW/D3MjLAV1/tTfvq3VXA94U
+ 2pQlX/Y4xfkaoEu/jTIpIYdNEsP4pKbssT1iht7Gd1PvDJLNa7IBRt7Pdk/P4LJruIny fA== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t4g3grc6d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Sep 2023 07:30:27 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38F7UQY2024463
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Sep 2023 07:30:26 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Fri, 15 Sep
+ 2023 00:30:19 -0700
+Message-ID: <35371580-8e5a-4f72-aec2-951268c296a3@quicinc.com>
+Date:   Fri, 15 Sep 2023 15:30:16 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 21/37] dt-bindings: clock: add r9a08g045 CPG clocks and
- resets definitions
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     Claudiu <claudiu.beznea@tuxon.dev>, mturquette@baylibre.com,
-        sboyd@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, magnus.damm@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
-        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
-        nfraprado@collabora.com, rafal@milecki.pl,
-        wsa+renesas@sang-engineering.com,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-22-claudiu.beznea.uj@bp.renesas.com>
- <20230912160330.GA864606-robh@kernel.org>
- <CAMuHMdWxKFrTi7c0Df0cHLrVFt3=a7UOy0jnKxsG8PEuD=15Pg@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAMuHMdWxKFrTi7c0Df0cHLrVFt3=a7UOy0jnKxsG8PEuD=15Pg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SM4450 pinctrl
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <andersson@kernel.org>, <agross@kernel.org>,
+        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_tsoni@quicinc.com>, <quic_shashim@quicinc.com>,
+        <quic_kaushalk@quicinc.com>, <quic_tdas@quicinc.com>,
+        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
+        <kernel@quicinc.com>
+References: <20230915015808.18296-1-quic_tengfan@quicinc.com>
+ <20230915015808.18296-2-quic_tengfan@quicinc.com>
+ <6f40ee72-b763-c58d-44df-ea40d1309820@linaro.org>
+From:   Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <6f40ee72-b763-c58d-44df-ea40d1309820@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: EqlzQTQnyulRjQvO_Zf0EtJ954qEv6h6
+X-Proofpoint-ORIG-GUID: EqlzQTQnyulRjQvO_Zf0EtJ954qEv6h6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-15_05,2023-09-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ mlxlogscore=698 phishscore=0 impostorscore=0 suspectscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309150064
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/09/2023 17:26, Geert Uytterhoeven wrote:
-> Hi Rob,
-> 
-> On Tue, Sep 12, 2023 at 6:03 PM Rob Herring <robh@kernel.org> wrote:
->> On Tue, Sep 12, 2023 at 07:51:41AM +0300, Claudiu wrote:
->>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>
->>> Add RZ/G3S (R9A08G045) Clock Pulse Generator (CPG) core clocks, module
->>> clocks and resets.
+
+
+在 9/15/2023 3:04 PM, Krzysztof Kozlowski 写道:
+> On 15/09/2023 03:58, Tengfei Fan wrote:
+>> Add device tree binding Documentation details for Qualcomm SM4450
+>> TLMM device.
 >>
->> This is part of the binding, so it can be squashed with the previous
->> patch. The ack there still stands.
+>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 > 
-> Usually we keep it as a separate patch, to be queued in an immutable
-> branch, as it is included by both the clock driver and by DTS, but
-> not by the yaml bindings file.
+> ...
+> 
+>> +
+>> +patternProperties:
+>> +  "-state$":
+>> +    oneOf:
+>> +      - $ref: "#/$defs/qcom-sm4450-tlmm-state"
+>> +      - patternProperties:
+>> +          "-pins$":
+>> +            $ref: "#/$defs/qcom-sm4450-tlmm-state"
+>> +        additionalProperties: false
+>> +
+>> +$defs:
+>> +  qcom-sm4450-tlmm-state:
+>> +    type: object
+>> +    description:
+>> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+>> +      Client device subnodes use below standard properties.
+>> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+>> +    unevaluatedProperties: false
+>> +
+>> +    properties:
+>> +      pins:
+>> +        description:
+>> +          List of gpio pins affected by the properties specified in this
+>> +          subnode.
+>> +        items:
+>> +          oneOf:
+>> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9])$"
+> 
+> This is still wrong. How many GPIOs do you have? Please open existing
+> bindings for recent device (e.g. sm8550) and look how it is done there.
+yes, will update to "^gpio([0-9]|[1-9][0-9]|1[0-2][0-5])$".
+> 
+> ...
+> 
+> 
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    tlmm: pinctrl@f100000 {
+>> +      compatible = "qcom,sm4450-tlmm";
+>> +      reg = <0x0f100000 0x300000>;
+>> +      gpio-controller;
+>> +      #gpio-cells = <2>;
+>> +      gpio-ranges = <&tlmm 0 0 137>;
+>> +      interrupt-controller;
+>> +      #interrupt-cells = <2>;
+>> +      interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> 
+> Missing example pieces. Again, please base your work on other recent files.
+yes, will reference other platform, and update
+> 
+>> +    };
+>> +...
+> 
+> Best regards,
+> Krzysztof
+> 
 
-Binding also should be shared, so you get compatible documented in both
-places (thus lack of checkpatch warnings). It still should be one patch.
-
-Best regards,
-Krzysztof
-
+-- 
+Thx and BRs,
+Tengfei Fan
