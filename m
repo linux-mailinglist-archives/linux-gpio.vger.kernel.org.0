@@ -2,108 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E6B47A21A2
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 16:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 158F67A21B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 17:03:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231349AbjIOO7z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Sep 2023 10:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47676 "EHLO
+        id S235233AbjIOPDj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Sep 2023 11:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjIOO7z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Sep 2023 10:59:55 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C0C10D;
-        Fri, 15 Sep 2023 07:59:50 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52969C433C9;
-        Fri, 15 Sep 2023 14:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694789990;
-        bh=A21SBk79usPEjw1XUt9dSJPMgbCWV6UEMjwE6HhbYMM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LlOn7YDxtz9tg+ngRqO/KxN8xHZl8JF3jNCBW7BlL5UBz6r8EZsBtAI5iFpz/A4Lf
-         6tcdotMybw5J5x78GH2/Z6Vk3DyTn+/EzyaS01wMJi6P1oZMqOjak2V6P0spemllzD
-         TbFVMqhjjdSEE+7SnDvFqmV8Tmx7sl3v5RPEXf8Yv7Glai2tbLbKDhilHamd39ljWk
-         yOHz9BEIYql1JRKItl6uR6SLAP6RvB3T4Tzaub3IM65qih4LFsC3TJ946KlVjJ7pbQ
-         w5Y99R2VMds4Xhk+D2Q/fWffT9vN92KA0MGcFfLEjyFZk3ZswpmOtMeuM0pJbCdF0E
-         PyhbAwviYmXhA==
-Received: (nullmailer pid 3718886 invoked by uid 1000);
-        Fri, 15 Sep 2023 14:59:47 -0000
-Date:   Fri, 15 Sep 2023 09:59:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Tengfei Fan <quic_tengfan@quicinc.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        andersson@kernel.org, agross@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_tsoni@quicinc.com,
-        quic_shashim@quicinc.com, quic_kaushalk@quicinc.com,
-        quic_tdas@quicinc.com, quic_tingweiz@quicinc.com,
-        quic_aiquny@quicinc.com, kernel@quicinc.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SM4450 pinctrl
-Message-ID: <20230915145947.GA3716246-robh@kernel.org>
-References: <20230915015808.18296-1-quic_tengfan@quicinc.com>
- <20230915015808.18296-2-quic_tengfan@quicinc.com>
- <6f40ee72-b763-c58d-44df-ea40d1309820@linaro.org>
- <35371580-8e5a-4f72-aec2-951268c296a3@quicinc.com>
+        with ESMTP id S229568AbjIOPDi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Sep 2023 11:03:38 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3111D1FE0
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Sep 2023 08:03:32 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-31f853f2f3aso2228465f8f.0
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Sep 2023 08:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694790210; x=1695395010; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v2icBidhNqLF921D274+HegN9s4sM/PCTy5BqMLL57c=;
+        b=x+TQ3jbvdGtso1IF9KzIw5VBjDCeGxZzua2+ltbfk/Q6ccsT9ckmoEmB6Vwww8Ya1p
+         x5DEBj9e9fMTtm6x+6Z2KWv4RlbqCFxIIwHL33FE9p9rmWg+5ukU9483ehDlE8JwYaC4
+         zsn/OdN83lSofAYFsMvVkOMdacpmEp2t0EGMOcH6Fb+VNv0ufeuzvJx+XlKxmcFtpJ8V
+         smnsfxxDR9EB27ePdweKgXpclwitYh3hPI+/aGIQVwO/OOBsNIRekL2s4bu9xgYtCOfK
+         rWC0JVR66XXSWKKiIM9TJdNIzliWaIu0LksZ2JB8O0wh9WbJELVM7Pzm3s7T/rOL6dzb
+         uaHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694790210; x=1695395010;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v2icBidhNqLF921D274+HegN9s4sM/PCTy5BqMLL57c=;
+        b=RC2EdMcHUXLuyX7PhdT2PQayVBzrJH6f+Ct2grrrj/dLS6yPvrT4tLIGutxlPAwVRb
+         5tWW92RTlqCMfXnYr9819GZQZ/IXSMqQ4mpoSLP+mivWofV+W3NVsXf14D8JfPaLYIzi
+         AxiYf5OXCGJE5lwMEACZzFsmJpqQK+zX9TTDaZwumutlzJTeo0IB09HQO3u3Is4rJVAE
+         kDTIDMQ/LlCCdgh1kzaxMz6iXoT9e7ZRsO8EuQ/9ULBSX+Td6HHp1BWJqjeip95tsaDT
+         /YykKYxdMrGFSoBfRxA6XHkJCPWrTVJnNj+OQEyGGiNJbyf/Y73I1Yx4FXxBQBqTORQR
+         fN8Q==
+X-Gm-Message-State: AOJu0YzxVFxEFWz98JkE4QIu2SbxlXeb2xt+6v4aT7SxRNFlopz6KjVk
+        mX5YYtHACnblS/qQNAaZ/28SWPRv2k3cwsV1YHU=
+X-Google-Smtp-Source: AGHT+IEfWgq+54eJPYGOwbdJHlYxpAVHAOywpVSMyAjN9QotMhlImJ8mbahol9G3z4CPEP99bWShMQ==
+X-Received: by 2002:a5d:6f15:0:b0:31f:ecb2:d774 with SMTP id ay21-20020a5d6f15000000b0031fecb2d774mr2343475wrb.19.1694790210397;
+        Fri, 15 Sep 2023 08:03:30 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:aa19:4569:aeeb:c0d3])
+        by smtp.gmail.com with ESMTPSA id hn40-20020a05600ca3a800b003fef19bb55csm4853369wmb.34.2023.09.15.08.03.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Sep 2023 08:03:29 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v3 00/11] gpiolib: work towards removing gpiochip_find()
+Date:   Fri, 15 Sep 2023 17:03:15 +0200
+Message-Id: <20230915150327.81918-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <35371580-8e5a-4f72-aec2-951268c296a3@quicinc.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 03:30:16PM +0800, Tengfei Fan wrote:
-> 
-> 
-> 在 9/15/2023 3:04 PM, Krzysztof Kozlowski 写道:
-> > On 15/09/2023 03:58, Tengfei Fan wrote:
-> > > Add device tree binding Documentation details for Qualcomm SM4450
-> > > TLMM device.
-> > > 
-> > > Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> > 
-> > ...
-> > 
-> > > +
-> > > +patternProperties:
-> > > +  "-state$":
-> > > +    oneOf:
-> > > +      - $ref: "#/$defs/qcom-sm4450-tlmm-state"
-> > > +      - patternProperties:
-> > > +          "-pins$":
-> > > +            $ref: "#/$defs/qcom-sm4450-tlmm-state"
-> > > +        additionalProperties: false
-> > > +
-> > > +$defs:
-> > > +  qcom-sm4450-tlmm-state:
-> > > +    type: object
-> > > +    description:
-> > > +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> > > +      Client device subnodes use below standard properties.
-> > > +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
-> > > +    unevaluatedProperties: false
-> > > +
-> > > +    properties:
-> > > +      pins:
-> > > +        description:
-> > > +          List of gpio pins affected by the properties specified in this
-> > > +          subnode.
-> > > +        items:
-> > > +          oneOf:
-> > > +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9])$"
-> > 
-> > This is still wrong. How many GPIOs do you have? Please open existing
-> > bindings for recent device (e.g. sm8550) and look how it is done there.
-> yes, will update to "^gpio([0-9]|[1-9][0-9]|1[0-2][0-5])$".
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-What about 106, 116, etc.?
+This is a reduced subset of patches from the initial sumbission[1]
+limited only to changes inside GPIOLIB. Once this is upstream, we can
+then slowly merge patches for other subsystems (like HTE) and then
+eventually remove gpiochip_find() entirely.
 
-Rob
+The GPIO subsystem does not handle hot-unplug events very well. We have
+recently patched the user-space part of it so that at least a rouge user
+cannot crash the kernel but in-kernel users are still affected by a lot of
+issues: from incorrect locking or lack thereof to using structures that are
+private to GPIO drivers. Since almost all GPIO controllers can be unbound,
+not to mention that we have USB devices registering GPIO expanders as well as
+I2C-on-USB HID devices on which I2C GPIO expanders can live, various media
+gadgets etc., we really need to make GPIO hotplug/unplug friendly.
+
+Before we can even get to fixing the locking, we need to address a serious
+abuse of the GPIO driver API - accessing struct gpio_chip by anyone who isn't
+the driver owning this object. This structure is owned by the GPIO provider
+and its lifetime is tied to that of that provider. It is destroyed when the
+device is unregistered and this may happen at any moment. struct gpio_device
+is the opaque, reference counted interface to struct gpio_chip (which is the
+low-level implementation) and all access should pass through it.
+
+The end-goal is to make all gpio_device manipulators check the existence of
+gdev->chip and then lock it for the duration of any of the calls using SRCU.
+Before we can get there, we need to first provide a set of functions that will
+replace any gpio_chip functions and convert all in-kernel users.
+
+This series adds several new helpers to the public GPIO API and uses
+them across the core GPIO code.
+
+Note that this does not make everything correct just yet. Especially the
+GPIOLIB internal users release the reference returned by the lookup function
+after getting the descriptor of interest but before requesting it. This will
+eventually be addressed. This is not a regression either.
+
+[1] https://lore.kernel.org/lkml/20230905185309.131295-1-brgl@bgdev.pl/T/
+
+v2 -> v3:
+- use gpio_device_get_chip() consistently
+- clarify comments
+- fix buggy chip assignment
+- check for PTR_ERR() in automatic cleanup
+- rearrange code as requested by Andy
+
+v1 -> v2:
+- drop all non-GPIOLIB patches
+- collect tags
+- fix kernel docs
+- use gpio_device_get_chip() and gpio_device_get_desc() where applicable
+
+Bartosz Golaszewski (11):
+  gpiolib: make gpio_device_get() and gpio_device_put() public
+  gpiolib: add support for scope-based management to gpio_device
+  gpiolib: provide gpio_device_find()
+  gpiolib: provide gpio_device_find_by_label()
+  gpiolib: provide gpio_device_get_desc()
+  gpiolib: reluctantly provide gpio_device_get_chip()
+  gpiolib: replace find_chip_by_name() with gpio_device_find_by_label()
+  gpio: of: replace gpiochip_find_* with gpio_device_find_*
+  gpio: acpi: replace gpiochip_find() with gpio_device_find()
+  gpio: swnode: replace gpiochip_find() with gpio_device_find_by_label()
+  gpio: sysfs: drop the mention of gpiochip_find() from sysfs code
+
+ drivers/gpio/gpiolib-acpi.c   |  12 +-
+ drivers/gpio/gpiolib-of.c     |  33 +++---
+ drivers/gpio/gpiolib-swnode.c |  33 +++---
+ drivers/gpio/gpiolib-sysfs.c  |   2 +-
+ drivers/gpio/gpiolib.c        | 202 ++++++++++++++++++++++++++--------
+ drivers/gpio/gpiolib.h        |  10 --
+ include/linux/gpio/driver.h   |  16 +++
+ 7 files changed, 216 insertions(+), 92 deletions(-)
+
+-- 
+2.39.2
+
