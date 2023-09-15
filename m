@@ -2,147 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0E547A16D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 09:04:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1D57A170E
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Sep 2023 09:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232263AbjIOHEW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Sep 2023 03:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36694 "EHLO
+        id S232671AbjIOHNz convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 15 Sep 2023 03:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232217AbjIOHEW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Sep 2023 03:04:22 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11612EB
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Sep 2023 00:04:16 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-502934c88b7so3060916e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Sep 2023 00:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694761454; x=1695366254; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xHiiw2zLmDDKdBpJJDRZPiiiZQs08sZNPmWWWLIoN4o=;
-        b=RrgEbkwA2AVjCwnK3qad1t0RKawdDXzgVP9FM1Q7Ebe7TGbAJd1nQVrWMMECDoMHJs
-         rLrCD07B8W06Wy5bL8CDSN+EeBssTIuUbZRXA4+NNJrNtO7NB1DYNm6R795Ow5PA7OK0
-         +3dFwej10XHCKjHr1BbRFp+XBa+xkVjXUcuOQl8NC1CFjbwidrDOkjIdoVLifBeUJakb
-         YKXY4r1DHd9FZ4DmMrHZiyJItDjSE0WOmqCR8X271MBDcNfS65uYB1BiST7nojY9w+VS
-         XS8GbcSjrXN1h2IgAvmgqcMZMnwGCqqFYvfbvEGnqAC2IfnZc/UiTTgykRoxAp6i0JaC
-         28og==
+        with ESMTP id S232400AbjIOHNy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Sep 2023 03:13:54 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 905B3A1;
+        Fri, 15 Sep 2023 00:13:49 -0700 (PDT)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-76ef27a8e4dso118967585a.1;
+        Fri, 15 Sep 2023 00:13:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694761454; x=1695366254;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xHiiw2zLmDDKdBpJJDRZPiiiZQs08sZNPmWWWLIoN4o=;
-        b=r4ze9508rgxQ4rwY6e4wqYlfS3GFYtyEZ4uHhdH31anmUbq6iuhl42f86Ul+ULl5nm
-         WLMjeJkked0TmaUL7oeYLA9zM4AL0a/NKnfV6dVEJUkH133skolPiP4VAWz3tjPLF0vx
-         Mp8TFOvvdsBs/DN4W9UFbo5y3SwBPVmpY0XmjRx/Cjc6ReKaQeU89o+Z5HKrCfhI85nW
-         B0SCvsOJSs4nP2LPnsc05EYjQE9N+aK8/Kh7KMb5wNrKMNqDZ4SBrkO9LlWhvOMqvhqU
-         06JyT95/FrO4tW9x2xi+lH7oz142X3kSBIeLnBz7WaD3m5hLI7ylbC+bCIiNmR4QTaBp
-         QZ6w==
-X-Gm-Message-State: AOJu0Yw3id8krR6FYQPpymJrodMi8sTq5hfUJNwEA1WV/IB4dp+poEUX
-        7XxSmV8Kj51cj1mhh6Cc6x5ZIA==
-X-Google-Smtp-Source: AGHT+IHg6sh6ARvRYSwuyoF2hmtnjsmopqC9TmkEeYtf8f4hqHAhSC4oiX7GDCdXqzTzoglQYBrSmQ==
-X-Received: by 2002:a05:6512:2082:b0:4fb:772a:af12 with SMTP id t2-20020a056512208200b004fb772aaf12mr617044lfr.21.1694761454189;
-        Fri, 15 Sep 2023 00:04:14 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.214.188])
-        by smtp.gmail.com with ESMTPSA id v21-20020aa7dbd5000000b005256771db39sm1818148edt.58.2023.09.15.00.04.12
+        d=1e100.net; s=20230601; t=1694762028; x=1695366828;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yQu7qZKWAlj7tq/NRi+dvudr3FOrz54dbR3YSeAAyEY=;
+        b=RP1lHN/FauF8Ist99fWh0eWftrHtK0TgT7ovzTda13TCuP9SSPj92fouOiwsEQMRKR
+         53KoW3TCBSo+h0nBGtInYmq1u5wx4HkOLhz/PPRbE0SzuleToFBtuzaDeu0/htmUiWcU
+         YxB9vgMc81i+DPo63vAoFh4L4xWDxgZq9WjoBRqPJxO4kA1MsSmzRGDEIAZ0OhBcmSZJ
+         RHRIc9v1pMcqpMUssPhx1/ICaMocQz7W+NNuiwCs0XHvLdBD5Jyu5ily8QyQs39DdOuh
+         IbLFtx2M+Ory/VwpFWOQyTM/I9ErZbPTwhgYDsAfCD4zn334FDl9jrngTHatmRAGmRrl
+         Ecxg==
+X-Gm-Message-State: AOJu0YwH4M0dAeV9sPzd5jLYhbzT+cJY6jGjbFOprFm+kiZgCaWkQy6b
+        bHsgZDWe1Tu5ub8lTXoTrS3FB5hsWz8V8Q==
+X-Google-Smtp-Source: AGHT+IH1/6PBbk4Q7gFNBPTK6HVASIXvb5iO6zHfYc+f6n+2n1PTxciETzo/itOiu2r2xv1tzwjDIw==
+X-Received: by 2002:a05:620a:e98:b0:770:fc5d:c191 with SMTP id w24-20020a05620a0e9800b00770fc5dc191mr728429qkm.44.1694762028483;
+        Fri, 15 Sep 2023 00:13:48 -0700 (PDT)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com. [209.85.222.170])
+        by smtp.gmail.com with ESMTPSA id a27-20020a05620a125b00b0076f16a00693sm1038854qkl.47.2023.09.15.00.13.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Sep 2023 00:04:13 -0700 (PDT)
-Message-ID: <6f40ee72-b763-c58d-44df-ea40d1309820@linaro.org>
-Date:   Fri, 15 Sep 2023 09:04:11 +0200
+        Fri, 15 Sep 2023 00:13:48 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-773a0f36b4bso90739485a.0;
+        Fri, 15 Sep 2023 00:13:48 -0700 (PDT)
+X-Received: by 2002:a25:dcc3:0:b0:d62:6514:45b7 with SMTP id
+ y186-20020a25dcc3000000b00d62651445b7mr319109ybe.37.1694761562659; Fri, 15
+ Sep 2023 00:06:02 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SM4450 pinctrl
-Content-Language: en-US
-To:     Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
-        agross@kernel.org, konrad.dybcio@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
+ <20230912045157.177966-13-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdVLx1d-6=5xx_GLAb7LxxRR9FwhAU56fxNc3b=9wj286g@mail.gmail.com> <f0aa7983-0300-ce21-8726-41d033f6afbe@tuxon.dev>
+In-Reply-To: <f0aa7983-0300-ce21-8726-41d033f6afbe@tuxon.dev>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 15 Sep 2023 09:05:48 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVtBoTRB7dMvxjwwhOXVUDS8LtZQsVcMctaxBU_J7HWwA@mail.gmail.com>
+Message-ID: <CAMuHMdVtBoTRB7dMvxjwwhOXVUDS8LtZQsVcMctaxBU_J7HWwA@mail.gmail.com>
+Subject: Re: [PATCH 12/37] clk: renesas: rzg2l: reduce the critical area
+To:     claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
+        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
+        nfraprado@collabora.com, rafal@milecki.pl,
+        wsa+renesas@sang-engineering.com,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_tsoni@quicinc.com, quic_shashim@quicinc.com,
-        quic_kaushalk@quicinc.com, quic_tdas@quicinc.com,
-        quic_tingweiz@quicinc.com, quic_aiquny@quicinc.com,
-        kernel@quicinc.com
-References: <20230915015808.18296-1-quic_tengfan@quicinc.com>
- <20230915015808.18296-2-quic_tengfan@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230915015808.18296-2-quic_tengfan@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15/09/2023 03:58, Tengfei Fan wrote:
-> Add device tree binding Documentation details for Qualcomm SM4450
-> TLMM device.
-> 
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+Hi Claudiu,
 
-...
+On Fri, Sep 15, 2023 at 7:51 AM claudiu beznea <claudiu.beznea@tuxon.dev> wrote:
+> On 14.09.2023 16:12, Geert Uytterhoeven wrote:
+> > On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> spinlock in rzg2l_mod_clock_endisable() is intended to protect the accesses
+> >> to hardware register. There is no need to protect the instructions that set
+> >> temporary variable which will be then written to register. Thus limit the
+> >> spinlock only to the hardware register access.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> >> --- a/drivers/clk/renesas/rzg2l-cpg.c
+> >> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> >> @@ -912,13 +912,13 @@ static int rzg2l_mod_clock_endisable(struct clk_hw *hw, bool enable)
+> >>
+> >>         dev_dbg(dev, "CLK_ON %u/%pC %s\n", CLK_ON_R(reg), hw->clk,
+> >>                 enable ? "ON" : "OFF");
+> >> -       spin_lock_irqsave(&priv->rmw_lock, flags);
+> >>
+> >>         value = bitmask << 16;
+> >>         if (enable)
+> >>                 value |= bitmask;
+> >> -       writel(value, priv->base + CLK_ON_R(reg));
+> >>
+> >> +       spin_lock_irqsave(&priv->rmw_lock, flags);
+> >> +       writel(value, priv->base + CLK_ON_R(reg));
+> >>         spin_unlock_irqrestore(&priv->rmw_lock, flags);
+> >
+> > After this, it becomes obvious there is nothing to protect at all,
+> > so the locking can just be removed from this function?
+>
+> I tend to be paranoid when writing to hardware resources thus I kept it.
+> Would you prefer to remove it at all?
 
-> +
-> +patternProperties:
-> +  "-state$":
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sm4450-tlmm-state"
-> +      - patternProperties:
-> +          "-pins$":
-> +            $ref: "#/$defs/qcom-sm4450-tlmm-state"
-> +        additionalProperties: false
-> +
-> +$defs:
-> +  qcom-sm4450-tlmm-state:
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          oneOf:
-> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9])$"
+Yes please. I guess this was copied from R-Car and friends, where
+there is a RMW operation on an MSTPCR register.
 
-This is still wrong. How many GPIOs do you have? Please open existing
-bindings for recent device (e.g. sm8550) and look how it is done there.
+Gr{oetje,eeting}s,
 
-...
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    tlmm: pinctrl@f100000 {
-> +      compatible = "qcom,sm4450-tlmm";
-> +      reg = <0x0f100000 0x300000>;
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +      gpio-ranges = <&tlmm 0 0 137>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <2>;
-> +      interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-
-Missing example pieces. Again, please base your work on other recent files.
-
-> +    };
-> +...
-
-Best regards,
-Krzysztof
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
