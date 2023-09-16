@@ -2,56 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B37247A3108
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Sep 2023 17:11:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCA307A31EB
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Sep 2023 20:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232670AbjIPPKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Sep 2023 11:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41286 "EHLO
+        id S237486AbjIPSiY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Sep 2023 14:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjIPPKT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Sep 2023 11:10:19 -0400
-Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46EB0CC9
-        for <linux-gpio@vger.kernel.org>; Sat, 16 Sep 2023 08:10:13 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id hWvyqftxFNtVWhWvyqismR; Sat, 16 Sep 2023 17:10:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1694877011;
-        bh=6jwMYAEqJdvc3UEqksxRjN6+6v4fxqBOxhEdpC1aB2w=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=t+BvTvMHqfmRNlhzui1OBOyxk0/k/0D0FuMcSRbEktFCHLq3BjnLA9OHemlXwRp+L
-         pNwL1IErYVUnSiKUooWgiaNj6NA/FFAm+RbXw00LXjw6Y0uWPsEkgK/Afm112TDt2b
-         5O7n3sa2GciUP19MoU7H7wAEigTqF/CuipLPOo+UgS50W0CeNoAAv1TcX2fkJl4Oqn
-         sIed5WdUUkfOfn2qz2CQvrDhA8hDmlS69/STHV13lUy4k9N9KlXCuqTot4h6GRnAlI
-         OY7P+4JRnd7RGqqlw0JHBZkLy9PdEj3NHqHRO7u8INHMEDI2UWXnxyXOchq8zN22DY
-         S4hM6HcFw3UMA==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 16 Sep 2023 17:10:11 +0200
-X-ME-IP: 86.243.2.178
-Message-ID: <4f629125-2b62-1284-3311-d95639044764@wanadoo.fr>
-Date:   Sat, 16 Sep 2023 17:10:10 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] gpio: tb10x: Fix an error handling path in
- tb10x_gpio_probe()
-Content-Language: fr, en-US
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linus.walleij@linaro.org, andy@kernel.org, galak@codeaurora.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <ceeda269bceee1c805f148bcbc628abc9d42601a.1693721348.git.christophe.jaillet@wanadoo.fr>
- <CAMRc=Meq+1z50=tXXt3MFAexRCmfSQ5rs6hT7311KRGO=q2RHQ@mail.gmail.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <CAMRc=Meq+1z50=tXXt3MFAexRCmfSQ5rs6hT7311KRGO=q2RHQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        with ESMTP id S229732AbjIPSht (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Sep 2023 14:37:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11CFCE3;
+        Sat, 16 Sep 2023 11:37:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694889464; x=1726425464;
+  h=from:to:cc:subject:date:message-id;
+  bh=AT5WWxI9hLwFEV51mkyCPpGP+L0vQQIaLfZ7jwJnb8A=;
+  b=GRwFCWWrCzo3yeKDlyp7IfnTf5oSxlhd3VuPUOjCgjQaDipnGCUhwp9T
+   UST0bRL3QGGZyeicmpYDSHqG31C33DuGxX29okOtpmgTK+maswRhqAwH8
+   OQrd0xNaQr9s5M+sujEs52FQ4eZ/Uo0Ng7BW8GRFFDJg636S4HM/jQByC
+   PW4w2jUOHrnBrbYqd4h9PUz2JItjZY3E3gzB6V6yVPxqwHpuePdjf/MLc
+   ts5LcEfUW16Nl2KNdgr3LFC1hXJfSeBa8+3a1aO6E9Llrm2lSSH2JMYsL
+   nYrf/MjO29jyAadJcnTjH6Dk2XrkHQ7tdN88ue7KT1iSytE+kqFtKPlAX
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10835"; a="383273388"
+X-IronPort-AV: E=Sophos;i="6.02,152,1688454000"; 
+   d="scan'208";a="383273388"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2023 11:37:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10835"; a="745372022"
+X-IronPort-AV: E=Sophos;i="6.02,152,1688454000"; 
+   d="scan'208";a="745372022"
+Received: from shsensorbuild2.sh.intel.com ([10.239.134.197])
+  by orsmga002.jf.intel.com with ESMTP; 16 Sep 2023 11:37:27 -0700
+From:   Wentong Wu <wentong.wu@intel.com>
+To:     gregkh@linuxfoundation.org, arnd@arndb.de, mka@chromium.org,
+        oneukum@suse.com, lee@kernel.org, wsa@kernel.org,
+        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
+        hdegoede@redhat.com, maz@kernel.org, brgl@bgdev.pl,
+        linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, heikki.krogerus@linux.intel.com,
+        andi.shyti@linux.intel.com, sakari.ailus@linux.intel.com,
+        bartosz.golaszewski@linaro.org, srinivas.pandruvada@intel.com
+Cc:     zhifeng.wang@intel.com, Wentong Wu <wentong.wu@intel.com>
+Subject: [PATCH v18 0/4] Add Intel LJCA device driver
+Date:   Sun, 17 Sep 2023 02:37:17 +0800
+Message-Id: <1694889441-7024-1-git-send-email-wentong.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,60 +62,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le 03/09/2023 à 19:02, Bartosz Golaszewski a écrit :
-> On Sun, Sep 3, 2023 at 8:13 AM Christophe JAILLET
-> <christophe.jaillet@wanadoo.fr> wrote:
->>
->> If an error occurs after a successful irq_domain_add_linear() call, it
->> should be undone by a corresponding irq_domain_remove(), as already done
->> in the remove function.
->>
->> Fixes: c6ce2b6bffe5 ("gpio: add TB10x GPIO driver")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->>   drivers/gpio/gpio-tb10x.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
->> index 78f8790168ae..f96d260a4a19 100644
->> --- a/drivers/gpio/gpio-tb10x.c
->> +++ b/drivers/gpio/gpio-tb10x.c
->> @@ -195,7 +195,7 @@ static int tb10x_gpio_probe(struct platform_device *pdev)
->>                                  handle_edge_irq, IRQ_NOREQUEST, IRQ_NOPROBE,
->>                                  IRQ_GC_INIT_MASK_CACHE);
->>                  if (ret)
->> -                       return ret;
->> +                       goto err_remove_domain;
->>
->>                  gc = tb10x_gpio->domain->gc->gc[0];
->>                  gc->reg_base                         = tb10x_gpio->base;
->> @@ -209,6 +209,10 @@ static int tb10x_gpio_probe(struct platform_device *pdev)
->>          }
->>
->>          return 0;
->> +
->> +err_remove_domain:
->> +       irq_domain_remove(tb10x_gpio->domain);
->> +       return ret;
->>   }
->>
->>   static int tb10x_gpio_remove(struct platform_device *pdev)
->> --
->> 2.34.1
->>
-> 
-> That's not enough, you also need to dispose of all remaining mappings.
-> Please see drivers/gpio/gpiolib.c and how it handles the gpio_irq_chip
-> domain.
+Add driver for Intel La Jolla Cove Adapter (LJCA) device. This
+IO-expander adds additional functions to the host system such
+as GPIO, I2C and SPI with USB host interface. We add 4 drivers
+to support this device: a USB driver, a GPIO chip driver, a I2C
+controller driver and a SPI controller driver.
 
-Hi,
+---
+v18:
+ - rebase patch set on top of Linus' master branch (57d88e8a5974644039fbc47806bac7bb12025636)
 
-you'll have to give me more explanation because I've not been able to 
-find anything useful to me.
+v17:
+ - change valid_pins type to __le32 and access valid_pins with get_unaligned_le32
+ - remove COMPILE_TEST for USB_LJCA Kconfig
 
-CJ
+v16:
+ - drop all void * and use real types in the exported apis and internal ljca_send()
+ - remove #ifdef in usb-ljca.c file
+ - add documentation in ljca.h for the public structures
+ - add error message in ljca_handle_cmd_ack() if error happens and remove blank line
+ - use the functionality in cleanup.h for spinlock to make function much simpler
+ - change the type of ex_buf in struct ljca_adapter to u8 *
 
-> 
-> Bartosz
-> 
+v15:
+ - enhance disconnect() of usb-ljca driver
+ - change memchr to strchr in ljca_match_device_ids() of usb-ljca driver
+
+v14:
+ - fix build error: implicit declaration of function 'acpi_dev_clear_dependencies'
+
+v13:
+ - make ljca-usb more robust with the help of Hans de Goede
+ - call acpi_dev_clear_dependencies() to mark _DEP ACPI dependencies on the I2C controller as satisfied, and patch is from Hans de Goede
+
+v12:
+ - switch dev_err to dev_dbg for i2c-ljca driver
+ - avoid err printing because of calling usb_kill_urb when attempts to resubmit the rx urb
+
+v11:
+ - switch dev_err to dev_dbg for i2c-ljca driver
+ - remove message length check because of defined quirk structure
+ - remove I2C_FUNC_SMBUS_EMUL support
+
+v10:
+ - remove ljca_i2c_format_slave_addr
+ - remove memset before write write w_packet
+ - make ljca_i2c_stop void and print err message in case failure
+ - use dev_err_probe in ljca_i2c_probe function
+
+v9:
+ - overhaul usb-ljca driver to make it more structured and easy understand
+ - fix memory leak issue for usb-ljca driver
+ - add spinlock to protect tx_buf and ex_buf
+ - change exported APIs for usb-ljca driver
+ - unify prefix for structures and functions for i2c-ljca driver
+ - unify prefix for structures and functions for spi-ljca driver
+ - unify prefix for structures and functions for gpio-ljca driver
+ - update gpio-ljca, i2c-ljca and spi-ljca drivers according to usb-ljca's changes
+
+Wentong Wu (4):
+  usb: Add support for Intel LJCA device
+  i2c: Add support for Intel LJCA USB I2C driver
+  spi: Add support for Intel LJCA USB SPI driver
+  gpio: update Intel LJCA USB GPIO driver
+
+ drivers/gpio/Kconfig          |   4 +-
+ drivers/gpio/gpio-ljca.c      | 246 +++++++------
+ drivers/i2c/busses/Kconfig    |  11 +
+ drivers/i2c/busses/Makefile   |   1 +
+ drivers/i2c/busses/i2c-ljca.c | 342 +++++++++++++++++
+ drivers/spi/Kconfig           |  11 +
+ drivers/spi/Makefile          |   1 +
+ drivers/spi/spi-ljca.c        | 297 +++++++++++++++
+ drivers/usb/misc/Kconfig      |  14 +
+ drivers/usb/misc/Makefile     |   1 +
+ drivers/usb/misc/usb-ljca.c   | 835 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/usb/ljca.h      | 145 ++++++++
+ 12 files changed, 1803 insertions(+), 105 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-ljca.c
+ create mode 100644 drivers/spi/spi-ljca.c
+ create mode 100644 drivers/usb/misc/usb-ljca.c
+ create mode 100644 include/linux/usb/ljca.h
+
+-- 
+2.7.4
 
