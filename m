@@ -2,54 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 542807A34C4
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Sep 2023 10:59:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF59F7A34CF
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Sep 2023 11:06:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235129AbjIQI7K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Sep 2023 04:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33202 "EHLO
+        id S229651AbjIQJFd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Sep 2023 05:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235045AbjIQI66 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Sep 2023 04:58:58 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6E518D
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Sep 2023 01:58:52 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-502e6d632b6so5210477e87.0
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Sep 2023 01:58:52 -0700 (PDT)
+        with ESMTP id S235133AbjIQJFY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Sep 2023 05:05:24 -0400
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791C418B
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Sep 2023 02:05:18 -0700 (PDT)
+Received: by mail-vk1-xa32.google.com with SMTP id 71dfb90a1353d-4935f87ca26so1494181e0c.3
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Sep 2023 02:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694941131; x=1695545931; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1694941517; x=1695546317; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+u66nMfJzlnM3RSBfHLUmO0kR6qeofo6vre+9QbeMy4=;
-        b=MRjN2nZ3N9kXUEttWugJSgdUnHBKAdImYPpJagwFYEqKZniY/rVg7Ec7AbdQb3oSkP
-         0rLIfuCIFfYIp0lQheUjqvt1Q2cCfUyvf8wfvW+92cYXied55i9nTBWuoHSf7SCLKpaf
-         vqw0b0a4kS1Bg/unIR/RPTx+SGs7d/Z84kVhS0cvVDk0/wsrBA85u9NVNsM5a9Myehup
-         Y18eNxQEqhkbR3kSMOn2i1E1ptqUTMSMx5bR1sc3qrOF1gJiU0FVY4K4YCVBf1CbOeSw
-         Bvooek9BB+yQ9xwEpb4ywc3y0ODoULA7EaKStSPOKFkg5RTCqwNO3JY3eeufBi2Q1y1G
-         Kmyw==
+        bh=HP1LGUtNLwUI59eq1jyFHHm5cPn/tDriJQdBb0fCPNw=;
+        b=sx4ssjVaSHR37XsNWdMzsGgkPvFgh/PuB6VsDSQDfwignqg+aHer4+ACWvQO0aVhuZ
+         8HG4cdHfaHj0iGWmD1kpnXfMO0dYnstrosC1wYw7hTs+308Lkz9CiP6O/agV4ospJ33R
+         JE8xp5kO3Si/1iVNi0dLYU4ZScUPfjAXA1TDXW+U4PghrG5b6Qbx08giI6B/H6JlR58K
+         MKHjWSiuTqvN4b63iu/grGL3C5tDAXhlCsHfvcsE0HN71thvfnQlMYk5dckLEOwyzagc
+         iffqnLHly+VJzS+U8gooI9Wz9IJJA2wHYVFATPjpkHwHn2Ek9Vg1IY93seHRGVELnAiV
+         8Jsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694941131; x=1695545931;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1694941517; x=1695546317;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+u66nMfJzlnM3RSBfHLUmO0kR6qeofo6vre+9QbeMy4=;
-        b=Hay9rKcMGwP8qFknIHl1S+jBxqg1OXwrWJ438nT58yU6Fl2/wznHWglpbRZFTmgkfE
-         36F09igJkYYgOhhf5CWqhxyuZF0SHXaCysLPT4cnyUSAF8+s1dtsO1VH5LGvUL2lr59n
-         +kCils8Tizuwva42+tm+oQjQ+RneLUklZBVtUkVaR002w/Prm4W/wH6HFH6kLHG4LqyU
-         PK2V4aLXHcsG2lhgP+6nYUuFiwX8TQWd8RLvSUYTTIv9b0DMzg0yo3E8K7MeDyXwOqRd
-         rMnUmj0jQy0XHLGiQAuwCgPvCMppHv0Ma+j6OjZBj/HJyssrL5GaG84sxkluILmyJY//
-         TWvw==
-X-Gm-Message-State: AOJu0YwzQdN2CxLumie8/kqACgp6Z6W2wDkwvX/YCGldKZouO90FKnjm
-        VvFgTZTOfoH+CqmK7JnzLhKdOA==
-X-Google-Smtp-Source: AGHT+IEhRBzkE8VbZxAIUZPx6lM6tkI2XGijQtYW5uVW0Z3/7exPAUPR2ohzsgqOKgxhvbxJGHdBmA==
-X-Received: by 2002:ac2:5323:0:b0:503:55c:7999 with SMTP id f3-20020ac25323000000b00503055c7999mr1962964lfh.34.1694941130545;
-        Sun, 17 Sep 2023 01:58:50 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4ea0:9945:6800:8739])
-        by smtp.gmail.com with ESMTPSA id r10-20020adfdc8a000000b0031aeca90e1fsm9240971wrj.70.2023.09.17.01.58.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Sep 2023 01:58:50 -0700 (PDT)
+        bh=HP1LGUtNLwUI59eq1jyFHHm5cPn/tDriJQdBb0fCPNw=;
+        b=xDaoksjRAbmr1DLShNK5A+uHd62micYg7Rcy88B0SX/L39IdwFjcEyPGD8FlL03hCn
+         lpdLp7oEekuE6fWbPdeOwreOJ4r55+cjHhHiAA2jKQdTdx7a3hRnzwJs8t9Z8eOsgLfa
+         ENInib336J+9D7a4cGeGGpD0gDAkbgLN4qH0Jn48Q1tqRxk7KSIwPOQtJ3zDGLV1K4GN
+         wOo40ZQ6V1cdAUndFRUcaLtGKivHF8wt5dWdvgAIy8mqozZrOU2h2VLSI7Go+gX4pjhg
+         FAuWCIGJfJS19EhjIIDpa53O4O8ATkxaTIfnPgWQrsjj3tUCTBQWkuChZ9W2IQfj0xt1
+         3PTA==
+X-Gm-Message-State: AOJu0YziGZwIkWln0hRq8RGR4LBrQvke6ljOrRWvGQ9e1gEnvjvV683Z
+        ZpyugUx/0WsJnn+tvm5hIU6iUXhhavF3y/Dgt7HQ5g==
+X-Google-Smtp-Source: AGHT+IEOFuukBkmPR2OxcvqFI6/I9hCYWJtetPmuLWYRbGOhVG9LNvCsqg/Hq6Y7+gWE09rNQ+cgW4jPJVelx7H7oK8=
+X-Received: by 2002:a1f:cac7:0:b0:495:e236:a73 with SMTP id
+ a190-20020a1fcac7000000b00495e2360a73mr4856611vkg.11.1694941517609; Sun, 17
+ Sep 2023 02:05:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230917085837.6199-1-brgl@bgdev.pl> <20230917085837.6199-2-brgl@bgdev.pl>
+In-Reply-To: <20230917085837.6199-2-brgl@bgdev.pl>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sun, 17 Sep 2023 11:05:06 +0200
+Message-ID: <CAMRc=MfoWamUG+pcEg6_0QCQ2RFeUyLoqdFPhkkiUTmkU+S7tg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: sim: fix an invalid __free() usage
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Kent Gibson <warthog618@gmail.com>,
@@ -59,54 +62,39 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         akpm@linux-foundation.org
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 2/2] gpio: sim: initialize a managed pointer when declaring it
-Date:   Sun, 17 Sep 2023 10:58:37 +0200
-Message-Id: <20230917085837.6199-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230917085837.6199-1-brgl@bgdev.pl>
-References: <20230917085837.6199-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Sun, Sep 17, 2023 at 10:58=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> gpio_sim_make_line_names() returns NULL or ERR_PTR() so we must not use
+> __free(kfree) on the returned address. Split this function into two, one
+> that determines the size of the "gpio-line-names" array to allocate and
+> one that actually sets the names at correct offsets. The allocation and
+> assignment of the managed pointer happens in between.
+>
+> Fixes: 3faf89f27aab ("gpio: sim: simplify code with cleanup helpers")
+> Reported-by: Alexey Dobriyan <adobriyan@gmail.com>
+> Closes: https://lore.kernel.org/all/07c32bf1-6c1a-49d9-b97d-f0ae4a2b42ab@=
+p183/
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-Variables managed with __free() should typically be initialized where
-they are declared so that the __free() callback is paired with its
-counterpart resource allocator. Fix the second instance of using
-__free() in gpio-sim to follow this pattern.
+I'm sorry for the noise, I realized I dropped the `if (line->offset >=3D
+bank->num_lines)` check that were added by commit d7459efc9276 ("gpio:
+sim: quietly ignore configured lines outside the bank") for a reason.
+I need to send a v3 with that restored.
 
-Fixes: 3faf89f27aab ("gpio: sim: simplify code with cleanup helpers")
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-sim.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 4d74ea3a4269..24c19c7c50a0 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -1481,10 +1481,10 @@ static const struct config_item_type gpio_sim_device_config_group_type = {
- static struct config_group *
- gpio_sim_config_make_device_group(struct config_group *group, const char *name)
- {
--	struct gpio_sim_device *dev __free(kfree) = NULL;
- 	int id;
- 
--	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-+	struct gpio_sim_device *dev __free(kfree) = kzalloc(sizeof(*dev),
-+							    GFP_KERNEL);
- 	if (!dev)
- 		return ERR_PTR(-ENOMEM);
- 
--- 
-2.39.2
-
+Bartosz
