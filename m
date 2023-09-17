@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 127697A3422
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Sep 2023 09:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 754947A3427
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Sep 2023 09:53:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbjIQHse (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Sep 2023 03:48:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45808 "EHLO
+        id S230230AbjIQHwu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Sep 2023 03:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbjIQHsc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Sep 2023 03:48:32 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BA5B18B
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Sep 2023 00:48:26 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-530bc7c5bc3so1291783a12.1
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Sep 2023 00:48:26 -0700 (PDT)
+        with ESMTP id S233820AbjIQHwk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Sep 2023 03:52:40 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2378218C
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Sep 2023 00:52:35 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-99c136ee106so459387666b.1
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Sep 2023 00:52:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694936905; x=1695541705; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694937153; x=1695541953; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GVPsYlLWrWkecJahmm8glLPlUmggcjlQlykoHTahPBs=;
-        b=RN/bt+EsomRqiB9xWzz3SMs04X366PgKHRMTPVD3H0ZpHn4IUO2RP4d7muKgjhAsex
-         VSKwLZELXwMsaIaG9LTVA/dxJ8Ap2byowHViWkenqaBhpIckL39/jOyxplFflfU4aNd2
-         D3uQm4duDJKlJNaPp6wLntqVmAhQcFIS6NLd2N07ONbHzJ1Qc95FJ/QJAB8AiZxVtOVs
-         h7M9W65VGPs88vnUs5kIguZNTPSrX5/rtkOB3Y/oPeWwiH5d7WbqqqkA7rjE66KWA4Cj
-         74yczqv5bqql1xKUpZA0jka10LkW7qklbiIlNESgOGYPsp/HuP+8RtIwSzxM7CqR80i1
-         jk1g==
+        bh=nWdqqGRpAgOkTLyvsD05R8Bq7nexhnixhUs0t/ev9zM=;
+        b=mYVyrYoMDtr1+kRawR6eJW+4S6ugehukaOOk8gP9zVuoIdpdZn+EzTXinQq5Tf72VR
+         ieYSbBHZpYrDz2KThSCb7l+E59cJz4qBaO48Y80gTDTkVvmiA3u5WNXdo3JjTPSLahLr
+         7iJFhB3LADSQ7m3vUJNn2E+U8Y+Xy+XgH133cFW20cAcQcHqCHlxZt78uow4ZfxcSzAD
+         QacLfU7SrMVo6ZVFyLBpDWO1VWLSyXucQzbCY5YqIKyDiH4NxMhppEOiiEDcnaVzzGBG
+         QylDlGdvJZVzYdSh1HPwEOfkcIx4ARoD25ccSOX0ML7ZC1pfVHCJmfjda9maodPxvE3X
+         75SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694936905; x=1695541705;
+        d=1e100.net; s=20230601; t=1694937153; x=1695541953;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GVPsYlLWrWkecJahmm8glLPlUmggcjlQlykoHTahPBs=;
-        b=miYBVZrU6M9Pzn8W8meMUosPL30k3QVKQcCYI5Ecb4aHEhASVKLbu+jt5yVexNqsXA
-         a1nfZqvoFwdlR3ikpiRhqPzVgqptQaO17ImzUuFKGLGNgce4WdKWp2I1uKiweR+AMCsY
-         xGx+LOj+tRgLpfmdl6S4WYbXTKf7V+9ODzk9CVLhxCiXOeAcGH+ZG7tMFl4u02Ud4sty
-         gvj0ekynhmVT5roCwHAJCygIjJWcv28G+40s51MXZZBtG4uesgKgtMZuSrTXtHv7tRKm
-         ghOCqJekWZd6FYsDdlFDP6Tgpcelel7fvNMJ3cN8dBwjdSE42Jnt3fJtSqUmcGn6NMGd
-         MCxA==
-X-Gm-Message-State: AOJu0YxCu7B9ru8IF9LxCNkSzSxyUbIt7nyE473J4RCkqpHqk5rlyZUu
-        RzUkm2p55ufXubSMqXcOXqhmpQ==
-X-Google-Smtp-Source: AGHT+IEmjAsO4U5DH1/SUqLBxFViS6gZtzW/Gz0PYU4pDtjJ+T01gRVgwYJdAGxdBcBSE/ulzwTU1w==
-X-Received: by 2002:aa7:cfd9:0:b0:523:38f5:c5ad with SMTP id r25-20020aa7cfd9000000b0052338f5c5admr5300840edy.20.1694936905043;
-        Sun, 17 Sep 2023 00:48:25 -0700 (PDT)
+        bh=nWdqqGRpAgOkTLyvsD05R8Bq7nexhnixhUs0t/ev9zM=;
+        b=eHTmchv83ZIbDNp5Kw8Gdpiot8VLu5QS356kGc8uZDRgLukfqRmhlwFzIIO5gZWMra
+         DPtoitdW4OpG6GNqwWEGWKWujd4P6qSAEXa806CO2xsN/pYFiws+c5V/klVQONX1R1Bz
+         N2acBKkuNViHM4UgJNCucLmo9HBnFhCxesjtozL/yPEWfVYFXV9C0exl/pz4Lm6uXq0q
+         G9uZNw5O1pwGYK1X+1yQobZaH1WR2di3rSFreT+U1BgplsjEv98LGb5bLRGKWLd9QV6J
+         5SW3V3FUTp1PB+msxGSpFjOhX/R2AnGeDC4uJhxU2cwGnE25EJxAQLLr0Bz0RtGdPsB5
+         TJIw==
+X-Gm-Message-State: AOJu0YxT9F8YB/tpAC3TkkoeZgbWfpHe9WXC9L8FZcmqIta8SgJj/QCb
+        y8ofGuFrb7KmQnlyYg23JT28gQ==
+X-Google-Smtp-Source: AGHT+IF5RIVwt4hk66LUepLEOgIR+mheKG73oWYXEJom7gBEA9V47ZkZ9eeF3807hhnrMrtacAD7Sw==
+X-Received: by 2002:a17:906:1c:b0:9ad:e0cc:902a with SMTP id 28-20020a170906001c00b009ade0cc902amr4173352eja.56.1694937153483;
+        Sun, 17 Sep 2023 00:52:33 -0700 (PDT)
 Received: from [192.168.1.77] (150-140-187-31.ftth.glasoperator.nl. [31.187.140.150])
-        by smtp.gmail.com with ESMTPSA id i8-20020a0564020f0800b005309eb7544fsm2636443eda.45.2023.09.17.00.48.23
+        by smtp.gmail.com with ESMTPSA id jl6-20020a17090775c600b009ade1a4f795sm2372439ejc.168.2023.09.17.00.52.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Sep 2023 00:48:24 -0700 (PDT)
-Message-ID: <4ff26ffd-2574-af16-d950-7f1b544528ef@linaro.org>
-Date:   Sun, 17 Sep 2023 09:48:23 +0200
+        Sun, 17 Sep 2023 00:52:32 -0700 (PDT)
+Message-ID: <7ec16938-53fa-24dc-8443-ed6428697558@linaro.org>
+Date:   Sun, 17 Sep 2023 09:52:31 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.0
-Subject: Re: [PATCH v2 5/6] arm64: dts: imx8ulp: update gpio node
+Subject: Re: [PATCH v2 2/6] dt-bindings: gpio: vf610: correct i.MX8ULP and
+ i.MX93
 Content-Language: en-US
 To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -73,30 +74,129 @@ Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Peng Fan <peng.fan@nxp.com>
 References: <20230916-vf610-gpio-v2-0-40823da788d7@nxp.com>
- <20230916-vf610-gpio-v2-5-40823da788d7@nxp.com>
+ <20230916-vf610-gpio-v2-2-40823da788d7@nxp.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230916-vf610-gpio-v2-5-40823da788d7@nxp.com>
+In-Reply-To: <20230916-vf610-gpio-v2-2-40823da788d7@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16/09/2023 04:04, Peng Fan (OSS) wrote:
+On 16/09/2023 04:03, Peng Fan (OSS) wrote:
 > From: Peng Fan <peng.fan@nxp.com>
 > 
-> The i.MX8ULP GPIO supports two interrupts and one register base, and not
-> compatible with i.MX7ULP. Update the node following dt-binding doc.
+> i.MX8ULP and i.MX93 actually has two interrupts for each gpio
+> controller, one for Trustzone non-secure world, one for secure world.
 > 
-I think last email thread concluded they are compatible. Otherwise, how
-did it work so far? You break users, which might be ok, but commit does
-no say that anything was broken here.
+> And they has one register based, not two as i.MX7ULP or VF610.
+> 
+> Although the Linux Kernel driver gpio-vf610.c could work with
+> fsl,imx7ulp-gpio compatible, it is based on some tricks did in
+> device tree with some offset added to base address.
+> 
+> So actually i.MX8ULP/i.MX93 is not compatible with i.MX7ULP.
+> 
+> Last, i.MX93 is directly derived from i.MX8ULP, so make i.MX93 GPIO
+> compatible with i.MX8ULP
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-vf610.yaml       | 41 +++++++++++++++++++---
+>  1 file changed, 37 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> index 59427d97adf5..8c1f87a1a393 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> @@ -20,6 +20,7 @@ description: |
+>  properties:
+>    compatible:
+>      oneOf:
+> +      - const: fsl,imx8ulp-gpio
+>        - const: fsl,vf610-gpio
+>        - items:
+>            - const: fsl,imx7ulp-gpio
+> @@ -27,16 +28,21 @@ properties:
+>        - items:
+>            - enum:
+>                - fsl,imx93-gpio
+> -              - fsl,imx8ulp-gpio
+> -          - const: fsl,imx7ulp-gpio
+> +          - const: fsl,imx8ulp-gpio
+>  
+>    reg:
+>      description: The first reg tuple represents the PORT module, the second tuple
+>        represents the GPIO module.
+> -    maxItems: 2
+> +    items:
+> +      - description: PORT register base address
+> +      - description: GPIO register base address
+> +    minItems: 1
+>  
+>    interrupts:
+> -    maxItems: 1
+> +    items:
+> +      - description: GPIO Trustzone non-secure interrupt number
+> +      - description: GPIO Trustzone secure interrupt number
+> +    minItems: 1
+>  
+>    interrupt-controller: true
+>  
+> @@ -78,6 +84,33 @@ required:
+>    - "#gpio-cells"
+>    - gpio-controller
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - fsl,vf610-gpio
+> +              - fsl,imx7ulp-gpio
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          items:
+> +            - description: GPIO interrupt number
+
+So this is different than first interrupt mentioned in top-level?
+
+
+> +        reg:
+> +          items:
+> +            - description: PORT register base address
+> +            - description: GPIO register base address
+
+You have the description in top-level, no need to repeat it. Just
+minItems: 2... although it depends whether top-level property will stay.
+
+
+> +    else:
+> +      properties:
+> +        interrupts:
+> +          items:
+> +            - description: GPIO Trustzone non-secure interrupt number
+> +            - description: GPIO Trustzone secure interrupt number
+> +        reg:
+> +          items:
+> +            - description: GPIO register base address
+
+So the first entry is different between variants? Then top-level should
+be just min/maxItems.
+
+> +
+>  additionalProperties: false
+>  
+>  examples:
+> 
 
 Best regards,
 Krzysztof
