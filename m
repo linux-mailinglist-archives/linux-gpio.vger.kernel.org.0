@@ -2,70 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D98467A4BFE
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 17:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 958D57A4C8F
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 17:36:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240056AbjIRPYT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Sep 2023 11:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49854 "EHLO
+        id S229604AbjIRPgi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Sep 2023 11:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238837AbjIRPYR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 11:24:17 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1213CCDA
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Sep 2023 08:21:23 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-5310aec4121so1575757a12.2
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Sep 2023 08:21:23 -0700 (PDT)
+        with ESMTP id S229618AbjIRPgg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 11:36:36 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C1E272C
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Sep 2023 08:34:29 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-5310a63cf7bso1588794a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Sep 2023 08:34:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695050458; x=1695655258; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G+kdSJ4sQ1S01UdF8CEB51WLv93rf0qpn38b7uekeAw=;
-        b=P8gHVDsv8Ju0Sgl330DR4IxEQ0xr1R625lUmPR/SWRmHGitls+sX1T9bgxaskgo/1u
-         J0+JuktMj871df0/PUY8qz61j1YfO7WhvO6eVVQeSqTthHslZdquZeIvT4YT6tzV0eM6
-         2KPJn1NGW3y7RrGO/QJl/5NKGU5u9XQ1wGHviD59Gd3/rMOQXMT6r8TQ7bBBwl/JjzmP
-         Ze2+x8mK8IUsQKSO76atJG+0BJCcSO8IWB/D5xF+EA4mV4VYhcB1+c75lFmqaZR97r/h
-         w94AalVV+6B74gRtZ7tbXPQ1MdpgMxlMvrCSZZPOC7BZAI2Avzo4uBphN0s9Vk4VmxKg
-         oxjA==
+        d=chromium.org; s=google; t=1695051088; x=1695655888; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RuVncYfyknrhNj8AwebunR5CYwD24eRmeOt3k3Ppp84=;
+        b=mOGcubsOBi0/Qz0/1tPdXMwsaE9Leq61wSUnXQu92LS6BLnxWx9ctIVG+Uv04ZpNfs
+         S6OEEnafNnJbj7m3Emlg0YMiq/SgmLlLnzb27t4Pl3aIgwxu5y6HkjpsfXixO3sVj0hh
+         +CSQ37HUnfPDw37JBIeKq/BGKv07MR4BNAtzU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695050458; x=1695655258;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G+kdSJ4sQ1S01UdF8CEB51WLv93rf0qpn38b7uekeAw=;
-        b=QeZmu+ee9vCWSBHcNc04J5p1D5OZAUwk4w4eLh5YrwvQ9MPRMWEW62bf2kClI0jclm
-         Bz2lp4fkgi4AeN/1vjwr0LcL1eVeicVqm7ebFHBxKk3NjwVv486CYI9N3zP0SwDNyzPG
-         rf/zjTqEZCk68diXy5x7JnEVTwODc3ecYyrAvxlMYEqt3d3NCXKDC/gWK85ywCXawP73
-         u/eKNA1sX7nni463B6+BdMHDwZ78OpTImq4m/6EsnMxXnMKo67e5sOLtyVUZueA9ZvLX
-         rv71/aoerfQO7YyIdr7U6FB74UVCXpt/+tfocWMjsOaNPyO6mBYU6o3q6uk4brlWJ1ho
-         HkVw==
-X-Gm-Message-State: AOJu0YzPwirCWODL4RxIKNOCtuWhQboORnFNodF3idGiZZiO9VSOf1U7
-        7kgsSnSe2sD1BUOJM1FKXjVLHNdnUlqEeTmDTEo=
-X-Google-Smtp-Source: AGHT+IE+mKlomEDK+2JFy6MEL88/jRlHFUbeM6YI6GKmBoXZsEayExX5oVZd6W3v8KrY4sWjwDjJ/Q==
-X-Received: by 2002:adf:d208:0:b0:320:4d1:d5f3 with SMTP id j8-20020adfd208000000b0032004d1d5f3mr5306035wrh.6.1695048938243;
-        Mon, 18 Sep 2023 07:55:38 -0700 (PDT)
-Received: from brgl-uxlite.nice.aeroport.fr ([193.57.185.11])
-        by smtp.gmail.com with ESMTPSA id y14-20020a5d4ace000000b0031c5dda3aedsm12995208wrs.95.2023.09.18.07.55.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Sep 2023 07:55:37 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        akpm@linux-foundation.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v4] gpio: sim: fix an invalid __free() usage
-Date:   Mon, 18 Sep 2023 16:55:33 +0200
-Message-Id: <20230918145533.14642-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1695051088; x=1695655888;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RuVncYfyknrhNj8AwebunR5CYwD24eRmeOt3k3Ppp84=;
+        b=LbtFW5iGlEGbMzLdcaSNo8Qb5K1p9eV8pYMyqRnug5wwpwIAaqlIlhdSXZJ4piNLqz
+         Aa8oZ7mT8R1+VATCEIJUaI9XiB9T7ghKqjd6TCHNPk+MUTY4o4B1GqS49ATCpDluUT0Z
+         GUQB5kFQGprNdTiKXKqaYrBpVbl59H7pQEJH2JBsjd9LSlvepR9F1004sv4v9ChZcEcg
+         Vxpekhro0uNr+dTwGm1g7Pz/Jp7SlBWx7c5gm04TJkuCevXWJUKk/fyucxHHf4r2UDG2
+         gsTB1LCpFsgSn85pR3wtVuFNqVNh15dmvhPZyf/58dTltfawAOOBYKb1KMN8YgFOgrOg
+         UwGQ==
+X-Gm-Message-State: AOJu0Yy1TCVaR6h3JR/r8kfINar+ozhSsoAe2Q5f90RD5ZbdqiarONd+
+        HXyIPbMI1riauEPYGamB8PcSnxi0DCNqGO8dVAfgQQ==
+X-Google-Smtp-Source: AGHT+IFCdkmoCP1NWSySl0xtvE367VFXsh9hEpswDhSw6n3AhpaU4vApOW0Z42zXYaBZYZnJ8SDmHg==
+X-Received: by 2002:a19:5f16:0:b0:501:be3d:8a46 with SMTP id t22-20020a195f16000000b00501be3d8a46mr7102554lfb.26.1695049234047;
+        Mon, 18 Sep 2023 08:00:34 -0700 (PDT)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170906068b00b00991faf3810esm6626203ejb.146.2023.09.18.08.00.33
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Sep 2023 08:00:33 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4047c6ec21dso112615e9.0
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Sep 2023 08:00:33 -0700 (PDT)
+X-Received: by 2002:a05:600c:3b8b:b0:404:7462:1f87 with SMTP id
+ n11-20020a05600c3b8b00b0040474621f87mr191074wms.6.1695049231656; Mon, 18 Sep
+ 2023 08:00:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+References: <20230918125851.310-1-johan+linaro@kernel.org>
+In-Reply-To: <20230918125851.310-1-johan+linaro@kernel.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 18 Sep 2023 08:00:15 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
+Message-ID: <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: fix handling of unpopulated devices
+To:     Johan Hovold <johan+linaro@kernel.org>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        LinusW <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,142 +85,145 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi,
 
-gpio_sim_make_line_names() returns NULL or ERR_PTR() so we must not use
-__free(kfree) on the returned address. Split this function into two, one
-that determines the size of the "gpio-line-names" array to allocate and
-one that actually sets the names at correct offsets. The allocation and
-assignment of the managed pointer happens in between.
+On Mon, Sep 18, 2023 at 6:00=E2=80=AFAM Johan Hovold <johan+linaro@kernel.o=
+rg> wrote:
+>
+> A recent commit reordered probe so that the interrupt line is now
+> requested before making sure that the device exists.
+>
+> This breaks machines like the Lenovo ThinkPad X13s which rely on the
+> HID driver to probe second-source devices and only register the variant
+> that is actually populated. Specifically, the interrupt line may now
+> already be (temporarily) claimed when doing asynchronous probing of the
+> touchpad:
+>
+>         genirq: Flags mismatch irq 191. 00082008 (hid-over-i2c) vs. 00082=
+008 (hid-over-i2c)
+>         i2c_hid_of 21-0015: Could not register for hid-over-i2c interrupt=
+, irq =3D 191, ret =3D -16
+>         i2c_hid_of: probe of 21-0015 failed with error -16
+>
+> Fix this by restoring the old behaviour of first making sure the device
+> exists before requesting the interrupt line.
+>
+> Note that something like this should probably be implemented also for
+> "panel followers", whose actual probe is currently effectively deferred
+> until the DRM panel is probed (e.g. by powering down the device after
+> making sure it exists and only then register it as a follower).
+>
+> Fixes: 675cd877c952 ("HID: i2c-hid: Rearrange probe() to power things up =
+later")
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>  drivers/hid/i2c-hid/i2c-hid-core.c | 142 ++++++++++++++++-------------
+>  1 file changed, 80 insertions(+), 62 deletions(-)
 
-Fixes: 3faf89f27aab ("gpio: sim: simplify code with cleanup helpers")
-Reported-by: Alexey Dobriyan <adobriyan@gmail.com>
-Closes: https://lore.kernel.org/all/07c32bf1-6c1a-49d9-b97d-f0ae4a2b42ab@p183/
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Linus,
+Ugh, sorry for the regression. :( It actually turns out that I've been
+digging into this same issue on a different device (see
+mt8173-elm-hana). I hadn't realized that it was a regression caused by
+my recent change, though.
 
-I followed the pattern for determining the size of the line-names array
-from your patch in the end but with a changed variable naming. If this is
-fine, I'll queue it for fixes for the next rc.
+I haven't yet reviewed your change in detail, but to me it seems like
+at most a short term fix. Specifically, I think the way that this has
+been working has been partially via hacks and partially via luck. Let
+me explain...
 
-Bart
+Currently, to make this work the `sc8280xp-lenovo-thinkpad-x13s.dts`
+file has a hack in it. You can see that the `tpad_default` pinctrl
+entry has been moved up to the i2c bus level even though it doesn't
+belong there (it should be in each trackpad). This is because,
+otherwise, you would have run into similar type problems as the device
+core would have failed to claim the pin for one of the devices.
 
-v3 -> v4:
-- simplify the line counting logic
+Currently, we're getting a bit lucky with
+`sc8280xp-lenovo-thinkpad-x13s.dts` that there are no other shared
+resources between the two devices besides the interrupt. Specifically
+a number of trackpads / touchscreens also have a "reset" GPIO that
+needs to be power sequenced properly in order to talk to the
+touchscreen. In this case we'll be stuck again because both instances
+would need to grab the "reset" GPIO before being able to confirm if
+the device is there.
 
-v2 -> v3:
-- restore the offset out-of-bounds checks
+This is an old problem. The first I remember running into it was back
+in 2015 on rk3288-veryron-minnie. We had a downstream hack to make
+this work with -EPROBE_DEFER. https://crrev.com/c/266224. By the time
+we shipped, though, we decided not to do the 2nd sourcing. After that
+I always NAKed HW designs like this, but I guess that didn't help with
+Mediatek hardware I wasn't involved with. :( ...and, of course, it
+didn't help with devices that aren't Chromebooks like the Thinkpad
+X13S.
 
-v1 -> v2:
-- split the line name setting into two parts
+FWIW: as a short term solution, we ended up forcing synchronous probe
+in <https://crrev.com/c/4857566>. This has some pretty serious boot
+time implications, but it's also very simple.
 
- drivers/gpio/gpio-sim.c | 59 +++++++++++++++--------------------------
- 1 file changed, 22 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 460389bb8e3f..b66abb55ef4d 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -718,52 +718,32 @@ gpio_sim_device_config_live_show(struct config_item *item, char *page)
- 	return sprintf(page, "%c\n", live ? '1' : '0');
- }
- 
--static char **gpio_sim_make_line_names(struct gpio_sim_bank *bank,
--				       unsigned int *line_names_size)
-+static unsigned int gpio_sim_get_line_names_size(struct gpio_sim_bank *bank)
- {
--	unsigned int max_offset = 0;
--	bool has_line_names = false;
- 	struct gpio_sim_line *line;
--	char **line_names;
-+	unsigned int size = 0;
- 
- 	list_for_each_entry(line, &bank->line_list, siblings) {
--		if (line->offset >= bank->num_lines)
-+		if (!line->name || (line->offset >= bank->num_lines))
- 			continue;
- 
--		if (line->name) {
--			if (line->offset > max_offset)
--				max_offset = line->offset;
--
--			/*
--			 * max_offset can stay at 0 so it's not an indicator
--			 * of whether line names were configured at all.
--			 */
--			has_line_names = true;
--		}
-+		size = line->offset + 1;
- 	}
- 
--	if (!has_line_names)
--		/*
--		 * This is not an error - NULL means, there are no line
--		 * names configured.
--		 */
--		return NULL;
--
--	*line_names_size = max_offset + 1;
-+	return size;
-+}
- 
--	line_names = kcalloc(*line_names_size, sizeof(*line_names), GFP_KERNEL);
--	if (!line_names)
--		return ERR_PTR(-ENOMEM);
-+static void
-+gpio_sim_set_line_names(struct gpio_sim_bank *bank, char **line_names)
-+{
-+	struct gpio_sim_line *line;
- 
- 	list_for_each_entry(line, &bank->line_list, siblings) {
--		if (line->offset >= bank->num_lines)
-+		if (!line->name || (line->offset >= bank->num_lines))
- 			continue;
- 
--		if (line->name && (line->offset <= max_offset))
--			line_names[line->offset] = line->name;
-+		line_names[line->offset] = line->name;
- 	}
--
--	return line_names;
- }
- 
- static void gpio_sim_remove_hogs(struct gpio_sim_device *dev)
-@@ -867,7 +847,7 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
- 			  struct fwnode_handle *parent)
- {
- 	struct property_entry properties[GPIO_SIM_PROP_MAX];
--	unsigned int prop_idx = 0, line_names_size = 0;
-+	unsigned int prop_idx = 0, line_names_size;
- 	char **line_names __free(kfree) = NULL;
- 
- 	memset(properties, 0, sizeof(properties));
-@@ -878,14 +858,19 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
- 		properties[prop_idx++] = PROPERTY_ENTRY_STRING("gpio-sim,label",
- 							       bank->label);
- 
--	line_names = gpio_sim_make_line_names(bank, &line_names_size);
--	if (IS_ERR(line_names))
--		return ERR_CAST(line_names);
-+	line_names_size = gpio_sim_get_line_names_size(bank);
-+	if (line_names_size) {
-+		line_names = kcalloc(line_names_size, sizeof(*line_names),
-+				     GFP_KERNEL);
-+		if (!line_names)
-+			return ERR_PTR(-ENOMEM);
-+
-+		gpio_sim_set_line_names(bank, line_names);
- 
--	if (line_names)
- 		properties[prop_idx++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
- 						"gpio-line-names",
- 						line_names, line_names_size);
-+	}
- 
- 	return fwnode_create_software_node(properties, parent);
- }
--- 
-2.39.2
+I'm actively working on coming up with a better solution here. My
+current thought is that that maybe we want to do:
 
+1. Undo the hack in the device tree and have each "2nd source" have
+its own pinctrl entry.
+
+2. In core pinctrl / device probing code detect the pinctrl conflict
+and only probe one of the devices at a time.
+
+...that sounds like a nice/elegant solution and I'm trying to make it
+work, though it does have some downsides. Namely:
+
+a) It requires "dts" changes to work. Namely we've got to undo the
+hack that pushed the pinctrl up to the controller level (or, in the
+case of mt8173-elm-hana, that just totally skipped the "pinctrl" entry
+altogether). Unfortunately those same "dts" changes will actually make
+things _worse_ if you don't have the code change. :(
+
+b) It only handles the case where the resources shared by 2nd sourcing
+are expressed by pinctrl. In a practical sense this seems to be most
+cases, but conceivably you could imagine running into this situation
+with a non-pin-related shared resource.
+
+c) To solve this in the core, we have to make sure we properly handle
+(without hanging/failing) multiple partially-conflicting devices and
+devices that might acquire resources in arbitrary orders.
+
+Though the above solution detecting the pinctrl conflicts sounds
+appealing and I'm currently working on prototyping it, I'm still not
+100% convinced. I'm worried about the above downsides.
+
+
+Personally, I feel like we could add information to the device tree
+that would help us out. The question is: is this an abuse of device
+tree for something that Linux ought to be able to figure out on its
+own, or is it OK? To make it concrete, I was thinking about something
+like this:
+
+/ {
+  tp_ex_group: trackpad-exclusion-group {
+    members =3D <&tp1>, <&tp2>, <&tp3>;
+  };
+};
+
+&i2c_bus {
+  tp1: trackpad@10 {
+    ...
+    mutual-exclusion-group =3D <&tp_ex_group>;
+  };
+  tp2: trackpad@20 {
+    ...
+    mutual-exclusion-group =3D <&tp_ex_group>;
+  };
+  tp3: trackpad@30 {
+    ...
+    mutual-exclusion-group =3D <&tp_ex_group>;
+  };
+};
+
+Then the device core would know not to probe devices in the same
+"mutual-exclusion-group" at the same time.
+
+If DT folks are OK with the "mutual-exclusion-group" idea then I'll
+probably backburner my attempt to make this work on the pinctrl level
+and go with that.
