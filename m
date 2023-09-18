@@ -2,132 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1C107A49C9
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 14:35:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D19D7A4A35
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 14:55:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241327AbjIRMez (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Sep 2023 08:34:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40054 "EHLO
+        id S240541AbjIRMyp convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 18 Sep 2023 08:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241618AbjIRMew (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 08:34:52 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6B608DE;
-        Mon, 18 Sep 2023 05:34:10 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="6.02,156,1688396400"; 
-   d="scan'208";a="176398365"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 18 Sep 2023 21:34:09 +0900
-Received: from localhost.localdomain (unknown [10.226.92.107])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9F6E84005E22;
-        Mon, 18 Sep 2023 21:34:06 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        with ESMTP id S241538AbjIRMyV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 08:54:21 -0400
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DEBAA;
+        Mon, 18 Sep 2023 05:54:15 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-59b5484fbe6so48072647b3.1;
+        Mon, 18 Sep 2023 05:54:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695041654; x=1695646454;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fFPC3PRlhZ/bS7lNjw3IfmrFe/tXeE+CeMKF6KweCV8=;
+        b=ADoeGMnbj+TgSgWpFQ+iQlT5AV16iF/FUhoXOkOu2ifmHL2dfjzAZi/uWBeXwMVt3q
+         z12C+b1KuFnATkKNjw0xXrEEWipuDWWJa/P9HNTzS3RurNGcmofWqV9TArSRKG7GLpsO
+         pccoUtq7JVci8+I6Fm5AWnXQB1vtgrtO43clYkwd784wK5Hbig2rSqAJWPJ2I/huCVjp
+         EjSJuGfp9qkbWDb3XX+LqRuy91ICoN0XY5OtPcQZolMapW4nn+df5dBHuLIZQfJ5XFIG
+         EjaJHiSy3RAn/S1QfRE4sXIgnx4cJ/XLm2/hSJOnRb2kVr/G+Ha0rl0vK8QqRXpW3hrw
+         btfA==
+X-Gm-Message-State: AOJu0Yywxe19u02LR7zI8Uvy/+MThyWe2lNWfpTo+drbvwZdWCQTN1ow
+        iXeCtnF3fVg7Z/H34eIXvXKqMgRJSXLVbg==
+X-Google-Smtp-Source: AGHT+IF1Kg7+bEcU1IDXCJj3WI+Ww1xGVHCROiID4VfxNvzT/LFDit4w+i1QxcNI6GgHirFt52ziUQ==
+X-Received: by 2002:a81:6cc1:0:b0:59b:eab8:7ac6 with SMTP id h184-20020a816cc1000000b0059beab87ac6mr9706450ywc.42.1695041654160;
+        Mon, 18 Sep 2023 05:54:14 -0700 (PDT)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id m17-20020a819c11000000b005707fb5110bsm2519305ywa.58.2023.09.18.05.54.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Sep 2023 05:54:14 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-59b5484fbe6so48072377b3.1;
+        Mon, 18 Sep 2023 05:54:13 -0700 (PDT)
+X-Received: by 2002:a81:a14a:0:b0:586:9c4e:a9a4 with SMTP id
+ y71-20020a81a14a000000b005869c4ea9a4mr8927102ywg.5.1695041653615; Mon, 18 Sep
+ 2023 05:54:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230918123355.262115-1-biju.das.jz@bp.renesas.com> <20230918123355.262115-2-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20230918123355.262115-2-biju.das.jz@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 Sep 2023 14:54:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV_eyPSJ26S5KZoHsLdr92h0xmkPjWbUpwpevS0oeMUXQ@mail.gmail.com>
+Message-ID: <CAMuHMdV_eyPSJ26S5KZoHsLdr92h0xmkPjWbUpwpevS0oeMUXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: renesas: rzg2l: Make reverse order of
+ enable() for disable()
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH 2/2] pinctrl: renesas: rzg2l: Enable noise filter for GPIO interrupt input
-Date:   Mon, 18 Sep 2023 13:33:55 +0100
-Message-Id: <20230918123355.262115-3-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230918123355.262115-1-biju.das.jz@bp.renesas.com>
-References: <20230918123355.262115-1-biju.das.jz@bp.renesas.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-As per RZ/G2L hardware manual Rev.1.30 section 8.7.3 GPIO Interrupt (TINT)
-and 41.4.1 Operation for GPIO function, we need to set digital noise
-filter for GPIO interrupt.
+On Mon, Sep 18, 2023 at 2:34 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> We usually do reverse order of enable() for disable(). Currently, the
+> ordering of irq_chip_disable_parent() is not correct in
+> rzg2l_gpio_irq_disable(). Fix the incorrect order.
+>
+> Fixes: db2e5f21a48e ("pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO interrupt")
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-This patch enables noise filter for GPIO interrupt in
-rzg2l_gpio_irq_enable() and disable it in rzg2l_gpio_irq_disable().
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v6.7.
 
-Fixes: db2e5f21a48e ("pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO interrupt")
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 2ea6ef99cc70..6d3fa962ac97 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -96,6 +96,7 @@
- #define PIN(n)			(0x0800 + 0x10 + (n))
- #define IOLH(n)			(0x1000 + (n) * 8)
- #define IEN(n)			(0x1800 + (n) * 8)
-+#define FILONOFF(n)		(0x2080 + (n) * 8)
- #define ISEL(n)			(0x2c80 + (n) * 8)
- #define PWPR			(0x3014)
- #define SD_CH(n)		(0x3000 + (n) * 4)
-@@ -1169,9 +1170,9 @@ static void rzg2l_gpio_irq_disable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-+	void __iomem *addr, *noise_filter_addr;
- 	unsigned int hwirq = irqd_to_hwirq(d);
- 	unsigned long flags;
--	void __iomem *addr;
- 	u32 port;
- 	u8 bit;
- 
-@@ -1181,12 +1182,15 @@ static void rzg2l_gpio_irq_disable(struct irq_data *d)
- 	bit = RZG2L_PIN_ID_TO_PIN(hwirq);
- 
- 	addr = pctrl->base + ISEL(port);
-+	noise_filter_addr = pctrl->base + FILONOFF(port);
- 	if (bit >= 4) {
- 		bit -= 4;
- 		addr += 4;
-+		noise_filter_addr += 4;
- 	}
- 
- 	spin_lock_irqsave(&pctrl->lock, flags);
-+	writel(readl(noise_filter_addr) & ~BIT(bit * 8), noise_filter_addr);
- 	writel(readl(addr) & ~BIT(bit * 8), addr);
- 	spin_unlock_irqrestore(&pctrl->lock, flags);
- 
-@@ -1197,9 +1201,9 @@ static void rzg2l_gpio_irq_enable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-+	void __iomem *addr, *noise_filter_addr;
- 	unsigned int hwirq = irqd_to_hwirq(d);
- 	unsigned long flags;
--	void __iomem *addr;
- 	u32 port;
- 	u8 bit;
- 
-@@ -1209,13 +1213,16 @@ static void rzg2l_gpio_irq_enable(struct irq_data *d)
- 	bit = RZG2L_PIN_ID_TO_PIN(hwirq);
- 
- 	addr = pctrl->base + ISEL(port);
-+	noise_filter_addr = pctrl->base + FILONOFF(port);
- 	if (bit >= 4) {
- 		bit -= 4;
- 		addr += 4;
-+		noise_filter_addr += 4;
- 	}
- 
- 	spin_lock_irqsave(&pctrl->lock, flags);
- 	writel(readl(addr) | BIT(bit * 8), addr);
-+	writel(readl(noise_filter_addr) | BIT(bit * 8), noise_filter_addr);
- 	spin_unlock_irqrestore(&pctrl->lock, flags);
- 
- 	irq_chip_enable_parent(d);
--- 
-2.25.1
+                        Geert
 
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
