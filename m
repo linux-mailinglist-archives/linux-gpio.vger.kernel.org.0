@@ -2,165 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C05047A4C21
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 17:26:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D98467A4BFE
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 17:24:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232935AbjIRP0q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Sep 2023 11:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
+        id S240056AbjIRPYT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Sep 2023 11:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234279AbjIRP0p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 11:26:45 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2070a.outbound.protection.outlook.com [IPv6:2a01:111:f403:700c::70a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24D6810C1;
-        Mon, 18 Sep 2023 08:26:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X4taH8vUk761lhSj8mIEV/IAPMAuuoCvwEEQBwYvONLB1HLBlJnGAVSzqwZ0+2DIMlj8S8omIR7cwYES9lPHQhi/TlTtQoyHfV5WmPTfMhWdnXRVVlLvQOKzaly2XMNdVUQxCTpDMNh2K7gI0AK7U8zDGQLHGhQZ+kFg3fFlaI2PoEJww0K5OY5SZbFC1dLLpFjfY1iXKqDKsHAFnYvT3CDizpU0rclopviQUFMXhvFIln7gCtx/gv5yr2WE3QfvdaStWhWEBDqoZmbR0B8h4IWEmrMvZKLGZP1AyNc3cpSaBLszR4qUiLK1q+MQvMyNCGK+lrISbpmHk8ID4S0W6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0NX35uj/9vC4oeLK30vbwe0sRr4BkG70nceJUXFgGpY=;
- b=CiHQRJJsMd7XbjWGyM0r3dNQ1czDLoYwtnUUoh6v8LhTwm9yCeqwUtYbzZTD8ickFDSnu81Ce0r2lkSfGYFUh0T2jUFlx6c0IEgUIJuqkrP9Kh0nC1cNDEbRDwuKrpx87liqzcdBPbqry/BlJs20qX/B6eqZCPD9unfNWedZtci4lXPYKIiDHRsoWF3QZbNy7WpMzgHgZl3WclDYIN7mJgGn3XUIruFEB2xl4mE6ITwv3N8SG8QCf0HFultZycHs5H9eOVgAyIV2CAgPu7hJPqTsS6VPRatLykrmcaOMr5zHUe+G7BG0wcUyGqjlXEvtubnU9Jd8Ii8VkCnEveMlsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0NX35uj/9vC4oeLK30vbwe0sRr4BkG70nceJUXFgGpY=;
- b=WjMTak3iYvaWKSWovEvBX/NYzrJKiA8obfUVHE1mqhuddtChOAGRg3MWTI+DWZ10E6WFQv4lZp6GQaK979UhXihxK6egR3iM4YyXZi6QHMJvlWmI09xV/N04zKRuRh0txQg3gERpFQnclVzdmvWuXYoURLy+QQ+8PRD7FVBIpKQ=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by TYWPR01MB11465.jpnprd01.prod.outlook.com (2603:1096:400:402::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.26; Mon, 18 Sep
- 2023 13:18:54 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::9d23:32f5:9325:3706]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::9d23:32f5:9325:3706%5]) with mapi id 15.20.6792.026; Mon, 18 Sep 2023
- 13:18:50 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Biju Das <biju.das.au@gmail.com>
-Subject: RE: [PATCH 2/2] pinctrl: renesas: rzg2l: Enable noise filter for GPIO
- interrupt input
-Thread-Topic: [PATCH 2/2] pinctrl: renesas: rzg2l: Enable noise filter for
- GPIO interrupt input
-Thread-Index: AQHZ6ixt37i5mirEkU2vvrutS3Og4rAgivWAgAAEY6A=
-Date:   Mon, 18 Sep 2023 13:18:50 +0000
-Message-ID: <OS0PR01MB5922356278D492FC32F0583586FBA@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20230918123355.262115-1-biju.das.jz@bp.renesas.com>
- <20230918123355.262115-3-biju.das.jz@bp.renesas.com>
- <CAMuHMdVcy82eQNKtqufk8Nb6PKYTgmZw_b_mC+qgmGMHt1gyiw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVcy82eQNKtqufk8Nb6PKYTgmZw_b_mC+qgmGMHt1gyiw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TYWPR01MB11465:EE_
-x-ms-office365-filtering-correlation-id: bfac4d12-d58a-451b-2e95-08dbb849cc66
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oVxea/ZhK2hv7ZyNgFpavkggXpDayDJUXkv31+9mv55asCgmYWAJttFfNPhPHl3K2W/CX0F2dQ+F/RBBu9nk6ER721hrx7KNe9IHneAljg2meJxS0EXmJHxg0kthaPo2T0hB+6+kPkN2hUSwLHzYeXrcFhYEfynnLyN9ZHPhulzJLjZUIeLAKxS96DRO1Ca/WabVLFkDZBDwvfeDe7OywFx1VTkzXB1Ukk+HEZmiZ6w9tBUUtEnKovrElLD4WADGTFdQH/BQpHI7Tb6/MxJhOL8BkMuxh8UQQOC1Mza9GyQGLyvxkg4Fac8lMJAw4vcUAJzdJxFi8OxlryXoRd6CHttQ19NqepVDQiiQlH+zpTMY2pMUDVrzYDP9u7Kb4PAXhjn+fppw0NwJLlfAi9WTv88TMuWIXqo+OgDHTuaTkOs0+IIYKO+cx5GlMgIFTdprA299QFnLLit+pHjD3/RQReYL6lVcFP1tdppj2L1/qf5+uTuPffcZN7XfaU74Y3wXIWgDfhP4M1BaXoGG3viK/FllNrTuaCI2sK+3DvIfmRs5Mnnm67YCgCrAjHISwi63Yrqa112a3ed0TyX6iL6sxOHZvHGHP4KUHPQjL8utsaqHTYbtzi9i6rra4SMrlIk0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(376002)(396003)(366004)(39860400002)(186009)(1800799009)(451199024)(55016003)(2906002)(83380400001)(38100700002)(38070700005)(122000001)(53546011)(71200400001)(6506007)(7696005)(9686003)(478600001)(5660300002)(4326008)(76116006)(6916009)(52536014)(316002)(8936002)(8676002)(54906003)(66946007)(66446008)(66556008)(66476007)(64756008)(41300700001)(26005)(33656002)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dlZKWFdXcTlzTlVzWFZ3dVE5QU40alhWWmNNZk9uQnVSc1owdnp6UTYrY1RF?=
- =?utf-8?B?S05PRFFDRDQxaEdvbTQzVVpOQVU5a0x1dTZwcWdVeC9zd3RtVGlLV09sS2hj?=
- =?utf-8?B?TVpEUlY0SE1XVmNoemVKOGJPQ1JFWTRPa1BJdFdxekg2d2J5UFJvaDA3QlNm?=
- =?utf-8?B?MEdvSmVwb1cydTZvOHdMcUtKNnNYZlFCM0hSY3VIQVlHaU8wajdIZ3h0amh1?=
- =?utf-8?B?NXhBNUxTdUJaVzdmaUZNcnBQK3M0ZThqMmZ5Vk1NS1A1bHpUUzc2QUtmaUh3?=
- =?utf-8?B?UFovZG8vbUdROGN0NTZuY1Jzdml3Tm9UUFdCVm00ZVRyWmpPUDQyY0dGVnA5?=
- =?utf-8?B?MU55S3hpanl4QWFjWHd4SUlxdGgyVTJWemcrMUMyVTY4VmpVdGV6UjNOMkd2?=
- =?utf-8?B?Ykc5ZTZTUnZVSTBHYStrdWc5T0NQVU5nS2JWNUxsV0lSbzVxV0NUMXh3OWR0?=
- =?utf-8?B?L29nRGY5L2wyNnRBektVMUZ6aVI4WGo3WFFXWGFJcWNnRzZxNUtkOWwyMTFh?=
- =?utf-8?B?WE9uL3ZPNzRxMWNDdktTQU84SUxDd3RZOWtEOGJ5UjVERk5UR0lEcmk0NlB3?=
- =?utf-8?B?TEtkZ1k1c21QdXF1U3ZNWVI3QVFJZVBmSkkyODFPdHhLVmFvbWluVVJPY0FS?=
- =?utf-8?B?UjF3U0ErZ2RuUlhQWjZ2S2NxVHdsUGtpcWRIcGhLWndNSThYNk9VcG83ZVda?=
- =?utf-8?B?SThtdmNvd1NYR25XUEIzY0JKUW5TQXREa3VZYlZaU2Y1aSt2b2d4MDd1d253?=
- =?utf-8?B?S0VKTlQ1UkY2ZmFCeGNMaXJSd2xDZzNtYit0Wk9EcDJXbCtMZ1JOamttTGFp?=
- =?utf-8?B?dkM2V3Bid3BPZUswNFp0b1RKL2Vub3ZIRDdBZDNxT2w2Y0o0TndnUTQ4aUFs?=
- =?utf-8?B?ZGI0SzJyWno2VVFOMTZYY0dOL1V4SzhCaVFUNytiSDRmQVVwNFRDZGJabk1o?=
- =?utf-8?B?Y3hCcEhGMW1pZW9oRm1xQ2g2T2dIRDRRelBUK2NpSDliOTc3SGlHUllUYUZB?=
- =?utf-8?B?VitBNjA3bWszZTdOSVZFU0JrV1lpZE5IOU9Oay84c0VFdndlTlBXb2tnalo1?=
- =?utf-8?B?TTRMVjljTTFGOTRHNkFRLzRQcDNQZ3NGMDJXbnpFb2FjdTdoUTZXb0NNcWN6?=
- =?utf-8?B?UlRUTWFiSlJmUDdNWFNjZktYT2kwYTg5ZlczWnVweFBIOHJ6enBOOThTZis3?=
- =?utf-8?B?dW5nVmZkRUlHNnBYeFhqc3ZRdllnQVUxRWxSR0FVamVzRDJPQ05sMHk5Qmxt?=
- =?utf-8?B?T21sU291RXdyQzJCalYzT2RrWTNpY21ybUF4WmtoSUQ5NllhSTNCUyswQ21r?=
- =?utf-8?B?RitOY2REbkE4M29abXNxbGdicGxXdnZXblVWWld0VEFWQkkxYm9rSFZzdmwx?=
- =?utf-8?B?cVJ2UDNRdERSbXVONXlvVjNwZWtSQ1NKQTVFZURmS3h3Tk5xVWZsOUR1SHI2?=
- =?utf-8?B?UWQ2ZVZPUHdoSVlXdFR6OGJoRVlWTFhvV0lDRnQwOWU1bmdTQTdFK1ZIdzlR?=
- =?utf-8?B?d25hUTlTZU1FdUtXMHpLOWtQZkVtOGU1dm0zeVNxeUFVa2RxZ2thZWdnRWds?=
- =?utf-8?B?alc3djErcXFGN3dYR0RIaEtHdnI1dTdIcmZOcm0weExWOFdpbmxjcm9Qekpi?=
- =?utf-8?B?T2twL1pJelBnR1RXK0xwa05uNjdjVTJ4WWk5enk5VWpIbDUrSSt5MHJpZEQv?=
- =?utf-8?B?Vmt1Qnk1RzBObk9GMUV4THFWL2VWVjFSRTczMU9QWEt0NldiU1lMdy8xYVAy?=
- =?utf-8?B?KzRSQU05V2ZPb2R4dUhuM3pPUWFBWUxZbHhxUDJDMWNKdFFtelNmbi9WRUFz?=
- =?utf-8?B?ZWZidzN6bHZrV202eFJoMVlqZXRWNWpvM2ROQkFmRHNoTEVXV0lqdlJ6Zlo5?=
- =?utf-8?B?VmxaVHQzMk9CeGhBS3BtTUx2MkdlMEQzeEdUOFdFdFA2ZTRLRnpJTEhxbGMx?=
- =?utf-8?B?WllzYzhsL1l1RlZ3ZXlqcnhOcmdZTmJLN21GM1laazRCV1d6aFNhY3BEU0d1?=
- =?utf-8?B?ZlJOMHJwYTFWYzFNdndIV2dpMHR0OExMNGMzd3lnbXhHYm1FaHdnbStjNkxr?=
- =?utf-8?B?WDZLRHFJZ0VYVkVXeEJBZSsrNytCWlc0YWVLU0lVaDJ1VzZRdzJQSzdQOStH?=
- =?utf-8?B?YjBKTmsrSWpqMUJ3dDVraFluYkpuSlNQM1l4RE1xMHlJdlpFWk5KQ1VUR0sv?=
- =?utf-8?B?bkE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S238837AbjIRPYR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 11:24:17 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1213CCDA
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Sep 2023 08:21:23 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-5310aec4121so1575757a12.2
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Sep 2023 08:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695050458; x=1695655258; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G+kdSJ4sQ1S01UdF8CEB51WLv93rf0qpn38b7uekeAw=;
+        b=P8gHVDsv8Ju0Sgl330DR4IxEQ0xr1R625lUmPR/SWRmHGitls+sX1T9bgxaskgo/1u
+         J0+JuktMj871df0/PUY8qz61j1YfO7WhvO6eVVQeSqTthHslZdquZeIvT4YT6tzV0eM6
+         2KPJn1NGW3y7RrGO/QJl/5NKGU5u9XQ1wGHviD59Gd3/rMOQXMT6r8TQ7bBBwl/JjzmP
+         Ze2+x8mK8IUsQKSO76atJG+0BJCcSO8IWB/D5xF+EA4mV4VYhcB1+c75lFmqaZR97r/h
+         w94AalVV+6B74gRtZ7tbXPQ1MdpgMxlMvrCSZZPOC7BZAI2Avzo4uBphN0s9Vk4VmxKg
+         oxjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695050458; x=1695655258;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G+kdSJ4sQ1S01UdF8CEB51WLv93rf0qpn38b7uekeAw=;
+        b=QeZmu+ee9vCWSBHcNc04J5p1D5OZAUwk4w4eLh5YrwvQ9MPRMWEW62bf2kClI0jclm
+         Bz2lp4fkgi4AeN/1vjwr0LcL1eVeicVqm7ebFHBxKk3NjwVv486CYI9N3zP0SwDNyzPG
+         rf/zjTqEZCk68diXy5x7JnEVTwODc3ecYyrAvxlMYEqt3d3NCXKDC/gWK85ywCXawP73
+         u/eKNA1sX7nni463B6+BdMHDwZ78OpTImq4m/6EsnMxXnMKo67e5sOLtyVUZueA9ZvLX
+         rv71/aoerfQO7YyIdr7U6FB74UVCXpt/+tfocWMjsOaNPyO6mBYU6o3q6uk4brlWJ1ho
+         HkVw==
+X-Gm-Message-State: AOJu0YzPwirCWODL4RxIKNOCtuWhQboORnFNodF3idGiZZiO9VSOf1U7
+        7kgsSnSe2sD1BUOJM1FKXjVLHNdnUlqEeTmDTEo=
+X-Google-Smtp-Source: AGHT+IE+mKlomEDK+2JFy6MEL88/jRlHFUbeM6YI6GKmBoXZsEayExX5oVZd6W3v8KrY4sWjwDjJ/Q==
+X-Received: by 2002:adf:d208:0:b0:320:4d1:d5f3 with SMTP id j8-20020adfd208000000b0032004d1d5f3mr5306035wrh.6.1695048938243;
+        Mon, 18 Sep 2023 07:55:38 -0700 (PDT)
+Received: from brgl-uxlite.nice.aeroport.fr ([193.57.185.11])
+        by smtp.gmail.com with ESMTPSA id y14-20020a5d4ace000000b0031c5dda3aedsm12995208wrs.95.2023.09.18.07.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Sep 2023 07:55:37 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        akpm@linux-foundation.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v4] gpio: sim: fix an invalid __free() usage
+Date:   Mon, 18 Sep 2023 16:55:33 +0200
+Message-Id: <20230918145533.14642-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfac4d12-d58a-451b-2e95-08dbb849cc66
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2023 13:18:50.4168
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ye6utLa1fx8vHFq8lY74izz5WlsU+rdxpkh/sFnQCAMCAHxDp+R3qxxjTTGFlqV3ytBemwc2IafjzRxb2rHRxbym08gtIL2huYvObubUzxs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB11465
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggMi8yXSBwaW5jdHJsOiByZW5lc2FzOiByemcybDogRW5hYmxlIG5vaXNlIGZpbHRlciBm
-b3INCj4gR1BJTyBpbnRlcnJ1cHQgaW5wdXQNCj4gDQo+IEhpIEJpanUsDQo+IA0KPiBPbiBNb24s
-IFNlcCAxOCwgMjAyMyBhdCAyOjM04oCvUE0gQmlqdSBEYXMgPGJpanUuZGFzLmp6QGJwLnJlbmVz
-YXMuY29tPg0KPiB3cm90ZToNCj4gPiBBcyBwZXIgUlovRzJMIGhhcmR3YXJlIG1hbnVhbCBSZXYu
-MS4zMCBzZWN0aW9uIDguNy4zIEdQSU8gSW50ZXJydXB0DQo+ID4gKFRJTlQpIGFuZCA0MS40LjEg
-T3BlcmF0aW9uIGZvciBHUElPIGZ1bmN0aW9uLCB3ZSBuZWVkIHRvIHNldCBkaWdpdGFsDQo+ID4g
-bm9pc2UgZmlsdGVyIGZvciBHUElPIGludGVycnVwdC4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggZW5h
-YmxlcyBub2lzZSBmaWx0ZXIgZm9yIEdQSU8gaW50ZXJydXB0IGluDQo+ID4gcnpnMmxfZ3Bpb19p
-cnFfZW5hYmxlKCkgYW5kIGRpc2FibGUgaXQgaW4gcnpnMmxfZ3Bpb19pcnFfZGlzYWJsZSgpLg0K
-PiA+DQo+ID4gRml4ZXM6IGRiMmU1ZjIxYTQ4ZSAoInBpbmN0cmw6IHJlbmVzYXM6IHBpbmN0cmwt
-cnpnMmw6IEFkZCBJUlEgZG9tYWluDQo+ID4gdG8gaGFuZGxlIEdQSU8gaW50ZXJydXB0IikNCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20+DQo+
-ID4gVGVzdGVkLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWEudWpAYnAucmVuZXNh
-cy5jb20+DQo+IA0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+IA0KPiA+IC0tLSBhL2RyaXZl
-cnMvcGluY3RybC9yZW5lc2FzL3BpbmN0cmwtcnpnMmwuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGlu
-Y3RybC9yZW5lc2FzL3BpbmN0cmwtcnpnMmwuYw0KPiA+IEBAIC05Niw2ICs5Niw3IEBADQo+ID4g
-ICNkZWZpbmUgUElOKG4pICAgICAgICAgICAgICAgICAoMHgwODAwICsgMHgxMCArIChuKSkNCj4g
-PiAgI2RlZmluZSBJT0xIKG4pICAgICAgICAgICAgICAgICAgICAgICAgKDB4MTAwMCArIChuKSAq
-IDgpDQo+ID4gICNkZWZpbmUgSUVOKG4pICAgICAgICAgICAgICAgICAoMHgxODAwICsgKG4pICog
-OCkNCj4gPiArI2RlZmluZSBGSUxPTk9GRihuKSAgICAgICAgICAgICgweDIwODAgKyAobikgKiA4
-KQ0KPiA+ICAjZGVmaW5lIElTRUwobikgICAgICAgICAgICAgICAgICAgICAgICAoMHgyYzgwICsg
-KG4pICogOCkNCj4gPiAgI2RlZmluZSBQV1BSICAgICAgICAgICAgICAgICAgICgweDMwMTQpDQo+
-ID4gICNkZWZpbmUgU0RfQ0gobikgICAgICAgICAgICAgICAoMHgzMDAwICsgKG4pICogNCkNCj4g
-DQo+IExHVE0sIGJ1dCBzaG91bGRuJ3QgeW91IGNvbmZpZ3VyZSB0aGUgRGlnaXRhbCBOb2lzZSBG
-aWx0ZXIgTnVtYmVyDQo+IChGSUxOVU0pIGFuZCBDbG9jayBTZWxlY3Rpb24gKEZJTENMS1NFTCkg
-cmVnaXN0ZXJzLCB0b28/DQoNCkN1cnJlbnRseSBpdCB1c2VzIHJlc2V0IHZhbHVlcy4NCg0KMDBi
-OiA0LXN0YWdlIGZpbHRlciAoNDEuNjY2IG5zIHggNCA9IDE2Ni42NjYgbnMpIChpbml0aWFsIHZh
-bHVlKSBmb3IgRklMTlVNIGFuZA0KDQowMGI6IE5vdCBkaXZpZGVkIChpbml0aWFsIHZhbHVlKSBm
-b3IgRklMQ0xLU0VMDQoNCkRvIHlvdSBtZWFuIHdlIHNob3VsZCBwcm92aWRlIHRoZXNlIHNldHRp
-bmdzIHRvIERULCBzbyB0aGF0DQppdCBpcyBjdXN0b21pc2VkIGJhc2VkIG9uIHRoZSBQQ0IgZGVz
-aWduIGFuZCB0aGUgZW52aXJvbm1lbnQNCnRoZSBib2FyZCBpcyB1c2VkIGluPyBJIGd1ZXNzIHRo
-aXMgd2lsbCBtYWtlIGl0IGVhc2llciBmb3INCmN1c3RvbWVycyB0byBtYWtlIHRoZSByZXF1aXJl
-ZCBjaGFuZ2VzIGZvciB0aGVpciBhcHBsaWNhdGlvbi4NCg0KQ2hlZXJzLA0KQmlqdQ0K
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+gpio_sim_make_line_names() returns NULL or ERR_PTR() so we must not use
+__free(kfree) on the returned address. Split this function into two, one
+that determines the size of the "gpio-line-names" array to allocate and
+one that actually sets the names at correct offsets. The allocation and
+assignment of the managed pointer happens in between.
+
+Fixes: 3faf89f27aab ("gpio: sim: simplify code with cleanup helpers")
+Reported-by: Alexey Dobriyan <adobriyan@gmail.com>
+Closes: https://lore.kernel.org/all/07c32bf1-6c1a-49d9-b97d-f0ae4a2b42ab@p183/
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Linus,
+
+I followed the pattern for determining the size of the line-names array
+from your patch in the end but with a changed variable naming. If this is
+fine, I'll queue it for fixes for the next rc.
+
+Bart
+
+v3 -> v4:
+- simplify the line counting logic
+
+v2 -> v3:
+- restore the offset out-of-bounds checks
+
+v1 -> v2:
+- split the line name setting into two parts
+
+ drivers/gpio/gpio-sim.c | 59 +++++++++++++++--------------------------
+ 1 file changed, 22 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index 460389bb8e3f..b66abb55ef4d 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -718,52 +718,32 @@ gpio_sim_device_config_live_show(struct config_item *item, char *page)
+ 	return sprintf(page, "%c\n", live ? '1' : '0');
+ }
+ 
+-static char **gpio_sim_make_line_names(struct gpio_sim_bank *bank,
+-				       unsigned int *line_names_size)
++static unsigned int gpio_sim_get_line_names_size(struct gpio_sim_bank *bank)
+ {
+-	unsigned int max_offset = 0;
+-	bool has_line_names = false;
+ 	struct gpio_sim_line *line;
+-	char **line_names;
++	unsigned int size = 0;
+ 
+ 	list_for_each_entry(line, &bank->line_list, siblings) {
+-		if (line->offset >= bank->num_lines)
++		if (!line->name || (line->offset >= bank->num_lines))
+ 			continue;
+ 
+-		if (line->name) {
+-			if (line->offset > max_offset)
+-				max_offset = line->offset;
+-
+-			/*
+-			 * max_offset can stay at 0 so it's not an indicator
+-			 * of whether line names were configured at all.
+-			 */
+-			has_line_names = true;
+-		}
++		size = line->offset + 1;
+ 	}
+ 
+-	if (!has_line_names)
+-		/*
+-		 * This is not an error - NULL means, there are no line
+-		 * names configured.
+-		 */
+-		return NULL;
+-
+-	*line_names_size = max_offset + 1;
++	return size;
++}
+ 
+-	line_names = kcalloc(*line_names_size, sizeof(*line_names), GFP_KERNEL);
+-	if (!line_names)
+-		return ERR_PTR(-ENOMEM);
++static void
++gpio_sim_set_line_names(struct gpio_sim_bank *bank, char **line_names)
++{
++	struct gpio_sim_line *line;
+ 
+ 	list_for_each_entry(line, &bank->line_list, siblings) {
+-		if (line->offset >= bank->num_lines)
++		if (!line->name || (line->offset >= bank->num_lines))
+ 			continue;
+ 
+-		if (line->name && (line->offset <= max_offset))
+-			line_names[line->offset] = line->name;
++		line_names[line->offset] = line->name;
+ 	}
+-
+-	return line_names;
+ }
+ 
+ static void gpio_sim_remove_hogs(struct gpio_sim_device *dev)
+@@ -867,7 +847,7 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
+ 			  struct fwnode_handle *parent)
+ {
+ 	struct property_entry properties[GPIO_SIM_PROP_MAX];
+-	unsigned int prop_idx = 0, line_names_size = 0;
++	unsigned int prop_idx = 0, line_names_size;
+ 	char **line_names __free(kfree) = NULL;
+ 
+ 	memset(properties, 0, sizeof(properties));
+@@ -878,14 +858,19 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
+ 		properties[prop_idx++] = PROPERTY_ENTRY_STRING("gpio-sim,label",
+ 							       bank->label);
+ 
+-	line_names = gpio_sim_make_line_names(bank, &line_names_size);
+-	if (IS_ERR(line_names))
+-		return ERR_CAST(line_names);
++	line_names_size = gpio_sim_get_line_names_size(bank);
++	if (line_names_size) {
++		line_names = kcalloc(line_names_size, sizeof(*line_names),
++				     GFP_KERNEL);
++		if (!line_names)
++			return ERR_PTR(-ENOMEM);
++
++		gpio_sim_set_line_names(bank, line_names);
+ 
+-	if (line_names)
+ 		properties[prop_idx++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
+ 						"gpio-line-names",
+ 						line_names, line_names_size);
++	}
+ 
+ 	return fwnode_create_software_node(properties, parent);
+ }
+-- 
+2.39.2
+
