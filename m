@@ -2,160 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C937A4CDC
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 17:42:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8188D7A4E85
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 18:18:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbjIRPm2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Sep 2023 11:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58044 "EHLO
+        id S230141AbjIRQSu convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 18 Sep 2023 12:18:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229747AbjIRPmY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 11:42:24 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6ACEA;
-        Mon, 18 Sep 2023 08:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695051664; x=1726587664;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rLtLGIQAKTVI1t+psJ8kukyAGQb0vc5GrHLOZQiF/gQ=;
-  b=m0UII/bdBjG3E36bOCGAtqjBPdrfb2y79Otbtw09brFqcxEslwD1j3uk
-   Um/FWTU1EDvRkU/xOnj8Gj3FwwDK3PQFBWy5Le3DQPqXn76HD/xRayh/b
-   JCk5anszCQ8Vduy+Jb0yym0dapOJWLCldX85gQm3abJBjHl8RSkirFbqW
-   lK/HEwRDlEuCSPhPpXy30Cnd2jzi5qzrot2ab0Ja1G1Xv5MOofpn+LzTI
-   ql9leJ++3aFnL5lvWhpOh9UIlS58LXjH7GzV4/qN7lyIGLzOkaz/wn+Cy
-   KOCZCx62vc4mYvZuFakV2Au8oCMDyFc8OYJcB5B+JhK9rY5TOXIaj63Ot
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="377008856"
-X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="377008856"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 08:31:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="775170732"
-X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="775170732"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 08:31:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qiGDp-0000000CeEP-03YZ;
-        Mon, 18 Sep 2023 18:31:37 +0300
-Date:   Mon, 18 Sep 2023 18:31:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        akpm@linux-foundation.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v4] gpio: sim: fix an invalid __free() usage
-Message-ID: <ZQhtWNaCiHVu5yzL@smile.fi.intel.com>
-References: <20230918145533.14642-1-brgl@bgdev.pl>
+        with ESMTP id S230063AbjIRQSi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 12:18:38 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2951F274AD;
+        Mon, 18 Sep 2023 09:15:49 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3adcec86a8cso903542b6e.3;
+        Mon, 18 Sep 2023 09:15:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695053748; x=1695658548;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i7dgcdQA0BxA6uxrPcgZG7zRAgTuR6bE+wss81BpvFI=;
+        b=pkSUPj3H7bPK9w75u9rieO9wC5kvpqN2x/X+9YYpr7ev3YrZkphBtBCOEoeYK3cEoY
+         0zqu3RsjEpVpQG1PLnRKpt9J3HIcNIy8+cze6BUiQq8fHWhNiMgBhuD6lJCqbg/yLc+J
+         RuNb+BWiWRQFzajIQFde+X7UnIAAWxdLr4/dwO7RsxBOQEZ1sV2cTObrUF36gdLEZlPH
+         DgdSUnoJ9p7N6Xmf7tIah48eU2GsWmsQPSbJjsYtPJsTw+3k4NLAiufOv7XeKEU289W1
+         TYJgd7Rx0LheqklpQn1wBtAUTbs0+sIWT2e/5oRtvMfel13t6JcXqm12usDhr+1aRgiS
+         bTww==
+X-Gm-Message-State: AOJu0Yzs1aLPntMQC2E2c3HM9BsChy7GOh8KNMXZJ7xzFjBZI9+EgAla
+        E02dNSd/hyN2E5o7hX1rn0Hmr2PEa1zNUA==
+X-Google-Smtp-Source: AGHT+IE2m9SI7J4ee/V2/V8uShuTeKtTeMxzv7/lqSJJ9l9e+1lBZTn/KNgd5/08OzU78hRM3KD36g==
+X-Received: by 2002:a81:9108:0:b0:583:f78c:994e with SMTP id i8-20020a819108000000b00583f78c994emr8725543ywg.42.1695043566967;
+        Mon, 18 Sep 2023 06:26:06 -0700 (PDT)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id z20-20020a81c214000000b00585e2c112fdsm2537505ywc.111.2023.09.18.06.26.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Sep 2023 06:26:06 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-d801c83325fso4134244276.0;
+        Mon, 18 Sep 2023 06:26:06 -0700 (PDT)
+X-Received: by 2002:a25:d105:0:b0:d78:3a4e:c19e with SMTP id
+ i5-20020a25d105000000b00d783a4ec19emr8161004ybg.24.1695043566396; Mon, 18 Sep
+ 2023 06:26:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230918145533.14642-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230918123355.262115-1-biju.das.jz@bp.renesas.com>
+ <20230918123355.262115-3-biju.das.jz@bp.renesas.com> <CAMuHMdVcy82eQNKtqufk8Nb6PKYTgmZw_b_mC+qgmGMHt1gyiw@mail.gmail.com>
+ <OS0PR01MB5922356278D492FC32F0583586FBA@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB5922356278D492FC32F0583586FBA@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 Sep 2023 15:25:54 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWtHawgor2Hs3vZDcTv8WXWhUAzSRYBpM1cD=ozKT4G2w@mail.gmail.com>
+Message-ID: <CAMuHMdWtHawgor2Hs3vZDcTv8WXWhUAzSRYBpM1cD=ozKT4G2w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: renesas: rzg2l: Enable noise filter for GPIO
+ interrupt input
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Biju Das <biju.das.au@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 18, 2023 at 04:55:33PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> gpio_sim_make_line_names() returns NULL or ERR_PTR() so we must not use
-> __free(kfree) on the returned address. Split this function into two, one
-> that determines the size of the "gpio-line-names" array to allocate and
-> one that actually sets the names at correct offsets. The allocation and
-> assignment of the managed pointer happens in between.
+Hi Biju,
 
-...
+On Mon, Sep 18, 2023 at 3:18 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > Subject: Re: [PATCH 2/2] pinctrl: renesas: rzg2l: Enable noise filter for
+> > GPIO interrupt input
+> >
+> > On Mon, Sep 18, 2023 at 2:34 PM Biju Das <biju.das.jz@bp.renesas.com>
+> > wrote:
+> > > As per RZ/G2L hardware manual Rev.1.30 section 8.7.3 GPIO Interrupt
+> > > (TINT) and 41.4.1 Operation for GPIO function, we need to set digital
+> > > noise filter for GPIO interrupt.
+> > >
+> > > This patch enables noise filter for GPIO interrupt in
+> > > rzg2l_gpio_irq_enable() and disable it in rzg2l_gpio_irq_disable().
+> > >
+> > > Fixes: db2e5f21a48e ("pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain
+> > > to handle GPIO interrupt")
+> > > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > > @@ -96,6 +96,7 @@
+> > >  #define PIN(n)                 (0x0800 + 0x10 + (n))
+> > >  #define IOLH(n)                        (0x1000 + (n) * 8)
+> > >  #define IEN(n)                 (0x1800 + (n) * 8)
+> > > +#define FILONOFF(n)            (0x2080 + (n) * 8)
+> > >  #define ISEL(n)                        (0x2c80 + (n) * 8)
+> > >  #define PWPR                   (0x3014)
+> > >  #define SD_CH(n)               (0x3000 + (n) * 4)
+> >
+> > LGTM, but shouldn't you configure the Digital Noise Filter Number
+> > (FILNUM) and Clock Selection (FILCLKSEL) registers, too?
+>
+> Currently it uses reset values.
+>
+> 00b: 4-stage filter (41.666 ns x 4 = 166.666 ns) (initial value) for FILNUM and
+>
+> 00b: Not divided (initial value) for FILCLKSEL
+>
+> Do you mean we should provide these settings to DT, so that
+> it is customised based on the PCB design and the environment
+> the board is used in? I guess this will make it easier for
+> customers to make the required changes for their application.
 
-> +	unsigned int size = 0;
->  
->  	list_for_each_entry(line, &bank->line_list, siblings) {
-> +		if (!line->name || (line->offset >= bank->num_lines))
->  			continue;
->  
-> +		size = line->offset + 1;
->  	}
->  
-> +	return size;
+If the optimal values are board-dependent, you should indeed add
+a way to configure this from DT.
 
-So, now the function iterates over all lines and returns the size of the last
-match, correct?
+Gr{oetje,eeting}s,
 
-Why not
-
-	list_for_each_entry_reversed() {
-		if (line->name && ())
-			break;
-	}
-
-	return size;
-
-?
-
-...
-
-> +static void
-> +gpio_sim_set_line_names(struct gpio_sim_bank *bank, char **line_names)
-> +{
-> +	struct gpio_sim_line *line;
->  
->  	list_for_each_entry(line, &bank->line_list, siblings) {
-> -		if (line->offset >= bank->num_lines)
-> +		if (!line->name || (line->offset >= bank->num_lines))
->  			continue;
->  
-> -		if (line->name && (line->offset <= max_offset))
-> -			line_names[line->offset] = line->name;
-> +		line_names[line->offset] = line->name;
->  	}
-> -
-> -	return line_names;
->  }
-
-Can be done in the similar (I see the difference) way for the consistency with
-above.
-
-...
-
-> +	line_names_size = gpio_sim_get_line_names_size(bank);
-
-> +	if (line_names_size) {
-
-Of course this can be replace with...
-
-> +		line_names = kcalloc(line_names_size, sizeof(*line_names),
-> +				     GFP_KERNEL);
-
-> +		if (!line_names)
-
-ZERO_OR_NULL_PTR() check here, but I assume we discourage use of it.
-
-> +			return ERR_PTR(-ENOMEM);
-> +
-> +		gpio_sim_set_line_names(bank, line_names);
->  
-> -	if (line_names)
->  		properties[prop_idx++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
->  						"gpio-line-names",
->  						line_names, line_names_size);
-> +	}
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
