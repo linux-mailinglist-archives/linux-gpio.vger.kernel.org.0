@@ -2,143 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B0A27A3F41
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 03:40:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D2487A3F8C
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 05:03:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234708AbjIRBkX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Sep 2023 21:40:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
+        id S230256AbjIRDDQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Sep 2023 23:03:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235866AbjIRBkF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Sep 2023 21:40:05 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37C3011C;
-        Sun, 17 Sep 2023 18:40:00 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38I1dsoJ012864;
-        Mon, 18 Sep 2023 01:39:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=fektZLu9V9H5UJ+0rOKIBNhaOjy+v1AhJEJMQgo9JkI=;
- b=IC6piAl0AVJVCWL+0cWa/IvS67M9eAIc0qje6aZL3b1gUr6PxokrUrmkaLCrCFsxSkMW
- i4dtPpWk/NxUJGImHD17LYF+jUuoe/5Jowu+YfrCymvoAql+RNDhcxx29SIpI0uaYGhe
- YizuKdYgOSyz12Zcxq6chhyCi7rzcEwPDO61BbTQSOBdczqfa62FHe5869kk69ytDj9K
- NOa9qeeJXjLgmbSQ+CqFTSUZVFnz0XcNOltuVWTxyj5sUmMgkZ2v6WDcwe8+BBRovsTN
- Wf+BB4mqHBuY4oTaMM/X7uMYIQ/WEVbeRzE79c8kaHkebPacXvc/1TCcC5qyQRfHJFn8 1Q== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t554pj2y1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Sep 2023 01:39:54 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38I1dree024140
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Sep 2023 01:39:53 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Sun, 17 Sep
- 2023 18:39:46 -0700
-Message-ID: <6e31d07f-133e-4abe-8225-45c822429bae@quicinc.com>
-Date:   Mon, 18 Sep 2023 09:39:43 +0800
+        with ESMTP id S238080AbjIRDC6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Sep 2023 23:02:58 -0400
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A206123;
+        Sun, 17 Sep 2023 20:02:51 -0700 (PDT)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 38I32VPu81517537, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+        by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 38I32VPu81517537
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Sep 2023 11:02:31 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Mon, 18 Sep 2023 11:02:31 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Mon, 18 Sep 2023 11:02:31 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::7445:d92b:d0b3:f79c]) by
+ RTEXMBS04.realtek.com.tw ([fe80::7445:d92b:d0b3:f79c%5]) with mapi id
+ 15.01.2375.007; Mon, 18 Sep 2023 11:02:31 +0800
+From:   =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/7] pinctrl: realtek: Add common pinctrl driver for Realtek DHC RTD SoCs
+Thread-Topic: [PATCH v2 1/7] pinctrl: realtek: Add common pinctrl driver for
+ Realtek DHC RTD SoCs
+Thread-Index: AQHZ5I483wqw7fXzOES3iZ0BnYDYkrAf7YUg
+Date:   Mon, 18 Sep 2023 03:02:31 +0000
+Message-ID: <ae5a5665e11242e49b9b84d54b1d4ac3@realtek.com>
+References: <20230824105703.19612-1-tychang@realtek.com>
+ <20230824105703.19612-2-tychang@realtek.com>
+ <CACRpkda8_nV1UiDO0_qvcc_z8ODQqckwaCGg6A5-Qm0NADi_Ng@mail.gmail.com>
+In-Reply-To: <CACRpkda8_nV1UiDO0_qvcc_z8ODQqckwaCGg6A5-Qm0NADi_Ng@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-originating-ip: [172.21.181.166]
+x-kse-serverinfo: RTEXMBS04.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add SM4450 pinctrl
-To:     Rob Herring <robh@kernel.org>
-CC:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <andersson@kernel.org>, <agross@kernel.org>,
-        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_tsoni@quicinc.com>, <quic_shashim@quicinc.com>,
-        <quic_kaushalk@quicinc.com>, <quic_tdas@quicinc.com>,
-        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
-        <kernel@quicinc.com>
-References: <20230915015808.18296-1-quic_tengfan@quicinc.com>
- <20230915015808.18296-2-quic_tengfan@quicinc.com>
- <6f40ee72-b763-c58d-44df-ea40d1309820@linaro.org>
- <35371580-8e5a-4f72-aec2-951268c296a3@quicinc.com>
- <20230915145947.GA3716246-robh@kernel.org>
-From:   Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <20230915145947.GA3716246-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: MWke8LkhVPybNMe8Z95GKq2FrQujruRu
-X-Proofpoint-ORIG-GUID: MWke8LkhVPybNMe8Z95GKq2FrQujruRu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-15_20,2023-09-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
- spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309180014
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-在 9/15/2023 10:59 PM, Rob Herring 写道:
-> On Fri, Sep 15, 2023 at 03:30:16PM +0800, Tengfei Fan wrote:
->>
->>
->> 在 9/15/2023 3:04 PM, Krzysztof Kozlowski 写道:
->>> On 15/09/2023 03:58, Tengfei Fan wrote:
->>>> Add device tree binding Documentation details for Qualcomm SM4450
->>>> TLMM device.
->>>>
->>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->>>
->>> ...
->>>
->>>> +
->>>> +patternProperties:
->>>> +  "-state$":
->>>> +    oneOf:
->>>> +      - $ref: "#/$defs/qcom-sm4450-tlmm-state"
->>>> +      - patternProperties:
->>>> +          "-pins$":
->>>> +            $ref: "#/$defs/qcom-sm4450-tlmm-state"
->>>> +        additionalProperties: false
->>>> +
->>>> +$defs:
->>>> +  qcom-sm4450-tlmm-state:
->>>> +    type: object
->>>> +    description:
->>>> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->>>> +      Client device subnodes use below standard properties.
->>>> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
->>>> +    unevaluatedProperties: false
->>>> +
->>>> +    properties:
->>>> +      pins:
->>>> +        description:
->>>> +          List of gpio pins affected by the properties specified in this
->>>> +          subnode.
->>>> +        items:
->>>> +          oneOf:
->>>> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9])$"
->>>
->>> This is still wrong. How many GPIOs do you have? Please open existing
->>> bindings for recent device (e.g. sm8550) and look how it is done there.
->> yes, will update to "^gpio([0-9]|[1-9][0-9]|1[0-2][0-5])$".
-> 
-> What about 106, 116, etc.?
-> 
-> Rob
-understand more, need "^gpio([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-5])$".
-
--- 
-Thx and BRs,
-Tengfei Fan
+DQpIaSBMaW51cywNCj4NCj5IaSBUenV5aSwNCj4NCj50aGFua3MgZm9yIHRoZSBuZXcgdmVyc2lv
+biEgVGhpcyBpcyBzdGFydGluZyB0byBsb29rIHJlYWxseSBnb29kLg0KPg0KPk9uIFRodSwgQXVn
+IDI0LCAyMDIzIGF0IDEyOjU34oCvUE0gVHp1eWkgQ2hhbmcgPHR5Y2hhbmdAcmVhbHRlay5jb20+
+IHdyb3RlOg0KPg0KPj4gVGhlIFJURCBTb0NzIHNoYXJlIGEgc2ltaWxhciBkZXNpZ24gZm9yIHBp
+bm11eCBhbmQgcGluY29uZmlnLg0KPj4gVGhpcyBjb21tb24gcGluY3RybCBkcml2ZXIgc3VwcG9y
+dHMgZGlmZmVyZW50IHZhcmlhbnRzIHdpdGhpbiB0aGUgUlREDQo+PiBTb0NzLg0KPj4NCj4+IFNp
+Z25lZC1vZmYtYnk6IFR6dXlpIENoYW5nIDx0eWNoYW5nQHJlYWx0ZWsuY29tPg0KPiguLi4pDQo+
+PiArc3RhdGljIHZvaWQgcnRkX3BpbmN0cmxfdXBkYXRlX2JpdHMoc3RydWN0IHJ0ZF9waW5jdHJs
+ICpkYXRhLCB1bnNpZ25lZCBpbnQgb2Zmc2V0LA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgdW5zaWduZWQgaW50IG1hc2ssIHVuc2lnbmVkIGludA0KPj4gK3ZhbCkgew0K
+Pj4gKyAgICAgICB1bnNpZ25lZCBpbnQgcmVnID0gcmVhZGxfcmVsYXhlZChkYXRhLT5iYXNlICsg
+b2Zmc2V0KTsNCj4+ICsNCj4+ICsgICAgICAgcmVnICY9IH5tYXNrOw0KPj4gKyAgICAgICByZWcg
+fD0gKG1hc2sgJiB2YWwpOw0KPj4gKyAgICAgICB3cml0ZWxfcmVsYXhlZChyZWcsIGRhdGEtPmJh
+c2UgKyBvZmZzZXQpOyB9DQo+DQo+VGhpcyBmdW5jdGlvbiBpcyBlc3NlbnRpYWxseSBhIHJlaW1w
+bGVtZW50YXRpb24gb2YgcmVnbWFwX3VwZGF0ZV9iaXRzKCkgdXNpbmcNCj5yZWdtYXBfbW1pbyB3
+aXRoIC51c2VyX3JlbGF4ZWRfbW1pbyBwcm9wZXJ0eSBzZXQgaW4gdGhlIGNvbmZpZy4NCj4NCj5I
+YXZlIHlvdSBjb25zaWRlcmVkIGp1c3QgdXNpbmcgcmVnbWFwLW1taW8gZm9yIHRoaXM/DQo+DQoN
+ClRoYW5rIHlvdSBmb3IgdGhlIHN1Z2dlc3Rpb24uIEknbGwgdXNlIHJlZ21hcF9tbWlvIHRvIHJl
+cGxhY2UgaXQgaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0KPllvdXJzLA0KPkxpbnVzIFdhbGxlaWoN
+Cg0KDQpUaGFua3MsDQpUenV5aSBDaGFuZw0K
