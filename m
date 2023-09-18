@@ -2,138 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44B727A43CC
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 10:03:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CD3E7A43E0
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Sep 2023 10:06:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231970AbjIRIDQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Sep 2023 04:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34100 "EHLO
+        id S235889AbjIRIEx convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 18 Sep 2023 04:04:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240558AbjIRIC5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 04:02:57 -0400
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB07CC1;
-        Mon, 18 Sep 2023 01:02:16 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3CE67240003;
-        Mon, 18 Sep 2023 08:02:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1695024135;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Swps3A5n7FEUQFidSq00HP9HJSFws8n5Srz8c0lIaak=;
-        b=mTtoy6QkMgiN1fFQIcZ/I6T7HLsDUUmwQoWtrmWRlgrRvSas5Y7ZueYbwoJcUN5yMH2yE2
-        rj4dWdQ6co74kek9BKb9F/H6NwOQRX4Jex9aAufBH2aMxpqfbXgnKTgSouDPKghgm3ZIbN
-        0VKiQ8YK/f5peyquPIPxk8etPNK4sD54n5G2AQQ80Rx2zng9rBXyVd6nnujIr6FHdWS3ip
-        lu2JQGyBg2Xug/JUmjSiIku/CdJGdk7gFmSxLSKKbxxqutDwplBgwnF91+lH+N1nRl0Raz
-        oFEGjruxqwEzZCtgwWJYoWD0cq3f49JsenqqV9fSu+rmaOvAaMEcs4CM3BlnmA==
-Date:   Mon, 18 Sep 2023 10:02:10 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Conor Dooley <conor@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Simon Horman <horms@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 25/31] dt-bindings: net: Add the Lantiq PEF2256
- E1/T1/J1 framer
-Message-ID: <20230918100210.2946f1e0@bootlin.com>
-In-Reply-To: <20230918094919.03835d40@bootlin.com>
-References: <20230912081527.208499-1-herve.codina@bootlin.com>
-        <20230912101444.225809-1-herve.codina@bootlin.com>
-        <20230912-overplay-donated-080eb97803d6@spud>
-        <992a2b31-e21f-eee3-8bfc-a65b69fe5bd7@csgroup.eu>
-        <20230918094919.03835d40@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        with ESMTP id S238743AbjIRIEY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Sep 2023 04:04:24 -0400
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A43CD3;
+        Mon, 18 Sep 2023 01:03:52 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-d815a5eee40so3749360276.2;
+        Mon, 18 Sep 2023 01:03:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695024228; x=1695629028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vO8AVtHDIpoQwzownXUxstbhdvdc8FtTt4K0IUKijtA=;
+        b=BF2APwXvqVRWBfP8Dw8dY/brG/bVMwUGWaAqyFrRYw+hqYCUZOglBDSlEDYBpW64Ak
+         kl8a0MfcZswnHNwff+RLLTiSt7ipL14Kh2Yn7SPMhTDfbATFCxbVINuG4wNVvtNyNB4b
+         8tMF9xudMNQgTr5Sm0bBynbqeVFOPWlLAoEc9Yz0mDCYstgmgDDxxrAEcuprf1nJdv6j
+         gS2o3TNzVIftjIZE3NIRhIKCkpihZD3XtwnklvwxOWVlqOqM1pyoZkkWmT8Fc4I1rMNv
+         FWNAkNOqE1B9VNj1IDPzU1NRJ4Z7At60B8fXvY225Ak8aXXsT5lj6g4nA9aeSz2YO+F0
+         8LYw==
+X-Gm-Message-State: AOJu0YxK58bXlzjYnJgwbyXqXmPcOOICByzL1RgPm7S4eQcTUT2JLBPN
+        yA6nCbmDdRbEVAi1WtvsnE+UpeSqMIFV8w==
+X-Google-Smtp-Source: AGHT+IF5MkS4OTzcXwSe3eNGeFIAZsBWXCpdbopfIp1liaZsOffiqIHBirhk/sRHU+IdBR6m+jmdDQ==
+X-Received: by 2002:a5b:347:0:b0:d84:d709:7966 with SMTP id q7-20020a5b0347000000b00d84d7097966mr2114718ybp.0.1695024228432;
+        Mon, 18 Sep 2023 01:03:48 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id 185-20020a2519c2000000b00d8514dcbbfdsm182700ybz.13.2023.09.18.01.03.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Sep 2023 01:03:47 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-59bd2e19c95so44472397b3.0;
+        Mon, 18 Sep 2023 01:03:47 -0700 (PDT)
+X-Received: by 2002:a0d:df43:0:b0:59a:b7b2:5f02 with SMTP id
+ i64-20020a0ddf43000000b0059ab7b25f02mr9659667ywe.18.1695024227472; Mon, 18
+ Sep 2023 01:03:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
+ <20230912045157.177966-11-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdV+54heFxPGmN53OMmP0cu4+3-t0ARZWH0c+qgZA_G73g@mail.gmail.com> <d54e14b2-9897-fbd4-7f5f-f5dd44c40f5e@tuxon.dev>
+In-Reply-To: <d54e14b2-9897-fbd4-7f5f-f5dd44c40f5e@tuxon.dev>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 18 Sep 2023 10:03:35 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUB-EyMhdOos2rO3V625xtmF8hw72fXEvXA06v=4B3_6w@mail.gmail.com>
+Message-ID: <CAMuHMdUB-EyMhdOos2rO3V625xtmF8hw72fXEvXA06v=4B3_6w@mail.gmail.com>
+Subject: Re: [PATCH 10/37] clk: renesas: rzg2l: use core->name for clock name
+To:     claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
+        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
+        nfraprado@collabora.com, rafal@milecki.pl,
+        wsa+renesas@sang-engineering.com,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 18 Sep 2023 09:49:19 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
+On Fri, Sep 15, 2023 at 7:47 AM claudiu beznea <claudiu.beznea@tuxon.dev> wrote:
+> On 14.09.2023 16:04, Geert Uytterhoeven wrote:
+> > On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> core->name already contains the clock name thus, there is no
+> >> need to check the GET_SHIFT(core->conf) to decide on it.
+> >>
+> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> >> --- a/drivers/clk/renesas/rzg2l-cpg.c
+> >> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> >> @@ -266,7 +266,7 @@ rzg2l_cpg_sd_mux_clk_register(const struct cpg_core_clk *core,
+> >>         clk_hw_data->priv = priv;
+> >>         clk_hw_data->conf = core->conf;
+> >>
+> >> -       init.name = GET_SHIFT(core->conf) ? "sd1" : "sd0";
+> >> +       init.name = core->name;
+> >
+> > Note that this does change the case of the names (e.g. "SD0" => "sd0").
+> > I guess no one cares...
+>
+> As of my experiments and investigation we should be good with it.
 
-> Hi Christophe,
-> 
-> On Tue, 12 Sep 2023 18:49:26 +0000
-> Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
-> 
-> > Le 12/09/2023 à 20:13, Conor Dooley a écrit :  
-> > > Yo,
-> > > 
-> > > I'm not au fait enough with this to leave particularly meaningful
-> > > comments, so just some minor ones for you.
-> > > 
-> > > On Tue, Sep 12, 2023 at 12:14:44PM +0200, Herve Codina wrote:    
-> > >> The Lantiq PEF2256 is a framer and line interface component designed to
-> > >> fulfill all required interfacing between an analog E1/T1/J1 line and the
-> > >> digital PCM system highway/H.100 bus.
-> > >>
-> > >> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> > >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>    
-> > > 
-> > > Missing a co-developed-by?    
-> > 
-> > No, I guess it's a left-over of version v4 that I sent-out while Hervé 
-> > was AFK.
-> > 
-> > If a v6 is sent I think this line can be removed.  
-> 
-> May I move to reviewed-by ?
+Thx, will queue in renesas-clk-for-v6.7.
 
-Your signed-of tag is present on all patches (left-over of version v4)
-May I remove your signed-of (or move to reviewed-by if relevant) in all patches
-present in this series ?
+Gr{oetje,eeting}s,
 
-Best regards,
-Hervé
-
-> 
-> > 
-> > Christophe  
-> 
-> 
-> 
-
-
+                        Geert
 
 -- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
