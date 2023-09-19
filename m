@@ -2,214 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 064347A6689
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Sep 2023 16:23:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CB0F7A6A87
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Sep 2023 20:16:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232813AbjISOXj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Sep 2023 10:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
+        id S229891AbjISSQS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Sep 2023 14:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232768AbjISOXe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 10:23:34 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E281F1
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Sep 2023 07:23:26 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1qibdB-0002Ps-MM; Tue, 19 Sep 2023 16:23:13 +0200
-Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1qibdA-007TfL-DJ; Tue, 19 Sep 2023 16:23:12 +0200
-Received: from mfe by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1qibdA-009fzF-AF; Tue, 19 Sep 2023 16:23:12 +0200
-Date:   Tue, 19 Sep 2023 16:23:12 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
+        with ESMTP id S231929AbjISSQS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 14:16:18 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C0A8F
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Sep 2023 11:16:09 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-5031ccf004cso3696326e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Sep 2023 11:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1695147366; x=1695752166; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZXJATLGe/WfIktgoMPXg04Y8kCGTEYPfQUQyvrst4q0=;
+        b=DGZRsWzeGzwUjlKOUpw8mGGfM7DlU1NPR0GDE2Y48D3CNJ4TT57/V6Nnj245lHbDoy
+         HLJn76Ra5OdF0DtB44XuZIuBe1QhlhI/iXIiKb67IHpFfkThBv1XdZJI1hwUMld7OAFk
+         Ui5ddmBd838Vgdb2LZgQQJAUnaw/ThxrwHKT8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695147366; x=1695752166;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZXJATLGe/WfIktgoMPXg04Y8kCGTEYPfQUQyvrst4q0=;
+        b=eVT1U7egNGObEwfBvdF+5iV+VXIkE0NJVuNlq0nqCTyROWHwryaFf/KPvpwb3cjOS6
+         C3SmNW2R+WaYZxLyswHyGKv7cZR0+NVFeflKZnNjjPqRiSP5i/4p7O5QyXE2R0if4w9H
+         WmgCgRBHTkONkFmlVVLwi5sk2tQQsfjmFN7ZYXSsfHNj6Z/StlAAXMP6dGD2d3H/1t81
+         jfRWGka5s0Y/T7lXhQZOuure6HMhkcvJlX1xIQ+z4tmGVCLTgtLJ6OvxnbWEIYEIIGIt
+         e2iQxdjqOs6z4lOQ+OXsE/LZO4iO2YNoPUJO1oESPDQ+W0zrHJlHXoEV5sOmhEBxWlaw
+         32Og==
+X-Gm-Message-State: AOJu0YwVfx5RtNPASlnWNzdEiyERg7XvFfX2kE+sDU0JFEAgC8csC64d
+        JtZPFMe480Q4HcapCQrJndx/vtXOgO2MyZDBZJxrzZgA
+X-Google-Smtp-Source: AGHT+IFqxKZh4htgje9Mx+hBOY1Autu0I1cfVr3/WZCLnMniLFvqsPWZoVtCyxGvKX/ldbA17GsJww==
+X-Received: by 2002:ac2:4d08:0:b0:503:525:243b with SMTP id r8-20020ac24d08000000b005030525243bmr355315lfi.58.1695147365990;
+        Tue, 19 Sep 2023 11:16:05 -0700 (PDT)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id i22-20020a05640200d600b0052595b17fd4sm7703431edu.26.2023.09.19.11.16.05
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Sep 2023 11:16:05 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-52fa364f276so2147a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Sep 2023 11:16:05 -0700 (PDT)
+X-Received: by 2002:a50:d71b:0:b0:51a:1ffd:10e with SMTP id
+ t27-20020a50d71b000000b0051a1ffd010emr3828edi.3.1695147364758; Tue, 19 Sep
+ 2023 11:16:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230918125851.310-1-johan+linaro@kernel.org> <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
+ <ZQlIveJVdvyV2Ygy@hovoldconsulting.com>
+In-Reply-To: <ZQlIveJVdvyV2Ygy@hovoldconsulting.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 19 Sep 2023 11:15:46 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XBG7auVVyHn5uvahSZZxp5qBfp4+A9NwFqahdN6XrbZA@mail.gmail.com>
+Message-ID: <CAD=FV=XBG7auVVyHn5uvahSZZxp5qBfp4+A9NwFqahdN6XrbZA@mail.gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: fix handling of unpopulated devices
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        LinusW <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 4/6] gpio: vf610: add i.MX8ULP of_device_id entry
-Message-ID: <20230919142312.erbn64n52y4f5vl5@pengutronix.de>
-References: <20230918-vf610-gpio-v3-0-ada82a17adc5@nxp.com>
- <20230918-vf610-gpio-v3-4-ada82a17adc5@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230918-vf610-gpio-v3-4-ada82a17adc5@nxp.com>
-User-Agent: NeoMutt/20180716
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Peng,
+Hi,
 
-please see my notes below.
+On Tue, Sep 19, 2023 at 12:07=E2=80=AFAM Johan Hovold <johan@kernel.org> wr=
+ote:
+>
+> > c) To solve this in the core, we have to make sure we properly handle
+> > (without hanging/failing) multiple partially-conflicting devices and
+> > devices that might acquire resources in arbitrary orders.
+> >
+> > Though the above solution detecting the pinctrl conflicts sounds
+> > appealing and I'm currently working on prototyping it, I'm still not
+> > 100% convinced. I'm worried about the above downsides.
+>
+> Yes, I agree that we'd need to take a broader look at this and not just
+> focus on the immediate pinctrl issue.
 
-On 23-09-18, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> i.MX8ULP GPIO supports similar feature as i.MX7ULP GPIO, but i.MX8ULP is
-> not compatible with i.MX7ULP per binding doc. i.MX8ULP only has one
-> register base, not two base.
-> 
-> Add a new of_device_id entry for i.MX8ULP. But to make the driver could
-> also support old bindings, check the compatible string first, before
-> check the device data.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/gpio/gpio-vf610.c | 55 +++++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 49 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> index dbc7ba0ee72c..ef2455093708 100644
-> --- a/drivers/gpio/gpio-vf610.c
-> +++ b/drivers/gpio/gpio-vf610.c
-> @@ -25,6 +25,7 @@
->  struct fsl_gpio_soc_data {
->  	/* SoCs has a Port Data Direction Register (PDDR) */
->  	bool have_paddr;
-> +	bool is_imx8ulp;
+OK. FWIW, I got blocked on trying to solve this in the core
+automatically by just using the conflicting "pinctrl" entries. There
+are probably some ways to get it solved, but none of them are easy.
 
-I would invert the logic:
 
-	bool have_dual_base;
+> > Personally, I feel like we could add information to the device tree
+> > that would help us out. The question is: is this an abuse of device
+> > tree for something that Linux ought to be able to figure out on its
+> > own, or is it OK? To make it concrete, I was thinking about something
+> > like this:
+> >
+> > / {
+> >   tp_ex_group: trackpad-exclusion-group {
+> >     members =3D <&tp1>, <&tp2>, <&tp3>;
+> >   };
+> > };
+> >
+> > &i2c_bus {
+> >   tp1: trackpad@10 {
+> >     ...
+> >     mutual-exclusion-group =3D <&tp_ex_group>;
+> >   };
+> >   tp2: trackpad@20 {
+> >     ...
+> >     mutual-exclusion-group =3D <&tp_ex_group>;
+> >   };
+> >   tp3: trackpad@30 {
+> >     ...
+> >     mutual-exclusion-group =3D <&tp_ex_group>;
+> >   };
+> > };
+> >
+> > Then the device core would know not to probe devices in the same
+> > "mutual-exclusion-group" at the same time.
+> >
+> > If DT folks are OK with the "mutual-exclusion-group" idea then I'll
+> > probably backburner my attempt to make this work on the pinctrl level
+> > and go with that.
+>
+> I expressed something along these lines in the thread above:
 
->  };
->  
->  struct vf610_gpio_port {
-> @@ -60,13 +61,22 @@ struct vf610_gpio_port {
->  #define PORT_INT_EITHER_EDGE	0xb
->  #define PORT_INT_LOGIC_ONE	0xc
->  
-> +#define IMX8ULP_GPIO_BASE_OFF	0x40
-> +#define IMX8ULP_BASE_OFF	0x80
-> +
+I'm going to try coding up the above to see how it looks. Assuming
+nothing comes up, I'll try to have something in the next few days.
 
-static const struct fsl_gpio_soc_data vf610_data = {
-	.have_dual_base = true,
-};
 
-static const struct fsl_gpio_soc_data imx_data = {
-	.have_paddr = true,
-	.have_dual_base = true,
-};
+>         It seems we'd need some way to describe the devices as mutually
+>         exclusive...
+>
+> but given that we had prior art for handling simple cases and due to
+> lack of time, I left it on the ever-growing todo list.
+>
+> But regardless of what a long-term proper solution to this may look
+> like, we need to fix the regression in 6.6-rc1 by restoring the old
+> behaviour.
 
-static const struct fsl_gpio_soc_data imx8ulp_data = {
-	.have_paddr = true,
-};
+OK, fair enough. I'll take a look at your patch, though I think the
+person that really needs to approve it is Benjamin...
 
-This also introduces .data pointer for the vf610 case and we could drop
-the 'port->sdata' guard from the
-'if (port->sdata && port->sdata->paddr)' pattern. This of course would
-be an additional patch.
+Style-wise, I will say that Benjamin really wanted to keep the "panel
+follower" code out of the main probe routine. Some of my initial
+patches adding "panel follower" looked more like the results after
+your patch but Benjamin really wasn't happy until there were no
+special cases for panel-followers in the main probe routine. This is
+why the code is structured as it is.
 
-> +
->  static const struct of_device_id vf610_gpio_dt_ids[] = {
->  	{ .compatible = "fsl,vf610-gpio",	.data = NULL, },
->  	{ .compatible = "fsl,imx7ulp-gpio",	.data = &imx_data, },
-> +	{ .compatible = "fsl,imx8ulp-gpio",	.data = &imx8ulp_data, },
->  	{ /* sentinel */ }
->  };
->  
-> @@ -255,6 +265,42 @@ static void vf610_gpio_disable_clk(void *data)
->  	clk_disable_unprepare(data);
->  }
->  
-> +static int vf610_gpio_map_base(struct platform_device *pdev, struct vf610_gpio_port *port)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	bool dual_base;
-> +
-> +	/* support old compatible strings */
-> +	if (device_is_compatible(dev, "fsl,imx7ulp-gpio") &&
-> +	    (device_is_compatible(dev, "fsl,imx93-gpio") ||
-> +	    (device_is_compatible(dev, "fsl,imx8ulp-gpio")))) {
-> +		dual_base = true;
+Thinking that way, is there any reason you can't just move the
+i2c_hid_init_irq() into __do_i2c_hid_core_initial_power_up()? You
+could replace the call to enable_irq() with it and then remove the
+`IRQF_NO_AUTOEN` flag? I think that would also solve the issue if you
+wanted to use a 2nd source + the panel follower concept? Both devices
+would probe, but only one of them would actually grab the interrupt
+and only one of them would actually create real HID devices. We might
+need to do some work to keep from trying again at every poweron of the
+panel, but it would probably be workable? I think this would also be a
+smaller change...
 
-Move this part into probe() (see below) and drop the rest.
-
-> +	} else if (port->sdata && port->sdata->is_imx8ulp) {
-> +		dual_base = false;
-> +	} else {
-> +		dual_base = true;
-> +	};
-> +
-> +	if (dual_base) {
-
-	if (port->sdata-have_dual_base) {
-
-> +		port->base = devm_platform_ioremap_resource(pdev, 0);
-> +		if (IS_ERR(port->base))
-> +			return PTR_ERR(port->base);
-> +
-> +		port->gpio_base = devm_platform_ioremap_resource(pdev, 1);
-> +		if (IS_ERR(port->gpio_base))
-> +			return PTR_ERR(port->gpio_base);
-> +	} else {
-> +		port->base = devm_platform_ioremap_resource(pdev, 0);
-> +		if (IS_ERR(port->base))
-> +			return PTR_ERR(port->base);
-> +
-> +		port->gpio_base = port->base + IMX8ULP_GPIO_BASE_OFF;
-> +		port->base = port->base + IMX8ULP_BASE_OFF;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int vf610_gpio_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -269,13 +315,10 @@ static int vf610_gpio_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	port->sdata = of_device_get_match_data(dev);
-
-	/* Handle old device-tree bindings */
-	if (device_is_compatible(dev, "fsl,imx7ulp-gpio") &&
-	    (device_is_compatible(dev, "fsl,imx93-gpio") ||
-	    (device_is_compatible(dev, "fsl,imx8ulp-gpio"))))
-		port->sdata->have_dual_base = true;
-
-> -	port->base = devm_platform_ioremap_resource(pdev, 0);
-> -	if (IS_ERR(port->base))
-> -		return PTR_ERR(port->base);
->  
-> -	port->gpio_base = devm_platform_ioremap_resource(pdev, 1);
-> -	if (IS_ERR(port->gpio_base))
-> -		return PTR_ERR(port->gpio_base);
-> +	ret = vf610_gpio_map_base(pdev, port);
-> +	if (ret)
-> +		return ret;
->  
->  	port->irq = platform_get_irq(pdev, 0);
->  	if (port->irq < 0)
-
-Regards,
-  Marco
+-Doug
