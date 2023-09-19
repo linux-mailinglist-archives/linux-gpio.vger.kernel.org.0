@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0A957A6EFF
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 01:04:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07AF07A6F14
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 01:04:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233412AbjISXDu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Sep 2023 19:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37782 "EHLO
+        id S233612AbjISXED (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Sep 2023 19:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233356AbjISXDt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 19:03:49 -0400
+        with ESMTP id S233450AbjISXD4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 19:03:56 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4341C0;
-        Tue, 19 Sep 2023 16:03:43 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C80C43395;
-        Tue, 19 Sep 2023 23:03:42 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD420C9;
+        Tue, 19 Sep 2023 16:03:48 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FDEDC433D9;
+        Tue, 19 Sep 2023 23:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695164623;
-        bh=ivEhs/zpi0JLldx/NRni4lu2jJS2PyalHVCowMrgpWU=;
+        s=k20201202; t=1695164628;
+        bh=BKSCEpcWTMGHY3XimOTfIsJcw1YDM09kC6XQg+YxKRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jLactDbzMUkpRGeo3wUh/yX6l3F1Z+OP9F0+eHgseBYs4+6x3+3h5S1kIgo++/u+R
-         aBBugArR4+j+/jFhbNpxf8w5voA1wySejdOqewHie3ZElY15etSd1RYyf2nBHozgNj
-         DQyw24Km7pMwszPD54CgijbfsnHF1Cnapdk3yR7QcRJA4Fr0UQfwsSRv/Z5zk2Qv+R
-         gsOceD1Tkypi4GNFr9GXOSbV/vCMW8TLyr1oWeXGQ/uUWHYiBioQ49HT7ahNOivmH6
-         nWNlA09r714Axoezixs3n9B1SxXvH5quKfRT/wvNiIO5XHIFSS/m086nZqXjYSbhpO
-         mSvAAHUTclQ7g==
+        b=vIje+1moVku665frSsXPDsvLHtTnmT7/r7Q5eGD8IKM8Qw538I6lRqvD1leH+mpLf
+         3rg7JUUTBz0ybmbDOjE8QN43rovgQWQUW5yGAKDENFFwGvwSvJDMEarRgXyxrovhh1
+         XC0czCu6Wkp2oLC0sxEEMekX7eRn1FBwFuw8fEXUimQNx6ax42VdHZaqT/XYoJjnKk
+         ztie/zPGruKuxRX3lQALSv2zMrG6QpQGWObXGskdcLxB0wKhh8VINMwQco1Cqck4Yi
+         J8fJxblgpUKy2Lph1XhwuElYfGBgWyZacUrs1YHhmSXRMcScWkZTCEJJNe5wLedRVL
+         Xd/rYP1X3x8IA==
 From:   Bjorn Andersson <andersson@kernel.org>
 To:     Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: (subset) [PATCH v2 0/3] SM6115 LPASS TLMM
-Date:   Tue, 19 Sep 2023 16:07:33 -0700
-Message-ID: <169516485994.787935.15338594127555472104.b4-ty@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>
+Subject: Re: (subset) [PATCH v3 1/3] dt-bindings: pinctrl: qcom,sm8350-lpass-lpi: add SM8350 LPASS TLMM
+Date:   Tue, 19 Sep 2023 16:07:37 -0700
+Message-ID: <169516485987.787935.2244475537859107114.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20230722-topic-6115_lpasstlmm-v2-0-d4883831a858@linaro.org>
-References: <20230722-topic-6115_lpasstlmm-v2-0-d4883831a858@linaro.org>
+In-Reply-To: <20230719192058.433517-1-krzysztof.kozlowski@linaro.org>
+References: <20230719192058.433517-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -61,16 +60,16 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On Mon, 24 Jul 2023 13:39:55 +0200, Konrad Dybcio wrote:
-> This series introduces the bindings and driver for SM6115's LPI TLMM
-> block and enables it as a module in the arm64 defconfig.
+On Wed, 19 Jul 2023 21:20:56 +0200, Krzysztof Kozlowski wrote:
+> Add bindings for pin controller in SM8350 Low Power Audio SubSystem
+> (LPASS).
 > 
 > 
 
 Applied, thanks!
 
-[3/3] arm64: defconfig: enable Qualcomm SM6115 LPASS pinctrl
-      commit: 2f98ed431b77cbaefd75f9690a671c5fe3c9c479
+[3/3] arm64: defconfig: enable Qualcomm SM8350 LPASS pinctrl
+      commit: 7a9d9ee88cdb25d6241021317bcb3874d0fa7153
 
 Best regards,
 -- 
