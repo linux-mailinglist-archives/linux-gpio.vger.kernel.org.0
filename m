@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ADE07A6146
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Sep 2023 13:33:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4624F7A6147
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Sep 2023 13:33:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231241AbjISLd0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Sep 2023 07:33:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34428 "EHLO
+        id S231283AbjISLdd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Sep 2023 07:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231317AbjISLdZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 07:33:25 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684BD114
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Sep 2023 04:33:18 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-52a49a42353so6867164a12.2
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Sep 2023 04:33:18 -0700 (PDT)
+        with ESMTP id S231317AbjISLdd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 07:33:33 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A214F0
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Sep 2023 04:33:27 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-99c3c8adb27so733745566b.1
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Sep 2023 04:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695123197; x=1695727997; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
+        d=linaro.org; s=google; t=1695123205; x=1695728005; darn=vger.kernel.org;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Fo03UjUC1jhGoKp0j713RHLgJR/4V8ctZxPIJ5e4u2o=;
-        b=EkYVsuMSOpsOeqnW4d9QOExZCPccOCRtwZx99jq8q0gbS5V4r+rvq16AkQUFl+OoHL
-         f9QphqAUf91O9qe4p6EIH1ZTqcGhDVSL3h0FB6xxTo6uC8z4zMD566fmbyUq+c5lczRI
-         c3k+T0nYsFEdYTLlGHihNddiSbAOPTHr36gbmTnGmkSsZmrv8V9GgV+hBrdKtP1me2wj
-         Nq4r4q0gyovhYX7Dqvl7Qu3r0+VBkK2yHwUP8v1cxMwh0+3bEu1G0SxcUvfr5qs+N52p
-         JpXAT/B02I+v5yQNNogQ4EHILoXvFREaA/QT4B8azlB2aRPV5AbfUUNgnZGugnV8DbaD
-         wg4g==
+        bh=gifzo1eEyI0ZsRMlllhE1c5xV09V6ZzgBSzm95G1p3A=;
+        b=PAOn8TZYhi1Z2t/2DEJOp9KhiSpJicFHLTIT+VLzTxhV83GSZb+/n5dUlzUwXhmqpU
+         OuW0l6o46o4s0pjTxKctvh+tpIjzN4FNBZtmAL+sATb5OYUS1Z2i5xX8e3NNdrSsvTvF
+         APE5nXkCCwFoU2LlaItbooziuxjsZ8EO3UMcdjlzT7u6iamcApz1RMfHNwGb883Iku8s
+         0JX/76Gwa3KZ9ZPsiRE0puOxvEm8H7YJoLhn2gsgicl+7uAVnFAJ18+NR4YoBgbUqyCX
+         lBQTDhM+AS7cQNnXbfpi4SVrtugwf9PKrfknWlNnuFrlv00N7AmejVaUHzamv+SELYKh
+         nBvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695123197; x=1695727997;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
+        d=1e100.net; s=20230601; t=1695123205; x=1695728005;
+        h=in-reply-to:references:to:cc:subject:from:message-id:date
          :content-transfer-encoding:mime-version:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Fo03UjUC1jhGoKp0j713RHLgJR/4V8ctZxPIJ5e4u2o=;
-        b=bFhHZK4o03kNohIKPZVCxpjvovWgHw7lxrWxCcjEBpO6gm5u0lPC1AywcxT1iPKF9u
-         aGYntzqum+Llor4tmEmS8vmrQpCqwxffNydN14vNcjJLr6iq/z2kqszqtsTfdhEuPGN8
-         2Gs6pp8MOvf2L9UyVhHRXlW8qtJHVRmFfgYes9XI6zhoHNKl6C3bfbs5ajnNPuO7/2xP
-         Y4QcjVVQIvUyGsyklHCvWIJJipX9p7rVXf0rhC8MuL1eOCoJ01sxBNH4/2yP/sNVBkBF
-         PmW+1hB5BsuuReeMiKuaTK/jknpRbaaW5m/kp37ZQenqXi8RmyoLpBMqo+4nTNzrIgHE
-         A9Ew==
-X-Gm-Message-State: AOJu0YwgMmRXDSpE1zxgX7+OnYGRa4wA9GuhFc6yELK1YkEGd3gry+aK
-        nDBelkoDhJqZWFgTXJNat2YW1Q==
-X-Google-Smtp-Source: AGHT+IHPU9q6NgjtEKwNqGmGfgr602S3TCb87Yl77d1gnsZtD/+zwdVrSqdguirOUhasCQQYVq0kww==
-X-Received: by 2002:a17:906:1bb2:b0:9aa:63d:9ede with SMTP id r18-20020a1709061bb200b009aa063d9edemr9946229ejg.9.1695123196726;
-        Tue, 19 Sep 2023 04:33:16 -0700 (PDT)
+        bh=gifzo1eEyI0ZsRMlllhE1c5xV09V6ZzgBSzm95G1p3A=;
+        b=V7bdu1cGcodXaJRrNBV9acc1GP+O6wNy1bEDjsbn1E8N5qbFMjzp0tsgNqiMGoQWo+
+         YkRFPQLOAB6CsNM8Ms5Ax9EI7wvsaO1bou724DPwciAZwWMHL/z0uu25u8oJ/qwJUodk
+         rxRRTEsr+N1BX1OWMKCe7oF7sk0TlA2SqPHmRG0E2gysZpgtl05UYCzrF0+mrLO8x2Bk
+         ZBrK8gq2Qa9qw/J+JaRc7PDB1koTWcfBvTcbcQ26cusyLl7PYp4uR2YtNkDFiWB9R39Y
+         BcBzq8Ddq3XkmHPnPxy3B+Ydr0DgWE2h82okmNLdd3WcBGap4GioxZYNaWKoM8Zxux4u
+         UHxA==
+X-Gm-Message-State: AOJu0YzYbz7AqJlDT+GmxHtKBTJKyaImwosXLAxaPe50k8ncWgj2nkC3
+        WcbvzeB/YZNdzJ6ICsbpIyJ2MtY5utlVoFiHo54ASw==
+X-Google-Smtp-Source: AGHT+IH1Fsq1hdoLaWN3yWBLf2wpCAHnYmFwWMw3HVgQMPbTfBycHCbWC7eF65JQN7pOqF4c2DeN0Q==
+X-Received: by 2002:a17:906:74d9:b0:9a1:fc1e:19af with SMTP id z25-20020a17090674d900b009a1fc1e19afmr10097324ejl.36.1695123205641;
+        Tue, 19 Sep 2023 04:33:25 -0700 (PDT)
 Received: from localhost (static-212-193-78-212.thenetworkfactory.nl. [212.78.193.212])
-        by smtp.gmail.com with ESMTPSA id u17-20020a1709064ad100b0098ce63e36e9sm7814906ejt.16.2023.09.19.04.33.16
+        by smtp.gmail.com with ESMTPSA id u14-20020a170906068e00b0099ce025f8ccsm7589236ejb.186.2023.09.19.04.33.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Sep 2023 04:33:16 -0700 (PDT)
+        Tue, 19 Sep 2023 04:33:25 -0700 (PDT)
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 19 Sep 2023 13:33:15 +0200
-Message-Id: <CVMV0TQQYGX1.1P90OHRZBIB73@ablu-work>
-Subject: Re: [libgpiod][PATCH 2/3] bindings: cxx: tests: don't use the same
- chip from different threads
+Date:   Tue, 19 Sep 2023 13:33:24 +0200
+Message-Id: <CVMV0XSO2QN3.38U1D4717922B@ablu-work>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+Subject: Re: [libgpiod][PATCH 3/3] bindings: python: tests: don't use the
+ same chip from different threads
 Cc:     <linux-gpio@vger.kernel.org>,
         "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>
 To:     "Bartosz Golaszewski" <brgl@bgdev.pl>,
@@ -63,11 +64,10 @@ To:     "Bartosz Golaszewski" <brgl@bgdev.pl>,
         "Linus Walleij" <linus.walleij@linaro.org>,
         "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
         "Viresh Kumar" <viresh.kumar@linaro.org>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
 X-Mailer: aerc 0.15.2
 References: <20230919093142.85389-1-brgl@bgdev.pl>
- <20230919093142.85389-2-brgl@bgdev.pl>
-In-Reply-To: <20230919093142.85389-2-brgl@bgdev.pl>
+ <20230919093142.85389-3-brgl@bgdev.pl>
+In-Reply-To: <20230919093142.85389-3-brgl@bgdev.pl>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -82,7 +82,7 @@ On Tue Sep 19, 2023 at 11:31 AM CEST, Bartosz Golaszewski wrote:
 >
 > There are no thread-safety guarantees in libgpiod. Let's not reuse the
 > chip object created in one thread to generate info events in another but
-> create a second chip for that purpose instead.
+> use a global request function instead.
 >
 > Reported-by: Erik Schilling <erik.schilling@linaro.org>
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -90,57 +90,37 @@ On Tue Sep 19, 2023 at 11:31 AM CEST, Bartosz Golaszewski wrote:
 Reviewed-by: Erik Schilling <erik.schilling@linaro.org>
 
 > ---
->  bindings/cxx/tests/tests-info-event.cpp | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+>  bindings/python/tests/tests_info_event.py | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/bindings/cxx/tests/tests-info-event.cpp b/bindings/cxx/tests=
-/tests-info-event.cpp
-> index 249b1e8..21c0ef0 100644
-> --- a/bindings/cxx/tests/tests-info-event.cpp
-> +++ b/bindings/cxx/tests/tests-info-event.cpp
-> @@ -3,6 +3,7 @@
+> diff --git a/bindings/python/tests/tests_info_event.py b/bindings/python/=
+tests/tests_info_event.py
+> index f3926d9..6bb09d5 100644
+> --- a/bindings/python/tests/tests_info_event.py
+> +++ b/bindings/python/tests/tests_info_event.py
+> @@ -37,9 +37,9 @@ class InfoEventDataclassBehavior(TestCase):
+>                      event.line_info =3D 4
 > =20
->  #include <catch2/catch.hpp>
->  #include <chrono>
-> +#include <filesystem>
->  #include <gpiod.hpp>
->  #include <sstream>
->  #include <thread>
-> @@ -17,11 +18,11 @@ using event_type =3D ::gpiod::info_event::event_type;
 > =20
->  namespace {
+> -def request_reconfigure_release_line(chip, offset):
+> +def request_reconfigure_release_line(chip_path, offset):
+>      time.sleep(0.1)
+> -    with chip.request_lines(config=3D{offset: None}) as request:
+> +    with gpiod.request_lines(chip_path, config=3D{offset: None}) as requ=
+est:
+>          time.sleep(0.1)
+>          request.reconfigure_lines(
+>              config=3D{offset: gpiod.LineSettings(direction=3DDirection.O=
+UTPUT)}
+> @@ -95,7 +95,7 @@ class WatchingInfoEventWorks(TestCase):
+>          self.assertEqual(info.direction, Direction.INPUT)
 > =20
-> -void request_reconfigure_release_line(::gpiod::chip& chip)
-> +void request_reconfigure_release_line(const ::std::filesystem::path& chi=
-p_path)
->  {
->  	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
+>          self.thread =3D threading.Thread(
+> -            target=3Dpartial(request_reconfigure_release_line, self.chip=
+, 7)
+> +            target=3Dpartial(request_reconfigure_release_line, self.sim.=
+dev_path, 7)
+>          )
+>          self.thread.start()
 > =20
-> -	auto request =3D chip
-> +	auto request =3D ::gpiod::chip(chip_path)
->  		.prepare_request()
->  		.add_line_settings(7, ::gpiod::line_settings())
->  		.do_request();
-> @@ -48,7 +49,9 @@ TEST_CASE("Lines can be watched", "[info-event][chip]")
->  		.set_num_lines(8)
->  		.build();
-> =20
-> -	::gpiod::chip chip(sim.dev_path());
-> +	const auto chip_path =3D sim.dev_path();
-> +
-> +	::gpiod::chip chip(chip_path);
-> =20
->  	SECTION("watch_line_info() returns line info")
->  	{
-> @@ -74,7 +77,7 @@ TEST_CASE("Lines can be watched", "[info-event][chip]")
-> =20
->  		REQUIRE(info.direction() =3D=3D direction::INPUT);
-> =20
-> -		::std::thread thread(request_reconfigure_release_line, ::std::ref(chip=
-));
-> +		::std::thread thread(request_reconfigure_release_line, ::std::ref(chip=
-_path));
-> =20
->  		REQUIRE(chip.wait_info_event(::std::chrono::seconds(1)));
->  		auto event =3D chip.read_info_event();
 
