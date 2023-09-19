@@ -2,56 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9AF37A59AD
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Sep 2023 08:04:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32B2A7A5A88
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Sep 2023 09:07:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231214AbjISGES (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Sep 2023 02:04:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34834 "EHLO
+        id S231622AbjISHHf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Sep 2023 03:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229960AbjISGES (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 02:04:18 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6898B102
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Sep 2023 23:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695103452; x=1726639452;
-  h=date:from:to:cc:subject:message-id;
-  bh=DNjaz9yWQCl1dFw6oa/6NytuPqrsV0t52jMJTO69egs=;
-  b=US8gy7fu9hDGLC1QZgEynfqNP5lHSw7cjwyFmKvKRc7qQZs9Q/xt30q+
-   mbSmk9eZS9RUQQ9EvwdAsB9l5YgTY5KQQ0ArPOtLJMrXTFh7L2x4HtZl3
-   A1/QVtqBy156MQrYUX5Fiz4DtboxbN2fy/F3hE8eUL3y6FhNsfY85XGq2
-   gvi0sPmUWZCVe2jiPcA9x7yg8KRyx0/+/hqe9eRcUXPg6tNogLhYQG6Oc
-   tcTM7D+mCbKZxmBB91sC8zM0DQhhKL8FZBHIOiC/tS9ZMJP6pyR+bKPNa
-   HjTiXKpYIleEPHzu/TMCFpq7TZz0CWHCEA9f4BP6a4iPK6AlC24FGVvKp
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="466191044"
-X-IronPort-AV: E=Sophos;i="6.02,158,1688454000"; 
-   d="scan'208";a="466191044"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2023 23:04:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10837"; a="919738449"
-X-IronPort-AV: E=Sophos;i="6.02,158,1688454000"; 
-   d="scan'208";a="919738449"
-Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 18 Sep 2023 23:04:10 -0700
-Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qiTqC-0006yX-1O;
-        Tue, 19 Sep 2023 06:04:08 +0000
-Date:   Tue, 19 Sep 2023 14:03:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- db8588f95cc5e4c9d134f7f4f939b1eade419560
-Message-ID: <202309191403.W4CHWdGa-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        with ESMTP id S231612AbjISHHf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 03:07:35 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FD1116;
+        Tue, 19 Sep 2023 00:07:29 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A10C433C8;
+        Tue, 19 Sep 2023 07:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695107249;
+        bh=hk6MTSg2w6vRJMTSQbUVxxO4PouQtMWRgz7EPaXFfhY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tByPkdImFal9VUGiAJG0v4DB3+eTkbIARCBO22fNE8S1MiU529opNX4DXDb0heUly
+         Yh1TS4hWzdTuvqhECYgg9KWuDdZg+l6JwaPE9oYe6wknLybJS4VhG89ACI8ueE7bWP
+         tTpsUX0+ur4zhpcRkBeO1IIZ9AuQ+cYfTi64h1qVX+2vFEeaWck178Fp1+9SX9Q/cZ
+         jFVeyxw3/qlWxeP14c/iejtQwFFL8tahguPeaAwwjBvGc3WkDXhYSXJ/YWORlYrkwW
+         8h0EHIbU7MBl0fKmRh2c44YF4o/xnuxOHhhdHweIRtiv659jM/Z+RbDNjWvfdoADgL
+         jiI5H94H1WASQ==
+Received: from johan by xi.lan with local (Exim 4.96)
+        (envelope-from <johan@kernel.org>)
+        id 1qiUph-0006Wl-3B;
+        Tue, 19 Sep 2023 09:07:42 +0200
+Date:   Tue, 19 Sep 2023 09:07:41 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        LinusW <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] HID: i2c-hid: fix handling of unpopulated devices
+Message-ID: <ZQlIveJVdvyV2Ygy@hovoldconsulting.com>
+References: <20230918125851.310-1-johan+linaro@kernel.org>
+ <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,155 +65,155 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: db8588f95cc5e4c9d134f7f4f939b1eade419560  gpio: sim: include a missing header
+On Mon, Sep 18, 2023 at 08:00:15AM -0700, Doug Anderson wrote:
+> On Mon, Sep 18, 2023 at 6:00 AM Johan Hovold <johan+linaro@kernel.org> wrote:
+> > A recent commit reordered probe so that the interrupt line is now
+> > requested before making sure that the device exists.
+> >
+> > This breaks machines like the Lenovo ThinkPad X13s which rely on the
+> > HID driver to probe second-source devices and only register the variant
+> > that is actually populated. Specifically, the interrupt line may now
+> > already be (temporarily) claimed when doing asynchronous probing of the
+> > touchpad:
+> >
+> >         genirq: Flags mismatch irq 191. 00082008 (hid-over-i2c) vs. 00082008 (hid-over-i2c)
+> >         i2c_hid_of 21-0015: Could not register for hid-over-i2c interrupt, irq = 191, ret = -16
+> >         i2c_hid_of: probe of 21-0015 failed with error -16
+> >
+> > Fix this by restoring the old behaviour of first making sure the device
+> > exists before requesting the interrupt line.
 
-elapsed time: 852m
+> Ugh, sorry for the regression. :( It actually turns out that I've been
+> digging into this same issue on a different device (see
+> mt8173-elm-hana). I hadn't realized that it was a regression caused by
+> my recent change, though.
+> 
+> I haven't yet reviewed your change in detail, but to me it seems like
+> at most a short term fix. Specifically, I think the way that this has
+> been working has been partially via hacks and partially via luck. Let
+> me explain...
+> 
+> Currently, to make this work the `sc8280xp-lenovo-thinkpad-x13s.dts`
+> file has a hack in it. You can see that the `tpad_default` pinctrl
+> entry has been moved up to the i2c bus level even though it doesn't
+> belong there (it should be in each trackpad). This is because,
+> otherwise, you would have run into similar type problems as the device
+> core would have failed to claim the pin for one of the devices.
 
-configs tested: 136
-configs skipped: 2
+Ḯ'm well aware of that and it was mentioned in the commit message for
+4367d763698c ("arm64: dts: qcom: sc8280xp-x13s: enable alternate
+touchpad") as well as discussed briefly with Rob here:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+	https://lore.kernel.org/all/Y3teH14YduOQQkNn@hovoldconsulting.com/
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230919   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20230919   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230919   gcc  
-i386         buildonly-randconfig-002-20230919   gcc  
-i386         buildonly-randconfig-003-20230919   gcc  
-i386         buildonly-randconfig-004-20230919   gcc  
-i386         buildonly-randconfig-005-20230919   gcc  
-i386         buildonly-randconfig-006-20230919   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230919   gcc  
-i386                  randconfig-002-20230919   gcc  
-i386                  randconfig-003-20230919   gcc  
-i386                  randconfig-004-20230919   gcc  
-i386                  randconfig-005-20230919   gcc  
-i386                  randconfig-006-20230919   gcc  
-i386                  randconfig-011-20230919   gcc  
-i386                  randconfig-012-20230919   gcc  
-i386                  randconfig-013-20230919   gcc  
-i386                  randconfig-014-20230919   gcc  
-i386                  randconfig-015-20230919   gcc  
-i386                  randconfig-016-20230919   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230919   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230919   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230919   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20230919   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230919   gcc  
-x86_64       buildonly-randconfig-002-20230919   gcc  
-x86_64       buildonly-randconfig-003-20230919   gcc  
-x86_64       buildonly-randconfig-004-20230919   gcc  
-x86_64       buildonly-randconfig-005-20230919   gcc  
-x86_64       buildonly-randconfig-006-20230919   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230919   gcc  
-x86_64                randconfig-002-20230919   gcc  
-x86_64                randconfig-003-20230919   gcc  
-x86_64                randconfig-004-20230919   gcc  
-x86_64                randconfig-005-20230919   gcc  
-x86_64                randconfig-006-20230919   gcc  
-x86_64                randconfig-011-20230919   gcc  
-x86_64                randconfig-012-20230919   gcc  
-x86_64                randconfig-013-20230919   gcc  
-x86_64                randconfig-014-20230919   gcc  
-x86_64                randconfig-015-20230919   gcc  
-x86_64                randconfig-016-20230919   gcc  
-x86_64                randconfig-071-20230919   gcc  
-x86_64                randconfig-072-20230919   gcc  
-x86_64                randconfig-073-20230919   gcc  
-x86_64                randconfig-074-20230919   gcc  
-x86_64                randconfig-075-20230919   gcc  
-x86_64                randconfig-076-20230919   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
+> Currently, we're getting a bit lucky with
+> `sc8280xp-lenovo-thinkpad-x13s.dts` that there are no other shared
+> resources between the two devices besides the interrupt. Specifically
+> a number of trackpads / touchscreens also have a "reset" GPIO that
+> needs to be power sequenced properly in order to talk to the
+> touchscreen. In this case we'll be stuck again because both instances
+> would need to grab the "reset" GPIO before being able to confirm if
+> the device is there.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Right, this will only work for fairly simple cases, but we do have a few
+of those in tree since some years back.
+
+> This is an old problem. The first I remember running into it was back
+> in 2015 on rk3288-veryron-minnie. We had a downstream hack to make
+> this work with -EPROBE_DEFER. https://crrev.com/c/266224. By the time
+> we shipped, though, we decided not to do the 2nd sourcing. After that
+> I always NAKed HW designs like this, but I guess that didn't help with
+> Mediatek hardware I wasn't involved with. :( ...and, of course, it
+> didn't help with devices that aren't Chromebooks like the Thinkpad
+> X13S.
+> 
+> FWIW: as a short term solution, we ended up forcing synchronous probe
+> in <https://crrev.com/c/4857566>. This has some pretty serious boot
+> time implications, but it's also very simple.
+> 
+> 
+> I'm actively working on coming up with a better solution here. My
+> current thought is that that maybe we want to do:
+> 
+> 1. Undo the hack in the device tree and have each "2nd source" have
+> its own pinctrl entry.
+> 
+> 2. In core pinctrl / device probing code detect the pinctrl conflict
+> and only probe one of the devices at a time.
+> 
+> ...that sounds like a nice/elegant solution and I'm trying to make it
+> work, though it does have some downsides. Namely:
+> 
+> a) It requires "dts" changes to work. Namely we've got to undo the
+> hack that pushed the pinctrl up to the controller level (or, in the
+> case of mt8173-elm-hana, that just totally skipped the "pinctrl" entry
+> altogether). Unfortunately those same "dts" changes will actually make
+> things _worse_ if you don't have the code change. :(
+
+Right, a proper solution will likely require an updated DT.
+
+> b) It only handles the case where the resources shared by 2nd sourcing
+> are expressed by pinctrl. In a practical sense this seems to be most
+> cases, but conceivably you could imagine running into this situation
+> with a non-pin-related shared resource.
+
+Indeed.
+
+> c) To solve this in the core, we have to make sure we properly handle
+> (without hanging/failing) multiple partially-conflicting devices and
+> devices that might acquire resources in arbitrary orders.
+> 
+> Though the above solution detecting the pinctrl conflicts sounds
+> appealing and I'm currently working on prototyping it, I'm still not
+> 100% convinced. I'm worried about the above downsides.
+
+Yes, I agree that we'd need to take a broader look at this and not just
+focus on the immediate pinctrl issue.
+ 
+> Personally, I feel like we could add information to the device tree
+> that would help us out. The question is: is this an abuse of device
+> tree for something that Linux ought to be able to figure out on its
+> own, or is it OK? To make it concrete, I was thinking about something
+> like this:
+> 
+> / {
+>   tp_ex_group: trackpad-exclusion-group {
+>     members = <&tp1>, <&tp2>, <&tp3>;
+>   };
+> };
+> 
+> &i2c_bus {
+>   tp1: trackpad@10 {
+>     ...
+>     mutual-exclusion-group = <&tp_ex_group>;
+>   };
+>   tp2: trackpad@20 {
+>     ...
+>     mutual-exclusion-group = <&tp_ex_group>;
+>   };
+>   tp3: trackpad@30 {
+>     ...
+>     mutual-exclusion-group = <&tp_ex_group>;
+>   };
+> };
+> 
+> Then the device core would know not to probe devices in the same
+> "mutual-exclusion-group" at the same time.
+> 
+> If DT folks are OK with the "mutual-exclusion-group" idea then I'll
+> probably backburner my attempt to make this work on the pinctrl level
+> and go with that.
+
+I expressed something along these lines in the thread above:
+
+	It seems we'd need some way to describe the devices as mutually
+	exclusive...
+
+but given that we had prior art for handling simple cases and due to
+lack of time, I left it on the ever-growing todo list.
+
+But regardless of what a long-term proper solution to this may look
+like, we need to fix the regression in 6.6-rc1 by restoring the old
+behaviour.
+
+Johan
