@@ -2,50 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 158D67A6B56
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Sep 2023 21:17:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA43C7A6F17
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 01:04:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232400AbjISTRv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Sep 2023 15:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
+        id S233371AbjISXDt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Sep 2023 19:03:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232672AbjISTRu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 15:17:50 -0400
+        with ESMTP id S232649AbjISXDq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Sep 2023 19:03:46 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E67D8E1;
-        Tue, 19 Sep 2023 12:17:44 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E07C433C8;
-        Tue, 19 Sep 2023 19:17:43 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189F7C4;
+        Tue, 19 Sep 2023 16:03:41 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B91BCC433CC;
+        Tue, 19 Sep 2023 23:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695151064;
-        bh=ebjAjtM0augVTdmL4SjqfI+x/1ojv/CTauE35eGA8Pg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=chfSUdX4YrcFga2P5HeNsgBGIoP5Mqcv+nEQK/fhk7hO86e0YwFJrrLYPTU1yXYu9
-         aQ/cY6fJqckwoMxTZIv0GHf6FhCrIfB2bWYHknQ32FV4FZecSUNaPuLdRutbo6AUbP
-         TmQU4oc1u4bmbojONBCy+jZ+3nezy4Gu0YKRNqNUsw+AzYxKPH2d7i7FdjvU4PrUBC
-         1gMbTDNXU1vf42R6gbfDolf+jQjI9LQkKtk4JR8zhYPUFD/kuggQe2yXD+NdiaawFU
-         O5NFQcQZ3yOgI6FZyHejheJiLXwcidS+cPq/xmGoLYnmWOeaom+90lqvBhWxOK80b3
-         nPieriSiDsxsw==
-Received: (nullmailer pid 51062 invoked by uid 1000);
-        Tue, 19 Sep 2023 19:17:42 -0000
-Date:   Tue, 19 Sep 2023 14:17:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Tzuyi Chang <tychang@realtek.com>
-Cc:     Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-kernel@vger.kernel.org,
+        s=k20201202; t=1695164620;
+        bh=qF4/9d6eVhS5IiOnbMCUg5Jo8SdxsHnh1wZSpqLGTW8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ABhdGUDFY+QyKtk1C0f9DweY+iaYrvY8dNhfiCe8Py42wGqb3sfEGSXTy9IVnI7wd
+         MDlitU6QzJ0d8sJTD1ima1nSr3L1OHjtRAde8u/kACUhfeCq8hvjjWQ0FjbLpFYmb+
+         NIK1lD3aeld3GB0qMA/2spgadAwuuksiRPozEd38ls0U+uqmGacFI1nOzOkLoooJpc
+         T1uJJnYC7AP+lCRdc2ib2yyHZBcrLVqth4FBzOd1IuPq48av0pTpVuu2C+dlTcWTYw
+         Dg+cpjbagYV75OXcV6LuvdCehOM0HHFKaDAl1Gr/iszyZOWmmJncvWgZj3cqvHyPCn
+         9CW2Vu5JtMfUg==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] dt-bindings: pinctrl: realtek: add RTD1619B
- pinctrl binding
-Message-ID: <169515106224.50995.5876042785043035967.robh@kernel.org>
-References: <20230919101117.4097-1-tychang@realtek.com>
- <20230919101117.4097-8-tychang@realtek.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: (subset) [PATCH 0/3] Clean up LPASS_LPI probe
+Date:   Tue, 19 Sep 2023 16:07:31 -0700
+Message-ID: <169516485983.787935.11341835418351027559.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230714-topic-lpass_lpi_cleanup-v1-0-dc18b5bd14f7@linaro.org>
+References: <20230714-topic-lpass_lpi_cleanup-v1-0-dc18b5bd14f7@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230919101117.4097-8-tychang@realtek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -56,27 +57,21 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On Tue, 19 Sep 2023 18:11:17 +0800, Tzuyi Chang wrote:
-> Add device tree bindings for RTD1619B.
+On Fri, 14 Jul 2023 14:40:45 +0200, Konrad Dybcio wrote:
+> Some SoCs (like SM6115 or SC7280 with various firmwares) expect a single
+> clock for the LPASS pinctrl.
 > 
-> Signed-off-by: Tzuyi Chang <tychang@realtek.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> v2 to v3 change:
->     1. Use '-pins$' to be node name pattern.
->     2. Remove if/then condition under the patternProperties
->        "-pins$".
-> v1 to v2 change:
->     1. Add a description for RTD1619B.
->     2. Rename realtek,pdrive, realtekmndrive and realtek,dcycle.
->     3. Add a description for PMOS and NMOS driving strength.
->     4. Remove the wildcard in the compatible strings.
->     5. Use '-pins$' to be node name pattern.
-> ---
->  .../pinctrl/realtek,rtd1619b-pinctrl.yaml     | 186 ++++++++++++++++++
->  1 file changed, 186 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1619b-pinctrl.yaml
+> This serires addresses that by simplifying the probe code and relying
+> on bindings to sanction the correct number of clocks. That allows us to
+> shoot down another downstream-ism.
 > 
+> [...]
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
 
+[3/3] arm64: dts: qcom: sc7280: Remove qcom,adsp-bypass-mode
+      commit: 274926cc4ced14f4e61204c0cd23fd099daa9b16
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
