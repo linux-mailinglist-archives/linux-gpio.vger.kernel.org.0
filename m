@@ -2,101 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 777337A8784
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 16:48:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 635A97A87E3
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 17:07:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235229AbjITOsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 10:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44452 "EHLO
+        id S235264AbjITPHt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 11:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234330AbjITOry (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 10:47:54 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 973521B5;
-        Wed, 20 Sep 2023 07:47:22 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="384082608"
-X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
-   d="scan'208";a="384082608"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 07:47:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="870403133"
-X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
-   d="scan'208";a="870403133"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 07:47:17 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andy@kernel.org>)
-        id 1qiyTw-0000000G0eB-3vo6;
-        Wed, 20 Sep 2023 17:47:12 +0300
-Date:   Wed, 20 Sep 2023 17:47:12 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] platform: cznic: Add preliminary support for
- Turris Omnia MCU
-Message-ID: <ZQsF8FWwfAuT26yE@smile.fi.intel.com>
-References: <20230919103815.16818-1-kabel@kernel.org>
- <20230919103815.16818-3-kabel@kernel.org>
- <ZQmUFPvIx91+ps6k@smile.fi.intel.com>
- <20230919171638.19bc1619@dellmb>
- <ZQnn+Gi0xVlsGCYA@smile.fi.intel.com>
- <20230920161953.6d952392@dellmb>
+        with ESMTP id S234501AbjITPHs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 11:07:48 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99707AF
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 08:07:41 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-501eec0a373so11459088e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 08:07:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695222460; x=1695827260; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bsZ7Wlr1yiQfcQ493EQPRMkRXBsuRukyL+6eZElb+dQ=;
+        b=zg1/6j9t1zZl+y2q0XUVLSweq/4BhIBza6hxrKLWd3yHhkkcBtXLUTUl41WvWr8XNc
+         lbzLgF7UghRQPsOKSJEeXIa1JeJ/PxWZh+Szq6BeK5KuYtKuCvw7iAlFCZRBBZurPp1z
+         cWraYIpgDm4P9Np32zNevsjwppdmxL0spTmcMI3xl05kC3C7fNsXYhfSiNoeH/iWs0Zm
+         1p0LaEmM7iaVHzexI5pLc8CfIxXVplihSzwfGCYZdcaGLbhCwZDlN4hFU/0icYgyzMgh
+         OsKlviHxaL2ur5AKauGEsjf0pDBk8OlQ61J34J8zdoe8WrdTX6rEdKMW0Hfsmgz/3RjT
+         YiUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695222460; x=1695827260;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bsZ7Wlr1yiQfcQ493EQPRMkRXBsuRukyL+6eZElb+dQ=;
+        b=ZufcMg7lZJfhiPUmRPiUWEmfHyTuPF7LxJdzmzORa0AfNNl3vS7rcbuCFarA6tZLf/
+         kHLKQJvKmdWgyiqq93viCGxbe+goTG0CUmwYL9GSEJktBatVptQYUaYmy7jNOKIGfuZK
+         9HKaMPzBK8HzwS6G4q1rjO4fUXCJnO3xXq8jpGTHEy6avWuCVVK4JUHqrp181LMmq+g+
+         yI1j3mUdj3pZkc+huZh3EmQUrdR90vrWlYEdhdM8Gst/GCgWdB+y2XRSF44QYEK+Ppix
+         pMy2lmn272h4S9wONmf4i6t8PUljGJ/gvDDjdjMjVn+EjbBellGnckIpm2HFwJLZYlEj
+         /5CA==
+X-Gm-Message-State: AOJu0YyJIhL6Am5UGLoZS8QqfJqz/j/KOBYxKuDcvxOuvocUSSdDLFon
+        exwy7mdchR4Oowsmp/7xsUEABw==
+X-Google-Smtp-Source: AGHT+IEH1H8yEO26SQB7+ldxq/TedHeDDispfgHnSqbgz2f8e+eP++uMAspDgHun80RyE0gxnLZpHg==
+X-Received: by 2002:a19:2d51:0:b0:500:ac0b:8d58 with SMTP id t17-20020a192d51000000b00500ac0b8d58mr2239158lft.18.1695222459729;
+        Wed, 20 Sep 2023 08:07:39 -0700 (PDT)
+Received: from [172.20.86.172] (static-212-193-78-212.thenetworkfactory.nl. [212.78.193.212])
+        by smtp.gmail.com with ESMTPSA id by6-20020a0564021b0600b0052a198d8a4dsm8951387edb.52.2023.09.20.08.07.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Sep 2023 08:07:39 -0700 (PDT)
+Message-ID: <d782e49a-cc69-06c5-ac0b-4efbdd1f0903@linaro.org>
+Date:   Wed, 20 Sep 2023 17:07:38 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230920161953.6d952392@dellmb>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 7/7] arm64: dts: qcom: qcm6490: Add device-tree for
+ Fairphone 5
+Content-Language: en-US
+To:     Luca Weiss <luca.weiss@fairphone.com>,
+        cros-qcom-dts-watchers@chromium.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20230919-fp5-initial-v2-0-14bb7cedadf5@fairphone.com>
+ <20230919-fp5-initial-v2-7-14bb7cedadf5@fairphone.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20230919-fp5-initial-v2-7-14bb7cedadf5@fairphone.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 20, 2023 at 04:19:53PM +0200, Marek Behún wrote:
-> On Tue, 19 Sep 2023 21:27:04 +0300
-> Andy Shevchenko <andy@kernel.org> wrote:
-> > On Tue, Sep 19, 2023 at 05:16:38PM +0200, Marek Behún wrote:
-> > > On Tue, 19 Sep 2023 15:29:08 +0300
-> > > Andy Shevchenko <andy@kernel.org> wrote:  
-> > > > On Tue, Sep 19, 2023 at 12:38:10PM +0200, Marek Behún wrote:  
 
-...
 
-> > > > > +	if (likely(ret == ARRAY_SIZE(msgs)))    
-> > > > 
-> > > > Why likely()? Please, justify.  
-> > > 
-> > > Becuase it is unlikely the I2C transaction will fail. In most cases, it
-> > > does not.  
-> > 
-> > Yes, but why likely() is needed? So, i.o.w. what's the benefit in _this_ case?
+On 9/19/23 14:46, Luca Weiss wrote:
+> Add device tree for the Fairphone 5 smartphone which is based on
+> the QCM6490 SoC.
 > 
-> Compiler optimization (one branch avoided). But I guess this isn't a
-> hot path, since I2C is insanely slow anyway. OK, I shall remove the
-> likely() usage.
+> Supported features are, as of now:
+> * Bluetooth
+> * Debug UART
+> * Display via simplefb
+> * Flash/torch LED
+> * Flip cover sensor
+> * Power & volume buttons
+> * RTC
+> * SD card
+> * USB
+> * Various plumbing like regulators, i2c, spi, etc
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Tested-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Have you seen the difference in the generated code, btw?
-
-I don't think it will get you one independently on the hot/slow
-path.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Konrad
 
 
