@@ -2,160 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A2097A7673
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 10:56:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32CF57A76C8
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 11:03:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233464AbjITI46 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 04:56:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
+        id S234124AbjITJDV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 05:03:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233597AbjITI45 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 04:56:57 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F9B9E
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 01:56:49 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-523100882f2so8408492a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 01:56:49 -0700 (PDT)
+        with ESMTP id S234181AbjITJDB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 05:03:01 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B3B1134
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 02:01:36 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-59bebd5bdadso68404497b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 02:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695200208; x=1695805008; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tWw1t4ALS79pB9kxjWM5PMdLLOt6nPp1AWWZtrHrPQ8=;
-        b=e7+mjuYJcgP7VkEekbsmVnlyvFKX7E80u/bZBPvgDbEt9PQl2Wb1Q+3XZHZV3Y2XaU
-         6f0aPFeoeAb2Kcpz9uv8moXPSWybQKRjqAYCaSjJrSe/u8D/ltXgMCAvSnzmyXEbG5Jf
-         FVBQgE5ga54gxGAkaL/H2dOWArSA2cmGkvrExzV2VjQrWoB5r1jGj9eFHmd4cBQKSDek
-         7dDK/xtVFf5rfH+gIJ2/182NmEBYNkGUWzGk0H96nh/7UBQtD/GxQZFK+T3XwFFydjxG
-         uotEkm7cGeeZ+GHHNn/L+C7e9DADNwZtpJAaAGuNbfUz8FeKVkFSfXjc1/C//jYGdGmm
-         A3IA==
+        d=linaro.org; s=google; t=1695200495; x=1695805295; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wYvirtTEHfvn8mKnPG5A91Sh0MgTtcoSl/PA6YHPo2E=;
+        b=e67SKoZXfFeMQUmerjh6yyRcmC80eeCa1feNmPVuynm/J+GCmXkW/9Ev8w9zQYYxl1
+         gIk0CMgsA1WjPdiYZi9caw6Syt3B6C12lfapGutfdqz+NTr8tbZYLH5042aJiYxzhl43
+         W5cK+ZvBfjdfKGDGpBLHzXDDX6qi2hf61iWRkiD2hVDHurmlHFJUtgHL9sJceBruqBHp
+         JdlQTV4Y86r4+yCGp40UVUifJmKDQMKzhNBnG4aPjiZO9QKpkhcfXvFgEKsyYSnqttbL
+         5xbDMK0s5w77gprYbgoq+lSRGNNksqNbUa8DFOI81yLUD7caa1NFWSBDTPAW5wifgdzF
+         GJYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695200208; x=1695805008;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tWw1t4ALS79pB9kxjWM5PMdLLOt6nPp1AWWZtrHrPQ8=;
-        b=NYpGfnroz3kAkEneEX8kyChlSe6C/F3ziC1zrtxaERGHcGdpGEyzFd4znjKGCiWZHc
-         bFTpRccL3ZAul4pSeLn6XG6BYtIhkIJKghepbBq4Tx/+XETQ5yRwqwlXBKH4fnKRDiWm
-         8ZzCw3ho6AgRUK7DLIfxJKLSVAZMCk2Qjmhs/jc/U87jllc7a+j9u1vEIU5LG6RUH8vM
-         BfhIL3k/EP5jwjgT5Lzw5I8tTi1k+1N1Q8gluFyh++Lm3FToJuv1pGn1RN5Y2or/DsnW
-         d77UpkMRPDZQBmuo58ZqerTRNU7ljOjD5m2tx72pEDHjI8UQ1Pm3ha6Rc9YGJyamYcLA
-         YYEQ==
-X-Gm-Message-State: AOJu0Yx2o1QIQT2GGKp8VBUbAyV5MutEgkflNLOjh5CRTUx+XSD+bad6
-        pDi5p4P/32o0ZCEUOeG87ZBnIA==
-X-Google-Smtp-Source: AGHT+IGXjbC1tb4RgeNU9s6vDfRt8H2U6A/YX/bk9skfM2AVLdcsSvGz3HYVAtziizBML2BM5Xfupw==
-X-Received: by 2002:a05:6402:1b1b:b0:52b:db31:3c5c with SMTP id by27-20020a0564021b1b00b0052bdb313c5cmr1667421edb.0.1695200207902;
-        Wed, 20 Sep 2023 01:56:47 -0700 (PDT)
-Received: from brgl-uxlite.. (static-212-193-78-212.thenetworkfactory.nl. [212.78.193.212])
-        by smtp.gmail.com with ESMTPSA id t18-20020a056402021200b0052fdfd8870bsm8621789edv.89.2023.09.20.01.56.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 01:56:47 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: extend the critical sections of lookup tables
-Date:   Wed, 20 Sep 2023 10:56:39 +0200
-Message-Id: <20230920085639.152441-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1695200495; x=1695805295;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wYvirtTEHfvn8mKnPG5A91Sh0MgTtcoSl/PA6YHPo2E=;
+        b=bGCBmKMMKH8vDNwiaELeqS4MjRSTmQVXY86OBmKCCmIRYOEG/gvwNigG0H2yawts3F
+         AM/QE2D0iWmNdAsWN0CJfrTDghGcpwGA/Feat5ozBYtRcFJRE7KA3NTYiF+zNIuyoIkt
+         DsGlQIgk6HxOPf2GUZynvhSqbUWpsoVAsUWmDS4rpEFta44+mfQrCDO1Z7cFgy84zo49
+         P5s9v43qR4jNGYf7yOq8at9/sLh3PDq3yivg1Ap2zrMK7nAQGRrL9wiSHNdxHlkw7JNz
+         UpOo3wdeoolU8AZ65CPhvwQn9b1ZVWNm2iVqrWCrAAKojmPMsVO1/JZeHRYZK+98EVr9
+         OhKQ==
+X-Gm-Message-State: AOJu0Yy9XS6mOLoLLNXLDfgxMEyjI7vOOk9qzoY7h4abaWxW+cTxGtKI
+        xC9EW2kDepJHW1eDKeSlawTmBchi/A9RGAMnkGqM1Q==
+X-Google-Smtp-Source: AGHT+IFYLO2eNKBLqWVJQogBfVy7gr+MrzJaAmqy5D9Lx5g4OrGNYLDqAwhQN3dOD8W4tqRc3FI0bLkqPu2G9bCLMcI=
+X-Received: by 2002:a81:a111:0:b0:59b:49a0:eec0 with SMTP id
+ y17-20020a81a111000000b0059b49a0eec0mr1942407ywg.12.1695200495386; Wed, 20
+ Sep 2023 02:01:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230915150327.81918-1-brgl@bgdev.pl> <20230915150327.81918-8-brgl@bgdev.pl>
+ <ZQf6zTsoZDFaIgHO@smile.fi.intel.com> <CAMRc=Mc9k9Brxw9eQxLS75ukin1o3D6P6FrX=nbfhgM7_e9W_A@mail.gmail.com>
+In-Reply-To: <CAMRc=Mc9k9Brxw9eQxLS75ukin1o3D6P6FrX=nbfhgM7_e9W_A@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 20 Sep 2023 11:01:23 +0200
+Message-ID: <CACRpkdZh5p78pVCS6MJ=fkxpP+sbYFRpM2-icGKr5wmkhPiTNg@mail.gmail.com>
+Subject: Re: [PATCH v3 07/11] gpiolib: replace find_chip_by_name() with gpio_device_find_by_label()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Sep 18, 2023 at 10:03=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> On Mon, Sep 18, 2023 at 9:23=E2=80=AFAM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
-There are two places in the code where we retrieve a lookup table using
-gpiod_find_lookup_table() (which protects the table list with the lookup
-table lock) and then use it after the lock is released.
+> > >       for (p =3D &table->table[0]; p->key; p++) {
+> > > +             struct gpio_device *gdev __free(gpio_device_put) =3D NU=
+LL;
+> >
+> > > +             gdev =3D gpio_device_find_by_label(p->key);
+> > > +             if (!gdev) {
+> >
+> > I haven't got the fix for gpio-sim, shouldn't we have the same here, i.=
+e.
+> > definition being done together with the assignment when __free() is in =
+use?
+>
+> It should but I only got yelled at by Linus under the gpio-sim patch
+> after I sent this one.
 
-We need to keep the lookup table mutex locked the entire time we're using
-the tables. Remove the locking from gpiod_find_lookup_table() and use
-guards to protect the code actually using the table objects.
+That happens, it's all new.
+I guess ideally we should patch checkpatch to just moan about
+this, I wonder how hard that could be (I've only patched it once in
+my life...)
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index edffa0d2acaa..7c27a1efc1b0 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3822,8 +3822,6 @@ static struct gpiod_lookup_table *gpiod_find_lookup_table(struct device *dev)
- 	const char *dev_id = dev ? dev_name(dev) : NULL;
- 	struct gpiod_lookup_table *table;
- 
--	mutex_lock(&gpio_lookup_lock);
--
- 	list_for_each_entry(table, &gpio_lookup_list, list) {
- 		if (table->dev_id && dev_id) {
- 			/*
-@@ -3831,21 +3829,18 @@ static struct gpiod_lookup_table *gpiod_find_lookup_table(struct device *dev)
- 			 * a match
- 			 */
- 			if (!strcmp(table->dev_id, dev_id))
--				goto found;
-+				return table;
- 		} else {
- 			/*
- 			 * One of the pointers is NULL, so both must be to have
- 			 * a match
- 			 */
- 			if (dev_id == table->dev_id)
--				goto found;
-+				return table;
- 		}
- 	}
--	table = NULL;
- 
--found:
--	mutex_unlock(&gpio_lookup_lock);
--	return table;
-+	return NULL;
- }
- 
- static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
-@@ -3855,6 +3850,8 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
- 	struct gpiod_lookup_table *table;
- 	struct gpiod_lookup *p;
- 
-+	guard(mutex)(&gpio_lookup_lock);
-+
- 	table = gpiod_find_lookup_table(dev);
- 	if (!table)
- 		return desc;
-@@ -3920,15 +3917,18 @@ static int platform_gpio_count(struct device *dev, const char *con_id)
- 	struct gpiod_lookup *p;
- 	unsigned int count = 0;
- 
--	table = gpiod_find_lookup_table(dev);
--	if (!table)
--		return -ENOENT;
-+	scoped_guard(mutex, &gpio_lookup_lock) {
-+		table = gpiod_find_lookup_table(dev);
-+		if (!table)
-+			return -ENOENT;
- 
--	for (p = &table->table[0]; p->key; p++) {
--		if ((con_id && p->con_id && !strcmp(con_id, p->con_id)) ||
--		    (!con_id && !p->con_id))
--			count++;
-+		for (p = &table->table[0]; p->key; p++) {
-+			if ((con_id && p->con_id && !strcmp(con_id, p->con_id)) ||
-+			    (!con_id && !p->con_id))
-+				count++;
-+		}
- 	}
-+
- 	if (!count)
- 		return -ENOENT;
- 
--- 
-2.39.2
-
+Yours,
+Linus Walleij
