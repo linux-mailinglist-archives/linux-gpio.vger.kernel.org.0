@@ -2,92 +2,221 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 355F57A7457
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 09:38:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E2AC7A7433
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 09:33:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233866AbjITHiO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 03:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45894 "EHLO
+        id S233769AbjITHdK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 03:33:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233893AbjITHhy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 03:37:54 -0400
-X-Greylist: delayed 381 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 20 Sep 2023 00:37:48 PDT
-Received: from mail.venturelinkage.com (mail.venturelinkage.com [80.211.143.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A748133
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 00:37:48 -0700 (PDT)
-Received: by mail.venturelinkage.com (Postfix, from userid 1002)
-        id 9078F825E6; Wed, 20 Sep 2023 09:31:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=venturelinkage.com;
-        s=mail; t=1695195085;
-        bh=7iowqdzve/IIiUUjcEwx8j3uMrVqqiE7R9zbOCKRV9Q=;
-        h=Date:From:To:Subject:From;
-        b=t40+QTxHjAfVNwopCTb2ytymziKGidGp4fUiJcj25srLL9IUE0sAmkKOe/W4s3Mwy
-         k8bd15KylwkVvF7GO90KL6W1tUngnBBqS7agBkUowIWL5xtRaveD3Ooqb25UG3Pa17
-         io2Qr+SQ6LyU3aqjbZcLMlyo1Kg/rVR1TjIDjfx2yxf7F/uvEhJgZx+OlGPbyOpNbb
-         PpCmUT1pixPvOGgmhVob/WjRU+XletttigSKYUx4XIkd0UJ8jAc5oFAWKEMIOBH7tp
-         hOLO7Xh9yI7QI3wd8uwAhhEGD658zIv7tBwm0Lw5k04Hw9+U+nb8DuQHbKkBzMZLhj
-         TiUzsIL6RSStw==
-Received: by mail.venturelinkage.com for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 07:31:20 GMT
-Message-ID: <20230920084500-0.1.l.113j.0.q69c54hdik@venturelinkage.com>
-Date:   Wed, 20 Sep 2023 07:31:20 GMT
-From:   "Lukas Varga" <lukas.varga@venturelinkage.com>
-To:     <linux-gpio@vger.kernel.org>
-Subject: =?UTF-8?Q?Popt=C3=A1vka?=
-X-Mailer: mail.venturelinkage.com
+        with ESMTP id S233755AbjITHdK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 03:33:10 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE90CA
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 00:32:58 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-9ae22bf33a0so133221866b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 00:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695195177; x=1695799977; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KYrvQbB0FGaR2TMUy/U/vm4+WSiYScO9+N5v6KBchuQ=;
+        b=KyREYUWECj3Z3ZaSBcaCno4kMnCH+FoyB3F+tjhrBOV47Cgd5d+ncxxjKQc/eHMGlh
+         NVNF8KWyyf2dsMzOIlsdw97BcRvU//NUosTjIzvw77RJYSSeiv5e4mqOBnkXEfnNNrLb
+         3vWH97fvIcBLuCbJSuHgJ3qNb4yEb53xouxCXWLPiftIeGsUKFwq/jgY3DX11JdZdh3E
+         XKIxHQR55UnVdMQHSuEMI0YMjAzEe5hLv7S1c3LpisGuJXtI2iPcuydo3OnMoY98Klfu
+         duuBxfl5bSiTXyxqFimbXC4FGaOxLRqlPoiFWU4Pc5nFkcqb/ZF/oueI0e14k1xW1K7M
+         0qsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695195177; x=1695799977;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KYrvQbB0FGaR2TMUy/U/vm4+WSiYScO9+N5v6KBchuQ=;
+        b=iIQgGjlJOpjezTskaA+NN4EUPFq6r2obNAhKorAJS/GumBy2bcrIyCqF2O8IUDzx+6
+         y5IJeFalTeU69q65NijEc1qnzba7XxLe0qBWw1p1JBh7xNFYUefGPZkDI7kHb8Qxhh6D
+         NvIEqqb0Z4nemv2l+qmFSEkZdW+qIFXuO5cyp6wywL5YsSttrM4jIlyhDPiqEgL3PJEI
+         JKA08XvHG6Ew4kCl4VTbkdrvYJHFxeUYBQw9cUjOuKFfNDFOqmmH+uGvMjmveaVeF+Yu
+         UC5854MEyosJ1SSxL0Ctd+TBTBkDltcoEWiIleO2Pr8Wda3/KMmJbsfx/pYkRJ3MZluu
+         suOg==
+X-Gm-Message-State: AOJu0Yxj+i4y5Zw0/BlEcYPHSw0hZWcy4feQEQ97XfwbAjFs5xE5RKnT
+        qgo9iaxJWSvnaeS0xpsZI96DCQ==
+X-Google-Smtp-Source: AGHT+IEvhe9pe7VdZSVff4gaCxhLQJggy4NQX7Vf2TOirfbE1fFyTlC1aU0PsDzOCSFOLtx7UXvBYA==
+X-Received: by 2002:a17:907:3ad1:b0:9ae:513f:a4f3 with SMTP id fi17-20020a1709073ad100b009ae513fa4f3mr196156ejc.32.1695195177081;
+        Wed, 20 Sep 2023 00:32:57 -0700 (PDT)
+Received: from brgl-uxlite.. (static-212-193-78-212.thenetworkfactory.nl. [212.78.193.212])
+        by smtp.gmail.com with ESMTPSA id x26-20020a1709064a9a00b009a13fdc139fsm8819453eju.183.2023.09.20.00.32.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Sep 2023 00:32:56 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        akpm@linux-foundation.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v5] gpio: sim: fix an invalid __free() usage
+Date:   Wed, 20 Sep 2023 09:32:53 +0200
+Message-Id: <20230920073253.51742-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.0 required=5.0 tests=BAYES_05,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
-        URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
-        *      blocklist
-        *      [URIs: venturelinkage.com]
-        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-        *      [80.211.143.151 listed in zen.spamhaus.org]
-        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
-        *      blocklist
-        *      [URIs: venturelinkage.com]
-        * -0.5 BAYES_05 BODY: Bayes spam probability is 1 to 5%
-        *      [score: 0.0121]
-        *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
-        *      DNSWL was blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [80.211.143.151 listed in list.dnswl.org]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.8 FROM_FMBLA_NEWDOM28 From domain was registered in last 14-28
-        *      days
-X-Spam-Level: ******
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dobr=C3=A9 r=C3=A1no,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Dovolil jsem si V=C3=A1s kontaktovat, proto=C5=BEe m=C3=A1m z=C3=A1jem ov=
-=C4=9B=C5=99it mo=C5=BEnost nav=C3=A1z=C3=A1n=C3=AD spolupr=C3=A1ce.
+gpio_sim_make_line_names() returns NULL or ERR_PTR() so we must not use
+__free(kfree) on the returned address. Split this function into two, one
+that determines the size of the "gpio-line-names" array to allocate and
+one that actually sets the names at correct offsets. The allocation and
+assignment of the managed pointer happens in between.
 
-Podporujeme firmy p=C5=99i z=C3=ADsk=C3=A1v=C3=A1n=C3=AD nov=C3=BDch obch=
-odn=C3=ADch z=C3=A1kazn=C3=ADk=C5=AF.
+Fixes: 3faf89f27aab ("gpio: sim: simplify code with cleanup helpers")
+Reported-by: Alexey Dobriyan <adobriyan@gmail.com>
+Closes: https://lore.kernel.org/all/07c32bf1-6c1a-49d9-b97d-f0ae4a2b42ab@p183/
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Hopefully this is the last version of this patch. I restored the max()
+assignment from v3 but kept the code simpler than v2. Tested most corner
+cases that occurred to me.
 
-M=C5=AF=C5=BEeme si promluvit a poskytnout podrobnosti?
+v4 -> v5:
+- restore checking for the higher offset in each iteration when counting
+  named lines
 
-V p=C5=99=C3=ADpad=C4=9B z=C3=A1jmu V=C3=A1s bude kontaktovat n=C3=A1=C5=A1=
- anglicky mluv=C3=ADc=C3=AD z=C3=A1stupce.
+v3 -> v4:
+- simplify the line counting logic
 
+v2 -> v3:
+- restore the offset out-of-bounds checks
 
-Pozdravy
-Lukas Varga
+v1 -> v2:
+- split the line name setting into two parts
+
+ drivers/gpio/gpio-sim.c | 60 ++++++++++++++++-------------------------
+ 1 file changed, 23 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index 460389bb8e3f..3b7cdf44eb38 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -21,6 +21,7 @@
+ #include <linux/irq.h>
+ #include <linux/irq_sim.h>
+ #include <linux/list.h>
++#include <linux/minmax.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+@@ -718,52 +719,32 @@ gpio_sim_device_config_live_show(struct config_item *item, char *page)
+ 	return sprintf(page, "%c\n", live ? '1' : '0');
+ }
+ 
+-static char **gpio_sim_make_line_names(struct gpio_sim_bank *bank,
+-				       unsigned int *line_names_size)
++static unsigned int gpio_sim_get_line_names_size(struct gpio_sim_bank *bank)
+ {
+-	unsigned int max_offset = 0;
+-	bool has_line_names = false;
+ 	struct gpio_sim_line *line;
+-	char **line_names;
++	unsigned int size = 0;
+ 
+ 	list_for_each_entry(line, &bank->line_list, siblings) {
+-		if (line->offset >= bank->num_lines)
++		if (!line->name || (line->offset >= bank->num_lines))
+ 			continue;
+ 
+-		if (line->name) {
+-			if (line->offset > max_offset)
+-				max_offset = line->offset;
+-
+-			/*
+-			 * max_offset can stay at 0 so it's not an indicator
+-			 * of whether line names were configured at all.
+-			 */
+-			has_line_names = true;
+-		}
++		size = max(size, line->offset + 1);
+ 	}
+ 
+-	if (!has_line_names)
+-		/*
+-		 * This is not an error - NULL means, there are no line
+-		 * names configured.
+-		 */
+-		return NULL;
+-
+-	*line_names_size = max_offset + 1;
++	return size;
++}
+ 
+-	line_names = kcalloc(*line_names_size, sizeof(*line_names), GFP_KERNEL);
+-	if (!line_names)
+-		return ERR_PTR(-ENOMEM);
++static void
++gpio_sim_set_line_names(struct gpio_sim_bank *bank, char **line_names)
++{
++	struct gpio_sim_line *line;
+ 
+ 	list_for_each_entry(line, &bank->line_list, siblings) {
+-		if (line->offset >= bank->num_lines)
++		if (!line->name || (line->offset >= bank->num_lines))
+ 			continue;
+ 
+-		if (line->name && (line->offset <= max_offset))
+-			line_names[line->offset] = line->name;
++		line_names[line->offset] = line->name;
+ 	}
+-
+-	return line_names;
+ }
+ 
+ static void gpio_sim_remove_hogs(struct gpio_sim_device *dev)
+@@ -867,7 +848,7 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
+ 			  struct fwnode_handle *parent)
+ {
+ 	struct property_entry properties[GPIO_SIM_PROP_MAX];
+-	unsigned int prop_idx = 0, line_names_size = 0;
++	unsigned int prop_idx = 0, line_names_size;
+ 	char **line_names __free(kfree) = NULL;
+ 
+ 	memset(properties, 0, sizeof(properties));
+@@ -878,14 +859,19 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
+ 		properties[prop_idx++] = PROPERTY_ENTRY_STRING("gpio-sim,label",
+ 							       bank->label);
+ 
+-	line_names = gpio_sim_make_line_names(bank, &line_names_size);
+-	if (IS_ERR(line_names))
+-		return ERR_CAST(line_names);
++	line_names_size = gpio_sim_get_line_names_size(bank);
++	if (line_names_size) {
++		line_names = kcalloc(line_names_size, sizeof(*line_names),
++				     GFP_KERNEL);
++		if (!line_names)
++			return ERR_PTR(-ENOMEM);
++
++		gpio_sim_set_line_names(bank, line_names);
+ 
+-	if (line_names)
+ 		properties[prop_idx++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
+ 						"gpio-line-names",
+ 						line_names, line_names_size);
++	}
+ 
+ 	return fwnode_create_software_node(properties, parent);
+ }
+-- 
+2.39.2
+
