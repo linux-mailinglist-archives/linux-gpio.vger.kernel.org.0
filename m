@@ -2,62 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB5897A79DB
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 12:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 905EC7A7A16
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 13:09:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233786AbjITK7R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 06:59:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44684 "EHLO
+        id S234336AbjITLJF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 07:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233727AbjITK7Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 06:59:16 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0073B4
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 03:59:10 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-59ed7094255so16156887b3.3
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 03:59:10 -0700 (PDT)
+        with ESMTP id S234344AbjITLJE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 07:09:04 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52E3D3
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 04:08:58 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-59c0b9ad491so51758637b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 04:08:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695207550; x=1695812350; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1695208138; x=1695812938; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GzQdLX4ffzjkMw7jYkFd27ktsvPZM4GAQ9T3XI7VcZU=;
-        b=zhuY7guSt+OZ8Wm4Ymdd2musO6cTkfi7sJuee/VvkyzZyAlHIred7RV8G2S7r3p1Lx
-         4+1bYW5RwDtrM8iSRdq8EqOlnoFl1s6eoX0VGunFZsjoovnZ6AfpmqXh17nupkPi9KFN
-         7HkpanmRaudaMZC78/HeNGT62qa4ae2Oco3J+hNyMD0G3aSMwWsVvmAwLaichyJXZ7af
-         jysrWqyfWlUwHm81McNfGyVtbCfizbM+Fecd2w0O0Ip7Ey8IuC4Ru29YmWPKGBBPNFGe
-         oCS08mkD5lfKS/JBlZVYB+tVPSwNjuCD6LytrjGRIfPZELDYdhxtgndHjpqYxwPrrbmn
-         0dmQ==
+        bh=9jo3K5hZEHtRUmMkWajypIc1dzDZhC7YyfBmpkmzcjA=;
+        b=XBQDcZDC+bnCYYOFE+xyC+TAQTVTCAnzDGY+uaCoYvczS5vhtyLNnibVmDxq3XYu24
+         M9o6omgaeEWb2BiF38R+1iBwhYGYslMzeOTL+UX+3jmcq4KSuQjOQeb0zs6LJXwrjwwN
+         jcRwLij3v1wWG5yZCflRWWZWowbvWfRC9INmjSkaprxLTGIqsCZIMzC0fFdcMnsgV1u0
+         vWXk2pq23Uzl+shrABZ88Lttc5x1UcY03WRqh9+ECMHmPLPwQITouS6QlQ+wlXHj5vsq
+         A73SEthWsek/dI2CQZcsAlx+J5hvNrxwwfybI9cpVkB+79VBNQ94lUziAsjPTbnRgKv/
+         S4vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695207550; x=1695812350;
+        d=1e100.net; s=20230601; t=1695208138; x=1695812938;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GzQdLX4ffzjkMw7jYkFd27ktsvPZM4GAQ9T3XI7VcZU=;
-        b=gVcp2jJaEO14lOL6d4IDiCj8TA3HGT5OtkDRn8VVBOclS2Ft0HFsjbj0vHIC8q0fo1
-         MhdFJ9/qy/+FWaSv0gCcaL/lo66BKObr064jZyewVIokyY23HNBB8iqqwzbnFGB1fjdC
-         sSMMQU87x9uffx8WvD0dr2StyfHgJ8gL9tvymj/nPp5QBzJhgTjo8uCwJQ+CndysuaHA
-         itpUUpi/MmIGUW3HUd7t+FOp1ds42RaezQTyAptVDqYlFxjCsRLAaIrz4LRDDQaEgXmg
-         j2U9steuy2NGWVWOMJQkVMGARjv4JI0K1cYD2F0VN4LFp/vx8q+bOW+zzUD5RcAPyjvN
-         hiGA==
-X-Gm-Message-State: AOJu0YxMcnfIeFERmEj8vd06SJtRmKmHgCOirRoORtiwXyCq7V7xx2t8
-        BUVxmXx6b5EKkqa/7jeKtmRQkWVp7V+wNtfyPfef4A==
-X-Google-Smtp-Source: AGHT+IGr72j1z62epCS0j7+7/HAJUbLH92EtwQWtcMuxny6gOm4544s3QtkGEaOnRMAXnpseX14ejSj13bFM/qsUKPI=
-X-Received: by 2002:a81:6542:0:b0:58c:4ec6:f21e with SMTP id
- z63-20020a816542000000b0058c4ec6f21emr2230919ywb.23.1695207550124; Wed, 20
- Sep 2023 03:59:10 -0700 (PDT)
+        bh=9jo3K5hZEHtRUmMkWajypIc1dzDZhC7YyfBmpkmzcjA=;
+        b=Uvf1KurOmdTO9vJzQsBrI5VEhwUenkLnqbchkV+QPHf4qFp/esEMwarBqaTGzz+CQI
+         L93+MvjQgoWp/hHXcNRh3D6Osm0VATjA3suhqcvjydY0S2Oi924A1yAeyJwcOsAnnYhA
+         Ypdi0A2OtuAEz4ti1IRAzoCA8SvvXwFUUis0fKdxfBWpj6rMmDh7+dvHTAGsHcthIob8
+         8AkR7KTJEdYqmMdz6mUCZkcgoYtTmAJ4CfaXzzdwYQpNWfCi6iBpKk4t+7pbaLVd90fP
+         0gdFBsKrrWJX+VbCThyzqvuSTAO+8cWezXpJe08ywh4t9AwnuaUEwPDKhTtesb7V+PPz
+         vglw==
+X-Gm-Message-State: AOJu0YyeGbuUFvmMDvZ0Wy06Wbg7yegtjNf4aH+J8g2JndG6kvtDr0TO
+        Ndsuhz0CeHhi4yafCj7CMjlnjE9e5RIWr5afxKMaSA==
+X-Google-Smtp-Source: AGHT+IEiI8ik+VkdOGL8Ne6V9Qo2SCzhnEr1PXNFQ7Bz4n/o9x1S/fTMugXn6kmF3YFQ+9wxYfMTDITWHbdgWvrlvY4=
+X-Received: by 2002:a0d:c804:0:b0:59b:d3cd:ffb6 with SMTP id
+ k4-20020a0dc804000000b0059bd3cdffb6mr2147130ywd.33.1695208137793; Wed, 20 Sep
+ 2023 04:08:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230920085639.152441-1-brgl@bgdev.pl> <CACRpkdYtbGqmMqN7FNhjYJGG+e0jWQmozf9kpNHiUBJvd2c=7Q@mail.gmail.com>
- <CAMRc=McrXEQbwcsK3yrfROujezjMd1L4EcJj7GNTCE5L6zD1gw@mail.gmail.com>
-In-Reply-To: <CAMRc=McrXEQbwcsK3yrfROujezjMd1L4EcJj7GNTCE5L6zD1gw@mail.gmail.com>
+References: <20230919101117.4097-1-tychang@realtek.com>
+In-Reply-To: <20230919101117.4097-1-tychang@realtek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 20 Sep 2023 12:58:58 +0200
-Message-ID: <CACRpkdYNA1rkG5wJ0+rAT9g4EyzfbN5VP2a9vuMMk_RD6bMLFA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: extend the critical sections of lookup tables
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Wed, 20 Sep 2023 13:08:46 +0200
+Message-ID: <CACRpkdYtGhhNuBnP0MvMKiqP=wPsv=5K_ZBaWcgW3sssLrm2aQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] Add pinctrl driver support for Realtek DHC SoCs
+To:     Tzuyi Chang <tychang@realtek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,29 +69,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 20, 2023 at 11:33=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
-> On Wed, 20 Sep 2023 11:12:58 +0200, Linus Walleij
-> <linus.walleij@linaro.org> said:
-> > On Wed, Sep 20, 2023 at 10:56=E2=80=AFAM Bartosz Golaszewski <brgl@bgde=
-v.pl> wrote:
+Hi Tzuyi,
 
-> > Can we rename this function gpiod_find_lookup_table_locked()
-> > as per precedents in the kernel, to indicate that it needs to be
-> > called with a lock held?
-> >
->
-> I think you mean gpiod_find_lookup_table_unlocked() as with this change i=
-t
-> will no longer take the lock?
 
-I think the pattern is the one I indicated: *_locked() means the function
-is to be called with the appropriate lock held, cf
-arch/arm64/kvm/hyp/nvhe/mm.c
+On Tue, Sep 19, 2023 at 12:12=E2=80=AFPM Tzuyi Chang <tychang@realtek.com> =
+wrote:
 
-pkvm_create_mappings() takes a lock and then calls
-pkvm_create_mappings_locked() which even asserts that
-the lock is held.
+> These patches add the bindings and the pinctrl drivers for Realtek
+> DHC(Digital Home Center) RTD SoCs(RTD1619B, RTD1319D and RTD1315E).
+
+All patches look good, bindings are reviewed by Rob, my comments
+addressed: patches applied for kernel v6.6!
+
+Excellent work on this patch series! Thank you.
 
 Yours,
 Linus Walleij
