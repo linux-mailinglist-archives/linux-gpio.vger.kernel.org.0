@@ -2,82 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A83C7A739D
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 09:04:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8D117A73FF
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 09:26:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233416AbjITHEc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 03:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
+        id S233638AbjITH0K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 03:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232245AbjITHEc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 03:04:32 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE4E90;
-        Wed, 20 Sep 2023 00:04:26 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38K5J11D014364;
-        Wed, 20 Sep 2023 07:04:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=sirRTSMtALGb40cFMEEIy3VWwp5E5wl1OmAjQoPdOKU=;
- b=Ujy2+bvZro+UN5VKEriI7WKasObZZe0boUUYk3Y14fDOWtf5/71GCjU02BK7gu/dvoSb
- M5e2CiD7mJu17DahaBA/sTvXTf7jDk5ZamWhveuhgaZHR6c506IBkdeczXzfOOAfO0rC
- U8972mMih38JPCUNzolfDlGngI9jrmKf5fNJeBNLSSISnVL+XRZ2q2CESEeQ8zvn4WO8
- e5pHcZKjK3QoMrUd7QlBpz/3FgzgDHji2D2rveKojsc1X4J2Ft2KAsiQqvdpd0ibf+Du
- Zn4oGDCxn2Q35GiFvVoIVQAQ0cZGKmKS6sTicA/sMgp8NRHCF654PwId6rrIzBe/aX9p bg== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t6v2dkkhf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Sep 2023 07:04:22 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38K74Ljd009072
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Sep 2023 07:04:21 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Wed, 20 Sep
- 2023 00:04:14 -0700
-Message-ID: <dbf09ddd-910b-4c1f-8dbe-8d1bcb7183d0@quicinc.com>
-Date:   Wed, 20 Sep 2023 15:04:11 +0800
+        with ESMTP id S233602AbjITH0J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 03:26:09 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12229CA;
+        Wed, 20 Sep 2023 00:26:02 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B7C2C433C7;
+        Wed, 20 Sep 2023 07:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695194761;
+        bh=X9yOJUrjbWjEiTh3oxcVWNpA9x66namZO18j2DCtN20=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H+kD+g2qcMwNqpfEO7M07AvF7mj0L2bWq9J+lhxLXC5Zv1dIeob7kY1rrVuRwy2wn
+         akDNc2Q9cWeWeMjfXM2O72qeESctR/xVOIH9600vNp05V0VFuT01QEtxIe7envji46
+         Kug1Ox3t1DdD8ceidkDfa4WPtmuXz/G7qafrk9KhIoTDo/pQ51gpdXIMupjA4bRPk0
+         RbClZGqhXy4LyHl20I5dugCOoGsgH/YclPT5NHpxUQmhUN7ls21L9qwrzYjxJlqyDT
+         zDn3aaeJNv5rti4DuNoC/ED3BhxOTptixs4LOs9xMlszJrOSbinRxnAQlR2o33qmuR
+         4Ed7283WVi2KQ==
+Received: from johan by xi.lan with local (Exim 4.96)
+        (envelope-from <johan@kernel.org>)
+        id 1qirbE-0002wI-2Q;
+        Wed, 20 Sep 2023 09:26:17 +0200
+Date:   Wed, 20 Sep 2023 09:26:16 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Johan Hovold <johan+linaro@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        LinusW <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] HID: i2c-hid: fix handling of unpopulated devices
+Message-ID: <ZQqemN8P2VKgxhsV@hovoldconsulting.com>
+References: <20230918125851.310-1-johan+linaro@kernel.org>
+ <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
+ <ZQlIveJVdvyV2Ygy@hovoldconsulting.com>
+ <CAD=FV=XBG7auVVyHn5uvahSZZxp5qBfp4+A9NwFqahdN6XrbZA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: qcom: Add SM4450 pinctrl
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <andersson@kernel.org>, <agross@kernel.org>,
-        <konrad.dybcio@linaro.org>, <linus.walleij@linaro.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_tsoni@quicinc.com>, <quic_shashim@quicinc.com>,
-        <quic_kaushalk@quicinc.com>, <quic_tdas@quicinc.com>,
-        <quic_tingweiz@quicinc.com>, <quic_aiquny@quicinc.com>,
-        <quic_ajipan@quicinc.com>, <kernel@quicinc.com>
-References: <20230920064739.12562-1-quic_tengfan@quicinc.com>
- <20230920064739.12562-2-quic_tengfan@quicinc.com>
- <d2f6bfbb-fd08-a551-51d3-f81d9237e060@linaro.org>
-From:   Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <d2f6bfbb-fd08-a551-51d3-f81d9237e060@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6pu_d-fLPeyPjqGHJlwS0likcd-WIFlJ
-X-Proofpoint-GUID: 6pu_d-fLPeyPjqGHJlwS0likcd-WIFlJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-20_02,2023-09-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=774 spamscore=0
- suspectscore=0 priorityscore=1501 bulkscore=0 malwarescore=0 phishscore=0
- impostorscore=0 clxscore=1015 mlxscore=0 adultscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309200056
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+In-Reply-To: <CAD=FV=XBG7auVVyHn5uvahSZZxp5qBfp4+A9NwFqahdN6XrbZA@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,36 +66,53 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Sep 19, 2023 at 11:15:46AM -0700, Doug Anderson wrote:
+> On Tue, Sep 19, 2023 at 12:07 AM Johan Hovold <johan@kernel.org> wrote:
 
+> > But regardless of what a long-term proper solution to this may look
+> > like, we need to fix the regression in 6.6-rc1 by restoring the old
+> > behaviour.
+> 
+> OK, fair enough. I'll take a look at your patch, though I think the
+> person that really needs to approve it is Benjamin...
+> 
+> Style-wise, I will say that Benjamin really wanted to keep the "panel
+> follower" code out of the main probe routine. Some of my initial
+> patches adding "panel follower" looked more like the results after
+> your patch but Benjamin really wasn't happy until there were no
+> special cases for panel-followers in the main probe routine. This is
+> why the code is structured as it is.
 
-在 9/20/2023 2:58 PM, Krzysztof Kozlowski 写道:
-> On 20/09/2023 08:47, Tengfei Fan wrote:
->> Add device tree binding Documentation details for Qualcomm SM4450
->> TLMM device.
->>
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> 
-> 
-> 
->> +    properties:
->> +      pins:
->> +        description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode.
->> +        items:
->> +          oneOf:
->> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-5])$"
-> 
-> Your driver and gpio-ranges in example tell you have 136 GPIOs, not 126.
-> It's v3 but still counting GPIOs is incorrect :/
-> 
-> Best regards,
-> Krzysztof
-> 
-Hi Krzysztof,
-my fault, misunderstand to other platform's setting when reference, will 
-update.
+Ok, I prefer not hiding away things like that as it obscures what's
+really going on, for example, in this case, that you register a device
+without really having probed it.
 
--- 
-Thx and BRs,
-Tengfei Fan
+As I alluded to in the commit message, you probably want to be able to
+support second-source touchscreen panel followers as well at some point
+and then deferring checking whether device is populated until the panel
+is powered on is not going to work.
+
+I skimmed the thread were you added this, but I'm not sure I saw any
+reason for why powering on the panel follower temporarily during probe
+would not work?
+
+> Thinking that way, is there any reason you can't just move the
+> i2c_hid_init_irq() into __do_i2c_hid_core_initial_power_up()? You
+> could replace the call to enable_irq() with it and then remove the
+> `IRQF_NO_AUTOEN` flag? I think that would also solve the issue if you
+> wanted to use a 2nd source + the panel follower concept? Both devices
+> would probe, but only one of them would actually grab the interrupt
+> and only one of them would actually create real HID devices. We might
+> need to do some work to keep from trying again at every poweron of the
+> panel, but it would probably be workable? I think this would also be a
+> smaller change...
+
+That was my first idea as well, but conceptually it is more correct to
+request resources at probe time and not at some later point when you can
+no longer fail probe.
+
+You'd also need to handle the fact that the interrupt may never have
+been requested when remove() is called, which adds unnecessary
+complexity.
+
+Johan
