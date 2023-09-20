@@ -2,117 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8D117A73FF
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 09:26:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 355F57A7457
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 09:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233638AbjITH0K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 03:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
+        id S233866AbjITHiO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 03:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233602AbjITH0J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 03:26:09 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12229CA;
-        Wed, 20 Sep 2023 00:26:02 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B7C2C433C7;
-        Wed, 20 Sep 2023 07:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695194761;
-        bh=X9yOJUrjbWjEiTh3oxcVWNpA9x66namZO18j2DCtN20=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H+kD+g2qcMwNqpfEO7M07AvF7mj0L2bWq9J+lhxLXC5Zv1dIeob7kY1rrVuRwy2wn
-         akDNc2Q9cWeWeMjfXM2O72qeESctR/xVOIH9600vNp05V0VFuT01QEtxIe7envji46
-         Kug1Ox3t1DdD8ceidkDfa4WPtmuXz/G7qafrk9KhIoTDo/pQ51gpdXIMupjA4bRPk0
-         RbClZGqhXy4LyHl20I5dugCOoGsgH/YclPT5NHpxUQmhUN7ls21L9qwrzYjxJlqyDT
-         zDn3aaeJNv5rti4DuNoC/ED3BhxOTptixs4LOs9xMlszJrOSbinRxnAQlR2o33qmuR
-         4Ed7283WVi2KQ==
-Received: from johan by xi.lan with local (Exim 4.96)
-        (envelope-from <johan@kernel.org>)
-        id 1qirbE-0002wI-2Q;
-        Wed, 20 Sep 2023 09:26:17 +0200
-Date:   Wed, 20 Sep 2023 09:26:16 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Johan Hovold <johan+linaro@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        LinusW <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] HID: i2c-hid: fix handling of unpopulated devices
-Message-ID: <ZQqemN8P2VKgxhsV@hovoldconsulting.com>
-References: <20230918125851.310-1-johan+linaro@kernel.org>
- <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
- <ZQlIveJVdvyV2Ygy@hovoldconsulting.com>
- <CAD=FV=XBG7auVVyHn5uvahSZZxp5qBfp4+A9NwFqahdN6XrbZA@mail.gmail.com>
+        with ESMTP id S233893AbjITHhy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 03:37:54 -0400
+X-Greylist: delayed 381 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 20 Sep 2023 00:37:48 PDT
+Received: from mail.venturelinkage.com (mail.venturelinkage.com [80.211.143.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A748133
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 00:37:48 -0700 (PDT)
+Received: by mail.venturelinkage.com (Postfix, from userid 1002)
+        id 9078F825E6; Wed, 20 Sep 2023 09:31:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=venturelinkage.com;
+        s=mail; t=1695195085;
+        bh=7iowqdzve/IIiUUjcEwx8j3uMrVqqiE7R9zbOCKRV9Q=;
+        h=Date:From:To:Subject:From;
+        b=t40+QTxHjAfVNwopCTb2ytymziKGidGp4fUiJcj25srLL9IUE0sAmkKOe/W4s3Mwy
+         k8bd15KylwkVvF7GO90KL6W1tUngnBBqS7agBkUowIWL5xtRaveD3Ooqb25UG3Pa17
+         io2Qr+SQ6LyU3aqjbZcLMlyo1Kg/rVR1TjIDjfx2yxf7F/uvEhJgZx+OlGPbyOpNbb
+         PpCmUT1pixPvOGgmhVob/WjRU+XletttigSKYUx4XIkd0UJ8jAc5oFAWKEMIOBH7tp
+         hOLO7Xh9yI7QI3wd8uwAhhEGD658zIv7tBwm0Lw5k04Hw9+U+nb8DuQHbKkBzMZLhj
+         TiUzsIL6RSStw==
+Received: by mail.venturelinkage.com for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 07:31:20 GMT
+Message-ID: <20230920084500-0.1.l.113j.0.q69c54hdik@venturelinkage.com>
+Date:   Wed, 20 Sep 2023 07:31:20 GMT
+From:   "Lukas Varga" <lukas.varga@venturelinkage.com>
+To:     <linux-gpio@vger.kernel.org>
+Subject: =?UTF-8?Q?Popt=C3=A1vka?=
+X-Mailer: mail.venturelinkage.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XBG7auVVyHn5uvahSZZxp5qBfp4+A9NwFqahdN6XrbZA@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.0 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
+        URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: venturelinkage.com]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [80.211.143.151 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: venturelinkage.com]
+        * -0.5 BAYES_05 BODY: Bayes spam probability is 1 to 5%
+        *      [score: 0.0121]
+        *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
+        *      DNSWL was blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [80.211.143.151 listed in list.dnswl.org]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.8 FROM_FMBLA_NEWDOM28 From domain was registered in last 14-28
+        *      days
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 19, 2023 at 11:15:46AM -0700, Doug Anderson wrote:
-> On Tue, Sep 19, 2023 at 12:07 AM Johan Hovold <johan@kernel.org> wrote:
+Dobr=C3=A9 r=C3=A1no,
 
-> > But regardless of what a long-term proper solution to this may look
-> > like, we need to fix the regression in 6.6-rc1 by restoring the old
-> > behaviour.
-> 
-> OK, fair enough. I'll take a look at your patch, though I think the
-> person that really needs to approve it is Benjamin...
-> 
-> Style-wise, I will say that Benjamin really wanted to keep the "panel
-> follower" code out of the main probe routine. Some of my initial
-> patches adding "panel follower" looked more like the results after
-> your patch but Benjamin really wasn't happy until there were no
-> special cases for panel-followers in the main probe routine. This is
-> why the code is structured as it is.
+Dovolil jsem si V=C3=A1s kontaktovat, proto=C5=BEe m=C3=A1m z=C3=A1jem ov=
+=C4=9B=C5=99it mo=C5=BEnost nav=C3=A1z=C3=A1n=C3=AD spolupr=C3=A1ce.
 
-Ok, I prefer not hiding away things like that as it obscures what's
-really going on, for example, in this case, that you register a device
-without really having probed it.
+Podporujeme firmy p=C5=99i z=C3=ADsk=C3=A1v=C3=A1n=C3=AD nov=C3=BDch obch=
+odn=C3=ADch z=C3=A1kazn=C3=ADk=C5=AF.
 
-As I alluded to in the commit message, you probably want to be able to
-support second-source touchscreen panel followers as well at some point
-and then deferring checking whether device is populated until the panel
-is powered on is not going to work.
+M=C5=AF=C5=BEeme si promluvit a poskytnout podrobnosti?
 
-I skimmed the thread were you added this, but I'm not sure I saw any
-reason for why powering on the panel follower temporarily during probe
-would not work?
+V p=C5=99=C3=ADpad=C4=9B z=C3=A1jmu V=C3=A1s bude kontaktovat n=C3=A1=C5=A1=
+ anglicky mluv=C3=ADc=C3=AD z=C3=A1stupce.
 
-> Thinking that way, is there any reason you can't just move the
-> i2c_hid_init_irq() into __do_i2c_hid_core_initial_power_up()? You
-> could replace the call to enable_irq() with it and then remove the
-> `IRQF_NO_AUTOEN` flag? I think that would also solve the issue if you
-> wanted to use a 2nd source + the panel follower concept? Both devices
-> would probe, but only one of them would actually grab the interrupt
-> and only one of them would actually create real HID devices. We might
-> need to do some work to keep from trying again at every poweron of the
-> panel, but it would probably be workable? I think this would also be a
-> smaller change...
 
-That was my first idea as well, but conceptually it is more correct to
-request resources at probe time and not at some later point when you can
-no longer fail probe.
-
-You'd also need to handle the fact that the interrupt may never have
-been requested when remove() is called, which adds unnecessary
-complexity.
-
-Johan
+Pozdravy
+Lukas Varga
