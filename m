@@ -2,221 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E2AC7A7433
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 09:33:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D55A7A74FD
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 09:56:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233769AbjITHdK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 03:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
+        id S233853AbjITH4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 03:56:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233755AbjITHdK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 03:33:10 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE90CA
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 00:32:58 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-9ae22bf33a0so133221866b.0
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 00:32:58 -0700 (PDT)
+        with ESMTP id S233867AbjITH4P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 03:56:15 -0400
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B642138
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 00:56:02 -0700 (PDT)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-59e88a28b98so9058087b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 00:56:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695195177; x=1695799977; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KYrvQbB0FGaR2TMUy/U/vm4+WSiYScO9+N5v6KBchuQ=;
-        b=KyREYUWECj3Z3ZaSBcaCno4kMnCH+FoyB3F+tjhrBOV47Cgd5d+ncxxjKQc/eHMGlh
-         NVNF8KWyyf2dsMzOIlsdw97BcRvU//NUosTjIzvw77RJYSSeiv5e4mqOBnkXEfnNNrLb
-         3vWH97fvIcBLuCbJSuHgJ3qNb4yEb53xouxCXWLPiftIeGsUKFwq/jgY3DX11JdZdh3E
-         XKIxHQR55UnVdMQHSuEMI0YMjAzEe5hLv7S1c3LpisGuJXtI2iPcuydo3OnMoY98Klfu
-         duuBxfl5bSiTXyxqFimbXC4FGaOxLRqlPoiFWU4Pc5nFkcqb/ZF/oueI0e14k1xW1K7M
-         0qsw==
+        d=linaro.org; s=google; t=1695196562; x=1695801362; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0W2F0GXbbtqn7CRR5nnsH3NJIOvd/wi06m4wX+wnCSk=;
+        b=C3GN6J2+s9vi6NkInIZVTPJHhsLeNTnqqkADfsy10nKvVQDi2kRM7Dw3gxbGHd9Jqj
+         i3nYoma+O4jBNi2Iqei9KbEQWwvK5qxdD418E13y/gZlv07xPr3hSZPPhjCFrqCGf1mH
+         aEFKITaePrrMlmSm1KwB2L/+V64SqprAjTVBuYdC4MkuabbxY41wWYom7AW6SVC1mX+5
+         TxbERl56q2jQpswFf03gBUasUY3Tm5/sXC0QoWRVzfpEVmU+3J2xaMwhiiYR08GQU1qg
+         /I+k4hSoiT9GYK1RN539hHZZxxI9jqnaAu4Fg8E4KjjjBw0HmejD58ED2iwqhJHxh2UT
+         BoTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695195177; x=1695799977;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KYrvQbB0FGaR2TMUy/U/vm4+WSiYScO9+N5v6KBchuQ=;
-        b=iIQgGjlJOpjezTskaA+NN4EUPFq6r2obNAhKorAJS/GumBy2bcrIyCqF2O8IUDzx+6
-         y5IJeFalTeU69q65NijEc1qnzba7XxLe0qBWw1p1JBh7xNFYUefGPZkDI7kHb8Qxhh6D
-         NvIEqqb0Z4nemv2l+qmFSEkZdW+qIFXuO5cyp6wywL5YsSttrM4jIlyhDPiqEgL3PJEI
-         JKA08XvHG6Ew4kCl4VTbkdrvYJHFxeUYBQw9cUjOuKFfNDFOqmmH+uGvMjmveaVeF+Yu
-         UC5854MEyosJ1SSxL0Ctd+TBTBkDltcoEWiIleO2Pr8Wda3/KMmJbsfx/pYkRJ3MZluu
-         suOg==
-X-Gm-Message-State: AOJu0Yxj+i4y5Zw0/BlEcYPHSw0hZWcy4feQEQ97XfwbAjFs5xE5RKnT
-        qgo9iaxJWSvnaeS0xpsZI96DCQ==
-X-Google-Smtp-Source: AGHT+IEvhe9pe7VdZSVff4gaCxhLQJggy4NQX7Vf2TOirfbE1fFyTlC1aU0PsDzOCSFOLtx7UXvBYA==
-X-Received: by 2002:a17:907:3ad1:b0:9ae:513f:a4f3 with SMTP id fi17-20020a1709073ad100b009ae513fa4f3mr196156ejc.32.1695195177081;
-        Wed, 20 Sep 2023 00:32:57 -0700 (PDT)
-Received: from brgl-uxlite.. (static-212-193-78-212.thenetworkfactory.nl. [212.78.193.212])
-        by smtp.gmail.com with ESMTPSA id x26-20020a1709064a9a00b009a13fdc139fsm8819453eju.183.2023.09.20.00.32.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 00:32:56 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        akpm@linux-foundation.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v5] gpio: sim: fix an invalid __free() usage
-Date:   Wed, 20 Sep 2023 09:32:53 +0200
-Message-Id: <20230920073253.51742-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1695196562; x=1695801362;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0W2F0GXbbtqn7CRR5nnsH3NJIOvd/wi06m4wX+wnCSk=;
+        b=LGpy6Dyz8bYdu6HwxaTxq5uAhNsBp2ddEFy7gouXZae6I89p+1g8HcFr6sruiN/s9U
+         AoWoCLz0Vd/cOP4NtuO3ilh+Ai8Z86/bkHNTgHGNnGsv6enOxQpr28ExkuCVEiJAc73f
+         7Fmk1/HnsEvIGvHg9CL5IVQIZtfukCpXWN/JOSim53LV/j8cUZO+Iu8CgugJn8ybWJ8e
+         6cfDMy08LXsDB++uMKcwOcxFN8A/phollR2oXm47RT+TE1GyAKvoL72/50fZHhUtysWw
+         VW8F5ERxPR3TO6R4V5fdTAT/TTBNvcb+DcfZVSOhuBa8nrAuVGFjeZLo9uGLRUNmEeF8
+         B0hA==
+X-Gm-Message-State: AOJu0Yzly6sXz0fhaMQy+xL53zYLKb76DvGbuJMwFBR2KRZY7+2BfmpX
+        gUMrJjJZR2eTsp4xD+4HHm3gvJWnjzuucoXr9TDPHA==
+X-Google-Smtp-Source: AGHT+IE8ZqLABHkmB1AmVdyVdn+zBjcBgUb4lYtT3ybz6pYiTkDfaC6C0g3wu5g0PMG3zmMsCIys38gLD8uinlOnnuw=
+X-Received: by 2002:a81:6dd1:0:b0:59b:cf74:ee8d with SMTP id
+ i200-20020a816dd1000000b0059bcf74ee8dmr5249310ywc.10.1695196561782; Wed, 20
+ Sep 2023 00:56:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230916081615.4237-1-iuncuim@gmail.com>
+In-Reply-To: <20230916081615.4237-1-iuncuim@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 20 Sep 2023 09:55:49 +0200
+Message-ID: <CACRpkdYPtxAZrf4=btbF53U3CGgSMOZ_39eJDWjBTwBU21XYaQ@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: sunxi: h616: add extra gpio banks
+To:     Mikhail Kalashnikov <iuncuim@gmail.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Sat, Sep 16, 2023 at 10:16=E2=80=AFAM Mikhail Kalashnikov <iuncuim@gmail=
+.com> wrote:
 
-gpio_sim_make_line_names() returns NULL or ERR_PTR() so we must not use
-__free(kfree) on the returned address. Split this function into two, one
-that determines the size of the "gpio-line-names" array to allocate and
-one that actually sets the names at correct offsets. The allocation and
-assignment of the managed pointer happens in between.
+> From: iuncuim <iuncuim@gmail.com>
+>
+> Some SoCs from the H616 family (such as the T507) have the same die but
+> more output pins that are used for additional peripherals. The T507 SoC
+> don't have a built-in multiphy like the AC200 or AC300 connected to the
+> bank A. With the T507 these pins can be freely used for any other applica=
+tion.
+> This patch adds the missing muxes on banks A, D and E.
+>
+> Signed-off-by: Mikhail Kalashnikov <iuncuim@gmail.com>
+>
+> Changes from v2:
+>  * replaced gpio alt functions from "h_i2s0" to "i2s0"
+> https://lore.kernel.org/linux-sunxi/20230909094529.6083-1-iuncuim@gmail.c=
+om/
 
-Fixes: 3faf89f27aab ("gpio: sim: simplify code with cleanup helpers")
-Reported-by: Alexey Dobriyan <adobriyan@gmail.com>
-Closes: https://lore.kernel.org/all/07c32bf1-6c1a-49d9-b97d-f0ae4a2b42ab@p183/
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-Hopefully this is the last version of this patch. I restored the max()
-assignment from v3 but kept the code simpler than v2. Tested most corner
-cases that occurred to me.
+No review on this yet, but I think Neil Armstrong is familiar with
+the AMLogic stuff so paging him!
 
-v4 -> v5:
-- restore checking for the higher offset in each iteration when counting
-  named lines
-
-v3 -> v4:
-- simplify the line counting logic
-
-v2 -> v3:
-- restore the offset out-of-bounds checks
-
-v1 -> v2:
-- split the line name setting into two parts
-
- drivers/gpio/gpio-sim.c | 60 ++++++++++++++++-------------------------
- 1 file changed, 23 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 460389bb8e3f..3b7cdf44eb38 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -21,6 +21,7 @@
- #include <linux/irq.h>
- #include <linux/irq_sim.h>
- #include <linux/list.h>
-+#include <linux/minmax.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-@@ -718,52 +719,32 @@ gpio_sim_device_config_live_show(struct config_item *item, char *page)
- 	return sprintf(page, "%c\n", live ? '1' : '0');
- }
- 
--static char **gpio_sim_make_line_names(struct gpio_sim_bank *bank,
--				       unsigned int *line_names_size)
-+static unsigned int gpio_sim_get_line_names_size(struct gpio_sim_bank *bank)
- {
--	unsigned int max_offset = 0;
--	bool has_line_names = false;
- 	struct gpio_sim_line *line;
--	char **line_names;
-+	unsigned int size = 0;
- 
- 	list_for_each_entry(line, &bank->line_list, siblings) {
--		if (line->offset >= bank->num_lines)
-+		if (!line->name || (line->offset >= bank->num_lines))
- 			continue;
- 
--		if (line->name) {
--			if (line->offset > max_offset)
--				max_offset = line->offset;
--
--			/*
--			 * max_offset can stay at 0 so it's not an indicator
--			 * of whether line names were configured at all.
--			 */
--			has_line_names = true;
--		}
-+		size = max(size, line->offset + 1);
- 	}
- 
--	if (!has_line_names)
--		/*
--		 * This is not an error - NULL means, there are no line
--		 * names configured.
--		 */
--		return NULL;
--
--	*line_names_size = max_offset + 1;
-+	return size;
-+}
- 
--	line_names = kcalloc(*line_names_size, sizeof(*line_names), GFP_KERNEL);
--	if (!line_names)
--		return ERR_PTR(-ENOMEM);
-+static void
-+gpio_sim_set_line_names(struct gpio_sim_bank *bank, char **line_names)
-+{
-+	struct gpio_sim_line *line;
- 
- 	list_for_each_entry(line, &bank->line_list, siblings) {
--		if (line->offset >= bank->num_lines)
-+		if (!line->name || (line->offset >= bank->num_lines))
- 			continue;
- 
--		if (line->name && (line->offset <= max_offset))
--			line_names[line->offset] = line->name;
-+		line_names[line->offset] = line->name;
- 	}
--
--	return line_names;
- }
- 
- static void gpio_sim_remove_hogs(struct gpio_sim_device *dev)
-@@ -867,7 +848,7 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
- 			  struct fwnode_handle *parent)
- {
- 	struct property_entry properties[GPIO_SIM_PROP_MAX];
--	unsigned int prop_idx = 0, line_names_size = 0;
-+	unsigned int prop_idx = 0, line_names_size;
- 	char **line_names __free(kfree) = NULL;
- 
- 	memset(properties, 0, sizeof(properties));
-@@ -878,14 +859,19 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
- 		properties[prop_idx++] = PROPERTY_ENTRY_STRING("gpio-sim,label",
- 							       bank->label);
- 
--	line_names = gpio_sim_make_line_names(bank, &line_names_size);
--	if (IS_ERR(line_names))
--		return ERR_CAST(line_names);
-+	line_names_size = gpio_sim_get_line_names_size(bank);
-+	if (line_names_size) {
-+		line_names = kcalloc(line_names_size, sizeof(*line_names),
-+				     GFP_KERNEL);
-+		if (!line_names)
-+			return ERR_PTR(-ENOMEM);
-+
-+		gpio_sim_set_line_names(bank, line_names);
- 
--	if (line_names)
- 		properties[prop_idx++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
- 						"gpio-line-names",
- 						line_names, line_names_size);
-+	}
- 
- 	return fwnode_create_software_node(properties, parent);
- }
--- 
-2.39.2
-
+Yours,
+Linus Walleij
