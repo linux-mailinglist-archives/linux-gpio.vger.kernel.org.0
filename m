@@ -2,81 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2C557A7956
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 12:33:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB5897A79DB
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 12:59:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233376AbjITKdy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 06:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42114 "EHLO
+        id S233786AbjITK7R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 06:59:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234374AbjITKdp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 06:33:45 -0400
-Received: from TWMBX03.aspeed.com (mail.aspeedtech.com [211.20.114.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB27E114;
-        Wed, 20 Sep 2023 03:33:36 -0700 (PDT)
-Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX03.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 20 Sep
- 2023 18:33:36 +0800
-Received: from twmbx02.aspeed.com (192.168.10.13) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 20 Sep 2023 18:33:36 +0800
-From:   Joe Wang <joe_wang@aspeedtech.com>
-To:     <andrew@aj.id.au>, <linus.walleij@linaro.org>, <joel@jms.id.au>
-CC:     <linux-aspeed@lists.ozlabs.org>, <openbmc@lists.ozlabs.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] pinctrl: pinctrl-aspeed-g6: Add more settings for USB2AHP function
-Date:   Wed, 20 Sep 2023 18:33:32 +0800
-Message-ID: <20230920103332.274151-1-joe_wang@aspeedtech.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S233727AbjITK7Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 06:59:16 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0073B4
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 03:59:10 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-59ed7094255so16156887b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Sep 2023 03:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695207550; x=1695812350; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GzQdLX4ffzjkMw7jYkFd27ktsvPZM4GAQ9T3XI7VcZU=;
+        b=zhuY7guSt+OZ8Wm4Ymdd2musO6cTkfi7sJuee/VvkyzZyAlHIred7RV8G2S7r3p1Lx
+         4+1bYW5RwDtrM8iSRdq8EqOlnoFl1s6eoX0VGunFZsjoovnZ6AfpmqXh17nupkPi9KFN
+         7HkpanmRaudaMZC78/HeNGT62qa4ae2Oco3J+hNyMD0G3aSMwWsVvmAwLaichyJXZ7af
+         jysrWqyfWlUwHm81McNfGyVtbCfizbM+Fecd2w0O0Ip7Ey8IuC4Ru29YmWPKGBBPNFGe
+         oCS08mkD5lfKS/JBlZVYB+tVPSwNjuCD6LytrjGRIfPZELDYdhxtgndHjpqYxwPrrbmn
+         0dmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695207550; x=1695812350;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GzQdLX4ffzjkMw7jYkFd27ktsvPZM4GAQ9T3XI7VcZU=;
+        b=gVcp2jJaEO14lOL6d4IDiCj8TA3HGT5OtkDRn8VVBOclS2Ft0HFsjbj0vHIC8q0fo1
+         MhdFJ9/qy/+FWaSv0gCcaL/lo66BKObr064jZyewVIokyY23HNBB8iqqwzbnFGB1fjdC
+         sSMMQU87x9uffx8WvD0dr2StyfHgJ8gL9tvymj/nPp5QBzJhgTjo8uCwJQ+CndysuaHA
+         itpUUpi/MmIGUW3HUd7t+FOp1ds42RaezQTyAptVDqYlFxjCsRLAaIrz4LRDDQaEgXmg
+         j2U9steuy2NGWVWOMJQkVMGARjv4JI0K1cYD2F0VN4LFp/vx8q+bOW+zzUD5RcAPyjvN
+         hiGA==
+X-Gm-Message-State: AOJu0YxMcnfIeFERmEj8vd06SJtRmKmHgCOirRoORtiwXyCq7V7xx2t8
+        BUVxmXx6b5EKkqa/7jeKtmRQkWVp7V+wNtfyPfef4A==
+X-Google-Smtp-Source: AGHT+IGr72j1z62epCS0j7+7/HAJUbLH92EtwQWtcMuxny6gOm4544s3QtkGEaOnRMAXnpseX14ejSj13bFM/qsUKPI=
+X-Received: by 2002:a81:6542:0:b0:58c:4ec6:f21e with SMTP id
+ z63-20020a816542000000b0058c4ec6f21emr2230919ywb.23.1695207550124; Wed, 20
+ Sep 2023 03:59:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_FAIL,SPF_PASS,UPPERCASE_50_75
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20230920085639.152441-1-brgl@bgdev.pl> <CACRpkdYtbGqmMqN7FNhjYJGG+e0jWQmozf9kpNHiUBJvd2c=7Q@mail.gmail.com>
+ <CAMRc=McrXEQbwcsK3yrfROujezjMd1L4EcJj7GNTCE5L6zD1gw@mail.gmail.com>
+In-Reply-To: <CAMRc=McrXEQbwcsK3yrfROujezjMd1L4EcJj7GNTCE5L6zD1gw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 20 Sep 2023 12:58:58 +0200
+Message-ID: <CACRpkdYNA1rkG5wJ0+rAT9g4EyzfbN5VP2a9vuMMk_RD6bMLFA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: extend the critical sections of lookup tables
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-AST2600 USB2AHP (USB PortA: PCIe EHCI to PHY) function needs to set the
-register SCUC20[16]. Set it to enable the PCIe EHCI device on PCIe bus.
-Besides, also add USB2AHP signal expressions into pin declarations.
+On Wed, Sep 20, 2023 at 11:33=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> On Wed, 20 Sep 2023 11:12:58 +0200, Linus Walleij
+> <linus.walleij@linaro.org> said:
+> > On Wed, Sep 20, 2023 at 10:56=E2=80=AFAM Bartosz Golaszewski <brgl@bgde=
+v.pl> wrote:
 
-Signed-off-by: Joe Wang <joe_wang@aspeedtech.com>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> > Can we rename this function gpiod_find_lookup_table_locked()
+> > as per precedents in the kernel, to indicate that it needs to be
+> > called with a lock held?
+> >
+>
+> I think you mean gpiod_find_lookup_table_unlocked() as with this change i=
+t
+> will no longer take the lock?
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index 80838dc54b3a..d376fa7114d1 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -1592,9 +1592,10 @@ SIG_EXPR_LIST_DECL_SEMG(A4, USB2ADPDP, USBA, USB2ADP, USB2ADP_DESC,
- 			SIG_DESC_SET(SCUC20, 16));
- SIG_EXPR_LIST_DECL_SEMG(A4, USB2ADDP, USBA, USB2AD, USB2AD_DESC);
- SIG_EXPR_LIST_DECL_SEMG(A4, USB2AHDP, USBA, USB2AH, USB2AH_DESC);
--SIG_EXPR_LIST_DECL_SEMG(A4, USB2AHPDP, USBA, USB2AHP, USB2AHP_DESC);
-+SIG_EXPR_LIST_DECL_SEMG(A4, USB2AHPDP, USBA, USB2AHP, USB2AHP_DESC,
-+			SIG_DESC_SET(SCUC20, 16));
- PIN_DECL_(A4, SIG_EXPR_LIST_PTR(A4, USB2ADPDP), SIG_EXPR_LIST_PTR(A4, USB2ADDP),
--	  SIG_EXPR_LIST_PTR(A4, USB2AHDP));
-+	  SIG_EXPR_LIST_PTR(A4, USB2AHDP), SIG_EXPR_LIST_PTR(A4, USB2AHPDP));
- 
- #define B4 253
- SIG_EXPR_LIST_DECL_SEMG(B4, USB2ADPDN, USBA, USB2ADP, USB2ADP_DESC);
-@@ -1602,7 +1603,7 @@ SIG_EXPR_LIST_DECL_SEMG(B4, USB2ADDN, USBA, USB2AD, USB2AD_DESC);
- SIG_EXPR_LIST_DECL_SEMG(B4, USB2AHDN, USBA, USB2AH, USB2AH_DESC);
- SIG_EXPR_LIST_DECL_SEMG(B4, USB2AHPDN, USBA, USB2AHP, USB2AHP_DESC);
- PIN_DECL_(B4, SIG_EXPR_LIST_PTR(B4, USB2ADPDN), SIG_EXPR_LIST_PTR(B4, USB2ADDN),
--	  SIG_EXPR_LIST_PTR(B4, USB2AHDN));
-+	  SIG_EXPR_LIST_PTR(B4, USB2AHDN), SIG_EXPR_LIST_PTR(B4, USB2AHPDN));
- 
- GROUP_DECL(USBA, A4, B4);
- 
--- 
-2.34.1
+I think the pattern is the one I indicated: *_locked() means the function
+is to be called with the appropriate lock held, cf
+arch/arm64/kvm/hyp/nvhe/mm.c
 
+pkvm_create_mappings() takes a lock and then calls
+pkvm_create_mappings_locked() which even asserts that
+the lock is held.
+
+Yours,
+Linus Walleij
