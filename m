@@ -2,126 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 989F97A8B31
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 20:09:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 640587A8C12
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Sep 2023 20:54:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbjITSJW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 14:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56898 "EHLO
+        id S229753AbjITSyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 14:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbjITSJT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 14:09:19 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DD2D6;
-        Wed, 20 Sep 2023 11:09:14 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-274b01849c4so11531a91.3;
-        Wed, 20 Sep 2023 11:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695233353; x=1695838153; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B/lu8BcHJ/ysOPQIAbugBzzumndKD9GUIWEsPV6mHQU=;
-        b=ATLStUVarJQARDf6LuL8kZwydKTbXAQ/6pcLEDT6yWMNTYVEZAbSuvl+NcGXPh/Vhp
-         EmyweuFZXm9EC2M8uc/0aqzwLWxNL7UpgW/QgpgePqy+oHTtRIkn5+ZiPi0d9W0bkZ+m
-         jQD/11Yv3UeXNmsy6gh332yjYvX8OSOjgEBDVqVvvWq9phGC1gtYsMSiEW441P9AW+/T
-         g/twWg3sdks6xOMMMh8+HFdJPRMa3ptxor9mCfFTx0Pq8vwgKCVpg+zyfq4gZwO1olw0
-         prjXtJr5kVMMKeOevSLOQqOdz4cVQktcDk5J6oVmBAEzz3qQXMIW9h3imbl4hqkwazHJ
-         IgxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695233353; x=1695838153;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B/lu8BcHJ/ysOPQIAbugBzzumndKD9GUIWEsPV6mHQU=;
-        b=CMnzmgpuJx1oX1LooHioviSyNvbWCwXVKQbcEf3VumK2LyaOWSgibbaDwYB4TEUFmH
-         h+SDeQ8CFDUYg0116uVVYTmCjSmYLRftDjyAOM/3igtSlMzO+CBUjVUNtNie7DDYuupT
-         IrkOyX1UIC3JeM/mR8tBbqjJ7pBMMIMoPbE2OKmlhPi8JKz/lEIO2jeEnN+DjxdTJwvL
-         k0AyEiHJkSI0ARlMS8MYRYPAsyItLATnk28+uNu/u8jmDad6YIeqXSE1N3DtJT/7eonS
-         TyBLgjFi2ev8EF+IiGM3nVuauizFQTu0A7s9S+l336cgvIUt0XQUXGQ9pkAf6HMSqPaD
-         9gKg==
-X-Gm-Message-State: AOJu0Ywjl5m5eQfrZsissj4JiRq+qbTwGdgD7cRl1LAs3s149UpYMdA+
-        JRvs4kWoeTn+5gM3SyZudCY=
-X-Google-Smtp-Source: AGHT+IEKT/IAOFUythlW5W88vJzTtnhHbWBqSiKa/tGntWajo2/y1nIo13iyVVq8GgAC4g2BIhItCg==
-X-Received: by 2002:a17:90a:3ec6:b0:268:29cf:3231 with SMTP id k64-20020a17090a3ec600b0026829cf3231mr3278194pjc.3.1695233353165;
-        Wed, 20 Sep 2023 11:09:13 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:3073:3a17:4a3d:2738])
-        by smtp.gmail.com with ESMTPSA id v13-20020a17090ac90d00b002639c4f81cesm1632455pjt.3.2023.09.20.11.09.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 11:09:12 -0700 (PDT)
-Date:   Wed, 20 Sep 2023 11:09:10 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: avoid unsafe code pattern in find_pinctrl()
-Message-ID: <ZQs1RgTKg6VJqmPs@google.com>
+        with ESMTP id S229518AbjITSyU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 14:54:20 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF62C6;
+        Wed, 20 Sep 2023 11:54:14 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26676C433C9;
+        Wed, 20 Sep 2023 18:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695236054;
+        bh=otb5DM/4dhf30T5dFnYMnw7MyuNEWEkpWHoB3snPXyU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MhubmkO7L0v45tnu09+stzCUT/fNV/OtFtzPV8j8YSjueRocNpa4Y3ESgPVAOXvOb
+         1XOf05kQpaHXhFl35oTfA4t7OSxaZbp1AoFT9CdbISs4nE7qFCOe2egbldrJATe6aA
+         WODXdTYMuURkoptVMo/Wz32NwkD0woOBrjK4V5uV8INwzP572JZ5b6fbkfyCnZqByb
+         YJqe01YJbHtGa1IE2uCsWmtnsaCCYPXm6D4r4BmDklrmvyVjl5G3nRsX3+gAxMSyIp
+         XSZj2zQLjSq8mPfS5ADNfbP7DkEEVL1N65qkwvM94O83yU6uvv+wcDW/hOBW6a/Cbn
+         zvZ6c8BAuqPHQ==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     cros-qcom-dts-watchers@chromium.org,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Luca Weiss <luca.weiss@fairphone.com>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH v2 0/7] Initial support for the Fairphone 5 smartphone
+Date:   Wed, 20 Sep 2023 11:58:20 -0700
+Message-ID: <169523629862.3360741.11240206637939402551.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230919-fp5-initial-v2-0-14bb7cedadf5@fairphone.com>
+References: <20230919-fp5-initial-v2-0-14bb7cedadf5@fairphone.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The code in find_pinctrl() takes a mutex and traverses a list of pinctrl
-structures. Later the caller bumps up reference count on the found
-structure. Such pattern is not safe as pinctrl that was found may get
-deleted before the caller gets around to increasing the reference count.
 
-Fix this by taking the reference count in find_pinctrl(), while it still
-holds the mutex.
+On Tue, 19 Sep 2023 14:45:54 +0200, Luca Weiss wrote:
+> Add support to boot up mainline kernel on the QCM6490-based Fairphone 5
+> smartphone.
+> 
+> These patches only cover a part of the functionality brought up on
+> mainline so far, with the rest needing larger dts and driver changes or
+> depend on patches that are not yet merged. I will work on sending those
+> once these base patches here have settled.
+> 
+> [...]
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/pinctrl/core.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index e9dc9638120a..e2f7519bef04 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1022,17 +1022,20 @@ static int add_setting(struct pinctrl *p, struct pinctrl_dev *pctldev,
- 
- static struct pinctrl *find_pinctrl(struct device *dev)
- {
--	struct pinctrl *p;
-+	struct pinctrl *entry, *p = NULL;
- 
- 	mutex_lock(&pinctrl_list_mutex);
--	list_for_each_entry(p, &pinctrl_list, node)
--		if (p->dev == dev) {
--			mutex_unlock(&pinctrl_list_mutex);
--			return p;
-+
-+	list_for_each_entry(entry, &pinctrl_list, node) {
-+		if (entry->dev == dev) {
-+			p = entry;
-+			kref_get(&p->users);
-+			break;
- 		}
-+	}
- 
- 	mutex_unlock(&pinctrl_list_mutex);
--	return NULL;
-+	return p;
- }
- 
- static void pinctrl_free(struct pinctrl *p, bool inlist);
-@@ -1140,7 +1143,6 @@ struct pinctrl *pinctrl_get(struct device *dev)
- 	p = find_pinctrl(dev);
- 	if (p) {
- 		dev_dbg(dev, "obtain a copy of previously claimed pinctrl\n");
--		kref_get(&p->users);
- 		return p;
- 	}
- 
+[1/7] arm64: dts: qcom: sc7280: Mark some nodes as 'reserved'
+      commit: 6da24ba932082bae110feb917a64bb54637fa7c0
+[3/7] arm64: dts: qcom: pm7250b: make SID configurable
+      commit: 8e2d56f64572e0432c355093a7601bde29677490
+[4/7] arm64: dts: qcom: pm8350c: Add flash led node
+      commit: bfd4412a023b2a3a2f858f2ffc13705aaeef5737
+[6/7] dt-bindings: arm: qcom: Add QCM6490 Fairphone 5
+      commit: 4b1a16d776b474345b12f834de1fd42bca226d90
+[7/7] arm64: dts: qcom: qcm6490: Add device-tree for Fairphone 5
+      commit: eee9602ad6498eee9ddab1b7eb6aede288f0b934
+
+Best regards,
 -- 
-2.42.0.515.g380fc7ccd1-goog
-
-
--- 
-Dmitry
+Bjorn Andersson <andersson@kernel.org>
