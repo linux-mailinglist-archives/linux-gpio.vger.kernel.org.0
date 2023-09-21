@@ -2,155 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2605C7A9D59
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Sep 2023 21:31:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2E347A999E
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Sep 2023 20:16:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230073AbjIUTbR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Sep 2023 15:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48816 "EHLO
+        id S230387AbjIUSQm convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 21 Sep 2023 14:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230303AbjIUTaV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Sep 2023 15:30:21 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE178ADC55
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Sep 2023 11:04:29 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2c007d6159aso22364201fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Sep 2023 11:04:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695319468; x=1695924268; darn=vger.kernel.org;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RLu1kFzMi5OTWpSvCFb1Jh2IvtJRIUlkrOolz/Jszqk=;
-        b=xmkfbqkApFBrsnhJnxNmIvUvo66kHw4sAmtSs9FT1fekuoH/goQ4sIP9ft2mDsKQjA
-         RRvsGL1QSc3fKG6KJgdd3ewFVJpcUEI/wkM12a6MqxO+jUdeSon7h68XkZP1YCLqlgZ7
-         Kj4D7RzU7xbHsFy1Yw340Qz37Yl1Lt63YUb+XMIeOz1TLaQ3M9aiu5qG5fbdPAGw0Vj0
-         7k7vmPLchxFxHjaorXOeTAzAKNKxzXlm4g+b8s015o75ERxPtr86eaXvS5LgdOprmT60
-         xlXab2rXqibMUFMTK0nqWKdiqfSZGPYg+PvoIcoe9HXc8xQ5g7Gmk/zQmNMqA2efB/PV
-         8aCg==
+        with ESMTP id S230301AbjIUSQ1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Sep 2023 14:16:27 -0400
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17CE5AE2E;
+        Thu, 21 Sep 2023 10:21:40 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-52f9a45b4bdso1423259a12.3;
+        Thu, 21 Sep 2023 10:21:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695319468; x=1695924268;
-        h=in-reply-to:references:to:cc:subject:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RLu1kFzMi5OTWpSvCFb1Jh2IvtJRIUlkrOolz/Jszqk=;
-        b=AWDNpouYXzNsehKBAt/NS5NSxWqcT2saV/RE22/sr1hWaLKOROmxtkmaWp8Ff3dl1r
-         vPxwwr6+MeMvViQ7a5BIY/twZDBwbfssFMDf09mo0i+eHFLCTIz6GevLkC04IYmIizZ0
-         pUtnc4UwyYLAJln7OlRX2ue1Qjv0r33kC7DqSfXID7E9x1m9yZVhMCG0kDcOWfe3gqnD
-         To+1qOljEQKALZlx51sSrK4K7UQ9qfIh4iS5Gg7Y7utVtZ0rkOsILXs0YsgzHQ22hLff
-         J53isOVWfjDyrmB7Yda0B+LDiBHG5Qkbyt56RiHpswgrm9ikRPQVtq3pInk11+hp9OuT
-         JGqQ==
-X-Gm-Message-State: AOJu0YygcZ/wAR/Ebi18zXhBBD0F8FhKYFDC0e2e8ADWVTbfsR6SB1lY
-        gYItoN2MnYKLPKo7nYRHrckUkDMhujeQ3ccHRqfjqw==
-X-Google-Smtp-Source: AGHT+IGfFevDnb2l/HaENbVpr0ZWm22+55I05LmJOSLeIIEJVJQspbCgHX9JeAg2WZsUYSXhoNEfHg==
-X-Received: by 2002:a05:6512:3a82:b0:500:b872:7899 with SMTP id q2-20020a0565123a8200b00500b8727899mr6122035lfu.62.1695301584541;
-        Thu, 21 Sep 2023 06:06:24 -0700 (PDT)
-Received: from localhost (static-212-193-78-212.thenetworkfactory.nl. [212.78.193.212])
-        by smtp.gmail.com with ESMTPSA id r22-20020aa7da16000000b00532c84e6997sm813474eds.23.2023.09.21.06.06.23
+        d=1e100.net; s=20230601; t=1695316899; x=1695921699;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=78TMJJFlsLVACVaST0yD4fr1cOAvW144T6j75QycuXg=;
+        b=BAV30hJkYC7gDJg8tJ5MgmwgAeTItbBEzWUcixCeM/pAGaCgaQ8iMiyn0XLG6VH9AG
+         ATLhbdtVyCC4KBdQdSsCTH0JJXuR7XVOSpV3URxP7TbirqHqYFRHRbBWD7+I3DjzCUZ0
+         iu65ni8UHH5hJfVmugdCvjEeqTP4zFi4RxIie6MPXhe9eTmsLORXD/5wosNIUBMifG9j
+         lSBCLxcxr0nbNY41dJQU3tqmp4sKBbaCaM27tuidbCQzJUwFo7JleTbtt8kmem84QoDV
+         zKqJa3Leqv9IUbhA64LQUI3GFTuCZ4samvzOPMyY2jFjLR5XbI/opUALhieLgtJd7xXY
+         YUKA==
+X-Gm-Message-State: AOJu0Yy11+ifoLtQMj0zsVqtcJIIdGl/qpKcTULNtlXmQqyT9qQ/0DL6
+        JbaLbcnQYqAHQbj57DOkw4bWirx05e9jlYr9
+X-Google-Smtp-Source: AGHT+IH+uBVw292r+sxaKfU8NLmvm5e2Jkc2m0Sb1GJILXn42+85/1qKFwBKoGAB4t0PUKVC9cnpbw==
+X-Received: by 2002:a2e:8098:0:b0:2c0:c6a:eb2f with SMTP id i24-20020a2e8098000000b002c00c6aeb2fmr5027753ljg.1.1695302182923;
+        Thu, 21 Sep 2023 06:16:22 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id p2-20020a2e9a82000000b002c001e57e1asm337469lji.73.2023.09.21.06.16.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Sep 2023 06:06:24 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 21 Sep 2023 15:06:23 +0200
-Message-Id: <CVOM97T49C5Z.1XA78Z7SPY16O@ablu-work>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-Subject: Re: [libgpiod] Thread safety API contract
-Cc:     <linux-gpio@vger.kernel.org>,
-        "Viresh Kumar" <viresh.kumar@linaro.org>,
-        =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-To:     "Erik Schilling" <erik.schilling@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>
-X-Mailer: aerc 0.15.2
-References: <CVHO091CC80Y.3KUOSLSOBVL0T@ablu-work>
- <CAMRc=MdMKd+6-P-ma0E0f5yBTOGS_zVaBJD6wEywyjZ7JVE2YA@mail.gmail.com>
- <CVHTW377HBYV.1CKNHXYC75Q5N@ablu-work>
- <CAMRc=MdR1coB9p1gvG2razQUeuwUJCaeDrTTm5o1ND+LJZ1SOg@mail.gmail.com>
- <CVHULP4LSR1M.U8ZIY7UL0OU5@ablu-work>
- <CAMRc=Mc4F_PKk3doS-MQUE0_=iRdQtJoWXO+mkhWcMBcudh--w@mail.gmail.com>
- <CVI29A6AMQRU.37OB8UWFQNINW@ablu-work>
-In-Reply-To: <CVI29A6AMQRU.37OB8UWFQNINW@ablu-work>
-X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: *
+        Thu, 21 Sep 2023 06:16:22 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2c007d6159aso15303351fa.3;
+        Thu, 21 Sep 2023 06:16:22 -0700 (PDT)
+X-Received: by 2002:a05:6512:3987:b0:500:bb99:69a7 with SMTP id
+ j7-20020a056512398700b00500bb9969a7mr6201266lfu.14.1695301737311; Thu, 21 Sep
+ 2023 06:08:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com> <20230912045157.177966-29-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20230912045157.177966-29-claudiu.beznea.uj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 21 Sep 2023 15:08:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV5BuPPLkZUDfhjXzq_aQ+LFfEM=eXGT-XjmpxSjSqeJg@mail.gmail.com>
+Message-ID: <CAMuHMdV5BuPPLkZUDfhjXzq_aQ+LFfEM=eXGT-XjmpxSjSqeJg@mail.gmail.com>
+Subject: Re: [PATCH 28/37] pinctrl: renesas: rzg2l: make struct
+ rzg2l_pinctrl_data::dedicated_pins constant
+To:     Claudiu <claudiu.beznea@tuxon.dev>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
+        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
+        nfraprado@collabora.com, rafal@milecki.pl,
+        wsa+renesas@sang-engineering.com,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed Sep 13, 2023 at 10:10 PM CEST, Erik Schilling wrote:
-> On Wed Sep 13, 2023 at 5:17 PM CEST, Bartosz Golaszewski wrote:
-> > On Wed, Sep 13, 2023 at 4:10=E2=80=AFPM Erik Schilling
-> > <erik.schilling@linaro.org> wrote:
-> > >
-> > > On Wed Sep 13, 2023 at 3:45 PM CEST, Bartosz Golaszewski wrote:
-> > > > On Wed, Sep 13, 2023 at 3:36=E2=80=AFPM Erik Schilling
-> > > > <erik.schilling@linaro.org> wrote:
-> > > > >
-> > > > > On Wed Sep 13, 2023 at 2:03 PM CEST, Bartosz Golaszewski wrote:
-> > > > > > On Wed, Sep 13, 2023 at 11:47=E2=80=AFAM Erik Schilling
-> > > > > > <erik.schilling@linaro.org> wrote:
-> > > > > > >
-> > > > > > > Hi all!
-> > > > > > >
-> > > > > > > Currently it looks like libgpiod does not document any kind o=
-f thread
-> > > > > > > safety gurantee. However, the Python bindings tests
-> > > > > >
-> > > > > > Indeed, the library is thread-aware but not thread-safe. Just l=
-ike
-> > > > > > what is recommended for low-level system libraries.
-> > > > >
-> > > > > Just to confirm:
-> > > > >
-> > > > > I assume this means: thread-aware in the sense that all created o=
-bjects
-> > > > > (chips, line_requests, ...) together may only be used by a single=
- thread
-> > > > > at once? So line_requests of a same chip may not be used across t=
-hreads?
-> > > > >
-> > > >
-> > > > They can be used across threads alright. Thread-aware means: no glo=
-bal
-> > > > state in the library, IOW two functions won't get in each other's w=
-ay
-> > > > unless they work on the same object.
-> > >
-> > > Sorry, I did not phrase that question super well. A (hopefully) bette=
-r
-> > > try:
-> > >
-> > > If I create a chip and then open two line_requests from that single
-> > > chip. Can I use these two line_requests concurrently on different
-> > > threads? Or do both of them (and the chip) have to share a single loc=
-k?
-> > >
-> > > My assumption was that everything derived from the same chip instance
-> > > must not run concurrently.
-> > >
-> >
-> > Ah sorry, I didn't understand your question. Actually using requests
-> > from a chip concurrently in a different thread is perfectly fine. The
-> > two structures are independent from each other in user-space and their
-> > work is synchronized in the kernel.
+On Tue, Sep 12, 2023 at 6:53 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> Ah. That makes things a lot simpler. I think then we only need some
-> Send traits on the Rust structs. Does the same guarantee apply to all
-> structs that are "created" from a chip? Then I would look into whether I
-> can extend the docs while fixing the Rust bindings.
+> struct rzg2l_pinctrl_data::dedicated_pins is constant thus mark it so.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Summarizing a short discussion between Bart an me:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v6.7.
 
-- objects created from chips are standalone and different instances can
-  be used concurrently
-- exception: edge_events from buffers are tied to the buffer unless one
-  copies them (as stated in the docs).
+Gr{oetje,eeting}s,
 
-Will send a patch mentioning this in the docs and adjusting the Rust
-bindings.
+                        Geert
 
-- Erik
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
