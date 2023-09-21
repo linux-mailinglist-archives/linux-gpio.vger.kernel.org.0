@@ -2,46 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B99DA7A90B6
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Sep 2023 03:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CDE97A90C0
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Sep 2023 04:00:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbjIUBxO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Sep 2023 21:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
+        id S229627AbjIUCAv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Sep 2023 22:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229801AbjIUBxN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 21:53:13 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E6A9B7;
-        Wed, 20 Sep 2023 18:53:05 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.201])
-        by gateway (Coremail) with SMTP id _____8BxNugAogtldnEqAA--.27948S3;
-        Thu, 21 Sep 2023 09:53:04 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.20.42.201])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxndzwoQtlCvsMAA--.26254S4;
-        Thu, 21 Sep 2023 09:53:02 +0800 (CST)
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229603AbjIUCAu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Sep 2023 22:00:50 -0400
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E8ABB;
+        Wed, 20 Sep 2023 19:00:41 -0700 (PDT)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 38L20TwjC2067081, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+        by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 38L20TwjC2067081
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Sep 2023 10:00:30 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Thu, 21 Sep 2023 10:00:30 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Thu, 21 Sep 2023 10:00:29 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::7445:d92b:d0b3:f79c]) by
+ RTEXMBS04.realtek.com.tw ([fe80::7445:d92b:d0b3:f79c%5]) with mapi id
+ 15.01.2375.007; Thu, 21 Sep 2023 10:00:29 +0800
+From:   =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        loongson-kernel@lists.loongnix.cn, Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v6 2/2] gpio: loongson: add more gpio chip support
-Date:   Thu, 21 Sep 2023 09:52:47 +0800
-Message-Id: <20230921015247.23478-3-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230921015247.23478-1-zhuyinbo@loongson.cn>
-References: <20230921015247.23478-1-zhuyinbo@loongson.cn>
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 0/7] Add pinctrl driver support for Realtek DHC SoCs
+Thread-Topic: [PATCH v3 0/7] Add pinctrl driver support for Realtek DHC SoCs
+Thread-Index: AQHZ6uG6NRO6y7T0o0yihmgUFfWH/bAjCcYAgAAARoCAAXsAQA==
+Date:   Thu, 21 Sep 2023 02:00:29 +0000
+Message-ID: <b160be5e1b1a4b589ca9bb383b104a23@realtek.com>
+References: <20230919101117.4097-1-tychang@realtek.com>
+ <CACRpkdYtGhhNuBnP0MvMKiqP=wPsv=5K_ZBaWcgW3sssLrm2aQ@mail.gmail.com>
+ <CACRpkda_EVEOP=LCjiBcSgPY7-mU9ENiOcw5taskL7TcwkMkCw@mail.gmail.com>
+In-Reply-To: <CACRpkda_EVEOP=LCjiBcSgPY7-mU9ENiOcw5taskL7TcwkMkCw@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-originating-ip: [172.21.181.166]
+x-kse-serverinfo: RTEXDAG01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxndzwoQtlCvsMAA--.26254S4
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-        nUUI43ZEXa7xR_UUUUUUUUU==
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -51,210 +70,11 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch was to add loongson 2k0500, 2k2000 and 3a5000 gpio chip
-driver support and define inten_offset attibute to enable gpio chip
-interrupt.
-
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-loongson-64bit.c | 119 ++++++++++++++++++++++++++---
- 1 file changed, 110 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpio/gpio-loongson-64bit.c b/drivers/gpio/gpio-loongson-64bit.c
-index 06213bbfabdd..6749d4dd6d64 100644
---- a/drivers/gpio/gpio-loongson-64bit.c
-+++ b/drivers/gpio/gpio-loongson-64bit.c
-@@ -26,6 +26,7 @@ struct loongson_gpio_chip_data {
- 	unsigned int		conf_offset;
- 	unsigned int		out_offset;
- 	unsigned int		in_offset;
-+	unsigned int		inten_offset;
- };
- 
- struct loongson_gpio_chip {
-@@ -117,19 +118,29 @@ static void loongson_gpio_set(struct gpio_chip *chip, unsigned int pin, int valu
- 
- static int loongson_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
- {
-+	unsigned int u;
- 	struct platform_device *pdev = to_platform_device(chip->parent);
-+	struct loongson_gpio_chip *lgpio = to_loongson_gpio_chip(chip);
-+
-+	if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
-+		/* Get the register index from offset then multiply by bytes per register */
-+		u = readl(lgpio->reg_base + lgpio->chip_data->inten_offset + (offset / 32) * 4);
-+		u |= BIT(offset % 32);
-+		writel(u, lgpio->reg_base + lgpio->chip_data->inten_offset + (offset / 32) * 4);
-+	} else {
-+		writeb(1, lgpio->reg_base + lgpio->chip_data->inten_offset + offset);
-+	}
- 
- 	return platform_get_irq(pdev, offset);
- }
- 
- static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgpio,
--			      struct device_node *np, void __iomem *reg_base)
-+			      void __iomem *reg_base)
- {
- 	int ret;
- 	u32 ngpios;
- 
- 	lgpio->reg_base = reg_base;
--
- 	if (lgpio->chip_data->mode == BIT_CTRL_MODE) {
- 		ret = bgpio_init(&lgpio->chip, dev, 8,
- 				lgpio->reg_base + lgpio->chip_data->in_offset,
-@@ -148,15 +159,15 @@ static int loongson_gpio_init(struct device *dev, struct loongson_gpio_chip *lgp
- 		lgpio->chip.direction_output = loongson_gpio_direction_output;
- 		lgpio->chip.set = loongson_gpio_set;
- 		lgpio->chip.parent = dev;
-+		device_property_read_u32(dev, "ngpios", &ngpios);
-+		lgpio->chip.ngpio = ngpios;
- 		spin_lock_init(&lgpio->lock);
- 	}
- 
--	device_property_read_u32(dev, "ngpios", &ngpios);
--
--	lgpio->chip.can_sleep = 0;
--	lgpio->chip.ngpio = ngpios;
- 	lgpio->chip.label = lgpio->chip_data->label;
--	lgpio->chip.to_irq = loongson_gpio_to_irq;
-+	lgpio->chip.can_sleep = false;
-+	if (lgpio->chip_data->inten_offset)
-+		lgpio->chip.to_irq = loongson_gpio_to_irq;
- 
- 	return devm_gpiochip_add_data(dev, &lgpio->chip, lgpio);
- }
-@@ -165,7 +176,6 @@ static int loongson_gpio_probe(struct platform_device *pdev)
- {
- 	void __iomem *reg_base;
- 	struct loongson_gpio_chip *lgpio;
--	struct device_node *np = pdev->dev.of_node;
- 	struct device *dev = &pdev->dev;
- 
- 	lgpio = devm_kzalloc(dev, sizeof(*lgpio), GFP_KERNEL);
-@@ -178,7 +188,7 @@ static int loongson_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(reg_base))
- 		return PTR_ERR(reg_base);
- 
--	return loongson_gpio_init(dev, lgpio, np, reg_base);
-+	return loongson_gpio_init(dev, lgpio, reg_base);
- }
- 
- static const struct loongson_gpio_chip_data loongson_gpio_ls2k_data = {
-@@ -187,6 +197,57 @@ static const struct loongson_gpio_chip_data loongson_gpio_ls2k_data = {
- 	.conf_offset = 0x0,
- 	.in_offset = 0x20,
- 	.out_offset = 0x10,
-+	.inten_offset = 0x30,
-+};
-+
-+static const struct loongson_gpio_chip_data loongson_gpio_ls2k0500_data0 = {
-+	.label = "ls2k0500_gpio",
-+	.mode = BIT_CTRL_MODE,
-+	.conf_offset = 0x0,
-+	.in_offset = 0x8,
-+	.out_offset = 0x10,
-+	.inten_offset = 0xb0,
-+};
-+
-+static const struct loongson_gpio_chip_data loongson_gpio_ls2k0500_data1 = {
-+	.label = "ls2k0500_gpio",
-+	.mode = BIT_CTRL_MODE,
-+	.conf_offset = 0x0,
-+	.in_offset = 0x8,
-+	.out_offset = 0x10,
-+	.inten_offset = 0x98,
-+};
-+
-+static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data0 = {
-+	.label = "ls2k2000_gpio",
-+	.mode = BIT_CTRL_MODE,
-+	.conf_offset = 0x0,
-+	.in_offset = 0xc,
-+	.out_offset = 0x8,
-+};
-+
-+static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data1 = {
-+	.label = "ls2k2000_gpio",
-+	.mode = BIT_CTRL_MODE,
-+	.conf_offset = 0x0,
-+	.in_offset = 0x20,
-+	.out_offset = 0x10,
-+};
-+
-+static const struct loongson_gpio_chip_data loongson_gpio_ls2k2000_data2 = {
-+	.label = "ls2k2000_gpio",
-+	.mode = BIT_CTRL_MODE,
-+	.conf_offset = 0x84,
-+	.in_offset = 0x88,
-+	.out_offset = 0x80,
-+};
-+
-+static const struct loongson_gpio_chip_data loongson_gpio_ls3a5000_data = {
-+	.label = "ls3a5000_gpio",
-+	.mode = BIT_CTRL_MODE,
-+	.conf_offset = 0x0,
-+	.in_offset = 0xc,
-+	.out_offset = 0x8,
- };
- 
- static const struct loongson_gpio_chip_data loongson_gpio_ls7a_data = {
-@@ -202,6 +263,30 @@ static const struct of_device_id loongson_gpio_of_match[] = {
- 		.compatible = "loongson,ls2k-gpio",
- 		.data = &loongson_gpio_ls2k_data,
- 	},
-+	{
-+		.compatible = "loongson,ls2k0500-gpio0",
-+		.data = &loongson_gpio_ls2k0500_data0,
-+	},
-+	{
-+		.compatible = "loongson,ls2k0500-gpio1",
-+		.data = &loongson_gpio_ls2k0500_data1,
-+	},
-+	{
-+		.compatible = "loongson,ls2k2000-gpio0",
-+		.data = &loongson_gpio_ls2k2000_data0,
-+	},
-+	{
-+		.compatible = "loongson,ls2k2000-gpio1",
-+		.data = &loongson_gpio_ls2k2000_data1,
-+	},
-+	{
-+		.compatible = "loongson,ls2k2000-gpio2",
-+		.data = &loongson_gpio_ls2k2000_data2,
-+	},
-+	{
-+		.compatible = "loongson,ls3a5000-gpio",
-+		.data = &loongson_gpio_ls3a5000_data,
-+	},
- 	{
- 		.compatible = "loongson,ls7a-gpio",
- 		.data = &loongson_gpio_ls7a_data,
-@@ -215,6 +300,22 @@ static const struct acpi_device_id loongson_gpio_acpi_match[] = {
- 		.id = "LOON0002",
- 		.driver_data = (kernel_ulong_t)&loongson_gpio_ls7a_data,
- 	},
-+	{
-+		.id = "LOON0007",
-+		.driver_data = (kernel_ulong_t)&loongson_gpio_ls3a5000_data,
-+	},
-+	{
-+		.id = "LOON000A",
-+		.driver_data = (kernel_ulong_t)&loongson_gpio_ls2k2000_data0,
-+	},
-+	{
-+		.id = "LOON000B",
-+		.driver_data = (kernel_ulong_t)&loongson_gpio_ls2k2000_data1,
-+	},
-+	{
-+		.id = "LOON000C",
-+		.driver_data = (kernel_ulong_t)&loongson_gpio_ls2k2000_data2,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(acpi, loongson_gpio_acpi_match);
--- 
-2.20.1
-
+SGkgTGludXMsDQoNCj4NCj5PbiBXZWQsIFNlcCAyMCwgMjAyMyBhdCAxOjA44oCvUE0gTGludXMg
+V2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPiB3cm90ZToNCj4NCj4+IEFsbCBwYXRj
+aGVzIGxvb2sgZ29vZCwgYmluZGluZ3MgYXJlIHJldmlld2VkIGJ5IFJvYiwgbXkgY29tbWVudHMN
+Cj4+IGFkZHJlc3NlZDogcGF0Y2hlcyBhcHBsaWVkIGZvciBrZXJuZWwgdjYuNiENCj4NCj5Tb3Jy
+eSwga2VybmVsIHY2LjcgYXQgdGhpcyBwb2ludCBvYnZpb3VzbHkuIEkgY2FuJ3Qga2VlcCBudW1i
+ZXJzIGluIG15IGhlYWQNCj5wcm9wZXJseSA6Lw0KPg0KPllvdXJzLA0KPkxpbnVzIFdhbGxlaWoN
+Cg0KSSBhcHByZWNpYXRlIGl0ISBUaGFuayB5b3UgZm9yIHRoZSByZXZpZXchDQoNClRoYW5rcywN
+ClR6dXlpIENoYW5nDQo=
