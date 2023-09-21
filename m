@@ -2,98 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BE727A96B6
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Sep 2023 19:11:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 936D67A9677
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Sep 2023 19:11:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbjIURIA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Sep 2023 13:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
+        id S230109AbjIURIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Sep 2023 13:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229774AbjIURHa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Sep 2023 13:07:30 -0400
+        with ESMTP id S230076AbjIURIe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Sep 2023 13:08:34 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A4B83A81;
-        Thu, 21 Sep 2023 10:05:12 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="466800441"
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CE75248;
+        Thu, 21 Sep 2023 10:05:14 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="466800623"
 X-IronPort-AV: E=Sophos;i="6.03,165,1694761200"; 
-   d="scan'208";a="466800441"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 04:22:49 -0700
+   d="scan'208";a="466800623"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 04:24:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="750351498"
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="870772233"
 X-IronPort-AV: E=Sophos;i="6.03,165,1694761200"; 
-   d="scan'208";a="750351498"
+   d="scan'208";a="870772233"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 04:22:45 -0700
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 04:23:58 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
         (envelope-from <andy@kernel.org>)
-        id 1qjHla-0000000GsMn-22jB;
-        Thu, 21 Sep 2023 14:22:42 +0300
-Date:   Thu, 21 Sep 2023 14:22:42 +0300
+        id 1qjHml-0000000GsNf-21Wl;
+        Thu, 21 Sep 2023 14:23:55 +0300
+Date:   Thu, 21 Sep 2023 14:23:55 +0300
 From:   Andy Shevchenko <andy@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>,
+To:     Wenhua Lin <Wenhua.Lin@unisoc.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] gpio: ixp4xx: Handle clock output on pin 14 and 15
-Message-ID: <ZQwngrU9fxdSGSKs@smile.fi.intel.com>
-References: <20230921-ixp4xx-gpio-clocks-v1-0-574942bf944a@linaro.org>
- <20230921-ixp4xx-gpio-clocks-v1-2-574942bf944a@linaro.org>
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wenhua lin <wenhua.lin1994@gmail.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Subject: Re: [PATCH V2 1/4] gpio: sprd: In the sleep state, the eic debounce
+ clk must be forced open
+Message-ID: <ZQwny/NO8qjPU7AH@smile.fi.intel.com>
+References: <20230921090027.11136-1-Wenhua.Lin@unisoc.com>
+ <20230921090027.11136-2-Wenhua.Lin@unisoc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230921-ixp4xx-gpio-clocks-v1-2-574942bf944a@linaro.org>
+In-Reply-To: <20230921090027.11136-2-Wenhua.Lin@unisoc.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 12:23:46AM +0200, Linus Walleij wrote:
-> This makes it possible to provide basic clock output on pins
-> 14 and 15. The clocks are typically used by random electronics,
-> not modeled in the device tree, so they just need to be provided
-> on request.
+On Thu, Sep 21, 2023 at 05:00:24PM +0800, Wenhua Lin wrote:
+> In the sleep state, Eic debounce has no clock and the clk of
 
-...
+Eic --> The eic
 
-> +	val = __raw_readl(g->base + IXP4XX_REG_GPCLK);
+clk --> clock
 
-Do we need to read this...
+> debounce needs to be forced open, so that eic can wake up normally.
 
->  	/*
->  	 * Make sure GPIO 14 and 15 are NOT used as clocks but GPIO on
->  	 * specific machines.
->  	 */
->  	if (of_machine_is_compatible("dlink,dsm-g600-a") ||
->  	    of_machine_is_compatible("iom,nas-100d"))
-> -		__raw_writel(0x0, g->base + IXP4XX_REG_GPCLK);
-> +		val = 0;
+> Fixes: 2788938b7946 ("gpio: eic-sprd: Make the irqchip immutable")
+> 
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 
-...if we are going to discard it anyway here?
-
-Maybe
-
-	if (...)
-		val = 0;
-	else
-		val = readl();
-
-?
-
-...
-
-> +	/*
-> +	 * Enable clock outputs with default timings of requested clock.
-> +	 * If you need control over TC and DC, add these to the device
-> +	 * tree bindings and use them here.
-> +	 */
-
-Shouldn't this be integrated into PPS subsystem?
+The tag block mustn't have blank lines.
 
 -- 
 With Best Regards,
