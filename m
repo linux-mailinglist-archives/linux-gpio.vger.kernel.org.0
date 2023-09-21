@@ -2,40 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 818B07A99F5
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Sep 2023 20:34:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF8787A9E3D
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Sep 2023 21:59:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjIUSer (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Sep 2023 14:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53406 "EHLO
+        id S231231AbjIUT7P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Sep 2023 15:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbjIUSej (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Sep 2023 14:34:39 -0400
-Received: from mail-sh.amlogic.com (mail-sh.amlogic.com [58.32.228.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09AB3400E0;
-        Thu, 21 Sep 2023 10:15:04 -0700 (PDT)
-Received: from rd02-sz.amlogic.software (10.28.11.83) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.2507.13; Thu, 21 Sep 2023
- 16:34:57 +0800
-From:   Huqiang Qin <huqiang.qin@amlogic.com>
-To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
-        <jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
-        <brgl@bgdev.pl>, <andy@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Huqiang Qin <huqiang.qin@amlogic.com>
-Subject: [PATCH V2 0/3] Add pinctrl driver support for Amlogic T7 SoCs
-Date:   Thu, 21 Sep 2023 16:34:05 +0800
-Message-ID: <20230921083407.1167510-2-huqiang.qin@amlogic.com>
-X-Mailer: git-send-email 2.42.0
+        with ESMTP id S231328AbjIUT6v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Sep 2023 15:58:51 -0400
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E57A58097
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Sep 2023 10:19:04 -0700 (PDT)
+Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
+        by SHSQR01.spreadtrum.com with ESMTP id 38L928FZ066903
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Sep 2023 17:02:08 +0800 (+08)
+        (envelope-from Wenhua.Lin@unisoc.com)
+Received: from dlp.unisoc.com ([10.29.3.86])
+        by SHSQR01.spreadtrum.com with ESMTP id 38L90jGx061777;
+        Thu, 21 Sep 2023 17:00:45 +0800 (+08)
+        (envelope-from Wenhua.Lin@unisoc.com)
+Received: from SHDLP.spreadtrum.com (shmbx06.spreadtrum.com [10.0.1.11])
+        by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Rrq6F44Nxz2Sb3tf;
+        Thu, 21 Sep 2023 16:57:25 +0800 (CST)
+Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx06.spreadtrum.com
+ (10.0.1.11) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Thu, 21 Sep
+ 2023 17:00:44 +0800
+From:   Wenhua Lin <Wenhua.Lin@unisoc.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        wenhua lin <wenhua.lin1994@gmail.com>,
+        Wenhua Lin <Wenhua.Lin@unisoc.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Subject: [PATCH V2 2/4] gpio: sprd: Clear interrupt after set the interrupt type
+Date:   Thu, 21 Sep 2023 17:00:25 +0800
+Message-ID: <20230921090027.11136-3-Wenhua.Lin@unisoc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20230921090027.11136-1-Wenhua.Lin@unisoc.com>
+References: <20230921090027.11136-1-Wenhua.Lin@unisoc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.11.83]
+Content-Type: text/plain
+X-Originating-IP: [10.13.2.29]
+X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
+ shmbx06.spreadtrum.com (10.0.1.11)
+X-MAIL: SHSQR01.spreadtrum.com 38L90jGx061777
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -44,34 +59,91 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds pinctrl driver support for Amloigc T7 SoC (A311D2)
+The initialization state of the EIC module is a high level trigger.
+If it is currently a high level, the interrupt condition is met at
+this time, and the EIC interrupt has a latch capability, which will
+cause an interrupt to occur after booting. To avoid this, When setting
+the EIC interrupt trigger type, clear the interrupt once.
 
-[PATCH 1/3]: 
-  V1 -> V2: Rename amlogic-t7-gpio.h to amlogic,t7-periphs-pinctrl.h
+Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+---
+ drivers/gpio/gpio-eic-sprd.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-[PATCH 2/3]:
-  V1 -> V2: Include header file changed to amlogic,t7-periphs-pinctrl.h
-
-[PATCH 3/3]:
-  V1 -> V2: Unchanged.
-
-Huqiang Qin (3):
-  dt-bindings: pinctrl: Add compatibles for Amlogic T7 SoCs
-  pinctrl: Add driver support for Amlogic T7 SoCs
-  arm64: dts: Add pinctrl node for Amlogic T7 SoCs
-
- .../pinctrl/amlogic,meson-pinctrl-a1.yaml     |    1 +
- arch/arm64/boot/dts/amlogic/amlogic-t7.dtsi   |   16 +
- drivers/pinctrl/meson/Kconfig                 |    6 +
- drivers/pinctrl/meson/Makefile                |    1 +
- drivers/pinctrl/meson/pinctrl-amlogic-t7.c    | 1612 +++++++++++++++++
- .../gpio/amlogic,t7-periphs-pinctrl.h         |  179 ++
- 6 files changed, 1815 insertions(+)
- create mode 100644 drivers/pinctrl/meson/pinctrl-amlogic-t7.c
- create mode 100644 include/dt-bindings/gpio/amlogic,t7-periphs-pinctrl.h
-
-
-base-commit: e143016b56ecb0fcda5bb6026b0a25fe55274f56
+diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+index bfa8a4c7515a..96f1c7fd3988 100644
+--- a/drivers/gpio/gpio-eic-sprd.c
++++ b/drivers/gpio/gpio-eic-sprd.c
+@@ -375,29 +375,34 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 1);
++			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_edge_irq);
+ 			break;
+ 		case IRQ_TYPE_EDGE_FALLING:
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 0);
++			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_edge_irq);
+ 			break;
+ 		case IRQ_TYPE_EDGE_BOTH:
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 1);
++			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_edge_irq);
+ 			break;
+ 		case IRQ_TYPE_LEVEL_HIGH:
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 1);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 1);
++			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_level_irq);
+ 			break;
+ 		case IRQ_TYPE_LEVEL_LOW:
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 1);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 0);
++			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_level_irq);
+ 			break;
+ 		default:
+@@ -410,29 +415,34 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 1);
++			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_edge_irq);
+ 			break;
+ 		case IRQ_TYPE_EDGE_FALLING:
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 0);
++			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_edge_irq);
+ 			break;
+ 		case IRQ_TYPE_EDGE_BOTH:
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 1);
++			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_edge_irq);
+ 			break;
+ 		case IRQ_TYPE_LEVEL_HIGH:
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 1);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 1);
++			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_level_irq);
+ 			break;
+ 		case IRQ_TYPE_LEVEL_LOW:
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 1);
+ 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 0);
++			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
+ 			irq_set_handler_locked(data, handle_level_irq);
+ 			break;
+ 		default:
 -- 
-2.42.0
+2.17.1
 
