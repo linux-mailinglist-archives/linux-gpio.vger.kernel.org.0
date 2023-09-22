@@ -2,97 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 971167ABA0B
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Sep 2023 21:28:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8212E7ABA3A
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Sep 2023 21:46:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233842AbjIVT2f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Sep 2023 15:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
+        id S230166AbjIVTqE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Sep 2023 15:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233461AbjIVT2f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 15:28:35 -0400
+        with ESMTP id S229495AbjIVTqD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 15:46:03 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34057A3;
-        Fri, 22 Sep 2023 12:28:29 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF9AC433CB;
-        Fri, 22 Sep 2023 19:28:23 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05986AC;
+        Fri, 22 Sep 2023 12:45:58 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F816C43391;
+        Fri, 22 Sep 2023 19:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695410908;
-        bh=R3/iDz5aT9T7hlpiaTK760UMgyWpl0oOdgc9iiOBRew=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uGThn8drLb5fMKoylPOVqi74FJ7D22bCwupRq/TFRPjYPTcblR8kVYm8fPhkWDl73
-         +AWaqXfnl5v7ob7ORs6vLWRitjm6bJ4XT+TOhue0wqcf6h14EKmv+z5X8D5YDCF6T2
-         +b02c4G13j9zXJPhTzFB04quX8PU7hLLqSuxlZGP4/GkBPFwSjGTcTRAznGIohmIEQ
-         Ai8HnPXfcCeeH7ngBkqZodllLrrvQEnPbeAu2ka01JVJn5lVFk642q/ruWoPRlZP6E
-         VhVde+a62lyty58dpHsEL0apwStnjtHFzWRDRx8kKIvUAO/4ag9ZSH0KGrMYEI8tlp
-         vbJ+SWc5K2hAQ==
-Date:   Fri, 22 Sep 2023 20:28:21 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Chen-Yu Tsai <wenst@chromium.org>, linux-input@vger.kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        andriy.shevchenko@linux.intel.com, frowand.list@gmail.com,
-        gregkh@linuxfoundation.org, hdegoede@redhat.com,
-        james.clark@arm.com, james@equiv.tech, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, rafael@kernel.org, tglx@linutronix.de
-Subject: Re: [RFC PATCH] of: device: Support 2nd sources of probeable but
- undiscoverable devices
-Message-ID: <785c1e6e-8d6c-49fa-b9eb-a58e4e6cf435@sirena.org.uk>
-References: <20230921102420.RFC.1.I9dddd99ccdca175e3ceb1b9fa1827df0928c5101@changeid>
- <CAL_Jsq+noP32-m5xdUCLFPFBXLxX9Ys1BNFM+9sga6KYTmDzqQ@mail.gmail.com>
- <CAD=FV=WXxGhX0Fw2nSS7PxYb1O-LUewAhoUVPn=2EpbSD2OeHQ@mail.gmail.com>
- <CAL_JsqKJyRJmwJzB1yew71Ld7BeMMat+rzhX9XtDtiFE8Dbvcw@mail.gmail.com>
+        s=k20201202; t=1695411957;
+        bh=Z73INrp+tUCDrn3nt/IznNU60OcEzvbVv581pkRDXlE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=P4ZZPqOmhipnrgdjc5Cicuv4gwGoR5ahpSW6RraPJhB2FOCevSoVAq7M03SUqbiJq
+         K7C83A8rvE9vTWF2PZ5kYCMKgg3G1IVvpRh+NW3hqCEKgBE5APzZ0p6is/9D0IzpXy
+         L4KFq+qRrX7Nsl9X/FVhceTOut8PENgISZ7V9Hgc0n17gQFch+sOZHm06uwoEbBMFg
+         bdQku4DZghgBK/X1clycJXNjGfpUaVv8cK0r9G/b2uMU+jMiHYfIm/lqjl9v/3n8cS
+         tduJT5OdwlLHx5IjPVmN9jiMNIWgStlkcTXysI9oJM3ogbUGEUzRoqqQuRZPSge2DG
+         XwBXMnxxa/mIQ==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-502e7d66c1eso4403480e87.1;
+        Fri, 22 Sep 2023 12:45:57 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzET3fIoLVxGM9RxuqSwL+djuYNXhC9P6ZumOlepuoR4JARMjx+
+        h4LOZERLC7Rm7GHf2X+sobwCVY8k0UHqW/Y9dA==
+X-Google-Smtp-Source: AGHT+IEyL15UWPDOOifALHGXr9zT3PFp6EFjcQQ6N5sRMKjOVNVOEvEhKETlB6KYvfp58mdiyeysUyZjSt5CkUaQLB8=
+X-Received: by 2002:a19:651e:0:b0:503:18c5:6833 with SMTP id
+ z30-20020a19651e000000b0050318c56833mr310830lfb.61.1695411955742; Fri, 22 Sep
+ 2023 12:45:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lkdtl8PHTFTeNLKo"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKJyRJmwJzB1yew71Ld7BeMMat+rzhX9XtDtiFE8Dbvcw@mail.gmail.com>
-X-Cookie: A day without sunshine is like night.
+References: <20230922075913.422435-1-herve.codina@bootlin.com>
+ <20230922075913.422435-26-herve.codina@bootlin.com> <169538601225.2919383.2942072541503354871.robh@kernel.org>
+ <20230922154546.4ca18b6f@bootlin.com>
+In-Reply-To: <20230922154546.4ca18b6f@bootlin.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 22 Sep 2023 14:45:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJTruTExc=uHCPCp3q-fo+fB-wAJ-ggPpHpWcHSoGALdw@mail.gmail.com>
+Message-ID: <CAL_JsqJTruTExc=uHCPCp3q-fo+fB-wAJ-ggPpHpWcHSoGALdw@mail.gmail.com>
+Subject: Re: [PATCH v6 25/30] dt-bindings: net: Add the Lantiq PEF2256
+ E1/T1/J1 framer
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Takashi Iwai <tiwai@suse.com>, Simon Horman <horms@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        netdev@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        alsa-devel@alsa-project.org, Paolo Abeni <pabeni@redhat.com>,
+        Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Shengjiu Wan g <shengjiu.wang@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Li Yang <leoyang.li@nxp.com>, Qiang Zhao <qiang.zhao@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Sep 22, 2023 at 8:46=E2=80=AFAM Herve Codina <herve.codina@bootlin.=
+com> wrote:
+>
+> Hi Rob,
+>
+> On Fri, 22 Sep 2023 07:33:32 -0500
+> Rob Herring <robh@kernel.org> wrote:
+>
+> > On Fri, 22 Sep 2023 09:59:00 +0200, Herve Codina wrote:
+> > > The Lantiq PEF2256 is a framer and line interface component designed =
+to
+> > > fulfill all required interfacing between an analog E1/T1/J1 line and =
+the
+> > > digital PCM system highway/H.100 bus.
+> > >
+> > > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > > Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> > > ---
+> > >  .../bindings/net/lantiq,pef2256.yaml          | 214 ++++++++++++++++=
+++
+> > >  1 file changed, 214 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/net/lantiq,pef2=
+256.yaml
+> > >
+> >
+> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_chec=
+k'
+> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/net/lantiq,pef2256.yaml: properties:lantiq,data-rate-bps: '$ref' should no=
+t be valid under {'const': '$ref'}
+> >       hint: Standard unit suffix properties don't need a type $ref
+> >       from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+> >
+>
+> The '-bps' suffix was added recently in
+> https://github.com/devicetree-org/dt-schema/
+> commit 033d0b1 ("Add '-bps' as a standard unit suffix for bits per second=
+")
+>
+> This commit is not yet present in any dt-schema release.
+>
+> Should I update my patch (ie. removing $ref) right now even if this updat=
+e will
+> make the last dt-schema release not happy ?
 
---lkdtl8PHTFTeNLKo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes. I will spin a release soon as well.
 
-On Fri, Sep 22, 2023 at 02:08:08PM -0500, Rob Herring wrote:
-
-> You could always make the driver probe smarter where if your supply
-> was already powered on, then don't delay. Then something else could
-> ensure that the supply is enabled. I'm not sure if regulators have the
-> same issue as clocks where the clock might be on from the bootloader,
-> then a failed probe which gets then puts the clock turns it off.
-
-That'll happen.
-
---lkdtl8PHTFTeNLKo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUN6tQACgkQJNaLcl1U
-h9DhuQf/S8t/ZgUl/pNQE3JrluRneGilBmp/iuF8gMkmI3+0gY2UO/t6A4A/2GcS
-9nZ9IcI1wx37gGjvNxESBCTl1b+2RI/mi9kBn/nbElSXmYerHHE/0HuENvwMspBD
-0msxDtUYRUPc4CoLBf1xElQeB0Tiry1QTXB6cG1xdyrjnqxAZ6ySL1cz8G3V1QMB
-aOwZPDuV2abhykK0hRVbWgy2lYt0pdNNUYVHDEHUn/imw7fTOd9qHQGqLCyaB+ob
-JSWTGggCnu28CemwoJ0I+neqRK8IOd+KTY5uOJ2L7cHCVg5Zz1ureTQCIhnA1mIO
-L6+2nIkz4SlUP7iQw+UiCUXLtXcY6A==
-=JjEE
------END PGP SIGNATURE-----
-
---lkdtl8PHTFTeNLKo--
+Rob
