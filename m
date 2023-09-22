@@ -2,70 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDC827ABB02
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Sep 2023 23:22:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92FEE7ABBE0
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Sep 2023 00:40:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229808AbjIVVWZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Sep 2023 17:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34912 "EHLO
+        id S230093AbjIVWki (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Sep 2023 18:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbjIVVWY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 17:22:24 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DBEAF;
-        Fri, 22 Sep 2023 14:22:18 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73FFC433C8;
-        Fri, 22 Sep 2023 21:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695417737;
-        bh=lmE8y4Naioq26myIwcGDskn3NlpSCo/s3ZeWn2dloK4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nv4Cz9sw3ckJXfg8gZo7FWOFFfqKqYySpjfLY7cZhQEb3LyIpaBvywrHA5M7C21Gc
-         mcsEqkC8cx13Dy8R/0X9lYJTpyRNr1qeElcsH00EHluLpOe3wRmDsUaEfIDdc00HgN
-         YZ5dnQxIkGqFegnvjx8fmrE8SjNnqVDUNMtF6lnOb5ybGvy1egpqEP36TNfvlgqqAO
-         kv5OnNDigOmYh5tnIGwghQpSuqDTEEDzwtyzW8MsyYi2xdU3YdARgKPEIx0roJsDT1
-         QMAlycnsTsH07IM9iuVX100coPa5Ms77i08JVt5XAfgf3pojKcODfR7zRW+tGBrVPO
-         6Cus0vP5Brspw==
-Received: (nullmailer pid 3638530 invoked by uid 1000);
-        Fri, 22 Sep 2023 21:22:12 -0000
-Date:   Fri, 22 Sep 2023 16:22:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Herve Codina <herve.codina@bootlin.com>
-Cc:     Lee Jones <lee@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org, Eric Dumazet <edumazet@google.com>,
-        Simon Horman <horms@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Takashi Iwai <tiwai@suse.com>,
-        linux-gpio@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        netdev@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
-        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Krzysztof K ozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, Jaroslav Kysela <perex@perex.cz>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>
-Subject: Re: [PATCH v6 08/30] dt-bindings: soc: fsl: cpm_qe: cpm1-scc-qmc:
- Add support for QMC HDLC
-Message-ID: <169541773236.3638470.1013241809358556101.robh@kernel.org>
-References: <20230922075913.422435-1-herve.codina@bootlin.com>
- <20230922075913.422435-9-herve.codina@bootlin.com>
+        with ESMTP id S230004AbjIVWki (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 18:40:38 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786CBAB;
+        Fri, 22 Sep 2023 15:40:32 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2bff936e10fso53204691fa.1;
+        Fri, 22 Sep 2023 15:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695422430; x=1696027230; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=le0OuGLsU3JORmn3p7Lmf2Z/hHnqT/ugH7hRtzH6LxQ=;
+        b=VQ2CbanKv/y+S3qFay2hLPOMz7NDjTPdjQL2TGbONQMDddvp74AE8ReCGtGNKF+QZu
+         n0dG4tpmTNL+TsRyiKkl3l1ba/aOG8u137/AcfpTBoZRXT53n34TW8Dq9SThetRqtGkg
+         nqt7zEXRbX95JXuhMZYZP3IZmz3cpn01ddQyznTPpd7vpjU2BUnPtbLsVKQvHyOKwAnc
+         Ga+o0gVELjR+cGltoAHeJHFU9vmHaUDPZ9hgedRT7lB2CID+/PcF6CSKw0dk5hPto4d6
+         na1OlC+yuPvL0Nl5m0D3jNgvSPO7WjVQpFL/6K0EUrnKJUiBMS3jDe+6GrSi/6kOKzlU
+         OvEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695422430; x=1696027230;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=le0OuGLsU3JORmn3p7Lmf2Z/hHnqT/ugH7hRtzH6LxQ=;
+        b=AUnsamZ2qZb/i7R9BwieDzCD9V061j/Slelq4FEhiGDBpODMcGav+VqjOOY23FHJlr
+         kK/uofZ+zcA2/1GMuizPK+omjp+KHjLpdSQSnUJwagmOENQIX5ZcCfyPLQx6zw4p7jN1
+         1jnHEudxkVovv3VMHB4UeFKceR4BQ0IEqXdWhLE1HcUo2ZLr215hAo4XuMVj2biqbwr8
+         tgH+UF1ucFLn0bQ2yGrlIn7hvaqeF1Oqr1zqlN1TGu6faNeYuQ7pt8+tHbx44bBX24I7
+         7+I534/btZswDSQl4AcPt8ryez4poQfxIT/HWFn0d3wOi2Js8clfS4bQZgjVo73LjIqb
+         nNDQ==
+X-Gm-Message-State: AOJu0YzNtpL0nlXe6SYuMHdbk02rZ90y4/dieDXVh4ZruNj9l+PvwyUo
+        Zbe3LLr626msvrmpqBiWnxkAXflzmCcPdQ==
+X-Google-Smtp-Source: AGHT+IGfox4cCDsOyrpaBMMVcmAZCPptsa9iQRPcQ8PPTjFnO/9MEZSoy4+ERHQKvwSXIJfy4VUtkQ==
+X-Received: by 2002:a2e:3513:0:b0:2bc:dd8f:ccd7 with SMTP id z19-20020a2e3513000000b002bcdd8fccd7mr340846ljz.16.1695422430436;
+        Fri, 22 Sep 2023 15:40:30 -0700 (PDT)
+Received: from i-vetokaappi.home.lan (dsl-hkibng42-56733b-36.dhcp.inet.fi. [86.115.59.36])
+        by smtp.gmail.com with ESMTPSA id j2-20020a2e8502000000b002bfec05a693sm1090423lji.22.2023.09.22.15.40.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Sep 2023 15:40:29 -0700 (PDT)
+From:   =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        =?UTF-8?q?Matti=20Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] MPM pin mappings for MSM8226 and MSM8974
+Date:   Sat, 23 Sep 2023 01:40:25 +0300
+Message-Id: <20230922224027.85291-1-matti.lehtimaki@gmail.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230922075913.422435-9-herve.codina@bootlin.com>
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,23 +70,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This series adds the MPM wakeirq mappings for MSM8226 and MSM8974.
 
-On Fri, 22 Sep 2023 09:58:43 +0200, Herve Codina wrote:
-> The QMC (QUICC mutichannel controller) is a controller present in some
-> PowerQUICC SoC such as MPC885.
-> The QMC HDLC uses the QMC controller to transfer HDLC data.
-> 
-> Additionally, a framer can be connected to the QMC HDLC.
-> If present, this framer is the interface between the TDM bus used by the
-> QMC HDLC and the E1/T1 line.
-> The QMC HDLC can use this framer to get information about the E1/T1 line
-> and configure the E1/T1 line.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> ---
->  .../soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml      | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
+Matti Lehtimäki (2):
+  pinctrl: qcom: msm8226: Add MPM pin mappings
+  pinctrl: qcom: msm8974: Add MPM pin mappings
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+ drivers/pinctrl/qcom/pinctrl-msm8226.c | 12 ++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm8x74.c | 12 ++++++++++++
+ 2 files changed, 24 insertions(+)
+
+-- 
+2.39.2
 
