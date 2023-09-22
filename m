@@ -2,32 +2,34 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0C3C7AB330
+	by mail.lfdr.de (Postfix) with ESMTP id ED68C7AB331
 	for <lists+linux-gpio@lfdr.de>; Fri, 22 Sep 2023 15:59:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbjIVOAD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S231191AbjIVOAD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Fri, 22 Sep 2023 10:00:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55596 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229953AbjIVOAC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 10:00:02 -0400
+        with ESMTP id S229953AbjIVOAD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 10:00:03 -0400
 Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD0A92
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Sep 2023 06:59:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F8BE8
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Sep 2023 06:59:57 -0700 (PDT)
 Received: from spb1wst022.omp.ru (81.3.167.34) by msexch01.omp.ru
  (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.986.14; Fri, 22 Sep
- 2023 16:59:50 +0300
+ 2023 16:59:53 +0300
 From:   Karina Yankevich <k.yankevich@omp.ru>
 To:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
 CC:     Karina Yankevich <k.yankevich@omp.ru>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         <linux-gpio@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH 1/2] pinctrl: mediatek: paris: handle mtk_hw_set_value() errors in mtk_pmx_set_mux()
-Date:   Fri, 22 Sep 2023 16:59:25 +0300
-Message-ID: <20230922135926.3653428-1-k.yankevich@omp.ru>
+Subject: [PATCH 2/2] pinctrl: mediatek: moore: handle mtk_hw_set_value() errors in mtk_pinmux_set_mux()
+Date:   Fri, 22 Sep 2023 16:59:26 +0300
+Message-ID: <20230922135926.3653428-2-k.yankevich@omp.ru>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230922135926.3653428-1-k.yankevich@omp.ru>
+References: <20230922135926.3653428-1-k.yankevich@omp.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -77,8 +79,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-mtk_pmx_set_mux() doesn't check the result of mtk_hw_set_value()
-despite it may return negative error code. Propagate error code
+mtk_pinmux_set_mux() doesn't check the result of mtk_hw_set_value()
+despite it may return a negative error code. Propagate error code
 to caller functions.
 
 Found by Linux Verification Center (linuxtesting.org) with the Svace static
@@ -86,24 +88,36 @@ analysis tool.
 
 Signed-off-by: Karina Yankevich <k.yankevich@omp.ru>
 ---
- drivers/pinctrl/mediatek/pinctrl-paris.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-moore.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 33d6c3fb7908..b7cb5a1f1060 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -779,9 +779,7 @@ static int mtk_pmx_set_mux(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
+diff --git a/drivers/pinctrl/mediatek/pinctrl-moore.c b/drivers/pinctrl/mediatek/pinctrl-moore.c
+index 8649a2f9d324..889469c7ac26 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-moore.c
++++ b/drivers/pinctrl/mediatek/pinctrl-moore.c
+@@ -45,7 +45,7 @@ static int mtk_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ 	struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
+ 	struct function_desc *func;
+ 	struct group_desc *grp;
+-	int i;
++	int i, err;
  
- 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[grp->pin];
--	mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE, desc_func->muxval);
--
--	return 0;
-+	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE, desc_func->muxval);
- }
+ 	func = pinmux_generic_get_function(pctldev, selector);
+ 	if (!func)
+@@ -67,8 +67,11 @@ static int mtk_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ 		if (!desc->name)
+ 			return -ENOTSUPP;
  
- static const struct pinmux_ops mtk_pmxops = {
+-		mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE,
+-				 pin_modes[i]);
++		err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE,
++				       pin_modes[i]);
++
++		if (err)
++			return err;
+ 	}
+ 
+ 	return 0;
 -- 
 2.25.1
 
