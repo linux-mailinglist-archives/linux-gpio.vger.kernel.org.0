@@ -2,139 +2,244 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C5357AB882
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Sep 2023 19:54:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 779E67AB9D9
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Sep 2023 21:08:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233809AbjIVRyG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Sep 2023 13:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
+        id S233694AbjIVTI3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Sep 2023 15:08:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233585AbjIVRxj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 13:53:39 -0400
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498E62118
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Sep 2023 10:52:07 -0700 (PDT)
-Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-6c0f3f24c27so1453436a34.2
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Sep 2023 10:52:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405125; x=1696009925; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rPeCsCM6RKnj7SP/7NeGfgjvWPniZKOlNUjLQPJjRrk=;
-        b=nsPPhAujoYnHbEV9rcA9vzDu5Mmxuzc8U6VYq6OZCF8Gl7xyc7Yv+LuH65H9mK4nxK
-         wbuXffyFykkwlAS9ru69GTCfZJOwp8SLOwZ4TenRdULgEjZokHTt0lvMJyW9yCNitAaw
-         VjaJZx/yUhwXilPpwB8s00m74tzHLXvEKR9hk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405125; x=1696009925;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rPeCsCM6RKnj7SP/7NeGfgjvWPniZKOlNUjLQPJjRrk=;
-        b=pUUdl4Rq9hq5WijYHbVUsvG4thOjAw2nhIM2EwnFoh6QGAb8AfqcvZqj+rvpEBbZ6T
-         IZZP9K876mHHvYD0uOYCYvaqNZvJQ+vPzAIKgBDuTK03yT3wIsANkFYiiUqmwRej7g0U
-         WzmWZSstsNorR/L/9nr84o7H5U02Vy/JzikAc5sTn6oM90kkXBjYuJeftlwjE3q1igUL
-         VJpXS2VlKqgpyUDqASzE7ekuFV+XEMds8GC0MD4CQaUmi2XWPzBx+6cy0/lrPZQ9iKmI
-         1+MZ49DmV7VQ5R/GHDne/cJC5vcr0nCGWDBuDZ//tkICwMFr5QNjXXtR1s7N6W7cE+fd
-         5jIQ==
-X-Gm-Message-State: AOJu0YyU2HgOvTfzCMXKixhxpxUK+2j0vqWEs9hxdUpBRCpIb8l9E8TY
-        /qKZIMK6cKdP9+SV7KIJxZWfHA==
-X-Google-Smtp-Source: AGHT+IFEPZY2FWuoLuj/J8x0P9zfOloxPTwOyuvqJHiLkoPALd4nAHq6UVOZicjn7oGHx7saYqsMnA==
-X-Received: by 2002:a05:6358:278a:b0:143:3179:1a67 with SMTP id l10-20020a056358278a00b0014331791a67mr301716rwb.29.1695405125439;
-        Fri, 22 Sep 2023 10:52:05 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r9-20020a63a009000000b0057e13ed796esm728612pge.60.2023.09.22.10.52.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:52:05 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] gpiolib: cdev: Annotate struct linereq with __counted_by
-Date:   Fri, 22 Sep 2023 10:52:03 -0700
-Message-Id: <20230922175203.work.760-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S231209AbjIVTI3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 15:08:29 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA73AF;
+        Fri, 22 Sep 2023 12:08:22 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58817C433CA;
+        Fri, 22 Sep 2023 19:08:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695409702;
+        bh=gXlMQDEZcoZ7YEdGgWtE3RZREDwAT02Now/rm1ivZ38=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Yn51I8olnoubAb0raQHBCIT/zuvl9y8bpUwUhW4/RuV1vBKOEJIHZExnNP74ixNNq
+         5EMJNRRHOPZ9XNf4YH8gu7TPlZ6gRMATOpnrQrrQTTAcNlMVGU2VYGikwcO96OMKw/
+         SwVHFIUtHDdgastpbwVyr0G0oKbcDgrRqW/Jep9PVc229s31lwYPV+FZEIrAqrW/xQ
+         Wa7kmcEcWrQw2JYhOdVCP32VbZfQJkzERteI+UAjEboN9+9pq7xfA8c0fDzgd7kMtx
+         u0aC5tt+HCeWDIs1QMlzZ2UDhqjXWmgoyJmYYjPfn722bKAp/Hc5bpFf7mbPdOajXb
+         7gVLhp5zWmvmg==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5042f391153so3273150e87.1;
+        Fri, 22 Sep 2023 12:08:22 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxNayVulqzNmFinVTXyOz5R8nWAiJD4U0Znunx8a6Gyh7qCB1FO
+        5hNULuoem+2xPYvIDjE5zfd5SGhB/oO9WaLDjA==
+X-Google-Smtp-Source: AGHT+IHu0zxikQTCNAWWLtZM6M/B76oAP9q2epBXI7C5s75wxgZ4+VhtdD2DumdDMnlj7lfdIFk8abWEObJNcfeeZ2E=
+X-Received: by 2002:a05:6512:2356:b0:503:385d:611b with SMTP id
+ p22-20020a056512235600b00503385d611bmr1315873lfu.30.1695409700475; Fri, 22
+ Sep 2023 12:08:20 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1931; i=keescook@chromium.org;
- h=from:subject:message-id; bh=8zr3EscqNMKGB+p2GQ+eNq4lFJNw863hYtHYoUZ6QT8=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRDnHWem4qivuYvpUIrmnI1crVLCjWEs1Bl3
- gzzs3k1FJGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UQwAKCRCJcvTf3G3A
- JseKD/4quBw/IubJ6kx2xMKEYBqn7EU8HCBh9hqvf/DZpDUBw12gRWSQNalISRWuYF67cas5Tkr
- EUj3MbyNdPUEx/IJrlL3WHXZfRNgY4r3M1SR9aDCVsSEylC1PQdUNdRTvU+rPLRjOr6JHlZDQqU
- ayR0dlH/PQnDDG2kVOZM5XHvZXu5mJUy8OvlhRV8vEMwvcodYJXl8SJreBqqCVIZqqwYhjP4B95
- OPINC+bpMgbcQ1hX/+IWYq1mh2HyM0AZw18fRaJevYcMTVvLd27oad+aja6ikDJpZnaiR4StABS
- JmE4ha3T05WdaaYiCf1MqC6qJRd/225OoZemjlFHuaqze/naFKA/dvHT18VPo69ezq0KkjQ2U7/
- 3TyK3eGInrlMpG4ABDIsl2HD8hDsc7Vl46x8b9DxIQmBF1Jls2LAm+7S3bLyc8zrT0fPP1I9oUd
- RAFcig+QfsIHBcf2MZIy/kj0y90XDIFLq4yXccv4vlI7+rJQOeoTeby164bXqumt9WVcYSdeyNK
- CRz0HHgMSkH60UvlLF05qx9N3E6PLjJ6k2x6KUC9SJbc92HLO1s63wzDJDfTgiy4SEiObVoyF76
- W9x+284Vs0VzKisQmXg6gBgf8fFLYi/xcW+8j+cNIQ4+uYqzT/L6JUY0SkB69rh+9U21waaUzft
- V7vH5yP GuFFYMXg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230921102420.RFC.1.I9dddd99ccdca175e3ceb1b9fa1827df0928c5101@changeid>
+ <CAL_Jsq+noP32-m5xdUCLFPFBXLxX9Ys1BNFM+9sga6KYTmDzqQ@mail.gmail.com> <CAD=FV=WXxGhX0Fw2nSS7PxYb1O-LUewAhoUVPn=2EpbSD2OeHQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=WXxGhX0Fw2nSS7PxYb1O-LUewAhoUVPn=2EpbSD2OeHQ@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 22 Sep 2023 14:08:08 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKJyRJmwJzB1yew71Ld7BeMMat+rzhX9XtDtiFE8Dbvcw@mail.gmail.com>
+Message-ID: <CAL_JsqKJyRJmwJzB1yew71Ld7BeMMat+rzhX9XtDtiFE8Dbvcw@mail.gmail.com>
+Subject: Re: [RFC PATCH] of: device: Support 2nd sources of probeable but
+ undiscoverable devices
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Chen-Yu Tsai <wenst@chromium.org>, linux-input@vger.kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        andriy.shevchenko@linux.intel.com, broonie@kernel.org,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        hdegoede@redhat.com, james.clark@arm.com, james@equiv.tech,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
+On Fri, Sep 22, 2023 at 12:40=E2=80=AFPM Doug Anderson <dianders@chromium.o=
+rg> wrote:
+>
+> Hi,
+>
+> On Fri, Sep 22, 2023 at 7:14=E2=80=AFAM Rob Herring <robh+dt@kernel.org> =
+wrote:
+> >
+> > > Let's attempt to do something better. Specifically, we'll allow
+> > > tagging nodes in the device tree as mutually exclusive from one
+> > > another. This says that only one of the components in this group is
+> > > present on any given board. To make it concrete, in my proposal this
+> > > looks like:
+> > >
+> > >   / {
+> > >     tp_ex_group: trackpad-exclusion-group {
+> > >     };
+> >
+> > Interesting way to just get a unique identifier. But it could be any
+> > phandle not used by another group. So just point all the devices in a
+> > group to one of the devices in the group.
+>
+> Fair enough.
+>
+>
+> > >   &i2c_bus {
+> > >     tp1: trackpad@10 {
+> > >       ...
+> > >       mutual-exclusion-group =3D <&tp_ex_group>;
+> > >     };
+> > >     tp2: trackpad@20 {
+> > >       ...
+> > >       mutual-exclusion-group =3D <&tp_ex_group>;
+> > >     };
+> > >     tp3: trackpad@30 {
+> > >       ...
+> > >       mutual-exclusion-group =3D <&tp_ex_group>;
+> > >     };
+> > >   };
+> > >
+> > > In Linux, we can make things work by simply only probing one of the
+> > > devices in the group at a time. We can make a mutex per group and
+> > > enforce locking that mutex around probe. If the first device that get=
+s
+> > > the mutex fails to probe then it won't try again. If it succeeds then
+> > > it will acquire the shared resources and future devices (which we kno=
+w
+> > > can't be present) will fail to get the shared resources. Future
+> > > patches could quiet down errors about failing to acquire shared
+> > > resources or failing to probe if a device is in a
+> > > mutual-exclusion-group.
+> >
+> > This seems like overkill to me. Do we really need groups and a mutex
+> > for each group? Worst case is what? 2-3 groups of 2-3 devices?
+> > Instead, what about extending "status" with another value
+> > ("fail-needs-probe"? (fail-xxx is a documented value)). Currently, the
+> > kernel would just ignore nodes with that status. Then we can process
+> > those nodes separately 1-by-1.
+>
+> My worry here is that this has the potential to impact boot speed in a
+> non-trivial way. While trackpads and touchscreens _are_ probable,
+> their probe routines are often quite slow. This is even mentioned in
+> Dmitry's initial patches adding async probe to the kernel. See commit
+> 765230b5f084 ("driver-core: add asynchronous probing support for
+> drivers") where he specifically brings up input devices as examples.
 
-As found with Coccinelle[1], add __counted_by for struct linereq.
-Additionally, since the element count member must be set before accessing
-the annotated flexible array member, move its initialization earlier.
+Perhaps then this should be solved in userspace where it can learn
+which device is actually present and save that information for
+subsequent boots.
 
-[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> It wouldn't be absurd to have a system that has multiple sources for
+> both the trackpad and the touchscreen. If we have to probe each of
+> these one at a time then it could be slow. It would be quicker to be
+> able to probe the trackpads (one at a time) at the same time we're
+> probing the touchscreens (one at a time). Using the "fail-needs-probe"
+> doesn't provide information needed to know which devices conflict with
+> each other.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/gpio/gpiolib-cdev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I would guess most of the time that's pretty evident. They are going
+to be on the same bus/link. If unrelated devices are on the same bus,
+then that's going to get serialized anyways (if bus accesses are what
+make things slow).
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index e39d344feb28..31fc71a612c2 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -572,7 +572,7 @@ struct linereq {
- 	DECLARE_KFIFO_PTR(events, struct gpio_v2_line_event);
- 	atomic_t seqno;
- 	struct mutex config_mutex;
--	struct line lines[];
-+	struct line lines[] __counted_by(num_lines);
- };
- 
- #define GPIO_V2_LINE_BIAS_FLAGS \
-@@ -1656,6 +1656,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
- 	lr = kzalloc(struct_size(lr, lines, ulr.num_lines), GFP_KERNEL);
- 	if (!lr)
- 		return -ENOMEM;
-+	lr->num_lines = ulr.num_lines;
- 
- 	lr->gdev = gpio_device_get(gdev);
- 
-@@ -1684,7 +1685,6 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
- 		lr->event_buffer_size = GPIO_V2_LINES_MAX * 16;
- 
- 	atomic_set(&lr->seqno, 0);
--	lr->num_lines = ulr.num_lines;
- 
- 	/* Request each GPIO */
- 	for (i = 0; i < ulr.num_lines; i++) {
--- 
-2.34.1
+We could add information on the class of device. touchscreen and
+touchpad aliases or something.
 
+> IMO this is still better than nothing, but it worries me
+> to pick the less-expressive solution for the dts which means that the
+> information simply isn't there and the OS can't be made better later.
+>
+> Thinking about this more, I guess even my proposed solution isn't
+> ideal for probe speed. Let's imagine that we had:
+>
+>   &i2c_bus {
+>     tp1: trackpad@10 {
+>       compatible =3D "hid-over-i2c";
+>       reg =3D <0x10>;
+>       post-power-on-delay-ms =3D <200>;
+>       ...
+>       mutual-exclusion-group =3D <&tp1>;
+>     };
+>     tp2: trackpad@20 {
+>       compatible =3D "hid-over-i2c";
+>       reg =3D <0x20>;
+>       post-power-on-delay-ms =3D <200>;
+>       ...
+>       mutual-exclusion-group =3D <&tp1>;
+>     };
+>   };
+>
+> With my solution, we'd power the first device up, wait 200 ms, then
+> check to see if anything acks an i2c xfer at address 0x10. If it
+> didn't, we'd power down. Then we'd power up the second device
+> (presumably the same power rail), wait 200 ms, and check to see if
+> anything acks an i2c xfer at 0x20. It would have been better to just
+> power up once, wait 200 ms, then check for a device at either 0x10 or
+> 0x20.
+>
+> I guess with more complex touchscreens this could be more important. I
+> don't know if we need to try to solve it at this point, but I guess I
+> could imagine a case where we truly need to take into account all
+> possible devices (maybe taking the maximum of delays?) to ensure we
+> don't violate power sequencing requirements for any of them while
+> probing.
+>
+> That would lead me to suggest this:
+>
+>   &i2c_bus {
+>     trackpad-prober {
+>       compatible =3D "mt8173-elm-hana-trackpad-prober";
+>
+>       tp1: trackpad@10 {
+>         compatible =3D "hid-over-i2c";
+>         reg =3D <0x10>;
+>         ...
+>         post-power-on-delay-ms =3D <200>;
+>       };
+>       tp2: trackpad@20 {
+>         compatible =3D "hid-over-i2c";
+>         reg =3D <0x20>;
+>         ...
+>         post-power-on-delay-ms =3D <200>;
+>       };
+>     };
+>   };
+>
+> ...but I suspect that would be insta-NAKed because it's creating a
+> completely virtual device ("mt8173-elm-hana-trackpad-prober") in the
+> device tree. I don't know if there's something that's functionally
+> similar that would be OK?
+
+Why do you need the intermediate node other than a convenient way to
+instantiate a driver? You just need a flag in each node which needs
+this special handling. Again, "status" could work well here since it
+keeps the normal probe from happening. But I'm not saying you can't
+have some board specific code. Sometimes you just need code to deal
+with this stuff. Don't try to parameterize everything to DT
+properties.
+
+Note that the above only works with "generic" compatibles with
+"generic" power sequencing properties (I won't repeat my dislike
+again). If only the driver knows how to handle the device, then you
+still just have to have the driver probe. If you *only* wanted to
+solve the above case, I'd just make "hid-over-i2c" take a 2nd (and
+3rd) I2C address in reg and have those as fallbacks.
+
+You could always make the driver probe smarter where if your supply
+was already powered on, then don't delay. Then something else could
+ensure that the supply is enabled. I'm not sure if regulators have the
+same issue as clocks where the clock might be on from the bootloader,
+then a failed probe which gets then puts the clock turns it off.
+
+Rob
