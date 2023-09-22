@@ -2,78 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4495D7AB81B
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Sep 2023 19:50:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C5357AB882
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Sep 2023 19:54:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233397AbjIVRu1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Sep 2023 13:50:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34648 "EHLO
+        id S233809AbjIVRyG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Sep 2023 13:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233508AbjIVRuU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 13:50:20 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B27CD2
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Sep 2023 10:50:08 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c1ff5b741cso23121815ad.2
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Sep 2023 10:50:08 -0700 (PDT)
+        with ESMTP id S233585AbjIVRxj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Sep 2023 13:53:39 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498E62118
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Sep 2023 10:52:07 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-6c0f3f24c27so1453436a34.2
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Sep 2023 10:52:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405008; x=1696009808; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405125; x=1696009925; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KgYTKXR/I1FPvObxorvJSFTW8JIzpStmNm7nH5Non2I=;
-        b=VOonxcK75+nzXNe8OkKAoH3Qwlb23335pR/QCmMdP7cCQer2LB4e/E2t+ixUXlWneL
-         ragX7EEMg6g4gXJABvVYGUM1NRUplb7/J3vEFXYl7CBzrOAWp8BEF8Yq+kZU6IRU/I7/
-         1rDhzoXSAJMdv3UAIn/Bx5EBWr0g1xJ59fyOk=
+        bh=rPeCsCM6RKnj7SP/7NeGfgjvWPniZKOlNUjLQPJjRrk=;
+        b=nsPPhAujoYnHbEV9rcA9vzDu5Mmxuzc8U6VYq6OZCF8Gl7xyc7Yv+LuH65H9mK4nxK
+         wbuXffyFykkwlAS9ru69GTCfZJOwp8SLOwZ4TenRdULgEjZokHTt0lvMJyW9yCNitAaw
+         VjaJZx/yUhwXilPpwB8s00m74tzHLXvEKR9hk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405008; x=1696009808;
+        d=1e100.net; s=20230601; t=1695405125; x=1696009925;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KgYTKXR/I1FPvObxorvJSFTW8JIzpStmNm7nH5Non2I=;
-        b=l7JKqVb5+uWXb3PUrAuik0FoFluLmgABn6Tik5zjEBuQ6WXxnwmKZ4/5E9Xz/hW55R
-         NICV8dZ7v7KPs/NKEZS8K8iOaYVFORLkuIFNMuuV1/e8PB0x6OHiiSoaP2DqKkUmTcLY
-         5ZPhyv6i3Zu2qw6rC6zgX0NEKVrAHwS5UnYkX10A9qgR4pznwPHxruF559cZfSaitQAq
-         hT1ZfN3m7O5tkX0NgKSj2PTwbGv+kGNOn8ojqvVoEIWk5JTeKQ2OGqJf1sBJG6cIOT4k
-         aOV1hrL5e4Jww44B8cIJv/zuznWl5wW4FenHrvLxqjNjphnw1VNtf1M6q5iT23wb/9bJ
-         Hz0g==
-X-Gm-Message-State: AOJu0YwlIrCc7qkG7poHd1Bm05DXrUCB3V2dbQTeGT6qrYT9MZNkEuVQ
-        UJ26Tp251h+jj88OZokMi2tY0Q==
-X-Google-Smtp-Source: AGHT+IFoNtsi25M+QrWUhiPSf6zW6D/xwoc6OJ3HOy2c3JyRBK7yqttvE9WeRwOY/cIOvf6x0iTR+Q==
-X-Received: by 2002:a17:902:f551:b0:1c3:3b5c:1fbf with SMTP id h17-20020a170902f55100b001c33b5c1fbfmr216816plf.10.1695405008186;
-        Fri, 22 Sep 2023 10:50:08 -0700 (PDT)
+        bh=rPeCsCM6RKnj7SP/7NeGfgjvWPniZKOlNUjLQPJjRrk=;
+        b=pUUdl4Rq9hq5WijYHbVUsvG4thOjAw2nhIM2EwnFoh6QGAb8AfqcvZqj+rvpEBbZ6T
+         IZZP9K876mHHvYD0uOYCYvaqNZvJQ+vPzAIKgBDuTK03yT3wIsANkFYiiUqmwRej7g0U
+         WzmWZSstsNorR/L/9nr84o7H5U02Vy/JzikAc5sTn6oM90kkXBjYuJeftlwjE3q1igUL
+         VJpXS2VlKqgpyUDqASzE7ekuFV+XEMds8GC0MD4CQaUmi2XWPzBx+6cy0/lrPZQ9iKmI
+         1+MZ49DmV7VQ5R/GHDne/cJC5vcr0nCGWDBuDZ//tkICwMFr5QNjXXtR1s7N6W7cE+fd
+         5jIQ==
+X-Gm-Message-State: AOJu0YyU2HgOvTfzCMXKixhxpxUK+2j0vqWEs9hxdUpBRCpIb8l9E8TY
+        /qKZIMK6cKdP9+SV7KIJxZWfHA==
+X-Google-Smtp-Source: AGHT+IFEPZY2FWuoLuj/J8x0P9zfOloxPTwOyuvqJHiLkoPALd4nAHq6UVOZicjn7oGHx7saYqsMnA==
+X-Received: by 2002:a05:6358:278a:b0:143:3179:1a67 with SMTP id l10-20020a056358278a00b0014331791a67mr301716rwb.29.1695405125439;
+        Fri, 22 Sep 2023 10:52:05 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p7-20020a170902e74700b001bf6ea340b3sm3777501plf.116.2023.09.22.10.50.07
+        by smtp.gmail.com with ESMTPSA id r9-20020a63a009000000b0057e13ed796esm728612pge.60.2023.09.22.10.52.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:50:07 -0700 (PDT)
+        Fri, 22 Sep 2023 10:52:05 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] pinctrl: uniphier: Annotate struct uniphier_pinctrl_reg_region with __counted_by
-Date:   Fri, 22 Sep 2023 10:50:06 -0700
-Message-Id: <20230922175006.work.421-kees@kernel.org>
+Subject: [PATCH] gpiolib: cdev: Annotate struct linereq with __counted_by
+Date:   Fri, 22 Sep 2023 10:52:03 -0700
+Message-Id: <20230922175203.work.760-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1374; i=keescook@chromium.org;
- h=from:subject:message-id; bh=Tm7WSbhCUuk32XvIW7v3CIW2EM0z50wK155ChWrac9c=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdPOjizzHR2Fjm5ECZPVLRxlOXXgda6lwE7va
- Ga/RNMhW1yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3TzgAKCRCJcvTf3G3A
- JhnID/9BsoGqvMvrhL7fUCSef2KOrN+0LY8Y9Gh+WefjyMcP4C22g4sclGpsrxAQkqk8krUt+5w
- c7zIvVimPqMsIxiBaJWr1OqtIB0pDqA7Jb9lW7lh9N68utQ2cB2YXUYQmvUM4N6MgXplPdH42V8
- y1MjcClXYSpmWA19UsRuXCGUG9dxZ4OdFC0yxoUW6D5nN3u4hL+hsWlwH50C4TBF0TEt2WWkNJ3
- rBbr/WxM67dRdxxurhQZjdL1O1fFBezTz2PbpZJTg4BL1pRSwu/3zexiLxHjIi9mAugGtkzBWSb
- ueMncH+Gb06R2+p3vmMrWonH4OPujnK4xFzBcOfrfn4dEUF9UZBjHM7NE/I/KRR2VcYvr7n+LpB
- YZJDrvy+6inR3Am6Ib+dY8Vwo//eb/uPXD0KXtGAwA0H3098tSkdl3eDQxDR3/g+Ih66IWvwkrP
- GqJRkE8sF3Nxzk9eBkl3C2myQjSsEuodvl45xOyqOUPpqF5sZNeJfu9dSMTgV7izNogHL8n2OgE
- JLb5a0Akkl9jAqBRGsKQPxNFYEu1Pi+bMfCc0fiWj7xTMCrMPFQMrlOb+tH9RaYnX4eHZC3gfdj
- O/tYjcDU6tm2Ak81vIxZ9R+zc/Y45CD0xr09bAu8gjOGQfLMYC5IYhCqGT3fzqOCd4wI4BFWpGn
- nW5lHw/ 91efgg9g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1931; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=8zr3EscqNMKGB+p2GQ+eNq4lFJNw863hYtHYoUZ6QT8=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRDnHWem4qivuYvpUIrmnI1crVLCjWEs1Bl3
+ gzzs3k1FJGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UQwAKCRCJcvTf3G3A
+ JseKD/4quBw/IubJ6kx2xMKEYBqn7EU8HCBh9hqvf/DZpDUBw12gRWSQNalISRWuYF67cas5Tkr
+ EUj3MbyNdPUEx/IJrlL3WHXZfRNgY4r3M1SR9aDCVsSEylC1PQdUNdRTvU+rPLRjOr6JHlZDQqU
+ ayR0dlH/PQnDDG2kVOZM5XHvZXu5mJUy8OvlhRV8vEMwvcodYJXl8SJreBqqCVIZqqwYhjP4B95
+ OPINC+bpMgbcQ1hX/+IWYq1mh2HyM0AZw18fRaJevYcMTVvLd27oad+aja6ikDJpZnaiR4StABS
+ JmE4ha3T05WdaaYiCf1MqC6qJRd/225OoZemjlFHuaqze/naFKA/dvHT18VPo69ezq0KkjQ2U7/
+ 3TyK3eGInrlMpG4ABDIsl2HD8hDsc7Vl46x8b9DxIQmBF1Jls2LAm+7S3bLyc8zrT0fPP1I9oUd
+ RAFcig+QfsIHBcf2MZIy/kj0y90XDIFLq4yXccv4vlI7+rJQOeoTeby164bXqumt9WVcYSdeyNK
+ CRz0HHgMSkH60UvlLF05qx9N3E6PLjJ6k2x6KUC9SJbc92HLO1s63wzDJDfTgiy4SEiObVoyF76
+ W9x+284Vs0VzKisQmXg6gBgf8fFLYi/xcW+8j+cNIQ4+uYqzT/L6JUY0SkB69rh+9U21waaUzft
+ V7vH5yP GuFFYMXg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -92,33 +91,50 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct uniphier_pinctrl_reg_region.
+As found with Coccinelle[1], add __counted_by for struct linereq.
+Additionally, since the element count member must be set before accessing
+the annotated flexible array member, move its initialization earlier.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
 Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy@kernel.org>
 Cc: linux-gpio@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/pinctrl/uniphier/pinctrl-uniphier-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpiolib-cdev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
-index 18d3a4f69e63..fbd0fcdb42c8 100644
---- a/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
-@@ -31,7 +31,7 @@ struct uniphier_pinctrl_reg_region {
- 	struct list_head node;
- 	unsigned int base;
- 	unsigned int nregs;
--	u32 vals[];
-+	u32 vals[] __counted_by(nregs);
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index e39d344feb28..31fc71a612c2 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -572,7 +572,7 @@ struct linereq {
+ 	DECLARE_KFIFO_PTR(events, struct gpio_v2_line_event);
+ 	atomic_t seqno;
+ 	struct mutex config_mutex;
+-	struct line lines[];
++	struct line lines[] __counted_by(num_lines);
  };
  
- struct uniphier_pinctrl_priv {
+ #define GPIO_V2_LINE_BIAS_FLAGS \
+@@ -1656,6 +1656,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+ 	lr = kzalloc(struct_size(lr, lines, ulr.num_lines), GFP_KERNEL);
+ 	if (!lr)
+ 		return -ENOMEM;
++	lr->num_lines = ulr.num_lines;
+ 
+ 	lr->gdev = gpio_device_get(gdev);
+ 
+@@ -1684,7 +1685,6 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+ 		lr->event_buffer_size = GPIO_V2_LINES_MAX * 16;
+ 
+ 	atomic_set(&lr->seqno, 0);
+-	lr->num_lines = ulr.num_lines;
+ 
+ 	/* Request each GPIO */
+ 	for (i = 0; i < ulr.num_lines; i++) {
 -- 
 2.34.1
 
