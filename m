@@ -2,43 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7C317AC162
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Sep 2023 13:49:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B76197AC185
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Sep 2023 13:53:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231361AbjIWLt1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Sep 2023 07:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40092 "EHLO
+        id S231387AbjIWLxY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Sep 2023 07:53:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230426AbjIWLt0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Sep 2023 07:49:26 -0400
+        with ESMTP id S231446AbjIWLxX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Sep 2023 07:53:23 -0400
 Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC649F;
-        Sat, 23 Sep 2023 04:49:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03930199;
+        Sat, 23 Sep 2023 04:53:17 -0700 (PDT)
 Received: from g550jk.localnet (k10064.upc-k.chello.nl [62.108.10.64])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id CC44BD0F49;
-        Sat, 23 Sep 2023 11:49:18 +0000 (UTC)
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 26024D0F49;
+        Sat, 23 Sep 2023 11:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1695469759; bh=kBe11jmRLaOVJhGVOL0BQH3axSYxyviTE0+dWdDMB9o=;
+        t=1695469965; bh=OKF1zzcs43ZDoi4cDiGqdLlW1pZIC+kMc6jGkGBwd0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=m6ONAgACgDg9nRxAFYlumXEaFnN7FSjLIuGbfeBQCTIbabGyec+zsn79N4v/C40Qv
-         QLJuP5wYu4Yo8q2mwpSs/uPS1Zjnr4+AGu3AR1MBenW3+C21m0WKAcJCYBKXDkvxDy
-         dU3DYUWWv34N783Gvg0vg2dl4cubFqAYoq0Qgxz0=
+        b=E6p3uEeWIWbNdfji9G0Dqf9szr70mHEXuu2bSClzufk+CT7OCosIoZBxpRe7elbZY
+         cYGfeC/FXzvHXmtpY//wSNV1NA8CQeXmg3OOJo2fMJql4Trupg3PSq0uQd8cHFVyuZ
+         KIhFlplG2nYWhtS7sG650wYiuwywHiUKqOs9nzqM=
 From:   Luca Weiss <luca@z3ntu.xyz>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     linux-arm-msm@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+To:     linux-arm-msm@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         Matti =?ISO-8859-1?Q?Lehtim=E4ki?= <matti.lehtimaki@gmail.com>,
         Bjorn Andersson <andersson@kernel.org>,
         Andy Gross <agross@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] pinctrl: qcom: msm8226: Add MPM pin mappings
-Date:   Sat, 23 Sep 2023 13:49:17 +0200
-Message-ID: <3182524.5fSG56mABF@z3ntu.xyz>
-In-Reply-To: <ZQ7NcuLOAwAJgQNr@gerhold.net>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matti =?ISO-8859-1?Q?Lehtim=E4ki?= <matti.lehtimaki@gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: msm8974: Add MPM pin mappings
+Date:   Sat, 23 Sep 2023 13:52:44 +0200
+Message-ID: <1769487.VLH7GnMWUR@z3ntu.xyz>
+In-Reply-To: <20230922224027.85291-3-matti.lehtimaki@gmail.com>
 References: <20230922224027.85291-1-matti.lehtimaki@gmail.com>
- <7570584.EvYhyI6sBW@z3ntu.xyz> <ZQ7NcuLOAwAJgQNr@gerhold.net>
+ <20230922224027.85291-3-matti.lehtimaki@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
@@ -51,169 +52,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Samstag, 23. September 2023 13:35:25 CEST Stephan Gerhold wrote:
-> On Sat, Sep 23, 2023 at 01:19:46PM +0200, Luca Weiss wrote:
-> > On Samstag, 23. September 2023 12:00:52 CEST Stephan Gerhold wrote:
-> > > On Sat, Sep 23, 2023 at 11:32:47AM +0200, Luca Weiss wrote:
-> > > > Hi Matti,
-> > > >=20
-> > > > On Samstag, 23. September 2023 00:40:26 CEST Matti Lehtim=E4ki wrot=
-e:
-> > > > > Add pin <-> wakeirq mappings to allow for waking up the AP from
-> > > > > sleep
-> > > > > through MPM-connected pins.
-> > > > >=20
-> > > > > Signed-off-by: Matti Lehtim=E4ki <matti.lehtimaki@gmail.com>
-> > > > > ---
-> > > > >=20
-> > > > >  drivers/pinctrl/qcom/pinctrl-msm8226.c | 12 ++++++++++++
-> > > > >  1 file changed, 12 insertions(+)
-> > > > >=20
-> > > > > diff --git a/drivers/pinctrl/qcom/pinctrl-msm8226.c
-> > > > > b/drivers/pinctrl/qcom/pinctrl-msm8226.c index
-> > > > > 994619840a70..1e46a9ab382f
-> > > > > 100644
-> > > > > --- a/drivers/pinctrl/qcom/pinctrl-msm8226.c
-> > > > > +++ b/drivers/pinctrl/qcom/pinctrl-msm8226.c
-> > > > > @@ -612,6 +612,16 @@ static const struct msm_pingroup
-> > > > > msm8226_groups[] =3D
-> > > > > {
-> > > > >=20
-> > > > >  #define NUM_GPIO_PINGROUPS 117
-> > > > >=20
-> > > > > +static const struct msm_gpio_wakeirq_map msm8226_mpm_map[] =3D {
-> > > > > +	{ 1, 3 }, { 4, 4 }, { 5, 5 }, { 9, 6 }, { 13, 7 }, { 17, 8=20
+On Samstag, 23. September 2023 00:40:27 CEST Matti Lehtim=E4ki wrote:
+> Add pin <-> wakeirq mappings to allow for waking up the AP from sleep
+> through MPM-connected pins.
+>=20
+> Signed-off-by: Matti Lehtim=E4ki <matti.lehtimaki@gmail.com>
+
+Based on the discussion in the 8226 patch, this looks correct, compared wit=
+h=20
+downstream arch/arm/boot/dts/msm8974pro-pm.dtsi.
+
+Reviewed-by: Luca Weiss <luca@z3ntu.xyz>
+
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm8x74.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>=20
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm8x74.c
+> b/drivers/pinctrl/qcom/pinctrl-msm8x74.c index d5fe62992849..238c83f6ec4f
+> 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm8x74.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
+> @@ -1045,6 +1045,16 @@ static const struct msm_pingroup msm8x74_groups[] =
+=3D {
+>=20
+>  #define NUM_GPIO_PINGROUPS 146
+>=20
+> +static const struct msm_gpio_wakeirq_map msm8x74_mpm_map[] =3D {
+> +	{ 1, 4 }, { 5, 5 }, { 9, 6 }, { 18, 7 }, { 20, 8 }, { 24, 9 },
+> +	{ 27, 10 }, { 28, 11 }, { 34, 12 }, { 35, 13 }, { 37, 14 }, { 42, 15=20
 },
-> > > >=20
-> > > > I'm not really convinced this is the correct order of values...
-> > > >=20
-> > > > Let's look at downstream:
-> > > >   qcom,gpio-map =3D <3  1>,
-> > > >  =20
-> > > >                   <4  4 >,
-> > > >                   <5  5 >,
-> > > >                   <6  9 >,
-> > > >                   [...]
-> > > >=20
-> > > > From Documentation/devicetree/bindings/arm/msm/mpm.txt downstream:
-> > > >   Each tuple represents a MPM pin and which GIC interrupt is routed=
- to
-> > > >   it.
-> > > >=20
-> > > > So first is pin number, second is interrupt number.
-> > > >=20
-> > > > And check mainline:
-> > > >   /**
-> > > >  =20
-> > > >    * struct msm_gpio_wakeirq_map - Map of GPIOs and their wakeup pi=
-ns
-> > > >    * @gpio:          The GPIOs that are wakeup capable
-> > > >    * @wakeirq:       The interrupt at the always-on interrupt
-> > > >    controller
-> > > >    */
-> > > >  =20
-> > > >   struct msm_gpio_wakeirq_map {
-> > > >  =20
-> > > >   	unsigned int gpio;
-> > > >   	unsigned int wakeirq;
-> > > >  =20
-> > > >   };
-> > > >=20
-> > > > So here we also have the order pin-interrupt, not the reverse order.
-> > > >=20
-> > > > Therefore I believe the order in this patch is incorrect, and it
-> > > > should
-> > > > rather>
-> > > >=20
-> > > > be:
-> > > >   { 3, 1 }, { 4, 4 }, { 5, 5 }, { 6, 9 }, { 7, 13 }, { 8, 17 },
-> > > >   [...]
-> > > >=20
-> > > > Or do you think I'm missing something?
-> > >=20
-> > > Yes :)
-> > >=20
-> > > Let's look at the later entries:
-> > > > > +	{ 21, 9 }, { 27, 10 }, { 29, 11 }, { 31, 12 }, { 33, 13 },=20
-{ 35,
-> > > > > 14
-> > > >=20
-> > > > },
-> > > >=20
-> > > > > +	{ 37, 15 }, { 38, 16 }, { 39, 17 }, { 41, 18 }, { 46, 19=20
-}, { 48,
-> > > > > 20
-> > > >=20
-> > > > },
-> > > >=20
-> > > > > +	{ 49, 21 }, { 50, 22 }, { 51, 23 }, { 52, 24 }, { 54, 25=20
-}, { 62,
-> > > > > 26
-> > > >=20
-> > > > },
-> > > >=20
-> > > > > +	{ 63, 27 }, { 64, 28 }, { 65, 29 }, { 66, 30 }, { 67, 31=20
-}, { 68,
-> > > > > 32
-> > > >=20
-> > > > },
-> > > >=20
-> > > > > +	{ 69, 33 }, { 71, 34 }, { 72, 35 }, { 106, 36 }, { 107, 37=20
+> +	{ 44, 16 }, { 46, 17 }, { 50, 18 }, { 54, 19 }, { 59, 20 }, { 61, 21=20
 },
-> > > > > +	{ 108, 38 }, { 109, 39 }, { 110, 40 }, { 111, 54 }, { 113,=20
-55 },
-> > > > > +};
-> > > > > +
-> > >=20
-> > > For example: { 113, 55 }, i.e. { .gpio =3D 113, .wakeirq =3D 55 }.
-> > >=20
-> > > MSM8226 has GPIOs 0-116 and 64 MPM pins/interrupts. The order in this
-> > > patch is the only one that can be correct because the definition would
-> > > be invalid the other way around. 113 must be the GPIO number because =
-it
-> > > is larger than the 64 available MPM interrupt pins. :)
-> >=20
-> > So basically you're saying downstream is wrong / buggy?
+> +	{ 62, 22 }, { 64, 23 }, { 65, 24 }, { 66, 25 }, { 67, 26 }, { 68, 27=20
+},
+> +	{ 71, 28 }, { 72, 29 }, { 73, 30 }, { 74, 31 }, { 75, 32 }, { 77, 33=20
+},
+> +	{ 79, 34 }, { 80, 35 }, { 82, 36 }, { 86, 37 }, { 92, 38 }, { 93, 39=20
+},
+> +	{ 95, 40 }, { 102, 3 }, { 144, 41 },
+> +};
+> +
+>  static const struct msm_pinctrl_soc_data msm8x74_pinctrl =3D {
+>  	.pins =3D msm8x74_pins,
+>  	.npins =3D ARRAY_SIZE(msm8x74_pins),
+> @@ -1053,6 +1063,8 @@ static const struct msm_pinctrl_soc_data
+> msm8x74_pinctrl =3D { .groups =3D msm8x74_groups,
+>  	.ngroups =3D ARRAY_SIZE(msm8x74_groups),
+>  	.ngpios =3D NUM_GPIO_PINGROUPS,
+> +	.wakeirq_map =3D msm8x74_mpm_map,
+> +	.nwakeirq_map =3D ARRAY_SIZE(msm8x74_mpm_map),
+>  };
 >=20
-> "Misleading" or "confusing" would be the words I would use. :-)
-
-;)
-
->=20
-> > From qcom,gpio-map =3D [...], <55 113>; it's taking the properties like=
- this
-> >=20
-> > (drivers/soc/qcom/mpm-of.c):
-> >   unsigned long pin =3D be32_to_cpup(list++);
-> >   irq_hw_number_t hwirq =3D be32_to_cpup(list++);
-> >=20
-> > Your explanation does make sense I guess but somewhere the link downstr=
-eam
-> > -> mainline must be broken, no?
->=20
-> After staring at mpm-of.c for a while I would say that there:
->  - downstream "pin" =3D MPM pin =3D mainline "wakeirq"
->    - because this is used as index to msm_mpm_irqs_m2a, which has a size
->      of MSM_MPM_NR_MPM_IRQS (64)
->  - downstream "hwirq" =3D GPIO / GIC IRQ =3D mainline "gpio"
->=20
-> This means for <55 113>: pin =3D wakeirq =3D 55 and hwirq =3D gpio =3D 11=
-3.
-> Which matches the definition in this patch:
->   { .gpio =3D 113, .wakeirq =3D 55 } =3D { 113, 55 }
-
-=46un, thanks for digging into it!
-
-@Matti: I think I see one missing entry here "<41  115>," on downstream, so
-{ 115, 41 } appears to be missing in this patch? Or is there a reason you=20
-omitted that one? The rest looks correct :)
-
-Regards
-Luca
-
-
->=20
-> Stephan
+>  static int msm8x74_pinctrl_probe(struct platform_device *pdev)
 
 
 
