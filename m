@@ -2,90 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7624C7AC4D1
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Sep 2023 21:26:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BB0E7AC508
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Sep 2023 22:21:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbjIWT0R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 Sep 2023 15:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38926 "EHLO
+        id S229460AbjIWUVs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 Sep 2023 16:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbjIWT0Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Sep 2023 15:26:16 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96393197
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Sep 2023 12:26:09 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-59c0d002081so48584697b3.2
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Sep 2023 12:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695497169; x=1696101969; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tZizts65y01ok+ES2EUhAYAn9GXHIb4VmooXZajucCU=;
-        b=uNeVk+4wrEtA25qCf/0cc+V/J0m5Bv+FMDG8kGqEEoFlimXmspGlZ471bmLaWTR6Td
-         svLBkwjoQ5RijQ121IJl/hmiuNKyS+WT/T2Gwm2T/sOGLUGvnXRo3v/tlVCdffyi+8zs
-         QB+TT+5b2sh6nB+K0vELCI7ByecLH9qX4fncnhD3sxMhUxl2+l1WN9A95ggUhWwsLGKu
-         biMyYisQOb3tnAnGiB+x2aW3r+EqpPceYseOmI29PjY1CaPZ3O8/+HKoqB8vx17UM/uy
-         lUTNlH5O3A8vua5hzsHsd0MNdDlyUan+qr+hUm6Ar+JALhPs1eztA5WOu7f8XfcLK8mD
-         NqHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695497169; x=1696101969;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tZizts65y01ok+ES2EUhAYAn9GXHIb4VmooXZajucCU=;
-        b=LEHPqNp/R9VsMpMNcoK6Wq/Kdz02FXQQ9nKzjM/TgpExTjEOANLCOKRdYUf500fv74
-         zwHMjBkUHcLSdnmv9y/AOquRgg3TinqtVYrGn4QRqqf6R4ioAck9UOug4UkRkNNYxiWI
-         3iiByepdpDHK+HVyYU6sAp4Zc+5pCdtOKj70cx6jo5N0G1YESeWwZHJBpZuCUzHD0heM
-         4RZ7r7vWk751tk+67FQS0tA+6EoyylkMBU2S9OKDMn6aMrArnHfvvIS10OcCFyV5CJTf
-         Fj5QNZIiLElpPaiRc9Kg8hf6hYFBODWv9HA8rVw86JoSOG6m3ZsBy/jRLJbjc1mkNX+n
-         zTWQ==
-X-Gm-Message-State: AOJu0YyouAWqHQCEjj5UC/SKOxVvH1LXhqMGu3/SIqw2ZPxjTlcGPlh7
-        TKVLnHHZVH0qeqRyJNMGbHwUX0rP+7OvnkFhPCeAsA==
-X-Google-Smtp-Source: AGHT+IH8xd9FGQCscz8xMLf0DoFylip6IAWZhY41aoUSaGynGex3s2gK+VocIMx3e8QuWNuPxfssl9IzVZ3Wrlq/3w8=
-X-Received: by 2002:a81:6089:0:b0:59b:4f5e:12d8 with SMTP id
- u131-20020a816089000000b0059b4f5e12d8mr2866968ywb.47.1695497168744; Sat, 23
- Sep 2023 12:26:08 -0700 (PDT)
+        with ESMTP id S229606AbjIWUVs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 Sep 2023 16:21:48 -0400
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD65113;
+        Sat, 23 Sep 2023 13:21:41 -0700 (PDT)
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+        by cmsmtp with ESMTP
+        id k7QFqca4rDKaKk98GqKDwv; Sat, 23 Sep 2023 20:21:41 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id k98GqBLo1TrtRk98GqJM3Z; Sat, 23 Sep 2023 20:21:40 +0000
+X-Authority-Analysis: v=2.4 cv=Yucc+qUX c=1 sm=1 tr=0 ts=650f48d4
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=qjWHau5h7Oqj65Zv8QkA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=95dquq9h2fN9ttOm7akqcNo5sL0dJDCKRHu0Vev7ugY=; b=yULlmJmgkB+IxpSPQpy3qXxdhz
+        dyiFkumbRtx2AUY/ANfZXCOI5MWyrQEPKMdJNSIATkhcknr0EaGLPGaL+EloWXqE0h+xY6KP9roRK
+        CF3tYyyTudvGcSL30NPHWD6QRW0SaMzMDrMD7nHNPaSXT9eg6MznAJN8A93MPXbbtCDAEpPHBkDk1
+        cUdiNOqbiGVttZfV41cgPNBMvA7GoOT4VfnsOHMGzCB08sYTQ0WIwxfeYfP5jzP4iTVkjq1o3rKG5
+        rvdUXGRRFdTZtqAIvBVK32dXTisrbYLbrJ7uoNR2A80eACWCjT45nJHMEY+UuZ+mqwZ8kwhRhn5Yt
+        WvW+jXUA==;
+Received: from [94.239.20.48] (port=52998 helo=[192.168.1.98])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qjy55-003czm-1R;
+        Sat, 23 Sep 2023 03:33:39 -0500
+Message-ID: <e5d6228d-e868-dc94-c49b-7cdc6a86286d@embeddedor.com>
+Date:   Sat, 23 Sep 2023 10:34:44 -0600
 MIME-Version: 1.0
-References: <20230922-msm8226-i2c6-v2-0-3fb55c47a084@z3ntu.xyz> <20230922-msm8226-i2c6-v2-3-3fb55c47a084@z3ntu.xyz>
-In-Reply-To: <20230922-msm8226-i2c6-v2-3-3fb55c47a084@z3ntu.xyz>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Sat, 23 Sep 2023 22:25:57 +0300
-Message-ID: <CAA8EJprhhUN6Txbiyvb1Jk8mEnX1bxhf-WWcDU2J2WH0uVF9kQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: qcom: msm8226: Add blsp1_i2c6 and blsp1_uart2
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] gpiolib: cdev: Annotate struct linereq with __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230922175203.work.760-kees@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230922175203.work.760-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.239.20.48
+X-Source-L: No
+X-Exim-ID: 1qjy55-003czm-1R
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:52998
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAZ1ITLoOpQAUiPweuVFExqrmbpzyNOuMc55pWHHPbsvPsFM2aYMTFNed9avpToUiBmpzoL+VGrJmOt4ae2D93ZapPxrjlugh455P9YM1dHo0mMupNEP
+ wdyzenrEEISL5I7bbymxJiAcV7VpCaWakrl0DY0W8jDpY0+bUcOQrH4362Su4+wD0mRU3Kyh6++dCf9sRoCxJjY2EX7KC5pDSYQubcxJmfP7ehOhzsXbZdnV
+ FfJc8zZV5UWHN0wL2zwDjCIiVB3Bwq1h6mkueyD888lvL4cxzl6YMAdrrEk+Xdcrmq9uAR97FsdM/+E3bKwe6w==
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 22 Sept 2023 at 19:56, Luca Weiss <luca@z3ntu.xyz> wrote:
->
-> Add more busses found on msm8226 SoC.
->
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
->  arch/arm/boot/dts/qcom/qcom-msm8226.dtsi | 33 ++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
+On 9/22/23 11:52, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct linereq.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
 -- 
-With best wishes
-Dmitry
+Gustavo
+
+> ---
+>   drivers/gpio/gpiolib-cdev.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index e39d344feb28..31fc71a612c2 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -572,7 +572,7 @@ struct linereq {
+>   	DECLARE_KFIFO_PTR(events, struct gpio_v2_line_event);
+>   	atomic_t seqno;
+>   	struct mutex config_mutex;
+> -	struct line lines[];
+> +	struct line lines[] __counted_by(num_lines);
+>   };
+>   
+>   #define GPIO_V2_LINE_BIAS_FLAGS \
+> @@ -1656,6 +1656,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>   	lr = kzalloc(struct_size(lr, lines, ulr.num_lines), GFP_KERNEL);
+>   	if (!lr)
+>   		return -ENOMEM;
+> +	lr->num_lines = ulr.num_lines;
+>   
+>   	lr->gdev = gpio_device_get(gdev);
+>   
+> @@ -1684,7 +1685,6 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+>   		lr->event_buffer_size = GPIO_V2_LINES_MAX * 16;
+>   
+>   	atomic_set(&lr->seqno, 0);
+> -	lr->num_lines = ulr.num_lines;
+>   
+>   	/* Request each GPIO */
+>   	for (i = 0; i < ulr.num_lines; i++) {
