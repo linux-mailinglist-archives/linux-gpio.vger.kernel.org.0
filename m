@@ -2,67 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D45F47ACABE
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Sep 2023 18:14:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FA857ACAEA
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Sep 2023 19:17:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbjIXQOT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Sep 2023 12:14:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38872 "EHLO
+        id S230029AbjIXRR1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Sep 2023 13:17:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjIXQOT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Sep 2023 12:14:19 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F0F83;
-        Sun, 24 Sep 2023 09:14:13 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c60c10db16so599275ad.1;
-        Sun, 24 Sep 2023 09:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695572052; x=1696176852; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4XCyKX51cNk6AwikCXxgUKM7FaSB4aCTyWjenyDue4A=;
-        b=dQzArYlLA0nnZt9e7CndlBzhJWksPuOe/MNRIjPXiw/FxzUSpSSArPYmW4Tidpdbav
-         LedNaRty1Nl7hC+IgLaYqYGzpBimKsJOe/LQU5TDr9jMoqlhlDhywLA7dqvwFTn8EChr
-         6Q3fZ8djrcOskgUlX904gIEVGLzwrecymHbJtKWsMMdqvhHkU0TTesXCQv0HoCJz6S+P
-         eT+fO4RmoJak48t5jhAx544Fo2YRyibIvhggUGlRS6bBzxn/bGI9nokIcX67c2MHN4zF
-         sGoWNNkKo1jKryguKe07VshqZVT/YIaLZS+K0VpAmntxyjwO5vb5AmjDFh47MpB+0Ym0
-         h7rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695572052; x=1696176852;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4XCyKX51cNk6AwikCXxgUKM7FaSB4aCTyWjenyDue4A=;
-        b=syba2JTeIkZe79aWOZUDtVEl+FbljdCVTAJRbgoSvgPgO4o5fTeXMoTf2SaGDmQvy4
-         pHdBhXLmwd7vLTXKhp2KSBX5d+YQLgsD1wHdDDoVmmbRR68lMZNJIxAOjQszLuCzHKmP
-         VuSdH7C22Tu5fWFhbUnyCXGy3Yj+74rPvuDErcJNXiaq+kwFTrtebazs0vI7VPQTfGsz
-         Een7PCAlscA64U0EyluivGvV4gvgWgKNAd92wGplzqXo4y9f7odXmg7y5meISyrQBEHQ
-         dLJBEy0I/625TQNpbb9mzlAmofmKj4H0WxCoYfSXed09xoxOZ8Kq3RJ9xtkPNqpt01Ml
-         BiIw==
-X-Gm-Message-State: AOJu0YzcZh9HI4Ih4JzOBWqNHggoqMBpIQQf/EsBeZ9iIrcwxhlRIcvr
-        DIm7rfAYfw83Jhs++s0DXnY=
-X-Google-Smtp-Source: AGHT+IH2wbuGmXdLswSNMpZK7/5YOZvUra+dVjvCawq3qsG/PPmMdA6DZheP0yLpdNY7o7K9ATWtGg==
-X-Received: by 2002:a17:903:2345:b0:1c3:a4f2:7cc1 with SMTP id c5-20020a170903234500b001c3a4f27cc1mr6319381plh.5.1695572052324;
-        Sun, 24 Sep 2023 09:14:12 -0700 (PDT)
-Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:1456:78d8:9605:879e])
-        by smtp.gmail.com with ESMTPSA id y13-20020a170902ed4d00b001c61512f2a6sm976248plb.220.2023.09.24.09.14.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Sep 2023 09:14:11 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     brgl@bgdev.pl, andy@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@denx.de>
-Subject: [PATCH] dt-bindings: gpio: fsl-imx-gpio: Document imx25 and imx27
-Date:   Sun, 24 Sep 2023 13:14:03 -0300
-Message-Id: <20230924161403.698833-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S230100AbjIXRR0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Sep 2023 13:17:26 -0400
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC306FF;
+        Sun, 24 Sep 2023 10:17:18 -0700 (PDT)
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+        by mx.skole.hr (mx.skole.hr) with ESMTP id BBAE082064;
+        Sun, 24 Sep 2023 19:11:25 +0200 (CEST)
+From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: [PATCH RFC 0/6] ARM: pxa: GPIO descriptor conversions
+Date:   Sun, 24 Sep 2023 18:42:53 +0200
+Message-Id: <20230924-pxa-gpio-v1-0-2805b87d8894@skole.hr>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-B4-Tracking: v=1; b=H4sIAA1nEGUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDCwNz3YKKRN30gsx8XePkVCPTFFNzEwtDEyWg8oKi1LTMCrBR0UpBbs5
+ KsbW1AHrYMDBfAAAA
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1194;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=B9DP0CxfWMcnVFBkaCnG2gUKEhrfXwj6FqG5mvPhN24=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlEG27bNYu4Fa4414ypkowuQ+gQAtFotUwZOv2q
+ d1cTD9kvnCJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZRBtuwAKCRCaEZ6wQi2W
+ 4ZjQEACo4c4VxqU5rJUdrlr21h4lHp2LcaxM93RzM0JC/NtD2NhGy0N78D0zdx014gLbvRFYIAA
+ bZfzf8MOK5SZLUJacCUt2kfxb+wUD3AjCEuS4zjfqhTtGbmR3GFWNun3v4IWmbg1f2h/1wUCMhU
+ 6nuEx0mtnZlQGwEC8AecRbC1LEcby7IG6Jpj251OYz4xOj+KOZdS1zGpWXQj4D4GASTuTrxqwx2
+ uF4+iOkIcE/4zwB4EjYnPtLA6uJIUknSjvedyTZoJ7rD5Hx9T4NWfMl93gzKVnxztoh5di4RGb3
+ Ky+tp/JDFU3kQzn0kWbg7CqJNcu3rMF3aUbdvcwKv7qSnCiUWJwhfyElAXChEtJG2latdW2P382
+ aMVDogpHYPteq/D1rsyygF2Wi/RlyvBt1OpuQ7oNp5shyrcMigNI5KBvblMWxQRXPfH9FLeVmsU
+ aiiM+33n4pZxl2uQaEzpsV/nP1kJuiZ0i664df1bfhllpd47n0vO8b5nmKt6TR8Lb+b/Qo2skUG
+ WklpXKEHAbyPFyrrar2UeObzm7s9/1r7Kt4FWuat/+7nBA85QB1rqly/Da4LtO7LE9FnY5AYjTJ
+ VT1UfzHTr2l8XIQl/G5onxdXjlkWrYNVrO2xgiFOsCSYnyIOazi2pTb5JejNJB/En1I3rQ4Xw7g
+ FunsLXRK7+2dlbA==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,40 +66,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Fabio Estevam <festevam@denx.de>
+Hello,
 
-fsl,imx25-gpio and fsl,imx27-gpio are not documented, causing schema
-warnings.
+Small series to convert some of the board files in the mach-pxa directory
+to use the new GPIO descriptor interface.
 
-fsl,imx25-gpio is compatible with fsl,imx35-gpio and fsl,imx27-gpio
-is compatible with fsl,imx21-gpio.
+Most notably, the am200epd, am300epd and Spitz matrix keypad among
+others are not converted in this series.
 
-Document them accordingly.
-
-Signed-off-by: Fabio Estevam <festevam@denx.de>
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Duje Mihanović (6):
+      ARM: pxa: Convert Spitz OHCI to GPIO descriptors
+      ARM: pxa: Convert Spitz LEDs to GPIO descriptors
+      ARM: pxa: Convert Spitz CF power control to GPIO descriptors
+      ARM: pxa: Convert reset driver to GPIO descriptors
+      ARM: pxa: Convert Spitz hsync to GPIO descriptors
+      ARM: pxa: Convert gumstix Bluetooth to GPIO descriptors
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-index d0ca2af89f1e..e716c6170643 100644
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-@@ -21,6 +21,14 @@ properties:
-       - items:
-           - const: fsl,imx35-gpio
-           - const: fsl,imx31-gpio
-+      - items:
-+          - enum:
-+              - fsl,imx25-gpio
-+          - const: fsl,imx35-gpio
-+      - items:
-+          - enum:
-+              - fsl,imx27-gpio
-+          - const: fsl,imx21-gpio
-       - items:
-           - enum:
-               - fsl,imx50-gpio
+ arch/arm/mach-pxa/gumstix.c    | 24 ++++++++-------
+ arch/arm/mach-pxa/reset.c      | 40 +++++++++----------------
+ arch/arm/mach-pxa/reset.h      |  3 +-
+ arch/arm/mach-pxa/spitz.c      | 68 +++++++++++++++++++++++++++++++++---------
+ drivers/usb/host/ohci-pxa27x.c | 10 +++++++
+ 5 files changed, 92 insertions(+), 53 deletions(-)
+---
+base-commit: ce9ecca0238b140b88f43859b211c9fdfd8e5b70
+change-id: 20230807-pxa-gpio-3ce25d574814
+
+Best regards,
 -- 
-2.34.1
+Duje Mihanović <duje.mihanovic@skole.hr>
+
 
