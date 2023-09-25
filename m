@@ -2,109 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B43AF7AD6ED
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 13:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CAF37AD75D
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 13:59:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231202AbjIYLYU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 07:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35104 "EHLO
+        id S231172AbjIYMAB convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 25 Sep 2023 08:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230460AbjIYLYT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 07:24:19 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B3A7107
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 04:24:12 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-50325ce89e9so10171286e87.0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 04:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695641051; x=1696245851; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qMhmMAQQbl/7qD+DBAIyGJ2AG8c+5UuMVzq4znI+3L8=;
-        b=g8p9/4FKFnMY5PNu7jaucK+xOc9vl50UhHgSTb1pm8FhSYghQxjl4DAxhVANmTKTP7
-         zlgKau0n+r0/478OUsXbw8a5OctYBaWQRUkAjA5ghoJWQ18IeMsJ3Ev3XuwcFXVxD4Rg
-         imvCt4OwF6gVk76FzaYTh3j1xb2qMNnCzs40OXaA15CiEBMLd2DrvvGmJFaeGXQ4gJLp
-         5npCJlNRMirQQNhG1mz9rZ8oyNIdcHzIvmMfXlEa+ti5Cv+Xxh1ZsUOasgk8yE8YCe1U
-         ORQ3WTg2YBUGdJIxEQRYezZiR2aQVukb6jr4Q4Xu7bqiLQqalR7l4i9Uxw1+lCRH+uMm
-         h0Vg==
+        with ESMTP id S231131AbjIYMAB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 08:00:01 -0400
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658A2A9;
+        Mon, 25 Sep 2023 04:59:54 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-59e77e4f707so74461267b3.0;
+        Mon, 25 Sep 2023 04:59:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695641051; x=1696245851;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1695643193; x=1696247993;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qMhmMAQQbl/7qD+DBAIyGJ2AG8c+5UuMVzq4znI+3L8=;
-        b=ii2K3Lq4LZ8o66Og7pnk0uCu2EFQ/Llub+Cs2glzKptWbW1tPF8J4AG/GD2Cp/ErKz
-         LQZmPDL99rbsd9Qdz80nu+YP16MHRBkaJxNOh5Ni3OPgfIpWBOwmtFSsV2KxkMVRA2s7
-         cDCQr1hStzwXAJhSHn/yZ9rudMUyVFAprx2IQziwjMM0KdF/fr/bDkwiyGMbV6fzTbtt
-         qe+0++OrGqws16GSdNaAmPPj4iSlgAgfpEx9biGciaKUmUYxKDXpWERm2UDYeNAtCdl3
-         nPOdxBkPvZoKkd0qHnGveDfNbyfobqozFbhxSdLjo57QNaA3yC3FW3z8oIDgjWfTT/Iy
-         VDAA==
-X-Gm-Message-State: AOJu0YyOHrx1ibe/aK0lIy59f6QieYqCb38h++m7jIBREe2wmrql1RUz
-        lJoN8TSPFwJIPtN0M5bJ8I5HEw==
-X-Google-Smtp-Source: AGHT+IFqIBkgVpP+AhlxyEQ0hkTfnfhpfzlJa4GthGn4gn/ftTVslN7s9txRdFNAZVQPZpNXmO0eXg==
-X-Received: by 2002:a05:6512:3d9e:b0:504:3424:215c with SMTP id k30-20020a0565123d9e00b005043424215cmr6852228lfv.51.1695641051028;
-        Mon, 25 Sep 2023 04:24:11 -0700 (PDT)
-Received: from srini-hackbase.lan ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id x62-20020a50bac4000000b0053443c8fd90sm152170ede.24.2023.09.25.04.24.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 04:24:10 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     cros-qcom-dts-watchers@chromium.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Luca Weiss <luca.weiss@fairphone.com>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230919-fp5-initial-v2-0-14bb7cedadf5@fairphone.com>
-References: <20230919-fp5-initial-v2-0-14bb7cedadf5@fairphone.com>
-Subject: Re: (subset) [PATCH v2 0/7] Initial support for the Fairphone 5
- smartphone
-Message-Id: <169564104980.23811.11629211382725152116.b4-ty@linaro.org>
-Date:   Mon, 25 Sep 2023 12:24:09 +0100
+        bh=2rAJ86cN+xrwluhtuXjfUlYkU73XqMR8cTagUgAndoo=;
+        b=HXBY4O4MyDAzV4xqmA4tzPYMTXs03XNhBGFhRmfdmGQbLmHnqEYQPaMbL+4m/CG/c8
+         IQz7ZBYKTkbR+WmLy6bQchm3R/OovuQT0ai/NY1S7nsqguYbH2KG1uGM1C3xINFFlqJF
+         A7DYOEz0Ldb7vue00GrX3yDsoooxhYL9c+ODPUoYTlnGzH5VYlIgIaXtH5wgOdYxOCQ7
+         /NVZVx0n6TgGS0pWye/BRlFjJMxV3VjsdubPhJgXmzwAnYr8AB/Fw+YLha1tJhZkHaOH
+         QBEjj0QcC9/JXk4d7URhqpH1uoKVOv44y9n+BOFtIg3MZl8pYjWbxbHYG3oJy69vYFkS
+         /tkg==
+X-Gm-Message-State: AOJu0YyfAZKAbqHp+GxISSQTA3dEaqVInY52wkNDfaPpG6u0/Zt84Mm/
+        9NXOAtsGKOZp+x8zb81jZ9yGyk4J2o8J9A==
+X-Google-Smtp-Source: AGHT+IFAr3VsepoMskF1gDCakA6IzY2ljOU5ewMX0q+Rri2USPg6wYjlyQ7uU+OLUqQI2SGSVX8Zhw==
+X-Received: by 2002:a81:7b83:0:b0:595:89b0:6b41 with SMTP id w125-20020a817b83000000b0059589b06b41mr6713081ywc.38.1695643193156;
+        Mon, 25 Sep 2023 04:59:53 -0700 (PDT)
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
+        by smtp.gmail.com with ESMTPSA id m18-20020a81ae12000000b005922c29c025sm590935ywh.108.2023.09.25.04.59.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Sep 2023 04:59:52 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-59e77e4f707so74460667b3.0;
+        Mon, 25 Sep 2023 04:59:52 -0700 (PDT)
+X-Received: by 2002:a05:690c:4246:b0:59f:4e6d:b565 with SMTP id
+ gi6-20020a05690c424600b0059f4e6db565mr4869645ywb.11.1695643192435; Mon, 25
+ Sep 2023 04:59:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.2
-X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: *
+References: <20230922073714.6164-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20230922073714.6164-1-wsa+renesas@sang-engineering.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 25 Sep 2023 13:59:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXDhkhd9rOK7Ns5ViT3JMdDD3OB_sU9tSX4QGJ=7chKqA@mail.gmail.com>
+Message-ID: <CAMuHMdXDhkhd9rOK7Ns5ViT3JMdDD3OB_sU9tSX4QGJ=7chKqA@mail.gmail.com>
+Subject: Re: [PATCH] drm: tilcdc: don't use devm_pinctrl_get_select_default()
+ in probe
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-renesas-soc@vger.kernel.org, Jyri Sarha <jyri.sarha@iki.fi>,
+        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+CC pinctrl
 
-On Tue, 19 Sep 2023 14:45:54 +0200, Luca Weiss wrote:
-> Add support to boot up mainline kernel on the QCM6490-based Fairphone 5
-> smartphone.
-> 
-> These patches only cover a part of the functionality brought up on
-> mainline so far, with the rest needing larger dts and driver changes or
-> depend on patches that are not yet merged. I will work on sending those
-> once these base patches here have settled.
-> 
-> [...]
+On Fri, Sep 22, 2023 at 6:26 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> Since commit ab78029ecc34 ("drivers/pinctrl: grab default handles from
+> device core"), we can rely on device core for setting the default pins.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Applied, thanks!
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[2/7] nvmem: qfprom: Mark core clk as optional
-      commit: 844ac302b2aa81c47a4323fc34a0a454cc749dbc
+> --- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+> +++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+> @@ -6,7 +6,6 @@
+>
+>  #include <linux/backlight.h>
+>  #include <linux/gpio/consumer.h>
+> -#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>
+>  #include <video/display_timing.h>
+> @@ -308,7 +307,6 @@ static int panel_probe(struct platform_device *pdev)
+>         struct backlight_device *backlight;
+>         struct panel_module *panel_mod;
+>         struct tilcdc_module *mod;
+> -       struct pinctrl *pinctrl;
+>         int ret;
+>
+>         /* bail out early if no DT data: */
+> @@ -342,10 +340,6 @@ static int panel_probe(struct platform_device *pdev)
+>
+>         tilcdc_module_init(mod, "panel", &panel_module_ops);
+>
+> -       pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
+> -       if (IS_ERR(pinctrl))
+> -               dev_warn(&pdev->dev, "pins are not configured\n");
+> -
+>         panel_mod->timings = of_get_display_timings(node);
+>         if (!panel_mod->timings) {
+>                 dev_err(&pdev->dev, "could not get panel timings\n");
 
-Best regards,
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
