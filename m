@@ -2,78 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D59BA7AD1DB
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 09:37:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16CB47AD1F4
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 09:43:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231896AbjIYHh7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 03:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35624 "EHLO
+        id S231816AbjIYHnR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 03:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232172AbjIYHh6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 03:37:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B64FCFC;
-        Mon, 25 Sep 2023 00:37:51 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="445296691"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="445296691"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 00:37:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="741836747"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="741836747"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 00:37:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andy@kernel.org>)
-        id 1qkg9q-00000000HTy-3f0F;
-        Mon, 25 Sep 2023 10:37:30 +0300
-Date:   Mon, 25 Sep 2023 10:37:30 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH RFC 0/6] ARM: pxa: GPIO descriptor conversions
-Message-ID: <ZRE4upyghsVEIMU7@smile.fi.intel.com>
-References: <20230924-pxa-gpio-v1-0-2805b87d8894@skole.hr>
+        with ESMTP id S232253AbjIYHnO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 03:43:14 -0400
+Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37BF8E8
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 00:43:08 -0700 (PDT)
+Received: by mail-vs1-xe36.google.com with SMTP id ada2fe7eead31-452c031f7b3so1802961137.0
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 00:43:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695627787; x=1696232587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kqSSfRt2FX1iJgBnNFLYuQcx0Izo1QKFxQpbwmgNxLk=;
+        b=ZeAg6Ywp1qkdnd1zKcQx2etQeb/PPE0/F7vJtTt8Yssa39IxL4csN3q8PevavOy7ek
+         Qnn/roTXPkhAwk91ZERG+q0l6ZUAxi2NbjEmMgqqSdmrHYfAxDlCHUjW2sJdBgJOfC+P
+         wSixGsU4lGm6t25exYUI/2VRM7S6B0WRSYkcs7BmVtI7iAiM6xfJpWqCRmfgPByI0RC/
+         UT/Ik9tVaL5dN8V8j+hjCTcCpXB0VXYEHOagIl/BPhTvMMx88rlENiUrEgyinGX3YSR0
+         Cv4+vzez8fPjFxObCvkAiDPdUY5jT+fAY1k06ApsyyTjvcG9Ni/AeZGIs9ZYNVyXnxEU
+         OQOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695627787; x=1696232587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kqSSfRt2FX1iJgBnNFLYuQcx0Izo1QKFxQpbwmgNxLk=;
+        b=ijRUpdhl5bcNpI7jK7Ln+ZF6mgd3PQpfs66csCuNumj820BY5OSo+30hoMlRskOBTZ
+         sZGP7qLrZ+PFRN55Q8BCsPq8dDVV1MxiWpAdn4+svsvI1XtLxiDydaeFU+G713p2YVog
+         Nr6XdfMV/f/TTDOSu7HJ7t2VD2F9wi1qVJcow+twpxOTZgypfVYrc1uFyyMjE3gUi0us
+         n0rM6PDn2iDRdfillCitn/9im7ZYSw1cHBmtuYjJame9kvvlGFgbjdTr3ESNuN+rbtTv
+         z6+n6f93298gKB1Tyki6CkKdosl47ejOpK2gaMSo3KZnpE27gJmLp2lSuiC41zjHA1CD
+         tv1g==
+X-Gm-Message-State: AOJu0YyqGivizC2Fgbloi1HLVATCN+8rSiekKrCbAloWcG4w3awCR+f6
+        cC2omWW9yw6zIiqIBvqpv4/SL8j+nbgOvk3bVXnIKA==
+X-Google-Smtp-Source: AGHT+IHcByVh1sZSB41P6ROWWyheYWiE63uzqjuBPnfCzpm9MQIkcZT8WWBea8nPFnPgbSK6agxpxLCyYwLxfeakN18=
+X-Received: by 2002:a67:d014:0:b0:450:c5e4:4869 with SMTP id
+ r20-20020a67d014000000b00450c5e44869mr2873248vsi.25.1695627787321; Mon, 25
+ Sep 2023 00:43:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230924-pxa-gpio-v1-0-2805b87d8894@skole.hr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230922175203.work.760-kees@kernel.org>
+In-Reply-To: <20230922175203.work.760-kees@kernel.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 25 Sep 2023 09:42:56 +0200
+Message-ID: <CAMRc=McijWTgX8yvar_J=boHfTPXmJftHnfLENj1XXseKLyL6A@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: cdev: Annotate struct linereq with __counted_by
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 24, 2023 at 06:42:53PM +0200, Duje Mihanović wrote:
-> Hello,
-> 
-> Small series to convert some of the board files in the mach-pxa directory
-> to use the new GPIO descriptor interface.
-> 
-> Most notably, the am200epd, am300epd and Spitz matrix keypad among
-> others are not converted in this series.
+On Fri, Sep 22, 2023 at 7:52=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> Prepare for the coming implementation by GCC and Clang of the __counted_b=
+y
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
+S
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+>
+> As found with Coccinelle[1], add __counted_by for struct linereq.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
+>
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
+ounted_by.cocci
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-Log waited clean up, thank you for doing it!
-My comments are placed per individual patches.
+Applied, thanks!
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
