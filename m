@@ -2,119 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 276E77AD05C
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 08:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54BD27AD0B0
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 08:54:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232118AbjIYGmk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 02:42:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41824 "EHLO
+        id S229720AbjIYGyQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 02:54:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231937AbjIYGmk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 02:42:40 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCBFC6
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Sep 2023 23:42:33 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-7ab30cee473so1229400241.2
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Sep 2023 23:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695624153; x=1696228953; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ltIy1nUyugevmhM0U73zYj6MpNP8ZepvnK+04omwLtg=;
-        b=pq7UEdAsMpxNaGY1Ijj2enmyjlfzl1QSlEsNrmsiYOu4kqrAygymh+lS7sMci2xMM8
-         X2b2mUbbAENcRCjxsiL1r/62sadvACzl64Ige5kM+LXDevkoHUxd7njXshQDaBm75dE3
-         grQdymx3LwcObNCNglbA8VcVOCy+5LQ6SjqmjSThSCDwru/qrvyJui393U5n7PxXTwdH
-         ieTL/PC4MFlifQNXQM+ik4PaE5lt7TzGJugE35OqRN94cpj0aZLXVrx8Y5KXBm0kuEjy
-         EhJW/WhBsLlHP8ZpAAllE5N+1r6XQkjoZVSp7zhl/96r6aNuEfKfwM3//Sz6xkh6N1Oq
-         xB4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695624153; x=1696228953;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ltIy1nUyugevmhM0U73zYj6MpNP8ZepvnK+04omwLtg=;
-        b=k1b49HsbYWU6IHoSP69KpqnsC7c/6nzjNf5U4dz3th2IU9IlqFZovS38raIDwMAuOo
-         mMobPcALPBEf/GrUvhAfUHJ15lQs+RDRPXRo1/9gxFxom7Wmt/FED7ZPqdbvK/E0z4In
-         FdKbFRMlsfsWjRfjkwkHVjXEbI3u+xirTpr9cJCG6vTw78CspCMhSlKTf3YFS4LcWfsv
-         QlEQ7rlGlJuyplX1QcohENdhPZUXewkFNlVhHCGcOMzuiC24OY1DJAItnBn4+Bz8VFTq
-         eMZD2YQ+jEirXnqOjudcGtGhbMzO/yKSO9CuxKEHczneT6yZnXQKPzWkFkKm8ZOXcIpu
-         y0CQ==
-X-Gm-Message-State: AOJu0YylSP5SgyLzb7cGIqN3yU5O/P8wBzWrkpAqpHSPoavk8hcrXm69
-        PTOogdw5uamq58ez6J9uqpckbY0ZKfRrvGiZ4DzLqQ==
-X-Google-Smtp-Source: AGHT+IGRgOm9LU02L4itFyCsCTiWLxKgYFBe9JX85Slqtz7zN5FMCX3u6wyB68zdM7oAz/8JdegT2Mw4SdIvnq3xD0U=
-X-Received: by 2002:a67:fa10:0:b0:452:58f8:71de with SMTP id
- i16-20020a67fa10000000b0045258f871demr2053569vsq.8.1695624152848; Sun, 24 Sep
- 2023 23:42:32 -0700 (PDT)
+        with ESMTP id S232142AbjIYGyO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 02:54:14 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B45FC;
+        Sun, 24 Sep 2023 23:54:08 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="412113817"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="412113817"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 23:54:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="777559513"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="777559513"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2023 23:54:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andy@kernel.org>)
+        id 1qkfTk-00000000Gvy-13tj;
+        Mon, 25 Sep 2023 09:54:00 +0300
+Date:   Mon, 25 Sep 2023 09:53:59 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: cdev: Annotate struct linereq with __counted_by
+Message-ID: <ZREuh1OQR5MBpRmQ@smile.fi.intel.com>
+References: <20230922175203.work.760-kees@kernel.org>
 MIME-Version: 1.0
-References: <20230917085837.6199-1-brgl@bgdev.pl> <20230917085837.6199-3-brgl@bgdev.pl>
-In-Reply-To: <20230917085837.6199-3-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 25 Sep 2023 08:42:22 +0200
-Message-ID: <CAMRc=MfvE+NeYwTTSLvZX-9=iqsMENZWec7WmxcgKDkNEPEn9A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: sim: initialize a managed pointer when
- declaring it
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        akpm@linux-foundation.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230922175203.work.760-kees@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_SOFTFAIL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 17, 2023 at 10:58=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Variables managed with __free() should typically be initialized where
-> they are declared so that the __free() callback is paired with its
-> counterpart resource allocator. Fix the second instance of using
-> __free() in gpio-sim to follow this pattern.
->
-> Fixes: 3faf89f27aab ("gpio: sim: simplify code with cleanup helpers")
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpio-sim.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index 4d74ea3a4269..24c19c7c50a0 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -1481,10 +1481,10 @@ static const struct config_item_type gpio_sim_dev=
-ice_config_group_type =3D {
->  static struct config_group *
->  gpio_sim_config_make_device_group(struct config_group *group, const char=
- *name)
->  {
-> -       struct gpio_sim_device *dev __free(kfree) =3D NULL;
->         int id;
->
-> -       dev =3D kzalloc(sizeof(*dev), GFP_KERNEL);
-> +       struct gpio_sim_device *dev __free(kfree) =3D kzalloc(sizeof(*dev=
-),
-> +                                                           GFP_KERNEL);
->         if (!dev)
->                 return ERR_PTR(-ENOMEM);
->
-> --
-> 2.39.2
->
+On Fri, Sep 22, 2023 at 10:52:03AM -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct linereq.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 
-Queued for v6.7.
+Ah, hadn't taken into account in my patch, so, Bart, feel free to ignore mine
+and apply this one.
 
-Bartosz
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
