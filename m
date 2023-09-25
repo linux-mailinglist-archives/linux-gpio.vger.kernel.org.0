@@ -2,65 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2C457AD256
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 09:52:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D9A17AD31D
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 10:17:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbjIYHwj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 03:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49014 "EHLO
+        id S230250AbjIYIRU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 04:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjIYHwi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 03:52:38 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DBED3;
-        Mon, 25 Sep 2023 00:52:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695628352; x=1727164352;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=R3k1cgOSQuf5VQnqBsn2JYn/UDWAa7+Sl2h6BSrBoL8=;
-  b=iFRlb5qWWqc7LFe75b6UP5zrA5u9lo5Ul7nQHpFUM6Xgr1IhMH5hQ7OS
-   MP+bW+wojOnK1Yuioz3/fmDgxjx94bkPx97tBF/q5/WrZT2Lpw2piZpYP
-   6JnMQxyzaTVJvKa9U4IebXpSFITU394iB3lt1jmHpMy7/vtVUkw2YhaWP
-   C0zr5qTm89bJVQPFxraqbsM8SOHsgICPrgdouFW2YFFOd1PExybm7S0eH
-   NjZyqlN0z+OJCe+1tzXGxkNLwhcT1ewn/YoAar3K/ACDpCkgHa7ZzNWTi
-   cCdYiVZVC7cSQDKcI/8ByXssAiwU3b95peYqozv1DXBHgbhRJJiWJnZIi
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="412123669"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="412123669"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 00:52:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="697902091"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="697902091"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 00:52:30 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qkgOJ-00000000HfP-0zU6;
-        Mon, 25 Sep 2023 10:52:27 +0300
-Date:   Mon, 25 Sep 2023 10:52:26 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.au@gmail.com>
-Subject: Re: [PATCH v3 3/3] pinctrl: mcp23s08: Simplify
- probe()/mcp23s08_spi_regmap_init()
-Message-ID: <ZRE8Oq4Xpklvism9@smile.fi.intel.com>
-References: <20230924172320.15165-1-biju.das.jz@bp.renesas.com>
- <20230924172320.15165-4-biju.das.jz@bp.renesas.com>
+        with ESMTP id S230190AbjIYIRT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 04:17:19 -0400
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F00F10A;
+        Mon, 25 Sep 2023 01:17:10 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3464240005;
+        Mon, 25 Sep 2023 08:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1695629829;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qsV/ySsvuL4jl/ST/3xwKb6vrdgxhf9GcZb1mGcioag=;
+        b=PvDIUho9NL9hEHa76AEtge+NrT0NJ8zlv3WYK5SX/puoarl+p4pDsPlODduEobYhbJGETW
+        9M6Vu9n4UXYwieLWHdxK2Far77OTkn9/ZCmhkN7eMnvsJrB2BpNJ9ax1L5TQj0/qqKQuj3
+        WVKKrUELOOrdbzUkvLS4T3W1LH3xNezBu6gMOnu6pxJNT+TfvTwYIpSbqig0d1yTMzpzVW
+        Tll81bV8zxi9FbcWQXikKgPf1zuLWnihDhyGlYXo7hSOdFlc1JNoBI21ya7JIzQs/DhU/m
+        La2QDXCNSznO5+LNPcscmvJfULG1M3AACyvA3Z066zgdx3Re0fBxgv+2ItpCtg==
+Date:   Mon, 25 Sep 2023 10:17:03 +0200
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 08/30] dt-bindings: soc: fsl: cpm_qe: cpm1-scc-qmc:
+ Add support for QMC HDLC
+Message-ID: <20230925101703.1bf083f1@bootlin.com>
+In-Reply-To: <5efae150-3d92-81b8-5c25-68846d27132e@linaro.org>
+References: <20230922075913.422435-1-herve.codina@bootlin.com>
+        <20230922075913.422435-9-herve.codina@bootlin.com>
+        <5efae150-3d92-81b8-5c25-68846d27132e@linaro.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230924172320.15165-4-biju.das.jz@bp.renesas.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,87 +79,101 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 24, 2023 at 06:23:20PM +0100, Biju Das wrote:
-> Add struct mcp23s08_info and simplify probe()/mcp23s08_spi_regmap_init() by
-> replacing match data 'type' with 'struct mcp23s08_info'.
+Hi Krzysztof,
+
+On Sat, 23 Sep 2023 19:39:49 +0200
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
+
+> On 22/09/2023 09:58, Herve Codina wrote:
+> > The QMC (QUICC mutichannel controller) is a controller present in some
+> > PowerQUICC SoC such as MPC885.
+> > The QMC HDLC uses the QMC controller to transfer HDLC data.
+> > 
+> > Additionally, a framer can be connected to the QMC HDLC.
+> > If present, this framer is the interface between the TDM bus used by the
+> > QMC HDLC and the E1/T1 line.
+> > The QMC HDLC can use this framer to get information about the E1/T1 line
+> > and configure the E1/T1 line.
+> > 
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > ---
+> >  .../soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml      | 24 +++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+> > index 82d9beb48e00..61dfd5ef7407 100644
+> > --- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+> > +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+> > @@ -101,6 +101,27 @@ patternProperties:
+> >            Channel assigned Rx time-slots within the Rx time-slots routed by the
+> >            TSA to this cell.
+> >  
+> > +      compatible:
+> > +        const: fsl,qmc-hdlc  
 > 
-> While at it, replace 'dev_err()'->'dev_err_probe()' and drop printing
-> 'type' in error path for i2c_get_match_data().
+> Why this is not a device/SoC specific compatible?
 
-No need to duplicate info in the name of variables (see below).
-With this fixed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This compatible is present in a QMC channel.
+The parent node (the QMC itself) contains a compatible with device/SoC:
+--- 8< ---
+  compatible:
+    items:
+      - enum:
+          - fsl,mpc885-scc-qmc
+          - fsl,mpc866-scc-qmc
+      - const: fsl,cpm1-scc-qmc
+--- 8< ---
 
-...
+At the child level (ie QMC channel), I am not sure that adding device/SoC
+makes sense. This compatible indicates that the QMC channel is handled by
+the QMC HDLC driver.
+At this level, whatever the device/SoC, we have to be QMC compliant.
 
-> +static const struct mcp23s08_info mcp23s08_i2c_0008 = {
+With these details, do you still think I need to change the child (channel)
+compatible ?
 
-static const struct mcp23s08_info mcp23008_i2c = {
+> 
+> > +
+> > +      fsl,framer:
+> > +        $ref: /schemas/types.yaml#/definitions/phandle
+> > +        description:
+> > +          phandle to the framer node. The framer is in charge of an E1/T1 line
+> > +          interface connected to the TDM bus. It can be used to get the E1/T1 line
+> > +          status such as link up/down.
+> > +
+> > +    allOf:
+> > +      - if:
+> > +          properties:
+> > +            compatible:
+> > +              not:
+> > +                contains:
+> > +                  const: fsl,qmc-hdlc
+> > +        then:
+> > +          properties:
+> > +            fsl,framer: false
+> > +
+> >      required:
+> >        - reg
+> >        - fsl,tx-ts-mask
+> > @@ -159,5 +180,8 @@ examples:
+> >              fsl,operational-mode = "hdlc";
+> >              fsl,tx-ts-mask = <0x00000000 0x0000ff00>;
+> >              fsl,rx-ts-mask = <0x00000000 0x0000ff00>;
+> > +
+> > +            compatible = "fsl,qmc-hdlc";  
+> 
+> compatible is always the first property.
 
-> +	.regmap = &mcp23x08_regmap,
-> +	.label = "mcp23008",
-> +	.type = MCP_TYPE_008,
-> +	.ngpio = 8,
-> +	.reg_shift = 0,
-> +};
-> +
-> +static const struct mcp23s08_info mcp23s08_i2c_0017 = {
+Will be moved to the first property in the next iteration.
 
-static const struct mcp23s08_info mcp23017_i2c = {
+Best regards,
+Hervé
 
-> +	.regmap = &mcp23x17_regmap,
-> +	.label = "mcp23017",
-> +	.type = MCP_TYPE_017,
-> +	.ngpio = 16,
-> +	.reg_shift = 1,
-> +};
-> +
-> +static const struct mcp23s08_info mcp23s08_i2c_0018 = {
-
-static const struct mcp23s08_info mcp23018_i2c = {
-
-> +	.regmap = &mcp23x17_regmap,
-> +	.label = "mcp23018",
-> +	.type = MCP_TYPE_018,
-> +	.ngpio = 16,
-> +	.reg_shift = 1,
-> +};
-
-...
-
-> +static const struct mcp23s08_info mcp23s08_spi_s08 = {
-
-static const struct mcp23s08_info mcp23s08_spi = {
-
-> +	.regmap = &mcp23x08_regmap,
-> +	.type = MCP_TYPE_S08,
-> +	.ngpio = 8,
-> +	.reg_shift = 0,
-> +};
-> +
-> +static const struct mcp23s08_info mcp23s08_spi_s17 = {
-
-static const struct mcp23s08_info mcp23s17_spi = {
-
-> +	.regmap = &mcp23x17_regmap,
-> +	.type = MCP_TYPE_S17,
-> +	.ngpio = 16,
-> +	.reg_shift = 1,
-> +};
-> +
-> +static const struct mcp23s08_info mcp23s08_spi_s18 = {
-
-static const struct mcp23s08_info mcp23s18_spi = {
-
-> +	.regmap = &mcp23x17_regmap,
-> +	.label = "mcp23s18",
-> +	.type = MCP_TYPE_S18,
-> +	.ngpio = 16,
-> +	.reg_shift = 1,
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
+> > +            fsl,framer = <&framer>;
+> >          };
+> >      };  
+> 
+> Best regards,
+> Krzysztof
+> 
