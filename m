@@ -2,100 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16CB47AD1F4
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 09:43:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2C457AD256
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 09:52:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231816AbjIYHnR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 03:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35148 "EHLO
+        id S230063AbjIYHwj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 03:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232253AbjIYHnO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 03:43:14 -0400
-Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37BF8E8
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 00:43:08 -0700 (PDT)
-Received: by mail-vs1-xe36.google.com with SMTP id ada2fe7eead31-452c031f7b3so1802961137.0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 00:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695627787; x=1696232587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kqSSfRt2FX1iJgBnNFLYuQcx0Izo1QKFxQpbwmgNxLk=;
-        b=ZeAg6Ywp1qkdnd1zKcQx2etQeb/PPE0/F7vJtTt8Yssa39IxL4csN3q8PevavOy7ek
-         Qnn/roTXPkhAwk91ZERG+q0l6ZUAxi2NbjEmMgqqSdmrHYfAxDlCHUjW2sJdBgJOfC+P
-         wSixGsU4lGm6t25exYUI/2VRM7S6B0WRSYkcs7BmVtI7iAiM6xfJpWqCRmfgPByI0RC/
-         UT/Ik9tVaL5dN8V8j+hjCTcCpXB0VXYEHOagIl/BPhTvMMx88rlENiUrEgyinGX3YSR0
-         Cv4+vzez8fPjFxObCvkAiDPdUY5jT+fAY1k06ApsyyTjvcG9Ni/AeZGIs9ZYNVyXnxEU
-         OQOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695627787; x=1696232587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kqSSfRt2FX1iJgBnNFLYuQcx0Izo1QKFxQpbwmgNxLk=;
-        b=ijRUpdhl5bcNpI7jK7Ln+ZF6mgd3PQpfs66csCuNumj820BY5OSo+30hoMlRskOBTZ
-         sZGP7qLrZ+PFRN55Q8BCsPq8dDVV1MxiWpAdn4+svsvI1XtLxiDydaeFU+G713p2YVog
-         Nr6XdfMV/f/TTDOSu7HJ7t2VD2F9wi1qVJcow+twpxOTZgypfVYrc1uFyyMjE3gUi0us
-         n0rM6PDn2iDRdfillCitn/9im7ZYSw1cHBmtuYjJame9kvvlGFgbjdTr3ESNuN+rbtTv
-         z6+n6f93298gKB1Tyki6CkKdosl47ejOpK2gaMSo3KZnpE27gJmLp2lSuiC41zjHA1CD
-         tv1g==
-X-Gm-Message-State: AOJu0YyqGivizC2Fgbloi1HLVATCN+8rSiekKrCbAloWcG4w3awCR+f6
-        cC2omWW9yw6zIiqIBvqpv4/SL8j+nbgOvk3bVXnIKA==
-X-Google-Smtp-Source: AGHT+IHcByVh1sZSB41P6ROWWyheYWiE63uzqjuBPnfCzpm9MQIkcZT8WWBea8nPFnPgbSK6agxpxLCyYwLxfeakN18=
-X-Received: by 2002:a67:d014:0:b0:450:c5e4:4869 with SMTP id
- r20-20020a67d014000000b00450c5e44869mr2873248vsi.25.1695627787321; Mon, 25
- Sep 2023 00:43:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230922175203.work.760-kees@kernel.org>
-In-Reply-To: <20230922175203.work.760-kees@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 25 Sep 2023 09:42:56 +0200
-Message-ID: <CAMRc=McijWTgX8yvar_J=boHfTPXmJftHnfLENj1XXseKLyL6A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: cdev: Annotate struct linereq with __counted_by
-To:     Kees Cook <keescook@chromium.org>
+        with ESMTP id S229473AbjIYHwi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 03:52:38 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DBED3;
+        Mon, 25 Sep 2023 00:52:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695628352; x=1727164352;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=R3k1cgOSQuf5VQnqBsn2JYn/UDWAa7+Sl2h6BSrBoL8=;
+  b=iFRlb5qWWqc7LFe75b6UP5zrA5u9lo5Ul7nQHpFUM6Xgr1IhMH5hQ7OS
+   MP+bW+wojOnK1Yuioz3/fmDgxjx94bkPx97tBF/q5/WrZT2Lpw2piZpYP
+   6JnMQxyzaTVJvKa9U4IebXpSFITU394iB3lt1jmHpMy7/vtVUkw2YhaWP
+   C0zr5qTm89bJVQPFxraqbsM8SOHsgICPrgdouFW2YFFOd1PExybm7S0eH
+   NjZyqlN0z+OJCe+1tzXGxkNLwhcT1ewn/YoAar3K/ACDpCkgHa7ZzNWTi
+   cCdYiVZVC7cSQDKcI/8ByXssAiwU3b95peYqozv1DXBHgbhRJJiWJnZIi
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="412123669"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="412123669"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 00:52:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="697902091"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="697902091"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 00:52:30 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qkgOJ-00000000HfP-0zU6;
+        Mon, 25 Sep 2023 10:52:27 +0300
+Date:   Mon, 25 Sep 2023 10:52:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.au@gmail.com>
+Subject: Re: [PATCH v3 3/3] pinctrl: mcp23s08: Simplify
+ probe()/mcp23s08_spi_regmap_init()
+Message-ID: <ZRE8Oq4Xpklvism9@smile.fi.intel.com>
+References: <20230924172320.15165-1-biju.das.jz@bp.renesas.com>
+ <20230924172320.15165-4-biju.das.jz@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230924172320.15165-4-biju.das.jz@bp.renesas.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 22, 2023 at 7:52=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> Prepare for the coming implementation by GCC and Clang of the __counted_b=
-y
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
-S
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
->
-> As found with Coccinelle[1], add __counted_by for struct linereq.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
->
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Andy Shevchenko <andy@kernel.org>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+On Sun, Sep 24, 2023 at 06:23:20PM +0100, Biju Das wrote:
+> Add struct mcp23s08_info and simplify probe()/mcp23s08_spi_regmap_init() by
+> replacing match data 'type' with 'struct mcp23s08_info'.
+> 
+> While at it, replace 'dev_err()'->'dev_err_probe()' and drop printing
+> 'type' in error path for i2c_get_match_data().
 
-Applied, thanks!
+No need to duplicate info in the name of variables (see below).
+With this fixed,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Bart
+...
+
+> +static const struct mcp23s08_info mcp23s08_i2c_0008 = {
+
+static const struct mcp23s08_info mcp23008_i2c = {
+
+> +	.regmap = &mcp23x08_regmap,
+> +	.label = "mcp23008",
+> +	.type = MCP_TYPE_008,
+> +	.ngpio = 8,
+> +	.reg_shift = 0,
+> +};
+> +
+> +static const struct mcp23s08_info mcp23s08_i2c_0017 = {
+
+static const struct mcp23s08_info mcp23017_i2c = {
+
+> +	.regmap = &mcp23x17_regmap,
+> +	.label = "mcp23017",
+> +	.type = MCP_TYPE_017,
+> +	.ngpio = 16,
+> +	.reg_shift = 1,
+> +};
+> +
+> +static const struct mcp23s08_info mcp23s08_i2c_0018 = {
+
+static const struct mcp23s08_info mcp23018_i2c = {
+
+> +	.regmap = &mcp23x17_regmap,
+> +	.label = "mcp23018",
+> +	.type = MCP_TYPE_018,
+> +	.ngpio = 16,
+> +	.reg_shift = 1,
+> +};
+
+...
+
+> +static const struct mcp23s08_info mcp23s08_spi_s08 = {
+
+static const struct mcp23s08_info mcp23s08_spi = {
+
+> +	.regmap = &mcp23x08_regmap,
+> +	.type = MCP_TYPE_S08,
+> +	.ngpio = 8,
+> +	.reg_shift = 0,
+> +};
+> +
+> +static const struct mcp23s08_info mcp23s08_spi_s17 = {
+
+static const struct mcp23s08_info mcp23s17_spi = {
+
+> +	.regmap = &mcp23x17_regmap,
+> +	.type = MCP_TYPE_S17,
+> +	.ngpio = 16,
+> +	.reg_shift = 1,
+> +};
+> +
+> +static const struct mcp23s08_info mcp23s08_spi_s18 = {
+
+static const struct mcp23s08_info mcp23s18_spi = {
+
+> +	.regmap = &mcp23x17_regmap,
+> +	.label = "mcp23s18",
+> +	.type = MCP_TYPE_S18,
+> +	.ngpio = 16,
+> +	.reg_shift = 1,
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
