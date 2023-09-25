@@ -2,121 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 220C07ADC00
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 17:46:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31FB77ADD1D
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 18:30:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230292AbjIYPqN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 11:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58052 "EHLO
+        id S230184AbjIYQbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 12:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230417AbjIYPqM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 11:46:12 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE12B6;
-        Mon, 25 Sep 2023 08:46:06 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-4053c6f0db8so57725925e9.3;
-        Mon, 25 Sep 2023 08:46:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695656764; x=1696261564; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9/CuCsB7lG3PrLf1A3sCZl+ySqyxlyn/r1ko2GPt+iQ=;
-        b=UQ3GGGZ8J4zyR2Tyntaqv/clPTx6NJQ7+nM/rJ0+1n2B4qv8f1uLzZyQzdPYcOH/Ro
-         ykRlAn3kkYYqnGvISSYdJvn07/N0LNawnynVMUN/DB1aSpjVnwgQWpEZS4v8EuTRKpSv
-         1emRT8edQkSkDXlWemNnm3jtdm53A4WEUM4oq4xoUv9y2WCBzjtEcbFvZYr9VTEKAasK
-         ACGqVG0Hf0cRDUwpUbTk8K3y+SSadqOVKnUo1vq5BIA+TzAaqHuiAeV86PmLqLKoFN5D
-         eodCcIRw5w4gXGDkaeCmpfCbjcVkJIsmbIaxa+BUaRRhoHDekFy2md4BMXr9oUgmsJqO
-         pTpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695656764; x=1696261564;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9/CuCsB7lG3PrLf1A3sCZl+ySqyxlyn/r1ko2GPt+iQ=;
-        b=e0ZTiP3oAaVfymM700uBWMR8gByVW3k2wqlINWuQF28uphUtA7E05ckHsXSg3mr5Jz
-         Cz3GAjsjEZ3fNjCuf5V2PNAYDZBl+PW2leR7ajh8HAj35quWtHeinnsfS2xElQg6PS6d
-         Wue4tzs0Eg/42az+MlH1B55KmcxA0ge4wrniFZs7I31SyQI1JNPFfBpWc80neTTvNeQL
-         svc5ZxCYEVhVjRayTyP/SRzUI+3xfcRa+6GAFdSamfgYm6D2VO1qh+KMzoIxdG7kkz4j
-         Onkrqxsko6bChXbdayEOL4N3/HWOaD9PMAF612in7CV86YIr4z1sP5/KhBTwscOk583V
-         TzqA==
-X-Gm-Message-State: AOJu0Yxlyeh9eC1ebm/sJomAS5smuLgL19pec3eHqVbjVpLMt8j9qk4I
-        Q/dIXnXYVhYSHV61KneVdjE=
-X-Google-Smtp-Source: AGHT+IEqH8vnp7oGDLXNvXEzzA8KHjMo2VSGDWnuhLGbauwCA13b7XYuMFX5nIb7A+/w6QlViZl4jQ==
-X-Received: by 2002:a7b:ce92:0:b0:405:3f19:fc49 with SMTP id q18-20020a7bce92000000b004053f19fc49mr5972338wmj.34.1695656764282;
-        Mon, 25 Sep 2023 08:46:04 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2501:c701:47ed:1dba:e442:ccf2])
-        by smtp.gmail.com with ESMTPSA id b1-20020a5d4d81000000b003140f47224csm12097377wru.15.2023.09.25.08.46.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 08:46:03 -0700 (PDT)
-From:   Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3] pinctrl: renesas: pinctrl-rzg2l: Add validation of GPIO pin in rzg2l_gpio_request()
-Date:   Mon, 25 Sep 2023 16:45:48 +0100
-Message-Id: <20230925154548.27048-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229905AbjIYQbB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 12:31:01 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EBF3BE;
+        Mon, 25 Sep 2023 09:30:53 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9D4A7C0007;
+        Mon, 25 Sep 2023 16:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1695659452;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RQ/JBsKhQfvBa0JgvkSbVZg5pomj/M1197UlLRWvkpc=;
+        b=Cnp9yQ8kw8KZx+WPmqR9wTQzYRJBkOQd6iu+uB/RJtKhpcGYZZPJhJ9cywYNQYtoiX9Ztn
+        UlKCdOMHC4jwgQNTKsqeWHDa+z53q9w//AvFJqvUZl9EWhruViK9FmDQ/hBDTlQ/0XEiaS
+        s/vGHvCab+q0zIyW1ss0HhfaMunwrUnN5AXXyPFUmZ5rggImetWY1/W0rfkTb/6v2q0o4l
+        f2rfCARRSMthwfAXNN4F8xJ8SFMmFICbhOE26lkgmmQw9mbZtX6tQ2wP4TOmoW++3TZZCZ
+        7vbz1ecCTvAdF3jMJAiW8rMVElS+GGIz1sLNQOnMzu/8AkJ2bDQeciRnel7rwg==
+Date:   Mon, 25 Sep 2023 18:30:49 +0200
+From:   Luca Ceresoli <luca.ceresoli@bootlin.com>
+To:     Prathamesh Shete <pshete@nvidia.com>
+Cc:     <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <linux-gpio@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] pinctrl: tegra: Add support to display pin function
+Message-ID: <20230925183049.10a40546@booty>
+In-Reply-To: <20230714113547.15384-1-pshete@nvidia.com>
+References: <0cf720bf-ae4b-5780-bda4-5c9bbb2d1d67@nvidia.com>
+        <20230714113547.15384-1-pshete@nvidia.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hello Prathamesh Shete,
 
-Validate the GPIO pin request in rzg2l_gpio_request() callback using
-rzg2l_validate_gpio_pin() function. This stops any accidental usage
-of GPIO pins which are not supported by the SoCs.
+On Fri, 14 Jul 2023 17:05:47 +0530
+Prathamesh Shete <pshete@nvidia.com> wrote:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
-v2->v3
-* Updated pin_data variable to be u32 instead of u64.
+> The current function for a given pin is not displayed via the debugfs.
+> Add support to display the current function that is set for each pin.
+> 
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
-v1->v2
-* Maintained reverse christmas tree order.
-* Included RB/TB tags from Claudiu.
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+While testing a Tegra20-based custom board I found a regression which
+according to my bisecting appears starting with this patch (commit
+d1cd5b51bc91 upstream).
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 37cdfe4b04f9..94984966084d 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -795,12 +795,18 @@ static const struct pinconf_ops rzg2l_pinctrl_confops = {
- static int rzg2l_gpio_request(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct rzg2l_pinctrl *pctrl = gpiochip_get_data(chip);
-+	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[offset];
- 	u32 port = RZG2L_PIN_ID_TO_PORT(offset);
- 	u8 bit = RZG2L_PIN_ID_TO_PIN(offset);
-+	u32 *pin_data = pin->drv_data;
- 	unsigned long flags;
- 	u8 reg8;
- 	int ret;
+The symptom is that i2c3 is not working anymore, the I2C lines being
+always high. No other known issues at the moment.
+
+The board is built around an Avionic Design Tamonten SOM:
+arch/arm/boot/dts/nvidia/tegra20-tamonten.dtsi, which has in the
+&state_default node:
+
+    dtf {
+        nvidia,pins = "dtf";
+        nvidia,function = "i2c3";
+    };
+
+But on top of that the board dts has:
  
-+	ret = rzg2l_validate_gpio_pin(pctrl, *pin_data, port, bit);
-+	if (ret)
-+		return ret;
-+
- 	ret = pinctrl_gpio_request(chip->base + offset);
- 	if (ret)
- 		return ret;
--- 
-2.34.1
+&state_default {
+       dtf {
+               nvidia,pins = "dtf";
+               nvidia,function = "i2c3";
+               nvidia,pull = <TEGRA_PIN_PULL_NONE>;
+               nvidia,tristate = <TEGRA_PIN_DISABLE>;
+       };
+};
 
+> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> index 4547cf66d03b..cb1d67239cd0 100644
+> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+> @@ -96,6 +96,7 @@ static const struct cfg_param {
+>  	{"nvidia,slew-rate-falling",	TEGRA_PINCONF_PARAM_SLEW_RATE_FALLING},
+>  	{"nvidia,slew-rate-rising",	TEGRA_PINCONF_PARAM_SLEW_RATE_RISING},
+>  	{"nvidia,drive-type",		TEGRA_PINCONF_PARAM_DRIVE_TYPE},
+> +	{"nvidia,function",		TEGRA_PINCONF_PARAM_FUNCTION},
+
+FYI, I reduced your patch to only this line plus the one in the
+pinctrl-tegra.h and the problem appears as well.
+
+This is all the info I have at the moment. Can you provide more info on
+what could be going on or how to investigate?
+
+I am available to share more info as needed.
+
+Best regards,
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
