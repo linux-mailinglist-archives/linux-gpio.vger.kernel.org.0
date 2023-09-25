@@ -2,91 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86BC67ADDB9
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 19:17:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 456BC7AE0BF
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 23:27:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232906AbjIYRRk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 13:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52918 "EHLO
+        id S233411AbjIYV1d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 17:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230184AbjIYRRj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 13:17:39 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF2D107
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 10:17:33 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-692c70bc440so2514506b3a.3
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 10:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695662253; x=1696267053; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jh8DqYJ2SwbIqpzzYZaUHPp5PasBm1tKXhMFi2b/M3M=;
-        b=auVOZIDFNAxr9Vgv0qza15dkVmMNPEeW3sab25uiXkrOyMWHtRDypNrAVaeqm/5rfl
-         w5D4DTNUj1s1dRAZfk1REwy7irJXXs6Rx7PQwf+0t2xhaX893VYS55SRj8KOx6JuBGFN
-         dmLLZixHt7ZBWcPhm72lMDb/10XSjQ+XyS3I0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695662253; x=1696267053;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jh8DqYJ2SwbIqpzzYZaUHPp5PasBm1tKXhMFi2b/M3M=;
-        b=PQfwAfFSu7XdonkhSq9oz1I1VrhwVfKbyQhWyCyjIrZOVp9aY4YyQfrwC8EgUg31/s
-         H8491wTndR2AMjsDMljEh1RQJb5+Ljh7AI85r8mjFbZyNcPIW5aIBgXfUhFIz2pPj/bC
-         Nit60IkXaMJ1yxtBMbQflgUkwXFmHlA+jaU73wM0+G0VwXx768FUo5wYJRF8rxTfJhUI
-         TOSaL4e3oxYPsOjB9sUpITO8sJyjO+7za7jW/crcT+9R4evSOYUWu8M+aaHF/8BeitMN
-         KgXyl2JD/B4PaHc8nr+NEQdHgBIFY3MrgDJtBOTjuqlrSn21NpqSLqK7Lm5AfSY/fQAl
-         e3EQ==
-X-Gm-Message-State: AOJu0YxIKF/Pc69spIoPHvd5nxpraunzf9ARGM9s28EX5FJaKAeRTBAa
-        bPE02m7rH002K2EmqZJu+L8qmQ==
-X-Google-Smtp-Source: AGHT+IEthMrGJUlIHLvFMqKnkR1JjLvwrAVSHFpBA55LiKKvZb2xEbera8+CZE1rcTc6k8edakLzyA==
-X-Received: by 2002:a05:6a20:1593:b0:138:92ef:78f9 with SMTP id h19-20020a056a20159300b0013892ef78f9mr6679763pzj.6.1695662253260;
-        Mon, 25 Sep 2023 10:17:33 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n26-20020aa78a5a000000b006889664aa6csm8377453pfa.5.2023.09.25.10.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 10:17:32 -0700 (PDT)
-Date:   Mon, 25 Sep 2023 10:17:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: cdev: Annotate struct linereq with
- __counted_by()
-Message-ID: <202309251016.DEC84A52@keescook>
-References: <20230918091553.1103567-1-andriy.shevchenko@linux.intel.com>
- <ZREuqs2LkkF3jqD8@smile.fi.intel.com>
+        with ESMTP id S233403AbjIYV1c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 17:27:32 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ADEA11F;
+        Mon, 25 Sep 2023 14:27:25 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F28BDC433C8;
+        Mon, 25 Sep 2023 21:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695677245;
+        bh=ttt9MxqlXu8nD2JgUN9u6TOQN+41IkV1ecAtDT3N474=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kYnloxV/57uAVpHewX8XeuFQPLiTF2QIJwR0cP+ubSh+Jx6ve4QYl+vRxwIp1BshC
+         nvlL3Jqc63g61QjTGgGm/6AfydVlM+FMEagcyDPX04Km1rjPfNX9f11AfahfOAyJCu
+         Sf4EtAb5DSS0GSkbtBII0jf3EfkACJf2tv7vhTRZU2XbVdbTclfy8HDeSGCdGhAJr7
+         j4JJP1n2KZtDHbuH5oBJWz+wrl6Y7tN/U0HuyXP5S001xOEvMYkaw/fFPUTcLHaPDd
+         nvM/48XZgpcbSmqU6KpQPj5JkTS1JSpjAKN2XpeHTQSP9RU8RA7ZNfKmD+S8Utl/76
+         K+u3kLdH8dn1A==
+Received: (nullmailer pid 1976042 invoked by uid 1000);
+        Mon, 25 Sep 2023 21:27:19 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc:     Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH] dt-bindings: pinctrl: Add missing additionalProperties on child node schemas
+Date:   Mon, 25 Sep 2023 16:27:10 -0500
+Message-Id: <20230925212713.1975800-1-robh@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZREuqs2LkkF3jqD8@smile.fi.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 25, 2023 at 09:54:34AM +0300, Andy Shevchenko wrote:
-> On Mon, Sep 18, 2023 at 12:15:53PM +0300, Andy Shevchenko wrote:
-> > Prepare for the coming implementation by GCC and Clang of the __counted_by
-> > attribute. Flexible array members annotated with __counted_by can have
-> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family                                         functions).
-> 
-> Kees' patch is better, please ignore this one.
+Just as unevaluatedProperties or additionalProperties are required at
+the top level of schemas, they should (and will) also be required for
+child node schemas. That ensures only documented properties are
+present for any node.
 
-Oh! I didn't get CCed so I didn't know you'd sent this. :)
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,mdm9607-tlmm.yaml         | 3 ++-
+ .../devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml     | 1 +
+ .../devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml     | 1 +
+ .../devicetree/bindings/pinctrl/rockchip,pinctrl.yaml          | 2 ++
+ 4 files changed, 6 insertions(+), 1 deletion(-)
 
-Thanks for taking the initiative on this, though! (But, yes,
-initialization order matters.)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9607-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9607-tlmm.yaml
+index 2aedb7e7bc8b..5ece3b9d676b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9607-tlmm.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9607-tlmm.yaml
+@@ -43,7 +43,8 @@ patternProperties:
+   "-state$":
+     oneOf:
+       - $ref: "#/$defs/qcom-mdm9607-tlmm-state"
+-      - patternProperties:
++      - additionalProperties: false
++        patternProperties:
+           ".*":
+             $ref: "#/$defs/qcom-mdm9607-tlmm-state"
+ 
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+index 145c5442f268..4782f96feb7e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+@@ -73,6 +73,7 @@ properties:
+ additionalProperties:
+   anyOf:
+     - type: object
++      additionalProperties: false
+       allOf:
+         - $ref: pincfg-node.yaml#
+         - $ref: pinmux-node.yaml#
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
+index cb81a17bd0b1..5fa5d31f8866 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzv2m-pinctrl.yaml
+@@ -53,6 +53,7 @@ properties:
+ additionalProperties:
+   anyOf:
+     - type: object
++      additionalProperties: false
+       allOf:
+         - $ref: pincfg-node.yaml#
+         - $ref: pinmux-node.yaml#
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+index 10c335efe619..20e806dce1ec 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+@@ -115,6 +115,8 @@ additionalProperties:
+   type: object
+   additionalProperties:
+     type: object
++    additionalProperties: false
++
+     properties:
+       rockchip,pins:
+         $ref: /schemas/types.yaml#/definitions/uint32-matrix
 -- 
-Kees Cook
+2.40.1
+
