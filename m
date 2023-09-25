@@ -2,119 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31FB77ADD1D
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 18:30:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86BC67ADDB9
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 19:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230184AbjIYQbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 12:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
+        id S232906AbjIYRRk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 13:17:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229905AbjIYQbB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 12:31:01 -0400
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EBF3BE;
-        Mon, 25 Sep 2023 09:30:53 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9D4A7C0007;
-        Mon, 25 Sep 2023 16:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1695659452;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RQ/JBsKhQfvBa0JgvkSbVZg5pomj/M1197UlLRWvkpc=;
-        b=Cnp9yQ8kw8KZx+WPmqR9wTQzYRJBkOQd6iu+uB/RJtKhpcGYZZPJhJ9cywYNQYtoiX9Ztn
-        UlKCdOMHC4jwgQNTKsqeWHDa+z53q9w//AvFJqvUZl9EWhruViK9FmDQ/hBDTlQ/0XEiaS
-        s/vGHvCab+q0zIyW1ss0HhfaMunwrUnN5AXXyPFUmZ5rggImetWY1/W0rfkTb/6v2q0o4l
-        f2rfCARRSMthwfAXNN4F8xJ8SFMmFICbhOE26lkgmmQw9mbZtX6tQ2wP4TOmoW++3TZZCZ
-        7vbz1ecCTvAdF3jMJAiW8rMVElS+GGIz1sLNQOnMzu/8AkJ2bDQeciRnel7rwg==
-Date:   Mon, 25 Sep 2023 18:30:49 +0200
-From:   Luca Ceresoli <luca.ceresoli@bootlin.com>
-To:     Prathamesh Shete <pshete@nvidia.com>
-Cc:     <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <linux-gpio@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] pinctrl: tegra: Add support to display pin function
-Message-ID: <20230925183049.10a40546@booty>
-In-Reply-To: <20230714113547.15384-1-pshete@nvidia.com>
-References: <0cf720bf-ae4b-5780-bda4-5c9bbb2d1d67@nvidia.com>
-        <20230714113547.15384-1-pshete@nvidia.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S230184AbjIYRRj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 13:17:39 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF2D107
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 10:17:33 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-692c70bc440so2514506b3a.3
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 10:17:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1695662253; x=1696267053; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jh8DqYJ2SwbIqpzzYZaUHPp5PasBm1tKXhMFi2b/M3M=;
+        b=auVOZIDFNAxr9Vgv0qza15dkVmMNPEeW3sab25uiXkrOyMWHtRDypNrAVaeqm/5rfl
+         w5D4DTNUj1s1dRAZfk1REwy7irJXXs6Rx7PQwf+0t2xhaX893VYS55SRj8KOx6JuBGFN
+         dmLLZixHt7ZBWcPhm72lMDb/10XSjQ+XyS3I0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695662253; x=1696267053;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jh8DqYJ2SwbIqpzzYZaUHPp5PasBm1tKXhMFi2b/M3M=;
+        b=PQfwAfFSu7XdonkhSq9oz1I1VrhwVfKbyQhWyCyjIrZOVp9aY4YyQfrwC8EgUg31/s
+         H8491wTndR2AMjsDMljEh1RQJb5+Ljh7AI85r8mjFbZyNcPIW5aIBgXfUhFIz2pPj/bC
+         Nit60IkXaMJ1yxtBMbQflgUkwXFmHlA+jaU73wM0+G0VwXx768FUo5wYJRF8rxTfJhUI
+         TOSaL4e3oxYPsOjB9sUpITO8sJyjO+7za7jW/crcT+9R4evSOYUWu8M+aaHF/8BeitMN
+         KgXyl2JD/B4PaHc8nr+NEQdHgBIFY3MrgDJtBOTjuqlrSn21NpqSLqK7Lm5AfSY/fQAl
+         e3EQ==
+X-Gm-Message-State: AOJu0YxIKF/Pc69spIoPHvd5nxpraunzf9ARGM9s28EX5FJaKAeRTBAa
+        bPE02m7rH002K2EmqZJu+L8qmQ==
+X-Google-Smtp-Source: AGHT+IEthMrGJUlIHLvFMqKnkR1JjLvwrAVSHFpBA55LiKKvZb2xEbera8+CZE1rcTc6k8edakLzyA==
+X-Received: by 2002:a05:6a20:1593:b0:138:92ef:78f9 with SMTP id h19-20020a056a20159300b0013892ef78f9mr6679763pzj.6.1695662253260;
+        Mon, 25 Sep 2023 10:17:33 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id n26-20020aa78a5a000000b006889664aa6csm8377453pfa.5.2023.09.25.10.17.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Sep 2023 10:17:32 -0700 (PDT)
+Date:   Mon, 25 Sep 2023 10:17:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: cdev: Annotate struct linereq with
+ __counted_by()
+Message-ID: <202309251016.DEC84A52@keescook>
+References: <20230918091553.1103567-1-andriy.shevchenko@linux.intel.com>
+ <ZREuqs2LkkF3jqD8@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZREuqs2LkkF3jqD8@smile.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Prathamesh Shete,
-
-On Fri, 14 Jul 2023 17:05:47 +0530
-Prathamesh Shete <pshete@nvidia.com> wrote:
-
-> The current function for a given pin is not displayed via the debugfs.
-> Add support to display the current function that is set for each pin.
+On Mon, Sep 25, 2023 at 09:54:34AM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 18, 2023 at 12:15:53PM +0300, Andy Shevchenko wrote:
+> > Prepare for the coming implementation by GCC and Clang of the __counted_by
+> > attribute. Flexible array members annotated with __counted_by can have
+> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family                                         functions).
 > 
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> Kees' patch is better, please ignore this one.
 
-While testing a Tegra20-based custom board I found a regression which
-according to my bisecting appears starting with this patch (commit
-d1cd5b51bc91 upstream).
+Oh! I didn't get CCed so I didn't know you'd sent this. :)
 
-The symptom is that i2c3 is not working anymore, the I2C lines being
-always high. No other known issues at the moment.
-
-The board is built around an Avionic Design Tamonten SOM:
-arch/arm/boot/dts/nvidia/tegra20-tamonten.dtsi, which has in the
-&state_default node:
-
-    dtf {
-        nvidia,pins = "dtf";
-        nvidia,function = "i2c3";
-    };
-
-But on top of that the board dts has:
- 
-&state_default {
-       dtf {
-               nvidia,pins = "dtf";
-               nvidia,function = "i2c3";
-               nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-               nvidia,tristate = <TEGRA_PIN_DISABLE>;
-       };
-};
-
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> index 4547cf66d03b..cb1d67239cd0 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> @@ -96,6 +96,7 @@ static const struct cfg_param {
->  	{"nvidia,slew-rate-falling",	TEGRA_PINCONF_PARAM_SLEW_RATE_FALLING},
->  	{"nvidia,slew-rate-rising",	TEGRA_PINCONF_PARAM_SLEW_RATE_RISING},
->  	{"nvidia,drive-type",		TEGRA_PINCONF_PARAM_DRIVE_TYPE},
-> +	{"nvidia,function",		TEGRA_PINCONF_PARAM_FUNCTION},
-
-FYI, I reduced your patch to only this line plus the one in the
-pinctrl-tegra.h and the problem appears as well.
-
-This is all the info I have at the moment. Can you provide more info on
-what could be going on or how to investigate?
-
-I am available to share more info as needed.
-
-Best regards,
-Luca
+Thanks for taking the initiative on this, though! (But, yes,
+initialization order matters.)
 
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Kees Cook
