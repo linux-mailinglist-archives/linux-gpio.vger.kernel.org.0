@@ -2,191 +2,232 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FE0E7AD5F7
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 12:30:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B56527AD648
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 12:44:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231888AbjIYKaS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 06:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36550 "EHLO
+        id S232288AbjIYKos (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 06:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232377AbjIYKaN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 06:30:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DFA1BB
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 03:30:02 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="380093961"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="380093961"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 03:30:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="724943166"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="724943166"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 03:29:56 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andy@kernel.org>)
-        id 1qkiqe-00000000JnZ-1xTn;
-        Mon, 25 Sep 2023 13:29:52 +0300
-Date:   Mon, 25 Sep 2023 13:29:52 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] platform: cznic: turris-omnia-mcu: Add support
- for MCU connected GPIOs
-Message-ID: <ZRFhILlFx3J1Yxy/@smile.fi.intel.com>
-References: <20230919103815.16818-1-kabel@kernel.org>
- <20230919103815.16818-4-kabel@kernel.org>
- <ZQmbd211FzPjA97r@smile.fi.intel.com>
- <20230920190818.50b2018b@dellmb>
- <ZQwS/DXBt/kyyU5r@smile.fi.intel.com>
- <20230921222453.4b3bdb4c@thinkpad>
- <ZQ2iULDcH6kdk7cJ@smile.fi.intel.com>
- <20230925120356.52bcd639@dellmb>
+        with ESMTP id S229735AbjIYKor (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 06:44:47 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF61ABE
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 03:44:40 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so7099010a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 03:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695638679; x=1696243479; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YPKwu29nswr19PRfxmThaRgCyfVAPPnrF03AJDF6RVE=;
+        b=KcqjVq0Zh71W300PkvOivm6pkpQGfgR10H3cywkmXHv4wb+rmTH1AhG9os5MCD2nJQ
+         CZ5QNCqyVvGqbxOIO7CaDhWUms9FI5mf+RM99TW4/uxmWCwMNgU0pruoBn3mm4nn81oC
+         ZNFmGW7ZE3Oq41NHUIjG+y9PkYnhJjoIovHWXViUHU+HjvlJ9kL1g+5mQXWYa2Lz5L+s
+         Jho+wiM4mYZzMBgRks+tF5WWcfjoEr0o1AxMQl+TLIgQEDroKMb3fJ6XGhl9FyaczDdN
+         xb7blOSpHRSME6ctzjkUvl701gRcSrBuVSQ0/vnZyVz5vl1NACRnYjvphV52vK+XVyQD
+         5n+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695638679; x=1696243479;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YPKwu29nswr19PRfxmThaRgCyfVAPPnrF03AJDF6RVE=;
+        b=kF7Y/2SSh/lvP3XZmO1i+O/eSmK4xWhom4Y9kzixyVMSxLphz1KWSdMnOGVM0lgFHF
+         8FIN5l9hDk+rgubmbRWYzqXgUq8y8l/cgTRs60k49xGdTofzp+35Y6RxHUHfauJv0yDQ
+         QJvCK0VN3MY9k6MhQosOxljRU/QvQJgOHbvyHP8vc0UZwwK0DlPUtFGBPXFynME+PzsX
+         mpS8peqMUAwgqFTNVRNBsry3lMDNNK2UhRkSKdSkdRojU10tfW58eB7bcygOFOxthdnn
+         TjF0IcJ6gkc6+hhQf3we64ChGx2Yo6iwKM7Bj340XYOmabVIzdR/6Y9iXcM9SekBS6CQ
+         82JQ==
+X-Gm-Message-State: AOJu0YxuXijtmHdrSHphMKyK+6jky9gJxJYpX85JO+beWhweQgPTvFo2
+        u2G6FU2C52OCk5wRp0C1vebuhg==
+X-Google-Smtp-Source: AGHT+IFdMo5I5c373VJKI1Qiq+6RT/IKdTELM18C3QX5YTHa873Vh8IoMEaubO6qaZj1vsmpa+IZ6Q==
+X-Received: by 2002:a05:6402:b5b:b0:533:d1cd:62c5 with SMTP id bx27-20020a0564020b5b00b00533d1cd62c5mr3976542edb.17.1695638679365;
+        Mon, 25 Sep 2023 03:44:39 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.100])
+        by smtp.gmail.com with ESMTPSA id l14-20020aa7cace000000b0053331f9094dsm5356947edt.52.2023.09.25.03.44.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Sep 2023 03:44:38 -0700 (PDT)
+Message-ID: <e02ebde7-f208-40a4-bb10-aa5962ee9864@linaro.org>
+Date:   Mon, 25 Sep 2023 12:44:35 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230925120356.52bcd639@dellmb>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 08/30] dt-bindings: soc: fsl: cpm_qe: cpm1-scc-qmc: Add
+ support for QMC HDLC
+Content-Language: en-US
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20230922075913.422435-1-herve.codina@bootlin.com>
+ <20230922075913.422435-9-herve.codina@bootlin.com>
+ <5efae150-3d92-81b8-5c25-68846d27132e@linaro.org>
+ <20230925101703.1bf083f1@bootlin.com>
+ <5b804a1a-6bfd-429d-ad84-696b7ecef72d@linaro.org>
+ <20230925122758.43963736@bootlin.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20230925122758.43963736@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 25, 2023 at 12:03:56PM +0200, Marek Behún wrote:
-> On Fri, 22 Sep 2023 17:18:56 +0300
-> Andy Shevchenko <andy@kernel.org> wrote:
-> > On Thu, Sep 21, 2023 at 10:25:01PM +0200, Marek Behún wrote:
-> > > On Thu, 21 Sep 2023 12:55:08 +0300
-> > > Andy Shevchenko <andy@kernel.org> wrote:  
-
-...
-
-> > > > > > > +	rising = reply[0] | (reply[2] << 8) | (reply[4] << 16) |
-> > > > > > > +		 (reply[6] << 24);
-> > > > > > > +	falling = reply[1] | (reply[3] << 8) | (reply[5] << 16) |
-> > > > > > > +		  (reply[7] << 24);      
-> > > > > > 
-> > > > > > With a help of two masks, you can access to the both edges as to
-> > > > > >   64-bit value and simplify the code.    
-> > > > > 
-> > > > > Huh? As in
-> > > > >   rising = reply & 0x00ff00ff00ff00ff;
-> > > > >   falling = reply & 0xff00ff00ff00ff00;
-> > > > > ?
-> > > > > But then I can't or the rising bit with the corresponding falling bit
-> > > > > to get pending...
-> > > > > Or I guess i can with:
-> > > > >   pending = rising & (pending >> 8);
-> > > > > 
-> > > > > Am I understanding you correctly?
-> > > > > 
-> > > > > But then I would need to store the mask in driver data as a 64-bit
-> > > > > value with half the data not used. Also the CPU is 32-bit.    
-> > > > 
-> > > > If you use proper bitmaps, perhaps this will be easier. You can use one for
-> > > > each and merge them whenever you want (with bitmap_or() call) or split (with
-> > > > bitmap_and() respectively):
-> > > > 
-> > > > 	bitmap_or(full, raising, failing); // merge
-> > > > 	bitmap_and(raising, full, rasing_mask); // split  
-> > > 
-> > > Hmm. But then what? I or the result and use it as pending interrupt
-> > > bitmap, to be iterated over. The indexes of the bits correspond to the
-> > > constants in the MCU API.
-> > > 
-> > > So after your suggestion I have rising and falling containgin
-> > >   rising = 00rr00rr00rr00rr; /* r means rising bits */
-> > >   falling = 00ff00ff00ff00ff; /* f means falling bits */
-> > >   pending = rising | falling;
-> > > which means:
-> > >   pending = pp00pp00pp00pp; /* p means pending bits */
-> > > But these bit positions do not correspond to the interrupt number
-> > > anymore.
-> > > 
-> > > I still think the de-interleaving of the buffer from
-> > >   rr ff rr ff rr ff rr ff
-> > > into two words:
-> > >   rising = rrrrrrrr;
-> > >   falling = ffffffff;
-> > > is simpler...  
-> > 
-> > There are two sides of this: OS and hardware. See Xilinx GPIO driver how it's
-> > made there. But before going that way, check on
-> > https://lore.kernel.org/all/ZOMmuZuhdjA6mdIG@smile.fi.intel.com/
-> > That APIs you would need I am pretty sure.
+On 25/09/2023 12:27, Herve Codina wrote:
+> On Mon, 25 Sep 2023 10:21:15 +0200
+> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 > 
-> Andy, thank you for patience in reviewing this.
+>> On 25/09/2023 10:17, Herve Codina wrote:
+>>> Hi Krzysztof,
+>>>
+>>> On Sat, 23 Sep 2023 19:39:49 +0200
+>>> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
+>>>   
+>>>> On 22/09/2023 09:58, Herve Codina wrote:  
+>>>>> The QMC (QUICC mutichannel controller) is a controller present in some
+>>>>> PowerQUICC SoC such as MPC885.
+>>>>> The QMC HDLC uses the QMC controller to transfer HDLC data.
+>>>>>
+>>>>> Additionally, a framer can be connected to the QMC HDLC.
+>>>>> If present, this framer is the interface between the TDM bus used by the
+>>>>> QMC HDLC and the E1/T1 line.
+>>>>> The QMC HDLC can use this framer to get information about the E1/T1 line
+>>>>> and configure the E1/T1 line.
+>>>>>
+>>>>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+>>>>> ---
+>>>>>  .../soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml      | 24 +++++++++++++++++++
+>>>>>  1 file changed, 24 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+>>>>> index 82d9beb48e00..61dfd5ef7407 100644
+>>>>> --- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
+>>>>> @@ -101,6 +101,27 @@ patternProperties:
+>>>>>            Channel assigned Rx time-slots within the Rx time-slots routed by the
+>>>>>            TSA to this cell.
+>>>>>  
+>>>>> +      compatible:
+>>>>> +        const: fsl,qmc-hdlc    
+>>>>
+>>>> Why this is not a device/SoC specific compatible?  
+>>>
+>>> This compatible is present in a QMC channel.
+>>> The parent node (the QMC itself) contains a compatible with device/SoC:
+>>> --- 8< ---
+>>>   compatible:
+>>>     items:
+>>>       - enum:
+>>>           - fsl,mpc885-scc-qmc
+>>>           - fsl,mpc866-scc-qmc
+>>>       - const: fsl,cpm1-scc-qmc
+>>> --- 8< ---
+>>>
+>>> At the child level (ie QMC channel), I am not sure that adding device/SoC
+>>> makes sense. This compatible indicates that the QMC channel is handled by
+>>> the QMC HDLC driver.
+>>> At this level, whatever the device/SoC, we have to be QMC compliant.
+>>>
+>>> With these details, do you still think I need to change the child (channel)
+>>> compatible ?  
+>>
+>> From OS point of view, you have a driver binding to this child-level
+>> compatible. How do you enforce Linux driver binding based on parent
+>> compatible? I looked at your next patch and I did not see it.
 > 
-> Hmm. I like the names, scatter and gather. In the firmware, I used
-> interleave and deinterleave, see
->   https://gitlab.nic.cz/turris/hw/omnia_hw_ctrl/-/blob/master/src/drivers/i2c_iface.c#L360
+> We do not need to have the child driver binding based on parent.
+
+Exactly, that's what I said.
+
+> We have to ensure that the child handles a QMC channel and the parent provides
+> a QMC channel.
 > 
-> But those functions work bit-wise. I realize that the I2C transfers in
-> the driver are so slow that such bit-wise cycling over a bitmap won't
-> matter much, but I still find my original proposal more simple and
-> straight-forward. But I will cave if you insist. Please let me know
-> (and can I then send your local patch in the series?)
+> A QMC controller (parent) has to implement the QMC API (include/soc/fsl/qe/qmc.h)
+> and a QMC channel driver (child) has to use the QMC API.
 
-You can. but I need to add test cases there.
+How does this solve my concerns? Sorry, I do not understand. Your driver
+is a platform driver and binds to the generic compatible. How do you
+solve regular compatibility issues (need for quirks) if parent
+compatible is not used?
 
-Yes, I think the best is to have hardware values and Linux cached ones
-to be separated. Let me try my best and send it out this week.
+How does being QMC compliant affects driver binding and
+compatibility/quirks?
 
-...
+We are back to my original question and I don't think you answered to
+any of the concerns.
 
-> > > > > > > +	if (!(mcu->features & FEAT_NEW_INT_API))
-> > > > > > > +
-> > > > > > >   cancel_delayed_work_sync(&mcu->button_release_emul_work); +
-> > > > > > > +	mutex_destroy(&mcu->lock);      
-> > > > > > 
-> > > > > > Wrong order?    
-> > > > > 
-> > > > > No, the mutex may be used in the work. Can't destroy it first. Or am I
-> > > > > misunderstanding something?    
-> > > > 
-> > > > I mean you are using a lot of devm(), can mutex be used in IRQ or whatever
-> > > > that can be triggered after this call?  
-> > > 
-> > > OK, I think I need to free the irq before canceling the work. Thank you!  
-> > 
-> > Can you rather switch everything to be devm managed?
-> 
-> There are no devm_ calls for mutex and work initialization. Are you
-> suggesting that I should write a release function for the gpio
-> sub-driver? Something like
-> 
-> static void omnia_gpiochip_release(dev, res)
-> {
->   cancel_work();
->   mutex_destroy();
-> }
-
-Not together, but
-- for mutex use devm_add_action_or_reset() as done in many other drivers
-  for the same reason;
-- for the work we have devm_work_autocancel()
-  (you need to include devm-helpers.h)
-
-> int omnia_mcu_register_gpiochip(mcu)
-> {
->   ...
->   x = devres_alloc(omnia_gpiochip_release);
->   devres_add(dev, x);
->   ...
-> }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
