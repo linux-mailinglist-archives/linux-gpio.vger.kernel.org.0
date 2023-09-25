@@ -2,119 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 719C77AD832
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 14:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4430E7AD8B5
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 15:15:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbjIYMoc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 08:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37888 "EHLO
+        id S230260AbjIYNPm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 09:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbjIYMob (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 08:44:31 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35DB7C0;
-        Mon, 25 Sep 2023 05:44:22 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c5faa2af60so5986285ad.0;
-        Mon, 25 Sep 2023 05:44:22 -0700 (PDT)
+        with ESMTP id S229712AbjIYNPl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 09:15:41 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD3A107
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 06:15:35 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-579de633419so76631857b3.3
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 06:15:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695645862; x=1696250662; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XklYb7b/fLQgyz+S2t23QEReui9hdouB34jEJfTniU0=;
-        b=QbVzMu/ly343z1PvfMK0kJcaO9yczZezvy7ueWXqgVgHK9nIlHNCmdIrNzqgTwmnm2
-         QQ1iAFrGngOMvm199DfAbFyeiW022J3IzNtFBVCjDJiq1a8JayEIeqNkLPP26c1ytzu1
-         nQr+rJCZkaN/e9/AoIwi+UsQfNeQhSrUWjiCtXEK3WboG0+wMJSdqiV+2p9CJLjewBdK
-         w7mLWEqLsITIL+ASk1lWl2yzZ8m5+S8U64221KwIn4Xv+jBZ435kZqP/v5jFLOlzpHVn
-         lIOcrMbcqMF8EUHJJ0AdBo1R745koOuD5WpqYyx9g5OtsP25JBPruplxqRyclTAUzH/5
-         iuuA==
+        d=linaro.org; s=google; t=1695647734; x=1696252534; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lcC37wQSlviDQDGelF47pyhsR+4+hM7dLjLOaaG5IJ4=;
+        b=EUhE/s81IoIPg2TR2lWYyyI5w8Ojtk1otKRoqmEkBz4PqL0qzpndxZjBd2ogi18+vX
+         GBgTpUIzej92wvYhWx5abPeSSzbZwsOWwSnCWD4KPGvL/NI2cqSxK34tZbhWMLUGvZQn
+         bZhQEOgS7jKpVzqHJpKF5bV9hOFIhwiSoeDFMJmiEAzGEgNTBmwffBIhXMYbumT2SGqa
+         RILjM2JNPpmTTayHs/5zKCgh2T1JXegnbp0TpMEUqy74GbBrYyqy5MbO5hTrUnnOwvD9
+         U0YXBuU4rYwf7jp6U86p+1vAaeHOdaLUEcfEiWcyJ0Zy9GnWyK3veyyfTSqR/RpTct/2
+         6faw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695645862; x=1696250662;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XklYb7b/fLQgyz+S2t23QEReui9hdouB34jEJfTniU0=;
-        b=JwTvlSTDmWttPb6npBhYmRPRSqY6sq9U4RWWjC9xEeeDkKX4H7+9hlvorwUix2FvZB
-         Zmd+IPM3zqh+nKY1ihmiUE/gUBvJRtf3E94MbQWTexrE0BhEOfKL4x9eglVoRo+pcW6E
-         JpUMMMkaOScwlAoGILcyHLLHr3TeTDg46luiM060czpz8tWK/7iYaY1lGdcIKOUTQ3Xs
-         1mcM11nEOB88WywcQLlbH05H+R4nOwdHzhsa1IZ6CyumbCS/cM0oRIKRClcn9bBaXMDt
-         3iqksX6Z6nQzLTcucWinED2QgCpVbljFpgjg6Ti0DLzccF+83ISrsZoMU+NOFGRmZ/DB
-         414Q==
-X-Gm-Message-State: AOJu0Yx8HEeyEZl+VmBtCHE9fYofnCrQ71VGLpCUhE8qmSoPvAS73WDc
-        8r3ckJ0fAUKTxv/pv7U9MyjJd55yWCU=
-X-Google-Smtp-Source: AGHT+IEsrd7RGAyPg8fa6eFSJDr3viGzrEuyU2t+5fNy5ncqm9c8K7crVD5JXS2IRP64YNiscFyyoQ==
-X-Received: by 2002:a17:903:110d:b0:1c5:cd01:d846 with SMTP id n13-20020a170903110d00b001c5cd01d846mr8624351plh.3.1695645861535;
-        Mon, 25 Sep 2023 05:44:21 -0700 (PDT)
-Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:fbad:220b:bad3:838c])
-        by smtp.gmail.com with ESMTPSA id iw15-20020a170903044f00b001c5d09e9437sm8816539plb.25.2023.09.25.05.44.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 05:44:21 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     brgl@bgdev.pl, andy@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@denx.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3] dt-bindings: gpio: fsl-imx-gpio: Document imx25 and imx27
-Date:   Mon, 25 Sep 2023 09:44:02 -0300
-Message-Id: <20230925124402.937649-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1695647734; x=1696252534;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lcC37wQSlviDQDGelF47pyhsR+4+hM7dLjLOaaG5IJ4=;
+        b=eunH0TIwbnhOnSrtY/MMA0d5hfrWVm9AhWEmSMQAaOKJ1UpMI+J+eeGyu3ZymQj1Zj
+         d6od3mspzHQaLIx5ZUNHOJxYt7kdHNDXFivDJpxiiI8Yl3UYmSq7k9QUtW5gEazdrFaP
+         845Cbp9mxVLB3c8jC41lsEZhgComIh3QkEIlNaqCjmkk1qSZ4zV4EhSV6GrOSkye3v3q
+         e1FhT2qt9qwN7Xjck2f1gTRfQU8+563y7EN135JFPR3zt8mfi2oEU4PLl7aI1iJVSXKl
+         rL+eadOI6ix+BjAM1jZLlJ1dXuWCXphr0DlVXBMD/bRIRc63NS8pOWrmYYe/P4cc55w9
+         SwDg==
+X-Gm-Message-State: AOJu0YyKnrnbQW1gkDWEc7f2j6vbAQZZHBKp90B0ZhVIAzW+oVOPzpyj
+        e3SLRGwJAxsxlzfxbKxbSY4OX2MePFVXf9yGHcumN3tt7fIDgPHR
+X-Google-Smtp-Source: AGHT+IGItYvswC2u29u8Avn3i2K5RB+tU2XzlzVbCIQUyAgfXNs59SBMHMovhmBPOhzKl7FIGgTIlg3vauP/2uAKAhU=
+X-Received: by 2002:a05:690c:23c1:b0:59f:4c75:1314 with SMTP id
+ do1-20020a05690c23c100b0059f4c751314mr5692718ywb.4.1695647734133; Mon, 25 Sep
+ 2023 06:15:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230920103332.274151-1-joe_wang@aspeedtech.com>
+In-Reply-To: <20230920103332.274151-1-joe_wang@aspeedtech.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 Sep 2023 15:15:22 +0200
+Message-ID: <CACRpkdaZb+V-Zx_Uw9MCqRqE+N-0gd__xEFV3BTpkG7icU9W+A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-aspeed-g6: Add more settings for USB2AHP function
+To:     Joe Wang <joe_wang@aspeedtech.com>
+Cc:     andrew@aj.id.au, joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Fabio Estevam <festevam@denx.de>
+On Wed, Sep 20, 2023 at 12:33=E2=80=AFPM Joe Wang <joe_wang@aspeedtech.com>=
+ wrote:
 
-fsl,imx25-gpio and fsl,imx27-gpio are not documented, causing schema
-warnings.
+> AST2600 USB2AHP (USB PortA: PCIe EHCI to PHY) function needs to set the
+> register SCUC20[16]. Set it to enable the PCIe EHCI device on PCIe bus.
+> Besides, also add USB2AHP signal expressions into pin declarations.
+>
+> Signed-off-by: Joe Wang <joe_wang@aspeedtech.com>
 
-fsl,imx25-gpio is compatible with fsl,imx35-gpio and fsl,imx27-gpio
-is compatible with fsl,imx21-gpio.
+Patch applied!
 
-Document them accordingly.
-
-Signed-off-by: Fabio Estevam <festevam@denx.de>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Changes since v2:
-- Place the 'fsl,imx21-gpio' fallback prior to 'fsl,imx31-gpio'. (Krzysztof)
-
-Changes since v1:
-- Sorted by fallback compatible. (Krzysztof)
-
- Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-index d0ca2af89f1e..918776d16ef3 100644
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-@@ -18,9 +18,17 @@ properties:
-           - fsl,imx31-gpio
-           - fsl,imx35-gpio
-           - fsl,imx7d-gpio
-+      - items:
-+          - enum:
-+              - fsl,imx27-gpio
-+          - const: fsl,imx21-gpio
-       - items:
-           - const: fsl,imx35-gpio
-           - const: fsl,imx31-gpio
-+      - items:
-+          - enum:
-+              - fsl,imx25-gpio
-+          - const: fsl,imx35-gpio
-       - items:
-           - enum:
-               - fsl,imx50-gpio
--- 
-2.34.1
-
+Yours,
+Linus Walleij
