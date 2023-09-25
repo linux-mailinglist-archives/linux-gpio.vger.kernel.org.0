@@ -2,156 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0D147AD5DA
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 12:28:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FE0E7AD5F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Sep 2023 12:30:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230467AbjIYK2O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 06:28:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59746 "EHLO
+        id S231888AbjIYKaS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 06:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbjIYK2O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 06:28:14 -0400
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679DF8E;
-        Mon, 25 Sep 2023 03:28:06 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0A3201C0002;
-        Mon, 25 Sep 2023 10:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1695637685;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CtO8T+sDShN7p7U0G6qKR0fuN42cZzhkfeW3eGEM+Oc=;
-        b=LVvprKIVChYwTJzlxBd2ZNYXBHm9J7hWY1K7wpTo7zgvqzqBZGISmFtj5OfIFjje66P6S6
-        HlEwH3l0nVjpj8nD5vuMQ04HpzK0kR9ZM/U4jh0pWSEMRb4F5bMp+1A6JeZwWYC3nZTpNn
-        /U6LnsAPSh0QZnEt3y0Lr0BoJp0UQrIcws9zjf3FD4NOdCmt44AIAujr+TSxw3+AlvXtxH
-        hfW+hGSVKZ+Hawd0vhvwNMVNosgsJYz2ky2HPFjrWkgsQ6PX7giQJvvsZAQmr4u96kgbX/
-        2NKS6FPh8EB5P2zy/eURoCGbCNJb1KY9NL1nF8B1faIJpM3bP2F6JtT1GYIe7w==
-Date:   Mon, 25 Sep 2023 12:27:58 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        with ESMTP id S232377AbjIYKaN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 06:30:13 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DFA1BB
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 03:30:02 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="380093961"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="380093961"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 03:30:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="724943166"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="724943166"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 03:29:56 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andy@kernel.org>)
+        id 1qkiqe-00000000JnZ-1xTn;
+        Mon, 25 Sep 2023 13:29:52 +0300
+Date:   Mon, 25 Sep 2023 13:29:52 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>, soc@kernel.org, arm@kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        Simon Horman <horms@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 08/30] dt-bindings: soc: fsl: cpm_qe: cpm1-scc-qmc:
- Add support for QMC HDLC
-Message-ID: <20230925122758.43963736@bootlin.com>
-In-Reply-To: <5b804a1a-6bfd-429d-ad84-696b7ecef72d@linaro.org>
-References: <20230922075913.422435-1-herve.codina@bootlin.com>
-        <20230922075913.422435-9-herve.codina@bootlin.com>
-        <5efae150-3d92-81b8-5c25-68846d27132e@linaro.org>
-        <20230925101703.1bf083f1@bootlin.com>
-        <5b804a1a-6bfd-429d-ad84-696b7ecef72d@linaro.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] platform: cznic: turris-omnia-mcu: Add support
+ for MCU connected GPIOs
+Message-ID: <ZRFhILlFx3J1Yxy/@smile.fi.intel.com>
+References: <20230919103815.16818-1-kabel@kernel.org>
+ <20230919103815.16818-4-kabel@kernel.org>
+ <ZQmbd211FzPjA97r@smile.fi.intel.com>
+ <20230920190818.50b2018b@dellmb>
+ <ZQwS/DXBt/kyyU5r@smile.fi.intel.com>
+ <20230921222453.4b3bdb4c@thinkpad>
+ <ZQ2iULDcH6kdk7cJ@smile.fi.intel.com>
+ <20230925120356.52bcd639@dellmb>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230925120356.52bcd639@dellmb>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 25 Sep 2023 10:21:15 +0200
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
+On Mon, Sep 25, 2023 at 12:03:56PM +0200, Marek Behún wrote:
+> On Fri, 22 Sep 2023 17:18:56 +0300
+> Andy Shevchenko <andy@kernel.org> wrote:
+> > On Thu, Sep 21, 2023 at 10:25:01PM +0200, Marek Behún wrote:
+> > > On Thu, 21 Sep 2023 12:55:08 +0300
+> > > Andy Shevchenko <andy@kernel.org> wrote:  
 
-> On 25/09/2023 10:17, Herve Codina wrote:
-> > Hi Krzysztof,
+...
+
+> > > > > > > +	rising = reply[0] | (reply[2] << 8) | (reply[4] << 16) |
+> > > > > > > +		 (reply[6] << 24);
+> > > > > > > +	falling = reply[1] | (reply[3] << 8) | (reply[5] << 16) |
+> > > > > > > +		  (reply[7] << 24);      
+> > > > > > 
+> > > > > > With a help of two masks, you can access to the both edges as to
+> > > > > >   64-bit value and simplify the code.    
+> > > > > 
+> > > > > Huh? As in
+> > > > >   rising = reply & 0x00ff00ff00ff00ff;
+> > > > >   falling = reply & 0xff00ff00ff00ff00;
+> > > > > ?
+> > > > > But then I can't or the rising bit with the corresponding falling bit
+> > > > > to get pending...
+> > > > > Or I guess i can with:
+> > > > >   pending = rising & (pending >> 8);
+> > > > > 
+> > > > > Am I understanding you correctly?
+> > > > > 
+> > > > > But then I would need to store the mask in driver data as a 64-bit
+> > > > > value with half the data not used. Also the CPU is 32-bit.    
+> > > > 
+> > > > If you use proper bitmaps, perhaps this will be easier. You can use one for
+> > > > each and merge them whenever you want (with bitmap_or() call) or split (with
+> > > > bitmap_and() respectively):
+> > > > 
+> > > > 	bitmap_or(full, raising, failing); // merge
+> > > > 	bitmap_and(raising, full, rasing_mask); // split  
+> > > 
+> > > Hmm. But then what? I or the result and use it as pending interrupt
+> > > bitmap, to be iterated over. The indexes of the bits correspond to the
+> > > constants in the MCU API.
+> > > 
+> > > So after your suggestion I have rising and falling containgin
+> > >   rising = 00rr00rr00rr00rr; /* r means rising bits */
+> > >   falling = 00ff00ff00ff00ff; /* f means falling bits */
+> > >   pending = rising | falling;
+> > > which means:
+> > >   pending = pp00pp00pp00pp; /* p means pending bits */
+> > > But these bit positions do not correspond to the interrupt number
+> > > anymore.
+> > > 
+> > > I still think the de-interleaving of the buffer from
+> > >   rr ff rr ff rr ff rr ff
+> > > into two words:
+> > >   rising = rrrrrrrr;
+> > >   falling = ffffffff;
+> > > is simpler...  
 > > 
-> > On Sat, 23 Sep 2023 19:39:49 +0200
-> > Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
-> >   
-> >> On 22/09/2023 09:58, Herve Codina wrote:  
-> >>> The QMC (QUICC mutichannel controller) is a controller present in some
-> >>> PowerQUICC SoC such as MPC885.
-> >>> The QMC HDLC uses the QMC controller to transfer HDLC data.
-> >>>
-> >>> Additionally, a framer can be connected to the QMC HDLC.
-> >>> If present, this framer is the interface between the TDM bus used by the
-> >>> QMC HDLC and the E1/T1 line.
-> >>> The QMC HDLC can use this framer to get information about the E1/T1 line
-> >>> and configure the E1/T1 line.
-> >>>
-> >>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> >>> ---
-> >>>  .../soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml      | 24 +++++++++++++++++++
-> >>>  1 file changed, 24 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
-> >>> index 82d9beb48e00..61dfd5ef7407 100644
-> >>> --- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
-> >>> +++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
-> >>> @@ -101,6 +101,27 @@ patternProperties:
-> >>>            Channel assigned Rx time-slots within the Rx time-slots routed by the
-> >>>            TSA to this cell.
-> >>>  
-> >>> +      compatible:
-> >>> +        const: fsl,qmc-hdlc    
-> >>
-> >> Why this is not a device/SoC specific compatible?  
-> > 
-> > This compatible is present in a QMC channel.
-> > The parent node (the QMC itself) contains a compatible with device/SoC:
-> > --- 8< ---
-> >   compatible:
-> >     items:
-> >       - enum:
-> >           - fsl,mpc885-scc-qmc
-> >           - fsl,mpc866-scc-qmc
-> >       - const: fsl,cpm1-scc-qmc
-> > --- 8< ---
-> > 
-> > At the child level (ie QMC channel), I am not sure that adding device/SoC
-> > makes sense. This compatible indicates that the QMC channel is handled by
-> > the QMC HDLC driver.
-> > At this level, whatever the device/SoC, we have to be QMC compliant.
-> > 
-> > With these details, do you still think I need to change the child (channel)
-> > compatible ?  
+> > There are two sides of this: OS and hardware. See Xilinx GPIO driver how it's
+> > made there. But before going that way, check on
+> > https://lore.kernel.org/all/ZOMmuZuhdjA6mdIG@smile.fi.intel.com/
+> > That APIs you would need I am pretty sure.
 > 
-> From OS point of view, you have a driver binding to this child-level
-> compatible. How do you enforce Linux driver binding based on parent
-> compatible? I looked at your next patch and I did not see it.
-
-We do not need to have the child driver binding based on parent.
-We have to ensure that the child handles a QMC channel and the parent provides
-a QMC channel.
-
-A QMC controller (parent) has to implement the QMC API (include/soc/fsl/qe/qmc.h)
-and a QMC channel driver (child) has to use the QMC API.
-
-Best regards,
-HervÃ©
-
+> Andy, thank you for patience in reviewing this.
 > 
-> Best regards,
-> Krzysztof
+> Hmm. I like the names, scatter and gather. In the firmware, I used
+> interleave and deinterleave, see
+>   https://gitlab.nic.cz/turris/hw/omnia_hw_ctrl/-/blob/master/src/drivers/i2c_iface.c#L360
 > 
+> But those functions work bit-wise. I realize that the I2C transfers in
+> the driver are so slow that such bit-wise cycling over a bitmap won't
+> matter much, but I still find my original proposal more simple and
+> straight-forward. But I will cave if you insist. Please let me know
+> (and can I then send your local patch in the series?)
+
+You can. but I need to add test cases there.
+
+Yes, I think the best is to have hardware values and Linux cached ones
+to be separated. Let me try my best and send it out this week.
+
+...
+
+> > > > > > > +	if (!(mcu->features & FEAT_NEW_INT_API))
+> > > > > > > +
+> > > > > > >   cancel_delayed_work_sync(&mcu->button_release_emul_work); +
+> > > > > > > +	mutex_destroy(&mcu->lock);      
+> > > > > > 
+> > > > > > Wrong order?    
+> > > > > 
+> > > > > No, the mutex may be used in the work. Can't destroy it first. Or am I
+> > > > > misunderstanding something?    
+> > > > 
+> > > > I mean you are using a lot of devm(), can mutex be used in IRQ or whatever
+> > > > that can be triggered after this call?  
+> > > 
+> > > OK, I think I need to free the irq before canceling the work. Thank you!  
+> > 
+> > Can you rather switch everything to be devm managed?
+> 
+> There are no devm_ calls for mutex and work initialization. Are you
+> suggesting that I should write a release function for the gpio
+> sub-driver? Something like
+> 
+> static void omnia_gpiochip_release(dev, res)
+> {
+>   cancel_work();
+>   mutex_destroy();
+> }
+
+Not together, but
+- for mutex use devm_add_action_or_reset() as done in many other drivers
+  for the same reason;
+- for the work we have devm_work_autocancel()
+  (you need to include devm-helpers.h)
+
+> int omnia_mcu_register_gpiochip(mcu)
+> {
+>   ...
+>   x = devres_alloc(omnia_gpiochip_release);
+>   devres_add(dev, x);
+>   ...
+> }
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
