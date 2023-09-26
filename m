@@ -2,214 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 958EB7AE4F3
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 07:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCA847AE649
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 08:55:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233043AbjIZFUk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 01:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        id S231250AbjIZGzg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 02:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232239AbjIZFUg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 01:20:36 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 279EEF2;
-        Mon, 25 Sep 2023 22:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695705629; x=1727241629;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2HOZ+oim+zNWe8lFVHeNEs80ZdHaUduFZXUMLCdW3No=;
-  b=bqkT8gDq5l9vXOhCHEgLdaTSreExf3hLjWetfKuF5mDvlLkMjzhjBDvg
-   AIMYx2wJJMbAk2JE/8R2pey70Yl3Fgtq90qDT8Su8ov8f/CaGJuSVgxPT
-   810FWwAgcTLuQnr6P0MBwIHQKfhqfO8EFKuHPSz5cEfKLDCub1TbrMsti
-   eg6EknMbrt5BE4zHo745ZXI+t0du5YUZBREMECiDeNlOOssrCM28jd4xp
-   +3b7F+2RRrXUiV4Kkr+7EucffQXyrewKB2POEPrOnn9gQvK9mg3Croqz6
-   hbom/b3fvi+0NgoR+Dh0grVl2zfLYNnRmikv5uw9gNB2kSRZygzYvMp0x
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="360865705"
-X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
-   d="scan'208";a="360865705"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 22:20:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="748689685"
-X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
-   d="scan'208";a="748689685"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 25 Sep 2023 22:20:24 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 162DB133D; Tue, 26 Sep 2023 08:20:19 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Michal Simek <michal.simek@amd.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v1 5/5] gpiolib: cdev: Utilize more bitmap APIs
-Date:   Tue, 26 Sep 2023 08:20:07 +0300
-Message-Id: <20230926052007.3917389-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-In-Reply-To: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
-References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230488AbjIZGzf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 02:55:35 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD83116
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 23:55:27 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-59f7f46b326so41192437b3.0
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 23:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695711327; x=1696316127; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eHSkNGK03t5d9rG+f10qQXua3Wp3jtHQqzKshE119FY=;
+        b=mypcl9B6J1Cs0PkTManL/as8PTIqMef9XvLWO6qrachl1UJwrEOOmiDcTEgdmWBsPm
+         GU/y2uYvgxYhT8uIzrrKDCYp/I7vDpdh+8IxJP3e7nTVYv9thPH/xqvBCHY0kS57VUzA
+         nkzu/kCi1EwnWBUY1pZ8BxEb9RhFzJt91g7QdfsTlrj4quIPIEIcC0jYnGNXjO3fbeB7
+         HzbK94muvO7LOREahc6LuH7E8RSKvtufn1zxPi2uqJdFhL/ulRWkcC2BbQKBxdykxu47
+         evSIAm/pcAdas0xnhIgsoK/M0WmekrUTMfh0N+zYNTuTNMSM8GyuWlYwf1d2ju7Iswie
+         9tJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695711327; x=1696316127;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eHSkNGK03t5d9rG+f10qQXua3Wp3jtHQqzKshE119FY=;
+        b=FK9aDaQnIX3Ld+l3ucfrQhp0iDFtDnXBzR+9QdX2LPcGQ9tIND4Tz8+F6S8MvCRVjf
+         GEF/iif2m7FHA++NkzREZQjRe6aaPgXbzQQ/20PwOtC6OgoWegsQbI04Q/KcOJdyjxGC
+         +UUubCnmE7NPVf5tG/a8IWVSDdveHNS+7DC5CjAOb7HAr8p2i2Gee5HqTiZ1XFphPFop
+         IgYl96+a3G5lii5AiHq5r5+KF93gxuT19edSFuDc1oaYCjVodFvBgb5DGiD5oNRWe5GR
+         mc47HJIkJcKzzz58rgQKJsERv1Q4Cl//fuL7t9O6BVeIf/xuFw4WkQ0HRNn1cTk1zxKN
+         cJQQ==
+X-Gm-Message-State: AOJu0YzRej2s06sEFF+GoZGUkwZZNVyrZOTxGMtqVlYhpWuP6TzHD32p
+        c94Gj4ys7DzSZ9URMJiOCT0V95bCRUgLd3HQRroONQ==
+X-Google-Smtp-Source: AGHT+IHoO7TBziPA5htbsuH2VXUX9yGcO/aIOtLwPZZVCJAErZgDwgIkJ3nSHIbU3VSV/WI7WX5/gfB00KELiu+FW9A=
+X-Received: by 2002:a81:4f92:0:b0:592:60e9:97cf with SMTP id
+ d140-20020a814f92000000b0059260e997cfmr8225904ywb.12.1695711326765; Mon, 25
+ Sep 2023 23:55:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230925212713.1975800-1-robh@kernel.org>
+In-Reply-To: <20230925212713.1975800-1-robh@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 26 Sep 2023 08:55:09 +0200
+Message-ID: <CACRpkdYSvgUsuMS+-=LXmCtH0bLF=EMguuvWwZ7VjUfnx+uyaQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Add missing additionalProperties on
+ child node schemas
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently we have a few bitmap calls that are open coded in the library
-module. Let's convert them to use generic bitmap APIs instead.
+On Mon, Sep 25, 2023 at 11:27=E2=80=AFPM Rob Herring <robh@kernel.org> wrot=
+e:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-cdev.c | 79 +++++++++++++++++--------------------
- 1 file changed, 36 insertions(+), 43 deletions(-)
+> Just as unevaluatedProperties or additionalProperties are required at
+> the top level of schemas, they should (and will) also be required for
+> child node schemas. That ensures only documented properties are
+> present for any node.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index e39d344feb28..a5bbbd44531f 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1263,35 +1263,32 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
- {
- 	struct gpio_v2_line_values lv;
- 	DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-+	DECLARE_BITMAP(mask, GPIO_V2_LINES_MAX);
-+	DECLARE_BITMAP(bits, GPIO_V2_LINES_MAX);
- 	struct gpio_desc **descs;
- 	unsigned int i, didx, num_get;
--	bool val;
- 	int ret;
- 
- 	/* NOTE: It's ok to read values of output lines. */
- 	if (copy_from_user(&lv, ip, sizeof(lv)))
- 		return -EFAULT;
- 
--	for (num_get = 0, i = 0; i < lr->num_lines; i++) {
--		if (lv.mask & BIT_ULL(i)) {
--			num_get++;
--			descs = &lr->lines[i].desc;
--		}
--	}
-+	bitmap_from_arr64(mask, &lv.mask, GPIO_V2_LINES_MAX);
- 
-+	num_get = bitmap_weight(mask, lr->num_lines);
- 	if (num_get == 0)
- 		return -EINVAL;
- 
--	if (num_get != 1) {
-+	if (num_get == 1) {
-+		descs = &lr->lines[find_first_bit(mask, lr->num_lines)].desc;
-+	} else {
- 		descs = kmalloc_array(num_get, sizeof(*descs), GFP_KERNEL);
- 		if (!descs)
- 			return -ENOMEM;
--		for (didx = 0, i = 0; i < lr->num_lines; i++) {
--			if (lv.mask & BIT_ULL(i)) {
--				descs[didx] = lr->lines[i].desc;
--				didx++;
--			}
--		}
-+
-+		didx = 0;
-+		for_each_set_bit(i, mask, lr->num_lines)
-+			descs[didx++] = lr->lines[i].desc;
- 	}
- 	ret = gpiod_get_array_value_complex(false, true, num_get,
- 					    descs, NULL, vals);
-@@ -1301,19 +1298,15 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
- 	if (ret)
- 		return ret;
- 
--	lv.bits = 0;
--	for (didx = 0, i = 0; i < lr->num_lines; i++) {
--		if (lv.mask & BIT_ULL(i)) {
--			if (lr->lines[i].sw_debounced)
--				val = debounced_value(&lr->lines[i]);
--			else
--				val = test_bit(didx, vals);
--			if (val)
--				lv.bits |= BIT_ULL(i);
--			didx++;
--		}
-+	bitmap_scatter(bits, vals, mask, lr->num_lines);
-+
-+	for_each_set_bit(i, mask, lr->num_lines) {
-+		if (lr->lines[i].sw_debounced)
-+			__assign_bit(i, bits, debounced_value(&lr->lines[i]));
- 	}
- 
-+	bitmap_to_arr64(&lv.bits, bits, GPIO_V2_LINES_MAX);
-+
- 	if (copy_to_user(ip, &lv, sizeof(lv)))
- 		return -EFAULT;
- 
-@@ -1324,35 +1317,35 @@ static long linereq_set_values_unlocked(struct linereq *lr,
- 					struct gpio_v2_line_values *lv)
- {
- 	DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
-+	DECLARE_BITMAP(mask, GPIO_V2_LINES_MAX);
-+	DECLARE_BITMAP(bits, GPIO_V2_LINES_MAX);
- 	struct gpio_desc **descs;
- 	unsigned int i, didx, num_set;
- 	int ret;
- 
--	bitmap_zero(vals, GPIO_V2_LINES_MAX);
--	for (num_set = 0, i = 0; i < lr->num_lines; i++) {
--		if (lv->mask & BIT_ULL(i)) {
--			if (!test_bit(FLAG_IS_OUT, &lr->lines[i].desc->flags))
--				return -EPERM;
--			if (lv->bits & BIT_ULL(i))
--				__set_bit(num_set, vals);
--			num_set++;
--			descs = &lr->lines[i].desc;
--		}
--	}
-+	bitmap_from_arr64(mask, &lv->mask, GPIO_V2_LINES_MAX);
-+	bitmap_from_arr64(bits, &lv->bits, GPIO_V2_LINES_MAX);
-+
-+	num_set = bitmap_gather(vals, bits, mask, lr->num_lines);
- 	if (num_set == 0)
- 		return -EINVAL;
- 
--	if (num_set != 1) {
-+	for_each_set_bit(i, mask, lr->num_lines) {
-+		if (!test_bit(FLAG_IS_OUT, &lr->lines[i].desc->flags))
-+			return -EPERM;
-+	}
-+
-+	if (num_set == 1) {
-+		descs = &lr->lines[find_first_bit(mask, lr->num_lines)].desc;
-+	} else {
- 		/* build compacted desc array and values */
- 		descs = kmalloc_array(num_set, sizeof(*descs), GFP_KERNEL);
- 		if (!descs)
- 			return -ENOMEM;
--		for (didx = 0, i = 0; i < lr->num_lines; i++) {
--			if (lv->mask & BIT_ULL(i)) {
--				descs[didx] = lr->lines[i].desc;
--				didx++;
--			}
--		}
-+
-+		didx = 0;
-+		for_each_set_bit(i, mask, lr->num_lines)
-+			descs[didx++] = lr->lines[i].desc;
- 	}
- 	ret = gpiod_set_array_value_complex(false, true, num_set,
- 					    descs, NULL, vals);
--- 
-2.40.0.1.gaa8946217a0b
+Patch applied!
 
+Yours,
+Linus Walleij
