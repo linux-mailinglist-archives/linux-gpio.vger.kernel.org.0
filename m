@@ -2,60 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B287AEA64
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 12:29:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02AA67AEA79
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 12:35:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234382AbjIZK32 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 06:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36262 "EHLO
+        id S229845AbjIZKf4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 06:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234368AbjIZK31 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 06:29:27 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96526FB;
-        Tue, 26 Sep 2023 03:29:20 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-690b7cb71aeso6251990b3a.0;
-        Tue, 26 Sep 2023 03:29:20 -0700 (PDT)
+        with ESMTP id S229445AbjIZKfz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 06:35:55 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CB8BF;
+        Tue, 26 Sep 2023 03:35:49 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6907e44665bso7434152b3a.1;
+        Tue, 26 Sep 2023 03:35:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695724160; x=1696328960; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qonb/48NxgSMrYoPiUlqmSZTRy7YmQA9LcOLKLZ8KWY=;
-        b=eyXBqnBSkZyMv5NPK6XFVn/U+ly2Zy8Rjxok5C9KWaN25tDrIUpNNnWDWfzCvwB//6
-         d9iXkIi3Ta501ToDZo5/hTuVOHfkPyTzQNJG1j0XOHJI3Bso+5zXOmC72reNyXD2PHrw
-         9JAVeO1Tlh+NWVSs+EOqq6kz2wHtS2cuNDHP0vnJgSvH9sHz5FSCwicNTD+Ukx3KtTnF
-         Avi7Zr6dqPATtg43531BAjRO5AjPF/9QTF9DIr0lHQIpjEYnJ74kQZ8DTeoCA7b9vkDh
-         3kwcXiEyyvdB8X4YJLr8DS3fr5WqD1rBG2lv6hvIbr3FQD+bRb+SgRH8NB9TuWD0fMg5
-         b4pQ==
+        d=gmail.com; s=20230601; t=1695724549; x=1696329349; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JI22u4oFcSIyGcZiwVeeO4sm05tqY+QDbtPIh5RQo1w=;
+        b=Ta95eXlBEe8uw1ZXLKbttCxboZ7Z64pposu2U2lP7kZAUWePPV9rF+HLpezhVEVAwH
+         sddxCpWLi5XO8Jua08takSmakpQhqXTuXZBXi/yTyRFrgsMaIedi2uc38C1DY+i2Qeuz
+         0QxU+L5YHIPDLZ0WGfAxBjQDSDUU96toM6hUKjUk73p/SHUod+5CN3q0ckzKS3W9kzKz
+         4dwTeiPLtMX+Lpyr/uZ54CXeUcRtxy+wEswVFKPq/JaZqP5LieD4SGaxeBdH28M6L1En
+         ntDYeBNu75IdsloukPn84TZJzvMfrfaBaTV34gfVwWHl99L1gvxGwh1E7BpczT5XyzaG
+         NPaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695724160; x=1696328960;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qonb/48NxgSMrYoPiUlqmSZTRy7YmQA9LcOLKLZ8KWY=;
-        b=nI7JtKni6CJaB75z3NSQgkDf7ASli+X1vy53kohoomXPDRSlue51dc5eRAUTOTD9yA
-         QbVerkHNefa3PjON0oFExBwg3lpRhZrTvnjG5c0YMqsDefQ9+jiHddgVPJpXqwq+Q3XG
-         wr08dQobxTkj7mqHtHb47PzuDudH0gDgKnXZ+ZbXYpPiAEbI9j4Emp7V3hpw+ZD9TeC2
-         bhkQxv5qvtPwR1iekwuoVpXT1maWtHEbioh2H4a948IBIHuI/Ff6v9ocCNcyWfKGpGXB
-         dHRc0to7FZ7fpc81mIMuiuxUFCpeTEQWQSOd5qXvjlYHi8R4TjUmBfi44K9jrUioYgns
-         7+/A==
-X-Gm-Message-State: AOJu0YyaOSBrfs2eSOIf9d5rKpTCpKmEdnV7YUHvqF5fGnV9TtvNj1x+
-        8SStSXGGxLdmjNe05ToXStw=
-X-Google-Smtp-Source: AGHT+IHXy98IULbI9MEELFASDJhU2Ctpv78t0HJ0G6bCOilqE3OS5LasbnvVvrJmltc3mePrXdm5lA==
-X-Received: by 2002:a05:6a00:2e9f:b0:692:6417:728a with SMTP id fd31-20020a056a002e9f00b006926417728amr3627838pfb.14.1695724159838;
-        Tue, 26 Sep 2023 03:29:19 -0700 (PDT)
-Received: from 377044c6c369.cse.ust.hk (191host097.mobilenet.cse.ust.hk. [143.89.191.97])
-        by smtp.gmail.com with ESMTPSA id m18-20020aa78a12000000b0068a2d78890csm9612667pfa.68.2023.09.26.03.29.17
+        d=1e100.net; s=20230601; t=1695724549; x=1696329349;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JI22u4oFcSIyGcZiwVeeO4sm05tqY+QDbtPIh5RQo1w=;
+        b=wXDjvDn74zOx7EfOULiZH1RqV/VDtSdp5UMTQBS5f8rPEY//TpS5CfgZ5z+J3aqWKI
+         6LMJcw/yzStSd9ufjUs3DsPhjvZcwjhirtG7HLNGn3BUyqYJNPLBRXPQDAdq0AXlLWWW
+         e7WHCNuyu4reksBuI6Rr6hYODDCSSzrSQ/IPwB4MVTLcPAKArnGOVbY1j+NyOkKPPTJM
+         bvNnUe500EMjjgLqwXal3L+NhdmcxRfoByLoMuLn5xQewgv4OBZnUXvDK+qO5wDDZ5K8
+         IZZetE3TX8lFJH+kReczo4GcF0h30RuCtVexNphb03KmYMWXLGGylHRsi/GEqmE5y6Ef
+         zAvQ==
+X-Gm-Message-State: AOJu0Yx54JI7AtVIeW/w41girBqT9QmEz1Sh6g/Un7/QNULfS8sk3qyu
+        LrTcnD59eDiSgjBcv4lOJKw=
+X-Google-Smtp-Source: AGHT+IHPgxQLC3Tuaq5fkXY5EnNUthvz5JnG4AAGGsD5gZCBIyiEtOP5iIEm+MeIHUqJYXsXLl7SMg==
+X-Received: by 2002:a05:6a00:a22:b0:691:21:d9b7 with SMTP id p34-20020a056a000a2200b006910021d9b7mr10322863pfh.27.1695724548760;
+        Tue, 26 Sep 2023 03:35:48 -0700 (PDT)
+Received: from sol (14-201-140-18.tpgi.com.au. [14.201.140.18])
+        by smtp.gmail.com with ESMTPSA id q18-20020a638c52000000b0058264a3c942sm3792389pgn.69.2023.09.26.03.35.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Sep 2023 03:29:19 -0700 (PDT)
-From:   Chengfeng Ye <dg573847474@gmail.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
-        alex@shruggie.ro, aboutphysycs@gmail.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chengfeng Ye <dg573847474@gmail.com>
-Subject: [PATCH] gpio: timberdale: Fix potential deadlock on &tgpio->lock
-Date:   Tue, 26 Sep 2023 10:29:14 +0000
-Message-Id: <20230926102914.6145-1-dg573847474@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 26 Sep 2023 03:35:48 -0700 (PDT)
+Date:   Tue, 26 Sep 2023 18:35:40 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+        Srinivas Neeli <srinivas.neeli@amd.com>,
+        Michal Simek <michal.simek@amd.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Subject: Re: [PATCH v1 1/5] lib/test_bitmap: Excape space symbols when
+ printing input string
+Message-ID: <ZRKz/G8y397MmVoc@sol>
+References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
+ <20230926052007.3917389-2-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230926052007.3917389-2-andriy.shevchenko@linux.intel.com>
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
@@ -66,55 +81,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-As timbgpio_irq_enable()/timbgpio_irq_disable() callback could be
-executed under irq context, it could introduce double locks on
-&tgpio->lock if it preempts other execution units requiring
-the same locks.
+On Tue, Sep 26, 2023 at 08:20:03AM +0300, Andy Shevchenko wrote:
+> test_bitmap_printlist() prints the input string which contains
+> a new line character. Instead of stripping it, escape that kind
+> of characters, so developer will see the actual input string
 
-timbgpio_gpio_set()
---> timbgpio_update_bit()
---> spin_lock(&tgpio->lock)
-<interrupt>
-   --> timbgpio_irq_disable()
-   --> spin_lock_irqsave(&tgpio->lock)
+Grammar nit:
 
-This flaw was found by an experimental static analysis tool I am
-developing for irq-related deadlock.
+"that kind of characters" -> "those kinds of characters" or "that kind
+of character" or "such characters" or ...
 
-To prevent the potential deadlock, the patch uses spin_lock_irqsave()
-on &tgpio->lock inside timbgpio_gpio_set() to prevent the possible
-deadlock scenario.
+> that has been used. Without this change the new line splits
+> the string to two, and the first one is not guaranteed to be
+> followed by the first part immediatelly.
 
-Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
----
- drivers/gpio/gpio-timberdale.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+immediately
 
-diff --git a/drivers/gpio/gpio-timberdale.c b/drivers/gpio/gpio-timberdale.c
-index bbd9e9191199..fad979797486 100644
---- a/drivers/gpio/gpio-timberdale.c
-+++ b/drivers/gpio/gpio-timberdale.c
-@@ -43,9 +43,10 @@ static int timbgpio_update_bit(struct gpio_chip *gpio, unsigned index,
- 	unsigned offset, bool enabled)
- {
- 	struct timbgpio *tgpio = gpiochip_get_data(gpio);
-+	unsigned long flags;
- 	u32 reg;
- 
--	spin_lock(&tgpio->lock);
-+	spin_lock_irqsave(&tgpio->lock, flags);
- 	reg = ioread32(tgpio->membase + offset);
- 
- 	if (enabled)
-@@ -54,7 +55,7 @@ static int timbgpio_update_bit(struct gpio_chip *gpio, unsigned index,
- 		reg &= ~(1 << index);
- 
- 	iowrite32(reg, tgpio->membase + offset);
--	spin_unlock(&tgpio->lock);
-+	spin_unlock_irqrestore(&tgpio->lock, flags);
- 
- 	return 0;
- }
--- 
-2.17.1
+And the second "first" should be "second"??
 
+"the second part is not guaranteed to immediately follow the first" is
+clearer (and hopefully what you mean), IMHO.
+
+Cheers,
+Kent.
+
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  lib/test_bitmap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+> index f2ea9f30c7c5..1f2dc7fef17f 100644
+> --- a/lib/test_bitmap.c
+> +++ b/lib/test_bitmap.c
+> @@ -523,7 +523,7 @@ static void __init test_bitmap_printlist(void)
+>  		goto out;
+>  	}
+>  
+> -	pr_err("bitmap_print_to_pagebuf: input is '%s', Time: %llu\n", buf, time);
+> +	pr_err("bitmap_print_to_pagebuf: input is '%*pEs', Time: %llu\n", ret, buf, time);
+>  out:
+>  	kfree(buf);
+>  	kfree(bmap);
+> -- 
+> 2.40.0.1.gaa8946217a0b
+> 
