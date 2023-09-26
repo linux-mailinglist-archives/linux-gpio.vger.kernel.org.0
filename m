@@ -2,156 +2,297 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 905587AEA9B
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 12:41:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D28957AEAF3
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 12:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234417AbjIZKlP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 06:41:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
+        id S234502AbjIZK67 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 06:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234398AbjIZKlP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 06:41:15 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F61EE5;
-        Tue, 26 Sep 2023 03:41:08 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1c3cbfa40d6so74347845ad.1;
-        Tue, 26 Sep 2023 03:41:08 -0700 (PDT)
+        with ESMTP id S234481AbjIZK66 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 06:58:58 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1F8193
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 03:58:50 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2c16757987fso54058541fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 03:58:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695724868; x=1696329668; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yj6G1FPeamgYBfElta3qoZHccx9xx96N+48SOIoxSIc=;
-        b=SV8qmE4vW+bce885ouqRPXO//YiD6yElgfRQTPiezt2evA/kPxw6rIO8MLW0NFcI0H
-         +dxR1oBY4zM1ztFN8dfMHGBmfzWYo9KhtUE/RxYRavNY/Lgz7of9AVJJiDU0Gjy/jaG6
-         EiZhzo4S6duLfdtkm0pzQfLIyOrJA0uk88rRi+ZtVWFTepLV94OFkx/MpIvTAmBaZk2U
-         hP8bkc3GBk5UPp8q4ogs0KhtB8jVVNUc5J8xEU65K/lNu8UIAqVGxQGsMuOO8MN+P173
-         RxOWL+ZKdo5NXA2RgWNh3SS40RBrTdbWjL7dTJfsRDMl0emYutxIw47omtKds3cYf953
-         A39Q==
+        d=tuxon.dev; s=google; t=1695725928; x=1696330728; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uw1cUsiT57O3RUVdq5mZiqTz08pOHH5WJzsYWq/LW4w=;
+        b=LDs36G73REglQOX9D/Nya1bWJXhVrk7ORjYwC6a3KKQdd8ycOnerhIDZ8PA8098Tb5
+         yj01CRMSd8x57BhfdqYEurmSNlDe85jiwc3wy1IBJre9ue4kUG1kvgDB+Phvi25kl6f7
+         OKP/mimaxCloGoKbLoMm80RW4QEdcwDWyze26yyz9PUeNFSZ8KwDK4g5OgwUOOC6c5MW
+         CilxLhNnKGoUWgtl2PKeGNSXYXXX/8zYxMj+MNNaNOWk9EpaHy5TNZKecKCbX46JBerS
+         5T0OXAx9gMR8AxKLTYxOZyRPhw6GfS6ghLN3taeqSxVKzem4O4iSlkuxG4YRLYw90A1q
+         XUoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695724868; x=1696329668;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yj6G1FPeamgYBfElta3qoZHccx9xx96N+48SOIoxSIc=;
-        b=VD22lgZnQ5XUiXH0g1t23IfPCx+yLufwkhv586kmWCeHO0PvTyNbgeuxv5trvVG77c
-         Fyb26DHq/+orLqmMfWQDLP37dwtCKamdCSysPHgpYsafc7frz92wqXWFeRjjmNV7J9/f
-         H9G8UluZkW35fURwEaznFfxMJ4mmBaBTYTG1YNPmhKIoYU1IGZTwvKdFNMpXi2LL7Nla
-         eGKywvkMUPhfhKXLeDQRjDUzUuWQ4osZFxkGBv+pqSsAGNA8J6tS1FyA/aWTTd8Qq4BM
-         UaFK5rzVr5JOUQmLLvWi/oOUWjSy39NZLOh39upLY7/UX3WMTJLTCf/FS99Z3pUQ2E+S
-         Hizg==
-X-Gm-Message-State: AOJu0Yz9V3vmV+sQ4jVNFbynw+o/zZyqUsIuZVPju9Xo2DN9Cmd4uTut
-        B/yU6T7sGBYmrsTPH6bSv+o=
-X-Google-Smtp-Source: AGHT+IHo4UOrl+ovnhwC0HWOMFO6dlIhUqXGrFAnrdS0ISdnko+qf2F5BkR9v+hT/9K2Xb+ueFctfw==
-X-Received: by 2002:a17:902:c409:b0:1b8:954c:1f6 with SMTP id k9-20020a170902c40900b001b8954c01f6mr12402599plk.36.1695724867787;
-        Tue, 26 Sep 2023 03:41:07 -0700 (PDT)
-Received: from sol (14-201-140-18.tpgi.com.au. [14.201.140.18])
-        by smtp.gmail.com with ESMTPSA id y12-20020a170902ed4c00b001c62c9d7289sm1539610plb.104.2023.09.26.03.41.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Sep 2023 03:41:07 -0700 (PDT)
-Date:   Tue, 26 Sep 2023 18:41:00 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Michal Simek <michal.simek@amd.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Subject: Re: [PATCH v1 4/5] gpio: xilinx: Replace bitmap_bitremap() calls
-Message-ID: <ZRK1PA2vZBdfAozG@sol>
-References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
- <20230926052007.3917389-5-andriy.shevchenko@linux.intel.com>
+        d=1e100.net; s=20230601; t=1695725928; x=1696330728;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uw1cUsiT57O3RUVdq5mZiqTz08pOHH5WJzsYWq/LW4w=;
+        b=U5CFYqCcCAGpG28ytDpWSUSXSOFfk67p7pCUHw4jfuSjr2PuB+L/b7BB/SFQNEFlq0
+         sFUbC25nDEyo2rAauHSx4oF/I8/PLQq8bocFoZs+b+eyNk121zA9LlsiebiBuYS6nLaA
+         t8zaXxxNK3iROX1Z1Wg2u+CdATB5zVzuOngKfLXY/5Z9U3PMvE8VEthZz9ZMrW56uXTG
+         dWeK/WFNiNJyF7DKKI+bOSjgi7dHmrE4zMw6UcwOqzLwSOXsIW8xDpZ5Ll7pg9Zg4lQG
+         VWxWDxSO4edgsR46tF6II8lpblMbDJUt6pA94qOpKcZlX8H/Sb/4pNjUkiuS7iRwdKqJ
+         tYLQ==
+X-Gm-Message-State: AOJu0YyE+cKAU03bTZgiGNMufcuTRtwwEdX6Ubx5Xge9bhSLoGufs1+n
+        QUVbtyJr0A2VNb2CCFQNkIEbyw==
+X-Google-Smtp-Source: AGHT+IG6q6rzMJI50tbGhCpzLWa59Dfr/8oOlsuBHFVc+7zzzxAnHqZNID2Eo94dRB44wFNMHKElWw==
+X-Received: by 2002:a2e:2e0f:0:b0:2b6:a3a0:5f7 with SMTP id u15-20020a2e2e0f000000b002b6a3a005f7mr7763488lju.9.1695725928289;
+        Tue, 26 Sep 2023 03:58:48 -0700 (PDT)
+Received: from [192.168.32.2] ([82.78.167.177])
+        by smtp.gmail.com with ESMTPSA id k22-20020a170906129600b009aa292a2df2sm7548486ejb.217.2023.09.26.03.58.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Sep 2023 03:58:47 -0700 (PDT)
+Message-ID: <64e91f8d-a94e-c835-75ef-ce9ab557dc54@tuxon.dev>
+Date:   Tue, 26 Sep 2023 13:58:44 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230926052007.3917389-5-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 30/37] pinctrl: renesas: rzg2l: add support for RZ/G3S SoC
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
+        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
+        nfraprado@collabora.com, rafal@milecki.pl,
+        wsa+renesas@sang-engineering.com,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
+ <20230912045157.177966-31-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdV2GEKF0QjKudz529_tmUksTNMJtZu9NwC18KX-AXwaeg@mail.gmail.com>
+From:   claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdV2GEKF0QjKudz529_tmUksTNMJtZu9NwC18KX-AXwaeg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 08:20:06AM +0300, Andy Shevchenko wrote:
-> We have sparse and dence masks of the line mappings based on
+Hi, Geert,
 
-dense
-
-> the view point (Linux numbering or hardware numbering). Since
-> the Linux side uses sequential bits for the mask, we can simply
-> convert a Linux number to the hardware one and vise versa by
-
-vice
-
-> counting set bits in the respective mask. Hence replace
-> bitmap_bitremap() calls by simpler equivalents.
+On 21.09.2023 17:58, Geert Uytterhoeven wrote:
+> Hi Claudiu,
 > 
-> With this done the dence mask is not needed and thus dropped.
+> On Tue, Sep 12, 2023 at 6:53 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> Add basic support for RZ/G3S to be able to boot from SD card, have a
+>> running console port and use GPIOs. RZ/G3S has 82 general-purpose IO
+>> ports. Support for the remaining pin functions (e.g. Ethernet, XSPI)
+>> will be added along with controller specific support.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-
-And dense again.
-
-Cheers,
-Kent.
-
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpio-xilinx.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
+> Thanks for your patch!
 > 
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index f103c30cc74f..14ca3097563a 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -46,7 +46,6 @@
->   * @gc: GPIO chip
->   * @regs: register block
->   * @hw_map: GPIO pin mapping on hardware side
-> - * @sw_map: GPIO pin mapping on software side
->   * @state: GPIO write state shadow register
->   * @last_irq_read: GPIO read state register from last interrupt
->   * @dir: GPIO direction shadow register
-> @@ -62,7 +61,6 @@ struct xgpio_instance {
->  	struct gpio_chip gc;
->  	void __iomem *regs;
->  	DECLARE_BITMAP(hw_map, 64);
-> -	DECLARE_BITMAP(sw_map, 64);
->  	DECLARE_BITMAP(state, 64);
->  	DECLARE_BITMAP(last_irq_read, 64);
->  	DECLARE_BITMAP(dir, 64);
-> @@ -76,12 +74,12 @@ struct xgpio_instance {
->  
->  static inline int xgpio_from_bit(struct xgpio_instance *chip, int bit)
->  {
-> -	return bitmap_bitremap(bit, chip->hw_map, chip->sw_map, 64);
-> +	return bitmap_weight(chip->hw_map, bit + 1);
->  }
->  
->  static inline int xgpio_to_bit(struct xgpio_instance *chip, int gpio)
->  {
-> -	return bitmap_bitremap(gpio, chip->sw_map, chip->hw_map, 64);
-> +	return find_nth_bit(chip->hw_map, 64, gpio);
->  }
->  
->  static inline u32 xgpio_get_value32(const unsigned long *map, int bit)
-> @@ -619,9 +617,6 @@ static int xgpio_probe(struct platform_device *pdev)
->  	if (width[1] > 32)
->  		return -EINVAL;
->  
-> -	/* Setup software pin mapping */
-> -	bitmap_set(chip->sw_map, 0, width[0] + width[1]);
-> -
->  	/* Setup hardware pin mapping */
->  	bitmap_set(chip->hw_map,  0, width[0]);
->  	bitmap_set(chip->hw_map, 32, width[1]);
-> -- 
-> 2.40.0.1.gaa8946217a0b
+>> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+>> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+>> @@ -1330,6 +1336,36 @@ static const u32 r9a07g043_gpio_configs[] = {
+>>         RZG2L_GPIO_PORT_PACK(6, 0x22, RZG2L_MPXED_PIN_FUNCS),
+>>  };
+>>
+>> +static const u32 r9a08g045_gpio_configs[] = {
+>> +       RZG2L_GPIO_PORT_PACK(4, 0x20, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P0  */
+>> +       RZG2L_GPIO_PORT_PACK(5, 0x30, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+>> +                                                               PIN_CFG_IO_VMC_ETH0)),  /* P1 */
+> 
+> P1_0 and P7_0 have IEN functionality.
+> I don't know how to represent that...
+
+I think Prabhakar's series at [1] may help (or make a step forward) in
+supporting this. I have in mind to wait for it and adapt RZ/G3S afterwards.
+
+[1]
+https://lore.kernel.org/all/20230630120433.49529-2-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+> 
+>> +       RZG2L_GPIO_PORT_PACK(4, 0x31, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+>> +                                                               PIN_CFG_IO_VMC_ETH0)),  /* P2 */
+>> +       RZG2L_GPIO_PORT_PACK(4, 0x32, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+>> +                                                               PIN_CFG_IO_VMC_ETH0)),  /* P3 */
+>> +       RZG2L_GPIO_PORT_PACK(6, 0x33, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+>> +                                                               PIN_CFG_IO_VMC_ETH0)),  /* P4 */
+>> +       RZG2L_GPIO_PORT_PACK(5, 0x21, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P5  */
+>> +       RZG2L_GPIO_PORT_PACK(5, 0x22, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P6  */
+>> +       RZG2L_GPIO_PORT_PACK(5, 0x34, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+>> +                                                               PIN_CFG_IO_VMC_ETH1)),  /* P7 */
+>> +       RZG2L_GPIO_PORT_PACK(5, 0x35, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+>> +                                                               PIN_CFG_IO_VMC_ETH1)),  /* P8 */
+>> +       RZG2L_GPIO_PORT_PACK(4, 0x36, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+>> +                                                               PIN_CFG_IO_VMC_ETH1)),  /* P9 */
+>> +       RZG2L_GPIO_PORT_PACK(5, 0x37, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+>> +                                                               PIN_CFG_IO_VMC_ETH1)),  /* P10 */
+>> +       RZG2L_GPIO_PORT_PACK(4, 0x23, RZG3S_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),          /* P11  */
+> 
+> P11_0 does not have IEN functionality.
+> I don't know how to represent that...
+
+Same here.
+
+> 
+>> +       RZG2L_GPIO_PORT_PACK(2, 0x24, RZG3S_MPXED_PIN_FUNCS(B) | PIN_CFG_IEN),          /* P12  */
+>> +       RZG2L_GPIO_PORT_PACK(5, 0x25, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P13  */
+>> +       RZG2L_GPIO_PORT_PACK(3, 0x26, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P14  */
+>> +       RZG2L_GPIO_PORT_PACK(4, 0x27, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P15  */
+>> +       RZG2L_GPIO_PORT_PACK(2, 0x28, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P16  */
+>> +       RZG2L_GPIO_PORT_PACK(4, 0x29, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P17  */
+>> +       RZG2L_GPIO_PORT_PACK(6, 0x2a, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P18 */
+>> +};
+>> +
+>>  static const struct {
+>>         struct rzg2l_dedicated_configs common[35];
+>>         struct rzg2l_dedicated_configs rzg2l_pins[7];
+>> @@ -1416,6 +1452,46 @@ static const struct {
+>>         }
+>>  };
+>>
+>> +static const struct rzg2l_dedicated_configs rzg3s_dedicated_pins[] = {
+>> +       { "NMI", RZG2L_SINGLE_PIN_PACK(0x0, 0, (PIN_CFG_FILONOFF | PIN_CFG_FILNUM |
+>> +                                               PIN_CFG_FILCLKSEL)) },
+>> +       { "TMS/SWDIO", RZG2L_SINGLE_PIN_PACK(0x1, 0, (PIN_CFG_IOLH_A | PIN_CFG_IEN |
+>> +                                                     PIN_CFG_SOFT_PS)) },
+>> +       { "TDO", RZG2L_SINGLE_PIN_PACK(0x1, 1, (PIN_CFG_IOLH_A | PIN_CFG_SOFT_PS)) },
+>> +       { "WDTOVF_PERROUT#", RZG2L_SINGLE_PIN_PACK(0x6, 0, PIN_CFG_IOLH_A | PIN_CFG_SOFT_PS) },
+>> +       { "SD0_CLK", RZG2L_SINGLE_PIN_PACK(0x10, 0, (PIN_CFG_IOLH_B | PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_CMD", RZG2L_SINGLE_PIN_PACK(0x10, 1, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                    PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_RST#", RZG2L_SINGLE_PIN_PACK(0x10, 2, (PIN_CFG_IOLH_B | PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_DATA0", RZG2L_SINGLE_PIN_PACK(0x11, 0, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_DATA1", RZG2L_SINGLE_PIN_PACK(0x11, 1, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_DATA2", RZG2L_SINGLE_PIN_PACK(0x11, 2, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_DATA3", RZG2L_SINGLE_PIN_PACK(0x11, 3, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_DATA4", RZG2L_SINGLE_PIN_PACK(0x11, 4, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_DATA5", RZG2L_SINGLE_PIN_PACK(0x11, 5, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_DATA6", RZG2L_SINGLE_PIN_PACK(0x11, 6, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD0_DATA7", RZG2L_SINGLE_PIN_PACK(0x11, 7, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD0)) },
+>> +       { "SD1_CLK", RZG2L_SINGLE_PIN_PACK(0x12, 0, (PIN_CFG_IOLH_B | PIN_CFG_IO_VMC_SD1)) },
+>> +       { "SD1_CMD", RZG2L_SINGLE_PIN_PACK(0x12, 1, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                    PIN_CFG_IO_VMC_SD1)) },
+>> +       { "SD1_DATA0", RZG2L_SINGLE_PIN_PACK(0x13, 0, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD1)) },
+>> +       { "SD1_DATA1", RZG2L_SINGLE_PIN_PACK(0x13, 1, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD1)) },
+>> +       { "SD1_DATA2", RZG2L_SINGLE_PIN_PACK(0x13, 2, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD1)) },
+>> +       { "SD1_DATA3", RZG2L_SINGLE_PIN_PACK(0x13, 3, (PIN_CFG_IOLH_B | PIN_CFG_IEN |
+>> +                                                      PIN_CFG_IO_VMC_SD1)) },
+> 
+> Is there any specific reason you left out the XSPI, Audio clock, and I3C pins?
+
+I kept only the necessary support for booting and having SDs, GPIO
+functional as a way of proving that all that has been added has been tested
+(similar to clock support). Thus, with e.g. XSPI support I will add at the
+same time clocks and pinctrl.
+
+> 
+>> +};
+>> +
+>>  static int rzg2l_gpio_get_gpioint(unsigned int virq, const struct rzg2l_pinctrl_data *data)
+>>  {
+>>         unsigned int gpioint;
+>> @@ -1823,6 +1899,40 @@ static const struct rzg2l_hwcfg rzg2l_hwcfg = {
+>>         .iolh_groupb_oi = { 100, 66, 50, 33, },
+>>  };
+>>
+>> +static const struct rzg2l_hwcfg rzg3s_hwcfg = {
+>> +       .regs = {
+>> +               .pwpr = 0x3000,
+>> +               .sd_ch = 0x3004,
+>> +       },
+>> +       .iolh_groupa_ua = {
+>> +               /* 1v8 power source */
+>> +               [RZG2L_IOLH_IDX_1V8] = 2200, 4400, 9000, 10000,
+>> +               /* 2v5 power source */
+>> +               [RZG2L_IOLH_IDX_2V5 ... RZG2L_IOLH_IDX_3V3 - 1] = RZG2L_INVALID_IOLH_VAL,
+> 
+> Can be dropped once zero means invalid.
+> 
+>> +               /* 3v3 power source */
+>> +               [RZG2L_IOLH_IDX_3V3] = 1900, 4000, 8000, 9000,
+>> +       },
+>> +       .iolh_groupb_ua = {
+>> +               /* 1v8 power source */
+>> +               [RZG2L_IOLH_IDX_1V8] = 7000, 8000, 9000, 10000,
+>> +               /* 2v5 power source */
+>> +               [RZG2L_IOLH_IDX_2V5 ... RZG2L_IOLH_IDX_3V3 - 1] = RZG2L_INVALID_IOLH_VAL,
+> 
+> Can be dropped once zero means invalid.
+> 
+>> +               /* 3v3 power source */
+>> +               [RZG2L_IOLH_IDX_3V3] = 4000, 6000, 8000, 9000,
+>> +       },
+>> +       .iolh_groupc_ua = {
+>> +               /* 1v8 power source */
+>> +               [RZG2L_IOLH_IDX_1V8] = 5200, 6000, 6550, 6800,
+>> +               /* 2v5 source */
+>> +               [RZG2L_IOLH_IDX_2V5] = 4700, 5300, 5800, 6100,
+>> +               /* 3v3 power source */
+>> +               [RZG2L_IOLH_IDX_3V3] = 4500, 5200, 5700, 6050,
+>> +       },
+>> +       .drive_strength_ua = true,
+>> +       .iolh_groupb_oi = { [0 ... 3] = RZG2L_INVALID_IOLH_VAL, },
+>> +       .func_base = 1,
+>> +};
+>> +
+>>  static struct rzg2l_pinctrl_data r9a07g043_data = {
+>>         .port_pins = rzg2l_gpio_names,
+>>         .port_pin_configs = r9a07g043_gpio_configs,
+>> @@ -1844,6 +1954,16 @@ static struct rzg2l_pinctrl_data r9a07g044_data = {
+>>         .hwcfg = &rzg2l_hwcfg,
+>>  };
+>>
+>> +static struct rzg2l_pinctrl_data r9a08g045_data = {
+>> +       .port_pins = rzg2l_gpio_names,
+>> +       .port_pin_configs = r9a08g045_gpio_configs,
+>> +       .n_ports = ARRAY_SIZE(r9a08g045_gpio_configs),
+>> +       .dedicated_pins = rzg3s_dedicated_pins,
+>> +       .n_port_pins = ARRAY_SIZE(r9a08g045_gpio_configs) * RZG2L_PINS_PER_PORT,
+>> +       .n_dedicated_pins = ARRAY_SIZE(rzg3s_dedicated_pins),
+>> +       .hwcfg = &rzg3s_hwcfg,
+>> +};
+>> +
+>>  static const struct of_device_id rzg2l_pinctrl_of_table[] = {
+>>         {
+>>                 .compatible = "renesas,r9a07g043-pinctrl",
+> 
+> Please add a BUILD_BUG_ON() check for RZ/G3S to the
+> rzg2l_pinctrl_probe() function, as is done for the other SoCs in
+> the family.
+
+Ok.
+
+> 
+> The rest LGTM.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
 > 
