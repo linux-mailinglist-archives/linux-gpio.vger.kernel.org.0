@@ -2,104 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5895D7AE853
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 10:52:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB7557AE89E
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 11:06:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbjIZIw1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 04:52:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36220 "EHLO
+        id S234018AbjIZJGl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 05:06:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233887AbjIZIw0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 04:52:26 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDFCDD
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 01:52:19 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-59c268676a9so100874577b3.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 01:52:19 -0700 (PDT)
+        with ESMTP id S233997AbjIZJGk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 05:06:40 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE55DDE
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 02:06:33 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-405524e6740so61666705e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 02:06:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695718339; x=1696323139; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NajgLg0J9ZRZ9dxlVjqGamAcS2J4TWmxpdZ8CDcWXXs=;
-        b=u3XJ5mDTB7L8Qw29oThWy4vExIHT0gkw1+Li6pYo+XbW9Qpnf2TKOjj8MDhDIN6kar
-         99Obqrng/bUEPdy8nx+z4IzWiHZCNzn6j2kHWBSlstXiU04KH8J4yEaWS8sV5WLEJBJX
-         y23nNehJw8KuFCsKE9qTbr3KflOuB2reMZkOTCs7KaMMl1hQTXjj3XBISTAlMq4mI1SQ
-         LPuuHL2jloIsVKeZD2dCzldubXZ8NEbZzDPW7/6PMMSR9Ca2u7Xi9oBMUXrZ7a/ZilcV
-         KxpMb5p9fLklDAqlSHBi7xBb++bUSfBg+hnLA3l2SdfG80x2ouCAM7FJ16Y765WPozhG
-         KhUA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695719192; x=1696323992; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AYPORNOx4NuRhf6WfJUJoSr5UgLUFNvcuKhQTL+JrnY=;
+        b=bjix63Oiqxi1eSIKv9kBiX/Y0i0bcLq6Z5XapGVl3wP569BlLSVeq9yeTZmfjxGLGs
+         g/NbbROM3rcc190ZeDit6F6ywrVhKSRXqjTfh0tUC5q/syS9+WbaiFIuABLko3wKT8cW
+         h+bwnFDc5j0pbBgN1N6DSysuyCn5ncUxFEHkjxW0fel9lsxg1o1SSD6Rv0eMn/P6IjGv
+         IgGVU1K/NAys2z9Y65lCYwsY3AXb3UTP2/w61tMmB/aY/BYGZaR0l/1qE9HgNO+va8a8
+         8oq4ysr1nqvt/SAVIeHfp8uE8qUTy2Vhz9NREE8CoWOn+PB0V2Q0h1cpWq/5r1y/Whtg
+         b4pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695718339; x=1696323139;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NajgLg0J9ZRZ9dxlVjqGamAcS2J4TWmxpdZ8CDcWXXs=;
-        b=K9Kr0MMQefYSAX9JSGUGzPEy3qCSkyZrYdLzhMlswawcJKws+LOMlJzmqjiBgI3xWY
-         fkYgh9q9XwVz4SMN2m+uMFh5+KgofjBUKcna+m5zizgB5BgEOVqpcKRIDR1hSoSTalZh
-         0cWi8oJmlblfpxT8fTt8S4lw0vZWaY2axTFS4HAWXAV2LrXfNUYwHARXtvSJQG7/gFmM
-         gbMhRtLi+lTTxJPFLN9OZMQeauw2NrigfxDEeCQaSmMNiGd8sRTFHqLjXfcv8HbYZ999
-         M/S/wgE7uFXfug+HRXwnhjydB79bpLM0JB4k+vn7f7t5/Sat+lDjWrkhYLfnkJBeNWVY
-         0ZHg==
-X-Gm-Message-State: AOJu0YzD78nD+qkx/B42uSJwzc3tYi1QIAGtX7Op3hACqaHu+h0h+rgy
-        AV44PTSaythJHp/5XnBIk32pX2t/rdk0Wc0QZH7S9A==
-X-Google-Smtp-Source: AGHT+IGaTn9+E8MiVA9mTTAzTlh5BjP/aULRmMqIstVahTUxNoAfr2vyacuq/Q/2G+tK5Q2Lhv7tmCUGk8E2c7J2+Wc=
-X-Received: by 2002:a81:6241:0:b0:58c:b8b4:2785 with SMTP id
- w62-20020a816241000000b0058cb8b42785mr9588689ywb.45.1695718337612; Tue, 26
- Sep 2023 01:52:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Sep 2023 10:52:05 +0200
-Message-ID: <CACRpkdYCY+P5+6nk28TQ9stoyYO83q1X1YG7mbrBJnG65uTwwA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] bitmap: get rid of bitmap_remap() and
- bitmap_biremap() uses
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Michal Simek <michal.simek@amd.com>,
+        d=1e100.net; s=20230601; t=1695719192; x=1696323992;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AYPORNOx4NuRhf6WfJUJoSr5UgLUFNvcuKhQTL+JrnY=;
+        b=Y1x5Ng/cXrmrBdYEEMWi84jSIDwNY1SPudN1Ss8Zv1iZFTHOR2+JpHLiNK1xgWmhti
+         PLw3/TjDdGR+AGgSRpgrtzXzhOLNjJQWagAnxpGdw2tf0WqbxQvK0Wy6GgyMJuoIe5dK
+         p/dbKBdCUqE/Mnu+h1oLSxdyD3guar3xOSXe5994NnWtP4ISDMgc+j8wC4XzUhhNW6qE
+         MTLHexAvdkPwiVs6kicLK5f6EEN2gG3BPeFHCkog1m0p3NqIvC9g1knqAIvaiiF4PlAS
+         uUfepTErAl5qV70kR5OpIhYfzaye/AhJ9ZsHZekj6ZWe1hufi0rwHmXPZKHSVOQ7J1kC
+         qZtA==
+X-Gm-Message-State: AOJu0Yxe1oy6mSBAhnAHSqhGQD0NHKi9QjgbRScMj2fmMp0AlgYNS/qY
+        p2w1TPg/Kc2puzlLR4H0XHcoLw==
+X-Google-Smtp-Source: AGHT+IHECvSMOxEXPR/Wch2K8u8yhXgBh2SGThdb3d5Y/uoLHNyMF9X2ZGAX1MvecWbgmJnLQpviVw==
+X-Received: by 2002:a05:600c:2050:b0:401:906b:7e9d with SMTP id p16-20020a05600c205000b00401906b7e9dmr8005516wmg.18.1695719191864;
+        Tue, 26 Sep 2023 02:06:31 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:686:c497:30b1:d2b9])
+        by smtp.gmail.com with ESMTPSA id 14-20020a05600c230e00b00402f7b50517sm14686841wmo.40.2023.09.26.02.06.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Sep 2023 02:06:31 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-mips@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [RFT PATCH] mtd: rawnand: ingenic: move the GPIO quirk to gpiolib-of.c
+Date:   Tue, 26 Sep 2023 11:06:23 +0200
+Message-Id: <20230926090623.35595-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 7:20=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> As Rasmus suggested [1], the bit remapping APIs should be local to NUMA.
-> However, they are being in use outside of that for a while. To make
-> above happen, introduces simplified APIs that can be used otherwise.
->
-> It seems we might have yet another user of the above mentioned APIs.
->
-> The last patch has not been tested anyhow (except compilation, so
-> all testing and comments are welcome).
->
-> The idea is to get an immutable tag (via my tree) that can be pulled
-> by bitmap and GPIO trees on the need (while usually I send PR to
-> the GPIO subsystem).
->
-> Link: https://lore.kernel.org/all/20230815235934.47782-1-yury.norov@gmail=
-.com/ [1]
+We have a special place for OF polarity quirks in gpiolib-of.c. Let's
+move this over there so that it doesn't pollute the driver.
 
-I don't understand the bitmap changes very well, but the resulting
-changes to cdev look very nice clearly making that code more readable
-and maintainable, so FWIW:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+This is an alternative to the previous patch that instead of replacing
+one active-low setter with another, just moves the quirk over to
+gpiolib-of.c
 
-Yours,
-Linus Walleij
+ drivers/gpio/gpiolib-of.c                       |  9 +++++++++
+ drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c | 12 ------------
+ 2 files changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 5515f32cf19b..58c0bbe9d569 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -192,6 +192,15 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
+ 		 */
+ 		{ "himax,hx8357",	"gpios-reset",	false },
+ 		{ "himax,hx8369",	"gpios-reset",	false },
++		/*
++		 * The rb-gpios semantics was undocumented and qi,lb60 (along with
++		 * the ingenic driver) got it wrong. The active state encodes the
++		 * NAND ready state, which is high level. Since there's no signal
++		 * inverter on this board, it should be active-high. Let's fix that
++		 * here for older DTs so we can re-use the generic nand_gpio_waitrdy()
++		 * helper, and be consistent with what other drivers do.
++		 */
++		{ "qi,lb60",		"rb-gpios",	true },
+ #endif
+ 	};
+ 	unsigned int i;
+diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+index 6748226b8bd1..c816dc137245 100644
+--- a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
++++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+@@ -380,18 +380,6 @@ static int ingenic_nand_init_chip(struct platform_device *pdev,
+ 		return ret;
+ 	}
+ 
+-	/*
+-	 * The rb-gpios semantics was undocumented and qi,lb60 (along with
+-	 * the ingenic driver) got it wrong. The active state encodes the
+-	 * NAND ready state, which is high level. Since there's no signal
+-	 * inverter on this board, it should be active-high. Let's fix that
+-	 * here for older DTs so we can re-use the generic nand_gpio_waitrdy()
+-	 * helper, and be consistent with what other drivers do.
+-	 */
+-	if (of_machine_is_compatible("qi,lb60") &&
+-	    gpiod_is_active_low(nand->busy_gpio))
+-		gpiod_toggle_active_low(nand->busy_gpio);
+-
+ 	nand->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_LOW);
+ 
+ 	if (IS_ERR(nand->wp_gpio)) {
+-- 
+2.39.2
+
