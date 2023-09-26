@@ -2,165 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1887B7AEBBA
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 13:47:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A0F47AEBFB
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 13:59:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230231AbjIZLrV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 07:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50118 "EHLO
+        id S230021AbjIZL7F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 07:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233592AbjIZLrU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 07:47:20 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4B7E6
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 04:47:11 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-5041335fb9cso13746866e87.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 04:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1695728830; x=1696333630; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LCp3DXpfVKfH2Y0o0M8mCid7ujeQPXx6UqfFbszv1i8=;
-        b=GFkmqM9lLJYapN4xBN0c7JH0ecC/aSpNEUDIAgH0wVZE/sOz9fL5dSc8mVtIEcOmUd
-         KF/3fQt921CGdVlWaw8FyZhfGdQzBNYlNjG/uvesG4Ewzg9I1AMKGE5u/XBrdjw8dlOw
-         NU9mK/8GxX5GZfK6E+K3Lk/odhHG9ZhG64kZCC3D4q7tqtaPxmJrxlRtwdEem6N0Nxfd
-         AWtevtsOlJlmU43ZXEy6KwYK86a9iYIGSF3/+/bd+9oTr8RLDOjoyJvxnJL1Zx1ufehH
-         xwcnQx5JGm0qOUBidz6Lg/yKqdwDMkolGZy0sd/DUfIVuhS14R+FVyL+bt+WFjIN7Q5C
-         IvAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695728830; x=1696333630;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LCp3DXpfVKfH2Y0o0M8mCid7ujeQPXx6UqfFbszv1i8=;
-        b=XKw8fxR6dRaCwbiE6wKpl/RWS5X4kcDaTboSSZXxfC0iff5fE8rBCSCZHALbyXcA54
-         0Qo1SFp/kKU2mIhud1FkmvqtfczIL4oRCU1ZuRW36Nb4PsHz+WkEE81mQX/XMrbHYii2
-         /eudYa579Y3y1vnRDthed+8srWUZpC5fYmGLvGTvASveE2HClXGRCgr9DXhRt575rbyM
-         Oh9GMzwne+VcqZSoZWYoXpayJFpcwabUuF1Dc5NKRkbk8n4Qwv+JOQSvqWwTuzoh3XgX
-         0NsuQcRJF44HavKMJnjoyozYxu5ncCljsCpiZttr/vp7pi/cZmhOq/QpQSroGHcntzmU
-         nfpg==
-X-Gm-Message-State: AOJu0YzR4jainWjhA3hMEujyW8o2vwgsZCj7k4DYzfCQa5rpVHeWiCfN
-        DE6pZnfhBiCG2j0zOXzrtIgBUA==
-X-Google-Smtp-Source: AGHT+IF+jbH7FWr6+cFqAnCyk/CUAIFVAZ8LgGPN4rOxnI4j0tUbuQS0WA4s9y3m/r3g5552xfmfnQ==
-X-Received: by 2002:a05:6512:110e:b0:4fd:d64f:c0a6 with SMTP id l14-20020a056512110e00b004fdd64fc0a6mr9175819lfg.48.1695728829802;
-        Tue, 26 Sep 2023 04:47:09 -0700 (PDT)
-Received: from [192.168.32.2] ([82.78.167.177])
-        by smtp.gmail.com with ESMTPSA id lo18-20020a170906fa1200b0099bd1a78ef5sm7641095ejb.74.2023.09.26.04.47.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Sep 2023 04:47:09 -0700 (PDT)
-Message-ID: <dfe64c7c-2f90-65a2-05fc-e96ec5113a60@tuxon.dev>
-Date:   Tue, 26 Sep 2023 14:47:06 +0300
+        with ESMTP id S233884AbjIZL7E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 07:59:04 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF1C2DE;
+        Tue, 26 Sep 2023 04:58:57 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="467831915"
+X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
+   d="scan'208";a="467831915"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 04:58:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="922395899"
+X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
+   d="scan'208";a="922395899"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 04:58:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andy@kernel.org>)
+        id 1ql6iI-00000000aw9-1RsA;
+        Tue, 26 Sep 2023 14:58:50 +0300
+Date:   Tue, 26 Sep 2023 14:58:50 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-mips@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [RFT PATCH] mtd: rawnand: ingenic: move the GPIO quirk to
+ gpiolib-of.c
+Message-ID: <ZRLHeuohRgEtTLHz@smile.fi.intel.com>
+References: <20230926090623.35595-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 09/37] clk: renesas: rzg2l: fix computation formula
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
-        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
-        nfraprado@collabora.com, rafal@milecki.pl,
-        wsa+renesas@sang-engineering.com,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-10-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdVNzgHqURohOgpFEaGn+6+rQTqsDomoS1u_-jn=GgmHXw@mail.gmail.com>
-From:   claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdVNzgHqURohOgpFEaGn+6+rQTqsDomoS1u_-jn=GgmHXw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230926090623.35595-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi, Geert,
+On Tue, Sep 26, 2023 at 11:06:23AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> We have a special place for OF polarity quirks in gpiolib-of.c. Let's
+> move this over there so that it doesn't pollute the driver.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> This is an alternative to the previous patch that instead of replacing
+> one active-low setter with another, just moves the quirk over to
+> gpiolib-of.c
 
-On 14.09.2023 15:55, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> According to hardware manual of RZ/G2L (r01uh0914ej0130-rzg2l-rzg2lc.pdf)
->> the computation formula for PLL rate is as follows:
->>
->> Fout = ((m + k/65536) * Fin) / (p * 2^s)
->>
->> and k has values in range [-32768, 32767]. Dividing k by 65536 with
->> integer variables leads all the time to zero. Thus we may have slight
->> differences b/w what has been set vs. what is displayed. Thus,
->> get rid of this and decompose the formula before dividing k by 65536.
->>
->> Fixes: ef3c613ccd68a ("clk: renesas: Add CPG core wrapper for RZ/G2L SoC")
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Thanks for your patch!
-> 
->> --- a/drivers/clk/renesas/rzg2l-cpg.c
->> +++ b/drivers/clk/renesas/rzg2l-cpg.c
->> @@ -696,18 +696,22 @@ static unsigned long rzg2l_cpg_pll_clk_recalc_rate(struct clk_hw *hw,
->>         struct pll_clk *pll_clk = to_pll(hw);
->>         struct rzg2l_cpg_priv *priv = pll_clk->priv;
->>         unsigned int val1, val2;
->> -       unsigned int mult = 1;
->> -       unsigned int div = 1;
->> +       unsigned int div;
->> +       u64 rate;
->> +       s16 kdiv;
->>
->>         if (pll_clk->type != CLK_TYPE_SAM_PLL)
->>                 return parent_rate;
->>
->>         val1 = readl(priv->base + GET_REG_SAMPLL_CLK1(pll_clk->conf));
->>         val2 = readl(priv->base + GET_REG_SAMPLL_CLK2(pll_clk->conf));
->> -       mult = MDIV(val1) + KDIV(val1) / 65536;
->> +       kdiv = KDIV(val1);
->>         div = PDIV(val1) << SDIV(val2);
->>
->> -       return DIV_ROUND_CLOSEST_ULL((u64)parent_rate * mult, div);
->> +       rate = (u64)MDIV(val1) * parent_rate;
->> +       rate += ((long long)parent_rate * kdiv) / 65536;
-> 
-> As the division is a binary shift, you can use the mul_u64_u32_shr() helper,
-> and incorporate the sdiv shift at the same time:
-> 
->     rate += mul_u64_u32_shr(parent_rate, KDIV(val1), 16 + SDIV(val2));
-> 
-> You can save a multiplication by premultiplying mdiv by 65536:
-> 
->     rate = mul_u64_u32_shr(parent_rate, (MDIV(val1) << 16)) + KDIV(val1),
->                            16 + SDIV(val2));
+Much better than that in my opinion.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Looking again at this: KDIV (aka DIV_K) could have negative values thus
-mul_u64_u32_shr() cannot be used here.
+>  drivers/gpio/gpiolib-of.c                       |  9 +++++++++
+>  drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c | 12 ------------
+>  2 files changed, 9 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 5515f32cf19b..58c0bbe9d569 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -192,6 +192,15 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
+>  		 */
+>  		{ "himax,hx8357",	"gpios-reset",	false },
+>  		{ "himax,hx8369",	"gpios-reset",	false },
+> +		/*
+> +		 * The rb-gpios semantics was undocumented and qi,lb60 (along with
+> +		 * the ingenic driver) got it wrong. The active state encodes the
+> +		 * NAND ready state, which is high level. Since there's no signal
+> +		 * inverter on this board, it should be active-high. Let's fix that
+> +		 * here for older DTs so we can re-use the generic nand_gpio_waitrdy()
+> +		 * helper, and be consistent with what other drivers do.
+> +		 */
+> +		{ "qi,lb60",		"rb-gpios",	true },
+>  #endif
+>  	};
+>  	unsigned int i;
+> diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+> index 6748226b8bd1..c816dc137245 100644
+> --- a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+> +++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
+> @@ -380,18 +380,6 @@ static int ingenic_nand_init_chip(struct platform_device *pdev,
+>  		return ret;
+>  	}
+>  
+> -	/*
+> -	 * The rb-gpios semantics was undocumented and qi,lb60 (along with
+> -	 * the ingenic driver) got it wrong. The active state encodes the
+> -	 * NAND ready state, which is high level. Since there's no signal
+> -	 * inverter on this board, it should be active-high. Let's fix that
+> -	 * here for older DTs so we can re-use the generic nand_gpio_waitrdy()
+> -	 * helper, and be consistent with what other drivers do.
+> -	 */
+> -	if (of_machine_is_compatible("qi,lb60") &&
+> -	    gpiod_is_active_low(nand->busy_gpio))
+> -		gpiod_toggle_active_low(nand->busy_gpio);
+> -
+>  	nand->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_LOW);
+>  
+>  	if (IS_ERR(nand->wp_gpio)) {
+> -- 
+> 2.39.2
+> 
 
-> 
->> +
->> +       return DIV_ROUND_CLOSEST_ULL(rate, div);
-> 
-> return DIV_ROUND_CLOSEST_ULL(rate, PDIV(val1));
-> 
->>  }
->>
->>  static const struct clk_ops rzg2l_cpg_pll_ops = {
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
