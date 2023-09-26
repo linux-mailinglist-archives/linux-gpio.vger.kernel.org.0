@@ -2,71 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A4A7AF50B
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 22:27:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 020D37AF65D
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 00:38:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235790AbjIZU1Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 16:27:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58978 "EHLO
+        id S229456AbjIZWiI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 18:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231564AbjIZU1P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 16:27:15 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF71126
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 13:27:07 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-59e77e4f707so118298077b3.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 13:27:07 -0700 (PDT)
+        with ESMTP id S231781AbjIZWgI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 18:36:08 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D52619AF
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 13:59:19 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-532c81b9adbso11747912a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 13:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695760027; x=1696364827; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wgr0elKj9lSA9DaoOQmGSleBXdUJYBk6OqVSBI3fCoo=;
-        b=aawmHcirD8DsgSzYr46dSgc4RX94o0O2lew5iksT9aga1rcSVvJ/hnXDM8V6FitWsq
-         Zcuv2+/iFeZwd7H4RNkuMTTpIR7BroGfS/2DmW90GH6GPs8eNY4csyymim1Z/hfPwRYh
-         FBN9QAUERNuKBknhnJK4B/6aOMTy8eiCqnEiskfVtEG/mouwUm0iTHhHxDXF6JfMpAan
-         zZDGphm7arpqIv4aBe8pwh1VQMAy/v9ootmIrttgW/l/3e09PoEHA+oB5vxEvacZ9F/9
-         wxwwF4mWGcVCcNgVyNlNC11xRoei6//gAW5jqnQNvIPKxlGJTTqGOGAbGcY3Zt/50qT0
-         +wNQ==
+        d=linaro.org; s=google; t=1695761958; x=1696366758; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nbm0fl6t7js3aniuoVoiV7uhTyT8SoKhMhmvTfEHKF0=;
+        b=W5eRTqGUHYRciSsKpzlaqpaBB6xXZUH34WS7vYCduqPlqRkZsQuLy+aake7oJ50f7R
+         oOS+jscmDiEDu6lq8RZt7kEk/HRjvhtOFLhhXAJ0AhucjtggdzJTXNT01bra2VrgfqDt
+         YLVTt7IMsC4FONdT1/XlA/V87sOUhrAshhNhRCn5JAplNQuzO3fPrDj75p5s4lodjbyb
+         AhkPO1I7XixIOSWDROP4YB+zbEwjQvmnTG4pqSqgFgjFxqrW9S1toA5KWsLQD8uyRKlK
+         AeKJOQKO2uvB+xoUpH+IOtQMGCAmK1/B6vcv7Y2pmT1S+WVbqyLdKzIBqvbWDrUdlyk+
+         nzNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695760027; x=1696364827;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wgr0elKj9lSA9DaoOQmGSleBXdUJYBk6OqVSBI3fCoo=;
-        b=JYz381RMOoaGT7mgGQD+pS+5Lzu1b/mYqrGqfio4TSELA5zd8jtqiohotMc7Zqf6tI
-         SHli92Yal4h8rrQJ9X/UpJpbIeWAIOYZ6MIyprY2jm9WR3hL/FbVoQX6n8DQQpZXGwBd
-         cdpnROl15N/DA0iCI9bltgRJtW3u/JIC3J5T3wRabVZP830xvnoQHfPyS6rGB+1NJEnm
-         MTaU8jGKxL0I+j85du19VTQicSivyqx4Lj8iwEWiIX066j7Pw0NCsrpKW0A0//IwC9Gi
-         Id9O6LRKwdRDtY/1WuAugI2w4XFzGA2qYf1gKsY7PBZMkBZ+wScWq4UM0ca87FRkNQmF
-         dM/A==
-X-Gm-Message-State: AOJu0YxN29lQzc9GMJIeHQucP2mNCmxPUgqRlTWtmlOBH2wC3dCYXxCM
-        Tymq2BgGSL+wzqrngvom613tMWme7lj1ykgAURB9Mw==
-X-Google-Smtp-Source: AGHT+IE9ToDynTpmGcT5P/uZKHvPeXXQc+bPT+qu/G4gEmvRth4jAWXdjvJ1oG4ktxEO98GYZKAnKHIrOYHNrw3dF/A=
-X-Received: by 2002:a0d:e442:0:b0:59f:4f56:59bc with SMTP id
- n63-20020a0de442000000b0059f4f5659bcmr59412ywe.42.1695760026911; Tue, 26 Sep
- 2023 13:27:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695761958; x=1696366758;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nbm0fl6t7js3aniuoVoiV7uhTyT8SoKhMhmvTfEHKF0=;
+        b=k1T/kEFq0u7MxoIwT1WhaGYszhNfU2Nh+sJLFK+npek5NF2NEBOjCPzZUyX7pWHtfk
+         noPMh5oKwNOBmppQRLOxyHFp0X886moKDp0tTFk+Seztgp5qUNAPiRTmW6ZfqSsIE9ja
+         gkeAnoRxF8rkcsW9QjyuBzMeRtB5FoB77lLUNBOzG9de3j4bnISPhWSw6ubcd39UQUtV
+         izC8z1glWW5ycHe2NGad7y0FRDcHTua/E6KIu1UP+Rm+cHV0k7CL3tXId8PL4Q6LEVx4
+         1CdyxBHB/Gy/9n2MPEDfkG3MRLoow0tCwKEJHI8R3AfaZN+7OqoI01Hkb5PjTfHLapk0
+         mYGg==
+X-Gm-Message-State: AOJu0Yw4MITjvEvaZrxlhzrjFa5uvuzVqsf53d6Jv9Chj6y3oKjuicHp
+        QCUAe4qRjzEaDkE7sDxeQ3r+rw==
+X-Google-Smtp-Source: AGHT+IENJ0xPYi4uzaeTJwwedZ+8tWUxG3QlM6olVDYu5bRBD5Pc+AxjzgEP0mdOv30vPgdF5uo+og==
+X-Received: by 2002:a17:906:8457:b0:9b2:89ec:7fca with SMTP id e23-20020a170906845700b009b289ec7fcamr5558979ejy.34.1695761957945;
+        Tue, 26 Sep 2023 13:59:17 -0700 (PDT)
+Received: from [192.168.1.145] (host-87-4-82-94.retail.telecomitalia.it. [87.4.82.94])
+        by smtp.gmail.com with ESMTPSA id gu20-20020a170906f29400b009ad8796a6aesm8202912ejb.56.2023.09.26.13.59.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Sep 2023 13:59:17 -0700 (PDT)
+Message-ID: <e8ee6529-b194-4588-96c0-1459f214d005@linaro.org>
+Date:   Tue, 26 Sep 2023 22:59:14 +0200
 MIME-Version: 1.0
-References: <20230926-pxa-gpio-v2-0-984464d165dd@skole.hr> <20230926-pxa-gpio-v2-3-984464d165dd@skole.hr>
-In-Reply-To: <20230926-pxa-gpio-v2-3-984464d165dd@skole.hr>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 26 Sep 2023 22:26:56 +0200
-Message-ID: <CACRpkdb8SwC=W6=Tiz0Uxk1MeQq2gBmDYQYyeKbWFzvaGA2mGQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 3/6] ARM: pxa: Convert Spitz CF power control to
- GPIO descriptors
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 08/30] dt-bindings: soc: fsl: cpm_qe: cpm1-scc-qmc: Add
+ support for QMC HDLC
+Content-Language: en-US
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        Simon Horman <horms@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20230922075913.422435-1-herve.codina@bootlin.com>
+ <20230922075913.422435-9-herve.codina@bootlin.com>
+ <5efae150-3d92-81b8-5c25-68846d27132e@linaro.org>
+ <20230925101703.1bf083f1@bootlin.com>
+ <5b804a1a-6bfd-429d-ad84-696b7ecef72d@linaro.org>
+ <20230925122758.43963736@bootlin.com>
+ <e02ebde7-f208-40a4-bb10-aa5962ee9864@linaro.org>
+ <20230925154929.2b6a9cab@bootlin.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20230925154929.2b6a9cab@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -77,17 +148,75 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 5:46=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
-@skole.hr> wrote:
+On 25/09/2023 15:50, Herve Codina wrote:
+>>>>> With these details, do you still think I need to change the child (channel)
+>>>>> compatible ?    
+>>>>
+>>>> From OS point of view, you have a driver binding to this child-level
+>>>> compatible. How do you enforce Linux driver binding based on parent
+>>>> compatible? I looked at your next patch and I did not see it.  
+>>>
+>>> We do not need to have the child driver binding based on parent.  
+>>
+>> Exactly, that's what I said.
+>>
+>>> We have to ensure that the child handles a QMC channel and the parent provides
+>>> a QMC channel.
+>>>
+>>> A QMC controller (parent) has to implement the QMC API (include/soc/fsl/qe/qmc.h)
+>>> and a QMC channel driver (child) has to use the QMC API.  
+>>
+>> How does this solve my concerns? Sorry, I do not understand. Your driver
+>> is a platform driver and binds to the generic compatible. How do you
+>> solve regular compatibility issues (need for quirks) if parent
+>> compatible is not used?
+>>
+>> How does being QMC compliant affects driver binding and
+>> compatibility/quirks?
+>>
+>> We are back to my original question and I don't think you answered to
+>> any of the concerns.
+> 
+> Well, to be sure that I understand correctly, do you mean that I should
+> provide a compatible for the child (HDLC) with something like this:
+> --- 8< ---
+>   compatible:
+>     items:
+>       - enum:
+>           - fsl,mpc885-qmc-hdlc
+>           - fsl,mpc866-qmc-hdlc
+>       - const: fsl,cpm1-qmc-hdlc
+>       - const: fsl,qmc-hdlc
+> --- 8< ---
 
-> Sharp's Spitz board still uses the legacy GPIO interface for controlling
-> the power supply to its CF and SD card slots.
->
-> Convert it to use the GPIO descriptor interface.
->
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+Yes, more or less, depending on actual compatibility and SoC-family.
+Maybe "fsl,cpm1-qmc-hdlc" item in the middle is not needed.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> If so, I didn't do that because a QMC channel consumer (driver matching
+> fsl,qmc-hdlc) doesn't contains any SoC specific part.
 
-Yours,
-Linus Walleij
+Just like hundreds of other drivers. :)
+
+There is a paragraph about specific compatibles here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/writing-schema.html
+
+
+> It uses the channel as a communication channel to send/receive HDLC frames
+> to/from this communication channel.
+> All the specific SoC part is handled by the QMC controller (parent) itself and
+> not by any consumer (child).
+
+OK, so you guarantee in 100% for this hardware and all future (including
+designs unknown currently), that they will be 100% compatible with
+existing QMC channel consumer (child, matching fsl,qmc-hdlc) driver,
+thus there will be no need for any quirk. Specifically, there will be no
+chances that it would be reasonable to re-use the same driver for child
+(currently fsl,qmc-hdlc) in different parent.
+
+P.S. If you received this email twice, apologies, I have here troubles
+with internet.
+
+Best regards,
+Krzysztof
+
