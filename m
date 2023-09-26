@@ -2,68 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4719A7AE2CD
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 02:11:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 710AD7AE2CE
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 02:11:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229495AbjIZALN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Sep 2023 20:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
+        id S229591AbjIZALs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Sep 2023 20:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjIZALM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 20:11:12 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C95E10A
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 17:11:06 -0700 (PDT)
+        with ESMTP id S229460AbjIZALr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Sep 2023 20:11:47 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F8210A
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Sep 2023 17:11:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695687066; x=1727223066;
+  t=1695687101; x=1727223101;
   h=date:from:to:cc:subject:message-id;
-  bh=wRfKUpV3z3K1LtrFldtAycR0MF0QjKfMzMnMYV3U3o8=;
-  b=bR9jr8+YXmt7E9nMtgf0lHy3foh9N5ODWaqS8rSNGBQ1hGj46Rhx6XnJ
-   Uwx/YMyoW3qIQOgvfzmnhoIv7FXT31x6oto1saBaVdv7SShOSSmUnE9Gb
-   YdnaQv3buTWGYtxRk8r0lVQ4ng8MYjvjQeEw+1X6g9aNwhyBR/yAtfNBb
-   JIAEUjR4Z0kX+/Y0nHEiaSln81CoHFzLKTPyml9YAI7I1h3SAKhj/Uv0K
-   dA9kHt09yQuSNfrPvqdBLvcmCeRhlOoGFEb5UeXwppxvJpoYsUGjtRZCs
-   U9h7+70c81mYK3GlDNtRV3iDDyBwzlDDZTRgXap4V/ZOIHB3M0DozmW0D
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="381350973"
+  bh=UqBpV5p/pHZcL7Xa5goCr7n0gtuiITn0hYL6d3e0s3U=;
+  b=TBecb0iExLaMKHRn80bjyC/Ty3devrX+VME7ryX50BhVzupyiHX9r1Nq
+   VqY53Iqz1zDbK03J0d63wqqFSfrb/bPTWDHlpPvCM5PkyhpBqNWvfYBTk
+   TfEftBUPwy7jjGHXrGakPpjJGKJJma1eTrFX3pzJTdWQ2ML/77gDUDgNe
+   VSfk5ZqDEUwc7Ld6RhXlA+xxY3otPvba1OAJHhp0ZNjx+ebfxQuZi0cib
+   AVw7zAKoweOFz9YixF0ufzbm2Qy3D2u4nhvJ4bSaVNHJXFflnznYDY5TC
+   BVvJhrm/9HxCaoRU3pSKV8tdjJQJRDO3NDDwp89nKy6jQfGtW8+W8Fnw0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="385292465"
 X-IronPort-AV: E=Sophos;i="6.03,176,1694761200"; 
-   d="scan'208";a="381350973"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 17:10:40 -0700
+   d="scan'208";a="385292465"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 17:11:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="891972498"
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="838787755"
 X-IronPort-AV: E=Sophos;i="6.03,176,1694761200"; 
-   d="scan'208";a="891972498"
+   d="scan'208";a="838787755"
 Received: from lkp-server02.sh.intel.com (HELO 32c80313467c) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Sep 2023 17:09:36 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Sep 2023 17:11:39 -0700
 Received: from kbuild by 32c80313467c with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qkvev-0002AT-0u;
-        Tue, 26 Sep 2023 00:10:37 +0000
-Date:   Tue, 26 Sep 2023 08:10:21 +0800
+        id 1qkvft-0002Af-19;
+        Tue, 26 Sep 2023 00:11:37 +0000
+Date:   Tue, 26 Sep 2023 08:10:39 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:at24/for-next] BUILD SUCCESS
- 997a29bbb1e0d6d10ebc2291fac604c4cded5828
-Message-ID: <202309260819.OX1VJMiG-lkp@intel.com>
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ a512635da9f7223b97262a5f376c7f1c3e9f6f7d
+Message-ID: <202309260836.9Fq3rdCG-lkp@intel.com>
 User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git at24/for-next
-branch HEAD: 997a29bbb1e0d6d10ebc2291fac604c4cded5828  eeprom: at24: Annotate struct at24_data with __counted_by
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: a512635da9f7223b97262a5f376c7f1c3e9f6f7d  gpiolib: cdev: annotate struct linereq with __counted_by
 
 elapsed time: 941m
 
-configs tested: 168
+configs tested: 159
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -77,13 +78,11 @@ arc                              allmodconfig   gcc
 arc                               allnoconfig   gcc  
 arc                              allyesconfig   gcc  
 arc                                 defconfig   gcc  
-arc                        nsim_700_defconfig   gcc  
 arc                   randconfig-001-20230925   gcc  
 arc                   randconfig-001-20230926   gcc  
 arm                              allmodconfig   gcc  
 arm                               allnoconfig   gcc  
 arm                              allyesconfig   gcc  
-arm                        clps711x_defconfig   gcc  
 arm                                 defconfig   gcc  
 arm                   randconfig-001-20230925   gcc  
 arm64                            allmodconfig   gcc  
@@ -141,9 +140,6 @@ mips                             allmodconfig   gcc
 mips                              allnoconfig   gcc  
 mips                             allyesconfig   gcc  
 mips                        bcm63xx_defconfig   clang
-mips                           ip32_defconfig   gcc  
-mips                           rs90_defconfig   clang
-mips                   sb1250_swarm_defconfig   clang
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -152,7 +148,6 @@ openrisc                         allmodconfig   gcc
 openrisc                          allnoconfig   gcc  
 openrisc                         allyesconfig   gcc  
 openrisc                            defconfig   gcc  
-openrisc                    or1ksim_defconfig   gcc  
 parisc                           allmodconfig   gcc  
 parisc                            allnoconfig   gcc  
 parisc                           allyesconfig   gcc  
@@ -161,7 +156,6 @@ parisc64                            defconfig   gcc
 powerpc                          allmodconfig   gcc  
 powerpc                           allnoconfig   gcc  
 powerpc                          allyesconfig   gcc  
-powerpc                      pmac32_defconfig   clang
 riscv                            allmodconfig   gcc  
 riscv                             allnoconfig   gcc  
 riscv                            allyesconfig   gcc  
@@ -179,8 +173,6 @@ sh                               allmodconfig   gcc
 sh                                allnoconfig   gcc  
 sh                               allyesconfig   gcc  
 sh                                  defconfig   gcc  
-sh                         ecovec24_defconfig   gcc  
-sh                            shmin_defconfig   gcc  
 sparc                            allmodconfig   gcc  
 sparc                             allnoconfig   gcc  
 sparc                            allyesconfig   gcc  
