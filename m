@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBDD27AEEA0
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 16:58:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C0A7AEEF8
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 16:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233679AbjIZOYF convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 26 Sep 2023 10:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45778 "EHLO
+        id S234581AbjIZOhY convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 26 Sep 2023 10:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230330AbjIZOYE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 10:24:04 -0400
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 803AD101;
-        Tue, 26 Sep 2023 07:23:56 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-59f6492b415so68293317b3.0;
-        Tue, 26 Sep 2023 07:23:56 -0700 (PDT)
+        with ESMTP id S234480AbjIZOhX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 10:37:23 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AAB116;
+        Tue, 26 Sep 2023 07:37:16 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3ae5e6a536bso224320b6e.1;
+        Tue, 26 Sep 2023 07:37:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695738235; x=1696343035;
+        d=1e100.net; s=20230601; t=1695739035; x=1696343835;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b6GInBInFecR+uHBKFfmOCInwlwyJcLVJtZLCIykOZs=;
-        b=ZUZMHEsZto/UkzaDFCGwHe9Z/OJ5naLg3jyeu+5PKrKkJSTvrWPJzxUNX5tw3bGisU
-         TqP3lzoxrMpjtgL1APQU4o9ctAlwYR/70SVoaX83LRFLuurHGVh9LUDMf7olbILQ7zgG
-         i4wIKBfi0vbpEDA5Y4TUFrBmysrBd3YCpyPFMddSR9noX+zxaNu8cN5QImJO35TVIQTV
-         oI14Ghj9yTpnufcI9zsYBw6kd1KxJEixxBz98/9g6Xc5FtXsbKA3awYAFBbgdawc7ZVu
-         RvZ/qBBCxynG7EaZ80s7RGWqwEbsQuLtGMtzg8RgUsXmMMMYD1Pjny/WQiVaIAXDAd4i
-         w6WQ==
-X-Gm-Message-State: AOJu0YzbQ0pihNRBZRM3PzDwe84+K9QIGDI0kH2M3Zh17pa/BQUt3au6
-        +WBS/22K58jB2I2fEEof5FlGVS0XWGJ7Sg==
-X-Google-Smtp-Source: AGHT+IHoy5K5uGXt4Am/NdtVvpfIGtR5dl61OjDvtiyjuLMl/jpu53XB8kamVMkIdz8McXQ2X06j5Q==
-X-Received: by 2002:a05:690c:4808:b0:59f:6440:7eff with SMTP id hc8-20020a05690c480800b0059f64407effmr2242894ywb.15.1695738235335;
-        Tue, 26 Sep 2023 07:23:55 -0700 (PDT)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id x184-20020a0deec1000000b005463e45458bsm3041260ywe.123.2023.09.26.07.23.54
+        bh=X6PrewSG4swx9L/T4VeN46rKLAc+cC9QOSk8MgUINPk=;
+        b=ZsO5UxeQq9SnVhwphb9cFaGLlv/OGduWQIyiE0qM0W0oP1uwhuittV1dBspXUHNHXj
+         zViZG7umxmigwv9D/CWKeVg+i70DNYUZtqH3MIKGz8y0WFQ9QJfmNCY+ADY5VrLqWZan
+         6oKEEmMtAw9jtSfP+Wc/oTijnbbk/Os5oZ0ERR4pTliup5/1fSC+4L4zbZfIubCW/jMS
+         rLWX80ttrJXD6Cc1YwD2nQ83fwzWXW8fmZEQa1xHs2NawPiQkftvAd92GRUWn2bZzpPv
+         UtSoDMc4mN/T1pSnstaUJsbgZ6yylSiHITuuZrYOCRqockzkvVffOeXfv/tzZ39oREzW
+         pCsA==
+X-Gm-Message-State: AOJu0YzRLGDUnEuqlLLl0n9+dKPoBombu+HiXxdS8TaKqdEjZJ1q9YmF
+        iFVHFLX/d4we7NdUPjpoLKqBSCiCbV3RBw==
+X-Google-Smtp-Source: AGHT+IGZYWcRgYqgr+ldrPHc3mGpBz/NRwp3iwn4/xPW5znsXqaKB8fkHVkyvs0PSr6FvMoYBtkIWQ==
+X-Received: by 2002:a05:6358:9989:b0:142:fb84:92e6 with SMTP id j9-20020a056358998900b00142fb8492e6mr13345347rwb.9.1695739035278;
+        Tue, 26 Sep 2023 07:37:15 -0700 (PDT)
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com. [209.85.215.177])
+        by smtp.gmail.com with ESMTPSA id i10-20020a633c4a000000b005740aa41237sm9699680pgn.74.2023.09.26.07.37.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Sep 2023 07:23:54 -0700 (PDT)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-59e88a28b98so126177077b3.1;
-        Tue, 26 Sep 2023 07:23:54 -0700 (PDT)
-X-Received: by 2002:a0d:e8c5:0:b0:59f:6489:75ac with SMTP id
- r188-20020a0de8c5000000b0059f648975acmr1898989ywe.19.1695738234682; Tue, 26
- Sep 2023 07:23:54 -0700 (PDT)
+        Tue, 26 Sep 2023 07:37:15 -0700 (PDT)
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-578a91ac815so5812761a12.1;
+        Tue, 26 Sep 2023 07:37:14 -0700 (PDT)
+X-Received: by 2002:a81:9c03:0:b0:59b:54b5:7d66 with SMTP id
+ m3-20020a819c03000000b0059b54b57d66mr9404795ywa.34.1695738558151; Tue, 26 Sep
+ 2023 07:29:18 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-26-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdVkttQpA-s0MrKbTVxJ6K+xXmhV3sNNLTAPSbDa0f8XYA@mail.gmail.com> <1f1b5174-cfd4-4393-3a86-9adfc8c2cce1@tuxon.dev>
-In-Reply-To: <1f1b5174-cfd4-4393-3a86-9adfc8c2cce1@tuxon.dev>
+ <20230912045157.177966-31-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdV2GEKF0QjKudz529_tmUksTNMJtZu9NwC18KX-AXwaeg@mail.gmail.com> <64e91f8d-a94e-c835-75ef-ce9ab557dc54@tuxon.dev>
+In-Reply-To: <64e91f8d-a94e-c835-75ef-ce9ab557dc54@tuxon.dev>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 26 Sep 2023 16:23:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXL=MpBin208aXe95Mp+NunGLGugtDG0MSs1XtYxyZ71Q@mail.gmail.com>
-Message-ID: <CAMuHMdXL=MpBin208aXe95Mp+NunGLGugtDG0MSs1XtYxyZ71Q@mail.gmail.com>
-Subject: Re: [PATCH 25/37] pinctrl: renesas: rzg2l: adapt function number for RZ/G3S
+Date:   Tue, 26 Sep 2023 16:29:05 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV_xdNtM3Qv+9iqiyHCALMPx4DzC4-DWbXLCtum-LS_Hw@mail.gmail.com>
+Message-ID: <CAMuHMdV_xdNtM3Qv+9iqiyHCALMPx4DzC4-DWbXLCtum-LS_Hw@mail.gmail.com>
+Subject: Re: [PATCH 30/37] pinctrl: renesas: rzg2l: add support for RZ/G3S SoC
 To:     claudiu beznea <claudiu.beznea@tuxon.dev>
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -82,84 +82,52 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Claudiu,
 
-On Tue, Sep 26, 2023 at 11:55 AM claudiu beznea
+On Tue, Sep 26, 2023 at 12:58 PM claudiu beznea
 <claudiu.beznea@tuxon.dev> wrote:
-> On 21.09.2023 15:51, Geert Uytterhoeven wrote:
+> On 21.09.2023 17:58, Geert Uytterhoeven wrote:
 > > On Tue, Sep 12, 2023 at 6:53 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
 > >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > >>
-> >> On RZ/G3S PFC register allow setting 8 functions for individual ports
-> >> (function1 to function8). For function1 register need to be configured
-> >> with 0, for function8 register need to be configured with 7.
-> >> We cannot use zero based addressing when requesting functions from
-> >> different code places as documentation (RZG3S_pinfunction_List_r1.0.xlsx)
-> >> states explicitly that function0 has different meaning.
-> >
-> > According to that table, function0 is GPIO.
->
-> Yes, I'll mention it like this in the next version.
->
-> >> For this add a new member to struct rzg2l_hwcfg that will keep the
-> >> offset that need to be substracted before applying a value to PFC register.
+> >> Add basic support for RZ/G3S to be able to boot from SD card, have a
+> >> running console port and use GPIOs. RZ/G3S has 82 general-purpose IO
+> >> ports. Support for the remaining pin functions (e.g. Ethernet, XSPI)
+> >> will be added along with controller specific support.
 > >>
 > >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > But one question below...
+> > Thanks for your patch!
 > >
 > >> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 > >> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> >> @@ -136,9 +136,11 @@ struct rzg2l_register_offsets {
-> >>  /**
-> >>   * struct rzg2l_hwcfg - hardware configuration data structure
-> >>   * @regs: hardware specific register offsets
-> >> + * @func_base: base number for port function (see register PFC)
-> >>   */
-> >>  struct rzg2l_hwcfg {
-> >>         const struct rzg2l_register_offsets regs;
-> >> +       u8 func_base;
+> >> @@ -1330,6 +1336,36 @@ static const u32 r9a07g043_gpio_configs[] = {
+> >>         RZG2L_GPIO_PORT_PACK(6, 0x22, RZG2L_MPXED_PIN_FUNCS),
 > >>  };
 > >>
-> >>  struct rzg2l_dedicated_configs {
-> >> @@ -221,6 +223,7 @@ static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
-> >>                                  unsigned int group_selector)
-> >>  {
-> >>         struct rzg2l_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> >> +       const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
-> >>         const struct pinctrl_pin_desc *pin_desc;
-> >>         unsigned int i, *psel_val, *pin_data;
-> >>         struct function_desc *func;
-> >> @@ -247,9 +250,9 @@ static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
-> >>                 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
-> >>
-> >>                 dev_dbg(pctrl->dev, "port:%u pin: %u off:%x PSEL:%u\n", port,
-> >> -                       pin, off, psel_val[i]);
-> >> +                       pin, off, psel_val[i] - hwcfg->func_base);
-> >>
-> >> -               rzg2l_pinctrl_set_pfc_mode(pctrl, pin, off, psel_val[i]);
-> >> +               rzg2l_pinctrl_set_pfc_mode(pctrl, pin, off, psel_val[i] - hwcfg->func_base);
-> >>         }
-> >>
-> >>         return 0;
+> >> +static const u32 r9a08g045_gpio_configs[] = {
+> >> +       RZG2L_GPIO_PORT_PACK(4, 0x20, RZG3S_MPXED_PIN_FUNCS(A)),                        /* P0  */
+> >> +       RZG2L_GPIO_PORT_PACK(5, 0x30, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IOLH_C |
+> >> +                                                               PIN_CFG_IO_VMC_ETH0)),  /* P1 */
 > >
-> > Perhaps the adjustment should be done in rzg2l_dt_subnode_to_map()
-> > instead, when obtaining MUX_FUNC() from DT? That would allow you to do
-> > some basic validation on it too, which is currently completely missing
-> > (reject out-of-range values overflowing into adjacent PFC fields,
-> > reject zero on RZ/G3S).
+> > P1_0 and P7_0 have IEN functionality.
+> > I don't know how to represent that...
 >
-> I'll have a look on this. I see .set_mux() can also be called from sysfs
-> though pinmux-select exported file thus, I don't know at the moment if
-> validating it on rzg2l_dt_subnode_to_map() will be enough.
+> I think Prabhakar's series at [1] may help (or make a step forward) in
+> supporting this. I have in mind to wait for it and adapt RZ/G3S afterwards.
 
-OK, that's a good reason to keep it as-is.
+OK.
 
-> Would it be OK to have this outside of this series or you would prefer it now?
+> [1]
+> https://lore.kernel.org/all/20230630120433.49529-2-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-That can be done later. I believe currently there is no validation against
-the register field size limit anyway.
-Thanks!
+> > Is there any specific reason you left out the XSPI, Audio clock, and I3C pins?
+>
+> I kept only the necessary support for booting and having SDs, GPIO
+> functional as a way of proving that all that has been added has been tested
+> (similar to clock support). Thus, with e.g. XSPI support I will add at the
+> same time clocks and pinctrl.
+
+IC.  I all fairness, you did write in your patch description that support
+for e.g. XSPI will be added later, so I'm to blame here.
 
 Gr{oetje,eeting}s,
 
