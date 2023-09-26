@@ -2,98 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0BB17AEF15
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 16:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAE497AEF4F
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 17:14:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234880AbjIZOzC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 10:55:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        id S234852AbjIZO77 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 10:59:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbjIZOzB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 10:55:01 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45F84E6;
-        Tue, 26 Sep 2023 07:54:53 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6927528c01dso1396453b3a.0;
-        Tue, 26 Sep 2023 07:54:53 -0700 (PDT)
+        with ESMTP id S233699AbjIZO77 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 10:59:59 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA2F910E
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 07:59:52 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-32329d935d4so4128229f8f.2
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 07:59:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695740093; x=1696344893; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eUg7RA9AWENnAEvjktXw0Q0VX8Hq+Jj1QvlmV23RBnY=;
-        b=ANYBt44+/IwPebLXa0MyLXFpGzZTlK96CifKfSLSiTzy4VHZMIpvbYqYapLkme9pIK
-         i9hfvr2HDCUoAivcMPVfYOtBg9YxmatI0FaNxfogqbQ2oqO9bLwCBN5BSN+6K4VCrvw4
-         DMtFgr4lkFtNLuXUdE8/5lw1nS1U/veY36+hirQYHVlj/WncU2OlP1d/qraBJsmpIM9g
-         xIIgBd3qjTvlCc6i3WQJleFcQN2b4iBAowQLsB/hMVpTJ4KO933boZixWGZjckOpb6wJ
-         Pv62Bsfa90S//khiikZGSDmYdrEv5zvzQ/QVOhA/0HWKIp3JhbIOc3cQXCe1dCKvGKiy
-         tM5Q==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695740391; x=1696345191; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfLYtgRnxIhfGIuZ3AuQPnmd6mF7Zk5St0BXq4vGsIQ=;
+        b=TLzw53xlfCA4B2yyekGcmN2Gow3tYsMQZDMag7APmsRKZLKRwPcuPoc7Xfm9pZ1N8A
+         i8XZ6fbmgckGNwnl/tB/4I5ppkDl4KZpStL4Xiv9ChBKbHtPW+I1ipHDcBULsm4XLdE3
+         aBu2drv72zmlMLQSx51xCIobXP2ySCWI7bFE7fqUuQCm41h1B3nTdBqVBLZk+3Wqr9TQ
+         UQcxODnyP08mnU+n1WxUthfrUHGcjCBdV14jAzYfqloN4c3Y2vLkGRyoEGR/WlHc5Kh+
+         TuNVFJ7KMX7DuFMdygi7a54VJGyS0URP4mSdyyDhwbZ4H+ipRDjnQ5o8xw/GHYglb4jt
+         R8xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695740093; x=1696344893;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eUg7RA9AWENnAEvjktXw0Q0VX8Hq+Jj1QvlmV23RBnY=;
-        b=ON8iwdTgOESD/wRyhPcoD/jwUv03wQ2ic+WegpQFwQv4hNCz+otXLW3h5O21xjtIEC
-         XqraEnYAqGPl54+cqftPnNBFylWI3T3U64i8qHgu2UtGMaRuztY/OU4ivDScbkyDBkys
-         OXxLKnF2eK18xdWHh/QVm/5vD5C9ED6+/+QkLs8KFdBMK5s+XUcnSUg755meI3S8jycd
-         waWCVo+nAV4w//97Bfv7/lPnXPN7cyOaoM/NALAP8XzGCzq4YZQgFrb+bZC30ORwgxug
-         jwPFUKQPAu8LwB1ZbR/CDJNhKebc4fKSx/rezRYnFViU3Wldp8wTUwgNMxS9Fsa6OJ1+
-         nI8Q==
-X-Gm-Message-State: AOJu0YzcSAwgEVULvtjhdM/FBf5LVIfnOr+9n36MUTaVGoqVYS+bABSX
-        QlviNIWyULp4/n6IKFz9PlvksfGKTH7uz+HPNgQ=
-X-Google-Smtp-Source: AGHT+IGppKOdOzhPvyCP7PuxYQZxIRXjPesiJpWn0izFZt6xiJeROoTqfOhhXOSb2Cksmwz8hbvNIH79Vu8b2i/Q4a4=
-X-Received: by 2002:a05:6a20:8e19:b0:15a:f7fd:dd97 with SMTP id
- y25-20020a056a208e1900b0015af7fddd97mr10735996pzj.2.1695740092640; Tue, 26
- Sep 2023 07:54:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695740391; x=1696345191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vfLYtgRnxIhfGIuZ3AuQPnmd6mF7Zk5St0BXq4vGsIQ=;
+        b=uNjxDJKNaz9poik//KhSp0+MJtDmya1TiGWsYdGskPxBzh30/kd8jLnlN6xg5Kj+rN
+         zKH/ZEDN4r+jlMPfMJBUmYNoPGO19YTs3wlidfNVAkBAcJZodQWaW8lgGy1yrkzEr6zd
+         A805MzmECCSwqWIoNUdo8VYuQxdM9Sty4K+9qU4h9HPL5qCTvd6jm/A3pdKiODsgg2es
+         Y4/g4vfvESB/JhMsCSrjbMFqaxVSbvjO0Z1phPWhhod+008c1KurTyqJNABaSV5Nah8f
+         4yrQdBXf5414BgOk9GOSZUnPVUOOthDiWW81UaGyo14Xvi9inkFj74lwL5r2xh/1WfNq
+         n7dg==
+X-Gm-Message-State: AOJu0YwrR3jukpERnGxKkKEVZRoiBPNPg4+MMq8QelebLaye0ncalB/S
+        6667gBMug5xaNKL1ocrPF9tfhg==
+X-Google-Smtp-Source: AGHT+IHPHclId6kylza566id26/po9Ed756snf6AMpJqfTNPum1ErtRmJjfjJVGvOnVFQwtK5zDvsw==
+X-Received: by 2002:a5d:44ca:0:b0:31f:d52a:82af with SMTP id z10-20020a5d44ca000000b0031fd52a82afmr8678818wrr.49.1695740391015;
+        Tue, 26 Sep 2023 07:59:51 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:686:c497:30b1:d2b9])
+        by smtp.gmail.com with ESMTPSA id s2-20020a5d5102000000b0031f82743e25sm14871634wrt.67.2023.09.26.07.59.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Sep 2023 07:59:50 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [RFT PATCH 0/4] platform/x86: int3472: don't use gpiod_toggle_active_low()
+Date:   Tue, 26 Sep 2023 16:59:39 +0200
+Message-Id: <20230926145943.42814-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230926-vf610-gpio-v4-0-b57b7f6e8368@nxp.com> <20230926-vf610-gpio-v4-1-b57b7f6e8368@nxp.com>
-In-Reply-To: <20230926-vf610-gpio-v4-1-b57b7f6e8368@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 26 Sep 2023 11:54:41 -0300
-Message-ID: <CAOMZO5BXb02NAEd32vr5OoPXyL=Xm46FwomT2L7nDzLYZQGF1w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] dt-bindings: gpio: vf610: update gpio-ranges
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peng Fan <peng.fan@nxp.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 12:28=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
-om> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> i.MX93 supports four gpio-ranges at max. To fix below issue:
-> "gpio@43820080: gpio-ranges: [[30, 0, 84, 8], [30, 8, 66, 18],
->  [30, 26, 34, 2], [30, 28, 0, 4]] is too long"
->
->  Update the gpio-ranges property
->
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+gpiod_toggle_active_low() is a badly designed API that should have never
+been used elsewhere then in the MMC code. And even there we should find
+a better solution.
+
+Replace the uses of it in the int3472 driver with the good old temporary
+lookup table trick. This is not very pretty either but it's the lesser
+evil.
+
+Bartosz Golaszewski (4):
+  platform/x86: int3472: provide a helper for getting GPIOs from lookups
+  platform/x86: int3472: led: don't use gpiod_toggle_active_low()
+  platform/x86: int3472: clk_and_regulator: use GPIO lookup tables
+  gpio: acpi: remove acpi_get_and_request_gpiod()
+
+ drivers/gpio/gpiolib-acpi.c                   | 28 ------------------
+ .../x86/intel/int3472/clk_and_regulator.c     | 22 ++++++--------
+ drivers/platform/x86/intel/int3472/common.c   | 29 +++++++++++++++++++
+ drivers/platform/x86/intel/int3472/common.h   |  9 ++++++
+ drivers/platform/x86/intel/int3472/led.c      | 12 +++-----
+ include/linux/gpio/consumer.h                 |  8 -----
+ 6 files changed, 51 insertions(+), 57 deletions(-)
+
+-- 
+2.39.2
+
