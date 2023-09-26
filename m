@@ -2,78 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 479457AEB42
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 13:18:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1887B7AEBBA
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 13:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbjIZLSI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 07:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
+        id S230231AbjIZLrV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 07:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjIZLSH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 07:18:07 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A35E5;
-        Tue, 26 Sep 2023 04:18:01 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-690d8fb3b7eso7551412b3a.1;
-        Tue, 26 Sep 2023 04:18:01 -0700 (PDT)
+        with ESMTP id S233592AbjIZLrU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 07:47:20 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4B7E6
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 04:47:11 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-5041335fb9cso13746866e87.0
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 04:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695727080; x=1696331880; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWBGxa76m7aeagTgko1i4QtCRID1/zltTLr5CfyYfo0=;
-        b=RUyfcL9+hYc06OG+MapNaaORN9Qgdzy8AE5hODr/UBAbGdHSRXMKwJtp+sdYR+xnhZ
-         Fl23Jsx2MY1/+FZqYSBpZL+FKrD8j4PQLaZ3QYXcnu1Tuay0lZtdm1kw3rGWezeVBNM4
-         Ae1uK79LrLUn2+wDdkGiMiWBk06bJFCrtLVZ5uUEsGdRxfXFcHJ2dANld+AtR47ASCDA
-         YfOxXfAKCNb9xAzzbpp7SH7w7Ww+vO8HAS7KxUsrRk/zwuDNQ22pj2+UiTGRwxM+eaKj
-         7DlvgQvr5tSrBQp9+lbw1pl0fsY7cBjSJWdnEPTLF353eqC7SI7KGV6Zz09tfK+s0WCc
-         R4Cg==
+        d=tuxon.dev; s=google; t=1695728830; x=1696333630; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LCp3DXpfVKfH2Y0o0M8mCid7ujeQPXx6UqfFbszv1i8=;
+        b=GFkmqM9lLJYapN4xBN0c7JH0ecC/aSpNEUDIAgH0wVZE/sOz9fL5dSc8mVtIEcOmUd
+         KF/3fQt921CGdVlWaw8FyZhfGdQzBNYlNjG/uvesG4Ewzg9I1AMKGE5u/XBrdjw8dlOw
+         NU9mK/8GxX5GZfK6E+K3Lk/odhHG9ZhG64kZCC3D4q7tqtaPxmJrxlRtwdEem6N0Nxfd
+         AWtevtsOlJlmU43ZXEy6KwYK86a9iYIGSF3/+/bd+9oTr8RLDOjoyJvxnJL1Zx1ufehH
+         xwcnQx5JGm0qOUBidz6Lg/yKqdwDMkolGZy0sd/DUfIVuhS14R+FVyL+bt+WFjIN7Q5C
+         IvAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695727080; x=1696331880;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZWBGxa76m7aeagTgko1i4QtCRID1/zltTLr5CfyYfo0=;
-        b=mrSq7EJ9SefN1tO6bnRV9VzKFfcypqttxc+O/MixObdFmQQZvw1cL0j+CYX6nXsD0Z
-         xhYnArsVlefz9HJcc9Oc4Us6yF0UPXFtmXA4WbYfj/d9P1yZ/IhbPfU7H2mIH4NzY3/U
-         JV8Sww8oO5IWQMDRavbVsvvUjUQX6128GxSGF9QYLEb7D1vXjA3/nvZlAzvyMbdu9dxM
-         TPM3CS7zvXnrizc4yq1zrsv3RNFrqxXfF73xCGYpFhSXLxEdTnzHN/li6311Ur5xbtMZ
-         A/UQNHFNsL5RKvNpgagufN9vyvMkXgTk+ieDtDTNYY19g3F9w/yvISHqZ8IENQJncFdS
-         K3EA==
-X-Gm-Message-State: AOJu0Yw52AjVYku1IQTuUtKN3c+QJ7QosQgT54tSmV7OlqN+Sqo3pO2b
-        DotDVHfxRMIImczIiu24Qfg=
-X-Google-Smtp-Source: AGHT+IGlxqmWKwg1Nds/ON39ID63GQjhIr13e4Wxhk4DX4WRVDLkvJrfHCMgPjn59wIuLIw8meGpmQ==
-X-Received: by 2002:aa7:8893:0:b0:690:2ecd:a597 with SMTP id z19-20020aa78893000000b006902ecda597mr9672823pfe.21.1695727080615;
-        Tue, 26 Sep 2023 04:18:00 -0700 (PDT)
-Received: from sol (60-242-83-31.tpgi.com.au. [60.242.83.31])
-        by smtp.gmail.com with ESMTPSA id l22-20020a62be16000000b0068fe9c7b199sm5814518pff.105.2023.09.26.04.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Sep 2023 04:18:00 -0700 (PDT)
-Date:   Tue, 26 Sep 2023 19:17:52 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Michal Simek <michal.simek@amd.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Subject: Re: [PATCH v1 4/5] gpio: xilinx: Replace bitmap_bitremap() calls
-Message-ID: <ZRK94EzQ6atqGvLG@sol>
-References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
- <20230926052007.3917389-5-andriy.shevchenko@linux.intel.com>
- <ZRK1PA2vZBdfAozG@sol>
- <ZRK8Uq699oeSOOg6@smile.fi.intel.com>
+        d=1e100.net; s=20230601; t=1695728830; x=1696333630;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LCp3DXpfVKfH2Y0o0M8mCid7ujeQPXx6UqfFbszv1i8=;
+        b=XKw8fxR6dRaCwbiE6wKpl/RWS5X4kcDaTboSSZXxfC0iff5fE8rBCSCZHALbyXcA54
+         0Qo1SFp/kKU2mIhud1FkmvqtfczIL4oRCU1ZuRW36Nb4PsHz+WkEE81mQX/XMrbHYii2
+         /eudYa579Y3y1vnRDthed+8srWUZpC5fYmGLvGTvASveE2HClXGRCgr9DXhRt575rbyM
+         Oh9GMzwne+VcqZSoZWYoXpayJFpcwabUuF1Dc5NKRkbk8n4Qwv+JOQSvqWwTuzoh3XgX
+         0NsuQcRJF44HavKMJnjoyozYxu5ncCljsCpiZttr/vp7pi/cZmhOq/QpQSroGHcntzmU
+         nfpg==
+X-Gm-Message-State: AOJu0YzR4jainWjhA3hMEujyW8o2vwgsZCj7k4DYzfCQa5rpVHeWiCfN
+        DE6pZnfhBiCG2j0zOXzrtIgBUA==
+X-Google-Smtp-Source: AGHT+IF+jbH7FWr6+cFqAnCyk/CUAIFVAZ8LgGPN4rOxnI4j0tUbuQS0WA4s9y3m/r3g5552xfmfnQ==
+X-Received: by 2002:a05:6512:110e:b0:4fd:d64f:c0a6 with SMTP id l14-20020a056512110e00b004fdd64fc0a6mr9175819lfg.48.1695728829802;
+        Tue, 26 Sep 2023 04:47:09 -0700 (PDT)
+Received: from [192.168.32.2] ([82.78.167.177])
+        by smtp.gmail.com with ESMTPSA id lo18-20020a170906fa1200b0099bd1a78ef5sm7641095ejb.74.2023.09.26.04.47.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Sep 2023 04:47:09 -0700 (PDT)
+Message-ID: <dfe64c7c-2f90-65a2-05fc-e96ec5113a60@tuxon.dev>
+Date:   Tue, 26 Sep 2023 14:47:06 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZRK8Uq699oeSOOg6@smile.fi.intel.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 09/37] clk: renesas: rzg2l: fix computation formula
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
+        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
+        nfraprado@collabora.com, rafal@milecki.pl,
+        wsa+renesas@sang-engineering.com,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
+ <20230912045157.177966-10-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdVNzgHqURohOgpFEaGn+6+rQTqsDomoS1u_-jn=GgmHXw@mail.gmail.com>
+From:   claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdVNzgHqURohOgpFEaGn+6+rQTqsDomoS1u_-jn=GgmHXw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,41 +89,78 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 02:11:14PM +0300, Andy Shevchenko wrote:
-> On Tue, Sep 26, 2023 at 06:41:00PM +0800, Kent Gibson wrote:
-> > On Tue, Sep 26, 2023 at 08:20:06AM +0300, Andy Shevchenko wrote:
-> > > We have sparse and dence masks of the line mappings based on
-> > 
-> > dense
-> > 
-> > > the view point (Linux numbering or hardware numbering). Since
-> > > the Linux side uses sequential bits for the mask, we can simply
-> > > convert a Linux number to the hardware one and vise versa by
-> > 
-> > vice
-> > 
-> > > counting set bits in the respective mask. Hence replace
-> > > bitmap_bitremap() calls by simpler equivalents.
-> > > 
-> > > With this done the dence mask is not needed and thus dropped.
-> > 
-> > And dense again.
+Hi, Geert,
+
+On 14.09.2023 15:55, Geert Uytterhoeven wrote:
+> Hi Claudiu,
 > 
-> Thank you, Kent, I really appreciate your help with my poor English,
-> nevertheless it would be nice if you can look at the last patch and
-> maybe even test it, so we have a bit of confidence that it works
-> as expected.
+> On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> According to hardware manual of RZ/G2L (r01uh0914ej0130-rzg2l-rzg2lc.pdf)
+>> the computation formula for PLL rate is as follows:
+>>
+>> Fout = ((m + k/65536) * Fin) / (p * 2^s)
+>>
+>> and k has values in range [-32768, 32767]. Dividing k by 65536 with
+>> integer variables leads all the time to zero. Thus we may have slight
+>> differences b/w what has been set vs. what is displayed. Thus,
+>> get rid of this and decompose the formula before dividing k by 65536.
+>>
+>> Fixes: ef3c613ccd68a ("clk: renesas: Add CPG core wrapper for RZ/G2L SoC")
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-
-Well that is the plan, but I haven't been in the GPIO space for a while so
-I need to pull my test setup out of mothballs first - so don't hold your
-breath.
-
-> (The spelling will be fixed in the next version.)
+> Thanks for your patch!
 > 
+>> --- a/drivers/clk/renesas/rzg2l-cpg.c
+>> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+>> @@ -696,18 +696,22 @@ static unsigned long rzg2l_cpg_pll_clk_recalc_rate(struct clk_hw *hw,
+>>         struct pll_clk *pll_clk = to_pll(hw);
+>>         struct rzg2l_cpg_priv *priv = pll_clk->priv;
+>>         unsigned int val1, val2;
+>> -       unsigned int mult = 1;
+>> -       unsigned int div = 1;
+>> +       unsigned int div;
+>> +       u64 rate;
+>> +       s16 kdiv;
+>>
+>>         if (pll_clk->type != CLK_TYPE_SAM_PLL)
+>>                 return parent_rate;
+>>
+>>         val1 = readl(priv->base + GET_REG_SAMPLL_CLK1(pll_clk->conf));
+>>         val2 = readl(priv->base + GET_REG_SAMPLL_CLK2(pll_clk->conf));
+>> -       mult = MDIV(val1) + KDIV(val1) / 65536;
+>> +       kdiv = KDIV(val1);
+>>         div = PDIV(val1) << SDIV(val2);
+>>
+>> -       return DIV_ROUND_CLOSEST_ULL((u64)parent_rate * mult, div);
+>> +       rate = (u64)MDIV(val1) * parent_rate;
+>> +       rate += ((long long)parent_rate * kdiv) / 65536;
+> 
+> As the division is a binary shift, you can use the mul_u64_u32_shr() helper,
+> and incorporate the sdiv shift at the same time:
+> 
+>     rate += mul_u64_u32_shr(parent_rate, KDIV(val1), 16 + SDIV(val2));
+> 
+> You can save a multiplication by premultiplying mdiv by 65536:
+> 
+>     rate = mul_u64_u32_shr(parent_rate, (MDIV(val1) << 16)) + KDIV(val1),
+>                            16 + SDIV(val2));
 
-Those I can spot without needing to compile anything ;-).
+Looking again at this: KDIV (aka DIV_K) could have negative values thus
+mul_u64_u32_shr() cannot be used here.
 
-Cheers,
-Kent.
-
+> 
+>> +
+>> +       return DIV_ROUND_CLOSEST_ULL(rate, div);
+> 
+> return DIV_ROUND_CLOSEST_ULL(rate, PDIV(val1));
+> 
+>>  }
+>>
+>>  static const struct clk_ops rzg2l_cpg_pll_ops = {
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
