@@ -2,183 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 525E47AE9B1
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 11:56:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B287AEA64
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 12:29:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234095AbjIZJ4U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 05:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44410 "EHLO
+        id S234382AbjIZK32 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 06:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234133AbjIZJ4L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 05:56:11 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75EA9CD0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 02:55:58 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-9a64619d8fbso1056305666b.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 02:55:58 -0700 (PDT)
+        with ESMTP id S234368AbjIZK31 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 06:29:27 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96526FB;
+        Tue, 26 Sep 2023 03:29:20 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-690b7cb71aeso6251990b3a.0;
+        Tue, 26 Sep 2023 03:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1695722156; x=1696326956; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oCGAB9bjd2rRkobql917EBDyBbo8Xf1tmOkuieid9Qw=;
-        b=HFmsZ4RrW76dmgghgjnLmy/if7RGsBsH4gCiOAm04mIl6nM43bU4nQtLpo9Mipeio4
-         JUhdNIn4w3HgA3gLB+81owUI+uiPg/4oyDitaKB+k6BzOwxh8C6RoMsHT6RFdWJ/t5fa
-         kZkn3eT+bQKDuIZbyX+KdFGTZlx/r1PFcgLzEr1Wa9Gxr4hkCtQiDoaruQAnT9TdaoLw
-         Lk8iZytyVRi3Hc982kBcXwdfyLV5KKQ7qefdk6LDk/U0aXwxhIAfzfZc7PFdV29YdBRj
-         k6fRmlWHQ+eJ/xaWFtECSUf0Xd7QCXN5TOpRM4YTq/E0wPiTnPiEcvndPYLYKtNKLhqs
-         A6tg==
+        d=gmail.com; s=20230601; t=1695724160; x=1696328960; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qonb/48NxgSMrYoPiUlqmSZTRy7YmQA9LcOLKLZ8KWY=;
+        b=eyXBqnBSkZyMv5NPK6XFVn/U+ly2Zy8Rjxok5C9KWaN25tDrIUpNNnWDWfzCvwB//6
+         d9iXkIi3Ta501ToDZo5/hTuVOHfkPyTzQNJG1j0XOHJI3Bso+5zXOmC72reNyXD2PHrw
+         9JAVeO1Tlh+NWVSs+EOqq6kz2wHtS2cuNDHP0vnJgSvH9sHz5FSCwicNTD+Ukx3KtTnF
+         Avi7Zr6dqPATtg43531BAjRO5AjPF/9QTF9DIr0lHQIpjEYnJ74kQZ8DTeoCA7b9vkDh
+         3kwcXiEyyvdB8X4YJLr8DS3fr5WqD1rBG2lv6hvIbr3FQD+bRb+SgRH8NB9TuWD0fMg5
+         b4pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695722156; x=1696326956;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oCGAB9bjd2rRkobql917EBDyBbo8Xf1tmOkuieid9Qw=;
-        b=P9a5jR59O07jYoWUyvXZOjgjwMpmK6rQlCCIqE13jwJ3o8XLgbQNMSh96KnCqi6VhD
-         AT0SxNTbKOVT9T3sh87AEJZzP6usuEINud+dPZmUFin/Pf/uAqgY7kIypfm+NsNHF+eu
-         JmiXT4XOB2zZQ1kzSimTipwxIkj3aZzs7RFkDzCIZqqSi/yMw+H7G6bLcKhJK8+h0K/y
-         iVcdeGa5WCGZipT9cFaCdI0H5kEB7Yq7jt/iZNcyvAHGy6z+4rAxOz/mVNcE0v0iB3K+
-         LiZlaR3D//7KHdMzQ9/+nXOmlAAIPmwVcDIBdJf3kLl2W+lpdJNp+MQ8skUEE/3XmgPy
-         B3Jw==
-X-Gm-Message-State: AOJu0YwixES/hV4VnlsKC6GPBjJLfxbwBkXDcQw0KKZ9hwJEEs9TLmLQ
-        pXthy7MfnPkKB5rPu7STgT9F6g==
-X-Google-Smtp-Source: AGHT+IEiQ8iJO3tEsrKT6DurQH2FvKo0uS+xJFcGLGiCr6SvtCfNXfJUyT6nkOwQSaE5M72oHauuhA==
-X-Received: by 2002:a17:906:3188:b0:9ae:5fdc:aee8 with SMTP id 8-20020a170906318800b009ae5fdcaee8mr8441103ejy.53.1695722156458;
-        Tue, 26 Sep 2023 02:55:56 -0700 (PDT)
-Received: from [192.168.32.2] ([82.78.167.177])
-        by smtp.gmail.com with ESMTPSA id j26-20020a170906831a00b00997d7aa59fasm7698269ejx.14.2023.09.26.02.55.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Sep 2023 02:55:55 -0700 (PDT)
-Message-ID: <1f1b5174-cfd4-4393-3a86-9adfc8c2cce1@tuxon.dev>
-Date:   Tue, 26 Sep 2023 12:55:53 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 25/37] pinctrl: renesas: rzg2l: adapt function number for
- RZ/G3S
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
-        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
-        nfraprado@collabora.com, rafal@milecki.pl,
-        wsa+renesas@sang-engineering.com,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-26-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdVkttQpA-s0MrKbTVxJ6K+xXmhV3sNNLTAPSbDa0f8XYA@mail.gmail.com>
-Content-Language: en-US
-From:   claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdVkttQpA-s0MrKbTVxJ6K+xXmhV3sNNLTAPSbDa0f8XYA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        d=1e100.net; s=20230601; t=1695724160; x=1696328960;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qonb/48NxgSMrYoPiUlqmSZTRy7YmQA9LcOLKLZ8KWY=;
+        b=nI7JtKni6CJaB75z3NSQgkDf7ASli+X1vy53kohoomXPDRSlue51dc5eRAUTOTD9yA
+         QbVerkHNefa3PjON0oFExBwg3lpRhZrTvnjG5c0YMqsDefQ9+jiHddgVPJpXqwq+Q3XG
+         wr08dQobxTkj7mqHtHb47PzuDudH0gDgKnXZ+ZbXYpPiAEbI9j4Emp7V3hpw+ZD9TeC2
+         bhkQxv5qvtPwR1iekwuoVpXT1maWtHEbioh2H4a948IBIHuI/Ff6v9ocCNcyWfKGpGXB
+         dHRc0to7FZ7fpc81mIMuiuxUFCpeTEQWQSOd5qXvjlYHi8R4TjUmBfi44K9jrUioYgns
+         7+/A==
+X-Gm-Message-State: AOJu0YyaOSBrfs2eSOIf9d5rKpTCpKmEdnV7YUHvqF5fGnV9TtvNj1x+
+        8SStSXGGxLdmjNe05ToXStw=
+X-Google-Smtp-Source: AGHT+IHXy98IULbI9MEELFASDJhU2Ctpv78t0HJ0G6bCOilqE3OS5LasbnvVvrJmltc3mePrXdm5lA==
+X-Received: by 2002:a05:6a00:2e9f:b0:692:6417:728a with SMTP id fd31-20020a056a002e9f00b006926417728amr3627838pfb.14.1695724159838;
+        Tue, 26 Sep 2023 03:29:19 -0700 (PDT)
+Received: from 377044c6c369.cse.ust.hk (191host097.mobilenet.cse.ust.hk. [143.89.191.97])
+        by smtp.gmail.com with ESMTPSA id m18-20020aa78a12000000b0068a2d78890csm9612667pfa.68.2023.09.26.03.29.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Sep 2023 03:29:19 -0700 (PDT)
+From:   Chengfeng Ye <dg573847474@gmail.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+        alex@shruggie.ro, aboutphysycs@gmail.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chengfeng Ye <dg573847474@gmail.com>
+Subject: [PATCH] gpio: timberdale: Fix potential deadlock on &tgpio->lock
+Date:   Tue, 26 Sep 2023 10:29:14 +0000
+Message-Id: <20230926102914.6145-1-dg573847474@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi, Geert,
+As timbgpio_irq_enable()/timbgpio_irq_disable() callback could be
+executed under irq context, it could introduce double locks on
+&tgpio->lock if it preempts other execution units requiring
+the same locks.
 
-On 21.09.2023 15:51, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> Thanks for your patch!
-> 
-> On Tue, Sep 12, 2023 at 6:53 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> On RZ/G3S PFC register allow setting 8 functions for individual ports
->> (function1 to function8). For function1 register need to be configured
->> with 0, for function8 register need to be configured with 7.
->> We cannot use zero based addressing when requesting functions from
->> different code places as documentation (RZG3S_pinfunction_List_r1.0.xlsx)
->> states explicitly that function0 has different meaning.
-> 
-> According to that table, function0 is GPIO.
+timbgpio_gpio_set()
+--> timbgpio_update_bit()
+--> spin_lock(&tgpio->lock)
+<interrupt>
+   --> timbgpio_irq_disable()
+   --> spin_lock_irqsave(&tgpio->lock)
 
-Yes, I'll mention it like this in the next version.
+This flaw was found by an experimental static analysis tool I am
+developing for irq-related deadlock.
 
-> 
->> For this add a new member to struct rzg2l_hwcfg that will keep the
->> offset that need to be substracted before applying a value to PFC register.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> But one question below...
-> 
->> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
->> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
->> @@ -136,9 +136,11 @@ struct rzg2l_register_offsets {
->>  /**
->>   * struct rzg2l_hwcfg - hardware configuration data structure
->>   * @regs: hardware specific register offsets
->> + * @func_base: base number for port function (see register PFC)
->>   */
->>  struct rzg2l_hwcfg {
->>         const struct rzg2l_register_offsets regs;
->> +       u8 func_base;
->>  };
->>
->>  struct rzg2l_dedicated_configs {
->> @@ -221,6 +223,7 @@ static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
->>                                  unsigned int group_selector)
->>  {
->>         struct rzg2l_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
->> +       const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
->>         const struct pinctrl_pin_desc *pin_desc;
->>         unsigned int i, *psel_val, *pin_data;
->>         struct function_desc *func;
->> @@ -247,9 +250,9 @@ static int rzg2l_pinctrl_set_mux(struct pinctrl_dev *pctldev,
->>                 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
->>
->>                 dev_dbg(pctrl->dev, "port:%u pin: %u off:%x PSEL:%u\n", port,
->> -                       pin, off, psel_val[i]);
->> +                       pin, off, psel_val[i] - hwcfg->func_base);
->>
->> -               rzg2l_pinctrl_set_pfc_mode(pctrl, pin, off, psel_val[i]);
->> +               rzg2l_pinctrl_set_pfc_mode(pctrl, pin, off, psel_val[i] - hwcfg->func_base);
->>         }
->>
->>         return 0;
-> 
-> Perhaps the adjustment should be done in rzg2l_dt_subnode_to_map()
-> instead, when obtaining MUX_FUNC() from DT? That would allow you to do
-> some basic validation on it too, which is currently completely missing
-> (reject out-of-range values overflowing into adjacent PFC fields,
-> reject zero on RZ/G3S).
+To prevent the potential deadlock, the patch uses spin_lock_irqsave()
+on &tgpio->lock inside timbgpio_gpio_set() to prevent the possible
+deadlock scenario.
 
-I'll have a look on this. I see .set_mux() can also be called from sysfs
-though pinmux-select exported file thus, I don't know at the moment if
-validating it on rzg2l_dt_subnode_to_map() will be enough.
+Signed-off-by: Chengfeng Ye <dg573847474@gmail.com>
+---
+ drivers/gpio/gpio-timberdale.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Would it be OK to have this outside of this series or you would prefer it now?
+diff --git a/drivers/gpio/gpio-timberdale.c b/drivers/gpio/gpio-timberdale.c
+index bbd9e9191199..fad979797486 100644
+--- a/drivers/gpio/gpio-timberdale.c
++++ b/drivers/gpio/gpio-timberdale.c
+@@ -43,9 +43,10 @@ static int timbgpio_update_bit(struct gpio_chip *gpio, unsigned index,
+ 	unsigned offset, bool enabled)
+ {
+ 	struct timbgpio *tgpio = gpiochip_get_data(gpio);
++	unsigned long flags;
+ 	u32 reg;
+ 
+-	spin_lock(&tgpio->lock);
++	spin_lock_irqsave(&tgpio->lock, flags);
+ 	reg = ioread32(tgpio->membase + offset);
+ 
+ 	if (enabled)
+@@ -54,7 +55,7 @@ static int timbgpio_update_bit(struct gpio_chip *gpio, unsigned index,
+ 		reg &= ~(1 << index);
+ 
+ 	iowrite32(reg, tgpio->membase + offset);
+-	spin_unlock(&tgpio->lock);
++	spin_unlock_irqrestore(&tgpio->lock, flags);
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
-Thank you,
-Claudiu Beznea
-
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
