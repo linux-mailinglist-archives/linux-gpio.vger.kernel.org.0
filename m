@@ -2,50 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E745A7AEB2F
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 13:16:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 479457AEB42
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Sep 2023 13:18:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbjIZLQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 07:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46190 "EHLO
+        id S229845AbjIZLSI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 07:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbjIZLQV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 07:16:21 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C11DE5;
-        Tue, 26 Sep 2023 04:16:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695726975; x=1727262975;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=bgJ6JLn5dG4WpQOqgkcDkaqD70XkjWn2MU0AKV6t6rA=;
-  b=iV7KQLCZXYZWsvJmcclwUj/ErDbwKj7Cl5uj8Aifc1CV9HXyQ2Awj2Bf
-   C+j5TnBwQAJVcBdVR1ZO5cYvDsfcS8fh/YqrM1k6BOdIwpMRCq6AaHAS4
-   UUTmAlL0h9prTNgCjP7xPHkd8DFkREJMYiV6yUXqCL2IOfprnYp3nrnWM
-   ogwKSTMEOMhXv2fjdgX2Gz6TIjdeLALq48MOjHwBiiRMPlNSu8aLP1ltF
-   pWIAkh+A5i3g9qtOPE8n67JY8C1TTEKNa3PdB8hNG3TTugH1WmiPz/YUM
-   Xec44SS8S1glAs45zgnauNZWDx8/sMxuzcgr6BOgYMRBStp/iwGxhuko4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="360922973"
-X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
-   d="scan'208";a="360922973"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 04:16:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="1079666794"
-X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
-   d="scan'208";a="1079666794"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 04:16:11 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ql62y-00000000aPT-3VEr;
-        Tue, 26 Sep 2023 14:16:08 +0300
-Date:   Tue, 26 Sep 2023 14:16:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        with ESMTP id S229507AbjIZLSH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 07:18:07 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A35E5;
+        Tue, 26 Sep 2023 04:18:01 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-690d8fb3b7eso7551412b3a.1;
+        Tue, 26 Sep 2023 04:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695727080; x=1696331880; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZWBGxa76m7aeagTgko1i4QtCRID1/zltTLr5CfyYfo0=;
+        b=RUyfcL9+hYc06OG+MapNaaORN9Qgdzy8AE5hODr/UBAbGdHSRXMKwJtp+sdYR+xnhZ
+         Fl23Jsx2MY1/+FZqYSBpZL+FKrD8j4PQLaZ3QYXcnu1Tuay0lZtdm1kw3rGWezeVBNM4
+         Ae1uK79LrLUn2+wDdkGiMiWBk06bJFCrtLVZ5uUEsGdRxfXFcHJ2dANld+AtR47ASCDA
+         YfOxXfAKCNb9xAzzbpp7SH7w7Ww+vO8HAS7KxUsrRk/zwuDNQ22pj2+UiTGRwxM+eaKj
+         7DlvgQvr5tSrBQp9+lbw1pl0fsY7cBjSJWdnEPTLF353eqC7SI7KGV6Zz09tfK+s0WCc
+         R4Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695727080; x=1696331880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZWBGxa76m7aeagTgko1i4QtCRID1/zltTLr5CfyYfo0=;
+        b=mrSq7EJ9SefN1tO6bnRV9VzKFfcypqttxc+O/MixObdFmQQZvw1cL0j+CYX6nXsD0Z
+         xhYnArsVlefz9HJcc9Oc4Us6yF0UPXFtmXA4WbYfj/d9P1yZ/IhbPfU7H2mIH4NzY3/U
+         JV8Sww8oO5IWQMDRavbVsvvUjUQX6128GxSGF9QYLEb7D1vXjA3/nvZlAzvyMbdu9dxM
+         TPM3CS7zvXnrizc4yq1zrsv3RNFrqxXfF73xCGYpFhSXLxEdTnzHN/li6311Ur5xbtMZ
+         A/UQNHFNsL5RKvNpgagufN9vyvMkXgTk+ieDtDTNYY19g3F9w/yvISHqZ8IENQJncFdS
+         K3EA==
+X-Gm-Message-State: AOJu0Yw52AjVYku1IQTuUtKN3c+QJ7QosQgT54tSmV7OlqN+Sqo3pO2b
+        DotDVHfxRMIImczIiu24Qfg=
+X-Google-Smtp-Source: AGHT+IGlxqmWKwg1Nds/ON39ID63GQjhIr13e4Wxhk4DX4WRVDLkvJrfHCMgPjn59wIuLIw8meGpmQ==
+X-Received: by 2002:aa7:8893:0:b0:690:2ecd:a597 with SMTP id z19-20020aa78893000000b006902ecda597mr9672823pfe.21.1695727080615;
+        Tue, 26 Sep 2023 04:18:00 -0700 (PDT)
+Received: from sol (60-242-83-31.tpgi.com.au. [60.242.83.31])
+        by smtp.gmail.com with ESMTPSA id l22-20020a62be16000000b0068fe9c7b199sm5814518pff.105.2023.09.26.04.17.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Sep 2023 04:18:00 -0700 (PDT)
+Date:   Tue, 26 Sep 2023 19:17:52 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
@@ -54,64 +61,61 @@ Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Subject: Re: [PATCH v1 0/5] bitmap: get rid of bitmap_remap() and
- bitmap_biremap() uses
-Message-ID: <ZRK9eCTy2rreZB5W@smile.fi.intel.com>
+Subject: Re: [PATCH v1 4/5] gpio: xilinx: Replace bitmap_bitremap() calls
+Message-ID: <ZRK94EzQ6atqGvLG@sol>
 References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdYCY+P5+6nk28TQ9stoyYO83q1X1YG7mbrBJnG65uTwwA@mail.gmail.com>
+ <20230926052007.3917389-5-andriy.shevchenko@linux.intel.com>
+ <ZRK1PA2vZBdfAozG@sol>
+ <ZRK8Uq699oeSOOg6@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdYCY+P5+6nk28TQ9stoyYO83q1X1YG7mbrBJnG65uTwwA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZRK8Uq699oeSOOg6@smile.fi.intel.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 10:52:05AM +0200, Linus Walleij wrote:
-> On Tue, Sep 26, 2023 at 7:20 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Sep 26, 2023 at 02:11:14PM +0300, Andy Shevchenko wrote:
+> On Tue, Sep 26, 2023 at 06:41:00PM +0800, Kent Gibson wrote:
+> > On Tue, Sep 26, 2023 at 08:20:06AM +0300, Andy Shevchenko wrote:
+> > > We have sparse and dence masks of the line mappings based on
+> > 
+> > dense
+> > 
+> > > the view point (Linux numbering or hardware numbering). Since
+> > > the Linux side uses sequential bits for the mask, we can simply
+> > > convert a Linux number to the hardware one and vise versa by
+> > 
+> > vice
+> > 
+> > > counting set bits in the respective mask. Hence replace
+> > > bitmap_bitremap() calls by simpler equivalents.
+> > > 
+> > > With this done the dence mask is not needed and thus dropped.
+> > 
+> > And dense again.
 > 
-> > As Rasmus suggested [1], the bit remapping APIs should be local to NUMA.
-> > However, they are being in use outside of that for a while. To make
-> > above happen, introduces simplified APIs that can be used otherwise.
-> >
-> > It seems we might have yet another user of the above mentioned APIs.
-> >
-> > The last patch has not been tested anyhow (except compilation, so
-> > all testing and comments are welcome).
-> >
-> > The idea is to get an immutable tag (via my tree) that can be pulled
-> > by bitmap and GPIO trees on the need (while usually I send PR to
-> > the GPIO subsystem).
-> >
-> > Link: https://lore.kernel.org/all/20230815235934.47782-1-yury.norov@gmail.com/ [1]
+> Thank you, Kent, I really appreciate your help with my poor English,
+> nevertheless it would be nice if you can look at the last patch and
+> maybe even test it, so we have a bit of confidence that it works
+> as expected.
 > 
-> I don't understand the bitmap changes very well,
 
-Me neither... Oops (it was a joke :-)
+Well that is the plan, but I haven't been in the GPIO space for a while so
+I need to pull my test setup out of mothballs first - so don't hold your
+breath.
 
-> but the resulting
-> changes to cdev look very nice clearly making that code more readable
-> and maintainable,
+> (The spelling will be fixed in the next version.)
+> 
 
-While the above is a joke it took quite a time to get into the logic.
-Hence this patch. TBH I'm in doubt, that's why asking for careful testing
-and reviews.
+Those I can spot without needing to compile anything ;-).
 
-> so FWIW:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Thank you!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Cheers,
+Kent.
 
