@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D68A7B04B8
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 14:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 012947B04C0
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 14:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbjI0Myq convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 27 Sep 2023 08:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37236 "EHLO
+        id S231781AbjI0M4T convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 27 Sep 2023 08:56:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231749AbjI0Myq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 08:54:46 -0400
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0560FC0;
-        Wed, 27 Sep 2023 05:54:42 -0700 (PDT)
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-        by mx.skole.hr (mx.skole.hr) with ESMTP id 3EF9B821B6;
-        Wed, 27 Sep 2023 14:54:35 +0200 (CEST)
+        with ESMTP id S231749AbjI0M4S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 08:56:18 -0400
+Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13068E6;
+        Wed, 27 Sep 2023 05:56:11 -0700 (PDT)
+Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+        by mx.skole.hr (mx.skole.hr) with ESMTP id 10AC58348D;
+        Wed, 27 Sep 2023 14:56:10 +0200 (CEST)
 From:   Duje =?utf-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
 To:     Andy Shevchenko <andy@kernel.org>
 Cc:     Daniel Mack <daniel@zonque.org>,
@@ -29,13 +29,14 @@ Cc:     Daniel Mack <daniel@zonque.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH RFC v2 5/6] ARM: pxa: Convert Spitz hsync to GPIO descriptors
-Date:   Wed, 27 Sep 2023 14:54:32 +0200
-Message-ID: <12302039.O9o76ZdvQC@radijator>
-In-Reply-To: <ZRMEi6pACEx5HQZ/@smile.fi.intel.com>
+Subject: Re: [PATCH RFC v2 3/6] ARM: pxa: Convert Spitz CF power control to GPIO
+ descriptors
+Date:   Wed, 27 Sep 2023 14:56:07 +0200
+Message-ID: <5984688.lOV4Wx5bFT@radijator>
+In-Reply-To: <ZRMDqVCtrUyhcqaw@smile.fi.intel.com>
 References: <20230926-pxa-gpio-v2-0-984464d165dd@skole.hr>
- <20230926-pxa-gpio-v2-5-984464d165dd@skole.hr>
- <ZRMEi6pACEx5HQZ/@smile.fi.intel.com>
+ <20230926-pxa-gpio-v2-3-984464d165dd@skole.hr>
+ <ZRMDqVCtrUyhcqaw@smile.fi.intel.com>
 MIME-Version: 1.0
 Autocrypt: addr=duje.mihanovic@skole.hr;
  keydata=
@@ -124,35 +125,40 @@ Autocrypt: addr=duje.mihanovic@skole.hr;
  MGQfJ+8rfAdLHf7iECLWLtrqyfYFQCZGhA5rPPr27TjOLaLV5ObMMBsUY=
 Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tuesday, September 26, 2023 6:19:23 PM CEST Andy Shevchenko wrote:
-> On Tue, Sep 26, 2023 at 05:46:26PM +0200, Duje Mihanović wrote:
-> >  	gpiod_add_lookup_table(&spitz_ads7846_gpio_table);
-> >  	gpiod_add_lookup_table(&spitz_spi_gpio_table);
+On Tuesday, September 26, 2023 6:15:37 PM CEST Andy Shevchenko wrote:
+> On Tue, Sep 26, 2023 at 05:46:24PM +0200, Duje Mihanović wrote:
+> > Sharp's Spitz board still uses the legacy GPIO interface for controlling
+> > the power supply to its CF and SD card slots.
 > > 
-> > +	hsync = gpiod_get(NULL, "hsync", GPIOD_IN);
-> > +	if (IS_ERR(hsync)) {
-> > +		pr_err("Failed to get hsync GPIO: %ld\n", PTR_ERR(hsync));
+> > Convert it to use the GPIO descriptor interface.
+> 
+> ...
+> 
+> > +	cf_power = gpiod_get(&pxa_device_mci.dev, "cf_power", GPIOD_ASIS);
+> > +	if (IS_ERR(cf_power)) {
+> > +		dev_err(&pxa_device_mci.dev,
+> > +				"failed to get power control GPIO with 
+%ld\n",
+> > +				PTR_ERR(cf_power));
 > > +		return;
 > > +	}
 > > 
-> >  	pxa2xx_set_spi_info(2, &spitz_spi_info);
-> >  	spi_register_board_info(ARRAY_AND_SIZE(spitz_spi_devices));
+> > +	gpiod_put(cf_power);
 > 
-> Yeah, but the question is, if GPIO request fails, can we instantiate at 
-least one device and move on?
+> Don't you want to use guarded gpiod_get()?
+> Okay, it seems not yet in the pending list, but we can survive without that.
 
-I see. If the touchscreen is the first out of 3 devices in that array, would 
-something like this do:
-
-spi_register_board_info(ARRAY_AND_SIZE(&spitz_spi_devices[1]));
+Can you please elaborate? If I understand correctly, the if statement right 
+after gpiod_get is a guard.
 
 Regards,
 Duje
