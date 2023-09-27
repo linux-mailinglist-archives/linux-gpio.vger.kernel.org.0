@@ -2,62 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F1D67AFBB9
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 09:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4796D7AFBE4
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 09:22:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229495AbjI0HNX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 03:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48676 "EHLO
+        id S229981AbjI0HWL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 03:22:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjI0HNW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 03:13:22 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA7B11D
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 00:13:21 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-7ab4c86eeb0so3182226241.2
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 00:13:21 -0700 (PDT)
+        with ESMTP id S230001AbjI0HWI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 03:22:08 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E91B910E
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 00:22:07 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-452749f6c47so4480488137.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 00:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695798800; x=1696403600; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695799327; x=1696404127; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ghpkue7N6oiwgsmKag0rzCvKeWoEMHhP4MSi8oTAVck=;
-        b=p2pGSvuXJe63WqsWpESNlKlGO+hbak4OmXhPyRV/bCBD0OiRIpVUOAGhaXyR9USvNq
-         kElwNeMbi0EbPVjcC65L2Yc0KkbdgZCevuT6PevLswUXNgr3dJXX04QhnbtvWcppY8+k
-         aHCa0Kv+dLvEkNWp5wg4IDvPAIb1oa4W+GKKoAb5/pnet7iTnHGlibhnqDKqCFEi2PjF
-         V6YRbH2/x7AdjlsXqozd1+3GOq98Dg1vCUAovUQqa4aAgwTLHMu06BB3T0c7yO70Q/H7
-         VwcHzXrVr8M854FRbucBBE6+IrKipLb7fgT8sUQqWvnM4NWmfwKGvoK7QcvYLbjUmBhr
-         7/zQ==
+        bh=RmxAHXmVUHGDcJ0DBWWl1uYiQCGSb58dGdZ67AkLMLQ=;
+        b=QXRMbtLsnAncWJjxmB0wKw1B6DqfAB27Ps73bRuVZAiZcOspaq1lsJVM4ISZfiW5oW
+         U6HaiSryBBwLLd4Avg29oCtySzLaiU9++U8d2sxzUQlE/xQCDtDKoLMFEVymy6kwJzGe
+         pfWNaIzzgWxwpBaJx/RbYhmi2xkvgVHluUqP8q9uEhBNMHIZdIKSS3f3YOZAgUMhoEzi
+         8wEVxsrhZPe581UeQqa9z/8q/HJxjXQoxmebojHH2Fwvv1gkioKOPZZN7yYYyjl0DLai
+         k1P5QLLX305TmYVkcVZLi6JRPSQ1irYDahiu/Lskho8fbYBiw0+lxU21+9vVOTeRbY/1
+         eS3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695798800; x=1696403600;
+        d=1e100.net; s=20230601; t=1695799327; x=1696404127;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ghpkue7N6oiwgsmKag0rzCvKeWoEMHhP4MSi8oTAVck=;
-        b=qzn/KuXN8eO6eVnGEwph227hXyaCzmqLK7gPZasxJYDsnDpqFe8ZfsrnztsR6eDfzz
-         dkcVRy1ewHDXFhx8BCcGU0RkrSA2OmOldKtZKJY6XRUaaXtMaq/F/VC5gOZXEMf/AluB
-         7ozptDocrfM6h1TUv0pLbLSZ/d7BJm+O+c9Q3IICdtdqNhm5Pg7sEsN8BX3UZ6NJiGpD
-         bIVhu7RGTCPZ+2Rf/LdalYr4GepWnMgtcSRv8czF/lAaLDAP1zM7909h4o/2hF6MASpY
-         r2tV/afJroD51XzwqX8nK5AeE+DUTosl+bmjHoMhH04PCdQPoFmp2wyZqjA2qAhQu/8H
-         Ifew==
-X-Gm-Message-State: AOJu0YxMGvO+m3lXjcrFSa1oCm2FCJG7EXERNNWIp64uUP4xiI4oaZAi
-        G6aEu9lQb+AY77pX7RFaktoEW5GvcwhxWkTk0X92FA==
-X-Google-Smtp-Source: AGHT+IHAENgUH9UcARUTyK7pqCnC0yqp7lcr2HSBpJL/3Zx3Ubb/BJSBsI0uRd8EEbUyiSWiywWjH+q7vKFynTt06Bk=
-X-Received: by 2002:a67:e218:0:b0:452:c3a4:1f9e with SMTP id
- g24-20020a67e218000000b00452c3a41f9emr981881vsa.19.1695798800231; Wed, 27 Sep
- 2023 00:13:20 -0700 (PDT)
+        bh=RmxAHXmVUHGDcJ0DBWWl1uYiQCGSb58dGdZ67AkLMLQ=;
+        b=Mq7yrikrIOnGKzb/L9wWdSXpwS5DLCGGtJxpYX86FaCTBgSoJe020/7Zahk9pAYxr8
+         mBg+2hTTXAt3pplssrQmZiOErUBeaGd8duyILNHxXcg6PCDNvhnSBHtW1qxxBa5qiX1p
+         myFkyAzrpdwDP9bUpxHjCR6chX5pWbP/1PzIMn2dunXUkoMt5XrY0l0i4o7JUZI/d+pH
+         droTqx65Y7W6E6HsxAfy4siAwS9+AoISqVA7JbKf9pmV43nu/ROptALTt/Vb14JUsJeF
+         1x/L5Y9xxL4flJBmHMZcdnWpbN0pPGOE+iVCD2EDPna1fjRoL1vw/AUSOcqTkPBIEuwu
+         VEgg==
+X-Gm-Message-State: AOJu0Yxgq0pXtkjOvQgTbVYGEps0+mNLqUKAuQgz8EoVwA2SX5r9o6Y0
+        XOGbHXEX3OuYx5SJ06FUiqCiIadWRcHr1tM5IzkCiA==
+X-Google-Smtp-Source: AGHT+IFo/CuSjFSJA5xlKHIrrmlEZyrIGXD0woZ0j7yTTbp2AaRcGnZSIuZZjnKQGtUQxbpXrSmdXIgi98fac1/f5+I=
+X-Received: by 2002:a05:6102:570b:b0:454:607d:196f with SMTP id
+ dg11-20020a056102570b00b00454607d196fmr356030vsb.20.1695799326908; Wed, 27
+ Sep 2023 00:22:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230921122527.15261-1-Wenhua.Lin@unisoc.com> <20230921122527.15261-3-Wenhua.Lin@unisoc.com>
- <ZQxjxA2UwHpTPKKr@smile.fi.intel.com>
-In-Reply-To: <ZQxjxA2UwHpTPKKr@smile.fi.intel.com>
+References: <20230921122527.15261-1-Wenhua.Lin@unisoc.com> <20230921122527.15261-2-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20230921122527.15261-2-Wenhua.Lin@unisoc.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 27 Sep 2023 09:13:09 +0200
-Message-ID: <CAMRc=McZsmqQXEUSGaNOWLWZWGYaa--euDao6xzsXicYy-QXnQ@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] gpio: pmic-eic-sprd: Add can_sleep flag for PMIC
- EIC chip
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Wenhua Lin <Wenhua.Lin@unisoc.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Wed, 27 Sep 2023 09:21:56 +0200
+Message-ID: <CAMRc=MfxG+fyjskTwzQ-5Rh7vPbTuFQCnf=N9XV+TZBf7k6d-g@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] gpio: pmic-eic-sprd: Two-dimensional arrays
+ maintain pmic eic
+To:     Wenhua Lin <Wenhua.Lin@unisoc.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
         Orson Zhai <orsonzhai@gmail.com>,
         Baolin Wang <baolin.wang@linux.alibaba.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
@@ -75,26 +74,105 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 5:40=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
-rote:
+On Thu, Sep 21, 2023 at 2:27=E2=80=AFPM Wenhua Lin <Wenhua.Lin@unisoc.com> =
+wrote:
 >
-> On Thu, Sep 21, 2023 at 08:25:27PM +0800, Wenhua Lin wrote:
-> > The drivers uses a mutex and I2C bus access in its PMIC EIC chip
-> > get implementation. This means these functions can sleep and the PMIC E=
-IC
-> > chip should set the can_sleep property to true.
-> >
-> > This will ensure that a warning is printed when trying to get the
-> > value from a context that potentially can't sleep.
+> A bank PMIC EIC contains 16 EICs, and the operating registers
+> are BIT0-BIT15, such as BIT0 of the register operated by EIC0.
+> Using the one-dimensional array reg[CACHE_NR_REGS] for maintenance
+> will cause the configuration of other EICs to be affected when
+> operating a certain EIC. In order to solve this problem, the register
+> operation bits of each PMIC EIC are maintained through the two-dimensiona=
+l
+> array reg[SPRD_PMIC_EIC_NR][CACHE_NR_REGS] to avoid mutual interference.
 >
-> This deserves a Fixes tag.
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+> ---
+>  drivers/gpio/gpio-pmic-eic-sprd.c | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
 >
+> diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-e=
+ic-sprd.c
+> index c3e4d90f6b18..442968bb2490 100644
+> --- a/drivers/gpio/gpio-pmic-eic-sprd.c
+> +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
+> @@ -57,7 +57,7 @@ struct sprd_pmic_eic {
+>         struct gpio_chip chip;
+>         struct regmap *map;
+>         u32 offset;
+> -       u8 reg[CACHE_NR_REGS];
+> +       u8 reg[SPRD_PMIC_EIC_NR][CACHE_NR_REGS];
+>         struct mutex buslock;
+>         int irq;
+>  };
+> @@ -151,8 +151,8 @@ static void sprd_pmic_eic_irq_mask(struct irq_data *d=
+ata)
+>         struct sprd_pmic_eic *pmic_eic =3D gpiochip_get_data(chip);
+>         u32 offset =3D irqd_to_hwirq(data);
+>
+> -       pmic_eic->reg[REG_IE] =3D 0;
+> -       pmic_eic->reg[REG_TRIG] =3D 0;
+> +       pmic_eic->reg[offset][REG_IE] =3D 0;
+> +       pmic_eic->reg[offset][REG_TRIG] =3D 0;
+>
+>         gpiochip_disable_irq(chip, offset);
+>  }
+> @@ -165,8 +165,8 @@ static void sprd_pmic_eic_irq_unmask(struct irq_data =
+*data)
+>
+>         gpiochip_enable_irq(chip, offset);
+>
+> -       pmic_eic->reg[REG_IE] =3D 1;
+> -       pmic_eic->reg[REG_TRIG] =3D 1;
+> +       pmic_eic->reg[offset][REG_IE] =3D 1;
+> +       pmic_eic->reg[offset][REG_TRIG] =3D 1;
+>  }
+>
+>  static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
+> @@ -174,13 +174,14 @@ static int sprd_pmic_eic_irq_set_type(struct irq_da=
+ta *data,
+>  {
+>         struct gpio_chip *chip =3D irq_data_get_irq_chip_data(data);
+>         struct sprd_pmic_eic *pmic_eic =3D gpiochip_get_data(chip);
+> +       u32 offset =3D irqd_to_hwirq(data);
+>
+>         switch (flow_type) {
+>         case IRQ_TYPE_LEVEL_HIGH:
+> -               pmic_eic->reg[REG_IEV] =3D 1;
+> +               pmic_eic->reg[offset][REG_IEV] =3D 1;
+>                 break;
+>         case IRQ_TYPE_LEVEL_LOW:
+> -               pmic_eic->reg[REG_IEV] =3D 0;
+> +               pmic_eic->reg[offset][REG_IEV] =3D 0;
+>                 break;
+>         case IRQ_TYPE_EDGE_RISING:
+>         case IRQ_TYPE_EDGE_FALLING:
+> @@ -222,15 +223,15 @@ static void sprd_pmic_eic_bus_sync_unlock(struct ir=
+q_data *data)
+>                         sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_=
+IEV, 1);
+>         } else {
+>                 sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV,
+> -                                    pmic_eic->reg[REG_IEV]);
+> +                                    pmic_eic->reg[offset][REG_IEV]);
+>         }
+>
+>         /* Set irq unmask */
+>         sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IE,
+> -                            pmic_eic->reg[REG_IE]);
+> +                            pmic_eic->reg[offset][REG_IE]);
+>         /* Generate trigger start pulse for debounce EIC */
+>         sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_TRIG,
+> -                            pmic_eic->reg[REG_TRIG]);
+> +                            pmic_eic->reg[offset][REG_TRIG]);
+>
+>         mutex_unlock(&pmic_eic->buslock);
+>  }
 > --
-> With Best Regards,
-> Andy Shevchenko
->
+> 2.17.1
 >
 
-Added when applying and queued for fixes.
+This looks good to me but I want to let the SPRD maintainers
+review/test it before applying.
 
 Bart
