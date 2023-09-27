@@ -2,165 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FF917B00EE
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 11:49:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE5A27B0205
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 12:41:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231232AbjI0Jti (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 05:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54108 "EHLO
+        id S230434AbjI0KlA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 06:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231254AbjI0JtR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 05:49:17 -0400
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F2910FD;
-        Wed, 27 Sep 2023 02:49:07 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VszxC8b_1695808144;
-Received: from 30.97.48.70(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VszxC8b_1695808144)
-          by smtp.aliyun-inc.com;
-          Wed, 27 Sep 2023 17:49:05 +0800
-Message-ID: <99dc2f99-cb03-bec8-b538-3ad21750adff@linux.alibaba.com>
-Date:   Wed, 27 Sep 2023 17:49:11 +0800
+        with ESMTP id S230326AbjI0Kk6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 06:40:58 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6FD413A
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 03:40:55 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-d81d09d883dso12227053276.0
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 03:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695811255; x=1696416055; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6nYXLxAB1G3fPQuWQuND+i8jMgLXF7y81yFurBOx7Q4=;
+        b=wyGfay+QSY+gKpC7//UNrF/yxgRA+HMHdA8aK73rZLGYrXKb8XLfmMWdnoSJfDRwsm
+         qrscbWDaMJVAb0CrDJQ9Xwz5J72p++RrH19iVCqMDIA1D2eHBBJ+soi3RFCWJsUvGgcY
+         aQTmlJYFx/+1j52BQxF2aTCCaMa7yklSbXNrINDQ67MK29m7lHpvViB/b5VqIyD9f4Ym
+         qhlK7RWdf5jg9gvtOQ3sFRSc9SW0A63xxNvhfoB0QiGaewy+b2DBQ7XdlUe4Z4QAYrnl
+         DSMjE3jO/9wAnicaWsrO/CovPnQRGIim5kUKhsRfshVYoatVaum33Mv/ShNuu8RAkrgw
+         8Lnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695811255; x=1696416055;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6nYXLxAB1G3fPQuWQuND+i8jMgLXF7y81yFurBOx7Q4=;
+        b=cuhCfZQ6W1JgaKdRsnqNj43DuMoFNiuOTD+GSa037i28GeF5vZhBlmT3ZwEXhmLxqT
+         1TfoDpufu7Fwd+S3G86uc3bv27Efb5XRhE45rdS4sYsqBAB+VC30tf9EcuL9T8uvNlkb
+         7fy0JnSLeLCZAJG5sWTfpNczxrdM7EF6pN8RGjIqbIBmfBYMYo+6FWsE6rPivuP9XFcz
+         utJvGAF7ZtZ2SCSae29rz4l0n5QBNkHZfVKtPrqAYoG13+IwyJA8NMCpU42COWS36wIf
+         fkWly0vGnk4goBrYjTSVv2M5jd9z06CGjnWH9tJUVkHLZTrQ0PO2EmFer9pL2BVRmMTu
+         XDIA==
+X-Gm-Message-State: AOJu0YwEGFWp1ShIRnRrgGujhv/ugikvIu6eRzlWrByStrC3OwHonwDL
+        niWu5Ovx5e7Ux5IgvuQegLnUYR9t86p/V8qymoCnrd8SbKqv68/F
+X-Google-Smtp-Source: AGHT+IGmun0NZIJ3+bBsQ7jBRBeKX3tnz5U8pzUprEmhy+ptbeVeqez+29jxHbg6q2orBUPijpNbYnhB12LG7S+EtJs=
+X-Received: by 2002:a25:ac1e:0:b0:d81:6344:540b with SMTP id
+ w30-20020a25ac1e000000b00d816344540bmr1617296ybi.45.1695811254940; Wed, 27
+ Sep 2023 03:40:54 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH V2 1/2] gpio: pmic-eic-sprd: Two-dimensional arrays
- maintain pmic eic
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Wenhua Lin <Wenhua.Lin@unisoc.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Orson Zhai <orsonzhai@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        wenhua lin <wenhua.lin1994@gmail.com>,
-        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-References: <20230921122527.15261-1-Wenhua.Lin@unisoc.com>
- <20230921122527.15261-2-Wenhua.Lin@unisoc.com>
- <9dd68b0e-e36a-b87c-e66d-586f2442da6c@linux.alibaba.com>
- <CAAfSe-tDFJtq77zw2vHsHAvrwXSy4KFwAEPnVJ6fP8e4PgRF6A@mail.gmail.com>
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAAfSe-tDFJtq77zw2vHsHAvrwXSy4KFwAEPnVJ6fP8e4PgRF6A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230925030647.40283-1-andrew@codeconstruct.com.au>
+ <CAPDyKFrFxYxSTa=z2VnCk4m_d-wEgd17wBokzyNCCRLtSUnFKw@mail.gmail.com> <7a7d5a7f19fc793f157508fec7fbc09ca8c4cc4b.camel@codeconstruct.com.au>
+In-Reply-To: <7a7d5a7f19fc793f157508fec7fbc09ca8c4cc4b.camel@codeconstruct.com.au>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 27 Sep 2023 12:40:18 +0200
+Message-ID: <CAPDyKFquBkoA2NN7MLwkOeAsykUfp9q3RrbdnAFNNkErEiseMg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: aspeed: Update Andrew's email address
+To:     Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc:     joel@jms.id.au, andrew@aj.id.au, linux-aspeed@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, 27 Sept 2023 at 01:22, Andrew Jeffery
+<andrew@codeconstruct.com.au> wrote:
+>
+> On Tue, 2023-09-26 at 17:03 +0200, Ulf Hansson wrote:
+> > On Mon, 25 Sept 2023 at 05:07, Andrew Jeffery
+> > <andrew@codeconstruct.com.au> wrote:
+> > >
+> > > I've changed employers, have company email that deals with patch-based
+> > > workflows without too much of a headache, and am trying to steer some
+> > > content out of my personal mail.
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> >
+> > I guess it doesn't really matter what tree this gets funneled through,
+> > so I decided to pick this up via my mmc tree.
+> >
+> > So, applied for next, thanks!
+>
+> Ah, thanks for being so prompt! However, Joel has sent a PR to Arnd
+> with the patch:
+>
+> https://lore.kernel.org/all/CACPK8Xc+D=YBc2Dhk-6-gOuvKN0xGgZYNop6oJVa=VNgaEYOHw@mail.gmail.com/
+>
+> I thought I'd left a note under the fold asking Joel to do that so
+> people knew how it would get into the tree, but that clearly isn't the
+> case. Sorry about that, I must have rolled the patch off again after I
+> put the note into the original.
 
+Np, I have dropped the patch from my tree now.
 
-On 9/27/2023 5:24 PM, Chunyan Zhang wrote:
-> On Wed, 27 Sept 2023 at 17:04, Baolin Wang
-> <baolin.wang@linux.alibaba.com> wrote:
->>
->>
->>
->> On 9/21/2023 8:25 PM, Wenhua Lin wrote:
->>> A bank PMIC EIC contains 16 EICs, and the operating registers
->>> are BIT0-BIT15, such as BIT0 of the register operated by EIC0.
->>> Using the one-dimensional array reg[CACHE_NR_REGS] for maintenance
->>> will cause the configuration of other EICs to be affected when
->>> operating a certain EIC. In order to solve this problem, the register
->>> operation bits of each PMIC EIC are maintained through the two-dimensional
->>> array reg[SPRD_PMIC_EIC_NR][CACHE_NR_REGS] to avoid mutual interference.
->>
->> LGTM. And this also deserves a Fixes tag.
-> 
-> Do we really need a two-dimensional array to save 16-bit value?
+[...]
 
-I also considering this, but after more thinking, I think this patch is 
-a simple fix.
-
-Now I realized the problem is that, if we use one array to cache a bank 
-of EICs' status, the pmic_eic->reg[] array can contain incorrect 
-configuration for other EICs in the same bank.
-
-Yes, we can have another fix, for example, setting the pmic_eic->reg[] 
-to some invalid values (maybe -1) in sprd_pmic_eic_bus_sync_unlock() 
-after setting one EIC. Thus when setting another EIC, we can validate if 
-the cached reg is a valid value, if not, we do not need to set the 
-register. But like I said above, this seems more complicated.
-
->> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->>
->>> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
->>> ---
->>>    drivers/gpio/gpio-pmic-eic-sprd.c | 21 +++++++++++----------
->>>    1 file changed, 11 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
->>> index c3e4d90f6b18..442968bb2490 100644
->>> --- a/drivers/gpio/gpio-pmic-eic-sprd.c
->>> +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
->>> @@ -57,7 +57,7 @@ struct sprd_pmic_eic {
->>>        struct gpio_chip chip;
->>>        struct regmap *map;
->>>        u32 offset;
->>> -     u8 reg[CACHE_NR_REGS];
->>> +     u8 reg[SPRD_PMIC_EIC_NR][CACHE_NR_REGS];
->>>        struct mutex buslock;
->>>        int irq;
->>>    };
->>> @@ -151,8 +151,8 @@ static void sprd_pmic_eic_irq_mask(struct irq_data *data)
->>>        struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
->>>        u32 offset = irqd_to_hwirq(data);
->>>
->>> -     pmic_eic->reg[REG_IE] = 0;
->>> -     pmic_eic->reg[REG_TRIG] = 0;
->>> +     pmic_eic->reg[offset][REG_IE] = 0;
->>> +     pmic_eic->reg[offset][REG_TRIG] = 0;
->>>
->>>        gpiochip_disable_irq(chip, offset);
->>>    }
->>> @@ -165,8 +165,8 @@ static void sprd_pmic_eic_irq_unmask(struct irq_data *data)
->>>
->>>        gpiochip_enable_irq(chip, offset);
->>>
->>> -     pmic_eic->reg[REG_IE] = 1;
->>> -     pmic_eic->reg[REG_TRIG] = 1;
->>> +     pmic_eic->reg[offset][REG_IE] = 1;
->>> +     pmic_eic->reg[offset][REG_TRIG] = 1;
->>>    }
->>>
->>>    static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
->>> @@ -174,13 +174,14 @@ static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
->>>    {
->>>        struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
->>>        struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
->>> +     u32 offset = irqd_to_hwirq(data);
->>>
->>>        switch (flow_type) {
->>>        case IRQ_TYPE_LEVEL_HIGH:
->>> -             pmic_eic->reg[REG_IEV] = 1;
->>> +             pmic_eic->reg[offset][REG_IEV] = 1;
->>>                break;
->>>        case IRQ_TYPE_LEVEL_LOW:
->>> -             pmic_eic->reg[REG_IEV] = 0;
->>> +             pmic_eic->reg[offset][REG_IEV] = 0;
->>>                break;
->>>        case IRQ_TYPE_EDGE_RISING:
->>>        case IRQ_TYPE_EDGE_FALLING:
->>> @@ -222,15 +223,15 @@ static void sprd_pmic_eic_bus_sync_unlock(struct irq_data *data)
->>>                        sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV, 1);
->>>        } else {
->>>                sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV,
->>> -                                  pmic_eic->reg[REG_IEV]);
->>> +                                  pmic_eic->reg[offset][REG_IEV]);
->>>        }
->>>
->>>        /* Set irq unmask */
->>>        sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IE,
->>> -                          pmic_eic->reg[REG_IE]);
->>> +                          pmic_eic->reg[offset][REG_IE]);
->>>        /* Generate trigger start pulse for debounce EIC */
->>>        sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_TRIG,
->>> -                          pmic_eic->reg[REG_TRIG]);
->>> +                          pmic_eic->reg[offset][REG_TRIG]);
->>>
->>>        mutex_unlock(&pmic_eic->buslock);
->>>    }
+Kind regards
+Uffe
