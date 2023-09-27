@@ -2,85 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC617AFED4
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 10:44:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA2C97AFEEC
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 10:48:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbjI0Io2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 04:44:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49772 "EHLO
+        id S230305AbjI0IsR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 04:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbjI0Io2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 04:44:28 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496C595
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:44:27 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-59f4db9e11eso99157647b3.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:44:27 -0700 (PDT)
+        with ESMTP id S230248AbjI0IsP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 04:48:15 -0400
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A68EFDE
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:48:13 -0700 (PDT)
+Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-7ab9ad973e6so2964718241.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695804266; x=1696409066; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695804493; x=1696409293; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z2a9BLS4u3DgICvLzOii5evpo5Bqh/hTtSobhBQ9qFg=;
-        b=LE2UcuhNgnQszwITPoxCxRb6EGj+9wZDVXj8jNtBXELIZrXK/PwPsfrVp/B0h7fmNT
-         wVetQbwf5qgRyopDRzKkxfCv2NuyKEEo203fmtpxwsC/EwcNJDf7GSOd6iNPvJblTOik
-         uXf6UF+I0r4KCSvj27DewIcTpQm0b9d1m2+Cic5q1Ps60XaRdPvK18a9AhzfRLsKWZ0D
-         Gf0nkPHN9KB0dMPP/FocyGX/hrwZuZ8XYg7Ztk/iAoVr2qnsvJCwWDwDPJUrQDT0a6lr
-         uDSvsaLB2AHAxm+XOA+h/EcgpJy0Ca/WFC5Nj2nOCKXSDWHKHyfgL0oGCrhG3vdjzVaV
-         mDrg==
+        bh=8UePqMDDAbqRhi0bsJrfurhqXQouyI8L8X5n7XzM0aw=;
+        b=FfgwJS1Rvsv35goPZ8b9P23dOQOPPUlV7AExFRNOR7J8BjwtqnzOKRsbZCibiJwTJA
+         mbD+wzPTx5xEmcy73G/DyVHiNsRVEROv33QSb9WUlEOF6J9BWwJdVmMrpKCeJb7KHAbN
+         NV2KlQcdq4Wh4cK7HBRQRkmyVL2V138IJQZFysKfxIq4PfyLYQsSPAmB+6Mhta73cRdY
+         KPnJ1u7Axrzm52VddpmuULaLD1ae1Jwt/tS19Osa+YjN+vi2yUhqEsawCtURYSYewIWh
+         Eza8dzNEeIGMrRyYZrY8T8aPFFjOsMu6Q5mWKvnzZK3xHO8vnTn8Tn+v4u33Kg6LQ+LX
+         q7pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695804266; x=1696409066;
+        d=1e100.net; s=20230601; t=1695804493; x=1696409293;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z2a9BLS4u3DgICvLzOii5evpo5Bqh/hTtSobhBQ9qFg=;
-        b=dYhe/88HQdzJXzrhJ6tmRFL9D8ifJkL3AmKNJJiDGAi6CTEhu2Ws9E98Wes0ilVtG0
-         TE62r/gDs33IQiEf6YL7sq/giCV+X6V2SyQ/yJ3Mb+4lWnez9YT3eGObnclXhSsOo0FS
-         Qv7EDIP640ObEPLCllCTo0yTgEP7M1LBKcql7bMdgF8b8NvBdiU/wX69+yctNkmKy65x
-         SZvogUCyl6YoPaRF+Ge1byseZyB64tSNm2LiPJoszj+r8Ut9ZqrJenzmCx8Q/Q/eiI6t
-         EoueQ7RdZIR3Cah8HWP7Ieawj2MTsJdMaVKF0Lffe1UCO0wa0WS7cKnF3XldYBIVTTV6
-         /Jdw==
-X-Gm-Message-State: AOJu0Yw0oFMKWQv+0ZnDP51d3MXvHRsFe5/NNcSHuM2Auku6j73sZ+fx
-        /ZVFEyAUHr5Zy4X1nkUMb4wa8i8lE9Dr0ZQvtYh2eg==
-X-Google-Smtp-Source: AGHT+IFI3OXUIw2YZjlJU3xxbWIddHpKtE/ek2D2wzGlJ0JTneFMoPW0I+2IJDJjj40UcgXnDZmQNbomJZ1OppPYI68=
-X-Received: by 2002:a81:c253:0:b0:59b:f736:4948 with SMTP id
- t19-20020a81c253000000b0059bf7364948mr1497316ywg.33.1695804266446; Wed, 27
- Sep 2023 01:44:26 -0700 (PDT)
+        bh=8UePqMDDAbqRhi0bsJrfurhqXQouyI8L8X5n7XzM0aw=;
+        b=lIAyM3RkL/eWRgGHoNtibvo9Yr0cJVF9tgBcnMN7WmL8FLNBAoOIvGH1U91NlOHM0U
+         RMeM2THtIpucCdOQiuhil61YzubeYd1cUCUivw7xnAGTTSml4ruPgyXfJNHhxhf+6ZF0
+         fe11Vn2jS4uL78kDyuDnxsy3SrI0uW+9DneQczTMV5R2milxOqHp7DdSj7IWlVHg4cDR
+         vILv9ifo/vRen1sapXXVNj03tyCbuwOgElNpxQxJzcV8FrByNqGb9BEfjUfwUnQ4vAmK
+         fOLEwEe25/nVqhwTczYG0Ge/0FRzil6oG04Pp/sZws+9hGJrXf1kMFdle3sHTJ42SKBF
+         zJYQ==
+X-Gm-Message-State: AOJu0Yw8Yzamaes+dUPwzePIyGe+4EwKlmVw6FQJE4FomUUaU1UOHzgZ
+        bc+lnJ3PIO0WNdydBdtawsPNUoWYSospnOzco1pPxg==
+X-Google-Smtp-Source: AGHT+IFQJtKsE+gtrZBKTdP3Ub4DSJkvgu5MeAUur4etdFKcriSX73VjALIHRe+/2tItrB4gRzHHuL+FlPlRAvpeIt0=
+X-Received: by 2002:a67:fd17:0:b0:44e:8ef9:3371 with SMTP id
+ f23-20020a67fd17000000b0044e8ef93371mr1313754vsr.8.1695804492779; Wed, 27 Sep
+ 2023 01:48:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230923131432.21721-1-matti.lehtimaki@gmail.com> <20230923131432.21721-2-matti.lehtimaki@gmail.com>
-In-Reply-To: <20230923131432.21721-2-matti.lehtimaki@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 Sep 2023 10:44:15 +0200
-Message-ID: <CACRpkdbs-k2QU9XrZj1sUE5e8QEdfQ=AWhxtvtxA9d7fkC+NOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: qcom: msm8226: Add MPM pin mappings
-To:     =?UTF-8?Q?Matti_Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230926145943.42814-1-brgl@bgdev.pl> <ffb5b1a8-a4fa-f794-afc8-52eed4420a5c@redhat.com>
+In-Reply-To: <ffb5b1a8-a4fa-f794-afc8-52eed4420a5c@redhat.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 27 Sep 2023 10:48:01 +0200
+Message-ID: <CAMRc=MeoRRzc+JHCSyOqYb2t5p6GMLdA5wX_-uq15O3tdzC1mQ@mail.gmail.com>
+Subject: Re: [RFT PATCH 0/4] platform/x86: int3472: don't use gpiod_toggle_active_low()
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Sep 23, 2023 at 3:14=E2=80=AFPM Matti Lehtim=C3=A4ki
-<matti.lehtimaki@gmail.com> wrote:
-
-> Add pin <-> wakeirq mappings to allow for waking up the AP from sleep
-> through MPM-connected pins.
+On Wed, Sep 27, 2023 at 10:38=E2=80=AFAM Hans de Goede <hdegoede@redhat.com=
+> wrote:
 >
-> Signed-off-by: Matti Lehtim=C3=A4ki <matti.lehtimaki@gmail.com>
+> Hi Bartosz,
+>
+> On 9/26/23 16:59, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > gpiod_toggle_active_low() is a badly designed API that should have neve=
+r
+> > been used elsewhere then in the MMC code. And even there we should find
+> > a better solution.
+> >
+> > Replace the uses of it in the int3472 driver with the good old temporar=
+y
+> > lookup table trick. This is not very pretty either but it's the lesser
+> > evil.
+>
+> I saw your previous proposal which added a new api to directly set
+> the active_low flag, rather then toggle it.
+>
+> I intended to reply to that thread to say that I liked that approach,
+> but I don't remember if I actually did reply.
+>
+> I wonder what made you abandon the new function to directly set
+> the active-low flag on a gpio_desc?
+>
+> For the int3472 code that would work pretty well and it would
+> be much cleaner then the temp gpio-lookup approach.
+>
 
-Both v2 patches applied!
+You did reply, yes. Under one of the other patches Linus W stated that
+first: adding the ability for consumers to toggle the polarity was
+added to handle the MMC slot quirk, then it was used unknowingly to
+GPIO maintainers in other places (including this driver). I then
+acknowledged the fact that it should have never existed in the first
+place as this is HW description and should be defined in ACPI, DT or
+lookup flags.
 
-Yours,
-Linus Walleij
+I'm not sure why this information needs to be hard-coded in the driver
+in int3472_get_func_and_polarity() but maybe it could be pulled into
+gpiolib-acpi.c with other quirks?
+
+Bart
