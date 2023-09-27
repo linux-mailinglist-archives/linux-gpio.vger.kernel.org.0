@@ -2,122 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF53B7AFF73
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 11:07:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 829037AFF74
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 11:08:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbjI0JHJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 05:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52146 "EHLO
+        id S230071AbjI0JI4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 05:08:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230071AbjI0JHI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 05:07:08 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C733497
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 02:07:07 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-59bebd5bdadso132684387b3.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 02:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695805626; x=1696410426; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wm+CmHkCFmEfa7cbK5Jo56DJl1QMiUb2TNUipR3cFWA=;
-        b=wFoqMyCPnhrGGvtGG6Ty7huovmS1iNqXw09OYVwSNF1mHXhzZcAWuAxClHWBh+WEHD
-         WLyPO618gCB9c8BOUw0MITYpjCXXeMkUj4MG9afhcXkEDE2YxnGiJhjeJo17Gc4kx5Ty
-         NZism+708MfpgQhu1eGO4bXwMzFy4tg99rtN9GnW7y9nFwBr0IKdjvEnNkLwt1z6OjcU
-         MMEYz3Nrevi+eIc0q2DCn1Eg8LWiqy+APRijx5imqU27TMiOrjMRp6Uma5oB6zMnlVKA
-         SEgZf/7sku2qlyyEryjW7ziKWbCMBQyvH4E+zVtiDNtVL2pVFi4t5s5GLER1w3+iJKWT
-         GcbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695805626; x=1696410426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wm+CmHkCFmEfa7cbK5Jo56DJl1QMiUb2TNUipR3cFWA=;
-        b=JWb7vVOQ7ynHDNLS9AO90RjCL9kaB3YyX48sXOrYVDfthaU0lS5PUaw8rN2DA0CRnR
-         0jRqDAC5lEGj6xso6u7IkXACqNwhRHRuSB40OU40j4v/mPdPNQy0zj023G4llp4XuIF3
-         2WG4yXVKc6qt9PYp5HPrRBKi28ZSJLbpu/crxkpB5o4OHOSut/KPYj3LqS0B55cpVGw3
-         7prx+Yla4LMOYsMVmurXQ4HD+9ZnLYLNwf0MTdwZQdkvFWfosbif/vMp6aEC+anTQR6E
-         K/PqrJ1/lbMQkVulPZhCb39Roz4LVZjlH6Gey6Y0euSYW1fl0m8CUcntmpPue9eVjizb
-         xflw==
-X-Gm-Message-State: AOJu0YyUBzqeDgwCkuH8RgYzgxTnlREorVyM2WWkFPKN2kloxDSJSbxI
-        t23itIz0/ZdvcSyKhaujSneRN3e1Qu9jThMVRoDTMw==
-X-Google-Smtp-Source: AGHT+IHOJ7uJz9wRRMx9WyJXVRZIxp98VLGc6U0MGhD6EvrOAqvdnUU1XL6wd4Dlp0oFyLPgxgq+FoerK6agjArWnwY=
-X-Received: by 2002:a0d:db11:0:b0:59f:5895:6e38 with SMTP id
- d17-20020a0ddb11000000b0059f58956e38mr1693957ywe.4.1695805626721; Wed, 27 Sep
- 2023 02:07:06 -0700 (PDT)
+        with ESMTP id S229531AbjI0JIz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 05:08:55 -0400
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E153297;
+        Wed, 27 Sep 2023 02:08:53 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VszrmVr_1695805730;
+Received: from 30.97.48.70(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VszrmVr_1695805730)
+          by smtp.aliyun-inc.com;
+          Wed, 27 Sep 2023 17:08:51 +0800
+Message-ID: <c8b9fef7-e27c-6760-52a8-04045dcdc0ec@linux.alibaba.com>
+Date:   Wed, 27 Sep 2023 17:08:57 +0800
 MIME-Version: 1.0
-References: <202309270234.aJGlDE0P-lkp@intel.com>
-In-Reply-To: <202309270234.aJGlDE0P-lkp@intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 Sep 2023 11:06:55 +0200
-Message-ID: <CACRpkdYHUVno_E0iFE_Gxuoszr7TbtnTKaZGcAWz8_cnifwQUQ@mail.gmail.com>
-Subject: Re: [linusw-pinctrl:devel 15/25] drivers/pinctrl/realtek/pinctrl-rtd.c:180:29:
- warning: '%s' directive argument is null
-To:     kernel test robot <lkp@intel.com>
-Cc:     Tzuyi Chang <tychang@realtek.com>, oe-kbuild-all@lists.linux.dev,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH V2 1/4] gpio: sprd: In the sleep state, the eic debounce
+ clk must be forced open
+To:     Wenhua Lin <Wenhua.Lin@unisoc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wenhua lin <wenhua.lin1994@gmail.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+References: <20230921090027.11136-1-Wenhua.Lin@unisoc.com>
+ <20230921090027.11136-2-Wenhua.Lin@unisoc.com>
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20230921090027.11136-2-Wenhua.Lin@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 8:48=E2=80=AFPM kernel test robot <lkp@intel.com> w=
-rote:
 
->    drivers/pinctrl/realtek/pinctrl-rtd.c: In function 'rtd_pinctrl_set_on=
-e_mux':
-> >> drivers/pinctrl/realtek/pinctrl-rtd.c:180:29: warning: '%s' directive =
-argument is null [-Wformat-overflow=3D]
->      180 |         dev_err(pcdev->dev, "No function %s available for pin =
-%s\n", func_name, mux->name);
->          |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~
 
-So:
+On 9/21/2023 5:00 PM, Wenhua Lin wrote:
+> In the sleep state, Eic debounce has no clock and the clk of
+> debounce needs to be forced open, so that eic can wake up normally.
+> 
+> Fixes: 2788938b7946 ("gpio: eic-sprd: Make the irqchip immutable")
 
->    155  static int rtd_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
->    156                                     unsigned int pin, const char *=
-func_name)
->    157  {
->    158          struct rtd_pinctrl *data =3D pinctrl_dev_get_drvdata(pcde=
-v);
->    159          const struct rtd_pin_desc *mux;
->    160          int ret =3D 0;
->    161          int i;
->    162
->    163          mux =3D rtd_pinctrl_find_mux(data, pin);
->    164          if (!mux)
->    165                  return 0;
->    166
->    167          if (!mux->functions) {
->    168                  dev_err(pcdev->dev, "No functions available for p=
-in %s\n", mux->name);
->    169                  return -ENOTSUPP;
->    170          }
->    171
->    172          for (i =3D 0; mux->functions[i].name; i++) {
->    173                  if (strcmp(mux->functions[i].name, func_name) !=
-=3D 0)
->    174                          continue;
->    175                  ret =3D regmap_update_bits(data->regmap_pinctrl, =
-mux->mux_offset, mux->mux_mask,
->    176                                          mux->functions[i].mux_val=
-ue);
->    177                  return ret;
->    178          }
->    179
->  > 180          dev_err(pcdev->dev, "No function %s available for pin %s\=
-n", func_name, mux->name);
+Are you sure this is the right Fixes tag? This commit did not change EIC 
+debounce logics.
 
-I can't see it, what am I missing? Why would func_name or mux->name be NULL=
-?
+The changes look good to me.
 
-Yours,
-Linus Walleij
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+> ---
+>   drivers/gpio/gpio-eic-sprd.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+> index 84352a6f4973..bfa8a4c7515a 100644
+> --- a/drivers/gpio/gpio-eic-sprd.c
+> +++ b/drivers/gpio/gpio-eic-sprd.c
+> @@ -23,6 +23,7 @@
+>   #define SPRD_EIC_DBNC_IC		0x24
+>   #define SPRD_EIC_DBNC_TRIG		0x28
+>   #define SPRD_EIC_DBNC_CTRL0		0x40
+> +#define SPRD_EIC_DBNC_FORCE_CLK		0x8000
+>   
+>   #define SPRD_EIC_LATCH_INTEN		0x0
+>   #define SPRD_EIC_LATCH_INTRAW		0x4
+> @@ -214,6 +215,7 @@ static int sprd_eic_set_debounce(struct gpio_chip *chip, unsigned int offset,
+>   	u32 value = readl_relaxed(base + reg) & ~SPRD_EIC_DBNC_MASK;
+>   
+>   	value |= (debounce / 1000) & SPRD_EIC_DBNC_MASK;
+> +	value |= SPRD_EIC_DBNC_FORCE_CLK;
+>   	writel_relaxed(value, base + reg);
+>   
+>   	return 0;
