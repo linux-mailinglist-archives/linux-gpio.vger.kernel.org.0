@@ -2,118 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA2C97AFEEC
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 10:48:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7050E7AFF00
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 10:54:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230305AbjI0IsR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 04:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        id S229666AbjI0Iyb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 04:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbjI0IsP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 04:48:15 -0400
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A68EFDE
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:48:13 -0700 (PDT)
-Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-7ab9ad973e6so2964718241.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:48:13 -0700 (PDT)
+        with ESMTP id S229499AbjI0Iya (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 04:54:30 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E4CBF
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:54:27 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-59f630612a4so92901587b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:54:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695804493; x=1696409293; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1695804867; x=1696409667; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8UePqMDDAbqRhi0bsJrfurhqXQouyI8L8X5n7XzM0aw=;
-        b=FfgwJS1Rvsv35goPZ8b9P23dOQOPPUlV7AExFRNOR7J8BjwtqnzOKRsbZCibiJwTJA
-         mbD+wzPTx5xEmcy73G/DyVHiNsRVEROv33QSb9WUlEOF6J9BWwJdVmMrpKCeJb7KHAbN
-         NV2KlQcdq4Wh4cK7HBRQRkmyVL2V138IJQZFysKfxIq4PfyLYQsSPAmB+6Mhta73cRdY
-         KPnJ1u7Axrzm52VddpmuULaLD1ae1Jwt/tS19Osa+YjN+vi2yUhqEsawCtURYSYewIWh
-         Eza8dzNEeIGMrRyYZrY8T8aPFFjOsMu6Q5mWKvnzZK3xHO8vnTn8Tn+v4u33Kg6LQ+LX
-         q7pA==
+        bh=eUQWHokI0/PP3Pa9y7+XUP51eu78u0wG0BZdJCTqPvM=;
+        b=yLZDXl/E3IZ/hHX381j+AS8ds+gxMHPH71lGfZzfAE+QCdFOe+TPJlb/VaEMKlonH9
+         G/Tful4Z/Q72D9SoaZvcoAV+SYqo+do04lTZq8FEiRg86eSvMHY8E6hv2iZvdcbPxjXB
+         5waBqcxWyJhV79JuFdKmKO9RI86y6aO5LZY7XjA5/AiNB1RtyYnAXKNhnPnztF3DfpZ+
+         ABsn1PdZxID9HEUhcRwTR4U7BRkRz6teQYnrPJH2tRvuHwL1ucv9XGIeTCxELGE/BKgU
+         aEB382eFrXrbycguNLwakQzTNhLq/5EBY+PFMD/YzxaCXueW5i2mbS3rn2bnqBxDfMI7
+         MmOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695804493; x=1696409293;
+        d=1e100.net; s=20230601; t=1695804867; x=1696409667;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8UePqMDDAbqRhi0bsJrfurhqXQouyI8L8X5n7XzM0aw=;
-        b=lIAyM3RkL/eWRgGHoNtibvo9Yr0cJVF9tgBcnMN7WmL8FLNBAoOIvGH1U91NlOHM0U
-         RMeM2THtIpucCdOQiuhil61YzubeYd1cUCUivw7xnAGTTSml4ruPgyXfJNHhxhf+6ZF0
-         fe11Vn2jS4uL78kDyuDnxsy3SrI0uW+9DneQczTMV5R2milxOqHp7DdSj7IWlVHg4cDR
-         vILv9ifo/vRen1sapXXVNj03tyCbuwOgElNpxQxJzcV8FrByNqGb9BEfjUfwUnQ4vAmK
-         fOLEwEe25/nVqhwTczYG0Ge/0FRzil6oG04Pp/sZws+9hGJrXf1kMFdle3sHTJ42SKBF
-         zJYQ==
-X-Gm-Message-State: AOJu0Yw8Yzamaes+dUPwzePIyGe+4EwKlmVw6FQJE4FomUUaU1UOHzgZ
-        bc+lnJ3PIO0WNdydBdtawsPNUoWYSospnOzco1pPxg==
-X-Google-Smtp-Source: AGHT+IFQJtKsE+gtrZBKTdP3Ub4DSJkvgu5MeAUur4etdFKcriSX73VjALIHRe+/2tItrB4gRzHHuL+FlPlRAvpeIt0=
-X-Received: by 2002:a67:fd17:0:b0:44e:8ef9:3371 with SMTP id
- f23-20020a67fd17000000b0044e8ef93371mr1313754vsr.8.1695804492779; Wed, 27 Sep
- 2023 01:48:12 -0700 (PDT)
+        bh=eUQWHokI0/PP3Pa9y7+XUP51eu78u0wG0BZdJCTqPvM=;
+        b=C/XYCTyjiUrilaDM+qEaDunxyqn5qlohHuRJT2bdKSz01rqi3JAivod7HjX3+md1IO
+         CSdYj42e9imFHYhubFQxie+jN9MOTooi5QQ59EOK2NTLL3TOclSn2CNd52gmXzQKERGh
+         kLDaWH52WZod2JXfL+joAvGW3ECADJ+QZksTvxOjSTXL83P1pGnawu1Lu1V2tTaxQXF0
+         hZIFg4OzvY3bnVhgyU9e40falr2gXrNKN5oHeBN3pfwn9QyWhWO+9ZqL82Uy4GRM3dnQ
+         MZJ1/DMEKJhyaXBySc5uNeaoeN2MIdu38q1efHM9k+PxnHkP1Hn2tw42Gm2QVNtUr8Rn
+         1Qcg==
+X-Gm-Message-State: AOJu0YxwKXl1WQhMveB3DyTFcWBKbXe8C97c9FEb3UMAgOPH6LA35NqG
+        fXnZaGT1GGgmW9gZQ/44Q5bH5ArtkGI76vHZ7Dgg/DfasCUlgw3UB8Q=
+X-Google-Smtp-Source: AGHT+IH8Va/N+/AVkQsfeoRifmdhTAO1hd0KT2hbbCj2lB2xc8n5r1zjH+27Pilr4ZSMZryb7OVBP5dRyrmgdeHesAY=
+X-Received: by 2002:a81:488a:0:b0:56c:f0c7:7d72 with SMTP id
+ v132-20020a81488a000000b0056cf0c77d72mr1315032ywa.4.1695804867167; Wed, 27
+ Sep 2023 01:54:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230926145943.42814-1-brgl@bgdev.pl> <ffb5b1a8-a4fa-f794-afc8-52eed4420a5c@redhat.com>
-In-Reply-To: <ffb5b1a8-a4fa-f794-afc8-52eed4420a5c@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 27 Sep 2023 10:48:01 +0200
-Message-ID: <CAMRc=MeoRRzc+JHCSyOqYb2t5p6GMLdA5wX_-uq15O3tdzC1mQ@mail.gmail.com>
-Subject: Re: [RFT PATCH 0/4] platform/x86: int3472: don't use gpiod_toggle_active_low()
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <0cf720bf-ae4b-5780-bda4-5c9bbb2d1d67@nvidia.com>
+ <20230714113547.15384-1-pshete@nvidia.com> <20230925183049.10a40546@booty>
+In-Reply-To: <20230925183049.10a40546@booty>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 Sep 2023 10:54:15 +0200
+Message-ID: <CACRpkdbZ0cxA_y=6j_QQpF1SQ1q4hw-qUyeOnEK-+cLBd=gjCg@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: tegra: Add support to display pin function
+To:     Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc:     Prathamesh Shete <pshete@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 27, 2023 at 10:38=E2=80=AFAM Hans de Goede <hdegoede@redhat.com=
-> wrote:
->
-> Hi Bartosz,
->
-> On 9/26/23 16:59, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > gpiod_toggle_active_low() is a badly designed API that should have neve=
-r
-> > been used elsewhere then in the MMC code. And even there we should find
-> > a better solution.
-> >
-> > Replace the uses of it in the int3472 driver with the good old temporar=
-y
-> > lookup table trick. This is not very pretty either but it's the lesser
-> > evil.
->
-> I saw your previous proposal which added a new api to directly set
-> the active_low flag, rather then toggle it.
->
-> I intended to reply to that thread to say that I liked that approach,
-> but I don't remember if I actually did reply.
->
-> I wonder what made you abandon the new function to directly set
-> the active-low flag on a gpio_desc?
->
-> For the int3472 code that would work pretty well and it would
-> be much cleaner then the temp gpio-lookup approach.
->
+On Mon, Sep 25, 2023 at 6:30=E2=80=AFPM Luca Ceresoli <luca.ceresoli@bootli=
+n.com> wrote:
 
-You did reply, yes. Under one of the other patches Linus W stated that
-first: adding the ability for consumers to toggle the polarity was
-added to handle the MMC slot quirk, then it was used unknowingly to
-GPIO maintainers in other places (including this driver). I then
-acknowledged the fact that it should have never existed in the first
-place as this is HW description and should be defined in ACPI, DT or
-lookup flags.
+> The symptom is that i2c3 is not working anymore, the I2C lines being
+> always high. No other known issues at the moment.
 
-I'm not sure why this information needs to be hard-coded in the driver
-in int3472_get_func_and_polarity() but maybe it could be pulled into
-gpiolib-acpi.c with other quirks?
+Hm....
 
-Bart
+>> +     {"nvidia,function",             TEGRA_PINCONF_PARAM_FUNCTION},
+>
+> FYI, I reduced your patch to only this line plus the one in the
+> pinctrl-tegra.h and the problem appears as well.
+
+I think there is a conflict now, that the pinconf is "stealing" the functio=
+n
+assignment from the pinmux call.
+
+It's just a debugprint, I will revert the patch, Luca can investigate and y=
+ou
+can test a new patch then we will merge that.
+
+Yours,
+Linus Walleij
