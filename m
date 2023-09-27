@@ -2,101 +2,230 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B98BD7B06D1
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 16:29:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 012597B076D
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 16:56:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232122AbjI0O3x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 10:29:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
+        id S232068AbjI0O4Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 10:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232169AbjI0O3s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 10:29:48 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B93101B4
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 07:29:46 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-405621baba7so83776965e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 07:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695824985; x=1696429785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MZXaGIIfZuiGEdZwV32Js1I7wu0xbFZLpMopu8S/63c=;
-        b=LRr+WyT+pJrvtzeFl3/fK+ENRQ+D1e0hsD+RYczEWKCCDSfkFSRWt4FSYjeXCZD9Kp
-         GyWvm2X6/1LKNL6TZAYKYS6ht5cszmolglAiC/8c4D6CgAjxPZUVvb4Ro7F7jIN+mJr9
-         9QUrTlbND7s6NJlmOzLc404VWq8LDsLHYi2qsK1qIuybIH8JoBqrVW+voJmD1lTJVYQw
-         pYeAx+hjxY8RSBKSOlL3x3lB8jAFSTB8w9OO3qTLr40WSgcZXQ8aNLNlpHYX33BtsNo2
-         W12MVKhQ/RaB15Oij4eRJm/nbjabyZ3ifwQTuom524ifc/F+xiRgd124dftTVaLC2Uz1
-         0nDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695824985; x=1696429785;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MZXaGIIfZuiGEdZwV32Js1I7wu0xbFZLpMopu8S/63c=;
-        b=E/iTJKgH13WdAPxtbQyqSEiRRYg2RXZidQ5iCcCyaBkwO5Zqlv6c2ecmFoFk9bn+B8
-         ZZFsCPvsQw61vI046IMJv7oKWpz0g6D+IkPvtUvwXfzV1nXEtOva9YAWwfbamPzVAwzf
-         3rPG48JQ+mOtUKQDiEPEoRnSJSQOY1ItA//mBTQowgjzRMlhdiULeDpAu/eJyJRQwXgd
-         Ej2s+LP4GeQi3gkneZe2xAywauN8mXOh91ojc/GKwE2Bem3lU2H5vjE3XMt+Irh7iSw4
-         5LG0odWt6CKrROK8y9kOyiruC+EWqsS6Cet9cQ0VKTZIkUPcKx60WFS1RZe8oI0O1A7+
-         fvuw==
-X-Gm-Message-State: AOJu0YxZbqDMFVkRBxMPmbOO+EdBej/A4UqoAPJ2SSSAQEcXy4CTkWdt
-        S2VIL2O+ccBIN3QAvxqmklT67w==
-X-Google-Smtp-Source: AGHT+IEXsLCf66wrsjqsyNP3LGPoGey7JEWXQQyftq4Pcl8llIG+MXA78yj2kb3tXjDQEhKuOHbqGg==
-X-Received: by 2002:a7b:c3d1:0:b0:405:3d27:70e8 with SMTP id t17-20020a7bc3d1000000b004053d2770e8mr2265430wmj.36.1695824985281;
-        Wed, 27 Sep 2023 07:29:45 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4bb6:1525:9e22:4a15])
-        by smtp.gmail.com with ESMTPSA id v2-20020a1cf702000000b003feae747ff2sm20448303wmh.35.2023.09.27.07.29.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Sep 2023 07:29:44 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v4 11/11] gpio: sysfs: drop the mention of gpiochip_find() from sysfs code
-Date:   Wed, 27 Sep 2023 16:29:31 +0200
-Message-Id: <20230927142931.19798-12-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230927142931.19798-1-brgl@bgdev.pl>
-References: <20230927142931.19798-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232067AbjI0O4Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 10:56:24 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37573F4
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 07:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695826583; x=1727362583;
+  h=date:from:to:cc:subject:message-id;
+  bh=KxhrNB0gbxQQR0CITbYJ18eF4Ygv+4d3o40SScZIT4k=;
+  b=mEE/wnDFfd1MTTIw/W+bG9aACfvs+SwKkzs0KmLsfjPwPa5YAxe2b14k
+   PkivYcnwRxS/2775LfPLgvHYcFkjWzYQwXOB9gdWNavD/EuAZvfCiP1f5
+   yZmeV6wuSrIk/ZWpQ8sGbG0qz8RmP5wbL8ECWRzeDuTjkWqzv9GaHE2KQ
+   /eCGBe8xtJleBjhh7IMHvaiGAkfu5kNF2S24e88qSXeGtIx1bfIF0thw/
+   zvk1e1gNhiU6c1/lSor9cg8f12SFcjWskHLNqbkspWkyMyLeZLAVtfM4Y
+   7oAQ9x6mPc3JQLxCT0VVZIVNXopQfTDgcSfxdUWgMr//2EVHL2XXMVutz
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="385701920"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="385701920"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 07:56:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="922806563"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="922806563"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 27 Sep 2023 07:56:19 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qlVxZ-0000L3-15;
+        Wed, 27 Sep 2023 14:56:17 +0000
+Date:   Wed, 27 Sep 2023 22:56:09 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-gpio:b4/descriptors-asoc-rockchip] BUILD SUCCESS
+ 5e4de96397985dfd1101a630340cb28bb7ed9a7e
+Message-ID: <202309272207.GYjjThQn-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-asoc-rockchip
+branch HEAD: 5e4de96397985dfd1101a630340cb28bb7ed9a7e  ASoC: rockchip: Drop includes from Rockchip RT5645
 
-We have removed all callers of gpiochip_find() so don't mention it in
-gpiolib-sysfs.c.
+elapsed time: 1473m
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpiolib-sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+configs tested: 155
+configs skipped: 2
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 50503a4525eb..6f309a3b2d9a 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -814,7 +814,7 @@ static int __init gpiolib_sysfs_init(void)
- 		 * gpiochip_sysfs_register() acquires a mutex. This is unsafe
- 		 * and needs to be fixed.
- 		 *
--		 * Also it would be nice to use gpiochip_find() here so we
-+		 * Also it would be nice to use gpio_device_find() here so we
- 		 * can keep gpio_chips local to gpiolib.c, but the yield of
- 		 * gpio_lock prevents us from doing this.
- 		 */
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20230927   gcc  
+arc                    vdk_hs38_smp_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   randconfig-001-20230927   gcc  
+arm                             rpc_defconfig   gcc  
+arm                           tegra_defconfig   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20230927   gcc  
+i386         buildonly-randconfig-002-20230927   gcc  
+i386         buildonly-randconfig-003-20230927   gcc  
+i386         buildonly-randconfig-004-20230927   gcc  
+i386         buildonly-randconfig-005-20230927   gcc  
+i386         buildonly-randconfig-006-20230927   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20230927   gcc  
+i386                  randconfig-002-20230927   gcc  
+i386                  randconfig-003-20230927   gcc  
+i386                  randconfig-004-20230927   gcc  
+i386                  randconfig-005-20230927   gcc  
+i386                  randconfig-006-20230927   gcc  
+i386                  randconfig-011-20230927   gcc  
+i386                  randconfig-012-20230927   gcc  
+i386                  randconfig-013-20230927   gcc  
+i386                  randconfig-014-20230927   gcc  
+i386                  randconfig-015-20230927   gcc  
+i386                  randconfig-016-20230927   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20230926   gcc  
+loongarch             randconfig-001-20230927   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5208evb_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath25_defconfig   clang
+mips                           ci20_defconfig   gcc  
+mips                     decstation_defconfig   gcc  
+mips                           ip28_defconfig   clang
+mips                       lemote2f_defconfig   clang
+mips                        vocore2_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                      chrp32_defconfig   gcc  
+powerpc                      makalu_defconfig   gcc  
+powerpc                      pasemi_defconfig   gcc  
+powerpc                       ppc64_defconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20230927   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20230927   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                          rsk7269_defconfig   gcc  
+sh                           se7780_defconfig   gcc  
+sh                           sh2007_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                 randconfig-001-20230927   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-001-20230927   gcc  
+x86_64       buildonly-randconfig-002-20230927   gcc  
+x86_64       buildonly-randconfig-003-20230927   gcc  
+x86_64       buildonly-randconfig-004-20230927   gcc  
+x86_64       buildonly-randconfig-005-20230927   gcc  
+x86_64       buildonly-randconfig-006-20230927   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20230927   gcc  
+x86_64                randconfig-002-20230927   gcc  
+x86_64                randconfig-003-20230927   gcc  
+x86_64                randconfig-004-20230927   gcc  
+x86_64                randconfig-005-20230927   gcc  
+x86_64                randconfig-006-20230927   gcc  
+x86_64                randconfig-011-20230927   gcc  
+x86_64                randconfig-012-20230927   gcc  
+x86_64                randconfig-013-20230927   gcc  
+x86_64                randconfig-014-20230927   gcc  
+x86_64                randconfig-015-20230927   gcc  
+x86_64                randconfig-016-20230927   gcc  
+x86_64                randconfig-071-20230927   gcc  
+x86_64                randconfig-072-20230927   gcc  
+x86_64                randconfig-073-20230927   gcc  
+x86_64                randconfig-074-20230927   gcc  
+x86_64                randconfig-075-20230927   gcc  
+x86_64                randconfig-076-20230927   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                  cadence_csp_defconfig   gcc  
+xtensa                    smp_lx200_defconfig   gcc  
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
