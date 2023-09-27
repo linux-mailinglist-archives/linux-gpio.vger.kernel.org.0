@@ -2,116 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35BFA7B0486
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 14:42:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D68A7B04B8
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 14:54:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbjI0Mmq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 08:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
+        id S230109AbjI0Myq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 27 Sep 2023 08:54:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231799AbjI0Mmn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 08:42:43 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB643193
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 05:42:40 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id ada2fe7eead31-4527ba546d2so4185868137.2
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 05:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695818560; x=1696423360; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EvHdxEwsucmy96ETfuIzQ5eJCnM+fye6vNp8d8H69Nc=;
-        b=KDaZcaGXy/4GQpNkkSH40XW9xzd8sune4LwzkwQiaBOdtgUSjm73zj4tSy4V9hNjv6
-         KhPVleGo2Bg5KIDJs5NFWYqzckjd2S8j0PAjO8ENSspdkIrPTI5SKiDfDXRRPQdIPKxQ
-         y38ikiWWEkaScOtILe6GJycOj8Hyen+PtZtLl/qx05ePoBz8BDmS3134E3x9EQvMNeC/
-         BV11gfKCGOOBatwslig0Kt06ma+fU21plYyXD/x5EdHHzPZX+cVc0qhgeiT81DLyYz6k
-         KQESmqYeu3FqL4llv9fUGkqh8O+GvYm+NYrfEIBn1EeOJJfO3c13H4CyBlampbyPtEai
-         7ZXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695818560; x=1696423360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EvHdxEwsucmy96ETfuIzQ5eJCnM+fye6vNp8d8H69Nc=;
-        b=hhw2JZf3x9jPv1gJfB/iIW5WxIfujYpQjHjMabjPik8YNF2QgN6nQm3/p/46TUgb/S
-         YA+TuuvCH6DC1xUp2T7Q1nl1hqef8sxbi7Mhs4kX2Iq5HngwlA++QXEUP2yu/aFfFkbC
-         eqJbSPf/EHyD4Gp/AwnmXdLEsTY7+qbIzczNQNc5BBLfmFaLrPGIo6vN69zIDY6sCRtc
-         lwPG4Wp+JJWpbY3FKZvpYOxgx7XLjoXDz4c/8gVY4Ft8qdgEqFt0ViyHqkrBe1rSigyl
-         XSvc/tyJuDs3RnhGhcGS+H6pP/gAhdKXxjVA2NYMUTfZay7m4U2F9hG2BVLEF9kkHEPS
-         bhIw==
-X-Gm-Message-State: AOJu0YwAai1LuEsj1uHbs8RhgFZJDkfOsXzREQiDg7Xg6CldrX3MceLP
-        NMNYQx/4ZnwDBa2+jqk8qnxbVSbQlFQoo/07hy8MGQ==
-X-Google-Smtp-Source: AGHT+IG8YgVkCOcVoASdJ8m5ynxyqPmsoDNwOwH7mhNL7+IBZ4f8tY6sNa/uwJi2At9mOZr2+SXY4HpEte2Akwsk+8A=
-X-Received: by 2002:a67:ff02:0:b0:44e:9219:136c with SMTP id
- v2-20020a67ff02000000b0044e9219136cmr1341472vsp.15.1695818559788; Wed, 27 Sep
- 2023 05:42:39 -0700 (PDT)
+        with ESMTP id S231749AbjI0Myq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 08:54:46 -0400
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0560FC0;
+        Wed, 27 Sep 2023 05:54:42 -0700 (PDT)
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+        by mx.skole.hr (mx.skole.hr) with ESMTP id 3EF9B821B6;
+        Wed, 27 Sep 2023 14:54:35 +0200 (CEST)
+From:   Duje =?utf-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH RFC v2 5/6] ARM: pxa: Convert Spitz hsync to GPIO descriptors
+Date:   Wed, 27 Sep 2023 14:54:32 +0200
+Message-ID: <12302039.O9o76ZdvQC@radijator>
+In-Reply-To: <ZRMEi6pACEx5HQZ/@smile.fi.intel.com>
+References: <20230926-pxa-gpio-v2-0-984464d165dd@skole.hr>
+ <20230926-pxa-gpio-v2-5-984464d165dd@skole.hr>
+ <ZRMEi6pACEx5HQZ/@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20230915150327.81918-1-brgl@bgdev.pl> <20230915150327.81918-5-brgl@bgdev.pl>
- <ZQf6E+itll3dmCnU@smile.fi.intel.com> <CAMRc=Mcq-0yWcYp6ksDF5RP-B+7b+r2KYh5onEMKx1tpS9O4hQ@mail.gmail.com>
- <ZRQhIqpb6Ho9ifgz@smile.fi.intel.com>
-In-Reply-To: <ZRQhIqpb6Ho9ifgz@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 27 Sep 2023 14:42:28 +0200
-Message-ID: <CAMRc=Mck9R8LB6_g9O54ZhRDewx99aOs9g-bExR3yC+GJ-8gYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 04/11] gpiolib: provide gpio_device_find_by_label()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Autocrypt: addr=duje.mihanovic@skole.hr;
+ keydata=
+ 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
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 27, 2023 at 2:33=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Sep 27, 2023 at 01:22:36PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Sep 18, 2023 at 9:19=E2=80=AFAM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Fri, Sep 15, 2023 at 05:03:19PM +0200, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > By far the most common way of looking up GPIO devices is using thei=
-r
-> > > > label. Provide a helpers for that to avoid every user implementing =
-their
-> > > > own matching function.
->
-> ...
->
-> > > > +static int gpio_chip_match_by_label(struct gpio_chip *gc, void *la=
-bel)
-> > > > +{
-> > > > +     return gc->label && !strcmp(gc->label, label);
-> > > > +}
-> > >
-> > > I am still wondering if we can oblige providers to have label to be n=
-on-empty.
-> >
-> > Of course we can. Just bail out of gpiochip_add_data_with_key() if it
-> > is. But that's material for a different patch.
->
-> Yes, but my point here is that
-> 1) the current users are already following this requirement;
-> 2) the enforcement can be done explicitly somewhere (in the register func=
-tion).
->
-> Is the 1) incorrect assumption?
->
+On Tuesday, September 26, 2023 6:19:23 PM CEST Andy Shevchenko wrote:
+> On Tue, Sep 26, 2023 at 05:46:26PM +0200, Duje Mihanović wrote:
+> >  	gpiod_add_lookup_table(&spitz_ads7846_gpio_table);
+> >  	gpiod_add_lookup_table(&spitz_spi_gpio_table);
+> > 
+> > +	hsync = gpiod_get(NULL, "hsync", GPIOD_IN);
+> > +	if (IS_ERR(hsync)) {
+> > +		pr_err("Failed to get hsync GPIO: %ld\n", PTR_ERR(hsync));
+> > +		return;
+> > +	}
+> > 
+> >  	pxa2xx_set_spi_info(2, &spitz_spi_info);
+> >  	spi_register_board_info(ARRAY_AND_SIZE(spitz_spi_devices));
+> 
+> Yeah, but the question is, if GPIO request fails, can we instantiate at 
+least one device and move on?
 
-I remember doing a quick glance over GPIO providers and it looks like
-ALL of them set the label. But I may have missed something. I would
-start with a warning.
+I see. If the touchscreen is the first out of 3 devices in that array, would 
+something like this do:
 
-Bart
+spi_register_board_info(ARRAY_AND_SIZE(&spitz_spi_devices[1]));
+
+Regards,
+Duje
+
+
+
