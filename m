@@ -2,72 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42ED17AFB6E
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 08:54:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57AF57AFB75
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 08:56:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjI0Gye (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 02:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
+        id S229478AbjI0G4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 02:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbjI0Gyd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 02:54:33 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E76DD;
-        Tue, 26 Sep 2023 23:54:32 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-32336a30d18so2690819f8f.2;
-        Tue, 26 Sep 2023 23:54:32 -0700 (PDT)
+        with ESMTP id S229458AbjI0G4h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 02:56:37 -0400
+Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2360FA3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 23:56:37 -0700 (PDT)
+Received: by mail-ua1-x932.google.com with SMTP id a1e0cc1a2514c-7a84609acc6so4047609241.3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Sep 2023 23:56:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695797671; x=1696402471; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DaZkwqJ0NHV5f8ZiALA0vRm4ZlZ22IDDgbWF0iyHHWI=;
-        b=S2JEZ9iPbObq2OeJDLvLILCCcyNUhKnrwCX90HjPAOIYriyzalmOEOY9iyNZRqcGbY
-         fMKwPxDqkdV2/0vsvbdzvjV9WRDpfSwyxulNWO0QV+I40OZPP2gkViI+tNAsDN4H+Gtx
-         XWk9nEaI9ODrhRFDZjzLFX7uPDYVZKiBmd8WnPTUEtfwPpojUdytkZAnac42PqEoRpKr
-         Mx+VYZbUeGFcWvBaYI2lW/zm/Jo/X9uuLkfDlCHjsSwdPiGPT+gUeYmxDEtpYFzZCE3d
-         g7tmHekTH++szXdJM1BH6QtjW9+xvxuEV0DsyvgcZDLHEA8p/vc8oBMJAO04FLS63hAF
-         7SEQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695797796; x=1696402596; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ogHgKYOg4Pr/48DpWW/k5DqXjmMzTHrz2VavoAqChL0=;
+        b=VtlD3vjw3b9qsIlToPFug2iap18BxG3lbLhkcfkI9y4ecd8E+VHNI7WdcmruujfaZU
+         bZHs02deWDae8FNoT8GAJ8BmgyOWvjs9r585LO5qlekLupo0Bf3O5CPRUdu/i3qNlzgb
+         sGVG18XF40qbag2saOy+wRLX+h8WPzPCx+q6nXLyZ7eBoFTX+Bzf0AMnPcaQnSQjuuKX
+         xIB7juVwxW+azV1Mv7IRjbsFffzU462iZOru0OKdfEWwrgVbWMjviJdNwc8T/ROCnq/h
+         qIcHwoiuzpuLOq2VEejXivx2/LrvGx2l08u70s4FUfdKNpdvh6C2c0uPwUg9T/rpvLqs
+         cOlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695797671; x=1696402471;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DaZkwqJ0NHV5f8ZiALA0vRm4ZlZ22IDDgbWF0iyHHWI=;
-        b=htXVtfGL8o1xm8irK0iXZFSPcEpfhvrjjlJTWx6Ck4uhcrZPNiAyxo51owtRTHvuDk
-         h3wO/nb6g/Zhzjjwi/lMwS7ak4DkZMQj6NdPj8VOd3sgc9POn3Zn0y4LNdPrHjw7w3+v
-         LmzDplscSqGBFgG2kJiqXWcgOwhB+2qfjqzMlb8RRMSwnD2JPQE/bVKeix8k0J63YTcN
-         Z+LaiEf4PcbhZJX+p9PRC73N4EZflAhmF59SjOKTHEiUZFaH7NtW96Ykd79LkIpyCi4s
-         0n+ONEZ3FL19UVCok6+ZSZzzXkeUN5R7Dw7Vj2KrYj9mQrFdo5Ueb3hskl02v+g5X5cr
-         C4bA==
-X-Gm-Message-State: AOJu0Yzwdyfjld881s5wjSV2mtuHMTtAdjjOxOqYDKdanWVPrgBpYl46
-        tfpB/g3BXzDlspp3Ye4hgIEmCBeTIJl4bGhZHRlKs7iaf2SzFg==
-X-Google-Smtp-Source: AGHT+IG/aY6dk4QVZxCqAl3TV/et4sl3C4IHv8aEPNedVxEDjUwJn+/tnjC7Cf3SCvzyyVzDnU9B2KiXcRMz0NDDkGQ=
-X-Received: by 2002:a5d:4811:0:b0:317:50b7:2ce3 with SMTP id
- l17-20020a5d4811000000b0031750b72ce3mr814195wrq.51.1695797670681; Tue, 26 Sep
- 2023 23:54:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695797796; x=1696402596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ogHgKYOg4Pr/48DpWW/k5DqXjmMzTHrz2VavoAqChL0=;
+        b=iXoByRdTp28osK0z+XOXH0Lo9vXY7SlSNshSqhWHJAuIZrBkquEnANLgboqeQCkijV
+         FNfeAXp3n/MJ5ZOC6dsf9e77koyGRIrpbRiRFs1jZ3aSkM4Q+zxz3Vl3SdJJcskMQUmA
+         yn5yFovblZ0c9yRfyCVK/me7oqJIqbhx28pcaEG38UVqz4rhMUJn01ZsPIrM3+pfm1aN
+         bbS7NFglFnY+AUG0+mhlekugLEDQQ6PKvg46cl1LjlSiriQOSg0mW867PfLP+8W8U3+C
+         eSVIUIthcSdywPati21JtBVMEcGheVCDkZ2Xxn9stbeJVLeA+O/tm4n1PNvPZbv/67kl
+         ht0g==
+X-Gm-Message-State: AOJu0Yw0a/idWuxPv6ZvTVvqMHBqV2CCP4PUFmwlm88fVI88VbsUpNzW
+        YWHZGDvvIQulgmDN1vP4k1qms3ST514XlWcdS99OtA==
+X-Google-Smtp-Source: AGHT+IEu7l+qv/EzFktz29NbLQ8Mjiny3AVF2fHHy3dxJi8oJsXwR/qzlMXaz4XRHFg37LF+Nq2tqw4MF6xZYwKTDJo=
+X-Received: by 2002:a67:eb16:0:b0:452:773c:e0a6 with SMTP id
+ a22-20020a67eb16000000b00452773ce0a6mr1149906vso.9.1695797796250; Tue, 26 Sep
+ 2023 23:56:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230926102914.6145-1-dg573847474@gmail.com> <CAMRc=Mf-tO5yaushz__Mq+em8o3Qp+QkG2Dc06JY9r-GoWPu=Q@mail.gmail.com>
-In-Reply-To: <CAMRc=Mf-tO5yaushz__Mq+em8o3Qp+QkG2Dc06JY9r-GoWPu=Q@mail.gmail.com>
-From:   Chengfeng Ye <dg573847474@gmail.com>
-Date:   Wed, 27 Sep 2023 14:54:19 +0800
-Message-ID: <CAAo+4rX67i=P0yatabDqdhz8wS=rdpGVcwoRagbDLsvZa2JZrA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: timberdale: Fix potential deadlock on &tgpio->lock
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linus.walleij@linaro.org, andy@kernel.org, alex@shruggie.ro,
-        aboutphysycs@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20230923-ixp4xx-gpio-clocks-v3-0-66f8fe4e7f15@linaro.org> <20230923-ixp4xx-gpio-clocks-v3-1-66f8fe4e7f15@linaro.org>
+In-Reply-To: <20230923-ixp4xx-gpio-clocks-v3-1-66f8fe4e7f15@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 27 Sep 2023 08:56:25 +0200
+Message-ID: <CAMRc=Mdk783GGe8-9__sNigr8kMedmLO1xtqtsbK2y=RMFJ4nA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] gpio: Rewrite IXP4xx GPIO bindings in schema
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>,
+        Krzysztof Halasa <khalasa@piap.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Thanks much for the review!
+On Sat, Sep 23, 2023 at 6:02=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> This rewrites the IXP4xx GPIO bindings to use YAML schema,
+> and adds two new properties to enable fixed clock output on
+> pins 14 and 15.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-Best,
-Chengfeng
+I queued this, no need to resend it with the next respin of patch 2/2.
+
+Bart
