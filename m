@@ -2,81 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD2427AFF6D
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 11:05:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF53B7AFF73
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 11:07:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbjI0JFK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 05:05:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34452 "EHLO
+        id S230149AbjI0JHJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 05:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbjI0JFJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 05:05:09 -0400
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3A8BF;
-        Wed, 27 Sep 2023 02:05:07 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VszpuXE_1695805503;
-Received: from 30.97.48.70(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VszpuXE_1695805503)
-          by smtp.aliyun-inc.com;
-          Wed, 27 Sep 2023 17:05:04 +0800
-Message-ID: <fdf63e0d-e342-3506-e441-c898c29569c4@linux.alibaba.com>
-Date:   Wed, 27 Sep 2023 17:05:10 +0800
+        with ESMTP id S230071AbjI0JHI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 05:07:08 -0400
+Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C733497
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 02:07:07 -0700 (PDT)
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-59bebd5bdadso132684387b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 02:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695805626; x=1696410426; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wm+CmHkCFmEfa7cbK5Jo56DJl1QMiUb2TNUipR3cFWA=;
+        b=wFoqMyCPnhrGGvtGG6Ty7huovmS1iNqXw09OYVwSNF1mHXhzZcAWuAxClHWBh+WEHD
+         WLyPO618gCB9c8BOUw0MITYpjCXXeMkUj4MG9afhcXkEDE2YxnGiJhjeJo17Gc4kx5Ty
+         NZism+708MfpgQhu1eGO4bXwMzFy4tg99rtN9GnW7y9nFwBr0IKdjvEnNkLwt1z6OjcU
+         MMEYz3Nrevi+eIc0q2DCn1Eg8LWiqy+APRijx5imqU27TMiOrjMRp6Uma5oB6zMnlVKA
+         SEgZf/7sku2qlyyEryjW7ziKWbCMBQyvH4E+zVtiDNtVL2pVFi4t5s5GLER1w3+iJKWT
+         GcbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695805626; x=1696410426;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wm+CmHkCFmEfa7cbK5Jo56DJl1QMiUb2TNUipR3cFWA=;
+        b=JWb7vVOQ7ynHDNLS9AO90RjCL9kaB3YyX48sXOrYVDfthaU0lS5PUaw8rN2DA0CRnR
+         0jRqDAC5lEGj6xso6u7IkXACqNwhRHRuSB40OU40j4v/mPdPNQy0zj023G4llp4XuIF3
+         2WG4yXVKc6qt9PYp5HPrRBKi28ZSJLbpu/crxkpB5o4OHOSut/KPYj3LqS0B55cpVGw3
+         7prx+Yla4LMOYsMVmurXQ4HD+9ZnLYLNwf0MTdwZQdkvFWfosbif/vMp6aEC+anTQR6E
+         K/PqrJ1/lbMQkVulPZhCb39Roz4LVZjlH6Gey6Y0euSYW1fl0m8CUcntmpPue9eVjizb
+         xflw==
+X-Gm-Message-State: AOJu0YyUBzqeDgwCkuH8RgYzgxTnlREorVyM2WWkFPKN2kloxDSJSbxI
+        t23itIz0/ZdvcSyKhaujSneRN3e1Qu9jThMVRoDTMw==
+X-Google-Smtp-Source: AGHT+IHOJ7uJz9wRRMx9WyJXVRZIxp98VLGc6U0MGhD6EvrOAqvdnUU1XL6wd4Dlp0oFyLPgxgq+FoerK6agjArWnwY=
+X-Received: by 2002:a0d:db11:0:b0:59f:5895:6e38 with SMTP id
+ d17-20020a0ddb11000000b0059f58956e38mr1693957ywe.4.1695805626721; Wed, 27 Sep
+ 2023 02:07:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH V2 2/2] gpio: pmic-eic-sprd: Add can_sleep flag for PMIC
- EIC chip
-To:     Wenhua Lin <Wenhua.Lin@unisoc.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wenhua lin <wenhua.lin1994@gmail.com>,
-        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-References: <20230921122527.15261-1-Wenhua.Lin@unisoc.com>
- <20230921122527.15261-3-Wenhua.Lin@unisoc.com>
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20230921122527.15261-3-Wenhua.Lin@unisoc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <202309270234.aJGlDE0P-lkp@intel.com>
+In-Reply-To: <202309270234.aJGlDE0P-lkp@intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 Sep 2023 11:06:55 +0200
+Message-ID: <CACRpkdYHUVno_E0iFE_Gxuoszr7TbtnTKaZGcAWz8_cnifwQUQ@mail.gmail.com>
+Subject: Re: [linusw-pinctrl:devel 15/25] drivers/pinctrl/realtek/pinctrl-rtd.c:180:29:
+ warning: '%s' directive argument is null
+To:     kernel test robot <lkp@intel.com>
+Cc:     Tzuyi Chang <tychang@realtek.com>, oe-kbuild-all@lists.linux.dev,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Sep 26, 2023 at 8:48=E2=80=AFPM kernel test robot <lkp@intel.com> w=
+rote:
 
+>    drivers/pinctrl/realtek/pinctrl-rtd.c: In function 'rtd_pinctrl_set_on=
+e_mux':
+> >> drivers/pinctrl/realtek/pinctrl-rtd.c:180:29: warning: '%s' directive =
+argument is null [-Wformat-overflow=3D]
+>      180 |         dev_err(pcdev->dev, "No function %s available for pin =
+%s\n", func_name, mux->name);
+>          |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~
 
-On 9/21/2023 8:25 PM, Wenhua Lin wrote:
-> The drivers uses a mutex and I2C bus access in its PMIC EIC chip
-> get implementation. This means these functions can sleep and the PMIC EIC
-> chip should set the can_sleep property to true.
-> 
-> This will ensure that a warning is printed when trying to get the
-> value from a context that potentially can't sleep.
+So:
 
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>    155  static int rtd_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
+>    156                                     unsigned int pin, const char *=
+func_name)
+>    157  {
+>    158          struct rtd_pinctrl *data =3D pinctrl_dev_get_drvdata(pcde=
+v);
+>    159          const struct rtd_pin_desc *mux;
+>    160          int ret =3D 0;
+>    161          int i;
+>    162
+>    163          mux =3D rtd_pinctrl_find_mux(data, pin);
+>    164          if (!mux)
+>    165                  return 0;
+>    166
+>    167          if (!mux->functions) {
+>    168                  dev_err(pcdev->dev, "No functions available for p=
+in %s\n", mux->name);
+>    169                  return -ENOTSUPP;
+>    170          }
+>    171
+>    172          for (i =3D 0; mux->functions[i].name; i++) {
+>    173                  if (strcmp(mux->functions[i].name, func_name) !=
+=3D 0)
+>    174                          continue;
+>    175                  ret =3D regmap_update_bits(data->regmap_pinctrl, =
+mux->mux_offset, mux->mux_mask,
+>    176                                          mux->functions[i].mux_val=
+ue);
+>    177                  return ret;
+>    178          }
+>    179
+>  > 180          dev_err(pcdev->dev, "No function %s available for pin %s\=
+n", func_name, mux->name);
 
-> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
-> ---
->   drivers/gpio/gpio-pmic-eic-sprd.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
-> index 442968bb2490..f04a40288638 100644
-> --- a/drivers/gpio/gpio-pmic-eic-sprd.c
-> +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
-> @@ -353,6 +353,7 @@ static int sprd_pmic_eic_probe(struct platform_device *pdev)
->   	pmic_eic->chip.set_config = sprd_pmic_eic_set_config;
->   	pmic_eic->chip.set = sprd_pmic_eic_set;
->   	pmic_eic->chip.get = sprd_pmic_eic_get;
-> +	pmic_eic->chip.can_sleep = true;
->   
->   	irq = &pmic_eic->chip.irq;
->   	gpio_irq_chip_set_chip(irq, &pmic_eic_irq_chip);
+I can't see it, what am I missing? Why would func_name or mux->name be NULL=
+?
+
+Yours,
+Linus Walleij
