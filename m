@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9FC7AF86F
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 05:07:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B452C7AF92A
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 06:20:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231585AbjI0DHC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 23:07:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49710 "EHLO
+        id S229705AbjI0EUM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 00:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232568AbjI0DFB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 23:05:01 -0400
-Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50BA1F15;
-        Tue, 26 Sep 2023 17:46:09 -0700 (PDT)
-Received: by mail-vk1-xa2e.google.com with SMTP id 71dfb90a1353d-493a661d7b6so7255141e0c.1;
-        Tue, 26 Sep 2023 17:46:09 -0700 (PDT)
+        with ESMTP id S229464AbjI0ETM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 00:19:12 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3713C00;
+        Tue, 26 Sep 2023 18:32:20 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1c61bde0b4bso46946025ad.3;
+        Tue, 26 Sep 2023 18:32:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695775569; x=1696380369; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1695778340; x=1696383140; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HGaAz2NGUFdNbG0DXs3PklSqzmoBdhiDuIki8POO1ik=;
-        b=BFzewfOo/M5ven7KsW0HCwrj0h7Q8EFnSNlYJSNHLHaq1py4ZD0WhQ65JsgolBBi/y
-         0kjrM1UOIslwdQx0Y3aBetOHaC895xN4BwV0Zq8hIAOqfMFFX/YUQ7D+8JzMOe5/T2Ue
-         +ibpqYCDdQHfliGK7kP3Hen5yMAMrPxZbhQcUhOYqmlYuiXh7FD7bBCwx6mlm4QzzWpR
-         kwvguqQZSpOud8O/xrWsUf3qaMtWPs+qoD7uIJhwhJtwWzq9kEAuVPqaI+jFMZVkaHzh
-         G+Kb4MfvoQ/IVsZVsXDRuNpknbedDTSKWmqpGTe6baG8WAJHPLznKcf6wUV0tHhhNo41
-         q/BA==
+        bh=hP+g2Zhox+Th+oVPcl2goCX8vInD7cvVYSsX0s/QkpE=;
+        b=Emoy4TuHKxJUmeFm14CrKuP4VC2roWtmNmIIEn6Wz5LLjHp6bGvaMILURLj64ptdEK
+         hXsRAVkYkPEARguujKvZvu9Ro9V9coU6gmbw8fnUB7DERGuoDU6aR6qND6qGaTamT+H8
+         FwD0D1oZMT9+B/Z1hz9Wy5/Xvmk0aFPJvzOZ4yrbiFZ+jA+VSzWNZv/FnuuRHRn6LjlY
+         TkKwjNAtlUq48kn8hCz5Q29YCiwcz0Svq4xSbvDx3i8Yy6x+2yXYv6FyX3Bde4B0mkVP
+         CVsaVHsDjmvHCtn6o9y3lGacWSIO0hXZG+A5JwvUZXBoghmdyraALaQNE7KUJDrytw9i
+         9mNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695775569; x=1696380369;
+        d=1e100.net; s=20230601; t=1695778340; x=1696383140;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HGaAz2NGUFdNbG0DXs3PklSqzmoBdhiDuIki8POO1ik=;
-        b=eqC5KFc5+Z95/oK4tnsaZ8riuNDndu0U7dglrtZ2488YRUO76FdcwOOBiy9DPaV5jT
-         C0jkGt3Oe1NwNB0V9NGVC1PIAVRi2HPVjYXEeffP2EtkG89niMAC0IhpPUDrmHlPaqu0
-         ANfuNkxfWAGHD88NRYDMowDtjYD6gSE5kKbYe/iVAKZHhAcX1NVGFGDV7dkKZz94rPd6
-         GNW1dJ0AIm3bJ0+WC41KamBa+ovDIstmPmjgsh1dftVRAK5C0OO5fo9NK4hheWCLpe8a
-         vNYwQjyuYCllCopA0qFQmWG2pF3+4Tqo+7u1gmS0Gv5SQpFnfRVP4aWq1I60KP2O4+cE
-         hhjw==
-X-Gm-Message-State: AOJu0YxMo3SGlfk13N87zLtR9Uk5Nn3ky0FEL36iNqOLkes+XWXxD9FR
-        6Z69kmXR3fgx3JqXrZqEjZU=
-X-Google-Smtp-Source: AGHT+IFBvdJTSeQQkUFB331UVlztzI9EhJYGCrQ9pKM8x8/SSRO3ME3CjPGO44EizXbaPnBD8sbz3g==
-X-Received: by 2002:a1f:db44:0:b0:48e:1463:914e with SMTP id s65-20020a1fdb44000000b0048e1463914emr275544vkg.7.1695775568826;
-        Tue, 26 Sep 2023 17:46:08 -0700 (PDT)
-Received: from localhost ([2607:fb90:be31:4195:3f3f:56b1:2bbb:65e2])
-        by smtp.gmail.com with ESMTPSA id 4-20020a0561220b4400b00495ce48c8adsm2174997vko.16.2023.09.26.17.46.07
+        bh=hP+g2Zhox+Th+oVPcl2goCX8vInD7cvVYSsX0s/QkpE=;
+        b=jDNje+G5N16WqGw0Dn4lv/tpGsJOKHMB1rymxHvkOv+3ItIbjVhVao/VfMRsHp9j/3
+         odtbGiYF9oFJN/nLzLl99ams8LZefdIilCus8i315hjIqtSroyLwwESikUK9QypKskup
+         b7NM6I1hMSO0cNsG3JgPSzFrGCpbOzdqO/+UgRaBSsWxFzzJr4TnNb/jAuwBLCa14nND
+         +kWMhH4CcMWP7RM2yhj8wajD1niXP8JGEBKFgBx1NJiDxu/uKT1PDQViAMhRNFZnOseF
+         3rpqVnQgeFvcN27YFlclw12XR9K+/QxUX/rpNNvoihza+fklp5Zn9fae5/aKLEgD9HiR
+         1UVg==
+X-Gm-Message-State: AOJu0YwZOa/QAlr4Qk/eagWb5oXQBcVAYiYlw8oq4WjD95fQV7YSdZ7R
+        nXeuS5XGjH7LIf5FxUuPc3o=
+X-Google-Smtp-Source: AGHT+IGPiO2n9poA5FBFxwbSW7wzdgA+aBNcevYeCBgsoPmyd4ftTzGq/klGeCdciA9mUzGWIBP/GQ==
+X-Received: by 2002:a17:90a:6046:b0:25c:8b5e:814 with SMTP id h6-20020a17090a604600b0025c8b5e0814mr377145pjm.44.1695778339932;
+        Tue, 26 Sep 2023 18:32:19 -0700 (PDT)
+Received: from sol (60-242-83-31.tpgi.com.au. [60.242.83.31])
+        by smtp.gmail.com with ESMTPSA id 14-20020a17090a004e00b0025dc5749b4csm13516723pjb.21.2023.09.26.18.32.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Sep 2023 17:46:08 -0700 (PDT)
-Date:   Tue, 26 Sep 2023 17:46:07 -0700
-From:   Yury Norov <yury.norov@gmail.com>
+        Tue, 26 Sep 2023 18:32:19 -0700 (PDT)
+Date:   Wed, 27 Sep 2023 09:32:11 +0800
+From:   Kent Gibson <warthog618@gmail.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
+        Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
         Srinivas Neeli <srinivas.neeli@amd.com>,
         Michal Simek <michal.simek@amd.com>,
@@ -63,17 +63,17 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
 Subject: Re: [PATCH v1 5/5] gpiolib: cdev: Utilize more bitmap APIs
-Message-ID: <ZRN7FRWvZnmpDD/v@yury-ThinkPad>
+Message-ID: <ZROGG44v5kfktdVs@sol>
 References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
  <20230926052007.3917389-6-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20230926052007.3917389-6-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -84,6 +84,36 @@ On Tue, Sep 26, 2023 at 08:20:07AM +0300, Andy Shevchenko wrote:
 > Currently we have a few bitmap calls that are open coded in the library
 > module. Let's convert them to use generic bitmap APIs instead.
 > 
+
+Firstly, I didn't consider using the bitmap module here as, in my mind at
+least, that is intended for bitmaps wider than 64 bits, or with variable
+width. In this case the bitmap is fixed at 64 bits, so bitops seemed more
+appropriate.
+
+And I would argue that they aren't "open coded" - they are parallelized
+to reduce the number of passes over the bitmap.
+This change serialises them, e.g. the get used to require 2 passes over
+the bitmap, it now requires 3 or 4.  The set used to require 1 and now
+requires 2.
+And there are additional copies that the original doesn't require.
+So your change looks less efficient to me - unless there is direct
+hardware support for bitmap ops??
+
+Wrt the argument that the serialized form is clearer and more
+maintainable, optimised code is frequently more cryptic - as noted in
+bitmap.c itself, and this code has remained unchanged since it was merged
+3 years ago, so the only maintenance it has required is to be more
+maintainable??  Ok then.
+
+Your patch is functionally equivalent and pass my uAPI tests, so 
+
+Tested-by: Kent Gibson <warthog618@gmail.com>
+
+but my preference is to leave it as is.
+
+Cheers,
+Kent.
+
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
 >  drivers/gpio/gpiolib-cdev.c | 79 +++++++++++++++++--------------------
@@ -192,14 +222,6 @@ On Tue, Sep 26, 2023 at 08:20:07AM +0300, Andy Shevchenko wrote:
 > +	bitmap_from_arr64(bits, &lv->bits, GPIO_V2_LINES_MAX);
 > +
 > +	num_set = bitmap_gather(vals, bits, mask, lr->num_lines);
-
-It looks like GPIO_V2_LINES_MAX is always 64, and so I wonder: is
-my understanding correct that all bits in ->mask and ->bits beyond
-lr->num_lines are clear?
-
-If so, you can seemingly pass the GPIO_V2_LINES_MAX instead of
-lr->num_lines, and that way it will be small_cons_nbits()-optimized.
-
 >  	if (num_set == 0)
 >  		return -EINVAL;
 >  
@@ -231,3 +253,4 @@ lr->num_lines, and that way it will be small_cons_nbits()-optimized.
 >  					    descs, NULL, vals);
 > -- 
 > 2.40.0.1.gaa8946217a0b
+> 
