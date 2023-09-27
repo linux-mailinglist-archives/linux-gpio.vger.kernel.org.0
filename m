@@ -2,86 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B28757AFECC
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 10:43:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECC617AFED4
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 10:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230062AbjI0InN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 04:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
+        id S230170AbjI0Io2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 04:44:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjI0InM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 04:43:12 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0E5995
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:43:11 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-59c268676a9so131435957b3.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:43:11 -0700 (PDT)
+        with ESMTP id S229762AbjI0Io2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 04:44:28 -0400
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496C595
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:44:27 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-59f4db9e11eso99157647b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695804191; x=1696408991; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1695804266; x=1696409066; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tbZf2fFA2FQ5qrsMA6J+4jlQPmdMuMWJbNxXkcx0woQ=;
-        b=ttxs85YMPPlc891Jam9KQgtHLayUWR9Y8PTt9jjRiyfrzIc3ou/w/TM2pwe3w+c6Zy
-         BRfu3Qhap3uw/i7IISn6kNQoO54OXPyiouk248Dhb2zqRz3FzK6c4V6f+jiX22I/14ep
-         os1MxLf9tYs2kbEwNIjiTD9gfSnvR5lP/xwPRL3+KuIAshXxqH95yJqKYoH2hJhPgCIx
-         w6V+XoYbzGnw3hM5Do+NT8eOZV+wRO7lKHEHXv3GJyB3/bgm/PBtjO83XieBntqGBGgJ
-         HwYUNxqL6XRLx+n60pRXrYk+qiVxlS+Md1t5U56Np5VzCZVIbyvxU+FjP3YmDgzNGi7+
-         Dgtw==
+        bh=z2a9BLS4u3DgICvLzOii5evpo5Bqh/hTtSobhBQ9qFg=;
+        b=LE2UcuhNgnQszwITPoxCxRb6EGj+9wZDVXj8jNtBXELIZrXK/PwPsfrVp/B0h7fmNT
+         wVetQbwf5qgRyopDRzKkxfCv2NuyKEEo203fmtpxwsC/EwcNJDf7GSOd6iNPvJblTOik
+         uXf6UF+I0r4KCSvj27DewIcTpQm0b9d1m2+Cic5q1Ps60XaRdPvK18a9AhzfRLsKWZ0D
+         Gf0nkPHN9KB0dMPP/FocyGX/hrwZuZ8XYg7Ztk/iAoVr2qnsvJCwWDwDPJUrQDT0a6lr
+         uDSvsaLB2AHAxm+XOA+h/EcgpJy0Ca/WFC5Nj2nOCKXSDWHKHyfgL0oGCrhG3vdjzVaV
+         mDrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695804191; x=1696408991;
+        d=1e100.net; s=20230601; t=1695804266; x=1696409066;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tbZf2fFA2FQ5qrsMA6J+4jlQPmdMuMWJbNxXkcx0woQ=;
-        b=jQekf8CaxomgYX+M/TGk9eUN/6Pm32zipqvev1HyY9D4o5b6uPg2OJy82Xx1Mbxzeb
-         NS8uW94u4kco10ua9So6qBDnfZEH7vXXm8ADI+Zwl+6MLmLNOs/0LVpW8UX9E0wMMd7o
-         LQKxbXcIQmc6VgIzPVTWL30rFug8LsiWZKO6Vgt6ntra+CI0oPmvGy1ktexuQTej11hV
-         yl0jPaqmQg0yjYoDGRdz9qf9RyHzz+ehNU4wgFD3dza+vugPMgw8vO0Y4My3GdQCSNYe
-         lYrcZtDCro2Qna/9tT5Yadf8CFxqe5xAJ3cX3YKidOepnsu598CNRF/qK5OAZcOHnYgg
-         YKsQ==
-X-Gm-Message-State: AOJu0YxAgptJhv7KKqhRfD4UBWjxSGUElZzblmYoGHq1px7lQ3+Ohz5l
-        XyTT9Tbyreswh6uM2L1ZuBYMkJiN86W5VqlPMvYcwA==
-X-Google-Smtp-Source: AGHT+IGARZ/ws1fRu2Yb4a4UQx44nHbRJFszxMdFAdC60oItaObm/kXlaW74QXdyzbXLViFp8x3ekZb9MDLlCcs2TJI=
-X-Received: by 2002:a81:5d87:0:b0:59b:cff1:a8eb with SMTP id
- r129-20020a815d87000000b0059bcff1a8ebmr1698986ywb.34.1695804191087; Wed, 27
- Sep 2023 01:43:11 -0700 (PDT)
+        bh=z2a9BLS4u3DgICvLzOii5evpo5Bqh/hTtSobhBQ9qFg=;
+        b=dYhe/88HQdzJXzrhJ6tmRFL9D8ifJkL3AmKNJJiDGAi6CTEhu2Ws9E98Wes0ilVtG0
+         TE62r/gDs33IQiEf6YL7sq/giCV+X6V2SyQ/yJ3Mb+4lWnez9YT3eGObnclXhSsOo0FS
+         Qv7EDIP640ObEPLCllCTo0yTgEP7M1LBKcql7bMdgF8b8NvBdiU/wX69+yctNkmKy65x
+         SZvogUCyl6YoPaRF+Ge1byseZyB64tSNm2LiPJoszj+r8Ut9ZqrJenzmCx8Q/Q/eiI6t
+         EoueQ7RdZIR3Cah8HWP7Ieawj2MTsJdMaVKF0Lffe1UCO0wa0WS7cKnF3XldYBIVTTV6
+         /Jdw==
+X-Gm-Message-State: AOJu0Yw0oFMKWQv+0ZnDP51d3MXvHRsFe5/NNcSHuM2Auku6j73sZ+fx
+        /ZVFEyAUHr5Zy4X1nkUMb4wa8i8lE9Dr0ZQvtYh2eg==
+X-Google-Smtp-Source: AGHT+IFI3OXUIw2YZjlJU3xxbWIddHpKtE/ek2D2wzGlJ0JTneFMoPW0I+2IJDJjj40UcgXnDZmQNbomJZ1OppPYI68=
+X-Received: by 2002:a81:c253:0:b0:59b:f736:4948 with SMTP id
+ t19-20020a81c253000000b0059bf7364948mr1497316ywg.33.1695804266446; Wed, 27
+ Sep 2023 01:44:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230922-msm8226-i2c6-v2-0-3fb55c47a084@z3ntu.xyz>
-In-Reply-To: <20230922-msm8226-i2c6-v2-0-3fb55c47a084@z3ntu.xyz>
+References: <20230923131432.21721-1-matti.lehtimaki@gmail.com> <20230923131432.21721-2-matti.lehtimaki@gmail.com>
+In-Reply-To: <20230923131432.21721-2-matti.lehtimaki@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 Sep 2023 10:43:00 +0200
-Message-ID: <CACRpkdZHjsm8HLg9B1KYHnhstcjwd18r0bE5GF0_Z4EqcuAWWA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Add blsp1_i2c6 and blsp1_uart2 to MSM8226 SoC
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
+Date:   Wed, 27 Sep 2023 10:44:15 +0200
+Message-ID: <CACRpkdbs-k2QU9XrZj1sUE5e8QEdfQ=AWhxtvtxA9d7fkC+NOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: qcom: msm8226: Add MPM pin mappings
+To:     =?UTF-8?Q?Matti_Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 22, 2023 at 6:56=E2=80=AFPM Luca Weiss <luca@z3ntu.xyz> wrote:
+On Sat, Sep 23, 2023 at 3:14=E2=80=AFPM Matti Lehtim=C3=A4ki
+<matti.lehtimaki@gmail.com> wrote:
 
-> Add the I2C bus and UART interface found on the MSM8226. For the I2C bus
-> we also first need to add the pinctrl function in the driver.
+> Add pin <-> wakeirq mappings to allow for waking up the AP from sleep
+> through MPM-connected pins.
 >
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> Signed-off-by: Matti Lehtim=C3=A4ki <matti.lehtimaki@gmail.com>
 
-v2 looks fine and ACKs in place, so patches applied!
+Both v2 patches applied!
 
 Yours,
 Linus Walleij
