@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 301937B00BA
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 11:40:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC8C27B00BF
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 11:41:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjI0Jk1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 05:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
+        id S230037AbjI0Jlu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 05:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230131AbjI0JkX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 05:40:23 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9581A6
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 02:40:22 -0700 (PDT)
+        with ESMTP id S230448AbjI0Jl1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 05:41:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7EE10E
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 02:41:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695807622; x=1727343622;
+  t=1695807685; x=1727343685;
   h=date:from:to:cc:subject:message-id;
-  bh=hIEn0gjXxt2VnuEh6xjcICVm4teXBQRQYC3YlaZKJf4=;
-  b=HVc34OXcmkmY3ZnXavDUhCWm1MYyu077JLtyThqPUA5Tgd55TcnJujgM
-   +WKkcEAUs21tPs2ofFuAtbxZMlgX4iSGk+JaXADuII204hWUFF1VXdnba
-   yahhNV/80cleNJ5V+ojniZpequInTxxYGbJzXOGPULZdZHEI4FNnV6K8s
-   tF75kjq8sYuc5oFHNtWR+kLi2eW8t9fMbWo551n3vRXNUZbvzCLp+gLBV
-   IK4PIivq2w5qgy5fJItyUq+JZZIt0uqxRhHBfteqhilY+PhQLJe6YQIOz
-   pJFKok85t0ornnxH4zfjqt0rTngVfWq5Q1rLnN3/XVfHdGf477caH4nGm
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="379059521"
+  bh=3amCUpFRv4qL9jNEFUnEE8IB1dv22eW268Ugyg9tjVk=;
+  b=fDHOgNIuXohqe7hMfgghRubsq2XOG/CK8Pu1gzvmtbWwlnEvYRsN/vKS
+   hLUrZ2xbYPdA4Mo7v8ECoiFYWOaoSikQPOd9h2oKS7pSDZH83C8VlJuWi
+   ujpjQzvn90rLEyDfGX7APzqR/6MYuUSU3xNbhITV9Xd7OgHMVQGvoU5Ej
+   CQPtDUwYrXZVCKWn8Srxne0/BiP/Edb+rtWEfBR2vDOV2gI2E0qqHdwHT
+   n8RurvC+RqYKoNISeKqqCUCgIRGMSTxT8foLcJd4wfwhNMEwhfr4x56P/
+   nzLxw21DZl1hzhZDHblIJ7GEPKPjkysR8/53KnJKPGuERvUqMlP0CSvOr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="362031815"
 X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="379059521"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 02:40:19 -0700
+   d="scan'208";a="362031815"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 02:41:23 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="819360194"
+X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="742647606"
 X-IronPort-AV: E=Sophos;i="6.03,179,1694761200"; 
-   d="scan'208";a="819360194"
+   d="scan'208";a="742647606"
 Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Sep 2023 02:40:18 -0700
+  by orsmga007.jf.intel.com with ESMTP; 27 Sep 2023 02:41:18 -0700
 Received: from kbuild by c3b01524d57c with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qlR1k-00003A-1E;
-        Wed, 27 Sep 2023 09:40:16 +0000
-Date:   Wed, 27 Sep 2023 17:40:04 +0800
+        id 1qlR2i-00003X-1w;
+        Wed, 27 Sep 2023 09:41:16 +0000
+Date:   Wed, 27 Sep 2023 17:40:22 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- b5d808409c2006eeded1dbcb63c9e45fa5af4522
-Message-ID: <202309271702.UaCAQHQ0-lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS WITH WARNING
+ caaeb8c551123e26e86270c8dec99a78f1f6fe0f
+Message-ID: <202309271715.kfku4Q1o-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -59,16 +59,101 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: b5d808409c2006eeded1dbcb63c9e45fa5af4522  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: caaeb8c551123e26e86270c8dec99a78f1f6fe0f  dt-bindings: pinctrl: Add missing additionalProperties on child node schemas
+
+Warning reports:
+
+https://lore.kernel.org/oe-kbuild-all/202309270234.aJGlDE0P-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202309270313.mBEc9o1A-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202309270448.7Aen3Sgx-lkp@intel.com
+
+Warning: (recently discovered and may have been fixed)
+
+drivers/pinctrl/realtek/pinctrl-rtd.c:180:29: warning: '%s' directive argument is null [-Wformat-overflow=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_boot_sel_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_reset_n_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_scan_switch_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_testmode_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_wd_rset_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_boot_sel_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_reset_n_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_scan_switch_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_testmode_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_wd_rset_pins' defined but not used [-Wunused-const-variable=]
+
+Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- arm-allmodconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm-randconfig-001-20230926
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm64-allmodconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|-- arm64-allyesconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|-- arm64-defconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+`-- arm64-randconfig-004-20230927
+    `-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
 
 elapsed time: 1463m
 
-configs tested: 187
+configs tested: 188
 configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
 tested configs:
 alpha                             allnoconfig   gcc  
@@ -187,6 +272,7 @@ sparc                            allmodconfig   gcc
 sparc                             allnoconfig   gcc  
 sparc                            allyesconfig   gcc  
 sparc                               defconfig   gcc  
+sparc                 randconfig-001-20230926   gcc  
 sparc                 randconfig-001-20230927   gcc  
 sparc64                          allmodconfig   gcc  
 sparc64                          allyesconfig   gcc  
