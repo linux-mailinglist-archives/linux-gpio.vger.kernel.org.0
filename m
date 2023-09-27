@@ -2,168 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EAE27AFD77
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 10:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B6647AFEC3
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 10:39:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbjI0IA4 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 27 Sep 2023 04:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34254 "EHLO
+        id S230248AbjI0IjB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 04:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjI0IAx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 04:00:53 -0400
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A98C113A;
-        Wed, 27 Sep 2023 01:00:52 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-59c0d002081so129260657b3.2;
-        Wed, 27 Sep 2023 01:00:52 -0700 (PDT)
+        with ESMTP id S230180AbjI0Ii7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 04:38:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB40B3
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695803892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oFBFk293L3WpA/SF5GLh0iya0M5nZqt8LWn5s306O2o=;
+        b=EKHdtYPRureqJduIGY9ufxO3zyAB2acAklipUj65F+JpDLs/Gvq12lAtWeYv19QvMh5W/X
+        931oV5o2mNU3MZ3C9CtrlNWOZ9NxBTtwVz3vdXAyFhPVDiE6o3OWSg3kjBJ7Ft4W7ueOR2
+        76yZPOX9DXSSRteGaZ0GgBD9wcykUDw=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-297-i9cnl0Y9NL--pNbu6Pp6WA-1; Wed, 27 Sep 2023 04:38:11 -0400
+X-MC-Unique: i9cnl0Y9NL--pNbu6Pp6WA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9ae0bf9c0b4so926222766b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 01:38:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695801652; x=1696406452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L9uKxj9k47rA9e6YAAq+HYqUB9sFpSTljgGom/9Mr1o=;
-        b=GHpITqGOIODV9SRyT6mVf/Ri1XCvuwXCY3NMbrDz+1sRJa5EeblHNFqzzhv1KEQOPI
-         e0tlrsWI61x4gvRTXCCM9uqBlMQaaVg8ulxP+LYVsnd7XdP+Okg/U9IJHkyLCOsNhgy/
-         n9B468WsKiq6m8oHv1lEwNdYfBqPZaAM9DdnbXBkCaaF3pmK3ZkVmBMbmMWp2c47A0Hg
-         yTjoD9NQdhtr+lwks6kV3WOHF2vVADP1IvqBh3+INuc5ePtrY/I1LX/xbJgNC5TJ/2Zd
-         7lNaAwDVZ/VUxgFQbJnaNE/zSJEf3C9Nq02XXktAREFnzj6IvoI3DIRGsvJp9PMIRyb0
-         BtsA==
-X-Gm-Message-State: AOJu0YzTQ+sl4PzId5R6le4T0IdZRU+EJeCS8tHouj1S49j69QkPBXId
-        1+DxgF0DxJnRdEZZ9kZO9GtAnrSdZ2dxJw==
-X-Google-Smtp-Source: AGHT+IFMY3dYYayoGlZslZsnY5g9lel8MjPuyCVDJ5VKmMA+AoI+O0i51jjBOs1ULav+VX2MmqVPkA==
-X-Received: by 2002:a0d:e20e:0:b0:5a1:d4f7:8b65 with SMTP id l14-20020a0de20e000000b005a1d4f78b65mr1553106ywe.27.1695801651665;
-        Wed, 27 Sep 2023 01:00:51 -0700 (PDT)
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
-        by smtp.gmail.com with ESMTPSA id u5-20020a81b605000000b0059f8120ee4dsm1613786ywh.30.2023.09.27.01.00.49
+        d=1e100.net; s=20230601; t=1695803890; x=1696408690;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oFBFk293L3WpA/SF5GLh0iya0M5nZqt8LWn5s306O2o=;
+        b=QPHDgdJhLAGZlQb2JlzqjbIREW+N7P1Ui8kSnJnziSm39nFTANDjytp+Deaemm23k9
+         Pu97Ayfkz2qJ+ghWnkT5ks6HUHTZhHPk7LrX7uv9Xxqk7pDtl8aMBgxXwk2R7IBYT1As
+         jUKkhPGYmvgD4tAHZ1lSiIEdvVl8wrfrH8zPRPhPzLNBJgNPqgyCVGDb7JBLKS1tnAcW
+         GVVPjcn5WlzVADWR7Z5rh9DABvCSVFxeO38ANMc6k0/W0KHE5Gjs9LkbuAl2zeMILcPy
+         Dxh2TS6O9PWDx6Q15pohv8kDSHLHIjy+4J8gp7okiSZVLDogWvw/Mqg53B16k180+Xxi
+         eeig==
+X-Gm-Message-State: AOJu0Yy1Y3CzhV9Szt8tdgwNiqDvmUb99Ooa8yVeHS+aLjiWg+Tbwj18
+        rRzWI89YajVVOuLfc2ZQkE6cv6SphIbmiOey/pr5NTlqcrDBAQgVcy0+Mwn0nV8XNWh8m8GaA1o
+        jFvlLksGrlvh6pkV73clkrw==
+X-Received: by 2002:a05:6402:6da:b0:530:9fbc:8df5 with SMTP id n26-20020a05640206da00b005309fbc8df5mr1352488edy.9.1695803889950;
+        Wed, 27 Sep 2023 01:38:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaAq1i5bLDH0/vOkJlIJOevgIvVaw73om6syxk8ocMxZ0l92s3G7QXYUlLWnJSKN24ep4wYA==
+X-Received: by 2002:a05:6402:6da:b0:530:9fbc:8df5 with SMTP id n26-20020a05640206da00b005309fbc8df5mr1352472edy.9.1695803889612;
+        Wed, 27 Sep 2023 01:38:09 -0700 (PDT)
+Received: from [192.168.1.217] ([109.36.155.235])
+        by smtp.gmail.com with ESMTPSA id x62-20020a50bac4000000b0053443c8fd90sm2645885ede.24.2023.09.27.01.38.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Sep 2023 01:00:50 -0700 (PDT)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-59c00b5c8b2so129387177b3.1;
-        Wed, 27 Sep 2023 01:00:49 -0700 (PDT)
-X-Received: by 2002:a0d:d511:0:b0:595:9770:6914 with SMTP id
- x17-20020a0dd511000000b0059597706914mr1510576ywd.35.1695801648914; Wed, 27
- Sep 2023 01:00:48 -0700 (PDT)
+        Wed, 27 Sep 2023 01:38:08 -0700 (PDT)
+Message-ID: <ffb5b1a8-a4fa-f794-afc8-52eed4420a5c@redhat.com>
+Date:   Wed, 27 Sep 2023 10:38:05 +0200
 MIME-Version: 1.0
-References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
- <20230912045157.177966-10-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdVNzgHqURohOgpFEaGn+6+rQTqsDomoS1u_-jn=GgmHXw@mail.gmail.com>
- <dfe64c7c-2f90-65a2-05fc-e96ec5113a60@tuxon.dev> <CAMuHMdXJ_gp5cdGpcK-kGk16YGDX8d9MEjQQkSobOGLphbJ5dQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdXJ_gp5cdGpcK-kGk16YGDX8d9MEjQQkSobOGLphbJ5dQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Sep 2023 10:00:36 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV=r9704bNemDHWvjMJKbsBQJKqTxkKCeGUNp4iBNBoew@mail.gmail.com>
-Message-ID: <CAMuHMdV=r9704bNemDHWvjMJKbsBQJKqTxkKCeGUNp4iBNBoew@mail.gmail.com>
-Subject: Re: [PATCH 09/37] clk: renesas: rzg2l: fix computation formula
-To:     claudiu beznea <claudiu.beznea@tuxon.dev>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
-        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
-        nfraprado@collabora.com, rafal@milecki.pl,
-        wsa+renesas@sang-engineering.com,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [RFT PATCH 0/4] platform/x86: int3472: don't use
+ gpiod_toggle_active_low()
+Content-Language: en-US
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Mark Gross <markgross@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20230926145943.42814-1-brgl@bgdev.pl>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20230926145943.42814-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Claudiu,
+Hi Bartosz,
 
-On Tue, Sep 26, 2023 at 4:44 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Tue, Sep 26, 2023 at 1:47 PM claudiu beznea <claudiu.beznea@tuxon.dev> wrote:
-> > On 14.09.2023 15:55, Geert Uytterhoeven wrote:
-> > > On Tue, Sep 12, 2023 at 6:52 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> > >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >>
-> > >> According to hardware manual of RZ/G2L (r01uh0914ej0130-rzg2l-rzg2lc.pdf)
-> > >> the computation formula for PLL rate is as follows:
-> > >>
-> > >> Fout = ((m + k/65536) * Fin) / (p * 2^s)
-> > >>
-> > >> and k has values in range [-32768, 32767]. Dividing k by 65536 with
-> > >> integer variables leads all the time to zero. Thus we may have slight
-> > >> differences b/w what has been set vs. what is displayed. Thus,
-> > >> get rid of this and decompose the formula before dividing k by 65536.
-> > >>
-> > >> Fixes: ef3c613ccd68a ("clk: renesas: Add CPG core wrapper for RZ/G2L SoC")
-> > >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >
-> > > Thanks for your patch!
-> > >
-> > >> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> > >> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> > >> @@ -696,18 +696,22 @@ static unsigned long rzg2l_cpg_pll_clk_recalc_rate(struct clk_hw *hw,
-> > >>         struct pll_clk *pll_clk = to_pll(hw);
-> > >>         struct rzg2l_cpg_priv *priv = pll_clk->priv;
-> > >>         unsigned int val1, val2;
-> > >> -       unsigned int mult = 1;
-> > >> -       unsigned int div = 1;
-> > >> +       unsigned int div;
-> > >> +       u64 rate;
-> > >> +       s16 kdiv;
-> > >>
-> > >>         if (pll_clk->type != CLK_TYPE_SAM_PLL)
-> > >>                 return parent_rate;
-> > >>
-> > >>         val1 = readl(priv->base + GET_REG_SAMPLL_CLK1(pll_clk->conf));
-> > >>         val2 = readl(priv->base + GET_REG_SAMPLL_CLK2(pll_clk->conf));
-> > >> -       mult = MDIV(val1) + KDIV(val1) / 65536;
-> > >> +       kdiv = KDIV(val1);
-> > >>         div = PDIV(val1) << SDIV(val2);
-> > >>
-> > >> -       return DIV_ROUND_CLOSEST_ULL((u64)parent_rate * mult, div);
-> > >> +       rate = (u64)MDIV(val1) * parent_rate;
-> > >> +       rate += ((long long)parent_rate * kdiv) / 65536;
-> > >
-> > > As the division is a binary shift, you can use the mul_u64_u32_shr() helper,
-> > > and incorporate the sdiv shift at the same time:
-> > >
-> > >     rate += mul_u64_u32_shr(parent_rate, KDIV(val1), 16 + SDIV(val2));
->
->  [1]^
->
-> > >
-> > > You can save a multiplication by premultiplying mdiv by 65536:
-> > >
-> > >     rate = mul_u64_u32_shr(parent_rate, (MDIV(val1) << 16)) + KDIV(val1),
-> > >                            16 + SDIV(val2));
->
-> [2]^
->
-> >
-> > Looking again at this: KDIV (aka DIV_K) could have negative values thus
-> > mul_u64_u32_shr() cannot be used here.
->
-> That means you can indeed not use [1].
->
-> But you can still use [2], as MDIV() must be in the range 64..533[3],
-> so "(MDIV(val1) << 16)) + (s16)KDIV(val1)" is always positive.
-> Note that you do need the cast to s16 (which I had missed before), or
-> the intermediate variable kdiv of type s16 (like in your patch).
+On 9/26/23 16:59, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> gpiod_toggle_active_low() is a badly designed API that should have never
+> been used elsewhere then in the MMC code. And even there we should find
+> a better solution.
+> 
+> Replace the uses of it in the int3472 driver with the good old temporary
+> lookup table trick. This is not very pretty either but it's the lesser
+> evil.
 
-Or include the cast to a signed type in the definition of KDIV().
+I saw your previous proposal which added a new api to directly set
+the active_low flag, rather then toggle it.
 
-Gr{oetje,eeting}s,
+I intended to reply to that thread to say that I liked that approach,
+but I don't remember if I actually did reply.
 
-                        Geert
+I wonder what made you abandon the new function to directly set
+the active-low flag on a gpio_desc?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+For the int3472 code that would work pretty well and it would
+be much cleaner then the temp gpio-lookup approach.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+
+Hans
+
+
+
+> 
+> Bartosz Golaszewski (4):
+>   platform/x86: int3472: provide a helper for getting GPIOs from lookups
+>   platform/x86: int3472: led: don't use gpiod_toggle_active_low()
+>   platform/x86: int3472: clk_and_regulator: use GPIO lookup tables
+>   gpio: acpi: remove acpi_get_and_request_gpiod()
+> 
+>  drivers/gpio/gpiolib-acpi.c                   | 28 ------------------
+>  .../x86/intel/int3472/clk_and_regulator.c     | 22 ++++++--------
+>  drivers/platform/x86/intel/int3472/common.c   | 29 +++++++++++++++++++
+>  drivers/platform/x86/intel/int3472/common.h   |  9 ++++++
+>  drivers/platform/x86/intel/int3472/led.c      | 12 +++-----
+>  include/linux/gpio/consumer.h                 |  8 -----
+>  6 files changed, 51 insertions(+), 57 deletions(-)
+> 
+
