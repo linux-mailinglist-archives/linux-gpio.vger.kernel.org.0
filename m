@@ -2,106 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B28367B043E
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 14:33:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35BFA7B0486
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 14:42:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbjI0Mdq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 08:33:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41986 "EHLO
+        id S231758AbjI0Mmq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 08:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229880AbjI0Mdp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 08:33:45 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75545C0;
-        Wed, 27 Sep 2023 05:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695818024; x=1727354024;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=RQkDGkoB+AgZ4DklgY/4FYp96be0UV7xEwXdT2sMe2c=;
-  b=KsRiuJzz7LOSDw4jPZysiDVxuq+DK/pe28ZB1zrFr34Ggt8PgeNEyS5U
-   RoHgM8bmYcdQYJC9ZrQYw9vlpONKV7mDxKIjPPiWIEKbjU593fBz93qXv
-   pMAIrayryxWDfZ2eu5Z7cSURBg5a7jBk+H4uDyrx3nYQAUIT2teF2Ktu9
-   xu78BsYSqN21K/9knIpTOj8zecmYdXIUSOrHmVphfZkBMQNUlDOY1Dxa1
-   3NDFSZPpRJ8girc4RRrjegMMqP4i7l2J3JmLb7RX0OgegvN1hbEjztRZH
-   M80bs+NDMg/bF7CBc2VnpD9FJurOfc1E455Qm21obapyNjqugh7ecJwyr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="448303524"
-X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
-   d="scan'208";a="448303524"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 05:33:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10845"; a="698860978"
-X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
-   d="scan'208";a="698860978"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 05:33:41 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qlTjX-00000000spT-06SH;
-        Wed, 27 Sep 2023 15:33:39 +0300
-Date:   Wed, 27 Sep 2023 15:33:38 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        with ESMTP id S231799AbjI0Mmn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 08:42:43 -0400
+Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB643193
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 05:42:40 -0700 (PDT)
+Received: by mail-vs1-xe31.google.com with SMTP id ada2fe7eead31-4527ba546d2so4185868137.2
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 05:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695818560; x=1696423360; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EvHdxEwsucmy96ETfuIzQ5eJCnM+fye6vNp8d8H69Nc=;
+        b=KDaZcaGXy/4GQpNkkSH40XW9xzd8sune4LwzkwQiaBOdtgUSjm73zj4tSy4V9hNjv6
+         KhPVleGo2Bg5KIDJs5NFWYqzckjd2S8j0PAjO8ENSspdkIrPTI5SKiDfDXRRPQdIPKxQ
+         y38ikiWWEkaScOtILe6GJycOj8Hyen+PtZtLl/qx05ePoBz8BDmS3134E3x9EQvMNeC/
+         BV11gfKCGOOBatwslig0Kt06ma+fU21plYyXD/x5EdHHzPZX+cVc0qhgeiT81DLyYz6k
+         KQESmqYeu3FqL4llv9fUGkqh8O+GvYm+NYrfEIBn1EeOJJfO3c13H4CyBlampbyPtEai
+         7ZXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695818560; x=1696423360;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EvHdxEwsucmy96ETfuIzQ5eJCnM+fye6vNp8d8H69Nc=;
+        b=hhw2JZf3x9jPv1gJfB/iIW5WxIfujYpQjHjMabjPik8YNF2QgN6nQm3/p/46TUgb/S
+         YA+TuuvCH6DC1xUp2T7Q1nl1hqef8sxbi7Mhs4kX2Iq5HngwlA++QXEUP2yu/aFfFkbC
+         eqJbSPf/EHyD4Gp/AwnmXdLEsTY7+qbIzczNQNc5BBLfmFaLrPGIo6vN69zIDY6sCRtc
+         lwPG4Wp+JJWpbY3FKZvpYOxgx7XLjoXDz4c/8gVY4Ft8qdgEqFt0ViyHqkrBe1rSigyl
+         XSvc/tyJuDs3RnhGhcGS+H6pP/gAhdKXxjVA2NYMUTfZay7m4U2F9hG2BVLEF9kkHEPS
+         bhIw==
+X-Gm-Message-State: AOJu0YwAai1LuEsj1uHbs8RhgFZJDkfOsXzREQiDg7Xg6CldrX3MceLP
+        NMNYQx/4ZnwDBa2+jqk8qnxbVSbQlFQoo/07hy8MGQ==
+X-Google-Smtp-Source: AGHT+IG8YgVkCOcVoASdJ8m5ynxyqPmsoDNwOwH7mhNL7+IBZ4f8tY6sNa/uwJi2At9mOZr2+SXY4HpEte2Akwsk+8A=
+X-Received: by 2002:a67:ff02:0:b0:44e:9219:136c with SMTP id
+ v2-20020a67ff02000000b0044e9219136cmr1341472vsp.15.1695818559788; Wed, 27 Sep
+ 2023 05:42:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230915150327.81918-1-brgl@bgdev.pl> <20230915150327.81918-5-brgl@bgdev.pl>
+ <ZQf6E+itll3dmCnU@smile.fi.intel.com> <CAMRc=Mcq-0yWcYp6ksDF5RP-B+7b+r2KYh5onEMKx1tpS9O4hQ@mail.gmail.com>
+ <ZRQhIqpb6Ho9ifgz@smile.fi.intel.com>
+In-Reply-To: <ZRQhIqpb6Ho9ifgz@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 27 Sep 2023 14:42:28 +0200
+Message-ID: <CAMRc=Mck9R8LB6_g9O54ZhRDewx99aOs9g-bExR3yC+GJ-8gYQ@mail.gmail.com>
+Subject: Re: [PATCH v3 04/11] gpiolib: provide gpio_device_find_by_label()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-acpi@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 04/11] gpiolib: provide gpio_device_find_by_label()
-Message-ID: <ZRQhIqpb6Ho9ifgz@smile.fi.intel.com>
-References: <20230915150327.81918-1-brgl@bgdev.pl>
- <20230915150327.81918-5-brgl@bgdev.pl>
- <ZQf6E+itll3dmCnU@smile.fi.intel.com>
- <CAMRc=Mcq-0yWcYp6ksDF5RP-B+7b+r2KYh5onEMKx1tpS9O4hQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mcq-0yWcYp6ksDF5RP-B+7b+r2KYh5onEMKx1tpS9O4hQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 27, 2023 at 01:22:36PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Sep 18, 2023 at 9:19 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Fri, Sep 15, 2023 at 05:03:19PM +0200, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Sep 27, 2023 at 2:33=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Sep 27, 2023 at 01:22:36PM +0200, Bartosz Golaszewski wrote:
+> > On Mon, Sep 18, 2023 at 9:19=E2=80=AFAM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
 > > >
-> > > By far the most common way of looking up GPIO devices is using their
-> > > label. Provide a helpers for that to avoid every user implementing their
-> > > own matching function.
-
-...
-
-> > > +static int gpio_chip_match_by_label(struct gpio_chip *gc, void *label)
-> > > +{
-> > > +     return gc->label && !strcmp(gc->label, label);
-> > > +}
+> > > On Fri, Sep 15, 2023 at 05:03:19PM +0200, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > By far the most common way of looking up GPIO devices is using thei=
+r
+> > > > label. Provide a helpers for that to avoid every user implementing =
+their
+> > > > own matching function.
+>
+> ...
+>
+> > > > +static int gpio_chip_match_by_label(struct gpio_chip *gc, void *la=
+bel)
+> > > > +{
+> > > > +     return gc->label && !strcmp(gc->label, label);
+> > > > +}
+> > >
+> > > I am still wondering if we can oblige providers to have label to be n=
+on-empty.
 > >
-> > I am still wondering if we can oblige providers to have label to be non-empty.
-> 
-> Of course we can. Just bail out of gpiochip_add_data_with_key() if it
-> is. But that's material for a different patch.
+> > Of course we can. Just bail out of gpiochip_add_data_with_key() if it
+> > is. But that's material for a different patch.
+>
+> Yes, but my point here is that
+> 1) the current users are already following this requirement;
+> 2) the enforcement can be done explicitly somewhere (in the register func=
+tion).
+>
+> Is the 1) incorrect assumption?
+>
 
-Yes, but my point here is that
-1) the current users are already following this requirement;
-2) the enforcement can be done explicitly somewhere (in the register function).
+I remember doing a quick glance over GPIO providers and it looks like
+ALL of them set the label. But I may have missed something. I would
+start with a warning.
 
-Is the 1) incorrect assumption?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
