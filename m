@@ -2,123 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 491767B05DF
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 15:57:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ADF07B05E6
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 15:59:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231992AbjI0N5Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 09:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54496 "EHLO
+        id S231997AbjI0N7o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Sep 2023 09:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231987AbjI0N5Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 09:57:16 -0400
-Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92D3FC
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 06:57:14 -0700 (PDT)
-Received: by mail-ua1-x930.google.com with SMTP id a1e0cc1a2514c-7ab5150a7b5so7504170241.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 06:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695823034; x=1696427834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AMwjIJJgcxE3VMRMd2drhHFu3fo06bNaaNt8CiSb3ZA=;
-        b=HhCx5VzTeMGkByx7ABbpm2S4ya+LVnum3qQQVZWqrxFISEqZ3ogxlIB0Q8fRkrW0gx
-         cRjpF5YPkvHfs9DMwzi5D69G0DPHHGesrlxOebNaNgmRZGJjnj7yHfgJ7mszXFZsubSv
-         CFNUPZ6kUqd3m3laCquQeEFpn+D+KCqShb1cw4Q0h8KB6LnPeu1ocD6bJUOvCCzfOBwi
-         GOMYOrgiG85PTnDsh5L3RjHngodrTGrEmcrjycme6yaQ7WtKFqJf6ybU62G3tt95NO49
-         +c9VeywOqYvnrwaq2nbpoUdwNUnBYFdrvxs0alJg6DVdEoYJY7QJrFlmcvWJsD7bbH3J
-         06Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695823034; x=1696427834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AMwjIJJgcxE3VMRMd2drhHFu3fo06bNaaNt8CiSb3ZA=;
-        b=V0h7XXHHNM99/kgiAH/vkSlqBFlz+PS/PrrU4mG0YSOuBpF9vNyItn0FgdaWLfaXNE
-         N5zgbtP8xiXZcKEUH+t61HdMdxx1KkBZdBtb7IZ29BirStrFI/hhqBd+FPF0V57cVb7S
-         loHKb6h9SNFrdpk2zDFmqe1JxajL96Jc1iiTdsfVbPVe2lX1ChWQgw7uCeRBZdT+UINc
-         ntcxCTbeZ28jeOmbxVXkj8zHJ1LUjGTtmlSM/ouTgBn8mUFtDLCrlzQOE2hUpd0Nd7jN
-         7TIA5hokYp5zIvjrbE947AtO7Yv+S4gfklznxO3O8FE93Kor5r6rCErBQrHVCHey7TQF
-         QUlA==
-X-Gm-Message-State: AOJu0Yz7jx1KmLpiZuED7U83M1W+k3Ce71RNFOn/AdC67xvkH8je7rMS
-        hP2c5e2Y/gUzjSnrZCSGTSG66O78Kbbp8AI2cAyMEC28QVLDhJgf
-X-Google-Smtp-Source: AGHT+IG8QPYt411jspTENiqRTlTfOTKc9VSZKjqh+jvAqpG0NijIqMYqnlA3c9yQcTj7Ts59sBCk4MXGHxEhudvFi+Q=
-X-Received: by 2002:a67:fa05:0:b0:452:6ecb:e90 with SMTP id
- i5-20020a67fa05000000b004526ecb0e90mr929334vsq.3.1695823034075; Wed, 27 Sep
- 2023 06:57:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230915150327.81918-1-brgl@bgdev.pl> <20230915150327.81918-5-brgl@bgdev.pl>
- <ZQf6E+itll3dmCnU@smile.fi.intel.com> <CAMRc=Mcq-0yWcYp6ksDF5RP-B+7b+r2KYh5onEMKx1tpS9O4hQ@mail.gmail.com>
- <ZRQhIqpb6Ho9ifgz@smile.fi.intel.com> <CAMRc=Mck9R8LB6_g9O54ZhRDewx99aOs9g-bExR3yC+GJ-8gYQ@mail.gmail.com>
- <ZRQyqw/YWbSeQcJc@smile.fi.intel.com>
-In-Reply-To: <ZRQyqw/YWbSeQcJc@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 27 Sep 2023 15:57:01 +0200
-Message-ID: <CAMRc=McRD8JNMUkROBPFor7E2t-tw+2wGEge7L6vbtkcEmtnhA@mail.gmail.com>
-Subject: Re: [PATCH v3 04/11] gpiolib: provide gpio_device_find_by_label()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S231895AbjI0N7n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 09:59:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72758FC;
+        Wed, 27 Sep 2023 06:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695823182; x=1727359182;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NC6JKmlxB0G+yQV5Q1g46Gz7YqnMXE9hYwJXZnngYVY=;
+  b=GfiCUfc/T8+QskXKmEkLPLOIk9pX1iI568rKzuCzaG5vPh/RIzTHAlH0
+   TKp99oT1GOcwcQcAKR1nlIlP75yi3P/hxtwrx4PfmBqj42x+ZxpF0BXj4
+   NSm9pg64XbT2cbPvyTMa78Y5YApMy4rlCmAZORnio3GeCvbdCnW7FsYJD
+   EqsNDLK/9LtjmxvLtfTclWsHBBcI9KqYDj1puJGYNT1sGraYPMyURLXHd
+   JghaGaPT6SK35XGKD7mpSxEse2xEMfYB5zpi7jvehNDa8uz1GIn78ocdV
+   ZSQo2fi5Ck3cUsXcs5Su0kkZlS+CMAidBxJh4PNJNyNjyye8IcsVmehQC
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="468113006"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="468113006"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 06:59:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="698891923"
+X-IronPort-AV: E=Sophos;i="6.03,181,1694761200"; 
+   d="scan'208";a="698891923"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2023 06:59:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qlV4h-00000000u3a-1XH9;
+        Wed, 27 Sep 2023 16:59:35 +0300
+Date:   Wed, 27 Sep 2023 16:59:34 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+        Srinivas Neeli <srinivas.neeli@amd.com>,
+        Michal Simek <michal.simek@amd.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Subject: Re: [PATCH v1 5/5] gpiolib: cdev: Utilize more bitmap APIs
+Message-ID: <ZRQ1RpHEapodQ0xU@smile.fi.intel.com>
+References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
+ <20230926052007.3917389-6-andriy.shevchenko@linux.intel.com>
+ <ZROGG44v5kfktdVs@sol>
+ <ZRQdQnL5VbX659cl@smile.fi.intel.com>
+ <ZRQy795YoPOKsOcz@sol>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZRQy795YoPOKsOcz@sol>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 27, 2023 at 3:48=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Sep 27, 2023 at 02:42:28PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Sep 27, 2023 at 2:33=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Wed, Sep 27, 2023 at 01:22:36PM +0200, Bartosz Golaszewski wrote:
-> > > > On Mon, Sep 18, 2023 at 9:19=E2=80=AFAM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Fri, Sep 15, 2023 at 05:03:19PM +0200, Bartosz Golaszewski wro=
-te:
-> > > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> ...
->
-> > > > > > +static int gpio_chip_match_by_label(struct gpio_chip *gc, void=
- *label)
-> > > > > > +{
-> > > > > > +     return gc->label && !strcmp(gc->label, label);
-> > > > > > +}
-> > > > >
-> > > > > I am still wondering if we can oblige providers to have label to =
-be non-empty.
-> > > >
-> > > > Of course we can. Just bail out of gpiochip_add_data_with_key() if =
-it
-> > > > is. But that's material for a different patch.
-> > >
-> > > Yes, but my point here is that
-> > > 1) the current users are already following this requirement;
-> > > 2) the enforcement can be done explicitly somewhere (in the register =
-function).
-> > >
-> > > Is the 1) incorrect assumption?
-> >
-> > I remember doing a quick glance over GPIO providers and it looks like
-> > ALL of them set the label. But I may have missed something. I would
-> > start with a warning.
->
-> For now I would drop the NULL check. We will have a few weeks to see
-> if somebody screams about. Meanwhile we can add the real error message
-> patch if no-one complains.
+On Wed, Sep 27, 2023 at 09:49:35PM +0800, Kent Gibson wrote:
+> On Wed, Sep 27, 2023 at 03:17:06PM +0300, Andy Shevchenko wrote:
+> > On Wed, Sep 27, 2023 at 09:32:11AM +0800, Kent Gibson wrote:
+> > > On Tue, Sep 26, 2023 at 08:20:07AM +0300, Andy Shevchenko wrote:
+> > > > Currently we have a few bitmap calls that are open coded in the library
+> > > > module. Let's convert them to use generic bitmap APIs instead.
+> > > 
+> > > Firstly, I didn't consider using the bitmap module here as, in my mind at
+> > > least, that is intended for bitmaps wider than 64 bits, or with variable
+> > > width. In this case the bitmap is fixed at 64 bits, so bitops seemed more
+> > > appropriate.
+> > > 
+> > > And I would argue that they aren't "open coded" - they are parallelized
+> > > to reduce the number of passes over the bitmap.
+> > > This change serialises them, e.g. the get used to require 2 passes over
+> > > the bitmap, it now requires 3 or 4.  The set used to require 1 and now
+> > > requires 2.
+> > > And there are additional copies that the original doesn't require.
+> > > So your change looks less efficient to me - unless there is direct
+> > > hardware support for bitmap ops??
+> > > 
+> > > Wrt the argument that the serialized form is clearer and more
+> > > maintainable, optimised code is frequently more cryptic - as noted in
+> > > bitmap.c itself, and this code has remained unchanged since it was merged
+> > > 3 years ago, so the only maintenance it has required is to be more
+> > > maintainable??  Ok then.
+> > > 
+> > > Your patch is functionally equivalent and pass my uAPI tests, so 
+> > > 
+> > > Tested-by: Kent Gibson <warthog618@gmail.com>
+> > 
+> > Thanks for testing!
+> 
+> Not a problem - that is what test suites are for.
+> 
+> > > but my preference is to leave it as is.
+> > 
+> > As Yury mentioned we need to look at bitmap APIs and make them possible to have
+> > a compile-time optimizations. With that in mind, I would prefer bitmap APIs
+> > over open-coded stuff which is hardly to be understood (yes, I still point
+> > out that it takes a few hours to me, maybe because I'm stupid enough, to
+> > get what's the heck is going one there, esp. for the == 1 case).
+> 
+> Really?  With all the bits out in the open it seems pretty clear to me.
+> Clearer than scatter/gather in fact.
 
-No, I'm not going to potentially break stuff like that as a way to
-detect bugs. That's not a hot path, we're not gaining much. Let's add
-a warning first, wait for some time, make it an error and then remove
-the check.
+Yes, you are biased. :-) Ask some stranger about this code and I am pretty sure
+there will be double-figures percentage of people who can tell that the current
+code is a bit voodoo.
 
-Bart
+> Sure, if there is suitable hardware support then bitmaps COULD be faster
+> than bitops.  But without that, and that is the general case, it will be
+> slower.  Do you have ANY cases where your implementation is currently
+> faster?  Then you would have a stronger case.
+
+Why do we care here about performance? But if we do, I would check this on
+the 32-bit platform where 64-bit operations somewhat problematic / slow.
+
+If Yury gives an idea about performance tests I can consider to add this
+piece to compare with and we might see the difference.
+
+> And if you find the existing implementation unclear then the appropriate
+> solution is to better document it, as bitmaps itself does, not replace it
+> with something simpler and slower.
+
+Documentation will be needed either way. In general statistics it will be 50/50
+who (mis)understands this or new code. Pity that the original author of the code
+hadn't though about documenting this...
+
+> > Yet, it opens a way to scale this in case we might have v3 ABI that let's say
+> > allows to work with 512 GPIOs at a time. With your code it will be much harder
+> > to achieve and see what you wrote about maintenance (in that case).
+> 
+> v3 ABI?? libgpiod v2 is barely out the door!
+> Do you have any cases where 64 lines per request is limiting?
+
+IIRC it was SO question where the OP asks exactly about breaking the 64 lines
+limitation in the current ABI.
+
+> If that sort of speculation isn't premature optimisation then I don't know
+> what is.
+
+No, based on the real question / discussion, just have no link at hand.
+But it's quite a niche, I can agree.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
