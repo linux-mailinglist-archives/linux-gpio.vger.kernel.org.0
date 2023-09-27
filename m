@@ -2,126 +2,305 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17EA87AF70C
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 02:07:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94E727AF7A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Sep 2023 03:20:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230508AbjI0AHG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Sep 2023 20:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44770 "EHLO
+        id S229817AbjI0BT7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Sep 2023 21:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231449AbjI0AFF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 20:05:05 -0400
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 472E99011;
-        Tue, 26 Sep 2023 16:22:23 -0700 (PDT)
-Received: from [192.168.68.112] (ppp118-210-175-231.adl-adc-lon-bras34.tpg.internode.on.net [118.210.175.231])
-        by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 6B2562017B;
-        Wed, 27 Sep 2023 07:22:14 +0800 (AWST)
+        with ESMTP id S234536AbjI0BR6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Sep 2023 21:17:58 -0400
+Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACE33C1D;
+        Tue, 26 Sep 2023 17:25:16 -0700 (PDT)
+Received: by mail-vk1-xa2e.google.com with SMTP id 71dfb90a1353d-4908d8f7263so3844803e0c.2;
+        Tue, 26 Sep 2023 17:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=codeconstruct.com.au; s=2022a; t=1695770536;
-        bh=3xy3oYvGG7Rgvu7rXIPqMIaHFUEefO32BL/5JeivFsM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References;
-        b=Nc1pzZmuL8BIfPa9WmVMAMK3q2oPyV6epmFy5ihSOS5smQ+L7+AvhVpWriHV8/ZLh
-         uwSAqCUSfyLQ0xjfIj+vnu82oGAWij+2M3B2+zL1W/seZW/cqQHT6ST4I1+8hPC4XX
-         Mdh6X04rt5eSwtTilUak5akhIQdszckz7bT2nTcbGco+CTlM1GBDShPol1EvR0ujCT
-         tQY6fR69A9K80khCkl/Sl/e02bi+59zFMnyMllUCSmiNtqNSPEiNicMBTjSPerc4Xa
-         erf4KHlO8DG2rj61hMoz2nnTmU3GdAci354zUOMDSndkpfgRveeh5GE7MUA2FWxBsd
-         I3MhVR3d7j5tg==
-Message-ID: <7a7d5a7f19fc793f157508fec7fbc09ca8c4cc4b.camel@codeconstruct.com.au>
-Subject: Re: [PATCH] MAINTAINERS: aspeed: Update Andrew's email address
-From:   Andrew Jeffery <andrew@codeconstruct.com.au>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     joel@jms.id.au, andrew@aj.id.au, linux-aspeed@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Date:   Wed, 27 Sep 2023 08:52:09 +0930
-In-Reply-To: <CAPDyKFrFxYxSTa=z2VnCk4m_d-wEgd17wBokzyNCCRLtSUnFKw@mail.gmail.com>
-References: <20230925030647.40283-1-andrew@codeconstruct.com.au>
-         <CAPDyKFrFxYxSTa=z2VnCk4m_d-wEgd17wBokzyNCCRLtSUnFKw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+        d=gmail.com; s=20230601; t=1695774316; x=1696379116; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uk4VYbPx9jokzwBQ6bgqMLV+wRcgMMw+2UWxIJDIgis=;
+        b=gpwoFPdwXcWjA2OEGq3T1sY7JwM9/RY2bOk1yMWNWZuUIGWGKYYJZmvwoW78L57km4
+         +9/39DIe7Nq2UFuPMSwpcakiaSrwX306LH8uziBNsQe064Ax5D6zroQxyXcE/GNxjnae
+         NYhonHEX5LCsf8LJBTbhAT592kGuKhg7vzZAntlhMoQq4vD5O50UPill1GS3WbOfmo+t
+         8EXw/DKkvalQ+CelMGQXMpe03qax8mcHJl8CDTyVL3fA+2illNGWBF+zCNN8m9iwtvYi
+         4kk8GmSKSYVYbG2xa1P9FVrhp/xy37hjEgxHEXr31Zp4kDkIjTI50xSZjpjQXr81djkW
+         Mbqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695774316; x=1696379116;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uk4VYbPx9jokzwBQ6bgqMLV+wRcgMMw+2UWxIJDIgis=;
+        b=UgmePZ6wfvOC0Dy/NY9EsFf2fVJwculPX+So0StPvk8tQrgsS1cJwoc17JMKwGwW9W
+         XukipqrYdFdMOy7f+oC+aaCj9jLdvib3FTfuifp+XD8QHIXC7jB5E45bpk+8jDaqkQoW
+         JdRSP2vQEZZbT2s01WedRddM0xCuezfpEVkSbP15jl6Zdm+V5kJI2L2FlK7EzxmplUIw
+         UtZKisjPCeapRPm+Mv3mspqOT6w0NCgna21/Y9wFcE/H+ECEoCmplzb0JwEVhBXKDl1h
+         XH7dyEs/e8qwD4ml4XwC1dX1cEI6gtHzJ35hWa6OFx9pJ1l3k31ILkidyAxOBeukQCox
+         EVhw==
+X-Gm-Message-State: AOJu0Yz7SvvjdqEl9njd9dpjAGd8p6fGemrQxwEq/vPoXWXBilDUW8Aa
+        mb/2xbJR6I0m/a3ZAR3Z20U=
+X-Google-Smtp-Source: AGHT+IHCOwV68ennnAuDVUGDcfDOSWvRLMXwly5VBOf38pUVwDh8Z3MZ1z6r0bXvKaLaosgT19lWog==
+X-Received: by 2002:a1f:c981:0:b0:495:db2f:f4e7 with SMTP id z123-20020a1fc981000000b00495db2ff4e7mr634719vkf.1.1695774315450;
+        Tue, 26 Sep 2023 17:25:15 -0700 (PDT)
+Received: from localhost ([2607:fb90:be31:4195:f17f:b5d0:e0df:d9ab])
+        by smtp.gmail.com with ESMTPSA id y15-20020ac5c80f000000b0048fa7f8dc89sm2180781vkl.31.2023.09.26.17.25.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Sep 2023 17:25:14 -0700 (PDT)
+Date:   Tue, 26 Sep 2023 17:25:13 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+        Srinivas Neeli <srinivas.neeli@amd.com>,
+        Michal Simek <michal.simek@amd.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Subject: Re: [PATCH v1 2/5] lib/bitmap: Introduce bitmap_scatter() and
+ bitmap_gather() helpers
+Message-ID: <ZRN2adZZaGeqWNlY@yury-ThinkPad>
+References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
+ <20230926052007.3917389-3-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230926052007.3917389-3-andriy.shevchenko@linux.intel.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 2023-09-26 at 17:03 +0200, Ulf Hansson wrote:
-> On Mon, 25 Sept 2023 at 05:07, Andrew Jeffery
-> <andrew@codeconstruct.com.au> wrote:
-> >=20
-> > I've changed employers, have company email that deals with patch-based
-> > workflows without too much of a headache, and am trying to steer some
-> > content out of my personal mail.
-> >=20
-> > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
->=20
-> I guess it doesn't really matter what tree this gets funneled through,
-> so I decided to pick this up via my mmc tree.
->=20
-> So, applied for next, thanks!
+On Tue, Sep 26, 2023 at 08:20:04AM +0300, Andy Shevchenko wrote:
+> These helpers are the optimized versions of the bitmap_remap()
+> where one of the bitmaps (source or destination) is of sequential bits.
 
-Ah, thanks for being so prompt! However, Joel has sent a PR to Arnd
-with the patch:
+If so, can you add a test that makes sure that new API is consistent
+with the old bitmap_remap? And also provide numbers how well are they
+optimized, comparing to bitmap_remap.
+ 
+> See more in the kernel documentation of the helpers.
 
-https://lore.kernel.org/all/CACPK8Xc+D=3DYBc2Dhk-6-gOuvKN0xGgZYNop6oJVa=3DV=
-NgaEYOHw@mail.gmail.com/
+I grepped the whole kernel, not only Documentation directory, and found
+nothing...
 
-I thought I'd left a note under the fold asking Joel to do that so
-people knew how it would get into the tree, but that clearly isn't the
-case. Sorry about that, I must have rolled the patch off again after I
-put the note into the original.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/bitmap.h |  9 ++++++
+>  lib/bitmap.c           | 70 ++++++++++++++++++++++++++++++++++++++++++
+>  lib/test_bitmap.c      | 23 ++++++++++++++
+>  3 files changed, 102 insertions(+)
+> 
+> diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+> index 1516ff979315..87013b9a7dd8 100644
+> --- a/include/linux/bitmap.h
+> +++ b/include/linux/bitmap.h
+> @@ -60,6 +60,8 @@ struct device;
+>   *  bitmap_shift_left(dst, src, n, nbits)       *dst = *src << n
+>   *  bitmap_cut(dst, src, first, n, nbits)       Cut n bits from first, copy rest
+>   *  bitmap_replace(dst, old, new, mask, nbits)  *dst = (*old & ~(*mask)) | (*new & *mask)
+> + *  bitmap_scatter(dst, src, mask, nbits)	*dst = map(dense, sparse)(src)
+> + *  bitmap_gather(dst, src, mask, nbits)	*dst = map(sparse, dense)(src)
+>   *  bitmap_remap(dst, src, old, new, nbits)     *dst = map(old, new)(src)
+>   *  bitmap_bitremap(oldbit, old, new, nbits)    newbit = map(old, new)(oldbit)
+>   *  bitmap_onto(dst, orig, relmap, nbits)       *dst = orig relative to relmap
+> @@ -208,6 +210,12 @@ int bitmap_parselist(const char *buf, unsigned long *maskp,
+>  			int nmaskbits);
+>  int bitmap_parselist_user(const char __user *ubuf, unsigned int ulen,
+>  			unsigned long *dst, int nbits);
+> +
+> +unsigned int bitmap_scatter(unsigned long *dst, const unsigned long *src,
+> +		const unsigned long *mask, unsigned int nbits);
+> +unsigned int bitmap_gather(unsigned long *dst, const unsigned long *src,
+> +		const unsigned long *mask, unsigned int nbits);
+> +
+>  void bitmap_remap(unsigned long *dst, const unsigned long *src,
+>  		const unsigned long *old, const unsigned long *new, unsigned int nbits);
+>  int bitmap_bitremap(int oldbit,
+> @@ -216,6 +224,7 @@ void bitmap_onto(unsigned long *dst, const unsigned long *orig,
+>  		const unsigned long *relmap, unsigned int bits);
+>  void bitmap_fold(unsigned long *dst, const unsigned long *orig,
+>  		unsigned int sz, unsigned int nbits);
+> +
+>  int bitmap_find_free_region(unsigned long *bitmap, unsigned int bits, int order);
+>  void bitmap_release_region(unsigned long *bitmap, unsigned int pos, int order);
+>  int bitmap_allocate_region(unsigned long *bitmap, unsigned int pos, int order);
+> diff --git a/lib/bitmap.c b/lib/bitmap.c
+> index 935e0f96e785..31cfc7846aae 100644
+> --- a/lib/bitmap.c
+> +++ b/lib/bitmap.c
+> @@ -942,6 +942,76 @@ int bitmap_parse(const char *start, unsigned int buflen,
+>  }
+>  EXPORT_SYMBOL(bitmap_parse);
+>  
+> +/**
+> + * bitmap_scatter - Scatter a bitmap according to the given mask
+> + * @dst: scattered bitmap
+> + * @src: gathered bitmap
+> + * @mask: bits to assign to in the scattered bitmap
+> + * @nbits: number of bits in each of these bitmaps
+> + *
+> + * Scatters bitmap with sequential bits according to the given @mask.
+> + *
+> + * Example:
+> + * If @src bitmap = 0x005a, with @mask = 0x1313, @dst will be 0x0302.
+> + *
+> + * Or in binary form
+> + * @src			@mask			@dst
+> + * 0000000001011010	0001001100010011	0000001100000010
+> + *
+> + * (Bits 0, 1, 2, 3, 4, 5 are copied to the bits 0, 1, 4, 8, 9, 12)
+> + *
+> + * Returns: the weight of the @mask.
 
-Andrew
+Returning a weight of the mask is somewhat non-trivial... To me it
+would be logical to return a weight of destination, for example...
 
->=20
-> Kind regards
-> Uffe
->=20
->=20
-> > ---
-> >  MAINTAINERS | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index b19995690904..1965cee433b0 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1963,7 +1963,7 @@ F:        drivers/irqchip/irq-aspeed-i2c-ic.c
-> >=20
-> >  ARM/ASPEED MACHINE SUPPORT
-> >  M:     Joel Stanley <joel@jms.id.au>
-> > -R:     Andrew Jeffery <andrew@aj.id.au>
-> > +R:     Andrew Jeffery <andrew@codeconstruct.com.au>
-> >  L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscri=
-bers)
-> >  L:     linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-> >  S:     Supported
-> > @@ -3058,7 +3058,7 @@ F:        Documentation/devicetree/bindings/peci/=
-peci-aspeed.yaml
-> >  F:     drivers/peci/controller/peci-aspeed.c
-> >=20
-> >  ASPEED PINCTRL DRIVERS
-> > -M:     Andrew Jeffery <andrew@aj.id.au>
-> > +M:     Andrew Jeffery <andrew@codeconstruct.com.au>
-> >  L:     linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-> >  L:     openbmc@lists.ozlabs.org (moderated for non-subscribers)
-> >  L:     linux-gpio@vger.kernel.org
-> > @@ -3075,7 +3075,7 @@ F:        drivers/irqchip/irq-aspeed-scu-ic.c
-> >  F:     include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
-> >=20
-> >  ASPEED SD/MMC DRIVER
-> > -M:     Andrew Jeffery <andrew@aj.id.au>
-> > +M:     Andrew Jeffery <andrew@codeconstruct.com.au>
-> >  L:     linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
-> >  L:     openbmc@lists.ozlabs.org (moderated for non-subscribers)
-> >  L:     linux-mmc@vger.kernel.org
-> > --
-> > 2.39.2
-> >=20
+But I see that in the following patch you're using the returned value.
+Maybe add a few words to advocate that?
 
+> + */
+> +unsigned int bitmap_scatter(unsigned long *dst, const unsigned long *src,
+> +			    const unsigned long *mask, unsigned int nbits)
+> +{
+> +	unsigned int bit;
+> +	int n = 0;
+
+Is n signed for purpose? I think it should be consistent with
+return value.
+
+> +
+> +	bitmap_zero(dst, nbits);
+> +
+> +	for_each_set_bit(bit, mask, nbits)
+> +		__assign_bit(bit, dst, test_bit(n++, src));
+> +
+> +	return n;
+> +}
+> +EXPORT_SYMBOL(bitmap_scatter);
+> +
+> +/**
+> + * bitmap_gather - Gather a bitmap according to given mask
+> + * @dst: gathered bitmap
+> + * @src: scattered bitmap
+> + * @mask: bits to extract from in the scattered bitmap
+> + * @nbits: number of bits in each of these bitmaps
+> + *
+> + * Gathers bitmap with sparse bits according to the given @mask.
+> + *
+> + * Example:
+> + * If @src bitmap = 0x0302, with @mask = 0x1313, @dst will be 0x001a.
+
+Not sure about others, but to me hex representation is quite useless,
+moreover it's followed by binary one.
+
+> + * Or in binary form
+> + * @src			@mask			@dst
+> + * 0000001100000010	0001001100010011	0000000000011010
+> + *
+> + * (Bits 0, 1, 4, 8, 9, 12 are copied to the bits 0, 1, 2, 3, 4, 5)
+> + *
+> + * Returns: the weight of the @mask.
+> + */
+
+It looks like those are designed complement to each other. Is that
+true? If so, can you make your example showing that
+        scatter -> gather -> scatter
+would restore the original bitmap?
+
+If I'm wrong, can you please underline that they are not complement,
+and why?
+
+> +unsigned int bitmap_gather(unsigned long *dst, const unsigned long *src,
+> +			   const unsigned long *mask, unsigned int nbits)
+> +{
+> +	unsigned int bit;
+> +	int n = 0;
+> +
+> +	bitmap_zero(dst, nbits);
+> +
+> +	for_each_set_bit(bit, mask, nbits)
+> +		__assign_bit(n++, dst, test_bit(bit, src));
+> +
+> +	return n;
+> +}
+> +EXPORT_SYMBOL(bitmap_gather);
+
+I feel like they should reside in header, because they are quite a small
+functions indeed, and they would benefit from compile-time optimizations
+without bloating the kernel.
+
+Moreover, you are using them in patch #3 on 64-bit bitmaps, which
+would benefit from small_const_nbits() optimization.
+
+> +
+>  /**
+>   * bitmap_pos_to_ord - find ordinal of set bit at given position in bitmap
+>   *	@buf: pointer to a bitmap
+> diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+> index 1f2dc7fef17f..f43a07679998 100644
+> --- a/lib/test_bitmap.c
+> +++ b/lib/test_bitmap.c
+> @@ -50,6 +50,9 @@ static const unsigned long exp2[] __initconst = {
+>  static const unsigned long exp2_to_exp3_mask[] __initconst = {
+>  	BITMAP_FROM_U64(0x008000020020212eULL),
+>  };
+> +static const unsigned long exp2_to_exp3_maskg[] __initconst = {
+> +	BITMAP_FROM_U64(0x00000000000001ffULL),
+> +};
+>  /* exp3_0_1 = (exp2[0] & ~exp2_to_exp3_mask) | (exp2[1] & exp2_to_exp3_mask) */
+>  static const unsigned long exp3_0_1[] __initconst = {
+>  	BITMAP_FROM_U64(0x33b3333311313137ULL),
+> @@ -357,6 +360,25 @@ static void __init test_replace(void)
+>  	expect_eq_bitmap(bmap, exp3_1_0, nbits);
+>  }
+>  
+> +static void __init test_bitmap_sg(void)
+> +{
+> +	unsigned int nbits = 64;
+> +	DECLARE_BITMAP(bmap, 1024);
+
+Can you make it 1000? That way we'll test non-aligned case.
+
+> +	unsigned int w;
+> +
+> +	bitmap_zero(bmap, 1024);
+> +	w = bitmap_gather(bmap, exp2_to_exp3_mask, exp2_to_exp3_mask, nbits);
+> +	expect_eq_uint(bitmap_weight(exp2_to_exp3_mask, nbits), w);
+> +	expect_eq_uint(bitmap_weight(bmap, 1024), w);
+> +	expect_eq_bitmap(bmap, exp2_to_exp3_maskg, nbits);
+> +
+> +	bitmap_zero(bmap, 1024);
+> +	w = bitmap_scatter(bmap, exp2_to_exp3_maskg, exp2_to_exp3_mask, nbits);
+> +	expect_eq_uint(bitmap_weight(exp2_to_exp3_maskg, nbits), w);
+> +	expect_eq_uint(bitmap_weight(bmap, 1024), w);
+> +	expect_eq_bitmap(bmap, exp2_to_exp3_mask, nbits);
+
+Would be interesting to compare bitmap scatter/gather performance
+against bitmap_remap.
+
+> +}
+> +
+>  #define PARSE_TIME	0x1
+>  #define NO_LEN		0x2
+>  
+> @@ -1228,6 +1250,7 @@ static void __init selftest(void)
+>  	test_fill_set();
+>  	test_copy();
+>  	test_replace();
+> +	test_bitmap_sg();
+>  	test_bitmap_arr32();
+>  	test_bitmap_arr64();
+>  	test_bitmap_parse();
+> -- 
+> 2.40.0.1.gaa8946217a0b
