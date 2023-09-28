@@ -2,65 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CD7C7B1EC3
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 15:43:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E275B7B1F0C
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 15:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232031AbjI1Nnh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Sep 2023 09:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59330 "EHLO
+        id S232424AbjI1N4x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Sep 2023 09:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231966AbjI1Nnh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 09:43:37 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C19136
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 06:43:36 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-690f2719ab2so2961913b3a.0
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 06:43:36 -0700 (PDT)
+        with ESMTP id S232425AbjI1N4w (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 09:56:52 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B32511F
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 06:56:50 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-5041335fb9cso20781978e87.0
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 06:56:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695908615; x=1696513415; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dqK7quKf/l4fe/ENZJcx8mmpiJDqOuGJS4qvF9KMko0=;
-        b=CrDrmH8hoOBek3PEgSCThupT8jgeFSBoFV1mNIReU3nIUN6+tmccq9iGHfduEP4lqx
-         mO83vLvi3C9ho5kEeUR+MHeR4omWNdrLzVnuM9SBCvicaLA4XHJb8zSqmMpjE2yEDban
-         jEd2y0hcflX7geTbag4q8lfW3JZGIHkmSwGhbGRENDYLT54f9b0Vtkw6Gr7ll05RayZX
-         sUkH3BCXdEbGzeHuX2cb5qFitRx1eNjyD+Y8bCh1hCOZkK+9P1J8IDDo2cLyO0/6iVcP
-         PkxaZI8OhuePf8KL7DULisq3cuBnMJhT6LF+VHRGUORMgtwj8mW4frFs4oZTcso8D8wT
-         kudg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695909408; x=1696514208; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RxPZWQf1jw9MHdfo1JPytSk2yZsM3hoAykpf52V7Iz8=;
+        b=GyK907qXLz1NgByW7qgeR7RYemU/+JYohjP1NOcWPJ5v+D+dGwhW5+7T7DeQncfCtD
+         MmlGPwEwFEYZIleLCf41+SB6AASCoC97djn2V4PR7e5SSoVpTaxp523AK1rDn2Lr7sYm
+         4wDgT2JiZS8j+p45UISUXpxhojpARYsQ342fWQ1cELXlJXOzs6BaRYzVPuWCaNaC/72b
+         b6kVBgwiM1KaHAKrK6kOUu2qHK2C2KBW1BMZLFiGC8ODBPWozyHGwtpky06W5s5Ralw/
+         8IED8GWph5OVHHGsf0NpM0iqUYF4IK8AlkEQUnPcmdocvhKJWu/f7KR3ARwrmTbx1Oi4
+         UJoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695908615; x=1696513415;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dqK7quKf/l4fe/ENZJcx8mmpiJDqOuGJS4qvF9KMko0=;
-        b=lkcCU2XrPDF57xKwTIgN49+JsDEKkwJLHC1sgJitHqf9CSLS3dKi860mLs/w8b7C5c
-         xPrbCop8LhsbVSzyJL8fHDc/e6Kl5cGE0OASY0ltoQcYKdhTjUz02Zm57ye/16zOlOZw
-         I+hbOHYQaBuRniV5q6erMolB8598betkFq77nUDohUuNqqUA+ucniEgCW6T6bs2Qv3+Q
-         0BgDc7Jsy2PHSFvNSO5br2XltcnyR2ShhdxGSZcUqLBcD9d31K4Kq/A37PthjNqupGR1
-         oE3nxnrRCo1J8Mvftnjoxvm/TyxRiZTUL9j6ymrad+pWycUSuh2fvjrftaSAs8PgU1WV
-         f4hg==
-X-Gm-Message-State: AOJu0Yy4SmGweMjSYbwngdRrUHo9qrO3B9u3lySY+yk8038mjWPJAgAi
-        /52Lopeda0wyy0ABjUUgVqs=
-X-Google-Smtp-Source: AGHT+IFyJhiCAvoxZbmNhB+cS1yAZmZUF3Y4N3KffEBmJMbm92Npl4JQWyLU3rhdtVglAwvp57lEMQ==
-X-Received: by 2002:a05:6a20:8403:b0:15c:b7bb:2bd9 with SMTP id c3-20020a056a20840300b0015cb7bb2bd9mr1263673pzd.6.1695908615352;
-        Thu, 28 Sep 2023 06:43:35 -0700 (PDT)
-Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:386c:ba81:a385:9374])
-        by smtp.gmail.com with ESMTPSA id e15-20020a17090301cf00b001bde6fa0a39sm14964387plh.167.2023.09.28.06.43.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 06:43:34 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     aisheng.dong@nxp.com, ping.bai@nxp.com, linux-gpio@vger.kernel.org,
-        Fabio Estevam <festevam@denx.de>
-Subject: [PATCH] pinctrl: mxs: Remove undocumented 'fsl,mxs-gpio' property
-Date:   Thu, 28 Sep 2023 10:43:21 -0300
-Message-Id: <20230928134321.438547-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1695909408; x=1696514208;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RxPZWQf1jw9MHdfo1JPytSk2yZsM3hoAykpf52V7Iz8=;
+        b=QJGlNhHY/Bz8KwC9sWzBZwDnzbvwd8N1XNMgn+MK4JqmjB0LOE55+Guv0tSGth3FAH
+         hnsDW4QbUXlvrAFDODtFsz7wwp6ti5628j0UkIzAhF3SG0NikVRvKRepGBL5+LpCM/pR
+         4y8TJuz/TQ45V5k/5GVL47Wx7SGfw0fPyI6zWuVMEldenimeTkeikIB6ICHfcwepN7Y+
+         1Xfx+09kubJZgb075XLeazQj4/7z9roLNBmNAgxlW1NstOHA8lzZ4b5aa6lX0szhxICn
+         2I6l4kNWkTXoW1anbL4leP6xJDq1Np4GwL43Kep6MAv1N0dIswJu+LHeF6FLBj01uyO5
+         rOSA==
+X-Gm-Message-State: AOJu0YyTPAgOs3uHLCtTNW6Eib7NdJ/vItniZlMs+S+OSlt9+r9P8LUz
+        3KfdnY4yT4Pef++KOEmrpkeD87B2PmM83zREnobJEg==
+X-Google-Smtp-Source: AGHT+IGWt/wwI1p/wZzGGCUfLvgGR5TCHpLokdh/WyYX4g0mNEhcbq32z+QYCub4QkTCL//rj90mIgcT2dEcBY4jYVc=
+X-Received: by 2002:a19:e05a:0:b0:500:adbd:43e7 with SMTP id
+ g26-20020a19e05a000000b00500adbd43e7mr1393633lfj.8.1695909408216; Thu, 28 Sep
+ 2023 06:56:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <1694890416-14409-1-git-send-email-wentong.wu@intel.com>
+ <2023091704-nape-coconut-af6c@gregkh> <f576c346-db6c-dded-1502-c87d5e58fa39@redhat.com>
+ <95ce1e2f-eb60-46fc-bced-06b8a150cbfb@suse.com> <ZRVxedVoCetvqGm3@ashyti-mobl2.lan>
+In-Reply-To: <ZRVxedVoCetvqGm3@ashyti-mobl2.lan>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 28 Sep 2023 15:56:35 +0200
+Message-ID: <CAMRc=MfdvkHSvCv_RcQo3MoMWrWCQn_JfbpL7RdZrrQ_cqMteA@mail.gmail.com>
+Subject: Re: [PATCH v19 0/4] Add Intel LJCA device driver
+To:     Andi Shyti <andi.shyti@linux.intel.com>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Wentong Wu <wentong.wu@intel.com>, arnd@arndb.de,
+        mka@chromium.org, lee@kernel.org, wsa@kernel.org,
+        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
+        maz@kernel.org, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        heikki.krogerus@linux.intel.com, sakari.ailus@linux.intel.com,
+        bartosz.golaszewski@linaro.org, srinivas.pandruvada@intel.com,
+        zhifeng.wang@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,82 +79,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Fabio Estevam <festevam@denx.de>
+On Thu, Sep 28, 2023 at 2:29=E2=80=AFPM Andi Shyti <andi.shyti@linux.intel.=
+com> wrote:
+>
+> Hi,
+>
+> On Thu, Sep 28, 2023 at 12:18:50PM +0200, Oliver Neukum wrote:
+> > On 17.09.23 13:26, Hans de Goede wrote:
+> > > Note I did not ask for a new version to be send right away, but
+> > > I'm afraid there has been a bit of miscommunication and instead
+> > > of rebasing the next version based on further review Wentong has
+> > > send out a new rebased version immediately, sorry about that.
+> >
+> > Hi,
+> >
+> > what to do now? It's been ten days.
+> > I am sure this driver has been very thoroughly reviewed by now.
+> > We are dragging this out. Do we want the developer to do another releas=
+e
+> > or do we ask Greg to take it as is?
+> > This is becoming almost comical, but that is not what we want driver
+> > submission to be.
+> >
+> > As far as I am concerned on the USB side everything is fine now.
+> > Hans? Greg?
+>
+> i2c is also good to go and the rest looks good, as well. I have
+> some concerns on patch 4 that looks like a mixture of many random
+> things.
+>
+> Andi
 
-The 'fsl,mxs-gpio' property is not documented in gpio-mxs.yaml, but
-the imx23 and imx28 dtsi describe the gpios as:
+It's got a lot of coding style fixes ninja-packed in there that are
+not mentioned by the commit message. But as it's been reviewed by
+Linus, acked by Andy (and myself) and tested by Hans, I'm ready to let
+it slide if that saves me from seeing ten additional versions of this
+series in my inbox.
 
-compatible = "fsl,imx28-gpio", "fsl,mxs-gpio";
-
-This gives schema warnings like:
-
-imx28-cfa10037.dtb: pinctrl@80018000: gpio@0:compatible: ['fsl,imx28-gpio', 'fsl,mxs-gpio'] is too long
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-mxs.yaml#
-
-"fsl,mxs-gpio" is only used inside pinctrl-mxs, but can be removed if
-the compatible check is done against fsl,imx23-gpio and fsl,imx28-gpio.
-
-Introduce is_mxs_gpio() and remove the need for "fsl,mxs-gpio".
-
-Tested on a imx28-evk.
-
-Signed-off-by: Fabio Estevam <festevam@denx.de>
----
- drivers/pinctrl/freescale/pinctrl-mxs.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.c b/drivers/pinctrl/freescale/pinctrl-mxs.c
-index cf3f4d2e0c16..e77311f26262 100644
---- a/drivers/pinctrl/freescale/pinctrl-mxs.c
-+++ b/drivers/pinctrl/freescale/pinctrl-mxs.c
-@@ -395,6 +395,12 @@ static int mxs_pinctrl_parse_group(struct platform_device *pdev,
- 	return 0;
- }
- 
-+static bool is_mxs_gpio(struct device_node *child)
-+{
-+	return of_device_is_compatible(child, "fsl,imx23-gpio") ||
-+	       of_device_is_compatible(child, "fsl,imx28-gpio");
-+}
-+
- static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
- 				struct mxs_pinctrl_data *d)
- {
-@@ -402,7 +408,6 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
- 	struct device_node *np = pdev->dev.of_node;
- 	struct device_node *child;
- 	struct mxs_function *f;
--	const char *gpio_compat = "fsl,mxs-gpio";
- 	const char *fn, *fnull = "";
- 	int i = 0, idxf = 0, idxg = 0;
- 	int ret;
-@@ -417,7 +422,7 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
- 	/* Count total functions and groups */
- 	fn = fnull;
- 	for_each_child_of_node(np, child) {
--		if (of_device_is_compatible(child, gpio_compat))
-+		if (is_mxs_gpio(child))
- 			continue;
- 		soc->ngroups++;
- 		/* Skip pure pinconf node */
-@@ -446,7 +451,7 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
- 	fn = fnull;
- 	f = &soc->functions[idxf];
- 	for_each_child_of_node(np, child) {
--		if (of_device_is_compatible(child, gpio_compat))
-+		if (is_mxs_gpio(child))
- 			continue;
- 		if (of_property_read_u32(child, "reg", &val))
- 			continue;
-@@ -486,7 +491,7 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
- 	idxf = 0;
- 	fn = fnull;
- 	for_each_child_of_node(np, child) {
--		if (of_device_is_compatible(child, gpio_compat))
-+		if (is_mxs_gpio(child))
- 			continue;
- 		if (of_property_read_u32(child, "reg", &val)) {
- 			ret = mxs_pinctrl_parse_group(pdev, child,
--- 
-2.34.1
-
+Bart
