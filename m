@@ -2,98 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A3947B1C65
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 14:29:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34C6E7B1C8A
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 14:35:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232200AbjI1M3G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Sep 2023 08:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42530 "EHLO
+        id S231293AbjI1MfE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Sep 2023 08:35:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230354AbjI1M3G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 08:29:06 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9926F199;
-        Thu, 28 Sep 2023 05:29:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695904143; x=1727440143;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0KYhwDYEnO+BmRoWwn3CeYFTmyTlo/woYGLWaN3nURk=;
-  b=Q850mc82TZZaiEaXD7ZkkXhymQdWPcCm/hzQ5yFXufYAFLPr4JnvibQT
-   3Re5v/NumOGDv407ljnkEaEiNeYhBrJwHPg1OF5gU1cZEHwx9ztiajTSq
-   InOKaipnaNTU/KH435fgXeDTpWn1RitE7+1V5z7KY/4mAatTzswbZODoL
-   gS/D3+rTso/5Lc5cFBdqNFPhZqD1XOa2f21Kr1wzG12GLFuUQ2XiRxj6a
-   i9m5Dc1Bmqb6e1GzK/ZQgXzGTYy8xCOTO2x8slrVNVoT1+bmX+5j2OCDf
-   3iOM4CmT/dUriijDJvEUTfPZQ7bAR6TQehZBIUS6v16q69ZXQnPn6G8wR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="362287057"
-X-IronPort-AV: E=Sophos;i="6.03,184,1694761200"; 
-   d="scan'208";a="362287057"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 05:29:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="743049082"
-X-IronPort-AV: E=Sophos;i="6.03,184,1694761200"; 
-   d="scan'208";a="743049082"
-Received: from mnazleas-mobl.gar.corp.intel.com (HELO intel.com) ([10.213.37.197])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 05:28:47 -0700
-Date:   Thu, 28 Sep 2023 14:28:41 +0200
-From:   Andi Shyti <andi.shyti@linux.intel.com>
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Wentong Wu <wentong.wu@intel.com>, arnd@arndb.de,
-        mka@chromium.org, lee@kernel.org, wsa@kernel.org,
-        kfting@nuvoton.com, broonie@kernel.org, linus.walleij@linaro.org,
-        maz@kernel.org, brgl@bgdev.pl, linux-usb@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        heikki.krogerus@linux.intel.com, andi.shyti@linux.intel.com,
-        sakari.ailus@linux.intel.com, bartosz.golaszewski@linaro.org,
-        srinivas.pandruvada@intel.com, zhifeng.wang@intel.com
-Subject: Re: [PATCH v19 0/4] Add Intel LJCA device driver
-Message-ID: <ZRVxedVoCetvqGm3@ashyti-mobl2.lan>
-References: <1694890416-14409-1-git-send-email-wentong.wu@intel.com>
- <2023091704-nape-coconut-af6c@gregkh>
- <f576c346-db6c-dded-1502-c87d5e58fa39@redhat.com>
- <95ce1e2f-eb60-46fc-bced-06b8a150cbfb@suse.com>
+        with ESMTP id S231752AbjI1MfD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 08:35:03 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ABC26180
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 05:35:01 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 998461FB;
+        Thu, 28 Sep 2023 05:35:39 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F5CB3F5A1;
+        Thu, 28 Sep 2023 05:35:00 -0700 (PDT)
+Message-ID: <9199562c-65ac-d8b1-20bd-429a32ede6c9@arm.com>
+Date:   Thu, 28 Sep 2023 13:34:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95ce1e2f-eb60-46fc-bced-06b8a150cbfb@suse.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 1/4] ASoC: rockchip: Convert RK3288 HDMI to GPIO
+ descriptors
+Content-Language: en-GB
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Heiko Stuebner <heiko@sntech.de>
+Cc:     alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+References: <20230928-descriptors-asoc-rockchip-v1-0-a142a42d4787@linaro.org>
+ <20230928-descriptors-asoc-rockchip-v1-1-a142a42d4787@linaro.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20230928-descriptors-asoc-rockchip-v1-1-a142a42d4787@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On Thu, Sep 28, 2023 at 12:18:50PM +0200, Oliver Neukum wrote:
-> On 17.09.23 13:26, Hans de Goede wrote:
-> > Note I did not ask for a new version to be send right away, but
-> > I'm afraid there has been a bit of miscommunication and instead
-> > of rebasing the next version based on further review Wentong has
-> > send out a new rebased version immediately, sorry about that.
+On 27/09/2023 11:47 pm, Linus Walleij wrote:
+> This converts the Rockchip RK3288 HDMI driver to use GPIO
+> descriptors:
 > 
-> Hi,
+> - Look up the HP EN GPIO as a descriptor and handle it directly.
 > 
-> what to do now? It's been ten days.
-> I am sure this driver has been very thoroughly reviewed by now.
-> We are dragging this out. Do we want the developer to do another release
-> or do we ask Greg to take it as is?
-> This is becoming almost comical, but that is not what we want driver
-> submission to be.
+> - Let the Jack detection core obtain and handle the HP detection
+>    GPIO, just pass the right name and gpiod_dev and it will
+>    do the job.
 > 
-> As far as I am concerned on the USB side everything is fine now.
-> Hans? Greg?
+> - As the probe() code is very insistent on getting valid
+>    GPIOs out of the device before it will continue, there
+>    is no point to carry all the code handling the GPIOs as
+>    optional, drop all these checks.
 
-i2c is also good to go and the rest looks good, as well. I have
-some concerns on patch 4 that looks like a mixture of many random
-things.
+Isn't it allowing them to be optional as long as of_get_named_gpio() 
+returns -ENODEV (which I guess may come out of the chip->of_xlate 
+callback)? Or is it implied that that's never actually been able to happen?
 
-Andi
+(just curious...)
+
+FWIW the DT binding does define them as optional, but the only in-tree 
+user provides both, so it seems unlikely to pose a regression in 
+practice even if we did just drop the notional support.
+
+Thanks,
+Robin.
+
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>   sound/soc/rockchip/rk3288_hdmi_analog.c | 54 +++++++++++----------------------
+>   1 file changed, 17 insertions(+), 37 deletions(-)
+> 
+> diff --git a/sound/soc/rockchip/rk3288_hdmi_analog.c b/sound/soc/rockchip/rk3288_hdmi_analog.c
+> index 0c6bd9a019db..7199f991ec26 100644
+> --- a/sound/soc/rockchip/rk3288_hdmi_analog.c
+> +++ b/sound/soc/rockchip/rk3288_hdmi_analog.c
+> @@ -12,8 +12,7 @@
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/slab.h>
+> -#include <linux/gpio.h>
+> -#include <linux/of_gpio.h>
+> +#include <linux/gpio/consumer.h>
+>   #include <sound/core.h>
+>   #include <sound/jack.h>
+>   #include <sound/pcm.h>
+> @@ -26,8 +25,7 @@
+>   #define DRV_NAME "rk3288-snd-hdmi-analog"
+>   
+>   struct rk_drvdata {
+> -	int gpio_hp_en;
+> -	int gpio_hp_det;
+> +	struct gpio_desc *gpio_hp_en;
+>   };
+>   
+>   static int rk_hp_power(struct snd_soc_dapm_widget *w,
+> @@ -35,11 +33,8 @@ static int rk_hp_power(struct snd_soc_dapm_widget *w,
+>   {
+>   	struct rk_drvdata *machine = snd_soc_card_get_drvdata(w->dapm->card);
+>   
+> -	if (!gpio_is_valid(machine->gpio_hp_en))
+> -		return 0;
+> -
+> -	gpio_set_value_cansleep(machine->gpio_hp_en,
+> -				SND_SOC_DAPM_EVENT_ON(event));
+> +	gpiod_set_value_cansleep(machine->gpio_hp_en,
+> +				 SND_SOC_DAPM_EVENT_ON(event));
+>   
+>   	return 0;
+>   }
+> @@ -113,24 +108,23 @@ static int rk_hw_params(struct snd_pcm_substream *substream,
+>   }
+>   
+>   static struct snd_soc_jack_gpio rk_hp_jack_gpio = {
+> -	.name = "Headphone detection",
+> +	.name = "rockchip,hp-det",
+>   	.report = SND_JACK_HEADPHONE,
+>   	.debounce_time = 150
+>   };
+>   
+>   static int rk_init(struct snd_soc_pcm_runtime *runtime)
+>   {
+> -	struct rk_drvdata *machine = snd_soc_card_get_drvdata(runtime->card);
+> +	struct snd_soc_card *card = runtime->card;
+> +	struct device *dev = card->dev;
+>   
+>   	/* Enable Headset Jack detection */
+> -	if (gpio_is_valid(machine->gpio_hp_det)) {
+> -		snd_soc_card_jack_new_pins(runtime->card, "Headphone Jack",
+> -					   SND_JACK_HEADPHONE, &headphone_jack,
+> -					   headphone_jack_pins,
+> -					   ARRAY_SIZE(headphone_jack_pins));
+> -		rk_hp_jack_gpio.gpio = machine->gpio_hp_det;
+> -		snd_soc_jack_add_gpios(&headphone_jack, 1, &rk_hp_jack_gpio);
+> -	}
+> +	rk_hp_jack_gpio.gpiod_dev = dev;
+> +	snd_soc_card_jack_new_pins(runtime->card, "Headphone Jack",
+> +				   SND_JACK_HEADPHONE, &headphone_jack,
+> +				   headphone_jack_pins,
+> +				   ARRAY_SIZE(headphone_jack_pins));
+> +	snd_soc_jack_add_gpios(&headphone_jack, 1, &rk_hp_jack_gpio);
+>   
+>   	return 0;
+>   }
+> @@ -182,24 +176,10 @@ static int snd_rk_mc_probe(struct platform_device *pdev)
+>   
+>   	card->dev = &pdev->dev;
+>   
+> -	machine->gpio_hp_det = of_get_named_gpio(np,
+> -		"rockchip,hp-det-gpios", 0);
+> -	if (!gpio_is_valid(machine->gpio_hp_det) && machine->gpio_hp_det != -ENODEV)
+> -		return machine->gpio_hp_det;
+> -
+> -	machine->gpio_hp_en = of_get_named_gpio(np,
+> -		"rockchip,hp-en-gpios", 0);
+> -	if (!gpio_is_valid(machine->gpio_hp_en) && machine->gpio_hp_en != -ENODEV)
+> -		return machine->gpio_hp_en;
+> -
+> -	if (gpio_is_valid(machine->gpio_hp_en)) {
+> -		ret = devm_gpio_request_one(&pdev->dev, machine->gpio_hp_en,
+> -					    GPIOF_OUT_INIT_LOW, "hp_en");
+> -		if (ret) {
+> -			dev_err(card->dev, "cannot get hp_en gpio\n");
+> -			return ret;
+> -		}
+> -	}
+> +	machine->gpio_hp_en = devm_gpiod_get(&pdev->dev, "rockchip,hp-en", GPIOD_OUT_LOW);
+> +	if (IS_ERR(machine->gpio_hp_en))
+> +		return PTR_ERR(machine->gpio_hp_en);
+> +	gpiod_set_consumer_name(machine->gpio_hp_en, "hp_en");
+>   
+>   	ret = snd_soc_of_parse_card_name(card, "rockchip,model");
+>   	if (ret) {
+> 
