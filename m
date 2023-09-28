@@ -2,121 +2,245 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B67517B1CFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 14:52:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A79367B1D16
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 14:55:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231542AbjI1MwH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Sep 2023 08:52:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52520 "EHLO
+        id S232575AbjI1Mzv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Sep 2023 08:55:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231293AbjI1MwH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 08:52:07 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43729139
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 05:52:05 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9ae75ece209so1496074366b.3
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 05:52:05 -0700 (PDT)
+        with ESMTP id S232583AbjI1Mzt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 08:55:49 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BAC31A1;
+        Thu, 28 Sep 2023 05:55:47 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-9b2b53e17feso402534566b.3;
+        Thu, 28 Sep 2023 05:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695905524; x=1696510324; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wH1jWkqQOZ+vGqi02z+SlQPfv6tGuaM+OJIz8kNh1lw=;
-        b=uBBqRKlSAyyMyic8tEokKosMDmZtKcy+eHyBMFjLHqEVkeL0eXi5lrGPpSe9pZuns7
-         hTyV0li9C2c5HUqFc/gwSN9Q8TBsJMlLrZLHobvZ5drTNVPr70mn3QUzGrAi5UM65XWE
-         r1t/ybHMD42Zj3khg4x8rseAtYM7576aKsgwYLy/iVzGffB/EQimg0opFQejqOVlmC5U
-         6oBtHoJh7u/EGI1I7uzZlLWPPY0MA3h9lXJdexIk30rDCVE4XDlgoT/9+b1g2C7DiimU
-         /nR2gcKOihEXdVmDOp7eH/VeeajqXwvcahF0dWVtJxacQ8kFSzfoK/M3C4DNuvnzc8t7
-         VE7A==
+        d=gmail.com; s=20230601; t=1695905746; x=1696510546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IjmABsbUI05o+ZavzLjhEq7Z627HD3chbAFdNF0zJvg=;
+        b=TTkMQLk3I9njcpf5hQueq9cEVDSpBsxvD8SLqRsJd5tnzvMFx5Hm9Fvm6x6ydx7OkU
+         U9NXh3dzbxO2ybpQHySKW/doHH/wCJI1UqmJYT6ckEF1DpB4mvifFVbmePirP/7qhrln
+         J/UBY8Xj76jcB3ZBnDPkLtpncsi7K4XA1eBFHewnpN6K3vMTIfXf1DLPCTbN4nJl+r76
+         fOdN7s+72pndChPOpSWAIffVbymUGXBxKIV91zmvplOhYNjNOnPrZzDQaFJSG3RsqfhW
+         fzVGGrQ4YaG5cWn+PqzPDiDazV+jJwPPqO2+3KpkiYZ37Z/4rWfkolKAhY2X3TwIWD9w
+         k1rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695905524; x=1696510324;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wH1jWkqQOZ+vGqi02z+SlQPfv6tGuaM+OJIz8kNh1lw=;
-        b=FCpvUz32bwVfv4A0DEMiT0+L0MKqwTZ9cbs7CnwwOEuZDA3aN44KENseyhpK9oS2mp
-         9wk5g81wFyUAuuPdv0Yl183L6zM9HhEm50U6wY9ovCBcn7rSS/6tKvN4T+dMokGgsdpi
-         N3JsSiSSC570dWIUrYSeL4CiQivhUzScS+hthMSz/4F8zjeW/l6uxVieTQSxXF3k3IUp
-         ZiEMjut6C4RYa2/k5obBJ45anD/r3ohUrQ1WOU4/j5zikmySP3fRzS4eNvdMtuYq0qC8
-         M2f6hnfkSkLvyFFohRCH1uUwRbK6DUqyUO+kQJOg+LxbLgd3kas8Q8oSHxBfhc8Wt8vn
-         jEZA==
-X-Gm-Message-State: AOJu0YwW+XVzEh0k6suJdxKvXc5Nho+dPjQuLvH6xSY8u52C8duquGwv
-        D6ljP5IY8SKS5W7dsjnsHnMA6w==
-X-Google-Smtp-Source: AGHT+IHHTmkuut85qjVQltwmZGZuDc8YVGNtCNfDPFpjO9CeaL+xauHWqSUnLjSPDpp+cs7/gkdp7g==
-X-Received: by 2002:a17:906:5393:b0:9a1:f73b:90ce with SMTP id g19-20020a170906539300b009a1f73b90cemr1184522ejo.54.1695905523531;
-        Thu, 28 Sep 2023 05:52:03 -0700 (PDT)
-Received: from localhost (i5C7438D4.versanet.de. [92.116.56.212])
-        by smtp.gmail.com with ESMTPSA id l25-20020a1709066b9900b0099cc36c4681sm10787223ejr.157.2023.09.28.05.52.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Sep 2023 05:52:03 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 28 Sep 2023 14:52:02 +0200
-Message-Id: <CVUKC1HXG1P8.13XIUCCXN95F0@ablu-work>
-Cc:     "Viresh Kumar" <viresh.kumar@linaro.org>,
-        "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>
-To:     "Erik Schilling" <erik.schilling@linaro.org>,
-        "Linux-GPIO" <linux-gpio@vger.kernel.org>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-Subject: Re: [libgpiod][PATCH 2/3] bindings: rust: allow cloning line::Info
- -> line::OwnedInfo
-X-Mailer: aerc 0.15.2
-References: <20230927-rust-line-info-soundness-v1-0-990dce6f18ab@linaro.org>
- <20230927-rust-line-info-soundness-v1-2-990dce6f18ab@linaro.org>
-In-Reply-To: <20230927-rust-line-info-soundness-v1-2-990dce6f18ab@linaro.org>
+        d=1e100.net; s=20230601; t=1695905746; x=1696510546;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IjmABsbUI05o+ZavzLjhEq7Z627HD3chbAFdNF0zJvg=;
+        b=PMzsaP8dpWqd83tbS+Sa0XOU02hEzAqkTeB9bSKpeuZY49rZpuEwNfGNYQWCcAh6XR
+         wPgSsC7A8UwjDNvXfvzVfro0bJ3xjWR2V8L8e+ljgIiQmHQ6xFWpcMM+XzaOlvnOCQaX
+         8PFHZ2sMc41VEL1gbjPRrEsUoCVzXcZcC6G+2nemnQuZDYOsIE4d6ENNHRNN2KYz9Ru8
+         euGckHnzm1hRAnPIM7XZd0W8ON21xBmu5uTGXS3zqPl7Gl8Pl1oIzpieAuq1AHLMpWc5
+         nTzOfQZj1FHUCtjAfyezVCgCXYlV9GH0irdpg7erqQ93tzBMzFqp16ShpsWEWrol1ZBr
+         ySgg==
+X-Gm-Message-State: AOJu0YyeHe8rWVEeng62SOr728rsmWIaBsndJvA2FIzpSecAfD/TIC2v
+        B9l9JySpB2uW8N0fx/6zqXQ=
+X-Google-Smtp-Source: AGHT+IFtNeoLNoLDkcr4QfSp2qY6+buxJfNcj8i4yaqq92Ic2jUBbdQN9m3MHm3/F3W0nNO0K0Rvbw==
+X-Received: by 2002:a17:907:2e01:b0:9b0:169b:eee2 with SMTP id ig1-20020a1709072e0100b009b0169beee2mr1078693ejc.10.1695905745460;
+        Thu, 28 Sep 2023 05:55:45 -0700 (PDT)
+Received: from localhost.localdomain ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id p26-20020a170906229a00b009ad8338aafasm11027787eja.13.2023.09.28.05.55.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Sep 2023 05:55:44 -0700 (PDT)
+From:   Dumitru Ceclan <mitrutzceclan@gmail.com>
+To:     mitrutzceclan@gmail.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+        linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        ChiaEn Wu <chiaen_wu@richtek.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        =?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+        Mike Looijmans <mike.looijmans@topic.nl>,
+        Haibo Chen <haibo.chen@nxp.com>,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        Ceclan Dumitru <dumitru.ceclan@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: adc: add AD7173
+Date:   Thu, 28 Sep 2023 15:54:42 +0300
+Message-Id: <20230928125443.615006-1-mitrutzceclan@gmail.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed Sep 27, 2023 at 6:29 PM CEST, Erik Schilling wrote:
-> While one would usually use the ToOwned [1] contract in rust, libgpipd's
-> API only allows copying that may fail.
->
-> Thus, we cannot implement the existing trait and roll our own method. I
-> went with `try_clone` since that seems to be used in similar cases across
-> the `std` crate [2].
->
-> It also closes the gap of not having any way to clone owned instances.
-> Though - again - not through the Clone trait which may not fail [3].
->
-> [1] https://doc.rust-lang.org/std/borrow/trait.ToOwned.html
-> [2] https://doc.rust-lang.org/std/index.html?search=3Dtry_clone
-> [3] https://doc.rust-lang.org/std/clone/trait.Clone.html
->
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> ---
->  bindings/rust/libgpiod/src/lib.rs         |  1 +
->  bindings/rust/libgpiod/src/line_info.rs   | 16 ++++++++++
->  bindings/rust/libgpiod/tests/line_info.rs | 53 +++++++++++++++++++++++++=
-++++++
->  3 files changed, 70 insertions(+)
+The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+which can be used in high precision, low noise single channel applications
+or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+primarily for measurement of signals close to DC but also delivers
+outstanding performance with input bandwidths out to ~10kHz.
 
-[...]
+Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
+---
+ .../bindings/iio/adc/adi,ad7173.yaml          | 139 ++++++++++++++++++
+ 1 file changed, 139 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
 
-> diff --git a/bindings/rust/libgpiod/src/line_info.rs b/bindings/rust/libg=
-piod/src/line_info.rs
-> index 32c4bb2..fe01a14 100644
-> --- a/bindings/rust/libgpiod/src/line_info.rs
-> +++ b/bindings/rust/libgpiod/src/line_info.rs
-> @@ -58,6 +58,22 @@ impl Info {
->          self as *const _ as *mut _
->      }
-> =20
-> +    /// Clones the [gpiod::gpiod_line_info] instance to an [InfoOwned]
-> +    pub fn try_clone(&self) -> Result<InfoOwned> {
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+new file mode 100644
+index 000000000000..a0f437297a23
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+@@ -0,0 +1,139 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2023 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7173 ADC device driver
++
++maintainers:
++  - Ceclan Dumitru <dumitru.ceclan@analog.com>
++
++description: |
++  Bindings for the Analog Devices AD717X ADC's. Datasheets for supported chips:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-2.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7173-8.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7175-2.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7176-2.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7172-2
++      - adi,ad7173-8
++      - adi,ad7175-2
++      - adi,ad7176-2
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  spi-max-frequency:
++    maximum: 20000000
++
++  spi-cpol:
++    type: boolean
++
++  spi-cpha:
++    type: boolean
++
++  required:
++    - compatible
++    - reg
++    - interrupts
++
++patternProperties:
++  "^channel@[0-9a-f]$":
++    type: object
++    $ref: adc.yaml
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        description: Channel number
++        minimum: 0
++        maximum: 15
++
++      diff-channels:
++        description:
++          Analog input pins
++        items:
++          minimum: 0
++          maximum: 31
++
++      adi,bipolar:
++        description: Specify if the channel should measure in bipolar mode.
++        type: boolean
++
++    required:
++      - reg
++      - diff-channels
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      adc@0 {
++        compatible = "adi,ad7173-8";
++        reg = <0>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++        interrupt-parent = <&gpio>;
++        spi-max-frequency = <5000000>;
++
++        channel@0 {
++          reg = <0>;
++          adi,bipolar;
++
++          diff-channels = <0 1>;
++        };
++
++        channel@1 {
++          reg = <1>;
++
++          diff-channels = <2 3>;
++        };
++
++        channel@2 {
++          reg = <2>;
++          adi,bipolar;
++
++          diff-channels = <4 5>;
++        };
++
++        channel@3 {
++          reg = <3>;
++          adi,bipolar;
++
++          diff-channels = <6 7>;
++        };
++
++        channel@4 {
++          reg = <4>;
++
++          diff-channels = <8 9>;
++        };
++      };
++    };
+-- 
+2.39.2
 
-Hm... I realized that we have `event_clone()` for cloning an `Event`
-and `settings_clone()` for cloning `line::Settings`. Should better
-stay consistent here...
-
-However, I think the name `try_clone()` sounds more suitable to me. Any
-opinions? I could send a patch to rename the existing cloning methods
-to `try_clone()`.
-
-- Erik
