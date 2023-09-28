@@ -2,237 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 433627B0FA4
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 01:50:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2757B11C5
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 06:54:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbjI0Xue (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Sep 2023 19:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35704 "EHLO
+        id S229547AbjI1Eyw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Sep 2023 00:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjI0Xud (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Sep 2023 19:50:33 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0FEF9
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 16:50:31 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-991c786369cso1497360166b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 16:50:31 -0700 (PDT)
+        with ESMTP id S229445AbjI1Eyv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 00:54:51 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 463A4121
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 21:54:49 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-534659061afso6077909a12.3
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 21:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695858628; x=1696463428; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SQOY6tEOrqC0mvJgxPaq1cgtEoQjHgAb4TcKrL7E2Jg=;
-        b=SfeMRVsX/3mciiQbrewbqiY6TrJdBmDYy8w3bzErj8xg/wiimqF460972CxAH2mvcT
-         ceFchHj8a4thZdTwPQtRUZTpFE3m+Xa37bO63SaRksyc/gxY/0ZvTZMuhuTgIQVub6sp
-         mUWt11H+3NMJ6b85d+T02sSyR32AS4jeOQz0I=
+        d=tuxon.dev; s=google; t=1695876888; x=1696481688; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=olm/D+dJExjfSBWXGE2Uq9vVnEsfwITsdsfFo+MxoTk=;
+        b=Dr1zyC1tiyCEQjBL1uj1JD4h+4CA80qgc0YJRvtD7Fw+xe6WnHNn+uMkxHDV7XJe67
+         A1LEWxgV1Pe5CESNz5cbrPvRDAZHdqRYYeXNMu6xo9etQIurMbGD/bAcmvmpG03pjJTN
+         SeuF3oJAxs7Vyy9w/KlCsKMonoiWdoc0tcaD82qg+oKXI5FQ6SJ1eUAOsRNdehy2p8uj
+         7eKOe8lWUfrUWiSjyndt82MaOSEiPGjeV0oapU+aPlEV5uvnA5Uh88E7R80KjpXlI5Pa
+         V26TlUnUOJW2XT4t2qvf4vNFqpIKZXoeNgw7jQsavdqALhMc05oKE6h7C1VMuAqPRnOZ
+         0ajw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695858628; x=1696463428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SQOY6tEOrqC0mvJgxPaq1cgtEoQjHgAb4TcKrL7E2Jg=;
-        b=RD54sQeuNpduTtDPa0K5fUhg4qk+8eZz6sn0eFlTACfvcl0MF210+GTpQJTn3LgMW/
-         Oyht6Ac1hN1I0ptqmNr8cUk9dzd/N3fAokXCCPR5IbMMfeNg8qXj5SVzufOO9bXYsPNv
-         HQHrd/I8PCGZSviGZOjBoefmviceLESALxKWG23o9TYTGjtVEKypEuhfP7pFAcaBF6UT
-         0pHnuJz0xtBdeEnTT6j4hnJNIWZDnGxvCM2tlxcAf4qvDxsXpWaPimx6KXv/Z4ST+C6u
-         TzFrSyed3nquz5RiDTbebYYGUdYdM6VQJOY8NLri2UrlmFM8MeJQJIoOYNaeIoLBBvLm
-         /aug==
-X-Gm-Message-State: AOJu0Yyh4l1HVTlHdNZfj/hTBXhmQbgLGSaLP+GdxLttfXfiL3Gy+8OV
-        Ay0n/yOhC7MgD2g4tsdBUDdxFKLb7Z034AUReTISoQVq
-X-Google-Smtp-Source: AGHT+IHG/JkOUQ2bqJV2ztVfzn9qkq80gV59fuFD4VykDp1nHCKFgbhKfVx2hm1efn8nGAKm+m0Blw==
-X-Received: by 2002:a17:906:310c:b0:9a9:e3be:1310 with SMTP id 12-20020a170906310c00b009a9e3be1310mr3203473ejx.53.1695858627784;
-        Wed, 27 Sep 2023 16:50:27 -0700 (PDT)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id j11-20020a170906278b00b00977eec7b7e8sm10018282ejc.68.2023.09.27.16.50.26
-        for <linux-gpio@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1695876888; x=1696481688;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=olm/D+dJExjfSBWXGE2Uq9vVnEsfwITsdsfFo+MxoTk=;
+        b=mqKKECby8NiQDlf+xciIoufPKi6Hm8r5tmZ1nusCxMTbHS9IQNCeF3ub3S/Xc+kY9s
+         tCGLvXzMhLIh4u7dnUWb8esSjzGNfIiL322mBJ+sRS8zrNys/rgx3+odRS3wVioA10yx
+         6gXJGgMELKk2slPKjYfdXZXqPS5+aYyf5OUv2PpTuljkVno/kZDjCK7fasL/cQ//S+74
+         KIwEArVr9qMvcplNOA8K+29OwV6chmxAitETa6+wM3A7EyY8FJSJyWqCbj+8YBWRUoNf
+         BMnZFo7IxXP814F1AKy602zPf4BVmHo1CL+wUbhISDpQJ374r4UPOgPCfBfdrS1qjjc0
+         30xQ==
+X-Gm-Message-State: AOJu0YwKt/qtufEiJMqAX0KDUVbZbAbB2/bpV4po9mrzquwKMbzI+++w
+        r1ouSbEPjc0msxbTCBgwhX80dg==
+X-Google-Smtp-Source: AGHT+IEFpdq3a7HATHUTgENVuaEGn2ioT9l2ERfVEJ8IOkiDOT6bn01Sn56ChsWGJMbIjhbJQj2snQ==
+X-Received: by 2002:a17:906:518e:b0:9ae:5fe1:ef03 with SMTP id y14-20020a170906518e00b009ae5fe1ef03mr176773ejk.67.1695876887638;
+        Wed, 27 Sep 2023 21:54:47 -0700 (PDT)
+Received: from [192.168.32.2] ([82.78.167.177])
+        by smtp.gmail.com with ESMTPSA id p26-20020a170906229a00b009ad8338aafasm10387144eja.13.2023.09.27.21.54.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Sep 2023 16:50:26 -0700 (PDT)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-53074ee0c2aso3985a12.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Sep 2023 16:50:26 -0700 (PDT)
-X-Received: by 2002:a50:d71d:0:b0:52f:2f32:e76c with SMTP id
- t29-20020a50d71d000000b0052f2f32e76cmr365834edi.2.1695858626384; Wed, 27 Sep
- 2023 16:50:26 -0700 (PDT)
+        Wed, 27 Sep 2023 21:54:47 -0700 (PDT)
+Message-ID: <154b823e-d532-ede7-5ada-08436ec86804@tuxon.dev>
+Date:   Thu, 28 Sep 2023 07:54:43 +0300
 MIME-Version: 1.0
-References: <20230921102420.RFC.1.I9dddd99ccdca175e3ceb1b9fa1827df0928c5101@changeid>
- <CAL_Jsq+noP32-m5xdUCLFPFBXLxX9Ys1BNFM+9sga6KYTmDzqQ@mail.gmail.com>
- <CAD=FV=WXxGhX0Fw2nSS7PxYb1O-LUewAhoUVPn=2EpbSD2OeHQ@mail.gmail.com>
- <CAL_JsqKJyRJmwJzB1yew71Ld7BeMMat+rzhX9XtDtiFE8Dbvcw@mail.gmail.com>
- <CAD=FV=UgFzT0TW2WEV0Wmk05EXUad2EYhN2DcckAxE_Lw5gV1Q@mail.gmail.com> <ZROVSAoKF9bimnSP@nixie71>
-In-Reply-To: <ZROVSAoKF9bimnSP@nixie71>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 27 Sep 2023 16:50:13 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UR47x+t37B2+Myv0qvvOJMFxVe-Fj7js=-Ez2GWuDySg@mail.gmail.com>
-Message-ID: <CAD=FV=UR47x+t37B2+Myv0qvvOJMFxVe-Fj7js=-Ez2GWuDySg@mail.gmail.com>
-Subject: Re: [RFC PATCH] of: device: Support 2nd sources of probeable but
- undiscoverable devices
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Chen-Yu Tsai <wenst@chromium.org>, linux-input@vger.kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        andriy.shevchenko@linux.intel.com, broonie@kernel.org,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        hdegoede@redhat.com, james.clark@arm.com, james@equiv.tech,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 21/37] dt-bindings: clock: add r9a08g045 CPG clocks and
+ resets definitions
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        prabhakar.mahadev-lad.rj@bp.renesas.com,
+        biju.das.jz@bp.renesas.com, quic_bjorande@quicinc.com,
+        arnd@arndb.de, konrad.dybcio@linaro.org, neil.armstrong@linaro.org,
+        nfraprado@collabora.com, rafal@milecki.pl,
+        wsa+renesas@sang-engineering.com,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20230912045157.177966-1-claudiu.beznea.uj@bp.renesas.com>
+ <20230912045157.177966-22-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWc6yy=oJDo4zMdvB-t8pjCuE1oJ_Y6Ck0aX_hPkfhPug@mail.gmail.com>
+From:   claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdWc6yy=oJDo4zMdvB-t8pjCuE1oJ_Y6Ck0aX_hPkfhPug@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi, Geert,
 
-On Tue, Sep 26, 2023 at 7:37=E2=80=AFPM Jeff LaBundy <jeff@labundy.com> wro=
-te:
->
-> Hi Doug,
->
-> On Fri, Sep 22, 2023 at 05:11:10PM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Fri, Sep 22, 2023 at 12:08=E2=80=AFPM Rob Herring <robh+dt@kernel.or=
-g> wrote:
-> > >
-> > > > > This seems like overkill to me. Do we really need groups and a mu=
-tex
-> > > > > for each group? Worst case is what? 2-3 groups of 2-3 devices?
-> > > > > Instead, what about extending "status" with another value
-> > > > > ("fail-needs-probe"? (fail-xxx is a documented value)). Currently=
-, the
-> > > > > kernel would just ignore nodes with that status. Then we can proc=
-ess
-> > > > > those nodes separately 1-by-1.
-> > > >
-> > > > My worry here is that this has the potential to impact boot speed i=
-n a
-> > > > non-trivial way. While trackpads and touchscreens _are_ probable,
-> > > > their probe routines are often quite slow. This is even mentioned i=
-n
-> > > > Dmitry's initial patches adding async probe to the kernel. See comm=
-it
-> > > > 765230b5f084 ("driver-core: add asynchronous probing support for
-> > > > drivers") where he specifically brings up input devices as examples=
-.
->
-> Ideally, all but one driver in a group should bail out of probe quickly i=
-f
-> the device is not populated. If not, I would consider that to be a bug or=
- at
-> least room for improvement in that driver.
->
-> The reason input devices can take a while to probe is because they may be
-> loading FW over I2C or performing some sort of calibration procedure; onl=
-y
-> one driver in the group should get that far.
+On 15.09.2023 14:59, Geert Uytterhoeven wrote:
+> On Tue, Sep 12, 2023 at 6:53 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> Add RZ/G3S (R9A08G045) Clock Pulse Generator (CPG) core clocks, module
+>> clocks and resets.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Thanks for your patch!
+> 
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/r9a08g045-cpg.h
+> 
+>> +/* R9A08G045 Module Clocks */
+> 
+>> +#define R9A08G045_USB_U2H0_HCLK                65
+>> +#define R9A08G045_USB_U2H1_HCLK                66
+>> +#define R9A08G045_USB_U2P_EXR_CPUCLK   67
+>> +#define R9A08G045_USB_PCLK             68
+>> +#define R9A08G045_USB_SCLK             69
+> 
+> There is no USB_SCLK bit in CPG_CLKON_USB, so please drop
+> R9A08G045_USB_SCLK.
+> 
+>> +/* R9A08G045 Resets */
+> 
+>> +#define R9A08G045_SRAM_ACPU_ARESETN0   11
+>> +#define R9A08G045_SRAM_ACPU_ARESETN1   12
+>> +#define R9A08G045_SRAM_ACPU_ARESETN2   13
+> 
+> There is no SRAM_ACPU_ARESETN2 bit in CPG_RST_SRAM_MCPU,
+> so please drop R9A08G045_SRAM_ACPU_ARESETN2.
 
-Hmm, that's not my experience. Specifically I've seen i2c-hid devices
-whose datasheets say that you're not allowed to talk i2c to them at
-all for hundreds of milliseconds after you power them on. See, for
-instance, "i2c-hid-of-goodix.c" which has a "post_gpio_reset_delay_ms"
-of 180 ms and "i2c-hid-of-elan.c" which has one of 300 ms.
+I see there is SRAM_ACPU_ARESETN2 in CPG_RST_SRAM_*A*CPU register. You are
+actually saying that the documentation might be wrong?
 
-As I understand it these touchscreens have firmware on them and that
-firmware can take a while to boot. Until the firmware boots they won't
-respond over i2c. This is simply not something that Linux can do
-anything about.
+Thank you,
+Claudiu Beznea
 
-About the best you could do would be to add a board-specific driver
-that understood that it could power up the rails, wait the maximum
-amount of time that all possible touchscreens might need, and then
-look for i2c ACKs. I'm still hoping to hear from Rob about how I would
-get a board-specific driver to load on a DT system so I can
-investigate / prototype this.
-
-
-> > > We could add information on the class of device. touchscreen and
-> > > touchpad aliases or something.
-> >
-> > Ah, I see. So something like "fail-needs-probe-<class>". The
-> > touchscreens could have "fail-needs-probe-touchscreen" and the
-> > trackpads could have "fail-needs-probe-trackpad" ? That could work. In
-> > theory that could fall back to the same solution of grabbing a mutex
-> > based on the group ID...
-> >
-> > Also: if having the mutex in the "struct device" is seen as a bad
-> > idea, it would also be easy to remove. __driver_probe_device() could
-> > just make a call like "of_device_probe_start()" at the beginning that
-> > locks the mutex and then "of_device_probe_end()" that unlocks it. Both
-> > of those calls could easily lookup the mutex in a list, which would
-> > get rid of the need to store it in the "struct device".
-> >
-> >
-> > > > That would lead me to suggest this:
-> > > >
-> > > >   &i2c_bus {
-> > > >     trackpad-prober {
-> > > >       compatible =3D "mt8173-elm-hana-trackpad-prober";
-> > > >
-> > > >       tp1: trackpad@10 {
-> > > >         compatible =3D "hid-over-i2c";
-> > > >         reg =3D <0x10>;
-> > > >         ...
-> > > >         post-power-on-delay-ms =3D <200>;
-> > > >       };
-> > > >       tp2: trackpad@20 {
-> > > >         compatible =3D "hid-over-i2c";
-> > > >         reg =3D <0x20>;
-> > > >         ...
-> > > >         post-power-on-delay-ms =3D <200>;
-> > > >       };
-> > > >     };
-> > > >   };
-> > > >
-> > > > ...but I suspect that would be insta-NAKed because it's creating a
-> > > > completely virtual device ("mt8173-elm-hana-trackpad-prober") in th=
-e
-> > > > device tree. I don't know if there's something that's functionally
-> > > > similar that would be OK?
->
-> This solution seems a bit confusing to me, and would require more edits
-> to the dts each time a second source is added. It also means one would
-> have to write a small platform driver for each group of devices, correct?
-
-No matter what we need to add something to the dts each time a second
-source is added, right?
-
-While it's true that we'd end up with some extra drivers, if we do it
-correctly we don't necessarily need a driver for each group of devices
-nor even a driver per board. If several boards have very similar
-probing requirements then, even if they have unique "compatible"
-strings they could still end up using the same Linux driver.
-
-I've actually been talking offline with folks on ChromeOS more about
-this problem as well. Chen-Yu actually pointed at a patch series (that
-never landed, I guess) that has some similar ideas [1]. I guess in
-that case Hans was actually constructing device tree properties
-manually in the driver. I was thinking more of having all of the
-options listed in the device tree and then doing something that only
-causes some of them to probe.
-
-If Rob was OK with it, I guess I could have some sort of top-level
-"hwmanager" node like Hans did and then have phandle links to all the
-hardware that are managed by it. Then I could just change those to
-"okay"?
-
-Ideally, though, this could somehow use device tree "overlays" I
-guess. That seems like almost a perfect fit. I guess the issue here,
-though, is that I'd want the overlays bundled together with the
-original DT and then the board-specific "hardware prober" driver to
-actually apply the overlays after probing. Does that seem sensible?
-
-
-[1] https://lore.kernel.org/linux-arm-kernel/20160901190820.21987-1-hdegoed=
-e@redhat.com/
+> 
+> The rest LGTM.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
