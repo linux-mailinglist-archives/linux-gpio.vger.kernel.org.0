@@ -2,62 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF6E27B2731
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 23:11:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A9067B2747
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 23:15:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232355AbjI1VLh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Sep 2023 17:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
+        id S231676AbjI1VPV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Sep 2023 17:15:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232283AbjI1VLd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 17:11:33 -0400
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08261AD
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 14:11:28 -0700 (PDT)
-Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-d852b28ec3bso14689431276.2
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 14:11:28 -0700 (PDT)
+        with ESMTP id S230325AbjI1VPV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 17:15:21 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697FD19D
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 14:15:18 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id 3f1490d57ef6-d81b42a3108so15219725276.1
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 14:15:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695935487; x=1696540287; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1695935717; x=1696540517; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=02U1Rt8dFlpoDrbdGEdfT6fcRmNro9CBN5gcx8xV91U=;
-        b=k4yhsOoLfhHIyLw8krnVaYc6Eh2X0CB3HOHUr2o7eNRWckWtL45+NOczHTH6aJvjzJ
-         0NgYkf1rPaj38Gki3XksegiRzLHVciZTfdfQQ4UjWTM2DRZ+cbybAruQtsIMJhtAxI1n
-         RNSCIul/NWZAD9iNbX8FewQr07ro1+yu/VT8+KX6TKR1Un8oADzk0RVXYAw/bO9kCMNJ
-         inY6eETL+2azL5E4QccPFGTL8/MR2TckYrf9hJ+UwzLTdaa1/GI3bOC4hkUc2AqW2jCp
-         woqQJq45G2meI7hIKSa0ShY8Zy9reYu+5E703CltK1A+SjsOOtRxULvDA+BWawgYaxjA
-         9pGA==
+        bh=zMae55Fx7PiApDYXyPzKPPdkwhRMRqPd7wXKmf/Imiw=;
+        b=V3QrO3PKQm9H77cDdo64Sx3GKFC9R0/AE55TYuvlRWvAc38QhOX3skh4W/5A8B3S6v
+         wRN7Clf1QRkmqa0FYiqOW0Mz0H02ARktho3VUFYk2r0SHBqvSLyWa5f9wz6FaTJjd2Ui
+         HR0QYYZQlkvV3wnTLuUYGizNl+F1B3P7TTKaUICfy3dfiLsRYJDgEVX6NkMtoEnQF63/
+         ckabajfDmYZXifx0zoG/OlGFeXeGetgLsiDevIs8+JeJobnnAm2oKeOnOyeTvOel5AZQ
+         KYsjBRbsecZVyJVmHK8fIKhOzpU2HW9p0Y9BtMwj1z0mnM81SJ0+eUH/3XOQpnWLleUS
+         +AVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695935487; x=1696540287;
+        d=1e100.net; s=20230601; t=1695935717; x=1696540517;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=02U1Rt8dFlpoDrbdGEdfT6fcRmNro9CBN5gcx8xV91U=;
-        b=hZArWa2y54+6XKauVOwWts25tc29/1G42kQmQI3zo3TQ/KHbRnFs2uUDl3m/0VcFUL
-         UyTA9TrRgax1bejYR28FyhcZqR+4ncd6BN1AmpHieHnYNg0ioHP4MW4cXcXjcbash5cy
-         h/997xkwBUIVamrtCh9XpY062EqoXrFvsgDoh2BZWE6lawdUhbCz4slO/yu7ZncZtEBh
-         BEhSWM7Mzs2Pk7YuxEOZ28IxM92c+K+UOm2fRAEKRPYhcehgkd7C42XHOCX9DPAk3pia
-         b9kx+1FKrigowMkqNKMS0rNpsYBsR6+QI2WVtdDhcv3efSuinoTDA3OaFe/IiVnKqD0v
-         dSCw==
-X-Gm-Message-State: AOJu0YyGrPQ8FRYV13AHfJJsKCmLq8kIu10A4m27HJ+0cWh0VaU0Uiou
-        4QFxwc1tvnqf9kridru6LIET8molZWik2/dyVuAUFCkigo06wO4faWw=
-X-Google-Smtp-Source: AGHT+IG7dG2z/wMvGWlyeaYZaye5IJfggkazjCfjq/+A1dRkAVSKM04AuFkYyqiQ8ZkJbHP8pcUqsNPVHcEcRL5E11Y=
-X-Received: by 2002:a25:c551:0:b0:d81:89e9:9f48 with SMTP id
- v78-20020a25c551000000b00d8189e99f48mr2434636ybe.63.1695935487097; Thu, 28
- Sep 2023 14:11:27 -0700 (PDT)
+        bh=zMae55Fx7PiApDYXyPzKPPdkwhRMRqPd7wXKmf/Imiw=;
+        b=FGzubvFBiouV0R3PrT7kG1pgsBu6AgNwLxDBKGSeTKYka8VUFfw0nYWrsHEO0pJv32
+         A1X2sJfXN6PxI0xJGztrTxH/oP4aD8jYP7Lt5+4SaaKhqRYJGnrzIjvprsfuQMLQ0Kwc
+         yUfcOnBHvS1agb/F6vpvzo50AZ6lmTU1IQWT0v/AK8lkDk283qvmHN8370QhfX+epdUA
+         s5Q0cnG1S/l7+7TsmoMTofi2n/ebN30kqaOvwAM7WVUIK5BuCAZo4feLsSmAPhyt+JsN
+         v1+4Uv4NyjfD1Oal/faVXgrxQOQQ51zT+8zyh+OohC27ARr5PCxJPM1+LqrbaenkR2rG
+         NU/A==
+X-Gm-Message-State: AOJu0YzehJzLMAoNYxP2HVwoo+dkGF7UwFCwZwjUJgqK11aV6SU3uSQ5
+        TpYK7mCChgFHhozQ/SCbANeaNYHL5r1NgDysU5k6rg==
+X-Google-Smtp-Source: AGHT+IEx5vmOlgc90YGcN9ELfymxnTjl5jH5W/7HnoFi7r9aFnJqkqfFU0S8v8Bpml17IwCuy4WjLkmqcJSWej8jc+E=
+X-Received: by 2002:a25:ca8b:0:b0:d80:9ed:5038 with SMTP id
+ a133-20020a25ca8b000000b00d8009ed5038mr2385007ybg.21.1695935717623; Thu, 28
+ Sep 2023 14:15:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230926160255.330417-1-robert.marko@sartura.hr>
-In-Reply-To: <20230926160255.330417-1-robert.marko@sartura.hr>
+References: <20230926-gpio-led-trigger-dt-v2-0-e06e458b788e@linaro.org> <20230926-gpio-led-trigger-dt-v2-1-e06e458b788e@linaro.org>
+In-Reply-To: <20230926-gpio-led-trigger-dt-v2-1-e06e458b788e@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 28 Sep 2023 23:11:16 +0200
-Message-ID: <CACRpkdZem9Gtd==gQM4EQ9R8MN2ZQ0JCyMCoTjg0kqCNDjuFMA@mail.gmail.com>
-Subject: Re: [PATCH] i2c: core: dont change pinmux state to GPIO during
- recovery setup
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     wsa@kernel.org, codrin.ciubotariu@microchip.com,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@armlinux.org.uk, linux-gpio@vger.kernel.org
+Date:   Thu, 28 Sep 2023 23:15:06 +0200
+Message-ID: <CACRpkda0XnLtNwp-sQhS=SKqPB+zce7ZJpEeKnJbGmfsL=p_Qw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] gpiolib: of: Allow "trigger-sources" to reference
+ a GPIO
+To:     =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-leds@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,57 +75,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 6:03=E2=80=AFPM Robert Marko <robert.marko@sartura.=
-hr> wrote:
+On Tue, Sep 26, 2023 at 11:48=E2=80=AFPM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
 
-> @@ -359,13 +359,6 @@ static int i2c_gpio_init_generic_recovery(struct i2c=
-_adapter *adap)
->         if (bri->recover_bus && bri->recover_bus !=3D i2c_generic_scl_rec=
-overy)
->                 return 0;
+> The "trigger-sources" phandle used for LED triggers are special:
+> the DT bindings mandate that such triggers have the same phandle
+> references no matter what the trigger is. A GPIO is just another
+> kind of device that can trigger a LED.
 >
-> -       /*
-> -        * pins might be taken as GPIO, so we should inform pinctrl about
-> -        * this and move the state to GPIO
-> -        */
-> -       if (bri->pinctrl)
-> -               pinctrl_select_state(bri->pinctrl, bri->pins_gpio);
-> -
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-But this might be absolutely necessary for other i2c drivers and this is
-set in generic code.
+Bartosz could you queue this patch? Lee already queued patches 2+3,
+and there is just runtime dependency with no in-tree users so it's fine
+to merge them in the different trees.
 
-My first question is: why is this platform even defining the "gpio" pin
-control state for this i2c device if it is so dangerous to use?
-If it can't be used, you just give it too much rope, delete the "gpio"
-state for this group from the device tree: problem solved.
-
-(This can be done with the specific /delete-node/ directive if
-necessary, e.g. if you want to use the "gpio" state on other boards.)
-
-Second: do you even want to do recovery on this platform then?
-Is it necessary? What happens electronically in this case, if we don't
-switch the pins to GPIO mode? Is it something akin to the "strict"
-property in struct pinmux: that the GPIO block and the device can
-affect the same pins at the same time? That warrants an explanation
-and a comment.
-
-If you can't delete the "gpio" pin control state, I would add a
-bool pinctrl_stay_in_device_mode;
-to
-struct i2c_bus_recovery_info
-in include/linux/i2c.h
-
-And just:
-
-if (bri->pinctrl && !bri->pinctrl_stay_in_device_mode)
-    pinctrl_select_state(bri->pinctrl, bri->pins_gpio);
-
-(Also the switch to the "default" state further down could be
-contitional !bri->pinctrl_stay_in_device_mode)
-
-But mostly I wonder why the "gpio" pin control state is defined, if it's
-not to be used.
+Sorry for missing to CC you directly on the set :/
 
 Yours,
 Linus Walleij
