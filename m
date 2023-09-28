@@ -2,56 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 149C37B1E88
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 15:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CD7C7B1EC3
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 15:43:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232286AbjI1NeI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Sep 2023 09:34:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37136 "EHLO
+        id S232031AbjI1Nnh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Sep 2023 09:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232292AbjI1NeB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 09:34:01 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 898DB1B1
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 06:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695908034; x=1727444034;
-  h=date:from:to:cc:subject:message-id;
-  bh=2URr3naZ1TlsdbdfLNczM8sC3qdha5bVAXluH+XKhjE=;
-  b=es04FXte340vNC35WlobrzI0tCJrzNPzPV0mZqQULVFE1GzrO6KIb65c
-   ZmI3OFgE/X+ET8TMR8umSi3nyVZofEJn0BdNQyFGl3IR/ob3vPTErujj7
-   OZNpA6zXNzBMSQNmNddfzRXHpy2g55nnIa5o/IbJbBRrC1vcvxhTrXDrK
-   Iri5Xv0Cm9ToXuWaWesTtdBhc5VRgvKBP1qbsp/OUP0Ty2Df0CpzJc8Jl
-   /Aj9x1hYRihB5HQYbBMzppg1VsV5w6WMgMP/HYFgXpoDyj7Lz2CSL7Cl/
-   TK0uMRD6uuOIFlkjLq3qMVUcAH7QFWdV0s75UawpsI3roShJ+uTKL847V
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="3624800"
-X-IronPort-AV: E=Sophos;i="6.03,184,1694761200"; 
-   d="scan'208";a="3624800"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 06:31:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="749599824"
-X-IronPort-AV: E=Sophos;i="6.03,184,1694761200"; 
-   d="scan'208";a="749599824"
-Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 28 Sep 2023 06:31:26 -0700
-Received: from kbuild by c3b01524d57c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qlr6y-0001Uj-29;
-        Thu, 28 Sep 2023 13:31:24 +0000
-Date:   Thu, 28 Sep 2023 21:30:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 3a7fd473bd5d430c8045830e9a09e8dc35bcca6b
-Message-ID: <202309282142.dAMklq5e-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        with ESMTP id S231966AbjI1Nnh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 09:43:37 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C19136
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 06:43:36 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-690f2719ab2so2961913b3a.0
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 06:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695908615; x=1696513415; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dqK7quKf/l4fe/ENZJcx8mmpiJDqOuGJS4qvF9KMko0=;
+        b=CrDrmH8hoOBek3PEgSCThupT8jgeFSBoFV1mNIReU3nIUN6+tmccq9iGHfduEP4lqx
+         mO83vLvi3C9ho5kEeUR+MHeR4omWNdrLzVnuM9SBCvicaLA4XHJb8zSqmMpjE2yEDban
+         jEd2y0hcflX7geTbag4q8lfW3JZGIHkmSwGhbGRENDYLT54f9b0Vtkw6Gr7ll05RayZX
+         sUkH3BCXdEbGzeHuX2cb5qFitRx1eNjyD+Y8bCh1hCOZkK+9P1J8IDDo2cLyO0/6iVcP
+         PkxaZI8OhuePf8KL7DULisq3cuBnMJhT6LF+VHRGUORMgtwj8mW4frFs4oZTcso8D8wT
+         kudg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695908615; x=1696513415;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dqK7quKf/l4fe/ENZJcx8mmpiJDqOuGJS4qvF9KMko0=;
+        b=lkcCU2XrPDF57xKwTIgN49+JsDEKkwJLHC1sgJitHqf9CSLS3dKi860mLs/w8b7C5c
+         xPrbCop8LhsbVSzyJL8fHDc/e6Kl5cGE0OASY0ltoQcYKdhTjUz02Zm57ye/16zOlOZw
+         I+hbOHYQaBuRniV5q6erMolB8598betkFq77nUDohUuNqqUA+ucniEgCW6T6bs2Qv3+Q
+         0BgDc7Jsy2PHSFvNSO5br2XltcnyR2ShhdxGSZcUqLBcD9d31K4Kq/A37PthjNqupGR1
+         oE3nxnrRCo1J8Mvftnjoxvm/TyxRiZTUL9j6ymrad+pWycUSuh2fvjrftaSAs8PgU1WV
+         f4hg==
+X-Gm-Message-State: AOJu0Yy4SmGweMjSYbwngdRrUHo9qrO3B9u3lySY+yk8038mjWPJAgAi
+        /52Lopeda0wyy0ABjUUgVqs=
+X-Google-Smtp-Source: AGHT+IFyJhiCAvoxZbmNhB+cS1yAZmZUF3Y4N3KffEBmJMbm92Npl4JQWyLU3rhdtVglAwvp57lEMQ==
+X-Received: by 2002:a05:6a20:8403:b0:15c:b7bb:2bd9 with SMTP id c3-20020a056a20840300b0015cb7bb2bd9mr1263673pzd.6.1695908615352;
+        Thu, 28 Sep 2023 06:43:35 -0700 (PDT)
+Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:386c:ba81:a385:9374])
+        by smtp.gmail.com with ESMTPSA id e15-20020a17090301cf00b001bde6fa0a39sm14964387plh.167.2023.09.28.06.43.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Sep 2023 06:43:34 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     aisheng.dong@nxp.com, ping.bai@nxp.com, linux-gpio@vger.kernel.org,
+        Fabio Estevam <festevam@denx.de>
+Subject: [PATCH] pinctrl: mxs: Remove undocumented 'fsl,mxs-gpio' property
+Date:   Thu, 28 Sep 2023 10:43:21 -0300
+Message-Id: <20230928134321.438547-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,147 +68,82 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 3a7fd473bd5d430c8045830e9a09e8dc35bcca6b  mtd: rawnand: ingenic: move the GPIO quirk to gpiolib-of.c
+From: Fabio Estevam <festevam@denx.de>
 
-elapsed time: 1522m
+The 'fsl,mxs-gpio' property is not documented in gpio-mxs.yaml, but
+the imx23 and imx28 dtsi describe the gpios as:
 
-configs tested: 128
-configs skipped: 2
+compatible = "fsl,imx28-gpio", "fsl,mxs-gpio";
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This gives schema warnings like:
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230927   gcc  
-arc                   randconfig-001-20230928   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20230928   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230928   gcc  
-i386         buildonly-randconfig-002-20230928   gcc  
-i386         buildonly-randconfig-003-20230928   gcc  
-i386         buildonly-randconfig-004-20230928   gcc  
-i386         buildonly-randconfig-005-20230928   gcc  
-i386         buildonly-randconfig-006-20230928   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230928   gcc  
-i386                  randconfig-002-20230928   gcc  
-i386                  randconfig-003-20230928   gcc  
-i386                  randconfig-004-20230928   gcc  
-i386                  randconfig-005-20230928   gcc  
-i386                  randconfig-006-20230928   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230927   gcc  
-loongarch             randconfig-001-20230928   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230928   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230928   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20230928   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230928   gcc  
-x86_64       buildonly-randconfig-002-20230928   gcc  
-x86_64       buildonly-randconfig-003-20230928   gcc  
-x86_64       buildonly-randconfig-004-20230928   gcc  
-x86_64       buildonly-randconfig-005-20230928   gcc  
-x86_64       buildonly-randconfig-006-20230928   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230928   gcc  
-x86_64                randconfig-002-20230928   gcc  
-x86_64                randconfig-003-20230928   gcc  
-x86_64                randconfig-004-20230928   gcc  
-x86_64                randconfig-005-20230928   gcc  
-x86_64                randconfig-006-20230928   gcc  
-x86_64                randconfig-011-20230928   gcc  
-x86_64                randconfig-012-20230928   gcc  
-x86_64                randconfig-013-20230928   gcc  
-x86_64                randconfig-014-20230928   gcc  
-x86_64                randconfig-015-20230928   gcc  
-x86_64                randconfig-016-20230928   gcc  
-x86_64                randconfig-071-20230928   gcc  
-x86_64                randconfig-072-20230928   gcc  
-x86_64                randconfig-073-20230928   gcc  
-x86_64                randconfig-074-20230928   gcc  
-x86_64                randconfig-075-20230928   gcc  
-x86_64                randconfig-076-20230928   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
+imx28-cfa10037.dtb: pinctrl@80018000: gpio@0:compatible: ['fsl,imx28-gpio', 'fsl,mxs-gpio'] is too long
+	from schema $id: http://devicetree.org/schemas/gpio/gpio-mxs.yaml#
 
+"fsl,mxs-gpio" is only used inside pinctrl-mxs, but can be removed if
+the compatible check is done against fsl,imx23-gpio and fsl,imx28-gpio.
+
+Introduce is_mxs_gpio() and remove the need for "fsl,mxs-gpio".
+
+Tested on a imx28-evk.
+
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+---
+ drivers/pinctrl/freescale/pinctrl-mxs.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.c b/drivers/pinctrl/freescale/pinctrl-mxs.c
+index cf3f4d2e0c16..e77311f26262 100644
+--- a/drivers/pinctrl/freescale/pinctrl-mxs.c
++++ b/drivers/pinctrl/freescale/pinctrl-mxs.c
+@@ -395,6 +395,12 @@ static int mxs_pinctrl_parse_group(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++static bool is_mxs_gpio(struct device_node *child)
++{
++	return of_device_is_compatible(child, "fsl,imx23-gpio") ||
++	       of_device_is_compatible(child, "fsl,imx28-gpio");
++}
++
+ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 				struct mxs_pinctrl_data *d)
+ {
+@@ -402,7 +408,6 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct device_node *child;
+ 	struct mxs_function *f;
+-	const char *gpio_compat = "fsl,mxs-gpio";
+ 	const char *fn, *fnull = "";
+ 	int i = 0, idxf = 0, idxg = 0;
+ 	int ret;
+@@ -417,7 +422,7 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 	/* Count total functions and groups */
+ 	fn = fnull;
+ 	for_each_child_of_node(np, child) {
+-		if (of_device_is_compatible(child, gpio_compat))
++		if (is_mxs_gpio(child))
+ 			continue;
+ 		soc->ngroups++;
+ 		/* Skip pure pinconf node */
+@@ -446,7 +451,7 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 	fn = fnull;
+ 	f = &soc->functions[idxf];
+ 	for_each_child_of_node(np, child) {
+-		if (of_device_is_compatible(child, gpio_compat))
++		if (is_mxs_gpio(child))
+ 			continue;
+ 		if (of_property_read_u32(child, "reg", &val))
+ 			continue;
+@@ -486,7 +491,7 @@ static int mxs_pinctrl_probe_dt(struct platform_device *pdev,
+ 	idxf = 0;
+ 	fn = fnull;
+ 	for_each_child_of_node(np, child) {
+-		if (of_device_is_compatible(child, gpio_compat))
++		if (is_mxs_gpio(child))
+ 			continue;
+ 		if (of_property_read_u32(child, "reg", &val)) {
+ 			ret = mxs_pinctrl_parse_group(pdev, child,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
