@@ -2,49 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B03CF7B13C8
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 09:07:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96E757B13B1
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Sep 2023 09:07:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231437AbjI1HHz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Sep 2023 03:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48124 "EHLO
+        id S231148AbjI1HHa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Sep 2023 03:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231270AbjI1HHY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 03:07:24 -0400
+        with ESMTP id S231160AbjI1HHS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Sep 2023 03:07:18 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B8A8199
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 00:07:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715A41AE
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Sep 2023 00:07:14 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qll7A-0002RU-9D; Thu, 28 Sep 2023 09:07:12 +0200
+        id 1qll7A-0002Ri-Dh; Thu, 28 Sep 2023 09:07:12 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qll79-009WCV-Rf; Thu, 28 Sep 2023 09:07:11 +0200
+        id 1qll7A-009WCZ-0Y; Thu, 28 Sep 2023 09:07:12 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qll79-005ZY5-IM; Thu, 28 Sep 2023 09:07:11 +0200
+        id 1qll79-005ZY9-Nn; Thu, 28 Sep 2023 09:07:11 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+Cc:     Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 19/23] gpio: uniphier: Convert to platform remove callback returning void
-Date:   Thu, 28 Sep 2023 09:07:02 +0200
-Message-Id: <20230928070706.2290137-20-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 20/23] gpio: xgene-sb: Convert to platform remove callback returning void
+Date:   Thu, 28 Sep 2023 09:07:03 +0200
+Message-Id: <20230928070706.2290137-21-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230928070706.2290137-1-u.kleine-koenig@pengutronix.de>
 References: <20230928070706.2290137-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1800; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=bkApXA01tGfNfpgysiyQC1mURMZijlgXCXcOlH9/CzU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlFSR01UED8lLvKL6iw0a22cHMHwxZe73TV5XEy qPw1w8wUVGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRUkdAAKCRCPgPtYfRL+ TjaUB/oDdhtr2klL8tb2/jjDA3Phmu8XHMX0ezozOjCI3s+9jWvfkcwPhUwYfhKNwP2AIpgOpgl 9mryeO06YcomQz75MNGhiJiuRvwwZRysefF1qIWxxQagBKmsMqnlvRS71vfZvrqfko4NJeh3mJI jkSLhF+l4L/Nhdzqy5i1pv3aWi43CRXrwi5aS3d9F5EdagiEruSHHA73y0pM1HVjlNd9StccwII 77pCaJ2HmlwiZkrsAqjB2oaY9MiRNdApl+vLlB6PHX6YX5v7pV7RAHBekHtjAV8tqgXXbDOhuRW BzbehJClDmrpiRJQGK7BtJK6hwV2YB89aVMHgGV781FS9h6Q
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1834; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=zztpnxsZEJDFZIm9qSZPjBEfzvjHiZRS9y3gnRLWgew=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlFSR1nubBXr+coH9eBOJNEo6aa+yPeQ4YMVMX0 ZDw574HLTiJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRUkdQAKCRCPgPtYfRL+ TiI2B/oDOUHb6ePdR5VqbUCgMJZxnP2/lZT7ygDZ/Mk5rREx7XWdA4p48ExDku2v8O99ZhRT8LV ro1ex9HnLOUhOV1fnXUal5mJpd1cKZ1sSphE28nBtiGGb/kfc5ICJUS3uIb579J7LJFhMzIfn/h W+5xj1dW+8cwJc2ZFilC7jOaY+Eh5Rgs9JjwYm1Jp9SljkPqhYRpM6B2kBeLiTPdcVnillrR+Qy 3IiAa2cahJbwOPaS3OOOpQyUs5LXfr6CjnmYXFNVzZAipoiIfVO0ubzXeyfde+2CJhLO2Z4ocvI DK9B/ptJuv8oqaFwM2WaNOBS47iGDwy/97cr8oC9/d+0jXtr
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -75,37 +72,39 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/gpio/gpio-uniphier.c | 6 ++----
+ drivers/gpio/gpio-xgene-sb.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
-index 9725b7aa18a7..1f440707f8f4 100644
---- a/drivers/gpio/gpio-uniphier.c
-+++ b/drivers/gpio/gpio-uniphier.c
-@@ -414,13 +414,11 @@ static int uniphier_gpio_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/gpio/gpio-xgene-sb.c b/drivers/gpio/gpio-xgene-sb.c
+index 453bf9338ac4..bd5befa807c3 100644
+--- a/drivers/gpio/gpio-xgene-sb.c
++++ b/drivers/gpio/gpio-xgene-sb.c
+@@ -295,15 +295,13 @@ static int xgene_gpio_sb_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
--static int uniphier_gpio_remove(struct platform_device *pdev)
-+static void uniphier_gpio_remove(struct platform_device *pdev)
+-static int xgene_gpio_sb_remove(struct platform_device *pdev)
++static void xgene_gpio_sb_remove(struct platform_device *pdev)
  {
- 	struct uniphier_gpio_priv *priv = platform_get_drvdata(pdev);
+ 	struct xgene_gpio_sb *priv = platform_get_drvdata(pdev);
  
- 	irq_domain_remove(priv->domain);
+ 	acpi_gpiochip_free_interrupts(&priv->gc);
+ 
+ 	irq_domain_remove(priv->irq_domain);
 -
 -	return 0;
  }
  
- static int __maybe_unused uniphier_gpio_suspend(struct device *dev)
-@@ -482,7 +480,7 @@ MODULE_DEVICE_TABLE(of, uniphier_gpio_match);
+ static const struct of_device_id xgene_gpio_sb_of_match[] = {
+@@ -327,7 +325,7 @@ static struct platform_driver xgene_gpio_sb_driver = {
+ 		   .acpi_match_table = ACPI_PTR(xgene_gpio_sb_acpi_match),
+ 		   },
+ 	.probe = xgene_gpio_sb_probe,
+-	.remove = xgene_gpio_sb_remove,
++	.remove_new = xgene_gpio_sb_remove,
+ };
+ module_platform_driver(xgene_gpio_sb_driver);
  
- static struct platform_driver uniphier_gpio_driver = {
- 	.probe = uniphier_gpio_probe,
--	.remove = uniphier_gpio_remove,
-+	.remove_new = uniphier_gpio_remove,
- 	.driver = {
- 		.name = "uniphier-gpio",
- 		.of_match_table = uniphier_gpio_match,
 -- 
 2.40.1
 
