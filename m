@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B96D7B32AB
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8765B7B32B9
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:42:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233093AbjI2Mex (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 08:34:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44120 "EHLO
+        id S232977AbjI2MmF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 08:42:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232977AbjI2Mew (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:34:52 -0400
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E11BE
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:34:47 -0700 (PDT)
-Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-495d687b138so5346606e0c.3
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:34:47 -0700 (PDT)
+        with ESMTP id S232990AbjI2MmE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:42:04 -0400
+Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3591AB
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:42:00 -0700 (PDT)
+Received: by mail-vk1-xa29.google.com with SMTP id 71dfb90a1353d-49369d29be3so5669276e0c.3
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:42:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695990886; x=1696595686; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695991320; x=1696596120; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f4lUBEn+jDygmMOFO7/F0juJNlGo49qtp8pwnlx0y2Y=;
-        b=iIVdy2Gl/vExm+IKbzjcpX6v3fe85tn7YHDy840UP1WthzoV8dxML0TvnzlnUCPg3s
-         FbmsL8aU7dT65LYJpeFVx1pHvyokeepZE3DreomyLREPLtUEYhivNmBFdZM7j8O8SBNj
-         qlLw1ibKCMYz07RZ845AWVy97O0Mry9+av0d+t5Ilt1hGklidY3YXSzPaCgpjTkI3csi
-         EPLqT17qi0lJjjzrbWZ5trcZcZPMjmPQGtFL5flb5mjY4wFI2sAzo0jlb0wkhyQPTroc
-         zQeeFtKfwQmpax6Qw/fH10jBYb33s+CfljgX+3XtKrKT3OCN0Wds2cueteaevxIx0eCp
-         /ucA==
+        bh=DEVCN2cknuV222YNiOig/5fjLrqs68kty1B92YZT3FU=;
+        b=C9KCVO4hmnYOn3Yi+w1qo60kg9WCteZfwN3rIA+0dxC27RJrekn2lEgmbnFWgugkjO
+         +zgLEI0XeW6e+yG9NpUrVZ14uDsE1T8vJLFiGtC96mZvxHi03/f10t8Gf67EWZg5+Xkn
+         o4pLSvPt2WzVwNinUVRyMzf2Vq+o2t8EmhRlZ0/WOKq4L4jHy2EDg6OCXHgTakFFQq1e
+         jIKN8WFBl9dCLiXJof3X6cmj2LyPFORc7qHCAbiYh4fyFI7yABkcarnFei3FRxlANIVy
+         SMH8/8+4OPBiiEC0hZpAug+qZE8dcUbJoJPncqtqYixA3aNiiu4s6Q+bDINu6UGKJGCr
+         3vNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695990886; x=1696595686;
+        d=1e100.net; s=20230601; t=1695991320; x=1696596120;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f4lUBEn+jDygmMOFO7/F0juJNlGo49qtp8pwnlx0y2Y=;
-        b=KA5sJXuf0X/+9ByiJ5IGiKzSGPG/yg8nWDmd+/W2VXGlEtXUmVzlWe3bCbfwjbK1T6
-         P2Sp1lZHZ5vRhCrt7zMCoe/9Q6aMqnxStz3u6T46/5CdIf4SY9e/vVvzfZqAaJ1mBXoa
-         YTMbUFPZYqpTyxqB/s08ZoJhmjoOUfJx9BLYQ3GsbWmp7sWfDP/W6/Wy0X/uqOFmatYh
-         jyWr6XS2oTIVrPYEFKarKm7jvq3LMuxmk4hgvIkFJcP1W7OttdIuf8JfcR2t4lmRQx5b
-         QDXHiWvtSpy6+IcYB591180P1mEjmQjFE3C1bRdkfXO0a0PC+mrbgxlxuvt0IX24R8Ep
-         /E6A==
-X-Gm-Message-State: AOJu0YyBzY+EFI69tOlcbP5qM6REUHgrFoV3PlMH204a2IzCThLGPSwG
-        TrCtEEG7xOWOpR2xmtK5UsFR/AASAr1aVdhUo3D+sQ==
-X-Google-Smtp-Source: AGHT+IEKCLzEtkQ1avboqOQ1dogcbvYHe3BPdlfAxKVrWhmvKhseG8l7+B18vWlIx7kk1H+Kamj/FaJ4eEaS/aUeNfM=
-X-Received: by 2002:a1f:c5c4:0:b0:48f:f026:27de with SMTP id
- v187-20020a1fc5c4000000b0048ff02627demr2837220vkf.15.1695990886467; Fri, 29
- Sep 2023 05:34:46 -0700 (PDT)
+        bh=DEVCN2cknuV222YNiOig/5fjLrqs68kty1B92YZT3FU=;
+        b=WVH4OmtakAL9i/2yzZCdlqFAhJbctb8hW/aXN4s+3lLY9TbCGKhkZa87BaaJd450OD
+         bsgau8Mi6I7gzh8FhS9h2WPdQw7LC98u0XBVREIDIiaFUYssjWHCJV7vr6Bc19KVf/fl
+         GBZuA9XDnxsddpufgN6eUQuUPvEose/mW21OtWS9YQxNK+wQIDNAaYCcQWq39991nqcV
+         dWia7gaIzvTJTdadT+Z7myc3QAjy1C7t23TGtEpL1RDiBzl6zJv1sLRBn83ttEvYtnJG
+         xFUJ1OIRh53r4Qv5iamJn+bJBtns7Jn3eAnr9DRDjVBXSyQPT1ZqzGViGU7CXQpXfavT
+         im+g==
+X-Gm-Message-State: AOJu0YwdCM/gDGWYeK6ejEgNh7yNd6Jlzho2CvWLV4P7eYajZq8mznjc
+        uRkLheeShzVfEO5f7QAX9GSwVTwebIwnou7UaCsitA==
+X-Google-Smtp-Source: AGHT+IG4CrI6vpWuzVQc7OFaLIxG4ikYChf8pfo0WyJ5d4jVOgdDNmaGfhYDrzXr/Db1u4hskV7C1Pee5gNqWbM95aY=
+X-Received: by 2002:ac5:cdda:0:b0:49d:611:a8cb with SMTP id
+ u26-20020ac5cdda000000b0049d0611a8cbmr3191738vkn.11.1695991320003; Fri, 29
+ Sep 2023 05:42:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230928-useless-clone-v1-1-c512c3c6bf2f@linaro.org>
-In-Reply-To: <20230928-useless-clone-v1-1-c512c3c6bf2f@linaro.org>
+References: <20230927-chip-drop-arc-v1-0-28013bf95948@linaro.org>
+In-Reply-To: <20230927-chip-drop-arc-v1-0-28013bf95948@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 29 Sep 2023 14:34:35 +0200
-Message-ID: <CAMRc=MfOBLco-a=JYNQ-RWkMNRhBUEFowOAT6_e=6GAJbDhbFQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: rust: remove useless clone
+Date:   Fri, 29 Sep 2023 14:41:49 +0200
+Message-ID: <CAMRc=Me0xEoa4G0OKNWdogUPXu5gzHed7mq6oe+-jJH3foyn2Q@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/2] rust: bindings: drop unneeded Arc within Chip
 To:     Erik Schilling <erik.schilling@linaro.org>
 Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
         Viresh Kumar <viresh.kumar@linaro.org>
@@ -67,54 +67,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 28, 2023 at 8:25=E2=80=AFAM Erik Schilling
+On Wed, Sep 27, 2023 at 11:25=E2=80=AFAM Erik Schilling
 <erik.schilling@linaro.org> wrote:
 >
-> Reported by 1.74.0-nightly:
->
->   warning: call to `.clone()` on a reference in this situation does nothi=
-ng
->     --> libgpiod/tests/line_request.rs:71:44
->      |
->   71 |             let chip_name =3D sim.chip_name().clone();
->      |                                            ^^^^^^^^ help: remove t=
-his redundant call
->      |
->      =3D note: the type `str` does not implement `Clone`, so calling `clo=
-ne` on `&str` copies the reference, which does not do anything and can be r=
-emoved
->      =3D note: `#[warn(noop_method_call)]` on by default
->
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> ---
-> Found while running nightly toolchains in order to run tests under the
-> AddressSanitizers.
+> While reviewing code for thread-safety. I realized that this structure
+> was a bit more complex than it should be...
 >
 > To: Linux-GPIO <linux-gpio@vger.kernel.org>
 > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+>
+> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 > ---
->  bindings/rust/libgpiod/tests/line_request.rs | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Erik Schilling (2):
+>       bindings: rust: construct chip infos by reference
+>       bindings: rust: drop unneeded Arc within Chip
 >
-> diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/rust=
-/libgpiod/tests/line_request.rs
-> index 9af5226..da22bea 100644
-> --- a/bindings/rust/libgpiod/tests/line_request.rs
-> +++ b/bindings/rust/libgpiod/tests/line_request.rs
-> @@ -68,7 +68,7 @@ mod line_request {
->
->              let arc =3D config.sim();
->              let sim =3D arc.lock().unwrap();
-> -            let chip_name =3D sim.chip_name().clone();
-> +            let chip_name =3D sim.chip_name();
->
->              assert_eq!(config.request().chip_name().unwrap(), chip_name)=
-;
->          }
->
+>  bindings/rust/libgpiod/src/chip.rs | 83 +++++++++++++++-----------------=
+------
+>  1 file changed, 33 insertions(+), 50 deletions(-)
 > ---
 > base-commit: ced90e79217793957b11414f47f8aa8a77c7a2d5
-> change-id: 20230928-useless-clone-af75c3a58df7
+> change-id: 20230927-chip-drop-arc-57debbe1e52a
 >
 > Best regards,
 > --
