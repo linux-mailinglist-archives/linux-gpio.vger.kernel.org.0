@@ -2,107 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72E197B3256
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E9E37B326E
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:24:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233088AbjI2MVK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 08:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
+        id S232732AbjI2MY2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 08:24:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232490AbjI2MVK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:21:10 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 654BC1AA;
-        Fri, 29 Sep 2023 05:21:08 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-536b39daec1so1445884a12.2;
-        Fri, 29 Sep 2023 05:21:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695990067; x=1696594867; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gr+D2f+RuJ9QcHfvwlUN0SCdJUZFyKEX1E9oKGFtxkc=;
-        b=gBdL8R//kuhm9S2TG1GqnA4EnTAgF1BaV443CfGx5N2BKgFbplguLazVusB9adHeYY
-         WOvJ2zvmbPKf32Uuu78xN7Bt0T6XJtvBAIiTzVYIQ7EekzLljHlklICr7XWS33CstfhE
-         QQBcyF5wL8RGFBYM23MziZWuFQM7v1RRliXk8I0tIxbHCORRkhWQVnrBZWGV32Ias2y+
-         fk65PPyj/KOINNQS9IWXGX9ElAHXeNsYi87Jv7VldH6ZEAQvyu37xBBbeyHRuMnfH5DZ
-         owZuMduuCwkzhYA3oTyK1JDL6HXtpgdswTwS60EAeNOnnTtiAwafCVSQqXvm/rHC/tkT
-         iROA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695990067; x=1696594867;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gr+D2f+RuJ9QcHfvwlUN0SCdJUZFyKEX1E9oKGFtxkc=;
-        b=IGDKJIEKt5cdxm2wo9Wv8m+266rjqCIJmSt9weymqXzC3aKScr3dUA1FqjqbopcAGM
-         jMH+pHV+MUyCWTR13BiMCw+30HI3rQ+LTY1u6k2rAYKGLrjUDkYLsDxB1bW9Zm3F938H
-         NjWkecWs5WguDoCAWxKVYQxopKHWTUa3887OuNJVjzZFwdJu0MOydsE2ZeJwASIqCiDi
-         uIPhfd80k0LyfmcO0U3R4xND4LWapl3pEJPG4sDQUGUZilL/CXW60Z7YZHC+tgswao/0
-         MZ9g88AtH6OrSxqRqmeauR+ZGTS6pZnUw5kRoPgH5lgGRfwA1HuRuBRzbTkLkkrwPuX9
-         rWHw==
-X-Gm-Message-State: AOJu0YwRjemNlxbQdh0C1NGXWbTe9Gj69WwHu1pQ/DPW2sO/xY49whpk
-        NCrZzICV91OtDWBeG/X5aE0s2pZpxDY=
-X-Google-Smtp-Source: AGHT+IEsJNKJaVkzzUTwbtVfTaNWyFdl5AQ9G/WzvWAUUz2p9lU1YkVzcyZKDU1tDdQfkXJJQvV51Q==
-X-Received: by 2002:a05:6402:704:b0:52f:4c92:69ee with SMTP id w4-20020a056402070400b0052f4c9269eemr3624175edx.36.1695990066463;
-        Fri, 29 Sep 2023 05:21:06 -0700 (PDT)
-Received: from localhost (p200300e41f3f4900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3f:4900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id da11-20020a056402176b00b0053495596f42sm3767244edb.30.2023.09.29.05.21.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 05:21:06 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
-        Luca Ceresoli <luca.ceresoli@bootlin.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH] pinctrl: tegra: Display pin function in pinconf-groups
-Date:   Fri, 29 Sep 2023 14:21:01 +0200
-Message-ID: <20230929122101.466266-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.42.0
+        with ESMTP id S232838AbjI2MY1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:24:27 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 108431AA;
+        Fri, 29 Sep 2023 05:24:26 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C678C433C7;
+        Fri, 29 Sep 2023 12:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695990265;
+        bh=4tyGEKQoD54F309kzc3I827i2mFS05bybclL1pdrQwE=;
+        h=From:Date:Subject:To:Cc:From;
+        b=tpDrWTuo/4+eCC3qQDiRvbFszen09z5iV6FDlyNTMFzy0hSxVVhheKjcWZA9GUyVr
+         qfJYzbqd6Es6kmEZhQpMsxo6fvCP/VxrvudwGTY8qK1HbXuyb0M3eo8XsO4Mi2kbdi
+         maiqC52tDXqfynBDJmSIoD3xivGCt2UaQnnxkU1x3UUUrq5IzD9klxH8DAgJiSnW5Q
+         80nujpgJjj7kKnLEGEZjwZACUztFC30ePMhWnKv7ZM0fZ0bHACSIznFxOrXF4r9XSb
+         BbJdT48FJ3/4g0xFLLBXok0TTmZiPaR6ntdl+l8UXtSxaioLuFZbKquGcfg9kspbZH
+         njVpuwXHzUeKA==
+From:   Mark Brown <broonie@kernel.org>
+Date:   Fri, 29 Sep 2023 14:24:13 +0200
+Subject: [PATCH] gpio: pca953x: Convert to use maple tree register cache
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230929-gpio-pca953x-maple-v1-1-d7960eac3d07@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOzBFmUC/x3MPQqAMAxA4atIZgO1xSFeRRz6EzWgtrQgBfHuF
+ sdveO+Bwlm4wNQ9kPmWIvFqGPoO/G6vjVFCM2iljSJNuCWJmLyl0VQ8bToYnSFH5AOp4KCFKfM
+ q9Z/Oy/t+BVVPJ2QAAAA=
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.13-dev-0438c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1236; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=4tyGEKQoD54F309kzc3I827i2mFS05bybclL1pdrQwE=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlFsH3FTgOQsdLN/QvqjPLMtHT3+ayhsSDRQTRd
+ 5dgzfnWhQeJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZRbB9wAKCRAk1otyXVSH
+ 0AYjB/9blw78FadCL9NV5VZSOajO7XbH27oggZPpo65Nu7Ee1I0/SclFoQdZgmzg1dJP992uCxf
+ WDlRnKqO2RlNfIfBlZobqKv8n0wbzaGYS0CkssGm3v9sRMuCiDhcp2VX5vHio5CI5I9ILpvsRy1
+ biSVaYfv82WteyxC5PVYN7s+gS4JH/1kHpmNR+EheN2kibObAObCBhbSDU3doGOSZXsUux2OXMQ
+ tpJlQszVmvwnty1GS1CUEWgIHcuZ6U4hpkvdh3ibThRC+N5x1j2hALXmfTFKCdeTGFt6Dp+pRTf
+ 21kzLPK9//Yr6GWvhFIUE/TRp3mCFFPS8IzLXuDthwRL+Lnm
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+The maple tree register cache is based on a much more modern data structure
+than the rbtree cache and makes optimisation choices which are probably
+more appropriate for modern systems than those made by the rbtree cache.
 
-The function that a pin is muxed to can be read from the top-level
-pinctrl-maps debugfs file. However, this only reflects the values that
-were specified in device tree, so they will only show deviations from
-the hardware default setting. Display the current pinmux setting in the
-per-controller pinconf-groups debugfs file along with the rest of the
-per-pin configuration settings.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpio/gpio-pca953x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index a4002b430f0a..c9fd3910bb3b 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -639,6 +639,14 @@ static void tegra_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
- 		seq_printf(s, "\n\t%s=%u",
- 			   strip_prefix(cfg_params[i].property), val);
- 	}
-+
-+	if (g->mux_reg >= 0) {
-+		/* read pinmux function and dump to seq_file */
-+		val = pmx_readl(pmx, g->mux_bank, g->mux_reg);
-+		val = g->funcs[(val >> g->mux_bit) & 0x3];
-+
-+		seq_printf(s, "\n\tfunction=%s", pmx->functions[val].name);
-+	}
- }
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index bdd50a78e414..528ccb59b52a 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -414,7 +414,7 @@ static const struct regmap_config pca953x_i2c_regmap = {
+ 	.volatile_reg = pca953x_volatile_register,
  
- static void tegra_pinconf_config_dbg_show(struct pinctrl_dev *pctldev,
+ 	.disable_locking = true,
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
+ 	.max_register = 0x7f,
+ };
+ 
+@@ -430,7 +430,7 @@ static const struct regmap_config pca953x_ai_i2c_regmap = {
+ 	.volatile_reg = pca953x_volatile_register,
+ 
+ 	.disable_locking = true,
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
+ 	.max_register = 0x7f,
+ };
+ 
+
+---
+base-commit: 6465e260f48790807eef06b583b38ca9789b6072
+change-id: 20230929-gpio-pca953x-maple-b39b99cd90db
+
+Best regards,
 -- 
-2.42.0
+Mark Brown <broonie@kernel.org>
 
