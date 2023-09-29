@@ -2,76 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3183A7B3287
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:26:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAD897B3297
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232834AbjI2M0z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 08:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34554 "EHLO
+        id S232990AbjI2Mby (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 08:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232896AbjI2M0y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:26:54 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C0A1B2;
-        Fri, 29 Sep 2023 05:26:51 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9a9f139cd94so1785970866b.2;
-        Fri, 29 Sep 2023 05:26:51 -0700 (PDT)
+        with ESMTP id S233119AbjI2Mbx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:31:53 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DD91AE
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:31:50 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2c02e232c48so232241861fa.1
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695990410; x=1696595210; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IHoAEPMCBmD5aMTuTOMQUGoRQ/DwG8nyjqA0CqFXZA8=;
-        b=cBtrGcm1gSW3D5yZpE5S9ipHlov4hMB53uFxSz21NNvUhcpzXoJcP2eKRtCAec0vFY
-         pbOrYLi71tM9PabJgDsBb8hX3oInVP3QmRaSoHNLuIp1lezBRLuKLn8sw3WWZqjSvgvB
-         TXVR373p8pEra1cWmP/z8KdeS5PJEzvm6jQvByePAiNDiUXxqhyKj3Rm0yMhZpkEvYOx
-         I/OXq+h4OJKl3EhzqkLoM4J0FfZmizPkKC7O5AnNQigyjNAMpNPKuu9g3E4FH858xhIR
-         /zJaGb0xKMKPc692tPO8UoqtZJdrHqXXEgdvcg5cvkckRBdCy8HYbKDrWs+WNszJ5WxF
-         +3mw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695990708; x=1696595508; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/cakR+T0CtDHM2CcBQ8FRiuXJVwcIXPiPweVMCCUBlY=;
+        b=F9/5SgkuseLzsyl1LCDjmIPspdoX5PVSebAYbc5SFAl5a+laMkIjQX9KZBDXt3A+sl
+         ur7GeKYRWoqwnDPLyz9mr0M9AWK8ntvE9KFmMyqhf4enZo8vnJcsl5U1KTeEztXDMM5B
+         ah0j3ZgCyCTk9Lhh6MnBlFZpBmH+DtQzSCyknPEka4gZ36DmaXBwI6FcwPHuwZ48+QNY
+         jsTLSdCoiex4T9QyI5dRLGXwtwxlJ0ZgrYZVYp5buUaQcfJ0yw0NlyuhmqoVYTSVkc9A
+         +Ql4iMUEr7kOI2isBsN/w1BhJavv8usRTyHDJusqqUI2V7vB9/aUY+mc1w1B2yHzbUgx
+         P91Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695990410; x=1696595210;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IHoAEPMCBmD5aMTuTOMQUGoRQ/DwG8nyjqA0CqFXZA8=;
-        b=KnFzxNBXViVncOWqoaAJS/NtSChVZuAqUvr6AlaBIscA7J1Wgxy0hjeWqOrZ61QPs4
-         taBD6bIYkxc1e1d0F2opT9n8VUhq1EJi/nxx3s9jVOYXaOUTUBT9xvPb+MoUQKFOphP+
-         7w3AOZPvj5ivJaAFoBulx4ymktG4jhYNfg2pp5J7IOjn/eTEa90kjtKIbtU8SntRYWev
-         02aslksINq6BAuw2XO2VR59veO90adHLx3k/lvOnuy7H9k1XLOKImLLWVxYIVt/j7yyg
-         08twAEFtBBqoC8iZTv9j18dj77KsuylVL97vZEJ0xoDXmJoH6VMnu9+6Ue/K002/kQ1J
-         +ZRQ==
-X-Gm-Message-State: AOJu0YxnMAzChWCqrzkjRFFQLv/ddY8iWcVHJaeHX2k1pw+luGvwY344
-        6EBU+yRjK/Bm+CvXZhCv+i+VRntHgiE=
-X-Google-Smtp-Source: AGHT+IELJ/fg2a0kWjkmk34qx0atFZS8m8WxUNXyOz4SEPB51VqWdtBl30UHPjWv3JqCCJWgY9YIwA==
-X-Received: by 2002:a17:906:cd1:b0:9ae:5120:5147 with SMTP id l17-20020a1709060cd100b009ae51205147mr3368629ejh.38.1695990410032;
-        Fri, 29 Sep 2023 05:26:50 -0700 (PDT)
-Received: from orome.fritz.box (p200300e41f3f4900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3f:4900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id n8-20020a1709061d0800b009a19701e7b5sm12442797ejh.96.2023.09.29.05.26.49
+        d=1e100.net; s=20230601; t=1695990708; x=1696595508;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/cakR+T0CtDHM2CcBQ8FRiuXJVwcIXPiPweVMCCUBlY=;
+        b=mTrwvj/jzqxfBNWGBkvKsE8I020TJSPB71xZ1I6uSFrDVAFofbHwyfDZQV59pgTxxF
+         fGw7pw0kmO9oEWb3j8zupdk7fm12zM3Xh+A+j1LWKXDwnKmi5b68M8/d9ohyqJob/J5O
+         jS9c0qc62Yw8Py7LRChxjct5+E+DeB4IQAYz4PC6Kh+0zvNzjcxfsXIBSj5GGHS00Wt0
+         /dQb1BBzFVM8It2XEmR3lWCaoa9Kb6uLRGIiwrQvwCmeHkpSwJQTTv0uCYXLhzBvfLq7
+         aeTf1Kj3+MhCiSKq9yStDaNVZDUypLWyFq9TjSKvWoAS5Yu42PRqbyFSEiqej6vsyJKW
+         +RXw==
+X-Gm-Message-State: AOJu0YyiWmWslLQqL0ZRAzdZ4pIOUxPdgPx6kuhl0Y7R8u2BMW6nLS7w
+        T7o+1mDieMn61jF2XCKUiuL4nGdLse+Pc+rYaso=
+X-Google-Smtp-Source: AGHT+IGYozBPLaVVGV33pkxMveenWJHnuQ25Q9SshKY3WsROcIPox12GhZvT6tGSQdtknuzysErIUw==
+X-Received: by 2002:a05:600c:3785:b0:405:3803:558a with SMTP id o5-20020a05600c378500b004053803558amr3731380wmr.12.1695990687598;
+        Fri, 29 Sep 2023 05:31:27 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:325c:7f1d:7e44:c5b1])
+        by smtp.gmail.com with ESMTPSA id n16-20020a05600c3b9000b003fe29f6b61bsm1356244wms.46.2023.09.29.05.31.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 05:26:49 -0700 (PDT)
-Date:   Fri, 29 Sep 2023 14:26:47 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Prathamesh Shete <pshete@nvidia.com>, jonathanh@nvidia.com,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pinctrl: tegra: Add support to display pin function
-Message-ID: <ZRbCh8F79WYvJ9Ni@orome.fritz.box>
-References: <0cf720bf-ae4b-5780-bda4-5c9bbb2d1d67@nvidia.com>
- <20230714113547.15384-1-pshete@nvidia.com>
- <20230925183049.10a40546@booty>
- <CACRpkdbZ0cxA_y=6j_QQpF1SQ1q4hw-qUyeOnEK-+cLBd=gjCg@mail.gmail.com>
- <20230928085319.0b09bf7d@booty>
+        Fri, 29 Sep 2023 05:31:27 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: fixes for v6.6-rc4
+Date:   Fri, 29 Sep 2023 14:31:24 +0200
+Message-Id: <20230929123124.19060-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0gWJLgNcozhyKN9n"
-Content-Disposition: inline
-In-Reply-To: <20230928085319.0b09bf7d@booty>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,80 +69,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---0gWJLgNcozhyKN9n
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Linus,
 
-On Thu, Sep 28, 2023 at 08:53:19AM +0200, Luca Ceresoli wrote:
-> Hello Linus, Prathamesh,
->=20
-> On Wed, 27 Sep 2023 10:54:15 +0200
-> Linus Walleij <linus.walleij@linaro.org> wrote:
->=20
-> > On Mon, Sep 25, 2023 at 6:30=E2=80=AFPM Luca Ceresoli <luca.ceresoli@bo=
-otlin.com> wrote:
-> >=20
-> > > The symptom is that i2c3 is not working anymore, the I2C lines being
-> > > always high. No other known issues at the moment. =20
-> >=20
-> > Hm....
-> >=20
-> > >> +     {"nvidia,function",             TEGRA_PINCONF_PARAM_FUNCTION},=
- =20
-> > >
-> > > FYI, I reduced your patch to only this line plus the one in the
-> > > pinctrl-tegra.h and the problem appears as well. =20
-> >=20
-> > I think there is a conflict now, that the pinconf is "stealing" the fun=
-ction
-> > assignment from the pinmux call.
-> >=20
-> > It's just a debugprint, I will revert the patch, Luca can investigate a=
-nd you
->=20
-> Thanks for the quick revert Linus.
->=20
-> > can test a new patch then we will merge that.
->=20
-> Prathamesh, if you send a new patch it would be great if you can Cc: me s=
-o I
-> can test it.
+Please pull the following set of driver fixes for the next RC.
 
-I was able to reproduce this on tegra20-trimslice, and it looks indeed
-that the "shortcut" of supporting this through the pinconf "framework"
-doesn't work. In addition to the pinmux now no longer getting applied
-(exactly why that is I don't think I understand), it also leads to weird
-things in other parts of the debugfs output. For example the code now
-ends up trying to read a u32 from the nvidia,function property, which is
-actually a string. That seems to be fine, but obviously it doesn't yield
-the value that is expected for a function and messes up the config param
-which will then later on fail to properly display.
+Thanks,
+Bartosz
 
-Anyway, turns out the correct implementation is even shorter. I've sent
-out a patch.
+The following changes since commit 6465e260f48790807eef06b583b38ca9789b6072:
 
-Thierry
+  Linux 6.6-rc3 (2023-09-24 14:31:13 -0700)
 
---0gWJLgNcozhyKN9n
-Content-Type: application/pgp-signature; name="signature.asc"
+are available in the Git repository at:
 
------BEGIN PGP SIGNATURE-----
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.6-rc4
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmUWwocACgkQ3SOs138+
-s6HhARAAmgbAGcjIr0Nac+ExNkH8nKRofmVJD97X/UkmeKRxRjQt5uBp5dl9qxHw
-6dcg5lnpYgpPfQPE4zfWIbyUKYoVFPrFCq42SUKp6UrarYL6Y7WTl2Ne/VMaAMpD
-Gn/MxecaWUZxKF2EGb7KgXHhoCU/qADJQuklfCYbwFNxvLbSdZKZbj40b2E+SObL
-dblvPOQZ2bfPgDg/xafu6iymziEaxL/BKIaKKp/R/R8GMUqormZ/ClqIV1bQfVsR
-ITdhhJbZcCBlgaycAc+ud2bkUDtJdSy9pc01bHMAWXCqjQB8apUaWy9yi1hwWWt3
-mwo5TMuHkLINXp8H/ZRMw1Y3yyaUy0xAixNbr5Ic0ZqKcABMyvMnWl+Qal9P2KNs
-l3KxfBOwGWzfP+49ghTCGiLG6GTRb9UErPmCIhOn9Kb6GlqIQy1u0v+z0Zw2g2YM
-CCRhXub7NHfvsgxI/4+3WnV8+lCvyuNZvbQ7Kmnj5w++nroR8Vnz8XlMD7tpNXkB
-QfqTC6vjxSQTYCadmLTfOXcl3smI9ghUEAS0pMTNu2gcwmARPfK8e781/N9C3Z+n
-mFZy0JHqp93pmpwlmZ1Rmr4UYUBEuUCyIdzWOvB4ze3Nv2LTiAqMKe+gD3qWXOwH
-qNOEkX8KDPYA/4msPdcReMemkvRNg/H1cZ04cryh8otPLFawMsg=
-=uu/I
------END PGP SIGNATURE-----
+for you to fetch changes up to 26d9e5640d2130ee16df7b1fb6a908f460ab004c:
 
---0gWJLgNcozhyKN9n--
+  gpio: pmic-eic-sprd: Add can_sleep flag for PMIC EIC chip (2023-09-27 09:12:09 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.6-rc4
+
+- fix a potential spinlock deadlock in gpio-timberdale
+- mark the gpio-pmic-eic-sprd driver as one that can sleep
+
+----------------------------------------------------------------
+Chengfeng Ye (1):
+      gpio: timberdale: Fix potential deadlock on &tgpio->lock
+
+Wenhua Lin (1):
+      gpio: pmic-eic-sprd: Add can_sleep flag for PMIC EIC chip
+
+ drivers/gpio/gpio-pmic-eic-sprd.c | 1 +
+ drivers/gpio/gpio-timberdale.c    | 5 +++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
