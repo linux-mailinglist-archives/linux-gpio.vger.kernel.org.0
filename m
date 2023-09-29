@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 367347B3352
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 15:18:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C2F27B3350
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 15:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232925AbjI2NS1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 09:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36664 "EHLO
+        id S233163AbjI2NSZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 09:18:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233255AbjI2NSZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 09:18:25 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88EE1AB
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 06:18:21 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-9b27bc8b65eso1279529966b.0
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 06:18:21 -0700 (PDT)
+        with ESMTP id S232925AbjI2NSY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 09:18:24 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 438BE1AC
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 06:18:22 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-9a64619d8fbso1921097466b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 06:18:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695993500; x=1696598300; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1695993501; x=1696598301; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IOQ11dSxNSkrGcEh00TaC+UaogU9d9mUSvpKs9oUHUI=;
-        b=xPxD6Xz/IJgqSt8lgMWUh6p+xwOqsQgxYHHLAjfFESB+YCgNDf+KRvjug4OkG6crbM
-         d17sy8oVcjh4QqR22+rbvAQzUnp/T97KgvXichOPGkMD6m1ygnn3sCxOWzfpXKd5QFRJ
-         Dr0bqJIPMCusL+E5pEirViZiK9AQr0J0xelBBPoj2vRlap8Jgb4emPklkv5mI0CO0ptk
-         TsiODIued+YefoLZe3gPDPoKHbZN6u3U4vn/pMD7frJCJHj0Bsye6ap3ijKGb+GWbQE8
-         0geH4pQicwN7wwt8mikWySoDUdfytwJIrySnwra1Y+0JEysC1pZmJ3nHw0QyIKkp5U02
-         tMtQ==
+        bh=aRn42sMlLcAqn5yMX1PI4XNkolBHdvIATUS8RBoa5YM=;
+        b=cCYhEJMrH6YNVEJSRjFZN0y0Ww5MBTScQgoJWMj0rYJFSlQJHvuV1zQWeTBkylolMq
+         oP1bEYDorTNs9e3GlwzjiQvoTeB1quRO46AldZXhVCrllH1zZAt8l3sylACkjVxC5HfQ
+         Hf9Olki5iaswyZaROXouDP1teKyjPlx+bbzVZWpPAMYM9dtRLCxNxS7uWhH9wAqVUv/1
+         2tPmvhGrbwAvjLLf654kkHi6ITa5TPca8MJGffXEZIpVwSsGcYCQEjESPOssSk2IAlyJ
+         o5SoUJrw8SBP+5W/PS5cP1t1kpaevR128mDwdSEp2jQ+JNDhHgyXcv7O/LFRvdoNeUwd
+         sMCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695993500; x=1696598300;
+        d=1e100.net; s=20230601; t=1695993501; x=1696598301;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IOQ11dSxNSkrGcEh00TaC+UaogU9d9mUSvpKs9oUHUI=;
-        b=nLvTq/XVN8/BDAkpt+SFdTlf2JaOYwlVfWKqQgQcWxtzqWhUIjgi8yAwwrxmmOSJAl
-         LaNb9sQcD22qqaugUKsVjvqU+SCM5iwPRKxA94i+8rjFYBl2EBzqud288Tl/D8fxNmjT
-         913fJynzmhmu6K4CnahIL/5MlQ3Rhsn1g7IZ3p3F2TU+DLO2JotzHT03B1Y75+t3DbDP
-         hO/m/nA9fyzkCCyvQRvSmzrsIQGDVdsd0U62JfVG/v/bOM/dOu/ol3KP0byxN7/K3lpg
-         gJZf3Bj3KkEzpaUiUlSNAXc+uJJK0o2hYIV4k41sWhYxxzhsYWnxTVD45ic/dajCKdD3
-         xweA==
-X-Gm-Message-State: AOJu0Yw7sl4adlO41mAxL2tM01cy2UxYKamZriJM3Yxq7mSKVXcBKM5U
-        V5HdDBn+EZ9q6YE9Pbzf25iFH+iqKXqBrVSBVPA=
-X-Google-Smtp-Source: AGHT+IGvV3jKzq/QfNnSKJFkkUlWtiGfWdZVwv0kNT4wm26WHBOJADmSuOtGyZFDOvKLH7emqkjw9g==
-X-Received: by 2002:a17:906:3cb1:b0:9a5:852f:10bd with SMTP id b17-20020a1709063cb100b009a5852f10bdmr3428764ejh.62.1695993499915;
-        Fri, 29 Sep 2023 06:18:19 -0700 (PDT)
+        bh=aRn42sMlLcAqn5yMX1PI4XNkolBHdvIATUS8RBoa5YM=;
+        b=ofgZIu3zPhdGviPXFPU3oufygws81vOAcmjidfP1EWD5ka12aLpY8LjtFBVtL52LEh
+         DVwi9q3XxZnS+tNKciY14rX5tgj3f5N+on8DZQlmtS2Twv9ZH1j2vjprV+CKMcuUdlqt
+         x5bUIkajWAs0SINAeExwAQAppj46X4BCBrmMkGEmtl1fte3lyO7m+PsPj0GQB4wAQx9z
+         ZbWFKHg/E4UlGngneiIMA7CaYErbAa8+Cw579bZLTti28QvkN98MQLuY2PRkPq0YwMrY
+         pcwtPqLPCnbKumLUHdYWxhCeIglI6sUrNROSvGVfuGJzOVRdaKJ8kHPf7cdi1rKBgbOd
+         h3fg==
+X-Gm-Message-State: AOJu0Yz5oUcb8LL1SUutVB3AwnmDseQgFHzLqNibSvfyEu49S1wnu85o
+        2Siwe059HtcJ3wLXt02Rl6xAp/g4oS8QN3OCXEk=
+X-Google-Smtp-Source: AGHT+IGZHUP9duE5F0bpuFvI0GVcoIWe0I7Hn49cqVwNhiqt1i4hz3wKufXfE4yrdOPMvm6iu8qkPg==
+X-Received: by 2002:a17:906:9c9:b0:9a5:c4c0:2d8a with SMTP id r9-20020a17090609c900b009a5c4c02d8amr3539917eje.24.1695993500637;
+        Fri, 29 Sep 2023 06:18:20 -0700 (PDT)
 Received: from [192.168.1.149] (i5C7438D4.versanet.de. [92.116.56.212])
-        by smtp.gmail.com with ESMTPSA id ck17-20020a170906c45100b00992e14af9c3sm12510086ejb.143.2023.09.29.06.18.19
+        by smtp.gmail.com with ESMTPSA id ck17-20020a170906c45100b00992e14af9c3sm12510086ejb.143.2023.09.29.06.18.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 06:18:19 -0700 (PDT)
+        Fri, 29 Sep 2023 06:18:20 -0700 (PDT)
 From:   Erik Schilling <erik.schilling@linaro.org>
-Date:   Fri, 29 Sep 2023 15:18:15 +0200
-Subject: [libgpiod][PATCH v2 1/3] bindings: rust: fix soundness of
- line_info modeling
+Date:   Fri, 29 Sep 2023 15:18:16 +0200
+Subject: [libgpiod][PATCH v2 2/3] bindings: rust: rename
+ {event,settings}_clone to try_clone
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230929-rust-line-info-soundness-v2-1-9782b7f20f26@linaro.org>
+Message-Id: <20230929-rust-line-info-soundness-v2-2-9782b7f20f26@linaro.org>
 References: <20230929-rust-line-info-soundness-v2-0-9782b7f20f26@linaro.org>
 In-Reply-To: <20230929-rust-line-info-soundness-v2-0-9782b7f20f26@linaro.org>
 To:     Linux-GPIO <linux-gpio@vger.kernel.org>
@@ -65,11 +65,11 @@ Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         Kent Gibson <warthog618@gmail.com>,
         Erik Schilling <erik.schilling@linaro.org>
 X-Mailer: b4 0.13-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695993498; l=14963;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695993498; l=3492;
  i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=/atkmBXO5euk6uoZwqXd7aDz0kPychqkOH30BV+m+iM=;
- b=p4lam3N5q32YMsGUqItX0itlT72+UXDk90cLiP3DMtAxDIYhDSXyT6jDSVAsz6/TwIzH2r5b1
- tDiwpFbFAf/D9TWDA2REyhoshNTE2aSXrpqutX/GFH47ZqRkxAgl+7j
+ bh=74mM/rOYixRKJAgPFvu7pOERfZFDGCmE5T2ja0svTn8=;
+ b=l1WfuJzRZQ22D/d+oNAmA6+aiU9UVU6H4ArY8zzKSenyXQBtkmiTcuBgce81I7/6BiuCp+oqZ
+ GMKDyOlcAGoAtd7Y5ZQFDIs1m/D0zTMQmUZNALowTn2yY3imDiiJILT
 X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
  pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -81,354 +81,75 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-While attention was provided to prevent freeing in non-owned use-cases,
-the lifetime of these object was not properly modeled.
+What is getting cloned is already clear from the type. This also aligns
+a bit better with similar methods from the `std` crate [1].
 
-The line_info from an event may only be used for as long as the event
-exists.
+[1] https://doc.rust-lang.org/std/index.html?search=try_clone
 
-This allowed us to write unsafe-free Rust code that causes a
-use-after-free:
-
-  let event = chip.read_info_event().unwrap();
-  let line_info = event.line_info().unwrap();
-  drop(event);
-  dbg!(line_info.name().unwrap());
-
-Which makes the AddressSanitizer scream:
-
-  ==90154==ERROR: AddressSanitizer: heap-use-after-free on address 0x50b000005dc4 at pc 0x55a4f883a009 bp 0x7f60ac8fbbc0 sp 0x7f60ac8fb388
-  READ of size 2 at 0x50b000005dc4 thread T2
-      [...]
-      #3 0x55a4f8c3d5f3 in libgpiod::line_info::Info::name::h5ba0bfd360ecb405 libgpiod/bindings/rust/libgpiod/src/line_info.rs:70:18
-    	[...]
-
-  0x50b000005dc4 is located 4 bytes inside of 112-byte region [0x50b000005dc0,0x50b000005e30)
-  freed by thread T2 here:
-      [...]
-      #1 0x7f60b07f7e31 in gpiod_info_event_free libgpiod/lib/info-event.c:61:2
-      [...]
-
-  previously allocated by thread T2 here:
-      #0 0x55a4f88b04be in malloc /rustc/llvm/src/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:69:3
-      #1 0x7f60b07f8ff0 in gpiod_line_info_from_uapi libgpiod/lib/line-info.c:144:9
-
-The fix is to distinguish between the owned and non-owned variants and
-assigning lifetimes to non-owned variants.
-
-For modeling the non-owned type there are a couple of options. The ideal
-solution would be using extern_types [1]. But that is still unstable.
-Instead, we are defining a #[repr(transparent)] wrapper around the opaque
-gpiod_line_info struct and cast the pointer to a reference.
-
-This was recommended on the Rust Discord server as good practise.
-(Thanks to Kyuuhachi, shepmaster, pie_flavor and ilyvion! Also thanks to
-@epilys for a brainstorming on this on #linaro-virtualization IRC).
-
-Of course, determining the lifetimes and casting across the types
-requires some care. So this adds a couple of SAFETY comments that would
-probably also have helped the existing code.
-
-[1] https://github.com/rust-lang/rfcs/blob/master/text/1861-extern-types.md
-
-Fixes: 91f9373 ("bindings: rust: Add libgpiod crate")
+Link: https://lore.kernel.org/r/CVUKC1HXG1P8.13XIUCCXN95F0@ablu-work
 Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 ---
- bindings/rust/libgpiod/src/chip.rs       |   8 +-
- bindings/rust/libgpiod/src/info_event.rs |   8 +-
- bindings/rust/libgpiod/src/line_info.rs  | 130 +++++++++++++++++++++----------
- 3 files changed, 100 insertions(+), 46 deletions(-)
+ bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs | 2 +-
+ bindings/rust/libgpiod/src/edge_event.rs                    | 3 ++-
+ bindings/rust/libgpiod/src/line_settings.rs                 | 4 ++--
+ bindings/rust/libgpiod/tests/line_request.rs                | 2 +-
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/bindings/rust/libgpiod/src/chip.rs b/bindings/rust/libgpiod/src/chip.rs
-index 81e1be6..9ef8f22 100644
---- a/bindings/rust/libgpiod/src/chip.rs
-+++ b/bindings/rust/libgpiod/src/chip.rs
-@@ -107,7 +107,9 @@ impl Chip {
-             ));
-         }
+diff --git a/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs b/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
+index ad90d7b..8dbb496 100644
+--- a/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
++++ b/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
+@@ -34,7 +34,7 @@ fn main() -> libgpiod::Result<()> {
+         let event = events.next().unwrap()?;
  
--        line::Info::new(info)
-+        // SAFETY: We verified that the pointer is valid. We own the pointer and
-+        // no longer use it after converting it into a Info instance.
-+        Ok(unsafe { line::Info::from_raw_owned(info) })
+         // This will out live `event` and the next read_edge_events().
+-        let cloned_event = libgpiod::request::Event::event_clone(event)?;
++        let cloned_event = libgpiod::request::Event::try_clone(event)?;
+ 
+         let events = request.read_edge_events(&mut buffer)?;
+         for event in events {
+diff --git a/bindings/rust/libgpiod/src/edge_event.rs b/bindings/rust/libgpiod/src/edge_event.rs
+index 0c0cfbc..4c940ba 100644
+--- a/bindings/rust/libgpiod/src/edge_event.rs
++++ b/bindings/rust/libgpiod/src/edge_event.rs
+@@ -25,7 +25,8 @@ use super::{
+ pub struct Event(*mut gpiod::gpiod_edge_event);
+ 
+ impl Event {
+-    pub fn event_clone(event: &Event) -> Result<Event> {
++    /// Makes a copy of the event object.
++    pub fn try_clone(event: &Event) -> Result<Event> {
+         // SAFETY: `gpiod_edge_event` is guaranteed to be valid here.
+         let event = unsafe { gpiod::gpiod_edge_event_copy(event.0) };
+         if event.is_null() {
+diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rust/libgpiod/src/line_settings.rs
+index f0b3e9c..41b27e2 100644
+--- a/bindings/rust/libgpiod/src/line_settings.rs
++++ b/bindings/rust/libgpiod/src/line_settings.rs
+@@ -52,8 +52,8 @@ impl Settings {
+         unsafe { gpiod::gpiod_line_settings_reset(self.settings) }
      }
  
-     /// Get the current snapshot of information about the line at given offset and start watching
-@@ -123,7 +125,9 @@ impl Chip {
-             ));
-         }
+-    /// Makes copy of the settings object.
+-    pub fn settings_clone(&self) -> Result<Self> {
++    /// Makes a copy of the settings object.
++    pub fn try_clone(&self) -> Result<Self> {
+         // SAFETY: `gpiod_line_settings` is guaranteed to be valid here.
+         let settings = unsafe { gpiod::gpiod_line_settings_copy(self.settings) };
+         if settings.is_null() {
+diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/rust/libgpiod/tests/line_request.rs
+index 9af5226..8731719 100644
+--- a/bindings/rust/libgpiod/tests/line_request.rs
++++ b/bindings/rust/libgpiod/tests/line_request.rs
+@@ -272,7 +272,7 @@ mod line_request {
+             for offset in offsets {
+                 lsettings.set_debounce_period(Duration::from_millis((100 + offset).into()));
+                 lconfig
+-                    .add_line_settings(&[offset as Offset], lsettings.settings_clone().unwrap())
++                    .add_line_settings(&[offset as Offset], lsettings.try_clone().unwrap())
+                     .unwrap();
+             }
  
--        line::Info::new_watch(info)
-+        // SAFETY: We verified that the pointer is valid. We own the instance and
-+        // no longer use it after converting it into a Info instance.
-+        Ok(unsafe { line::Info::from_raw_owned(info) })
-     }
- 
-     /// Stop watching a line
-diff --git a/bindings/rust/libgpiod/src/info_event.rs b/bindings/rust/libgpiod/src/info_event.rs
-index db60600..843f3f7 100644
---- a/bindings/rust/libgpiod/src/info_event.rs
-+++ b/bindings/rust/libgpiod/src/info_event.rs
-@@ -44,7 +44,7 @@ impl Event {
-     }
- 
-     /// Get the line-info object associated with the event.
--    pub fn line_info(&self) -> Result<line::Info> {
-+    pub fn line_info(&self) -> Result<&line::InfoRef> {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
-         let info = unsafe { gpiod::gpiod_info_event_get_line_info(self.event) };
- 
-@@ -55,7 +55,11 @@ impl Event {
-             ));
-         }
- 
--        line::Info::new_from_event(info)
-+        // SAFETY: The pointer is valid. The returned reference receives the
-+        // lifetime '0 - the same as &self. &self also controls lifetime and
-+        // ownership of the owning object. Therefore, the borrow prevents moving
-+        // of the owning object to another thread.
-+        Ok(unsafe { line::InfoRef::from_raw_non_owning(info) })
-     }
- }
- 
-diff --git a/bindings/rust/libgpiod/src/line_info.rs b/bindings/rust/libgpiod/src/line_info.rs
-index c4f488c..e3ea5e1 100644
---- a/bindings/rust/libgpiod/src/line_info.rs
-+++ b/bindings/rust/libgpiod/src/line_info.rs
-@@ -2,9 +2,10 @@
- // SPDX-FileCopyrightText: 2022 Linaro Ltd.
- // SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
- 
--use std::ffi::CStr;
-+use std::ops::Deref;
- use std::str;
- use std::time::Duration;
-+use std::{ffi::CStr, marker::PhantomData};
- 
- use super::{
-     gpiod,
-@@ -12,7 +13,7 @@ use super::{
-     Error, Result,
- };
- 
--/// Line info
-+/// Line info reference
- ///
- /// Exposes functions for retrieving kernel information about both requested and
- /// free lines.  Line info object contains an immutable snapshot of a line's status.
-@@ -20,48 +21,57 @@ use super::{
- /// The line info contains all the publicly available information about a
- /// line, which does not include the line value.  The line must be requested
- /// to access the line value.
--
--#[derive(Debug, Eq, PartialEq)]
--pub struct Info {
--    info: *mut gpiod::gpiod_line_info,
--    contained: bool,
-+///
-+/// [InfoRef] only abstracts a reference to a [gpiod::gpiod_line_info] instance whose lifetime is managed
-+/// by a different object instance. The owned counter-part of this type is [Info].
-+#[derive(Debug)]
-+#[repr(transparent)]
-+pub struct InfoRef {
-+    _info: gpiod::gpiod_line_info,
-+    // Avoid the automatic `Sync` implementation.
-+    //
-+    // The C lib does not allow parallel invocations of the API. We could model
-+    // that by restricting all wrapper functions to `&mut Info` - which would
-+    // ensure exclusive access. But that would make the API a bit weird...
-+    // So instead we just suppress the `Sync` implementation, which suppresses
-+    // the `Send` implementation on `&Info` - disallowing to send it to other
-+    // threads, making concurrent use impossible.
-+    _not_sync: PhantomData<*mut gpiod::gpiod_line_info>,
- }
- 
--impl Info {
--    fn new_internal(info: *mut gpiod::gpiod_line_info, contained: bool) -> Result<Self> {
--        Ok(Self { info, contained })
--    }
--
--    /// Get a snapshot of information about the line.
--    pub(crate) fn new(info: *mut gpiod::gpiod_line_info) -> Result<Self> {
--        Info::new_internal(info, false)
--    }
--
--    /// Get a snapshot of information about the line and start watching it for changes.
--    pub(crate) fn new_watch(info: *mut gpiod::gpiod_line_info) -> Result<Self> {
--        Info::new_internal(info, false)
-+impl InfoRef {
-+    /// Converts a non-owning pointer to a wrapper reference of a specific
-+    /// lifetime
-+    ///
-+    /// No ownership will be assumed, the pointer must be free'd by the original
-+    /// owner.
-+    ///
-+    /// SAFETY: The pointer must point to an instance that is valid for the
-+    /// entire lifetime 'a. The instance must be owned by an object that is
-+    /// owned by the thread invoking this method. The owning object may not be
-+    /// moved to another thread for the entire lifetime 'a.
-+    pub(crate) unsafe fn from_raw_non_owning<'a>(info: *mut gpiod::gpiod_line_info) -> &'a InfoRef {
-+        &*(info as *mut _)
-     }
- 
--    /// Get the Line info object associated with an event.
--    pub(crate) fn new_from_event(info: *mut gpiod::gpiod_line_info) -> Result<Self> {
--        Info::new_internal(info, true)
-+    fn as_raw_ptr(&self) -> *mut gpiod::gpiod_line_info {
-+        self as *const _ as *mut _
-     }
- 
-     /// Get the offset of the line within the GPIO chip.
-     ///
-     /// The offset uniquely identifies the line on the chip. The combination of the chip and offset
-     /// uniquely identifies the line within the system.
--
-     pub fn offset(&self) -> Offset {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_line_info_get_offset(self.info) }
-+        unsafe { gpiod::gpiod_line_info_get_offset(self.as_raw_ptr()) }
-     }
- 
-     /// Get GPIO line's name.
-     pub fn name(&self) -> Result<&str> {
-         // SAFETY: The string returned by libgpiod is guaranteed to live as long
-         // as the `struct Info`.
--        let name = unsafe { gpiod::gpiod_line_info_get_name(self.info) };
-+        let name = unsafe { gpiod::gpiod_line_info_get_name(self.as_raw_ptr()) };
-         if name.is_null() {
-             return Err(Error::NullString("GPIO line's name"));
-         }
-@@ -79,14 +89,14 @@ impl Info {
-     /// the line is used and we can't request it.
-     pub fn is_used(&self) -> bool {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_line_info_is_used(self.info) }
-+        unsafe { gpiod::gpiod_line_info_is_used(self.as_raw_ptr()) }
-     }
- 
-     /// Get the GPIO line's consumer name.
-     pub fn consumer(&self) -> Result<&str> {
-         // SAFETY: The string returned by libgpiod is guaranteed to live as long
-         // as the `struct Info`.
--        let name = unsafe { gpiod::gpiod_line_info_get_consumer(self.info) };
-+        let name = unsafe { gpiod::gpiod_line_info_get_consumer(self.as_raw_ptr()) };
-         if name.is_null() {
-             return Err(Error::NullString("GPIO line's consumer name"));
-         }
-@@ -100,44 +110,44 @@ impl Info {
-     /// Get the GPIO line's direction.
-     pub fn direction(&self) -> Result<Direction> {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        Direction::new(unsafe { gpiod::gpiod_line_info_get_direction(self.info) })
-+        Direction::new(unsafe { gpiod::gpiod_line_info_get_direction(self.as_raw_ptr()) })
-     }
- 
-     /// Returns true if the line is "active-low", false otherwise.
-     pub fn is_active_low(&self) -> bool {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_line_info_is_active_low(self.info) }
-+        unsafe { gpiod::gpiod_line_info_is_active_low(self.as_raw_ptr()) }
-     }
- 
-     /// Get the GPIO line's bias setting.
-     pub fn bias(&self) -> Result<Option<Bias>> {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        Bias::new(unsafe { gpiod::gpiod_line_info_get_bias(self.info) })
-+        Bias::new(unsafe { gpiod::gpiod_line_info_get_bias(self.as_raw_ptr()) })
-     }
- 
-     /// Get the GPIO line's drive setting.
-     pub fn drive(&self) -> Result<Drive> {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        Drive::new(unsafe { gpiod::gpiod_line_info_get_drive(self.info) })
-+        Drive::new(unsafe { gpiod::gpiod_line_info_get_drive(self.as_raw_ptr()) })
-     }
- 
-     /// Get the current edge detection setting of the line.
-     pub fn edge_detection(&self) -> Result<Option<Edge>> {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        Edge::new(unsafe { gpiod::gpiod_line_info_get_edge_detection(self.info) })
-+        Edge::new(unsafe { gpiod::gpiod_line_info_get_edge_detection(self.as_raw_ptr()) })
-     }
- 
-     /// Get the current event clock setting used for edge event timestamps.
-     pub fn event_clock(&self) -> Result<EventClock> {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        EventClock::new(unsafe { gpiod::gpiod_line_info_get_event_clock(self.info) })
-+        EventClock::new(unsafe { gpiod::gpiod_line_info_get_event_clock(self.as_raw_ptr()) })
-     }
- 
-     /// Returns true if the line is debounced (either by hardware or by the
-     /// kernel software debouncer), false otherwise.
-     pub fn is_debounced(&self) -> bool {
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_line_info_is_debounced(self.info) }
-+        unsafe { gpiod::gpiod_line_info_is_debounced(self.as_raw_ptr()) }
-     }
- 
-     /// Get the debounce period of the line.
-@@ -147,18 +157,54 @@ impl Info {
-         #[allow(clippy::unnecessary_cast)]
-         // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
-         Duration::from_micros(unsafe {
--            gpiod::gpiod_line_info_get_debounce_period_us(self.info) as u64
-+            gpiod::gpiod_line_info_get_debounce_period_us(self.as_raw_ptr()) as u64
-         })
-     }
- }
- 
-+/// Line info
-+///
-+/// This is the owned counterpart to [InfoRef]. Due to a [Deref] implementation,
-+/// all functions of [InfoRef] can also be called on this type.
-+#[derive(Debug)]
-+pub struct Info {
-+    info: *mut gpiod::gpiod_line_info,
-+}
-+
-+// SAFETY: Info models a owned instance whose ownership may be safely
-+// transferred to other threads.
-+unsafe impl Send for Info {}
-+
-+impl Info {
-+    /// Converts a owned pointer into an owned instance
-+    ///
-+    /// Assumes sole ownership over a [gpiod::gpiod_line_info] instance.
-+    ///
-+    /// SAFETY: The pointer must point to an instance that is valid. After
-+    /// constructing an [Info] the pointer MUST NOT be used for any other
-+    /// purpose anymore. All interactions with the libgpiod API have to happen
-+    /// through this object.
-+    pub(crate) unsafe fn from_raw_owned(info: *mut gpiod::gpiod_line_info) -> Info {
-+        Info { info }
-+    }
-+}
-+
-+impl Deref for Info {
-+    type Target = InfoRef;
-+
-+    fn deref(&self) -> &Self::Target {
-+        // SAFETY: The pointer is valid for the entire lifetime '0. Info is not
-+        // Sync. Therefore, no &Info may be held by a different thread. Hence,
-+        // the current thread owns it. Since we borrow with the lifetime of '0,
-+        // no move to a different thread can occur while a reference remains
-+        // being hold.
-+        unsafe { InfoRef::from_raw_non_owning(self.info) }
-+    }
-+}
-+
- impl Drop for Info {
-     fn drop(&mut self) {
--        // We must not free the Line info object created from `struct chip::Event` by calling
--        // libgpiod API.
--        if !self.contained {
--            // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
--            unsafe { gpiod::gpiod_line_info_free(self.info) }
--        }
-+        // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
-+        unsafe { gpiod::gpiod_line_info_free(self.info) }
-     }
- }
 
 -- 
 2.41.0
