@@ -2,98 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8451D7B3229
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:15:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72E197B3256
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:21:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233210AbjI2MO7 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 29 Sep 2023 08:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47412 "EHLO
+        id S233088AbjI2MVK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 08:21:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233207AbjI2MO5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:14:57 -0400
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2550519F;
-        Fri, 29 Sep 2023 05:14:55 -0700 (PDT)
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-57b68556d6dso6524895eaf.1;
-        Fri, 29 Sep 2023 05:14:55 -0700 (PDT)
+        with ESMTP id S232490AbjI2MVK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:21:10 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 654BC1AA;
+        Fri, 29 Sep 2023 05:21:08 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-536b39daec1so1445884a12.2;
+        Fri, 29 Sep 2023 05:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695990067; x=1696594867; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gr+D2f+RuJ9QcHfvwlUN0SCdJUZFyKEX1E9oKGFtxkc=;
+        b=gBdL8R//kuhm9S2TG1GqnA4EnTAgF1BaV443CfGx5N2BKgFbplguLazVusB9adHeYY
+         WOvJ2zvmbPKf32Uuu78xN7Bt0T6XJtvBAIiTzVYIQ7EekzLljHlklICr7XWS33CstfhE
+         QQBcyF5wL8RGFBYM23MziZWuFQM7v1RRliXk8I0tIxbHCORRkhWQVnrBZWGV32Ias2y+
+         fk65PPyj/KOINNQS9IWXGX9ElAHXeNsYi87Jv7VldH6ZEAQvyu37xBBbeyHRuMnfH5DZ
+         owZuMduuCwkzhYA3oTyK1JDL6HXtpgdswTwS60EAeNOnnTtiAwafCVSQqXvm/rHC/tkT
+         iROA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695989694; x=1696594494;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RuoH4Um95jPah+EhYg0BBr891Wv4izigjaMEWeAZDlE=;
-        b=wQRcmkjHrUfYn4EIqibb9B+ADh0HqBABsRdMGCsX+2tAhiq0cwrmOUEQULMYIa2yU/
-         vKkdSwnI+vPXeBewXlq1Y3J+bcHLf9ivPmzh5a5/Vmg0qJEgYjiS98ZTjroy12emptrE
-         4Da+7mXOepkvBwO4DueT7ifBlw7qA19fnCb9p4ARcQR/Pyg9NvzNzVUZCScvlUWzK/mI
-         zty88Gxnv98HIQC6UQ4Sn8O9SmYelpyVIVV9c4XfPAEgh4X5dMbs/XWvSEaWFVg3hD1c
-         2GywS7582+aB4rul6F7pph3F0ib9TKgALRIISHe9jLMmcR3rw8TrIwhhaoeyOwSnQW2S
-         sOXg==
-X-Gm-Message-State: AOJu0YxSIXwgD10YXZ6UIZFDbIK4uIgGcwcWPpAZj/yEqr9jHp7wqhgk
-        hYRgkPUs/+x+rc7SXJblabguwik4jGWLPFAr
-X-Google-Smtp-Source: AGHT+IFRj61fbWgq7CLJNKA93/V+zVCyq3LNqFBOZOAYeOf0HZJG+N7nBmPWn78HcLfzQFArbEO9Rg==
-X-Received: by 2002:a05:6358:7252:b0:135:a10e:1ed0 with SMTP id i18-20020a056358725200b00135a10e1ed0mr4127927rwa.23.1695989693864;
-        Fri, 29 Sep 2023 05:14:53 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id o79-20020a254152000000b00d749a394c87sm4997381yba.16.2023.09.29.05.14.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Sep 2023 05:14:53 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-d8afe543712so1356386276.0;
-        Fri, 29 Sep 2023 05:14:53 -0700 (PDT)
-X-Received: by 2002:a25:d4c5:0:b0:d4e:4103:7807 with SMTP id
- m188-20020a25d4c5000000b00d4e41037807mr4110545ybf.60.1695989693529; Fri, 29
- Sep 2023 05:14:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695990067; x=1696594867;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gr+D2f+RuJ9QcHfvwlUN0SCdJUZFyKEX1E9oKGFtxkc=;
+        b=IGDKJIEKt5cdxm2wo9Wv8m+266rjqCIJmSt9weymqXzC3aKScr3dUA1FqjqbopcAGM
+         jMH+pHV+MUyCWTR13BiMCw+30HI3rQ+LTY1u6k2rAYKGLrjUDkYLsDxB1bW9Zm3F938H
+         NjWkecWs5WguDoCAWxKVYQxopKHWTUa3887OuNJVjzZFwdJu0MOydsE2ZeJwASIqCiDi
+         uIPhfd80k0LyfmcO0U3R4xND4LWapl3pEJPG4sDQUGUZilL/CXW60Z7YZHC+tgswao/0
+         MZ9g88AtH6OrSxqRqmeauR+ZGTS6pZnUw5kRoPgH5lgGRfwA1HuRuBRzbTkLkkrwPuX9
+         rWHw==
+X-Gm-Message-State: AOJu0YwRjemNlxbQdh0C1NGXWbTe9Gj69WwHu1pQ/DPW2sO/xY49whpk
+        NCrZzICV91OtDWBeG/X5aE0s2pZpxDY=
+X-Google-Smtp-Source: AGHT+IEsJNKJaVkzzUTwbtVfTaNWyFdl5AQ9G/WzvWAUUz2p9lU1YkVzcyZKDU1tDdQfkXJJQvV51Q==
+X-Received: by 2002:a05:6402:704:b0:52f:4c92:69ee with SMTP id w4-20020a056402070400b0052f4c9269eemr3624175edx.36.1695990066463;
+        Fri, 29 Sep 2023 05:21:06 -0700 (PDT)
+Received: from localhost (p200300e41f3f4900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3f:4900:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id da11-20020a056402176b00b0053495596f42sm3767244edb.30.2023.09.29.05.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Sep 2023 05:21:06 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        Luca Ceresoli <luca.ceresoli@bootlin.com>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH] pinctrl: tegra: Display pin function in pinconf-groups
+Date:   Fri, 29 Sep 2023 14:21:01 +0200
+Message-ID: <20230929122101.466266-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-References: <20230925154548.27048-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20230925154548.27048-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 29 Sep 2023 14:14:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU690+e1SNVFsjMJHHdqQymwKMjGwuCe02Q2wYzMSNGEA@mail.gmail.com>
-Message-ID: <CAMuHMdU690+e1SNVFsjMJHHdqQymwKMjGwuCe02Q2wYzMSNGEA@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: renesas: pinctrl-rzg2l: Add validation of
- GPIO pin in rzg2l_gpio_request()
-To:     Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 25, 2023 at 5:46 PM Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Validate the GPIO pin request in rzg2l_gpio_request() callback using
-> rzg2l_validate_gpio_pin() function. This stops any accidental usage
-> of GPIO pins which are not supported by the SoCs.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> Tested-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
-> v2->v3
-> * Updated pin_data variable to be u32 instead of u64.
+From: Thierry Reding <treding@nvidia.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl-for-v6.7.
+The function that a pin is muxed to can be read from the top-level
+pinctrl-maps debugfs file. However, this only reflects the values that
+were specified in device tree, so they will only show deviations from
+the hardware default setting. Display the current pinmux setting in the
+per-controller pinconf-groups debugfs file along with the rest of the
+per-pin configuration settings.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-                        Geert
-
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index a4002b430f0a..c9fd3910bb3b 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -639,6 +639,14 @@ static void tegra_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
+ 		seq_printf(s, "\n\t%s=%u",
+ 			   strip_prefix(cfg_params[i].property), val);
+ 	}
++
++	if (g->mux_reg >= 0) {
++		/* read pinmux function and dump to seq_file */
++		val = pmx_readl(pmx, g->mux_bank, g->mux_reg);
++		val = g->funcs[(val >> g->mux_bit) & 0x3];
++
++		seq_printf(s, "\n\tfunction=%s", pmx->functions[val].name);
++	}
+ }
+ 
+ static void tegra_pinconf_config_dbg_show(struct pinctrl_dev *pctldev,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.42.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
