@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA657B3B94
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 22:48:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0575B7B3C13
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 23:43:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233807AbjI2UsT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 16:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
+        id S232878AbjI2Vna (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 17:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233857AbjI2UsS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 16:48:18 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22AB31AB
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 13:48:16 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-59bebd5bdadso179623877b3.0
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 13:48:16 -0700 (PDT)
+        with ESMTP id S229508AbjI2Vna (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 17:43:30 -0400
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2ABAAC
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 14:43:27 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-59f6e6b7600so121734167b3.3
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 14:43:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696020495; x=1696625295; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696023807; x=1696628607; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0PB3in7uQxQJMooXEXWpiBaHwk+ekocGtELm1zz7ac4=;
-        b=U+3jJ0gKkYUho3gGmo88xldu9TJkA1CeWbLN6HTCIqW5mV1hQqFWK0XqN3lvN+ZMed
-         /03R+MVkn/T25onIUeUtupXjNBoRNrZad4lqXb8xl5FdLo6ryTLVF9sCvD2SVPqZO5MN
-         DvtFj4+5tFKF6OXQp6jzMKSOEV47nVCVnGqyFVjbOIbFksJQeyciKt+uKG53N6FZ0/iM
-         GDGifjx7/jNpVpPguiJqoN7a+dkqrlYPuf7EQIYEfi0TgRtbg2QkFTOyMOb2/OsTw5+M
-         DUhtfzEqqOyDKFmrVCw9W9Cjzea+6qYXomi4zNsvmCUXpnUAhozJ7r3qkw5bRhz06pty
-         l21g==
+        bh=jQswShTuKxxSh5nmMk81ZYZYkK3o9OGcLEs56wp3Irk=;
+        b=XcVFnmzR9htXFWTa3c3UFloxs2CJuNsOMg8fjNw5PlhsvNN7lhLI8OxVJeidW4/rKF
+         mpG4bF7+FCcXm765vqEfFJoIRXjDS/K1bJBA0vrInrsg+8ClIrG14iAHzE4/sm8S3Ej5
+         TigNGS2PIdxqBAISIchrTNLyiA0UCG2PiAw8ElLDbdzLl2Vbl9mo7/MYVTOOEdpWVp3q
+         7TXl8h7VbxnKatmMSxXFMUjKptAhvemMhE5kcORyWJPsI7cqng3X99mEvjqM5iHP5D/d
+         KpkvF8i1/yPnJX1ufjwzBleHd4A5iZQrOFgrs/Z0BiSju4gPkD3q9W1KT9NZH/gYlU8P
+         5uSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696020495; x=1696625295;
+        d=1e100.net; s=20230601; t=1696023807; x=1696628607;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0PB3in7uQxQJMooXEXWpiBaHwk+ekocGtELm1zz7ac4=;
-        b=nD/lbpDnVSJ13jOFh1ajd0cNuyzAFZmniQuaTx0KUyUk8C1YiNVu6mmd6AkRPfrM+m
-         JAF6gB7JFd1J2MLaPFNsd+o8/chBHqCPapASEQ4J7Cw+R3cvvCoNt7dm2QwMqVIDhXR/
-         hDz796MucozmZZG2ikfSy//hu+rvlvwvCigFrugaMPl7b7CCdCTh/xrDeyHNW5mp6GeU
-         7yKYU0Yu0OkU72OYoX2f1+dMgwBBnHO8PA0qtF+P29c97m8reG+3AjOYxM8sBWL4wZ0Z
-         siJdOVWIf5Fia34/d4q8xovGvMbgnY8ySOfEPSb98YR7M8j8Qk+SyVJY+ikdczKUaIw7
-         ptjw==
-X-Gm-Message-State: AOJu0Yw/CwQzr9w9zDamfZnPONH9XVqQzPWhS66xaUHvaeKSZjg5LXkZ
-        DOKI58nipquYu55ZlDm1rPwdixMfgXO7HZlqYgU4hw==
-X-Google-Smtp-Source: AGHT+IGhNuagYdzoQaqD/8H7vq+7TA/IEUrISt5AV9Vh1CFU389coOm1p2xo8o1X5Amvawa/yVVBQqfrtYEIKvx1fl4=
-X-Received: by 2002:a05:690c:f8e:b0:5a2:4fd3:d05 with SMTP id
- df14-20020a05690c0f8e00b005a24fd30d05mr2158753ywb.31.1696020495343; Fri, 29
- Sep 2023 13:48:15 -0700 (PDT)
+        bh=jQswShTuKxxSh5nmMk81ZYZYkK3o9OGcLEs56wp3Irk=;
+        b=DYp3HRBH7x6W7itrAEh3WRCPA9LXq0ixU65hhvq0WrxiQCRW8dmd68A77ssQvhEI/1
+         CZYbvQRWuz5CHT/ISlSWP3BkFjfzU/ws01Rwf+O/1CGwpZbOgpfMGHDzIV5MbTHQIks6
+         L3IB3Ogu1pBYglW5W+BifU4IckgV1AKi/HqVEnfpzuKTtJQWfxmTDbTYS95NHYRrz0ih
+         U8TH8+3phdwKbDgOnaDjUamTPdsk6FacgLMMPNs3uDj1oZkt/Jtx5mv4ZsXwMf1JqPB1
+         jfgy0Ll+YLlWLfkz61d2E1SsiOUHW5Bb8gEUjUHxa6ebXu+DKfLR3rEDAVq751Gq3UDb
+         GPqQ==
+X-Gm-Message-State: AOJu0YxL1UytD/a6F3TwYIABaXeV5BGswJNxqRBbjiwcCowBFgxFs1Pp
+        u+99Ehix8AF+6FL38hi9Na+s7o6Vql+j1I+Oahv3YA==
+X-Google-Smtp-Source: AGHT+IF+IH5XX3pXSI0Xv1uCS3nzKWoHgIYiA8NwGlFfFyn8QHc4flVJoEqejmqpVOqFHEBmB/sNk00EsZmgPigOA7o=
+X-Received: by 2002:a81:6907:0:b0:59b:f899:7bd6 with SMTP id
+ e7-20020a816907000000b0059bf8997bd6mr5239914ywc.36.1696023806925; Fri, 29 Sep
+ 2023 14:43:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929-pxa-gpio-v3-0-af8d5e5d1f34@skole.hr> <20230929-pxa-gpio-v3-2-af8d5e5d1f34@skole.hr>
-In-Reply-To: <20230929-pxa-gpio-v3-2-af8d5e5d1f34@skole.hr>
+References: <20230929-pxa-gpio-v3-0-af8d5e5d1f34@skole.hr> <20230929-pxa-gpio-v3-5-af8d5e5d1f34@skole.hr>
+In-Reply-To: <20230929-pxa-gpio-v3-5-af8d5e5d1f34@skole.hr>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Sep 2023 22:48:04 +0200
-Message-ID: <CACRpkdbDVLZBku4VYK98VNDB5qdd-O5XtZsynT+d4MRf96ExXQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 2/6] ARM: pxa: Convert Spitz LEDs to GPIO descriptors
+Date:   Fri, 29 Sep 2023 23:43:15 +0200
+Message-ID: <CACRpkdb0HZFGnNm=5NdSJjM1-3kUzLigfnz9Ks-CX8U9a51Zmg@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 5/6] ARM: pxa: Convert Spitz hsync to GPIO descriptors
 To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
 Cc:     Daniel Mack <daniel@zonque.org>,
         Haojian Zhuang <haojian.zhuang@gmail.com>,
@@ -67,9 +67,8 @@ Cc:     Daniel Mack <daniel@zonque.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -83,40 +82,94 @@ thanks for your patch!
 On Fri, Sep 29, 2023 at 3:15=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
 @skole.hr> wrote:
 
-> Sharp's Spitz board still uses the legacy GPIO interface for configuring
-> its two onboard LEDs.
+> Sharp's Spitz still uses the legacy GPIO interface in its
+> wait_for_hsync() function.
 >
-> Convert them to use the GPIO descriptor interface.
+> Convert it to use the GPIO descriptor interface.
 >
 > Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-(...)
-> +       .table =3D {
-> +               GPIO_LOOKUP_IDX("pxa-gpio", SPITZ_GPIO_LED_ORANGE, NULL, =
-0,
-> +                               GPIO_ACTIVE_HIGH),
-> +               GPIO_LOOKUP_IDX("pxa-gpio", SPITZ_GPIO_LED_GREEN, NULL, 1=
-,
-> +                               GPIO_ACTIVE_HIGH),
 
-This looks right!
+Overall this looks fine, but can't help but notice:
 
-> +       gpiod_add_lookup_table(&spitz_led_gpio_table);
-> +       spitz_gpio_leds[0].gpiod =3D gpiod_get_index(&spitz_led_device.de=
-v,
-> +                       NULL, 0, GPIOD_ASIS);
-> +       spitz_gpio_leds[1].gpiod =3D gpiod_get_index(&spitz_led_device.de=
-v,
-> +                       NULL, 1, GPIOD_ASIS);
->         platform_device_register(&spitz_led_device);
+>  static void spitz_ads7846_wait_for_hsync(void)
+>  {
+> -       while (gpio_get_value(SPITZ_GPIO_HSYNC))
+> +       while (gpiod_get_value(hsync))
+>                 cpu_relax();
 
-I missed this before, sorry.
+Waits while the line is high...
 
-This will probably not work. You need to register the spitz_led_device
-first, then
-you can get the gpiod:s.
+> -       while (!gpio_get_value(SPITZ_GPIO_HSYNC))
+> +       while (!gpiod_get_value(hsync))
+>                 cpu_relax();
 
-The lookup will use the device name to locate the device, and if the device
-isn't there it can't be found.
+Then as it goes low, waits for it to go high again.
+
+So the hsync signal is *active* when it is *low*.
+
+> @@ -543,6 +545,8 @@ static struct gpiod_lookup_table spitz_ads7846_gpio_t=
+able =3D {
+>         .table =3D {
+>                 GPIO_LOOKUP("gpio-pxa", SPITZ_GPIO_TP_INT,
+>                             "pendown", GPIO_ACTIVE_LOW),
+> +               GPIO_LOOKUP("gpio-pxa", SPITZ_GPIO_HSYNC,
+> +                           "hsync", GPIO_ACTIVE_LOW),
+
+Which is what you appropriately flag it for.
+
+BUT: the signal is now inverted in gpiolib, so the
+
+spitz_ads7846_wait_for_hsync() loops needs to be rewritten
+inverted, because the value from gpiod_get_value() now means
+"asserted" if high.
+
+/* Wait while de-asserted */
+while (!gpiod_get_value(hsync))
+                cpu_relax();
+/* Wait while asserted */
+while (gpiod_get_value(hsync))
+                cpu_relax();
+return;
+
+Right?
+
+> @@ -622,8 +626,13 @@ static void __init spitz_spi_init(void)
+>
+>         gpiod_add_lookup_table(&spitz_ads7846_gpio_table);
+>         gpiod_add_lookup_table(&spitz_spi_gpio_table);
+> +       hsync =3D gpiod_get(NULL, "hsync", GPIOD_IN);
+
+You are getting the gpiod from device NULL which is probably correct
+when you do this in the board file.
+
+But the spitz_ads7846_gpio_table where you put the descriptor
+is associated with the ads7846 device so this will not work.
+
+You either have to add a one-gpio table just for this, or (better)
+move the whole spitz_ads7846_wait_for_hsync() down into the
+touchscreen driver instead, so the device driver can (optionally) obtain
+this gpio and deal with it. Which is easy because:
+
+[linus@Fecusia linux-nomadik]$ git grep ads7846_platform_data
+Documentation/spi/spi-summary.rst:      static struct
+ads7846_platform_data ads_info =3D {
+arch/arm/mach-pxa/spitz.c:static struct ads7846_platform_data
+spitz_ads7846_info =3D {
+arch/mips/alchemy/devboards/db1000.c:static struct
+ads7846_platform_data db1100_touch_pd =3D {
+arch/powerpc/platforms/512x/pdm360ng.c:static struct
+ads7846_platform_data pdm360ng_ads7846_pdata =3D {
+
+Only three users in the kernel, and sptiz is the only one using the
+void    (*wait_for_sync)(void) callback in ads7846_platform_data!
+
+So delete that callback from ads7846_platform_data in
+include/linux/spi/ads7846.h
+and augment drivers/input/touchscreen/ads7846.c to get the
+GPIO optionally with gpiod_get_optional() from the device,
+then copy the code from spitz_ads7846_wait_for_hsync() right
+into the driver and make sure it gets called if and only
+if the "hsync" gpio exists.
 
 Yours,
 Linus Walleij
