@@ -2,54 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A101F7B3447
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 16:09:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E03A27B3464
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 16:11:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232630AbjI2OJ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 10:09:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42784 "EHLO
+        id S232995AbjI2OLj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 10:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233098AbjI2OJZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 10:09:25 -0400
+        with ESMTP id S233081AbjI2OLi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 10:11:38 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE71D1AC;
-        Fri, 29 Sep 2023 07:09:22 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78C2CC433C8;
-        Fri, 29 Sep 2023 14:09:17 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BEE1B7;
+        Fri, 29 Sep 2023 07:11:35 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A94B3C433CA;
+        Fri, 29 Sep 2023 14:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695996562;
-        bh=ECIuZgxCEmIlmR41y89eDdyCkMIakxVpMzDPuDy5MOA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PvNMHhpqSzuReyTiC4l3M5RQMMGyhdSk3jvXO/U5VICKHL+e2+92J8t7avhcY2umw
-         iw3yNR6yleB93+2nj9H5grnfMPhiBG3ECreR6EMjtIHXedm0bZxS9odtsGgN9Yen2c
-         3srldQcMsSAGO8krC7yF8aZirgrpA5VXUIRMsy6ZOAsJBraH7S3z5v8JwCJob+Ed6l
-         +ifWMJyXJ90Rwa0jjN1KzfhPLDxYYfgcbfpbDqJXEFIcOeTqGuBRdewV15Vf/+MOXE
-         lSAM2CTyP8eIaoX3wjaYMl9scZBwd9mNueYN0+KAx/4+repoWvr1m6KhoiyTJWhaD0
-         6QpeTM55Y48Sg==
-Date:   Fri, 29 Sep 2023 15:09:15 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Claudiu <claudiu.beznea@tuxon.dev>
-Cc:     geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        magnus.damm@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        quic_bjorande@quicinc.com, konrad.dybcio@linaro.org, arnd@arndb.de,
-        neil.armstrong@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, linux-renesas-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 19/28] dt-bindings: pinctrl: renesas: set
- additionalProperties: false
-Message-ID: <20230929-garlic-outboard-815482929d9f@spud>
-References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com>
- <20230929053915.1530607-20-claudiu.beznea@bp.renesas.com>
+        s=k20201202; t=1695996694;
+        bh=QDzwivM9waT9P3iQApji1MwpmtdWkdeTyx0Uagh5Pj4=;
+        h=From:Date:Subject:To:Cc:From;
+        b=pP9LARu977UQoMcfnHW7o4VD1t3C1SIf/NcQ+ClVo18vpixPGKC1XCplMj6uP9akF
+         2W0YfmAtqG3BAIPG0GLfMAvjGTZD7LntYjudfB5Zla/1zf441vSURxY90beZJbXZW5
+         pxmKyCwpWjs7OWZpHQx6Zrvthe3EPBqT1AFyxdo5Fwn0yGrEpQW3VPCC7mCyFfvq6u
+         hf06eHqBAl8peOcONEmYTbxxgPwCX0ForXG7v9itF9mj0D5d95JI1V3UzaFEbAaTRB
+         0763v0GHf+eUOfb64ECd8wr+RYWwSXvni7uc/USWlZ4/iuUVrX3AvTU+XNH89eB777
+         qLyQkl/qxaqpw==
+From:   Mark Brown <broonie@kernel.org>
+Date:   Fri, 29 Sep 2023 16:11:24 +0200
+Subject: [PATCH] gpio: fx6408: Convert to use maple tree register cache
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="my2HgJawl2/1ExGF"
-Content-Disposition: inline
-In-Reply-To: <20230929053915.1530607-20-claudiu.beznea@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230929-gpio-fx16408-v1-1-7fdd3218f7d6@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAvbFmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDSyNL3fSCzHzdtApDMxMDC10Tc7MkQxMTcxOzpGQloJaCotS0zAqwcdG
+ xtbUAebgutV4AAAA=
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.13-dev-0438c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=971; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=QDzwivM9waT9P3iQApji1MwpmtdWkdeTyx0Uagh5Pj4=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlFtsVtRqMuMLDGIsqZL/rf92AgoNUdo2rro3rl
+ HectEvnM12JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZRbbFQAKCRAk1otyXVSH
+ 0BzpB/9LSosAdCA5uHVpkR1EbHufGrxMKwZe0zPvXZF57Rz5eSvSbenexUt0nxqKMU+QsDE2E8n
+ 6DLAscury3Ka21ZYrnvcxL5EjcmX6/n6vwZUZ0gkE/fgzm5CldLCYDuqey96dIJ8i8pw1OJZNq0
+ LCH/4PiCzV7JSvX+MfuNQbZRipwVLbn131skSrxDXB/qoJLq5m/SMd+oAP5c51YpNqc6GXPPmRg
+ oWLN/y3PUszaacLwqElnv6dRqoeoNH8MUx3cUUAkgMBfxmZfJVm08stzQ6DbMeY9cSW8F9vCrWL
+ YQDluy0vn4xRkLwhyWaVFrFR/lBBnSVjFBtizB2CFXuoQVm9
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -59,68 +62,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The maple tree register cache is based on a much more modern data structure
+than the rbtree cache and makes optimisation choices which are probably
+more appropriate for modern systems than those made by the rbtree cache.
 
---my2HgJawl2/1ExGF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/gpio/gpio-fxl6408.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Fri, Sep 29, 2023 at 08:39:06AM +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->=20
-> Set additionalProperties: false.
->=20
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->=20
-> Changes in v2:
-> - this patch is new in v2 and added as suggested by Rob
->=20
->  .../devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml     | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinc=
-trl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.=
-yaml
-> index 4782f96feb7e..eb726770f571 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> @@ -106,8 +106,7 @@ additionalProperties:
->          line-name: true
-> =20
->      - type: object
-> -      additionalProperties:
-> -        $ref: "#/additionalProperties/anyOf/0"
+diff --git a/drivers/gpio/gpio-fxl6408.c b/drivers/gpio/gpio-fxl6408.c
+index c14b5cc5e519..991549888904 100644
+--- a/drivers/gpio/gpio-fxl6408.c
++++ b/drivers/gpio/gpio-fxl6408.c
+@@ -84,7 +84,7 @@ static const struct regmap_config regmap = {
+ 	.rd_table = &rd_table,
+ 	.volatile_table = &volatile_table,
+ 
+-	.cache_type = REGCACHE_RBTREE,
++	.cache_type = REGCACHE_MAPLE,
+ 	.num_reg_defaults_raw = FXL6408_REG_INT_STS + 1,
+ };
+ 
 
-I have no clue what this original version was doing, I figure it
-resolves to an empty list or something, and therefore acts just like
-false?
+---
+base-commit: 6465e260f48790807eef06b583b38ca9789b6072
+change-id: 20230929-gpio-fx16408-476b144746bc
 
-New version looks a lot more normal..
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
-> +      additionalProperties: false
-> =20
->  allOf:
->    - $ref: pinctrl.yaml#
-> --=20
-> 2.39.2
->=20
-
---my2HgJawl2/1ExGF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZRbaiwAKCRB4tDGHoIJi
-0qh+APwL6eo2jECb7XDIacBCE/sq/P8EV9UzIhGMLfok9E+kzAEAmaehwb9i3mFu
-xGy7Ze7QT7QWKu0jwHWu07oEbpptGwg=
-=HoNT
------END PGP SIGNATURE-----
-
---my2HgJawl2/1ExGF--
