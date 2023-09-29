@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8765B7B32B9
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E23A87B32BE
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:43:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232977AbjI2MmF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 08:42:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
+        id S232990AbjI2Mnz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 08:43:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232990AbjI2MmE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:42:04 -0400
-Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3591AB
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:42:00 -0700 (PDT)
-Received: by mail-vk1-xa29.google.com with SMTP id 71dfb90a1353d-49369d29be3so5669276e0c.3
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:42:00 -0700 (PDT)
+        with ESMTP id S232977AbjI2Mny (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:43:54 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDD5B7
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:43:51 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-4526a936dcaso6262401137.2
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:43:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695991320; x=1696596120; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695991430; x=1696596230; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DEVCN2cknuV222YNiOig/5fjLrqs68kty1B92YZT3FU=;
-        b=C9KCVO4hmnYOn3Yi+w1qo60kg9WCteZfwN3rIA+0dxC27RJrekn2lEgmbnFWgugkjO
-         +zgLEI0XeW6e+yG9NpUrVZ14uDsE1T8vJLFiGtC96mZvxHi03/f10t8Gf67EWZg5+Xkn
-         o4pLSvPt2WzVwNinUVRyMzf2Vq+o2t8EmhRlZ0/WOKq4L4jHy2EDg6OCXHgTakFFQq1e
-         jIKN8WFBl9dCLiXJof3X6cmj2LyPFORc7qHCAbiYh4fyFI7yABkcarnFei3FRxlANIVy
-         SMH8/8+4OPBiiEC0hZpAug+qZE8dcUbJoJPncqtqYixA3aNiiu4s6Q+bDINu6UGKJGCr
-         3vNQ==
+        bh=XhP8BMnkshh0KHHgeHRBeIV/H0EdZG6IqyeL+1jAwX0=;
+        b=o3xDLP5pjNsB4ojNeeE7xh/aiUaIp9oPUM78zZ1hhGCVqV1YwtnMxuZoiLCYOj1rxQ
+         HhQHy3onYirbgRXuw6R0JHghY59pScuxCs0OSCtHrR4VimD3JTtUTQ/nVOuPTXuq9fG6
+         e97fl/yEjbEwwhVrMe7SV/pEzWhjZ5fNIz3BVCqErsyLypfcxXvf0q4xUL477EQu2b0U
+         xKdmR6+SaXlS+fDcDy/aIejEbH0ChSlnLsTh1eXudb3Urvx5gkvxeJ9BnyOrNJaB8G1h
+         ncAT29BdpklEtBJPWzW9jHO8fuLm2S3WwH87NkUfEl6hm5n/XAGN31bTJ/vHv0S3taHX
+         Zdgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695991320; x=1696596120;
+        d=1e100.net; s=20230601; t=1695991430; x=1696596230;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DEVCN2cknuV222YNiOig/5fjLrqs68kty1B92YZT3FU=;
-        b=WVH4OmtakAL9i/2yzZCdlqFAhJbctb8hW/aXN4s+3lLY9TbCGKhkZa87BaaJd450OD
-         bsgau8Mi6I7gzh8FhS9h2WPdQw7LC98u0XBVREIDIiaFUYssjWHCJV7vr6Bc19KVf/fl
-         GBZuA9XDnxsddpufgN6eUQuUPvEose/mW21OtWS9YQxNK+wQIDNAaYCcQWq39991nqcV
-         dWia7gaIzvTJTdadT+Z7myc3QAjy1C7t23TGtEpL1RDiBzl6zJv1sLRBn83ttEvYtnJG
-         xFUJ1OIRh53r4Qv5iamJn+bJBtns7Jn3eAnr9DRDjVBXSyQPT1ZqzGViGU7CXQpXfavT
-         im+g==
-X-Gm-Message-State: AOJu0YwdCM/gDGWYeK6ejEgNh7yNd6Jlzho2CvWLV4P7eYajZq8mznjc
-        uRkLheeShzVfEO5f7QAX9GSwVTwebIwnou7UaCsitA==
-X-Google-Smtp-Source: AGHT+IG4CrI6vpWuzVQc7OFaLIxG4ikYChf8pfo0WyJ5d4jVOgdDNmaGfhYDrzXr/Db1u4hskV7C1Pee5gNqWbM95aY=
-X-Received: by 2002:ac5:cdda:0:b0:49d:611:a8cb with SMTP id
- u26-20020ac5cdda000000b0049d0611a8cbmr3191738vkn.11.1695991320003; Fri, 29
- Sep 2023 05:42:00 -0700 (PDT)
+        bh=XhP8BMnkshh0KHHgeHRBeIV/H0EdZG6IqyeL+1jAwX0=;
+        b=oz3Ss/xLy9ERBYZMbhXWBPt1Dh5piJFHp+3Om4ZBs4xFkGSxQa79U+PvM9O1PfyLYd
+         ylPJjUxiiAcJR0R3IKfr/pKWNH4Hp9+1y2JVl0iJHZG+Nv2LdMoy5CKKyCKqUCRSfEYY
+         fYOY4EcuFiwuDSPq/FvjdNcW80oDpaMxVuhsnclgY9lSPURFSIB8wFxXj8KudTOm06kp
+         BYUugLyq35IlOzWlBZtlgPhIM0aR6fkxfxGDJGZtzMQpaHwGI6avYPG7SS/Avxu2VxHe
+         b+p2M9MBoeoUUK2K03hI6GSErvOYh7D/o9RQimRxX1DDID1Dm2QHXqKmm602tLS5JmV1
+         zY6Q==
+X-Gm-Message-State: AOJu0YwE0eJcTsCHO0y9rM6t9bbAIqFYzkrxkYFI+QJlU0Um2DhI9g3b
+        oiPOxuYXm346aDA7CbSWqzSGT+JWqzq6IQA+Wn9r2MEDveftMO+P
+X-Google-Smtp-Source: AGHT+IG4hdtG5Hx6rgJNAKZca4NLNZM8/sdowGT931F4/noNJcnF2MX2JuS88unlkhPzrEZvbw2H0tsMavU58qhhAi0=
+X-Received: by 2002:a67:ad0f:0:b0:452:7617:a757 with SMTP id
+ t15-20020a67ad0f000000b004527617a757mr4131364vsl.26.1695991430662; Fri, 29
+ Sep 2023 05:43:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230927-chip-drop-arc-v1-0-28013bf95948@linaro.org>
-In-Reply-To: <20230927-chip-drop-arc-v1-0-28013bf95948@linaro.org>
+References: <20230927-rust-line-info-soundness-v1-0-990dce6f18ab@linaro.org> <20230927-rust-line-info-soundness-v1-3-990dce6f18ab@linaro.org>
+In-Reply-To: <20230927-rust-line-info-soundness-v1-3-990dce6f18ab@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 29 Sep 2023 14:41:49 +0200
-Message-ID: <CAMRc=Me0xEoa4G0OKNWdogUPXu5gzHed7mq6oe+-jJH3foyn2Q@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 0/2] rust: bindings: drop unneeded Arc within Chip
+Date:   Fri, 29 Sep 2023 14:43:39 +0200
+Message-ID: <CAMRc=MfZKuMfQx2bgfv2dT3VTj8TjMqYNw_d51kTaZXQh7LRKQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 3/3] bindings: rust: bump major for libgpiod crate
 To:     Erik Schilling <erik.schilling@linaro.org>
 Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -67,33 +68,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 27, 2023 at 11:25=E2=80=AFAM Erik Schilling
+On Wed, Sep 27, 2023 at 6:30=E2=80=AFPM Erik Schilling
 <erik.schilling@linaro.org> wrote:
 >
-> While reviewing code for thread-safety. I realized that this structure
-> was a bit more complex than it should be...
+> Since the type changes around ownership of line_info instances are not
+> necessarily transparent to the user, we bump the major for the next
+> release of the crate.
 >
-> To: Linux-GPIO <linux-gpio@vger.kernel.org>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Note:
+> I am using the term "major" as defined in the Rust SemVer compatibility
+> guide [1], where the first non-zero digit is considered as "major".
+>
+> [1] https://doc.rust-lang.org/cargo/reference/semver.html
 >
 > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 > ---
-> Erik Schilling (2):
->       bindings: rust: construct chip infos by reference
->       bindings: rust: drop unneeded Arc within Chip
+>  bindings/rust/libgpiod/Cargo.toml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->  bindings/rust/libgpiod/src/chip.rs | 83 +++++++++++++++-----------------=
-------
->  1 file changed, 33 insertions(+), 50 deletions(-)
-> ---
-> base-commit: ced90e79217793957b11414f47f8aa8a77c7a2d5
-> change-id: 20230927-chip-drop-arc-57debbe1e52a
+> diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/C=
+argo.toml
+> index 518e5e5..3be4aa0 100644
+> --- a/bindings/rust/libgpiod/Cargo.toml
+> +++ b/bindings/rust/libgpiod/Cargo.toml
+> @@ -4,7 +4,7 @@
 >
-> Best regards,
+>  [package]
+>  name =3D "libgpiod"
+> -version =3D "0.1.0"
+> +version =3D "0.2.0"
+>  authors =3D ["Viresh Kumar <viresh.kumar@linaro.org>"]
+>  description =3D "libgpiod wrappers"
+>  repository =3D "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.gi=
+t"
+>
 > --
-> Erik Schilling <erik.schilling@linaro.org>
+> 2.41.0
 >
 
-Applied, thanks!
+Isn't it something that we should do right before tagging the release
+once we know the final requirement for the version change? At least
+this is what I do for the rest of libgpiod.
 
 Bart
