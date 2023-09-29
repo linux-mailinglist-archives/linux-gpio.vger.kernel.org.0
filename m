@@ -2,72 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 946E67B3102
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 13:05:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86A617B3105
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 13:06:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232784AbjI2LFJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 07:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38234 "EHLO
+        id S231429AbjI2LGm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 07:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjI2LFI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 07:05:08 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA9A31A7
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 04:05:05 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-5335725cf84so16580272a12.2
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 04:05:05 -0700 (PDT)
+        with ESMTP id S229508AbjI2LGl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 07:06:41 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98F7199
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 04:06:37 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-5334f9a56f6so17514085a12.3
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 04:06:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695985504; x=1696590304; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
+        d=linaro.org; s=google; t=1695985596; x=1696590396; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hE/5aJGq7M14w3MHiClAMDxjNRXy4K1baIrj5e8KZ94=;
-        b=utNvknQEIuxMXitIRO555c1kWo4y0NZdL9ZErs2/NDFTsqssRILhJ1tQoPD0JZOJ78
-         WSl07eTAULrF38Dm2YeFlOHMhwHK7TcHaQBmLukTixxPrcOJ9bhIqTLYdDMe5PKXKCdk
-         rJJLVxXVLZsJDSS6knwR3m1amhQP7bz5bf5sx20xIpre3q9Ej7rKhGmy5pqwiVedKate
-         ynQXjrEc0UWeXBU557j+olCdjQ/M4weWUah8tU6zWeGj4Ix/dx4m13T6jAvmtc7mm7pt
-         WioamAhghh3X7vMqFNflq1FsTtlu9wKysgVcDUBiWCbU8pVQnir8/pAfRFtISidHKjCO
-         jPSQ==
+        bh=52P1CjcQduwZ/Qf2MZDP3p2JkwuTTvvzuvJ1lIEs2D4=;
+        b=znvtQafZbLqLOzMR5hhmpSKy9M16Wsq/AWPiYnVywy+gdTqT6NtV/WrXvr6eJBhlJx
+         HozJi+svVtu8/qv1D626TZ3Vzmybhru6/lO7rQ6wkIbiJQ29ylMPjgkLalr2jPvchDUV
+         iYHQPtjWJxHppwWcNrBjIzyBFRH3qhF6o17/YvHi5LUR4lqhZeP3TmFJRFsdEh19DuXo
+         yjcRlQ7tl4Kpd1Clp6DVg5Lmmt6w24yJleizth3DpqS8ItMrQJ/3fsDE6I8W2YMMEYRt
+         t194uM20Y0ymOCvveHg9OWGEF/ZCt4cisW8TuMzQwtEFKnWRNkQqpujFF4l9RaF1limB
+         iU5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695985504; x=1696590304;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
+        d=1e100.net; s=20230601; t=1695985596; x=1696590396;
+        h=in-reply-to:references:subject:from:to:cc:message-id:date
          :content-transfer-encoding:mime-version:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=hE/5aJGq7M14w3MHiClAMDxjNRXy4K1baIrj5e8KZ94=;
-        b=rpgcUHDcL0jao5/cw8T/l1/+Wx7ZzAkh7Wq8rXGNE/4IZLkhLX285oRW1fs2TEjDGq
-         UyZ1XQjawXfg/fIDSglbOehsHeGHP8ijIRCJKk70kXt5z+JbdW1mjMay69y/umjM66L+
-         yEVub4nnBSAAbhpCk2116asuhwgXNW2oDEd3IKQllX5F2KpPlyrIrR+y6PfxOB66lfLw
-         rI1eeWJsJMlZJ7rq5rIIF7wY8o8qFzchx26RbNQqlv1rg3iu4UiDJ+HMdGpJ8trsekVH
-         8X58td0XfecEMuqHn7XL3NnGc/EOThh6PoCNndPwSK7Ts93FYRFzywd9HNo9s+9THqUW
-         ilWA==
-X-Gm-Message-State: AOJu0YyVfkZMI1Lf4L7vBM8ycbndYa6zUHtGNrvAXABiV3zoRXfUOGN7
-        evnNS58M4faVhHmK4apGLVN5+Q==
-X-Google-Smtp-Source: AGHT+IENx8IfYmbfN/gzJ2qasEKSKjQSHjtiriIzYxBPb1rqUPyD2Y5r28lmMLfhV7VjfxLj4yCLNw==
-X-Received: by 2002:a05:6402:70e:b0:532:c72e:26fe with SMTP id w14-20020a056402070e00b00532c72e26femr3627774edx.10.1695985504179;
-        Fri, 29 Sep 2023 04:05:04 -0700 (PDT)
+        bh=52P1CjcQduwZ/Qf2MZDP3p2JkwuTTvvzuvJ1lIEs2D4=;
+        b=mziWnKusxRIU0JQDSkrnCcqwHhFfsKlY6O7IHffVkspeV618n/J5iosPsgS84uDPSW
+         mxOn2klsib7w0w3MbneIjfUl0fA3zDPU6ZZ5Kw3LHz+A2zCmFdalL+fQCVC65gPz9HxM
+         SBaQe6noRxfP59tc5o9rixLu0Ew4fVO04WovSuCk/H1fIO4lUtf5g7aWz7w7scwQJHiu
+         8JMZ2h4iRLumJnWGrpjiZb+gGSzJa5vYonDPVWAF/FjKau/IIRXPOyp3rUI8r/4aFtXB
+         2jXEJ/fask6sQ7aw1qW3QabBS39TyKtf3wih1TsdSZrwRvUKmAyBaBERThAnMPU2BZ/e
+         C9dg==
+X-Gm-Message-State: AOJu0YxWHSPX8/kKnGJNQ+IVrfj5fwWxNxHJKgtNu1JX1h5lpNMEVCJC
+        COG/XC9Ho3XAlFemmbv2m0b/cMYdcGs5ZswtRew=
+X-Google-Smtp-Source: AGHT+IHbL++lalhTq1Vy+0zbvwkwpG1ULYQ05LgfPkF2R7Oy2CekNmi0zu4vPkLBkhE+edQrwVqHFA==
+X-Received: by 2002:aa7:da0b:0:b0:51e:5251:8f45 with SMTP id r11-20020aa7da0b000000b0051e52518f45mr3313390eds.4.1695985596062;
+        Fri, 29 Sep 2023 04:06:36 -0700 (PDT)
 Received: from localhost (i5C7438D4.versanet.de. [92.116.56.212])
-        by smtp.gmail.com with ESMTPSA id c8-20020aa7c748000000b005288f0e547esm11146814eds.55.2023.09.29.04.05.03
+        by smtp.gmail.com with ESMTPSA id bt13-20020a0564020a4d00b00530a9488623sm2131026edb.46.2023.09.29.04.06.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Sep 2023 04:05:03 -0700 (PDT)
+        Fri, 29 Sep 2023 04:06:35 -0700 (PDT)
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 29 Sep 2023 13:05:02 +0200
-Message-Id: <CVVCOO4NN17R.3TUR5CODRZEK@ablu-work>
-Subject: Re: [libgpiod][PATCH 2/3] bindings: rust: allow cloning line::Info
- -> line::OwnedInfo
+Date:   Fri, 29 Sep 2023 13:06:33 +0200
+Message-Id: <CVVCPTVMR14A.3KNMCU2YXYPBU@ablu-work>
 Cc:     "Linux-GPIO" <linux-gpio@vger.kernel.org>,
         "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>
 To:     "Viresh Kumar" <viresh.kumar@linaro.org>
 From:   "Erik Schilling" <erik.schilling@linaro.org>
+Subject: Re: [libgpiod][PATCH 1/3] bindings: rust: fix soundness of
+ line_info modeling
 X-Mailer: aerc 0.15.2
 References: <20230927-rust-line-info-soundness-v1-0-990dce6f18ab@linaro.org>
- <20230927-rust-line-info-soundness-v1-2-990dce6f18ab@linaro.org>
- <CVUKC1HXG1P8.13XIUCCXN95F0@ablu-work>
- <20230929105005.hssr5bgs7w5j24j6@vireshk-i7>
-In-Reply-To: <20230929105005.hssr5bgs7w5j24j6@vireshk-i7>
+ <20230927-rust-line-info-soundness-v1-1-990dce6f18ab@linaro.org>
+ <CVUL0PI4MCEG.3H1JSHTV7KKTN@ablu-work>
+ <20230929103959.ahaf6edlxkngyhir@vireshk-i7>
+In-Reply-To: <20230929103959.ahaf6edlxkngyhir@vireshk-i7>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,49 +75,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri Sep 29, 2023 at 12:50 PM CEST, Viresh Kumar wrote:
-> $subject: s/OwnedInfo/InfoOwned/
+On Fri Sep 29, 2023 at 12:39 PM CEST, Viresh Kumar wrote:
+> On 28-09-23, 15:24, Erik Schilling wrote:
+> > > +/// Line info
+> > > +///
+> > > +/// This is the owned counterpart to [Info]. Due to a [Deref] implem=
+entation,
+> > > +/// all functions of [Info] can also be called on this type.
+> > > +#[derive(Debug)]
+> > > +pub struct InfoOwned {
+> > > +    info: *mut gpiod::gpiod_line_info,
+> > > +}
+> >=20
+> > While going through all the structs in order to add missing `Send`
+> > implementations, it occured to me that it may be a bit confusing if
+> > only this one type has the `Owned` suffix, while the others are also
+> > "owned" but do not carry that suffix.
+> >=20
+> > Not really sure how to resolve this... We could rename the non-owned
+> > `Info` to something like `InfoRef` and turn `InfoOwned` back into
+> > `Info`, but reading `&InfoRef` may be a bit weird?
+>
+> I like this one and none of the others.
 
-Whoops. Flipped that around at some point. Forgot to fix here... Will do
-once we agreed on a naming scheme :)
+OK :). With Manos also agreeing, I will do this then.
 
 >
-> On 28-09-23, 14:52, Erik Schilling wrote:
-> > On Wed Sep 27, 2023 at 6:29 PM CEST, Erik Schilling wrote:
-> > > diff --git a/bindings/rust/libgpiod/src/line_info.rs b/bindings/rust/=
-libgpiod/src/line_info.rs
-> > > index 32c4bb2..fe01a14 100644
-> > > --- a/bindings/rust/libgpiod/src/line_info.rs
-> > > +++ b/bindings/rust/libgpiod/src/line_info.rs
-> > > @@ -58,6 +58,22 @@ impl Info {
-> > >          self as *const _ as *mut _
-> > >      }
-> > > =20
-> > > +    /// Clones the [gpiod::gpiod_line_info] instance to an [InfoOwne=
-d]
-> > > +    pub fn try_clone(&self) -> Result<InfoOwned> {
+> > Alternatively, we could rename all other structs to add the suffix...
+> > Then, "Owned" would maybe sound confusing - given that no un-owned
+> > variant exists.
+> > Maybe "Box" would be a more suitable suffix in that case - borrowing
+> > from the Box type name [1]?
 > >=20
-> > Hm... I realized that we have `event_clone()` for cloning an `Event`
-> > and `settings_clone()` for cloning `line::Settings`. Should better
-> > stay consistent here...
+> > Any opinions here?
 > >=20
-> > However, I think the name `try_clone()` sounds more suitable to me. Any
-> > opinions? I could send a patch to rename the existing cloning methods
-> > to `try_clone()`.
->
-> IIRC, I did try to use clone() and try_clone() earlier for something and =
-there
-> were prototype issues, as they weren't matching with the standard library=
- and so
-> had to innovate `event_clone()` and `settings_clone()`. `try_clone()` is =
-anyday
-> better.
-
-ACK. I am not aware of any trait like `TryClone`, but yeah: `Clone` and
-`ToOwned` do not work for the reason outlined in the commit message.
-
-I will then add a commit to rename the other `*_clone` functions to
-`try_clone` in v2.
-
-- Erik
+> > [1] https://doc.rust-lang.org/std/boxed/struct.Box.html
 
