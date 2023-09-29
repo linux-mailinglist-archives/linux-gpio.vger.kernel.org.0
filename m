@@ -2,91 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B8D47B3C18
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 23:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8396E7B3C1E
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 23:51:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232834AbjI2Vsu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 17:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
+        id S233791AbjI2VvH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 17:51:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjI2Vsu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 17:48:50 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E89B7
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 14:48:47 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-59f6e6b206fso126553047b3.3
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 14:48:47 -0700 (PDT)
+        with ESMTP id S233645AbjI2VvG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 17:51:06 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 324751B8
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 14:51:03 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-59c268676a9so177287627b3.0
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 14:51:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696024126; x=1696628926; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696024262; x=1696629062; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d9Y2fSCkcD6jdRglS8aGJ3vVQKyE2EnbQ1TAFzAJFA4=;
-        b=QnVibiDBsePGVHKmKJEmFcVrX/9y/tY775zcYtJVRPdepP4npvAhk9nyjVsoZFOHB9
-         ms/5hacbxBgLjc/ajo9RRG/CcfC/O0riso3DthdwM2/DNT2yETDnO+g0HFbrM7Gk/jY/
-         P3ncwe7r8OLzE/tCDhZmK6hUDcD3iF869OXuMe4ACXres0sbPf2Vok7gNMFvR48qdNBm
-         ta7r3HOoP1q9qkraK9x90kEuEltcFD96g0wa73mqlk2n1pLPEVckLovIfEI5Y2B8LmVD
-         zn3IoHXr+ftuYmRCu5zENLBSBuJVAZxJ2srJw7DC4qliaoQxkmxZZOu2Ceu5d6LuoY7o
-         ok8Q==
+        bh=Hskw88hLeAFbdhf2MCWNUtrnHOIlmXUQ4ZL1O7T/y0E=;
+        b=M2ygEO2xao9bi1LsQy8OB5+84c6hVswvmjJwxCoJHSHOM/pIbKXoenew8o0NL1JgGW
+         kxRUK8At0IKdWg2TuKHOrVi9ymb9Eeckmr211X/KOAYMMyfc2BuOyCkWnBdDxVs/c60r
+         m9FF3Q0Vz6Q8ZqFB+m5MxoSLqtg0PwzRA9arXKzXvO3KYW3enAZACmKI8MFDldD05HNl
+         Qd0ZDPm4RbB2K8CtconqBtn0QE/xeC2UiSp5KDOFODfrbEXgRUs/GU1BCMqnMEguarnd
+         4GZn0piAkt8redRma/jLzZza9yszARRsyaXGc/C03Phckc79/4p4X/pbUDWj+zqg6sPk
+         RpdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696024126; x=1696628926;
+        d=1e100.net; s=20230601; t=1696024262; x=1696629062;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d9Y2fSCkcD6jdRglS8aGJ3vVQKyE2EnbQ1TAFzAJFA4=;
-        b=bUzdEUpeIstOfhpaji++rw0sexpmbk9JDBf/VHPc34w7KgKKHcSB9FZ6bTwh4tKAB7
-         3FzfLK3vq463MNPFNwaAEhZkSiJMJT+AesOH4j7jSN5WN1mdpGui/VTHG/cSlVgnBHcB
-         0E7797rn75YCyIrxXyilP0lliSe1b0kCxHhmLx+mgTF5CZSsgjqh9h2WirziHpg4l3XY
-         figKv7F/fEmUyJvxuhtswumvohmA1BVbGT6zWQt66ZzLUmt/tenMfEtXEXxKnH1BBfxr
-         sPcDAIizzgdZMb7rvUj9ARuaAat1msPNfGiV3YhQyPbbpf4ZHEeeWKBqy7hLlFDDDnTo
-         abXQ==
-X-Gm-Message-State: AOJu0YxtrhdwugbVR15X1OqtWFtNV1Cb5Gv47b+GK1ybltpeXRm2YddS
-        Fe0R+rXGtdSAbrL6XePQbc8l93egsFRUtKbAZ5omzw==
-X-Google-Smtp-Source: AGHT+IGMuUapNs4yNU9a9tvc0M51D2PY6cv7TMVefM3fJUMhtTVk+rSQKUmHIfeHIdVCBINeGTuJAZ2WcPIL4LztSNU=
-X-Received: by 2002:a0d:eacb:0:b0:586:b686:8234 with SMTP id
- t194-20020a0deacb000000b00586b6868234mr5805526ywe.8.1696024126383; Fri, 29
- Sep 2023 14:48:46 -0700 (PDT)
+        bh=Hskw88hLeAFbdhf2MCWNUtrnHOIlmXUQ4ZL1O7T/y0E=;
+        b=NgwHjlKo9aI9F32lqM3SLX7v+VY4pa7lPhmBVZ+r35aJmU4wB7Essime57BjZPRRtg
+         23a+bwCTnulIqH/vLAR/jborAMk8x4ONThR/FOs+r/UpZksrfjdX23oPpGKPvVx4zUXR
+         fAY81drDIWRAfWwFxX96gB4+jXnHs2SJwKocOgbCBbYBGtnUWEQjWwnCApyEA8NvZsKq
+         LILme7qpDa4GQRSapeq7qo4uKaqjM9nt1ArR+z4HDWfyJl6hJ4g91XAoLGTKyyc7jMJG
+         4w5B6vKpz9pVgubjQ9HMsbAsIL4aKnKugO4S1MZAHBOlRqA/I0nXG+6v1z7MDoqp2XRB
+         es0g==
+X-Gm-Message-State: AOJu0YxwnWt7uOVpAtCmnkpAvFnIst5HE1UJiZPP8vKxtU2Q37IuDLXm
+        cl49M3QRFyBc2yWNz37h4AJW+QheRQY3aBmy2J6qVQ==
+X-Google-Smtp-Source: AGHT+IE63fBH+1dNUwDRNH6iqlkLqEfx/+NHRsl/1r9uDgfQ0bqotCuiv4a9l+YPI2jFuA031iE6BeH9RXt0OKpKTI8=
+X-Received: by 2002:a0d:dd11:0:b0:59b:e97e:f7ce with SMTP id
+ g17-20020a0ddd11000000b0059be97ef7cemr5210736ywe.22.1696024262418; Fri, 29
+ Sep 2023 14:51:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929-pxa-gpio-v3-0-af8d5e5d1f34@skole.hr> <20230929-pxa-gpio-v3-6-af8d5e5d1f34@skole.hr>
-In-Reply-To: <20230929-pxa-gpio-v3-6-af8d5e5d1f34@skole.hr>
+References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr> <20230929-pxa1908-lkml-v5-2-5aa5a1109c5f@skole.hr>
+In-Reply-To: <20230929-pxa1908-lkml-v5-2-5aa5a1109c5f@skole.hr>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 29 Sep 2023 23:48:34 +0200
-Message-ID: <CACRpkdZr4aRm6ru5FXa-s5Q0HbinTNU+HZd2ach-sUzNDQdyOg@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 6/6] ARM: pxa: Convert gumstix Bluetooth to GPIO descriptors
+Date:   Fri, 29 Sep 2023 23:50:51 +0200
+Message-ID: <CACRpkdbgbu=1kD=+f83NUZwXZ80-yjGOdH2CR7Lbg4rhubaR0g@mail.gmail.com>
+Subject: Re: [PATCH RESEND v5 2/8] clk: mmp: Switch to use struct u32_fract
+ instead of custom one
 To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        afaerber@suse.de, balejk@matfyz.cz,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 3:15=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
+On Fri, Sep 29, 2023 at 5:42=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
 @skole.hr> wrote:
 
-> Gumstix still uses the legacy GPIO interface for resetting the Bluetooth
-> device.
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 >
-> Convert it to use the GPIO descriptor interface.
+> The struct mmp_clk_factor_tbl repeats the generic struct u32_fract.
+> Kill the custom one and use the generic one instead.
 >
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Tested-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
 > Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
 
-As far as I can tell the BT UART is registered before the
-gpios are added and retrieved, and that should work so:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
