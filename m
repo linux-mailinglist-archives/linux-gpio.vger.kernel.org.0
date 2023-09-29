@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E23A87B32BE
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:43:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8721A7B32C0
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 14:45:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232990AbjI2Mnz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 08:43:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51458 "EHLO
+        id S232959AbjI2Mpe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 08:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232977AbjI2Mny (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:43:54 -0400
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDD5B7
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:43:51 -0700 (PDT)
-Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-4526a936dcaso6262401137.2
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:43:51 -0700 (PDT)
+        with ESMTP id S232977AbjI2Mpd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 08:45:33 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F8C1A4
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:45:32 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-49a99c43624so1742047e0c.2
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 05:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695991430; x=1696596230; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695991531; x=1696596331; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XhP8BMnkshh0KHHgeHRBeIV/H0EdZG6IqyeL+1jAwX0=;
-        b=o3xDLP5pjNsB4ojNeeE7xh/aiUaIp9oPUM78zZ1hhGCVqV1YwtnMxuZoiLCYOj1rxQ
-         HhQHy3onYirbgRXuw6R0JHghY59pScuxCs0OSCtHrR4VimD3JTtUTQ/nVOuPTXuq9fG6
-         e97fl/yEjbEwwhVrMe7SV/pEzWhjZ5fNIz3BVCqErsyLypfcxXvf0q4xUL477EQu2b0U
-         xKdmR6+SaXlS+fDcDy/aIejEbH0ChSlnLsTh1eXudb3Urvx5gkvxeJ9BnyOrNJaB8G1h
-         ncAT29BdpklEtBJPWzW9jHO8fuLm2S3WwH87NkUfEl6hm5n/XAGN31bTJ/vHv0S3taHX
-         Zdgg==
+        bh=Y3mcGFrO1zlVzfQz9WJ52S8Jf1SXe31YDDJj6RL5kCk=;
+        b=XYLVREyPoOakrrbwsHMkcTMMVhOMBesEYMLE2CYHE7n90U+jt2ePyemvkT54CXbymG
+         Q/Q9VWHSrjUFTTR+3FSXHe8VvbIoMiebsKKEGyIP3mquCdiZLjNyjY/OgLZyowpw8H/O
+         7c1shtPXOctZtXtdFwwvxxuIUzjk9EgPLpU2/CXuiXDC+Mh2xAxnVHHVOxZiSHzry8QA
+         czAODZ8kxFwTHysnBZWAbJS/NL5/J3kmlZDo06kMx2RjHH1shhSvmzvFNL5bzcDp12OD
+         BDy3n6bwpA4CS9J+ZvEgTCGIEf6/WI82VeOV19+qOicBA3fiZE3e2PE9yHP+zP+xJVzc
+         QS4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695991430; x=1696596230;
+        d=1e100.net; s=20230601; t=1695991531; x=1696596331;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XhP8BMnkshh0KHHgeHRBeIV/H0EdZG6IqyeL+1jAwX0=;
-        b=oz3Ss/xLy9ERBYZMbhXWBPt1Dh5piJFHp+3Om4ZBs4xFkGSxQa79U+PvM9O1PfyLYd
-         ylPJjUxiiAcJR0R3IKfr/pKWNH4Hp9+1y2JVl0iJHZG+Nv2LdMoy5CKKyCKqUCRSfEYY
-         fYOY4EcuFiwuDSPq/FvjdNcW80oDpaMxVuhsnclgY9lSPURFSIB8wFxXj8KudTOm06kp
-         BYUugLyq35IlOzWlBZtlgPhIM0aR6fkxfxGDJGZtzMQpaHwGI6avYPG7SS/Avxu2VxHe
-         b+p2M9MBoeoUUK2K03hI6GSErvOYh7D/o9RQimRxX1DDID1Dm2QHXqKmm602tLS5JmV1
-         zY6Q==
-X-Gm-Message-State: AOJu0YwE0eJcTsCHO0y9rM6t9bbAIqFYzkrxkYFI+QJlU0Um2DhI9g3b
-        oiPOxuYXm346aDA7CbSWqzSGT+JWqzq6IQA+Wn9r2MEDveftMO+P
-X-Google-Smtp-Source: AGHT+IG4hdtG5Hx6rgJNAKZca4NLNZM8/sdowGT931F4/noNJcnF2MX2JuS88unlkhPzrEZvbw2H0tsMavU58qhhAi0=
-X-Received: by 2002:a67:ad0f:0:b0:452:7617:a757 with SMTP id
- t15-20020a67ad0f000000b004527617a757mr4131364vsl.26.1695991430662; Fri, 29
- Sep 2023 05:43:50 -0700 (PDT)
+        bh=Y3mcGFrO1zlVzfQz9WJ52S8Jf1SXe31YDDJj6RL5kCk=;
+        b=gYpVdHXjgSOKzez4Agj1vlqxRo8vxuXP8e4t3CNRKbEJYnN1AIZMXik02RcJVIfp4y
+         vO16BtFGwnvcTcztYvV6wNePlRGOADtDKGVq8BkQGHPxhcb0ReS4zcZlFMsPKkMjVZHR
+         Qz6QyWSyOl8pw4syY9sD8Ze56MD13s2BiGJ5y1LN8TT97qD/ExiAZphsA9KbHWNZzp8R
+         /Z9WXOfLOj040+8xsxj4RhW/6SE7js8hXqZcyltYJBisK8Lg4ZVMEudtV+cPhgjVwEqh
+         SI/qdQet8qSsbOH8Et0K154lhzbZ8OMLR0xdWw610/MUVH53Y4Q4gGA1c9QZy+pqidkD
+         L0gg==
+X-Gm-Message-State: AOJu0YwEjPGFRMHH5sj3G2yVzuhu7gaWwnH0s1oqCaXjEVZS7vbZDpte
+        nRn9YZnu4b2H2wecXQRe6B9B9CpN2apgo363t8hFFg==
+X-Google-Smtp-Source: AGHT+IEeR3Z2aWP8YRvHjd1zCkdQYDOBmedG/wkW4aSAiW/Zespd/e8MxEwQm240iV5sHj0vB4E/58kZSz2Fu3N24WI=
+X-Received: by 2002:a1f:ea84:0:b0:49a:b6c7:ddfc with SMTP id
+ i126-20020a1fea84000000b0049ab6c7ddfcmr4073172vkh.1.1695991531121; Fri, 29
+ Sep 2023 05:45:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230927-rust-line-info-soundness-v1-0-990dce6f18ab@linaro.org> <20230927-rust-line-info-soundness-v1-3-990dce6f18ab@linaro.org>
-In-Reply-To: <20230927-rust-line-info-soundness-v1-3-990dce6f18ab@linaro.org>
+References: <20230928-rust-send-trait-v1-0-30b4f59d13cb@linaro.org>
+ <20230928-rust-send-trait-v1-3-30b4f59d13cb@linaro.org> <20230929105829.vm7ed3unydb5rrh4@vireshk-i7>
+In-Reply-To: <20230929105829.vm7ed3unydb5rrh4@vireshk-i7>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 29 Sep 2023 14:43:39 +0200
-Message-ID: <CAMRc=MfZKuMfQx2bgfv2dT3VTj8TjMqYNw_d51kTaZXQh7LRKQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 3/3] bindings: rust: bump major for libgpiod crate
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+Date:   Fri, 29 Sep 2023 14:45:20 +0200
+Message-ID: <CAMRc=MeU+yS7L_HguALjoYiw8NHqTWQ1=X5s4OmqnNiqAZmOOQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 3/3] bindings: rust: mark all owning types as `Send`
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Erik Schilling <erik.schilling@linaro.org>,
+        Linux-GPIO <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -68,46 +68,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 27, 2023 at 6:30=E2=80=AFPM Erik Schilling
-<erik.schilling@linaro.org> wrote:
+On Fri, Sep 29, 2023 at 12:58=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.=
+org> wrote:
 >
-> Since the type changes around ownership of line_info instances are not
-> necessarily transparent to the user, we bump the major for the next
-> release of the crate.
+> On 28-09-23, 16:37, Erik Schilling wrote:
+> > The thread-safety rules of libgpiod allow individual object instances t=
+o
+> > be used from different threads. So far, this was not actually possible
+> > with the Rust bindings. Not being `Send` disallowed the user to transfe=
+r
+> > the ownership to different threads.
+> >
+> > Rust also has a `Sync` marker. That one would even allow sending
+> > references of objects to other threads. Since we wrap a lot of C
+> > functions with `fn foo(&self)` signatures, that would not be safe.
+> > libgpiod does not allow concurrent API calls to the same object instanc=
+e
+> > - which Rust would allow for read-only references. Thus, we do not
+> > define that one.
+> >
+> > Chip was already modeled correctly.
+> >
+> > line::Info is not marked as Send since it may either be owning or non-
+> > owning. That problem is fixed as part of a separate pull request [1].
+> >
+> > [1] https://lore.kernel.org/r/20230927-rust-line-info-soundness-v1-0-99=
+0dce6f18ab@linaro.org
+> >
+> > Link: https://lore.kernel.org/r/CVHO091CC80Y.3KUOSLSOBVL0T@ablu-work
+> > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+> > ---
+> >  bindings/rust/libgpiod/src/edge_event.rs     | 4 ++++
+> >  bindings/rust/libgpiod/src/event_buffer.rs   | 8 ++++++++
+> >  bindings/rust/libgpiod/src/info_event.rs     | 4 ++++
+> >  bindings/rust/libgpiod/src/line_config.rs    | 4 ++++
+> >  bindings/rust/libgpiod/src/line_request.rs   | 4 ++++
+> >  bindings/rust/libgpiod/src/line_settings.rs  | 4 ++++
+> >  bindings/rust/libgpiod/src/request_config.rs | 4 ++++
+> >  7 files changed, 32 insertions(+)
 >
-> Note:
-> I am using the term "major" as defined in the Rust SemVer compatibility
-> guide [1], where the first non-zero digit is considered as "major".
->
-> [1] https://doc.rust-lang.org/cargo/reference/semver.html
->
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> ---
->  bindings/rust/libgpiod/Cargo.toml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/C=
-argo.toml
-> index 518e5e5..3be4aa0 100644
-> --- a/bindings/rust/libgpiod/Cargo.toml
-> +++ b/bindings/rust/libgpiod/Cargo.toml
-> @@ -4,7 +4,7 @@
->
->  [package]
->  name =3D "libgpiod"
-> -version =3D "0.1.0"
-> +version =3D "0.2.0"
->  authors =3D ["Viresh Kumar <viresh.kumar@linaro.org>"]
->  description =3D "libgpiod wrappers"
->  repository =3D "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.gi=
-t"
->
-> --
-> 2.41.0
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 >
 
-Isn't it something that we should do right before tagging the release
-once we know the final requirement for the version change? At least
-this is what I do for the rest of libgpiod.
+Thanks, do you have any comments about the other patches in this series?
 
 Bart
