@@ -2,66 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 104087B330A
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 15:08:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D58997B3335
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 15:15:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232997AbjI2NIG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 09:08:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34848 "EHLO
+        id S233257AbjI2NPQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 09:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232803AbjI2NIF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 09:08:05 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A47F0B7
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 06:08:03 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-4526ae5b0b3so6147369137.2
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 06:08:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695992883; x=1696597683; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cxf0/FyTTukPZaR6SdHjgImiVLVk6/MUUSQkTxW8+KU=;
-        b=iRLXMPBN0pRIwZDVR591iCU2kMjwUF6LgjSsBdkAJXU8rzaKnBXjzHnulSSU8S+Vv/
-         30d20CV1p2VKPVGP0c5O+84pjrkQBo2uF8I64G3a+X49sDM/uRjvN/xuVsez4l53ELia
-         2HXUA2kGNLlTrtvilhrErurOWmv848hYH0vg2eOIcr1JBOr1pD5HLvCsr9tAxI7EFPY5
-         nn2eQSPiypFibsqy/XweRxMjkdjJsSak/9ykOV3KxXusghxMI4lr1huo8+7dKCBsrQhM
-         pMAbd7M212i99Ybtz2+/s4JxZozI4qQBCHlwnIMx3MyKso73qqLMR3Z/swWZDX20kCZ/
-         gxGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695992883; x=1696597683;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cxf0/FyTTukPZaR6SdHjgImiVLVk6/MUUSQkTxW8+KU=;
-        b=OBOu6mABGU7CzHhqxLbF8IfFG7dCHVprjKZKEfyfSyV20o7bikCUf/qQS5Vm7GVo5a
-         IvS2kN8RtXu7xBMQCBt0PMp8LdvER2Y8+K41XA/yuT06eJMWLvQrDPEGP+OlwdnYaVgR
-         ccEbPS8x1Mwg4ACjx8/cEybpX7Nf+icn+sGXkAGQWTrr7Id3n6UWC3sreiKZjATS8b16
-         eOO5nvQTg5FBz5PfGreDwi/av15tUgzrYhxwf6U5JSKe0QQ7Cg+wEJpUTVOhVZmVPD96
-         umq9IV28uk4tOHH2vBc6WXZmjUSuH2fFknFhtmh/n+kiUMa57Bg7uttFcXFcYIuln2uG
-         zvoA==
-X-Gm-Message-State: AOJu0YwgUyXE9qq52dqvVVELeRB+keX+GXGALtU2Hvtdzg24Kty+Sox4
-        ypd8MWQ9f6VVOzTGKC9wVLGbG5rVQFKueioEl6AK7Q==
-X-Google-Smtp-Source: AGHT+IFucZCo8279H51n3/tmS/YO6dD0AvhFbS6fpKa1lhTxaDjzXKhPWSNK12VWIBjTL/LzXSRDg9l/h3uoHBsGxzE=
-X-Received: by 2002:a05:6102:7a4:b0:452:d5f6:cf5d with SMTP id
- x4-20020a05610207a400b00452d5f6cf5dmr3655845vsg.32.1695992882701; Fri, 29 Sep
- 2023 06:08:02 -0700 (PDT)
+        with ESMTP id S233125AbjI2NPN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 09:15:13 -0400
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8E71AA;
+        Fri, 29 Sep 2023 06:15:09 -0700 (PDT)
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+        by mx.skole.hr (mx.skole.hr) with ESMTP id 536AC83114;
+        Fri, 29 Sep 2023 15:15:06 +0200 (CEST)
+From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: [PATCH RFC v3 0/6] ARM: pxa: GPIO descriptor conversions
+Date:   Fri, 29 Sep 2023 15:13:58 +0200
+Message-Id: <20230929-pxa-gpio-v3-0-af8d5e5d1f34@skole.hr>
 MIME-Version: 1.0
-References: <20230928-rust-send-trait-v1-0-30b4f59d13cb@linaro.org>
- <20230928-rust-send-trait-v1-3-30b4f59d13cb@linaro.org> <20230929105829.vm7ed3unydb5rrh4@vireshk-i7>
- <CAMRc=MeU+yS7L_HguALjoYiw8NHqTWQ1=X5s4OmqnNiqAZmOOQ@mail.gmail.com> <CVVEV9GFLWN5.1AB912RVJSYUC@ablu-work>
-In-Reply-To: <CVVEV9GFLWN5.1AB912RVJSYUC@ablu-work>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 29 Sep 2023 15:07:52 +0200
-Message-ID: <CAMRc=MfxCUYw_X_gVeRbX1m2KC-VBJgfQ1B2cE=kyF6FKy94+g@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 3/3] bindings: rust: mark all owning types as `Send`
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux-GPIO <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJbNFmUC/02MTQ6CMBBGr0JmbU07tFBcmZh4ALfGBdIKEwwlr
+ WkwhLvbdCPL7+e9FYL1ZAOcihW8jRTITSmUhwK6oZ16y8ikDMix5JrXbF5a1s/kWNlZVEbVUgs
+ J6T57+6Ilq+5wu17gkcqBwsf5b9ZHkadsalD+TVEwzlBz9dS10bqR5zC6tz0OPjsi7rlqx2HiG
+ i1lJY2olDE7btu2H3YkBS/cAAAA
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1932;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=ZXXO1MTt43BI/DSSWQXztjifMqczYVcjKstVvA9qX0I=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlFs3XN9glGVhCprsb0PWm1HcAGYFyGDzOu0HzY
+ JvhdGErw+6JAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZRbN1wAKCRCaEZ6wQi2W
+ 4X7fEACVww75yICQbuA5WDOjhk2uNjgyy1dgzEwl89eSPHrcOhL9Zok+NYNBvU/CNESODuU7ZwT
+ RI+zMRPVQ+9DvqOREpJTgd+Pa2giwr9utho2JxLAnFeiLjLYM54bVj7d89BzpqElKar39qKHS7Y
+ z3XTlYVYVzegkbF2yjngvo6qRKBYP1nMd6+6oId6BqkarPd0r7KXvehiNs/pz/oiQxFMtEEdAQx
+ VOyZQaN/ay+mZx6iZ8HQzrG10cAiSCb08m7+q5r/urspC0tY5EyShdU8NN2BLaknMYA0p9C6C+1
+ pY6Hj8SqZcDu3oXNXHfhTM3/a7Xc6lZXipU6/AGCqOQ44+ywRGmM5KtK6BAhiuuIJfVf3ZlUoSd
+ C7/kOfB2qaFiQkhM//a5CKiVVN5APdc8tOtbtmWXx7LLpupoA7rvdpbRCIehYTfkv0cjqWeY2S1
+ pO1BoM2jTpx1A+7prtRWqCGyzKQwDgCJN1fBiUitlk5IOBMHEq88SWbjZbPRhRLDuBKM0gnDhxZ
+ Ou8ojDacI/GQtL2ccuYsmmHriHPPYawFwC34rHzf0/l6EJKrjnsrKb0pjKQUoeEZ4TaDPZ2IHgz
+ oDhXel8gygih5JXkv8yud1SPR1qJecHNK3IbLi3aLrk2ybbUFJW6C+yMuBSLqSwKM5tFcG4jEXV
+ b6DUcB2h4MdaEMA==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,69 +67,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 2:47=E2=80=AFPM Erik Schilling
-<erik.schilling@linaro.org> wrote:
->
-> On Fri Sep 29, 2023 at 2:45 PM CEST, Bartosz Golaszewski wrote:
-> > On Fri, Sep 29, 2023 at 12:58=E2=80=AFPM Viresh Kumar <viresh.kumar@lin=
-aro.org> wrote:
-> > >
-> > > On 28-09-23, 16:37, Erik Schilling wrote:
-> > > > The thread-safety rules of libgpiod allow individual object instanc=
-es to
-> > > > be used from different threads. So far, this was not actually possi=
-ble
-> > > > with the Rust bindings. Not being `Send` disallowed the user to tra=
-nsfer
-> > > > the ownership to different threads.
-> > > >
-> > > > Rust also has a `Sync` marker. That one would even allow sending
-> > > > references of objects to other threads. Since we wrap a lot of C
-> > > > functions with `fn foo(&self)` signatures, that would not be safe.
-> > > > libgpiod does not allow concurrent API calls to the same object ins=
-tance
-> > > > - which Rust would allow for read-only references. Thus, we do not
-> > > > define that one.
-> > > >
-> > > > Chip was already modeled correctly.
-> > > >
-> > > > line::Info is not marked as Send since it may either be owning or n=
-on-
-> > > > owning. That problem is fixed as part of a separate pull request [1=
-].
-> > > >
-> > > > [1] https://lore.kernel.org/r/20230927-rust-line-info-soundness-v1-=
-0-990dce6f18ab@linaro.org
-> > > >
-> > > > Link: https://lore.kernel.org/r/CVHO091CC80Y.3KUOSLSOBVL0T@ablu-wor=
-k
-> > > > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> > > > ---
-> > > >  bindings/rust/libgpiod/src/edge_event.rs     | 4 ++++
-> > > >  bindings/rust/libgpiod/src/event_buffer.rs   | 8 ++++++++
-> > > >  bindings/rust/libgpiod/src/info_event.rs     | 4 ++++
-> > > >  bindings/rust/libgpiod/src/line_config.rs    | 4 ++++
-> > > >  bindings/rust/libgpiod/src/line_request.rs   | 4 ++++
-> > > >  bindings/rust/libgpiod/src/line_settings.rs  | 4 ++++
-> > > >  bindings/rust/libgpiod/src/request_config.rs | 4 ++++
-> > > >  7 files changed, 32 insertions(+)
-> > >
-> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > >
-> >
-> > Thanks, do you have any comments about the other patches in this series=
-?
->
-> Hm. The others are not Rust-related and mostly try to document our
-> discussion about thread-safety of the C lib. It would probably be good
-> if you could double-check that I summarized everything correctly.
->
-> - Erik
->
+Hello,
 
-Of course they aren't and I should have read them before assuming the
-entire series is for rust bindings. :)
+Small series to convert some of the board files in the mach-pxa directory
+to use the new GPIO descriptor interface.
 
-Thanks.
+Most notably, the am200epd, am300epd and Spitz matrix keypad among
+others are not converted in this series.
 
-Bart
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+Changes in v3:
+- Address maintainer comments:
+  - Use GPIO_LOOKUP_IDX for LEDs
+  - Drop unnecessary NULL assignments
+  - Don't give up on *all* SPI devices if hsync cannot be set up
+- Add Linus' Acked-by
+- Link to v2: https://lore.kernel.org/r/20230926-pxa-gpio-v2-0-984464d165dd@skole.hr
+
+Changes in v2:
+- Address maintainer comments:
+  - Change mentions of function to function()
+  - Drop cast in OHCI driver dev_warn() call
+  - Use %pe in OHCI and reset drivers
+  - Use GPIO _optional() API in OHCI driver
+  - Drop unnecessary not-null check in OHCI driver
+  - Use pr_err() instead of printk() in reset driver
+- Rebase on v6.6-rc3
+- Link to v1: https://lore.kernel.org/r/20230924-pxa-gpio-v1-0-2805b87d8894@skole.hr
+
+---
+Duje Mihanović (6):
+      ARM: pxa: Convert Spitz OHCI to GPIO descriptors
+      ARM: pxa: Convert Spitz LEDs to GPIO descriptors
+      ARM: pxa: Convert Spitz CF power control to GPIO descriptors
+      ARM: pxa: Convert reset driver to GPIO descriptors
+      ARM: pxa: Convert Spitz hsync to GPIO descriptors
+      ARM: pxa: Convert gumstix Bluetooth to GPIO descriptors
+
+ arch/arm/mach-pxa/gumstix.c    | 24 +++++++-------
+ arch/arm/mach-pxa/reset.c      | 39 ++++++++---------------
+ arch/arm/mach-pxa/reset.h      |  3 +-
+ arch/arm/mach-pxa/spitz.c      | 72 +++++++++++++++++++++++++++++++++---------
+ drivers/usb/host/ohci-pxa27x.c |  7 ++++
+ 5 files changed, 91 insertions(+), 54 deletions(-)
+---
+base-commit: 6465e260f48790807eef06b583b38ca9789b6072
+change-id: 20230807-pxa-gpio-3ce25d574814
+
+Best regards,
+-- 
+Duje Mihanović <duje.mihanovic@skole.hr>
+
+
