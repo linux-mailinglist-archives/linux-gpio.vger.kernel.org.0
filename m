@@ -2,140 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96AE87B3338
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 15:15:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34EAD7B334F
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Sep 2023 15:18:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233328AbjI2NPQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Sep 2023 09:15:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
+        id S233217AbjI2NSX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Sep 2023 09:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233293AbjI2NPO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 09:15:14 -0400
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05EBA1AB;
-        Fri, 29 Sep 2023 06:15:10 -0700 (PDT)
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-        by mx.skole.hr (mx.skole.hr) with ESMTP id 71C4A84758;
-        Fri, 29 Sep 2023 15:15:09 +0200 (CEST)
-From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date:   Fri, 29 Sep 2023 15:14:04 +0200
-Subject: [PATCH RFC v3 6/6] ARM: pxa: Convert gumstix Bluetooth to GPIO
- descriptors
+        with ESMTP id S233163AbjI2NSX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Sep 2023 09:18:23 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56351AA
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 06:18:20 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-99c3c8adb27so1916162166b.1
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Sep 2023 06:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695993499; x=1696598299; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lV0ibgwQX5PkhCO9aOZFrfHjhu055OsuavQde+3bh9c=;
+        b=JjerD9jsBoP1wfNCp1VN+ceo/GZUYcplBLuAqHqzW2Bw9HyxDv1VPQ+vpUd406ZSIA
+         E211d+GKvJ5uVaBMxIEmn6so9T6BFeRwzJqF62UWMUKLAcBMhmD/YYFd99g1AnT0JwvI
+         r7s9DxM8S9cG/v+i/Vrdgpkd1uKp7o373FtKApu1ut/uYKeNqkosHNPvNPrylc2XA3sn
+         iMqqI6Q5NVnO9ZgQFOjBbHn2PTP2xsk/v6iiuZeTBNk3tbpQjZoCnkzmRT9Wy3w5pHjy
+         lRaMN+HDIqgZB/JqHOQWSRpDZPxgHfu3uXqIigVujlY2OvR/RVdN2nvnq9QDUgmQBnDv
+         470w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695993499; x=1696598299;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lV0ibgwQX5PkhCO9aOZFrfHjhu055OsuavQde+3bh9c=;
+        b=rBiBVNGthQb6yl7pFEdGiA/+ranUw2Y+f+0WfhKLSV5A+CibyRCLjDa8g+eAbb7f/8
+         7IenjxYoUxKAYnOS4ksefQVzUmYEBkWlf7tBx8Ed2KdhMEQMSuGqRnDhoNLo/7VpthAv
+         TTvmnVteUVeMamSURvyQ5KV3l3mao8X+W0fSSyS9/HZ8XrGKHP/eVwKor95OeE7ZVqzU
+         AGoLGuhF8cRSiGu08u6Gi8oa8Yjw6r7UHg6ST7VbtskKnNdn7x0p4J6da+rBbjawUbgT
+         jTJXlX7hZTrxhJN7GhlTbO++uZBxP1kQo76QrhgTPcjo9kiW6gGXNsveBzaj/RBeZw7o
+         2fqw==
+X-Gm-Message-State: AOJu0YyJP39+afgSGivqJWoPNpU4tdwI/Wu92mt4T/UdKWQpKp5LbORf
+        WMZ8Y5JBQXM0HXK8vBmEes2cxavWXWBGmzQ+QDM=
+X-Google-Smtp-Source: AGHT+IGUqD+SkcKXHm8WIQcG8zB3dNBTmTqkBkt0ykFtEdWVGfoOx0GDsmc1egeNFNTBecWcG3cCiA==
+X-Received: by 2002:a17:906:5384:b0:9b2:b119:4909 with SMTP id g4-20020a170906538400b009b2b1194909mr4097015ejo.75.1695993499165;
+        Fri, 29 Sep 2023 06:18:19 -0700 (PDT)
+Received: from [192.168.1.149] (i5C7438D4.versanet.de. [92.116.56.212])
+        by smtp.gmail.com with ESMTPSA id ck17-20020a170906c45100b00992e14af9c3sm12510086ejb.143.2023.09.29.06.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Sep 2023 06:18:18 -0700 (PDT)
+From:   Erik Schilling <erik.schilling@linaro.org>
+Subject: [libgpiod][PATCH v2 0/3] bindings: rust: fix modeling of line_info
+ lifetimes
+Date:   Fri, 29 Sep 2023 15:18:14 +0200
+Message-Id: <20230929-rust-line-info-soundness-v2-0-9782b7f20f26@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20230929-pxa-gpio-v3-6-af8d5e5d1f34@skole.hr>
-References: <20230929-pxa-gpio-v3-0-af8d5e5d1f34@skole.hr>
-In-Reply-To: <20230929-pxa-gpio-v3-0-af8d5e5d1f34@skole.hr>
-To:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
-        =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2065;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=H9m5GKPOjDqHvnoQunanjp8s8qAFx4LJD9KoCMZ/UEw=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlFs3XQsYnvxMh8SEOdWIMlFI/gwqsQo1oFMAKm
- lHd2NusZbuJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZRbN1wAKCRCaEZ6wQi2W
- 4bA8EACR7xGZJhaqRGnqJIgWVrBgsRruhMzrzu0NpPcugh54aroe6yB2w3nU0wXPpA10Gdfcrey
- 1a15ODiJtApvmlnEhX3FfH/ifnmsM1vf2lNV1icIZUi0ytId2w6YSJxZegXEs0lLWecCcXZHli/
- z5PlZp/ln3AwtJs5oRseXF0s0GiPDFnZcBKtMluMRV2vTogjJEE8opuw2Upb8e50snjsPw/BaLY
- wKzWq+ICN8a0dEbFvPVQLZX6NVsW2AjdYbszt98XeQoPIapJuOMgbfzxJ9pS9xG6O11A7DuZQKb
- UJVkdC054DdcytnfJEZD/frOLmoQkC9KR2/7I3Dlkyn11t866hRB9zHdKks+XZVs1+YMCj0W8dj
- KaIIJQuse3+VTs7xJzWGwPJlDRCeuT5j/l9s786EOQXS4uAiWUUMKbxUPMcn9mTRfDOpLVhLGkO
- aBl4LxNmwh5QRh/slaS8gpmstNrG0A5oeqPjL52RnK1HZz7m6JQUiL5L5mcWPhiC2RyRchBOPXn
- SLxX0S/y/ZQvsocbiOuZulkqG0329Wh9Wbzxi5l9R/Rxv/BIGFfrqB7jb3cRyy891A9U0AVIsBC
- 95WBkTo9J5SGgE8dE49P2wvFQz90zdxKqfFCoXCIkfEcDOkIb/BrUciT3afDv3SEgl/HesqzLMk
- ZAlgpNYVDBEU/nA==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJbOFmUC/4WNQQqDMBBFryKz7pQkLdZ01XsUF2pGHZCMZFRax
+ Ls3eIEuP+//93dQSkwKz2KHRBsrS8zBXQroxiYOhBxyBmfczXj3wLTqghPHDGIvqLLGEEkV7b0
+ zFZngSvKQ53Oinj+n+g0Tt8PMEqDOZGRdJH3Pz82e/L9+s2jQexM6KntbNe0rt5okV0kD1Mdx/
+ ABW/aJxywAAAA==
+To:     Linux-GPIO <linux-gpio@vger.kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Erik Schilling <erik.schilling@linaro.org>
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695993498; l=2027;
+ i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
+ bh=rXXZsIsQsq0JgQjZU1HO1QZjkVvuQHpcrxOis9K3324=;
+ b=q+YBdmy8Jeo4LI+zlQj21wcNJKkavt8ono+5NseUu06zZBE/glfYxvxybxIORPBTBPg4OBgVj
+ TGPYVyogdv9A8rPh7xIH+BG6rZ81wj8Bap0E5CCB649CQETehdINrfu
+X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
+ pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Gumstix still uses the legacy GPIO interface for resetting the Bluetooth
-device.
+While reviewing the bindings for thread-safety, I realized that the
+bindings did not properly model the lifetimes of non-owned line_info
+instances.
 
-Convert it to use the GPIO descriptor interface.
+This fixes that. It might be a bit mind bending. I tried to provide
+lengthy comments to clarify what happens.
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+To: Linux-GPIO <linux-gpio@vger.kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+Cc: Kent Gibson <warthog618@gmail.com>
+
+Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 ---
- arch/arm/mach-pxa/gumstix.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+Changes in v2:
+- Removed unneeded temporary variables
+- Added missing SAFETY comment
+- Renamed owning wrapper to `Event`, non-owning to `EventRef`
+- Renamed existing clone methods to try_clone()
+- Slightly tweaked try_clone() documentation
+- Dropped version bump commit
+- Added Fixes tag
+- CC'd Kent - suggested by vireshk since he reviewed his commits
+- Link to v1: https://lore.kernel.org/r/20230927-rust-line-info-soundness-v1-0-990dce6f18ab@linaro.org
 
-diff --git a/arch/arm/mach-pxa/gumstix.c b/arch/arm/mach-pxa/gumstix.c
-index c9f0f62187bd..14e1b9274d7a 100644
---- a/arch/arm/mach-pxa/gumstix.c
-+++ b/arch/arm/mach-pxa/gumstix.c
-@@ -20,8 +20,8 @@
- #include <linux/delay.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/partitions.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio/machine.h>
--#include <linux/gpio.h>
- #include <linux/err.h>
- #include <linux/clk.h>
- 
-@@ -129,6 +129,9 @@ static void gumstix_udc_init(void)
- #endif
- 
- #ifdef CONFIG_BT
-+GPIO_LOOKUP_SINGLE(gumstix_bt_gpio_table, "pxa2xx-uart.1", "pxa-gpio",
-+		GPIO_GUMSTIX_BTRESET, "BTRST", GPIO_ACTIVE_LOW);
-+
- /* Normally, the bootloader would have enabled this 32kHz clock but many
- ** boards still have u-boot 1.1.4 so we check if it has been turned on and
- ** if not, we turn it on with a warning message. */
-@@ -153,24 +156,23 @@ static void gumstix_setup_bt_clock(void)
- 
- static void __init gumstix_bluetooth_init(void)
- {
--	int err;
-+	struct gpio_desc *desc;
-+
-+	gpiod_add_lookup_table(&gumstix_bt_gpio_table);
- 
- 	gumstix_setup_bt_clock();
- 
--	err = gpio_request(GPIO_GUMSTIX_BTRESET, "BTRST");
--	if (err) {
-+	desc = gpiod_get(&pxa_device_btuart.dev, "BTRST", GPIOD_OUT_HIGH);
-+	if (IS_ERR(desc)) {
- 		pr_err("gumstix: failed request gpio for bluetooth reset\n");
- 		return;
- 	}
- 
--	err = gpio_direction_output(GPIO_GUMSTIX_BTRESET, 1);
--	if (err) {
--		pr_err("gumstix: can't reset bluetooth\n");
--		return;
--	}
--	gpio_set_value(GPIO_GUMSTIX_BTRESET, 0);
-+	gpiod_set_value(desc, 0);
- 	udelay(100);
--	gpio_set_value(GPIO_GUMSTIX_BTRESET, 1);
-+	gpiod_set_value(desc, 1);
-+
-+	gpiod_put(desc);
- }
- #else
- static void gumstix_bluetooth_init(void)
+---
+Erik Schilling (3):
+      bindings: rust: fix soundness of line_info modeling
+      bindings: rust: rename {event,settings}_clone to try_clone
+      bindings: rust: allow cloning line::InfoRef -> line::Info
 
+ .../libgpiod/examples/buffered_event_lifetimes.rs  |   2 +-
+ bindings/rust/libgpiod/src/chip.rs                 |   8 +-
+ bindings/rust/libgpiod/src/edge_event.rs           |   3 +-
+ bindings/rust/libgpiod/src/info_event.rs           |   8 +-
+ bindings/rust/libgpiod/src/lib.rs                  |   1 +
+ bindings/rust/libgpiod/src/line_info.rs            | 140 +++++++++++++++------
+ bindings/rust/libgpiod/src/line_settings.rs        |   4 +-
+ bindings/rust/libgpiod/tests/line_info.rs          |  53 ++++++++
+ bindings/rust/libgpiod/tests/line_request.rs       |   2 +-
+ 9 files changed, 173 insertions(+), 48 deletions(-)
+---
+base-commit: ced90e79217793957b11414f47f8aa8a77c7a2d5
+change-id: 20230927-rust-line-info-soundness-14c08e0d26e9
+
+Best regards,
 -- 
-2.42.0
-
+Erik Schilling <erik.schilling@linaro.org>
 
