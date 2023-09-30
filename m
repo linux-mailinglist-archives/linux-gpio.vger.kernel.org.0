@@ -2,24 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07FAC7B3F31
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Sep 2023 10:25:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0777C7B3FB1
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Sep 2023 11:30:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234160AbjI3IZU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 Sep 2023 04:25:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51718 "EHLO
+        id S232829AbjI3Jai (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 30 Sep 2023 05:30:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232641AbjI3IZT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Sep 2023 04:25:19 -0400
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F842195;
-        Sat, 30 Sep 2023 01:25:14 -0700 (PDT)
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-        by mx.skole.hr (mx.skole.hr) with ESMTP id 8C1288418A;
-        Sat, 30 Sep 2023 10:25:12 +0200 (CEST)
-From:   Duje =?utf-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
-To:     Linus Walleij <linus.walleij@linaro.org>
+        with ESMTP id S229645AbjI3Jah (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Sep 2023 05:30:37 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507B8CA;
+        Sat, 30 Sep 2023 02:30:33 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4FFC433C7;
+        Sat, 30 Sep 2023 09:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696066232;
+        bh=tin0U19Nf4ANHDkcJXK1cl2YnmWbZlWUAWYQns6q95A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GrJMGkZXrPIT7StjOmeW+Fl8xwgebNyjtUdAOXRb7MJ/TkKMz13DPx5Qoi0HwXWp1
+         Mj2c9yfx7SVQvUXsKfnq2P+RHMAyI6mccAk8fKyDW4gULxhlZPGShSX0WB+iPaLSr7
+         mUiK0T0ddtqYsPPd0h1y920r2619heC5HkItOvuIA5vB7ZbXGsO9h6OwebpZKIXYfF
+         cpzqp4c9klicbTpjXdFyqmWoSxM1g9gXG3Rv/6g0U6gQbBYq5kpvOkn71X4pJA4cJz
+         KBit/mnJ2hHesyHyAhpoqwuKWDve8VIIRBfPJ7YgW7vnqnXZCqNQXymd7meZ+Cwm2y
+         ZlR+A2h8PKMfg==
+Date:   Sat, 30 Sep 2023 10:30:24 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
 Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -39,103 +50,18 @@ Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
         linux-hardening@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         afaerber@suse.de, balejk@matfyz.cz
-Subject: Re: [PATCH RESEND v5 7/8] arm64: dts: Add DTS for Marvell PXA1908 and
- samsung,coreprimevelte
-Date:   Sat, 30 Sep 2023 10:25:09 +0200
-Message-ID: <5715527.DvuYhMxLoT@radijator>
-In-Reply-To: <CACRpkdb=8LU9Mkkn_VDcTGoH1pWn=hp9ZhN5dLm5pykif8cp-w@mail.gmail.com>
+Subject: Re: [PATCH RESEND v5 3/8] dt-bindings: clock: Add Marvell PXA1908
+ clock bindings
+Message-ID: <20230930-purr-catchable-7149ee271df9@spud>
 References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
- <20230929-pxa1908-lkml-v5-7-5aa5a1109c5f@skole.hr>
- <CACRpkdb=8LU9Mkkn_VDcTGoH1pWn=hp9ZhN5dLm5pykif8cp-w@mail.gmail.com>
+ <20230929-pxa1908-lkml-v5-3-5aa5a1109c5f@skole.hr>
 MIME-Version: 1.0
-Autocrypt: addr=duje.mihanovic@skole.hr;
- keydata=
- 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
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xztbYI3ipS2Vh9bj"
+Content-Disposition: inline
+In-Reply-To: <20230929-pxa1908-lkml-v5-3-5aa5a1109c5f@skole.hr>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -144,19 +70,196 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Saturday, September 30, 2023 12:05:41 AM CEST Linus Walleij wrote:
-> But it exists, so I can't say you can't use it. Not my choice.
-> I understand it is convenient.
-> 
-> It is possible to switch later, but only if you have a unique
-> pin controller compatible so please add that.
 
-Maybe a dumb question. I might want to do this at some point to clean up the 
-device tree a bit, are there any such pinctrl drivers I can use as a 
-reference?
+--xztbYI3ipS2Vh9bj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Duje
+On Fri, Sep 29, 2023 at 05:41:59PM +0200, Duje Mihanovi=C4=87 wrote:
+> Add dt bindings and documentation for the Marvell PXA1908 clock
+> controller.
+>=20
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
 
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
+Thanks,
+Conor.
 
+> ---
+>  .../devicetree/bindings/clock/marvell,pxa1908.yaml | 48 ++++++++++++
+>  include/dt-bindings/clock/marvell,pxa1908.h        | 88 ++++++++++++++++=
+++++++
+>  2 files changed, 136 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml=
+ b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
+> new file mode 100644
+> index 000000000000..4e78933232b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/marvell,pxa1908.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell PXA1908 Clock Controllers
+> +
+> +maintainers:
+> +  - Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> +
+> +description: |
+> +  The PXA1908 clock subsystem generates and supplies clock to various
+> +  controllers within the PXA1908 SoC. The PXA1908 contains numerous clock
+> +  controller blocks, with the ones currently supported being APBC, APBCP=
+, MPMU
+> +  and APMU roughly corresponding to internal buses.
+> +
+> +  All these clock identifiers could be found in <include/dt-bindings/mar=
+vell,pxa1908.h>.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - marvell,pxa1908-apbc
+> +      - marvell,pxa1908-apbcp
+> +      - marvell,pxa1908-mpmu
+> +      - marvell,pxa1908-apmu
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#clock-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # APMU block:
+> +  - |
+> +    clock-controller@d4282800 {
+> +      compatible =3D "marvell,pxa1908-apmu";
+> +      reg =3D <0xd4282800 0x400>;
+> +      #clock-cells =3D <1>;
+> +    };
+> diff --git a/include/dt-bindings/clock/marvell,pxa1908.h b/include/dt-bin=
+dings/clock/marvell,pxa1908.h
+> new file mode 100644
+> index 000000000000..fb15b0d0cd4c
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/marvell,pxa1908.h
+> @@ -0,0 +1,88 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +#ifndef __DTS_MARVELL_PXA1908_CLOCK_H
+> +#define __DTS_MARVELL_PXA1908_CLOCK_H
+> +
+> +/* plls */
+> +#define PXA1908_CLK_CLK32		1
+> +#define PXA1908_CLK_VCTCXO		2
+> +#define PXA1908_CLK_PLL1_624		3
+> +#define PXA1908_CLK_PLL1_416		4
+> +#define PXA1908_CLK_PLL1_499		5
+> +#define PXA1908_CLK_PLL1_832		6
+> +#define PXA1908_CLK_PLL1_1248		7
+> +#define PXA1908_CLK_PLL1_D2		8
+> +#define PXA1908_CLK_PLL1_D4		9
+> +#define PXA1908_CLK_PLL1_D8		10
+> +#define PXA1908_CLK_PLL1_D16		11
+> +#define PXA1908_CLK_PLL1_D6		12
+> +#define PXA1908_CLK_PLL1_D12		13
+> +#define PXA1908_CLK_PLL1_D24		14
+> +#define PXA1908_CLK_PLL1_D48		15
+> +#define PXA1908_CLK_PLL1_D96		16
+> +#define PXA1908_CLK_PLL1_D13		17
+> +#define PXA1908_CLK_PLL1_32		18
+> +#define PXA1908_CLK_PLL1_208		19
+> +#define PXA1908_CLK_PLL1_117		20
+> +#define PXA1908_CLK_PLL1_416_GATE	21
+> +#define PXA1908_CLK_PLL1_624_GATE	22
+> +#define PXA1908_CLK_PLL1_832_GATE	23
+> +#define PXA1908_CLK_PLL1_1248_GATE	24
+> +#define PXA1908_CLK_PLL1_D2_GATE	25
+> +#define PXA1908_CLK_PLL1_499_EN		26
+> +#define PXA1908_CLK_PLL2VCO		27
+> +#define PXA1908_CLK_PLL2		28
+> +#define PXA1908_CLK_PLL2P		29
+> +#define PXA1908_CLK_PLL2VCODIV3		30
+> +#define PXA1908_CLK_PLL3VCO		31
+> +#define PXA1908_CLK_PLL3		32
+> +#define PXA1908_CLK_PLL3P		33
+> +#define PXA1908_CLK_PLL3VCODIV3		34
+> +#define PXA1908_CLK_PLL4VCO		35
+> +#define PXA1908_CLK_PLL4		36
+> +#define PXA1908_CLK_PLL4P		37
+> +#define PXA1908_CLK_PLL4VCODIV3		38
+> +
+> +/* apb (apbc) peripherals */
+> +#define PXA1908_CLK_UART0		1
+> +#define PXA1908_CLK_UART1		2
+> +#define PXA1908_CLK_GPIO		3
+> +#define PXA1908_CLK_PWM0		4
+> +#define PXA1908_CLK_PWM1		5
+> +#define PXA1908_CLK_PWM2		6
+> +#define PXA1908_CLK_PWM3		7
+> +#define PXA1908_CLK_SSP0		8
+> +#define PXA1908_CLK_SSP1		9
+> +#define PXA1908_CLK_IPC_RST		10
+> +#define PXA1908_CLK_RTC			11
+> +#define PXA1908_CLK_TWSI0		12
+> +#define PXA1908_CLK_KPC			13
+> +#define PXA1908_CLK_SWJTAG		14
+> +#define PXA1908_CLK_SSP2		15
+> +#define PXA1908_CLK_TWSI1		16
+> +#define PXA1908_CLK_THERMAL		17
+> +#define PXA1908_CLK_TWSI3		18
+> +
+> +/* apb (apbcp) peripherals */
+> +#define PXA1908_CLK_UART2		1
+> +#define PXA1908_CLK_TWSI2		2
+> +#define PXA1908_CLK_AICER		3
+> +
+> +/* axi (apmu) peripherals */
+> +#define PXA1908_CLK_CCIC1		1
+> +#define PXA1908_CLK_ISP			2
+> +#define PXA1908_CLK_DSI1		3
+> +#define PXA1908_CLK_DISP1		4
+> +#define PXA1908_CLK_CCIC0		5
+> +#define PXA1908_CLK_SDH0		6
+> +#define PXA1908_CLK_SDH1		7
+> +#define PXA1908_CLK_USB			8
+> +#define PXA1908_CLK_NF			9
+> +#define PXA1908_CLK_CORE_DEBUG		10
+> +#define PXA1908_CLK_VPU			11
+> +#define PXA1908_CLK_GC			12
+> +#define PXA1908_CLK_SDH2		13
+> +#define PXA1908_CLK_GC2D		14
+> +#define PXA1908_CLK_TRACE		15
+> +#define PXA1908_CLK_DVC_DFC_DEBUG	16
+> +
+> +#endif
+>=20
+> --=20
+> 2.42.0
+>=20
+>=20
+
+--xztbYI3ipS2Vh9bj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZRfqsAAKCRB4tDGHoIJi
+0jIyAQClD4BtPUpM5qBMvLM7SmIKbmSXy1dLhn3+zWj1ceg1kgD/XLaUdvmI7W0U
+Itc9gfrWaDvaBLCZSGLLCFp10gm07AE=
+=eaix
+-----END PGP SIGNATURE-----
+
+--xztbYI3ipS2Vh9bj--
