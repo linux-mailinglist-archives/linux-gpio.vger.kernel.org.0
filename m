@@ -2,64 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0777C7B3FB1
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Sep 2023 11:30:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02EE77B3FC3
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Sep 2023 11:45:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232829AbjI3Jai (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 Sep 2023 05:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50090 "EHLO
+        id S234004AbjI3Jp1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 30 Sep 2023 05:45:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjI3Jah (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Sep 2023 05:30:37 -0400
+        with ESMTP id S233237AbjI3Jp0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Sep 2023 05:45:26 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507B8CA;
-        Sat, 30 Sep 2023 02:30:33 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4FFC433C7;
-        Sat, 30 Sep 2023 09:30:27 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37CBBDD;
+        Sat, 30 Sep 2023 02:45:24 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4A3C433C8;
+        Sat, 30 Sep 2023 09:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696066232;
-        bh=tin0U19Nf4ANHDkcJXK1cl2YnmWbZlWUAWYQns6q95A=;
+        s=k20201202; t=1696067123;
+        bh=35Y4iJHA+yWQnYr6BMS/v8x2kCyZKak1olZ7h4RwhS8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GrJMGkZXrPIT7StjOmeW+Fl8xwgebNyjtUdAOXRb7MJ/TkKMz13DPx5Qoi0HwXWp1
-         Mj2c9yfx7SVQvUXsKfnq2P+RHMAyI6mccAk8fKyDW4gULxhlZPGShSX0WB+iPaLSr7
-         mUiK0T0ddtqYsPPd0h1y920r2619heC5HkItOvuIA5vB7ZbXGsO9h6OwebpZKIXYfF
-         cpzqp4c9klicbTpjXdFyqmWoSxM1g9gXG3Rv/6g0U6gQbBYq5kpvOkn71X4pJA4cJz
-         KBit/mnJ2hHesyHyAhpoqwuKWDve8VIIRBfPJ7YgW7vnqnXZCqNQXymd7meZ+Cwm2y
-         ZlR+A2h8PKMfg==
-Date:   Sat, 30 Sep 2023 10:30:24 +0100
+        b=u3gL4nunRXW7dTiVTMu0dEo9arEeorI4G1OLEqJ1KTOc3z6kOPDTzyjmCBlYU61+n
+         btC0IHLO/zCfRLv5/b5+i5rQyayKe0L+Lc1FkCpMMJ+YzNAR2+CWOQpZUTybP2uNFB
+         I/j/fP3f85Mzn4BxXEYRp++DT3K3PFekRnniXhjzWFQOS7/i6pk2oeuHsDXIqus7BH
+         hMGn/0ai5UFCm/hgZK4y9xRj0s9Kz1w8WskYi37Eq9WYdPsFGCrM6JN+cbftf8x/Mc
+         DPWlWqrC/zIgjkFXvg5I6LUfMGnfVa6uD2qcoVvK/+UbUfu/nkwhmno9E2oKdjYx0L
+         q40fsAVAs7XXQ==
+Date:   Sat, 30 Sep 2023 10:45:17 +0100
 From:   Conor Dooley <conor@kernel.org>
-To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+To:     Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+        linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.de, balejk@matfyz.cz
-Subject: Re: [PATCH RESEND v5 3/8] dt-bindings: clock: Add Marvell PXA1908
- clock bindings
-Message-ID: <20230930-purr-catchable-7149ee271df9@spud>
-References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
- <20230929-pxa1908-lkml-v5-3-5aa5a1109c5f@skole.hr>
+        Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        ChiaEn Wu <chiaen_wu@richtek.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
+        Mike Looijmans <mike.looijmans@topic.nl>,
+        Haibo Chen <haibo.chen@nxp.com>,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        Ceclan Dumitru <dumitru.ceclan@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: adc: add AD7173
+Message-ID: <20230930-grief-clapper-1c8f4d058969@spud>
+References: <20230928125443.615006-1-mitrutzceclan@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xztbYI3ipS2Vh9bj"
+        protocol="application/pgp-signature"; boundary="jOZehTjmQKbhopAK"
 Content-Disposition: inline
-In-Reply-To: <20230929-pxa1908-lkml-v5-3-5aa5a1109c5f@skole.hr>
+In-Reply-To: <20230928125443.615006-1-mitrutzceclan@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -71,195 +66,209 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---xztbYI3ipS2Vh9bj
-Content-Type: text/plain; charset=utf-8
+--jOZehTjmQKbhopAK
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 29, 2023 at 05:41:59PM +0200, Duje Mihanovi=C4=87 wrote:
-> Add dt bindings and documentation for the Marvell PXA1908 clock
-> controller.
+Hey,
+
+On Thu, Sep 28, 2023 at 03:54:42PM +0300, Dumitru Ceclan wrote:
+> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+> which can be used in high precision, low noise single channel applications
+> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+> primarily for measurement of signals close to DC but also delivers
+> outstanding performance with input bandwidths out to ~10kHz.
 >=20
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
+> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
 > ---
->  .../devicetree/bindings/clock/marvell,pxa1908.yaml | 48 ++++++++++++
->  include/dt-bindings/clock/marvell,pxa1908.h        | 88 ++++++++++++++++=
-++++++
->  2 files changed, 136 insertions(+)
+>  .../bindings/iio/adc/adi,ad7173.yaml          | 139 ++++++++++++++++++
+>  1 file changed, 139 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7173.=
+yaml
 >=20
-> diff --git a/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml=
- b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
 > new file mode 100644
-> index 000000000000..4e78933232b6
+> index 000000000000..a0f437297a23
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+> @@ -0,0 +1,139 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2023 Analog Devices Inc.
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/clock/marvell,pxa1908.yaml#
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Marvell PXA1908 Clock Controllers
+> +title: Analog Devices AD7173 ADC device driver
 > +
 > +maintainers:
-> +  - Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> +  - Ceclan Dumitru <dumitru.ceclan@analog.com>
 > +
 > +description: |
-> +  The PXA1908 clock subsystem generates and supplies clock to various
-> +  controllers within the PXA1908 SoC. The PXA1908 contains numerous clock
-> +  controller blocks, with the ones currently supported being APBC, APBCP=
-, MPMU
-> +  and APMU roughly corresponding to internal buses.
-> +
-> +  All these clock identifiers could be found in <include/dt-bindings/mar=
-vell,pxa1908.h>.
+> +  Bindings for the Analog Devices AD717X ADC's. Datasheets for supported=
+ chips:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+AD7172-2.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+AD7173-8.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+AD7175-2.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+AD7176-2.pdf
 > +
 > +properties:
 > +  compatible:
 > +    enum:
-> +      - marvell,pxa1908-apbc
-> +      - marvell,pxa1908-apbcp
-> +      - marvell,pxa1908-mpmu
-> +      - marvell,pxa1908-apmu
+> +      - adi,ad7172-2
+> +      - adi,ad7173-8
+> +      - adi,ad7175-2
+> +      - adi,ad7176-2
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  '#clock-cells':
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  '#address-cells':
 > +    const: 1
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
+> +  '#size-cells':
+> +    const: 0
 > +
-> +additionalProperties: false
+> +  spi-max-frequency:
+> +    maximum: 20000000
+> +
+> +  spi-cpol:
+> +    type: boolean
+> +
+> +  spi-cpha:
+> +    type: boolean
+> +
+> +  required:
+> +    - compatible
+> +    - reg
+> +    - interrupts
+> +
+> +patternProperties:
+> +  "^channel@[0-9a-f]$":
+> +    type: object
+> +    $ref: adc.yaml
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        description: Channel number
+> +        minimum: 0
+> +        maximum: 15
+> +
+> +      diff-channels:
+> +        description:
+> +          Analog input pins
+
+These descriptions are redundant AFAICT, since youre just constraining
+properties defined in adc.yaml.
+
+> +        items:
+> +          minimum: 0
+> +          maximum: 31
+> +
+> +      adi,bipolar:
+> +        description: Specify if the channel should measure in bipolar mo=
+de.
+> +        type: boolean
+
+You have a ref here to adc.yaml, but do not appear to be making use of
+"bipolar" property:
+  bipolar:
+    $ref: /schemas/types.yaml#/definitions/flag
+    description: If provided, the channel is to be used in bipolar mode.
+
+> +
+> +    required:
+> +      - reg
+> +      - diff-channels
+> +
+> +allOf:
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +unevaluatedProperties: false
 > +
 > +examples:
-> +  # APMU block:
 > +  - |
-> +    clock-controller@d4282800 {
-> +      compatible =3D "marvell,pxa1908-apmu";
-> +      reg =3D <0xd4282800 0x400>;
-> +      #clock-cells =3D <1>;
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    spi {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      adc@0 {
+> +        compatible =3D "adi,ad7173-8";
+> +        reg =3D <0>;
+> +
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +
+> +        interrupts =3D <25 IRQ_TYPE_EDGE_FALLING>;
+> +        interrupt-parent =3D <&gpio>;
+> +        spi-max-frequency =3D <5000000>;
+> +
+> +        channel@0 {
+> +          reg =3D <0>;
+> +          adi,bipolar;
+> +
+
+Why the odd newlines?
+
+Mostly looks good to me, cheers,
+Conor.
+
+> +          diff-channels =3D <0 1>;
+> +        };
+> +
+> +        channel@1 {
+> +          reg =3D <1>;
+> +
+> +          diff-channels =3D <2 3>;
+> +        };
+> +
+> +        channel@2 {
+> +          reg =3D <2>;
+> +          adi,bipolar;
+> +
+> +          diff-channels =3D <4 5>;
+> +        };
+> +
+> +        channel@3 {
+> +          reg =3D <3>;
+> +          adi,bipolar;
+> +
+> +          diff-channels =3D <6 7>;
+> +        };
+> +
+> +        channel@4 {
+> +          reg =3D <4>;
+> +
+> +          diff-channels =3D <8 9>;
+> +        };
+> +      };
 > +    };
-> diff --git a/include/dt-bindings/clock/marvell,pxa1908.h b/include/dt-bin=
-dings/clock/marvell,pxa1908.h
-> new file mode 100644
-> index 000000000000..fb15b0d0cd4c
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/marvell,pxa1908.h
-> @@ -0,0 +1,88 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> +#ifndef __DTS_MARVELL_PXA1908_CLOCK_H
-> +#define __DTS_MARVELL_PXA1908_CLOCK_H
-> +
-> +/* plls */
-> +#define PXA1908_CLK_CLK32		1
-> +#define PXA1908_CLK_VCTCXO		2
-> +#define PXA1908_CLK_PLL1_624		3
-> +#define PXA1908_CLK_PLL1_416		4
-> +#define PXA1908_CLK_PLL1_499		5
-> +#define PXA1908_CLK_PLL1_832		6
-> +#define PXA1908_CLK_PLL1_1248		7
-> +#define PXA1908_CLK_PLL1_D2		8
-> +#define PXA1908_CLK_PLL1_D4		9
-> +#define PXA1908_CLK_PLL1_D8		10
-> +#define PXA1908_CLK_PLL1_D16		11
-> +#define PXA1908_CLK_PLL1_D6		12
-> +#define PXA1908_CLK_PLL1_D12		13
-> +#define PXA1908_CLK_PLL1_D24		14
-> +#define PXA1908_CLK_PLL1_D48		15
-> +#define PXA1908_CLK_PLL1_D96		16
-> +#define PXA1908_CLK_PLL1_D13		17
-> +#define PXA1908_CLK_PLL1_32		18
-> +#define PXA1908_CLK_PLL1_208		19
-> +#define PXA1908_CLK_PLL1_117		20
-> +#define PXA1908_CLK_PLL1_416_GATE	21
-> +#define PXA1908_CLK_PLL1_624_GATE	22
-> +#define PXA1908_CLK_PLL1_832_GATE	23
-> +#define PXA1908_CLK_PLL1_1248_GATE	24
-> +#define PXA1908_CLK_PLL1_D2_GATE	25
-> +#define PXA1908_CLK_PLL1_499_EN		26
-> +#define PXA1908_CLK_PLL2VCO		27
-> +#define PXA1908_CLK_PLL2		28
-> +#define PXA1908_CLK_PLL2P		29
-> +#define PXA1908_CLK_PLL2VCODIV3		30
-> +#define PXA1908_CLK_PLL3VCO		31
-> +#define PXA1908_CLK_PLL3		32
-> +#define PXA1908_CLK_PLL3P		33
-> +#define PXA1908_CLK_PLL3VCODIV3		34
-> +#define PXA1908_CLK_PLL4VCO		35
-> +#define PXA1908_CLK_PLL4		36
-> +#define PXA1908_CLK_PLL4P		37
-> +#define PXA1908_CLK_PLL4VCODIV3		38
-> +
-> +/* apb (apbc) peripherals */
-> +#define PXA1908_CLK_UART0		1
-> +#define PXA1908_CLK_UART1		2
-> +#define PXA1908_CLK_GPIO		3
-> +#define PXA1908_CLK_PWM0		4
-> +#define PXA1908_CLK_PWM1		5
-> +#define PXA1908_CLK_PWM2		6
-> +#define PXA1908_CLK_PWM3		7
-> +#define PXA1908_CLK_SSP0		8
-> +#define PXA1908_CLK_SSP1		9
-> +#define PXA1908_CLK_IPC_RST		10
-> +#define PXA1908_CLK_RTC			11
-> +#define PXA1908_CLK_TWSI0		12
-> +#define PXA1908_CLK_KPC			13
-> +#define PXA1908_CLK_SWJTAG		14
-> +#define PXA1908_CLK_SSP2		15
-> +#define PXA1908_CLK_TWSI1		16
-> +#define PXA1908_CLK_THERMAL		17
-> +#define PXA1908_CLK_TWSI3		18
-> +
-> +/* apb (apbcp) peripherals */
-> +#define PXA1908_CLK_UART2		1
-> +#define PXA1908_CLK_TWSI2		2
-> +#define PXA1908_CLK_AICER		3
-> +
-> +/* axi (apmu) peripherals */
-> +#define PXA1908_CLK_CCIC1		1
-> +#define PXA1908_CLK_ISP			2
-> +#define PXA1908_CLK_DSI1		3
-> +#define PXA1908_CLK_DISP1		4
-> +#define PXA1908_CLK_CCIC0		5
-> +#define PXA1908_CLK_SDH0		6
-> +#define PXA1908_CLK_SDH1		7
-> +#define PXA1908_CLK_USB			8
-> +#define PXA1908_CLK_NF			9
-> +#define PXA1908_CLK_CORE_DEBUG		10
-> +#define PXA1908_CLK_VPU			11
-> +#define PXA1908_CLK_GC			12
-> +#define PXA1908_CLK_SDH2		13
-> +#define PXA1908_CLK_GC2D		14
-> +#define PXA1908_CLK_TRACE		15
-> +#define PXA1908_CLK_DVC_DFC_DEBUG	16
-> +
-> +#endif
->=20
 > --=20
-> 2.42.0
->=20
+> 2.39.2
 >=20
 
---xztbYI3ipS2Vh9bj
+--jOZehTjmQKbhopAK
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZRfqsAAKCRB4tDGHoIJi
-0jIyAQClD4BtPUpM5qBMvLM7SmIKbmSXy1dLhn3+zWj1ceg1kgD/XLaUdvmI7W0U
-Itc9gfrWaDvaBLCZSGLLCFp10gm07AE=
-=eaix
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZRfuLQAKCRB4tDGHoIJi
+0r+UAP9rtIVQ87EPicIl2kqOobvXvlAxgnYsfHa4HQKS4Np1QQD/ca0SFP9n+6uN
+XZsNzknuXMWToXtnh8f7OvH8rKeeUgQ=
+=BSNn
 -----END PGP SIGNATURE-----
 
---xztbYI3ipS2Vh9bj--
+--jOZehTjmQKbhopAK--
