@@ -2,131 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 070637B41BE
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Sep 2023 17:37:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1A977B461B
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 Oct 2023 10:18:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234289AbjI3Phi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 Sep 2023 11:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
+        id S234453AbjJAISw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 1 Oct 2023 04:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234257AbjI3Phh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Sep 2023 11:37:37 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF708E6
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Sep 2023 08:37:31 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-5a1d0fee86aso113098177b3.2
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Sep 2023 08:37:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696088251; x=1696693051; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iij7GZPs4ta7mpI/DDP/sOC6B5pAs6vBvsF5JU59Dng=;
-        b=sYzo6XUj/VGXsS/c+8iIR/YiKUJBwnimrOMTrD+9AUnOIlUUa+wIQpkqJpMyHu/bf3
-         d4+1cDx5AvDqd5noI/NmQZhb10XCf2l8YeZJ+vjZgD/EBXHWLMG0DGxPXcTDNouaD37Y
-         KptpNMaeTeRLAfOvYv4NWBe6a6fVZvxUlO7i8GMXc8wVhc5FpGVv285qRKt5d9Yz6M4a
-         1jh5qc3Bj6I612sXZ9g4DcjZS0+7mfrkOudLL53a6W8DsPdyyCnMvvXD5BY4B3bJJJ5O
-         /vNzBAyqjW70SEluDVl5R9zhVXvcSV6igSvORQ4pfcYfRmUEV0/CJ5ttuXWQddP3dS0N
-         r+sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696088251; x=1696693051;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Iij7GZPs4ta7mpI/DDP/sOC6B5pAs6vBvsF5JU59Dng=;
-        b=lU2PuAB197ONwhWCoxZVaiIW8nUugAHzcaFFv740DmcUUX6z5aSdDcwfEyu7QSxx8X
-         A/xgfeZ+eeBjptUaSTYz0/lBeC6dQ1OzHfZOlT5ojKVAMwhd7rUbEjHz9Nq15LGSLzzS
-         XLeIGMnEoenvhQOFKyiMRYKEk8AC3WXo5B9meEuWyzNn1nwK9q8g7Ce2LSaYDP3ePkdH
-         dhzTR7vFIsGbmWk6z6olgdqV4zynouBHENekWAwTZ82h/NVLxzeC9nVnE/G519vwdDle
-         0qPR/zjo2wEPcNy+g9nT1Jv475DiTmUTck/zGWS2CHUqGh/LpItG1FsczP2nxOZ/fphy
-         /BFQ==
-X-Gm-Message-State: AOJu0YytgnQo5y7HASHGRzvd9yqRsL6SMNlyFi1n902eMUQ5Sh7dhdl0
-        ShHH7wJmA1JH7zlXb/XZsFT5oFaQ8aZ6lMyp06/OjA==
-X-Google-Smtp-Source: AGHT+IGFEGxNW9iad1m1hopLGKbkXI8hjBmpaUfewF+ozAfJ+lrOwUFw+LD1rcN0USj40MfR4GqG12cZk9y2+fvzoII=
-X-Received: by 2002:a0d:ddc1:0:b0:5a1:d4bc:7faa with SMTP id
- g184-20020a0dddc1000000b005a1d4bc7faamr7394744ywe.18.1696088251028; Sat, 30
- Sep 2023 08:37:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
- <20230929-pxa1908-lkml-v5-7-5aa5a1109c5f@skole.hr> <CACRpkdb=8LU9Mkkn_VDcTGoH1pWn=hp9ZhN5dLm5pykif8cp-w@mail.gmail.com>
- <5715527.DvuYhMxLoT@radijator>
-In-Reply-To: <5715527.DvuYhMxLoT@radijator>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 30 Sep 2023 17:37:19 +0200
-Message-ID: <CACRpkdYOLjZ2thKdR7JoYxa2gr078AHO6JXu76fUU+dBzG7MPQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v5 7/8] arm64: dts: Add DTS for Marvell PXA1908 and samsung,coreprimevelte
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
+        with ESMTP id S234402AbjJAISv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 Oct 2023 04:18:51 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B819C;
+        Sun,  1 Oct 2023 01:18:49 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10849"; a="446656290"
+X-IronPort-AV: E=Sophos;i="6.03,191,1694761200"; 
+   d="scan'208";a="446656290"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 01:18:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10849"; a="700047588"
+X-IronPort-AV: E=Sophos;i="6.03,191,1694761200"; 
+   d="scan'208";a="700047588"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 01:18:45 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andy@kernel.org>)
+        id 1qmrez-00000001qqK-11KX;
+        Sun, 01 Oct 2023 11:18:41 +0300
+Date:   Sun, 1 Oct 2023 11:18:40 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.de, balejk@matfyz.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH RFC 1/6] ARM: pxa: Convert Spitz OHCI to GPIO descriptors
+Message-ID: <ZRkrYChL0hKZwQGp@smile.fi.intel.com>
+References: <20230924-pxa-gpio-v1-0-2805b87d8894@skole.hr>
+ <20230924-pxa-gpio-v1-1-2805b87d8894@skole.hr>
+ <ZRE3JNVNqFN0knHl@smile.fi.intel.com>
+ <CACRpkdZdSTCeobuFdXNbJcHTKJp1V=t1sfp2tp25Mb0FBh74pA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZdSTCeobuFdXNbJcHTKJp1V=t1sfp2tp25Mb0FBh74pA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Sep 30, 2023 at 10:25=E2=80=AFAM Duje Mihanovi=C4=87 <duje.mihanovi=
-c@skole.hr> wrote:
-> On Saturday, September 30, 2023 12:05:41 AM CEST Linus Walleij wrote:
-> > But it exists, so I can't say you can't use it. Not my choice.
-> > I understand it is convenient.
+On Wed, Sep 27, 2023 at 04:01:58PM +0200, Linus Walleij wrote:
+> On Mon, Sep 25, 2023 at 9:30 AM Andy Shevchenko <andy@kernel.org> wrote:
+
+...
+
+> > > +     if (pxa_ohci->usb_host)
+> > > +             gpiod_put(pxa_ohci->usb_host);
 > >
-> > It is possible to switch later, but only if you have a unique
-> > pin controller compatible so please add that.
->
-> Maybe a dumb question. I might want to do this at some point to clean up =
-the
-> device tree a bit, are there any such pinctrl drivers I can use as a
-> reference?
+> > Linus, Bart, do we have misdesigned _optinal() GPIO APIs?
+> >
+> > In GPIOLIB=n, the above requires that redundant check. Shouldn't we replace
+> > gpiod_put() stub to be simply no-op?
+> 
+> You mean the WARN_ON(desc) in gpiod_put() in the static inline
+> stub version?
+> 
+> I thought about it for a bit, drafted a patch removing them, and then
+> realized the following:
+> 
+> If someone is making the gpiolib optional for a driver, i.e. neither
+> DEPENDS ON GPIOLIB nor SELECT GPIOLIB, they are a quite
+> narrow segment. I would say in 9 cases out of 10 or more this is
+> just a driver that should depend on or select GPIOLIB.
+> 
+> I think such drivers should actually do the NULL checks and not be
+> too convenient, the reason is readability: someone reading that
+> driver will be thinking gpios are not optional if they can call
+> gpiod_set_value(), gpiod_put() etc without any sign that the
+> desc is optional.
+> 
+> If the driver uses [devm_]gpiod_get_optional() the library is not
+> using the stubs and does the right thing, and it is clear that
+> the GPIO is *runtime* optional.
+> 
+> But *compile time* optional, *combined* with runtime optional -
+> I'm not so happy if we try to avoid warnings around that. I think
+> it leads to confusing configs and code that looks like gpiolib is
+> around despite it wasn't selected.
+> 
+> If the code isn't depending on or selecting GPIOLIB and still
+> use _optional() calls, it better be ready to do some extra checks,
+> because this is a weird combo, it can't be common.
+> 
+> Could be a documentation update making this clear though.
+> 
+> What do you other people think?
 
-Since it's Marvell after all (albeit a descendant of the 20 yo
-PXA platform!) I would expect new Marvell SoCs to be more alike
-the AC5 bindings that Chris Packham merged only last year:
-Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
-Driver:
-drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-drivers/pinctrl/mvebu/pinctrl-mvebu.c
+The problem here indeed if the code is not selecting or being dependent on
+GPIOLIB and uses _optional() calls.
 
-But if this pin controller is more related to PXA (Intel) hardware
-than to either Kirkwood or Armada, you might want to do something
-entirely different. It depends a bit on hardware.
+I agree that this is quite a niche that should be addressed on the driver side.
 
-Hardware such as pinctrl-single.c with one mux configuration
-register per pin usually follow the Qualcomm way of doing
-things, which is to simply have one group per pin, then that
-can be associated with desired functions:
-Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
-this has the upside of using all the standard bindings for
-bias etc. Driver:
-drivers/pinctrl/qcom/pinctrl-msm.c
-then qualcomm have subdrivers for each SoC calling into this
-so you have to check "real" bindings and drivers such as:
-Documentation/devicetree/bindings/pinctrl/qcom,sm8550-tlmm.yaml
-drivers/pinctrl/qcom/pinctrl-sm8550.c
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
