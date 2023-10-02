@@ -2,121 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ABB07B4C77
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 09:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 720977B4C7D
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 09:22:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235701AbjJBHT1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Oct 2023 03:19:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44506 "EHLO
+        id S235730AbjJBHWi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Oct 2023 03:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235729AbjJBHT0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 03:19:26 -0400
-Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C2BBD
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 00:19:22 -0700 (PDT)
-Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-493542a25dfso5764957e0c.0
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 00:19:22 -0700 (PDT)
+        with ESMTP id S235696AbjJBHWh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 03:22:37 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD618E
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 00:22:34 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-5363227cc80so6130474a12.3
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 00:22:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696231162; x=1696835962; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1696231353; x=1696836153; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GJYpofyuAEv4jvR+QfJqDzbesTQIm4BiLwBiP1RFTxg=;
-        b=FD2cCmBvfbdxp2rLmRGjB/OdFADslsSKGVp42pVAxaeWvBZszsCx24W/Kf/JZlwFiM
-         jmXKHNwLPquWnloEZgDT0Qgu3/qLuEaLJGf5CWPSQbuTMXUNkS+nZgFEnc0EmtDMv4G5
-         oNhdzAczo3SAKu/rdINO48fWzDqmTg+Q9/XMrkdDpWjON2s1IJKoIQ45rwG+k8rxsiww
-         F3SptW+aY75B1Eu+t+YjUBtZU5vfD20WIJgOzRClGNdqUsJaE4kzA5/9wXqtGQDv8qgB
-         x+kKLxexiMva5x3RVrzqAS9/gxQDPsnMt8KEDkeGDkHRACtzCVdT2nLSQNHoyjIx9sQX
-         Ny2A==
+        bh=Q7D46kJeMegvsyu+SqZBdwCYZmwUBmdR9yeUZQMsjbU=;
+        b=ox4ZqOeu6GoPGKcB2UWw8O53n4IEP4T7WmwEeAFtgoJvso+wFMbVBLVsCRWtZyi6WE
+         6bAPHDYw/Z/IIHPtfJEXZtvADJ1ubFdPCiy+S/IRxj0R5sSgQyPm3G+3DtpReWdSy5YI
+         werLsonzbrfkaK3T1rf/FB9sHIXrdP5qx28RNd/+TXeHF0jyogcepKPI13CBkQFGQeVZ
+         dgYIG1ISv71aTx+mZ2gbrXgYwq4Cg5L0Cr4cHADX/2acMzwInG38F6MdGJTHhWWReIUd
+         SdUtf77lQIj95ggX3eVQ9WZcjtfiv0BfxOsaCWeKSdk3nkT1vRy9ahtzOs+/JdI1wxad
+         UOug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696231162; x=1696835962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GJYpofyuAEv4jvR+QfJqDzbesTQIm4BiLwBiP1RFTxg=;
-        b=hwcodTcKRGPNigS6o2epCSZlA5xwWbcrWRErs7NZ7eC1tr/MlnBPr7q2kqZ38tUJlR
-         ewEr869DRUYwBEbH69ajEG7wNaB7DNbVxMyVn7HiOIZTCvflWu1qbCVmQ5CH6DIeQfbV
-         DTmHVkCrBOGzqpKhGwXcr3EksI+Xjhc9/oio79TKkcr9+zU7krxsKWGHfX/objAUTRgP
-         l6/h7ZH4WcImmhPKnGEPQIBhf7MW/ahYB7DZ8BeL/emzBmKz5zgtVSNO/xw3dHGA3+Jc
-         m+JxPWvbJoJYapHom1lq4KucOQPJy/0VS2Z97XsjyGL2/xuePRy1w5XUY8qQ/adoSYeU
-         qTmQ==
-X-Gm-Message-State: AOJu0Yziji8Fj5tC7I24OQdA2lb0o44y//I85l7jjOL6JZJIGtOWn0+M
-        ThwnujP6j80Z8LibemwqxYNUi8gH/J/lWekT5mzajQ==
-X-Google-Smtp-Source: AGHT+IFzc+4NII5E+Bbq2HSe+Tfh0b+oyGG0oCJoYCRjhheamRaNHC0qOW9XNPegrbm7tafeSUWThKV2MC2+atCwOHc=
-X-Received: by 2002:a67:fdc9:0:b0:452:829e:ac90 with SMTP id
- l9-20020a67fdc9000000b00452829eac90mr9154479vsq.28.1696231162035; Mon, 02 Oct
- 2023 00:19:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr> <20230929-pxa1908-lkml-v5-1-5aa5a1109c5f@skole.hr>
-In-Reply-To: <20230929-pxa1908-lkml-v5-1-5aa5a1109c5f@skole.hr>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 2 Oct 2023 09:19:11 +0200
-Message-ID: <CAMRc=MerAnyZd08S61YEn6Gu0VmK+KmNyChbtBuCfBpaUGFvug@mail.gmail.com>
-Subject: Re: [PATCH RESEND v5 1/8] gpio: pxa: disable pinctrl calls for MMP_GPIO
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.de, balejk@matfyz.cz
-Content-Type: text/plain; charset="UTF-8"
+        d=1e100.net; s=20230601; t=1696231353; x=1696836153;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Q7D46kJeMegvsyu+SqZBdwCYZmwUBmdR9yeUZQMsjbU=;
+        b=pZaj7CmbhXKo/vXos0XQryD/CFg7SoLPCJdBD3LYbONvsQonTqReD5pNTJ7jenQxxr
+         xOnO95bU0yFPYgYx4JNluGc+2PKrf8XoymTwcOkwiqcWVyTIpZHfFROZk4pOFPgB1Rdj
+         dSji1vlzNzSUJ1jrahKWSSo745JBgE4C214Ys63WIAW4ILYoLWyqxHhO6YYL5wMpWMnd
+         yk0MJNfXsYP7Yq6fuzPLV+v4FQE3AgO0u+BKmcv4Ium+bF/x/Zd75wY21/AGfkVMWccN
+         D38buOt0zPPXOL/ifd8d2sbR11PLD/sp7X9HfxvQjdELoSebMXg1HQ9rHnQ/T+pNIsYX
+         Swkg==
+X-Gm-Message-State: AOJu0YxTx3Q0WVbHcHdVsDFWN20kqxGJlAVm/J26ofEuAxcyJ6LPYrpR
+        xJtNDoW9ycGwOTRZc9vLnciHqw==
+X-Google-Smtp-Source: AGHT+IEf7kXaO0uZkhgMS0feoMQZtfg92oK+E3fhWZ8ujt+8rp5FxzYl8gNtSlIWcWycltAcaeZFQg==
+X-Received: by 2002:aa7:d98e:0:b0:527:251e:1be8 with SMTP id u14-20020aa7d98e000000b00527251e1be8mr8893856eds.13.1696231353070;
+        Mon, 02 Oct 2023 00:22:33 -0700 (PDT)
+Received: from localhost (i5C743835.versanet.de. [92.116.56.53])
+        by smtp.gmail.com with ESMTPSA id h20-20020a0564020e9400b0053441519ed5sm9844561eda.88.2023.10.02.00.22.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Oct 2023 00:22:32 -0700 (PDT)
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 02 Oct 2023 09:22:32 +0200
+Message-Id: <CVXRTXOO8559.2M83QY2U5MC0K@ablu-work>
+Subject: Re: [libgpiod][PATCH 0/3] thread-safety doc + Rust modeling
+Cc:     "Linux-GPIO" <linux-gpio@vger.kernel.org>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+X-Mailer: aerc 0.15.2
+References: <20230928-rust-send-trait-v1-0-30b4f59d13cb@linaro.org>
+ <CAMRc=Megx1B+zEqsntLOnJ_dcQngFOy31qr=TMKreefsjX_MAg@mail.gmail.com>
+In-Reply-To: <CAMRc=Megx1B+zEqsntLOnJ_dcQngFOy31qr=TMKreefsjX_MAg@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 5:42=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
-@skole.hr> wrote:
+On Mon Oct 2, 2023 at 9:16 AM CEST, Bartosz Golaszewski wrote:
+> On Thu, Sep 28, 2023 at 4:37=E2=80=AFPM Erik Schilling
+> <erik.schilling@linaro.org> wrote:
+> >
+> > This updates the docs with what was discussed in the linked thread.
+> > Then, the Rust bindings are adjusted to match in behaviour.
+> >
+> > To: Linux-GPIO <linux-gpio@vger.kernel.org>
+> > Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> >
+> > Link: https://lore.kernel.org/r/CVHO091CC80Y.3KUOSLSOBVL0T@ablu-work
+> > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+> > ---
+> > Erik Schilling (3):
+> >       doc: drop unneeded <p> tags
+> >       doc: document thread safety guarantees
+> >       bindings: rust: mark all owning types as `Send`
+> >
+> >  bindings/rust/libgpiod/src/edge_event.rs     |  4 ++++
+> >  bindings/rust/libgpiod/src/event_buffer.rs   |  8 ++++++++
+> >  bindings/rust/libgpiod/src/info_event.rs     |  4 ++++
+> >  bindings/rust/libgpiod/src/line_config.rs    |  4 ++++
+> >  bindings/rust/libgpiod/src/line_request.rs   |  4 ++++
+> >  bindings/rust/libgpiod/src/line_settings.rs  |  4 ++++
+> >  bindings/rust/libgpiod/src/request_config.rs |  4 ++++
+> >  include/gpiod.h                              | 26 ++++++++++++++++++++=
++++---
+> >  8 files changed, 55 insertions(+), 3 deletions(-)
+> > ---
+> > base-commit: ced90e79217793957b11414f47f8aa8a77c7a2d5
+> > change-id: 20230928-rust-send-trait-316a8f31bb97
+> >
+> > Best regards,
+> > --
+> > Erik Schilling <erik.schilling@linaro.org>
+> >
 >
-> Similarly to PXA3xx and MMP2, pinctrl-single isn't capable of setting
-> pin direction on MMP either.
->
-> Fixes: a770d946371e ("gpio: pxa: add pin control gpio direction and reque=
-st")
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> ---
->  drivers/gpio/gpio-pxa.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-> index a1630ed4b741..d92650aecb06 100644
-> --- a/drivers/gpio/gpio-pxa.c
-> +++ b/drivers/gpio/gpio-pxa.c
-> @@ -238,6 +238,7 @@ static bool pxa_gpio_has_pinctrl(void)
->         switch (gpio_type) {
->         case PXA3XX_GPIO:
->         case MMP2_GPIO:
-> +       case MMP_GPIO:
->                 return false;
->
->         default:
->
-> --
-> 2.42.0
->
->
+> Series applied, thanks!
 
-Queued for fixes, thanks!
+Thanks for merging and the clarifications!
 
-Bart
+- Erik
+
