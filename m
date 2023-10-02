@@ -2,98 +2,206 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E83157B4E5D
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 10:59:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4989D7B4EA1
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 11:04:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235917AbjJBI7S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Oct 2023 04:59:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41566 "EHLO
+        id S235951AbjJBJEn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Oct 2023 05:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235944AbjJBI7R (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 04:59:17 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50989DA
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 01:59:14 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-59f6492b415so37132567b3.0
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 01:59:14 -0700 (PDT)
+        with ESMTP id S235953AbjJBJEm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 05:04:42 -0400
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1640BE6
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 02:04:38 -0700 (PDT)
+Received: by mail-vs1-xe2a.google.com with SMTP id ada2fe7eead31-4529d1238a9so7745818137.3
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 02:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696237153; x=1696841953; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696237478; x=1696842278; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yQY2i+vSoxbuYAF7vQ9wW6HahcEbMKsvXUOSPTlVVRU=;
-        b=IY5UKajNFvwmmEPjpibdfnt0QLYRQiMwvTxFJ2vIDWUJjWV4ZLE4mcTWGKnlQ65IgK
-         y8o8MMaItd1KfF8tV2Nm7qjHKathxhHul4MrT3FlluCHXwNY0JAtN5GdjgiEf2kVq+Op
-         qXHN4JMMIuJgLMqGvd7LioqDNIOxA+2zqXUF1YWlB7B1OnOzn5+fAk0BOQQgQKy/SEYj
-         qICzC1jxH6TlEPxrsZKaySloQ/qnBuS5jICxQwiiF9Wkoanj98q59tfGxcLagsFLTNrq
-         0SQlBbI2h3ljqehAVPtqKALYZaLIW4A/Aw7K5b0TMdeGtqN2ev+LE9x/5xVlX8P4HKA3
-         3Q3A==
+        bh=w6lSGzMYmbvQIYpVjiyxdxEmD3PDo3maFv/Yj2jKXkA=;
+        b=gyK3ViCxB5CiK7cAFiaPb/6seSebdH7OUrotGMBqaF+yMjWGH3EEqLvyIqKlTgCQdC
+         8cgX8x0zt2Zvx188KUUlL//un6jrwNUlV7PQaCBX2HCt16AKCgAlApyXEkHfyQL2Twyf
+         +3ZDx2w2ZuiXpyFYj78R86tqlsTEc0ihmQYlN0OXf9yBkGU4L6rsk4CoGXLYBDKMghco
+         fsexOMU+zFejkPr9Z1MxCxfQwSKNq2vR+FtZ+PGRKIUf7QYknI6Odc3HlBfsnxeX8rLT
+         l6Ndz1IS+YlkrpHG8ejPKXaCCr/ayn63wuzJLKJ2HF8By4Yop1E2sGHHy2wvyDbcTDRt
+         1U4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696237153; x=1696841953;
+        d=1e100.net; s=20230601; t=1696237478; x=1696842278;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yQY2i+vSoxbuYAF7vQ9wW6HahcEbMKsvXUOSPTlVVRU=;
-        b=SeXqp6Zh9PcYnWbrPU4nnd/kaUlhWg3dIz5CT4ehbZdoAcCUZPArBA2DAk941I8qKe
-         6ct6fY94W7TVwV65v6J6pNWrDxmOlv2yAQ1MZNkVl3lW0H1p5ixXdqnPg53iS755J697
-         yt4ZbweaYa7EZ1vDlrL7Hmt84VY2xV8SCqA/YiBXclGrtYmrp0bxpe3HV+wuDzqSumBr
-         QWW1IeUN0KqBvqbOUbVW+L2f2WRJpxlBVl3xu2Bl9leaoSTdLUuka5hGG3K7RqxLoynO
-         tY2Y91x8wl58OnkjGfgzRwqKcrzRjv5xjdZAtAnSA/y0AmCeIIZTL5Iwg4cwSVCzv4jm
-         HLhQ==
-X-Gm-Message-State: AOJu0YyonATdQcrDsKqVH0dvm2g+06/fNbcqpbnFWWimRg07kQs5VQ+k
-        gdspxfKgsBbmzrrELjwWn+sOOBcyhiB/whCrV6Ed8w==
-X-Google-Smtp-Source: AGHT+IHu7jVJIVYaIv2Y16+cRGZmCmi3JuaxpOSYzxyCnuQB60ryryVMNDLdUrNxQRUoYHifLfyBCyLQpVp3lUiLmp8=
-X-Received: by 2002:a81:4e52:0:b0:59f:6440:7eff with SMTP id
- c79-20020a814e52000000b0059f64407effmr11888090ywb.15.1696237153462; Mon, 02
- Oct 2023 01:59:13 -0700 (PDT)
+        bh=w6lSGzMYmbvQIYpVjiyxdxEmD3PDo3maFv/Yj2jKXkA=;
+        b=PvylZRcdQUo/O7kXnPdjwKCc52wNnmQhzkMO8Wo4QecwuGwB6FUVOaXG7Jvih5n2FN
+         7pLM5EVsOzT+qIFYGzjaduclwao+6lqQsFTpUbgEM9mCNESpd2b9WwfbQVV1+sZl4Gsc
+         VUu0uXreTCX0eYrtLg8hJN4EOVssstZGvx5RuSFr/0PZkj+gmjpRJL/W9+yjsjM0GnAe
+         pMw3Rq2cE3emaJ4Vn/8rI5B9Gkk2wM7DJG6JWOWeASlyw3kURvRZ89NFcm5A9MKl8ebm
+         nhSa3+SkPmkai4JKYPqV9M/b7XuYsCunX8NKIjPgR9mCg1k4eVqfv4LDM3HDMtabwJYU
+         QOZg==
+X-Gm-Message-State: AOJu0YzRzjSLyMZdofO//ouTo86Jl7cqOVHAbsr7N95A9f50MjtodD8d
+        DWvAblWXFNrl/ZFflaMkeBWnVDFo+vrS/a9aBmtLnw==
+X-Google-Smtp-Source: AGHT+IHJZy1TMb/fvXpxgZf1OGsiFiqP+dJU/QormPX81So2k7lHQizhtBNoZhxqRjcK9UBTsp9Haz+YSQw3rbHYVqY=
+X-Received: by 2002:a67:ed4e:0:b0:452:5798:64bd with SMTP id
+ m14-20020a67ed4e000000b00452579864bdmr7520196vsp.35.1696237477855; Mon, 02
+ Oct 2023 02:04:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231001-pxa-gpio-v4-0-0f3b975e6ed5@skole.hr> <20231001-pxa-gpio-v4-6-0f3b975e6ed5@skole.hr>
-In-Reply-To: <20231001-pxa-gpio-v4-6-0f3b975e6ed5@skole.hr>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 2 Oct 2023 10:59:02 +0200
-Message-ID: <CACRpkdZJ_hVZTELbjPdfpmHdQBC8jcuLhxyzV=Zs=8NuVaU+8g@mail.gmail.com>
-Subject: Re: [PATCH RFC v4 6/6] input: ads7846: Move wait_for_sync() logic to driver
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+References: <20231001-vf610-gpio-v5-0-8d873a8f224a@nxp.com> <20231001-vf610-gpio-v5-4-8d873a8f224a@nxp.com>
+In-Reply-To: <20231001-vf610-gpio-v5-4-8d873a8f224a@nxp.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 2 Oct 2023 11:04:27 +0200
+Message-ID: <CAMRc=MdXkFBWMuyr8sbetyP2sJX2QG6Ce=Tsb7RVMguvGdC3TA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/7] gpio: vf610: add i.MX8ULP of_device_id entry
+To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 1, 2023 at 4:13=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic@=
-skole.hr> wrote:
-
-> If this code is left in the board file, the sync GPIO would have to be
-> separated into another lookup table during conversion to the GPIO
-> descriptor API (which is also done in this patch).
+On Sun, Oct 1, 2023 at 10:23=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
+m> wrote:
 >
-> The only user of this code (Sharp Spitz) is also converted in this
-> patch.
+> From: Peng Fan <peng.fan@nxp.com>
 >
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> i.MX8ULP/93 GPIO supports similar feature as i.MX7ULP GPIO, but i.MX8ULP =
+is
+> actually not hardware compatible with i.MX7ULP. i.MX8ULP only has one
+> register base, not two bases. i.MX8ULP and i.MX93 actually has two
+> interrupts for each gpio controller, one for Trustzone non-secure world,
+> one for secure world.
+>
+> Although the Linux Kernel driver gpio-vf610.c could work with
+> fsl,imx7ulp-gpio compatible, it is based on some tricks did in device tre=
+e
+> with some offset added to base address.
+>
+> Add a new of_device_id entry for i.MX8ULP. But to make the driver could
+> also support old bindings, check the compatible string first, before
+> check the device data.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/gpio/gpio-vf610.c | 47 ++++++++++++++++++++++++++++++++++++++++-=
+------
+>  1 file changed, 40 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+> index dbc7ba0ee72c..8e12706c0b22 100644
+> --- a/drivers/gpio/gpio-vf610.c
+> +++ b/drivers/gpio/gpio-vf610.c
+> @@ -25,6 +25,7 @@
+>  struct fsl_gpio_soc_data {
+>         /* SoCs has a Port Data Direction Register (PDDR) */
+>         bool have_paddr;
+> +       bool have_dual_base;
+>  };
+>
+>  struct vf610_gpio_port {
+> @@ -60,13 +61,26 @@ struct vf610_gpio_port {
+>  #define PORT_INT_EITHER_EDGE   0xb
+>  #define PORT_INT_LOGIC_ONE     0xc
+>
+> +#define IMX8ULP_GPIO_BASE_OFF  0x40
+> +#define IMX8ULP_BASE_OFF       0x80
+> +
+> +static const struct fsl_gpio_soc_data vf610_data =3D {
+> +       .have_dual_base =3D true,
+> +};
+> +
+>  static const struct fsl_gpio_soc_data imx_data =3D {
+>         .have_paddr =3D true,
+> +       .have_dual_base =3D true,
+> +};
+> +
+> +static const struct fsl_gpio_soc_data imx8ulp_data =3D {
+> +       .have_paddr =3D true,
+>  };
+>
+>  static const struct of_device_id vf610_gpio_dt_ids[] =3D {
+> -       { .compatible =3D "fsl,vf610-gpio",       .data =3D NULL, },
+> +       { .compatible =3D "fsl,vf610-gpio",       .data =3D &vf610_data }=
+,
+>         { .compatible =3D "fsl,imx7ulp-gpio",     .data =3D &imx_data, },
+> +       { .compatible =3D "fsl,imx8ulp-gpio",     .data =3D &imx8ulp_data=
+, },
+>         { /* sentinel */ }
+>  };
+>
+> @@ -263,19 +277,38 @@ static int vf610_gpio_probe(struct platform_device =
+*pdev)
+>         struct gpio_irq_chip *girq;
+>         int i;
+>         int ret;
+> +       bool dual_base;
+>
+>         port =3D devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+>         if (!port)
+>                 return -ENOMEM;
+>
+>         port->sdata =3D of_device_get_match_data(dev);
+> -       port->base =3D devm_platform_ioremap_resource(pdev, 0);
+> -       if (IS_ERR(port->base))
+> -               return PTR_ERR(port->base);
+>
+> -       port->gpio_base =3D devm_platform_ioremap_resource(pdev, 1);
+> -       if (IS_ERR(port->gpio_base))
+> -               return PTR_ERR(port->gpio_base);
+> +       dual_base =3D port->sdata->have_dual_base;
+> +
+> +       /* support old compatible strings */
+> +       if (device_is_compatible(dev, "fsl,imx7ulp-gpio") &&
+> +           (device_is_compatible(dev, "fsl,imx93-gpio") ||
 
-Looking good!
-With Andy's nits fixed:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Why not just add this compatible to vf610_gpio_dt_ids?
 
-Yours,
-Linus Walleij
+Bart
+
+> +           (device_is_compatible(dev, "fsl,imx8ulp-gpio"))))
+> +               dual_base =3D true;
+> +
+> +       if (dual_base) {
+> +               port->base =3D devm_platform_ioremap_resource(pdev, 0);
+> +               if (IS_ERR(port->base))
+> +                       return PTR_ERR(port->base);
+> +
+> +               port->gpio_base =3D devm_platform_ioremap_resource(pdev, =
+1);
+> +               if (IS_ERR(port->gpio_base))
+> +                       return PTR_ERR(port->gpio_base);
+> +       } else {
+> +               port->base =3D devm_platform_ioremap_resource(pdev, 0);
+> +               if (IS_ERR(port->base))
+> +                       return PTR_ERR(port->base);
+> +
+> +               port->gpio_base =3D port->base + IMX8ULP_GPIO_BASE_OFF;
+> +               port->base =3D port->base + IMX8ULP_BASE_OFF;
+> +       }
+>
+>         port->irq =3D platform_get_irq(pdev, 0);
+>         if (port->irq < 0)
+>
+> --
+> 2.37.1
+>
