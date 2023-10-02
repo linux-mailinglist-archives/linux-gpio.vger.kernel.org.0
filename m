@@ -2,79 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 551A07B4D44
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 10:25:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D0867B4E46
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 10:58:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235848AbjJBIZx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Oct 2023 04:25:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50950 "EHLO
+        id S235927AbjJBI6K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Oct 2023 04:58:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235845AbjJBIZs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 04:25:48 -0400
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07874C4;
-        Mon,  2 Oct 2023 01:25:44 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D9DEF60017;
-        Mon,  2 Oct 2023 08:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1696235143;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RNHnqB4N/sFo3MdfMP59guhAXP0/erOIPWf4ZjX7S+0=;
-        b=OxUfIdUzPTlw3wqOKKfq69BnqhdnPbSQ2ry+WhusFq3EvqOfEiv9SvObfv01HSUlisG2xV
-        nOPOAcvS6H5hs3FTjVttLncRwMaMqMlOkRNQq0rApnC2DqftwN/wCG3Cl8Y7MTlc1N+1J2
-        hNTGbDHBTvqppsJ+n0DNE2qeqtEUGFSagsB2KFJBXCIsnVSk2ylCBJgekoWW2Z4PYzbpAT
-        Ov/wWE4EgfH5y+S9mivlHT76rX2s8DpNzgeUkaQbP05GbKuto4/rcFxlgG87fMwfQJwRkM
-        IJdzRoENhqSmQO+g3XTOoz8wSuzryOni23wnAxV1PRNeHZkQDxxqMcqsqEeYBg==
-Date:   Mon, 2 Oct 2023 10:25:41 +0200
-From:   Luca Ceresoli <luca.ceresoli@bootlin.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: tegra: Display pin function in pinconf-groups
-Message-ID: <20231002102541.426371e8@booty>
-In-Reply-To: <20230929122101.466266-1-thierry.reding@gmail.com>
-References: <20230929122101.466266-1-thierry.reding@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S236051AbjJBI5v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 04:57:51 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395512D43
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 01:54:28 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-59c215f2f4aso201391207b3.1
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 01:54:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696236867; x=1696841667; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SAHGe0Dh0hTiu77ede4jd3f5FD+aqZVWssvCBucRdDw=;
+        b=x+rCB5P0HkIE4YZ0A0EF23AnFJ6/bHqPz17K2I0HhU69pCtY8vnw4nVu1mN7jOqZOk
+         uRKEAfz5IWwj82uwdBNh9BtZWmgWfL31yejXEm2cwIRCaux7vs3/yRrayCuQ/jsDHzDi
+         +abzVezajzIhLbUYC0CKP3tjl4q9Lv3MN0juTymENW4u6j19RSBK+9Ku6EhnlCjLsbmT
+         3E9qgIrCtATJsFWiUbmgn4ZAMoaRMxumE1tDlIZzeiWfa6Q1opTQ0DE5QhW994Nt0oVD
+         4P+f3LTFuubQ6eOGoTR4UrBuwTiDHxSIrPKNvlqxITWR9/dRdaGZtyufKhlwv3a6ql9w
+         k+UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696236867; x=1696841667;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SAHGe0Dh0hTiu77ede4jd3f5FD+aqZVWssvCBucRdDw=;
+        b=Ohyxyk/HkaX1Arpn0P6RquFNebXw233JvOsbRtk0W4zG7527grDUhxf11CPZYoZRxL
+         15Rj2kvFd2MMQUSns6LZL1R5CCcpFq4z7GhYqty6zalnnF59QH0Ht7wHvt6rJZRU27Sj
+         CymERpmQ81YloU3uKr9wVGFZfxEhQcx/MNiqy1r0XdF6vl6Oh3hhm2tSXLePsrQPMAIA
+         X6U5r5hy20pDQJZqULCodql+4/ja/w91TlO6jXVEqzbelvYxjKYyODiGaId4bQouYg7U
+         EClh3K3XG/CEbfhn9Eco/nHY3gVVxdvPMT6vkIfklTrQC31KLqp2rGF7q5OTgOwZwSPG
+         cGDg==
+X-Gm-Message-State: AOJu0YzQiwX6pumSwfcfmA2VSR+k7CzJBWIMyY5SK2uHlteMDzj8/XOn
+        54YygnA4JcrARIYqui1kGNrbYAmc6s5BnKLoBorCWQ==
+X-Google-Smtp-Source: AGHT+IH3xhl+OqZLFGjc/FIIZK7vVneZIRUfkgmVwUJ1Lbcx2j8iWEa2u1r3zv87HGXUt/qD+sekTdSLdXL30TNvBos=
+X-Received: by 2002:a0d:dc01:0:b0:599:b59f:5280 with SMTP id
+ f1-20020a0ddc01000000b00599b59f5280mr10777800ywe.28.1696236866969; Mon, 02
+ Oct 2023 01:54:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: luca.ceresoli@bootlin.com
+References: <20231001-pxa-gpio-v4-0-0f3b975e6ed5@skole.hr> <20231001-pxa-gpio-v4-2-0f3b975e6ed5@skole.hr>
+In-Reply-To: <20231001-pxa-gpio-v4-2-0f3b975e6ed5@skole.hr>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 2 Oct 2023 10:54:15 +0200
+Message-ID: <CACRpkdbi9fcna_giYR9HubWYoR-ZfrxZK7dPOJR9vX1n5A8Vtg@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 2/6] ARM: pxa: Convert Spitz LEDs to GPIO descriptors
+To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Thierry,
+On Sun, Oct 1, 2023 at 4:13=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic@=
+skole.hr> wrote:
 
-On Fri, 29 Sep 2023 14:21:01 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
+> Sharp's Spitz board still uses the legacy GPIO interface for configuring
+> its two onboard LEDs.
+>
+> Convert them to use the GPIO descriptor interface.
+>
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
 
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> The function that a pin is muxed to can be read from the top-level
-> pinctrl-maps debugfs file. However, this only reflects the values that
-> were specified in device tree, so they will only show deviations from
-> the hardware default setting. Display the current pinmux setting in the
-> per-controller pinconf-groups debugfs file along with the rest of the
-> per-pin configuration settings.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+LGTM:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-[On Tegra20]
-Tested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Yours,
+Linus Walleij
