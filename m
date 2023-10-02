@@ -2,37 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50FB37B5743
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 18:12:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3E557B5728
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 18:12:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237812AbjJBPsd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Oct 2023 11:48:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48212 "EHLO
+        id S238342AbjJBQAw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Oct 2023 12:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237798AbjJBPsc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 11:48:32 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E66EB93;
-        Mon,  2 Oct 2023 08:48:29 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86986C433C7;
-        Mon,  2 Oct 2023 15:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696261709;
-        bh=rFA173u7TYSSDdMiO8zMnnvXrhNdNsDs7EeyJiXp5SQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JNn2CsXENcCuXB0l7pfRk1AHPhE9B5i3OL6CajMgO6oipyPQcW3EFZjDSbGpRtreA
-         ZsghJsMFo4FunNaGoaNP2aus9jKDiV05cInibJ6bzCMYYLeOzme746dD9HBliMbFCw
-         Dh50CNFM0FAF0orjaLK/BZZ0AFuOAmpgEUYqFFiDDt0zOuXxAPLpkWleQCJRKygeIK
-         VtYBqZAYgxiaqemoK36acKkWaHVVa8vhJ3+H0IVC/t7vg6hyTyd4XqKFdMykXKKmDQ
-         UUvmJpHx4p6Gcz7pIPeNJ4/Os02Jd7CEB83ujSFTQ+ihm0NGCWljsH9kN4NWytRK4k
-         rJ/84ulmyrkYA==
-Received: from johan by xi.lan with local (Exim 4.96)
-        (envelope-from <johan@kernel.org>)
-        id 1qnL9w-0005a9-2L;
-        Mon, 02 Oct 2023 17:48:37 +0200
-Date:   Mon, 2 Oct 2023 17:48:36 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
+        with ESMTP id S238340AbjJBQAv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 12:00:51 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BCCB4
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 09:00:47 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9adb9fa7200so732221966b.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 09:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1696262445; x=1696867245; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O+6tSuZGsJ8MLmUkhQ/q6aX6p0H5mimnkA642RTbylo=;
+        b=f4C2hTxCkxrb0R0Kf8tOr/+7s4xgm5l92EIxycloLqEtyB+khxf7KP9LlTybOhMCHQ
+         qmoAhWw//iNt1r552BPZgpn8RM4WFEQmko/AOk5RtLRoFt5O0aBs0FW/JqG3wGTbBFdF
+         yFfNiTdfe1/EUZYZQ4dWnXPdlEKjv0SanoRig=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696262445; x=1696867245;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O+6tSuZGsJ8MLmUkhQ/q6aX6p0H5mimnkA642RTbylo=;
+        b=cwCefM1G69dj43IFPSyFEr6zPvEgsKdXZP8uMMBzU8ZyShgWpnKd2tQrSk6KrAFzAR
+         hr/v9oCQ8eNtxng8xDBPx3znjXnk/aNAxbIFlVnun1/NI7Hwf7kUgQ2lhFdeJNW9Loli
+         3jy5b581NJSYNXnhGT4VAhQIrWGQuoqLVH4YHMP+k3VuKuknZPPlY5El35crusj1Ngf+
+         Giwp8/c5ChfZhGfc7LZYbS292evv21tVpteySWbvAaVfGouAj9QoFQOgBM/q1yWrbce4
+         I0hLu5rGK+QQkIT2lFRzLkzIr6K4jIDHKNEYaOobUocOJbPFKyajNg0GPmFIMvZ5mSkU
+         bPkw==
+X-Gm-Message-State: AOJu0Yyu3cttSiAyDAAVVkTuLY6grptOx07pr5tU20yiLGvSH1NuhXni
+        F5DJOJsUw/2eFMcVu4qSSA4xznErPOva/u0HHR1HVZuO
+X-Google-Smtp-Source: AGHT+IFL8+DydZh+Xc0qGSdAy3Nkg7sls9fF00VyM7Oaor47i64VPX/vQ8lmsmh/pC8/it/ZLFo77g==
+X-Received: by 2002:a17:907:3e12:b0:9a5:7dec:fab9 with SMTP id hp18-20020a1709073e1200b009a57decfab9mr61114ejc.9.1696262444944;
+        Mon, 02 Oct 2023 09:00:44 -0700 (PDT)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id g5-20020a17090670c500b009a13fdc139fsm17155756ejk.183.2023.10.02.09.00.44
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Oct 2023 09:00:44 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-537f07dfe8eso14916a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 09:00:44 -0700 (PDT)
+X-Received: by 2002:a50:9b19:0:b0:522:4741:d992 with SMTP id
+ o25-20020a509b19000000b005224741d992mr156294edi.4.1696262443982; Mon, 02 Oct
+ 2023 09:00:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230918125851.310-1-johan+linaro@kernel.org> <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
+ <ZQlIveJVdvyV2Ygy@hovoldconsulting.com> <CAD=FV=XBG7auVVyHn5uvahSZZxp5qBfp4+A9NwFqahdN6XrbZA@mail.gmail.com>
+ <ZQqemN8P2VKgxhsV@hovoldconsulting.com> <CAD=FV=XK87TZuPy+d2r2g5QhowmghE-m9pGHe9-X7jnXAw9z1g@mail.gmail.com>
+ <ZQ1Zm6ec9NuBvqpl@hovoldconsulting.com> <CAD=FV=USBJRzqxX9kBP8pp4LKRGpBee+jkHL=KmeQvyfBk2CVQ@mail.gmail.com>
+ <ZRqzGA1F6JV-mlRL@hovoldconsulting.com> <CAD=FV=UHEeu3crTFEZDY+LDQZk07H8un7gCSs0jyCQJrGYkV=Q@mail.gmail.com>
+ <ZRrmVN3Rbz9PY8FW@hovoldconsulting.com>
+In-Reply-To: <ZRrmVN3Rbz9PY8FW@hovoldconsulting.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 2 Oct 2023 09:00:26 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WcUKPezcp2dUQHW2vhrvvdo9=GSAOeML1JPLhEyG3WqA@mail.gmail.com>
+Message-ID: <CAD=FV=WcUKPezcp2dUQHW2vhrvvdo9=GSAOeML1JPLhEyG3WqA@mail.gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: fix handling of unpopulated devices
+To:     Johan Hovold <johan@kernel.org>
 Cc:     Johan Hovold <johan+linaro@kernel.org>,
         Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
@@ -46,25 +79,10 @@ Cc:     Johan Hovold <johan+linaro@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] HID: i2c-hid: fix handling of unpopulated devices
-Message-ID: <ZRrmVN3Rbz9PY8FW@hovoldconsulting.com>
-References: <20230918125851.310-1-johan+linaro@kernel.org>
- <CAD=FV=Wfwvp-SbGrdO5VJcjG42njkApJPB7wnY-YYa1_-O0JWQ@mail.gmail.com>
- <ZQlIveJVdvyV2Ygy@hovoldconsulting.com>
- <CAD=FV=XBG7auVVyHn5uvahSZZxp5qBfp4+A9NwFqahdN6XrbZA@mail.gmail.com>
- <ZQqemN8P2VKgxhsV@hovoldconsulting.com>
- <CAD=FV=XK87TZuPy+d2r2g5QhowmghE-m9pGHe9-X7jnXAw9z1g@mail.gmail.com>
- <ZQ1Zm6ec9NuBvqpl@hovoldconsulting.com>
- <CAD=FV=USBJRzqxX9kBP8pp4LKRGpBee+jkHL=KmeQvyfBk2CVQ@mail.gmail.com>
- <ZRqzGA1F6JV-mlRL@hovoldconsulting.com>
- <CAD=FV=UHEeu3crTFEZDY+LDQZk07H8un7gCSs0jyCQJrGYkV=Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=UHEeu3crTFEZDY+LDQZk07H8un7gCSs0jyCQJrGYkV=Q@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,121 +90,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 02, 2023 at 07:35:06AM -0700, Doug Anderson wrote:
-> On Mon, Oct 2, 2023 at 5:09 AM Johan Hovold <johan@kernel.org> wrote:
+Hi,
 
-> > Out of curiosity, are there any machines that actually need this
-> > "panel-follower" API today, or are saying above that this is just
-> > something that may be needed one day?
-> 
-> Yes. See commit de0874165b83 ("drm/panel: Add a way for other devices
-> to follow panel state") where I point to Cong Yang's original patch
-> [1]. In that patch Cong was trying to make things work by assuming
-> probe ordering and manually taking some of the power sequencing stuff
-> out of some of the drivers in order to get things to work.
-> 
-> [1] https://lore.kernel.org/r/20230519032316.3464732-1-yangcong5@huaqin.corp-partner.google.com
+On Mon, Oct 2, 2023 at 8:48=E2=80=AFAM Johan Hovold <johan@kernel.org> wrot=
+e:
+>
+> > In any case, the fact that there is a shared power rail / shared power
+> > sequence is because the hardware designer intended them to either be
+> > both off or both on. Whenever I asked the EEs that designed these
+> > boards about leaving the touchscreen on while turning the panel power
+> > off they always looked at me incredulously and asked why I would ever
+> > do that. Although we can work around the hardware by powering the
+> > panel in order to allow the touchscreen to be on, it's just not the
+> > intention.
+>
+> I hear you, but users sometimes want do things with their hardware which
+> may not have originally been intended (e.g. your kiosk example).
 
-Ok, thanks for the pointer.
+...and they can. I don't think it's totally unreasonable for userspace
+in this case to take into account that they need to keep the panel
+powered on (maybe with the screen black and the backlight off) if they
+want the touchscreen kept on. If I was coding up userspace it wouldn't
+surprise me at all if the touchscreen stopped working when the panel
+was off.
 
-> > > > Don't you need to keep the touchscreen powered to support wakeup events
-> > > > (e.g. when not closing the lid)?
-> > >
-> > > No. The only reason you'd use panel follower is if the hardware was
-> > > designed such that the touchscreen needed to be power sequenced with
-> > > the panel. If the touchscreen can stay powered when the panel is off
-> > > then it is, by definition, not a panel follower.
-> > >
-> > > For a laptop I don't think most people expect the touchscreen to stay
-> > > powered when the screen is off. I certainly wouldn't expect it. If the
-> > > screen was off and I wanted to interact with the device, I would hit a
-> > > key on the keyboard or touch the trackpad. When the people designing
-> > > sc7180-trogdor chose to have the display and touchscreen share a power
-> > > rail they made a conscious choice that they didn't need the
-> > > touchscreen active when the screen was off.
-> >
-> > Sure, but that's a policy decision and not something that should be
-> > hard-coded in our drivers.
-> 
-> If the touchscreen and panel can be powered separately then, sure,
-> it's a policy decision.
-> 
-> In the cases where the touchscreen and panel need to be powered
-> together I'd say it's more than a policy decision. Even if it wasn't,
-> you have to make _some_ decision in the kernel. One could also argue
-> that if you say that you're going to force the panel to be powered on
-> whenever the touchscreen is on then that's just as much of a policy
-> decision, isn't it?
+I will further note that there is actually hardware where it's even
+more difficult. On the same sc7180-trogdor laptops (and others as
+well) the USB webcam is _also_ powered by the same power rail. When
+you power the screen off then the USB webcam deenumerates. When you
+power the screen on then it shows back up. It would be really weird if
+somehow the USB webcam driver needed a link to the panel to try to
+keep it powered.
 
-I get your point, but with runtime pm suspending the touchpad after a
-timeout it seems that would still be the most flexible alternative
-which allows deferring the decision whether to support wakeup on
-touch events to the user.
 
-> In any case, the fact that there is a shared power rail / shared power
-> sequence is because the hardware designer intended them to either be
-> both off or both on. Whenever I asked the EEs that designed these
-> boards about leaving the touchscreen on while turning the panel power
-> off they always looked at me incredulously and asked why I would ever
-> do that. Although we can work around the hardware by powering the
-> panel in order to allow the touchscreen to be on, it's just not the
-> intention.
-
-I hear you, but users sometimes want do things with their hardware which
-may not have originally been intended (e.g. your kiosk example).
-
-> > > > But the main reason is still that requesting resources belongs in
-> > > > probe() and should not be deferred to some later random time where you
-> > > > cannot inform driver core of failures (e.g. for probe deferral if the
-> > > > interrupt controller is not yet available).
-> > >
-> > > OK, I guess the -EPROBE_DEFER is technically possible though probably
-> > > not likely in practice. ...so that's a good reason to make sure we
-> > > request the IRQ in probe even in the "panel follower" case. I still
-> > > beleive Benjamin would prefer that this was abstracted out and not in
-> > > the actual probe() routine, but I guess we can wait to hear from him.
-> >
-> > I talked to Benjamin at Kernel Recipes last week and I don't think he
-> > has any fundamental objections to the fix I'm proposing.
-> 
-> Sure. I don't either though I'm hoping that we can come up with a more
-> complete solution long term.
-> 
-> 
-> > I prefer it as it makes the code easier to reason about and clearly
-> > marks the code paths that differ in case the device is a "panel
-> > follower". And since you said it also makes the code look more like what
-> > you originally intended, then I guess you should be ok with it too?
-> 
-> It looks OK to me. The biggest objection I have is just that I dislike
-> it when code churns because two people disagree what the nicer style
-> is. It just makes for bigger diffs and more work to review things.
-
-Ok, but this isn't just about style as that initial_power_on() function
-which does all the magic needs to be broken up to fix the regression
-(unless you want to convolute the driver and defer resource lookups
-until panel power-on).
-
-I'll respin a v2 with that panel-property lookup change I mentioned and
-hopefully we can get this fixed this week.
-
-> > > One last idea I had while digging would be to wonder if we could
-> > > somehow solve this case with "IRQF_PROBE_SHARED". I guess that doesn't
-> > > work well together with "IRQF_NO_AUTOEN", but conceivably we could
-> > > have the interrupt handler return "IRQ_NONE" if the initial power up
-> > > never happened? I haven't spent much time poking with shared
-> > > interrupts though, so I don't know if there are other side effects...
-> >
-> > Yeah, that doesn't seem right, though. The interrupt line is not really
-> > shared, it's just that we need to check whether the device is populated
-> > before requesting the interrupt.
-> 
-> I'm not convinced that marking it as shared is any "less right" than
-> extra work to request the interrupt after we've probed the device.
-> Fundamentally both are taking into account that another touchscreen
-> might be trying to probe with the same interrupt line.
-
-If you need to start to thinking about rewriting your interrupt handler,
-I'd say that qualifies as "less right". ;)
-
-Johan
+-Doug
