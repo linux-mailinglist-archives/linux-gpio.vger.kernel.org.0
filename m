@@ -2,120 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89F0B7B4C02
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 09:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC87E7B4C71
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 09:16:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235584AbjJBHBH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Oct 2023 03:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52022 "EHLO
+        id S235695AbjJBHQ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Oct 2023 03:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235626AbjJBHBG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 03:01:06 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47E6C9
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 00:01:02 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-31fa15f4cc6so15535341f8f.2
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 00:01:02 -0700 (PDT)
+        with ESMTP id S235733AbjJBHQ0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 03:16:26 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1068E
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 00:16:23 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-4527d65354bso7197571137.0
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 00:16:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696230061; x=1696834861; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696230982; x=1696835782; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ED3nCHgOaahRi3tOePbQGBavpIZHiHZhel+Y9Fp/+p4=;
-        b=wfBzL7Ar2gTHJL2ZtNQpNlK4DtZeN0aZIUaM1VD7ZCijTn/jmoJ4G0VQGcGi+tei2j
-         +DQAhY2DLxm0AoAH1cyzI2xIViUhHHWGlFtLPw689VlirZrGS+gI2ysKJ1m8nzQkoIae
-         iqf9klJp2tPBMWDCphVhxWpEpvOyuovxQ/pbOeBdqnwAtZGnYhPn6HRPAOIw2TR4ka0E
-         9KFwKKFOKBlVTH1aIx7Yq8WifNfWyuR5kI7TJLUf59WX5GYvfgr7EV6XjgTJsxP7bS7w
-         coYUWlpU73/wn9AAM8gJV5WcIE7mexGPN8xJYDoqwcOJ35wKTrelkVZVyz5h6F6rxa4K
-         0n2Q==
+        bh=nNMo9T/ZDDmhXp0VotIvFA1cLI5FfTrK+uuGF3k+mcM=;
+        b=yKTqf/Yd9O71j3RU1eSUH7UVPYpKjtS4O9SK+9kkG7QZx+SzSxbtx5AP7qwNhh8zck
+         +RGeG+lmD5wMGkI0iRtnNznbjDSjSrxloo5b1fy9kzCX0S6CDXgLyhSIvDHLXNKo1Rrp
+         XFeoOJg/VdUMUQeclsRZeW+F7tMMgOvlanZOU8NboFqjlidSK8GHEssI7lmzzeeVmPVe
+         0n7riOksLmlkwEv++8shcxAfpNUJqizp1em3SKmJdZhcAkFB/oTuR2TUwCtEErkyX1o9
+         Ow6o+1R0KJXbzmJ8PmmSJQ18UP4sn09P0dOxqQ9ji9hCzie7kZm/q4+xpj3DdWiOmlq/
+         OiNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696230061; x=1696834861;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1696230982; x=1696835782;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ED3nCHgOaahRi3tOePbQGBavpIZHiHZhel+Y9Fp/+p4=;
-        b=vKzvox12zED+sRKdU+kNKiYFDanixNKVQ2tIvXgOBwMpbHswTita/LECyW7qGeEfOi
-         iT5jqqtspT5BOUD1fV/jvOanHVOnBXPtpaCcY7Zfgwcesz+9PO/UhLDNNFEKdN7OsRgp
-         cltmEKHa4gJc8LkeQUNPgR1G2xsAbFChCQ+pMdDu+ohPoZwfXXwcHZDRzWMkIgW+ACfA
-         eJ3DsTmdpwBz6Xr2QW+KFjIuk+kGIyuDC8qNjqG7msaSFZUhLhd5GKzhdOK3c4BBnfnR
-         yxkwWkZxxtpZaTucWnMMqaOSZ6g0rPNoII3Qk6Sqw6H63X8ATb3+PB/5nJfWf0jarBIe
-         trOw==
-X-Gm-Message-State: AOJu0Yys2Eh3xDMt6JzWw8l+9/nUqP7XhyEFwwYeJ27x9xZ7+Gq2nThc
-        yP4vqG72u0gOD+qOJm4QDgOpwA==
-X-Google-Smtp-Source: AGHT+IHnVHHnTOhtd/Btr60iU9/eHOnkZf9kPsbDDvwF0leE0UE71ygHUrODFNhJf2LGR0NcKfWECw==
-X-Received: by 2002:adf:e48e:0:b0:317:67bf:3376 with SMTP id i14-20020adfe48e000000b0031767bf3376mr8843141wrm.57.1696230061171;
-        Mon, 02 Oct 2023 00:01:01 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id r17-20020adfda51000000b00327c79ca7c6sm2440715wrl.80.2023.10.02.00.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Oct 2023 00:01:00 -0700 (PDT)
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        khilman@baylibre.com, jbrunet@baylibre.com,
-        martin.blumenstingl@googlemail.com, brgl@bgdev.pl, andy@kernel.org,
-        Huqiang Qin <huqiang.qin@amlogic.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20230922094342.637251-1-huqiang.qin@amlogic.com>
-References: <20230922094342.637251-1-huqiang.qin@amlogic.com>
-Subject: Re: (subset) [PATCH V3 0/3] Add pinctrl driver support for Amlogic
- T7 SoCs
-Message-Id: <169623006024.3465675.18368876466117698542.b4-ty@linaro.org>
-Date:   Mon, 02 Oct 2023 09:01:00 +0200
+        bh=nNMo9T/ZDDmhXp0VotIvFA1cLI5FfTrK+uuGF3k+mcM=;
+        b=sG6Yq+94rlIXzwpT8rIPCzpyibDbf64Lq9EqYIQHVZ0PX8umzsPyN8PS4Ck/0dOul5
+         bXsqBHIx/uBG5nLC4N01uMJEjh2XAykmqCqwXM2LFPJD9DRRV9tQhoy6Rky8FOwGL5z8
+         Y5pOA8jUFD4fWIUiX7Uczf0MhKjSv/asxnniGkE8QEGhsTEKMzY0AbomQuV5uVxAPjAb
+         wOVld9jW7JsDoaL7EORHniebx+wm8vT4yCOoDz6WeKCx3lDIGgu8S95b8yaV95HXSj1B
+         JSogXVcPkC5xM4AOp6wO0vPY93PDGi6TE7MJEijDkG2pL0I4m603dAP34Vwzax5zA0UK
+         MCmA==
+X-Gm-Message-State: AOJu0YyqnWLFYt5y/sUoY8Ip4QbYYyFtbOtsRfGYdqApoK9hdzn/rAHd
+        Q5ddCHhbNkpsxzb6Ijf9uz4+p9jmRCze+v+1sA/JFIpmyO+uT/vy
+X-Google-Smtp-Source: AGHT+IFqQPTj8HjXWMTyXGbHCfwecYjUADVtuybRkWdAFNw/kBCO+ZvFMBkfPPLvm3laX26sx5zRPBVmOZTeQr3m2Y8=
+X-Received: by 2002:a67:f84e:0:b0:452:6a4d:d40 with SMTP id
+ b14-20020a67f84e000000b004526a4d0d40mr9486634vsp.23.1696230982260; Mon, 02
+ Oct 2023 00:16:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20230928-rust-send-trait-v1-0-30b4f59d13cb@linaro.org>
+In-Reply-To: <20230928-rust-send-trait-v1-0-30b4f59d13cb@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 2 Oct 2023 09:16:11 +0200
+Message-ID: <CAMRc=Megx1B+zEqsntLOnJ_dcQngFOy31qr=TMKreefsjX_MAg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/3] thread-safety doc + Rust modeling
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Thu, Sep 28, 2023 at 4:37=E2=80=AFPM Erik Schilling
+<erik.schilling@linaro.org> wrote:
+>
+> This updates the docs with what was discussed in the linked thread.
+> Then, the Rust bindings are adjusted to match in behaviour.
+>
+> To: Linux-GPIO <linux-gpio@vger.kernel.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+>
+> Link: https://lore.kernel.org/r/CVHO091CC80Y.3KUOSLSOBVL0T@ablu-work
+> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+> ---
+> Erik Schilling (3):
+>       doc: drop unneeded <p> tags
+>       doc: document thread safety guarantees
+>       bindings: rust: mark all owning types as `Send`
+>
+>  bindings/rust/libgpiod/src/edge_event.rs     |  4 ++++
+>  bindings/rust/libgpiod/src/event_buffer.rs   |  8 ++++++++
+>  bindings/rust/libgpiod/src/info_event.rs     |  4 ++++
+>  bindings/rust/libgpiod/src/line_config.rs    |  4 ++++
+>  bindings/rust/libgpiod/src/line_request.rs   |  4 ++++
+>  bindings/rust/libgpiod/src/line_settings.rs  |  4 ++++
+>  bindings/rust/libgpiod/src/request_config.rs |  4 ++++
+>  include/gpiod.h                              | 26 ++++++++++++++++++++++=
++---
+>  8 files changed, 55 insertions(+), 3 deletions(-)
+> ---
+> base-commit: ced90e79217793957b11414f47f8aa8a77c7a2d5
+> change-id: 20230928-rust-send-trait-316a8f31bb97
+>
+> Best regards,
+> --
+> Erik Schilling <erik.schilling@linaro.org>
+>
 
-On Fri, 22 Sep 2023 17:43:39 +0800, Huqiang Qin wrote:
-> This patch adds pinctrl driver support for Amloigc T7 SoC (A311D2)
-> 
-> [PATCH 1/3]:
->   V1 -> V2: Rename amlogic-t7-gpio.h to amlogic,t7-periphs-pinctrl.h
->             Corrected indentation format.
->   V2 -> V3: Updated subject.
-> 
-> [...]
+Series applied, thanks!
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.7/arm64-dt)
-
-[3/3] arm64: dts: Add pinctrl node for Amlogic T7 SoCs
-      https://git.kernel.org/amlogic/c/d0f3a19a990a8fde6a7730255af74ef8d70c3761
-
-These changes has been applied on the intermediate git tree [1].
-
-The v6.7/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
-
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
-
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
-
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
--- 
-Neil
-
+Bart
