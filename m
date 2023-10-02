@@ -2,66 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D385E7B4A3A
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 00:46:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A5887B4AB3
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 04:17:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234027AbjJAWqA convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Sun, 1 Oct 2023 18:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33926 "EHLO
+        id S235059AbjJBCRM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 1 Oct 2023 22:17:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjJAWp7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 Oct 2023 18:45:59 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BDAB7;
-        Sun,  1 Oct 2023 15:45:55 -0700 (PDT)
-Received: from i53875a3c.versanet.de ([83.135.90.60] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1qn5C3-0002ng-SD; Mon, 02 Oct 2023 00:45:43 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 16/23] gpio: rockchip: Convert to platform remove callback
- returning void
-Date:   Mon, 02 Oct 2023 00:45:50 +0200
-Message-ID: <4863315.31r3eYUQgx@phil>
-In-Reply-To: <20230928070706.2290137-17-u.kleine-koenig@pengutronix.de>
-References: <20230928070706.2290137-1-u.kleine-koenig@pengutronix.de>
- <20230928070706.2290137-17-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S234505AbjJBCRM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 Oct 2023 22:17:12 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F5BCE
+        for <linux-gpio@vger.kernel.org>; Sun,  1 Oct 2023 19:17:08 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-273e3d8b57aso3507266a91.0
+        for <linux-gpio@vger.kernel.org>; Sun, 01 Oct 2023 19:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696213028; x=1696817828; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6b76Ych1HnNWX1i2+SMCurFq8JmPkRVbgEKvHul6Y6M=;
+        b=HOzAakugpT5jH49+zsnPAoGSrzC4RQyW/9VDM64hsVYCKqErk5vj91prWqv4SNRaKJ
+         5+FTn+BahMoYmBzhLezqiIKWLSb7H/caYdDYpoOv1CMyO5OXnc9iVuKmoQA0IGjtm2GT
+         iXvc6meL4x0AxeRFVNWsmyfEvp99k/T8QCA9wilnwLQ6LgoI7RWSQ1/Q6/l1orzeZVV9
+         SeQxYOnwFlOF37n3nG65k8ZZY6pnCVFWfpBfGjpeI/nPkILxYQDHjuhW8WmAvX/65mAu
+         5JuSP3JWhWahRncrRMmbxi2100BIvGWYRep7oGmMrPSKJhPPjWiAl6sYi3RiaEv73ajE
+         h9QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696213028; x=1696817828;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6b76Ych1HnNWX1i2+SMCurFq8JmPkRVbgEKvHul6Y6M=;
+        b=v6hXtcOsMCVPlWAhGhomYedc9OqBe1FAFtyBYiFK5ANKKdkFbKkD7CHGNuakUusosO
+         S9W77Zps9+iqzMPHG/hhw47V3Yu2EczU43n7KUdqjvpd+H2e/ylkawKMeyYL5+a2Za0v
+         4+mdzRetDnv7UocvYsEekx39sM0zJ4Glv00OUzaCeAn7QjAO8Y2bsp119gzLmg8xamFx
+         +W0sJU3YrtFdsmXm4Fi+qsS7Gg9A7hWyoMKu3ht4xbS615ZVexA5sJsj7L6jBv1riEeC
+         iv9tPLb6RprwsFl6Wfq8aD2zHbmk8R8G809bM7ig+zod5QVNujBguvcid7I0KJH3V9Rb
+         zasA==
+X-Gm-Message-State: AOJu0YzpDWm8AM9DG7mulT5gOOwosMJi5E7xq1aX4m6tvjo9S+968uji
+        yIWs1g5pfs6+DgZyho3+jRGfTA==
+X-Google-Smtp-Source: AGHT+IG7F7GjhJnFomtH628B6eLxLuj4n7S9f0mGkASawyhxSQzyDo06i0YtDgv7Hzddo0DyTk9qvw==
+X-Received: by 2002:a17:90a:242:b0:263:730b:f568 with SMTP id t2-20020a17090a024200b00263730bf568mr9141074pje.3.1696213028338;
+        Sun, 01 Oct 2023 19:17:08 -0700 (PDT)
+Received: from octopus.. ([2400:4050:c3e1:100:7ab1:199:d138:f054])
+        by smtp.gmail.com with ESMTPSA id mg11-20020a17090b370b00b002609cadc56esm5278319pjb.11.2023.10.01.19.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Oct 2023 19:17:08 -0700 (PDT)
+From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
+To:     sudeep.holla@arm.com, cristian.marussi@arm.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        linus.walleij@linaro.org
+Cc:     Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [RFC 0/4] gpio: add SCMI pinctrl based driver
+Date:   Mon,  2 Oct 2023 11:15:58 +0900
+Message-Id: <20231002021602.260100-1-takahiro.akashi@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_PASS,T_SPF_HELO_TEMPERROR autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Donnerstag, 28. September 2023, 09:06:59 CEST schrieb Uwe Kleine-König:
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
-> 
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
-> 
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+I'm currently working on implementing SCMI pinctrl/gpio drivers
+on U-Boot[1]. Although the pinctrl driver for the kernel[2] was submitted
+by EPAM, it doesn't contain the gpio driver and I believe that we should
+discuss a couple of points on the kernel side to finalize my design for
+U-Boot. 
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+So this RFC is intended for reviews, especially to raise some issues.
+(Please note that I have *never* tested the code because I don't have
+any real hardware to test SCMI on it.)
 
+1) how to obtain a value on an input pin
+   All the existing gpio drivers are set to obtain a value on an input
+   pin by accessing the hardware directly. In SCMI case, however, this is
+   just impossible in its nature and must be supported via a protocol
+   using "Input-value" configuration type. (See the spec[3], table-23.)
+
+   The current pinconf framework is missing the feature (the pinconf
+   parameter and a helper function). See patch#1 and #2.
+
+   Please note that there is an issue around the pin configuration in
+   EPAM's current pinctrl driver as I commented[4].
+
+2) DT bindings
+   I would like to propose a generic binding for SCMI pinctrl based
+   gpio driver. This allows a "consumer" driver to handle gpio input pins
+   like as other normal gpio controllers provide. (patch#4)
+
+3) generic GPIO driver
+   Based on (2), I tried to prototype a generic driver in patch#3.
+   As you can see, there is no SCMI-specific line of code as a set of
+   existing helper functions, except (1), seem to be enough to implement
+   required interfaces.
+   So I'm not sure whether the driver should has a "compatibles" property
+   of "arm,scmi-gpio-generic".
+
+I will appreciate any comments.
+
+-Takahiro Akashi
+
+[1] https://lists.denx.de/pipermail/u-boot/2023-September/529765.html
+[2] https://lkml.iu.edu/hypermail/linux/kernel/2308.1/01082.html
+[3] https://developer.arm.com/documentation/den0056/
+[4] https://lkml.iu.edu/hypermail/linux/kernel/2308.2/07483.html
+
+AKASHI Takahiro (4):
+  pinctrl: define PIN_CONFIG_INPUT
+  pinctrl: add pinctrl_gpio_get_config()
+  gpio: scmi: add SCMI pinctrl based gpio driver
+  dt-bindings: gpio: Add bindings for SCMI pinctrl based gpio
+
+ .../bindings/gpio/arm,scmi-gpio.yaml          |  71 ++++++++
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-scmi.c                      | 154 ++++++++++++++++++
+ drivers/pinctrl/core.c                        |  19 +++
+ include/linux/pinctrl/consumer.h              |   8 +
+ include/linux/pinctrl/pinconf-generic.h       |   3 +
+ 7 files changed, 264 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/arm,scmi-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-scmi.c
+
+-- 
+2.34.1
 
