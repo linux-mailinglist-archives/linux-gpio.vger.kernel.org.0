@@ -2,206 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4989D7B4EA1
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 11:04:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E94007B4EA5
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 11:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235951AbjJBJEn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Oct 2023 05:04:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
+        id S235974AbjJBJFW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Oct 2023 05:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235953AbjJBJEm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 05:04:42 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1640BE6
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 02:04:38 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id ada2fe7eead31-4529d1238a9so7745818137.3
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 02:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696237478; x=1696842278; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w6lSGzMYmbvQIYpVjiyxdxEmD3PDo3maFv/Yj2jKXkA=;
-        b=gyK3ViCxB5CiK7cAFiaPb/6seSebdH7OUrotGMBqaF+yMjWGH3EEqLvyIqKlTgCQdC
-         8cgX8x0zt2Zvx188KUUlL//un6jrwNUlV7PQaCBX2HCt16AKCgAlApyXEkHfyQL2Twyf
-         +3ZDx2w2ZuiXpyFYj78R86tqlsTEc0ihmQYlN0OXf9yBkGU4L6rsk4CoGXLYBDKMghco
-         fsexOMU+zFejkPr9Z1MxCxfQwSKNq2vR+FtZ+PGRKIUf7QYknI6Odc3HlBfsnxeX8rLT
-         l6Ndz1IS+YlkrpHG8ejPKXaCCr/ayn63wuzJLKJ2HF8By4Yop1E2sGHHy2wvyDbcTDRt
-         1U4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696237478; x=1696842278;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w6lSGzMYmbvQIYpVjiyxdxEmD3PDo3maFv/Yj2jKXkA=;
-        b=PvylZRcdQUo/O7kXnPdjwKCc52wNnmQhzkMO8Wo4QecwuGwB6FUVOaXG7Jvih5n2FN
-         7pLM5EVsOzT+qIFYGzjaduclwao+6lqQsFTpUbgEM9mCNESpd2b9WwfbQVV1+sZl4Gsc
-         VUu0uXreTCX0eYrtLg8hJN4EOVssstZGvx5RuSFr/0PZkj+gmjpRJL/W9+yjsjM0GnAe
-         pMw3Rq2cE3emaJ4Vn/8rI5B9Gkk2wM7DJG6JWOWeASlyw3kURvRZ89NFcm5A9MKl8ebm
-         nhSa3+SkPmkai4JKYPqV9M/b7XuYsCunX8NKIjPgR9mCg1k4eVqfv4LDM3HDMtabwJYU
-         QOZg==
-X-Gm-Message-State: AOJu0YzRzjSLyMZdofO//ouTo86Jl7cqOVHAbsr7N95A9f50MjtodD8d
-        DWvAblWXFNrl/ZFflaMkeBWnVDFo+vrS/a9aBmtLnw==
-X-Google-Smtp-Source: AGHT+IHJZy1TMb/fvXpxgZf1OGsiFiqP+dJU/QormPX81So2k7lHQizhtBNoZhxqRjcK9UBTsp9Haz+YSQw3rbHYVqY=
-X-Received: by 2002:a67:ed4e:0:b0:452:5798:64bd with SMTP id
- m14-20020a67ed4e000000b00452579864bdmr7520196vsp.35.1696237477855; Mon, 02
- Oct 2023 02:04:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231001-vf610-gpio-v5-0-8d873a8f224a@nxp.com> <20231001-vf610-gpio-v5-4-8d873a8f224a@nxp.com>
-In-Reply-To: <20231001-vf610-gpio-v5-4-8d873a8f224a@nxp.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 2 Oct 2023 11:04:27 +0200
-Message-ID: <CAMRc=MdXkFBWMuyr8sbetyP2sJX2QG6Ce=Tsb7RVMguvGdC3TA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/7] gpio: vf610: add i.MX8ULP of_device_id entry
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+        with ESMTP id S235983AbjJBJFV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 05:05:21 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C5C91;
+        Mon,  2 Oct 2023 02:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696237519; x=1727773519;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kfqKs+0cNmvI19UU8b/Nv0Di7NOKQZPlZ3XU9/IVcM4=;
+  b=XZUVAB5QEREZh8zhcUF6aAhlg0eA0fIy4VDXR3ALwBmCGuNiLvABswDS
+   pngHX6mQZgTibNLveAIvvAYKI0l/w4FLO+re487AD8koNM3XhuD6uf12D
+   VAvT5UN+uyhovkh43jj+7+ExvNl8USruHwQ6jw4qdiBxuxxM7/F9DcP05
+   RY+KWswMxkJBtnX2FN1Q99+bNcaABrJTUDq0gMpvoUPHmmAXU32dZECEH
+   t4g/EWY2s9DuqS9RaJu3wc06Xs20I+txmxoQgtD2ZXnZ1zIIhSvwU7afE
+   eUVEZRZAH/zcoAcGJO1g6r80otf8in4pnKsTgJT6ZueGa+UsLyfy8rm0E
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="386478982"
+X-IronPort-AV: E=Sophos;i="6.03,193,1694761200"; 
+   d="scan'208";a="386478982"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 02:05:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="700282974"
+X-IronPort-AV: E=Sophos;i="6.03,193,1694761200"; 
+   d="scan'208";a="700282974"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 02:05:15 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qnErX-0000000279P-3dcG;
+        Mon, 02 Oct 2023 12:05:11 +0300
+Date:   Mon, 2 Oct 2023 12:05:11 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Yury Norov <yury.norov@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+        Srinivas Neeli <srinivas.neeli@amd.com>,
+        Michal Simek <michal.simek@amd.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Subject: Re: [PATCH v1 5/5] gpiolib: cdev: Utilize more bitmap APIs
+Message-ID: <ZRqHx+Ihcxor2Jz4@smile.fi.intel.com>
+References: <20230926052007.3917389-1-andriy.shevchenko@linux.intel.com>
+ <20230926052007.3917389-6-andriy.shevchenko@linux.intel.com>
+ <ZROGG44v5kfktdVs@sol>
+ <ZRQdQnL5VbX659cl@smile.fi.intel.com>
+ <ZRQy795YoPOKsOcz@sol>
+ <ZRQ1RpHEapodQ0xU@smile.fi.intel.com>
+ <ZRQ60KBtY09uPxp6@sol>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZRQ60KBtY09uPxp6@sol>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 1, 2023 at 10:23=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> i.MX8ULP/93 GPIO supports similar feature as i.MX7ULP GPIO, but i.MX8ULP =
-is
-> actually not hardware compatible with i.MX7ULP. i.MX8ULP only has one
-> register base, not two bases. i.MX8ULP and i.MX93 actually has two
-> interrupts for each gpio controller, one for Trustzone non-secure world,
-> one for secure world.
->
-> Although the Linux Kernel driver gpio-vf610.c could work with
-> fsl,imx7ulp-gpio compatible, it is based on some tricks did in device tre=
-e
-> with some offset added to base address.
->
-> Add a new of_device_id entry for i.MX8ULP. But to make the driver could
-> also support old bindings, check the compatible string first, before
-> check the device data.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/gpio/gpio-vf610.c | 47 ++++++++++++++++++++++++++++++++++++++++-=
-------
->  1 file changed, 40 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> index dbc7ba0ee72c..8e12706c0b22 100644
-> --- a/drivers/gpio/gpio-vf610.c
-> +++ b/drivers/gpio/gpio-vf610.c
-> @@ -25,6 +25,7 @@
->  struct fsl_gpio_soc_data {
->         /* SoCs has a Port Data Direction Register (PDDR) */
->         bool have_paddr;
-> +       bool have_dual_base;
->  };
->
->  struct vf610_gpio_port {
-> @@ -60,13 +61,26 @@ struct vf610_gpio_port {
->  #define PORT_INT_EITHER_EDGE   0xb
->  #define PORT_INT_LOGIC_ONE     0xc
->
-> +#define IMX8ULP_GPIO_BASE_OFF  0x40
-> +#define IMX8ULP_BASE_OFF       0x80
-> +
-> +static const struct fsl_gpio_soc_data vf610_data =3D {
-> +       .have_dual_base =3D true,
-> +};
-> +
->  static const struct fsl_gpio_soc_data imx_data =3D {
->         .have_paddr =3D true,
-> +       .have_dual_base =3D true,
-> +};
-> +
-> +static const struct fsl_gpio_soc_data imx8ulp_data =3D {
-> +       .have_paddr =3D true,
->  };
->
->  static const struct of_device_id vf610_gpio_dt_ids[] =3D {
-> -       { .compatible =3D "fsl,vf610-gpio",       .data =3D NULL, },
-> +       { .compatible =3D "fsl,vf610-gpio",       .data =3D &vf610_data }=
-,
->         { .compatible =3D "fsl,imx7ulp-gpio",     .data =3D &imx_data, },
-> +       { .compatible =3D "fsl,imx8ulp-gpio",     .data =3D &imx8ulp_data=
-, },
->         { /* sentinel */ }
->  };
->
-> @@ -263,19 +277,38 @@ static int vf610_gpio_probe(struct platform_device =
-*pdev)
->         struct gpio_irq_chip *girq;
->         int i;
->         int ret;
-> +       bool dual_base;
->
->         port =3D devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
->         if (!port)
->                 return -ENOMEM;
->
->         port->sdata =3D of_device_get_match_data(dev);
-> -       port->base =3D devm_platform_ioremap_resource(pdev, 0);
-> -       if (IS_ERR(port->base))
-> -               return PTR_ERR(port->base);
->
-> -       port->gpio_base =3D devm_platform_ioremap_resource(pdev, 1);
-> -       if (IS_ERR(port->gpio_base))
-> -               return PTR_ERR(port->gpio_base);
-> +       dual_base =3D port->sdata->have_dual_base;
-> +
-> +       /* support old compatible strings */
-> +       if (device_is_compatible(dev, "fsl,imx7ulp-gpio") &&
-> +           (device_is_compatible(dev, "fsl,imx93-gpio") ||
+On Wed, Sep 27, 2023 at 10:23:12PM +0800, Kent Gibson wrote:
+> On Wed, Sep 27, 2023 at 04:59:34PM +0300, Andy Shevchenko wrote:
+> > On Wed, Sep 27, 2023 at 09:49:35PM +0800, Kent Gibson wrote:
+> > > On Wed, Sep 27, 2023 at 03:17:06PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Sep 27, 2023 at 09:32:11AM +0800, Kent Gibson wrote:
 
-Why not just add this compatible to vf610_gpio_dt_ids?
+...
 
-Bart
+> > > > Yet, it opens a way to scale this in case we might have v3 ABI that let's say
+> > > > allows to work with 512 GPIOs at a time. With your code it will be much harder
+> > > > to achieve and see what you wrote about maintenance (in that case).
+> > > 
+> > > v3 ABI?? libgpiod v2 is barely out the door!
+> > > Do you have any cases where 64 lines per request is limiting?
+> > 
+> > IIRC it was SO question where the OP asks exactly about breaking the 64 lines
+> > limitation in the current ABI.
+> > 
+> > > If that sort of speculation isn't premature optimisation then I don't know
+> > > what is.
+> > 
+> > No, based on the real question / discussion, just have no link at hand.
+> > But it's quite a niche, I can agree.
+> 
+> Let me know if you find a ref to that discussion - I'm curious.
 
-> +           (device_is_compatible(dev, "fsl,imx8ulp-gpio"))))
-> +               dual_base =3D true;
-> +
-> +       if (dual_base) {
-> +               port->base =3D devm_platform_ioremap_resource(pdev, 0);
-> +               if (IS_ERR(port->base))
-> +                       return PTR_ERR(port->base);
-> +
-> +               port->gpio_base =3D devm_platform_ioremap_resource(pdev, =
-1);
-> +               if (IS_ERR(port->gpio_base))
-> +                       return PTR_ERR(port->gpio_base);
-> +       } else {
-> +               port->base =3D devm_platform_ioremap_resource(pdev, 0);
-> +               if (IS_ERR(port->base))
-> +                       return PTR_ERR(port->base);
-> +
-> +               port->gpio_base =3D port->base + IMX8ULP_GPIO_BASE_OFF;
-> +               port->base =3D port->base + IMX8ULP_BASE_OFF;
-> +       }
->
->         port->irq =3D platform_get_irq(pdev, 0);
->         if (port->irq < 0)
->
-> --
-> 2.37.1
->
+Here it is (read comments as well):
+https://stackoverflow.com/questions/76307370/control-gpio-from-linux-userspace-with-linux-gpio-h
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
