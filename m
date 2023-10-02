@@ -2,108 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D954F7B4BEB
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 08:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89F0B7B4C02
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Oct 2023 09:01:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235584AbjJBG6z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Oct 2023 02:58:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
+        id S235584AbjJBHBH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Oct 2023 03:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235596AbjJBG6y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 02:58:54 -0400
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EE6D7
-        for <linux-gpio@vger.kernel.org>; Sun,  1 Oct 2023 23:58:52 -0700 (PDT)
-Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-4525dd7f9d0so6368343137.3
-        for <linux-gpio@vger.kernel.org>; Sun, 01 Oct 2023 23:58:52 -0700 (PDT)
+        with ESMTP id S235626AbjJBHBG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 03:01:06 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47E6C9
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 00:01:02 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-31fa15f4cc6so15535341f8f.2
+        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 00:01:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696229931; x=1696834731; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1696230061; x=1696834861; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A4qziV8UF0SZXz3oB61dXR8DlPsKUiWHDmOG204EYoc=;
-        b=1pVe3tMMGzJG7V3ocJCyxmJm2grbredP5qmhXsN1iirtOQ+3NLJEjd+xomlAZsXl5Q
-         u/cotVuQmWH6n1psJPmlfqGHseyqI5Sywdnzrv8oxwf/7ZwJ7xp+H8hz6nI2HYdc4hBa
-         PNUs5rgYBNwj45lS+NCGZ6/tsksYIe3/NaOrskmrDQGPfjkGqsQc9kgjjA1WxdmFls4u
-         4/wJgzlo5pCmbDBtkq+WDgfK0rSbDyFrulfk0YRM02o5Hgj+FsxPWTyWS24jXz6miXBE
-         LPYZ0lGCSM7IBGkA4yioyHUV509O+Bk7qWFiTxn8Fq1d3QtrICOb1rw53KW2/TQWF8Wb
-         FNwg==
+        bh=ED3nCHgOaahRi3tOePbQGBavpIZHiHZhel+Y9Fp/+p4=;
+        b=wfBzL7Ar2gTHJL2ZtNQpNlK4DtZeN0aZIUaM1VD7ZCijTn/jmoJ4G0VQGcGi+tei2j
+         +DQAhY2DLxm0AoAH1cyzI2xIViUhHHWGlFtLPw689VlirZrGS+gI2ysKJ1m8nzQkoIae
+         iqf9klJp2tPBMWDCphVhxWpEpvOyuovxQ/pbOeBdqnwAtZGnYhPn6HRPAOIw2TR4ka0E
+         9KFwKKFOKBlVTH1aIx7Yq8WifNfWyuR5kI7TJLUf59WX5GYvfgr7EV6XjgTJsxP7bS7w
+         coYUWlpU73/wn9AAM8gJV5WcIE7mexGPN8xJYDoqwcOJ35wKTrelkVZVyz5h6F6rxa4K
+         0n2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696229931; x=1696834731;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1696230061; x=1696834861;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=A4qziV8UF0SZXz3oB61dXR8DlPsKUiWHDmOG204EYoc=;
-        b=KxLcFF4u9IvX+qCGWxV7JqnLHCcki3UjT96WPNLE3uOSYwi6S8271YW0rOKv57eUBJ
-         A30MJJzbq4fCv2agb2ImID7sbQ/BZ7+AfJUQ+Boa8QnbpuRG7W8wDPvUZoRLF0ctKT0v
-         7EPSCKGs340Lq8vPGlCsv+GZlqsr5+1VFwOeYpWbgWB4Ow7hVMlPQxQioMxbhCx1Fg0s
-         r4MoPcs3j7Hlmj/I7D6x95GozABs/LXXqP6MB7K8zGPE8VkPaM2Vq8XA87963j2lMJhe
-         UEEpsEQjMrs4XghNKaKqm/DuDkwFre2uM1tF+0Eyyss+fXc6JHZ8RVI7ulV+uPFS+/DV
-         kdcw==
-X-Gm-Message-State: AOJu0YxOdZI759EcBILNnryJXn3rYnKmDwz6YtiYlvXuM0s0N4a8jwU6
-        ZRYUFIt43nk7QCG0NlKCPVPiH/8cMRJ3kS86UDzjA8YeX01hTrDCav4=
-X-Google-Smtp-Source: AGHT+IG3rs8zYl/JJw0tQ56R8pNc8Z4u7VsfcZANJKhvdcy3VGBf3DrVHIPL2bWY3jddy27oPmc/VgQeyI43E8zLL1E=
-X-Received: by 2002:a67:bd1a:0:b0:454:701c:7717 with SMTP id
- y26-20020a67bd1a000000b00454701c7717mr6527449vsq.5.1696229931169; Sun, 01 Oct
- 2023 23:58:51 -0700 (PDT)
+        bh=ED3nCHgOaahRi3tOePbQGBavpIZHiHZhel+Y9Fp/+p4=;
+        b=vKzvox12zED+sRKdU+kNKiYFDanixNKVQ2tIvXgOBwMpbHswTita/LECyW7qGeEfOi
+         iT5jqqtspT5BOUD1fV/jvOanHVOnBXPtpaCcY7Zfgwcesz+9PO/UhLDNNFEKdN7OsRgp
+         cltmEKHa4gJc8LkeQUNPgR1G2xsAbFChCQ+pMdDu+ohPoZwfXXwcHZDRzWMkIgW+ACfA
+         eJ3DsTmdpwBz6Xr2QW+KFjIuk+kGIyuDC8qNjqG7msaSFZUhLhd5GKzhdOK3c4BBnfnR
+         yxkwWkZxxtpZaTucWnMMqaOSZ6g0rPNoII3Qk6Sqw6H63X8ATb3+PB/5nJfWf0jarBIe
+         trOw==
+X-Gm-Message-State: AOJu0Yys2Eh3xDMt6JzWw8l+9/nUqP7XhyEFwwYeJ27x9xZ7+Gq2nThc
+        yP4vqG72u0gOD+qOJm4QDgOpwA==
+X-Google-Smtp-Source: AGHT+IHnVHHnTOhtd/Btr60iU9/eHOnkZf9kPsbDDvwF0leE0UE71ygHUrODFNhJf2LGR0NcKfWECw==
+X-Received: by 2002:adf:e48e:0:b0:317:67bf:3376 with SMTP id i14-20020adfe48e000000b0031767bf3376mr8843141wrm.57.1696230061171;
+        Mon, 02 Oct 2023 00:01:01 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id r17-20020adfda51000000b00327c79ca7c6sm2440715wrl.80.2023.10.02.00.01.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Oct 2023 00:01:00 -0700 (PDT)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        khilman@baylibre.com, jbrunet@baylibre.com,
+        martin.blumenstingl@googlemail.com, brgl@bgdev.pl, andy@kernel.org,
+        Huqiang Qin <huqiang.qin@amlogic.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20230922094342.637251-1-huqiang.qin@amlogic.com>
+References: <20230922094342.637251-1-huqiang.qin@amlogic.com>
+Subject: Re: (subset) [PATCH V3 0/3] Add pinctrl driver support for Amlogic
+ T7 SoCs
+Message-Id: <169623006024.3465675.18368876466117698542.b4-ty@linaro.org>
+Date:   Mon, 02 Oct 2023 09:01:00 +0200
 MIME-Version: 1.0
-References: <20230929-gpio-fx16408-v1-1-7fdd3218f7d6@kernel.org>
-In-Reply-To: <20230929-gpio-fx16408-v1-1-7fdd3218f7d6@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 2 Oct 2023 08:58:40 +0200
-Message-ID: <CAMRc=MdS4pjYhZ8AsYPa6-QMiPCocgsJ_aihL6iF3tvO8bc=sQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: fx6408: Convert to use maple tree register cache
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 4:11=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> The maple tree register cache is based on a much more modern data structu=
-re
-> than the rbtree cache and makes optimisation choices which are probably
-> more appropriate for modern systems than those made by the rbtree cache.
->
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  drivers/gpio/gpio-fxl6408.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-fxl6408.c b/drivers/gpio/gpio-fxl6408.c
-> index c14b5cc5e519..991549888904 100644
-> --- a/drivers/gpio/gpio-fxl6408.c
-> +++ b/drivers/gpio/gpio-fxl6408.c
-> @@ -84,7 +84,7 @@ static const struct regmap_config regmap =3D {
->         .rd_table =3D &rd_table,
->         .volatile_table =3D &volatile_table,
->
-> -       .cache_type =3D REGCACHE_RBTREE,
-> +       .cache_type =3D REGCACHE_MAPLE,
->         .num_reg_defaults_raw =3D FXL6408_REG_INT_STS + 1,
->  };
->
->
-> ---
-> base-commit: 6465e260f48790807eef06b583b38ca9789b6072
-> change-id: 20230929-gpio-fx16408-476b144746bc
->
-> Best regards,
-> --
-> Mark Brown <broonie@kernel.org>
->
+Hi,
 
-Applied, thanks!
+On Fri, 22 Sep 2023 17:43:39 +0800, Huqiang Qin wrote:
+> This patch adds pinctrl driver support for Amloigc T7 SoC (A311D2)
+> 
+> [PATCH 1/3]:
+>   V1 -> V2: Rename amlogic-t7-gpio.h to amlogic,t7-periphs-pinctrl.h
+>             Corrected indentation format.
+>   V2 -> V3: Updated subject.
+> 
+> [...]
 
-Bart
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.7/arm64-dt)
+
+[3/3] arm64: dts: Add pinctrl node for Amlogic T7 SoCs
+      https://git.kernel.org/amlogic/c/d0f3a19a990a8fde6a7730255af74ef8d70c3761
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.7/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
+
