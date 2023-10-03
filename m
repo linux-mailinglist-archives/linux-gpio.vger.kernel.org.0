@@ -2,87 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6CDA7B687D
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 14:06:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 200E97B68D8
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 14:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbjJCMG5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 08:06:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
+        id S232549AbjJCMRg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 08:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232017AbjJCMG5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 08:06:57 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8DAA9;
-        Tue,  3 Oct 2023 05:06:52 -0700 (PDT)
+        with ESMTP id S232271AbjJCMRg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 08:17:36 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816C6AF;
+        Tue,  3 Oct 2023 05:17:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696334812; x=1727870812;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TjniIZhzKzC35iBW82KnmeoLWBQCp+HfnnP4c9zFzAQ=;
-  b=NDXhjRBm5KN4eh3IQf4g8OL2rNrv+uU6a/F2s1sXAiKCkqghsOo5AeXj
-   lRAQyxYOrqPSgGCDcEVSJy3oR8+SN6VB2OXZiPo4bhBqJ5NaRv003R2bA
-   SUygzhf2XlnBiASh6WqYdZtnQs5d3qhuhwfn2N/1XBx6uePJOhmjKiOwd
-   9wGPwdi0gIf+A0csv5kHBUiSOKG7o/Lr26WQBM/wM/SeZAoal4MxX9IpH
-   3DPHxfQ/07ksCJB8vhjSqD3P16kiv6Jx+hET/U1ykTF0ngBcKycXIrihr
-   TjAR48IMULJeeUIBgEOKeOM4CzSITXGg+ZOI4RLJ8o+mAL8z18TSBQCzh
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="380135669"
+  t=1696335452; x=1727871452;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uI4y9JZTmdufudsS70VmPd6szf4oGmGJOeGKh60sIbw=;
+  b=JIHq0JuEYbcnGRnR/6QpD2mrkGocrVbJrG82efmXqXvoqZz2s1orkJbb
+   QkNI6ocZQApV+zQglM+K7Gu2GN/78Dh6DIfzepigAB53pYCLQu3uHZ7KO
+   9mehpG58dNLiWZn1ApbMJGdkWFWeEbgxZCNm2BlGiNVP77Oi9yzllwQ0M
+   qYYbwrYLa0GizVC1qrtKreuFYvDkL0F9iEnI6tHFDNhJ04QV71gr6kzQo
+   clAdXTbqBUmcxGOfNIalbUYslqeXirbfZjpmfOelRRC7N6Xwvs5afOlcy
+   +HdmK1pcnZZTXVHKYs4IadrcdTiVrdM+gy0rZcnXpCdLtB+2yHRpipGNq
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="1450065"
 X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
-   d="scan'208";a="380135669"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:06:52 -0700
+   d="scan'208";a="1450065"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:16:31 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="821234279"
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="894452131"
 X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
-   d="scan'208";a="821234279"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Oct 2023 05:06:50 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 92E1718A0; Tue,  3 Oct 2023 15:06:49 +0300 (EEST)
+   d="scan'208";a="894452131"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 05:15:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qneKA-00000002TqI-0REH;
+        Tue, 03 Oct 2023 15:16:26 +0300
+Date:   Tue, 3 Oct 2023 15:16:25 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] pinctrl: core: Remove unneeded {} around one line conditional body
-Date:   Tue,  3 Oct 2023 15:06:48 +0300
-Message-Id: <20231003120648.2838047-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+To:     Raag Jadav <raag.jadav@intel.com>
+Cc:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
+Subject: Re: [PATCH v2 0/2] Drop runtime PM support for Baytrail and
+ Lynxpoint pinctrl
+Message-ID: <ZRwGGS+Uilr/egln@smile.fi.intel.com>
+References: <20231003114036.27674-1-raag.jadav@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231003114036.27674-1-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The one line conditional body doesn't require {} surrounding it.
-Remove unneeded {}.
+On Tue, Oct 03, 2023 at 05:10:34PM +0530, Raag Jadav wrote:
+> This series removes runtime PM support for the devices that are not
+> explicitly attached to acpi_lpss_pm_domain as it is dead code anyway.
+> 
+> This has no functional impact and helps reduce their code and memory
+> footprint.
+> 
+> bloat-o-meter:
+> ==============
+> 
+> Baytrail:
+> add/remove: 2/4 grow/shrink: 0/3 up/down: 49/-103 (-54)
+> Total: Before=16104, After=16050, chg -0.34%
+> 
+> Lynxpoint:
+> add/remove: 7/10 grow/shrink: 1/3 up/down: 152/-223 (-71)
+> Total: Before=7506, After=7435, chg -0.95%
+> 
+> Changes since v1:
+> - Add missing pm.h
+> 
+> Raag Jadav (2):
+>   pinctrl: baytrail: drop runtime PM support
+>   pinctrl: lynxpoint: drop runtime PM support
+> 
+>  drivers/pinctrl/intel/pinctrl-baytrail.c  | 19 ++------------
+>  drivers/pinctrl/intel/pinctrl-lynxpoint.c | 32 +++--------------------
+>  2 files changed, 5 insertions(+), 46 deletions(-)
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+You forgot --base... :-(
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index e2f7519bef04..5a15583bf4ae 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -445,9 +445,9 @@ struct pinctrl_dev *pinctrl_find_and_add_gpio_range(const char *devname,
- 	 * it has not probed yet, so the driver trying to register this
- 	 * range need to defer probing.
- 	 */
--	if (!pctldev) {
-+	if (!pctldev)
- 		return ERR_PTR(-EPROBE_DEFER);
--	}
-+
- 	pinctrl_add_gpio_range(pctldev, range);
- 
- 	return pctldev;
 -- 
-2.40.0.1.gaa8946217a0b
+With Best Regards,
+Andy Shevchenko
+
 
