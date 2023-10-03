@@ -2,69 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 530447B6C1B
+	by mail.lfdr.de (Postfix) with ESMTP id F20147B6C1D
 	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 16:51:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240172AbjJCOvb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S240175AbjJCOvb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 3 Oct 2023 10:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240189AbjJCOv3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 10:51:29 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 737B9A7
+        with ESMTP id S240188AbjJCOv2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 10:51:28 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D754DB0
         for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 07:51:25 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-406618d0992so10102115e9.0
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-40572aeb6d0so9991145e9.1
         for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 07:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696344684; x=1696949484; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N1EqDAqCtBZo7z2kLkJw7lL/39F321nZ+hBeSnpopZ4=;
-        b=DP2d5evg8RtAb17yHhsEp3qKo1t4rhF+2w4AzVJLqvnM/OdRCymOQFSSjAT/0MhTol
-         DdbyN7xG1UWtq8BHc2vtk0eZ6acIfavd9xfmz4K8jPXwVLTlDOmThlGZ4DIDqPwZ59vc
-         OjF9ol31iLwPXMrja0cCEW4doGyG0P8kstygs7kUG84n2PyQsNYiXjblqbwTHr4lUPmx
-         eQ3SLXlPrSh6VhlxrJa+R0QIiV1JCUmd9VRR9ncq2T1PNm5Q2pSNOvHaaaT8owoO7NnB
-         9mvzmipwTnruPJeROvR4ZD9bOGc+EeoPlTUjOm7SiEVfyBpckWfF0/xbZ6F+eqfgYGqW
-         ImCw==
+        bh=m+cAT0NJxUIuqflU1cBfM6vQPrUJJd4UlghEqs5YsBY=;
+        b=LFNdR+dp4rIVI1EYTfKCEFUufwfItUQ9v/T8U0/sMedgyzvNAZTZJpsRGBUBGkZAJi
+         gJagrqCK1lf9vndHIqNkIGbeGseePrXKlrzL726CLqTD3+7KGynrfFRMHeE/EcHauTCi
+         P8JJe8BBS78kH6N+BiJR6jdl5hSJGg/hntlzfHHahaLhZoDhCaISyTpbhk4EFLXoFO4U
+         jBjsCOWlY3BGBWNt6osytY7te3GyFMbqWKzl4cXkdZdbrlx3AnieG5g9ex2Sua/TCloy
+         9j94/cEfpZygogEmUI4SkrPKXNFxgPCnwEjW8GELXO+LjLXRNUYOnusEVZUBXCJARS7O
+         g7mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1696344684; x=1696949484;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N1EqDAqCtBZo7z2kLkJw7lL/39F321nZ+hBeSnpopZ4=;
-        b=UTWktGVWMe6NCN+6psLCiMbQ0reAZPKRLwonGvHrlbBIw2w/DKl/YWCQjZ5NYY7XOf
-         I1w4qCBhPfsSISxJGe7WfO+wh4x2pnlhJ+7riUazkJCCW4t11wDR66B8ihYTNAJlGV+6
-         4AQSE5zqY07asOWp9U7VMGL3H+IV2TDn6QE5SDno9DLEl+upq/I9WtfldXoXB2xhFyAi
-         MNurQSdsJQAyJhTqa7rdr9sHYsOeBeuugff/yKyQhW4pSuIcgFDIDPoIdupqfKMkvmGp
-         v45cp+da4O0sA2OXikWHxHex4gJsd2InzlNpOcjBHEjentkw5drWv0UGU6WvhzrseNYg
-         JQaA==
-X-Gm-Message-State: AOJu0Yz5477d2UPUjs3VdTJE9Xh2pkAP1U+vfvJHBt/HSi1PrUEy+bUp
-        xW/kBnQfDNqg6oA0tFyvzcOsfg==
-X-Google-Smtp-Source: AGHT+IE45u3d6FCnLBmAspL/qXP4y25PYnMCd8R73QpVttBd8FY+RzS2nR9kUUmu7P+pQXxCBPAjmA==
-X-Received: by 2002:a7b:cbc9:0:b0:405:1ba2:4fcb with SMTP id n9-20020a7bcbc9000000b004051ba24fcbmr13493031wmi.16.1696344683602;
-        Tue, 03 Oct 2023 07:51:23 -0700 (PDT)
+        bh=m+cAT0NJxUIuqflU1cBfM6vQPrUJJd4UlghEqs5YsBY=;
+        b=hbWPw8/SnkpbJby+kfaPwUjRkF0P/wtQYlnYKEG6MZHHKr3GyvTTQd5nBlhiQkD45V
+         XVN8FwjzQrwWv5VAfCRiUJ1nCJGcQEFooyKu+5LMqUx9qCtm99b8WxoI0OlpnsM4io/n
+         TFRc8utJmywXNz/WuXkQc8H7qEzQvxqQsjcFBJa8O6bRS1dR4Q2AixG4P//wv6SqWdUj
+         s5756Ns5AGPbDp/kOeN9qRi8tSZ+IfTT9nYUn9vbFQexdPXyHR7qVmGv3AynPlUujL4u
+         TuQAzN1dL9q+vmkatd7/YAArJWnHs968+8BRdD8H79m3aO+4O2DQ5hX8G+lb6dd2UETs
+         e26Q==
+X-Gm-Message-State: AOJu0YyQmehtnVV5/zexbpgvY4v8OjlGBtpdZNgatbH/CfldVx9gcHua
+        Qc90oQgnr9+5YWdF/22eGreW8A==
+X-Google-Smtp-Source: AGHT+IHioWDnG6xJL3DIbbqz/tDyFKQ3NBP6THRHpZJAOU282meIzEKqGKDI+KX0axm5yV3Yi64EjA==
+X-Received: by 2002:a05:600c:ac9:b0:402:f55c:faee with SMTP id c9-20020a05600c0ac900b00402f55cfaeemr12308302wmr.26.1696344684393;
+        Tue, 03 Oct 2023 07:51:24 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:1f2d:3479:a5de:fa35])
-        by smtp.gmail.com with ESMTPSA id c15-20020a05600c0acf00b003fe29f6b61bsm1462773wmr.46.2023.10.03.07.51.22
+        by smtp.gmail.com with ESMTPSA id c15-20020a05600c0acf00b003fe29f6b61bsm1462773wmr.46.2023.10.03.07.51.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 07:51:22 -0700 (PDT)
+        Tue, 03 Oct 2023 07:51:24 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 02/36] pinctrl: provide new GPIO-to-pinctrl glue helpers
-Date:   Tue,  3 Oct 2023 16:50:40 +0200
-Message-Id: <20231003145114.21637-3-brgl@bgdev.pl>
+Subject: [PATCH 03/36] gpiolib: generic: use new pinctrl GPIO helpers
+Date:   Tue,  3 Oct 2023 16:50:41 +0200
+Message-Id: <20231003145114.21637-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231003145114.21637-1-brgl@bgdev.pl>
 References: <20231003145114.21637-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -73,298 +73,46 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Currently the pinctrl GPIO helpers all take a number from the global
-GPIO numberspace - of which we're trying to get rid of as argument.
-
-These helpers are almost universally called from GPIOLIB driver
-callbacks which take a pointer to the backing gpio_chip and the
-controller-relative offset as arguments.
-
-Let's provide improved variants of these functions that match the
-GPIOLIB signatures as the first step in removing the older flavor.
+Replace the pinctrl helpers taking the global GPIO number as argument
+with the improved variants that instead take a pointer to the GPIO chip
+and the controller-relative offset.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pinctrl/core.c           | 107 ++++++++++++++++++++++---------
- include/linux/pinctrl/consumer.h |  46 +++++++++++++
- 2 files changed, 124 insertions(+), 29 deletions(-)
+ drivers/gpio/gpiolib.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index e2f7519bef04..679f48c5beeb 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -23,6 +23,7 @@
- #include <linux/seq_file.h>
- #include <linux/slab.h>
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 7c27a1efc1b0..511f6220071d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1854,7 +1854,7 @@ int gpiochip_generic_request(struct gpio_chip *gc, unsigned int offset)
+ 		return 0;
+ #endif
  
-+#include <linux/gpio/driver.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pinctrl/devinfo.h>
- #include <linux/pinctrl/machine.h>
-@@ -781,14 +782,13 @@ bool pinctrl_gpio_can_use_line(unsigned gpio)
+-	return pinctrl_gpio_request(gc->gpiodev->base + offset);
++	return pinctrl_gpio_request_new(gc, offset);
  }
- EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
+ EXPORT_SYMBOL_GPL(gpiochip_generic_request);
  
--/**
-- * pinctrl_gpio_request() - request a single pin to be used as GPIO
-- * @gpio: the GPIO pin number from the GPIO subsystem number space
-- *
-- * This function should *ONLY* be used from gpiolib-based GPIO drivers,
-- * as part of their gpio_request() semantics, platforms and individual drivers
-- * shall *NOT* request GPIO pins to be muxed in.
-- */
-+bool pinctrl_gpio_can_use_line_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return pinctrl_gpio_can_use_line(gc->base + offset);
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line_new);
-+
-+/* This function is deprecated and will be removed. Don't use. */
- int pinctrl_gpio_request(unsigned gpio)
- {
- 	struct pinctrl_dev *pctldev;
-@@ -817,13 +817,21 @@ int pinctrl_gpio_request(unsigned gpio)
- EXPORT_SYMBOL_GPL(pinctrl_gpio_request);
+@@ -1870,7 +1870,7 @@ void gpiochip_generic_free(struct gpio_chip *gc, unsigned int offset)
+ 		return;
+ #endif
  
- /**
-- * pinctrl_gpio_free() - free control on a single pin, currently used as GPIO
-- * @gpio: the GPIO pin number from the GPIO subsystem number space
-+ * pinctrl_gpio_request_new() - request a single pin to be used as GPIO
-+ * @gc: GPIO chip structure from the GPIO subsystem
-+ * @offset: hardware offset of the GPIO relative to the controller
-  *
-  * This function should *ONLY* be used from gpiolib-based GPIO drivers,
-- * as part of their gpio_free() semantics, platforms and individual drivers
-- * shall *NOT* request GPIO pins to be muxed out.
-+ * as part of their gpio_request() semantics, platforms and individual drivers
-+ * shall *NOT* request GPIO pins to be muxed in.
-  */
-+int pinctrl_gpio_request_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return pinctrl_gpio_request(gc->base + offset);
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_request_new);
-+
-+/* This function is deprecated and will be removed. Don't use. */
- void pinctrl_gpio_free(unsigned gpio)
- {
- 	struct pinctrl_dev *pctldev;
-@@ -846,6 +854,21 @@ void pinctrl_gpio_free(unsigned gpio)
+-	pinctrl_gpio_free(gc->gpiodev->base + offset);
++	pinctrl_gpio_free_new(gc, offset);
  }
- EXPORT_SYMBOL_GPL(pinctrl_gpio_free);
+ EXPORT_SYMBOL_GPL(gpiochip_generic_free);
  
-+/**
-+ * pinctrl_gpio_free_new() - free control on a single pin, currently used as GPIO
-+ * @gc: GPIO chip structure from the GPIO subsystem
-+ * @offset: hardware offset of the GPIO relative to the controller
-+ *
-+ * This function should *ONLY* be used from gpiolib-based GPIO drivers,
-+ * as part of their gpio_request() semantics, platforms and individual drivers
-+ * shall *NOT* request GPIO pins to be muxed in.
-+ */
-+void pinctrl_gpio_free_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return pinctrl_gpio_free(gc->base + offset);
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_free_new);
-+
- static int pinctrl_gpio_direction(unsigned gpio, bool input)
+@@ -1883,7 +1883,7 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_free);
+ int gpiochip_generic_config(struct gpio_chip *gc, unsigned int offset,
+ 			    unsigned long config)
  {
- 	struct pinctrl_dev *pctldev;
-@@ -869,14 +892,7 @@ static int pinctrl_gpio_direction(unsigned gpio, bool input)
- 	return ret;
+-	return pinctrl_gpio_set_config(gc->gpiodev->base + offset, config);
++	return pinctrl_gpio_set_config_new(gc, offset, config);
  }
+ EXPORT_SYMBOL_GPL(gpiochip_generic_config);
  
--/**
-- * pinctrl_gpio_direction_input() - request a GPIO pin to go into input mode
-- * @gpio: the GPIO pin number from the GPIO subsystem number space
-- *
-- * This function should *ONLY* be used from gpiolib-based GPIO drivers,
-- * as part of their gpio_direction_input() semantics, platforms and individual
-- * drivers shall *NOT* touch pin control GPIO calls.
-- */
-+/* This function is deprecated and will be removed. Don't use. */
- int pinctrl_gpio_direction_input(unsigned gpio)
- {
- 	return pinctrl_gpio_direction(gpio, true);
-@@ -884,13 +900,21 @@ int pinctrl_gpio_direction_input(unsigned gpio)
- EXPORT_SYMBOL_GPL(pinctrl_gpio_direction_input);
- 
- /**
-- * pinctrl_gpio_direction_output() - request a GPIO pin to go into output mode
-- * @gpio: the GPIO pin number from the GPIO subsystem number space
-+ * pinctrl_gpio_direction_input_new() - request a GPIO pin to go into input mode
-+ * @gc: GPIO chip structure from the GPIO subsystem
-+ * @offset: hardware offset of the GPIO relative to the controller
-  *
-  * This function should *ONLY* be used from gpiolib-based GPIO drivers,
-- * as part of their gpio_direction_output() semantics, platforms and individual
-+ * as part of their gpio_direction_input() semantics, platforms and individual
-  * drivers shall *NOT* touch pin control GPIO calls.
-  */
-+int pinctrl_gpio_direction_input_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return pinctrl_gpio_direction_input(gc->base + offset);
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_direction_input_new);
-+
-+/* This function is deprecated and will be removed. Don't use. */
- int pinctrl_gpio_direction_output(unsigned gpio)
- {
- 	return pinctrl_gpio_direction(gpio, false);
-@@ -898,14 +922,22 @@ int pinctrl_gpio_direction_output(unsigned gpio)
- EXPORT_SYMBOL_GPL(pinctrl_gpio_direction_output);
- 
- /**
-- * pinctrl_gpio_set_config() - Apply config to given GPIO pin
-- * @gpio: the GPIO pin number from the GPIO subsystem number space
-- * @config: the configuration to apply to the GPIO
-+ * pinctrl_gpio_direction_output_new() - request a GPIO pin to go into output
-+ *                                       mode
-+ * @gc: GPIO chip structure from the GPIO subsystem
-+ * @offset: hardware offset of the GPIO relative to the controller
-  *
-- * This function should *ONLY* be used from gpiolib-based GPIO drivers, if
-- * they need to call the underlying pin controller to change GPIO config
-- * (for example set debounce time).
-+ * This function should *ONLY* be used from gpiolib-based GPIO drivers,
-+ * as part of their gpio_direction_output() semantics, platforms and individual
-+ * drivers shall *NOT* touch pin control GPIO calls.
-  */
-+int pinctrl_gpio_direction_output_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return pinctrl_gpio_direction_output(gc->base + offset);
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_direction_output_new);
-+
-+/* This function is deprecated and will be removed. Don't use. */
- int pinctrl_gpio_set_config(unsigned gpio, unsigned long config)
- {
- 	unsigned long configs[] = { config };
-@@ -926,6 +958,23 @@ int pinctrl_gpio_set_config(unsigned gpio, unsigned long config)
- }
- EXPORT_SYMBOL_GPL(pinctrl_gpio_set_config);
- 
-+/**
-+ * pinctrl_gpio_set_config_new() - Apply config to given GPIO pin
-+ * @gc: GPIO chip structure from the GPIO subsystem
-+ * @offset: hardware offset of the GPIO relative to the controller
-+ * @config: the configuration to apply to the GPIO
-+ *
-+ * This function should *ONLY* be used from gpiolib-based GPIO drivers, if
-+ * they need to call the underlying pin controller to change GPIO config
-+ * (for example set debounce time).
-+ */
-+int pinctrl_gpio_set_config_new(struct gpio_chip *gc, unsigned int offset,
-+				unsigned long config)
-+{
-+	return pinctrl_gpio_set_config(gc->base + offset, config);
-+}
-+EXPORT_SYMBOL_GPL(pinctrl_gpio_set_config_new);
-+
- static struct pinctrl_state *find_state(struct pinctrl *p,
- 					const char *name)
- {
-diff --git a/include/linux/pinctrl/consumer.h b/include/linux/pinctrl/consumer.h
-index 22eef0a513ce..c95c13983376 100644
---- a/include/linux/pinctrl/consumer.h
-+++ b/include/linux/pinctrl/consumer.h
-@@ -17,6 +17,7 @@
- #include <linux/pinctrl/pinctrl-state.h>
- 
- struct device;
-+struct gpio_chip;
- 
- /* This struct is private to the core and should be regarded as a cookie */
- struct pinctrl;
-@@ -26,11 +27,20 @@ struct pinctrl_state;
- 
- /* External interface to pin control */
- bool pinctrl_gpio_can_use_line(unsigned gpio);
-+bool pinctrl_gpio_can_use_line_new(struct gpio_chip *gc, unsigned int offset);
- int pinctrl_gpio_request(unsigned gpio);
-+int pinctrl_gpio_request_new(struct gpio_chip *gc, unsigned int offset);
- void pinctrl_gpio_free(unsigned gpio);
-+void pinctrl_gpio_free_new(struct gpio_chip *gc, unsigned int offset);
- int pinctrl_gpio_direction_input(unsigned gpio);
-+int pinctrl_gpio_direction_input_new(struct gpio_chip *gc,
-+				     unsigned int offset);
- int pinctrl_gpio_direction_output(unsigned gpio);
-+int pinctrl_gpio_direction_output_new(struct gpio_chip *gc,
-+				      unsigned int offset);
- int pinctrl_gpio_set_config(unsigned gpio, unsigned long config);
-+int pinctrl_gpio_set_config_new(struct gpio_chip *gc, unsigned int offset,
-+				unsigned long config);
- 
- struct pinctrl * __must_check pinctrl_get(struct device *dev);
- void pinctrl_put(struct pinctrl *p);
-@@ -68,30 +78,66 @@ static inline bool pinctrl_gpio_can_use_line(unsigned gpio)
- 	return true;
- }
- 
-+static inline bool
-+pinctrl_gpio_can_use_line_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return true;
-+}
-+
- static inline int pinctrl_gpio_request(unsigned gpio)
- {
- 	return 0;
- }
- 
-+static inline int
-+pinctrl_gpio_request_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return 0;
-+}
-+
- static inline void pinctrl_gpio_free(unsigned gpio)
- {
- }
- 
-+static inline void
-+pinctrl_gpio_free_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+}
-+
- static inline int pinctrl_gpio_direction_input(unsigned gpio)
- {
- 	return 0;
- }
- 
-+static inline int
-+pinctrl_gpio_direction_input_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return 0;
-+}
-+
- static inline int pinctrl_gpio_direction_output(unsigned gpio)
- {
- 	return 0;
- }
- 
-+static inline int
-+pinctrl_gpio_direction_output_new(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return 0;
-+}
-+
- static inline int pinctrl_gpio_set_config(unsigned gpio, unsigned long config)
- {
- 	return 0;
- }
- 
-+static inline int
-+pinctrl_gpio_set_config_new(struct gpio_chip *gc, unsigned int offset,
-+			    unsigned long config)
-+{
-+	return 0;
-+}
-+
- static inline struct pinctrl * __must_check pinctrl_get(struct device *dev)
- {
- 	return NULL;
 -- 
 2.39.2
 
