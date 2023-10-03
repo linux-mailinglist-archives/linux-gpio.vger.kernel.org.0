@@ -2,104 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF6BC7B6CE4
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 17:19:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B372D7B6CF6
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 17:21:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231391AbjJCPTd convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 3 Oct 2023 11:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48112 "EHLO
+        id S229883AbjJCPVV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 11:21:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231294AbjJCPTc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 11:19:32 -0400
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CA3AD;
-        Tue,  3 Oct 2023 08:19:29 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d8162698f0dso1132636276.0;
-        Tue, 03 Oct 2023 08:19:29 -0700 (PDT)
+        with ESMTP id S230238AbjJCPVV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 11:21:21 -0400
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C054083;
+        Tue,  3 Oct 2023 08:21:17 -0700 (PDT)
+Received: by mail-ot1-x32b.google.com with SMTP id 46e09a7af769-6c67060fdfaso720837a34.2;
+        Tue, 03 Oct 2023 08:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696346477; x=1696951277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1z9Omi3EfSCh5yQBotfP7z50wuoV8LxiixPm+3LhYpQ=;
+        b=W/uABWY7+nWORqtxp2xxh3C9pESQRDAXnESbr9XkTG9k3BVAWuHFom+I1PrAhimvtY
+         mqKu1JBNvVP5gL5mJdRFgztku2SJ0DJNtMSnArNeOdJ+KThWZRKUQjp1vwYT5R2lwLCu
+         ZxTHb2iG0zHN6geSe4B2Hx9urNjNUVvuh04dDz6Kvp8oHDLz6f+HMqXm08XIk9CU1avL
+         CAQiVxYc7QY83rVFIwTrhv5JDQY1TBXimvREC/n1jF0OA+iFIX51+LIoyyn9iO76gj2x
+         9SwBokj/p/7z3aAj1WRTq7gyGOUi4bxvizUB1FDkuvHfdDxJGp96dsxpNr2cJOiUSBaM
+         kevw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696346368; x=1696951168;
+        d=1e100.net; s=20230601; t=1696346477; x=1696951277;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BBKViIdg/9cDLzuM95X5V6V6ZzYcdpIf1IK/GDtHoe0=;
-        b=XQEdsdt8nFLPyUMPfeTEYr4ILJbJo8SxtdDg6re9zcrsrH49no2NKFsJzltloln0mN
-         n/vXwsTSon1terKNTQRRuI8nyjrNyZf93V/O0jn7UvV5u0sIn0cfCsFYD3b6MNZ6gFJ4
-         v2A4oMZnzmvnFg7CrGsBeXcSQzdtzfqvQYZ+0hXvhsnY5faNOhBR9oTRYMcXFQhVw18u
-         FL9o4zBHseUUBvu83no6N+UPS+xVfYA2fGOQ6uQ/1LZ53m3vz6ns9CIZ1qXgkG+8is7R
-         sYeqObLy6FCa7g5/6E7dug8cYPa8KrvwEQWIPrcoiMq/Hx/qtUQvpnX9zv7LeQTg9Nh1
-         Lk0g==
-X-Gm-Message-State: AOJu0Ywvo/Sn59aZsUhZPW7Suy+lrwb7aQFla3LY7XUNjoMbZcE696Az
-        dDKAVNlszl6v39fdWU7KCYHEI3gzEoGwSQ==
-X-Google-Smtp-Source: AGHT+IHFnV1zRGLHP66GQTrNH644jljVi4HcTMCI/GaAXQTCckrj7rGC2KB68Ym7wD6dC6pVbLn7Xw==
-X-Received: by 2002:a25:ae21:0:b0:d7f:c4ed:d6af with SMTP id a33-20020a25ae21000000b00d7fc4edd6afmr14373219ybj.40.1696346368281;
-        Tue, 03 Oct 2023 08:19:28 -0700 (PDT)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
-        by smtp.gmail.com with ESMTPSA id t1-20020a252d01000000b00d7e339ada01sm460433ybt.20.2023.10.03.08.19.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Oct 2023 08:19:27 -0700 (PDT)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-59c268676a9so12899207b3.0;
-        Tue, 03 Oct 2023 08:19:27 -0700 (PDT)
-X-Received: by 2002:a25:553:0:b0:d36:58a6:3281 with SMTP id
- 80-20020a250553000000b00d3658a63281mr11873855ybf.39.1696346367086; Tue, 03
- Oct 2023 08:19:27 -0700 (PDT)
+        bh=1z9Omi3EfSCh5yQBotfP7z50wuoV8LxiixPm+3LhYpQ=;
+        b=CWtujNoZaur6xqGH5d6HpYilwtlw2x6teeMya8wMhoSho0TItzy/fb21CXv/mDbpGY
+         ZBl5crE1NufgbsF5Wp2Y4mZI2FVQJQRj/cGBJxjjEbKxemzE8y5dANHdUX5KjO2rTTOy
+         MmuZ86WT+8far9eYrcLTc5pKL0rYSQD7dt9aGiJXWvPS5AOcvwmODU4vQkY2frbW8Ul+
+         UAMigfC0YDISOM7SXbj1LgdpoXzbqe0d/Z+rHRpLkMmTGow7r/YhPkOSdrwsR3MJnEOa
+         MSE0FsdociA1FVHu4G+a0kS7/gfhfUyM7OTldw7EuCmcskAhocROvO3tQLXM2p59TQdq
+         ew1g==
+X-Gm-Message-State: AOJu0YxShHN0valcvhHvWegu88zJah3uxMLLCBKf+iDOZoABtPrsZFh9
+        +pHxSaMuutHeyW2dHkgT0RAXOTIN8VBCWsVjN44=
+X-Google-Smtp-Source: AGHT+IETV0LxOFOFHvGdReEo1wLRQ8Ox2E/7FPUFivgbHbFlkNM6gGwPKhV0dJeUxwQtnlsDb11uHiHvgJ37tK2KI/c=
+X-Received: by 2002:a05:6808:92:b0:3a8:5fd6:f4cf with SMTP id
+ s18-20020a056808009200b003a85fd6f4cfmr15159009oic.22.1696346477021; Tue, 03
+ Oct 2023 08:21:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-5-claudiu.beznea@bp.renesas.com>
-In-Reply-To: <20230929053915.1530607-5-claudiu.beznea@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Oct 2023 17:19:15 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXM7=sMgLJVXpa7maa0ybc=KsOt7-RpdPL6OpMeW6aULw@mail.gmail.com>
-Message-ID: <CAMuHMdXM7=sMgLJVXpa7maa0ybc=KsOt7-RpdPL6OpMeW6aULw@mail.gmail.com>
-Subject: Re: [PATCH v2 04/28] clk: renesas: rzg2l: trust value returned by hardware
-To:     Claudiu <claudiu.beznea@tuxon.dev>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, magnus.damm@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        quic_bjorande@quicinc.com, konrad.dybcio@linaro.org, arnd@arndb.de,
-        neil.armstrong@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, linux-renesas-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-31-brgl@bgdev.pl>
+In-Reply-To: <20231003145114.21637-31-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 3 Oct 2023 18:20:40 +0300
+Message-ID: <CAHp75VdvUUw77MuuhY3Ts9L0ezOdakyppQcnikpYCu672Ghb9Q@mail.gmail.com>
+Subject: Re: [PATCH 30/36] pinctrl: remove old GPIO helpers
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 7:39 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Tue, Oct 3, 2023 at 5:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 >
-> Initial value of CPG_PL2SDHI_DSEL bits 0..1 or 4..6 is 01b. Hardware user's
-> manual (r01uh0914ej0130-rzg2l-rzg2lc.pdf) specifies that setting 0 is
-> prohibited. The rzg2l_cpg_sd_clk_mux_get_parent() should just read
-> CPG_PL2SDHI_DSEL, trust the value and return the proper clock parent index
-> based on the read value. Do this.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Fixes: eaff33646f4cb ("clk: renesas: rzg2l: Add SDHI clk mux support")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v2:
-> - Used "return val ? val - 1 : 0;"
+> Old variants of pinctrl GPIO helpers are no longer used. Let's remove
+> them as well as convert all static functions in pinctrl/core.c that
+> still deal with global GPIO numbers to using the gpio_chip + offset
+> pairs.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk-for-v6.7.
+This patch does three thighs as I see it.
 
-Gr{oetje,eeting}s,
+First of all, it silently converts to RAII. Please, do this separately.
+Second, it shuffles a lot of code between old and new implementations.
+What I prefer to see is what the subject tells: only "-" (minus)
+lines.
+Third, it will become easier if you name the "new" functions better to
+begin with, it will help a lot here.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+With Best Regards,
+Andy Shevchenko
