@@ -2,69 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C71777B64E2
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 11:00:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F50B7B64E7
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 11:01:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231228AbjJCJAQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 05:00:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39484 "EHLO
+        id S231367AbjJCJBI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 05:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239302AbjJCJAP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 05:00:15 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04C71AD
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 02:00:12 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-584bfb14c59so421385a12.0
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 02:00:11 -0700 (PDT)
+        with ESMTP id S239319AbjJCJBH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 05:01:07 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7437AB
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 02:01:03 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c736b00639so4727835ad.2
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 02:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696323611; x=1696928411; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696323663; x=1696928463; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hb99VX38yvDvccuTPifAvrO+mRcxC/1h188AcXvpiIY=;
-        b=k7q2kvLIIE3JI3rmTvif1qgJ/wvLChfiPv77vjnlHXkUoerNN3ct+ZF9FQ1YhReDzl
-         O8K0A2JqTNM+sUBito60Gkj849n1UszwbgcmMjahIjZYvKCwMG/kzrmUleAY7u2xlDy8
-         r668v61p8CJkOvskGvtV1oWCX6NI1qIZYIbHvCM3h1C+zVTAA838g3E5NnWMYbyX03dQ
-         qPTpyE7/S5f2njDW2ZAequRjsbkCmj+cSzWssOBu3upqSTFTZX6kAojtqOkTghGA6H3I
-         UGzhOV9OSEhoC1lkcu3lCvZ+8mJm+UDx6vfH3idzVq6UPl/OvWfExLmseN1PY+knTBNO
-         OfTA==
+        bh=AMHyZNJMt+Shx2jNrCPkjSqXVBBOOyvN72/VVGyt8PI=;
+        b=YzSE1jJxuDcmZbkTPSJjdPGJbOpOX4tDNToLw9viVoYGmJ1qTTbkoVM8nBegHaL9dr
+         xqi96y0MIt4F/jzkropXyJvxIcQWt2VNqxeewU8Qb4oiteK9wxQcmC6wVIylbaF53rdq
+         iDWGggoEzXlVHJLRRbqg8N4O3D+CN4wxxN9KkyRt1x4E2EzXWEZ5EBLwINQRhHmCEFK2
+         ZLhkQRMWgxjD+MamPZEuhLMtLBLsCDv+xYqw0gxHzUe773xp98VkUcuHBhJvJx1oHh28
+         qHKYxdfvM5DkpxlWR4eoDRni8qE1ScvimY+SmGMVeU+eTQ8fvntCLQS7BHnuwL01ZoF9
+         L/oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696323611; x=1696928411;
+        d=1e100.net; s=20230601; t=1696323663; x=1696928463;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Hb99VX38yvDvccuTPifAvrO+mRcxC/1h188AcXvpiIY=;
-        b=DNBiUWaASFvv60C1aSsKpLp+xbQmNGD2A51tK29OB9WF1ZdQ7LUyzzS+8dVhXYhJLp
-         YbEJ9SuirDgVlyVNcDLsyjM38+xLtQr8Do37KRceWB1loTzEXd3WYgL5c6WJuS48fzrN
-         jUd+e6lISHzLVW4lkJKP0qsk8h4tZDwF9woAU+ZCxOktkOtpmDiw6QXiN3d7ulAW6dwp
-         A6vRtw641cgBjwOrMxgXbFo0YetQkSSSaWL2fVYPg7QfEQcqICZ5O0jKtTnfDS9/dYb4
-         Md1zO6KjZhyBM0yidkXyX95OtXjBVqB0xVwX1XlEWJU6Z4ZmoTzKJ9W2HGXAKvoawI3A
-         +vOg==
-X-Gm-Message-State: AOJu0YxHRv1W7WxZeTOrHSarqSA1yH3/MObH1IDXl040fJEFzVzaxaL0
-        JVrvqP3L7pxV1/+CcQ+GqL59cO9R8QrED7eFDjM=
-X-Google-Smtp-Source: AGHT+IEAfkzY/L8U8Bx9qhrI9KxgFq+5N0DFfG5L22TkaIfpABDpUE+xuykV5amDcimLf2gaw1K3Jg==
-X-Received: by 2002:a05:6a20:1596:b0:161:3120:e888 with SMTP id h22-20020a056a20159600b001613120e888mr14279469pzj.46.1696323611373;
-        Tue, 03 Oct 2023 02:00:11 -0700 (PDT)
+        bh=AMHyZNJMt+Shx2jNrCPkjSqXVBBOOyvN72/VVGyt8PI=;
+        b=ptkENm2gSucsv2yNyE5Ln/1GMa1TtGN0BeoFTRO+3STPdZNChk1fyJnZXdKV2j8N3i
+         SB5kWOwAeJXRjTfacP5gra6htohUdGbO3c5Vk7DdgEdYc87fZl0Pu5cAp8LCPc+lA3jx
+         S5rMmzpy4f6PDPjHgP6Glxd969uCv6E4Pis0Eqx5Kl9Nc7S6wtdpUUFCfeeZ9fuNk8RX
+         x6PVWXfRHUFWvDCfa9SDhM/W8ZGXlM2wBEC6EYCfKnGTSVfe4a/XEwYDvnO6Ibqn/kPi
+         2WHDAZpHJCWGswx8BM415L59pUtgCPM8ywupIPLyDO8kq1vvtpg3xdB/Qn9gXBv2M6bv
+         j2KA==
+X-Gm-Message-State: AOJu0Yxu6y7joet6OmT/g3uC0O8MoprRUWo0VBkn9Gmhtx5C61uJSUfU
+        SJg9Fb7H5KfTgqrHM9iiDywhRw==
+X-Google-Smtp-Source: AGHT+IH4bOTdaMqHw4b3cDuutHt4L1JwcR21RpGKxpj6Jr0NuZRnCtFvByUA9f1nTm6hHgA9ApxhsQ==
+X-Received: by 2002:a17:902:e809:b0:1c0:6e92:8cc5 with SMTP id u9-20020a170902e80900b001c06e928cc5mr13069775plg.17.1696323663225;
+        Tue, 03 Oct 2023 02:01:03 -0700 (PDT)
 Received: from localhost ([122.172.81.92])
-        by smtp.gmail.com with ESMTPSA id j5-20020a170902c3c500b001c73fb506aesm940281plj.128.2023.10.03.02.00.10
+        by smtp.gmail.com with ESMTPSA id i19-20020a170902eb5300b001bdc3768ca5sm938963pli.254.2023.10.03.02.01.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 02:00:10 -0700 (PDT)
-Date:   Tue, 3 Oct 2023 14:30:08 +0530
+        Tue, 03 Oct 2023 02:01:02 -0700 (PDT)
+Date:   Tue, 3 Oct 2023 14:31:00 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Erik Schilling <erik.schilling@linaro.org>
 Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
         Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
         Kent Gibson <warthog618@gmail.com>
-Subject: Re: [libgpiod][PATCH v2 2/3] bindings: rust: rename
- {event,settings}_clone to try_clone
-Message-ID: <20231003090008.b75anhi7joftsayq@vireshk-i7>
+Subject: Re: [libgpiod][PATCH v2 3/3] bindings: rust: allow cloning
+ line::InfoRef -> line::Info
+Message-ID: <20231003090100.l4nzrh4u5tegt2fw@vireshk-i7>
 References: <20230929-rust-line-info-soundness-v2-0-9782b7f20f26@linaro.org>
- <20230929-rust-line-info-soundness-v2-2-9782b7f20f26@linaro.org>
+ <20230929-rust-line-info-soundness-v2-3-9782b7f20f26@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230929-rust-line-info-soundness-v2-2-9782b7f20f26@linaro.org>
+In-Reply-To: <20230929-rust-line-info-soundness-v2-3-9782b7f20f26@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,74 +73,136 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 29-09-23, 15:18, Erik Schilling wrote:
-> What is getting cloned is already clear from the type. This also aligns
-> a bit better with similar methods from the `std` crate [1].
+> While one would usually use the ToOwned [1] contract in rust, libgpipd's
+> API only allows copying that may fail.
 > 
-> [1] https://doc.rust-lang.org/std/index.html?search=try_clone
+> Thus, we cannot implement the existing trait and roll our own method. I
+> went with `try_clone` since that seems to be used in similar cases across
+> the `std` crate [2].
 > 
-> Link: https://lore.kernel.org/r/CVUKC1HXG1P8.13XIUCCXN95F0@ablu-work
+> It also closes the gap of not having any way to clone owned instances.
+> Though - again - not through the Clone trait which may not fail [3].
+> 
+> [1] https://doc.rust-lang.org/std/borrow/trait.ToOwned.html
+> [2] https://doc.rust-lang.org/std/index.html?search=try_clone
+> [3] https://doc.rust-lang.org/std/clone/trait.Clone.html
+> 
 > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 > ---
->  bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs | 2 +-
->  bindings/rust/libgpiod/src/edge_event.rs                    | 3 ++-
->  bindings/rust/libgpiod/src/line_settings.rs                 | 4 ++--
->  bindings/rust/libgpiod/tests/line_request.rs                | 2 +-
->  4 files changed, 6 insertions(+), 5 deletions(-)
+>  bindings/rust/libgpiod/src/lib.rs         |  1 +
+>  bindings/rust/libgpiod/src/line_info.rs   | 16 ++++++++++
+>  bindings/rust/libgpiod/tests/line_info.rs | 53 +++++++++++++++++++++++++++++++
+>  3 files changed, 70 insertions(+)
 > 
-> diff --git a/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs b/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
-> index ad90d7b..8dbb496 100644
-> --- a/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
-> +++ b/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
-> @@ -34,7 +34,7 @@ fn main() -> libgpiod::Result<()> {
->          let event = events.next().unwrap()?;
->  
->          // This will out live `event` and the next read_edge_events().
-> -        let cloned_event = libgpiod::request::Event::event_clone(event)?;
-> +        let cloned_event = libgpiod::request::Event::try_clone(event)?;
->  
->          let events = request.read_edge_events(&mut buffer)?;
->          for event in events {
-> diff --git a/bindings/rust/libgpiod/src/edge_event.rs b/bindings/rust/libgpiod/src/edge_event.rs
-> index 0c0cfbc..4c940ba 100644
-> --- a/bindings/rust/libgpiod/src/edge_event.rs
-> +++ b/bindings/rust/libgpiod/src/edge_event.rs
-> @@ -25,7 +25,8 @@ use super::{
->  pub struct Event(*mut gpiod::gpiod_edge_event);
->  
->  impl Event {
-> -    pub fn event_clone(event: &Event) -> Result<Event> {
-> +    /// Makes a copy of the event object.
-> +    pub fn try_clone(event: &Event) -> Result<Event> {
->          // SAFETY: `gpiod_edge_event` is guaranteed to be valid here.
->          let event = unsafe { gpiod::gpiod_edge_event_copy(event.0) };
->          if event.is_null() {
-> diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rust/libgpiod/src/line_settings.rs
-> index f0b3e9c..41b27e2 100644
-> --- a/bindings/rust/libgpiod/src/line_settings.rs
-> +++ b/bindings/rust/libgpiod/src/line_settings.rs
-> @@ -52,8 +52,8 @@ impl Settings {
->          unsafe { gpiod::gpiod_line_settings_reset(self.settings) }
+> diff --git a/bindings/rust/libgpiod/src/lib.rs b/bindings/rust/libgpiod/src/lib.rs
+> index 3acc98c..fd95ed2 100644
+> --- a/bindings/rust/libgpiod/src/lib.rs
+> +++ b/bindings/rust/libgpiod/src/lib.rs
+> @@ -74,6 +74,7 @@ pub enum OperationType {
+>      LineConfigSetOutputValues,
+>      LineConfigGetOffsets,
+>      LineConfigGetSettings,
+> +    LineInfoCopy,
+>      LineRequestReconfigLines,
+>      LineRequestGetVal,
+>      LineRequestGetValSubset,
+> diff --git a/bindings/rust/libgpiod/src/line_info.rs b/bindings/rust/libgpiod/src/line_info.rs
+> index e3ea5e1..c9dd379 100644
+> --- a/bindings/rust/libgpiod/src/line_info.rs
+> +++ b/bindings/rust/libgpiod/src/line_info.rs
+> @@ -58,6 +58,22 @@ impl InfoRef {
+>          self as *const _ as *mut _
 >      }
 >  
-> -    /// Makes copy of the settings object.
-> -    pub fn settings_clone(&self) -> Result<Self> {
-> +    /// Makes a copy of the settings object.
-> +    pub fn try_clone(&self) -> Result<Self> {
->          // SAFETY: `gpiod_line_settings` is guaranteed to be valid here.
->          let settings = unsafe { gpiod::gpiod_line_settings_copy(self.settings) };
->          if settings.is_null() {
-> diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/rust/libgpiod/tests/line_request.rs
-> index 9af5226..8731719 100644
-> --- a/bindings/rust/libgpiod/tests/line_request.rs
-> +++ b/bindings/rust/libgpiod/tests/line_request.rs
-> @@ -272,7 +272,7 @@ mod line_request {
->              for offset in offsets {
->                  lsettings.set_debounce_period(Duration::from_millis((100 + offset).into()));
->                  lconfig
-> -                    .add_line_settings(&[offset as Offset], lsettings.settings_clone().unwrap())
-> +                    .add_line_settings(&[offset as Offset], lsettings.try_clone().unwrap())
->                      .unwrap();
->              }
+> +    /// Clones the line info object.
+> +    pub fn try_clone(&self) -> Result<Info> {
+> +        // SAFETY: `gpiod_line_info` is guaranteed to be valid here.
+> +        let copy = unsafe { gpiod::gpiod_line_info_copy(self.as_raw_ptr()) };
+> +        if copy.is_null() {
+> +            return Err(Error::OperationFailed(
+> +                crate::OperationType::LineInfoCopy,
+> +                errno::errno(),
+> +            ));
+> +        }
+> +
+> +        // SAFETY: The copy succeeded, we are the owner and stop using the
+> +        // pointer after this.
+> +        Ok(unsafe { Info::from_raw_owned(copy) })
+> +    }
+> +
+>      /// Get the offset of the line within the GPIO chip.
+>      ///
+>      /// The offset uniquely identifies the line on the chip. The combination of the chip and offset
+> diff --git a/bindings/rust/libgpiod/tests/line_info.rs b/bindings/rust/libgpiod/tests/line_info.rs
+> index ce66a60..d02c9ea 100644
+> --- a/bindings/rust/libgpiod/tests/line_info.rs
+> +++ b/bindings/rust/libgpiod/tests/line_info.rs
+> @@ -19,6 +19,10 @@ mod line_info {
+>      const NGPIO: usize = 8;
+>  
+>      mod properties {
+> +        use std::thread;
+> +
+> +        use libgpiod::{line, request};
+> +
+>          use super::*;
+>  
+>          #[test]
+> @@ -271,5 +275,54 @@ mod line_info {
+>              assert!(info.is_debounced());
+>              assert_eq!(info.debounce_period(), Duration::from_millis(100));
+>          }
+> +
+> +        fn generate_line_event(chip: &Chip) {
+> +            let mut line_config = line::Config::new().unwrap();
+> +            line_config
+> +                .add_line_settings(&[0], line::Settings::new().unwrap())
+> +                .unwrap();
+> +
+> +            let mut request = chip
+> +                .request_lines(Some(&request::Config::new().unwrap()), &line_config)
+> +                .unwrap();
+> +
+> +            let mut new_line_config = line::Config::new().unwrap();
+> +            let mut settings = line::Settings::new().unwrap();
+> +            settings.set_direction(Direction::Output).unwrap();
+> +            new_line_config.add_line_settings(&[0], settings).unwrap();
+> +            request.reconfigure_lines(&new_line_config).unwrap();
+> +        }
+> +
+> +        #[test]
+> +        fn ownership() {
+> +            let sim = Sim::new(Some(1), None, false).unwrap();
+> +            sim.set_line_name(0, "Test line").unwrap();
+> +            sim.enable().unwrap();
+> +
+> +            let chip = Chip::open(&sim.dev_path()).unwrap();
+> +
+> +            // start watching line
+> +            chip.watch_line_info(0).unwrap();
+> +
+> +            generate_line_event(&chip);
+> +
+> +            // read generated event
+> +            let event = chip.read_info_event().unwrap();
+> +            let info = event.line_info().unwrap();
+> +            assert_eq!(info.name().unwrap(), "Test line");
+> +
+> +            // clone info and move to separate thread
+> +            let info = info.try_clone().unwrap();
+> +
+> +            // drop the original event with the associated line_info
+> +            drop(event);
+> +
+> +            // assert that we can still read the name
+> +            thread::scope(|s| {
+> +                s.spawn(move || {
+> +                    assert_eq!(info.name().unwrap(), "Test line");
+> +                });
+> +            });
+> +        }
+>      }
+>  }
 
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
