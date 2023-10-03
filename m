@@ -2,106 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 372147B64D3
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 10:58:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE4F87B64DC
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 10:59:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230434AbjJCI6w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 04:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
+        id S231298AbjJCI7l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 04:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbjJCI6w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 04:58:52 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DABAB
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 01:58:48 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c364fb8a4cso5513145ad.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 01:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696323528; x=1696928328; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hKyecxYBOnJ1SDJ3VqjkcvNfM9xabaDRFQtv2x6HFY=;
-        b=k4vsbu5s87Uqf10OVt3NSP8ytwVbhspRj2+AtHyljVRGaall1/mdQ1qflha5IJ8bGo
-         gNIv3hzjGQUStiTcgVXQPsDlSTZUvJp+EjOavjWFA/saX8g9B9OBcAgPefJIBtqLO9+m
-         6ODf6bTxqiuEWa8+zOsCityMvD0wg6yh79imW7lACb/JH9IsSH2PrMIFtHyJrndlnqWU
-         +JKRGrdQQFUFbGamImDkOI/gwUAadTn1/fUhoIQ54Rh14YmvqsnXWusNWoEmJZafHGQr
-         927/+Ze8WmWOZD4g9FnbzRtO/q8W5QTyvh8v1n3E/+rkQmTuDd2mRqePRJ8Wm1acdHEm
-         gkzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696323528; x=1696928328;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7hKyecxYBOnJ1SDJ3VqjkcvNfM9xabaDRFQtv2x6HFY=;
-        b=loco9rqM0cWnyLZfa4q2HKNve3zFN+i0oYeX3Uz7WYWWVPBmDmTsQVMYTui1rzG6Do
-         haDfd1I2DfEAuMfAwpR6NBwW5sfqnpOA3VpMY2E/xD4olA3AFgJBknb3LfxF+0tZqm6Y
-         PurLbgspBrBH2k40p//qp8UuisYsd6/h40j63Qdtm3STFqXyCHDxdD7FUhAM1Q7yjMw6
-         129elrnmottHAgrzsPKzwVP/PSGa9YJRDWIdoFRmPln2TuHKBuy1eJypmn24Qk4OCkgd
-         I0huSHh6kvevgnWy7R8mRJMDSKHsUVK650pXlHrF0a7QuDsTbpYSKBuHxIao3cb+5mfA
-         mHYg==
-X-Gm-Message-State: AOJu0YwEjEPZOMGI26z0vPxP0dIuTQDUmNvHFmAPdN4pkjaJpaeEGFzg
-        XuYtQBiPA6HdA4eIUhQliavZsQ==
-X-Google-Smtp-Source: AGHT+IH+hAiF5Z4fPDCJAurmydG1FRBoMeSn8aVrqnEECdULLXJY5qtJeMBKxwKBtnKq/f4D3hfatw==
-X-Received: by 2002:a17:902:e885:b0:1b0:f8:9b2d with SMTP id w5-20020a170902e88500b001b000f89b2dmr16249822plg.29.1696323528240;
-        Tue, 03 Oct 2023 01:58:48 -0700 (PDT)
-Received: from localhost ([122.172.81.92])
-        by smtp.gmail.com with ESMTPSA id p18-20020a170902e75200b001c61073b079sm948797plf.71.2023.10.03.01.58.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 01:58:47 -0700 (PDT)
-Date:   Tue, 3 Oct 2023 14:28:45 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>
-Subject: Re: [libgpiod][PATCH v2 1/3] bindings: rust: fix soundness of
- line_info modeling
-Message-ID: <20231003085845.5ldq3ghwez3impyx@vireshk-i7>
-References: <20230929-rust-line-info-soundness-v2-0-9782b7f20f26@linaro.org>
- <20230929-rust-line-info-soundness-v2-1-9782b7f20f26@linaro.org>
+        with ESMTP id S231228AbjJCI7l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 04:59:41 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACB9AB;
+        Tue,  3 Oct 2023 01:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696323578; x=1727859578;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xIDK+C23+3Nrlv2X3L1ZA2/XMLRtjH25dFaOH0K3hW8=;
+  b=K4lNAM9o5io4PyMbHVQIjksCQwkOJXwz9BUv5Z3cpHb02yI3//fqIvVW
+   R0Sp6walX6PnMc9M25tuUPTmmhXFyHzkEzx1CNaMd4FkGchXH1nDa8fLB
+   OcDHCLcUGUKTs/5/B4KlOS4v5YMqJ9qEWn4WYBrOJKO89FkBcER1nmhwl
+   FpdaFZCa8LJJCUrB2Np8AXQngsmBSoNI0blythYVmih/KwswgP+jwopVw
+   IFruRex/abaD4HB2oOiORPQXXfQASsgvkvmDB4QuEi+LfVlxnVe0GMexT
+   Cc4UnirtmLCap4XuKUsluBvrsx7SmKHKPGXgTwkDJM095vSNVZXz+UZaI
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="363095049"
+X-IronPort-AV: E=Sophos;i="6.03,196,1694761200"; 
+   d="scan'208";a="363095049"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 01:59:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="700631932"
+X-IronPort-AV: E=Sophos;i="6.03,196,1694761200"; 
+   d="scan'208";a="700631932"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 01:59:35 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qnbFd-00000002RJA-0fL1;
+        Tue, 03 Oct 2023 11:59:33 +0300
+Date:   Tue, 3 Oct 2023 11:59:32 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Raag Jadav <raag.jadav@intel.com>
+Cc:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
+Subject: Re: [PATCH v1 1/2] pinctrl: baytrail: drop runtime PM support
+Message-ID: <ZRvX9GUXbJksmSIP@smile.fi.intel.com>
+References: <20231003081519.27524-1-raag.jadav@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230929-rust-line-info-soundness-v2-1-9782b7f20f26@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20231003081519.27524-1-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29-09-23, 15:18, Erik Schilling wrote:
-> diff --git a/bindings/rust/libgpiod/src/chip.rs b/bindings/rust/libgpiod/src/chip.rs
-> index 81e1be6..9ef8f22 100644
-> --- a/bindings/rust/libgpiod/src/chip.rs
-> +++ b/bindings/rust/libgpiod/src/chip.rs
-> @@ -107,7 +107,9 @@ impl Chip {
->              ));
->          }
->  
-> -        line::Info::new(info)
-> +        // SAFETY: We verified that the pointer is valid. We own the pointer and
-> +        // no longer use it after converting it into a Info instance.
-> +        Ok(unsafe { line::Info::from_raw_owned(info) })
+On Tue, Oct 03, 2023 at 01:45:18PM +0530, Raag Jadav wrote:
+> Since Baytrail pinctrl device is not attached to acpi_lpss_pm_domain,
+> runtime PM serves no purpose here. Drop it and switch to pm_sleep_ptr()
+> as now we only have suspend and resume handles in place.
+> 
+> No functional impact.
 
-Hmm, I was expecting the naming to be simplified in this version here.
+> TODO:
+> Consider moving to DEFINE_LATE_DEV_PM_OPS() in the future once we have
+> enough users to account for its introduction.
 
-Now:
-
-Info::from_raw_owned()
-InfoRef::from_raw_non_owning()
-
-What I am suggesting:
-
-Info::from_raw()
-InfoRef::from_raw()
-
-Or maybe just `new()` routines for both ?
-
-I think structure names tell us enough about ownership here and we don't need to
-add it to functions.
+This is not related to the commit message.
+I'll drop it.
 
 -- 
-viresh
+With Best Regards,
+Andy Shevchenko
+
+
