@@ -2,70 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 622247B6C91
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 17:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 554457B6CA4
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 17:08:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231327AbjJCPCw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 11:02:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
+        id S231321AbjJCPIz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 11:08:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231321AbjJCPCw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 11:02:52 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE34AD;
-        Tue,  3 Oct 2023 08:02:48 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6910ea9cca1so748223b3a.1;
-        Tue, 03 Oct 2023 08:02:48 -0700 (PDT)
+        with ESMTP id S230511AbjJCPIy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 11:08:54 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F35B7A7;
+        Tue,  3 Oct 2023 08:08:51 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id 5614622812f47-3af608eb34bso590306b6e.1;
+        Tue, 03 Oct 2023 08:08:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696345366; x=1696950166; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nS+ccFeanplUyxIAlft8qH746KZhH4ap1TG1HVN92IU=;
-        b=LbedeaLwiCYjXXw1pOktqAKzimNV7sS/zTucQGcRInTqDMp5bAkym2al0IeR27fUXJ
-         i/gs/JXWwKaFJWeANhpMBsS/BUC7lKKBpRcdmM90Urxc+WE3tQjta9vBmX3F0vApKWOC
-         FEvYRQwHs7f/cwg/E1xITn2wfBMCyt0wDoVaEnHbgPUfKK3wnIOEPgqq2dKaQuH6ATuH
-         /GVZxCTkHdDw7UeD140jmh96sc86xoorrb0w0HzPqC2LL1fNgWX+DvX78uDkKmB6idIu
-         6elbc/8cTG8o4eEt4MRwkEaviVDxHGxBPRTTCovnmsaNBmLbEwEsUxsVX0ZhsKXSyd/O
-         Nk/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696345366; x=1696950166;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1696345731; x=1696950531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nS+ccFeanplUyxIAlft8qH746KZhH4ap1TG1HVN92IU=;
-        b=sFaUw1mdfNqrNKJzeGF5/r+oWQ9grW6u//2hv35cStl2sv+cJSh53HEMxyNNIij8Du
-         TLnFfUSio5C+8usVymJj2uP7ucfHiit/kAfLbnQyC9Xp1Jd+yO7ZA3JJMpSDQIw6lzYd
-         ioqT4aygB7LTl2+eOzaPbErOVfXn04xbv8toQELxROics0uly9opWVK4NwMP6GYO4yVQ
-         8J9XnFzrUI5YN1o7s2rUxg7H2xFtHv4pdoIxKKB/+HPzMneL0CVMD8NwhBiixFgGWuv/
-         akeW27BMNl6EO/EWo/AZbFvXoCF6WjntPpBVJ6OAZNE4o52x8505FTIDM81xbbMiv/VI
-         b5LQ==
-X-Gm-Message-State: AOJu0YxXP8uhh3o6N74Q5zDjfyH3vIQaHaS+c19QqKIdgTiUx8BhGrBF
-        4Ok+5evwQzT31xS7L9qvfnI=
-X-Google-Smtp-Source: AGHT+IHSlDJ2mmjoBx/Me+lkCJEt6FVTewL8lb06iJPxb1GKt63w6MNIhtDzqhA4+5n5XL5hnwnN7Q==
-X-Received: by 2002:a05:6a20:9144:b0:154:6480:83a4 with SMTP id x4-20020a056a20914400b00154648083a4mr13485861pzc.14.1696345365695;
-        Tue, 03 Oct 2023 08:02:45 -0700 (PDT)
-Received: from sol (14-200-166-90.static.tpgi.com.au. [14.200.166.90])
-        by smtp.gmail.com with ESMTPSA id n15-20020a63b44f000000b00578cc5f4905sm1335986pgu.28.2023.10.03.08.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 08:02:45 -0700 (PDT)
-Date:   Tue, 3 Oct 2023 23:02:40 +0800
-From:   Kent Gibson <warthog618@gmail.com>
+        bh=s8z9u1jazZxUkm/2qxN8EBAJw5LUMMLBIMP/RABmSXQ=;
+        b=AYaiOOQ2r5bkQh3vjr7U1UslHnG7ZY5NCJkRLI9rlK6f9kjS8ib4ZKRGigV0THvfiR
+         aKNC/srzCNqx36i0sDDpVCTSlLnEIjJkyIpCmiuqU4uBhxgVsbiNTmp9U4WR2f9f1c9I
+         jWcmE92dOyLe/ZOgM3qHKpeoAujOyIDqajfbeCYeMqnaw3B0k1NGlb1HHmT3hhZedjX8
+         kT8bj1sCRS35rs3a671Vxmaiis32DQAxUUzBON9serkOd6wQdAWEkszFM4Js6ab2gSXK
+         x4XKYqNS/G5+whkX6Viw577DWJ4r6E//RatS47XKt5mVCOsG7R+GvquZZ3m2RMH1WGNE
+         PPkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696345731; x=1696950531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s8z9u1jazZxUkm/2qxN8EBAJw5LUMMLBIMP/RABmSXQ=;
+        b=qtcgZRz75BewlEp7/iLR8DcHwezIXFIIDHUDMdMtnLSqrrx7L8ZvNeSJLj6VT/Eu3Y
+         6OqgAxYBe4Fx3zXAzwJ/9fXFhd5xL0axqPsksoUjTPYAMxrrXDdPpVUAO+Mn07OJvWp3
+         hDnw9LdV52UyeeyiUgZGLKbB9aVRuzYiV3qNPFWmWkcbEj3twTyEkLFYsmYwh9F30KnQ
+         vjNg0gh+1er8o5C7HgWeHXmtQ7T0XhwleO2dr1jxXFquu7GG5L1vaKAC7Wdf6On2RiOK
+         0i3x/5JzDEwROHt8kG1pO3oHY4gCtKtUUVfIxxVfKKwsO42a5IC7iHp9x5yvvmfxnCJ+
+         5aDA==
+X-Gm-Message-State: AOJu0YzN7AEysVKlnKqQf5WMEqR/ip4upIA1yOXDxHgAuDiWIrlz1cCS
+        bj8QKaCRNtaC6DiwAvAkx76x6g4MVouMoUXkndKgh4CeOL6qiA==
+X-Google-Smtp-Source: AGHT+IERYmvkNLmw5JtjuVtgXExuDbxmMRfnEkEaotGFHgHiorftVljmI1jXWi5rbW6ouKxikrUVumfWBsYCkcR8ExY=
+X-Received: by 2002:a05:6808:92:b0:3a8:5fd6:f4cf with SMTP id
+ s18-20020a056808009200b003a85fd6f4cfmr15122566oic.22.1696345731263; Tue, 03
+ Oct 2023 08:08:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-3-brgl@bgdev.pl>
+In-Reply-To: <20231003145114.21637-3-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 3 Oct 2023 18:08:15 +0300
+Message-ID: <CAHp75VfK6Z+Dw44Z4eP-45hK4ipCxrkbj1ifJnmZ3ooZ+ksP-A@mail.gmail.com>
+Subject: Re: [PATCH 02/36] pinctrl: provide new GPIO-to-pinctrl glue helpers
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 04/36] gpio: cdev: use pinctrl_gpio_can_use_line_new()
-Message-ID: <ZRwtEG1DamMLZC/3@sol>
-References: <20231003145114.21637-1-brgl@bgdev.pl>
- <20231003145114.21637-5-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231003145114.21637-5-brgl@bgdev.pl>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,34 +70,70 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 03, 2023 at 04:50:42PM +0200, Bartosz Golaszewski wrote:
+On Tue, Oct 3, 2023 at 5:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Use the improved variant of pinctrl_gpio_can_use_line() which takes a
-> pointer to the gpio_chip and a controller-relative offset.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpiolib-cdev.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 31fc71a612c2..54ee075410db 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -2287,8 +2287,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->  	 * FIXME: find a non-racy way to retrieve this information. Maybe a
->  	 * lock common to both frameworks?
->  	 */
-> -	ok_for_pinctrl =
-> -		pinctrl_gpio_can_use_line(gc->base + info->offset);
-> +	ok_for_pinctrl = pinctrl_gpio_can_use_line_new(gc, info->offset);
->  
+>
+> Currently the pinctrl GPIO helpers all take a number from the global
+> GPIO numberspace - of which we're trying to get rid of as argument.
+>
+> These helpers are almost universally called from GPIOLIB driver
+> callbacks which take a pointer to the backing gpio_chip and the
+> controller-relative offset as arguments.
+>
+> Let's provide improved variants of these functions that match the
+> GPIOLIB signatures as the first step in removing the older flavor.
 
-_new??  In what sense?
+...
 
-I agree with the change in principle, just not comfortable with the naming.
+> +#include <linux/gpio/driver.h>
 
-Cheers,
-Kent.
++ blank line here
 
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/pinctrl/devinfo.h>
+>  #include <linux/pinctrl/machine.h>
+
+...
+
+>  EXPORT_SYMBOL_GPL(pinctrl_gpio_can_use_line);
+
+> +/* This function is deprecated and will be removed. Don't use. */
+
+Shouldn't the same / similar comment be added to
+pinctrl_gpio_can_use_line() above?
+
+...
+
+> + * pinctrl_gpio_request_new() - request a single pin to be used as GPIO
+
+"new" is too broad and too odd suffix, what I would see as a better
+alternative(s) is (are):
+
+pinctrl_gpiochip_request()
+pinctrl_gpio_chip_request()
+pinctrl_gc_request()
+
+(sorted by personal preference from high to low).
+
+The similar comment to all of them.
+
+...
+
+>   * This function should *ONLY* be used from gpiolib-based GPIO drivers,
+> - * as part of their gpio_free() semantics, platforms and individual driv=
+ers
+> - * shall *NOT* request GPIO pins to be muxed out.
+> + * as part of their gpio_request() semantics, platforms and individual d=
+rivers
+> + * shall *NOT* request GPIO pins to be muxed in.
+
+Hmm... This looks like a fix to the previous code that can even be backport=
+ed.
+
+>   */
+
+--=20
+With Best Regards,
+Andy Shevchenko
