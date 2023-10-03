@@ -2,72 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75D847B6543
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 11:17:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E24E7B657E
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 11:30:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239513AbjJCJRq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 05:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60116 "EHLO
+        id S231797AbjJCJay (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 05:30:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231509AbjJCJRp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 05:17:45 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 489B090
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 02:17:41 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-534659061afso1024297a12.3
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 02:17:41 -0700 (PDT)
+        with ESMTP id S231626AbjJCJaw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 05:30:52 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47454B0
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 02:30:50 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-692c70bc440so499996b3a.3
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 02:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696324660; x=1696929460; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ej9CYZVeUojJdrHALws4klkgC42W4yLx+nv2R/kCTck=;
-        b=ifBQFEt9EMrufvU9TJtXg0Yfu/gw61cmIsPTO92oYpo3D/iHHwbRLmTzBqRR+N1OXA
-         QapFHJkML8G7nuWDMJv4dwPz4G+CvDDFYe+YO3FaCQuNKj/r6JOh5O5cj40vFIlWlz/G
-         nCX6Bm9NyUIuU+pOpszMqjiMOwQ9noaffda1yyklPDIYU0wXTlLmo5kU1q/m44L6SMRb
-         kXoehdGHTGFqtjlsSoLO8yg3eFpBfqO2ReqHhfArYqhb5JkWN0saDjzkQd6RAVIULypf
-         aqkpNYOCQYSLHEJp6dc2vc5/GN6Pi2NIlfc1UlsFl25gDrcvoiK0SWWZhOBxS00DlmV6
-         84hA==
+        d=linaro.org; s=google; t=1696325450; x=1696930250; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XDNas0x9E0bp93jVe3CDmv/Iu7HIhUVkP/fN4F6qL4Q=;
+        b=nPMcj7QaR0362wmitR+OZS8Y/8nzqpbYRsE0i8syFtdcbdOGUW5lUuIR8Txbnvx2MD
+         EG0rdW+DPJosbl4VQc6Z/Lols4tUAbTM0Pv/22qREvEyE1xy11h0psidAxmwQUtVonLl
+         OHuZuKYwIfoKdqpPRC9Ik7aZ+/5/D+4kzHjUNTTi6UVsN4+4C8pgpoA2UoDJr9J94TcF
+         pT2ebNgMsuPhdZ351Aywp18aQXWor+4+TJqg35jH4JiA9pf8Ra/1zjQrZdWB2DwfYtrh
+         ozYzmKo+QaDR3xxwlpzo1WBkjhe3k/m7D1NVaQEKz46D5u4kykZmvOdr+adSPgwMY4zc
+         prGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696324660; x=1696929460;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ej9CYZVeUojJdrHALws4klkgC42W4yLx+nv2R/kCTck=;
-        b=LdfAHwGXkefqg9ujCRQrUBtxREo3JZHbYx+sVQPwDUJQnhYLIJkX3W8275bnYlQtay
-         cRnDAptMNgQDqWLQkbqUJGlvD3NoEQ7Nh01fpZIF18xT01PBgLMp1sHgLoVVnXtwhx4P
-         XaOAr1N3SiEXHT7KWWAMnl5xytgdbbhsym951Hu0oOw76v51hDIdP09hz6BJImgvKfHC
-         qGtfnIYB0Ebak8xMnVWE6U4fWVXPGMSSt0+cvi4OWFaqmV2pmt4SPn0yeF6XRl2eIH1m
-         fDtCQUNpcQhYTZtc22pD/9TfXkunzWjScG8ktT9x7M9OSb464EzsJNzWGRwNpjP3pzLX
-         /EWg==
-X-Gm-Message-State: AOJu0Yw+DkegsEijt72sdtia7NeqVyWv4s5ButhX3SPgP+zNR19TTeCA
-        RrnpLOqmvSxaRazId3IAKuMYng==
-X-Google-Smtp-Source: AGHT+IFUd35fJXoyOyP/G610/ibRlCBZMzjn0dBC8V1V7xkWfwZu8rUOZL59Bgr6wJcQmlda1irP4Q==
-X-Received: by 2002:aa7:cd70:0:b0:525:bbc0:2a8c with SMTP id ca16-20020aa7cd70000000b00525bbc02a8cmr10972139edb.33.1696324659683;
-        Tue, 03 Oct 2023 02:17:39 -0700 (PDT)
-Received: from localhost (i5C743835.versanet.de. [92.116.56.53])
-        by smtp.gmail.com with ESMTPSA id v18-20020a056402185200b00534c65fd0ebsm536979edy.90.2023.10.03.02.17.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Oct 2023 02:17:39 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 03 Oct 2023 11:17:38 +0200
-Message-Id: <CVYOWM37OR3Y.3K4VIOR9A0DPG@ablu-work>
+        d=1e100.net; s=20230601; t=1696325450; x=1696930250;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XDNas0x9E0bp93jVe3CDmv/Iu7HIhUVkP/fN4F6qL4Q=;
+        b=oTAzcBonuX7tZ2IUaG6mMSNhki94MvRniS46vVLP+LbA5rbE5ub7x9v9+A+He8OU4B
+         w8uBQd6vJfjs2HON+4FbJNAOrbcAFMR3rzejwC+KcKVnB1vdeMHhzthuhYmd15Suh4Es
+         BLxGUn8tkP+zA7UhIshhTZWHbVn+TV4pXaGMAf3LL0EzWqlZeD0qkE19yzsiUW8Al2kb
+         v0XjH126LSy3PH38JFu18+94yCAQMEoGTPNnc6zzFjSyqB3nhsb5NkueJIPxh9iB3CXj
+         m54JDTfDxDxjsu4kOQXV/ybjsjTV/+t1opftoT7tbEyuKAaqXOUyln/WLsmWQYuLN0XJ
+         8HnQ==
+X-Gm-Message-State: AOJu0YxwvgPFk+m+zaCsLqJzRBfVc84UBCUmozKS49AcIEyP800cU6uW
+        j4KbeYKKrfvMrxq3F8qz7LDJFbrrHeRGr1bd8fk=
+X-Google-Smtp-Source: AGHT+IF/CwOdqWSRFSMicgquGJfFu17rw8W99v9ZEm5CqntY/Nks1qderlvOYCHz9Cvx6T3VS7HQnA==
+X-Received: by 2002:a05:6a00:3a1e:b0:68e:417c:ed5c with SMTP id fj30-20020a056a003a1e00b0068e417ced5cmr13392862pfb.32.1696325449720;
+        Tue, 03 Oct 2023 02:30:49 -0700 (PDT)
+Received: from localhost ([122.172.81.92])
+        by smtp.gmail.com with ESMTPSA id f17-20020aa782d1000000b0068bc6a75848sm902243pfn.156.2023.10.03.02.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Oct 2023 02:30:49 -0700 (PDT)
+Date:   Tue, 3 Oct 2023 15:00:46 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>
 Subject: Re: [libgpiod][PATCH v2 1/3] bindings: rust: fix soundness of
  line_info modeling
-Cc:     "Linux-GPIO" <linux-gpio@vger.kernel.org>,
-        "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>,
-        "Kent Gibson" <warthog618@gmail.com>
-To:     "Viresh Kumar" <viresh.kumar@linaro.org>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-X-Mailer: aerc 0.15.2
+Message-ID: <20231003093046.r5xen5cfdoqbu3yt@vireshk-i7>
 References: <20230929-rust-line-info-soundness-v2-0-9782b7f20f26@linaro.org>
  <20230929-rust-line-info-soundness-v2-1-9782b7f20f26@linaro.org>
  <20231003085845.5ldq3ghwez3impyx@vireshk-i7>
-In-Reply-To: <20231003085845.5ldq3ghwez3impyx@vireshk-i7>
+ <CVYOWM37OR3Y.3K4VIOR9A0DPG@ablu-work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CVYOWM37OR3Y.3K4VIOR9A0DPG@ablu-work>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,54 +74,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue Oct 3, 2023 at 10:58 AM CEST, Viresh Kumar wrote:
-> On 29-09-23, 15:18, Erik Schilling wrote:
-> > diff --git a/bindings/rust/libgpiod/src/chip.rs b/bindings/rust/libgpio=
-d/src/chip.rs
-> > index 81e1be6..9ef8f22 100644
-> > --- a/bindings/rust/libgpiod/src/chip.rs
-> > +++ b/bindings/rust/libgpiod/src/chip.rs
-> > @@ -107,7 +107,9 @@ impl Chip {
-> >              ));
-> >          }
-> > =20
-> > -        line::Info::new(info)
-> > +        // SAFETY: We verified that the pointer is valid. We own the p=
-ointer and
-> > +        // no longer use it after converting it into a Info instance.
-> > +        Ok(unsafe { line::Info::from_raw_owned(info) })
->
-> Hmm, I was expecting the naming to be simplified in this version here.
->
-> Now:
->
-> Info::from_raw_owned()
-> InfoRef::from_raw_non_owning()
->
-> What I am suggesting:
->
-> Info::from_raw()
-> InfoRef::from_raw()
->
-> Or maybe just `new()` routines for both ?
->
-> I think structure names tell us enough about ownership here and we don't =
-need to
-> add it to functions.
+On 03-10-23, 11:17, Erik Schilling wrote:
+> Ah, I posted some weak opposition against that in [1], but failed to
+> mention that again for v2. I mostly disliked `Info::from_raw()` being
+> not very expressive without peeking at the type definition. But if you
+> feel strongly about this, I am happy to change it.
 
-Ah, I posted some weak opposition against that in [1], but failed to
-mention that again for v2. I mostly disliked `Info::from_raw()` being
-not very expressive without peeking at the type definition. But if you
-feel strongly about this, I am happy to change it.
+I feel `Info` and `InfoRef` speak enough for themselves and what they contain
+and I don't see a need for the routines to be named specially anymore.
 
-I would strongly vote for `from_raw()` since `new()` sounds like it
-would create a new instance, but really, we are just wrapping an already
-existing instance here.
+> I would strongly vote for `from_raw()` since `new()` sounds like it
+> would create a new instance, but really, we are just wrapping an already
+> existing instance here.
+> 
+> So... Shall I move to `from_raw()` or keep
+> `from_raw_owned/non_owning()`?
 
-So... Shall I move to `from_raw()` or keep
-`from_raw_owned/non_owning()`?
+I like the simplified version, i.e. `from_raw()` for sure. Unless someone else
+have an objection to that.
 
-- Erik
-
-[1] https://lore.kernel.org/r/CVUJTBQZYN6B.17WXH28G8MKZ2@ablu-work
-
+-- 
+viresh
