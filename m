@@ -2,68 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C5407B6CB8
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 17:13:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7AFD7B6CC4
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 17:14:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237708AbjJCPNk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 11:13:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
+        id S230338AbjJCPOt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 11:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239961AbjJCPNj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 11:13:39 -0400
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA44A1;
-        Tue,  3 Oct 2023 08:13:36 -0700 (PDT)
-Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6c4fa1c804bso672651a34.2;
-        Tue, 03 Oct 2023 08:13:36 -0700 (PDT)
+        with ESMTP id S229713AbjJCPOt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 11:14:49 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B04EA7;
+        Tue,  3 Oct 2023 08:14:45 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id 5614622812f47-3ae35773a04so661405b6e.0;
+        Tue, 03 Oct 2023 08:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696346015; x=1696950815; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1696346084; x=1696950884; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+8aCsMQXsiJpdwq9EITe7uDvfQZFGnH9kasY1jCayPo=;
-        b=b221zDYzWWQ8q9mvm+98fgXuTaTh67o8+VNjWAPQXfBC9AU9LOL45eEid39KdDiwV6
-         TJUDpOQIyjfesr+Cjc+nQqA8eOp0A/rA7IIreZUgvwyYz+zNdP1pKpmthju+CJY9Gz62
-         bKFWw7j5iBDi5NuFzyy/4mHMeSDCDi4HhHZolQw2Tw1+CTKgxuqCeaj6mlEZ1ULd55IN
-         /u72YDsfj5EPdiyiR2cGprvmOR/qEWJWGaZXmEPr+klOPDyxHJrF3zh9diCKP/6jG/+C
-         jwIjTGkIDDnttCEO8UIkgPthv+mMSKQRxoyj/JKM1C7wFDXPOcBYVNDfrnukVDD5inUS
-         wOlw==
+        bh=Q9v1BXZnCjiIfMQyrGG/Xux/yOjBTOVdEf4NCm3iTbU=;
+        b=Ilw0iZs3ZUT68UcIBCp4AAIvFrL/ujNKO4M1f0VBKUCcWyGQ7guTtu2fJTR36F9BJX
+         6EuATXNwZKd+TqLWLjuWFBYBjUqcGaAAIj/dYT5iBYc21CozmQ+rBL5rgyiy+13y8ECw
+         BtkUhGpUVaw0kU3gL7J+MmZHXq2lOEDL+KZ1x1Jmo6tRe05YCBkQbNVGK96IpYONaJU3
+         df+O/m+85pf+lEjAu+nF/Uz9FvPHNo7520x8+zaCUq0pio/KNlFOgPVYgWVbsHdJCpyt
+         VmSmti2LjBTxeReryqmXeeo0Kz3C4bDqKSELcFr1zXdBvJYljJf65hD9OihaWhkH9CPT
+         qRJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696346015; x=1696950815;
+        d=1e100.net; s=20230601; t=1696346084; x=1696950884;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+8aCsMQXsiJpdwq9EITe7uDvfQZFGnH9kasY1jCayPo=;
-        b=WZztub3wb4ZKDQo8aV1Tzu2TDCfepEzIc/v24E/ahImn7ggKwsiusMoskoeb4vPPWG
-         JUMhp/ew2QsH3lgMesUSQFqqJEcd6xgABZvAvPzF67beR0STjs5q6DrpahBiNFr1rl5I
-         1W/uasYGIM3FnGKZ+eQj8NXwtIva25a6REG+UPKcvmwwm8MNe6HYsWZZceIGxbsHImCU
-         pJea4e9mHbzdMlalzYF0epu2xy76Ls2QClqeP+jcwGWyd0xapRfA0t6I4hgpP9+nuwwD
-         WCguu3TKR7e5N6vBJEzDOoxSTHLkpR0gReNnsFKuWdxetYXk6kRoCRklPBy1MVDQR7Az
-         2Dxw==
-X-Gm-Message-State: AOJu0Yy4cZvrd6vN2aWKBbY/+vVEA3rPsl17KrPBWhDFGZmU28iiw1CY
-        Hg20rEOFDiBQHbOoSfSaXS6lDfIIija7FxyBnas=
-X-Google-Smtp-Source: AGHT+IF5LmhQYBEALuv4tymjC02rLV2yDcWbglnO+4YZIvWLWHyFpO5WP/XfH/HhDAgamRgxSlZkRaK4Gz7U/5H9s1I=
-X-Received: by 2002:a05:6808:2391:b0:3ad:af12:2fbc with SMTP id
- bp17-20020a056808239100b003adaf122fbcmr18291731oib.38.1696346015433; Tue, 03
- Oct 2023 08:13:35 -0700 (PDT)
+        bh=Q9v1BXZnCjiIfMQyrGG/Xux/yOjBTOVdEf4NCm3iTbU=;
+        b=Mn/a9/nuQK6OaYYR+8vgrGvvOVyiMfnquOMSAItO2c0Hvqe1IOkeL42PjRfKyyS7mP
+         qjyYsfM9vRnQuRIcyC53gGL3o0vCaUIPheVuCv+c0GQNW5Vk0eMap7ffy2viAlRktsGZ
+         xov2ibPXM/ufrgYkFP8Wxff+v/W35mjIwnN/X20g+M/LMsCToP0GRJJprKzU7Xmad3J5
+         S0SO3Omn9jCdUUKQMdbcNBSMhrnb6WCQ/v4qQSrKniMwk+7GBQpvU02hitfhYGtFqRQp
+         aPQA/p7ScalyUYoXtXUYV1CMmlBUBASKMTQ5mxmPb79RLWFM/6AjdCTUWRKW/cahb4JI
+         y6lQ==
+X-Gm-Message-State: AOJu0Yz0KxFpVQS5zp9WArJg4PreDQ5mXsDTHGxu+z3FeGcpv9EjfeRe
+        nUPMVMwVzPc7zMsIcoX5KPHI/m2rCmnwzgZoVQU=
+X-Google-Smtp-Source: AGHT+IGCrtur4JgGsVFGsvC9n6qhrrUtTZ9olUQrA5PBh1UfleDL8UIWH0Kqgm8qlIHUkT0jdaKB0JsLxv9s2k/ySxc=
+X-Received: by 2002:a05:6808:188d:b0:3a7:1962:d7ff with SMTP id
+ bi13-20020a056808188d00b003a71962d7ffmr16202926oib.57.1696346084672; Tue, 03
+ Oct 2023 08:14:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-29-brgl@bgdev.pl>
-In-Reply-To: <20231003145114.21637-29-brgl@bgdev.pl>
+References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-4-brgl@bgdev.pl>
+In-Reply-To: <20231003145114.21637-4-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 3 Oct 2023 18:12:59 +0300
-Message-ID: <CAHp75VddLwh5jbzAO3GTpsYSLpLFRsuY_MoSZk64iKd_7fKRqw@mail.gmail.com>
-Subject: Re: [PATCH 28/36] pinctrl: intel: use new pinctrl GPIO helpers
+Date:   Tue, 3 Oct 2023 18:14:08 +0300
+Message-ID: <CAHp75VfV2cY+wsM0EtpRA-gwfC0bgbhnOgNJN4v0SLpxLVSEjg@mail.gmail.com>
+Subject: Re: [PATCH 03/36] gpiolib: generic: use new pinctrl GPIO helpers
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,9 +82,6 @@ wrote:
 With whatever name of the APIs at the end,
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-But I want to see this to be in an immutable tag / branch so I can
-pull it into my tree.
-
---=20
+--
 With Best Regards,
 Andy Shevchenko
