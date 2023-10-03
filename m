@@ -2,215 +2,365 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5727B5E51
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 02:42:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9954F7B5E6F
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 03:05:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238700AbjJCAmH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Oct 2023 20:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47672 "EHLO
+        id S229890AbjJCBFT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Oct 2023 21:05:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjJCAmH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 20:42:07 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE78AAB
-        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 17:42:03 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-3a707bc2397so58651b6e.0
-        for <linux-gpio@vger.kernel.org>; Mon, 02 Oct 2023 17:42:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696293723; x=1696898523; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6NUDE2+H89he6BS9I3HNkP9B+FIe1jpB9GTuSekloXo=;
-        b=vBL9U+8nnThHF7jmPYJB9EkvqZL2i7Nu1Ayg8VDxn4pNVMnJMlHeRmXe1i0KYdIh5D
-         7fpmzF/73jQinW2lL4rG4Sv3HZK4cwDbcYACZxBpOyGWo/R9NlZgMtMy1uKXK+aW+Uew
-         aIoE7hzrOtYOxZkEfLLY5MNpr+6iJO10cLkk+OjdnWSmG85GQuHC0ozkXna4HnblhL11
-         /iG1jtqIIgHSNjI2ZSkMJ/XumEn84TMNj5bDJ3KFsukcNz493xbfcG3dXpFGHZA7aZRl
-         DD/v/fpnOwsQXECQIbcy5FALWHzN3lN1iF2P5+CDQbvhZIFMgnhbu9qnTl10siywpBr9
-         K0TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696293723; x=1696898523;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6NUDE2+H89he6BS9I3HNkP9B+FIe1jpB9GTuSekloXo=;
-        b=FH/9LwPolUfGDQ33Q3N2660xRluTRx3mjRsYwzM5TIaFLIz+CFb1T7CUtNbnlbMXQW
-         iYbL0xjorHSH2YvTtSvrJanKeX/kGJ0lYlES3uKtrpJRvNtKmOBe/8P1q0+3EhjCQ7Ou
-         V/62CTxqeNWbH5v2gx2FWHtkbhC/Fg82fOKaBPrXJGhDg4A9HUpjt5EkCz87rIkeoqh2
-         UzJMNB//QFX3syk9ujJkqgcAWNkYri2ySICEFZ/H696hXbzzqdCmW4r+VHXkSrucGw0u
-         7pbVuO/cVDuxQxHq9fNdYuugvjHYvbnSqY2wwvjB2Lx4/8xWOha0aYOdYcVaR5rwsOI5
-         tsiw==
-X-Gm-Message-State: AOJu0YyCueWa+qD5brGTtJXGYBQ7DLvPXVwNxQ35ZkpK1Fnty6ln7GEy
-        5Wv06dKwiacYoRRS/1S51qNOjA==
-X-Google-Smtp-Source: AGHT+IGlw1kZKdt+UyAH31lC9JsO/OzHGFTE0E91BQ34s5sGYXbhHt7x/H/hFaTuM1t44AIWZKwO6w==
-X-Received: by 2002:a05:6808:3614:b0:3ad:f5d8:2da9 with SMTP id ct20-20020a056808361400b003adf5d82da9mr10798904oib.4.1696293722812;
-        Mon, 02 Oct 2023 17:42:02 -0700 (PDT)
-Received: from octopus ([2400:4050:c3e1:100:783d:e8bb:e013:a869])
-        by smtp.gmail.com with ESMTPSA id a20-20020a637f14000000b0057d86bb613esm75006pgd.45.2023.10.02.17.41.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Oct 2023 17:42:02 -0700 (PDT)
-Date:   Tue, 3 Oct 2023 09:41:58 +0900
-From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     sudeep.holla@arm.com, cristian.marussi@arm.com,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linus.walleij@linaro.org, Oleksii_Moisieiev@epam.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [RFC 4/4] dt-bindings: gpio: Add bindings for SCMI pinctrl based
- gpio
-Message-ID: <ZRtjVnWhAK2CZaRM@octopus>
-Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
-        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, linus.walleij@linaro.org,
-        Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20231002021602.260100-1-takahiro.akashi@linaro.org>
- <20231002021602.260100-5-takahiro.akashi@linaro.org>
- <20231002144155.GA1675188-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231002144155.GA1675188-robh@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229837AbjJCBFS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Oct 2023 21:05:18 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63BE2B7
+        for <linux-gpio@vger.kernel.org>; Mon,  2 Oct 2023 18:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696295115; x=1727831115;
+  h=date:from:to:cc:subject:message-id;
+  bh=zV1KyDP9mywyeGGppDr6FFPcV3k2H0bGID5Qxd4blEk=;
+  b=ahAsAIu4Kf8g5JIiZNoh/G7yWt5nrm+MNA6d7Alblup1aoZDRHTVTfbi
+   u6MRQngQ+okPdGVCcTZ5ujcHlc65VKkWK/Npr2MKUh5a9lDjEeeh+Ew5j
+   ySc9VowQBZeuCpL1/XGPGpKEf9bQIJJ2QwIKV24D8z6BCx/KR6wP+kD1H
+   80BVM+M8z9lungWAW8k1ss+WgaZ22DdpF7JNGviRWcNF9m1qxbd2izs0H
+   G7OzExKTnkdMFf2ez4tsFp7KrzWDvPhcb6jBpo6Fbyg9LIuxfbx7fMD9X
+   BjNC7XfLEsxswZuT6Q9Ib5MmfxM5zJm1+okQkXT3jbnST9vlVjdEfWLHf
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="381653448"
+X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
+   d="scan'208";a="381653448"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 18:05:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10851"; a="785930263"
+X-IronPort-AV: E=Sophos;i="6.03,194,1694761200"; 
+   d="scan'208";a="785930263"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 02 Oct 2023 18:05:07 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qnTqU-0006bV-0f;
+        Tue, 03 Oct 2023 01:05:06 +0000
+Date:   Tue, 03 Oct 2023 09:04:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS WITH WARNING
+ 1c0b3cbe7fd98f54fb447e74119216f550a045b9
+Message-ID: <202310030901.NDfqDTJW-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 1c0b3cbe7fd98f54fb447e74119216f550a045b9  Merge tag 'renesas-pinctrl-for-v6.7-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into devel
 
-On Mon, Oct 02, 2023 at 09:41:55AM -0500, Rob Herring wrote:
-> On Mon, Oct 02, 2023 at 11:16:02AM +0900, AKASHI Takahiro wrote:
-> > A dt binding for SCMI pinctrl based gpio driver is defined in this
-> > commit. It basically conforms to generic pinctrl-gpio mapping framework.
-> 
-> What is "generic pinctrl-gpio mapping framework"? DT doesn't have 
-> frameworks.
+Warning reports:
 
-I meant to refer to section 2.1-2.3 in "Documentation/devicetree/bindings/gpio/gpio.txt". The semantics is implemented in drivers/gpio/gpiolib(-of).c.
+https://lore.kernel.org/oe-kbuild-all/202309270234.aJGlDE0P-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202309270313.mBEc9o1A-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202309270448.7Aen3Sgx-lkp@intel.com
 
-> > 
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > ---
-> >  .../bindings/gpio/arm,scmi-gpio.yaml          | 71 +++++++++++++++++++
-> >  1 file changed, 71 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/arm,scmi-gpio.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/arm,scmi-gpio.yaml b/Documentation/devicetree/bindings/gpio/arm,scmi-gpio.yaml
-> > new file mode 100644
-> > index 000000000000..2601c5594567
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/arm,scmi-gpio.yaml
-> > @@ -0,0 +1,71 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/gpio/arm,scmi-gpio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: SCMI pinctrl based generic GPIO controller
-> > +
-> > +maintainers:
-> > +  - AKASHI Takahiro <akashi.takahiro@linaro.org>
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^scmi_gpio(@[0-9a-f]+)$"
-> 
-> Not the correct name.
+Warning: (recently discovered and may have been fixed)
 
-How not?
+drivers/pinctrl/realtek/pinctrl-rtd.c:180:29: warning: '%s' directive argument is null [-Wformat-overflow=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_boot_sel_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_reset_n_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_scan_switch_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_testmode_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning: 'rtd1315e_wd_rset_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_boot_sel_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_reset_n_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_scan_switch_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_testmode_pins' defined but not used [-Wunused-const-variable=]
+drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning: 'rtd1319d_wd_rset_pins' defined but not used [-Wunused-const-variable=]
 
-> > +
-> > +  compatible:
-> > +    const: arm,scmi-gpio-generic
-> 
-> What makes it generic? No such thing. Just drop '-generic'.
+Warning ids grouped by kconfigs:
 
-I will discuss this issue in following Cristian's comment.
+gcc_recent_errors
+|-- arm-allmodconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm-randconfig-004-20231002
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm64-allmodconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm64-allyesconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm64-defconfig
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm64-randconfig-001-20231002
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm64-randconfig-002-20231002
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd.c:warning:s-directive-argument-is-null
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+|-- arm64-randconfig-003-20231002
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+|   |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+|   `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
+`-- arm64-randconfig-004-20231002
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_boot_sel_pins-defined-but-not-used
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_reset_n_pins-defined-but-not-used
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_scan_switch_pins-defined-but-not-used
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_testmode_pins-defined-but-not-used
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1315e.c:warning:rtd1315e_wd_rset_pins-defined-but-not-used
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_boot_sel_pins-defined-but-not-used
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_reset_n_pins-defined-but-not-used
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_scan_switch_pins-defined-but-not-used
+    |-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_testmode_pins-defined-but-not-used
+    `-- drivers-pinctrl-realtek-pinctrl-rtd1319d.c:warning:rtd1319d_wd_rset_pins-defined-but-not-used
 
-> 
-> > +
-> > +  gpio-controller: true
-> > +
-> > +  "#gpio-cells":
-> > +    const: 2
-> > +
-> > +  gpio-ranges: true
-> > +
-> > +  gpio-ranges-group-names: true
-> > +
-> > +patternProperties:
-> > +  "^.+-hog(-[0-9]+)?$":
-> > +    type: object
-> > +    properties:
-> > +      gpio-hog: true
-> > +      gpios: true
-> > +      input: true
-> > +      output-high: true
-> > +      output-low: true
-> > +      line-name: true
-> > +
-> > +    required:
-> > +      - gpio-hog
-> > +      - gpios
-> 
-> You don't need all this just 'required: [ gpio-hog ]'. Then the hog 
-> schema will check the rest.
+elapsed time: 1020m
 
-Okay.
+configs tested: 151
+configs skipped: 2
 
-> > +
-> > +    additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - gpio-controller
-> > +  - "#gpio-cells"
-> > +  - gpio-ranges
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    scmi_gpio_0: scmi_gpio@0 {
-> 
-> gpio {
-> 
-> But doesn't SCMI have protocol numbers?
-> 
-> > +        compatible = "arm,scmi-gpio";
-> > +        gpio-controller;
-> > +        #gpio-cells = <2>;
-> > +        gpio-ranges = <&scmi_pinctrl 0 10 5>,
-> > +                      <&scmi_pinctrl 5 0 0>;
-> > +        gpio-ranges-group-names = "",
-> > +                                  "pinmux_gpio";
-> > +    };
-> > +
-> > +    // Consumer:
-> 
-> Outside the scope of this binding. Drop this node.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                   randconfig-001-20231002   gcc  
+arc                   randconfig-001-20231003   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                       aspeed_g5_defconfig   gcc  
+arm                                 defconfig   gcc  
+arm                           imxrt_defconfig   gcc  
+arm                        multi_v7_defconfig   gcc  
+arm                             pxa_defconfig   gcc  
+arm                   randconfig-001-20231002   gcc  
+arm                   randconfig-001-20231003   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             alldefconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20231002   gcc  
+i386         buildonly-randconfig-001-20231003   gcc  
+i386         buildonly-randconfig-002-20231002   gcc  
+i386         buildonly-randconfig-002-20231003   gcc  
+i386         buildonly-randconfig-003-20231002   gcc  
+i386         buildonly-randconfig-003-20231003   gcc  
+i386         buildonly-randconfig-004-20231002   gcc  
+i386         buildonly-randconfig-004-20231003   gcc  
+i386         buildonly-randconfig-005-20231002   gcc  
+i386         buildonly-randconfig-005-20231003   gcc  
+i386         buildonly-randconfig-006-20231002   gcc  
+i386         buildonly-randconfig-006-20231003   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231002   gcc  
+i386                  randconfig-001-20231003   gcc  
+i386                  randconfig-002-20231002   gcc  
+i386                  randconfig-002-20231003   gcc  
+i386                  randconfig-003-20231002   gcc  
+i386                  randconfig-003-20231003   gcc  
+i386                  randconfig-004-20231002   gcc  
+i386                  randconfig-004-20231003   gcc  
+i386                  randconfig-005-20231002   gcc  
+i386                  randconfig-005-20231003   gcc  
+i386                  randconfig-006-20231002   gcc  
+i386                  randconfig-006-20231003   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231002   gcc  
+loongarch             randconfig-001-20231003   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5249evb_defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                       holly_defconfig   gcc  
+powerpc                  iss476-smp_defconfig   gcc  
+powerpc                 mpc837x_rdb_defconfig   gcc  
+powerpc                     sequoia_defconfig   gcc  
+powerpc                      tqm8xx_defconfig   gcc  
+powerpc                        warp_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                          sdk7780_defconfig   gcc  
+sh                           se7712_defconfig   gcc  
+sh                           se7750_defconfig   gcc  
+sh                        sh7757lcr_defconfig   gcc  
+sh                          urquell_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20231002   gcc  
+x86_64                randconfig-001-20231003   gcc  
+x86_64                randconfig-002-20231002   gcc  
+x86_64                randconfig-002-20231003   gcc  
+x86_64                randconfig-003-20231002   gcc  
+x86_64                randconfig-003-20231003   gcc  
+x86_64                randconfig-004-20231002   gcc  
+x86_64                randconfig-004-20231003   gcc  
+x86_64                randconfig-005-20231002   gcc  
+x86_64                randconfig-005-20231003   gcc  
+x86_64                randconfig-006-20231002   gcc  
+x86_64                randconfig-006-20231003   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                          iss_defconfig   gcc  
 
-Even though it's in an example?
-"#gpio-cells" has a meaning in consumer side.
-
--Takahiro Akashi
-
-
-> > +    sdhci0_pwrseq {
-> > +        compatible = "mmc-pwrseq-emmc";
-> > +        reset-gpios = <&scmi_gpio_0 0 GPIO_ACTIVE_LOW>;
-> > +    };
-> > -- 
-> > 2.34.1
-> > 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
