@@ -2,105 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDBF87B7386
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 23:51:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F38957B74F3
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 01:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232502AbjJCVvY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 17:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60892 "EHLO
+        id S230325AbjJCXaz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 19:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232457AbjJCVvX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 17:51:23 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2657A1
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 14:51:19 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-59c268676a9so17874167b3.0
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 14:51:19 -0700 (PDT)
+        with ESMTP id S229818AbjJCXay (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 19:30:54 -0400
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFEE90;
+        Tue,  3 Oct 2023 16:30:48 -0700 (PDT)
+Received: from [192.168.68.112] (ppp118-210-175-196.adl-adc-lon-bras34.tpg.internode.on.net [118.210.175.196])
+        by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 799B620059;
+        Wed,  4 Oct 2023 07:30:39 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696369878; x=1696974678; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IYSo37MNMNSHe1ppr3BExCLjoNGDWxayjSiu18PcIu8=;
-        b=ri27ITsjTSgvn+nIfF0YFxTY+F0Fxw7G4FAcxQgvpz4KU2OQm/I+s8RPdt/za4zzCg
-         Qo52DZ4C1srFUPa1v40iR0FRX3R3hJ+m5h38l6V7E3JSB/uQZOgihnt/imbto6Y+Ov0G
-         pkz+4H9PCTOQg4rJpfGgeycyewVIysU0BUVCLgeu+jGaUgUm5r0AlfDF0+pNzR9VTcEj
-         6uwJjHa4H9c6JMCz0dAd4DkRwrA3BIXcAl202z1TzpkWmLNwYkNbreclqc9sco+xeKaV
-         DTyMHX361ef1kEA3yerNtiOU7YVvMh/y+bvBvRKm+4lsp+xCxJjzCtl+9bqvIfPdonof
-         gwBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696369878; x=1696974678;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IYSo37MNMNSHe1ppr3BExCLjoNGDWxayjSiu18PcIu8=;
-        b=FHJ486LZR4VjlY0IxC6AGODFh8WmYu0Smx+qS4x0hBrcKGxO1bgqZlJH9bhQhmPN/2
-         51+5sTukuVjwQg+gTVw93+Ic/zNDPvmtRJ0+FgVlV9apTJPm3t7cDyDmZ+YaBmcl/QuZ
-         QzsfSjMi/b/d1svQ8lf0SAxpnnevqHwZ6/5SBeZ06hazJTzcmmNXM0QRV9SSJK9piCA7
-         gYGWu3MCLiCEgHCjTtu/wjLkMYNiajbN8PtzalktY1mF8tG/XDg3QFH+Swi+A5puzlly
-         Pv2CKwEQo0jeflJ85SH/sRtwA1KbwPgRpvIrNpvdWGu3oTHFxOtbPNdtwzT+36jeZupE
-         eTLQ==
-X-Gm-Message-State: AOJu0YzV2ImaHj+BClPsuato4Lb0EaLTJGYNBKt/gCa9Y3GrF1qJChg4
-        TLTMB/YJGY4cLhRzRDB7dR5JOI/fLthkNL/R7fqg+Q==
-X-Google-Smtp-Source: AGHT+IFpAKaZcePQhrSK//gT7QKNjoNg5pwUIjzpRPi/IB8Rlk7anbHUuBthbP5VTQuPBwdWJWqTtFXTIqF0Q54meQM=
-X-Received: by 2002:a81:4f85:0:b0:59f:4c75:1314 with SMTP id
- d127-20020a814f85000000b0059f4c751314mr925263ywb.4.1696369878633; Tue, 03 Oct
- 2023 14:51:18 -0700 (PDT)
-MIME-Version: 1.0
+        d=codeconstruct.com.au; s=2022a; t=1696375842;
+        bh=0DwoPwHtvsNHshbiX0L5U/GGpl/naUYap0pFgc5OoPg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=fup1rsQjI6vuo9F7ghDudR0GDrJtiWkokCJjW2gEiNomV9EFA+PifQ1z6X65JDVkd
+         eu3Qv/lLuC/Xq/QAnP32VuWQAfPKFpJzXS1H3PihTjA39WDeswTe+PKzcqmiz2KxQZ
+         dVzI57qBkV+WXOLxQrBqfh2lCBko/TlO9vs3XiGBTOHyVN+JSmU7EGD4s//VaOyqxM
+         TZAkCouYeQyfBDttjPDWLxV/mAlDk6DJTwDKfVpd1jW7I8HzH+qC6odtOmBLtUwjkR
+         Sk68RYBMauvX7fA7NrjYc0l1MWfywAoOQYP1prkTO/rCRRoGP2GBox5XhfvIaCqSen
+         26vRJ1Qd4NMKQ==
+Message-ID: <6608b6ea673454672fb5930b57e9e7a5570d96d5.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 08/36] gpio: aspeed: use new pinctrl GPIO helpers
+From:   Andrew Jeffery <andrew@codeconstruct.com.au>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Date:   Wed, 04 Oct 2023 10:00:38 +1030
+In-Reply-To: <20231003145114.21637-9-brgl@bgdev.pl>
 References: <20231003145114.21637-1-brgl@bgdev.pl>
-In-Reply-To: <20231003145114.21637-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 3 Oct 2023 23:51:06 +0200
-Message-ID: <CACRpkdY03QUkHcmyfTTfvVFbmNujW3qg5GcNJ-=8zj_zvGqDeg@mail.gmail.com>
-Subject: Re: [PATCH 00/36] pinctrl: don't use GPIOLIB global numberspace in helpers
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+         <20231003145114.21637-9-brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
+MIME-Version: 1.0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 3, 2023 at 4:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
-
+On Tue, 2023-10-03 at 16:50 +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> We have a set of pinctrl helpers for GPIOLIB drivers that take a number
-> from the global GPIO numberspace as argument. We are trying to get rid
-> of this global numbering. Let's rework these helpers to use the
-> recommended gpio_chip + controller-relative offset instead.
->
-> This work is split into phases: first let's introduce the new variants
-> of the helpers. Next: let's convert all users one-by-one for easier
-> review. Finally let's remove the old helpers and rename the new variants
-> to take the place of the old ones.
+>=20
+> Replace the pinctrl helpers taking the global GPIO number as argument
+> with the improved variants that instead take a pointer to the GPIO chip
+> and the controller-relative offset.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpio-aspeed.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+> index da33bbbdacb9..d3aa1cfd4ace 100644
+> --- a/drivers/gpio/gpio-aspeed.c
+> +++ b/drivers/gpio/gpio-aspeed.c
+> @@ -750,12 +750,12 @@ static int aspeed_gpio_request(struct gpio_chip *ch=
+ip, unsigned int offset)
+>  	if (!have_gpio(gpiochip_get_data(chip), offset))
+>  		return -ENODEV;
+> =20
+> -	return pinctrl_gpio_request(chip->base + offset);
+> +	return pinctrl_gpio_request_new(chip, offset);
+>  }
+> =20
+>  static void aspeed_gpio_free(struct gpio_chip *chip, unsigned int offset=
+)
+>  {
+> -	pinctrl_gpio_free(chip->base + offset);
+> +	pinctrl_gpio_free_new(chip, offset);
+>  }
+> =20
+>  static int usecs_to_cycles(struct aspeed_gpio *gpio, unsigned long usecs=
+,
+> @@ -973,7 +973,7 @@ static int aspeed_gpio_set_config(struct gpio_chip *c=
+hip, unsigned int offset,
+>  	else if (param =3D=3D PIN_CONFIG_BIAS_DISABLE ||
+>  			param =3D=3D PIN_CONFIG_BIAS_PULL_DOWN ||
+>  			param =3D=3D PIN_CONFIG_DRIVE_STRENGTH)
+> -		return pinctrl_gpio_set_config(offset, config);
+> +		return pinctrl_gpio_set_config_new(chip, offset, config);
 
-Almost too good attention to process here, I hope you used some
-tooling and didn't do all this by hand...
+Ah, this looks like it removes a bug too. Nice.
 
-I reviewed it by applying the lot with b4 on a branch off
-my devel branch, and
+Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 
-git diff devel..HEAD
+>  	else if (param =3D=3D PIN_CONFIG_DRIVE_OPEN_DRAIN ||
+>  			param =3D=3D PIN_CONFIG_DRIVE_OPEN_SOURCE)
+>  		/* Return -ENOTSUPP to trigger emulation, as per datasheet */
 
-which shows what the goal of the patches is and since the
-kernel clearly looks better after than before the patches:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Or I can just merge this branch into my devel (for v6.7)
-branch, and offer you the same as immutable.
-Which is my plan.
-
-Shall I just do it?
-
-Yours,
-Linus Walleij
