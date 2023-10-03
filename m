@@ -2,134 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74E347B6A0C
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 15:17:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 072B57B6A90
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 15:31:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234466AbjJCNRI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 09:17:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45622 "EHLO
+        id S232036AbjJCNbV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 09:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232629AbjJCNRH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 09:17:07 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE544BB
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 06:17:01 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-59f6492b415so8110057b3.0
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 06:17:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696339021; x=1696943821; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3faYxTgXuQnbhfWmmQf6OvVCP1SKSiKoB+6fW+6tcM8=;
-        b=rgCXF9YlZVF1mKGpOjsFZ6n6NbmsxkU/nHt96zv/q4NDZWzCvLgFLJLEGKUhA5Pfrk
-         QFDU44UUNgMbVh76hmF/51RRZMYpmBfI9Zi/X1uPnjCdx8+/ZF+HzAnII0R9opZbuJmC
-         oQxFOVUaOR80Osyqrge/kraKygaZSgTq3m9sXzcrM6ddMrg3j4sZVJJOSRNk/+mR6Isi
-         MT1DOnJQQbIZoX6D9Q3SkitRNXwL7iCgmcsZargWqV6cKgS0fsLoAbw/6CbmZzdv235p
-         srd5TcqXQmrMXZ/RxGT8+85AqUAYCk3MR1ARHO+snb+g+vSUttqjz6C+mHKKnZg5ZohI
-         2dpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696339021; x=1696943821;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3faYxTgXuQnbhfWmmQf6OvVCP1SKSiKoB+6fW+6tcM8=;
-        b=lRK5+6dRtKxW4Bljoo1uUMNhgEHYJTi5MWRSphnj70w7dJOwsYlabwpym2pCyGOylo
-         1ozPPkM6eOrN/N0BS2VEv/SJmYFSZmx8/jgOEnHBnP+mvBNoHBVosDGifG8/JZE0d6eC
-         FT+k4jq/e863NXD+k2di6ONeeICtuy+ulucYST6xMwnCQdBMZY/6dKCcEj3HuB23pBqt
-         c5SezR52lL+/cM4iU47V12+QmMAMb+Vz1oe3kmUWzIQpJjV0luaH1uEbIGhp6i9eKGPr
-         ZAf9pBBh1KzVDvwMSkDMRvE31MKvceR9gbIlj1ZrSrBx2a5rC6xPtBvBf92fPTsgMPPe
-         Uy4Q==
-X-Gm-Message-State: AOJu0Yyj1klQh+nvofhaQj8+CEI2mlKhN7y1tUcQ2Qm0GbpeA19o73Cb
-        gpgeYnT2aElpqEXCdmzQ27dEJ3YSKMZhPTC+c31wqA==
-X-Google-Smtp-Source: AGHT+IE7Y5KY9v77qq2SLyZ9BmZE77wqCusEmGoWV7nr2/Yf2hTAHCmxeNHeDb7ceRs3GwoInM+bm/dSk8igGsuHkh4=
-X-Received: by 2002:a05:690c:23ca:b0:5a4:dde3:6db5 with SMTP id
- do10-20020a05690c23ca00b005a4dde36db5mr1806691ywb.10.1696339020779; Tue, 03
- Oct 2023 06:17:00 -0700 (PDT)
+        with ESMTP id S231296AbjJCNbU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 09:31:20 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C544FA3;
+        Tue,  3 Oct 2023 06:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696339878; x=1727875878;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xxqxS0x5dYC4fVbGucgwjPASbXwI7a727oCG19nYfBo=;
+  b=e4IDrobHB92BSfB9sjBDnKldDpDicAZtKzr8oz3/B/CKBfQGKLekfXIJ
+   Bt11IcS7I/1qD7Xhl0+t8Z9mGzr8kPsznD+lNL+Z64aAG+mOc3386mexm
+   wyJbYc2uxmpk1j5Hnnzw69sLDaQikmNkP3RIKMsqBvqFRG6Ckw/cPCoGR
+   LDl+l/t/ZQ+meFOWyNjvbfTU9Vux8hYoCSlb1qYWAQBCLM9zIbjo/0PSn
+   J/wU4XC/a5HmdCDKf//EYLjJcZYHimhmx19rCFRTblds1sdCp3dcx201H
+   2pMachrkpDhkOVVkhAmGKS/Njf1W/ys63126Zd57tR2QnAcHnPtoh6uRM
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="4439820"
+X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
+   d="scan'208";a="4439820"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 06:31:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="744506253"
+X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
+   d="scan'208";a="744506253"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 06:31:14 -0700
+Date:   Tue, 3 Oct 2023 16:31:12 +0300
+From:   Raag Jadav <raag.jadav@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linus.walleij@linaro.org, mika.westerberg@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
+Subject: Re: [PATCH v2 0/2] Drop runtime PM support for Baytrail and
+ Lynxpoint pinctrl
+Message-ID: <ZRwXoK2fca3buQ9y@black.fi.intel.com>
+References: <20231003114036.27674-1-raag.jadav@intel.com>
+ <ZRwGGS+Uilr/egln@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20231002021602.260100-1-takahiro.akashi@linaro.org> <20231002021602.260100-5-takahiro.akashi@linaro.org>
-In-Reply-To: <20231002021602.260100-5-takahiro.akashi@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 3 Oct 2023 15:16:49 +0200
-Message-ID: <CACRpkdZgmwhGYH43iAq=cERaGO9a-mVHXG8sQ2htPw0DcrnuNA@mail.gmail.com>
-Subject: Re: [RFC 4/4] dt-bindings: gpio: Add bindings for SCMI pinctrl based gpio
-To:     AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc:     sudeep.holla@arm.com, cristian.marussi@arm.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZRwGGS+Uilr/egln@smile.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Takahiro,
+On Tue, Oct 03, 2023 at 03:16:25PM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 03, 2023 at 05:10:34PM +0530, Raag Jadav wrote:
+> > This series removes runtime PM support for the devices that are not
+> > explicitly attached to acpi_lpss_pm_domain as it is dead code anyway.
+> > 
+> > This has no functional impact and helps reduce their code and memory
+> > footprint.
+> > 
+> > bloat-o-meter:
+> > ==============
+> > 
+> > Baytrail:
+> > add/remove: 2/4 grow/shrink: 0/3 up/down: 49/-103 (-54)
+> > Total: Before=16104, After=16050, chg -0.34%
+> > 
+> > Lynxpoint:
+> > add/remove: 7/10 grow/shrink: 1/3 up/down: 152/-223 (-71)
+> > Total: Before=7506, After=7435, chg -0.95%
+> > 
+> > Changes since v1:
+> > - Add missing pm.h
+> > 
+> > Raag Jadav (2):
+> >   pinctrl: baytrail: drop runtime PM support
+> >   pinctrl: lynxpoint: drop runtime PM support
+> > 
+> >  drivers/pinctrl/intel/pinctrl-baytrail.c  | 19 ++------------
+> >  drivers/pinctrl/intel/pinctrl-lynxpoint.c | 32 +++--------------------
+> >  2 files changed, 5 insertions(+), 46 deletions(-)
+> 
+> You forgot --base... :-(
 
-first, thanks for working on this important and crucial driver!
+Sorry, I need to go figure out some send-email automation.
 
-I'll try to clarify and also explain something of what the others
-are saying (unless I misunderstand them...)
-
-On Mon, Oct 2, 2023 at 4:17=E2=80=AFAM AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
-
-> A dt binding for SCMI pinctrl based gpio driver is defined in this
-> commit. It basically conforms to generic pinctrl-gpio mapping framework.
->
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-
-I think like Christian says that SCMI maybe has nothing to do
-with this binding? It is just one possible use case (though we don't know
-of any others.) The resource it is using is generic functionality that exis=
-t
-in any pin controller that provides ways to drive lines high and low
-etc.
-
-Would it be named a generic pin control-based GPIO?
-
-(...)
-> +++ b/Documentation/devicetree/bindings/gpio/arm,scmi-gpio.yaml
-(...)
-> +$id: http://devicetree.org/schemas/gpio/arm,scmi-gpio.yaml#
-
-So no ARM, no scmi, just pin-control-gpio.yaml, be bold!
-
-(I like this long unabbreviated name)
-
-> +title: SCMI pinctrl based generic GPIO controller
-
-Pin control-based generic GPIO controller
-
-Add
-
-description:
-  The pin control-based GPIO will facilitate a pin controllers ability
-  to drive electric lines high/low and other generic properties of a
-  pin controller to perform general-purpose one-bit binary I/O.
-
-(At least I think this is the idea, I hope I understand correctly.)
-
-> +properties:
-> +  $nodename:
-> +    pattern: "^scmi_gpio(@[0-9a-f]+)$"
-
-These nodes are always just named gpio@...
-the resource marker is "this is a GPIO" that's all it means.
-
-> +  compatible:
-> +    const: arm,scmi-gpio-generic
-
-const: pin-control-gpio
-
-Other than that I am aboard with the solution!
-
-Yours,
-Linus Walleij
+Raag
