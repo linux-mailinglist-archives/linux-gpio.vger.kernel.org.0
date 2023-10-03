@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53AC27B72BA
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 22:49:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E60D47B72D8
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 22:53:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241080AbjJCUt1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 16:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60452 "EHLO
+        id S241120AbjJCUxG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 16:53:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231653AbjJCUt0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 16:49:26 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9973BAD
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 13:49:23 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5a22f9e2f40so16417267b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 13:49:23 -0700 (PDT)
+        with ESMTP id S241115AbjJCUxF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 16:53:05 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910C6BF
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 13:53:01 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-59f6e6b206fso17150577b3.3
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 13:53:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696366163; x=1696970963; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696366380; x=1696971180; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1FJPUi+MyKd+dVlpPJp8bCnu+4EByJ0OLEwCa+47Woc=;
-        b=iQuYNBszchRggbd6WjC55XwIUE+gyP/TU5N/kmIZaDYm70LI6NqGfn1UzzGQi/tXaC
-         unkpbqBS7c5TR0yJ34a/OdFb6FwQGjNMHrtiChKmpUdtQCegM+xuJFjXIyxhogSnEOVx
-         f26/hvizaKpAkmFIm1A/4kf2HJH2EeK6AnHz6qFCS4zZ0nSd4HzZaJKAsangJS+fKZpx
-         NKdPdSMYeri8z2PiYed0NaWLcGBNQxM0in4EPXL9IXKevIrM+Hq9rt3RT78KM/x6JGBa
-         Tb3y3iF37kLVIha2+xdHhdSURKn9Am1vl3H9Sis0/kn4+jXgoo9p7wHMJQaFZZFxHdBL
-         Dspg==
+        bh=yt14wylIoWnbcXhDHRlgibumbtrD/L6WB2BDNq/uwc4=;
+        b=Q3cDbYlqd9LAsD+g7YS+1sBhTT2bt3ZotGmQIG3aHsbpxLadUWwQMjev3sc9uS6HAx
+         sDOor30yfP98HIIkQ8tp28uspiH3lIwo/PjFuVp0SmSrxOnyJYe85rYGZHGzJVhdZW6N
+         y53dRYm197/nQ8VyaE25YmREl5aKcSW3JfOHBE4WoU7EQR8MS1GlGnNKUrs++TmJJ7XU
+         sAzPr4E6vuNsIcSDDP7U8HYAfqPZMkRFGJRU9xgvd9fEpyQBjttQF2I8lxLvZxFwTjHM
+         jhfx2AwGZw5aKwW6YMI7soPa3VUe8eSSuq/skm1i1YAduA9KgVeXJrtUCY+1Q7MCCfRU
+         MdaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696366163; x=1696970963;
+        d=1e100.net; s=20230601; t=1696366380; x=1696971180;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1FJPUi+MyKd+dVlpPJp8bCnu+4EByJ0OLEwCa+47Woc=;
-        b=tb/nwAIVwzx0Uk6DizfRgw9IsKzYdFt56ZOaZp468rPmZQugTTIUbonvLqSmQLUaoc
-         52zBsbO8l3u6wsEPJcMg7RQpM0lhIZ9FHWsupxStQjJ2p53IaJhsjq6pWuZ6FamixfPu
-         4+RUeHqrZSpEVhJdjwqnp5WOoaJxuBDb24YuyaOWQgNuaw/bCv+2H6OPNzXljwY/xFK5
-         nYj9isU38GdMOHIo8ziyKrnZZG3D1hvuJlD0jagM/2LOoTLij9sswWHypkdeSKms/ZYW
-         txnXwRcuSQ3uXWI/putP88T9pTykG9XhfAw3FYwPf/9QHhi8IfabPd09Y4VxR/xthYMW
-         5wxA==
-X-Gm-Message-State: AOJu0YygUj1lkk/DaZ5meRdlYawqjm9+JF4C1mzZk/qjGbv2LYz3PkZR
-        qMn1TchVEGbqpEhVsH6zZ+FlJk58FrClx9apJlJjPw==
-X-Google-Smtp-Source: AGHT+IEreLlAAb1BEaIqmVOi80nv6yIE6GNZPrSiU+SaEd9snYNzmyb1GnIOcQcstQN89h5TnTmEDXhfiAWNkiQFVLc=
-X-Received: by 2002:a0d:e215:0:b0:573:bb84:737c with SMTP id
- l21-20020a0de215000000b00573bb84737cmr740029ywe.26.1696366162811; Tue, 03 Oct
- 2023 13:49:22 -0700 (PDT)
+        bh=yt14wylIoWnbcXhDHRlgibumbtrD/L6WB2BDNq/uwc4=;
+        b=NY96qV1dD7wdwgAbmG+7BaMbOP3RMGIBY7LVTtO3AikzH/hXfHpd1gdw882AyToNQs
+         5GAVypNKX1CJX6Fe3xs7um+diftKBgfkLtak+AQPbks2XCl9Mx+g7UOqrKQOpUdQXCAN
+         mCSbUDTco3NEvBxNW6D7Qg0VPvqfFHrRO6QKTmTCcieBgtzYqh1u405DxTPLenBRNASV
+         0cuCs7oHP4HstgJlwtbVzhEM7VQr4EAxwnc1iQ8ZPfjC50628Wzx2z5pDCt0wgfVNVOL
+         SomIPr/m07znbMWf4mHPv3dROBs2v+srIVMegrgikcYhZsSRwqm99NM3Ysi2LrAg8vrN
+         ko6g==
+X-Gm-Message-State: AOJu0YwXAD+XkEZrANJUVpyDYuWlvlTk58cR9eAmA2hfLNNxTdY6rHRt
+        KYI9vy+15f6QA6GKznhyXoX8S5wXbziUyG3f6v+Hkqsi34PWWUkb
+X-Google-Smtp-Source: AGHT+IGltDHvoagwvELuhiXRm3gPHaNjqQ8ydWenusCYp5p2iPnIMX62XJICRXgdqR/Og5UsqkzHiiwDO8oYfsIhKho=
+X-Received: by 2002:a0d:f387:0:b0:589:c065:b419 with SMTP id
+ c129-20020a0df387000000b00589c065b419mr734080ywf.34.1696366380636; Tue, 03
+ Oct 2023 13:53:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231002021602.260100-1-takahiro.akashi@linaro.org> <20231002021602.260100-2-takahiro.akashi@linaro.org>
-In-Reply-To: <20231002021602.260100-2-takahiro.akashi@linaro.org>
+References: <20231002021602.260100-1-takahiro.akashi@linaro.org> <20231002021602.260100-3-takahiro.akashi@linaro.org>
+In-Reply-To: <20231002021602.260100-3-takahiro.akashi@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 3 Oct 2023 22:49:10 +0200
-Message-ID: <CACRpkdZsQN5V0Nt46dQmUiQo-co81Z_TrzWW_9CPJEbF+X-vnw@mail.gmail.com>
-Subject: Re: [RFC 1/4] pinctrl: define PIN_CONFIG_INPUT
+Date:   Tue, 3 Oct 2023 22:52:49 +0200
+Message-ID: <CACRpkdY1NwE-jw_HqhwAAiLJHmz-kjzjB-SyqgwR-0n4gbWG6Q@mail.gmail.com>
+Subject: Re: [RFC 2/4] pinctrl: add pinctrl_gpio_get_config()
 To:     AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc:     sudeep.holla@arm.com, cristian.marussi@arm.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -71,27 +71,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Takahiro,
-
 On Mon, Oct 2, 2023 at 4:17=E2=80=AFAM AKASHI Takahiro
 <takahiro.akashi@linaro.org> wrote:
 
-> This allows for enabling SCMI pinctrl based GPIO driver to obtain
-> an input gpio pin.
+> This is a counterpart of pinctrl_gpio_set_config(), which will initially
+> be used to implement gpio_get interface in SCMI pinctrl based GPIO driver=
+.
 >
 > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-(...)
-> + * @PIN_CONFIG_INPUT: This will obtain a value on an input pin. The retu=
-rned
-> + *     argument indicates the value.
 
-We need to specify that this is the inverse of @PIN_CONFIG_OUTPUT,
-that setting a line into *input mode* requires the use of
-@PIN_CONFIG_INPUT_ENABLE, so the config can never be set
-but should return an error on set, and that the argument returned is 1 for
-logic high and 0 for logic low.
-
-Otherwise I think this is fine!
+Makes perfect sense for what you are trying to do.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
