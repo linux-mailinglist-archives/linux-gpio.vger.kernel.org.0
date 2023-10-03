@@ -2,104 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 840CA7B6CCA
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 17:15:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAACB7B6CD4
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Oct 2023 17:16:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbjJCPPL convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 3 Oct 2023 11:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
+        id S230238AbjJCPQ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Oct 2023 11:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231248AbjJCPPK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 11:15:10 -0400
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5409AC9;
-        Tue,  3 Oct 2023 08:15:07 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-d89ba259964so1083560276.2;
-        Tue, 03 Oct 2023 08:15:07 -0700 (PDT)
+        with ESMTP id S229469AbjJCPQ4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 11:16:56 -0400
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E0E83;
+        Tue,  3 Oct 2023 08:16:53 -0700 (PDT)
+Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-3af65455e7fso720418b6e.3;
+        Tue, 03 Oct 2023 08:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696346213; x=1696951013; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y4ae0RRMoTga+gtJl22Je3cvBedkJ8+kyu4Au/fIbrQ=;
+        b=duUSJfFuHARpzYp6CNMfI4OGTBVKZb0XrqIOIX1xo/QHalMtAKtTz7LJYx989YZBrH
+         8XW5byOI96NsVAWU82H3vumrTd0S7yjQB3nXQwL6iAUCE9+8CTHYru63sBTE21R+bKB3
+         5vfceyzzritUpCc7QRWPegmNUMjAs/4xj7vSo4U5tfinx244pAsqIK4e400zjR6sSy7D
+         wPHJQyETYcCIT0p52SfIwCHaspfdPh8obdHuxU5h49UYYotuNwGByWdPQRag1C3Fw6Iv
+         mXIBv5jY23DH1IbdgJl1Xll24DRK2juD+3DH5cJiNnt46YiLSaanleDhNxfAaVkJwrkt
+         lpVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696346106; x=1696950906;
+        d=1e100.net; s=20230601; t=1696346213; x=1696951013;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cNhSWAJYWgEDGwtiwjiH8QlfR14j4fmvgyQzNmxJTSU=;
-        b=hTTSn+f/bb+WTxFkvDp05w1vE/lXlwsWqeqPT4+qH/40lO/BCZJctOJGZYFqmWQ9tM
-         /s+xSAGesrsVct28+zPj5ZVDwZl6Z7QotY+zEusjU4/H0Wi02H8eampKA//fh82nBTwl
-         PRUbFloArUCcI2w9oE0VjOz3/R1qh8lk7hxmd7xLo8XL6Lv0Tq2lxkst1covBvYTSbs8
-         k5EXDJabrOFHiVASeWKGbZE0241i4l7DC9d/4h4OgpcfO9TCkBvo7KYhE3sOVj5CliXR
-         g9v9QoEV7neziIzvzx8xtH2OeC3lLDmrWo/FzhGkHNAebd+MtCzMis+Tuvi4RnKwKQqV
-         qpfg==
-X-Gm-Message-State: AOJu0YwM3wBS5ogjM6gVmTRIwzvk2yYQZGck5crEgDviBwdVqCJwngS8
-        ErDWM80uVMgWIWnUPxGeRif1okY9SFBn2w==
-X-Google-Smtp-Source: AGHT+IExJlaND/bKWaUuUpX2KdLNm1zvoB5Wk69ljUOGH9ijRnq7wIvdjSmpFe3169JwdwbYzwC47A==
-X-Received: by 2002:a25:941:0:b0:d89:4343:a0a5 with SMTP id u1-20020a250941000000b00d894343a0a5mr13217297ybm.42.1696346106075;
-        Tue, 03 Oct 2023 08:15:06 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id a9-20020a259389000000b00d8128f9a46bsm449515ybm.37.2023.10.03.08.15.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Oct 2023 08:15:04 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-d8181087dc9so1082657276.3;
-        Tue, 03 Oct 2023 08:15:04 -0700 (PDT)
-X-Received: by 2002:a25:c791:0:b0:d81:6e88:7cb3 with SMTP id
- w139-20020a25c791000000b00d816e887cb3mr14108080ybe.47.1696346103886; Tue, 03
- Oct 2023 08:15:03 -0700 (PDT)
+        bh=Y4ae0RRMoTga+gtJl22Je3cvBedkJ8+kyu4Au/fIbrQ=;
+        b=iltTbo1Zq1vmUXRtvMMf/aWa7z7+g0vatsqCimzPpld2AU3oUwj7wvHGcWJ/eECzJq
+         M8xbyv4YNJRVk3Qoir1R6ek/YXSw4CeE5PIAtashkHU2w7Roh/gQZcbqmo4Nf5ESfG8G
+         VYwbd4+fb6MGMiqbS05ushk6VR/E//23TKN8cjAKsmA5Rp3CWIHVw9XB5FoOiNAns/cz
+         oNQmF2dG1rY9Ca0jRLQ6caVW7FoQz4oBG92bng/GB4se/PyEEnToZ8Q+ylj8hhnuFfHG
+         bzC59GHDrvMNMmTOxY+KswCJiHRvkTKziZnU3y16W/C1QMO+1GJPNzPlTMYTvGkjq4Bk
+         ShnQ==
+X-Gm-Message-State: AOJu0Yzjw6T9E9MFIIiX93IY2ee7oJpwiNEp1XFIv1ObreDSxB5v0ycX
+        65iFPu15kfI2OjSpmda0InZdOnGELYJgHZuf7yE=
+X-Google-Smtp-Source: AGHT+IEfuZ94VWCEmgyXwCydZNzN7eSKHshl37YDLU9JmihWLNbU7UYPSNm3CQLCByQf05GhYdKtuB4kIrf+nIds2lU=
+X-Received: by 2002:a05:6808:1a96:b0:3a7:2456:6af6 with SMTP id
+ bm22-20020a0568081a9600b003a724566af6mr13430282oib.31.1696346213032; Tue, 03
+ Oct 2023 08:16:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-3-claudiu.beznea@bp.renesas.com>
-In-Reply-To: <20230929053915.1530607-3-claudiu.beznea@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Oct 2023 17:14:51 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXsECEfYmqiGSdkkeyCvD87mAp_LGHdXy+Q_hDAPNRiFg@mail.gmail.com>
-Message-ID: <CAMuHMdXsECEfYmqiGSdkkeyCvD87mAp_LGHdXy+Q_hDAPNRiFg@mail.gmail.com>
-Subject: Re: [PATCH v2 02/28] clk: renesas: rzg2l: wait for status bit of SD
- mux before continuing
-To:     Claudiu <claudiu.beznea@tuxon.dev>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, magnus.damm@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        quic_bjorande@quicinc.com, konrad.dybcio@linaro.org, arnd@arndb.de,
-        neil.armstrong@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, linux-renesas-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-35-brgl@bgdev.pl>
+In-Reply-To: <20231003145114.21637-35-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 3 Oct 2023 18:16:17 +0300
+Message-ID: <CAHp75VexazbYskr2pxOPzZe8q=o4ZCHnhcN6U1XX=Th8sxXCgQ@mail.gmail.com>
+Subject: Re: [PATCH 34/36] treewide: rename pinctrl_gpio_direction_input_new()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 7:39 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Tue, Oct 3, 2023 at 5:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 >
-> Hardware user manual of RZ/G2L (r01uh0914ej0130-rzg2l-rzg2lc.pdf,
-> chapter 7.4.7 Procedure for Switching Clocks by the Dynamic Switching
-> Frequency Selectors) specifies that we need to check CPG_PL2SDHI_DSEL for
-> SD clock switching status.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Fixes: eaff33646f4cb ("clk: renesas: rzg2l: Add SDHI clk mux support")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v2:
-> - initialized msk
+> Now that pinctrl_gpio_direction_input() is no longer used, let's drop the
+> '_new' suffix from its improved variant.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk-for-v6.7.
+This and other "treewide" patches in the series are redundant. Just
+name the functions better to begin with.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+With Best Regards,
+Andy Shevchenko
