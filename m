@@ -2,108 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C137B8AC6
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 20:39:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BE4A7B8D8F
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 21:42:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243812AbjJDSjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 14:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59658 "EHLO
+        id S233552AbjJDTmu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 15:42:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243633AbjJDSjT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 14:39:19 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33700C9
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 11:39:15 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-3247cefa13aso162341f8f.1
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 11:39:15 -0700 (PDT)
+        with ESMTP id S243845AbjJDTmt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 15:42:49 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B54A9;
+        Wed,  4 Oct 2023 12:42:46 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-7741c2fae49so13041285a.0;
+        Wed, 04 Oct 2023 12:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696444753; x=1697049553; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QA+Y3LssOPJ3KAADHkTgfkM+4lfsQSRUByKy5qehR+I=;
-        b=l0c7FjqSkm9u34rUPxY50qEdwFtPVWe0pfCN73L/g90h14reeFXkfq3V3kq6XpAFN4
-         Xh264Z3qgcHbFveEmK7lTjC2G54+t63+iCtOQV8zdSnZFX9ZVr3QxPfNSetxah0l/nTK
-         Pl0anrgN+hkecZNIoPP4WKa6MMM4nBOiaAG6k2CfmbFroaFlUhGRFCSWCgLXjNcUxddi
-         vUu/++ICtomys5urCSyWUQgsJ1u95bkvSJUfa2mwo5+F+8+aR+6NgK7HAs7XwDZt/5mJ
-         ejQ0QfZ+IqV+9fCZXCL8QQ4VyVPXhNCoq0WPQR4rwnXRKfYZd3OElvzs57nFRuz1L9je
-         sqqg==
+        d=gmail.com; s=20230601; t=1696448565; x=1697053365; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VNEUrx2f0EOsYSNLwljjtMrsuJmbZYcwoRJZYPUoB3Y=;
+        b=dGYWCUvNp/T8+HspqGVG2u1DZEYcsHJ6xn0hkJDUL4IM8UtFA1tm9PQVNEqP0mEfk3
+         KgY9foXPEUGUDvQBTBee/TS0mlUiBxicEtqaB00ex1jQci0P1S2x9Vtkegm4gHXlHGy7
+         w1U0vlQxcV5hv7DHZGjQ4SUSdhGb6uzWaggdXJEFIrd7yHEuukD2DmOZDzr2sspBR1bn
+         0kSDC9cnj3rxxAuZFO1wqTxQW3PBNSQLKTI8iNmE7X5J48pmfj6uonrkMgYr7UVghGhy
+         6oxwqckiQMiFnLgh4clASzjHM1d9c/lDzndLZuW127gnY7ha8skaJR0W/nWAH3T9KVAv
+         2BDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696444753; x=1697049553;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QA+Y3LssOPJ3KAADHkTgfkM+4lfsQSRUByKy5qehR+I=;
-        b=J1VjbWWiw44Fjm795LYiXQXrtxmVMktX3iWKjfZNWkUj+mggpJBQs8lSaUFlaTm6VR
-         eiO9ZrAT5NP31B+e/aBwcrmMciz/3tXmCkqR4ri81yQe0+6+cln9+aOgtOZw4EPFC9FI
-         c74Y4aWsEtr/+IBVC6pFIoeGdphArse3RPeGLdhUbblHWz4Zf7Ri1LEejjLxxTS/Wms/
-         jWcVZW1q8bZTyL483dU0qiOHhjkonFyTN7evTGr3osCK/Lx9hfZa4H4Pv+8ilTtru0Et
-         zrdPKmCTXY+7pYIlu98Noty54dYo/2yKH1DNM89srlhILMUBOyVJlsMnqX9PeW5eYZEd
-         SZdQ==
-X-Gm-Message-State: AOJu0Yxnb5sHJgavifv40H7NqEtfaYI1OPX6KowakIeimGQ5UcjVfmAt
-        AjHPb4/HQQ0kTbwPtdpZOwsyDA==
-X-Google-Smtp-Source: AGHT+IFHrJt9Llwwm5JxoO+o1/3XuyhHZP01x1HpnwvYcsCqaaDIXZfPsR/EwAiRfDvwXntresVquA==
-X-Received: by 2002:adf:fdd0:0:b0:321:6fe4:d4eb with SMTP id i16-20020adffdd0000000b003216fe4d4ebmr2878576wrs.2.1696444753110;
-        Wed, 04 Oct 2023 11:39:13 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4cd6:4440:32bb:f50d])
-        by smtp.gmail.com with ESMTPSA id s21-20020a7bc395000000b004064cd71aa8sm2109950wmj.34.2023.10.04.11.39.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 11:39:12 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] spi: bcm2835: add a sentinel at the end of the lookup array
-Date:   Wed,  4 Oct 2023 20:39:06 +0200
-Message-Id: <20231004183906.97845-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1696448565; x=1697053365;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VNEUrx2f0EOsYSNLwljjtMrsuJmbZYcwoRJZYPUoB3Y=;
+        b=p12KmS8D1GS0CSiDcBuaJQWbhAfr5VOqNidVB0oLh/tTnNZCBet0KrNtjnjZTrHA0S
+         QlQnyl1kEtdoWj8vSb55VmPaCnjWRIwIHBeMMSspbwFQS8+T/XfTztMMrTPZgKyDUrgf
+         sluAmM/ikT60tsImARELPRWMuUA0JV9wSYWTSma6it7H+uupJHs94vOcmCuwchrx8cln
+         xtOm0zkDXGHp57tov2ql3o/coZsQv/PnhN1FlAc3WmGOqCP3FrfI33FgKCO47vTFSkp+
+         IAUUR5p50gBWuajhZqY8e2/VHVNdv6lj3ofSF1MMLCxUZaxClI1EnwCxcUgoikVo8NCL
+         5/Kw==
+X-Gm-Message-State: AOJu0Yxt5zbpZt0CvU7BvP7D/ltwV7353WxHhYU+QouxJFTb/3wio0CR
+        zPwAyD04tir4Bxew/oDr2gSWF5y7OL620U4pMdQ6rWO9PXo=
+X-Google-Smtp-Source: AGHT+IHzq0mBsVSOM/oReFyc7rW719H1KDBi3mMkvT3/axT9y1WEUjEQ4JUkJ//VnSO1fK16h3VjChV+UUtPths+0ok=
+X-Received: by 2002:a0c:aa08:0:b0:658:2037:718c with SMTP id
+ d8-20020a0caa08000000b006582037718cmr2796522qvb.40.1696448565340; Wed, 04 Oct
+ 2023 12:42:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230926190818.931951-1-andriy.shevchenko@linux.intel.com>
+ <76d1e643-9b81-4c23-8f46-73fe59913600@kernel.org> <CAHp75VdKF+QfSsUwVSrSEng_xY_2ZW_0t0kBuXYPPcBi3_6LxQ@mail.gmail.com>
+ <cac56745-f611-48c2-bb1b-e86a3694fa59@kernel.org>
+In-Reply-To: <cac56745-f611-48c2-bb1b-e86a3694fa59@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Oct 2023 22:42:08 +0300
+Message-ID: <CAHp75VeNG3cE5XmnhPyVQmR4Ppfk7CarSahU8-5Kpgg7TwLMjg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: denverton: Enable platform device in the
+ absence of ACPI enumeration
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Oct 4, 2023 at 4:20=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+> On 04/10/2023 15:09, Andy Shevchenko wrote:
+> > On Wed, Oct 4, 2023 at 11:18=E2=80=AFAM Krzysztof Kozlowski <krzk@kerne=
+l.org> wrote:
+> >> On 26/09/2023 21:08, Andy Shevchenko wrote:
 
-GPIOLIB expects the array of lookup entries to be terminated with an
-empty member. We need to increase the size of the variable length array
-in the lookup table by 1.
+...
 
-Fixes: 21f252cd29f0 ("spi: bcm2835: reduce the abuse of the GPIO API")
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Closes: https://lore.kernel.org/lkml/29764d46-8d3d-9794-bbde-d7928a91cbb5@redhat.com/
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/spi/spi-bcm2835.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> >>> +MODULE_ALIAS("platform:denverton-pinctrl");
+> >>
+> >> Why do you need the alias? It's the same as ID table. You most likely
+> >> miss MODULE_DEVICE_TABLE() or your table is just wrong.
+> >
+> > This is cargo cult from pinctrl-broxton.c. If we want to fix, we need
+> > to fix both.
+> > Care to send patches?
+>
+> I don't understand how some other file affects this. Why do you exactly
+> need module alias here? Which use-case does not work without it (after
+> adding proper MODULE_DEVICE_TABLE())?
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index c9078fee3662..e709887eb2a9 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -1299,7 +1299,7 @@ static int bcm2835_spi_setup(struct spi_device *spi)
- 	 * More on the problem that it addresses:
- 	 *   https://www.spinics.net/lists/linux-gpio/msg36218.html
- 	 */
--	lookup = kzalloc(struct_size(lookup, table, 1), GFP_KERNEL);
-+	lookup = kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
- 	if (!lookup) {
- 		ret = -ENOMEM;
- 		goto err_cleanup;
--- 
-2.39.2
+We try to keep these drivers uniform. So, if something should be done
+differently, it should be done for all affected drivers.
+Since patch is applied, now we have two drivers to improve.
 
+--=20
+With Best Regards,
+Andy Shevchenko
