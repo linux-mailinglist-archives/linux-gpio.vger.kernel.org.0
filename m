@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F36BB7B7FF9
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 14:57:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 460B07B8003
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 14:59:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242435AbjJDM55 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 Oct 2023 08:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42444 "EHLO
+        id S242435AbjJDM7Q convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 Oct 2023 08:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242325AbjJDM54 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 08:57:56 -0400
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA67C9;
-        Wed,  4 Oct 2023 05:57:52 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-d9191f0d94cso747192276.3;
-        Wed, 04 Oct 2023 05:57:52 -0700 (PDT)
+        with ESMTP id S242362AbjJDM7Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 08:59:16 -0400
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 514A9A6;
+        Wed,  4 Oct 2023 05:59:13 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d89491dab33so2182655276.0;
+        Wed, 04 Oct 2023 05:59:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696424272; x=1697029072;
+        d=1e100.net; s=20230601; t=1696424352; x=1697029152;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nNWbuPqGRcDinjfq6bAk+Y11zIkNJyvZkAmw9q5qsww=;
-        b=Ap1xCr5/lhNzhs2f7YCyAnn4I74pbz66+Dcit47dWg4d0XNqDEA5EIrpXILox6Xru9
-         bNs+QibL5/LWXzHP0e3u5zrB/x9hilhiXykGYd9nQSlH0JZE50SeD+DpoweBmTQo1QOB
-         Aj0sPpudR4rXTBqg1CFB7fk4FI7aIyurIERsTiC1yzupMf3875KZv+/LTktQXJ7iqmlp
-         2LFTOTAN+bhx5IQH2vbjSYnf5vGgM04EQJJyHFb4wwYSqNVCp+n2MoOeUVZbeQkp2bdV
-         Jv4Hschz+lpAJUqvRyVP963wqJKkxQJRJ4K0+2vRHhJh8InI0zHblH8fYGB1vc71H0Fy
-         Jd9g==
-X-Gm-Message-State: AOJu0Yy0exjksxBwnrGZAydmmuSlenbl8u6A57rKhtZ9GOkf1WM554SH
-        tpGFzqq12gX8UwVF94A2/cWGwlOC9oOiUQ==
-X-Google-Smtp-Source: AGHT+IFlI7GrP4XnGy9To4+xeIAvkni+tRCqK79kL7PecDcxv0beM5Q3akBlUZPKMCgklB6n6C31nw==
-X-Received: by 2002:a5b:e8b:0:b0:d85:ae5c:527a with SMTP id z11-20020a5b0e8b000000b00d85ae5c527amr2037242ybr.10.1696424271990;
-        Wed, 04 Oct 2023 05:57:51 -0700 (PDT)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id l14-20020a5b0b8e000000b00d8679407796sm1009449ybq.48.2023.10.04.05.57.51
+        bh=NbgEznJD4TxRTKE9Bc/b9u/1IzvkC4JvJP2YJ9vkopw=;
+        b=lfQDhnsxLgTrB6jRezT4dlsiS8wJcq7AoYIJYW3laTnz/YpghgpVJ03noGdXDdvzrb
+         uu0af5RaEqQxiei0bS55IcGuJi7i/bOA0HPYDyB8witJlU5M/okkbtiRn0A5+zXzePO4
+         OCxf+fkmTYSCXW+Vfq0tbyKVUcIdHngBaBIzvG1rZHNNdCpaMzA3i0Mu4i3jsm9ADp5F
+         bKonSOOkXdaJXpqP0KHGeJ7Ft0vKHWC+CQdNLKN2IvPwIxEtxtMqzNWd8w3H2dO+fkQj
+         KJRu6j2dX9se1fLB2G8AOxdCyS4sBLko4aPqJJZ+G7AiFI9hjE1vH29tL+Thd7xBWpZ8
+         b64Q==
+X-Gm-Message-State: AOJu0YynTpl8aYZzbK1iymrf2tDZODRF7gs83eHUahDA4KmDF1LhM0EJ
+        3vibofHfTKOjQ/4JIFtqeHUwlDsYBacsmg==
+X-Google-Smtp-Source: AGHT+IGsis2eiRNkfZaBiG2hxgU5EHbRXHs/4ge/BaczYf4peAUMgu7vCUyhU9CY1OPC5qOqHo2WOg==
+X-Received: by 2002:a25:d8cb:0:b0:d85:aa2f:5718 with SMTP id p194-20020a25d8cb000000b00d85aa2f5718mr1954416ybg.51.1696424351950;
+        Wed, 04 Oct 2023 05:59:11 -0700 (PDT)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
+        by smtp.gmail.com with ESMTPSA id x7-20020a5b0287000000b00d7b9fab78bfsm1011959ybl.7.2023.10.04.05.59.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Oct 2023 05:57:51 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-59bbdb435bfso25087257b3.3;
-        Wed, 04 Oct 2023 05:57:51 -0700 (PDT)
-X-Received: by 2002:a0d:df12:0:b0:59f:4bea:512f with SMTP id
- i18-20020a0ddf12000000b0059f4bea512fmr2537506ywe.15.1696424271499; Wed, 04
- Oct 2023 05:57:51 -0700 (PDT)
+        Wed, 04 Oct 2023 05:59:11 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-59f6041395dso25233857b3.1;
+        Wed, 04 Oct 2023 05:59:11 -0700 (PDT)
+X-Received: by 2002:a81:c24d:0:b0:58f:bda3:8dd with SMTP id
+ t13-20020a81c24d000000b0058fbda308ddmr2392331ywg.32.1696424351066; Wed, 04
+ Oct 2023 05:59:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-16-claudiu.beznea@bp.renesas.com>
-In-Reply-To: <20230929053915.1530607-16-claudiu.beznea@bp.renesas.com>
+References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-17-claudiu.beznea@bp.renesas.com>
+In-Reply-To: <20230929053915.1530607-17-claudiu.beznea@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Oct 2023 14:57:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUC+-=ni44+1UQyEgSvwOVa2pb_TVyWjM-5BrTGjVChuA@mail.gmail.com>
-Message-ID: <CAMuHMdUC+-=ni44+1UQyEgSvwOVa2pb_TVyWjM-5BrTGjVChuA@mail.gmail.com>
-Subject: Re: [PATCH v2 15/28] pinctrl: renesas: rzg2l: adapt for different
- SD/PWPR register offsets
+Date:   Wed, 4 Oct 2023 14:58:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXv6-u6zktHe_cUOKpWnzyLRRowdjQRWv42GMnx1pkKjQ@mail.gmail.com>
+Message-ID: <CAMuHMdXv6-u6zktHe_cUOKpWnzyLRRowdjQRWv42GMnx1pkKjQ@mail.gmail.com>
+Subject: Re: [PATCH v2 16/28] pinctrl: renesas: rzg2l: adapt function number
+ for RZ/G3S
 To:     Claudiu <claudiu.beznea@tuxon.dev>
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -78,16 +78,22 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Sep 29, 2023 at 7:39 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> SD, PWPR power registers have different offsets b/w RZ/G2L and RZ/G3S.
-> Commit adds a per SoC configuration data structure that is initialized with
-> proper register offset for individual SoCs. The struct rzg2l_hwcfg will be
-> further extended in next commits.
+> On RZ/G3S PFC register allow setting 8 functions for individual ports
+> (function1 to function8). For function1 register need to be configured
+> with 0, for function8 register need to be configured with 7.
+> We cannot use zero based addressing when requesting functions from
+> different code places as documentation (RZG3S_pinfunction_List_r1.0.xlsx)
+> states explicitly that function0 is GPIO.
+>
+> For this add a new member to struct rzg2l_hwcfg that will keep the
+> offset that need to be substracted before applying a value to PFC register.
 >
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
 >
 > Changes in v2:
+> - in commit description mentioned that function0 is GPIO
 > - collected tags
 
 Thanks, will queue in renesas-pinctrl-for-v6.7.
