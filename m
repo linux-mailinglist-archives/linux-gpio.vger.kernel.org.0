@@ -2,54 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A599B7B80DD
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:30:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D36A7B80E7
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:31:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233419AbjJDNaI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 Oct 2023 09:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33318 "EHLO
+        id S242582AbjJDNbB convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 Oct 2023 09:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233096AbjJDNaH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:30:07 -0400
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740ADA9;
-        Wed,  4 Oct 2023 06:30:04 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-d8195078f69so2171826276.3;
-        Wed, 04 Oct 2023 06:30:04 -0700 (PDT)
+        with ESMTP id S242618AbjJDNbB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:31:01 -0400
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A71A1;
+        Wed,  4 Oct 2023 06:30:57 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-59f57ad6126so24384717b3.3;
+        Wed, 04 Oct 2023 06:30:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696426203; x=1697031003;
+        d=1e100.net; s=20230601; t=1696426256; x=1697031056;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BSqP1HMvoJHAI12SXee3FprrGwc1/xQXuShGpL6vjO0=;
-        b=GblXYSMK7EYzxZj7zOTU4uxu6O/L9f/YoOeQkUg820CjBmVMj6nbxIPMS/wgFCrfua
-         aiS4i7CYqXXSypL5KKzhsdeGkcDDk6S+qzw4drm8/rPBwwlPy6uwWKTeG9WCyVjpqTDQ
-         zB6uhbqLYPA4Ojhkc3/3d5UJDs3kg/EIwF8y89dikDibgBuWsE0WZSDfmpyF1wp9B5dv
-         pNcg+g1Q3Rmn6VYYKgaufcz+Emb3TKJfLVO5YdvP7oJFqn8ehDXEz4yqm6EPTdXffOL+
-         3gGAwwZhMMlvhpgMThJkZPuwRnjV3OwtGfM+UjY9BLnoGH6SbVfYwhFi/6XjpG7NlU1g
-         /+5g==
-X-Gm-Message-State: AOJu0YzoHMIyNiI78poAi2xLaS9jE1S/AYmhR1d6C4dlasWukDItf/yI
-        oB8PNuRMvcULPmXw08oOFjcPQS8i18mW0A==
-X-Google-Smtp-Source: AGHT+IFF/RAc9wvQa4KjDazTzcAPfz5hdIb9TqwFey5NG1E0jdrh2wW45C3vdyI09Ye8rglamn3rSA==
-X-Received: by 2002:a25:8686:0:b0:d81:754a:7cb9 with SMTP id z6-20020a258686000000b00d81754a7cb9mr2009274ybk.50.1696426203249;
-        Wed, 04 Oct 2023 06:30:03 -0700 (PDT)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id j6-20020a056902020600b00d81bb7ef494sm1024809ybs.19.2023.10.04.06.30.02
+        bh=Y7Wkcd61aZ3jx46S8NbMXaS0P3NM67mT91+N7Httj6U=;
+        b=LcEWNdvY0o3uLzl7oQrMxsqzN+SMqmLSJE4yGFGlLDxxnnHdp5Qbrf+ZbsOZSVyX0q
+         Xgi/vi1/Jc06+SCwX2ACMzbhK285Hpwniwez2LVn1j0PdgNzcqg79ncN+cMo+75tFn/1
+         eO28TrtyoLKeT7vpV+onipqGlZAUNxm6SMnz+cAnS8QTp2hW85kXLgLvfdj02emMs9bw
+         F0XlGvNGycrv0Lmt7/Rsbdj78j2aRDWoyXfyscsEKYR+7w8D6yeJlCuW2FNfI5RBRLeJ
+         +tQKWq0tPMTOm+D3tHWqEabgRqvKLPoQXXxWZnEHB+9ZEgVweTZJK8fdL6ia38cIz4U7
+         07gg==
+X-Gm-Message-State: AOJu0YwTAP3ToWAkaWvpOKPQ3S4nPtI4Xj46LvhB/fpPNCX2y3nDcqGT
+        w2S4FLfDIkOuQIjn1Tk/sHxM6+SEX7skpA==
+X-Google-Smtp-Source: AGHT+IGqd5/WCAgdgySwo808CKYbEaXFHFhB0XNnubuw2hyQTkVCJsWOeht2BYUyJ3ZOn71ylngK6g==
+X-Received: by 2002:a81:8742:0:b0:59f:6675:7771 with SMTP id x63-20020a818742000000b0059f66757771mr2200602ywf.35.1696426256252;
+        Wed, 04 Oct 2023 06:30:56 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id d5-20020a81ab45000000b005a1f7231cf5sm1115151ywk.142.2023.10.04.06.30.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Oct 2023 06:30:02 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5a24b03e22eso26085347b3.0;
-        Wed, 04 Oct 2023 06:30:02 -0700 (PDT)
-X-Received: by 2002:a0d:c104:0:b0:571:11ea:b2dd with SMTP id
- c4-20020a0dc104000000b0057111eab2ddmr2405768ywd.32.1696426202539; Wed, 04 Oct
- 2023 06:30:02 -0700 (PDT)
+        Wed, 04 Oct 2023 06:30:55 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5a22f9e2f40so24506887b3.1;
+        Wed, 04 Oct 2023 06:30:55 -0700 (PDT)
+X-Received: by 2002:a81:a24a:0:b0:59f:7f8e:dc4a with SMTP id
+ z10-20020a81a24a000000b0059f7f8edc4amr2987098ywg.22.1696426255356; Wed, 04
+ Oct 2023 06:30:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-23-claudiu.beznea@bp.renesas.com>
-In-Reply-To: <20230929053915.1530607-23-claudiu.beznea@bp.renesas.com>
+References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-25-claudiu.beznea@bp.renesas.com>
+In-Reply-To: <20230929053915.1530607-25-claudiu.beznea@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Oct 2023 15:29:50 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWN=c3rXKhM4UwYuAkaUp5AbmMf+eCkBe859EHnfxm7+A@mail.gmail.com>
-Message-ID: <CAMuHMdWN=c3rXKhM4UwYuAkaUp5AbmMf+eCkBe859EHnfxm7+A@mail.gmail.com>
-Subject: Re: [PATCH v2 22/28] arm64: dts: renesas: add initial DTSI for RZ/G3S SoC
+Date:   Wed, 4 Oct 2023 15:30:44 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVcGxFCiw9dTkpMHzz2rBZ0Lc7RZrsKtYys=QksMYVgWg@mail.gmail.com>
+Message-ID: <CAMuHMdVcGxFCiw9dTkpMHzz2rBZ0Lc7RZrsKtYys=QksMYVgWg@mail.gmail.com>
+Subject: Re: [PATCH v2 24/28] arm64: dts: renesas: rzg3l-smarc-som: add
+ initial support for RZ/G3S SMARC SoM
 To:     Claudiu <claudiu.beznea@tuxon.dev>
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -77,19 +78,31 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Sep 29, 2023 at 7:40 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> Add initial DTSI for RZ/G3S SoC. Files in commit has the following
-> meaning:
-> r9a08g045.dtsi          RZ/G3S family SoC common parts
-> r9a08g045s33.dtsi       RZ/G3S R0A08G045S33 SoC specific parts
+> Add initial support for RZ/G3S SMARC SoM. The following devices available
+> on SoM were added to this initial device tree:
+>
+> - RZ/G3S SoC: Renesas R9A08G045S33GBG
+> - Clock Generator (only 24MHz output): Renesas 5L35023B
+> - 1GiB LPDDR4 SDRAM: Micron MT53D512M16D1DS-046
+> - 64GB eMMC Flash (though SD ch0): Micron MTFC64GBCAQTC
+>
+> SD channel 0 of RZ/G3S is connected to an uSD card interface
+> and an eMMC. The selection b/w them is done though a hardware switch.
+> The DT will select b/w uSD and eMMC though SW_SD0_DEV_SEL build flag.
 >
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
 >
 > Changes in v2:
-> - collected tags
+> - s/Carrier-II SoM/SoM in patch title
+> - listed in commit description only devices addressed by this initial dtsi
+> - s/8G LPDDR4/1GiB LPDDR4 in commit description
+> - removed sd0-pwr-en-hog node and use specific GPIO in vcc_sdhi0 regulator
+> - added SoM compatible:
+>   compatible = "renesas,rzg3s-smarcm", "renesas,r9a08g045s33", "renesas,r9a08g045";
 
-Thanks, will queue in renesas-devel for v6.7.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.7.
 
 Gr{oetje,eeting}s,
 
