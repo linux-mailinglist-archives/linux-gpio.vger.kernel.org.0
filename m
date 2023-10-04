@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D267B7B7E1C
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 13:26:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D59E17B7E1F
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 13:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242248AbjJDL0b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 07:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45998 "EHLO
+        id S241788AbjJDL1H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 07:27:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232944AbjJDL02 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 07:26:28 -0400
-Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF89A6
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 04:26:24 -0700 (PDT)
-Received: by mail-ua1-x92b.google.com with SMTP id a1e0cc1a2514c-7b08ac3ce7fso994240241.2
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 04:26:24 -0700 (PDT)
+        with ESMTP id S238760AbjJDL1H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 07:27:07 -0400
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F7DBD
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 04:27:03 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id a1e0cc1a2514c-7ab9488f2f0so925911241.3
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 04:27:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696418783; x=1697023583; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696418822; x=1697023622; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QPTmJqSZ7x18aAzf1qilhCc1A1W8G6ELW33nC7XbDn0=;
-        b=Mkg5eKDu6Ayk5sLjgM6EkYtb5OqcUxpHVDs00L2EpqTD0VK/xWV/zpivsERPIYUwWg
-         1HuxU/KsrFO+euadlmj2L4xS3aA4/L7RvZheWKBp4xR5O91xlH8tZCDWDvMG1LtvnLYC
-         t/E/bVvpKkZeb9ic9vcwVqAklrfA0gSx4yQp3lCSUOvMUVUgHsDinj3oNiqmYJMs0iKU
-         YEt2Y9IoBrr15HeL2DE1R2V5Yc9+3lYye6pV7FevVYCqnWZbIwA7I1w7omDUDON3TEQB
-         z6ZTc3WeuAy47f4W9AwwXEguYDp/JdtL2zHpi0qBvBkP50w00KO4dNkD0uXoCIFqn2Xz
-         6mHA==
+        bh=domdQOBTB4Uh6D2HC7Jfj/foB9FFuRCeOJ79oojlb1g=;
+        b=2VrqgTkkH4FPyyl3fFZJSHtaqdWgpyHMQsj5rqFa9gjTOdzx4D8oIFIKkqbYmaQqAi
+         X9/gQ9PYiU8Q3//hWM0Wi8NmVu8N4/ERWgsk9/SzYoqRocGuqJMpvoIoERthuApcQ10R
+         y1CM9D7lP7L2yhSvx1sEOI06gOcqhzyzJnFxbq4fSBpGvuE9Kks3Wprh8pI4ZVCvbGGn
+         NMSbJa39YytoOdSayyZS3ZwKejHQf6ucZFJOudFxdqNyY9VF3qQYv8Wf1wH6KPzAP830
+         eC9LmJrkyvE5bWmftEvwhf6VWw9/weWpW9z1vs4p1JyXJl4ndBPYC/+AEDDHMvvr2isj
+         KCFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696418783; x=1697023583;
+        d=1e100.net; s=20230601; t=1696418822; x=1697023622;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QPTmJqSZ7x18aAzf1qilhCc1A1W8G6ELW33nC7XbDn0=;
-        b=npHixgrgzyKzCvR+G0apIqnj9sJMrnuJHpECWiCmahjYUmgWRv2pHxhE+f6J2GHiHT
-         5Bc8AtaDw7c9azm61MiDCjp8eI9dz7TXJ17xF4X+vOOO0Y075OaiII6gHNHCc2WizxHf
-         noHk6WLHYQzXj5GV1OUxtmMEvs9FtINsolf5Xkv2lCpyIV3RBev8A63fPDSmMTFxzeKr
-         WNw3iPCNLB3LIx5fBGm/BfaEWyqiZhZuSNarJ6OzsMCIudF4MERWSmATctUpW09c8bwB
-         Jl1ST3kQNDJhY3nrvt3E1F/or7R4jdve0Mykk9ebjsiS0tc37jhGmcrCogH+nBSaUIpQ
-         eNqw==
-X-Gm-Message-State: AOJu0YzMIspZIU7wHyRJkHdaxY9+yD32zWk5RvBsKAISaLzXOFx1z/d3
-        qM0U8LPBdlJVKgbS9Rm1qxdaVKy/iqBXjF2DgUHPmg==
-X-Google-Smtp-Source: AGHT+IFVqlQYVCGNgWqaqty6H6YGhtZ0z9V1MECXO6G4uWt18LWb/76TgROOl8auGPcAwwZ6CmJuveb8+n7CDfBhqaE=
-X-Received: by 2002:a67:f64e:0:b0:44d:4a41:893f with SMTP id
- u14-20020a67f64e000000b0044d4a41893fmr1837380vso.9.1696418783613; Wed, 04 Oct
- 2023 04:26:23 -0700 (PDT)
+        bh=domdQOBTB4Uh6D2HC7Jfj/foB9FFuRCeOJ79oojlb1g=;
+        b=umWFGuc1SPtZLpCdmrxOTGoSRphD1kZdbFgMf5hKlO91g0GbAjB1gzAxhluZCrQPeY
+         H2Ev2CiYdKAPEBJ1E4lSgHcKOC4EZsJGUuYToNeCEyCLZHwcqAb1XuXHIWky8RmEM9HV
+         sTLcwaTcZR1KnXRMWpDzaNm56Np4GUL5x+s8FcBkf8m+ZM25lXMGIpPKzzz6f5NkySl6
+         UaMckWzYFZcOl50C0MJL1v2SVVPrM9dAl7r/1H4HppeXo0L4XbphFTvWtd6w/vS1iMY4
+         rDZKtLZiEk0sp0nnmlp1FlNQ9TgSC5klueEncTTkgniWNr8W0n03U6gVuRdVYE+nP4We
+         ReKQ==
+X-Gm-Message-State: AOJu0YyRuZL62DfVEkYDAElzmulMjzHNW6DWp6A5PhJrGUUv8LKubwzz
+        6pHZ0Higm8CouX7y8cn9JLKkDKEHo3g+cjU4x47EhQ==
+X-Google-Smtp-Source: AGHT+IH5iloK4Tk0xV0CTvT50fhAreF6D7shbHOiUxye7iij85bExgSYu4UHs4u4yUCaE2iBA7Il4ZGV2YX4dpckCTg=
+X-Received: by 2002:a1f:e3c4:0:b0:49d:10ce:9a8b with SMTP id
+ a187-20020a1fe3c4000000b0049d10ce9a8bmr1432502vkh.15.1696418822594; Wed, 04
+ Oct 2023 04:27:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231003-rust-line-info-soundness-v3-0-555ba21b4632@linaro.org> <20231003-rust-line-info-soundness-v3-3-555ba21b4632@linaro.org>
-In-Reply-To: <20231003-rust-line-info-soundness-v3-3-555ba21b4632@linaro.org>
+References: <20231003-rust-line-info-soundness-v3-0-555ba21b4632@linaro.org>
+In-Reply-To: <20231003-rust-line-info-soundness-v3-0-555ba21b4632@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 4 Oct 2023 13:26:12 +0200
-Message-ID: <CAMRc=MdK96Qx4FE481V2J5Ca596-Og34ct_0z_tFj_1CAbuJVg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v3 3/3] bindings: rust: allow cloning
- line::InfoRef -> line::Info
+Date:   Wed, 4 Oct 2023 13:26:51 +0200
+Message-ID: <CAMRc=MczoC6Bj4ZigNt4Dse_6YXwGnQxgxPOVJn5Y1L8niSJ8g@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v3 0/3] bindings: rust: fix modeling of
+ line_info lifetimes
 To:     Erik Schilling <erik.schilling@linaro.org>
 Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
@@ -62,8 +62,8 @@ Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -73,24 +73,22 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Tue, Oct 3, 2023 at 11:40=E2=80=AFAM Erik Schilling
 <erik.schilling@linaro.org> wrote:
 >
-> While one would usually use the ToOwned [1] contract in rust, libgpipd's
-> API only allows copying that may fail.
+> While reviewing the bindings for thread-safety, I realized that the
+> bindings did not properly model the lifetimes of non-owned line_info
+> instances.
 >
-> Thus, we cannot implement the existing trait and roll our own method. I
-> went with `try_clone` since that seems to be used in similar cases across
-> the `std` crate [2].
+> This fixes that. It might be a bit mind bending. I tried to provide
+> lengthy comments to clarify what happens.
 >
-> It also closes the gap of not having any way to clone owned instances.
-> Though - again - not through the Clone trait which may not fail [3].
+> To: Linux-GPIO <linux-gpio@vger.kernel.org>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+> Cc: Kent Gibson <warthog618@gmail.com>
 >
-> [1] https://doc.rust-lang.org/std/borrow/trait.ToOwned.html
-> [2] https://doc.rust-lang.org/std/index.html?search=3Dtry_clone
-> [3] https://doc.rust-lang.org/std/clone/trait.Clone.html
->
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
 > ---
 
-Applied, thanks!
+Please make sure to include my brgl@bgdev.pl address too in the future
+when submitting libgpiod patches, thanks!
 
 Bart
