@@ -2,163 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB5DD7B75EA
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 02:36:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A5F87B770A
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 06:16:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232215AbjJDAgV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Oct 2023 20:36:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59220 "EHLO
+        id S232117AbjJDEQ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 00:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbjJDAgV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Oct 2023 20:36:21 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A11CA6;
-        Tue,  3 Oct 2023 17:36:18 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-53447d0241eso2808843a12.3;
-        Tue, 03 Oct 2023 17:36:18 -0700 (PDT)
+        with ESMTP id S232115AbjJDEQ1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 00:16:27 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41071AC;
+        Tue,  3 Oct 2023 21:16:24 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-694f75deb1aso404980b3a.0;
+        Tue, 03 Oct 2023 21:16:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696379776; x=1696984576; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9XJRvSjw9vE3ViTEA7+Fc+ROzh6Ut2Xh1WXhdCCyUoM=;
-        b=SJnvMIYlfk71S+W3PJ+xoj9DqYbrE83H8xqquNwV94TBGXJTBSFkdAkz4SCqlarYME
-         qDlPjAF/Tt9h+gRE5VEgzmIYk6OcLQ0YckprDAau4Aoy4FbqW/lP9agMQReihIgIiWHN
-         JcXO5BJUrskKjEvHu1iRkzE3Q4CgXuVfYEBC/7xutkU5owvuefir5SmvpZrnJ0UweF1i
-         gqbJlBjOizNlT8t5gBEtLqMi2hTTTrzVGW67E4TqoWdLMvVegwFXNFP6KFPvuh6NsH9f
-         pmhHyWavFvr2rOomlcytckNr6dDQAxSzw411G8LCiUAF/a6UbwKplKHiCXucTVXNwXtc
-         vEgQ==
+        d=gmail.com; s=20230601; t=1696392984; x=1696997784; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1nxELRefWgX/plBQJdhjQvCak5wttkBwSg7H4d2bgsw=;
+        b=ZhJHid3vfNqq9UAEirwWnFzrHk55WUotgAdZP8n+cZGYSJBUQn5ksyeERXCKsiEglD
+         9zzuWQrPPEzhC07mtwNCakoJgz7LkiCE6M9zyUxLwXaXf+HV3i24kY0qZWeSRYloflZs
+         oItLUrmxv1N0ZWJChQJJpcxoJwPwwKgGzd6E6ZIXZgHl/9yvwB/nqsDT9g9VmWnlqcon
+         qbUwaGF1JcK4LBgB90e0ollY/al8S1RtuFliXGl/xLOZe75Lwx/xVhW1xPG82SmKnpW+
+         x9eXrAoYXUJdIJ7GGk4nj3hF0sVBZVROyC+1Lo0SMig2RE0DOO1RV0gON+q2ejCHJMwI
+         FkWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696379776; x=1696984576;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9XJRvSjw9vE3ViTEA7+Fc+ROzh6Ut2Xh1WXhdCCyUoM=;
-        b=rDgjaVCkEOAa78aP/rV/QO2SzMrOTPCv3Awu6y9MvrxYIlEcbG397vVjC8QSG1HS85
-         9kCJhNSwkG+w+njriA/T0JskUG7ZLfJsCBHW69e5WDiIY6kwfi6aEYV1IN7LX/qMfKye
-         A5CG1qaROgg1E86ZzpCqdk4h42Ih4Fw6O2CUt85g0LvaX8tTHJqsApWDSWVlcfBT3yaB
-         1bIRgomLH7Ob1zIegJlZhQYOWyG3g3JbKNH+Imwho4I+Nkct147LXhSJM5JULZXdBkHZ
-         s6lou70COBzOgTL/BcjYA9ql+zWMOTWcrmZ6Tkicm+ZvhhbTIZb0tyi5HzQVj66MTcO/
-         0/fg==
-X-Gm-Message-State: AOJu0YyuH/g4eUtRTvPBELMTRV3Iw7hEHiJT0s/OBIirRbhv4xpo74vt
-        vjtFb5S3UxZ00VGTvxWeUa8=
-X-Google-Smtp-Source: AGHT+IHmdDNcvb1k/uz4FIW9trWjcu9894h81mL2637ya7mGbZk+fy69n/xEa9hiU+L3T6dxpq2o7A==
-X-Received: by 2002:aa7:c409:0:b0:530:a925:77a6 with SMTP id j9-20020aa7c409000000b00530a92577a6mr653446edq.8.1696379776395;
-        Tue, 03 Oct 2023 17:36:16 -0700 (PDT)
-Received: from dell.localnet (77-255-201-154.dynamic.inetia.pl. [77.255.201.154])
-        by smtp.gmail.com with ESMTPSA id c4-20020a056402120400b00537963f692esm1575392edw.0.2023.10.03.17.36.14
+        d=1e100.net; s=20230601; t=1696392984; x=1696997784;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1nxELRefWgX/plBQJdhjQvCak5wttkBwSg7H4d2bgsw=;
+        b=qLyGOYRIfZCWbGQPx7Xa7FdYrm0NdtDIzXGV+oYBTDcTb5QV8NEttFdZM9qCy0EWp1
+         1D7uxWe75dyldFYqhRxk2T374/5ohLOfNveLs86YebZ5PaBxZSJSHJwCV/NCaGKUfzQx
+         NkBIE5MN1WRFqlHTZCPGZyvlwmFyt0eo768k+iDI6xFXc/F374PQjE8UOof+XaKqbIWI
+         7Sm0ex8shxS0vdtj2o5qSHtxEorHz8KRltd8SJ0/KDZrpWb/pa9v9J5Es80GW+Rat84Q
+         wbs2oGvk7C+8b/X0IjrBXxa9j1lbGr1FKMeRXKpjyC42Ybb7TU7BMZ/Sj+n5/0Y0yr0Q
+         dosw==
+X-Gm-Message-State: AOJu0Yx1EmyV52gnGPeePDUvZ8da2M1P+vDO4KxHO/8SmBwj1wlWIWNs
+        0H+Es3+dR17OePKRsad1Zaw=
+X-Google-Smtp-Source: AGHT+IEWil4HiZnBdsQgjIYMpOS1vKdwrrYpkePsXs1ruscZvmuboArlCn3in3cy61I5LVeDIefsVQ==
+X-Received: by 2002:a05:6a21:1a3:b0:134:73f6:5832 with SMTP id le35-20020a056a2101a300b0013473f65832mr2023860pzb.16.1696392983587;
+        Tue, 03 Oct 2023 21:16:23 -0700 (PDT)
+Received: from sol (14-200-166-90.static.tpgi.com.au. [14.200.166.90])
+        by smtp.gmail.com with ESMTPSA id n3-20020a6546c3000000b005706b9813afsm1959884pgr.90.2023.10.03.21.16.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 17:36:15 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] OMAP/gpio: drop MPUIO static base
-Date:   Wed, 04 Oct 2023 02:36:13 +0200
-Message-ID: <2298936.ElGaqSPkdT@dell>
-In-Reply-To: <20230926070953.GV5285@atomide.com>
-References: <20230912-omap-mpuio-base-v1-1-290d9bd24b23@linaro.org>
- <20230926070953.GV5285@atomide.com>
+        Tue, 03 Oct 2023 21:16:23 -0700 (PDT)
+Date:   Wed, 4 Oct 2023 12:16:17 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 04/36] gpio: cdev: use pinctrl_gpio_can_use_line_new()
+Message-ID: <ZRznEe2tKmVcVlwr@sol>
+References: <20231003145114.21637-1-brgl@bgdev.pl>
+ <20231003145114.21637-5-brgl@bgdev.pl>
+ <ZRwtEG1DamMLZC/3@sol>
+ <CAHp75VdSDart2b+_d6_9E204JYa2zyFKdh_Pey6Wb4MZ-Z-L0Q@mail.gmail.com>
+ <ZRwyG80u6nIf7PGU@sol>
+ <CAMRc=McbWU+bPph7f6treqNmqJvakj8nLzNEJPjgb8tbG_pWxQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4836419.GXAFRqVoOG";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
-        HK_RANDOM_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McbWU+bPph7f6treqNmqJvakj8nLzNEJPjgb8tbG_pWxQ@mail.gmail.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---nextPart4836419.GXAFRqVoOG
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: Re: [PATCH] OMAP/gpio: drop MPUIO static base
-Date: Wed, 04 Oct 2023 02:36:13 +0200
-Message-ID: <2298936.ElGaqSPkdT@dell>
-In-Reply-To: <20230926070953.GV5285@atomide.com>
-MIME-Version: 1.0
+On Tue, Oct 03, 2023 at 08:07:05PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Oct 3, 2023 at 5:24 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Tue, Oct 03, 2023 at 06:17:27PM +0300, Andy Shevchenko wrote:
+> > > On Tue, Oct 3, 2023 at 6:02 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > On Tue, Oct 03, 2023 at 04:50:42PM +0200, Bartosz Golaszewski wrote:
+> > >
+> > > ...
+> > >
+> > > > I agree with the change in principle, just not comfortable with the naming.
+> > >
+> > > +1 here. I proposed some names, have you seen my comment(s)?
+> > >
+> >
+> > I have now - any of those work for me.
+> > Whichever is consistent with what we are using for gpiochip functions in
+> > gpiolib would make most sense to me.
+> >
+> 
+> Does it really matter? It's not here to stay, it's temporary and
+> exists only until the whole series is applied - which given that it's
+> limited to gpio and pinctrl, shouldn't take more than one release
+> cycle.
+> 
+> There are plenty of examples of this naming convention for temporary
+> symbols - there's even an ongoing effort to replace all .remove()
+> callbacks with .remove_new() which will then be changed back to
+> .remove() treewide.
+> 
 
-Hi Linus, Tony,
+This was the only patch that I was included into, so I didn't realise
+there was a treewide rename at the end.
+Even so, using _new suffix for that purpose is poor (well
+pinctrl_gpio_free_new() did draw a laugh, but other than that...).
+Perhaps use something specific to the patch series so it is clear what
+its purpose is?
 
-Dnia wtorek, 26 wrze=C5=9Bnia 2023 09:09:53 CEST Tony Lindgren pisze:
-> * Linus Walleij <linus.walleij@linaro.org> [230912 08:45]:
-> > The OMAP GPIO driver hardcodes the MPIO chip base, but there
-> > is no point: we have already moved all consumers over to using
-> > descriptor look-ups.
-> >=20
-> > Drop the MPUIO GPIO base and use dynamic assignment.
-
-On my OMAP1510 based ams_delta with the patch applied on top of v6.6-rc4:
-
-root@amsdelta:~# cat /sys/kernel/debug/gpio=20
-gpiochip0: GPIOs 512-527, parent: platform/omap_gpio.0, mpuio:
- gpio-512 (                    |data                ) in  lo=20
- gpio-513 (                    |data                ) in  lo=20
- gpio-514 (                    |data                ) in  lo=20
- gpio-515 (                    |data                ) in  lo=20
- gpio-516 (                    |data                ) in  lo=20
- gpio-517 (                    |data                ) in  lo=20
- gpio-518 (                    |data                ) in  lo=20
- gpio-519 (                    |data                ) in  lo=20
-
-gpiochip1: GPIOs 528-543, parent: platform/omap_gpio.1, gpio-0-15:
- gpio-528 (                    |keybrd_data         ) in  lo=20
- gpio-529 (                    |keybrd_clk          ) in  lo IRQ=20
- gpio-530 (                    |modem_irq           ) in  lo=20
- gpio-532 (                    |hook_switch         ) in  hi IRQ=20
- gpio-540 (                    |rdy                 ) in  hi=20
-
-gpiochip2: GPIOs 544-551, parent: platform/basic-mmio-gpio.0, latch1:
- gpio-544 (                    |camera              ) out lo=20
-=2E..
-
-GPIO based hardware seems to be working correctly.  I'm only not sure if=20
-we should maybe change the name to something else than gpio-0-15 (mpuio=20
-looks OK).
-
-> >=20
-> > Root out the unused instances of the OMAP_MPUIO() macro and
-> > delete the unused OMAP_GPIO_IS_MPUIO() macro.
-> >=20
-> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> > Maybe Bartosz can merge this into the GPIO tree with Tony's
-> > et al blessing?
->=20
-> Best to wait for Tested-by from Aaro on this one.
->=20
-> As far as I'm concerned, good to see this:
->=20
-> Reviewed-by: Tony Lindgren <tony@atomide.com>
-
-Tested-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
---nextPart4836419.GXAFRqVoOG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnyr6IsGnTYAeAkHJ2WqSnltsjBoFAmUcs30ACgkQ2WqSnlts
-jBrU9Qf9F6VXtPldEIdUb7pt3KTUg58jkYvLTvNhaMxSQqqjU1Q/xkMtpw+LPEDu
-DYdApDvzsunX458kK6XW3biK43fNMTAda6dYCRGIY993q4y9UIbpwyEqezIoJgAs
-cs3lx8wrFDGKAXhISeDfYry9PjDv5YOwRqI6efF0NBSb7hhxkHn46mKdblBl0CIR
-HpNzQahyC6fE4bBGdZ+TgArmLC5C4vxBc+VNWXQMAmuNk24J7Vpw9mgViflMaclE
-8E6prcJQ8R8bilvQzDTB5jLYQhb+K4jVdiwqKdzHHfCVA3ftvNm8sWpP8VmN6Wr3
-9O8MIfAyDbmk9ML33M/3LIK2Mamibg==
-=wcDK
------END PGP SIGNATURE-----
-
---nextPart4836419.GXAFRqVoOG--
-
-
+Cheers,
+Kent.
 
