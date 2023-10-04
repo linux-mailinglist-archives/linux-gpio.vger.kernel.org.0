@@ -2,65 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5871D7B7E62
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 13:41:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15DB47B7E86
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 13:59:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233060AbjJDLlQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 07:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45788 "EHLO
+        id S232912AbjJDL7S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 07:59:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242292AbjJDLlQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 07:41:16 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9242DBF
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 04:41:12 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-45289a987ddso921930137.0
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 04:41:12 -0700 (PDT)
+        with ESMTP id S229687AbjJDL7Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 07:59:16 -0400
+Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ABB2A7
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 04:59:08 -0700 (PDT)
+Received: by mail-vk1-xa2b.google.com with SMTP id 71dfb90a1353d-49ab0641e77so896099e0c.0
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 04:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696419671; x=1697024471; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696420747; x=1697025547; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZBqjb8SBtq9wVTBrX0JB2VzFgWKS26/mLUuG0CMFwr4=;
-        b=VzU7r7uljraGt3khbyWnqfcWqKIbVBE/2K8saryW14OlL6YB1/Ul33p/HovDCNm3c+
-         +YwV4xcIHWI9b8xUF3teSP39RHjSI7awr7C5WSZI2tDs+cUm4GBOh+EiBOoyzJndM0OZ
-         1OkXfflP03135w71YZUAjzrvsotxMwW4prtvHNISNh7E9nQlWWDiMKs64krF4PwHhw6t
-         QTQ4YYojYeWpKf0nvjvVsh5Cnd58Q8KPX9PVxiX+Be2ddoSucyC3DxHc0cr2/M00937q
-         /1hVCDyNOCLuzQkcuZp7ts6Qe9wdkvhLQ6iMt4z7nkEct1zJMnEU76xJSTz62aiTuxFR
-         gsUA==
+        bh=iVw1l2trXRnxFi0TaySuozbKIYN2oOG8xoWmOb0upws=;
+        b=083/VA33stgN3NYTmEJgs1azmBRVmmzp8IVIM5KJvf+mpumuixbF/jsgN15tWa516+
+         eHiqEvthREHQZFgAPPV/vH4y17f3IiEdbyggt4VFFraL9aEkXETnjbe9PNtUKPGPHV6L
+         IzxQH+KqaQ22kSy3S1nWZJJX1ZH6MUZG01K6Hm2TvXiiDI4Wm1hixAWok4BflSYC8KL1
+         48DHB5h7kusH+Et9Lnl5bQqhOSJsOWEBJCkUBQpRr5jASJWxIGLx+A9N+Wlv80Gj/z7Y
+         Znv5pIJyuD+nMYTgRelqWDreQbQgSHXWPk3ZxN1Jv7LPCMIV8fxJSpefKWqaF1bE812j
+         53/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696419671; x=1697024471;
+        d=1e100.net; s=20230601; t=1696420747; x=1697025547;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZBqjb8SBtq9wVTBrX0JB2VzFgWKS26/mLUuG0CMFwr4=;
-        b=B0Fw8w83X/vL0Xmw7bU3tHaTf5O14zTm8npA43cLnWSO8ViFog6AdW04qyCJPkC6O1
-         2Te0SenfDBAo/EZrdLRvKML8ugRLPTiWV1ZdPDUf4pKhCtUleN0VfpjaEceoiNV6whhc
-         xZKXMsqQ9aDJJKEiH03I59r0dcncLYMqOh1l5mCQMQX6cn1NlHS4fy6FGlOVS7iel8/q
-         NrU61oADzE1b94cCwSrNz3MwiQmYESv0x5un/S3ROh6dfATx5L7Yk//tea/tea4DhK0K
-         6lrU+5N0Zzl95CIR/q74OPBRuAcA8vZnybk/ufkGOn8lzeUIeSKdzqwkkWqYgyA0AYlL
-         BAYw==
-X-Gm-Message-State: AOJu0Yx7MPBsobOSdg1vSSwSc/o9NhGeZLW1LEWA34EM9jPh4C/nT8eP
-        ZuLRK1WDXqnmJcNcPJF6vyISNcRf20y+57IJpka7qw==
-X-Google-Smtp-Source: AGHT+IHztdTVjDAnmVdG0YXcot4MeT86xj/94ocjZyYXuT+kTPa1qEoTOA3UCpGK2bNG0G2V9jMUbPDM6N1z1s/HlRk=
-X-Received: by 2002:a67:ed83:0:b0:452:7c1b:d57c with SMTP id
- d3-20020a67ed83000000b004527c1bd57cmr1243121vsp.28.1696419671631; Wed, 04 Oct
- 2023 04:41:11 -0700 (PDT)
+        bh=iVw1l2trXRnxFi0TaySuozbKIYN2oOG8xoWmOb0upws=;
+        b=M7hWmZOHeKqxoaDtgZNhScVdZmdu7Xq3nMyuNt+PlwXxuCz33kwR7py8KuCV8tFYiR
+         RWphUye0WW5NAfesGG+Ws3IvYwKUGHsp8jCT58S+Q4KYNGZr1hTi+3KvRvgTGOs9GrZx
+         cR7ecg+SXqbM9qhUIS7Ybck/4pjgJbvIE4fsvifuRqjHUtV6tL42kKlMkuYOJLpNNX2c
+         8RbaP3poJTTveaD2x8TkXe3GVXyskSjAsREHuKO30l/N+mW8nccSIf0x2IngZXLF7Fb7
+         4NU8Pe0XFY+thC1gN+9nPs3aXilDR1ICSiSMiZDw5qxMa7way9QVHxCjxPq/AOzR7z8i
+         2owQ==
+X-Gm-Message-State: AOJu0YzXkbev8lKDuYcFOzPw0rIp5uJKlbfLa2EdXDOMoVf39f/kfI+h
+        V5SOcWLDmmWAexKMedTxmXzY+/iqeIYCIq/QT8OQqzwXCIYsJdczru0=
+X-Google-Smtp-Source: AGHT+IHWauAEDI913UXUJqGyQcRq4KhqbDo7k+iMspoO5nTxXRhkVHFfJdYKQhz5WtnJJadvtfxRm9v6KqoFFC2qz7M=
+X-Received: by 2002:a1f:cb42:0:b0:48d:b7c:56c8 with SMTP id
+ b63-20020a1fcb42000000b0048d0b7c56c8mr1945183vkg.0.1696420746981; Wed, 04 Oct
+ 2023 04:59:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231002-gpiodoc-v1-1-a8ec8376bbf1@linaro.org>
-In-Reply-To: <20231002-gpiodoc-v1-1-a8ec8376bbf1@linaro.org>
+References: <20230927142931.19798-1-brgl@bgdev.pl>
+In-Reply-To: <20230927142931.19798-1-brgl@bgdev.pl>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 4 Oct 2023 13:41:00 +0200
-Message-ID: <CAMRc=Mc1ocs6aT9PdptBXSgKJOOva5wm00HwYse9oCY6UpE2Mw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Further document optional GPIOLIB
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 4 Oct 2023 13:58:56 +0200
+Message-ID: <CAMRc=McZ2qDyF_pfSdFY8Nn-uwAVrcEbzjYT-FaFFVAcbVVyfg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/11] gpiolib: work towards removing gpiochip_find()
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,47 +70,113 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 2, 2023 at 10:12=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
+On Wed, Sep 27, 2023 at 4:29=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
-> Optional GPIOLIB as in not depended on or selected by a driver
-> should NOT use any *_optional() calls, this becomes paradoxical.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  Documentation/driver-api/gpio/consumer.rst | 4 ++++
->  1 file changed, 4 insertions(+)
+> This is a reduced subset of patches from the initial sumbission[1]
+> limited only to changes inside GPIOLIB. Once this is upstream, we can
+> then slowly merge patches for other subsystems (like HTE) and then
+> eventually remove gpiochip_find() entirely.
 >
-> diff --git a/Documentation/driver-api/gpio/consumer.rst b/Documentation/d=
-river-api/gpio/consumer.rst
-> index de6fc79ad6f0..3e588b9d678c 100644
-> --- a/Documentation/driver-api/gpio/consumer.rst
-> +++ b/Documentation/driver-api/gpio/consumer.rst
-> @@ -29,6 +29,10 @@ warnings. These stubs are used for two use cases:
->    will use it under other compile-time configurations. In this case the
->    consumer must make sure not to call into these functions, or the user =
-will
->    be met with console warnings that may be perceived as intimidating.
-> +  Combining truly optional GPIOLIB usage with calls to
-> +  ``[devm_]gpiod_get_optional()`` is a *bad idea*, and will result in we=
-ird
-> +  error messages. Use the ordinary getter functions with optional GPIOLI=
-B:
-> +  some open coding of error handling should be expected when you do this=
-.
+> The GPIO subsystem does not handle hot-unplug events very well. We have
+> recently patched the user-space part of it so that at least a rouge user
+> cannot crash the kernel but in-kernel users are still affected by a lot o=
+f
+> issues: from incorrect locking or lack thereof to using structures that a=
+re
+> private to GPIO drivers. Since almost all GPIO controllers can be unbound=
+,
+> not to mention that we have USB devices registering GPIO expanders as wel=
+l as
+> I2C-on-USB HID devices on which I2C GPIO expanders can live, various medi=
+a
+> gadgets etc., we really need to make GPIO hotplug/unplug friendly.
 >
->  All the functions that work with the descriptor-based GPIO interface are
->  prefixed with ``gpiod_``. The ``gpio_`` prefix is used for the legacy
+> Before we can even get to fixing the locking, we need to address a seriou=
+s
+> abuse of the GPIO driver API - accessing struct gpio_chip by anyone who i=
+sn't
+> the driver owning this object. This structure is owned by the GPIO provid=
+er
+> and its lifetime is tied to that of that provider. It is destroyed when t=
+he
+> device is unregistered and this may happen at any moment. struct gpio_dev=
+ice
+> is the opaque, reference counted interface to struct gpio_chip (which is =
+the
+> low-level implementation) and all access should pass through it.
 >
-> ---
-> base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
-> change-id: 20231002-gpiodoc-cf9430641b91
+> The end-goal is to make all gpio_device manipulators check the existence =
+of
+> gdev->chip and then lock it for the duration of any of the calls using SR=
+CU.
+> Before we can get there, we need to first provide a set of functions that=
+ will
+> replace any gpio_chip functions and convert all in-kernel users.
 >
-> Best regards,
+> This series adds several new helpers to the public GPIO API and uses
+> them across the core GPIO code.
+>
+> Note that this does not make everything correct just yet. Especially the
+> GPIOLIB internal users release the reference returned by the lookup funct=
+ion
+> after getting the descriptor of interest but before requesting it. This w=
+ill
+> eventually be addressed. This is not a regression either.
+>
+> [1] https://lore.kernel.org/lkml/20230905185309.131295-1-brgl@bgdev.pl/T/
+>
+> v3 -> v4:
+> - initialize managed pointers when declaring them
+> - drop unneeded casting
+> - collect more tags
+>
+> v2 -> v3:
+> - use gpio_device_get_chip() consistently
+> - clarify comments
+> - fix buggy chip assignment
+> - check for PTR_ERR() in automatic cleanup
+> - rearrange code as requested by Andy
+>
+> v1 -> v2:
+> - drop all non-GPIOLIB patches
+> - collect tags
+> - fix kernel docs
+>
+> Bartosz Golaszewski (11):
+>   gpiolib: make gpio_device_get() and gpio_device_put() public
+>   gpiolib: add support for scope-based management to gpio_device
+>   gpiolib: provide gpio_device_find()
+>   gpiolib: provide gpio_device_find_by_label()
+>   gpiolib: provide gpio_device_get_desc()
+>   gpiolib: reluctantly provide gpio_device_get_chip()
+>   gpiolib: replace find_chip_by_name() with gpio_device_find_by_label()
+>   gpio: of: replace gpiochip_find_* with gpio_device_find_*
+>   gpio: acpi: replace gpiochip_find() with gpio_device_find()
+>   gpio: swnode: replace gpiochip_find() with gpio_device_find_by_label()
+>   gpio: sysfs: drop the mention of gpiochip_find() from sysfs code
+>
+>  drivers/gpio/gpiolib-acpi.c   |  12 +-
+>  drivers/gpio/gpiolib-of.c     |  33 +++---
+>  drivers/gpio/gpiolib-swnode.c |  33 +++---
+>  drivers/gpio/gpiolib-sysfs.c  |   2 +-
+>  drivers/gpio/gpiolib.c        | 202 ++++++++++++++++++++++++++--------
+>  drivers/gpio/gpiolib.h        |  10 --
+>  include/linux/gpio/driver.h   |  16 +++
+>  7 files changed, 215 insertions(+), 93 deletions(-)
+>
 > --
-> Linus Walleij <linus.walleij@linaro.org>
+> 2.39.2
 >
 
-Applied, thanks!
+I queued this series in this form. Other than the constness of the
+data pointer passed to gpio_device_find() (which - as explained under
+the relevant patch - should remain non constant) Andy only had two
+cosmetic issues with some patches which I'm choosing to leave out.
+
+Let's give it some time in next before the merge window and hopefully
+get the rest of the gpiochip_find() removal done before it.
 
 Bart
