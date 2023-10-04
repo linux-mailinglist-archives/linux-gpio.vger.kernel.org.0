@@ -2,111 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C968A7B80A2
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D01277B80AA
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:20:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233269AbjJDNSV convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 Oct 2023 09:18:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48594 "EHLO
+        id S233105AbjJDNUL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 09:20:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233134AbjJDNSU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:18:20 -0400
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F369E;
-        Wed,  4 Oct 2023 06:18:17 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-59c268676a9so25262317b3.0;
-        Wed, 04 Oct 2023 06:18:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696425496; x=1697030296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/wMp+Vg307cSobQ6lm2WKyfxk9n+yqBtBGToupSFTGM=;
-        b=misch/BJVoWoaIq2vp15aDmvzrFy0U7a5fO8B/2Wl0/a/GxKCAQFyxcOQVfsfBB3tW
-         pWNTab4AH9kvqKqir+8OoAgxI3GKE5V32f81itWfNs2Ju6/91L6NKwHTF0sDsjyYYcSe
-         ywN41ADhMthIm13PmqexFHNCfdXeKDVHSJDuNYYVenIvNdkptIu8kFDcO5Qsju+jsLOo
-         oUtjeD7xtB/20F98l3pAKkPvzCKnLZgqJPL/XERAp2YO3qqjnT4mFAaMPVeQWfyS4c26
-         SIDushCEhA5F61jsJV8gCW5Rszw02fmOprGehWFy9klC6rMckK+Ic2dIifB97WNH/OPp
-         Ms5A==
-X-Gm-Message-State: AOJu0YxTRNHjcNaVvpMfNaKwRlVw2IfLqn9sQ1RnbIopCXVpqHpNNo3F
-        BWIK/2gaIH+braaXjUsRZgGMZckZUJEOvA==
-X-Google-Smtp-Source: AGHT+IFjpDJ/TWx4mYP1vTavRlFj+pulva715y9H09RW7jK91X92kkZz4JebvV1USCCHTPWyZrqxgA==
-X-Received: by 2002:a81:5c57:0:b0:561:a123:1041 with SMTP id q84-20020a815c57000000b00561a1231041mr2480757ywb.29.1696425496426;
-        Wed, 04 Oct 2023 06:18:16 -0700 (PDT)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id n16-20020a819e50000000b005837633d9cbsm1114124ywj.64.2023.10.04.06.18.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Oct 2023 06:18:16 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5a229ac185aso25149567b3.1;
-        Wed, 04 Oct 2023 06:18:15 -0700 (PDT)
-X-Received: by 2002:a81:4811:0:b0:5a1:eec1:b42e with SMTP id
- v17-20020a814811000000b005a1eec1b42emr2615702ywa.0.1696425495727; Wed, 04 Oct
- 2023 06:18:15 -0700 (PDT)
+        with ESMTP id S242619AbjJDNUL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:20:11 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA9DC6;
+        Wed,  4 Oct 2023 06:20:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB9EC433C8;
+        Wed,  4 Oct 2023 13:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696425607;
+        bh=Uc3NOTcxp+jJ5AbMaMdMtkI/XmkjuT7JikGjiL50+KY=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=sMRvkTLzaMOKie1V5CI3w1UUGAMZRWddWMA8oivj3Rvy+CAjwgeoQZIZs6ma68SsA
+         NIVc02N8b+CKTFfintSqdwApeLdsRPPYZdbPNe7WTaHGPJAY5RFOXBzDKHBMv3UOw5
+         oNmOnC16HF2BfG8hxcSTPdkw/5h3hxjjplQ7GCUl3bhaWgwqDnJtpp6vP5+wxXjUA4
+         q80MdhnBAKpRATVVWfWEuokXHu3523qqyWw6xSVAilYqsDHfm8jN+xvbgzAUIqodoj
+         uWbQTsp3tJRb2BbEl26HimZC5FinU3y9t6OgaiMVauv6/TXpE30ROmnanQasZesWl6
+         sXnM5l1QzKViA==
+Message-ID: <cac56745-f611-48c2-bb1b-e86a3694fa59@kernel.org>
+Date:   Wed, 4 Oct 2023 15:20:01 +0200
 MIME-Version: 1.0
-References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-18-claudiu.beznea@bp.renesas.com>
-In-Reply-To: <20230929053915.1530607-18-claudiu.beznea@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Oct 2023 15:18:03 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX+3PinKKrWbtnaGGJZcARSyMewQR6QvYVGnM7NT0ObXQ@mail.gmail.com>
-Message-ID: <CAMuHMdX+3PinKKrWbtnaGGJZcARSyMewQR6QvYVGnM7NT0ObXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 17/28] pinctrl: renesas: rzg2l: move ds and oi to SoC
- specific configuration
-To:     Claudiu <claudiu.beznea@tuxon.dev>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, magnus.damm@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        quic_bjorande@quicinc.com, konrad.dybcio@linaro.org, arnd@arndb.de,
-        neil.armstrong@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, linux-renesas-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] pinctrl: denverton: Enable platform device in the
+ absence of ACPI enumeration
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+References: <20230926190818.931951-1-andriy.shevchenko@linux.intel.com>
+ <76d1e643-9b81-4c23-8f46-73fe59913600@kernel.org>
+ <CAHp75VdKF+QfSsUwVSrSEng_xY_2ZW_0t0kBuXYPPcBi3_6LxQ@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CAHp75VdKF+QfSsUwVSrSEng_xY_2ZW_0t0kBuXYPPcBi3_6LxQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 7:39 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Move drive strength and output impedance values to SoC specific
-> configuration data structure (struct rzg2l_hwcfg). This allows extending
-> the drive strength support for RZ/G3S. Along with this the DS values
-> were converted to uA for simple integration with RZ/G3S support.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->
-> Changes in v2:
-> - s/indexes/indices in code documentation
-> - s/micro amps/uA in code documentation
-> - added RZG2L_IOLH_MAX_DS_ENTRIES for "+ 4" statements in code
-> - changed struct rzg2l_hwcfg::iolh_groupb_oi[] size to 4 to avoid
->   oversize it in next commits when RZG2L_IOLH_IDX_MAX will be increased
->   and thus avoiding issues when executing
->   "if (index == ARRAY_SIZE(hwcfg->iolh_groupb_oi))" in
->   rzg2l_pinctrl_pinconf_set()
-> - collected tags
+On 04/10/2023 15:09, Andy Shevchenko wrote:
+> On Wed, Oct 4, 2023 at 11:18 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>> On 26/09/2023 21:08, Andy Shevchenko wrote:
+> 
+> ...
+> 
+>>> +MODULE_ALIAS("platform:denverton-pinctrl");
+>>
+>> Why do you need the alias? It's the same as ID table. You most likely
+>> miss MODULE_DEVICE_TABLE() or your table is just wrong.
+> 
+> This is cargo cult from pinctrl-broxton.c. If we want to fix, we need
+> to fix both.
+> Care to send patches?
 
-Thanks, will queue in renesas-pinctrl-for-v6.7.
+I don't understand how some other file affects this. Why do you exactly
+need module alias here? Which use-case does not work without it (after
+adding proper MODULE_DEVICE_TABLE())?
 
-Gr{oetje,eeting}s,
+Best regards,
+Krzysztof
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
