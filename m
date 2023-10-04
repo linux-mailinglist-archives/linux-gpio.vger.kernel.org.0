@@ -2,102 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DE667B7A89
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 10:47:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 828ED7B7A98
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 10:49:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241765AbjJDIrb convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 Oct 2023 04:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49914 "EHLO
+        id S232807AbjJDItk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 04:49:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232554AbjJDIra (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 04:47:30 -0400
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F9198;
-        Wed,  4 Oct 2023 01:47:27 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d865db5b4c7so1925318276.1;
-        Wed, 04 Oct 2023 01:47:27 -0700 (PDT)
+        with ESMTP id S232554AbjJDItk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 04:49:40 -0400
+Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9F7A7
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 01:49:37 -0700 (PDT)
+Received: by mail-vk1-xa2a.google.com with SMTP id 71dfb90a1353d-49dc95be8c3so67871e0c.0
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 01:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696409376; x=1697014176; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O+YzNfqTip4SK0su8p8tGtqQX78FmAMwOHUKfII9CPQ=;
+        b=j8E1xbCC2TqSQ77FFnCZw67BzRUnDR/bApmGCqaoi25r3wUR8wyaIUvz5e2/CTHi6A
+         ol/SZxzCJBPtoZiMolyn/F7YSQ8aQbdEhriMrcd5g/O0s+vw9RbeiFlN68Qa/jD7zLW2
+         WorID5g79y97l2scWkvkR65l/31wCA+OUpHBOGqfj3PYwA0EU1744lg4C5D+HykbBtTs
+         XAtCfLB8kzuXX0JILuWNipRUQZ+XuOflPk7BeLT4FO97/w7pOskkV2fTjcbvyyKdOPXI
+         ggqq2zkWAXOQv+Ebw73wbEkUSjhmDYPVD6n+JrDpDMK5bMOJ7AGLwQTx9HAXhbK5zC2I
+         bssg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696409246; x=1697014046;
+        d=1e100.net; s=20230601; t=1696409376; x=1697014176;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YooWuKVd1rh+nYG5HBqqiBiWwSOKPBjK/oiwvdElrQQ=;
-        b=ErxKcxvT1rQIBgUnzFdDWtrJ0f4WJgZjA0dcmbYf6AZBIKUuAINlxFLJl7RBt8F6yO
-         tyGZc1c8pKZ+6CMFjm/zZ9Wmwv/HTwmHL5ALnyUtdfaS1c43mc9fEwsC4x1tqgryz7W+
-         CPJ/xFD4h3f/mD7UfKj4sohpQHiiZbItG2T8oTB76QjMtVOAFogCtnpCFxziBWBPMbsS
-         uGDoEDyntjqicoe64n3kCgI8JWTKaXo7j3Ki+1MZIsRChjLuxGC0m2YqaNQcfLv9Tbtv
-         YBpABIHJtGk53lY9PwjmxScoHmtCbHNezG2egxzAVvFYCvMfi+tkkg5ui1tIO26jUFuG
-         AVpA==
-X-Gm-Message-State: AOJu0YzdpL8SrayoLIe8T0CTpRFR3ctqINSqZQ9BXZR2eEQdvHdms+Dr
-        Fyaq1dtce++5Zo1arZ61U6w3HzYexMgRvw==
-X-Google-Smtp-Source: AGHT+IFaUl9sjwH3kv88nWiZ3YM2n1Kmqz42U1G1ewwhPQXsH4sFtojPrh8nbMnQm6AL10k4ddF4BQ==
-X-Received: by 2002:a25:b34d:0:b0:d7e:b88b:1de8 with SMTP id k13-20020a25b34d000000b00d7eb88b1de8mr1327228ybg.9.1696409246709;
-        Wed, 04 Oct 2023 01:47:26 -0700 (PDT)
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
-        by smtp.gmail.com with ESMTPSA id w7-20020a05690202c700b00d7ba4c5e31fsm906073ybh.39.2023.10.04.01.47.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Oct 2023 01:47:26 -0700 (PDT)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5a2536adaf3so22614267b3.2;
-        Wed, 04 Oct 2023 01:47:26 -0700 (PDT)
-X-Received: by 2002:a81:4ec9:0:b0:59f:7110:936a with SMTP id
- c192-20020a814ec9000000b0059f7110936amr1849241ywb.1.1696409246245; Wed, 04
- Oct 2023 01:47:26 -0700 (PDT)
+        bh=O+YzNfqTip4SK0su8p8tGtqQX78FmAMwOHUKfII9CPQ=;
+        b=ijWj5/Ny6wsLPJKGQMb+5w6ry5FPUIMem4Xq7KGuEUQN4TcBjMIt07GCTqTtoOFDyW
+         B2tk32TM5GFJravy5q1ByyKsxC8nqWIT/KWm5iedKsTvAUi8tFOtjqakkNW69y43w+Dp
+         L5tbCLJfCicoZXZ03lGfk17W2iM3mb0S26aqY7VQsl0ret8/EEQ8M5xaE2QzpE0Pl8z9
+         C93HvE04bnGkrB+9PIadSpnqHfEImUP8azyvRcusvbKVowc1pf9qUsznjH2F/OPiIMtr
+         RTq7uNQOfrFYwGKjcmjOgfpXAPPZRnZoPv+QXDXW7rDtCd23+dPqadOS+rHAv+L5NWrK
+         WxKA==
+X-Gm-Message-State: AOJu0Yw230e59CgI/vInjIQ26lAH51ongUo3vAk+wAVomLagE3Na0naQ
+        clpGL/0x3qkhsZXVyDV5mI2+p1vndiGmDw1N+OrS0A==
+X-Google-Smtp-Source: AGHT+IGVSiuefKeZd7FIOAhYAf7Wpjqc00O/2UC1iG6D/ByEXO64AiPAIYZUseotQx4KRq096ulaIxS4u6diKf2a61w=
+X-Received: by 2002:a1f:4887:0:b0:493:3491:ce89 with SMTP id
+ v129-20020a1f4887000000b004933491ce89mr1155527vka.14.1696409376342; Wed, 04
+ Oct 2023 01:49:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-9-claudiu.beznea@bp.renesas.com>
-In-Reply-To: <20230929053915.1530607-9-claudiu.beznea@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Oct 2023 10:47:14 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWY_28uT39XhgwPtm=dKmxAmohRPjUGD1r_ZP3ev8c_pw@mail.gmail.com>
-Message-ID: <CAMuHMdWY_28uT39XhgwPtm=dKmxAmohRPjUGD1r_ZP3ev8c_pw@mail.gmail.com>
-Subject: Re: [PATCH v2 08/28] clk: renesas: rzg2l: add struct clk_hw_data
-To:     Claudiu <claudiu.beznea@tuxon.dev>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, magnus.damm@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        quic_bjorande@quicinc.com, konrad.dybcio@linaro.org, arnd@arndb.de,
-        neil.armstrong@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com,
-        biju.das.jz@bp.renesas.com, linux-renesas-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-31-brgl@bgdev.pl>
+ <CAHp75VdvUUw77MuuhY3Ts9L0ezOdakyppQcnikpYCu672Ghb9Q@mail.gmail.com>
+In-Reply-To: <CAHp75VdvUUw77MuuhY3Ts9L0ezOdakyppQcnikpYCu672Ghb9Q@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 4 Oct 2023 10:49:25 +0200
+Message-ID: <CAMRc=MdtdS6+8TL1edRzu_=ZT3mgfRud1YEx9ZAQcYprUj+yew@mail.gmail.com>
+Subject: Re: [PATCH 30/36] pinctrl: remove old GPIO helpers
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 29, 2023 at 7:39 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Tue, Oct 3, 2023 at 5:21=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Add clk_hw_data struct that keeps the core part of a clock data. The
-> sd_hw_data embeds a member of type struct clk_hw_data along with other
-> members (in the next commits). This commit prepares the field for
-> refactoring the SD MUX clock driver.
+> On Tue, Oct 3, 2023 at 5:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> >
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Old variants of pinctrl GPIO helpers are no longer used. Let's remove
+> > them as well as convert all static functions in pinctrl/core.c that
+> > still deal with global GPIO numbers to using the gpio_chip + offset
+> > pairs.
 >
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
+> This patch does three thighs as I see it.
 >
-> Changes in v2:
-> - collected tags
 
-Thanks, will queue in renesas-clk-for-v6.7.
+I'd argue it just fold the code that lived in old functions into the new on=
+es...
 
-Gr{oetje,eeting}s,
+> First of all, it silently converts to RAII. Please, do this separately.
 
-                        Geert
+... and while at it, it already switches to SBRM because why copy outdated =
+code.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> Second, it shuffles a lot of code between old and new implementations.
+> What I prefer to see is what the subject tells: only "-" (minus)
+> lines.
+> Third, it will become easier if you name the "new" functions better to
+> begin with, it will help a lot here.
+>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I'll wait for Linus to tell me if he prefers one big squashed commit
+or a fine-grained history (I prefer the latter) before spending time
+splitting this commit.
+
+Bart
+
+> --
+> With Best Regards,
+> Andy Shevchenko
