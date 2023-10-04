@@ -2,108 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3570A7B8036
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:05:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0DEE7B803D
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:10:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232819AbjJDNFp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 09:05:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34810 "EHLO
+        id S242435AbjJDNKR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 09:10:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233093AbjJDNFo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:05:44 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9FF898
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 06:05:40 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-9ae2cc4d17eso382758766b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 06:05:40 -0700 (PDT)
+        with ESMTP id S233003AbjJDNKO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:10:14 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5584398;
+        Wed,  4 Oct 2023 06:10:09 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-65b0e623189so11624776d6.1;
+        Wed, 04 Oct 2023 06:10:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696424739; x=1697029539; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1696425008; x=1697029808; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lf773RqqbvK1ST+uBlOfJ8R2x4EhFyikOffuYi63sKc=;
-        b=T5EM7LfPCS+V35ne82244YpZyHvj3PR91drrVDUXkDjPo6Geht6nVR8uY8k13YOCz9
-         XyCC/TfBj8nC0aomzHPjj0NOPns5pJ6+Z4r5PAdrQWal3ONxAJ9honcAslc0P33yNHFl
-         sJv2ZukvFdTA2YA3EwnkTYRfGflaJhA5UoBi7wLZ3SXNEO2qgWkjvindEP8W/Mt9GxHS
-         6o4hDV+MMEGx0mc9Qv+r8fSd9hBIb75C3aJYuTEhlzwhFgUibSTUPsKPijFWbHlWLNXv
-         b9FDd9dzzXfXhLCJ4MNrkr2lgkrXxoTNohqZQemtVQZn6rtQCIO1fn72y93RYTC0IueF
-         Ls6w==
+        bh=asdaHQCAKRIWEz9CnctgMv3GKP9kjq8BnTwyAVU+fio=;
+        b=Qa11NW/54TOKnk0Jb4tSizHMf7aNNA0o0PuMgZ2qrkYMVKuJSUxnIapluJ2oq58uhc
+         eps7VunbTpGy8zazQqGu8fHWFGKo5dxBsN4a0GwPvnJ24tq8lw6pUdohurcvetulHtQC
+         2owF+0tlw6t1X2Fo6rNpCgn3W/Ud70YvAHQhv53J5rMZcWX5sFCSC7bo/EcoA5+/TOnZ
+         x9InXb5s1w8wbRuBmqlQ8qZL7tU0QeQssNndNAmW3+BvnvNCDkzW4acsDw/dKO9Bf3zn
+         jIMGQ2ZM0TfCzyw8OOL7PTNN3be5kwxZyJM51XTk9J1KOzFyzjJFxqZDpf9qaq4QGhfT
+         Lnow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696424739; x=1697029539;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lf773RqqbvK1ST+uBlOfJ8R2x4EhFyikOffuYi63sKc=;
-        b=kl5gaKMdMTgx0YmJU4uUJH/ShBH1NiddaVEtWSlbpNEq5VoCeCTIMzichee1k0Bgw+
-         JyZN6k7WRqQh70858hVCNoWiw6QT3z3qqruqqAKBddIJw0Cge0EYX8PBN1TkwOBmAp8x
-         aBldCcEGBsv+ZVnLpLUE4jpw+i8BTOdI2wtfhgQajRoROvU9A+TWCdR72uQztrnovEwa
-         KTv85r6yJWXv93XfNQgZaLwBE2ebwFldzTTA+S/FEa1Sd0G59dppKmkp2BihiaqCnQFn
-         W890VDH3pX3a9+gLnCrcJthtH1BeFejLGoTl/MoMGbIkgVTVdn1z1fIwyf+IsP0216kh
-         l/NQ==
-X-Gm-Message-State: AOJu0YxAR7BjuO19HuAIMePpwg1yCyPzqn/MZB5/rz9g0EUazYyII0vf
-        vYTyrlDZcz9B99gRI9gGSE6vPg==
-X-Google-Smtp-Source: AGHT+IE8+IiF4aq1BizWYk8jW1yPC0gr0iwLbzmo4YXauyLTcaNfKGvc8y01euG+Ny313Np9wjHvXQ==
-X-Received: by 2002:a17:906:5357:b0:9ae:7681:f62a with SMTP id j23-20020a170906535700b009ae7681f62amr2377972ejo.44.1696424738665;
-        Wed, 04 Oct 2023 06:05:38 -0700 (PDT)
-Received: from localhost (i5C743835.versanet.de. [92.116.56.53])
-        by smtp.gmail.com with ESMTPSA id g6-20020a1709064e4600b00991faf3810esm2797105ejw.146.2023.10.04.06.05.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Oct 2023 06:05:38 -0700 (PDT)
-Mime-Version: 1.0
+        d=1e100.net; s=20230601; t=1696425008; x=1697029808;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=asdaHQCAKRIWEz9CnctgMv3GKP9kjq8BnTwyAVU+fio=;
+        b=bK3hLgwq/jZbmmPENs3/Lxka68YOtvrgqmzAl9dcAoJ8sUadx4NZ1n1YrGRQe5ROSP
+         PAsz1m9T5dswJPV1VuQnOF965tTyoOdnknCU03u2Rm8RwE2VqbE/sjX7DwTTTnNQ4eJK
+         oy4aKu3LIQ/Ph0SeqGL804eQa5sZONMB0AbQRz9KszdL8ohgwL9b4ghsOXSRWZu7QHGd
+         PtyMxqtX8tWJiEkcYnvzkashNOoqnrJoBWRyhqKJI+FEyCG7CLOzPHP4wcgm1omfAn/B
+         k43wvLf6qeY1mNY6YmCCbAbpUIntT94h2/M4jFwel6Do0Gj5ZHs4qVSh7LsV8dPN2jab
+         uQxg==
+X-Gm-Message-State: AOJu0YzpjXuUQJNjtdAYRytE6dT6gtCyROllHOYniJs4GLK0wWGZ2f8p
+        rPqKrU27YCYiGVxYjHVHK6d+oy+cuPrp0Dkf87eV6OFciYc=
+X-Google-Smtp-Source: AGHT+IFMgcbtnGHOGQEnTV0fNuWMb2syIVJ41wSGPv8NVZe/+CZBISZ9FUJKCjvlImsjAVhn8IdBiSZ3INKYtXwMX78=
+X-Received: by 2002:a05:6214:3381:b0:647:23b8:dac2 with SMTP id
+ mv1-20020a056214338100b0064723b8dac2mr2261508qvb.58.1696425008344; Wed, 04
+ Oct 2023 06:10:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230926190818.931951-1-andriy.shevchenko@linux.intel.com> <76d1e643-9b81-4c23-8f46-73fe59913600@kernel.org>
+In-Reply-To: <76d1e643-9b81-4c23-8f46-73fe59913600@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Oct 2023 16:09:31 +0300
+Message-ID: <CAHp75VdKF+QfSsUwVSrSEng_xY_2ZW_0t0kBuXYPPcBi3_6LxQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: denverton: Enable platform device in the
+ absence of ACPI enumeration
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 04 Oct 2023 15:05:37 +0200
-Message-Id: <CVZODPRT7CMN.3DCWMHVZSE92F@ablu-work>
-Subject: Re: [libgpiod][PATCH v3 0/3] bindings: rust: fix modeling of
- line_info lifetimes
-Cc:     "Linux-GPIO" <linux-gpio@vger.kernel.org>,
-        "Viresh Kumar" <viresh.kumar@linaro.org>,
-        "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>,
-        "Kent Gibson" <warthog618@gmail.com>
-To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-X-Mailer: aerc 0.15.2
-References: <20231003-rust-line-info-soundness-v3-0-555ba21b4632@linaro.org>
- <CAMRc=MczoC6Bj4ZigNt4Dse_6YXwGnQxgxPOVJn5Y1L8niSJ8g@mail.gmail.com>
-In-Reply-To: <CAMRc=MczoC6Bj4ZigNt4Dse_6YXwGnQxgxPOVJn5Y1L8niSJ8g@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed Oct 4, 2023 at 1:26 PM CEST, Bartosz Golaszewski wrote:
-> On Tue, Oct 3, 2023 at 11:40=E2=80=AFAM Erik Schilling
-> <erik.schilling@linaro.org> wrote:
-> >
-> > While reviewing the bindings for thread-safety, I realized that the
-> > bindings did not properly model the lifetimes of non-owned line_info
-> > instances.
-> >
-> > This fixes that. It might be a bit mind bending. I tried to provide
-> > lengthy comments to clarify what happens.
-> >
-> > To: Linux-GPIO <linux-gpio@vger.kernel.org>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Cc: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-> > Cc: Kent Gibson <warthog618@gmail.com>
-> >
-> > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> > ---
+On Wed, Oct 4, 2023 at 11:18=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+> On 26/09/2023 21:08, Andy Shevchenko wrote:
+
+...
+
+> > +MODULE_ALIAS("platform:denverton-pinctrl");
 >
-> Please make sure to include my brgl@bgdev.pl address too in the future
-> when submitting libgpiod patches, thanks!
+> Why do you need the alias? It's the same as ID table. You most likely
+> miss MODULE_DEVICE_TABLE() or your table is just wrong.
 
-Thanks for merging!
+This is cargo cult from pinctrl-broxton.c. If we want to fix, we need
+to fix both.
+Care to send patches?
 
-Will do! Though, you should probably update the CONTRIBUTING section in
-the README with that and clarify whether you want to receive it on CC or
-TO :->.
-
-I will update my b4 config accordingly.
-
-- Erik
+--=20
+With Best Regards,
+Andy Shevchenko
