@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D8777B80FC
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:32:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 383FF7B8108
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:34:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242702AbjJDNci convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 Oct 2023 09:32:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49322 "EHLO
+        id S242666AbjJDNeD convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 4 Oct 2023 09:34:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242710AbjJDNce (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:32:34 -0400
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EC8D7;
-        Wed,  4 Oct 2023 06:32:31 -0700 (PDT)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5a229ac185aso25343277b3.1;
-        Wed, 04 Oct 2023 06:32:31 -0700 (PDT)
+        with ESMTP id S233319AbjJDNeC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:34:02 -0400
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A45DAD;
+        Wed,  4 Oct 2023 06:33:59 -0700 (PDT)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-59f6492b415so8883227b3.0;
+        Wed, 04 Oct 2023 06:33:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696426350; x=1697031150;
+        d=1e100.net; s=20230601; t=1696426438; x=1697031238;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pMucO+yN7Gt13UiaJENaqz62Z68eTMF8lPfTcKOke+k=;
-        b=oRLPNvXuqmede9FU9mBxdgq2RhtW2RJbjuTOqxBx4c2Il4KphckXqPC/K93VcyZ0FV
-         SXtawQqJh/6XL96u9jz+wTpkuzjY2Km//O8M/JVIFUsC0y+EZVN1CIWcaX2OpqMUzzeW
-         rkqBzKg0/1fQEQtkduVuUFt0UEXUBei0mHPtTs50criJewdMgB09zLCzu2K/nBi8TePO
-         kDWdvudL4IulYKbz3DX53p1xnILiqV3BwhOjlRM22CbzmiHgCcRiE43V36CpEDjysUOG
-         ei/NoKhBAx9Iq9VjTXemtnYIx31j53f0zQjrRRy2r+c017Cq/pJAdyRW5my5pBCQvV3p
-         jUYQ==
-X-Gm-Message-State: AOJu0YwDcnlTjWlL88acVsD19+e7vLjqkl+5gxya3GCdI6fEE+FTL8hT
-        MvguyymqNnJ+K8z3N9duXlAwkYJnDnMIFw==
-X-Google-Smtp-Source: AGHT+IGvPTSRsbjDZGMcZ/3KloGs0hp2+x7zOKMCqouJzG+ZiwJSBoLSFzoyPUsNhZriDroTGviqag==
-X-Received: by 2002:a81:49d8:0:b0:55a:574f:327c with SMTP id w207-20020a8149d8000000b0055a574f327cmr2808275ywa.13.1696426350500;
-        Wed, 04 Oct 2023 06:32:30 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id i127-20020a0dc685000000b0058e37788bf7sm1145364ywd.72.2023.10.04.06.32.29
+        bh=vWliRVyDflCaQ0ibzTdSksrcW2qMke8NU2ExNZSvp74=;
+        b=apPIulPo3JIKY6zwXTei2+3MDuwCse5BpReIfePDK7FDHPryb04kODujXZ924Wn4pB
+         KFgVpQRvdHn/TP+IwOtU09PzyPrM5lsvvj447k4mkjciTpBnv37RJF+qys+03NZlJSwF
+         ugi84IrEtxtccTmN9eX4SIKeUtqCPTx635q6WXc8FUgk8eyQI5FTiFNdmV9hnBTEPJ6n
+         eKHwEYNVeZph/AlbSFqWJ7huIhPKS+YxmVWL9eC9Rb+vnMyzqh7KOPrkh2AP3MsooXJm
+         7cmjOQtFT9VPU3on82TfumJft4tf620QNPC+KIGPhNIyxZvMfEJOAa2oVCxtoaBONIcI
+         x+pQ==
+X-Gm-Message-State: AOJu0Yy0P7v7PH+MZN8Sc4nNJnBvHoe7EYiPP8iOMNPZpD80IpKXoCFV
+        M+0m4WEjR9gjN1DxKI4x0JE6jNruPmE6DQ==
+X-Google-Smtp-Source: AGHT+IEyNbDtO9wLGuzSBbbR79dXUAD/sxOUgtSNul5Amb2wli+nEGNPHbuuZMTC6sR/aRqi2qUhxg==
+X-Received: by 2002:a05:690c:4706:b0:59f:6a25:959e with SMTP id gz6-20020a05690c470600b0059f6a25959emr3957416ywb.10.1696426438562;
+        Wed, 04 Oct 2023 06:33:58 -0700 (PDT)
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
+        by smtp.gmail.com with ESMTPSA id y126-20020a0def84000000b0054bfc94a10dsm1146182ywe.47.2023.10.04.06.33.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Oct 2023 06:32:29 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d865c441a54so2251184276.1;
-        Wed, 04 Oct 2023 06:32:29 -0700 (PDT)
-X-Received: by 2002:a05:6902:1890:b0:d89:4368:aa1 with SMTP id
- cj16-20020a056902189000b00d8943680aa1mr2554867ybb.53.1696426349589; Wed, 04
- Oct 2023 06:32:29 -0700 (PDT)
+        Wed, 04 Oct 2023 06:33:58 -0700 (PDT)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-59e88a28b98so8783357b3.1;
+        Wed, 04 Oct 2023 06:33:58 -0700 (PDT)
+X-Received: by 2002:a0d:df8a:0:b0:59b:ca32:7460 with SMTP id
+ i132-20020a0ddf8a000000b0059bca327460mr4104751ywe.3.1696426438040; Wed, 04
+ Oct 2023 06:33:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-27-claudiu.beznea@bp.renesas.com>
-In-Reply-To: <20230929053915.1530607-27-claudiu.beznea@bp.renesas.com>
+References: <20230929053915.1530607-1-claudiu.beznea@bp.renesas.com> <20230929053915.1530607-28-claudiu.beznea@bp.renesas.com>
+In-Reply-To: <20230929053915.1530607-28-claudiu.beznea@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 4 Oct 2023 15:32:17 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXqUNNbwV_SVqT+WAJVm6C1XgeFOpWDsBeYHxvp1hUxvw@mail.gmail.com>
-Message-ID: <CAMuHMdXqUNNbwV_SVqT+WAJVm6C1XgeFOpWDsBeYHxvp1hUxvw@mail.gmail.com>
-Subject: Re: [PATCH v2 26/28] dt-bindings: arm: renesas: document SMARC
- Carrier-II EVK
+Date:   Wed, 4 Oct 2023 15:33:45 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWAhKzdSUtcC-3jZ=wy2Oz2q+Gx0EzUKQzFMBgSMu_UEw@mail.gmail.com>
+Message-ID: <CAMuHMdWAhKzdSUtcC-3jZ=wy2Oz2q+Gx0EzUKQzFMBgSMu_UEw@mail.gmail.com>
+Subject: Re: [PATCH v2 27/28] arm64: dts: renesas: r9a08g045s33-smarc: add
+ initial device tree for RZ/G3S SMARC EVK board
 To:     Claudiu <claudiu.beznea@tuxon.dev>
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -78,16 +78,15 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Sep 29, 2023 at 7:40 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> Document Renesas SMARC Carrier-II EVK board which is based on RZ/G3S
-> SMARC SoM. The SMARC Carrier-II EVK consists of RZ/G3S SoM module and
-> SMARC Carrier-II carrier board, the SoM module sits on top of carrier
-> board.
+> Add initial device tree for RZ/G3S SMARC EVK board.
 >
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > ---
 >
 > Changes in v2:
-> - this patch is new in v2
+> - modified compatible
+> - @Geert: I haven't added you Rb tag as I've added
+>   "renesas,rzg3s-smarcm" to the compatible list
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 i.e. will queue in renesas-devel for v6.7.
