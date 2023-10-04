@@ -2,65 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22E607B79CF
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 10:12:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 958707B79E2
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 10:18:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232824AbjJDIMg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 04:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
+        id S232596AbjJDISL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 04:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232788AbjJDIMg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 04:12:36 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC064A6
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 01:12:32 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-452863742f3so929101137.1
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 01:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696407152; x=1697011952; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/mSb+SIJ1kznY7Jji6Vr2AJRvHPkHGWmS9RZs4FnxRA=;
-        b=QUyuH5A6/gWrhvnEBSFipLbJe9XXiZkO4a5I9t8vgRnLs4rRuKlP1JpZ4xw1ayzgiO
-         +23tteumyfNCijHkbaZ5nCelHCnD0mPMkuxOyFgbyQ2Yefs0DDL3SBvmRYuGD9qjf2EM
-         gxutl7ReOLEoGtqH3s2dqs3f3ksurR9DuzhPCfgjFIvoQHloEJvRsbEGBxCvjJzhG3MV
-         qMpuEgIK4dH2XjVy+1zNPRHMQpdNJ7O5RgmO7fFoBDnt9sClGGuiqo6jKzwPVNybjKpi
-         E0VQnWpPoB45m3KmkB0sxxnrnGCgSoDZLrTFnLGaLCSZHXHbRWFV3nZEhx7dB10FpQH1
-         jMvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696407152; x=1697011952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/mSb+SIJ1kznY7Jji6Vr2AJRvHPkHGWmS9RZs4FnxRA=;
-        b=kBt70Qpb2I3XWfICUXaVeaAqw4Efd6qCfoFPRJOnyctnHFkKiO3LctraZi4ZKTxNNl
-         +ICfeI6b0EbWlXjmvBmdvkVS9oQPhmwEnwD9X3HKNdqxG9zLsE3He+EaDWew+kkMz0FI
-         KU/4SqJX3eTK6xE5l+guq9BxcWFM7E+E1kxT6KktpyllQyY+e+Dtc4RrJ2GhjX26q20q
-         n/x7Y90O1Lm4hp3E2InysnDlcaWd0yIjFk6YOlmGPzDkJfX+L8cfA+CpAp5DMNOb2FBE
-         U2vv7Yval5b0T/Sn3YcC+D1y53oSU15MCrue9vcfzehewMcUBjWSfBIqo3UOrkBdEzmk
-         oWUg==
-X-Gm-Message-State: AOJu0YwNJmzerKgzljlkVECGLtF2nn09jhtE5HSBsCzH8gellCMRJy/Y
-        zNIJsplQ7GCzRCdBcuLtT+frpt9N5H+MoxlqFCmw4Q==
-X-Google-Smtp-Source: AGHT+IGrYgDVrxDoJMZJVhHVecsbpjwYyRMPanYYZQkNEn6NEyoB0KCjHZhQaLxV5l8xsEO72zVxSlFYG3tXVGQD3xE=
-X-Received: by 2002:a67:f9c4:0:b0:452:8ce2:5149 with SMTP id
- c4-20020a67f9c4000000b004528ce25149mr1417255vsq.12.1696407151799; Wed, 04 Oct
- 2023 01:12:31 -0700 (PDT)
+        with ESMTP id S229712AbjJDISK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 04:18:10 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21619A6;
+        Wed,  4 Oct 2023 01:18:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8864C433C7;
+        Wed,  4 Oct 2023 08:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696407486;
+        bh=vQFPg6PA6WrMnXAY1PY7xlQzGKPRe88hSEWvcIqGGLE=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=h+1ABKoh9sVQArHfErOER+r1zQroHl5optg7U+U/veYLL913BqEdKUPuk1K98ULmR
+         Y3OWeV2g3kCfwrdFXzZ/i6zruJLfc2H7S3Q4m8oC7pqym5Ot3sqhI96P5ICGsq/HDv
+         jYHBof86l57qaLWNPDia4Ub2MbOpPsZjZQPO4367US1/ArMRr4OXmEZBFZOq5Yr/pT
+         NXxZjiOOfHekOeVXT6H5OCR+hF8nI64rYI1IwoiMA/3I1bfjvfiVN/kPJCUJQvXGFA
+         r5w9+1otsSGFZMK+bnvFA3kVK9fgGwJKG9It+VQ4coRED44w7iYkQ4CK7mQzng9Y3O
+         ZOyWiUYxdH4iw==
+Message-ID: <76d1e643-9b81-4c23-8f46-73fe59913600@kernel.org>
+Date:   Wed, 4 Oct 2023 10:18:01 +0200
 MIME-Version: 1.0
-References: <20231003145114.21637-1-brgl@bgdev.pl> <CACRpkdY03QUkHcmyfTTfvVFbmNujW3qg5GcNJ-=8zj_zvGqDeg@mail.gmail.com>
-In-Reply-To: <CACRpkdY03QUkHcmyfTTfvVFbmNujW3qg5GcNJ-=8zj_zvGqDeg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 4 Oct 2023 10:12:20 +0200
-Message-ID: <CAMRc=Md7QKYqRaytw2xG8hqTmEDmZGxFfDyGZqoE96h-CvmJcw@mail.gmail.com>
-Subject: Re: [PATCH 00/36] pinctrl: don't use GPIOLIB global numberspace in helpers
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] pinctrl: denverton: Enable platform device in the
+ absence of ACPI enumeration
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+References: <20230926190818.931951-1-andriy.shevchenko@linux.intel.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20230926190818.931951-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,56 +97,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 3, 2023 at 11:51=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Tue, Oct 3, 2023 at 4:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > We have a set of pinctrl helpers for GPIOLIB drivers that take a number
-> > from the global GPIO numberspace as argument. We are trying to get rid
-> > of this global numbering. Let's rework these helpers to use the
-> > recommended gpio_chip + controller-relative offset instead.
-> >
-> > This work is split into phases: first let's introduce the new variants
-> > of the helpers. Next: let's convert all users one-by-one for easier
-> > review. Finally let's remove the old helpers and rename the new variant=
-s
-> > to take the place of the old ones.
->
-> Almost too good attention to process here, I hope you used some
-> tooling and didn't do all this by hand...
->
-> I reviewed it by applying the lot with b4 on a branch off
-> my devel branch, and
->
-> git diff devel..HEAD
->
-> which shows what the goal of the patches is and since the
-> kernel clearly looks better after than before the patches:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Or I can just merge this branch into my devel (for v6.7)
-> branch, and offer you the same as immutable.
-> Which is my plan.
->
+On 26/09/2023 21:08, Andy Shevchenko wrote:
+> This is to cater the need for non-ACPI system whereby
+> a platform device has to be created in order to bind
+> with the Denverton pinctrl platform driver.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/pinctrl/intel/pinctrl-denverton.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-denverton.c b/drivers/pinctrl/intel/pinctrl-denverton.c
+> index 0c4694cfa594..a1a7242e0451 100644
+> --- a/drivers/pinctrl/intel/pinctrl-denverton.c
+> +++ b/drivers/pinctrl/intel/pinctrl-denverton.c
+> @@ -257,6 +257,11 @@ static const struct acpi_device_id dnv_pinctrl_acpi_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, dnv_pinctrl_acpi_match);
+>  
+> +static const struct platform_device_id dnv_pinctrl_platform_ids[] = {
+> +	{ "denverton-pinctrl", (kernel_ulong_t)&dnv_soc_data },
+> +	{ }
+> +};
+> +
+>  static struct platform_driver dnv_pinctrl_driver = {
+>  	.probe = intel_pinctrl_probe_by_hid,
+>  	.driver = {
+> @@ -264,6 +269,7 @@ static struct platform_driver dnv_pinctrl_driver = {
+>  		.acpi_match_table = dnv_pinctrl_acpi_match,
+>  		.pm = &dnv_pinctrl_pm_ops,
+>  	},
+> +	.id_table = dnv_pinctrl_platform_ids,
+>  };
+>  
+>  static int __init dnv_pinctrl_init(void)
+> @@ -281,4 +287,5 @@ module_exit(dnv_pinctrl_exit);
+>  MODULE_AUTHOR("Mika Westerberg <mika.westerberg@linux.intel.com>");
+>  MODULE_DESCRIPTION("Intel Denverton SoC pinctrl/GPIO driver");
+>  MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:denverton-pinctrl");
 
-I'll need to send a v2 because there was an issue with one of the stub
-declarations and I think we should let it rest on the list for a week
-but eventually I think you should just pick up the entire series and
-if anything new for the GPIO tree conflicts then we can deal with
-immutable tags.
+Why do you need the alias? It's the same as ID table. You most likely
+miss MODULE_DEVICE_TABLE() or your table is just wrong.
 
-What is your view on Andy's and Kent's issues with the _new() name
-suffix? My argument is that it's just temporary and will be gone once
-you apply the entire series. Bikeshedding about a temp name is just
-unnecessary churn and _new() is as good as anything else.
+Best regards,
+Krzysztof
 
-Bart
-
-> Shall I just do it?
->
-> Yours,
-> Linus Walleij
