@@ -2,121 +2,218 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A5F87B770A
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 06:16:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 436AD7B7753
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 07:04:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbjJDEQ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 00:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36974 "EHLO
+        id S231154AbjJDFEv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 01:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232115AbjJDEQ1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 00:16:27 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41071AC;
-        Tue,  3 Oct 2023 21:16:24 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-694f75deb1aso404980b3a.0;
-        Tue, 03 Oct 2023 21:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696392984; x=1696997784; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1nxELRefWgX/plBQJdhjQvCak5wttkBwSg7H4d2bgsw=;
-        b=ZhJHid3vfNqq9UAEirwWnFzrHk55WUotgAdZP8n+cZGYSJBUQn5ksyeERXCKsiEglD
-         9zzuWQrPPEzhC07mtwNCakoJgz7LkiCE6M9zyUxLwXaXf+HV3i24kY0qZWeSRYloflZs
-         oItLUrmxv1N0ZWJChQJJpcxoJwPwwKgGzd6E6ZIXZgHl/9yvwB/nqsDT9g9VmWnlqcon
-         qbUwaGF1JcK4LBgB90e0ollY/al8S1RtuFliXGl/xLOZe75Lwx/xVhW1xPG82SmKnpW+
-         x9eXrAoYXUJdIJ7GGk4nj3hF0sVBZVROyC+1Lo0SMig2RE0DOO1RV0gON+q2ejCHJMwI
-         FkWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696392984; x=1696997784;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1nxELRefWgX/plBQJdhjQvCak5wttkBwSg7H4d2bgsw=;
-        b=qLyGOYRIfZCWbGQPx7Xa7FdYrm0NdtDIzXGV+oYBTDcTb5QV8NEttFdZM9qCy0EWp1
-         1D7uxWe75dyldFYqhRxk2T374/5ohLOfNveLs86YebZ5PaBxZSJSHJwCV/NCaGKUfzQx
-         NkBIE5MN1WRFqlHTZCPGZyvlwmFyt0eo768k+iDI6xFXc/F374PQjE8UOof+XaKqbIWI
-         7Sm0ex8shxS0vdtj2o5qSHtxEorHz8KRltd8SJ0/KDZrpWb/pa9v9J5Es80GW+Rat84Q
-         wbs2oGvk7C+8b/X0IjrBXxa9j1lbGr1FKMeRXKpjyC42Ybb7TU7BMZ/Sj+n5/0Y0yr0Q
-         dosw==
-X-Gm-Message-State: AOJu0Yx1EmyV52gnGPeePDUvZ8da2M1P+vDO4KxHO/8SmBwj1wlWIWNs
-        0H+Es3+dR17OePKRsad1Zaw=
-X-Google-Smtp-Source: AGHT+IEWil4HiZnBdsQgjIYMpOS1vKdwrrYpkePsXs1ruscZvmuboArlCn3in3cy61I5LVeDIefsVQ==
-X-Received: by 2002:a05:6a21:1a3:b0:134:73f6:5832 with SMTP id le35-20020a056a2101a300b0013473f65832mr2023860pzb.16.1696392983587;
-        Tue, 03 Oct 2023 21:16:23 -0700 (PDT)
-Received: from sol (14-200-166-90.static.tpgi.com.au. [14.200.166.90])
-        by smtp.gmail.com with ESMTPSA id n3-20020a6546c3000000b005706b9813afsm1959884pgr.90.2023.10.03.21.16.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 21:16:23 -0700 (PDT)
-Date:   Wed, 4 Oct 2023 12:16:17 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        with ESMTP id S241318AbjJDFEu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 01:04:50 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ACD9B8
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 22:04:46 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1qnu3i-0002VK-99; Wed, 04 Oct 2023 07:04:30 +0200
+Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1qnu3g-00Ax5H-J1; Wed, 04 Oct 2023 07:04:28 +0200
+Received: from mfe by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1qnu3g-00ChlX-Fh; Wed, 04 Oct 2023 07:04:28 +0200
+Date:   Wed, 4 Oct 2023 07:04:28 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 04/36] gpio: cdev: use pinctrl_gpio_can_use_line_new()
-Message-ID: <ZRznEe2tKmVcVlwr@sol>
-References: <20231003145114.21637-1-brgl@bgdev.pl>
- <20231003145114.21637-5-brgl@bgdev.pl>
- <ZRwtEG1DamMLZC/3@sol>
- <CAHp75VdSDart2b+_d6_9E204JYa2zyFKdh_Pey6Wb4MZ-Z-L0Q@mail.gmail.com>
- <ZRwyG80u6nIf7PGU@sol>
- <CAMRc=McbWU+bPph7f6treqNmqJvakj8nLzNEJPjgb8tbG_pWxQ@mail.gmail.com>
+        Andy Shevchenko <andy@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v5 4/7] gpio: vf610: add i.MX8ULP of_device_id entry
+Message-ID: <20231004050428.o7l2e23xjcjkzzck@pengutronix.de>
+References: <20231001-vf610-gpio-v5-0-8d873a8f224a@nxp.com>
+ <20231001-vf610-gpio-v5-4-8d873a8f224a@nxp.com>
+ <CAMRc=MdXkFBWMuyr8sbetyP2sJX2QG6Ce=Tsb7RVMguvGdC3TA@mail.gmail.com>
+ <DU0PR04MB9417594B2DFDA6056AEC4CB988C5A@DU0PR04MB9417.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McbWU+bPph7f6treqNmqJvakj8nLzNEJPjgb8tbG_pWxQ@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <DU0PR04MB9417594B2DFDA6056AEC4CB988C5A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 03, 2023 at 08:07:05PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Oct 3, 2023 at 5:24 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Oct 03, 2023 at 06:17:27PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Oct 3, 2023 at 6:02 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > On Tue, Oct 03, 2023 at 04:50:42PM +0200, Bartosz Golaszewski wrote:
-> > >
-> > > ...
-> > >
-> > > > I agree with the change in principle, just not comfortable with the naming.
-> > >
-> > > +1 here. I proposed some names, have you seen my comment(s)?
-> > >
-> >
-> > I have now - any of those work for me.
-> > Whichever is consistent with what we are using for gpiochip functions in
-> > gpiolib would make most sense to me.
-> >
-> 
-> Does it really matter? It's not here to stay, it's temporary and
-> exists only until the whole series is applied - which given that it's
-> limited to gpio and pinctrl, shouldn't take more than one release
-> cycle.
-> 
-> There are plenty of examples of this naming convention for temporary
-> symbols - there's even an ongoing effort to replace all .remove()
-> callbacks with .remove_new() which will then be changed back to
-> .remove() treewide.
-> 
+Hi Peng,
 
-This was the only patch that I was included into, so I didn't realise
-there was a treewide rename at the end.
-Even so, using _new suffix for that purpose is poor (well
-pinctrl_gpio_free_new() did draw a laugh, but other than that...).
-Perhaps use something specific to the patch series so it is clear what
-its purpose is?
+On 23-10-02, Peng Fan wrote:
+> > Subject: Re: [PATCH v5 4/7] gpio: vf610: add i.MX8ULP of_device_id entry
+> > 
+> > On Sun, Oct 1, 2023 at 10:23 AM Peng Fan (OSS) <peng.fan@oss.nxp.com>
+> > wrote:
+> > >
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > i.MX8ULP/93 GPIO supports similar feature as i.MX7ULP GPIO, but
+> > > i.MX8ULP is actually not hardware compatible with i.MX7ULP. i.MX8ULP
+> > > only has one register base, not two bases. i.MX8ULP and i.MX93
+> > > actually has two interrupts for each gpio controller, one for
+> > > Trustzone non-secure world, one for secure world.
+> > >
+> > > Although the Linux Kernel driver gpio-vf610.c could work with
+> > > fsl,imx7ulp-gpio compatible, it is based on some tricks did in device
+> > > tree with some offset added to base address.
+> > >
+> > > Add a new of_device_id entry for i.MX8ULP. But to make the driver
+> > > could also support old bindings, check the compatible string first,
+> > > before check the device data.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  drivers/gpio/gpio-vf610.c | 47
+> > > ++++++++++++++++++++++++++++++++++++++++-------
+> > >  1 file changed, 40 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+> > > index dbc7ba0ee72c..8e12706c0b22 100644
+> > > --- a/drivers/gpio/gpio-vf610.c
+> > > +++ b/drivers/gpio/gpio-vf610.c
+> > > @@ -25,6 +25,7 @@
+> > >  struct fsl_gpio_soc_data {
+> > >         /* SoCs has a Port Data Direction Register (PDDR) */
+> > >         bool have_paddr;
+> > > +       bool have_dual_base;
+> > >  };
+> > >
+> > >  struct vf610_gpio_port {
+> > > @@ -60,13 +61,26 @@ struct vf610_gpio_port {
+> > >  #define PORT_INT_EITHER_EDGE   0xb
+> > >  #define PORT_INT_LOGIC_ONE     0xc
+> > >
+> > > +#define IMX8ULP_GPIO_BASE_OFF  0x40
+> > > +#define IMX8ULP_BASE_OFF       0x80
+> > > +
+> > > +static const struct fsl_gpio_soc_data vf610_data = {
+> > > +       .have_dual_base = true,
+> > > +};
+> > > +
+> > >  static const struct fsl_gpio_soc_data imx_data = {
+> > >         .have_paddr = true,
+> > > +       .have_dual_base = true,
+> > > +};
+> > > +
+> > > +static const struct fsl_gpio_soc_data imx8ulp_data = {
+> > > +       .have_paddr = true,
+> > >  };
+> > >
+> > >  static const struct of_device_id vf610_gpio_dt_ids[] = {
+> > > -       { .compatible = "fsl,vf610-gpio",       .data = NULL, },
+> > > +       { .compatible = "fsl,vf610-gpio",       .data = &vf610_data },
+> > >         { .compatible = "fsl,imx7ulp-gpio",     .data = &imx_data, },
+> > > +       { .compatible = "fsl,imx8ulp-gpio",     .data = &imx8ulp_data, },
+> > >         { /* sentinel */ }
+> > >  };
+> > >
+> > > @@ -263,19 +277,38 @@ static int vf610_gpio_probe(struct
+> > platform_device *pdev)
+> > >         struct gpio_irq_chip *girq;
+> > >         int i;
+> > >         int ret;
+> > > +       bool dual_base;
+> > >
+> > >         port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+> > >         if (!port)
+> > >                 return -ENOMEM;
+> > >
+> > >         port->sdata = of_device_get_match_data(dev);
+> > > -       port->base = devm_platform_ioremap_resource(pdev, 0);
+> > > -       if (IS_ERR(port->base))
+> > > -               return PTR_ERR(port->base);
+> > >
+> > > -       port->gpio_base = devm_platform_ioremap_resource(pdev, 1);
+> > > -       if (IS_ERR(port->gpio_base))
+> > > -               return PTR_ERR(port->gpio_base);
+> > > +       dual_base = port->sdata->have_dual_base;
+> > > +
+> > > +       /* support old compatible strings */
+> > > +       if (device_is_compatible(dev, "fsl,imx7ulp-gpio") &&
+> > > +           (device_is_compatible(dev, "fsl,imx93-gpio") ||
+> > 
+> > Why not just add this compatible to vf610_gpio_dt_ids?
+> 
+> "fsl,imx93-gpio", "fsl,imx7ulp-gpio" is not a correct entry
+> combination. This is to support legacy old compatible
+> strings.
 
-Cheers,
-Kent.
+The "/* support old compatible strings */" may a bit misleading here?
+Should we be a bit more verbose for the reader of the code, e.g.:
 
+		/*
+		 * Handle legacy compatible combinations which used two
+		 * reg values for the i.MX8ULP and i.MX93.
+		 */
+
+Regards,
+  Marco
+
+> 
+> Thanks,
+> Peng.
+> > 
+> > Bart
+> > 
+> > > +           (device_is_compatible(dev, "fsl,imx8ulp-gpio"))))
+> > > +               dual_base = true;
+> > > +
+> > > +       if (dual_base) {
+> > > +               port->base = devm_platform_ioremap_resource(pdev, 0);
+> > > +               if (IS_ERR(port->base))
+> > > +                       return PTR_ERR(port->base);
+> > > +
+> > > +               port->gpio_base = devm_platform_ioremap_resource(pdev, 1);
+> > > +               if (IS_ERR(port->gpio_base))
+> > > +                       return PTR_ERR(port->gpio_base);
+> > > +       } else {
+> > > +               port->base = devm_platform_ioremap_resource(pdev, 0);
+> > > +               if (IS_ERR(port->base))
+> > > +                       return PTR_ERR(port->base);
+> > > +
+> > > +               port->gpio_base = port->base + IMX8ULP_GPIO_BASE_OFF;
+> > > +               port->base = port->base + IMX8ULP_BASE_OFF;
+> > > +       }
+> > >
+> > >         port->irq = platform_get_irq(pdev, 0);
+> > >         if (port->irq < 0)
+> > >
+> > > --
+> > > 2.37.1
+> > >
