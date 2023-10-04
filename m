@@ -2,134 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 284847B971E
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 00:05:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 286C17B97F1
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 00:24:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231148AbjJDWDn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 18:03:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51186 "EHLO
+        id S232667AbjJDWYc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 18:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbjJDWDn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 18:03:43 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E8FBD;
-        Wed,  4 Oct 2023 15:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696457019; x=1727993019;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9cBg1srJbGdmQ36/Me/28e8gGP+MspxyR+FDEJ6Nxl0=;
-  b=aGA2Ju/deTtMVZ4h8b3F4TRnCyhxv2kwcOL0AJ3zzpxNSgcAiYj5S9zX
-   p0UW31kDhaoze+b41Rmp6yf+pbneL0cEnrkVCYb6VqftdUEy9PlKN0oII
-   4usv6h5Vcjnrm98oD4g4DK+LK0XAgjEra404f1TSMzOxWyf4ld0Dxz6a2
-   3kLWOeygnDitT26qKtzORGdKjcjE6PYy+glJ5dAO9JLTHAsEcLZp7qEUX
-   nPj9HSv9lPXHgrNL92X8xovqa6Qz3Wgd5/7V5NNjE6Pg2/gwvHtfg9lHj
-   OPXSxaV+4aaZ1qtIQr5zbXRhgyJOtsGf+qIn+FTPyb7cuxbnVxk/m2JPN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="368380951"
-X-IronPort-AV: E=Sophos;i="6.03,201,1694761200"; 
-   d="scan'208";a="368380951"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 15:03:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="817302103"
-X-IronPort-AV: E=Sophos;i="6.03,201,1694761200"; 
-   d="scan'208";a="817302103"
-Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Oct 2023 15:03:33 -0700
-Received: from kbuild by c3b01524d57c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qo9xr-000Kex-1d;
-        Wed, 04 Oct 2023 22:03:31 +0000
-Date:   Thu, 5 Oct 2023 06:02:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org,
-        brgl@bgdev.pl, andy@kernel.org, linux-gpio@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Michael Walle <michael@walle.cc>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        ChiaEn Wu <chiaen_wu@richtek.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-        Mike Looijmans <mike.looijmans@topic.nl>,
-        Haibo Chen <haibo.chen@nxp.com>,
-        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-        Ceclan Dumitru <dumitru.ceclan@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        with ESMTP id S231651AbjJDWYa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 18:24:30 -0400
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9B45EC;
+        Wed,  4 Oct 2023 15:24:24 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 070B720003;
+        Wed,  4 Oct 2023 22:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1696458263;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rZEPDMNKYxxc1y/Lg8uXbOfwUDjfLMxGlYiDmv2DKy0=;
+        b=F5MZyLh50CqykMPgDt4SoT8jABGpLvGTQmWqAH1oKxPi9ISbpZ1bcQhF8L82NNNCZUF4td
+        STe03+qh1fT6FcGgGLxf2XMhEmQDqksoXUidjFwK6rIxQi4DxtPI7CiFCj5nomM+yI9mK7
+        Lms3vpQ58rf4An1FIeFQGmagLIod3PLuEx9x1yydigKLXKrmKgOyCHjbP3Z6pF1GHFZsEI
+        aP/o4+huX6Vm0bHF4pqKY3bp5t8kZNlpezxh56xhq7P6uwSJcH0Y+EgPmcJiZlWNFoA1eu
+        tU4Hjbzb3QhpPvCEFP1Rs4xs4B11bepJNjp91M2sl0vY5rStDv7pZyGXMdBkGg==
+Date:   Thu, 5 Oct 2023 00:24:20 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Ralph Siemsen <ralph.siemsen@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <202310050520.VEIzHNiM-lkp@intel.com>
-References: <20230928125443.615006-2-mitrutzceclan@gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzn1: enable PINMUX
+Message-ID: <20231005002420.7d03bbd8@xps-13>
+In-Reply-To: <20231004200008.1306798-1-ralph.siemsen@linaro.org>
+References: <20231004200008.1306798-1-ralph.siemsen@linaro.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230928125443.615006-2-mitrutzceclan@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Dumitru,
+Hi Ralph,
 
-kernel test robot noticed the following build warnings:
+ralph.siemsen@linaro.org wrote on Wed,  4 Oct 2023 16:00:08 -0400:
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on linus/master v6.6-rc4 next-20231004]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> Enable pin muxing (eg. programmable function), so that the RZN1 GPIO
+> pins will be configured as specified by the pinmux in the DTS.
+>=20
+> This used to be enabled implicitly via CONFIG_GENERIC_PINMUX_FUNCTIONS,
+> however that was removed in 308fb4e4eae14e6189dece3b7cf5b5f453c5d02
+> since the rzn1 driver does not call any of the generic pinmux functions.
+>=20
+> Signed-off-by: Ralph Siemsen <ralph.siemsen@linaro.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dumitru-Ceclan/iio-adc-ad7173-add-AD7173-driver/20230928-205802
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20230928125443.615006-2-mitrutzceclan%40gmail.com
-patch subject: [PATCH v2 2/2] iio: adc: ad7173: add AD7173 driver
-config: i386-randconfig-063-20231005 (https://download.01.org/0day-ci/archive/20231005/202310050520.VEIzHNiM-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231005/202310050520.VEIzHNiM-lkp@intel.com/reproduce)
+You probably need to point at this commit with a Fixes and possibly Cc
+this to stable. Also you should use proper formatting for the commit
+(12 digits sha then the text inside ("...")).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310050520.VEIzHNiM-lkp@intel.com/
+With this added:
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/iio/adc/ad7173.c:829:42: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned long [usertype] driver_data @@     got struct ad7173_device_info const * @@
-   drivers/iio/adc/ad7173.c:829:42: sparse:     expected unsigned long [usertype] driver_data
-   drivers/iio/adc/ad7173.c:829:42: sparse:     got struct ad7173_device_info const *
-   drivers/iio/adc/ad7173.c:830:42: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned long [usertype] driver_data @@     got struct ad7173_device_info const * @@
-   drivers/iio/adc/ad7173.c:830:42: sparse:     expected unsigned long [usertype] driver_data
-   drivers/iio/adc/ad7173.c:830:42: sparse:     got struct ad7173_device_info const *
-   drivers/iio/adc/ad7173.c:831:42: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned long [usertype] driver_data @@     got struct ad7173_device_info const * @@
-   drivers/iio/adc/ad7173.c:831:42: sparse:     expected unsigned long [usertype] driver_data
-   drivers/iio/adc/ad7173.c:831:42: sparse:     got struct ad7173_device_info const *
-   drivers/iio/adc/ad7173.c:832:42: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned long [usertype] driver_data @@     got struct ad7173_device_info const * @@
-   drivers/iio/adc/ad7173.c:832:42: sparse:     expected unsigned long [usertype] driver_data
-   drivers/iio/adc/ad7173.c:832:42: sparse:     got struct ad7173_device_info const *
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-vim +829 drivers/iio/adc/ad7173.c
+> ---
+>  drivers/pinctrl/renesas/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kc=
+onfig
+> index 77730dc548ed..0ad8e14ccc52 100644
+> --- a/drivers/pinctrl/renesas/Kconfig
+> +++ b/drivers/pinctrl/renesas/Kconfig
+> @@ -234,6 +234,7 @@ config PINCTRL_RZN1
+>  	bool "pin control support for RZ/N1"
+>  	depends on OF
+>  	depends on ARCH_RZN1 || COMPILE_TEST
+> +	select PINMUX
+>  	select GENERIC_PINCONF
+>  	help
+>  	  This selects pinctrl driver for Renesas RZ/N1 devices.
 
-   827	
-   828	static const struct spi_device_id ad7173_id_table[] = {
- > 829		{ "ad7172-2", &ad7173_device_info[ID_AD7172_2], },
-   830		{ "ad7173-8", &ad7173_device_info[ID_AD7173_8], },
-   831		{ "ad7175-2", &ad7173_device_info[ID_AD7175_2], },
-   832		{ "ad7176-2", &ad7173_device_info[ID_AD7176_2], },
-   833		{ },
-   834	};
-   835	MODULE_DEVICE_TABLE(spi, ad7173_id_table);
-   836	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Miqu=C3=A8l
