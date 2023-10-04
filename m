@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBABE7B84EF
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 18:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F0CA7B84FA
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 18:25:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243343AbjJDQYZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 12:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52146 "EHLO
+        id S243325AbjJDQZI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 12:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243266AbjJDQYY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 12:24:24 -0400
+        with ESMTP id S243287AbjJDQZH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 12:25:07 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5679B
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 09:23:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F24E8
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 09:23:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696436614;
+        s=mimecast20190719; t=1696436627;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AxlB9jGPDkVTrNs+dLX6hYItM8N/DBvuylNLWowa8UI=;
-        b=LBdmakKej/CaRZ/IT5enEn0DKF8+dtYaRuj11DlZtyo6TDfdwwnayZ/BZHRzC95up1VuJr
-        1d8UEG5JHYPFhpTHA2Zg8fvbxip3BcaKo+qJk80td0MK2PbvQktqczjfdqbIYYf8AloXRy
-        tyNZB2uULwjhgBJmftZHxP+SWeXvqcQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-393-kczh6-UgOn2uLNeDCCXT6w-1; Wed, 04 Oct 2023 12:23:30 -0400
-X-MC-Unique: kczh6-UgOn2uLNeDCCXT6w-1
+        bh=fCKgDeYs5G2UxuYhogLBnsUuAjSI/jIJLn3GDbWKl68=;
+        b=Qr/VCdCn5XulbjOdSDmzXt76TYa80bNJcb4oEg+CpuBFXKmf0F0L+vD9oHuaXsyDBTYJzp
+        z9UZ+FbgSU8tFp9AD8g84KHtwcMUqc23d+LUQBhdhGR3gVhlC1Y37A6suRLXRdxbKKp4w7
+        4mNAeA1Iat+SJn6K56tqqmYz5bHVp6I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-333-utG86j4yNrClnCeAeKUEZg-1; Wed, 04 Oct 2023 12:23:31 -0400
+X-MC-Unique: utG86j4yNrClnCeAeKUEZg-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A71B11C04B58;
-        Wed,  4 Oct 2023 16:23:29 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5074C98B723;
+        Wed,  4 Oct 2023 16:23:31 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.192.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3AD8A40C2015;
-        Wed,  4 Oct 2023 16:23:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D949540C2015;
+        Wed,  4 Oct 2023 16:23:29 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -48,9 +48,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org,
         Daniel Scally <djrscally@gmail.com>,
         linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH v3 1/5] platform/x86: int3472: Add new skl_int3472_fill_gpiod_lookup() helper
-Date:   Wed,  4 Oct 2023 18:23:13 +0200
-Message-ID: <20231004162317.163488-2-hdegoede@redhat.com>
+Subject: [PATCH v3 2/5] platform/x86: int3472: Add new skl_int3472_gpiod_get_from_temp_lookup() helper
+Date:   Wed,  4 Oct 2023 18:23:14 +0200
+Message-ID: <20231004162317.163488-3-hdegoede@redhat.com>
 In-Reply-To: <20231004162317.163488-1-hdegoede@redhat.com>
 References: <20231004162317.163488-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -66,79 +66,66 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a new skl_int3472_fill_gpiod_lookup() helper.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Add a new skl_int3472_gpiod_get_from_temp_lookup() helper.
 
 This is a preparation patch for removing usage of the deprecated
 gpiod_toggle_active_low() and acpi_get_and_request_gpiod() functions.
 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+[hdegoede@redhat.com] use the new skl_int3472_fill_gpiod_lookup() helper
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Co-developed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/intel/int3472/discrete.c | 32 +++++++++++++------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+Changes in v3:
+- Fix wrong size of gpio lookup table allocation. There must also
+  be an empty terminating lookup, so 2 entries must be allocated.
+
+Changes in v2:
+- Use the new skl_int3472_fill_gpiod_lookup() helper.
+---
+ drivers/platform/x86/intel/int3472/discrete.c | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index e33c2d75975c..351ecf047944 100644
+index 351ecf047944..b69ef63f75ab 100644
 --- a/drivers/platform/x86/intel/int3472/discrete.c
 +++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -52,21 +52,15 @@ static void skl_int3472_log_sensor_module_name(struct int3472_discrete_device *i
- 	}
+@@ -99,6 +99,32 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
+ 	return 0;
  }
  
--static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int3472,
--					  struct acpi_resource_gpio *agpio,
--					  const char *func, u32 polarity)
-+static int skl_int3472_fill_gpiod_lookup(struct gpiod_lookup *table_entry,
-+					 struct acpi_resource_gpio *agpio,
-+					 const char *func, u32 polarity)
- {
- 	char *path = agpio->resource_source.string_ptr;
--	struct gpiod_lookup *table_entry;
- 	struct acpi_device *adev;
- 	acpi_handle handle;
- 	acpi_status status;
- 
--	if (int3472->n_sensor_gpios >= INT3472_MAX_SENSOR_GPIOS) {
--		dev_warn(int3472->dev, "Too many GPIOs mapped\n");
--		return -EINVAL;
--	}
--
- 	status = acpi_get_handle(NULL, path, &handle);
- 	if (ACPI_FAILURE(status))
- 		return -EINVAL;
-@@ -75,13 +69,31 @@ static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int347
- 	if (!adev)
- 		return -ENODEV;
- 
--	table_entry = &int3472->gpios.table[int3472->n_sensor_gpios];
- 	table_entry->key = acpi_dev_name(adev);
- 	table_entry->chip_hwnum = agpio->pin_table[0];
- 	table_entry->con_id = func;
- 	table_entry->idx = 0;
- 	table_entry->flags = polarity;
- 
-+	return 0;
-+}
-+
-+static int skl_int3472_map_gpio_to_sensor(struct int3472_discrete_device *int3472,
-+					  struct acpi_resource_gpio *agpio,
-+					  const char *func, u32 polarity)
++/* This should *really* only be used when there's no other way... */
++static struct gpio_desc *
++skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
++				       struct acpi_resource_gpio *agpio,
++				       const char *func, u32 polarity)
 +{
++	struct gpio_desc *desc;
 +	int ret;
 +
-+	if (int3472->n_sensor_gpios >= INT3472_MAX_SENSOR_GPIOS) {
-+		dev_warn(int3472->dev, "Too many GPIOs mapped\n");
-+		return -EINVAL;
-+	}
++	struct gpiod_lookup_table *lookup __free(kfree) =
++			kzalloc(struct_size(lookup, table, 2), GFP_KERNEL);
++	if (!lookup)
++		return ERR_PTR(-ENOMEM);
 +
-+	ret = skl_int3472_fill_gpiod_lookup(&int3472->gpios.table[int3472->n_sensor_gpios],
-+					    agpio, func, polarity);
++	lookup->dev_id = dev_name(int3472->dev);
++	ret = skl_int3472_fill_gpiod_lookup(&lookup->table[0], agpio, func, polarity);
 +	if (ret)
-+		return ret;
++		return ERR_PTR(ret);
 +
- 	int3472->n_sensor_gpios++;
- 
- 	return 0;
++	gpiod_add_lookup_table(lookup);
++	desc = gpiod_get(int3472->dev, func, GPIOD_OUT_LOW);
++	gpiod_remove_lookup_table(lookup);
++
++	return desc;
++}
++
+ static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
+ {
+ 	switch (type) {
 -- 
 2.41.0
 
