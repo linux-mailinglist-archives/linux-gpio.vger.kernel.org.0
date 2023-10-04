@@ -2,77 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC5937B7838
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 08:54:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E467B785D
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 09:07:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241464AbjJDGyo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 02:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49372 "EHLO
+        id S241479AbjJDHHq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 03:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241452AbjJDGyn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 02:54:43 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C38BB
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Oct 2023 23:54:39 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-690fe1d9ba1so363857b3a.0
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Oct 2023 23:54:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696402479; x=1697007279; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6YbF45exUihM3V8J++Yr9N+b7S0JorXYJc7FhvfdAn8=;
-        b=AmDVBf/H8f8WKjyGbYytQvbe+rQ6zHNCMm5GWG3fXJPZkRZgFEjGvzupjU/7oU25JO
-         rSho2wrUtFNZb4COW18b4FzArv1oYz+UoPKmTgKXcQ78oNeoSlIQ4BkkzHRsN0qSWQom
-         t8sjWgiCgcY8/qS9FJfeA3y1+qRTJLJX7Ioq7oOp9X87u4gd906PXWd9WJwkXmxMPLIm
-         vk43XxftF82lIvqkXTui+/M5uQb9X9K16DBO18m8XlnbUDc67Uc31SRmg8pd9XI5P1Fz
-         K5t6kHu0IsbmOyvAsUQEVyYtfH6XntMNQEanqzDoCAnfqalOQ9pmHF13NpViLhMvqIdg
-         cwQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696402479; x=1697007279;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6YbF45exUihM3V8J++Yr9N+b7S0JorXYJc7FhvfdAn8=;
-        b=ZRI+1xEka8mwt5JGmd588KMZ4lfw8yJ378/808RDv2VYfZI/qQx5wopJ31PCWcPmos
-         mi3JiF9pJNtjIz3GxEuzNuB6LxgeWX71pt+0Q0zsuiL7uCji5zkQh7qXiLzT/POZeeu8
-         biXmlEWocPvku2ScRsWzahAtCELsgm7bv97jmtEr0rSohAX1yB5ldNqb4UtsJRO6w62Z
-         ZiXTS2QOcAEhvY3Wm3nEb6S+LtivJmFaQPmREeNnaGhxkbI+tTc8kQfSLW3ATNBWV+/A
-         bbg5HkD40KwGmp8H9XJ99HvgPzM4dwTri7QYVyUlnOt2TFSLmTp5PzabvMZJ+1T2XwgM
-         e8FQ==
-X-Gm-Message-State: AOJu0Yzhhe0JW9R9Qy+tB7Es/n+0JSb1wyquJUCnB71mas7ed9HwEWYU
-        WS99sW1lBmceOtonLsgrBmOeSQ==
-X-Google-Smtp-Source: AGHT+IEDXNokAKn8nzCNvCbNOIUSolppsI+K2w+sGFIw9BHV5d5Ibkooq38MxAM5oAiTWM73Hlc0Tw==
-X-Received: by 2002:a17:903:244d:b0:1c5:cd01:d846 with SMTP id l13-20020a170903244d00b001c5cd01d846mr1709840pls.3.1696402479192;
-        Tue, 03 Oct 2023 23:54:39 -0700 (PDT)
-Received: from octopus ([2400:4050:c3e1:100:81c4:ac5:bfc9:67a3])
-        by smtp.gmail.com with ESMTPSA id y5-20020a1709029b8500b001b54d064a4bsm2815058plp.259.2023.10.03.23.54.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 23:54:38 -0700 (PDT)
-Date:   Wed, 4 Oct 2023 15:54:33 +0900
-From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     sudeep.holla@arm.com, cristian.marussi@arm.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [RFC 1/4] pinctrl: define PIN_CONFIG_INPUT
-Message-ID: <ZR0MKfr+xPT1Nyg8@octopus>
-Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, sudeep.holla@arm.com,
-        cristian.marussi@arm.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20231002021602.260100-1-takahiro.akashi@linaro.org>
- <20231002021602.260100-2-takahiro.akashi@linaro.org>
- <CACRpkdZsQN5V0Nt46dQmUiQo-co81Z_TrzWW_9CPJEbF+X-vnw@mail.gmail.com>
+        with ESMTP id S241453AbjJDHHq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 03:07:46 -0400
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF736AF;
+        Wed,  4 Oct 2023 00:07:41 -0700 (PDT)
+Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id A177F168B;
+        Wed,  4 Oct 2023 09:07:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1696403259;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MH9KWBMgqso6+BwvpRM3ahjbzr5vwavoxYlNVWr5Dc8=;
+        b=iqqByt9hnspznEXEbnUfOCTYhmqOBL2lCq3CqX35EOyzDHT8b8leJ1v/g0KOLRCwbtGpX3
+        9cIcLj7+StsfSTWJoaBTyMJoJPQQQymh3rWFKdpGwDDurZ2+/BNPRxhu/PF53uDmU0fvj6
+        4EHEi1WQPhn8ys6/Q4BpjX1foGRS2Ldg6TYo9FpwhZO9HVF38vwuLku/jCM2SbYINO68gA
+        Tp8wmXxxLGfxjI4EBgYRD1vAurwKLJEWXGfvm96UeJN7Rwnpd5bEu0w4x+sE8mGXDjMNao
+        yHjQZHTM7rQbgT1FQ5vwKPEgDhGePEspM54gQT6SLQb/CjTOvBUNZF/LMEJPrw==
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZsQN5V0Nt46dQmUiQo-co81Z_TrzWW_9CPJEbF+X-vnw@mail.gmail.com>
+Date:   Wed, 04 Oct 2023 09:07:39 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc:     mitrutzceclan@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+        andy@kernel.org, linux-gpio@vger.kernel.org,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        ChiaEn Wu <chiaen_wu@richtek.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+        Mike Looijmans <mike.looijmans@topic.nl>,
+        Haibo Chen <haibo.chen@nxp.com>,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        Ceclan Dumitru <dumitru.ceclan@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] iio: adc: ad7173: add AD7173 driver
+In-Reply-To: <20230928125443.615006-2-mitrutzceclan@gmail.com>
+References: <20230928125443.615006-1-mitrutzceclan@gmail.com>
+ <20230928125443.615006-2-mitrutzceclan@gmail.com>
+Message-ID: <cc64b68545b4e178e1f5d90109f72e9a@walle.cc>
+X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -83,32 +73,66 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 03, 2023 at 10:49:10PM +0200, Linus Walleij wrote:
-> Hi Takahiro,
-> 
-> On Mon, Oct 2, 2023 at 4:17???AM AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> 
-> > This allows for enabling SCMI pinctrl based GPIO driver to obtain
-> > an input gpio pin.
-> >
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> (...)
-> > + * @PIN_CONFIG_INPUT: This will obtain a value on an input pin. The returned
-> > + *     argument indicates the value.
-> 
-> We need to specify that this is the inverse of @PIN_CONFIG_OUTPUT,
-> that setting a line into *input mode* requires the use of
-> @PIN_CONFIG_INPUT_ENABLE, so the config can never be set
-> but should return an error on set, and that the argument returned is 1 for
-> logic high and 0 for logic low.
+Hi,
 
-I will add more as you suggest.
+I've just had a look at the gpio-regmap part.
 
--Takahiro Akashi
+> +static int ad7173_mask_xlate(struct gpio_regmap *gpio, unsigned int 
+> base,
+> +			     unsigned int offset, unsigned int *reg,
+> +			     unsigned int *mask)
+> +{
+> +	*mask = AD7173_GPO_DATA(offset);
+> +	*reg = AD7173_REG_GPIO;
+
+*reg = base;
+
+See also below.
+
+> +	return 0;
+> +}
+> +
+> +static int ad7173_gpio_init(struct iio_dev *indio_dev)
+> +{
+> +	struct ad7173_state *st = iio_priv(indio_dev);
+> +	struct gpio_regmap_config gpio_regmap = {};
+> +	struct device *dev = &st->sd.spi->dev;
+> +	unsigned int mask;
+> +
+> +	st->regmap = devm_regmap_init_spi(st->sd.spi, &ad7173_regmap_config);
+> +	if (IS_ERR(st->regmap)) {
+> +		return dev_err_probe(dev, PTR_ERR(st->regmap),
+> +				     "Unable to init regmap\n");
+> +	}
+> +
+> +	mask = AD7173_GPIO_OP_EN0 | AD7173_GPIO_OP_EN1 | 
+> AD7173_GPIO_OP_EN2_3;
+> +	regmap_update_bits(st->regmap, AD7173_REG_GPIO, mask, mask);
+> +
+> +	gpio_regmap.parent = dev;
+> +	gpio_regmap.regmap = st->regmap;
+> +	gpio_regmap.ngpio = st->info->num_gpios;
+> +	gpio_regmap.reg_set_base = GPIO_REGMAP_ADDR_ZERO;
+
+Why don't you set it to AD7173_REG_GPIO? Register 0 seems wrong, it
+looks like you're using that to say this is a output-only I/O.
 
 
-> Otherwise I think this is fine!
-> 
-> Yours,
-> Linus Walleij
+> +	gpio_regmap.reg_mask_xlate = ad7173_mask_xlate;
+> +
+> +	st->gpio_regmap = devm_gpio_regmap_register(dev, &gpio_regmap);
+> +	if (IS_ERR(st->gpio_regmap)) {
+> +		return dev_err_probe(dev, PTR_ERR(st->gpio_regmap),
+> +				     "Unable to init gpio-regmap\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +#endif /* CONFIG_GPIOLIB */
+
+Otherwise looks good. But I've noticed that the chip can actually
+also do input on gpio0 and gpio1. If you ever want to support that,
+it seems like you need two gpio-regmaps.
+
+-michael
