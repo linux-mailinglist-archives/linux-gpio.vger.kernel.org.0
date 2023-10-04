@@ -2,69 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1C6F7B7879
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 09:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CEF47B78AF
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 09:25:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229577AbjJDHOF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 03:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50292 "EHLO
+        id S232638AbjJDHZM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 03:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241376AbjJDHOE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 03:14:04 -0400
-Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69ADBB4
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 00:14:01 -0700 (PDT)
-Received: by mail-vk1-xa33.google.com with SMTP id 71dfb90a1353d-49040dc5cedso752814e0c.3
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 00:14:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696403640; x=1697008440; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6QVaru3aSoKJ46q6kHIF95rs3QTWK4J1La37jYhgEOI=;
-        b=21Tb+hhMS3iE+lpSaXLkVoKG3LE3S0pkW8aZhjvrGum2VNZEfUwzA1uvnLo1zz2OjY
-         BlyopNkfUdWmUqYQxm+i50Ic6XFPJ9Ia3tr2gaT5s0pH+7i4XI3CYTzgOuOMNscEZPMA
-         Kk8FJ9Zwklubw4Yicr3cVv/05MVbVfOO7VYhszE75Qp0JrYEP7d9FiT6uSLUm0fr/U+q
-         AYq1GaWXu2sbVf34y2rVUanww9k28fZjVM6+M4drCuoAwBfKckyv5jAEIX6K3W3hJ3v5
-         cjQ3oiU6KfE12W07Ea+ZhZEPLT2V9iwYZQVjiU0jdrlnZJTz33vHKqkOyKV/TNbQRasQ
-         v29g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696403640; x=1697008440;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6QVaru3aSoKJ46q6kHIF95rs3QTWK4J1La37jYhgEOI=;
-        b=rrSqI2BypJwP0rf1e2B4s0Ura7t8pcxLVC5I6GnAtP850g5w+3kJl0FB43jh9+WeyI
-         h4/Gt3p2C649OMoPo/lR1TX2NKzFJSEycOKYVBNYXkQPh3TdczZtfKS4GBzWSrd69UQY
-         vIpyArqWtKkporXM9UYNLups7vbE2qyomsVzL5WLmZzKOIzEQHLl9OV6H2Vj/fF2Oybz
-         7tjp2fPq7ro9IcFv5wNGlMbtyTM5HVlt22nWTKbWLhO+SVrxoTH9lAtHw1aI9J5u4N3C
-         CWw3F337kUCjFRYz93XgUV8Hg7wd/7y4S+XRAKV6/GArt57tydJpNdmAZVj27kracINJ
-         4LYw==
-X-Gm-Message-State: AOJu0YwKfqpCJKBnhYSj2xZiFF71I7KLMShx0fj3E2CkDp2ExZLRYOzV
-        jYNx1vB8fdQQo2x0gTTKrkhtAK0PCL+DbtaYd89c8OXQUQ7a1t26
-X-Google-Smtp-Source: AGHT+IEAheGN4u/b6R2oY17tnd628GPgVY2HjXw6hyOOK1exO4/ZvyYR21mjv4Q+Rpof2QDHqpNJOZVIfu16JQ9fiNA=
-X-Received: by 2002:a1f:4905:0:b0:49d:d91:8b13 with SMTP id
- w5-20020a1f4905000000b0049d0d918b13mr1055911vka.8.1696403640393; Wed, 04 Oct
- 2023 00:14:00 -0700 (PDT)
+        with ESMTP id S241512AbjJDHZL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 03:25:11 -0400
+X-Greylist: delayed 504 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 04 Oct 2023 00:25:08 PDT
+Received: from thorn.bewilderbeest.net (thorn.bewilderbeest.net [71.19.156.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0930DAD
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 00:25:07 -0700 (PDT)
+Received: from hatter.bewilderbeest.net (unknown [IPv6:2602:61:7e5d:5300::2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: zev)
+        by thorn.bewilderbeest.net (Postfix) with ESMTPSA id DAF71DD9;
+        Wed,  4 Oct 2023 00:16:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bewilderbeest.net;
+        s=thorn; t=1696403803;
+        bh=yFCKItcXGPE1Q+oFb43qALwVs7ooi/Pj1fioqFcF6gw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hadfSUMfsGJ2vkIP/x8ARWUdzgF/1O22W2p3kl7aFETYKCgQYjqWYD8dd+u5IMAAb
+         QwIJfiO2YOrAUYq9LkkngRKjaINpWN+x9ECkRf7URPtuomY/zTeiNAxm2O2wvooZcE
+         b7E7qQkbbCzfQW+29dD3HVZmiKypiBPXXo7HwIbY=
+From:   Zev Weiss <zev@bewilderbeest.net>
+To:     Andrew Jeffery <andrew@codeconstruct.com.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org
+Cc:     Zev Weiss <zev@bewilderbeest.net>, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: aspeed: Allow changing hardware strap defaults
+Date:   Wed,  4 Oct 2023 00:16:06 -0700
+Message-ID: <20231004071605.21323-2-zev@bewilderbeest.net>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-9-brgl@bgdev.pl>
- <6608b6ea673454672fb5930b57e9e7a5570d96d5.camel@codeconstruct.com.au>
-In-Reply-To: <6608b6ea673454672fb5930b57e9e7a5570d96d5.camel@codeconstruct.com.au>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 4 Oct 2023 09:13:49 +0200
-Message-ID: <CAMRc=MfrJHWppvWv=Gh0cQRjFG69UoqLyguu-zE2NB6Yga-3xA@mail.gmail.com>
-Subject: Re: [PATCH 08/36] gpio: aspeed: use new pinctrl GPIO helpers
-To:     Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,62 +52,103 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 4, 2023 at 1:30=E2=80=AFAM Andrew Jeffery
-<andrew@codeconstruct.com.au> wrote:
->
-> On Tue, 2023-10-03 at 16:50 +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Replace the pinctrl helpers taking the global GPIO number as argument
-> > with the improved variants that instead take a pointer to the GPIO chip
-> > and the controller-relative offset.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  drivers/gpio/gpio-aspeed.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-> > index da33bbbdacb9..d3aa1cfd4ace 100644
-> > --- a/drivers/gpio/gpio-aspeed.c
-> > +++ b/drivers/gpio/gpio-aspeed.c
-> > @@ -750,12 +750,12 @@ static int aspeed_gpio_request(struct gpio_chip *=
-chip, unsigned int offset)
-> >       if (!have_gpio(gpiochip_get_data(chip), offset))
-> >               return -ENODEV;
-> >
-> > -     return pinctrl_gpio_request(chip->base + offset);
-> > +     return pinctrl_gpio_request_new(chip, offset);
-> >  }
-> >
-> >  static void aspeed_gpio_free(struct gpio_chip *chip, unsigned int offs=
-et)
-> >  {
-> > -     pinctrl_gpio_free(chip->base + offset);
-> > +     pinctrl_gpio_free_new(chip, offset);
-> >  }
-> >
-> >  static int usecs_to_cycles(struct aspeed_gpio *gpio, unsigned long use=
-cs,
-> > @@ -973,7 +973,7 @@ static int aspeed_gpio_set_config(struct gpio_chip =
-*chip, unsigned int offset,
-> >       else if (param =3D=3D PIN_CONFIG_BIAS_DISABLE ||
-> >                       param =3D=3D PIN_CONFIG_BIAS_PULL_DOWN ||
-> >                       param =3D=3D PIN_CONFIG_DRIVE_STRENGTH)
-> > -             return pinctrl_gpio_set_config(offset, config);
-> > +             return pinctrl_gpio_set_config_new(chip, offset, config);
->
-> Ah, this looks like it removes a bug too. Nice.
->
-> Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
->
-> >       else if (param =3D=3D PIN_CONFIG_DRIVE_OPEN_DRAIN ||
-> >                       param =3D=3D PIN_CONFIG_DRIVE_OPEN_SOURCE)
-> >               /* Return -ENOTSUPP to trigger emulation, as per datashee=
-t */
->
+Previously we've generally assumed that the defaults in the hardware
+strapping register are in fact appropriate for the system and thus
+have avoided making any changes to its contents (with the exception of
+the bits controlling the GPIO passthrough feature).
 
-I sent a separate patch that fixes this issue for backporting, once
-the other one is in next, we can update this series.
+Unfortunately, on some platforms corrections from software are
+required as the hardware strapping is simply incorrect for the system
+(such as the SPI1 interface being configured for passthrough mode when
+master mode is in fact the only useful configuration for it).  We thus
+remove the checks preventing changes to the strap register so that the
+pinctrl subsystem can be used for such corrections.
 
-Bart
+Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c | 21 ---------------------
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 21 ---------------------
+ drivers/pinctrl/aspeed/pinmux-aspeed.h     |  3 ---
+ 3 files changed, 45 deletions(-)
+
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+index bfed0e274643..7ecfe3e4280e 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+@@ -2556,27 +2556,6 @@ static int aspeed_g4_sig_expr_set(struct aspeed_pinmux_data *ctx,
+ 		if (!ctx->maps[desc->ip])
+ 			return -ENODEV;
+ 
+-		/*
+-		 * Strap registers are configured in hardware or by early-boot
+-		 * firmware. Treat them as read-only despite that we can write
+-		 * them. This may mean that certain functions cannot be
+-		 * deconfigured and is the reason we re-evaluate after writing
+-		 * all descriptor bits.
+-		 *
+-		 * Port D and port E GPIO loopback modes are the only exception
+-		 * as those are commonly used with front-panel buttons to allow
+-		 * normal operation of the host when the BMC is powered off or
+-		 * fails to boot. Once the BMC has booted, the loopback mode
+-		 * must be disabled for the BMC to control host power-on and
+-		 * reset.
+-		 */
+-		if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP1 &&
+-		    !(desc->mask & (BIT(21) | BIT(22))))
+-			continue;
+-
+-		if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP2)
+-			continue;
+-
+ 		ret = regmap_update_bits(ctx->maps[desc->ip], desc->reg,
+ 					 desc->mask, val);
+ 
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+index 4c0d26606b6c..3e57e76c2eb7 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -2735,27 +2735,6 @@ static int aspeed_g5_sig_expr_set(struct aspeed_pinmux_data *ctx,
+ 			return PTR_ERR(map);
+ 		}
+ 
+-		/*
+-		 * Strap registers are configured in hardware or by early-boot
+-		 * firmware. Treat them as read-only despite that we can write
+-		 * them. This may mean that certain functions cannot be
+-		 * deconfigured and is the reason we re-evaluate after writing
+-		 * all descriptor bits.
+-		 *
+-		 * Port D and port E GPIO loopback modes are the only exception
+-		 * as those are commonly used with front-panel buttons to allow
+-		 * normal operation of the host when the BMC is powered off or
+-		 * fails to boot. Once the BMC has booted, the loopback mode
+-		 * must be disabled for the BMC to control host power-on and
+-		 * reset.
+-		 */
+-		if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP1 &&
+-		    !(desc->mask & (BIT(21) | BIT(22))))
+-			continue;
+-
+-		if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP2)
+-			continue;
+-
+ 		/* On AST2500, Set bits in SCU70 are cleared from SCU7C */
+ 		if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP1) {
+ 			u32 value = ~val & desc->mask;
+diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+index aaa78a613196..e9068acd5879 100644
+--- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
++++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+@@ -16,9 +16,6 @@
+  * bits. Some difficulty arises as the pin's function bit masks for each
+  * priority level are frequently not the same (i.e. cannot just flip a bit to
+  * change from a high to low priority signal), or even in the same register.
+- * Further, not all signals can be unmuxed, as some expressions depend on
+- * values in the hardware strapping register (which may be treated as
+- * read-only).
+  *
+  * SoC Multi-function Pin Expression Examples
+  * ------------------------------------------
+-- 
+2.42.0
+
