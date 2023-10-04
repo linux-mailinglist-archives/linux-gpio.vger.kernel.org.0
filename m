@@ -2,94 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 958707B79E2
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 10:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E5767B7A24
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 10:35:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232596AbjJDISL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 04:18:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54214 "EHLO
+        id S241688AbjJDIfY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 04:35:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjJDISK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 04:18:10 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21619A6;
-        Wed,  4 Oct 2023 01:18:07 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8864C433C7;
-        Wed,  4 Oct 2023 08:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696407486;
-        bh=vQFPg6PA6WrMnXAY1PY7xlQzGKPRe88hSEWvcIqGGLE=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=h+1ABKoh9sVQArHfErOER+r1zQroHl5optg7U+U/veYLL913BqEdKUPuk1K98ULmR
-         Y3OWeV2g3kCfwrdFXzZ/i6zruJLfc2H7S3Q4m8oC7pqym5Ot3sqhI96P5ICGsq/HDv
-         jYHBof86l57qaLWNPDia4Ub2MbOpPsZjZQPO4367US1/ArMRr4OXmEZBFZOq5Yr/pT
-         NXxZjiOOfHekOeVXT6H5OCR+hF8nI64rYI1IwoiMA/3I1bfjvfiVN/kPJCUJQvXGFA
-         r5w9+1otsSGFZMK+bnvFA3kVK9fgGwJKG9It+VQ4coRED44w7iYkQ4CK7mQzng9Y3O
-         ZOyWiUYxdH4iw==
-Message-ID: <76d1e643-9b81-4c23-8f46-73fe59913600@kernel.org>
-Date:   Wed, 4 Oct 2023 10:18:01 +0200
+        with ESMTP id S241711AbjJDIfX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 04:35:23 -0400
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B316A9
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 01:35:18 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5a200028437so22698517b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 01:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696408517; x=1697013317; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V9Pvz5wjW4nQEQ8U042AuTMhwGm2vJJWl+JdrrFRANE=;
+        b=mOp6+SvvY1EPvyAmrP0haBzCOHQTDIV2iQyA6NxNWzZBRqFsLTRbkuUV9Cr60uliXn
+         z8YIx4lW/6DaL17qylB0Kv+lXip64aEMiKrGyDbl3VFSBdgxujoZO0NE7VVKZrBgW7kp
+         DFWhxJenY0juQNs0L9xbvs0EGaoJT+y3KUR4ccdQbyZ33WMl3YVJVgQoYM+AF6QCZDxK
+         Rc7H6rNcF3qgZpW6ysEoDREtyLh1dnwP8WoitzfglPCwG7oQVO+BfFQGEw/6ErfV8hWc
+         PXIiiYXGc0uRXdwhT2UfB4ez5Mi/iBp64HYVf6/UJ4z/dWgRHOSz2hm9zbMicMGZffnn
+         snzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696408517; x=1697013317;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V9Pvz5wjW4nQEQ8U042AuTMhwGm2vJJWl+JdrrFRANE=;
+        b=cx38xbfJfocs7G1wl+HzhC1tavvCeWjj7spvMDBeQkwNIq5wGQLiDhoz562loKlBHb
+         BpKIQaypKzFU3OoO9wZ2/Omfp/hf0IhT8y6lHdLfK5uEy4AePBxzNdxtRmyRP43DC8nL
+         V8aay1QrSD6FiFPZ1WEf68KtYo/OCmjs3yBGb+OpURVT1WXDhCDdPTBftWmZawiQNGKG
+         5js1zoEG+vVrpiZqGdi7IOEi095ioPD3vygKpi/Maxe7NNW5gboscoCZlyFNHkXUKofA
+         /KZP2a6bSQwqdf7I6z1+bByH/9/uqt3MB4nH1jzB8dh+GqI5E6T3EIcrf5BMbD/Tu1s5
+         xY8A==
+X-Gm-Message-State: AOJu0Ywzi8qywZAxZqI9m+VqBnbPcJ3wzYoLmIGoQNMb9vAlFOPUEhdO
+        auveeCJjWL/kryzs6MVEO0uHjbSfiHGKzlDbyEazwg==
+X-Google-Smtp-Source: AGHT+IH5ngf97qNt6bu22r6TovmZpeCObZ1P4vs+ZHMOMTu1yaL2qGufLWfX5gIBKVU2oIFa2UbP+oCYEwSXWYxeI0o=
+X-Received: by 2002:a0d:d203:0:b0:58d:7ec3:16c4 with SMTP id
+ u3-20020a0dd203000000b0058d7ec316c4mr1815920ywd.34.1696408517703; Wed, 04 Oct
+ 2023 01:35:17 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] pinctrl: denverton: Enable platform device in the
- absence of ACPI enumeration
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>
-References: <20230926190818.931951-1-andriy.shevchenko@linux.intel.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20230926190818.931951-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20231002021602.260100-1-takahiro.akashi@linaro.org>
+ <20231002021602.260100-4-takahiro.akashi@linaro.org> <CACRpkdZojfC2qr7gfzL9fj=DEYJcuPR=a1+zVWTMysK9BH_m_Q@mail.gmail.com>
+ <ZR0L5Oe9oT/sEF2p@octopus>
+In-Reply-To: <ZR0L5Oe9oT/sEF2p@octopus>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 4 Oct 2023 10:35:05 +0200
+Message-ID: <CACRpkdY=5hYONDcXW4omcX7=r-JtH=AvOSVMkj72LKiaF_wJuA@mail.gmail.com>
+Subject: Re: [RFC 3/4] gpio: scmi: add SCMI pinctrl based gpio driver
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>, sudeep.holla@arm.com,
+        cristian.marussi@arm.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -97,49 +74,159 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 26/09/2023 21:08, Andy Shevchenko wrote:
-> This is to cater the need for non-ACPI system whereby
-> a platform device has to be created in order to bind
-> with the Denverton pinctrl platform driver.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pinctrl/intel/pinctrl-denverton.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-denverton.c b/drivers/pinctrl/intel/pinctrl-denverton.c
-> index 0c4694cfa594..a1a7242e0451 100644
-> --- a/drivers/pinctrl/intel/pinctrl-denverton.c
-> +++ b/drivers/pinctrl/intel/pinctrl-denverton.c
-> @@ -257,6 +257,11 @@ static const struct acpi_device_id dnv_pinctrl_acpi_match[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, dnv_pinctrl_acpi_match);
->  
-> +static const struct platform_device_id dnv_pinctrl_platform_ids[] = {
-> +	{ "denverton-pinctrl", (kernel_ulong_t)&dnv_soc_data },
-> +	{ }
-> +};
-> +
->  static struct platform_driver dnv_pinctrl_driver = {
->  	.probe = intel_pinctrl_probe_by_hid,
->  	.driver = {
-> @@ -264,6 +269,7 @@ static struct platform_driver dnv_pinctrl_driver = {
->  		.acpi_match_table = dnv_pinctrl_acpi_match,
->  		.pm = &dnv_pinctrl_pm_ops,
->  	},
-> +	.id_table = dnv_pinctrl_platform_ids,
->  };
->  
->  static int __init dnv_pinctrl_init(void)
-> @@ -281,4 +287,5 @@ module_exit(dnv_pinctrl_exit);
->  MODULE_AUTHOR("Mika Westerberg <mika.westerberg@linux.intel.com>");
->  MODULE_DESCRIPTION("Intel Denverton SoC pinctrl/GPIO driver");
->  MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:denverton-pinctrl");
+Hi Takahiro,
 
-Why do you need the alias? It's the same as ID table. You most likely
-miss MODULE_DEVICE_TABLE() or your table is just wrong.
+I see you are on track with this!
 
-Best regards,
-Krzysztof
+Some clarifications:
 
+On Wed, Oct 4, 2023 at 8:53=E2=80=AFAM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+
+> I'm still not sure whether my approach can be applied to any other
+> pinctrl-based gpio drivers, in which extra (driver-specific) operations
+> might be needed around the generic pinctrl_gpio helpers (i.e. gpiolib.c).
+> For instance, look at gpio-tegra.c:
+
+Yeah, it kind of requires a "pure" pin controller underneath that don't
+want to do anything else on any operations, otherwise we are back
+to a per-soc pin control driver.
+
+But I think it is appropriate for abstractions that strive to provide
+"total abstraction behind a firmware", so such as SCMI or ACPI (heh).
+
+> > Skip this, let's use device properties instead. They will anyways just =
+translate
+> > to OF properties in the OF case.
+>
+> Okay, I don't know how device properties work, though.
+
+They are pretty much 1-to-1 slot-ins for the corresponding of_*
+functions, passing struct device * instead of struct device_node *,
+if you look in include/linux/property.h you will feel at home very
+quickly.
+
+> > > +static int scmi_gpio_get_direction(struct gpio_chip *chip, unsigned =
+int offset)
+> >
+> > Rename all functions pinctrl_gpio_*
+>
+> Well, this change will result in name conflicts against existing
+> pinctrl_gpio_direction_[in|out]out(). So use "pin_control_gpio_" prefix.
+
+Yeah that works, or pincontro_by_gpio_ or such.
+
+> Not sure how the last case (in_en && out_en && DRIVE_OPEN_DRAIN) works.
+
+I wrote some documentation! But it is hidden deep in the docs:
+https://docs.kernel.org/driver-api/gpio/driver.html#gpio-lines-with-open-dr=
+ain-source-support
+
+> In order to be able to read a value as an input pin, I think, we need
+> to set the output status to Hi-Z. Then we should recognize it as "INPUT"?
+> In this case, however, we cannot distinguish the other case where we want
+> to use the pin as OUTPUT and drive it to (active) high.
+
+With open drain, on GPIO controllers that do not support a native
+open drain mode, we emulate open drain output high by switching
+the line into input mode. The line in this case has a pull-up resistor
+(internal or external) and as input mode is high-Z the pull up resistor
+will pull the signal high, to any level - could be e.g 48V which is
+helpful for some serial links.
+
+But this case is really tricky so it can be hard to get things right,
+I get a bit confused and so we need to think about it a few times.
+
+> > > +static void scmi_gpio_set(struct gpio_chip *chip, unsigned int offse=
+t, int val)
+> >
+> > static int?
+>
+> Unfortunately, the function prototype of "set" in struct gpio_device is
+>         void (*set)(struct gpio_chip *gc, unsigned int offset, int value)=
+;
+>
+> So we cannot propagate an error to the caller.
+
+Grrr that must be my fault. Sorry about not fixing this :(
+
+> > No need to add & 0x01, the gpiolib core already does this.
+>
+> Which part of gpiolib core?
+
+chip->set =3D scmi_gpio_set; gets called like this in gpiolib:
+
+ gpiod_direction_output_raw_commit(..., int value)
+{
+    int val =3D !!value;
+(...)
+    gc->set(gc, gpio_chip_hwgpio(desc), val);
+
+Notice clamping int val =3D !!value; will make the passed val 0 or 1.
+
+> > > +static u16 sum_up_ngpios(struct gpio_chip *chip)
+> > > +{
+> > > +       struct gpio_pin_range *range;
+> > > +       struct gpio_device *gdev =3D chip->gpiodev;
+> > > +       u16 ngpios =3D 0;
+> > > +
+> > > +       list_for_each_entry(range, &gdev->pin_ranges, node) {
+> > > +               ngpios +=3D range->range.npins;
+> > > +       }
+> >
+> > This works but isn't really the intended use case of the ranges.
+> > Feel a bit uncertain about it, but I can't think of anything better.
+> > And I guess these come directly out of SCMI so it's first hand
+> > information about all GPIOs.
+>
+> I don't get your point.
+> However many pins SCMI firmware (or other normal pin controllers) might
+> expose, the total number of pins available by this driver is limited by
+> "gpio-ranges" property.
+> So the sum as "ngpios" should make sense unless a user accidentally
+> specifies a wrong range of pins.
+
+Yes.
+
+And it is this fact that the same number need to appear in two places
+and double-specification will sooner or later bring us to the situation
+where the two do not agree, and what do we do then?
+
+If the ranges come from firmware, which is subject to change such
+as "oops we forgot this pin", the GPIO number will just insert itself
+among the already existing ones: say we have two ranges:
+
+1: 0..5
+2: 6..9
+
+Ooops forgot a GPIO in the first range, it has to be bumped to
+0..6.
+
+But somewhere in the device tree there is:
+
+foo-gpios =3D <&scmi_gpio 7 GPIO_OUT_LOW>;
+
+So now this is wrong (need to be changed to 8) and we have zero tooling
+to detect this, the author just has to be very careful all the time.
+
+But I honestly do not know any better way.
+
+> > which in turn becomes just pinctrl_gpio_set_config(), which
+> > is what we want.
+> >
+> > The second cell in two-cell GPIOs already supports passing
+> > GPIO_PUSH_PULL, GPIO_OPEN_DRAIN, GPIO_OPEN_SOURCE,
+> > GPIO_PULL_UP, GPIO_PULL_DOWN, GPIO_PULL_DISABLE,
+> > which you can this way trivially pass down to the pin control driver.
+> >
+> > NB: make sure the scmi pin control driver returns error for
+> > unknown configs.
+>
+> Well, the error will be determined by SCMI firmware(server)
+> not the driver itself :)
+
+Hehe, I think it is good that the SCMI firmware gets some exercise
+from day 1!
+
+Yours,
+Linus Walleij
