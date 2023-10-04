@@ -2,78 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 448357B8010
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:00:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A0CD7B801C
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Oct 2023 15:01:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242354AbjJDNAa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Oct 2023 09:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
+        id S232819AbjJDNBu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Oct 2023 09:01:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242521AbjJDNA3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:00:29 -0400
+        with ESMTP id S233003AbjJDNBu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Oct 2023 09:01:50 -0400
 Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874FAE6
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 06:00:24 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-533cbbd0153so3752399a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 06:00:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D1498
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Oct 2023 06:01:46 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5362bcc7026so3750353a12.1
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Oct 2023 06:01:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696424423; x=1697029223; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VUxHRAAUJ8e4w2sN24vI2mGf3yYOo4or/Y+gwtC/L2Y=;
-        b=MrjRIKgelKm/2BT1jKQmAVjSYcKRP8vai9OYYNu5HS37hiG3vpblqStmCrrkpZ/MbW
-         9+sk7xozHYVXoUfG3+ERKq8GYJ0lqvqfTnN2NVRhGOTnquWvww7Sq0GFpcW2Kam98+MP
-         pd8FGeim17sGyJK7bjK0f05yz8Hy4MUwt+TW9H00kEU0heatmKFVRRPTLddDTlj1T732
-         ueJGadqkpH/Wy9Ebi+3vjWBd8nIfVNiZkfKUrVABbMhTijUV07T5RrS9TnwypUMjcvtH
-         wtmA7eCOAptepGD+j1CVZUtHBLXaTiL5NnEXXl7NKuDfvbrakUKTVX4jYONdSCXHFwKr
-         qTpA==
+        d=linaro.org; s=google; t=1696424505; x=1697029305; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:subject:from:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VQPURT2cB30aEZVuY0YniaL39V0VOCF5T3GrjWLBDKk=;
+        b=d2fWxpwP6uFiO34pOxDwGZ9z29PFmz50YXzv2a168mIizJb/nenBo28aOmQHSIGSPJ
+         0vYy3J5rDQtSUR80Liwga0BvJgt65duiZGKH24k/EgOCzvVIddI/9QCbZYS4JITnTgBo
+         SZWfknVhohxCTn9IH1Qf4jN1l9ExRPJb7HbP6j01KcKzzis5cj5QRzOyA9bK9cdgJiJX
+         L4eLPZd0A2MEd2chD1exdgkBw/xKSnxRk6IeCvJeBSdEm6dGY0EqzLMGgS5GJpmn6QSu
+         OlLfxiosb1L2hfeTujl/G6RbIJ/fCo/bVcT+Fm4x5lIJwPhbJJuMqtdpiiEu/wm7b4vJ
+         T7jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696424423; x=1697029223;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VUxHRAAUJ8e4w2sN24vI2mGf3yYOo4or/Y+gwtC/L2Y=;
-        b=HZ974/oTWKzqxS7sXReT/Riw/KjUSxAFD4a1hDEmD1WpehrQaxsfgXgXDYEmbJGrOJ
-         zmzVlbirdm8D6h4RNzpofwX0HBzfkoQZKBuiSwu7RTEjsBdiT/+F09xPjmha0Yhvcu4r
-         UuaxBXPB/mp+1b1bZyF7LOGHLC/P+4f+EOzLeCpKkd9AJY8TuYZvtVEMsH/S7wKnxOC5
-         87EkshnMCRg7LsiKj6hQgx4W47wLK9uVuYzBUHPfhWoOLi6c/yJZpLPjcUdllgElQCWV
-         p+p1eNNH9CbYsU0oEPBfGSbWpp9JEkNQCP3NGB3rP5WVfIkKN6N2/UaOQkNko1SIV749
-         MmLg==
-X-Gm-Message-State: AOJu0YxLCeX+lW4UFwUP/oplr7oZY+0QauK9tLj7ebvcEV/rziHofekN
-        iK+5GlgyYe01DJNErNv4etdkrtDWYmphxWMV/+o=
-X-Google-Smtp-Source: AGHT+IF8oZMlxrNLjnlTKjVb7MDbgLCyaWLSGqt2VuaHlidR3fb5iL2Srf5T6aZeS6K/hdyfFqWO1g==
-X-Received: by 2002:a17:906:10a:b0:9ae:3e2f:4d00 with SMTP id 10-20020a170906010a00b009ae3e2f4d00mr2521060eje.70.1696424422754;
-        Wed, 04 Oct 2023 06:00:22 -0700 (PDT)
-Received: from [192.168.1.149] (i5C743835.versanet.de. [92.116.56.53])
-        by smtp.gmail.com with ESMTPSA id ss26-20020a170907039a00b009a5f1d15644sm2692005ejb.119.2023.10.04.06.00.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 06:00:21 -0700 (PDT)
-From:   Erik Schilling <erik.schilling@linaro.org>
-Date:   Wed, 04 Oct 2023 15:00:00 +0200
-Subject: [libgpiod][PATCH v4] bindings: rust: rename {event,settings}_clone
- to try_clone
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231004-rust-line-info-soundness-v4-1-cff89db04aa5@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAM9hHWUC/4XN3YrCMBAF4Fcpud7IZNK/eLXvsXjRNJM6IIkkW
- pTSdzf2QlwW3MvDmfPNIjIlpiz21SISzZw5hhLqr0qMxyFMJNmVLBBQg8FOpmu+yBOHUgQfZY7
- X4ALlLFU9Qk/gsCUjyvycyPNto3/Eie105ujEoTRHzpeY7tvPWW39//ysJEhjwI3UetUP9rtcD
- SnuYpo2dcZ3yXyQ8Cl1PdrOI3hs/0j6JSkA/UHSRWqaxg6obN1q/CWt6/oAqIbfjF8BAAA=
-To:     brgl@bgdev.pl
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Erik Schilling <erik.schilling@linaro.org>,
-        Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-X-Mailer: b4 0.13-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696424421; l=4820;
- i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
- bh=mqShslodg0Oiui24nKpcl44gAU2f6npkFD4lJg/3f90=;
- b=2sGUpPRu/+m/akoY64tUy4HeRiLaxoZKv+hTG1GCwqLlXcatf/xXAzVygWJ64Jyt8SWtQ4DGg
- HS5gOLSLZtQA6NPm1VDlh1/kCH4RyjzTRRFbRaKl/ne1hyyGThgFCc8
-X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
- pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
+        d=1e100.net; s=20230601; t=1696424505; x=1697029305;
+        h=in-reply-to:references:cc:subject:from:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VQPURT2cB30aEZVuY0YniaL39V0VOCF5T3GrjWLBDKk=;
+        b=LIymtM4zM74rKyXCbMxROV8n0YX3ejWlOPTtfE/+LnF62JwGpjkq9fDw9PzthmYsAF
+         JunYJPne6n4n+ftbb9iuk6xqgD3boHhf/0p/lsxKd62g23ETFqnQ9Zn1Dwg6xDGfXNre
+         qKP2fJw3iY1ZaFTSR6RobYwi2ChhWR6VdvW8U58GiQkEgAzRKIRHQC1Wfg/YYfB7AHiz
+         NbGa+GOvrQEW+WPZTlcihwzUWSVwDcZBRCScEiHjgH0wVTiFF5aVh5C6iGMWO9S77ktj
+         OwRZqxwNkdj/jQmT8Va9pYgY4m1ZusE5yXFr7sxAJxhyhmnSKIqqv5rDr73cQAcGF/3i
+         i6JQ==
+X-Gm-Message-State: AOJu0YxzuRa+MwWnYDvmD7Jn1N4LAJWHUBSWj1l5nI+t1PALv3juBsSv
+        dYlZi58MUgSmHsHDCSSDPOgZDA==
+X-Google-Smtp-Source: AGHT+IFey3V/7VIqf6zeHV1RIfPDrX1txSM3AsPD1URYJb0FnGPkoASOlt2LhgowSyiLKfDxd7bWJQ==
+X-Received: by 2002:aa7:c301:0:b0:523:2e0e:5462 with SMTP id l1-20020aa7c301000000b005232e0e5462mr1680412edq.42.1696424489175;
+        Wed, 04 Oct 2023 06:01:29 -0700 (PDT)
+Received: from localhost (i5C743835.versanet.de. [92.116.56.53])
+        by smtp.gmail.com with ESMTPSA id s7-20020aa7c547000000b0052595b17fd4sm2413303edr.26.2023.10.04.06.01.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Oct 2023 06:01:28 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Wed, 04 Oct 2023 15:01:28 +0200
+Message-Id: <CVZOAJ4WAGKU.21D52ZLTSHG5G@ablu-work>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+From:   "Erik Schilling" <erik.schilling@linaro.org>
+Subject: Re: [libgpiod][PATCH v3 2/3] bindings: rust: rename
+ {event,settings}_clone to try_clone
+Cc:     "Linux-GPIO" <linux-gpio@vger.kernel.org>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>,
+        "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>,
+        "Kent Gibson" <warthog618@gmail.com>
+X-Mailer: aerc 0.15.2
+References: <20231003-rust-line-info-soundness-v3-0-555ba21b4632@linaro.org>
+ <20231003-rust-line-info-soundness-v3-2-555ba21b4632@linaro.org>
+ <CAMRc=MfhLtjeJk1q489kgAMdezYqyf_pLPPhhQR66n9Sq2xZfg@mail.gmail.com>
+In-Reply-To: <CAMRc=MfhLtjeJk1q489kgAMdezYqyf_pLPPhhQR66n9Sq2xZfg@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -84,109 +77,108 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-What is getting cloned is already clear from the type. This also aligns
-a bit better with similar methods from the `std` crate [1].
+On Wed Oct 4, 2023 at 1:22 PM CEST, Bartosz Golaszewski wrote:
+> On Tue, Oct 3, 2023 at 11:40=E2=80=AFAM Erik Schilling
+> <erik.schilling@linaro.org> wrote:
+> >
+> > What is getting cloned is already clear from the type. This also aligns
+> > a bit better with similar methods from the `std` crate [1].
+> >
+> > [1] https://doc.rust-lang.org/std/index.html?search=3Dtry_clone
+> >
+> > Link: https://lore.kernel.org/r/CVUKC1HXG1P8.13XIUCCXN95F0@ablu-work
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+> > ---
+> >  bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs | 2 +-
+> >  bindings/rust/libgpiod/src/edge_event.rs                    | 3 ++-
+> >  bindings/rust/libgpiod/src/line_settings.rs                 | 4 ++--
+> >  bindings/rust/libgpiod/tests/line_request.rs                | 2 +-
+> >  4 files changed, 6 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/bindings/rust/libgpiod/examples/buffered_event_lifetimes.r=
+s b/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
+> > index ad90d7b..8dbb496 100644
+> > --- a/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
+> > +++ b/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
+> > @@ -34,7 +34,7 @@ fn main() -> libgpiod::Result<()> {
+> >          let event =3D events.next().unwrap()?;
+> >
+> >          // This will out live `event` and the next read_edge_events().
+> > -        let cloned_event =3D libgpiod::request::Event::event_clone(eve=
+nt)?;
+> > +        let cloned_event =3D libgpiod::request::Event::try_clone(event=
+)?;
+> >
+> >          let events =3D request.read_edge_events(&mut buffer)?;
+> >          for event in events {
+> > diff --git a/bindings/rust/libgpiod/src/edge_event.rs b/bindings/rust/l=
+ibgpiod/src/edge_event.rs
+> > index 0c0cfbc..4c940ba 100644
+> > --- a/bindings/rust/libgpiod/src/edge_event.rs
+> > +++ b/bindings/rust/libgpiod/src/edge_event.rs
+> > @@ -25,7 +25,8 @@ use super::{
+> >  pub struct Event(*mut gpiod::gpiod_edge_event);
+> >
+> >  impl Event {
+> > -    pub fn event_clone(event: &Event) -> Result<Event> {
+> > +    /// Makes a copy of the event object.
+> > +    pub fn try_clone(event: &Event) -> Result<Event> {
+>
+> Hi Erik,
+>
+> This fails to apply on top of current master of libgpiod. Could you verif=
+y?
 
-[1] https://doc.rust-lang.org/std/index.html?search=try_clone
+Hm. Not sure what went wrong. It rebased and tests cleanly for me.
+Resent them.
 
-Link: https://lore.kernel.org/r/CVUKC1HXG1P8.13XIUCCXN95F0@ablu-work
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
----
-Resending only the missing patch, rebased on the others.
+- Erik
 
-To: Linux-GPIO <linux-gpio@vger.kernel.org>
-To: brgl@bgdev.pl
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-Cc: Kent Gibson <warthog618@gmail.com>
----
-Changes in v4:
-- Rebased on top of the already merged patches
-- Link to v3: https://lore.kernel.org/r/20231003-rust-line-info-soundness-v3-0-555ba21b4632@linaro.org
-
-Changes in v3:
-- Renamed from_raw_{owned,non_owning}() -> from_raw()
-- Link to v2: https://lore.kernel.org/r/20230929-rust-line-info-soundness-v2-0-9782b7f20f26@linaro.org
-
-Changes in v2:
-- Removed unneeded temporary variables
-- Added missing SAFETY comment
-- Renamed owning wrapper to `Event`, non-owning to `EventRef`
-- Renamed existing clone methods to try_clone()
-- Slightly tweaked try_clone() documentation
-- Dropped version bump commit
-- Added Fixes tag
-- CC'd Kent - suggested by vireshk since he reviewed his commits
-- Link to v1: https://lore.kernel.org/r/20230927-rust-line-info-soundness-v1-0-990dce6f18ab@linaro.org
----
- bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs | 2 +-
- bindings/rust/libgpiod/src/edge_event.rs                    | 3 ++-
- bindings/rust/libgpiod/src/line_settings.rs                 | 4 ++--
- bindings/rust/libgpiod/tests/line_request.rs                | 2 +-
- 4 files changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs b/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
-index ad90d7b..8dbb496 100644
---- a/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
-+++ b/bindings/rust/libgpiod/examples/buffered_event_lifetimes.rs
-@@ -34,7 +34,7 @@ fn main() -> libgpiod::Result<()> {
-         let event = events.next().unwrap()?;
- 
-         // This will out live `event` and the next read_edge_events().
--        let cloned_event = libgpiod::request::Event::event_clone(event)?;
-+        let cloned_event = libgpiod::request::Event::try_clone(event)?;
- 
-         let events = request.read_edge_events(&mut buffer)?;
-         for event in events {
-diff --git a/bindings/rust/libgpiod/src/edge_event.rs b/bindings/rust/libgpiod/src/edge_event.rs
-index 639f033..7f8f377 100644
---- a/bindings/rust/libgpiod/src/edge_event.rs
-+++ b/bindings/rust/libgpiod/src/edge_event.rs
-@@ -29,7 +29,8 @@ pub struct Event(*mut gpiod::gpiod_edge_event);
- unsafe impl Send for Event {}
- 
- impl Event {
--    pub fn event_clone(event: &Event) -> Result<Event> {
-+    /// Makes a copy of the event object.
-+    pub fn try_clone(event: &Event) -> Result<Event> {
-         // SAFETY: `gpiod_edge_event` is guaranteed to be valid here.
-         let event = unsafe { gpiod::gpiod_edge_event_copy(event.0) };
-         if event.is_null() {
-diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rust/libgpiod/src/line_settings.rs
-index c81d118..4ba20d4 100644
---- a/bindings/rust/libgpiod/src/line_settings.rs
-+++ b/bindings/rust/libgpiod/src/line_settings.rs
-@@ -56,8 +56,8 @@ impl Settings {
-         unsafe { gpiod::gpiod_line_settings_reset(self.settings) }
-     }
- 
--    /// Makes copy of the settings object.
--    pub fn settings_clone(&self) -> Result<Self> {
-+    /// Makes a copy of the settings object.
-+    pub fn try_clone(&self) -> Result<Self> {
-         // SAFETY: `gpiod_line_settings` is guaranteed to be valid here.
-         let settings = unsafe { gpiod::gpiod_line_settings_copy(self.settings) };
-         if settings.is_null() {
-diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/rust/libgpiod/tests/line_request.rs
-index da22bea..e0ae200 100644
---- a/bindings/rust/libgpiod/tests/line_request.rs
-+++ b/bindings/rust/libgpiod/tests/line_request.rs
-@@ -272,7 +272,7 @@ mod line_request {
-             for offset in offsets {
-                 lsettings.set_debounce_period(Duration::from_millis((100 + offset).into()));
-                 lconfig
--                    .add_line_settings(&[offset as Offset], lsettings.settings_clone().unwrap())
-+                    .add_line_settings(&[offset as Offset], lsettings.try_clone().unwrap())
-                     .unwrap();
-             }
- 
-
----
-base-commit: 808d15ebffdcee5e418a210815e57e6128e0f803
-change-id: 20230927-rust-line-info-soundness-14c08e0d26e9
-
-Best regards,
--- 
-Erik Schilling <erik.schilling@linaro.org>
+>
+> Bart
+>
+> >          // SAFETY: `gpiod_edge_event` is guaranteed to be valid here.
+> >          let event =3D unsafe { gpiod::gpiod_edge_event_copy(event.0) }=
+;
+> >          if event.is_null() {
+> > diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rus=
+t/libgpiod/src/line_settings.rs
+> > index f0b3e9c..41b27e2 100644
+> > --- a/bindings/rust/libgpiod/src/line_settings.rs
+> > +++ b/bindings/rust/libgpiod/src/line_settings.rs
+> > @@ -52,8 +52,8 @@ impl Settings {
+> >          unsafe { gpiod::gpiod_line_settings_reset(self.settings) }
+> >      }
+> >
+> > -    /// Makes copy of the settings object.
+> > -    pub fn settings_clone(&self) -> Result<Self> {
+> > +    /// Makes a copy of the settings object.
+> > +    pub fn try_clone(&self) -> Result<Self> {
+> >          // SAFETY: `gpiod_line_settings` is guaranteed to be valid her=
+e.
+> >          let settings =3D unsafe { gpiod::gpiod_line_settings_copy(self=
+.settings) };
+> >          if settings.is_null() {
+> > diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/ru=
+st/libgpiod/tests/line_request.rs
+> > index da22bea..e0ae200 100644
+> > --- a/bindings/rust/libgpiod/tests/line_request.rs
+> > +++ b/bindings/rust/libgpiod/tests/line_request.rs
+> > @@ -272,7 +272,7 @@ mod line_request {
+> >              for offset in offsets {
+> >                  lsettings.set_debounce_period(Duration::from_millis((1=
+00 + offset).into()));
+> >                  lconfig
+> > -                    .add_line_settings(&[offset as Offset], lsettings.=
+settings_clone().unwrap())
+> > +                    .add_line_settings(&[offset as Offset], lsettings.=
+try_clone().unwrap())
+> >                      .unwrap();
+> >              }
+> >
+> >
+> > --
+> > 2.41.0
+> >
 
