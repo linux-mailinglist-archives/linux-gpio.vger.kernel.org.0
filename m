@@ -2,336 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 005797BAA24
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 21:28:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D387BAA29
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 21:29:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbjJET2v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Oct 2023 15:28:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        id S230168AbjJET3f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Oct 2023 15:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjJET2u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 15:28:50 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A7198
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 12:28:49 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-7ab5150a7b5so1646879241.0
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 12:28:49 -0700 (PDT)
+        with ESMTP id S229939AbjJET3e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 15:29:34 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F359CDE
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 12:29:31 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-9ada2e6e75fso255389866b.2
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 12:29:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696534128; x=1697138928; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XSh0l5ofVGMNbspBk9OBoPCC5cHBB/5eLrue4avwkfs=;
-        b=DPND1qj8JvWAwB4AQJYcJxvDGbI4Ctbzr0MLsYIW5EqmSkDVsJooBhezPvcPNCX+Iw
-         grvlGTYhVJLayqgOFgLqZRbcVssb5PJ8vEh5m9W3GhKuiLchL4Ngz7uvIULT9tzwFqAw
-         hqU3JiJLXOnmO0x/pVEGu972L/Y2CchQt4QiEHnLglzdrxKLc/3jcBT8zoHV4ynlnqf+
-         ga0asCrNYs3PT+RNdJFCt1qqATw8iCBYy56rkMq7h0jZS5qq7MZTGFvgCbq2RxWVArri
-         pRsdwALqAW2wOB/YyUp7+SjqBo9Zn0FKDQluXSAFqWsExFel7pHkYoXYNnNlGF3O7Rh0
-         DVbw==
+        d=linaro.org; s=google; t=1696534170; x=1697138970; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8FcIrqBncC9Mrs6EWL94iGiE6FYJb1dG9INjYIsj2wg=;
+        b=Sp+kRiJ60ClUIP33/zrpqR68uGfgHZeMm4+XnQVqUKnwHYLTHDTgipSVBvkvO7lFpR
+         7h1tSOVKgN8l2i/GTjnG0M9DaNczXTUEAG71AvnBnBn42TQYQFhqer5jGKafpJT7WvR6
+         tA5eRjDWdtxxNTE/q8IpFKLILd1+IrqsFz0+HQ5cEedOjtug1P7ljlT+kr5h9L3rcov2
+         VKexLghFPEYp5xgZyK/VHS3hOqF56CEwfJOgLieboNi4pMVXZ0WB5qAlU8Uv79zbLbB7
+         2QvjoKpbF9H6OzYsCphE03nxvt9/6JUQ6Gl1HpjSo29aiG46TVAeLjoE4qZlXqKcJ2ie
+         BVeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696534128; x=1697138928;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XSh0l5ofVGMNbspBk9OBoPCC5cHBB/5eLrue4avwkfs=;
-        b=uex83OJTHLc0J92La8cJUzOtI7xBgYIgUm2/sGx0nZ8wTBS124zZuZfYRGI+CJO55P
-         aL+c40fMxU8RfUXdj1yOCSomJmJdLg8rB2MIrL4hx+B+8oyq8qjCFJ7Nh8lP/p9opc2O
-         wDyWaDFCgtXS0JE9LrjbCTH0wBECsWR6q25qNGw2/jjMg7SPpdLy9aGuk3ocGkL7TtAw
-         iEXZtEVPsJmJvTBhVbnvKAdI/ntbiRLXE0FghN0+bKCUC5tGmuu5Z6ZsQuvyXATV8yyt
-         4WcozRKsR5rQOo9Yj4nX59Hmyw3Opgmrm7H8ZZHjGDUaeK6cv/7EChmSo6RTeHcJC1/B
-         /gMw==
-X-Gm-Message-State: AOJu0YwdUq8FG+sYhTX73US+7czCQjdOLSWzcz04tdb/8b1JTTjFdXcg
-        rm4fYA8wzHYso1IL+oaNAlbNACSJtJoaC1kw49abdQ==
-X-Google-Smtp-Source: AGHT+IHAkb4QbOhqb1IbWDecFeoJk4YYf8bLlEmnaFX7gpy/mLj6MNRVg1DgoQMpuq9pgjqv8doTTSOYwnt0RHehLmA=
-X-Received: by 2002:a67:fd50:0:b0:450:cebb:4f15 with SMTP id
- g16-20020a67fd50000000b00450cebb4f15mr2244279vsr.1.1696534126724; Thu, 05 Oct
- 2023 12:28:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696534170; x=1697138970;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8FcIrqBncC9Mrs6EWL94iGiE6FYJb1dG9INjYIsj2wg=;
+        b=T2jHAbG1uYqxMjnfxpeJFJXPkWTUfC2x57IYJSCZJPUwiH6Z5CXrUf9us/Uwbt9CK+
+         NedGYZeUiYbgwT2WgumJ97v+P03P2yw6xNSc5s+BFHSml0VJUok/fQkv0QpbK2mzDWcQ
+         Rmq9eA4HVoUsiB0VPtP/C9fR2zS+m8rAyO9VEOE53PzgXQ08K3/G4QuaU+7tuhfY020q
+         Ew8j+W1NwON93stRhRcJKTVMJY/4SaFVUOKcrptI2s2MrWdWWq/LcsrMRKndVROHbqd0
+         lZio1LQqnV5qAsVLn+fT2tu5s8DUFyZd93TWW5KpPh/erG2pxW9n83FgDnqCPbHTmzRz
+         P8PA==
+X-Gm-Message-State: AOJu0YzwjsXYS82K0BcdXUVIypqQn8TKiFe8d+stUpf5dh0o33VeDa+k
+        WFOG8v+3rBzfYD24PblCZYXE6Q==
+X-Google-Smtp-Source: AGHT+IH5OVqZVwFMXRaCd1BDzWuuagJUNL+cVtINgJ+JuCQ4BBFliTN5odpOdP1Nfa2kVem3dld3Pg==
+X-Received: by 2002:a17:906:220c:b0:9b8:a556:87a5 with SMTP id s12-20020a170906220c00b009b8a55687a5mr5241419ejs.22.1696534170424;
+        Thu, 05 Oct 2023 12:29:30 -0700 (PDT)
+Received: from [192.168.1.197] (5-157-101-10.dyn.eolo.it. [5.157.101.10])
+        by smtp.gmail.com with ESMTPSA id u2-20020a17090617c200b009ad8084e08asm1640184eje.0.2023.10.05.12.29.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Oct 2023 12:29:29 -0700 (PDT)
+Message-ID: <efc9f099-9c97-460b-b0c8-9891aa3b772a@linaro.org>
+Date:   Thu, 5 Oct 2023 21:29:26 +0200
 MIME-Version: 1.0
-References: <20231004162317.163488-1-hdegoede@redhat.com> <20231004162317.163488-4-hdegoede@redhat.com>
-In-Reply-To: <20231004162317.163488-4-hdegoede@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Oct 2023 21:28:36 +0200
-Message-ID: <CAMRc=McLZU06s10h7HFFDaRpFtA-DCz=aRqkuPA-x0mgFPD2LA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] platform/x86: int3472: Stop using gpiod_toggle_active_low()
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org,
-        Daniel Scally <djrscally@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/21] arm64: dts: google: Add initial Google gs101 SoC
+ support
+Content-Language: en-US
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     William McVicker <willmcvicker@google.com>,
+        Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
+        s.nawrocki@samsung.com, linus.walleij@linaro.org,
+        wim@linux-watchdog.org, linux@roeck-us.net,
+        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+        olof@lixom.net, cw00.choi@samsung.com, tudor.ambarus@linaro.org,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        soc@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@google.com
+References: <20231005155618.700312-1-peter.griffin@linaro.org>
+ <20231005155618.700312-19-peter.griffin@linaro.org>
+ <ZR75cIvnQS2cqTT3@google.com> <2023100520-cleaver-sinless-fbae@gregkh>
+ <99419159-cab0-4c79-a4a0-12229bfad3c0@linaro.org>
+ <2023100513-mashing-scrubber-ea59@gregkh>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <2023100513-mashing-scrubber-ea59@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 4, 2023 at 6:23=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
->
-> Use the new skl_int3472_gpiod_get_from_temp_lookup() helper to get
-> a gpio to pass to register_gpio_clock(), skl_int3472_register_regulator()
-> and skl_int3472_register_pled().
->
-> This removes all use of the deprecated gpiod_toggle_active_low() and
-> acpi_get_and_request_gpiod() functions.
->
-> Suggested-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  .../x86/intel/int3472/clk_and_regulator.c     | 31 ++-----------
->  drivers/platform/x86/intel/int3472/common.h   |  7 ++-
->  drivers/platform/x86/intel/int3472/discrete.c | 43 +++++++++++++------
->  drivers/platform/x86/intel/int3472/led.c      | 17 ++------
->  4 files changed, 40 insertions(+), 58 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/dri=
-vers/platform/x86/intel/int3472/clk_and_regulator.c
-> index ef4b3141efcd..459f96c04ca1 100644
-> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-> @@ -162,9 +162,8 @@ int skl_int3472_register_dsm_clock(struct int3472_dis=
-crete_device *int3472)
->  }
->
->  int skl_int3472_register_gpio_clock(struct int3472_discrete_device *int3=
-472,
-> -                                   struct acpi_resource_gpio *agpio, u32=
- polarity)
-> +                                   struct gpio_desc *gpio)
->  {
-> -       char *path =3D agpio->resource_source.string_ptr;
->         struct clk_init_data init =3D {
->                 .ops =3D &skl_int3472_clock_ops,
->                 .flags =3D CLK_GET_RATE_NOCACHE,
-> @@ -174,19 +173,7 @@ int skl_int3472_register_gpio_clock(struct int3472_d=
-iscrete_device *int3472,
->         if (int3472->clock.cl)
->                 return -EBUSY;
->
-> -       int3472->clock.ena_gpio =3D acpi_get_and_request_gpiod(path, agpi=
-o->pin_table[0],
-> -                                                            "int3472,clk=
--enable");
-> -       if (IS_ERR(int3472->clock.ena_gpio)) {
-> -               ret =3D PTR_ERR(int3472->clock.ena_gpio);
-> -               int3472->clock.ena_gpio =3D NULL;
-> -               return dev_err_probe(int3472->dev, ret, "getting clk-enab=
-le GPIO\n");
-> -       }
-> -
-> -       if (polarity =3D=3D GPIO_ACTIVE_LOW)
-> -               gpiod_toggle_active_low(int3472->clock.ena_gpio);
-> -
-> -       /* Ensure the pin is in output mode and non-active state */
-> -       gpiod_direction_output(int3472->clock.ena_gpio, 0);
-> +       int3472->clock.ena_gpio =3D gpio;
->
->         init.name =3D kasprintf(GFP_KERNEL, "%s-clk",
->                               acpi_dev_name(int3472->adev));
-> @@ -273,9 +260,8 @@ static const struct dmi_system_id skl_int3472_regulat=
-or_second_sensor[] =3D {
->  };
->
->  int skl_int3472_register_regulator(struct int3472_discrete_device *int34=
-72,
-> -                                  struct acpi_resource_gpio *agpio)
-> +                                  struct gpio_desc *gpio)
->  {
-> -       char *path =3D agpio->resource_source.string_ptr;
->         struct regulator_init_data init_data =3D { };
->         struct regulator_config cfg =3D { };
->         const char *second_sensor =3D NULL;
-> @@ -314,16 +300,7 @@ int skl_int3472_register_regulator(struct int3472_di=
-screte_device *int3472,
->                                                 int3472->regulator.supply=
-_name,
->                                                 &int3472_gpio_regulator_o=
-ps);
->
-> -       int3472->regulator.gpio =3D acpi_get_and_request_gpiod(path, agpi=
-o->pin_table[0],
-> -                                                            "int3472,reg=
-ulator");
-> -       if (IS_ERR(int3472->regulator.gpio)) {
-> -               ret =3D PTR_ERR(int3472->regulator.gpio);
-> -               int3472->regulator.gpio =3D NULL;
-> -               return dev_err_probe(int3472->dev, ret, "getting regulato=
-r GPIO\n");
-> -       }
-> -
-> -       /* Ensure the pin is in output mode and non-active state */
-> -       gpiod_direction_output(int3472->regulator.gpio, 0);
-> +       int3472->regulator.gpio =3D gpio;
->
->         cfg.dev =3D &int3472->adev->dev;
->         cfg.init_data =3D &init_data;
-> diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platfo=
-rm/x86/intel/int3472/common.h
-> index 9f29baa13860..145dec66df64 100644
-> --- a/drivers/platform/x86/intel/int3472/common.h
-> +++ b/drivers/platform/x86/intel/int3472/common.h
-> @@ -117,16 +117,15 @@ int skl_int3472_get_sensor_adev_and_name(struct dev=
-ice *dev,
->                                          const char **name_ret);
->
->  int skl_int3472_register_gpio_clock(struct int3472_discrete_device *int3=
-472,
-> -                                   struct acpi_resource_gpio *agpio, u32=
- polarity);
-> +                                   struct gpio_desc *gpio);
->  int skl_int3472_register_dsm_clock(struct int3472_discrete_device *int34=
-72);
->  void skl_int3472_unregister_clock(struct int3472_discrete_device *int347=
-2);
->
->  int skl_int3472_register_regulator(struct int3472_discrete_device *int34=
-72,
-> -                                  struct acpi_resource_gpio *agpio);
-> +                                  struct gpio_desc *gpio);
->  void skl_int3472_unregister_regulator(struct int3472_discrete_device *in=
-t3472);
->
-> -int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
-> -                             struct acpi_resource_gpio *agpio, u32 polar=
-ity);
-> +int skl_int3472_register_pled(struct int3472_discrete_device *int3472, s=
-truct gpio_desc *gpio);
->  void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472=
-);
->
->  #endif
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/plat=
-form/x86/intel/int3472/discrete.c
-> index b69ef63f75ab..0bc7cbefd9ae 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -194,6 +194,7 @@ static int skl_int3472_handle_gpio_resources(struct a=
-cpi_resource *ares,
->         struct acpi_resource_gpio *agpio;
->         u8 active_value, pin, type;
->         union acpi_object *obj;
-> +       struct gpio_desc *gpio;
->         const char *err_msg;
->         const char *func;
->         u32 polarity;
-> @@ -244,22 +245,38 @@ static int skl_int3472_handle_gpio_resources(struct=
- acpi_resource *ares,
->
->                 break;
->         case INT3472_GPIO_TYPE_CLK_ENABLE:
-> -               ret =3D skl_int3472_register_gpio_clock(int3472, agpio, p=
-olarity);
-> -               if (ret)
-> -                       err_msg =3D "Failed to register clock\n";
-> -
-> -               break;
->         case INT3472_GPIO_TYPE_PRIVACY_LED:
-> -               ret =3D skl_int3472_register_pled(int3472, agpio, polarit=
-y);
-> -               if (ret)
-> -                       err_msg =3D "Failed to register LED\n";
-> -
-> -               break;
->         case INT3472_GPIO_TYPE_POWER_ENABLE:
-> -               ret =3D skl_int3472_register_regulator(int3472, agpio);
-> -               if (ret)
-> -                       err_msg =3D "Failed to map regulator to sensor\n"=
-;
-> +               gpio =3D skl_int3472_gpiod_get_from_temp_lookup(int3472, =
-agpio, func, polarity);
-> +               if (IS_ERR(gpio)) {
-> +                       ret =3D PTR_ERR(gpio);
-> +                       err_msg =3D "Failed to get GPIO\n";
-> +                       break;
-> +               }
->
-> +               switch (type) {
+On 05/10/2023 21:23, Greg KH wrote:
+> On Thu, Oct 05, 2023 at 09:18:48PM +0200, Krzysztof Kozlowski wrote:
+>>>> I'd like to bring up this thread and discuss the option of not introducing
+>>>> another ARCH_* config:
+>>>>
+>>>>   https://lore.kernel.org/all/20200306103652.GA3634389@kroah.com/
+>>>
+>>> I agree, PLEASE don't add platform config options as that makes it
+>>> impossible to make a unified kernel image that works for more than one
+>>> platform at the same time.
+>>
+>> There is no single problem in making unified image as we were doing
+>> since beginning of ARM64. The ARCH_* is not a obstacle for this.
+> 
+> Then why are the ARCH_* options needed at all?  What does this help out
+> with?
 
-My brain refused to parse the diff, I needed to apply the patch to
-understand what it's doing. I can't say I'm a fan of this double
-switch construct but I don't have a better idea either, so...
+It helps all the people and distros who do not want to build/package
+drivers or modules for unrelated hardware or architectures.
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Let's take Samsung Exynos UART driver. It will never, 100% never, work
+on x86, x86_64. There is no single need to package it for kernels build
+for these products. It will not work on nVidia Tegra ARM64, Qualcomm
+ARM64 SoC, so if you do not want to run on Exynos, then you do no select
+ARCH_EXYNOS and have significantly smaller image.
 
-> +               case INT3472_GPIO_TYPE_CLK_ENABLE:
-> +                       ret =3D skl_int3472_register_gpio_clock(int3472, =
-gpio);
-> +                       if (ret)
-> +                               err_msg =3D "Failed to register clock\n";
-> +
-> +                       break;
-> +               case INT3472_GPIO_TYPE_PRIVACY_LED:
-> +                       ret =3D skl_int3472_register_pled(int3472, gpio);
-> +                       if (ret)
-> +                               err_msg =3D "Failed to register LED\n";
-> +
-> +                       break;
-> +               case INT3472_GPIO_TYPE_POWER_ENABLE:
-> +                       ret =3D skl_int3472_register_regulator(int3472, g=
-pio);
-> +                       if (ret)
-> +                               err_msg =3D "Failed to map regulator to s=
-ensor\n";
-> +
-> +                       break;
-> +               default: /* Never reached */
-> +                       ret =3D -EINVAL;
-> +                       break;
-> +               }
->                 break;
->         default:
->                 dev_warn(int3472->dev,
-> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/=
-x86/intel/int3472/led.c
-> index bca1ce7d0d0c..476cd637fc51 100644
-> --- a/drivers/platform/x86/intel/int3472/led.c
-> +++ b/drivers/platform/x86/intel/int3472/led.c
-> @@ -16,26 +16,15 @@ static int int3472_pled_set(struct led_classdev *led_=
-cdev,
->         return 0;
->  }
->
-> -int skl_int3472_register_pled(struct int3472_discrete_device *int3472,
-> -                             struct acpi_resource_gpio *agpio, u32 polar=
-ity)
-> +int skl_int3472_register_pled(struct int3472_discrete_device *int3472, s=
-truct gpio_desc *gpio)
->  {
-> -       char *p, *path =3D agpio->resource_source.string_ptr;
-> +       char *p;
->         int ret;
->
->         if (int3472->pled.classdev.dev)
->                 return -EBUSY;
->
-> -       int3472->pled.gpio =3D acpi_get_and_request_gpiod(path, agpio->pi=
-n_table[0],
-> -                                                            "int3472,pri=
-vacy-led");
-> -       if (IS_ERR(int3472->pled.gpio))
-> -               return dev_err_probe(int3472->dev, PTR_ERR(int3472->pled.=
-gpio),
-> -                                    "getting privacy LED GPIO\n");
-> -
-> -       if (polarity =3D=3D GPIO_ACTIVE_LOW)
-> -               gpiod_toggle_active_low(int3472->pled.gpio);
-> -
-> -       /* Ensure the pin is in output mode and non-active state */
-> -       gpiod_direction_output(int3472->pled.gpio, 0);
-> +       int3472->pled.gpio =3D gpio;
->
->         /* Generate the name, replacing the ':' in the ACPI devname with =
-'_' */
->         snprintf(int3472->pled.name, sizeof(int3472->pled.name),
-> --
-> 2.41.0
->
+Now, there is no problem to have one kernel for nVidia Tegra + Qualcomm
++ Samsung Exynos with everything you need. The ARCH_EXYNOS or SOC_EXYNOS
+or SOC_GOOGLE serves only the purpose to allow distros and people
+customize build for specific hardware.
+
+It does not limit anyone on anything.
+
+
+
+> 
+>>>> I especially don't like the "depends on ARCH_EXYNOS" because that forces one to
+>>>> include all the other Exynos drivers that ARCH_EXYNOS selects that Google
+>>>> Tensor SoCs don't need. Can we consider using SOC_GOOGLE instead and for all
+>>>> drivers that actually depend on the SoC hardware, we can just add "depends on
+>>>> SOC_GOOGLE"?
+>>>
+>>> Why do any of this at all?  It should not be needed.
+>>>
+>>>> The idea is that drivers should be tied to hardware -- not a specific vendor.
+>>>
+>>> And drivers should be auto-loaded.
+>>>
+>>> All of these drivers are not vendor-specific at all, they are based on
+>>> the same IP blocks as others, so that is how they should be unified.
+>>
+>> They are vendor specific. All of them are specifically for Exynos
+>> hardwre, because this is Exynos. We call it Google GS/Tensor SoC just
+>> for fancy convenience, but this just Exynos.
+> 
+> Ok, then why is this ARCH_ option needed if these IP blocks really are
+> from something else and are part of other drivers?
+
+For the same reason above, because if I want to build kernel for
+Qualcomm, I want to drop easily anything not related. If I want to build
+kernel without I2C, I disable I2C bus which effectively disables all
+drivers which work on I2C. If I want to build kernel without Exynos, I
+disable ARCH_EXYNOS which effectively disables entire Exynos hardware.
+
+Think of SoC as a bus or interface.
+
+Best regards,
+Krzysztof
+
