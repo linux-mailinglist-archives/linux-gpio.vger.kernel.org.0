@@ -2,160 +2,220 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CC5D7BA9FB
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 21:22:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B55C67BA9FF
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 21:24:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbjJETWr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Oct 2023 15:22:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51760 "EHLO
+        id S230420AbjJETYL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Oct 2023 15:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231219AbjJETWq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 15:22:46 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE67CE
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 12:22:44 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9a58dbd5daeso247293766b.2
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 12:22:44 -0700 (PDT)
+        with ESMTP id S231142AbjJETYK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 15:24:10 -0400
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8837BE4
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 12:24:09 -0700 (PDT)
+Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-7ab8265b797so563073241.2
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 12:24:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696533763; x=1697138563; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H2RLmB7g+8qx4harkihCsHRe2Jxdu/epelEM4mwXVSM=;
-        b=Lza5/yCd8OlmWY4bmAEdxNSACxV7Sfm/gDo/KMK/IeDo/WAL7qDWFckzBowjTcgZDH
-         rfhfR5JyIsLKPMjBDRAiN6AMKvPgkkAL1RbzdBHzZfq1yCjuf0SKowYnoxiMNfmbb9us
-         Z12aUNDS42Fqmg+hARkFV58NMhdV016+28FY/nn4gWdKNcoP4qGh9Ds8Irh2WnDzkEtK
-         TZX2B9odY+dGfyn9Bc6yK9O/DjPz6A/boiKfB3BPOCrP/FvGUgdHTD1UM8J+v9MtVOW/
-         IeLlARuDHgI1TUjc8LrDDMqY9407J7vbObOZ1PWg8imBfmfdkVRHQISMHx+H4fPdG7v9
-         g5Og==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696533848; x=1697138648; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kJIBjdHm1ElO0Q/5Tg/KzhsnCInNf6ArioOkVClacUM=;
+        b=DjqUBS1ZNqUaUwBp5v/sxIwfbA8cjule898WmFKphi1uUpN4iHbnTholmhcKeTMNDL
+         Idd7xXoUv7pzS/q7Z70ZQpRRsvPhAC2JJ9WELCjTg5QjGQ1Jp21ONCY9e0GiVkM92sq9
+         FvoYkVFiE2XjhVo8WUSpGO4VqYySoMpgi2qEL2MHTdPbRvQBGqcNQX3/24iF36+rk2x+
+         3WELdSEb3TXI5N4HOOdxBYA2C43iA+puqbiyg8XJhjJVQg1zwuX07gXVj/Hr59OiMd+N
+         JwXnsA1eXFG/9elj6A672kC88QO6BsnmX2Ony4634+iXmCCXpyc+GNUbG2FIjDNASkj2
+         catw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696533763; x=1697138563;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H2RLmB7g+8qx4harkihCsHRe2Jxdu/epelEM4mwXVSM=;
-        b=WNUQr7Q5i5N1EoKR6OxO02UFlastMOCHjCLw/HegA8ccsqkPwtSRiRL6xDeYn2+Hd9
-         he4wbVSrA53ghXr6NqLmg9pkv7CE7Or085c2WrZ+ZkE5ZgiGAK2AkXP73O1YrO/nh2KV
-         /XQYN8Chh1rdpRd0rzxnlvTmyC8HcGSG1G+d52pEfwpt6ZnB9zzUarZI6EIWp1+itZHy
-         cBs8WBxN8AIkLIBhY6wp/0Oms6xAwtxKm6NwgjLOrk0XuPbCqFZm/9hqq4IF2VD+egsC
-         un6HyKmKKTxBHc+k/E+6j/uz801LLHYRc/A+hI6b3a1IBYCOpkBqU7Ssw76r/9uHoW0f
-         TCvA==
-X-Gm-Message-State: AOJu0YzG8IE3rCB5kw1FX8IU72AeYJBXDKu2FIf/oa+a465ZXszwmlib
-        MY+g+zKiYooZsFjMKyyJema6KQ==
-X-Google-Smtp-Source: AGHT+IHzCMPH6GCYxav68JKuM4RFSuedz3bF6GTUfGGj4Q7LE6xtvJ+89OJMdsC5nnk7tPBAuRv26A==
-X-Received: by 2002:a17:906:2da:b0:9b7:1e26:e2ea with SMTP id 26-20020a17090602da00b009b71e26e2eamr5297358ejk.41.1696533762679;
-        Thu, 05 Oct 2023 12:22:42 -0700 (PDT)
-Received: from [192.168.1.197] (5-157-101-10.dyn.eolo.it. [5.157.101.10])
-        by smtp.gmail.com with ESMTPSA id rn4-20020a170906d92400b0099bc038eb2bsm1613889ejb.58.2023.10.05.12.22.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Oct 2023 12:22:42 -0700 (PDT)
-Message-ID: <db02684f-c32b-4e09-8752-8d07dcb518c3@linaro.org>
-Date:   Thu, 5 Oct 2023 21:22:40 +0200
+        d=1e100.net; s=20230601; t=1696533848; x=1697138648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kJIBjdHm1ElO0Q/5Tg/KzhsnCInNf6ArioOkVClacUM=;
+        b=QaSHSEJtmxWEbqb+N6PWP6MEh8a3zYfITChiTn9OXsr5s+40xqN+JZFCL77LGIWX0N
+         PSQeyOJTpvT0xVboTdzwTemB30mpsKCIIW1oaIDwu6jdOZAWr1OykCGcVU+7OcccjyeO
+         yYfR5CFGDFJCBVvvjNtN0hV73kGYaZIpaZrZ2HyFOgwo+ijqCxWXccES66r+D8B6nUA1
+         vW4FLg1/ab0RdxlqvA4z2Im1a+Rb+B4WBAc5EEkYpvql3Vl5+LFsgL/GPsvKH+vGMVrE
+         F777OK3cc5n2CG2n0GI4H4Z0JmAaKlyyGzgHSfnboW9VtqcYJxEXkkJGYxQ3g8gAoq8b
+         7ORA==
+X-Gm-Message-State: AOJu0YwcdhSqAWNxrwoTUxYZzQMfPstVXaI8ohs/Lxx19U2jNNuMMldw
+        /fF8ok7D2UuwALO/pGQMuF3vpzSVV+gKIINRNCM2+A==
+X-Google-Smtp-Source: AGHT+IGh0duTgq7OsXC+XkKGS9kNsK8dFunWxtrrnDWf7uvEm2UFTdjxGkSLPPX416q5NVUUBUMe2HS8FIujKIqUyzg=
+X-Received: by 2002:a67:f252:0:b0:454:6fb8:9d4e with SMTP id
+ y18-20020a67f252000000b004546fb89d4emr6450286vsm.25.1696533848483; Thu, 05
+ Oct 2023 12:24:08 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/21] arm64: dts: google: Add initial Google gs101 SoC
- support
-Content-Language: en-US
-To:     William McVicker <willmcvicker@google.com>,
-        Peter Griffin <peter.griffin@linaro.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
-        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, wim@linux-watchdog.org,
-        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
-        arnd@arndb.de, olof@lixom.net, cw00.choi@samsung.com,
-        tudor.ambarus@linaro.org, andre.draszik@linaro.org,
-        semen.protsenko@linaro.org, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        gregkh@linuxfoundation.org, kernel-team@google.com
-References: <20231005155618.700312-1-peter.griffin@linaro.org>
- <20231005155618.700312-19-peter.griffin@linaro.org>
- <ZR75cIvnQS2cqTT3@google.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZR75cIvnQS2cqTT3@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20231004162317.163488-1-hdegoede@redhat.com> <20231004162317.163488-5-hdegoede@redhat.com>
+In-Reply-To: <20231004162317.163488-5-hdegoede@redhat.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 5 Oct 2023 21:23:57 +0200
+Message-ID: <CAMRc=Me-g+qG7-_0r0b-6bXDie5AFDNC-WVp+fo3LDrStP5NVw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] platform/x86: int3472: Switch to devm_get_gpiod()
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org,
+        Daniel Scally <djrscally@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 05/10/2023 19:59, William McVicker wrote:
-> On 10/05/2023, Peter Griffin wrote:
->> Google gs101 SoC is ARMv8 mobile SoC found in the Pixel 6,
->> (oriole) Pixel 6a (bluejay) and Pixel 6 pro (raven) mobile
->> phones. It features:
->> * 4xA55 little cluster
->> * 2xA76 Mid cluster
->> * 2xX1 Big cluster
->>
->> This commit adds the basic device tree for gs101 (SoC) and oriole
->> (pixel 6). Further platform support will be added over time.
->>
->> It has been tested with a minimal busybox initramfs and boots to
->> a shell.
->>
+On Wed, Oct 4, 2023 at 6:23=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
+wrote:
+>
+> Switch to devm_get_gpiod() for discrete GPIOs for clks / regulators / LED=
+s
+> and let devm do the cleanup for us.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  .../x86/intel/int3472/clk_and_regulator.c     | 23 ++++---------------
+>  drivers/platform/x86/intel/int3472/discrete.c |  2 +-
+>  drivers/platform/x86/intel/int3472/led.c      |  7 +-----
+>  3 files changed, 6 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/dri=
+vers/platform/x86/intel/int3472/clk_and_regulator.c
+> index 459f96c04ca1..16e36ac0a7b4 100644
+> --- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> +++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
+> @@ -177,10 +177,8 @@ int skl_int3472_register_gpio_clock(struct int3472_d=
+iscrete_device *int3472,
+>
+>         init.name =3D kasprintf(GFP_KERNEL, "%s-clk",
+>                               acpi_dev_name(int3472->adev));
+> -       if (!init.name) {
+> -               ret =3D -ENOMEM;
+> -               goto out_put_gpio;
+> -       }
+> +       if (!init.name)
+> +               return -ENOMEM;
+>
+>         int3472->clock.frequency =3D skl_int3472_get_clk_frequency(int347=
+2);
+>
+> @@ -206,8 +204,6 @@ int skl_int3472_register_gpio_clock(struct int3472_di=
+screte_device *int3472,
+>         clk_unregister(int3472->clock.clk);
+>  out_free_init_name:
+>         kfree(init.name);
+> -out_put_gpio:
+> -       gpiod_put(int3472->clock.ena_gpio);
+>
+>         return ret;
+>  }
+> @@ -219,7 +215,6 @@ void skl_int3472_unregister_clock(struct int3472_disc=
+rete_device *int3472)
+>
+>         clkdev_drop(int3472->clock.cl);
+>         clk_unregister(int3472->clock.clk);
+> -       gpiod_put(int3472->clock.ena_gpio);
+>  }
+>
+>  /*
+> @@ -266,7 +261,7 @@ int skl_int3472_register_regulator(struct int3472_dis=
+crete_device *int3472,
+>         struct regulator_config cfg =3D { };
+>         const char *second_sensor =3D NULL;
+>         const struct dmi_system_id *id;
+> -       int i, j, ret;
+> +       int i, j;
+>
+>         id =3D dmi_first_match(skl_int3472_regulator_second_sensor);
+>         if (id)
+> @@ -309,21 +304,11 @@ int skl_int3472_register_regulator(struct int3472_d=
+iscrete_device *int3472,
+>         int3472->regulator.rdev =3D regulator_register(int3472->dev,
+>                                                      &int3472->regulator.=
+rdesc,
+>                                                      &cfg);
+> -       if (IS_ERR(int3472->regulator.rdev)) {
+> -               ret =3D PTR_ERR(int3472->regulator.rdev);
+> -               goto err_free_gpio;
+> -       }
+>
+> -       return 0;
+> -
+> -err_free_gpio:
+> -       gpiod_put(int3472->regulator.gpio);
+> -
+> -       return ret;
+> +       return PTR_ERR_OR_ZERO(int3472->regulator.rdev);
+>  }
+>
+>  void skl_int3472_unregister_regulator(struct int3472_discrete_device *in=
+t3472)
+>  {
+>         regulator_unregister(int3472->regulator.rdev);
+> -       gpiod_put(int3472->regulator.gpio);
+>  }
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/plat=
+form/x86/intel/int3472/discrete.c
+> index 0bc7cbefd9ae..07b302e09340 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -119,7 +119,7 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472=
+_discrete_device *int3472,
+>                 return ERR_PTR(ret);
+>
+>         gpiod_add_lookup_table(lookup);
+> -       desc =3D gpiod_get(int3472->dev, func, GPIOD_OUT_LOW);
+> +       desc =3D devm_gpiod_get(int3472->dev, func, GPIOD_OUT_LOW);
+>         gpiod_remove_lookup_table(lookup);
+>
+>         return desc;
+> diff --git a/drivers/platform/x86/intel/int3472/led.c b/drivers/platform/=
+x86/intel/int3472/led.c
+> index 476cd637fc51..9cbed694e2ca 100644
+> --- a/drivers/platform/x86/intel/int3472/led.c
+> +++ b/drivers/platform/x86/intel/int3472/led.c
+> @@ -39,7 +39,7 @@ int skl_int3472_register_pled(struct int3472_discrete_d=
+evice *int3472, struct gp
+>
+>         ret =3D led_classdev_register(int3472->dev, &int3472->pled.classd=
+ev);
+>         if (ret)
+> -               goto err_free_gpio;
+> +               return ret;
+>
+>         int3472->pled.lookup.provider =3D int3472->pled.name;
+>         int3472->pled.lookup.dev_id =3D int3472->sensor_name;
+> @@ -47,10 +47,6 @@ int skl_int3472_register_pled(struct int3472_discrete_=
+device *int3472, struct gp
+>         led_add_lookup(&int3472->pled.lookup);
+>
+>         return 0;
+> -
+> -err_free_gpio:
+> -       gpiod_put(int3472->pled.gpio);
+> -       return ret;
+>  }
+>
+>  void skl_int3472_unregister_pled(struct int3472_discrete_device *int3472=
+)
+> @@ -60,5 +56,4 @@ void skl_int3472_unregister_pled(struct int3472_discret=
+e_device *int3472)
+>
+>         led_remove_lookup(&int3472->pled.lookup);
+>         led_classdev_unregister(&int3472->pled.classdev);
+> -       gpiod_put(int3472->pled.gpio);
+>  }
+> --
+> 2.41.0
+>
 
-William,
-
-Please do not Cc non-existing mailboxes. You added Cc kernel-team and we
-all got awesome bounces now:
-
-"We're writing to let you know that the group you tried to contact
-(kernel-team) may not exist, or you may not have permission to post
-messages to the group. A few more details on why you weren't able to post:"
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
