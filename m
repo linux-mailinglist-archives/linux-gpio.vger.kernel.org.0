@@ -2,56 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C5D87B9FB3
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 16:28:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDE047BA3F0
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 18:02:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233696AbjJEO06 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Oct 2023 10:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52712 "EHLO
+        id S231368AbjJEQCp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Oct 2023 12:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235180AbjJEOYe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 10:24:34 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18EF31A1
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 06:48:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696513710; x=1728049710;
-  h=date:from:to:cc:subject:message-id;
-  bh=6ZR0YTx0Mksrm3CgptSaoFHwuc3/+Fuh1s5PUPsea3o=;
-  b=la7GDP8igZwGmXRGp61soz42RcB0AohOaC6Rd2azsVGQJx5CmxcqrxED
-   +mLx54S/40KlJ+3Jb7InAcdHfTQNStFypUzJzMQavyTdv61VOzhegvWYo
-   YEU37I0VKuSp+NIQVjXV7f5HJz9zwRXjw9Kb+kx3bhjjDSv5Ypd5wzaPz
-   cL6MNqJqL+4A6YqpWxx/CxdPJ0sG9aYZPgTj49ydbf0pHJ+eD8TxOueov
-   4pue5WQk86nr3ZnUAnpwAEIbXensTp1+GUW6zC2t+H9eDTY+/he7iOtOh
-   rTMte2R1YiuxTnqVzL42lf4RuAy+CLrgARhKGbUNJ0pzV8KE/jM01VAyF
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="469656017"
-X-IronPort-AV: E=Sophos;i="6.03,201,1694761200"; 
-   d="scan'208";a="469656017"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 20:12:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="728282880"
-X-IronPort-AV: E=Sophos;i="6.03,201,1694761200"; 
-   d="scan'208";a="728282880"
-Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 04 Oct 2023 20:12:41 -0700
-Received: from kbuild by c3b01524d57c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qoEn0-000Kvg-2a;
-        Thu, 05 Oct 2023 03:12:38 +0000
-Date:   Thu, 05 Oct 2023 11:11:41 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 0c42fc96cc020b7879b38c8e8597ffbbf34e0eda
-Message-ID: <202310051139.AkxQNAEG-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        with ESMTP id S237493AbjJEQA6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 12:00:58 -0400
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17982469E;
+        Thu,  5 Oct 2023 06:52:04 -0700 (PDT)
+Received: from [192.168.68.112] (ppp118-210-84-62.adl-adc-lon-bras32.tpg.internode.on.net [118.210.84.62])
+        by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5D962200DB;
+        Thu,  5 Oct 2023 11:14:56 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeconstruct.com.au; s=2022a; t=1696475698;
+        bh=R7cbZEGmJy2Gw2vxwUa3TW2M1e1bape91R+3bvKvVu0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=O34P3A/oGQNwIozMFMzAjDAioU17wp3c9h1nOMZ7RV8TgQXElvFBqhe4Bsbl8fE3x
+         gQJHr4JcMw0cY+ZWvzT4kdJUNrBlJY268m03OdYVbLkUGQxAsG2UsnZSHZkVBfy/ud
+         Ijx6ZjbiaRGBK5PJQOHlqpK/zAbkif3zrnpSQ4DHsBw/vEdgEDH2Dkffu3UU5j4eKu
+         MRDmWH4T+LbN/9/q9UkU98aF7+68IUsY6WlrKbKEy7JE2euX6wE7QhXOhK9C7SBe/D
+         dFxN+kL91aUD6hgp+qRN2ZtZi7wnw91jBnLcYB5RQCJFiBsHw/M9m/+6dufL4msv8U
+         Iljyq3ilKd4/g==
+Message-ID: <3bf55144b8169a8f44c67e9a6b63cc67a2edfa50.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v2] pinctrl: aspeed: Allow changing SPI mode from
+ hardware strap defaults
+From:   Andrew Jeffery <andrew@codeconstruct.com.au>
+To:     Zev Weiss <zev@bewilderbeest.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org
+Cc:     openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Thu, 05 Oct 2023 13:44:54 +1030
+In-Reply-To: <20231005030849.11352-2-zev@bewilderbeest.net>
+References: <20231005030849.11352-2-zev@bewilderbeest.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,179 +53,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 0c42fc96cc020b7879b38c8e8597ffbbf34e0eda  arm: omap1: ams-delta: stop using gpiochip_find()
+On Wed, 2023-10-04 at 20:08 -0700, Zev Weiss wrote:
+> Some platforms unfortunately have their SPI mode selection bits
+> strapped incorrectly (such as being configured for passthrough mode
+> when master mode is in fact the only useful configuration for it) and
+> thus require correction in software.  Add the SPI mode bits to the
+> GPIO passthrough bits as the exceptions to the read-only rule for the
+> hardware strap register so that the pinctrl subsystem can be used for
+> such corrections.
+>=20
+> Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
 
-elapsed time: 879m
+Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
 
-configs tested: 159
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs101_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                 nsimosci_hs_smp_defconfig   gcc  
-arc                   randconfig-001-20231004   gcc  
-arc                   randconfig-001-20231005   gcc  
-arm                              alldefconfig   clang
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         bcm2835_defconfig   clang
-arm                                 defconfig   gcc  
-arm                      footbridge_defconfig   gcc  
-arm                         lpc32xx_defconfig   clang
-arm                         orion5x_defconfig   clang
-arm                          pxa168_defconfig   clang
-arm                          pxa3xx_defconfig   gcc  
-arm                   randconfig-001-20231004   gcc  
-arm                   randconfig-001-20231005   gcc  
-arm                         s5pv210_defconfig   clang
-arm                           spitz_defconfig   clang
-arm                           sunxi_defconfig   gcc  
-arm                         vf610m4_defconfig   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231004   gcc  
-i386         buildonly-randconfig-001-20231005   gcc  
-i386         buildonly-randconfig-002-20231004   gcc  
-i386         buildonly-randconfig-002-20231005   gcc  
-i386         buildonly-randconfig-003-20231004   gcc  
-i386         buildonly-randconfig-003-20231005   gcc  
-i386         buildonly-randconfig-004-20231004   gcc  
-i386         buildonly-randconfig-004-20231005   gcc  
-i386         buildonly-randconfig-005-20231004   gcc  
-i386         buildonly-randconfig-005-20231005   gcc  
-i386         buildonly-randconfig-006-20231004   gcc  
-i386         buildonly-randconfig-006-20231005   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231004   gcc  
-i386                  randconfig-001-20231005   gcc  
-i386                  randconfig-002-20231004   gcc  
-i386                  randconfig-002-20231005   gcc  
-i386                  randconfig-003-20231004   gcc  
-i386                  randconfig-003-20231005   gcc  
-i386                  randconfig-004-20231004   gcc  
-i386                  randconfig-004-20231005   gcc  
-i386                  randconfig-005-20231004   gcc  
-i386                  randconfig-005-20231005   gcc  
-i386                  randconfig-006-20231004   gcc  
-i386                  randconfig-006-20231005   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231004   gcc  
-loongarch             randconfig-001-20231005   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                          malta_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         alldefconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                      bamboo_defconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                    klondike_defconfig   gcc  
-powerpc                     mpc5200_defconfig   clang
-powerpc                     skiroot_defconfig   clang
-powerpc                  storcenter_defconfig   gcc  
-powerpc                         wii_defconfig   gcc  
-powerpc                 xes_mpc85xx_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                    nommu_virt_defconfig   clang
-riscv                          rv32_defconfig   gcc  
-s390                             alldefconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                   rts7751r2dplus_defconfig   gcc  
-sh                          sdk7780_defconfig   gcc  
-sh                             sh03_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231004   gcc  
-x86_64                randconfig-001-20231005   gcc  
-x86_64                randconfig-002-20231004   gcc  
-x86_64                randconfig-002-20231005   gcc  
-x86_64                randconfig-003-20231004   gcc  
-x86_64                randconfig-003-20231005   gcc  
-x86_64                randconfig-004-20231004   gcc  
-x86_64                randconfig-004-20231005   gcc  
-x86_64                randconfig-005-20231004   gcc  
-x86_64                randconfig-005-20231005   gcc  
-x86_64                randconfig-006-20231004   gcc  
-x86_64                randconfig-006-20231005   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks!
