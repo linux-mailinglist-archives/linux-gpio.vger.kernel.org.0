@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E1427BA9F3
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 21:21:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC5D7BA9FB
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 21:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231186AbjJETVx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Oct 2023 15:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39288 "EHLO
+        id S231270AbjJETWr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Oct 2023 15:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbjJETVw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 15:21:52 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34EBCDC
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 12:21:51 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so2353725a12.1
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 12:21:51 -0700 (PDT)
+        with ESMTP id S231219AbjJETWq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 15:22:46 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE67CE
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 12:22:44 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9a58dbd5daeso247293766b.2
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 12:22:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696533709; x=1697138509; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696533763; x=1697138563; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zC5nmhOEkk98rezBT2eL5gPDYlMqNoJcj52hTWs3iUg=;
-        b=NykbaJ9zUW0rzDtgUsFY8vwHSe9X0zKpj/ApIXLdDLm7exPrQjBmP1VZXU9oscFApk
-         4ukmYWSAJg83kQtN17BMtk96pANKyvcWp5Y1F728e8IGqZlpJ4uBWltGAWVzI6kxSKiz
-         Lg3zKfmlko6+O7eNqBkCitJWVU+VLQikNudQXVL/OD+NOBslNn2Te7e0nnoh+TX66VEj
-         w6NDo8J5XVtyJ0HDcyzc5aNz6eUdPkpRCombIxD9b46JGmsZi+nsANDdoxZVTb0kYq3s
-         EqZC4qKB7YGQIXBbgSkSQJhn01yVFt52XmKNYa09WtX3SpFcguQK7jT/oN0Gni/Msayc
-         14WA==
+        bh=H2RLmB7g+8qx4harkihCsHRe2Jxdu/epelEM4mwXVSM=;
+        b=Lza5/yCd8OlmWY4bmAEdxNSACxV7Sfm/gDo/KMK/IeDo/WAL7qDWFckzBowjTcgZDH
+         rfhfR5JyIsLKPMjBDRAiN6AMKvPgkkAL1RbzdBHzZfq1yCjuf0SKowYnoxiMNfmbb9us
+         Z12aUNDS42Fqmg+hARkFV58NMhdV016+28FY/nn4gWdKNcoP4qGh9Ds8Irh2WnDzkEtK
+         TZX2B9odY+dGfyn9Bc6yK9O/DjPz6A/boiKfB3BPOCrP/FvGUgdHTD1UM8J+v9MtVOW/
+         IeLlARuDHgI1TUjc8LrDDMqY9407J7vbObOZ1PWg8imBfmfdkVRHQISMHx+H4fPdG7v9
+         g5Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696533709; x=1697138509;
+        d=1e100.net; s=20230601; t=1696533763; x=1697138563;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zC5nmhOEkk98rezBT2eL5gPDYlMqNoJcj52hTWs3iUg=;
-        b=nAFO5Tuif+yqAwzBSezha1tOUyMPptc/fMxUJ4oTG8FR7UUEy+kLZt2jBOLHgOknH5
-         6iJwUcwkuYAG2hO9sQzfl5pziYFep7GZQAKmwnuXUtq0uxpvWvluZnokWc31QwCkueLa
-         udsnjNFFu3KGxol0AtjMQe1bFuoOBjRTnK79XTOnDlj+V3ylCSP5gRW0UvuzwFJRti3D
-         gtUtagw8tkw1lHAbTVqzgUlVdoTs8Hv+OxeVmAMiTj2gcgfsaO2NUnql8YQNvQGrpM4M
-         wlscpV/xgM/pEzfZl0NhtNBsWjuUsTBzbQzmZmjq4XYRKrPUlGx84jD85mTeRNAx38WC
-         LmWw==
-X-Gm-Message-State: AOJu0Yw7BcwoA7dR6FGyWP3Aju3TRRHZ695w90nyX5OZlUmcP86fBaY2
-        MEspyGOM30DoIUDwqIA1Zw0IYQ==
-X-Google-Smtp-Source: AGHT+IEsAQS65ajEAkvqirYG2lP79o5Xp6M15XP9UKihrzfeVYblRVgcZVLCMPbVyNs07EDBpyOXGQ==
-X-Received: by 2002:a17:906:31c5:b0:9a2:5bf:8b14 with SMTP id f5-20020a17090631c500b009a205bf8b14mr6089768ejf.22.1696533709605;
-        Thu, 05 Oct 2023 12:21:49 -0700 (PDT)
+        bh=H2RLmB7g+8qx4harkihCsHRe2Jxdu/epelEM4mwXVSM=;
+        b=WNUQr7Q5i5N1EoKR6OxO02UFlastMOCHjCLw/HegA8ccsqkPwtSRiRL6xDeYn2+Hd9
+         he4wbVSrA53ghXr6NqLmg9pkv7CE7Or085c2WrZ+ZkE5ZgiGAK2AkXP73O1YrO/nh2KV
+         /XQYN8Chh1rdpRd0rzxnlvTmyC8HcGSG1G+d52pEfwpt6ZnB9zzUarZI6EIWp1+itZHy
+         cBs8WBxN8AIkLIBhY6wp/0Oms6xAwtxKm6NwgjLOrk0XuPbCqFZm/9hqq4IF2VD+egsC
+         un6HyKmKKTxBHc+k/E+6j/uz801LLHYRc/A+hI6b3a1IBYCOpkBqU7Ssw76r/9uHoW0f
+         TCvA==
+X-Gm-Message-State: AOJu0YzG8IE3rCB5kw1FX8IU72AeYJBXDKu2FIf/oa+a465ZXszwmlib
+        MY+g+zKiYooZsFjMKyyJema6KQ==
+X-Google-Smtp-Source: AGHT+IHzCMPH6GCYxav68JKuM4RFSuedz3bF6GTUfGGj4Q7LE6xtvJ+89OJMdsC5nnk7tPBAuRv26A==
+X-Received: by 2002:a17:906:2da:b0:9b7:1e26:e2ea with SMTP id 26-20020a17090602da00b009b71e26e2eamr5297358ejk.41.1696533762679;
+        Thu, 05 Oct 2023 12:22:42 -0700 (PDT)
 Received: from [192.168.1.197] (5-157-101-10.dyn.eolo.it. [5.157.101.10])
-        by smtp.gmail.com with ESMTPSA id rn4-20020a170906d92400b0099bc038eb2bsm1613889ejb.58.2023.10.05.12.21.47
+        by smtp.gmail.com with ESMTPSA id rn4-20020a170906d92400b0099bc038eb2bsm1613889ejb.58.2023.10.05.12.22.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Oct 2023 12:21:49 -0700 (PDT)
-Message-ID: <20c6070e-edeb-4a9d-863d-143abc840874@linaro.org>
-Date:   Thu, 5 Oct 2023 21:21:46 +0200
+        Thu, 05 Oct 2023 12:22:42 -0700 (PDT)
+Message-ID: <db02684f-c32b-4e09-8752-8d07dcb518c3@linaro.org>
+Date:   Thu, 5 Oct 2023 21:22:40 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 18/21] arm64: dts: google: Add initial Google gs101 SoC
@@ -123,8 +123,8 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -146,76 +146,15 @@ On 05/10/2023 19:59, William McVicker wrote:
 >> It has been tested with a minimal busybox initramfs and boots to
 >> a shell.
 >>
->> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
->> ---
->>  arch/arm64/Kconfig.platforms                  |    6 +
->>  arch/arm64/boot/dts/Makefile                  |    1 +
->>  arch/arm64/boot/dts/google/Makefile           |    6 +
->>  arch/arm64/boot/dts/google/gs101-oriole.dts   |   68 +
->>  arch/arm64/boot/dts/google/gs101-pinctrl.dtsi | 1134 +++++++++++++++++
->>  arch/arm64/boot/dts/google/gs101-pinctrl.h    |   17 +
->>  arch/arm64/boot/dts/google/gs101.dtsi         |  501 ++++++++
->>  7 files changed, 1733 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/google/Makefile
->>  create mode 100644 arch/arm64/boot/dts/google/gs101-oriole.dts
->>  create mode 100644 arch/arm64/boot/dts/google/gs101-pinctrl.dtsi
->>  create mode 100644 arch/arm64/boot/dts/google/gs101-pinctrl.h
->>  create mode 100644 arch/arm64/boot/dts/google/gs101.dtsi
->>
->> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->> index 6069120199bb..a5ed1b719488 100644
->> --- a/arch/arm64/Kconfig.platforms
->> +++ b/arch/arm64/Kconfig.platforms
->> @@ -107,6 +107,12 @@ config ARCH_EXYNOS
->>  	help
->>  	  This enables support for ARMv8 based Samsung Exynos SoC family.
->>  
->> +config ARCH_GOOGLE_TENSOR
->> +	bool "Google Tensor SoC fmaily"
->> +	depends on ARCH_EXYNOS
->> +	help
->> +	  Support for ARMv8 based Google Tensor platforms.
-> 
-> I'd like to bring up this thread and discuss the option of not introducing
-> another ARCH_* config:
-> 
->   https://lore.kernel.org/all/20200306103652.GA3634389@kroah.com/
-> 
-> I especially don't like the "depends on ARCH_EXYNOS" because that forces one to
-> include all the other Exynos drivers that ARCH_EXYNOS selects that Google
 
-Since we are creating unified kernel images, having other drivers is not
-a problem.
+William,
 
-> Tensor SoCs don't need. Can we consider using SOC_GOOGLE instead and for all
+Please do not Cc non-existing mailboxes. You added Cc kernel-team and we
+all got awesome bounces now:
 
-SOC_GOOGLE will work exactly the same and depend on ARCH_EXYNOS or
-appear everywhere as ARCH_EXYNOS. We already had this talk with Tesla.
-
-
-> drivers that actually depend on the SoC hardware, we can just add "depends on
-> SOC_GOOGLE"?
-> 
-> The idea is that drivers should be tied to hardware -- not a specific vendor.
-
-And hardware is Exynos. Tesla FSD and Google Tensor is Exynos, even if
-you do no like calling it.
-
-> By making drivers depend on ARCH_*, you are introducing an arbitrary vendor
-> dependency and not a hardware dependency.
-
-There is no arbitrary dependency. We call it all Exynos hardware,
-because this is Exynos.
-
-I remember what you were pushing for removal of ARCH_EXYNOS and there
-waas clear feedback, not only from me: this is against communities goals.
-
-> 
-> Thanks,
-> Will
-
-Please trim the replies from unrelated context.
-
+"We're writing to let you know that the group you tried to contact
+(kernel-team) may not exist, or you may not have permission to post
+messages to the group. A few more details on why you weren't able to post:"
 
 Best regards,
 Krzysztof
