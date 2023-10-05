@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1A7D7BA5D3
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 18:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 876FF7BA657
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 18:33:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240956AbjJEQUk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Oct 2023 12:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52344 "EHLO
+        id S231561AbjJEQdi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Oct 2023 12:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242551AbjJEQSO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 12:18:14 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B06C33CE01
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 09:08:15 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-536b39daec1so2015313a12.2
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 09:08:15 -0700 (PDT)
+        with ESMTP id S232573AbjJEQck (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 12:32:40 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D759661E
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 09:10:23 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-5335725cf84so2092354a12.2
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 09:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696522093; x=1697126893; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696522221; x=1697127021; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uI05/q5mcVCOgeH4iLAoYvKVHId2bMB8DvjW9ucdTxg=;
-        b=xmQlKDeLEIq8wH0jlTwIYMtzDx2uFJWHGhAhiHCwvHnBevcj/FRDwt9D7TtHlT1qAE
-         L499pzEQegPmEFD5+EG9gLc2ihQlZfox53M0dNXNeRiNGBOjdZSsqeHE1wJe4DJkklEj
-         ckr72IHv4Gqb48emSMsKHFox6qNtgn+Po+EfPa7JZrCItNVQli9MQogSw/lygSJ55uGa
-         MLfMfH8+E2dKu9eTEcwEBq1+sZLUtvNQv7eiBteCePXwLWkuXeDl/KNrjk8SXAKVTFD2
-         P7n9SNlpuO+sFUB4L+6p3/8fCGf7SJFUw/nlKWEb/5lwt/Cu9vFbyxvfgEw8QgpscKuo
-         eiHw==
+        bh=23kmFh6+pgy715HOrPmc19FtPEKPTlp4raSs/egX1XA=;
+        b=rDYgAlek7BlJyavgRn2KGZI70UNoxXeJ8/0SCYabU/3aNgmBQYHms96LJd59kPE4iI
+         9NbXUn2Ve9rEiz9WvKKzen1Bfp2htikrxvA5v/vJyfNZlRlYu3EhWmi3U7y8ztI8wkc7
+         bd2Hgchh+0z1H5QI0UGPl2WKuzZht5kFAdbABxg4s4YDkNr9UqkjMLRi9rkqaUMjbVE6
+         /SnbPAHNAv47qqe2GMNmVJ8Ri5p6fv1GAWBDG94XYIBJ1ZaV35sQl5M+1Y6uI2PMADSY
+         Sf1nnpKbajCJCSn33iPqprBDGY1HIvM/dIfxIVkFyku5vbC5PEGoL7u9RymL8LoCKjK0
+         gQjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696522093; x=1697126893;
+        d=1e100.net; s=20230601; t=1696522221; x=1697127021;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uI05/q5mcVCOgeH4iLAoYvKVHId2bMB8DvjW9ucdTxg=;
-        b=MdJ4A8xkBxqNdDR3/YytbkOAf6KhWWjW0W4ggulK0hzUN4JqsOuMU5mH7UZ2wlnk3y
-         OyDM1EQ9h4aLAHB78RC4X6vwrB/WvR2aWVKdcLkFmPfzrg/Tl7FSrIjSHtTAKtcMCOY7
-         Tn19nKaNceqs8U9Sb244NZKjVxqz9aWlsYjMiIf0l9y2o7ygYfOMTUz08Z4QrGSB0CDX
-         c2zuaKUp4bNoeCY2+CYjNUhuMu1RpOLQH9ZnALky/PcdWnVXwWnbUc1+uXRb44dENxSz
-         ZWE+MtXB3IX7TmsgdHH+o5h2qZNCPu29Dx8MyfMk+wThxy0N0+tYBOizoa1svnQpEWyF
-         ToEw==
-X-Gm-Message-State: AOJu0Yzkxav3mHwTmG26zmF7Hnk2l0tKKpRb5SaZxYz4ZOKiFUmWf5Lx
-        oZlDIajaWSlWdkI6ygXtw6Heuw==
-X-Google-Smtp-Source: AGHT+IGfAG67LY1/H1huLH8l0uFHwS0gFArke2lGS2nKxaeBBfRyncv8+kwP9ayMFA0j7hUihIWfVA==
-X-Received: by 2002:a05:6402:134a:b0:534:63e:d0b7 with SMTP id y10-20020a056402134a00b00534063ed0b7mr5966839edw.23.1696522092871;
-        Thu, 05 Oct 2023 09:08:12 -0700 (PDT)
+        bh=23kmFh6+pgy715HOrPmc19FtPEKPTlp4raSs/egX1XA=;
+        b=NfnKwmyV9SZgBQx8LHzNeTc5heeCb2VSfVQ9rkuRFdro418QBq1qgrwlqfQRgWrMUb
+         neZDmyH9DCERd8yji2+RwFkFh3sXUF+Tl64qxm4LNq5yRnzjAqw+nHVawp2x8dzvGXOF
+         V/w9jCU5+u4If244xXkI0ZyPb9y+I0o/6Xm5NSh+mfP6+pJ7oOpvAIE9oHhVMkgaw25k
+         m0v31Xo012hjfo7zxG+BQXxz3K74PphMUkp8/6siyroVFVKC+S1ZrQgAfXTV8hGiYoMA
+         E/6mTUig/grbxzMS0Dm+PpUmPRm0BbsSaHjjVQnOEDH1SXz1hekKE5qtBFFK5KbusCbo
+         4xSQ==
+X-Gm-Message-State: AOJu0Yzhs/fHkro9H3/mBqWA8T/HiWjdt3iUnuhMgH+H8x6No2HclfJ5
+        bbz16Hw/QbpOKoryU/YcqAi25A==
+X-Google-Smtp-Source: AGHT+IFAR42nIb2OGbTD1YdZhVFdwEeKAZ32pePyiLvgaLQtJReh5q1u0q+WQH3scbY1A3CBTk5MmA==
+X-Received: by 2002:a50:fa95:0:b0:52c:92e3:1d12 with SMTP id w21-20020a50fa95000000b0052c92e31d12mr5078131edr.11.1696522221373;
+        Thu, 05 Oct 2023 09:10:21 -0700 (PDT)
 Received: from [192.168.1.197] (5-157-101-10.dyn.eolo.it. [5.157.101.10])
-        by smtp.gmail.com with ESMTPSA id n19-20020a056402515300b0053495596f42sm1278344edd.30.2023.10.05.09.08.10
+        by smtp.gmail.com with ESMTPSA id u1-20020a05640207c100b005311e934765sm1278866edy.27.2023.10.05.09.10.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Oct 2023 09:08:12 -0700 (PDT)
-Message-ID: <ea3e9b01-0698-42b2-b702-3dd001f237b3@linaro.org>
-Date:   Thu, 5 Oct 2023 18:08:10 +0200
+        Thu, 05 Oct 2023 09:10:20 -0700 (PDT)
+Message-ID: <eca324c1-4e1d-4563-a85a-da646f41b8b0@linaro.org>
+Date:   Thu, 5 Oct 2023 18:10:18 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/21] dt-bindings: watchdog: Document Google gs101 &
- gs201 watchdog bindings
+Subject: Re: [PATCH 07/21] dt-bindings: pinctrl: samsung: add
+ google,gs101-pinctrl compatible
 Content-Language: en-US
 To:     Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
@@ -69,7 +69,7 @@ Cc:     tudor.ambarus@linaro.org, andre.draszik@linaro.org,
         linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org
 References: <20231005155618.700312-1-peter.griffin@linaro.org>
- <20231005155618.700312-6-peter.griffin@linaro.org>
+ <20231005155618.700312-8-peter.griffin@linaro.org>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -115,11 +115,11 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231005155618.700312-6-peter.griffin@linaro.org>
+In-Reply-To: <20231005155618.700312-8-peter.griffin@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -129,32 +129,44 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 05/10/2023 17:56, Peter Griffin wrote:
-> Add the "google,gs101-wdt" and "google,gs201-wdt" compatibles to the
-> dt-schema documentation.
+> Add the "google,gs101-pinctrl" compatible to the dt-schema bindings
+> documentation.
 > 
-> gs101 SoC has two CPU clusters and each cluster has its own dedicated
-> watchdog timer (similar to exynos850 and exynosautov9 SoCs).
-> 
-> These WDT instances are controlled using different bits in PMU
-> registers.
+> Add maxItems of 50 for the interrupts property as gs101 can have
+> multiple irqs.
 > 
 > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
->  .../devicetree/bindings/watchdog/samsung-wdt.yaml      | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/pinctrl/samsung,pinctrl.yaml          | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> index 8fb6656ba0c2..30f5949037fc 100644
-> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> @@ -24,6 +24,8 @@ properties:
->        - samsung,exynos7-wdt                   # for Exynos7
->        - samsung,exynos850-wdt                 # for Exynos850
->        - samsung,exynosautov9-wdt              # for Exynosautov9
-> +      - google,gs101-wdt                      # for Google gs101
-> +      - google,gs201-wdt                      # for Google gs101
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> index 26614621774a..e0f37f8ae8e7 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> @@ -54,11 +54,13 @@ properties:
+>        - samsung,exynos850-pinctrl
+>        - samsung,exynosautov9-pinctrl
+>        - tesla,fsd-pinctrl
+> +      - google,gs101-pinctrl
 
-Alphanumerical order.
+Alphanumerical order
+
+>  
+>    interrupts:
+>      description:
+>        Required for GPIO banks supporting external GPIO interrupts.
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 50
+
+You need to add to allOf: a new "if:then:else:" which will:
+1. narrow this for Google (with some description - is it interrupt per
+GPIO? per bank?)
+2. else: maxItems: 1
+
+
+
 
 Best regards,
 Krzysztof
