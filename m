@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29EC67BA851
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 19:44:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57DE07BA860
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 19:47:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230304AbjJERov (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Oct 2023 13:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41324 "EHLO
+        id S229547AbjJERqa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Oct 2023 13:46:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231719AbjJERoM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 13:44:12 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B77D68
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 10:43:36 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1c6193d6bb4so17635ad.0
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 10:43:36 -0700 (PDT)
+        with ESMTP id S232287AbjJERpW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 13:45:22 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9540CD4A
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 10:45:05 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1c6185cafb3so13025ad.1
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 10:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696527816; x=1697132616; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696527905; x=1697132705; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=60HdR/gjr+ClSlC+M7zPKhkatv0oHCCn87pO3lsKx5I=;
-        b=2kMeOCROZSDaKRqT/YRB/99dYfBtETGNk42W0nOQfNqBu7zym29q01v5TGveFeK2sG
-         tsxKoWG4eYvIceAqXqSNlH28eEM+tk43ICp/KxTVYNEUiYCDW0Oj18yGMrmhqa3OHs/0
-         LS1NMUnyOcT77hKOGgV9KVsCOOw66A/RUagsTe4JLoSi4SLt3IOEeYdG40/KLRjIZV2j
-         99Po5JbNtLjJH2HEgou9qpJMbAqUz5wtb82XrnEFoY8mQxIsgz6pTJkp23PplnYQgziV
-         3f4c6i+EftLKmID0DtaBeNi7fF/CcW6RkPszTaFyIiZqYbQMRPsY6B6X/kMsIF1ou7JK
-         2PuQ==
+        bh=bxWRh8BRaa8VEKxGZaugm2kd1aBscgPwwFJdYCN2qDk=;
+        b=M8W1TDnjS+GNiyoFxTkGom/mrV0At5S9pFxkLzk7QmG7CFeQwz+r6dPjSsLKJhejuc
+         /eU6w/dJ+GbsKZcZ3Qj055wn9ONIBpl7AQSUco5PoH7TkCWnnBDysncu6swERBjHAhi3
+         GdAWZiIqpnJ3zOr35OCpE1eS2/D5lvN8nz/2khE8vN9iHC4lkvEt5J2i96gzbiMmeWl4
+         dzQ0SL/tE7ZUq4IMEiC+9XQxYsrhgXfGvJQfGB1bitbc08mUN9/CtmM1yRWju2xG2uWl
+         uY52irX3N1VGFKDyJjRp/ZDdzkYfDmlByI8HJHcVQgQDsG6gKm1Var4u3zBz3SqMJQ5G
+         15XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696527816; x=1697132616;
+        d=1e100.net; s=20230601; t=1696527905; x=1697132705;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=60HdR/gjr+ClSlC+M7zPKhkatv0oHCCn87pO3lsKx5I=;
-        b=VOoIkR6D1ymOs01kHkplKi+83NZlvV3w5w0dawr6kWVO7gVKd4ajlIH9DNIYIfwVrS
-         qKy1xZb4X4M5xvRtkhbyDjK76pTCDVUjJPRIhSoboe1s8dSlU7IVw6NEeqfvfZrSIlfP
-         tQMCtseM/0zHxOLAf4g/kh5cs7taY+1ta5balVcnMei5dlMetkDz1YcHrNinyuvFdDNn
-         dk4xSS0Q6Z8s/C8CAYhItBnnx7IAc/es6RCLDLApA2RLlo9OEBpU/I8VHxC71jquF0XE
-         XGyx/DPuBdnTLQYWSbbt/mOuvk0Y7eISeZ0pp7NBgz5Qr+9gsoo+ygX7HkaSqictzG74
-         HN+g==
-X-Gm-Message-State: AOJu0Yx5vEW0b2nn5ZYtnjXTvwphdUH0+UPhpWQmVfV87E/vmed+JUx9
-        2EMLD5h3xDxS345fL+53uGsM7w==
-X-Google-Smtp-Source: AGHT+IHkEphjNPyY0Ba9advfXP+UTZ/LmV0S52IPUtK95qHYj4uqa58dO6ukXUIyOrQzBy4kgUBmhg==
-X-Received: by 2002:a17:902:c794:b0:1c3:3649:1f6a with SMTP id w20-20020a170902c79400b001c336491f6amr164574pla.7.1696527815616;
-        Thu, 05 Oct 2023 10:43:35 -0700 (PDT)
+        bh=bxWRh8BRaa8VEKxGZaugm2kd1aBscgPwwFJdYCN2qDk=;
+        b=gfC4vsP9Qw39pgiuZTvx0Fqqj5p5QV5xykr8JAar6lkwLTYMixWbIJoZkpBZAHCPH7
+         6+H8m1sW1VyKfTbdbEJBHsk16QHc6KusaibbLADco0gAfFPpq05uNrFPZSPnaB6u17mL
+         lqqC8uPwjmFTR/hkbYpMWk3KqbHuaAdZyk6vzp3UksG1+cXJSCt2qVymui2Aw8v6/UNu
+         21kKWqZdgka9NUcKH6jPaDucR6//j3Ez8aIQOoh2XcigalHbPPc1zga3yiJfhYfO6aJz
+         qcCGW9KalEUVe01XX3miujMysohSTmCn+AO+K6WPuxLkZvzhZpm1h4X+Bwz9UxVXI1qE
+         1g5g==
+X-Gm-Message-State: AOJu0YxY9FK4HB11HP3RITYZkBOQ6NhH+hmBSxW3/DihrIgfiVgr4au3
+        fUUqK6CRzRf42L52frp/raQXYQ==
+X-Google-Smtp-Source: AGHT+IFvde05nbhg5LTqUjenKdhiwDkfhFpMz3sG9kEY47JK21uv/T10QqKVXEqXoaGSCPv10+0/ug==
+X-Received: by 2002:a17:902:ce82:b0:1c7:1fbc:b9e8 with SMTP id f2-20020a170902ce8200b001c71fbcb9e8mr149344plg.10.1696527904755;
+        Thu, 05 Oct 2023 10:45:04 -0700 (PDT)
 Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
-        by smtp.gmail.com with ESMTPSA id e8-20020a62ee08000000b00690fe1c928csm1702957pfi.147.2023.10.05.10.43.34
+        by smtp.gmail.com with ESMTPSA id u18-20020a170902e5d200b001c6052152fdsm2013863plf.50.2023.10.05.10.45.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Oct 2023 10:43:34 -0700 (PDT)
-Date:   Thu, 5 Oct 2023 10:43:31 -0700
+        Thu, 05 Oct 2023 10:45:04 -0700 (PDT)
+Date:   Thu, 5 Oct 2023 10:45:00 -0700
 From:   William McVicker <willmcvicker@google.com>
 To:     Peter Griffin <peter.griffin@linaro.org>
 Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
@@ -64,7 +64,7 @@ Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
         kernel-team@android.com
 Subject: Re: [PATCH 14/21] clk: samsung: clk-gs101: add CMU_APM support
-Message-ID: <ZR71w7r4kubJ_Ow4@google.com>
+Message-ID: <ZR72HLCIAbT03Wuu@google.com>
 References: <20231005155618.700312-1-peter.griffin@linaro.org>
  <20231005155618.700312-15-peter.griffin@linaro.org>
 MIME-Version: 1.0
@@ -91,12 +91,6 @@ On 10/05/2023, Peter Griffin wrote:
 > 
 > One clock is marked CLK_IS_CRITICAL because the system
 > hangs is this clock is disabled.
-
-nit: hangs if this clock...
-
-Regards,
-Will
-
 > 
 > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
@@ -402,6 +396,12 @@ Will
 > +		.compatible = "google,gs101-cmu-apm",
 > +		.data = &apm_cmu_info,
 > +	},
+
+Missing terminating empty entry {}.
+
+Regards,
+Will
+
 > +};
 > +
 > +static struct platform_driver gs101_cmu_driver __refdata = {
