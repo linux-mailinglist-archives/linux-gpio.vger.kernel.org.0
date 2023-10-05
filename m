@@ -2,160 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 221ED7BA86D
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 19:48:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E93427BA87D
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 19:55:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231278AbjJERsF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Oct 2023 13:48:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59834 "EHLO
+        id S229572AbjJERzE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Oct 2023 13:55:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232119AbjJERr2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 13:47:28 -0400
-Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE04FB
-        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 10:47:25 -0700 (PDT)
-Received: by mail-ua1-x932.google.com with SMTP id a1e0cc1a2514c-7b07c3eaf9bso487911241.3
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 10:47:25 -0700 (PDT)
+        with ESMTP id S230453AbjJERyh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 13:54:37 -0400
+Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9538810D
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 10:54:20 -0700 (PDT)
+Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-49d0f24a815so506172e0c.2
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 10:54:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696528045; x=1697132845; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696528459; x=1697133259; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mtbtM+Kqq9eY2FzrbEugTIY8H/+c5pqgQBxrckc1Fh0=;
-        b=eg4m+j5X9e+VXQh/vg6JzKcUhbQX3yPtuBNjQ65nfXEiWH9GbR/jKAWECcq9U0Lzbk
-         vBLd5ZRxZbBsX9LV0qIBarCAEheB9OtT/dWkMdHlMtAGnjMaUkYEZl6zH7st4E+caIRz
-         i7G24UOkj8sJlaUPjR6DXFqFpgtJ1v1tEL2Iwany2oZIFBNHpHXemww+89P01uV5LCDH
-         WU8CbheCjUZ8R96N5dh6B8dm0DfLL+tJeRLHL0ih7ggt2EmS2o7TZhyEB+UXwGG4yQ6Q
-         sklCHvKGyiMhKMqZX5pZR7Hk0l2BMxCn2ytNWg6i/JuDzHMFr4cU0UuFDn6sEUwQRtbv
-         Q4bw==
+        bh=D76EeSMgKi6+9rAoLhvu8+kB+2vM8hIpa0TeocCPFcs=;
+        b=suyWDfANo2frFGih4DlCAmyOTNKXpa/vMIOvukgPrT0z1TV6CAdAwibYSKyh4Yf+9x
+         APqMZUbYeqgaFPzMJCMI8wL+5ivAGLQFhLG2oFxKdYaHpwdpfdy0e46JQPohf6mIALO3
+         2a8QvVpdIVtzZuFExywRt1ey8Fn1JwAti/AkeeX0jmwSzz6eRKEGI5k60potyYNFh36t
+         sZHyBGz1ox7a5mcdNUtSMmlbxfXQsVLLctc/4MCHZFxWStQ/QCnBEX4rHl6zZeFeE8Gm
+         tYdDb9UaofGwEUvARYZwD6DbC2D4CQek49f8iroJ/ff6mVxmTp2RnJWRC7PTb6DSU1iF
+         oyOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696528045; x=1697132845;
+        d=1e100.net; s=20230601; t=1696528459; x=1697133259;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mtbtM+Kqq9eY2FzrbEugTIY8H/+c5pqgQBxrckc1Fh0=;
-        b=d6kEVRi08LNe0gA65t+pwu7GokhMc5Xmj0jr+RCbkueohOGPIpaktjgsniDFw9CbCk
-         Sh2Hw1rbmcrDnHYi9adI3MZlvJgwymtHtWSmWt8AAXZ9T1yNEX+z+sbx7sBs/blOaImY
-         Cz9FyqVVTTQ9FkRTngOdjfWz2uYb8ostbTPVyXJDvFt26z2nXkiRmz5c87MC4qBE8ejJ
-         jePfdh9ZHqSXzGtjJLqSnW9UakV+mubCfcJbl7pdR1FTBcKd746C/IML7BD1fLhcNZZN
-         fvsFCoYLHLI1Y3bJcFdtAapboaD40j0x03kzKl/v2sMiZk8gZOD5YFGSrag2vBbHqj+L
-         LQMQ==
-X-Gm-Message-State: AOJu0YxZ7qjMTpVlPpRW0L0njA3ssrKZYh0GA902dZZhwCg4CgWPYaOd
-        Th6aFIt4Cfz9ED/JMddKSWefws4ejKz2fIArwam0BmpOB2Z3hrVE
-X-Google-Smtp-Source: AGHT+IHQVvBlxJZWR4h42kSYwIyVAS591cM2AIgFOIe+guNUGRPWcmg7i3kIDcH5igSMgzxXF28W/A4LaznWuT/aNdo=
-X-Received: by 2002:a67:b102:0:b0:452:d9d4:a056 with SMTP id
- w2-20020a67b102000000b00452d9d4a056mr5221003vsl.26.1696528044955; Thu, 05 Oct
- 2023 10:47:24 -0700 (PDT)
+        bh=D76EeSMgKi6+9rAoLhvu8+kB+2vM8hIpa0TeocCPFcs=;
+        b=a42KWxiTbHpb9zPRE+XCc1zE8rAY/z0ZKDRhdidRUklMn9dUs73MddoDhfdhZtIAYN
+         xLZm6zNFttqYrMitzMuD5U31D8a1RSe60ofUzApuwq2BIjCZmJtHKg1dZr7VoT41Xerx
+         n3/n/Dk8irh5npoEeNBlXQ8e2X4eBP7jf8wK9tPubjfi7FcoFKVJkG/brLo5rdXb4Qcy
+         kuIan/CiBiQ+V7RgTqNMdoz/2tnq79XXctPb+hZ6CGDQNBjzhxwhf57dTvqqxT9JZcwT
+         Jjqp3No8zbpfUdoNN2ZVrx0KVAol/KVNtifu1bj1uy/X5goy5faNb7ur2JHCZTVyL0Hp
+         v1uw==
+X-Gm-Message-State: AOJu0YxnfzW4sR6LPFanBgHrIaY7+I47+qHzcoVY8rAnNa2LWixm/6Ch
+        8lEjXUMMFArUSBFCClfLL7pb6g0IA2jx/tixoAeKDw==
+X-Google-Smtp-Source: AGHT+IGqd7cRywJrqAx7tLdWplGQ/cpV/JZJxibRe7Uc/F7Xm33Lo6i42WYHIC4HVau1Ml+H0YEATejuGsARVRTWRu0=
+X-Received: by 2002:a05:6122:ca8:b0:49d:120c:3c2a with SMTP id
+ ba40-20020a0561220ca800b0049d120c3c2amr5902899vkb.11.1696528459613; Thu, 05
+ Oct 2023 10:54:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231005-b4-rust-release-0_2_0-v1-1-0fab05c09962@linaro.org>
-In-Reply-To: <20231005-b4-rust-release-0_2_0-v1-1-0fab05c09962@linaro.org>
+References: <20231001-vf610-gpio-v5-0-8d873a8f224a@nxp.com>
+In-Reply-To: <20231001-vf610-gpio-v5-0-8d873a8f224a@nxp.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Oct 2023 19:47:13 +0200
-Message-ID: <CAMRc=MeTHSwyTPcjm1kttCjr4GrknqM2pqfWZ8ngFWWxC8YxeQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: rust: libgpiod: release 0.2.0
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>
+Date:   Thu, 5 Oct 2023 19:54:08 +0200
+Message-ID: <CAMRc=MeNmEuXNgyw9eWCBoVLyo59UTB+45rMUY1uUk+0K_bYUw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] gpio: update i.MX93/8ULP and support i.MX95
+To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peng Fan <peng.fan@nxp.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 5, 2023 at 9:42=E2=80=AFAM Erik Schilling <erik.schilling@linar=
-o.org> wrote:
+On Sun, Oct 1, 2023 at 10:23=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
+m> wrote:
 >
-> Since we had some (potentially-)breaking changes, we bump the major for
-> the next release of the crate.
+> From hardware perspective:
+> - i.MX8ULP/93 GPIO supports two interrupts, 1st for Trustzone non-secure =
+irq,
+>   2nd for Trustzone secure irq.
+> - i.MX8ULP/93 only has one register base
 >
-> Note:
-> I am using the term "major" as defined in the Rust SemVer compatibility
-> guide [1], where the first non-zero digit is considered as "major".
+> The current linux gpio-vf610.c could work with i.MX8ULP/i.MX93, it is
+> because some trick did in device tree node with offset added to base:
+>   reg =3D <0x2d010080 0x1000>, <0x2d010040 0x40>;
+> But actually the register base should be 0x2d010000.
 >
-
-This makes no sense to me in terms of logical versioning but I trust
-you guys know what you're doing.
-
-Applied.
-
-Bart
-
-> [1] https://doc.rust-lang.org/cargo/reference/semver.html
+> So i.MX8ULP/93 is not HW compatible with i.MX7ULP.
 >
-> Changelog:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> i.MX93 GPIO is directly derived from i.MX8ULP, so make i.MX93 compatible
+> with i.MX8ULP. i.MX95 GPIO is same as i.MX93, so also compatible with
+> i.MX8ULP
 >
-> (potentially-)breaking changes:
->   a29f3e6 (bindings: rust: rename {event,settings}_clone to try_clone, 20=
-23-10-04)
->   b290348 (bindings: rust: fix soundness of line_info modeling, 2023-10-0=
-3)
->   d04639d (bindings: rust: bump MSRV to 1.60, 2023-06-16)
+> There maybe dtbs_check failure if only test the 1st patch. After
+> the patchset applied, no failure.
 >
-> new functionality:
->   808d15e (bindings: rust: allow cloning line::InfoRef -> line::Info, 202=
-3-10-03)
->   64aac85 (bindings: rust: mark all owning types as `Send`, 2023-09-28)
->   d12ce74 (bindings: rust: provide LineRequest::chip_name(), 2023-07-20)
->   53226d5 (bindings: rust: examples: add dedicated examples, 2023-06-14)
->
-> other changes:
->   0a570b6 (bindings: rust: drop unneeded Arc within Chip, 2023-09-27)
->   a97fe96 (bindings: rust: construct chip infos by reference, 2023-09-27)
->   27afa47 (bindings: rust: remove useless clone, 2023-09-28)
->   3f6e0bf (bindings: rust: add README.md for libgpiod crate, 2023-07-03)
->   4b8357b (bindings: rust: clippy: silence false-positive on iterator, 20=
-23-06-30)
->   39189f0 (bindings: rust: clippy: drop unneeded conversions, 2023-06-30)
->   46115fd (bindings: rust: clippy: silence false-positives on casts, 2023=
--06-30)
->   901104e (bindings: rust: clippy: drop unnecessary casts, 2023-06-30)
->   46ecbe0 (rust: examples: file comment consistency, 2023-06-24)
->   aaed0f2 (bindings: rust: examples: replace tools examples with use case=
- examples, 2023-06-23)
->   b37bd9e (bindings: rust: examples: consistency cleanup, 2023-06-23)
->   06c8ad9 (bindings: rust: package new examples in the distro tarball, 20=
-23-06-15)
->
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> ---
-> After merging a couple of important soundness fixes and threading API
-> adjustments, I suggest doing a new release for the Rust bindings.
->
-> Once this is merged, I will publish the tree of this commit to
-> https://crates.io/crates/libgpiod/.
-> ---
->  bindings/rust/libgpiod/Cargo.toml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/C=
-argo.toml
-> index 518e5e5..3be4aa0 100644
-> --- a/bindings/rust/libgpiod/Cargo.toml
-> +++ b/bindings/rust/libgpiod/Cargo.toml
-> @@ -4,7 +4,7 @@
->
->  [package]
->  name =3D "libgpiod"
-> -version =3D "0.1.0"
-> +version =3D "0.2.0"
->  authors =3D ["Viresh Kumar <viresh.kumar@linaro.org>"]
->  description =3D "libgpiod wrappers"
->  repository =3D "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.gi=
-t"
+> To make avoid break old bindings from work, update the driver
+> to support both old/new bindings.
 >
 > ---
-> base-commit: a29f3e6957914dc564c723a8fc405cd99e407fd2
-> change-id: 20231005-b4-rust-release-0_2_0-1344e6af7cc2
+> Changes in v5:
+> - Add R-b for patch 1, 2
+> - Simplify code a bit more in patch 4 pPer Marco's comments
+> - Update patch 5 to only drop port->sdata check, since patch 4 is changed=
+.
+> - Link to v4: https://lore.kernel.org/r/20230926-vf610-gpio-v4-0-b57b7f6e=
+8368@nxp.com
+>
+> Changes in v4:
+>  Change to minItems for allOf: else: interrupts
+>  Update commit log for patch 4/6
+>  Follow Marco's comments for patch 4/6
+>  Add a new patch 5/6 Per Marco's comments.
+>
+> Changes in v3:
+> Update patch v2 2/6
+> Update commit log in patch v2 5/6
+> Add A-b from DT maintainer for patch v2 1/6, 3/6
+> - Link to v2: https://lore.kernel.org/r/20230916-vf610-gpio-v2-0-40823da7=
+88d7@nxp.com
+>
+> Changes in v2:
+> - Update bindings with describe items, add one reg base for i.MX8ULP/93
+> - Update driver to support one reg base, support both new/old bindings
+> - Add a new patch 1 to update gpio-ranges found in dtbs_check
+> - Link to v1: https://lore.kernel.org/r/20230914-vf610-gpio-v1-0-3ed41818=
+2a6a@nxp.com
+>
+> ---
+> Peng Fan (7):
+>       dt-bindings: gpio: vf610: update gpio-ranges
+>       dt-bindings: gpio: vf610: correct i.MX8ULP and i.MX93
+>       dt-bindings: gpio: vf610: add i.MX95 compatible
+>       gpio: vf610: add i.MX8ULP of_device_id entry
+>       gpio: vf610: simplify code by dropping data check
+>       arm64: dts: imx8ulp: update gpio node
+>       arm64: dts: imx93: update gpio node
+>
+>  .../devicetree/bindings/gpio/gpio-vf610.yaml       | 40 +++++++++++++---
+>  arch/arm64/boot/dts/freescale/imx8ulp.dtsi         | 21 +++++----
+>  arch/arm64/boot/dts/freescale/imx93.dtsi           | 28 +++++++-----
+>  drivers/gpio/gpio-vf610.c                          | 53 ++++++++++++++++=
+++----
+>  4 files changed, 105 insertions(+), 37 deletions(-)
+> ---
+> base-commit: e143016b56ecb0fcda5bb6026b0a25fe55274f56
+> change-id: 20230914-vf610-gpio-46edacd2b513
 >
 > Best regards,
 > --
-> Erik Schilling <erik.schilling@linaro.org>
+> Peng Fan <peng.fan@nxp.com>
 >
+
+This looks good enough. I applied patches 1-5. If you could send a
+follow-up with a comment clarification for patch 4/5, that would be
+great.
+
+Thanks,
+Bart
