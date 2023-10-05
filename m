@@ -2,96 +2,234 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AF827BA39D
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 17:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 026D37BA0B0
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Oct 2023 16:41:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237923AbjJEP6E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Oct 2023 11:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50920 "EHLO
+        id S235556AbjJEOiY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Oct 2023 10:38:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234805AbjJEP46 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 11:56:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCA8662C;
-        Thu,  5 Oct 2023 07:04:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696514686; x=1728050686;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=v3qwi4Il0uHXyU4Gb6XPvF3wdo1K10RCU84IBPX9PAY=;
-  b=FLhOYnH7C3pauGeZRfVHa7cH9JXHSYA+mnwV09U1YsqRuEzBjG2ZsYUu
-   locsd1v8C+Duf6bpjkMQssfsrqiaMB7aIXS3CNu2TFhxaPNuX3kYv9Cwe
-   NCtltdvrjA4aM7GzGeOKwj7RYh0W8IzCZNj0PhiAGVhrBfi2npa70TpMF
-   kuvY3L2ymRQ2zFYO2h7MGQ5CqG+rYojbO24Pf3VxstMCq8GRRZSe6yqwW
-   8/e+9AaH+tJwszDcPuLJUdlfooe2SwVooJSZwg+vRkImo4ijyq5IpZlF1
-   BiYur3qCFJbi6NaOdzZcQ6LR7ABxgF2TsqgXQ2wAwV7xsMNbLqp/SqAji
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="386336355"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="386336355"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:59:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="1083047490"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="1083047490"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Oct 2023 06:59:42 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A1E02345; Thu,  5 Oct 2023 16:59:40 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v1 1/1] pinctrl: broxton: Replace MODULE_ALIAS() with MODULE_DEVICE_TABLE()
-Date:   Thu,  5 Oct 2023 16:39:49 +0300
-Message-Id: <20231005133949.3613943-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+        with ESMTP id S235656AbjJEOfx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Oct 2023 10:35:53 -0400
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA8B6171C
+        for <linux-gpio@vger.kernel.org>; Thu,  5 Oct 2023 06:48:43 -0700 (PDT)
+Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-79df12ff0f0so404842241.3
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Oct 2023 06:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696513722; x=1697118522; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gHY/ZQQzp7Eh1tubbFWWOn2NxVKU0m/orXkn9/Odof0=;
+        b=c1xWPf3/mvf8/i/TrzUZOuGMDYM91CxU4gozBvzeOu2ANTQu3NigwJHRxAYRlObQqp
+         mGf1s0ZoZDZNFUmlPKqBXHnqYT7LXulZN9+sfdJJmqJCFjEgs92Vk0yBa3G/q8oMJ+QZ
+         Zb9QHMuDZbGpMOJo6qUE14TZZBs7zp8GACSN4MIQ877omaJeiqg49MfpeuVURa5DIQUW
+         hH6U04Vo1CtUk7GClCSandDXKRDybCuxZFCy9bdFwGUHJ4UA8Yjqn71+CRQadgPARLBf
+         +1wfv4PZ3iKh2/U6NgKpv95dm+FfiACztMxZUqS0ZZtENf16EiKUaqeRGxGMO2p+1EHd
+         dc8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696513722; x=1697118522;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gHY/ZQQzp7Eh1tubbFWWOn2NxVKU0m/orXkn9/Odof0=;
+        b=DxGJ1wSDqopgeOvot6/KALDC5ZO789lt0e7kO9x/yhduGGtN8In79Lfts4wZuRfl6i
+         lj/iu8jc0OICL0mtPhd9dqbjaNGBlMYkAPtyyq6/CS4WpgAaqICIvmzA66R6JqXc8gpr
+         8DqjyUs7YV0dmrbbutQgXXBmhXX+Zd2AZYdPdb7m+cufh5pPVlUsoKz4mVThSj/V8xGi
+         wVYm+eJMIyHxKQ0+govUQrMJd72tPtcBcAE6kVbZCOUIOUfRaJDncHxPCoMmg74amWGw
+         tzNDj2xMaMm3DCPg2bgXg7CPZzAtGtEoAyZdzDOQZRd7UTCMKjzRICNcecJqpDqU3hnd
+         pHmA==
+X-Gm-Message-State: AOJu0YyRaIKn4oOFNaSeVBTInevxw1MpjHcX7vPkKCEOKOyr246v1GE6
+        V2PGFEwDXTBsEw6UrUnuoKzluiscAlJsQQRzCCbzhA==
+X-Google-Smtp-Source: AGHT+IEs24zy6ibJecOnCN0EfrO6wFAW3J5eW9qxeqqcBUsb4ootHwEPnzV2453v5/6B/ux1FD3fv13iIIuy1J493K0=
+X-Received: by 2002:a1f:e2c3:0:b0:49c:37a1:2358 with SMTP id
+ z186-20020a1fe2c3000000b0049c37a12358mr4560513vkg.14.1696513722632; Thu, 05
+ Oct 2023 06:48:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230905185309.131295-1-brgl@bgdev.pl> <20230905185309.131295-15-brgl@bgdev.pl>
+ <CACRpkda9=VULj4Cy_sit-UpUQnVEbS-RJKAeULVCw8ZCRTq1sw@mail.gmail.com>
+ <CAMRc=MdTk1B4MEh9C624Upm_EcaQgJd9OU-AGfU0G-DU1+qk6A@mail.gmail.com>
+ <36b17290-c643-8d8e-e82b-49afa6b34fbb@nvidia.com> <3624e973-d09a-d211-c6d0-d0ffb8c20c4b@nvidia.com>
+ <90b5f887-8af4-a80d-ea4d-cf2199752de4@nvidia.com> <0e7cae42-0b81-c038-8beb-49102feea8a6@nvidia.com>
+In-Reply-To: <0e7cae42-0b81-c038-8beb-49102feea8a6@nvidia.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 5 Oct 2023 15:48:31 +0200
+Message-ID: <CAMRc=McSG6qajxt6P3vWQEeT63Pk5tggD05pUoMD1zd5ApZxgA@mail.gmail.com>
+Subject: Re: [RFT PATCH 14/21] hte: tegra194: don't access struct gpio_chip
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,T_SPF_TEMPERROR
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-As Krzysztof pointed out the better is to use MODULE_DEVICE_TABLE()
-as it will be consistent with the content of the real ID table of
-the platform devices.
+On Thu, Oct 5, 2023 at 1:52=E2=80=AFAM Dipen Patel <dipenp@nvidia.com> wrot=
+e:
+>
+> On 10/4/23 3:54 PM, Dipen Patel wrote:
+> > On 10/4/23 1:33 PM, Dipen Patel wrote:
+> >> On 10/4/23 1:30 PM, Dipen Patel wrote:
+> >>> On 10/4/23 5:00 AM, Bartosz Golaszewski wrote:
+> >>>> On Thu, Sep 7, 2023 at 9:28=E2=80=AFAM Linus Walleij <linus.walleij@=
+linaro.org> wrote:
+> >>>>>
+> >>>>> On Tue, Sep 5, 2023 at 8:53=E2=80=AFPM Bartosz Golaszewski <brgl@bg=
+dev.pl> wrote:
+> >>>>>
+> >>>>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>>>>
+> >>>>>> Using struct gpio_chip is not safe as it will disappear if the
+> >>>>>> underlying driver is unbound for any reason. Switch to using refer=
+ence
+> >>>>>> counted struct gpio_device and its dedicated accessors.
+> >>>>>>
+> >>>>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org=
+>
+> >>>>>
+> >>>>> As Andy points out add <linux/cleanup.h>, with that fixed:
+> >>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >>>>>
+> >>>>> I think this can be merged into the gpio tree after leaving some
+> >>>>> slack for the HTE maintainer to look at it, things look so much
+> >>>>> better after this.
+> >>>>>
+> >>>>> Yours,
+> >>>>> Linus Walleij
+> >>>>
+> >>>> Dipen,
+> >>>>
+> >>>> if you could give this patch a test and possibly ack it for me to ta=
+ke
+> >>>> it through the GPIO tree (or go the immutable tag from HTE route) th=
+en
+> >>>> it would be great. This is the last user of gpiochip_find() treewide=
+,
+> >>>> so with it we could remove it entirely for v6.7.
+> >>>
+> >>> Progress so far for the RFT...
+> >>>
+> >>> I tried applying the patch series on 6.6-rc1 and it did not apply cle=
+anly,
+> >>> some patches I needed to manually apply and correct. With all this, i=
+t failed
+> >>> compilation at some spi/spi-bcm2835 driver. I disabled that and was a=
+ble to
+> >>> compile. I thought I should let you know this part.
+> >>>
+> >>> Now, I tried to test the hte and it seems to fail finding the gpio de=
+vice,
+> >>> roughly around this place [1]. I thought it would be your patch serie=
+s so
+> >>> tried to just use 6.6rc1 without your patches and it still failed at =
+the
+> >>> same place. I have to trace back now from which kernel version it bro=
+ke.
+> >>
+> >> [1].
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/pateldipen1984/linux.g=
+it/tree/drivers/hte/hte-tegra194.c?h=3Dfor-next#n781
+> >>
+> >> of course with your patches it would fail for the gdev instead of the =
+chip.
+> >
+> > Small update:
+> >
+> > I put some debugging prints in the gpio match function in the hte-tegra=
+194.c as
+> > below:
+> >
+> > static int tegra_gpiochip_match(struct gpio_chip *chip, void *data)
+> >  {
+> > +       struct device_node *node =3D data;
+> > +       struct fwnode_handle *fw =3D of_node_to_fwnode(data);
+> > +       if (!fw || !chip->fwnode)
+> > +               pr_err("dipen patel: fw is null\n");
+> >
+> > -       pr_err("%s:%d\n", __func__, __LINE__);
+> > +       pr_err("dipen patel, %s:%d: %s, %s, %s, match?:%d, fwnode name:=
+%s\n",
+> > __func__, __LINE__, chip->label, node->name, node->full_name, (chip->fw=
+node =3D=3D
+> > fw), fw->dev->init_name);
+> >         return chip->fwnode =3D=3D of_node_to_fwnode(data);
+> >  }
+> >
+> > The output of the printfs looks like below:
+> > [    3.955194] dipen patel: fw is null -----> this message started appe=
+aring
+> > when I added !chip->fwnode test in the if condition line.
+> >
+> > [    3.958864] dipen patel, tegra_gpiochip_match:689: tegra234-gpio, gp=
+io,
+> > gpio@c2f0000, match?:0, fwnode name:(null)
+> >
+> > I conclude that chip->fwnode is empty. Any idea in which conditions tha=
+t node
+> > would be empty?
+>
+> sorry for spamming, one last message before I sign off for the day....
+>
+> Seems, adding below in the tegra gpio driver resolved the issue I am faci=
+ng, I
+> was able to verify your patch series.
+>
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index d87dd06db40d..a56c159d7136 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -989,6 +989,8 @@ static int tegra186_gpio_probe(struct platform_device=
+ *pdev)
+>                 offset +=3D port->pins;
+>         }
+>
+> +       gpio->gpio.fwnode =3D of_node_to_fwnode(pdev->dev.of_node);
+> +
+>         return devm_gpiochip_add_data(&pdev->dev, &gpio->gpio, gpio);
+>  }
+>
+> Now, few follow up questions:
+> 1) is this the correct way of setting the chip fwnode in the gpio driver?
 
-Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-broxton.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+You shouldn't need this. This driver already does:
 
-diff --git a/drivers/pinctrl/intel/pinctrl-broxton.c b/drivers/pinctrl/intel/pinctrl-broxton.c
-index 4d5ddb297909..3118c7c8842f 100644
---- a/drivers/pinctrl/intel/pinctrl-broxton.c
-+++ b/drivers/pinctrl/intel/pinctrl-broxton.c
-@@ -998,6 +998,7 @@ static const struct platform_device_id bxt_pinctrl_platform_ids[] = {
- 	{ "broxton-pinctrl", (kernel_ulong_t)bxt_pinctrl_soc_data },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(platform, bxt_pinctrl_platform_ids);
- 
- static INTEL_PINCTRL_PM_OPS(bxt_pinctrl_pm_ops);
- 
-@@ -1026,6 +1027,4 @@ module_exit(bxt_pinctrl_exit);
- MODULE_AUTHOR("Mika Westerberg <mika.westerberg@linux.intel.com>");
- MODULE_DESCRIPTION("Intel Broxton SoC pinctrl/GPIO driver");
- MODULE_LICENSE("GPL v2");
--MODULE_ALIAS("platform:apollolake-pinctrl");
--MODULE_ALIAS("platform:broxton-pinctrl");
- MODULE_IMPORT_NS(PINCTRL_INTEL);
--- 
-2.40.0.1.gaa8946217a0b
+    gpio->gpio.parent =3D &pdev->dev;
 
+so fwnode should be assigned in gpiochip_add_data_with_key(). Can you
+check why this doesn't happen?
+
+Bart
+
+> 2) Or should I use something else in hte matching function instead of fwn=
+ode so
+> to avoid adding above line in the gpio driver?
+>
+> >
+> >>>
+> >>>>
+> >>>> Bart
+> >>>
+> >>
+> >
+>
