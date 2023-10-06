@@ -2,161 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8FE97BB37D
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 10:49:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B62EE7BB426
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 11:26:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231228AbjJFIta (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 04:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51108 "EHLO
+        id S231137AbjJFJ0A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 05:26:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbjJFIt3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 04:49:29 -0400
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E142B83;
-        Fri,  6 Oct 2023 01:49:27 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 553463200B27;
-        Fri,  6 Oct 2023 04:49:22 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 06 Oct 2023 04:49:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1696582161; x=1696668561; bh=fq
-        7jUTQDYY98nWZgnWeYl6Cagk6XWBLFE67pLot1gWo=; b=kBZzKMgJZsyJhJ4jkw
-        jQU20dAsOX6gV5+9PEwOC6EDKw7Yrab03w7x2jeKDOi5U8sb/zmQ8Do9RTmngNC8
-        yW1XTJd1bUm/rTmNlB9F9TExc3icsyP1glN07DJTwfqW+FzA7E339NrTeU5sRc/L
-        n3VnfG7n+yfSNcSvAHPhilUJEguUWvbqXhCccmjZaMBvxEY4yFK+ZSL9Gp0LtFha
-        cZ0A9UoKYcf32ekNsano2pLPsmc54RzW/g3tPBuRro7L3uPt90fH3hIN8BzDhNze
-        p9rH9D8bX843QRBOTm7lQAd41lszXDeeJikGphg72AEiyROyBJHPvmCE3IgtC1B8
-        I8xw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1696582161; x=1696668561; bh=fq7jUTQDYY98n
-        WZgnWeYl6Cagk6XWBLFE67pLot1gWo=; b=Z9wduYnbaSjO4hO9z4ThmB4lkJ+ww
-        qv48JvZetC68Oy7Cwu1FZTuWCiNrKWgPVlC3WfLZq9CQAtRwtR+Hgmm5hm7ogHvR
-        g0HhACHoO4MLD7fxHHWj2C3pZU6RASeeLf/9XyNP46PxJ9+Wl/0D6WC9DBYJNVUx
-        mtNhY7IAXC9PqRSim+iZ7rzPLHV0BIft9I6alaUUj3XxUqUv5l7FauuYS80Rf78F
-        T7iw5HeL/xcklmoBHAfAZMLxvFOyUulgeZzpl67xGf0yowfKAw8nWtTXzHAQ8HCE
-        psBkN+QRkt9PJmeDlBFt3h9VAeNTcJJeZFH8l8liepztop+DKATVvf2XQ==
-X-ME-Sender: <xms:EMofZT2i-9GISWVnjxgMhlfr_K0J1DDCikeZffdfaxxvS-c9ZvWmTA>
-    <xme:EMofZSH-GDrTlbKrOc09JAu6xzst-K08JW-bRaweoc7LuQJp4GgEj665KOBjFQo1J
-    Ga257VUxycRUUCsOyk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrgeeigddtjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:EMofZT4ywgzN7LkzmXzXPySCJeAKjukN8v43qGhqwxizLsQRUilCXg>
-    <xmx:EMofZY2E3kF4qLgYpdHd4RbTBZENJnE3pcBjp3j1fIuAPC4cUrEcNA>
-    <xmx:EMofZWHiFKv5E0Dvozm7fdb71mAiOQ7Sue59rxI-niu4_MbVJRdtNw>
-    <xmx:EcofZZYKcoYBWJfaMLlaG0rL0xmTDuYDJQLE8dL3BH9l1IWy6uP6mQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id ABDB6B60089; Fri,  6 Oct 2023 04:49:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-958-g1b1b911df8-fm-20230927.002-g1b1b911d
+        with ESMTP id S230484AbjJFJZ6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 05:25:58 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD9295
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 02:25:57 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-69101d33315so1649064b3a.3
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 02:25:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696584357; x=1697189157; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rnbDxSizoKEmB+u9ZYYFCwCCdB+OuSQcG9GC/oqdNyI=;
+        b=nt3Drt5A1xHUP/EQkRUbcNSNQEvS/YFE2NiDE/M8vzFhJtmNjZak0z6G+OaVwUBmfE
+         3/eKVf1rPibi7WbEu0oJrHwLPKv/an+iazWRI2wIvqTMhT+LyR+3hq1QrCwnDCEynBdS
+         St0G+yEpeTUQDuLEXRqgP/39UiJ/diNKac+TEH0RdYui7Hz2b2On2d63qIlwu00MoZyI
+         feRxjTTtzXxlSiJIQaoi7dU+hVPgZwbRiDdAzSuNGmCuxzwlh9FhjOA2MrhjsCLbLeBX
+         gr2atw/Hsfxix/uCaMjqd94IOXfvTdJ4nPQtvittOmLHHmvhGSA/TFaeFwveTT2p3yvW
+         sy3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696584357; x=1697189157;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rnbDxSizoKEmB+u9ZYYFCwCCdB+OuSQcG9GC/oqdNyI=;
+        b=WNgwl8IVPwyptNLVYGucyHC1WSoJLE3Te0EpApQNIPGyAAloV12TjgtbgQSd87rGsa
+         05SoHW+yNBXXWoCLDyvoH3j2lFYBH1sFlbgCCrzBfbs35nubz9Oua69yWZAAPWw3HfWn
+         AL3RHTP1z9ypR0XSrNIoZU5OO0V9fifMGBEPBXSidEebjS7UQ3IgriCboEUVKZPIBaxN
+         IQ4mSYWGmXx+ceS2vwmfvZRKrPxlB5F4pAPh6QuEGNsof7Mxlq8wPyVBz9Uf/R638cM2
+         +oKSm//eyHUWxcsPDtmANic0BE39v+iCdZkBaFlRvCTRSOumaRZzgHxfMP7xeUUrXzXs
+         SKDg==
+X-Gm-Message-State: AOJu0YzCDBMx7uiFkYuHmmtPs5pM6rrOQ0z49g3n01Q8EfxgrN4k0tKU
+        FFYUutEx2lmWXxddJHpWbFC0tA==
+X-Google-Smtp-Source: AGHT+IHGyydmc31NlWcvqmTfKZWxPGu9RxZhO2gghpF4mjtL3jwtJ7smA0HWOOujsAxBD0DFPIQ87g==
+X-Received: by 2002:a05:6a00:2489:b0:690:1720:aa92 with SMTP id c9-20020a056a00248900b006901720aa92mr7992480pfv.10.1696584356667;
+        Fri, 06 Oct 2023 02:25:56 -0700 (PDT)
+Received: from localhost ([122.172.81.92])
+        by smtp.gmail.com with ESMTPSA id e19-20020aa78c53000000b00666e649ca46sm994270pfd.101.2023.10.06.02.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 02:25:55 -0700 (PDT)
+Date:   Fri, 6 Oct 2023 14:55:53 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linux-GPIO <linux-gpio@vger.kernel.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>
+Subject: Re: [libgpiod][PATCH 1/2] bindings: rust: feature gate unreleased
+ features
+Message-ID: <20231006092553.cgfcziugrngvibud@vireshk-i7>
+References: <20231006-b4-bindings-old-version-fix-v1-0-a65f431afb97@linaro.org>
+ <20231006-b4-bindings-old-version-fix-v1-1-a65f431afb97@linaro.org>
 MIME-Version: 1.0
-Message-Id: <e8b23683-36ac-4547-9386-935a1b211d7d@app.fastmail.com>
-In-Reply-To: <44816879-a3a7-4bd0-bb20-19a645107b4b@linaro.org>
-References: <20231005155618.700312-1-peter.griffin@linaro.org>
- <20231005155618.700312-19-peter.griffin@linaro.org>
- <ZR75cIvnQS2cqTT3@google.com> <2023100520-cleaver-sinless-fbae@gregkh>
- <99419159-cab0-4c79-a4a0-12229bfad3c0@linaro.org>
- <2023100513-mashing-scrubber-ea59@gregkh>
- <efc9f099-9c97-460b-b0c8-9891aa3b772a@linaro.org>
- <ZR9EnFw3vB92vlYM@google.com>
- <44816879-a3a7-4bd0-bb20-19a645107b4b@linaro.org>
-Date:   Fri, 06 Oct 2023 10:48:58 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
-        "William McVicker" <willmcvicker@google.com>
-Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Peter Griffin" <peter.griffin@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        "Conor Dooley" <conor+dt@kernel.org>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        "Tomasz Figa" <tomasz.figa@gmail.com>,
-        "Sylwester Nawrocki" <s.nawrocki@samsung.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Wim Van Sebroeck" <wim@linux-watchdog.org>,
-        "Guenter Roeck" <linux@roeck-us.net>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>, "Olof Johansson" <olof@lixom.net>,
-        "Chanwoo Choi" <cw00.choi@samsung.com>,
-        "Tudor Ambarus" <tudor.ambarus@linaro.org>,
-        andre.draszik@linaro.org, semen.protsenko@linaro.org,
-        soc@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH 18/21] arm64: dts: google: Add initial Google gs101 SoC support
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231006-b4-bindings-old-version-fix-v1-1-a65f431afb97@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 6, 2023, at 08:06, Krzysztof Kozlowski wrote:
-> On 06/10/2023 01:19, William McVicker wrote:
->> On 10/05/2023, Krzysztof Kozlowski wrote:
->>> On 05/10/2023 21:23, Greg KH wrote:
->>
->> Being able to include SERIAL_SAMSUNG and SERIAL_MSM without all the vendor> specific drivers that ARCH_EXYNOS and ARCH_QCOM select is very
-> valuable for
->> debugging early boot issues.
->
-> Really? How related? The drivers are independent. You describe some
-> out-of-tree development process which we never needed for upstream work.
-> And we did here quite a lot of upstream, specially if you look at ARCH_QCOM.
+On 06-10-23, 09:24, Erik Schilling wrote:
+> `gpiod_line_request_get_chip_name()` is not released yet. Still, libgpiod-sys
+> will just happily generate bindings for it if it sees the definition in the
+> header file.
+> 
+> This guards the unreleased features behind an optional feature `vnext`.
+> 
+> To sketch the process of what happens once these features get into an
+> assumed "2.1" release:
+> 
+> libgpiod-sys will get updated with a `v2_1` feature. That feature would
+> then raise the minimum version that is attempted to query from pkg-
+> config. An identical feature will then be introduced on the `libgpiod`
+> crate and `vnext` guards will be changed to `v2_1` guards. The `vnext`
+> feature will then be updated to require the new `v2_1` feature.
+> 
+> Eventually, we will probably raise the minimum supported version for the
+> rust bindings and drop all the version gates before that.
+> 
+> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+> ---
+>  bindings/rust/libgpiod/Cargo.toml            |  3 +++
+>  bindings/rust/libgpiod/Makefile.am           |  2 +-
+>  bindings/rust/libgpiod/README.md             | 13 +++++++++++++
+>  bindings/rust/libgpiod/src/line_request.rs   |  2 ++
+>  bindings/rust/libgpiod/tests/line_request.rs |  1 +
+>  5 files changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/Cargo.toml
+> index 3be4aa0..3fd1d74 100644
+> --- a/bindings/rust/libgpiod/Cargo.toml
+> +++ b/bindings/rust/libgpiod/Cargo.toml
+> @@ -18,6 +18,9 @@ exclude = [
+>      "Makefile.am",
+>  ]
+>  
+> +[features]
+> +vnext = []
+> +
+>  [dependencies]
+>  errno = "0.2.8"
+>  intmap = "2.0.0"
+> diff --git a/bindings/rust/libgpiod/Makefile.am b/bindings/rust/libgpiod/Makefile.am
+> index 92edbfc..619e36c 100644
+> --- a/bindings/rust/libgpiod/Makefile.am
+> +++ b/bindings/rust/libgpiod/Makefile.am
+> @@ -8,7 +8,7 @@ command = SYSTEM_DEPS_LIBGPIOD_NO_PKG_CONFIG=1 \
+>  		SYSTEM_DEPS_LIBGPIOD_SEARCH_NATIVE="${PWD}/../../../lib/.libs/" \
+>  		SYSTEM_DEPS_LIBGPIOD_LIB=gpiod \
+>  		SYSTEM_DEPS_LIBGPIOD_INCLUDE="${PWD}/../../../include/"  \
+> -		cargo build --release --lib
+> +		cargo build --features=vnext --release --lib
+>  
+>  if WITH_TESTS
+>  command += --tests
+> diff --git a/bindings/rust/libgpiod/README.md b/bindings/rust/libgpiod/README.md
+> index 8d514e7..c86b06e 100644
+> --- a/bindings/rust/libgpiod/README.md
+> +++ b/bindings/rust/libgpiod/README.md
+> @@ -17,6 +17,19 @@ By default, `libgpiod-sys` builds against the libgpiod version identified via
+>  `pkg-config`. See the `README.md` of `libgpiod-sys` for options to override
+>  that.
+>  
+> +Currently at least libgpiod 2.0 is required with the default feature set.
+> +
+> +## Features
+> +
+> +The Rust bindings will usually be built against whatever libgpiod version a
+> +system provides. Hence, only the functionality of the oldest supported libgpiod
+> +C library will be exposed by default.
+> +
+> +Setting flags allows to increase the base version and export features of newer
+> +versions:
+> +
+> +- `vnext`: The upcoming, still unreleased version of the C lib
+> +
+>  ## License
+>  
+>  This project is licensed under either of
+> diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
+> index 64ef05d..a7fe6d0 100644
+> --- a/bindings/rust/libgpiod/src/line_request.rs
+> +++ b/bindings/rust/libgpiod/src/line_request.rs
+> @@ -2,6 +2,7 @@
+>  // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+>  // SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+>  
+> +#[cfg(feature = "vnext")]
+>  use std::ffi::CStr;
+>  use std::os::unix::prelude::AsRawFd;
+>  use std::time::Duration;
+> @@ -31,6 +32,7 @@ impl Request {
+>      }
+>  
+>      /// Get the name of the chip this request was made on.
+> +    #[cfg(feature = "vnext")]
+>      pub fn chip_name(&self) -> Result<&str> {
+>          // SAFETY: The `gpiod_line_request` is guaranteed to be live as long
+>          // as `&self`
+> diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/rust/libgpiod/tests/line_request.rs
+> index e0ae200..a936a1b 100644
+> --- a/bindings/rust/libgpiod/tests/line_request.rs
+> +++ b/bindings/rust/libgpiod/tests/line_request.rs
+> @@ -60,6 +60,7 @@ mod line_request {
+>          use super::*;
+>  
+>          #[test]
+> +        #[cfg(feature = "vnext")]
+>          fn chip_name() {
+>              const GPIO: Offset = 2;
+>              let mut config = TestConfig::new(NGPIO).unwrap();
 
-Right: in general, all drivers are independent of the platform
-besides the typical 'depends on ARCH_FOO || COMPILE_TEST' dependency,
-but I think it's worth mentioning the known exceptions, so Greg and
-Will can take that fight to the respective places rather than
-discussing it in the platform submission:
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-- Some subsystems are considered 'special' and the maintainers
-  prefer the drivers to be automatically selected based on the
-  ARCH_* settings instead of having user-visible options. This is
-  traditionally true for large chunks of drivers/irqchip,
-  drivers/clocksource and drivers/pinctrl, though it has gotten
-  better over time on all of them.
-
-- Some older 32-bit platforms are still not as modular as we'd
-  like them to be, especially the StrongARM (ARMv4) platforms that
-  require a custom kernel build, and some of ARMv4T and ARMv5
-  boards that are still missing DT support. These tend to require
-  drivers they directly link to from board code, so disabling
-  the drivers would cause a link failure until this gets
-  cleaned up.
-
-- A couple of drivers are force-enabled based on the ARCH_*
-  options because booting without these drivers would risk
-  permanent damage to hardware, e.g. in overtemp or overcurrent
-  scenarios.
-
-- ACPI based platforms require the PCI host bridge driver to
-  be built-in rather than a loadable module because ACPI
-  needs to probe PCI devices during early boot.
-
-- Some subsystems (notably drivers/gpu/, but others as well)
-  have an excessive number of 'select' statements, so you
-  end up surprise-enabling a number of additional drivers
-  and subsystems by enabling certain less important platform
-  specific drivers.
-
-      Arnd
+-- 
+viresh
