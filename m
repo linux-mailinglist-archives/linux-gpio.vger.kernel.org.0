@@ -2,97 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BFED7BB8BF
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 15:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 931D97BB8E3
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 15:18:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232357AbjJFNPG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 09:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
+        id S232172AbjJFNSt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 09:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232342AbjJFNPF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 09:15:05 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F97EA6;
-        Fri,  6 Oct 2023 06:15:04 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="383639098"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="383639098"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 06:15:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="781655164"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="781655164"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 06:15:00 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
-        (envelope-from <andy@kernel.org>)
-        id 1qokfS-00000003IrP-0WWv;
-        Fri, 06 Oct 2023 16:14:58 +0300
-Date:   Fri, 6 Oct 2023 16:14:57 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dipen Patel <dipenp@nvidia.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFC/RFT PATCH] gpiolib: reverse-assign the fwnode to struct
- gpio_chip
-Message-ID: <ZSAIUVAQ6ifi8LTL@smile.fi.intel.com>
-References: <20231006115147.18559-1-brgl@bgdev.pl>
+        with ESMTP id S232091AbjJFNSs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 09:18:48 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4619483;
+        Fri,  6 Oct 2023 06:18:47 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F85C433C7;
+        Fri,  6 Oct 2023 13:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696598326;
+        bh=t5ARPJAi2ZOUMZALtc2xCSh/huEsxLMt7Ehm+RTiBAs=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=dUL+Mg0D3X2BTRDPZgGw1VyWx9Kz+W5i+mUkXP8CH+bQZvKxeJC7wl4Q4KDjN18uP
+         ZsEaOuI7Mq/P4sho67CCeoTs85GApeQM89Jhljx4hsmChrXsWx0GGduVbsUgZsaCTC
+         JhexH+gAwpBSlLHgAD+y+Yh31/ruLPrhhtF/CftYqMs4+q4c2x1rkWBLm92a7K69qN
+         8PCBaOcV6s4YbzWNyl6pPaRTsNPb+aJhVfy+7Gz1dJNjriYHpCLAL4HpRxiYdk+EUI
+         5yjM2wjYoraeHpRZAkK4G4tS9w2EoNWTCsXtndVWCLlGiodoZlz3gIHftFKZn90sjV
+         yORXNHAEfB6Sw==
+Received: (nullmailer pid 3410056 invoked by uid 1000);
+        Fri, 06 Oct 2023 13:18:43 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231006115147.18559-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc:     robh+dt@kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, Oleksii_Moisieiev@epam.com,
+        devicetree@vger.kernel.org, sudeep.holla@arm.com,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        cristian.marussi@arm.com
+In-Reply-To: <20231005025843.508689-6-takahiro.akashi@linaro.org>
+References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
+ <20231005025843.508689-6-takahiro.akashi@linaro.org>
+Message-Id: <169659832273.3409847.15694416126257533842.robh@kernel.org>
+Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+Date:   Fri, 06 Oct 2023 08:18:43 -0500
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 06, 2023 at 01:51:47PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+On Thu, 05 Oct 2023 11:58:43 +0900, AKASHI Takahiro wrote:
+> A dt binding for pin controller based generic gpio driver is defined in
+> this commit. One usable device is Arm's SCMI.
 > 
-> struct gpio_chip is not only used to carry the information needed to
-> set-up a GPIO device but is also used in all GPIOLIB callbacks and is
-> passed to the matching functions of lookup helpers.
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+> RFC v2 (Oct 5, 2023)
+> * rename the binding to pin-control-gpio
+> * add the "description"
+> * remove nodename, hog properties, and a consumer example
+> RFC (Oct 2, 2023)
+> ---
+>  .../bindings/gpio/pin-control-gpio.yaml       | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/pin-control-gpio.yaml
 > 
-> In that last case, it is currently impossible to match a GPIO device by
-> fwnode unless it was explicitly assigned to the chip in the provider
-> code.
 
-That's expected behaviour.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> If the fwnode is taken from the parent device, the pointer in
-> struct gpio_chip will remain NULL.
+yamllint warnings/errors:
 
-> If we have a parent device but gc->fwnode was not assigned by the
-> provider, let's assign it ourselves so that lookup by fwnode can work in
-> all cases.
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/gpio/pin-control-gpio.example.dts:18.23-26.11: Warning (unit_address_vs_reg): /example-0/gpio@0: node has a unit name, but no reg or ranges property
 
-I don't think this is a good change. We paper over the real issue where
-we and callers need to understand what they are looking for.
+doc reference errors (make refcheckdocs):
 
-...
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20231005025843.508689-6-takahiro.akashi@linaro.org
 
-> This is something that Dipen reported with one of the tegra drivers where
-> a GPIO lookup by fwnode does not work because the fwnode pointer in struct
-> gpio_chip is NULL. This patch addresses this use-case.
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-I am not sure I understand the problem here. All these should have been
-addressed already, no?
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-So, the GPIOLIB should use dev_fwnode(&gdev->dev) inside it, outside it
-the GPIO drivers are free to use gc->fwnode as long as they understand
-the lifetime of the respective object.
+pip3 install dtschema --upgrade
 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
