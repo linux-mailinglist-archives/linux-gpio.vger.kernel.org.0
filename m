@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88E107BB54C
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 12:32:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 430E57BB55E
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 12:38:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231755AbjJFKcw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 06:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32962 "EHLO
+        id S231659AbjJFKiA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 06:38:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231759AbjJFKcu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 06:32:50 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B58AD;
-        Fri,  6 Oct 2023 03:32:48 -0700 (PDT)
+        with ESMTP id S229938AbjJFKh7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 06:37:59 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DD59F;
+        Fri,  6 Oct 2023 03:37:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696588368; x=1728124368;
+  t=1696588678; x=1728124678;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=9fUH6EXJbYRX6bscbdM7bdFvMC19mlqyuBFWSrlZ5AY=;
-  b=XoyMdcCIuy2axET8LAdhHdGubDlZRdru+yzog9lHfArVwGW9D5sAAAn7
-   zNJO6z3eMr4oMjWQMEhb80jwogKwjSEnzHXE53CH6HWvqtIAuKb3jz11s
-   Bnh03gUU+3b/jTMhPK9bvtaR1MKmT04fJwKf/0XXgtGb6AcwjWVrwe/7p
-   CR+3r1KmQwOucPGWAm/KmLnR385D6d7y5DSaK8oVA09WjtGYY0XL3KqbD
-   yPR3SVWSm3Vi0y4QH5/FfnQ0o9xBKnZ0xb1GVgPQzKX8YJPooT33/fV3Y
-   eR9svauC6EpPaYaFAecGR9GWC5Dku+CiRBeepE4qidXZCD2ltFy9eyxdH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="387603541"
+  bh=GrH/J2J8Ux35o9V1vvBRR3zKhEBbuN6jvk75UPYnP9w=;
+  b=KDZ9JGd96peGjYaQzboY9CR57Uckx/4okPag3z9sYc48CBtndAr10gy8
+   MehHsY/3v0ksDJwYrkV3WSmfzHPk1U7KNdp4oOz2m4XqgtWYRnYe/g+iU
+   dFHHhDC0gU9cryPvewBYTST0Pxsj2wDsj6DvRnU1eDdIuJyfPtyktMw/7
+   f4I+Nc4VmoAHc/qDFjEs40JBfMby7yUHwfWrnm3BXx1jNjnW2UFrF4SQ7
+   YcEMM40dBtVGgCpp+h9sx2qYds/ZdS6J7Azx/PTShKoe55oQFnH/GdAGy
+   WXKO5QwXSPB/6TxnfuPgGWgFb1Gfro3XMntj0EbmmmFW9emhalmneFwxR
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382592991"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="387603541"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 03:32:47 -0700
+   d="scan'208";a="382592991"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 03:37:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="875899566"
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="781616208"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="875899566"
+   d="scan'208";a="781616208"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 03:32:46 -0700
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 03:37:55 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qoi8R-00000003Gd9-3LLj;
-        Fri, 06 Oct 2023 13:32:43 +0300
-Date:   Fri, 6 Oct 2023 13:32:43 +0300
+        id 1qoiDR-00000003GgY-1Enq;
+        Fri, 06 Oct 2023 13:37:53 +0300
+Date:   Fri, 6 Oct 2023 13:37:53 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -50,7 +50,7 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Raag Jadav <raag.jadav@intel.com>
 Subject: Re: [PATCH v1 2/2] pinctrl: cherryview: Simplify code with cleanup
  helpers
-Message-ID: <ZR/iSzJP7kaf2uVe@smile.fi.intel.com>
+Message-ID: <ZR/jgbDL3CxmFrX+@smile.fi.intel.com>
 References: <20231006094033.3082468-1-andriy.shevchenko@linux.intel.com>
  <20231006094033.3082468-2-andriy.shevchenko@linux.intel.com>
  <20231006102641.GZ3208943@black.fi.intel.com>
@@ -71,20 +71,9 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Oct 06, 2023 at 01:26:41PM +0300, Mika Westerberg wrote:
 > On Fri, Oct 06, 2023 at 12:40:33PM +0300, Andy Shevchenko wrote:
 
-...
-
-> >  	if (cfg == CHV_PADCTRL0_GPIOCFG_GPO)
-> >  		return !!(ctrl0 & CHV_PADCTRL0_GPIOTXSTATE);
-> > +
-> 
-> Unrelated whitespace change.
-
-Will drop it.
-
-> Otherwise looks good,
 > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Thank you!
+Pushed to my review and testing queue, thanks!
 
 -- 
 With Best Regards,
