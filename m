@@ -2,96 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F3C87BB203
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 09:12:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0611A7BB218
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 09:24:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230271AbjJFHMD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 03:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
+        id S230265AbjJFHYg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 03:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230269AbjJFHMC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 03:12:02 -0400
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808F4ED
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 00:12:00 -0700 (PDT)
-Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-493542a25dfso664319e0c.0
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 00:12:00 -0700 (PDT)
+        with ESMTP id S230175AbjJFHYf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 03:24:35 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08B1E4
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 00:24:31 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-9b95622c620so337267466b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 00:24:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696576319; x=1697181119; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iHzPDIF0nHvJ4MjZXtd+1YcUGWWggbQugVNz0aoRvm4=;
-        b=uoti3CP1UVIV4y6Az3AEUllKS7h0StIL6Gn5M0VSwN5J2LjQDgx/3fM6a5KHKfRPin
-         WPJNTf9VKGtmJj57NXv/hF+GqyJpGR5OY8LmTZ8SLDIUCPBLaqBe6iW2aHR5vk2Z94hu
-         tKw7liJchp9+hKSiGjzbKY1V7XhBAzjEUALg1ZWBP236ZkoRuQEhdtyFNljlW2JVKpcJ
-         l55foz2jy+6FfXFxVUbS7GMm8y7EDbLEM0b3qKhCAUP28otIEsYwBQd5rlBVXZtF/zLe
-         aopFz0015uSyrxJUwX1vvY+bqLTqk9EEfe98wwLMnp4AG9p4IL3WLHiT3bLdcukYkSbF
-         dnKg==
+        d=linaro.org; s=google; t=1696577070; x=1697181870; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FOSlaaJB6X2WSoMd8+KnJy/fnhz6ELzyVEUEL3quGWE=;
+        b=NhHkOH4m8PMhgrjS6P41MROXV8bJDa1OqeKeELAkRx88whPPqW7AooWImj3cKtXpes
+         rZByM6B5Ankeg1aCT1Qc1QHKMKDyoRVvCY56msjTcTHeHyiZZpn0IzUtLIYdgWnNfCA8
+         sTU8u4DBso+p0jsfwWhYeOTrExf45NXibMAlABq3MWXFey8rPWXaS+jyMF6Toke7YojU
+         btC2HxsolsYvtCJnrFpSXLu1BH7tIFacr1vf9n3RqU/+2idKRkhWeuPjysi2n9JibOn3
+         AWaPgo97R1tgrmb0Zb9SFmYm+tBSfOMD/1WvIinpdkMThb2cMt+XOrTQGss4F0t2o9Ct
+         qJFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696576319; x=1697181119;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iHzPDIF0nHvJ4MjZXtd+1YcUGWWggbQugVNz0aoRvm4=;
-        b=THPIFTaVw7HnVgoVxOieh9va3jh10BnSaNmCTz/xiwl08n/e7ovKxnTeRrsKbChDUZ
-         2N/OTziZpVqOmnmgowZHebKHLfpVtKbq6/tYvzxcTS+/upyTpBuO6bGEetWVbz3VP39s
-         mCNj1XldODxFreXB40cwAlbsWCRJjb9U40uuCiFwJfClW5qFRADh877A3D2/WnlK60XR
-         pmMB8YbWcIR4Vwz9cmzz7bqv7wYQnyYlqbwoFM0G8p71zmQiSE86QJVNfRbJW3A/NrUi
-         ySHQwAbDqnHKbcuNww31q22fiwDmjF0Q2e608POVKGkt00/JWEUGFRy7V6jLzOvOYQds
-         lXTA==
-X-Gm-Message-State: AOJu0Yxdgeb/YQy8U4Z/8QPeqcp4BdxxCHoL5ozgGoNzXu++a4bJqSts
-        dAZ4ZFSktSbsjPdevaNlVxrnuQLRHI5X/1bDzWMRDg==
-X-Google-Smtp-Source: AGHT+IHiUqGjKQHUfgrIcgITqHkmD2z1HCMXkK+vuDHKcerGKLDJ+4ufx0fc/UxlguWUqe3soL3/3nEQ/msf2e3kc/I=
-X-Received: by 2002:a1f:a9d0:0:b0:49d:92e0:9cd1 with SMTP id
- s199-20020a1fa9d0000000b0049d92e09cd1mr7100923vke.11.1696576319479; Fri, 06
- Oct 2023 00:11:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696577070; x=1697181870;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FOSlaaJB6X2WSoMd8+KnJy/fnhz6ELzyVEUEL3quGWE=;
+        b=fFVwA9ZrOnt3FyIMWgooJZbH9I9p6xuAIhtVCNcpwnAD3v1jzqX3ndOCOrJikf4HQH
+         NHz25H9a0SxFLdr9up3vrx731FV9C0bTn4DnoMwES+euPei1KKBPlFjWTvx51ciCOJON
+         7wCO/4VPvXRoB2eGFx9X0edPTzAmaSwVhC8K2HdbeGun043LkGu1B8TqUmgdo5S+DO/I
+         bqCMyFifmQ5Kv0HRpNna+a+GzoFzw7KrT4V+NcJ3KIaKnIMiI7dGL1hYfMFSMuFuIQbh
+         v/pVYX9dTyNEqDnD+T2tWf7KoiuG36D/fbqF/LSGNWLB/Nw3Pv3Cl5h+CTpJm+DMOiDp
+         WjYA==
+X-Gm-Message-State: AOJu0YyYvOaXkfevy8hGumgR2ljVFeJh3IlB/4C7vKj4+2uOmKRBtVn7
+        FPxyftZdMaRK3jEI4TTMSuU7cRCdFVNcDb42YTU=
+X-Google-Smtp-Source: AGHT+IEX4FCPH2nCfqDY9NgjPUdIGFdx/hIcE0Py6K7yhvk0TMhkvzrJ9GJlzKAIi2SU76PaqkQCxQ==
+X-Received: by 2002:a17:906:7485:b0:9ae:5fe1:ef03 with SMTP id e5-20020a170906748500b009ae5fe1ef03mr6188295ejl.67.1696577070165;
+        Fri, 06 Oct 2023 00:24:30 -0700 (PDT)
+Received: from [192.168.1.149] (i5C743835.versanet.de. [92.116.56.53])
+        by smtp.gmail.com with ESMTPSA id l9-20020a170906230900b009928b4e3b9fsm2394963eja.114.2023.10.06.00.24.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 00:24:29 -0700 (PDT)
+From:   Erik Schilling <erik.schilling@linaro.org>
+Subject: [libgpiod][PATCH 0/2] bindings: rust: feature gate unreleased
+ features
+Date:   Fri, 06 Oct 2023 09:24:25 +0200
+Message-Id: <20231006-b4-bindings-old-version-fix-v1-0-a65f431afb97@linaro.org>
 MIME-Version: 1.0
-References: <20231004-pxa-gpio-v5-0-d99ae6fceea8@skole.hr> <20231004-pxa-gpio-v5-6-d99ae6fceea8@skole.hr>
-In-Reply-To: <20231004-pxa-gpio-v5-6-d99ae6fceea8@skole.hr>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 6 Oct 2023 09:11:48 +0200
-Message-ID: <CAMRc=MeGvqnsn63o1sH66AwTFCPd5kqj+7V=B08afrwUZdZCvQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v5 6/6] input: ads7846: Move wait_for_sync() logic to driver
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACm2H2UC/x2MwQqDMBAFf0X27EI0pav9FfFgmm18IIkkIIL47
+ 017nIGZi4pmaKFXc1HWAwUpVujaht7rEoMyfGXqTW87Y57sHuwQPWIonDbPh+Zfwx+cLMM4ihV
+ jnQjVw5616v99og0u7Eie5vv+AogcSLN3AAAA
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linux-GPIO <linux-gpio@vger.kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Erik Schilling <erik.schilling@linaro.org>
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696577069; l=2124;
+ i=erik.schilling@linaro.org; s=20230523; h=from:subject:message-id;
+ bh=nz4SvDYEgbPxerKmOUiSsWeov9bEuAl+wbetNED3Llo=;
+ b=aIeB56mj1IH1dbPVOth3OwMJx+7uLWfAnxdOhXroOuMU8WfEIoq7LKkUPDULdNQ5XK+w94741
+ F2Cs47llkwcAOuvZnoxyHWIMtNmxZd/EC+qliixkLtqJtWKF/GIotk5
+X-Developer-Key: i=erik.schilling@linaro.org; a=ed25519;
+ pk=/nNqy8/YOEdthj1epXl5FgwCTKEiVqTqqnVN1jVal7s=
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 4, 2023 at 4:56=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic@=
-skole.hr> wrote:
->
-> If this code is left in the board file, the sync GPIO would have to be
-> separated into another lookup table during conversion to the GPIO
-> descriptor API (which is also done in this patch).
->
-> The only user of this code (Sharp Spitz) is also converted in this
-> patch.
->
-> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> ---
+When releasing the 0.2.0 version of the libgpiod crate, I did not
+realize that there were C lib features that were not released yet.
+Helpfully, vhost-device's CI went up in flames and revealed this [1].
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+This suggests a way to handle that and sketches how further updates can
+be handled.
+
+I acknowledge that this may be very strange to C developers...
+Traditionally, one would just use whatever your distro provided and the
+distro would make sure that dependencies update in lock-step.
+
+However, in Rust the default way to consume libraries is to pull them
+from crates.io. This is a balancing act for -sys crates which link to
+distro-provided libraries on the system. Since crates.io does not wait
+for distros to update their libraries, crates will need to support a
+wider range of system libraries.
+
+This sets up / sketches the infrastructure for that.
+
+Only the first commit is intended to be merged. The second one just
+sketches how a release will look like once it happens.
+
+[1] https://buildkite.com/rust-vmm/vhost-device-ci/builds/1746#018b0110-b9d3-468a-973c-c3bbc27cd479
+
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linux-GPIO <linux-gpio@vger.kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+Cc: Kent Gibson <warthog618@gmail.com>
+
+Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
+---
+Erik Schilling (2):
+      bindings: rust: feature gate unreleased features
+      DONOTMERGE: bindings: rust: simulate v2.1 release
+
+ bindings/rust/libgpiod-sys/Cargo.toml        |  9 +++++++--
+ bindings/rust/libgpiod/Cargo.toml            |  4 ++++
+ bindings/rust/libgpiod/Makefile.am           |  2 +-
+ bindings/rust/libgpiod/README.md             | 14 ++++++++++++++
+ bindings/rust/libgpiod/src/line_request.rs   |  2 ++
+ bindings/rust/libgpiod/tests/line_request.rs |  1 +
+ 6 files changed, 29 insertions(+), 3 deletions(-)
+---
+base-commit: e7b02c2259d97c77107c77b68e3bc1664e6703c1
+change-id: 20231006-b4-bindings-old-version-fix-789973703b77
+
+Best regards,
+-- 
+Erik Schilling <erik.schilling@linaro.org>
+
