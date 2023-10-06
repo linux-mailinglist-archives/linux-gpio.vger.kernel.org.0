@@ -2,93 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 327C17BBE1F
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 19:57:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D0DA7BBEDD
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 20:45:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233073AbjJFR5B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 13:57:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42168 "EHLO
+        id S230415AbjJFSpn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 14:45:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233134AbjJFR47 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 13:56:59 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC178106;
-        Fri,  6 Oct 2023 10:56:57 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0AAFC433C8;
-        Fri,  6 Oct 2023 17:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696615017;
-        bh=M7cM0uzrZk4lKMKjA93C2oMjoATI9WLt5iEp4Pa0My4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ExVRjuA7T/H0LaeJ0jyf3NZMtrc0lM6wOK+ekvS3Hq8ZCLXMYeoBcRONIckkYnR9e
-         R9KWM6wDzcE5q6jwvZF8lMhKkQ1lgD5XgMAmF7JJPxu8HLrXCruZvJdtW+N4EFMC/7
-         +MgEyPdqIsG0GVwqs1Zo00lHWuag9pWExwjTRXjr6/1rfLAWPo85X4OULjN1ooa7MU
-         QE2wvKipHSHuTUa2DvBuP+DGUrlVwrPA7dr5beW5tSBoKlXJNaQzu4hKecZwWebxPT
-         cSOeYmHLA64elgkUGOYkMirnChTWEZcTn5lG+t94KgeZRNsGwZCdyYGcGdRGZ4Z1JF
-         KS5ex2P3lOVhA==
-Received: (nullmailer pid 70487 invoked by uid 1000);
-        Fri, 06 Oct 2023 17:56:54 -0000
-Date:   Fri, 6 Oct 2023 12:56:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Martin Kaiser <martin@kaiser.cx>
-Cc:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: pinctrl: st,stm32: fix phandle-array warning
-Message-ID: <169661501435.70432.16755877986670034633.robh@kernel.org>
-References: <20231006082247.3830719-1-martin@kaiser.cx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231006082247.3830719-1-martin@kaiser.cx>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232789AbjJFSpm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 14:45:42 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13370BE
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 11:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696617938; x=1728153938;
+  h=date:from:to:cc:subject:message-id;
+  bh=Fh4OofvAggxlU5Geuwyjea3AbFK+jnsUZIvhX1pfrh8=;
+  b=I90NhnkNYbF4bl+zyD+vZGmWGmfDlbiKwA7ZMwxOfQYwybv+4/sZqp3i
+   ofq6rG53y1x10z4qxHoczB5Ofvm4z/g0atCfUNJ2CMgAVPGMRju/uOxv+
+   SGvQV67JTrEUb0y+btTgEf+4plFHDGxtcbZ3qQnVijZABPLdw+hZTHdzw
+   5olCP2RzQfOhkel8I2mxXCI/G9cKadq88w4g3TVuKwURgiKbQjEeGOIQs
+   a585x3iTaTZ5nj2JTfO7XZV2wZoMGQELR/t3DIx8yk6pk4yG8JmOhWfYE
+   TfB/2kGDgb/qkE8eB+un9qfvLDgic83JHDaF+bA1JCBtSJ6TM9XvUI3lx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="386638196"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="386638196"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 11:45:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="876036522"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="876036522"
+Received: from lkp-server01.sh.intel.com (HELO 8a3a91ad4240) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 06 Oct 2023 11:45:28 -0700
+Received: from kbuild by 8a3a91ad4240 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qoppF-0003Xf-0t;
+        Fri, 06 Oct 2023 18:45:25 +0000
+Date:   Sat, 07 Oct 2023 02:44:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ b57587f11f8116c3835e994caed81fc4d8ab5dbd
+Message-ID: <202310070232.miDDtXRP-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: b57587f11f8116c3835e994caed81fc4d8ab5dbd  gpio: vf610: simplify code by dropping data check
 
-On Fri, 06 Oct 2023 10:22:48 +0200, Martin Kaiser wrote:
-> make CHECK_DTBS=y st/stm32f469-disco.dtb
-> 
-> brings up a warning about a missing argument:
-> 
-> stm32f469-disco.dtb: pinctrl@40020000: st,syscfg:0: [21, 8] is too short
-> 
-> The description of the third entry indicates that this entry is optional.
-> The code in stm32_pctrl_dt_setup_irq parses st,syscfg and treats the third
-> entry as optional. It defaults to 0xf if not present in the devicetree.
-> 
-> Update the schema to require at least two entries, use the same syntax as
-> the description of renesas,ipmmu-main in
-> Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml.
-> 
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
-> 
-> I tested the following cases, all of them returned the expected result:
-> 
->    st,syscfg = <&syscfg>;              (too short)
->    st,syscfg = <&syscfg 0x8>;          (ok)
->    st,syscfg = <&syscfg 0x8 0x0>;      (ok)
->    st,syscfg = <&syscfg 0x8 0x0 0x0>;  (too long)
-> 
->  .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+elapsed time: 1452m
 
-Acked-by: Rob Herring <robh@kernel.org>
+configs tested: 85
+configs skipped: 2
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231006   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
