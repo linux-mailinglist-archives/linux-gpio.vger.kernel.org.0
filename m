@@ -2,66 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50AC67BBF8C
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 21:08:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CA0E7BC01F
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 22:17:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233349AbjJFTIJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 15:08:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43762 "EHLO
+        id S233167AbjJFURN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 16:17:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233356AbjJFTIH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 15:08:07 -0400
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50BBAAC
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 12:08:06 -0700 (PDT)
-Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-45274236ef6so1193983137.3
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 12:08:06 -0700 (PDT)
+        with ESMTP id S233417AbjJFURM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 16:17:12 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2703C5
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 13:17:10 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-692779f583fso2077611b3a.0
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 13:17:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696619285; x=1697224085; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zxlLhkoj1Kmhin2Qlx3Q+WrvoF0R0Cb9Ja4Y1YVu+4c=;
-        b=TLDxoEpd1VVzP2mVNHKHE5dptEcJRqLnM8p/qOjD0CgPHt51KMoCLmd5kw1nzxcSWY
-         yJNamVcOdDvcSGyjnliAn82Ky8Y63Z7IabIObEorEe9cIogWLZ5e8bP74QFLqjkg4zip
-         FWFgfyWxf7PcJNAMeDQYPxhUyVWyF3a1+5qlbHHghJK1W0r6kuLePkF6M8lrdzk5exmd
-         aJYstLDJ8Qew+l0SINgLx4F5p+FbNjYLrp8WZ8UWXpiDr3wyd1fbvCjXICu7wQ4yx+mW
-         wGy0ug/gFbcSwavz4gXMQlt8USDnpXJGytFLgsbM1rnu62QUaby5f8/hTqK9NTnA+o8j
-         4gxA==
+        d=chromium.org; s=google; t=1696623430; x=1697228230; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K1eBnvmyPH2CZ9nM0L4OdqfRabPTQXIENd6RkEgpAic=;
+        b=K/BMsDKnBX4LyJETsKidzzFjYBgMstd12+yf3lq/HGbPmyDvyR2pKB7NeeL+entCxA
+         3Y0vjXXj2keeWn8iw/IXNce3THRUSs7TZiXMlrcsUkHapFLTaoxjMsP+gY2zBfJEdhRT
+         BUZ6bxMP8lMEzZ6oLkXv+tCftdzNj7enupxxk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696619285; x=1697224085;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zxlLhkoj1Kmhin2Qlx3Q+WrvoF0R0Cb9Ja4Y1YVu+4c=;
-        b=YqIklGs0Qr4yMWHJepE46A13rk6A+PpGAcvF+0z6DsNmT1ZOCGBQcvbUNUAJbqxc3I
-         jn7phS3Le45DTi6sO9iVNbm/BfWk0VRNpmaJL7sNptwWHmyGM7gUvQyAkXfz7/d5YdZ5
-         uc4tbteEY5r+l3bfX2t+YBf0VTk+zJJb+B3qOuMxWsn+ezI+IfTZhwBFI6xnWMyDMZeK
-         ShnbNaWQhzV3LUtcu/kGskmX+A1+mRT9ma4wl2OtWghqN6DYldZIJo8QngTN7nZD4QvT
-         AbOTVTkrbDmIIc3vDZR/UMYBGBZzsT8gkskfs3frSCfe5KcLMhNVfcKzzFyHevC/K6SX
-         if5g==
-X-Gm-Message-State: AOJu0Ywjwx66E2iq7mHojDfJRNcHoC+48XmGzGW0cKq2Jf2Ktifi3vy+
-        /1AWX2HBmQfOAK5Vo1lWk+MmTZpZPKOptXncrqhSLg==
-X-Google-Smtp-Source: AGHT+IG4YWnlNuzYQ3D7QfQ85iW7UB8nypued/rD9Y1v+Txs/czpFfkdZpjjbAeS2dURl24tCbNVSIcLGC9D4KBQ7Mo=
-X-Received: by 2002:a67:fdd0:0:b0:454:2d1e:6ced with SMTP id
- l16-20020a67fdd0000000b004542d1e6cedmr9726691vsq.27.1696619285327; Fri, 06
- Oct 2023 12:08:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696623430; x=1697228230;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K1eBnvmyPH2CZ9nM0L4OdqfRabPTQXIENd6RkEgpAic=;
+        b=j+a4T7LRm14Jsk4TJBF5k+FWLI2wxoVqcoodlKdr0577hB211yI0Q0/PHZEgEw5OLK
+         TuPTvhclrCBkxC4c/4grTXg7S0CGPhP+b3po0QdqhMYdkA8mAkiM8MfO9M+xjU+6xaqA
+         TBTWkDnrqOa/mfl281JmC7RkE0fkig4/VWuZmFpDXXfoi4/0qcmiMhpua7/x7ih+XA67
+         e1lDUgTh/NnzrqloUYu4sqQh1DKFvQeb/c8vFrmpNlTuR4NUauSMdWiGUDgSutequhSk
+         Dsxv2nrmVmd8992/uDe8YWDdap5XLdMx5x4bgQJpEE4FPycSmExybQFr4/qWr55GOZWa
+         nyew==
+X-Gm-Message-State: AOJu0YyY2uBPNIQmVw0xD3vwfGSS/4OYmqM/XiiYckD9JDM1K8P6xNyd
+        gA8pvlJePNqQ6U/PwJiajlOqsA==
+X-Google-Smtp-Source: AGHT+IEtlTeDLTCL/lFi+oJBgl0DcZtNH+OVNahSkKRT97SzL7fnVmB7IYgd/mR8i75HJAy9DMPCdg==
+X-Received: by 2002:a05:6a20:2451:b0:14d:5580:8ff0 with SMTP id t17-20020a056a20245100b0014d55808ff0mr10184865pzc.25.1696623430379;
+        Fri, 06 Oct 2023 13:17:10 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 15-20020aa7914f000000b00692c5b1a731sm1875791pfi.186.2023.10.06.13.17.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 13:17:09 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Tomasz Figa <tomasz.figa@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: [PATCH] pinctrl: samsung: Annotate struct exynos_muxed_weint_data with __counted_by
+Date:   Fri,  6 Oct 2023 13:17:07 -0700
+Message-Id: <20231006201707.work.405-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20231006115147.18559-1-brgl@bgdev.pl> <ZSAIUVAQ6ifi8LTL@smile.fi.intel.com>
-In-Reply-To: <ZSAIUVAQ6ifi8LTL@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 6 Oct 2023 21:07:54 +0200
-Message-ID: <CAMRc=MdrLSPCEsQ6OEgRX-7Wh7ka+Rczja=QjY-srozj3cz68w@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH] gpiolib: reverse-assign the fwnode to struct gpio_chip
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dipen Patel <dipenp@nvidia.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2568; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=lsTbTj1Qtp6GgXJHYDIN0GpRbyjpp/e7Ct6QQbjSy0Q=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlIGtDy9BWBe1i4kwKNKaTCXh1WjWe/M2wbybFm
+ RGQGh5dTv+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZSBrQwAKCRCJcvTf3G3A
+ JkxPEACXFEGhNrvxBkTKUfgVjkyDrnxC4WfPJdhQxqmOPOzyY7EPwkDCEoiad2SUhfNal9NNCX2
+ YG6o8XD/Uh2tW7jyIlkOfT6uBfN7mpF6v8hCUD+fj68+miZhqVOIS/HHe0lZoS+pIPABq9VOexQ
+ jjhxKYKoT8/9zXbQpD73TUCh9JHPIVlA3/ogT3ZoqWFJxtyNsuR//kYxSK3cTmx7KTH2cjdhNfE
+ FOVAGIaap8Ql40LUwC7YnOL3GgFklirZ49tih0ydJ92l/cBHsNFOneuAL9sAORZPXrC9U3zx2wl
+ 5PwxcY6gIE6Qt+/crsR7qoAO5VwSQGiDcgv/NfhyFZ8WIeDnffMI47fj8qHurqCTH2to25FGThw
+ Wae7K4YrpBU7BQ1VjmJpSAT3vTjH/7gsV1m6n93iTXw6A+M8li7P5V1kpw1VTdyRmEvikJfo5SL
+ HIJ89R8z5r9OZLteo3msJf6liREQIfgVYXvyAFMP5F/MRQO2jV2nRG9V9Q9epbB6SdpTjzxiO3Q
+ 971qa3ROTD5xraPe3iEYKh/b5jWN9fzoYD4WWl+ptluj6FTIhL0MqsPBkRwH2EkTIYRsncnJZd+
+ Yrf3FjEvpL7AzCI34QOyMBEeP2ttb4NVoGGAQWWt5I97UEdH5QyqDsOL/vI8bR3Oj3ccd8l77Eq
+ 6vqzydT cWFqXEJQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,60 +91,67 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 6, 2023 at 3:15=E2=80=AFPM Andy Shevchenko <andy@kernel.org> wr=
-ote:
->
-> On Fri, Oct 06, 2023 at 01:51:47PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > struct gpio_chip is not only used to carry the information needed to
-> > set-up a GPIO device but is also used in all GPIOLIB callbacks and is
-> > passed to the matching functions of lookup helpers.
-> >
-> > In that last case, it is currently impossible to match a GPIO device by
-> > fwnode unless it was explicitly assigned to the chip in the provider
-> > code.
->
-> That's expected behaviour.
->
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-Is it though? We now have a GPIO device that represents a piece of
-physical hardware that has an fwnode assigned and the associated GPIO
-chip (tied to that device) that has none. How is that logical? It's
-not coherent. I'm not surprised users of that code will be confused -
-like Dipen in this case.
+As found with Coccinelle[1], add __counted_by for struct
+exynos_muxed_weint_data. Additionally, since the element count member
+must be set before accessing the annotated flexible array member, move
+its initialization earlier.
 
-Bart
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/pinctrl/samsung/pinctrl-exynos.c | 2 +-
+ drivers/pinctrl/samsung/pinctrl-exynos.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> > If the fwnode is taken from the parent device, the pointer in
-> > struct gpio_chip will remain NULL.
->
-> > If we have a parent device but gc->fwnode was not assigned by the
-> > provider, let's assign it ourselves so that lookup by fwnode can work i=
-n
-> > all cases.
->
-> I don't think this is a good change. We paper over the real issue where
-> we and callers need to understand what they are looking for.
->
-> ...
->
-> > This is something that Dipen reported with one of the tegra drivers whe=
-re
-> > a GPIO lookup by fwnode does not work because the fwnode pointer in str=
-uct
-> > gpio_chip is NULL. This patch addresses this use-case.
->
-> I am not sure I understand the problem here. All these should have been
-> addressed already, no?
->
-> So, the GPIOLIB should use dev_fwnode(&gdev->dev) inside it, outside it
-> the GPIO drivers are free to use gc->fwnode as long as they understand
-> the lifetime of the respective object.
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+index a8212fc126bf..6b58ec84e34b 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -616,6 +616,7 @@ __init int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
+ 		+ muxed_banks*sizeof(struct samsung_pin_bank *), GFP_KERNEL);
+ 	if (!muxed_data)
+ 		return -ENOMEM;
++	muxed_data->nr_banks = muxed_banks;
+ 
+ 	irq_set_chained_handler_and_data(irq, exynos_irq_demux_eint16_31,
+ 					 muxed_data);
+@@ -628,7 +629,6 @@ __init int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
+ 
+ 		muxed_data->banks[idx++] = bank;
+ 	}
+-	muxed_data->nr_banks = muxed_banks;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/samsung/pinctrl-exynos.h
+index 7bd6d82c9f36..3ac52c2cf998 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.h
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
+@@ -159,7 +159,7 @@ struct exynos_weint_data {
+  */
+ struct exynos_muxed_weint_data {
+ 	unsigned int nr_banks;
+-	struct samsung_pin_bank *banks[];
++	struct samsung_pin_bank *banks[] __counted_by(nr_banks);
+ };
+ 
+ int exynos_eint_gpio_init(struct samsung_pinctrl_drv_data *d);
+-- 
+2.34.1
+
