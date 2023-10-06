@@ -2,129 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61C187BB911
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 15:27:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA3C87BB97F
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 15:45:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232364AbjJFN1R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 09:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
+        id S232457AbjJFNpP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 09:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232082AbjJFN1Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 09:27:16 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29372AC;
-        Fri,  6 Oct 2023 06:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696598835; x=1728134835;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2cc26gFKLWV1zohqFQ9a2XIcjoRWt0n03Xemi9o+UVA=;
-  b=QB5+Gr8lpX+N+lwZkP1bGdyfHOl4uvAFIFG2KuouxAQObNXVvo414EHd
-   Kx89qb3T0SGaQO6c4LGGfr6he7Pfx9HMVOY3NnW0RX+2DBxdtpiAOosmY
-   9Kqkt6byhXr90lYIKeOU8/d93+4mP7xlDoguYn4xlR3Pm+Mpd7xZM8bNG
-   hkpcML+nT7y1pbWSfJo9ePVSHlm+7iRIqf08l+Vk3dNqLO3SZwV5NbtBO
-   EH64HgkPDWqBHm60+wj1isIjKGerbgZS4HWflaSL+nNjQl3y5LByc383z
-   /LG8Gvi/K3C37Y2tin6bcoJPf71ZMbuO3TaVKO7PVSUq3kC5EhHFRnqLu
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="383641043"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="383641043"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 06:27:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="999328555"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="999328555"
-Received: from srab-mobl1.ger.corp.intel.com ([10.252.43.69])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 06:27:11 -0700
-Date:   Fri, 6 Oct 2023 16:27:09 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] platform/x86: int3472: don't use
- gpiod_toggle_active_low()
-In-Reply-To: <29764d46-8d3d-9794-bbde-d7928a91cbb5@redhat.com>
-Message-ID: <2e9621e7-59e-dc20-71a-9da6f367557e@linux.intel.com>
-References: <20230926145943.42814-1-brgl@bgdev.pl> <e6817d30-b443-1a73-efae-84415604b19f@redhat.com> <CACMJSetWH=Z5ubHb33W0mYvpqkU7vv=nKNBSa9eLmAi94NyrgA@mail.gmail.com> <29764d46-8d3d-9794-bbde-d7928a91cbb5@redhat.com>
+        with ESMTP id S232323AbjJFNpO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 09:45:14 -0400
+Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE7B83;
+        Fri,  6 Oct 2023 06:45:11 -0700 (PDT)
+Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+        by mx.skole.hr (mx.skole.hr) with ESMTP id 2CF8283E79;
+        Fri,  6 Oct 2023 15:45:10 +0200 (CEST)
+From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: [PATCH RFT v6 0/6] ARM: pxa: GPIO descriptor conversions
+Date:   Fri, 06 Oct 2023 15:44:24 +0200
+Message-Id: <20231006-pxa-gpio-v6-0-981b4910d599@skole.hr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADgPIGUC/13PvW7DIBDA8VeJmEvE12Ho1KkPUHWrMhDfEaNWs
+ QWVlSryuwcxpMjjwf3+iDsrlBMV9nq4s0xrKmm+1sG+HNg4heuFeMI6MyWUFk4MfLkFflnSzPV
+ IChAG46RhdX3JFNOtpb7Yx/snO9XDKZXfOf+1/CrbVSt5Zf5Lq+SCKyfg7AZ0zpu38j3/0HHKr
+ bGq3tnOqeq8M8YalBYQd073zndOVxeiQyBAGfX+PfN0UgjZOVOdiPrsByBLCDsHvev/B9Wh94F
+ sHImC69y2bQ+Ih4j0hAEAAA==
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-spi@vger.kernel.org,
+        =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3136;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=vI2UBZDMwp1KnzrvD4DKMizRjoWa7ZGUogcX2qCrlnU=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlIA9dcgrmj3+YmkuDPQ6NB90jclsxEluTaVbHA
+ jRr7Yra0xyJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZSAPXQAKCRCaEZ6wQi2W
+ 4ZLQD/9QfHwozzzavQqJBgavxYYXaezwWXw2/D6c76kmN7beMOJcorpY5WFtW1AHbAw40nTp0Hm
+ UiOfHm8ovkbt8ht39EHQxpRZq1dX9Gak3M/wM9YlGday2HbdU8SeHPCWNnNNEY/mqQRUYdtPKm7
+ ot6COA8GuXOuQg/TyE/uu8EMn9Zr/DcafHxF0CkBJ2/rj5aBfPEcglnqedZ7mBdjTSfS9egIv80
+ zb+2Re2b1bkPSVMBm9FCnDVimn8VTYoUtRmrbv6XqFYDAgn0zZH3uvH6WZ3ypnv7KomCZlR2G/O
+ pJvFE/HsqsCSN3o/Lhz9EKMDXjeDkrl1H9CfrsjELwxlt9QzRTxP7jCMckZ1aWXGwl9M8mpAyvT
+ /R1/Nw9YiVZIYtcsipz20DLyl0Sjmcyy2rvVtgqBKYbOWqksTv/irBxOH9mYHAy3iYlqa8U568m
+ 6JH6lPJJKP7acwSe2F1+ct1VOM1xNQtl5FpEe31gYay4NVA3cHB35p0JPpmkF1hBFbJg2jCy4V+
+ sXzXQQWePzn/DYetDOTNp9ol2Q2I9Lm5zWxK7VRwaiDNEZfA9bCg9GpbpNRHIY7hfO96495p0pw
+ +gWzvAWKaE/IrDVOkvBGa5lKqSbBp6iHY97ByUxuf6LXZOf7pb98+0Y7MxU0pGiRkNfzZQ/hzNb
+ DstjqmARBtK1Dvg==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 4 Oct 2023, Hans de Goede wrote:
+Hello,
 
-> Hi Bart,
-> 
-> On 9/28/23 20:40, Bartosz Golaszewski wrote:
-> > On Thu, 28 Sept 2023 at 14:40, Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Hi All,
-> >>
-> >> Here is a v2 of Bartosz' "don't use gpiod_toggle_active_low()" series.
-> >>
-> >> New in v2:
-> >> - Rework to deal with ACPI path vs gpiod_lookup.key differences:
-> >>   acpi_get_handle(path) -> acpi_fetch_acpi_dev(handle) -> acpi_dev_name(adev)
-> >>
-> >> Regards,
-> >>
-> >> Hans
-> >>
-> >>
-> >> Bartosz Golaszewski (2):
-> >>   platform/x86: int3472: Add new
-> >>     skl_int3472_gpiod_get_from_temp_lookup() helper
-> >>   gpio: acpi: remove acpi_get_and_request_gpiod()
-> >>
-> >> Hans de Goede (3):
-> >>   platform/x86: int3472: Add new skl_int3472_fill_gpiod_lookup() helper
-> >>   platform/x86: int3472: Stop using gpiod_toggle_active_low()
-> >>   platform/x86: int3472: Switch to devm_get_gpiod()
-> >>
-> >>  drivers/gpio/gpiolib-acpi.c                   |  28 -----
-> >>  .../x86/intel/int3472/clk_and_regulator.c     |  54 ++--------
-> >>  drivers/platform/x86/intel/int3472/common.h   |   7 +-
-> >>  drivers/platform/x86/intel/int3472/discrete.c | 101 ++++++++++++++----
-> >>  drivers/platform/x86/intel/int3472/led.c      |  24 +----
-> >>  include/linux/gpio/consumer.h                 |   8 --
-> >>  6 files changed, 93 insertions(+), 129 deletions(-)
-> >>
-> >> --
-> >> 2.41.0
-> >>
-> > 
-> > Thanks Hans, this looks good to me. I'd let it sit on the list for a
-> > week. After that, do you want to take patches 1-4 and provide me with
-> > another tag?
-> 
-> I have just send out a v3 to address Andy's remark about me
-> somehow resetting the authorship to me on 2 patches from Bartosz.
+Small series to convert some of the board files in the mach-pxa directory
+to use the new GPIO descriptor interface.
 
-> As for your request for a tag for the 4st 4 patches for you to merge
-> into gpiolib. I'll go and work work on that. I need to coordinate
-> this with Ilpo, with whom I now co-maintain pdx86 .
+Most notably, the am200epd, am300epd and Spitz matrix keypad among
+others are not converted in this series.
 
-Thanks all. I've applied patches 1-4 into platform-drivers-x86-int3472 and 
-merged that into review-ilpo.
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+Changes in v6:
+- Address maintainer comments:
+  - Use devm_gpiod_get_optional() in OHCI
+  - Use gpiod_get_array() in Spitz LEDs
+- Update trailers
+- Link to v5: https://lore.kernel.org/r/20231004-pxa-gpio-v5-0-d99ae6fceea8@skole.hr
 
-I'll send the IB PR once LKP has done its thing for the branch.
+Changes in v5:
+- Address maintainer comments:
+  - Rename "reset generator" GPIO to "reset"
+  - Rename ads7846_wait_for_sync() to ads7846_wait_for_sync_gpio()
+  - Properly bail out when requesting USB host GPIO fails
+  - Use dev_err_probe() when requesting touchscreen sync GPIO fails
+  - Use static gpio_desc for gumstix bluetooth reset
+- Pulse gumstix bluetooth reset line correctly (assert, then deassert)
+- Fix style issue in ads7846_wait_for_sync_gpio()
+- Update trailers
+- Link to v4: https://lore.kernel.org/r/20231001-pxa-gpio-v4-0-0f3b975e6ed5@skole.hr
 
+Changes in v4:
+- Address maintainer comments:
+  - Move wait_for_sync() from spitz.c to driver
+  - Register LED platform device before getting its gpiod-s
+- Add Linus' Reviewed-by
+- Link to v3: https://lore.kernel.org/r/20230929-pxa-gpio-v3-0-af8d5e5d1f34@skole.hr
 
+Changes in v3:
+- Address maintainer comments:
+  - Use GPIO_LOOKUP_IDX for LEDs
+  - Drop unnecessary NULL assignments
+  - Don't give up on *all* SPI devices if hsync cannot be set up
+- Add Linus' Acked-by
+- Link to v2: https://lore.kernel.org/r/20230926-pxa-gpio-v2-0-984464d165dd@skole.hr
+
+Changes in v2:
+- Address maintainer comments:
+  - Change mentions of function to function()
+  - Drop cast in OHCI driver dev_warn() call
+  - Use %pe in OHCI and reset drivers
+  - Use GPIO _optional() API in OHCI driver
+  - Drop unnecessary not-null check in OHCI driver
+  - Use pr_err() instead of printk() in reset driver
+- Rebase on v6.6-rc3
+- Link to v1: https://lore.kernel.org/r/20230924-pxa-gpio-v1-0-2805b87d8894@skole.hr
+
+---
+Duje Mihanović (6):
+      ARM: pxa: Convert Spitz OHCI to GPIO descriptors
+      ARM: pxa: Convert Spitz LEDs to GPIO descriptors
+      ARM: pxa: Convert Spitz CF power control to GPIO descriptors
+      ARM: pxa: Convert reset driver to GPIO descriptors
+      ARM: pxa: Convert gumstix Bluetooth to GPIO descriptors
+      input: ads7846: Move wait_for_sync() logic to driver
+
+ arch/arm/mach-pxa/gumstix.c         | 22 ++++++------
+ arch/arm/mach-pxa/reset.c           | 39 +++++++-------------
+ arch/arm/mach-pxa/reset.h           |  3 +-
+ arch/arm/mach-pxa/spitz.c           | 71 +++++++++++++++++++++++++------------
+ drivers/input/touchscreen/ads7846.c | 22 ++++++++----
+ drivers/usb/host/ohci-pxa27x.c      |  7 ++++
+ include/linux/spi/ads7846.h         |  1 -
+ 7 files changed, 96 insertions(+), 69 deletions(-)
+---
+base-commit: 8a749fd1a8720d4619c91c8b6e7528c0a355c0aa
+change-id: 20230807-pxa-gpio-3ce25d574814
+
+Best regards,
 -- 
- i.
+Duje Mihanović <duje.mihanovic@skole.hr>
+
 
