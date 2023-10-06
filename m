@@ -2,161 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D0DA7BBEDD
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 20:45:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF6F87BBF68
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 20:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230415AbjJFSpn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 14:45:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
+        id S232789AbjJFS5n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 14:57:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232789AbjJFSpm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 14:45:42 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13370BE
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 11:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696617938; x=1728153938;
-  h=date:from:to:cc:subject:message-id;
-  bh=Fh4OofvAggxlU5Geuwyjea3AbFK+jnsUZIvhX1pfrh8=;
-  b=I90NhnkNYbF4bl+zyD+vZGmWGmfDlbiKwA7ZMwxOfQYwybv+4/sZqp3i
-   ofq6rG53y1x10z4qxHoczB5Ofvm4z/g0atCfUNJ2CMgAVPGMRju/uOxv+
-   SGvQV67JTrEUb0y+btTgEf+4plFHDGxtcbZ3qQnVijZABPLdw+hZTHdzw
-   5olCP2RzQfOhkel8I2mxXCI/G9cKadq88w4g3TVuKwURgiKbQjEeGOIQs
-   a585x3iTaTZ5nj2JTfO7XZV2wZoMGQELR/t3DIx8yk6pk4yG8JmOhWfYE
-   TfB/2kGDgb/qkE8eB+un9qfvLDgic83JHDaF+bA1JCBtSJ6TM9XvUI3lx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="386638196"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="386638196"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 11:45:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="876036522"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="876036522"
-Received: from lkp-server01.sh.intel.com (HELO 8a3a91ad4240) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 06 Oct 2023 11:45:28 -0700
-Received: from kbuild by 8a3a91ad4240 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qoppF-0003Xf-0t;
-        Fri, 06 Oct 2023 18:45:25 +0000
-Date:   Sat, 07 Oct 2023 02:44:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- b57587f11f8116c3835e994caed81fc4d8ab5dbd
-Message-ID: <202310070232.miDDtXRP-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S233285AbjJFS5k (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 14:57:40 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5412FA6
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 11:57:37 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-3296a998234so746767f8f.2
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 11:57:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696618656; x=1697223456; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D5ujGhg/oWpMfh+EFmyYE/R6gmVaUYXCMy0MWwjtD4k=;
+        b=Aj+Yl9cZ8V6jqIEJ5lQ4xHdIvx8Osazv8rUmyakjM9nC45/62OgIML9scil8uMpoGf
+         8pdc9Erx9Znth6eNNNRjXLVO0WuuQ7QntlGp3J+Aro4YPEYeYPihek1t5vCc7qIv2J5U
+         khleH6uD8oeMJE5x8gjvOI4QkkjFy55o/8i6lOe+GnwvwdnSODoLUw1BteB0Z4pOXa6k
+         VRVbuqJsleVuqVNyxv2xul7MaetO+nNhMr7uJKhAz7lo0xBU9T38+eNMne7apyWl1ZJr
+         p2IDs8CIfhzZa1j8o4fw1WHH5kYSX0MtEcQxqPj3EJD5ZF6dIaF0qhKX4McI4WPyYCzK
+         LatA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696618656; x=1697223456;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D5ujGhg/oWpMfh+EFmyYE/R6gmVaUYXCMy0MWwjtD4k=;
+        b=aPp2beWt0QhVxOeWimQVnrT/gyiDA686TeTOqJy+E7jPSI9S7kbiS44XM3JwxWL93z
+         6p3wXtMayo2P6P+L1pIVb9zNBdp6732feRMwQEIg2bsWH/KFdfTC1nNsZTJ1xA1qn1yZ
+         69Tbd0J8XcVK+NqJRe6m+UiB/8ywQ3uL6entHF/3WhhkhLQFrBKp2HglVrTcgVNQ8qJv
+         cTXLgl71dPO/1jkTa3EwLjEVbu35xwUgzpnc2XBgxJKbzHILSJT5cf4bSLGY5dthICv9
+         3fkVpt4GmvG+f15BUnd50ymfF3B99xS0sTVXXrq4jrp/KxYlJeie04yRlbhZNGEh2Ucv
+         usRw==
+X-Gm-Message-State: AOJu0YzazUFi25B5Q+Q0GCTJcn6PuUcjjGcS+p56HwITKfuiWWqlsuUr
+        gyHVsVZq40fPaYGrJ9zoqwJAHA==
+X-Google-Smtp-Source: AGHT+IHJ75LSX2vESlJBeft1GpfLzUS09dlvQHzl3mgsuDTtAZgtBWpajx1rtfb6MjH2Mb5kgKrx5A==
+X-Received: by 2002:adf:e406:0:b0:31a:e6c2:7705 with SMTP id g6-20020adfe406000000b0031ae6c27705mr7996277wrm.50.1696618655676;
+        Fri, 06 Oct 2023 11:57:35 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:8160:8fdc:c61c:a0a6])
+        by smtp.gmail.com with ESMTPSA id n20-20020adf8b14000000b003296b62d413sm1740890wra.82.2023.10.06.11.57.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 11:57:35 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: fixes for v6.6-rc5
+Date:   Fri,  6 Oct 2023 20:57:34 +0200
+Message-Id: <20231006185734.39969-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: b57587f11f8116c3835e994caed81fc4d8ab5dbd  gpio: vf610: simplify code by dropping data check
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-elapsed time: 1452m
+Linus,
 
-configs tested: 85
-configs skipped: 2
+Please pull another round of driver one-liners from the GPIO subsystem
+for the next RC.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
+Bartosz
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231006   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+The following changes since commit 8a749fd1a8720d4619c91c8b6e7528c0a355c0aa:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  Linux 6.6-rc4 (2023-10-01 14:15:13 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.6-rc5
+
+for you to fetch changes up to f9315f17bf778cb8079a29639419fcc8a41a3c84:
+
+  gpio: aspeed: fix the GPIO number passed to pinctrl_gpio_set_config() (2023-10-05 08:41:56 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.6-rc5
+
+- disable pin control on MMP GPIOs in gpio-pxa
+- fix the GPIO number passed to one of the pinctrl callbacks in gpio-aspeed
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      gpio: aspeed: fix the GPIO number passed to pinctrl_gpio_set_config()
+
+Duje Mihanović (1):
+      gpio: pxa: disable pinctrl calls for MMP_GPIO
+
+ drivers/gpio/gpio-aspeed.c | 2 +-
+ drivers/gpio/gpio-pxa.c    | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
