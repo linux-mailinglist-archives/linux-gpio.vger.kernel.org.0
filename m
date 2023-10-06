@@ -2,90 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E295B7BC0E0
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 23:03:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CE4C7BC0E3
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 23:04:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233634AbjJFVDk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 17:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
+        id S233589AbjJFVEW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 17:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233541AbjJFVDj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 17:03:39 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C9FC2
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 14:03:38 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-59f82ad1e09so31715167b3.0
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 14:03:38 -0700 (PDT)
+        with ESMTP id S233541AbjJFVEV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 17:04:21 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C506BD
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 14:04:20 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-40572aeb73cso23217205e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 14:04:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696626217; x=1697231017; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WZtjai8HBeCzrqWX0FnRVebJMoag+hyC+PqgXKIGxKw=;
-        b=YTi4ktUEW9kKle3F+nj+f3A/m/zhUTUoM1+L8KBkyMrH7oY8QOUBo0GS6qaf35D1tV
-         DEKM8NO3W0HAaLw5PJiJmpXIw5gPB+C/ZXOn1JV2KW5nurQz/Y00PXQ6We5zpjWzwgwV
-         dsg1b5VdQGdzjTqD8I3Xr2AnmJCuTYHtll2HhgeLlE+Lc/tLRORnYMIkcUL23WRqc0ch
-         N4BmGpqohXMHsNx4yajzzDhe7a2DvcvMFJlOo2qcV3bICi/tu9Rih5962ajphOlGNcd8
-         ww40V9UE1EJ3ECfaCDkXuBaHyPmZ0XAyLbamIh041NScnDrm0PF7UTSwqZWw46bJnbej
-         5VHg==
+        d=linaro.org; s=google; t=1696626258; x=1697231058; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YQRexPV+8Vov0pv0hXh9flhYegE8FCFTJLg0B0fm1UU=;
+        b=w5TrUncv9143goriUWgOma5iLtnXqrOTHjZG0R6ZcwSIvufqB1jXCEAI/T1nY2Nx4j
+         ikKEvJBmIwihHBCNmARS5k4NJIUcYyCRepx/LlzqBCtld/UATmC7GeAcrm2ZwsGheAza
+         orjNHwlwE0+qZ6OksHhYHZyk7n6vJxfRRfq3le45Hv9clGBcEWruBrsUZHF98ehOpUJF
+         WSDnWd52ooK0ugz9X2kTmz0nDQ3JqqSUMbnkAijy+G2Nk4DBvCLJrxjdYy5k/UsXnUzg
+         hDiT48Bbl8nZV2XDPO+YWwlPqEQ2XrN35ngUmpxM9BpoMYXusPY4zrFpguprNK99jP7o
+         sgwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696626217; x=1697231017;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WZtjai8HBeCzrqWX0FnRVebJMoag+hyC+PqgXKIGxKw=;
-        b=XG2bhBS57mF8FINggaJCoIxsS2ZhCZXGBzKK5Ak+3csh+ACPeJxDkPrN/EoxE6lVdy
-         UjBH3I8uTC6npQEMc8SUJPRwI5pdqtAZ8IE025Zc/oRS48Mhr3ktXasna9041bf4K+uK
-         f4UGzTnyHAVrK7S5njwCpCIZr5MNFNw9kYYMkg0b9AzM5x6ybCNiD3zjI8QIlDcYlmiq
-         Xu6kjXMws0Hj+0/KqSgJtoTo5ZMUY5V8QUqlVpvCthpp4hMKF/9YjBruCCZ+rWxFyB+L
-         46Z9qu9+7eQBCSWXk3BaUWsNqlVzqsvYuWTwTkuUaRBJMeQ951l4cocge4iCB8cwHY5O
-         WiYg==
-X-Gm-Message-State: AOJu0YycVak2B2LwE6GXkesOlcrpXmEcbaQdl7oIEyVGiBLk/QMQ7sMP
-        UFi18aqLap6VzOqouTZbGccF0juB6evXFLV3Wv9p70QytbxBNuaG
-X-Google-Smtp-Source: AGHT+IG9ye4+fmxd6vQXVxi/Joy3Iy0DHgAhMe1v/pWJvSaXF8ghuCacF/QQFUS6VkKnAEDvlULfgE+TPJAkdQZztFU=
-X-Received: by 2002:a0d:d606:0:b0:586:b686:8234 with SMTP id
- y6-20020a0dd606000000b00586b6868234mr10321910ywd.8.1696626217493; Fri, 06 Oct
- 2023 14:03:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1696577527.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1696577527.git.geert+renesas@glider.be>
+        d=1e100.net; s=20230601; t=1696626258; x=1697231058;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YQRexPV+8Vov0pv0hXh9flhYegE8FCFTJLg0B0fm1UU=;
+        b=HGADBK98b72v0ZxutrpqZY994OqtFFD9/m91BkGUaQUOSdxGD9iZrcsY6SwJ3TZWCe
+         bmO0hAQFmDwSCxpiLPCMCaEvQWpC+VAXYd079fXzRZ+AQrjq8rtdgzpYbcr8GjhSl5SP
+         HdL9lBQehbhqADXqxdL57wXKAYxkfEecsL5QTRgpcrIKrU984RKW/2KQG2QaHV7uGszS
+         tnHvKi52fkGjD5ORxDifHbfP3NApfHaDEDTt69Pa3Zg7J6S+Va6qrqU0+X0uE8r4wVCQ
+         DlYzsguR2ppsAIqRHuuHne2MRLAdZHvNoYMgumNw5AIf4/it3wHSOHLbtdyWy9+ByZ9y
+         bflg==
+X-Gm-Message-State: AOJu0Yyn+jENzN3YYLLgaYGmLpLAmfAPWU90/Y75zxsZBn257iAxUCDW
+        fBCuJzIyMj2XJ0cdFzjCTKQ8wA==
+X-Google-Smtp-Source: AGHT+IFfVa55Z0k+xnzz6DmXmsyHHjRtKJosliwG8nh/znIKetArdy/zlpieRb8IVEp34SRLXRv2yA==
+X-Received: by 2002:adf:fc09:0:b0:31c:7ada:5e05 with SMTP id i9-20020adffc09000000b0031c7ada5e05mr7459255wrr.51.1696626258538;
+        Fri, 06 Oct 2023 14:04:18 -0700 (PDT)
+Received: from [127.0.1.1] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id d25-20020ac25459000000b00501ce28db76sm432993lfn.291.2023.10.06.14.04.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 14:04:18 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 6 Oct 2023 23:03:26 +0200
-Message-ID: <CACRpkdaOELGxGWUk_asChG71j8JP4uAUgq-8L-_NAkzmTeoUMQ@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: renesas: Fixes for v6.6
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH 0/2] Fix some realtek driver warnings
+Date:   Fri, 06 Oct 2023 23:04:17 +0200
+Message-Id: <20231006-fix-realtek-warnings-v1-0-09af253312ba@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFF2IGUC/x2MwQqDMBAFf0X27EJiTUV/RXoI+kyXSpSNaCH47
+ w09DsxMpgQVJBqqTIpTkmyxgK0rmt4+BrDMhakxzcMa0/IiX1b49cCHL69RYkg82afzi0PfwVF
+ Jd0Xx/tvxdd8/r8qLKmYAAAA=
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Tzuyi Chang <tychang@realtek.com>
+X-Mailer: b4 0.12.3
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 6, 2023 at 9:36=E2=80=AFAM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Linus Walleij (2):
+      pinctrl: realtek: Tag unused pins as __maybe_unused
+      pinctrl: realtek: Fix some NULL dereference warnings
 
-> The following changes since commit 0bb80ecc33a8fb5a682236443c1e740d5c917d=
-1d:
->
->   Linux 6.6-rc1 (2023-09-10 16:28:41 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
- tags/renesas-pinctrl-fixes-for-v6.6-tag1
->
-> for you to fetch changes up to 73394a1b2194694b66f7a0839a219ce0d16b64a3:
->
->   pinctrl: renesas: rzn1: Enable missing PINMUX (2023-10-05 11:42:43 +020=
-0)
+ drivers/pinctrl/realtek/pinctrl-rtd.c      | 10 +++++++++-
+ drivers/pinctrl/realtek/pinctrl-rtd1315e.c |  3 ++-
+ drivers/pinctrl/realtek/pinctrl-rtd1319d.c |  3 ++-
+ 3 files changed, 13 insertions(+), 3 deletions(-)
+---
+base-commit: e8b4ff6a856d02ee64a6023edf45e11827badeef
+change-id: 20231004-fix-realtek-warnings-c165af5e97e5
 
-Pulled in, thanks Geert!
+Best regards,
+-- 
+Linus Walleij <linus.walleij@linaro.org>
 
-Yours,
-Linus Walleij
