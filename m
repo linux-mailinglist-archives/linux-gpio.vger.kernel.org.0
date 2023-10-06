@@ -2,305 +2,195 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5968C7BBB58
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 17:10:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D86387BBCCD
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 18:34:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232678AbjJFPKK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 11:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33362 "EHLO
+        id S232774AbjJFQeA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 12:34:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232677AbjJFPKK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 11:10:10 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28F49F;
-        Fri,  6 Oct 2023 08:10:08 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 396DJY15008473;
-        Fri, 6 Oct 2023 15:09:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=116pN689ygt9psamelJSV3WSJBDI4hnmaTYmjbIGKPk=;
- b=bdTG9AugUWu6LZ23FBsbNo/TYE0Bc53Am3b/ITJMrq3duow2m6UG+kCPo0Q0zBjE6lok
- jXNh/0lktZrzyDLQSahmVBPvTOLPUxAIzNJ2Dgqi6ywJbq8eg7ipC766HQS5dqvn8pI9
- TecjD2S/U4jqZlspKF24O7PvjxuxzYL8Xt/56vibIV9nG+IIr29iRtGc06YbRFIJ27JO
- DSi3qnitzCGz/EI6qe/3RlwB895LeEdmhQ1yUk3TgWlDcBN36cBMKTCmzCCSU5gjTbSx
- OvVynM3j6ePsCd4zDrFKH/wUmsAmu2FJmhcvFscbnLz14awDjUBCohkYUHsJkOn3goya yw== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tj820sp79-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Oct 2023 15:09:30 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 396F9TqR026704
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 6 Oct 2023 15:09:29 GMT
-Received: from [10.216.35.212] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Fri, 6 Oct
- 2023 08:08:56 -0700
-Message-ID: <bb29aba3-9378-6405-5f6d-a7d77e0374ad@quicinc.com>
-Date:   Fri, 6 Oct 2023 20:38:52 +0530
+        with ESMTP id S232848AbjJFQd7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 12:33:59 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345CBE9
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 09:33:57 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c6185cafb3so166685ad.1
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 09:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696610036; x=1697214836; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hTvdrZFmq0hYxp77EcKvOnGpN0oCW3xY/AiFjsTxtTU=;
+        b=1cH8qcBLbYdVmyJgImfP4kPooyszqdpDDthXV10khKxOsscBnVV3NVbQKLvLbvxpMO
+         fHuFzPq8TQdY/uGy/u2NON+aYcSKUcYAazbz3YZ3KSDLDm3GSD+rP2mR8S8Glbt07Kb0
+         7A5a49SYPvi9/b1g50QgirZreJsXES4IRiUp0GEzEw66wp/Q7G6GfLEvcSRoOy8cDMVC
+         oyvq+1tJ8NU9qKSqigDolMELM0AEmHqdWsJAzcy5mV6TCdzukP5Yv9SxTHQrT9llVCzj
+         jaIwVe6yRVaJa8K3mrN8ZYfIVvFLcTSx/Q9Q5rbHIQ8W4JqZ87/ZOzBiqlJK+ngA/TgG
+         Ghog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696610036; x=1697214836;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hTvdrZFmq0hYxp77EcKvOnGpN0oCW3xY/AiFjsTxtTU=;
+        b=A/KAgH0hdhW9H3gMSdkuHu8xyPB3hyNeynOohoKYAd/lAfVvaKXTI64ouDLoM0sm6m
+         JPYcc3h3M5HKgd7c6vV0LKcC6uBlB87N2NpNuBJH/ifHMQzBUjmuP++NJyeFVOb+y17n
+         rULHySvzLMcaDgpcn8g4/Jn+XwbGLaXD+GM1psagi9uwZ0HlKqwppj6eJnAf8mb82ZpX
+         F5XAvhBUFglitaxCgybz2RGwMuVBdt+Xft4Ehb7sNe+wu35/m5Jl9eiZgwAHCy4whOGS
+         yJs3iqUsd7JIQOqhgEKPZbs5ycU3x09T3mLTwlLzxjRV9Ztf09UpVP2rmxooFgn0nXKE
+         57XA==
+X-Gm-Message-State: AOJu0Yzt32ThENFnkoqnYXh7AQ6Q+Ca1uQI2xTrO6XcpqovWUs874en4
+        n99J6zdkBeZvG+OdTtsQnuNTuw==
+X-Google-Smtp-Source: AGHT+IHgejsiy4SZfD/kIaiCo2p5a5GHbtVsqXoNRUJ/kjAOpzjKyLWuXfdo9k7lkUWRMBwV75Nd+w==
+X-Received: by 2002:a17:902:e805:b0:1c7:3224:913a with SMTP id u5-20020a170902e80500b001c73224913amr382708plg.27.1696610036323;
+        Fri, 06 Oct 2023 09:33:56 -0700 (PDT)
+Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
+        by smtp.gmail.com with ESMTPSA id l4-20020a170902eb0400b001b9d7c8f44dsm4113036plb.182.2023.10.06.09.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 09:33:55 -0700 (PDT)
+Date:   Fri, 6 Oct 2023 09:33:51 -0700
+From:   William McVicker <willmcvicker@google.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Griffin <peter.griffin@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        krzysztof.kozlowski+dt@linaro.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        soc@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH 18/21] arm64: dts: google: Add initial Google gs101 SoC
+ support
+Message-ID: <ZSA27y5CVs4yQC4a@google.com>
+References: <20231005155618.700312-1-peter.griffin@linaro.org>
+ <20231005155618.700312-19-peter.griffin@linaro.org>
+ <ZR75cIvnQS2cqTT3@google.com>
+ <2023100520-cleaver-sinless-fbae@gregkh>
+ <99419159-cab0-4c79-a4a0-12229bfad3c0@linaro.org>
+ <2023100513-mashing-scrubber-ea59@gregkh>
+ <efc9f099-9c97-460b-b0c8-9891aa3b772a@linaro.org>
+ <ZR9EnFw3vB92vlYM@google.com>
+ <44816879-a3a7-4bd0-bb20-19a645107b4b@linaro.org>
+ <e8b23683-36ac-4547-9386-935a1b211d7d@app.fastmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [REBASE PATCH v5 04/17] remoteproc: qcom: Remove minidump related
- data from qcom_common.c
-Content-Language: en-US
-To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-5-git-send-email-quic_mojha@quicinc.com>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <1694429639-21484-5-git-send-email-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: TY-OAbVjGnyZJBDRL_fedObtLqGklWvb
-X-Proofpoint-GUID: TY-OAbVjGnyZJBDRL_fedObtLqGklWvb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-06_12,2023-10-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 spamscore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310060113
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8b23683-36ac-4547-9386-935a1b211d7d@app.fastmail.com>
+X-Spam-Status: No, score=-15.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bjorn/Mathieu,
-
-Patches from 2/17-4/17  is just a movement of functions to separate 
-config/file.
-
-Do you think, these can be picked independently from this series ?
-I can send them separately, if required.
-
-@Bjorn: I have sent 13/17-15/17 separately [1] as it is needed
-by some folks and independent from this series.
-
-[1]
-https://lore.kernel.org/all/1696440338-12561-1-git-send-email-quic_mojha@quicinc.com/
-
--Mukesh
-
-On 9/11/2023 4:23 PM, Mukesh Ojha wrote:
-> As minidump specific data structure and functions move under
-> config QCOM_RPROC_MINIDUMP, so remove minidump specific data
-> from driver/remoteproc/qcom_common.c .
+On 10/06/2023, Arnd Bergmann wrote:
+> On Fri, Oct 6, 2023, at 08:06, Krzysztof Kozlowski wrote:
+> > On 06/10/2023 01:19, William McVicker wrote:
+> >> On 10/05/2023, Krzysztof Kozlowski wrote:
+> >>> On 05/10/2023 21:23, Greg KH wrote:
+> >>
+> >> Being able to include SERIAL_SAMSUNG and SERIAL_MSM without all the vendor> specific drivers that ARCH_EXYNOS and ARCH_QCOM select is very
+> > valuable for
+> >> debugging early boot issues.
+> >
+> > Really? How related? The drivers are independent. You describe some
+> > out-of-tree development process which we never needed for upstream work.
+> > And we did here quite a lot of upstream, specially if you look at ARCH_QCOM.
 > 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->   drivers/remoteproc/qcom_common.c | 160 ---------------------------------------
->   1 file changed, 160 deletions(-)
+> Right: in general, all drivers are independent of the platform
+> besides the typical 'depends on ARCH_FOO || COMPILE_TEST' dependency,
+> but I think it's worth mentioning the known exceptions, so Greg and
+> Will can take that fight to the respective places rather than
+> discussing it in the platform submission:
 > 
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index 03e5f5d533eb..085fd73fa23a 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -17,7 +17,6 @@
->   #include <linux/rpmsg/qcom_smd.h>
->   #include <linux/slab.h>
->   #include <linux/soc/qcom/mdt_loader.h>
-> -#include <linux/soc/qcom/smem.h>
->   
->   #include "remoteproc_internal.h"
->   #include "qcom_common.h"
-> @@ -26,61 +25,6 @@
->   #define to_smd_subdev(d) container_of(d, struct qcom_rproc_subdev, subdev)
->   #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, subdev)
->   
-> -#define MAX_NUM_OF_SS           10
-> -#define MAX_REGION_NAME_LENGTH  16
-> -#define SBL_MINIDUMP_SMEM_ID	602
-> -#define MINIDUMP_REGION_VALID		('V' << 24 | 'A' << 16 | 'L' << 8 | 'I' << 0)
-> -#define MINIDUMP_SS_ENCR_DONE		('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
-> -#define MINIDUMP_SS_ENABLED		('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' << 0)
-> -
-> -/**
-> - * struct minidump_region - Minidump region
-> - * @name		: Name of the region to be dumped
-> - * @seq_num:		: Use to differentiate regions with same name.
-> - * @valid		: This entry to be dumped (if set to 1)
-> - * @address		: Physical address of region to be dumped
-> - * @size		: Size of the region
-> - */
-> -struct minidump_region {
-> -	char	name[MAX_REGION_NAME_LENGTH];
-> -	__le32	seq_num;
-> -	__le32	valid;
-> -	__le64	address;
-> -	__le64	size;
-> -};
-> -
-> -/**
-> - * struct minidump_subsystem - Subsystem's SMEM Table of content
-> - * @status : Subsystem toc init status
-> - * @enabled : if set to 1, this region would be copied during coredump
-> - * @encryption_status: Encryption status for this subsystem
-> - * @encryption_required : Decides to encrypt the subsystem regions or not
-> - * @region_count : Number of regions added in this subsystem toc
-> - * @regions_baseptr : regions base pointer of the subsystem
-> - */
-> -struct minidump_subsystem {
-> -	__le32	status;
-> -	__le32	enabled;
-> -	__le32	encryption_status;
-> -	__le32	encryption_required;
-> -	__le32	region_count;
-> -	__le64	regions_baseptr;
-> -};
-> -
-> -/**
-> - * struct minidump_global_toc - Global Table of Content
-> - * @status : Global Minidump init status
-> - * @md_revision : Minidump revision
-> - * @enabled : Minidump enable status
-> - * @subsystems : Array of subsystems toc
-> - */
-> -struct minidump_global_toc {
-> -	__le32				status;
-> -	__le32				md_revision;
-> -	__le32				enabled;
-> -	struct minidump_subsystem	subsystems[MAX_NUM_OF_SS];
-> -};
-> -
->   struct qcom_ssr_subsystem {
->   	const char *name;
->   	struct srcu_notifier_head notifier_list;
-> @@ -90,110 +34,6 @@ struct qcom_ssr_subsystem {
->   static LIST_HEAD(qcom_ssr_subsystem_list);
->   static DEFINE_MUTEX(qcom_ssr_subsys_lock);
->   
-> -static void qcom_minidump_cleanup(struct rproc *rproc)
-> -{
-> -	struct rproc_dump_segment *entry, *tmp;
-> -
-> -	list_for_each_entry_safe(entry, tmp, &rproc->dump_segments, node) {
-> -		list_del(&entry->node);
-> -		kfree(entry->priv);
-> -		kfree(entry);
-> -	}
-> -}
-> -
-> -static int qcom_add_minidump_segments(struct rproc *rproc, struct minidump_subsystem *subsystem,
-> -			void (*rproc_dumpfn_t)(struct rproc *rproc, struct rproc_dump_segment *segment,
-> -				void *dest, size_t offset, size_t size))
-> -{
-> -	struct minidump_region __iomem *ptr;
-> -	struct minidump_region region;
-> -	int seg_cnt, i;
-> -	dma_addr_t da;
-> -	size_t size;
-> -	char *name;
-> -
-> -	if (WARN_ON(!list_empty(&rproc->dump_segments))) {
-> -		dev_err(&rproc->dev, "dump segment list already populated\n");
-> -		return -EUCLEAN;
-> -	}
-> -
-> -	seg_cnt = le32_to_cpu(subsystem->region_count);
-> -	ptr = ioremap((unsigned long)le64_to_cpu(subsystem->regions_baseptr),
-> -		      seg_cnt * sizeof(struct minidump_region));
-> -	if (!ptr)
-> -		return -EFAULT;
-> -
-> -	for (i = 0; i < seg_cnt; i++) {
-> -		memcpy_fromio(&region, ptr + i, sizeof(region));
-> -		if (le32_to_cpu(region.valid) == MINIDUMP_REGION_VALID) {
-> -			name = kstrndup(region.name, MAX_REGION_NAME_LENGTH - 1, GFP_KERNEL);
-> -			if (!name) {
-> -				iounmap(ptr);
-> -				return -ENOMEM;
-> -			}
-> -			da = le64_to_cpu(region.address);
-> -			size = le64_to_cpu(region.size);
-> -			rproc_coredump_add_custom_segment(rproc, da, size, rproc_dumpfn_t, name);
-> -		}
-> -	}
-> -
-> -	iounmap(ptr);
-> -	return 0;
-> -}
-> -
-> -void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
-> -		void (*rproc_dumpfn_t)(struct rproc *rproc,
-> -		struct rproc_dump_segment *segment, void *dest, size_t offset,
-> -		size_t size))
-> -{
-> -	int ret;
-> -	struct minidump_subsystem *subsystem;
-> -	struct minidump_global_toc *toc;
-> -
-> -	/* Get Global minidump ToC*/
-> -	toc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, NULL);
-> -
-> -	/* check if global table pointer exists and init is set */
-> -	if (IS_ERR(toc) || !toc->status) {
-> -		dev_err(&rproc->dev, "Minidump TOC not found in SMEM\n");
-> -		return;
-> -	}
-> -
-> -	/* Get subsystem table of contents using the minidump id */
-> -	subsystem = &toc->subsystems[minidump_id];
-> -
-> -	/**
-> -	 * Collect minidump if SS ToC is valid and segment table
-> -	 * is initialized in memory and encryption status is set.
-> -	 */
-> -	if (subsystem->regions_baseptr == 0 ||
-> -	    le32_to_cpu(subsystem->status) != 1 ||
-> -	    le32_to_cpu(subsystem->enabled) != MINIDUMP_SS_ENABLED) {
-> -		return rproc_coredump(rproc);
-> -	}
-> -
-> -	if (le32_to_cpu(subsystem->encryption_status) != MINIDUMP_SS_ENCR_DONE) {
-> -		dev_err(&rproc->dev, "Minidump not ready, skipping\n");
-> -		return;
-> -	}
-> -
-> -	/**
-> -	 * Clear out the dump segments populated by parse_fw before
-> -	 * re-populating them with minidump segments.
-> -	 */
-> -	rproc_coredump_cleanup(rproc);
-> -
-> -	ret = qcom_add_minidump_segments(rproc, subsystem, rproc_dumpfn_t);
-> -	if (ret) {
-> -		dev_err(&rproc->dev, "Failed with error: %d while adding minidump entries\n", ret);
-> -		goto clean_minidump;
-> -	}
-> -	rproc_coredump_using_sections(rproc);
-> -clean_minidump:
-> -	qcom_minidump_cleanup(rproc);
-> -}
-> -EXPORT_SYMBOL_GPL(qcom_minidump);
-> -
->   static int glink_subdev_start(struct rproc_subdev *subdev)
->   {
->   	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
+> - Some subsystems are considered 'special' and the maintainers
+>   prefer the drivers to be automatically selected based on the
+>   ARCH_* settings instead of having user-visible options. This is
+>   traditionally true for large chunks of drivers/irqchip,
+>   drivers/clocksource and drivers/pinctrl, though it has gotten
+>   better over time on all of them.
+> 
+> - Some older 32-bit platforms are still not as modular as we'd
+>   like them to be, especially the StrongARM (ARMv4) platforms that
+>   require a custom kernel build, and some of ARMv4T and ARMv5
+>   boards that are still missing DT support. These tend to require
+>   drivers they directly link to from board code, so disabling
+>   the drivers would cause a link failure until this gets
+>   cleaned up.
+> 
+> - A couple of drivers are force-enabled based on the ARCH_*
+>   options because booting without these drivers would risk
+>   permanent damage to hardware, e.g. in overtemp or overcurrent
+>   scenarios.
+> 
+> - ACPI based platforms require the PCI host bridge driver to
+>   be built-in rather than a loadable module because ACPI
+>   needs to probe PCI devices during early boot.
+> 
+> - Some subsystems (notably drivers/gpu/, but others as well)
+>   have an excessive number of 'select' statements, so you
+>   end up surprise-enabling a number of additional drivers
+>   and subsystems by enabling certain less important platform
+>   specific drivers.
+> 
+>       Arnd
+
+So if the argument is that the existing upstream Exynos platforms are required
+to have these drivers built-in to the kernel to boot:
+    COMMON_CLK_SAMSUNG
+    CLKSRC_EXYNOS_MCT
+    EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
+    EXYNOS_PMU
+    PINCTRL
+    PINCTRL_EXYNOS
+    PM_GENERIC_DOMAINS if PM
+    SOC_SAMSUNG
+
+...then that is understandable and we can work to fix that.
+
+My last question then is -- why do we need a new ARCH_GOOGLE_TENSOR config in
+the platform Kconfig? For example, I don't really like this:
+
+diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
+index 76a494e95027..4c8f173c4dec 100644
+--- a/drivers/clk/samsung/Kconfig
++++ b/drivers/clk/samsung/Kconfig
+@@ -13,6 +13,7 @@ config COMMON_CLK_SAMSUNG
+        select EXYNOS_5420_COMMON_CLK if ARM && SOC_EXYNOS5420
+        select EXYNOS_ARM64_COMMON_CLK if ARM64 && ARCH_EXYNOS
+        select TESLA_FSD_COMMON_CLK if ARM64 && ARCH_TESLA_FSD
++       select GOOGLE_GS101_COMMON_CLK if ARM64 && ARCH_GOOGLE_TENSOR
+
+What happens when we have GOOGLE_GS101_COMMON_CLK, GOOGLE_GS201_COMMON_CLK, and
+so on? How are we going to pick the right driver when we have a generic
+ARCH_GOOGLE_TENSOR config? Ideally, we should have one Exynos clock driver that
+can detect what hardware is running (using the DT) to determine what it needs
+to do. If you really want to compile out the other vendor's clock drivers using
+some configs, then we should do that with SOC_GS101, SOC_GS201, SOC_TESLA_FSD
+configs (not ideal though). With that approach, we could drop the platform
+ARCH_GOOGLE_TENSOR config and create an SOC_GS101 config that can be used for
+things like the COMMON_CLK_SAMSUNG driver (for now) and building the GS101 dtb.
+
+Let me know your thoughts.
+
+Thanks,
+Will
