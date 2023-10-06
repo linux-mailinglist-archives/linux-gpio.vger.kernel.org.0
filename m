@@ -2,107 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD8CD7BB9B3
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 15:48:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66AA47BBA12
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 16:18:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232496AbjJFNro (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 09:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60692 "EHLO
+        id S232234AbjJFOSm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 10:18:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232598AbjJFNrJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 09:47:09 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C61071717
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 06:46:36 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-50435a9f800so2794157e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 06:46:36 -0700 (PDT)
+        with ESMTP id S229492AbjJFOSm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 10:18:42 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE168C5;
+        Fri,  6 Oct 2023 07:18:40 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-9936b3d0286so403045766b.0;
+        Fri, 06 Oct 2023 07:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696599995; x=1697204795; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LbIwSXH6FjrGWEWkB8T6Lc3o+IPSoQUzJoJygEsVP2Q=;
-        b=M3oq6ZOROeph8Fv7ppj+U8piGVvV7XaktM+MOxQLPx9B0paNEapfFjo6X1QC6xuPtT
-         wLE1Pv0qcPaDAXQ+V0lSGptIZk4iytMdr797zl26RmNgEaN+dVfLJZQGmkgovakbJnLH
-         sP9iaC1/ueQXN35ckC5i0MWiEucemFCAs9Dp4m2eSXSEe50qCRDbdfcnkn4Z9JaV6UBe
-         tSmKFLnlHgoudfzKLeRdiRZG6Dpz1MeykVxQ8ESOIMq5S57qnbM3W5qH5WAJWfWeOP9j
-         QkznC7bBgxBvxgONArYT3LX2owneRc/FHO61znAEtPn9fEVzo179I0kpAvdyBvapMP96
-         ApkA==
+        d=gmail.com; s=20230601; t=1696601919; x=1697206719; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AmTNhahVlLjLwaQlHbv41r5WgbZRC4QhjNNkQIXElyw=;
+        b=XoiK9GUJuSlOBU0sdAEfniSGdyRyMqBn3R/cjtwRgVXJbsAaQbifbDH3H8fsAb938Y
+         QMaV6MZHzbIwADP+tScFvnBjrTUMyxrRmiLIsB1E33hSiY5fPk/X8tv2qPRQGX+eTiZW
+         yckRc1er9Glpp3YXbbBD0Hdicy09CqA9mSmen5oRCrTwBHpH1lxBlGqw8LXviDXnPjQx
+         7jq/TGXLqH7hN1GX7NdXBXunhW3Ao4pB8uj1VEnT2vQz6rUjPg4H/jpvKBB1xH8JUmnF
+         7JNS19Hvi3mrsBfYEbYe1lhKiiF97ZMUlOcQSC+FG4gVfA930wuwGIafmnKtoF+acD50
+         FQHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696599995; x=1697204795;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LbIwSXH6FjrGWEWkB8T6Lc3o+IPSoQUzJoJygEsVP2Q=;
-        b=GsDVnzDt/tegwtWKRB6WvLQAo4z7f1nW2ykWjTrvKGPB0QCqd/kU4KsR3UXreX3Ih+
-         jQXNW1Dc5LN0Dhgvvbp5usT6bMC3aQ3SBT8LFP40YjBm+fUTZKKpGWMH7SJNUnYe42iu
-         hbf5c1f8Ntb2IO250mqDX/jOOUIMnK2QZ/n17fF0JmcgguzwKcGeyzsXXE2b0nDtkvp6
-         sLQDxs4DmbN4c7t4gv51VW45PHdxPzsL4jFLggZuggzCphcpeYit2u/NfoBjKi+ramqN
-         SnkkwFl98YxKxJn4uCHDExB4s9lFjlegd5QYL6QF7+wu7kYBFG6+tJ/o0AV2KUqpr09z
-         5s8w==
-X-Gm-Message-State: AOJu0Yx3D99qDxijgJTg9KiO8Jq+1lTF+zDBU0OiH+V3yDYkAWk8kwC3
-        3NOKqrMEFE4DQg3jQsFC9CYW8w==
-X-Google-Smtp-Source: AGHT+IFoek3UspuoDg2fClJUEjov1EeEFdmzeEDd5y8Kje8woAv95XAU2HD1vvAKiP/TapL6Jc3a7g==
-X-Received: by 2002:a19:5e06:0:b0:504:4165:54c1 with SMTP id s6-20020a195e06000000b00504416554c1mr6124350lfb.7.1696599994954;
-        Fri, 06 Oct 2023 06:46:34 -0700 (PDT)
-Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id v25-20020a197419000000b004fe37199b87sm308733lfe.156.2023.10.06.06.46.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 06:46:34 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 06 Oct 2023 15:46:31 +0200
-Subject: [PATCH 8/8] ASoC: mt8192-afe-gpio: Drop unused include
+        d=1e100.net; s=20230601; t=1696601919; x=1697206719;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AmTNhahVlLjLwaQlHbv41r5WgbZRC4QhjNNkQIXElyw=;
+        b=ZBsszL3rzmK09bwmkdq9P1YSyG+oGyi7/DKqfhNXLCwDk4Hq6xWSHUwoZfFloEtxrv
+         ua6Beaxt1usDu6nAnHJ2DGSAQ2QlRv3IPJQgO8YG4ElZK5ItiSpH55v5o8hrRoXxipMh
+         +LdWQJK3uhCCHgwFnnkRDn9F/c9a27CVuJrLRJeU+uzzxqJlOSgvhc2f4hZhwXZ8xYBf
+         S3qetoBAZ2bw8EQXxMfr2ngXFZUZWQZ/L2OYBmRrBZAgNO5DkHxqG5mJMbTKako03363
+         uuloMb7+YFuJqj6t3rpNbh8VRUTd3E+vOQtdx92afxb/4hkZaSGKb1P1TlvDTJ/IQnfV
+         6ztw==
+X-Gm-Message-State: AOJu0YxIoX06ovzOEvJc9XiGl2126UoovqfOVOef5GsJUEbZ1jAbcS+m
+        MB4hh5+kVlD3iQoxxnaeYaBhQbyCZnsyBSrL
+X-Google-Smtp-Source: AGHT+IFPssNvdDSrhsENbJLGoa0rvZp3zpleLsg6gyuJ+0YhysS296jJ15ngd5HgjjZ1TuGY4WGJGQ==
+X-Received: by 2002:a17:906:308c:b0:9ae:829e:d930 with SMTP id 12-20020a170906308c00b009ae829ed930mr8031948ejv.9.1696601918987;
+        Fri, 06 Oct 2023 07:18:38 -0700 (PDT)
+Received: from [10.76.84.110] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id w19-20020a170906481300b009b9720a85e5sm2932839ejq.38.2023.10.06.07.18.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Oct 2023 07:18:38 -0700 (PDT)
+Message-ID: <07afa29c-bfef-72dc-d471-f72dfcebe342@gmail.com>
+Date:   Fri, 6 Oct 2023 17:18:36 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v3 2/2] iio: adc: ad7173: add AD7173 driver
+Content-Language: en-US
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+        linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        ChiaEn Wu <chiaen_wu@richtek.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        =?UTF-8?Q?Leonard_G=c3=b6hrs?= <l.goehrs@pengutronix.de>,
+        Mike Looijmans <mike.looijmans@topic.nl>,
+        Haibo Chen <haibo.chen@nxp.com>,
+        Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+        Ceclan Dumitru <dumitru.ceclan@analog.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20231005105921.460657-1-mitrutzceclan@gmail.com>
+ <20231005105921.460657-2-mitrutzceclan@gmail.com>
+ <20231005180131.0518f46c@jic23-huawei>
+From:   Ceclan Dumitru-Ioan <mitrutzceclan@gmail.com>
+In-Reply-To: <20231005180131.0518f46c@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231006-descriptors-asoc-mediatek-v1-8-07fe79f337f5@linaro.org>
-References: <20231006-descriptors-asoc-mediatek-v1-0-07fe79f337f5@linaro.org>
-In-Reply-To: <20231006-descriptors-asoc-mediatek-v1-0-07fe79f337f5@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, alsa-devel@alsa-project.org,
-        Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.3
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This driver includes the legacy GPIO header <linux/gpio.h> but
-is not using any symbols from it. AFE has a custom GPIO
-implementation that is not using the kernel GPIO framework.
+On 10/5/23 20:01, Jonathan Cameron wrote:
+> On Thu,  5 Oct 2023 13:59:22 +0300
+> Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
+> 
+>> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+>> which can be used in high precision, low noise single channel
+>> applications or higher speed multiplexed applications. The Sigma-Delta
+>> ADC is intended primarily for measurement of signals close to DC but also
+>> delivers outstanding performance with input bandwidths out to ~10kHz.
+>>
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- sound/soc/mediatek/mt8192/mt8192-afe-gpio.c | 1 -
- 1 file changed, 1 deletion(-)
+...
 
-diff --git a/sound/soc/mediatek/mt8192/mt8192-afe-gpio.c b/sound/soc/mediatek/mt8192/mt8192-afe-gpio.c
-index 165663a78e36..de5e1deaa167 100644
---- a/sound/soc/mediatek/mt8192/mt8192-afe-gpio.c
-+++ b/sound/soc/mediatek/mt8192/mt8192-afe-gpio.c
-@@ -6,7 +6,6 @@
- // Author: Shane Chien <shane.chien@mediatek.com>
- //
- 
--#include <linux/gpio.h>
- #include <linux/pinctrl/consumer.h>
- 
- #include "mt8192-afe-common.h"
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		ret = ad_sigma_delta_single_conversion(indio_dev, chan, val);
+> 
+> It's fairly usual for it to be safe to grab a single conversion when the
+> buffered mode might be enabled.  Do you need an iio_device_claim_direct_mode()
+> here?
+> 
+ad_sigma_delta_single_conversion() calls iio_device_claim_direct_mode()
 
--- 
-2.34.1
 
+>> +static int ad7173_update_scan_mode(struct iio_dev *indio_dev,
+>> +				   const unsigned long *scan_mask)
+>> +{
+>> +	struct ad7173_state *st = iio_priv(indio_dev);
+>> +	int i, ret = 0;
+>> +
+>> +	iio_device_claim_direct_mode(indio_dev);
+> 
+> This looks wrong.
+> Firstly iio_device_claim_direct_mode() can fail so you always have
+> to check the return value. If it does fail and you then call
+> iio_release_direct_mode() it is unbalanced release of a mutex.
+> 
+> Secondly update_scan_mode is only called as part of buffer setup
+> and there should be no races around that (and the mutex this
+> tries to grab is already held.
+> https://elixir.bootlin.com/linux/latest/source/drivers/iio/industrialio-buffer.c#L1265
+> )
+> 
+> If you are protecting something device specific (rather than
+> the mode) then a device specific lock should be taken.
+> 
+
+The use of a lock was inspired from ad7124, but from looking at it the only use it has
+was to protect concurrent access of the device setup from write_raw (that now uses ...direct_mode())
+
+I think it's best to drop this lock. 
+
+
+>> +		chan[chan_index].differential = fwnode_property_read_bool(child, "bipolar");
+> 
+> bipolar doesn't normally == differential. 
+> You can have unipolar differential (just that you can't get a negative answer)
+> Perhaps just a terminology thing?
+>
+
+This device supports only differential channels. Here, the differential flag is used to show
+if bipolar coding should be used.
+
+
+>> +	st->info = device_get_match_data(dev);
+>> +	if (!st->info)
+>> +		return -ENODEV;
+> This works for the cases of DT and ACPI but not for anyone just
+> using the spi_device_id table. 
+> There is spi_device_get_match_data() to cover all options.
+> 
+I could not find the spi_device_get_match_data() function in the repo.
+It appears however as a suggestion from Andy Shevchenko in a thread:
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg2382960.html
+ Is this it? 
