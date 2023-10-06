@@ -2,153 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C619B7BBDB2
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 19:25:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 327C17BBE1F
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 19:57:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233040AbjJFRZs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 13:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53014 "EHLO
+        id S233073AbjJFR5B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 13:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233036AbjJFRZq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 13:25:46 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3714DCF
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 10:25:44 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-7afc13d58c6so992651241.1
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 10:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696613143; x=1697217943; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dfqdpiaz02xN8PLTPu9pWuaYxQEaAnQY6icekWcwU9s=;
-        b=kdO3qI33aPBkfgeK5AxV6UIAGYQ1iYuJR54B9k5s+ZHkyFeEDCgfxeh7hdbtm6iygD
-         Y/t23b7Fypy9mm8aZmDVgP17hKL0pqqgOLPsPc+GMJ2NFfZhY+e4YwvmuimYUA/pXG0f
-         LXlTZJaE31a6+z2D0yI/DKpdF++j1fY9+QJv5U5zD7/uaA9ym24Zc11/fk/mhyQlWrpb
-         Y6CXx+HrmdIDYfrTxdGvo8mX+g7sLV1nOaXru2XUDMFrV338/278UqQq4reprYiyVtHv
-         WV/AKa12opu6HcQYsVH7w976I2dzt9YSwcJWklKJpI0BOkxFsZMVpQNm8iOOiVDUNFbL
-         eziw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696613143; x=1697217943;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dfqdpiaz02xN8PLTPu9pWuaYxQEaAnQY6icekWcwU9s=;
-        b=KBRkaU5aoXF67kNnXz1NPbvzjtggw+P/k6Hin/rGdHlgwgHm9aPB3lvjsJAsUrAcS3
-         EBgQ0MEd7/Ct84biSxPmX4A54SK+2S1nOy2KD1SgNpS+vqb87is6bxI+tqm72tnoUB82
-         UTaZRSaJnA9UQX6zPJibnylLruMGJDIjPTioCv26PGGHfah79jZUgMev+hnHi0D6BsND
-         z3rCSsPdpi93kdDmV8d80uz1ECCNSwwDc7N2Z2igEDPRbEuR40EjlqqdSvBKIMuiZxhg
-         YautYO8bNx4sKe89+1gMhIpL5HnymRd/0YzCTHeU6HNvFkgBGHjtmuQlaTUipkEWMHRe
-         tchg==
-X-Gm-Message-State: AOJu0YwLU/gPPaSPUgjzMnyemmQYq3hXcoMyT5U6t4fEsUTisRGE2+Hq
-        vfQ4mXToIpeiOXKVF+wNW5Ra4cd/l8+09ecFZTUjNQ==
-X-Google-Smtp-Source: AGHT+IFAfquioQvCUi1yrJicx4juipJtkOOWOyEzXNLtXeXDDfkDZKDvRvHpEr2iQgkuqnzhVnkDvAAn+uh8ePAxBsg=
-X-Received: by 2002:a1f:4cc7:0:b0:493:7c76:bbac with SMTP id
- z190-20020a1f4cc7000000b004937c76bbacmr7557435vka.2.1696613143171; Fri, 06
- Oct 2023 10:25:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231006-pxa-gpio-v6-0-981b4910d599@skole.hr> <20231006-pxa-gpio-v6-2-981b4910d599@skole.hr>
-In-Reply-To: <20231006-pxa-gpio-v6-2-981b4910d599@skole.hr>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 6 Oct 2023 19:25:32 +0200
-Message-ID: <CAMRc=McaMx-pNb__8BhU7zj9D=3FERm0BzSbQebS+BQew=ZTbA@mail.gmail.com>
-Subject: Re: [PATCH RFT v6 2/6] ARM: pxa: Convert Spitz LEDs to GPIO descriptors
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        with ESMTP id S233134AbjJFR47 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 13:56:59 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC178106;
+        Fri,  6 Oct 2023 10:56:57 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0AAFC433C8;
+        Fri,  6 Oct 2023 17:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696615017;
+        bh=M7cM0uzrZk4lKMKjA93C2oMjoATI9WLt5iEp4Pa0My4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ExVRjuA7T/H0LaeJ0jyf3NZMtrc0lM6wOK+ekvS3Hq8ZCLXMYeoBcRONIckkYnR9e
+         R9KWM6wDzcE5q6jwvZF8lMhKkQ1lgD5XgMAmF7JJPxu8HLrXCruZvJdtW+N4EFMC/7
+         +MgEyPdqIsG0GVwqs1Zo00lHWuag9pWExwjTRXjr6/1rfLAWPo85X4OULjN1ooa7MU
+         QE2wvKipHSHuTUa2DvBuP+DGUrlVwrPA7dr5beW5tSBoKlXJNaQzu4hKecZwWebxPT
+         cSOeYmHLA64elgkUGOYkMirnChTWEZcTn5lG+t94KgeZRNsGwZCdyYGcGdRGZ4Z1JF
+         KS5ex2P3lOVhA==
+Received: (nullmailer pid 70487 invoked by uid 1000);
+        Fri, 06 Oct 2023 17:56:54 -0000
+Date:   Fri, 6 Oct 2023 12:56:54 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Kaiser <martin@kaiser.cx>
+Cc:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Conor Dooley <conor+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] dt-bindings: pinctrl: st,stm32: fix phandle-array warning
+Message-ID: <169661501435.70432.16755877986670034633.robh@kernel.org>
+References: <20231006082247.3830719-1-martin@kaiser.cx>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231006082247.3830719-1-martin@kaiser.cx>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 6, 2023 at 3:45=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic@=
-skole.hr> wrote:
->
-> Sharp's Spitz board still uses the legacy GPIO interface for configuring
-> its two onboard LEDs.
->
-> Convert them to use the GPIO descriptor interface.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+
+On Fri, 06 Oct 2023 10:22:48 +0200, Martin Kaiser wrote:
+> make CHECK_DTBS=y st/stm32f469-disco.dtb
+> 
+> brings up a warning about a missing argument:
+> 
+> stm32f469-disco.dtb: pinctrl@40020000: st,syscfg:0: [21, 8] is too short
+> 
+> The description of the third entry indicates that this entry is optional.
+> The code in stm32_pctrl_dt_setup_irq parses st,syscfg and treats the third
+> entry as optional. It defaults to 0xf if not present in the devicetree.
+> 
+> Update the schema to require at least two entries, use the same syntax as
+> the description of renesas,ipmmu-main in
+> Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml.
+> 
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 > ---
->  arch/arm/mach-pxa/spitz.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/mach-pxa/spitz.c b/arch/arm/mach-pxa/spitz.c
-> index 535e2b2e997b..1fb4102ea39e 100644
-> --- a/arch/arm/mach-pxa/spitz.c
-> +++ b/arch/arm/mach-pxa/spitz.c
-> @@ -452,16 +452,25 @@ static inline void spitz_keys_init(void) {}
->   * LEDs
->   ***********************************************************************=
-*******/
->  #if defined(CONFIG_LEDS_GPIO) || defined(CONFIG_LEDS_GPIO_MODULE)
-> +static struct gpiod_lookup_table spitz_led_gpio_table =3D {
-> +       .dev_id =3D "leds-gpio",
-> +       .table =3D {
-> +               GPIO_LOOKUP_IDX("pxa-gpio", SPITZ_GPIO_LED_ORANGE, NULL, =
-0,
-> +                               GPIO_ACTIVE_HIGH),
-> +               GPIO_LOOKUP_IDX("pxa-gpio", SPITZ_GPIO_LED_GREEN, NULL, 1=
-,
-> +                               GPIO_ACTIVE_HIGH),
-> +               { }
-> +       }
-> +};
-> +
->  static struct gpio_led spitz_gpio_leds[] =3D {
->         {
->                 .name                   =3D "spitz:amber:charge",
->                 .default_trigger        =3D "sharpsl-charge",
-> -               .gpio                   =3D SPITZ_GPIO_LED_ORANGE,
->         },
->         {
->                 .name                   =3D "spitz:green:hddactivity",
->                 .default_trigger        =3D "disk-activity",
-> -               .gpio                   =3D SPITZ_GPIO_LED_GREEN,
->         },
->  };
->
-> @@ -480,7 +489,14 @@ static struct platform_device spitz_led_device =3D {
->
->  static void __init spitz_leds_init(void)
->  {
-> +       struct gpio_descs *leds;
+> 
+> I tested the following cases, all of them returned the expected result:
+> 
+>    st,syscfg = <&syscfg>;              (too short)
+>    st,syscfg = <&syscfg 0x8>;          (ok)
+>    st,syscfg = <&syscfg 0x8 0x0>;      (ok)
+>    st,syscfg = <&syscfg 0x8 0x0 0x0>;  (too long)
+> 
+>  .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-This should be global, otherwise KASAN will complain.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Bart
-
-> +
-> +       gpiod_add_lookup_table(&spitz_led_gpio_table);
->         platform_device_register(&spitz_led_device);
-> +       leds =3D gpiod_get_array_optional(&spitz_led_device.dev,
-> +                       NULL, GPIOD_ASIS);
-> +       spitz_gpio_leds[0].gpiod =3D leds->desc[0];
-> +       spitz_gpio_leds[1].gpiod =3D leds->desc[1];
->  }
->  #else
->  static inline void spitz_leds_init(void) {}
->
-> --
-> 2.42.0
->
->
