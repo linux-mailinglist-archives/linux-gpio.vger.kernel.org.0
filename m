@@ -2,219 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5090C7BB1EF
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 09:07:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EC637BB1F4
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 09:09:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230273AbjJFHHi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 03:07:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34708 "EHLO
+        id S230239AbjJFHI7 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 6 Oct 2023 03:08:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbjJFHHg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 03:07:36 -0400
-Received: from mail-vs1-xe29.google.com (mail-vs1-xe29.google.com [IPv6:2607:f8b0:4864:20::e29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126C3FC
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 00:07:34 -0700 (PDT)
-Received: by mail-vs1-xe29.google.com with SMTP id ada2fe7eead31-45289425da1so720005137.1
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 00:07:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696576053; x=1697180853; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l3mh1m76o0jxvdd1cNjwNEbLhdaRWelrX6qtRv+BOf0=;
-        b=QOMknG8lVd6IeEBIrAt2LZIjoR14UIOUieW4OvASl9pYEgbxkGIEmUN96uYSUXMbdc
-         MJlBuVxvLVBv48YTqo9WYoOyzV31plxvACvrn8LdNiyZYIs4XG4FfXtCRc8MPd0h396x
-         yosdJ2N0ci9qLy8HuFNugZG6yzdUK/mfIbFy8fIGxT3iKlZgdnMxKCDZu/u1HZGpr+zE
-         Tjz4aP1ssuM1snD3udVivBgsJ26MaBDFDVHZv3J2syklcayEtdztqGcyo7rturV1CyHb
-         XVhWg+kuNOjfi+PJKDikhN9r49xP0P6klODneZb/6NYyB5bm7X1i0NPV9RRqjImEF/Mt
-         QPvA==
+        with ESMTP id S230216AbjJFHI6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 03:08:58 -0400
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD3D7EB;
+        Fri,  6 Oct 2023 00:08:55 -0700 (PDT)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-59f82ad1e09so21831857b3.0;
+        Fri, 06 Oct 2023 00:08:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696576053; x=1697180853;
+        d=1e100.net; s=20230601; t=1696576135; x=1697180935;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l3mh1m76o0jxvdd1cNjwNEbLhdaRWelrX6qtRv+BOf0=;
-        b=OM9hJQrlod3oyBl2LlPhv6UEVjf7HjHccC+KDvv5YU5tqpLv33CjhtlGLQ2gRnoqUn
-         AXuKj0+D/GDUoomehBRlJoPEAy+09qd3CvdVuT6zOUJtCuDKwzcWIOFPX6Hl2cuyayqY
-         iBJ1K8ADirWsDy7lf3OXpfudBGiM0Myoln+zF4kRafsiXyM9zceAMY++rYTj620BYmRd
-         Eb/PEiQEuCXQw1XWZ6zXYiilfv6NHyERBW+IkgJ3/Aqru5CoTMVFXWSSs3+kG6qm8lJQ
-         z2vkgVV5996JIkztAItyhMiaAoP/qBGb4KGOCb1QCC/qRRVcTZqJrumXd/hn32JTMb9+
-         QSug==
-X-Gm-Message-State: AOJu0Yw9FR9CCEIIyijlg7Acl57tG4BbNzycqHjjLdFagqNOmbuNiKKW
-        hNtFByHB5a9A6SUtGtRtEb9Udw50Su4QxYF+XyxCig==
-X-Google-Smtp-Source: AGHT+IFl+c9LzCGElLpLq/HwxVVkvurQIXqs+Ze9puu/rF8cYLylpN/sMv3aI0Wmo9C8w/PQ0ihqIMl5uErVFp+2yFk=
-X-Received: by 2002:a67:b606:0:b0:452:58f8:71de with SMTP id
- d6-20020a67b606000000b0045258f871demr6214378vsm.8.1696576053117; Fri, 06 Oct
- 2023 00:07:33 -0700 (PDT)
+        bh=bDvOGTbwmYKB4yj3dggVQge2NMSHumJx3EfGcewWqNg=;
+        b=P8PqJC3G4xGo2+ilG1ft2/Fvof8Lb9RvotJJWcCR3e3+cfi+17OQFjLia0vWd8OGqP
+         veIej9+m/+D1C+r63oFOplgNuVO/zw0sXdBVAdenYsYb6m02Eg/OwGZCLQb+zPvTRk4O
+         2ysBmddfNkWTWe1Zfz6PJhkSGVlFKY1b45BF59lLwUy+0NDp7J/5xEOMCzIcO/83sRym
+         QZo5wiPKaoZMnWJYYSqXSpYFzrsAzIKfoazD6nSEoJa4+5OBOaH93WUEFQAyOVpQf/HR
+         s/OriPE924HzA3N8s33ZtMew23Fidj2N2Z3cR8H/9NlRs2mcmq5f4ujeLenGzX3iY9BY
+         Vobw==
+X-Gm-Message-State: AOJu0YzmlpjW4rnsDfxKejp16M6y1Vz2gByJMyZbaTZp1lnYw8OFV2cM
+        bz7BWBgztb6VviPOGNt8Af7y0hxoWkh4iQ==
+X-Google-Smtp-Source: AGHT+IEzHd2u+JyGUA1VxiF3B0cNwRjyZsMoyah2KMOfTfFEXGCZr9IfDNYyZvfkFLKQKb+xtrobBg==
+X-Received: by 2002:a81:9289:0:b0:5a2:4409:2124 with SMTP id j131-20020a819289000000b005a244092124mr7760070ywg.35.1696576134761;
+        Fri, 06 Oct 2023 00:08:54 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id u195-20020a8184cc000000b0059f4f30a32bsm1086046ywf.24.2023.10.06.00.08.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Oct 2023 00:08:53 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-59f55c276c3so21557857b3.2;
+        Fri, 06 Oct 2023 00:08:53 -0700 (PDT)
+X-Received: by 2002:a81:4a55:0:b0:599:8bd:5bdf with SMTP id
+ x82-20020a814a55000000b0059908bd5bdfmr7486809ywa.50.1696576133283; Fri, 06
+ Oct 2023 00:08:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231004-pxa-gpio-v5-0-d99ae6fceea8@skole.hr> <20231004-pxa-gpio-v5-4-d99ae6fceea8@skole.hr>
-In-Reply-To: <20231004-pxa-gpio-v5-4-d99ae6fceea8@skole.hr>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 6 Oct 2023 09:07:22 +0200
-Message-ID: <CAMRc=MewJk3=ms9ggnjMqOdAevW4dOb12savYdJg2tfcuUGEUw@mail.gmail.com>
-Subject: Re: [PATCH RFC v5 4/6] ARM: pxa: Convert reset driver to GPIO descriptors
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20231005155618.700312-1-peter.griffin@linaro.org> <20231005155618.700312-20-peter.griffin@linaro.org>
+In-Reply-To: <20231005155618.700312-20-peter.griffin@linaro.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 6 Oct 2023 09:08:41 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUgW1qx-7ADh89BRE4Hhk7-+R7o5VrswcBMymxh7zWUnQ@mail.gmail.com>
+Message-ID: <CAMuHMdUgW1qx-7ADh89BRE4Hhk7-+R7o5VrswcBMymxh7zWUnQ@mail.gmail.com>
+Subject: Re: [PATCH 19/21] google/gs101: Add dt overlay for oriole board
+To:     Peter Griffin <peter.griffin@linaro.org>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
+        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, wim@linux-watchdog.org,
+        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
+        arnd@arndb.de, olof@lixom.net, cw00.choi@samsung.com,
+        tudor.ambarus@linaro.org, andre.draszik@linaro.org,
+        semen.protsenko@linaro.org, soc@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 4, 2023 at 4:56=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic@=
-skole.hr> wrote:
->
-> The PXA reset driver still uses the legacy GPIO interface for
-> configuring and asserting the reset pin.
->
-> Convert it to use the GPIO descriptor interface.
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> ---
->  arch/arm/mach-pxa/reset.c | 39 +++++++++++++--------------------------
->  arch/arm/mach-pxa/reset.h |  3 +--
->  arch/arm/mach-pxa/spitz.c |  6 +++++-
->  3 files changed, 19 insertions(+), 29 deletions(-)
->
-> diff --git a/arch/arm/mach-pxa/reset.c b/arch/arm/mach-pxa/reset.c
-> index 27293549f8ad..08bc104b9411 100644
-> --- a/arch/arm/mach-pxa/reset.c
-> +++ b/arch/arm/mach-pxa/reset.c
-> @@ -2,7 +2,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/delay.h>
-> -#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/io.h>
->  #include <asm/proc-fns.h>
->  #include <asm/system_misc.h>
-> @@ -14,33 +14,20 @@
->
->  static void do_hw_reset(void);
->
-> -static int reset_gpio =3D -1;
-> +static struct gpio_desc *reset_gpio;
->
-> -int init_gpio_reset(int gpio, int output, int level)
-> +int init_gpio_reset(int output, int level)
->  {
-> -       int rc;
-> -
-> -       rc =3D gpio_request(gpio, "reset generator");
-> -       if (rc) {
-> -               printk(KERN_ERR "Can't request reset_gpio\n");
-> -               goto out;
-> +       reset_gpio =3D gpiod_get(NULL, "reset", GPIOD_ASIS);
-> +       if (IS_ERR(reset_gpio)) {
-> +               pr_err("Can't request reset_gpio: %pe\n", reset_gpio);
-> +               return PTR_ERR(reset_gpio);
->         }
->
->         if (output)
-> -               rc =3D gpio_direction_output(gpio, level);
-> +               return gpiod_direction_output(reset_gpio, level);
->         else
-> -               rc =3D gpio_direction_input(gpio);
-> -       if (rc) {
-> -               printk(KERN_ERR "Can't configure reset_gpio\n");
-> -               gpio_free(gpio);
-> -               goto out;
-> -       }
-> -
-> -out:
-> -       if (!rc)
-> -               reset_gpio =3D gpio;
-> -
-> -       return rc;
-> +               return gpiod_direction_input(reset_gpio);
->  }
->
->  /*
-> @@ -50,16 +37,16 @@ int init_gpio_reset(int gpio, int output, int level)
->   */
->  static void do_gpio_reset(void)
->  {
-> -       BUG_ON(reset_gpio =3D=3D -1);
-> +       BUG_ON(IS_ERR(reset_gpio));
+Hi Peter,
 
-Crashing the kernel on a GPIO error? I guess it just keeps the old
-behavior but still...
+On Thu, Oct 5, 2023 at 5:58 PM Peter Griffin <peter.griffin@linaro.org> wrote:
+> The LK bootloader on Pixel6 searches for a dt overlay in the
+> dtbo partition with a board_id and board_rev that matches
+> what is baked into the device. If this overlay is not present
+> then the phone will bootloop in fastboot and you can't boot
+> the upstream kernel.
+>
+> This commit adds a dtbo for the production oriole variant.
+> The other pre-production board overlays are not included
+> at this time.
+>
+> Adding the dtbo here allows for a better experience when
+> building/booting the upstream kernel on Pixel devices
+> as all the DT required to boot the device will be created
+> as part of the kernel build process. Rather than having to
+> fetch the dtbo from some other repo.
+>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 
->
->         /* drive it low */
-> -       gpio_direction_output(reset_gpio, 0);
-> +       gpiod_direction_output(reset_gpio, 0);
->         mdelay(2);
->         /* rising edge or drive high */
-> -       gpio_set_value(reset_gpio, 1);
-> +       gpiod_set_value(reset_gpio, 1);
->         mdelay(2);
->         /* falling edge */
-> -       gpio_set_value(reset_gpio, 0);
-> +       gpiod_set_value(reset_gpio, 0);
->
->         /* give it some time */
->         mdelay(10);
-> diff --git a/arch/arm/mach-pxa/reset.h b/arch/arm/mach-pxa/reset.h
-> index 963dd190bc13..5864f61a0e94 100644
-> --- a/arch/arm/mach-pxa/reset.h
-> +++ b/arch/arm/mach-pxa/reset.h
-> @@ -13,10 +13,9 @@ extern void pxa_register_wdt(unsigned int reset_status=
-);
->
->  /**
->   * init_gpio_reset() - register GPIO as reset generator
-> - * @gpio: gpio nr
->   * @output: set gpio as output instead of input during normal work
->   * @level: output level
->   */
-> -extern int init_gpio_reset(int gpio, int output, int level);
-> +extern int init_gpio_reset(int output, int level);
->
->  #endif /* __ASM_ARCH_RESET_H */
-> diff --git a/arch/arm/mach-pxa/spitz.c b/arch/arm/mach-pxa/spitz.c
-> index 965354e64c68..26ec29c9cd1b 100644
-> --- a/arch/arm/mach-pxa/spitz.c
-> +++ b/arch/arm/mach-pxa/spitz.c
-> @@ -1024,9 +1024,13 @@ static void spitz_restart(enum reboot_mode mode, c=
-onst char *cmd)
->         spitz_poweroff();
->  }
->
-> +GPIO_LOOKUP_SINGLE(spitz_reset_gpio_table, NULL, "pxa-gpio",
-> +               SPITZ_GPIO_ON_RESET, "reset", GPIO_ACTIVE_HIGH);
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/google/gs101-oriole.dtso
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Oriole DVT Device Tree
+> + *
+> + * Copyright 2021-2023 Google,LLC
+> + */
 > +
->  static void __init spitz_init(void)
->  {
-> -       init_gpio_reset(SPITZ_GPIO_ON_RESET, 1, 0);
-> +       gpiod_add_lookup_table(&spitz_reset_gpio_table);
-> +       init_gpio_reset(1, 0);
->         pm_power_off =3D spitz_poweroff;
->
->         PMCR =3D 0x00;
->
-> --
-> 2.42.0
->
->
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +/ {
+> +       board_id = <0x20304>;
+> +       board_rev = <0x10000>;
+> +       fragment@boardbase {
+> +               target-path="/";
+> +               __overlay__ {
+> +                       model = "Oriole DVT";
+> +                       compatible = "google,gs101-oriole";
+> +               };
+> +       };
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Please use sugar-syntax instead of manually defining
+fragment/target-path/__overlay__ constructs.
+You can override these properties in the root node of the base DTS
+using the much simpler:
+
+    &{/} {
+            model = "Oriole DVT";
+            compatible = "google,gs101-oriole";
+    };
+
+The generated DTBO should be identical (modulo naming).
+
+> +};
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
