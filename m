@@ -2,195 +2,180 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D86387BBCCD
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 18:34:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 178B07BBDA7
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 19:24:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232774AbjJFQeA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 12:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52818 "EHLO
+        id S232923AbjJFRYa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 13:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232848AbjJFQd7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 12:33:59 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345CBE9
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 09:33:57 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c6185cafb3so166685ad.1
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 09:33:57 -0700 (PDT)
+        with ESMTP id S232404AbjJFRY3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 13:24:29 -0400
+Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AF0C2
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 10:24:27 -0700 (PDT)
+Received: by mail-vk1-xa33.google.com with SMTP id 71dfb90a1353d-49dd3bb5348so934597e0c.0
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 10:24:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696610036; x=1697214836; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hTvdrZFmq0hYxp77EcKvOnGpN0oCW3xY/AiFjsTxtTU=;
-        b=1cH8qcBLbYdVmyJgImfP4kPooyszqdpDDthXV10khKxOsscBnVV3NVbQKLvLbvxpMO
-         fHuFzPq8TQdY/uGy/u2NON+aYcSKUcYAazbz3YZ3KSDLDm3GSD+rP2mR8S8Glbt07Kb0
-         7A5a49SYPvi9/b1g50QgirZreJsXES4IRiUp0GEzEw66wp/Q7G6GfLEvcSRoOy8cDMVC
-         oyvq+1tJ8NU9qKSqigDolMELM0AEmHqdWsJAzcy5mV6TCdzukP5Yv9SxTHQrT9llVCzj
-         jaIwVe6yRVaJa8K3mrN8ZYfIVvFLcTSx/Q9Q5rbHIQ8W4JqZ87/ZOzBiqlJK+ngA/TgG
-         Ghog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696610036; x=1697214836;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696613067; x=1697217867; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hTvdrZFmq0hYxp77EcKvOnGpN0oCW3xY/AiFjsTxtTU=;
-        b=A/KAgH0hdhW9H3gMSdkuHu8xyPB3hyNeynOohoKYAd/lAfVvaKXTI64ouDLoM0sm6m
-         JPYcc3h3M5HKgd7c6vV0LKcC6uBlB87N2NpNuBJH/ifHMQzBUjmuP++NJyeFVOb+y17n
-         rULHySvzLMcaDgpcn8g4/Jn+XwbGLaXD+GM1psagi9uwZ0HlKqwppj6eJnAf8mb82ZpX
-         F5XAvhBUFglitaxCgybz2RGwMuVBdt+Xft4Ehb7sNe+wu35/m5Jl9eiZgwAHCy4whOGS
-         yJs3iqUsd7JIQOqhgEKPZbs5ycU3x09T3mLTwlLzxjRV9Ztf09UpVP2rmxooFgn0nXKE
-         57XA==
-X-Gm-Message-State: AOJu0Yzt32ThENFnkoqnYXh7AQ6Q+Ca1uQI2xTrO6XcpqovWUs874en4
-        n99J6zdkBeZvG+OdTtsQnuNTuw==
-X-Google-Smtp-Source: AGHT+IHgejsiy4SZfD/kIaiCo2p5a5GHbtVsqXoNRUJ/kjAOpzjKyLWuXfdo9k7lkUWRMBwV75Nd+w==
-X-Received: by 2002:a17:902:e805:b0:1c7:3224:913a with SMTP id u5-20020a170902e80500b001c73224913amr382708plg.27.1696610036323;
-        Fri, 06 Oct 2023 09:33:56 -0700 (PDT)
-Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
-        by smtp.gmail.com with ESMTPSA id l4-20020a170902eb0400b001b9d7c8f44dsm4113036plb.182.2023.10.06.09.33.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 09:33:55 -0700 (PDT)
-Date:   Fri, 6 Oct 2023 09:33:51 -0700
-From:   William McVicker <willmcvicker@google.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Griffin <peter.griffin@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        andre.draszik@linaro.org, semen.protsenko@linaro.org,
-        soc@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH 18/21] arm64: dts: google: Add initial Google gs101 SoC
- support
-Message-ID: <ZSA27y5CVs4yQC4a@google.com>
-References: <20231005155618.700312-1-peter.griffin@linaro.org>
- <20231005155618.700312-19-peter.griffin@linaro.org>
- <ZR75cIvnQS2cqTT3@google.com>
- <2023100520-cleaver-sinless-fbae@gregkh>
- <99419159-cab0-4c79-a4a0-12229bfad3c0@linaro.org>
- <2023100513-mashing-scrubber-ea59@gregkh>
- <efc9f099-9c97-460b-b0c8-9891aa3b772a@linaro.org>
- <ZR9EnFw3vB92vlYM@google.com>
- <44816879-a3a7-4bd0-bb20-19a645107b4b@linaro.org>
- <e8b23683-36ac-4547-9386-935a1b211d7d@app.fastmail.com>
+        bh=MXg07Advx6F48OmXOI5LqKwE4lifCKB21IEnukLuOS4=;
+        b=qlOELpKp/HAVpMRkKgqLmrXrNXEFeJcdZrPQDXPF1PQRk+o3U5KA58Qh84cDnXru9K
+         Fr6HCQqqNt3zzF9hOvkttcmkStKcHdwUrjhxFpu1igNAfyWPPGMWAeEoHRfYbYw0Gklq
+         GKTfPg/yjXAwJGLkqDEveut58nRGXgyFsJfFjj0ebADnprrZu9B5BR+crSzZXyyjqYUh
+         EJfDGNK+3bILEsgMrdvzwaLc89zoTTSwBgCx9XHvdVZ1EFFlPlfPnNfM6z58tA/0qSzc
+         AFPDw1Ck2FPgNoInMTObhMQ7GfGHpChRD5yG1iZ7eVa1bi70fPquOkab5H5vBPOFro1p
+         2fFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696613067; x=1697217867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MXg07Advx6F48OmXOI5LqKwE4lifCKB21IEnukLuOS4=;
+        b=luQz+rfAWNUXKEzJPvyOPr8DBFyX4+k5wlM8C9hV9uHZlrsU49JBTp2KaOU/ghx8Ly
+         pojUFiog4jOGa15shxA6yRV0mlUOnXGf0gIyAyFHvZZhSxzvZS2CQQpS8AYjtE+kxWJx
+         xOFqVyWGS0XOgEyvXvhVXdEvdwJ9bog7zDW5nwO0q3dZQgfZekTp3FWMq3WUnplsSmK+
+         FkBcMc1sObVJLVDg7KnKk2DVarepM+bi1SLK4RniYT9wpeNHTFFvJyfe3okdjrTGdeto
+         p45qwzhE4gP6xBwm+iLkOB9iAxIOUncWHoE95aRq22e+AoSGqwf8zgFQeBM2RBTrKrTW
+         S/MQ==
+X-Gm-Message-State: AOJu0YwuuFsRhiDRvAm5/UtbEsOFvsdA4dU2zn0kABfEITpQNSRJd4z8
+        TxVGLysaxU7ZL7FZqc0XoGm4rq4Gypr9Nq4EJyVbsQ==
+X-Google-Smtp-Source: AGHT+IGfi4mWhaz+b8BorJFDpgBUjJUgMrmh9w4qb8vbAM4r9GKqJxQmeIxhjH0dns02JY2KOxOWrQmMHml9anSgJvU=
+X-Received: by 2002:a1f:49c5:0:b0:49a:b7bf:5a22 with SMTP id
+ w188-20020a1f49c5000000b0049ab7bf5a22mr7842989vka.14.1696613066638; Fri, 06
+ Oct 2023 10:24:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8b23683-36ac-4547-9386-935a1b211d7d@app.fastmail.com>
-X-Spam-Status: No, score=-15.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no version=3.4.6
+References: <20231006-pxa-gpio-v6-0-981b4910d599@skole.hr> <20231006-pxa-gpio-v6-1-981b4910d599@skole.hr>
+In-Reply-To: <20231006-pxa-gpio-v6-1-981b4910d599@skole.hr>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 6 Oct 2023 19:24:15 +0200
+Message-ID: <CAMRc=Mf3yoMF1Q5=-UtzJf4gqONQ=Dg=p68Q=DsVANaAPgwD=w@mail.gmail.com>
+Subject: Re: [PATCH RFT v6 1/6] ARM: pxa: Convert Spitz OHCI to GPIO descriptors
+To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/06/2023, Arnd Bergmann wrote:
-> On Fri, Oct 6, 2023, at 08:06, Krzysztof Kozlowski wrote:
-> > On 06/10/2023 01:19, William McVicker wrote:
-> >> On 10/05/2023, Krzysztof Kozlowski wrote:
-> >>> On 05/10/2023 21:23, Greg KH wrote:
-> >>
-> >> Being able to include SERIAL_SAMSUNG and SERIAL_MSM without all the vendor> specific drivers that ARCH_EXYNOS and ARCH_QCOM select is very
-> > valuable for
-> >> debugging early boot issues.
-> >
-> > Really? How related? The drivers are independent. You describe some
-> > out-of-tree development process which we never needed for upstream work.
-> > And we did here quite a lot of upstream, specially if you look at ARCH_QCOM.
-> 
-> Right: in general, all drivers are independent of the platform
-> besides the typical 'depends on ARCH_FOO || COMPILE_TEST' dependency,
-> but I think it's worth mentioning the known exceptions, so Greg and
-> Will can take that fight to the respective places rather than
-> discussing it in the platform submission:
-> 
-> - Some subsystems are considered 'special' and the maintainers
->   prefer the drivers to be automatically selected based on the
->   ARCH_* settings instead of having user-visible options. This is
->   traditionally true for large chunks of drivers/irqchip,
->   drivers/clocksource and drivers/pinctrl, though it has gotten
->   better over time on all of them.
-> 
-> - Some older 32-bit platforms are still not as modular as we'd
->   like them to be, especially the StrongARM (ARMv4) platforms that
->   require a custom kernel build, and some of ARMv4T and ARMv5
->   boards that are still missing DT support. These tend to require
->   drivers they directly link to from board code, so disabling
->   the drivers would cause a link failure until this gets
->   cleaned up.
-> 
-> - A couple of drivers are force-enabled based on the ARCH_*
->   options because booting without these drivers would risk
->   permanent damage to hardware, e.g. in overtemp or overcurrent
->   scenarios.
-> 
-> - ACPI based platforms require the PCI host bridge driver to
->   be built-in rather than a loadable module because ACPI
->   needs to probe PCI devices during early boot.
-> 
-> - Some subsystems (notably drivers/gpu/, but others as well)
->   have an excessive number of 'select' statements, so you
->   end up surprise-enabling a number of additional drivers
->   and subsystems by enabling certain less important platform
->   specific drivers.
-> 
->       Arnd
+On Fri, Oct 6, 2023 at 3:45=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic@=
+skole.hr> wrote:
+>
+> Sharp's Spitz board still uses the legacy GPIO interface for controlling
+> a GPIO pin related to the USB host controller.
+>
+> Convert this function to use the new GPIO descriptor interface.
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> ---
+>  arch/arm/mach-pxa/spitz.c      | 13 ++++++-------
+>  drivers/usb/host/ohci-pxa27x.c |  7 +++++++
+>  2 files changed, 13 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/arm/mach-pxa/spitz.c b/arch/arm/mach-pxa/spitz.c
+> index cc691b199429..535e2b2e997b 100644
+> --- a/arch/arm/mach-pxa/spitz.c
+> +++ b/arch/arm/mach-pxa/spitz.c
+> @@ -649,23 +649,22 @@ static inline void spitz_mmc_init(void) {}
+>   * USB Host
+>   ***********************************************************************=
+*******/
+>  #if defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE)
+> +GPIO_LOOKUP_SINGLE(spitz_usb_host_gpio_table, "pxa27x-ohci", "gpio-pxa",
+> +               SPITZ_GPIO_USB_HOST, "usb-host", GPIO_ACTIVE_LOW);
+> +
+>  static int spitz_ohci_init(struct device *dev)
+>  {
+> -       int err;
+> -
+> -       err =3D gpio_request(SPITZ_GPIO_USB_HOST, "USB_HOST");
+> -       if (err)
+> -               return err;
+> +       gpiod_add_lookup_table(&spitz_usb_host_gpio_table);
+>
+>         /* Only Port 2 is connected, setup USB Port 2 Output Control Regi=
+ster */
+>         UP2OCR =3D UP2OCR_HXS | UP2OCR_HXOE | UP2OCR_DPPDE | UP2OCR_DMPDE=
+;
+>
+> -       return gpio_direction_output(SPITZ_GPIO_USB_HOST, 1);
+> +       return 0;
+>  }
+>
+>  static void spitz_ohci_exit(struct device *dev)
+>  {
+> -       gpio_free(SPITZ_GPIO_USB_HOST);
+> +       gpiod_remove_lookup_table(&spitz_usb_host_gpio_table);
+>  }
+>
+>  static struct pxaohci_platform_data spitz_ohci_platform_data =3D {
+> diff --git a/drivers/usb/host/ohci-pxa27x.c b/drivers/usb/host/ohci-pxa27=
+x.c
+> index 357d9aee38a3..7f04421c80d6 100644
+> --- a/drivers/usb/host/ohci-pxa27x.c
+> +++ b/drivers/usb/host/ohci-pxa27x.c
+> @@ -121,6 +121,7 @@ struct pxa27x_ohci {
+>         void __iomem    *mmio_base;
+>         struct regulator *vbus[3];
+>         bool            vbus_enabled[3];
+> +       struct gpio_desc *usb_host;
+>  };
+>
+>  #define to_pxa27x_ohci(hcd)    (struct pxa27x_ohci *)(hcd_to_ohci(hcd)->=
+priv)
+> @@ -447,6 +448,10 @@ static int ohci_hcd_pxa27x_probe(struct platform_dev=
+ice *pdev)
+>         pxa_ohci =3D to_pxa27x_ohci(hcd);
+>         pxa_ohci->clk =3D usb_clk;
+>         pxa_ohci->mmio_base =3D (void __iomem *)hcd->regs;
+> +       pxa_ohci->usb_host =3D devm_gpiod_get_optional(&pdev->dev, "usb-h=
+ost", GPIOD_OUT_LOW);
+> +       if (IS_ERR(pxa_ohci->usb_host))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(pxa_ohci->usb_ho=
+st),
+> +                               "failed to get USB host GPIO\n");
+>
+>         for (i =3D 0; i < 3; ++i) {
+>                 char name[6];
+> @@ -512,6 +517,8 @@ static void ohci_hcd_pxa27x_remove(struct platform_de=
+vice *pdev)
+>         for (i =3D 0; i < 3; ++i)
+>                 pxa27x_ohci_set_vbus_power(pxa_ohci, i, false);
+>
+> +       gpiod_put(pxa_ohci->usb_host);
 
-So if the argument is that the existing upstream Exynos platforms are required
-to have these drivers built-in to the kernel to boot:
-    COMMON_CLK_SAMSUNG
-    CLKSRC_EXYNOS_MCT
-    EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
-    EXYNOS_PMU
-    PINCTRL
-    PINCTRL_EXYNOS
-    PM_GENERIC_DOMAINS if PM
-    SOC_SAMSUNG
+This is now wrong. Devres APIs are managed by the driver core. You no
+longer need this in your remove() callback.
 
-...then that is understandable and we can work to fix that.
+Bart
 
-My last question then is -- why do we need a new ARCH_GOOGLE_TENSOR config in
-the platform Kconfig? For example, I don't really like this:
-
-diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
-index 76a494e95027..4c8f173c4dec 100644
---- a/drivers/clk/samsung/Kconfig
-+++ b/drivers/clk/samsung/Kconfig
-@@ -13,6 +13,7 @@ config COMMON_CLK_SAMSUNG
-        select EXYNOS_5420_COMMON_CLK if ARM && SOC_EXYNOS5420
-        select EXYNOS_ARM64_COMMON_CLK if ARM64 && ARCH_EXYNOS
-        select TESLA_FSD_COMMON_CLK if ARM64 && ARCH_TESLA_FSD
-+       select GOOGLE_GS101_COMMON_CLK if ARM64 && ARCH_GOOGLE_TENSOR
-
-What happens when we have GOOGLE_GS101_COMMON_CLK, GOOGLE_GS201_COMMON_CLK, and
-so on? How are we going to pick the right driver when we have a generic
-ARCH_GOOGLE_TENSOR config? Ideally, we should have one Exynos clock driver that
-can detect what hardware is running (using the DT) to determine what it needs
-to do. If you really want to compile out the other vendor's clock drivers using
-some configs, then we should do that with SOC_GS101, SOC_GS201, SOC_TESLA_FSD
-configs (not ideal though). With that approach, we could drop the platform
-ARCH_GOOGLE_TENSOR config and create an SOC_GS101 config that can be used for
-things like the COMMON_CLK_SAMSUNG driver (for now) and building the GS101 dtb.
-
-Let me know your thoughts.
-
-Thanks,
-Will
+> +
+>         usb_put_hcd(hcd);
+>  }
+>
+>
+> --
+> 2.42.0
+>
+>
