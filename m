@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63E247BC0E5
+	by mail.lfdr.de (Postfix) with ESMTP id BBEF67BC0E6
 	for <lists+linux-gpio@lfdr.de>; Fri,  6 Oct 2023 23:04:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233640AbjJFVE0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 17:04:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55226 "EHLO
+        id S233632AbjJFVE2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Oct 2023 17:04:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233561AbjJFVEY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 17:04:24 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6130FBE
+        with ESMTP id S233638AbjJFVEZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 17:04:25 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765B5C2
         for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 14:04:22 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-5043a01ee20so3141396e87.0
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2c189dabcc3so30151101fa.1
         for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 14:04:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696626260; x=1697231060; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696626261; x=1697231061; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0gRhdNWLww8131tERKBK6Gq4NzqQdVzbadH36wOuOqU=;
-        b=RgBAllhPuvHE58VeOKyCwaNQW5hKHzU/LPdJHzzP4qqdRCVJqwV79dM4qVdknEfFx7
-         O3NM7kdoyYEHaWVOjy++fhDkxDATtWSIiFCAqvTPFEX77QMtvdNqj5itnbbNhCCy7pRb
-         1ADezwecAXAqMP45ptzJgXh4L+afEJxp4ATByy+C3pKFt5Mveddvt7xtWttTdHbsGgBX
-         Krs/jFZE3KMsLMKVqSsyIHvYYp8HcRrAMB1FbAARa8Mzou09scZpgmnKp36CMejDqfeP
-         lR6TK22bqOK7losMKUfMmoHFkSvOvq6iPaRB3d7czlwGVfKVWoH8c6inlFU/rJw0GvzE
-         L5Ig==
+        bh=unO5+OwTpqcdKwNk0P0czzkhYjqFhgQGJfILd9g1TMg=;
+        b=s6uAvr7a0hgIYiJg/21hJU9IeiRfLD4mi/YogfnPr09c2GZram5pZ0M+nSJtcRtCoI
+         u2p6Gtx6ZSI9mh+ekeZybLV5rc4Exi0T1FnqKuspGErecZ+BXCSoy9v9siuqBKtkxiO8
+         K285V3GF/QrU7rC8Rt4TFT8PeKzLq8/j7gTG60v7xxcQRZYGrf+3DMoq0s+GhjkDhn5W
+         4+ytbTBcggebzhgqa61mwlb4VodPZe21fpjRLqkGpOht8Vq7V1osy/IUQhcYu1vmDhKz
+         uYEXLAH86GqBIbXi0mALaz6HAUmHTfJhIoF6oDqJy/9SsCc9JZ08KTYiNZV9k4kZsC7I
+         0Oew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696626260; x=1697231060;
+        d=1e100.net; s=20230601; t=1696626261; x=1697231061;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0gRhdNWLww8131tERKBK6Gq4NzqQdVzbadH36wOuOqU=;
-        b=iy3uaoqszKKU1dDWgs/HdDvXBKfEHG+kOnUYk5ylm0DQFIRVZVwaOUvwd0Q5HzyPUu
-         k4s7Nb3u03VFQJZucCT3Vc4V4Mt1XeGtQyzriKVp/ZQJEZGlrlP9Aw50DrqmorIpyWGa
-         Hv+HXSANmNO+2fu+kmu2Nf46RE8KFvDk9BXysd4Hb7nVUVHmdCZUt0KxJ+RveLsMBeS5
-         L7SAt+0NdOf9HMys8Q34iIIL67au/SQgACwrqmbE9ewW+yBPZiXcJavPyMuznXi383JE
-         VlQGYtz1KHwb1XMo+83FbsEGooASSIQax3A9PhcQnCaMl7HQ8gP/1FFBTzKmvpH6qCli
-         fGxg==
-X-Gm-Message-State: AOJu0YyV2u6QVwHPrkqqSvDxe1qY+apF3/GP3KFMoZO2TsCNCvE+QRLZ
-        jG71XCQBv9yHXi/LdHzYfychxQ==
-X-Google-Smtp-Source: AGHT+IHAHSU/SOXoSXqQoUXlQQg8d6dV6TJJPSYmw5MDjOvNiYR2Ft9+pS+KX5nSELtBl+NFq7cQ3g==
-X-Received: by 2002:a05:6512:3494:b0:500:c348:7efd with SMTP id v20-20020a056512349400b00500c3487efdmr8154629lfr.59.1696626260055;
+        bh=unO5+OwTpqcdKwNk0P0czzkhYjqFhgQGJfILd9g1TMg=;
+        b=MfkxhuONLdj+mQHoB0u3YXHSlQV1hduve//dXk4eYu+K23O0mxVZrrwUbJDAgM/qXQ
+         Wwd8KvNc0Dv50e8QZnbkWeamkHCYeFZKn0W7rjAuNx2fZsjma/EEqJB9xToS27sdfEJJ
+         v+Yb2JFoVf8SH5zE5KVgOX/nhV6KvB6QVKiy9+s7ZGRLV5NhxDcRqLr6pN13qJD72LaN
+         6NKqU51k4440Z4a2A6dJipCxXpt9M0PLfHb9HKBiE4Nw0bBnLYKX1is2anqZML1i6unS
+         5Wwkc8mBBBFHG/+aR2FsR1fX2f2SAipLEQ4kQM+xcORs55sW4w/LnzdEKv7KQsZ4DWGh
+         RyAQ==
+X-Gm-Message-State: AOJu0YzajSZ7ipr4P8fBbC1oczeq7fZRoynOHzEfJB95eSdnOGuBTC0p
+        6WcBUL3PJprhyH8YLJXPBXA/ng==
+X-Google-Smtp-Source: AGHT+IGYMNMsu4G1N4jaaEGhlkJIUX3v4ADaKW/BFO/sleuZ3Ib55Vio/pzcRauVvrf/AwlHh4iZPA==
+X-Received: by 2002:a05:6512:4011:b0:501:bd6f:7c1e with SMTP id br17-20020a056512401100b00501bd6f7c1emr11091519lfb.33.1696626260738;
         Fri, 06 Oct 2023 14:04:20 -0700 (PDT)
 Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id d25-20020ac25459000000b00501ce28db76sm432993lfn.291.2023.10.06.14.04.18
+        by smtp.gmail.com with ESMTPSA id d25-20020ac25459000000b00501ce28db76sm432993lfn.291.2023.10.06.14.04.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 14:04:18 -0700 (PDT)
+        Fri, 06 Oct 2023 14:04:20 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 06 Oct 2023 23:04:18 +0200
-Subject: [PATCH 1/2] pinctrl: realtek: Tag unused pins as __maybe_unused
+Date:   Fri, 06 Oct 2023 23:04:19 +0200
+Subject: [PATCH 2/2] pinctrl: realtek: Fix some NULL dereference warnings
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231006-fix-realtek-warnings-v1-1-09af253312ba@linaro.org>
+Message-Id: <20231006-fix-realtek-warnings-v1-2-09af253312ba@linaro.org>
 References: <20231006-fix-realtek-warnings-v1-0-09af253312ba@linaro.org>
 In-Reply-To: <20231006-fix-realtek-warnings-v1-0-09af253312ba@linaro.org>
 To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -71,72 +71,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-These pin definitions are helpful to have when working with the
-driver in the future, so they are in a sense a bit like
-documentation. They could be commented out as well, but why.
-
-This should fix these build warnings:
-
-drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning:
-'rtd1315e_boot_sel_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning:
-'rtd1315e_reset_n_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning:
-'rtd1315e_scan_switch_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning:
-'rtd1315e_testmode_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1315e.c:231:35: warning:
-'rtd1315e_wd_rset_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning:
-'rtd1319d_boot_sel_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning:
-'rtd1319d_reset_n_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning:
-'rtd1319d_scan_switch_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning:
-'rtd1319d_testmode_pins' defined but not used [-Wunused-const-variable=]
-drivers/pinctrl/realtek/pinctrl-rtd1319d.c:237:35: warning:
-'rtd1319d_wd_rset_pins' defined but not used [-Wunused-const-variable=]
+Just inspecting the code doesn't convince me that this is a real
+issue, but the tools complain that it is so I will just handle it.
 
 Cc: Tzuyi Chang <tychang@realtek.com>
-Link: https://lore.kernel.org/oe-kbuild-all/202309270313.mBEc9o1A-lkp@intel.com/
-Link: https://lore.kernel.org/oe-kbuild-all/202309270448.7Aen3Sgx-lkp@intel.com/
+Link: https://lore.kernel.org/oe-kbuild-all/202309270234.aJGlDE0P-lkp@intel.com/
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/pinctrl/realtek/pinctrl-rtd1315e.c | 3 ++-
- drivers/pinctrl/realtek/pinctrl-rtd1319d.c | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/pinctrl/realtek/pinctrl-rtd.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1315e.c b/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-index 5ab35d73e6f4..10afc736a52b 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-@@ -227,8 +227,9 @@ static const struct pinctrl_pin_desc rtd1315e_iso_pins[] = {
- 	PINCTRL_PIN(RTD1315E_ISO_TESTMODE, "testmode"),
- };
+diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
+index bafe27face80..fc27e4f61be1 100644
+--- a/drivers/pinctrl/realtek/pinctrl-rtd.c
++++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
+@@ -165,7 +165,10 @@ static int rtd_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
+ 		return 0;
  
-+/* Tagged as __maybe_unused since there are pins we may use in the future */
- #define DECLARE_RTD1315E_PIN(_pin, _name) \
--	static const unsigned int rtd1315e_## _name ##_pins[] = { _pin }
-+	static const unsigned int rtd1315e_## _name ##_pins[] __maybe_unused = { _pin }
+ 	if (!mux->functions) {
+-		dev_err(pcdev->dev, "No functions available for pin %s\n", mux->name);
++		if (!mux->name)
++			dev_err(pcdev->dev, "NULL pin has no functions\n");
++		else
++			dev_err(pcdev->dev, "No functions available for pin %s\n", mux->name);
+ 		return -ENOTSUPP;
+ 	}
  
- DECLARE_RTD1315E_PIN(RTD1315E_ISO_GPIO_0, gpio_0);
- DECLARE_RTD1315E_PIN(RTD1315E_ISO_GPIO_1, gpio_1);
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1319d.c b/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-index 838a447776ba..b1a654ac30dc 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-@@ -233,8 +233,9 @@ static const struct pinctrl_pin_desc rtd1319d_iso_pins[] = {
- 	PINCTRL_PIN(RTD1319D_ISO_TESTMODE, "testmode"),
- };
+@@ -177,6 +180,11 @@ static int rtd_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
+ 		return ret;
+ 	}
  
-+/* Tagged as __maybe_unused since there are pins we may use in the future */
- #define DECLARE_RTD1319D_PIN(_pin, _name) \
--	static const unsigned int rtd1319d_## _name ##_pins[] = { _pin }
-+	static const unsigned int rtd1319d_## _name ##_pins[] __maybe_unused = { _pin }
++	if (!mux->name) {
++		dev_err(pcdev->dev, "NULL pin provided for function %s\n", func_name);
++		return -EINVAL;
++	}
++
+ 	dev_err(pcdev->dev, "No function %s available for pin %s\n", func_name, mux->name);
  
- DECLARE_RTD1319D_PIN(RTD1319D_ISO_GPIO_0, gpio_0);
- DECLARE_RTD1319D_PIN(RTD1319D_ISO_GPIO_1, gpio_1);
+ 	return -EINVAL;
 
 -- 
 2.34.1
