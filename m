@@ -2,67 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDEDC7BC557
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Oct 2023 09:04:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C8037BC5A0
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Oct 2023 09:36:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343627AbjJGHE0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 Oct 2023 03:04:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
+        id S1343675AbjJGHgS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Oct 2023 03:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343578AbjJGHEY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Oct 2023 03:04:24 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72420BD;
-        Sat,  7 Oct 2023 00:04:23 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3ae65e8eb45so1953303b6e.1;
-        Sat, 07 Oct 2023 00:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696662262; x=1697267062; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EZVQpme/Czd5/VYAsQPo4BoFaas9BoftbCjcn0zFcSw=;
-        b=hTRSVcznJYi1i4XDYx3+tVSmKH/Pu5jUsfxKuHPcR7FeVHjjhy3fAxQP7M5WMEAbbb
-         RfXKozW0yZv6ena1ZD0BLPAifHEz/0V6bVLbrmLyC64SRQc/IbJYGS6gf1VR9KF0ssez
-         rdqVzaZkQCFfD0o/kNX/rSdWcxWIh9T4ghUUDEBNhkwVUNws+5WOY8xQNqthVusj3dWN
-         bWKI++Uss43e0Qxr5LxqX9vlaAIJE44vhVd2QEcMCMAA9RaSwy08AFT2g2SVxfR3d2Oc
-         I+/0AWdVRRPtD2B0CQqVMdinWoZnaCJUeWQXyXOfQdiOhNQsUScOrFz+6kFXac20W1HN
-         Alug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696662262; x=1697267062;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EZVQpme/Czd5/VYAsQPo4BoFaas9BoftbCjcn0zFcSw=;
-        b=shLzKtL+mzh6SCKbZUgWhBZwNpEp/olI6HK550t9oBvmhlCxRx3/fRCsRAWhRWdLE4
-         7VTLZ6CyE0T1mSRz/Z1ZYuR6DAqT0u1yFuNicXWOuW4G13xxHX5qHHTvEcZnKjYtC2fA
-         XuYJOiSzGMl8uJU1PgBSlnes9ESapSNLZcvcBp+ryqk9YUEiIW3wO/ig/0dNgWaHw9Ed
-         RZbwmL4dtcHs0TMk7NgJDUqClNW1PBUIgmuCEOKtI+MQ+YxQYjoa5KHbxTHFA2an1jA3
-         j+emHvHISJ8vMrBm0jd41ueLHlI7tNSH/wDFIgrUFXxvBWaDoJTelKN/XiYBSc6mKBxf
-         abxw==
-X-Gm-Message-State: AOJu0YwhXn8ev9Iznb430st828HI1efl4rLq3ioZxQEEBI3718eA5Gp5
-        5gSG/l5eLkOYrIgPfStjdp7b/j6eNiTEsfVHFaU=
-X-Google-Smtp-Source: AGHT+IElCh6zbQYAtET/SeI7Qf0Z54wtjDgQ0dGJOlBmT13Na90J4+1qHL69tsqck07fHDG0CQu2wLQxL0VT8p2avyI=
-X-Received: by 2002:aca:2810:0:b0:3ad:fdfb:d384 with SMTP id
- 16-20020aca2810000000b003adfdfbd384mr9676137oix.53.1696662262569; Sat, 07 Oct
- 2023 00:04:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231006115147.18559-1-brgl@bgdev.pl> <CACRpkdZP_nOgj77iek_V28Ny8Pb03Xyy-=ho+WqzMHzXajtfqA@mail.gmail.com>
-In-Reply-To: <CACRpkdZP_nOgj77iek_V28Ny8Pb03Xyy-=ho+WqzMHzXajtfqA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 7 Oct 2023 10:03:45 +0300
-Message-ID: <CAHp75Vdm-um7Ep=kfjEnDotJrbXi1vtfPUVJgcogou8Gr9+MQQ@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH] gpiolib: reverse-assign the fwnode to struct gpio_chip
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dipen Patel <dipenp@nvidia.com>,
+        with ESMTP id S1343632AbjJGHgS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Oct 2023 03:36:18 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D19F0B9;
+        Sat,  7 Oct 2023 00:36:16 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="363258789"
+X-IronPort-AV: E=Sophos;i="6.03,205,1694761200"; 
+   d="scan'208";a="363258789"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2023 00:36:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10855"; a="876236536"
+X-IronPort-AV: E=Sophos;i="6.03,205,1694761200"; 
+   d="scan'208";a="876236536"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2023 00:36:14 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
+        (envelope-from <andy@kernel.org>)
+        id 1qp1r9-00000003Xnq-2voy;
+        Sat, 07 Oct 2023 10:36:11 +0300
+Date:   Sat, 7 Oct 2023 10:36:11 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dipen Patel <dipenp@nvidia.com>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Subject: Re: [RFC/RFT PATCH] gpiolib: reverse-assign the fwnode to struct
+ gpio_chip
+Message-ID: <ZSEKa3gwBRzR7HI+@smile.fi.intel.com>
+References: <20231006115147.18559-1-brgl@bgdev.pl>
+ <ZSAKdOXpo+xOI3sJ@smile.fi.intel.com>
+ <CAMRc=MeYiiWaaqRtSjRBfaWGFtZCPWCjYk+ZrX5TwicNq9MQeA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeYiiWaaqRtSjRBfaWGFtZCPWCjYk+ZrX5TwicNq9MQeA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,54 +57,72 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 7, 2023 at 1:14=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
-> On Fri, Oct 6, 2023 at 1:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> > struct gpio_chip is not only used to carry the information needed to
-> > set-up a GPIO device but is also used in all GPIOLIB callbacks and is
-> > passed to the matching functions of lookup helpers.
+On Fri, Oct 06, 2023 at 09:07:49PM +0200, Bartosz Golaszewski wrote:
+> On Fri, Oct 6, 2023 at 3:24 PM Andy Shevchenko <andy@kernel.org> wrote:
 > >
-> > In that last case, it is currently impossible to match a GPIO device by
-> > fwnode unless it was explicitly assigned to the chip in the provider
-> > code. If the fwnode is taken from the parent device, the pointer in
-> > struct gpio_chip will remain NULL.
-> >
-> > If we have a parent device but gc->fwnode was not assigned by the
-> > provider, let's assign it ourselves so that lookup by fwnode can work i=
-n
-> > all cases.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> because we want the code to work (rough consensus and running code)
->
-
-> The core of the crux is that we have
-> information duplication with a reference to the fwnode in two
-> places. One in gdev->dev and one in gc->fwnode.
-
-No, we don't. We have plenty of drivers that have gc->fwnode =3D=3D NULL,
-which means that it is shared with the parent device.
-
+> > On Fri, Oct 06, 2023 at 01:51:47PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > struct gpio_chip is not only used to carry the information needed to
+> > > set-up a GPIO device but is also used in all GPIOLIB callbacks and is
+> > > passed to the matching functions of lookup helpers.
+> > >
+> > > In that last case, it is currently impossible to match a GPIO device by
+> > > fwnode unless it was explicitly assigned to the chip in the provider
+> > > code. If the fwnode is taken from the parent device, the pointer in
+> > > struct gpio_chip will remain NULL.
+> > >
+> > > If we have a parent device but gc->fwnode was not assigned by the
+> > > provider, let's assign it ourselves so that lookup by fwnode can work in
+> > > all cases.
 
 ...
 
-> A gdev is created for each gpio_chip so in my naive brain we could
-> get rid of gc->fwnode and only have the one inside gdev->dev?
-> +/- some helpful getters/setters if need be.
->
-> Or what am I thinking wrong here?
+> > > +             gc->fwnode = parent_fwnode;
+> >
+> > Ah, this is basically reverts my commit, the whole idea of which was to go
+> > towards constant struct gpio_chip object that is supplied by a provider.
+> 
+> Then this idea was wrong in the first place and that goal will never
+> be achieved.
 
-That would work I think. But I'm definitely against this change. It is
-the way to nowhere. We should really be quite strict about fwnode and
-do NOT assign the gc one behind the provider's back. If something is
-not working in this scenario, that should be fixed and not with a hack
-like this.
+Why not? You always can have internal opaque data structure that takes constant
+object from the provider.
 
---=20
+> Whether that's a correct approach is questionable but
+> struct gpio_chip has become so much more than a simple config
+> structure and - given how ubiquitous GPIO providers are throughout the
+> different subsystems of the kernel - it'll stay that way unless we're
+> ready to rebuild every GPIO provider in linux.
+
+> The best we can do now is at least make its usage safe. Meaning: it's
+> a structure with which providers will interact using GPIOLIB callbacks
+> which will in turn assure that during the execution of any function
+> taking struct gpio_chip as argument, it will remain alive and
+> protected from concurrent access.
+> 
+> The providers however will continue to use gpio_chip for many
+> purposes. One of such purposes is matching the GPIO device BY its
+> backing gpio_chip structure. It not having the same fwnode in this
+> particular case is an inconsistency rather than design IMO.
+> 
+> I don't see any good reason for it not having the fwnode assigned.
+
+I see it clearly that we don't need to go this dead end.
+The fwnode used by GPIO devices is not semantically the same as fwnode that is
+supplied by the provider. Moreover, your patch will bring a clear layering
+violation since it changes the member behind the owner's back.
+
+> User calling gpio_device_find() will have to jump through hoops in
+> order to match the device by fwnode (include gpiolib.h and dereference
+> gpiodev?) but it could be very easily facilitated by just assigning it
+> at registration-time - just like we assign a whole bunch of other
+> pointers and data structures.
+
+No, please do not do this hack with fwnode.
+
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
