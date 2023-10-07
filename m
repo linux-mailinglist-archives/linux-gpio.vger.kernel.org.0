@@ -2,136 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 606FB7BC428
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Oct 2023 04:15:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDEDC7BC557
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Oct 2023 09:04:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234095AbjJGCPL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Oct 2023 22:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34240 "EHLO
+        id S1343627AbjJGHE0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Oct 2023 03:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234064AbjJGCPJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Oct 2023 22:15:09 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D60FE
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Oct 2023 19:14:57 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-27736c2a731so2090699a91.3
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Oct 2023 19:14:57 -0700 (PDT)
+        with ESMTP id S1343578AbjJGHEY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Oct 2023 03:04:24 -0400
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72420BD;
+        Sat,  7 Oct 2023 00:04:23 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3ae65e8eb45so1953303b6e.1;
+        Sat, 07 Oct 2023 00:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696644897; x=1697249697; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1696662262; x=1697267062; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OmwMXhTarCatb9NCqPkt+8vsHUJEJPTqRytW2qNQM+I=;
-        b=ta6h1y00X6iHmZYhv9Opn+Cd+cwdJVhgMXKgcjSGtEeIXeWOp7SMjTKB6K5grW1+zY
-         mdXx4u42kcKT3Vw2yD85/mTe+/AFkRVvY6S9SLolnfek2cwEcW5rTR7rrD7KII7AoWsa
-         PZDzQO8+k7qjYheSmn81kOphqB2lE2CjvJxPVjHVB2hGNYUSs6z0Y0TwXvtxKRT0NBNZ
-         ZD7Z1kdIksjnEamspS0Wk8YuYvJojhTmDeHvm1nkVwH2xV/EB/hghhhQRf6mYryakRcP
-         EOzKo1OE5qL9ArOvwtxttZRHSEKVcgHaou18tb8YFyjLB2UqtEWFrdkgO5fhm67Z4sve
-         Muhw==
+        bh=EZVQpme/Czd5/VYAsQPo4BoFaas9BoftbCjcn0zFcSw=;
+        b=hTRSVcznJYi1i4XDYx3+tVSmKH/Pu5jUsfxKuHPcR7FeVHjjhy3fAxQP7M5WMEAbbb
+         RfXKozW0yZv6ena1ZD0BLPAifHEz/0V6bVLbrmLyC64SRQc/IbJYGS6gf1VR9KF0ssez
+         rdqVzaZkQCFfD0o/kNX/rSdWcxWIh9T4ghUUDEBNhkwVUNws+5WOY8xQNqthVusj3dWN
+         bWKI++Uss43e0Qxr5LxqX9vlaAIJE44vhVd2QEcMCMAA9RaSwy08AFT2g2SVxfR3d2Oc
+         I+/0AWdVRRPtD2B0CQqVMdinWoZnaCJUeWQXyXOfQdiOhNQsUScOrFz+6kFXac20W1HN
+         Alug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696644897; x=1697249697;
+        d=1e100.net; s=20230601; t=1696662262; x=1697267062;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OmwMXhTarCatb9NCqPkt+8vsHUJEJPTqRytW2qNQM+I=;
-        b=hEQ5+zFIna9qDibFGM6sl7uYZuQ8CeFuKkRtm/4GZ+qnOrlSTJBZ8L4BVwoifSgTo+
-         VGGIUBOTOihFSRGO3aMm8Qwy28v91nZQm8Ce0At+ohR0ZnbEeDdAvG/koGOR9cGBXp3l
-         cohN0ZtCth4dUSFavXghrw8qP1i2vhHFH1vwuSodmE5NdbGjU/kx3L6f0tkaY4m0IeJ8
-         EjU5H9ijN925KbYEapLgFbLkN4RxYXd3wo8dhyRCtyQ5/msulbQyPFX6jjcd9kXEfgyY
-         lXtSqCedFAitTUp02QfBIAyrJI9V++930UFfQVWV25DFY11MbqfkUNHMkuKD69TqMxCW
-         dJGQ==
-X-Gm-Message-State: AOJu0YyzXKwh+QaaGpDLZwO+W1shsbbr1UFMAbkyp3jdrBw6HoDEf0bI
-        2S26sV+oZ7v0X29QmwI7mQrUc01Qqu7upGS87LiZKg==
-X-Google-Smtp-Source: AGHT+IE4N8mEXZ+Sf6QjH5HJEG+NHwGaiY72YE+cpdx/5P/OYP1BJbf0OS5y+nuKS/dwCBllK5jEsE1KIaVCkl5d9jA=
-X-Received: by 2002:a17:90b:4c12:b0:274:bf7a:60cd with SMTP id
- na18-20020a17090b4c1200b00274bf7a60cdmr9625536pjb.34.1696644896930; Fri, 06
- Oct 2023 19:14:56 -0700 (PDT)
+        bh=EZVQpme/Czd5/VYAsQPo4BoFaas9BoftbCjcn0zFcSw=;
+        b=shLzKtL+mzh6SCKbZUgWhBZwNpEp/olI6HK550t9oBvmhlCxRx3/fRCsRAWhRWdLE4
+         7VTLZ6CyE0T1mSRz/Z1ZYuR6DAqT0u1yFuNicXWOuW4G13xxHX5qHHTvEcZnKjYtC2fA
+         XuYJOiSzGMl8uJU1PgBSlnes9ESapSNLZcvcBp+ryqk9YUEiIW3wO/ig/0dNgWaHw9Ed
+         RZbwmL4dtcHs0TMk7NgJDUqClNW1PBUIgmuCEOKtI+MQ+YxQYjoa5KHbxTHFA2an1jA3
+         j+emHvHISJ8vMrBm0jd41ueLHlI7tNSH/wDFIgrUFXxvBWaDoJTelKN/XiYBSc6mKBxf
+         abxw==
+X-Gm-Message-State: AOJu0YwhXn8ev9Iznb430st828HI1efl4rLq3ioZxQEEBI3718eA5Gp5
+        5gSG/l5eLkOYrIgPfStjdp7b/j6eNiTEsfVHFaU=
+X-Google-Smtp-Source: AGHT+IElCh6zbQYAtET/SeI7Qf0Z54wtjDgQ0dGJOlBmT13Na90J4+1qHL69tsqck07fHDG0CQu2wLQxL0VT8p2avyI=
+X-Received: by 2002:aca:2810:0:b0:3ad:fdfb:d384 with SMTP id
+ 16-20020aca2810000000b003adfdfbd384mr9676137oix.53.1696662262569; Sat, 07 Oct
+ 2023 00:04:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20231006130038eucas1p1c849a21714227a11759681ef909ffd94@eucas1p1.samsung.com>
- <20231006125557.212681-1-m.majewski2@samsung.com> <20231006125557.212681-2-m.majewski2@samsung.com>
-In-Reply-To: <20231006125557.212681-2-m.majewski2@samsung.com>
-From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Fri, 6 Oct 2023 21:14:45 -0500
-Message-ID: <CAPLW+4nFLeBqNRh7g8a5eJZdT_G6Dtc4zs6nkyTpcG++mYHxfA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] pinctrl: samsung: defer pinctrl_enable
-To:     Mateusz Majewski <m.majewski2@samsung.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20231006115147.18559-1-brgl@bgdev.pl> <CACRpkdZP_nOgj77iek_V28Ny8Pb03Xyy-=ho+WqzMHzXajtfqA@mail.gmail.com>
+In-Reply-To: <CACRpkdZP_nOgj77iek_V28Ny8Pb03Xyy-=ho+WqzMHzXajtfqA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 7 Oct 2023 10:03:45 +0300
+Message-ID: <CAHp75Vdm-um7Ep=kfjEnDotJrbXi1vtfPUVJgcogou8Gr9+MQQ@mail.gmail.com>
+Subject: Re: [RFC/RFT PATCH] gpiolib: reverse-assign the fwnode to struct gpio_chip
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dipen Patel <dipenp@nvidia.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 6, 2023 at 8:01=E2=80=AFAM Mateusz Majewski <m.majewski2@samsun=
-g.com> wrote:
+On Sat, Oct 7, 2023 at 1:14=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
+org> wrote:
+> On Fri, Oct 6, 2023 at 1:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 >
-> dev_pinctrl_register function immediately enables the pinctrl subsystem,
+> > struct gpio_chip is not only used to carry the information needed to
+> > set-up a GPIO device but is also used in all GPIOLIB callbacks and is
+> > passed to the matching functions of lookup helpers.
+> >
+> > In that last case, it is currently impossible to match a GPIO device by
+> > fwnode unless it was explicitly assigned to the chip in the provider
+> > code. If the fwnode is taken from the parent device, the pointer in
+> > struct gpio_chip will remain NULL.
+> >
+> > If we have a parent device but gc->fwnode was not assigned by the
+> > provider, let's assign it ourselves so that lookup by fwnode can work i=
+n
+> > all cases.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> because we want the code to work (rough consensus and running code)
+>
 
-Nitpick: dev -> devm
+> The core of the crux is that we have
+> information duplication with a reference to the fwnode in two
+> places. One in gdev->dev and one in gc->fwnode.
 
-> which is unpreferable in general, since drivers might be unable to
-> handle calls immediately. Hence devm_pinctrl_register_and_init, which
-> does not call pinctrl_enable, is preferred.
+No, we don't. We have plenty of drivers that have gc->fwnode =3D=3D NULL,
+which means that it is shared with the parent device.
+
+
+...
+
+> A gdev is created for each gpio_chip so in my naive brain we could
+> get rid of gc->fwnode and only have the one inside gdev->dev?
+> +/- some helpful getters/setters if need be.
 >
-> In case of our driver using the old function does not seem to be
-> problematic for now, but will become an issue when we postpone parts of
-> pinctrl initialization in a future commit, and it is a good idea to move
-> off a deprecated-ish function anyway.
->
-> Signed-off-by: Mateusz Majewski <m.majewski2@samsung.com>
-> ---
->  drivers/pinctrl/samsung/pinctrl-samsung.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/=
-samsung/pinctrl-samsung.c
-> index e54847040b4a..e496af72a587 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> @@ -904,11 +904,11 @@ static int samsung_pinctrl_register(struct platform=
-_device *pdev,
->         if (ret)
->                 return ret;
->
-> -       drvdata->pctl_dev =3D devm_pinctrl_register(&pdev->dev, ctrldesc,
-> -                                                 drvdata);
-> -       if (IS_ERR(drvdata->pctl_dev)) {
-> +       ret =3D devm_pinctrl_register_and_init(&pdev->dev, ctrldesc, drvd=
-ata,
-> +                                            &drvdata->pctl_dev);
-> +       if (ret) {
->                 dev_err(&pdev->dev, "could not register pinctrl driver\n"=
-);
-> -               return PTR_ERR(drvdata->pctl_dev);
-> +               return ret;
->         }
->
->         for (bank =3D 0; bank < drvdata->nr_banks; ++bank) {
-> @@ -1176,6 +1176,10 @@ static int samsung_pinctrl_probe(struct platform_d=
-evice *pdev)
->         if (ret)
->                 goto err_unregister;
->
-> +       ret =3D pinctrl_enable(drvdata->pctl_dev);
-> +       if (ret)
-> +               goto err_unregister;
-> +
->         platform_set_drvdata(pdev, drvdata);
->
->         return 0;
-> --
-> 2.42.0
->
+> Or what am I thinking wrong here?
+
+That would work I think. But I'm definitely against this change. It is
+the way to nowhere. We should really be quite strict about fwnode and
+do NOT assign the gc one behind the provider's back. If something is
+not working in this scenario, that should be fixed and not with a hack
+like this.
+
+--=20
+With Best Regards,
+Andy Shevchenko
