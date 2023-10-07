@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36A637BCA5B
+	by mail.lfdr.de (Postfix) with ESMTP id 8F3AD7BCA5C
 	for <lists+linux-gpio@lfdr.de>; Sun,  8 Oct 2023 00:17:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344208AbjJGWRg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 Oct 2023 18:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55348 "EHLO
+        id S1344151AbjJGWRh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Oct 2023 18:17:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344151AbjJGWRg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Oct 2023 18:17:36 -0400
+        with ESMTP id S1344214AbjJGWRh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Oct 2023 18:17:37 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F26BC
-        for <linux-gpio@vger.kernel.org>; Sat,  7 Oct 2023 15:17:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4553ABD
+        for <linux-gpio@vger.kernel.org>; Sat,  7 Oct 2023 15:17:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696717055; x=1728253055;
+  t=1696717056; x=1728253056;
   h=date:from:to:cc:subject:message-id;
-  bh=Mug11j3t2LxG6A0l5W5t45p843cjA2j1WoUVv5RkdgQ=;
-  b=h+QtyOh0sthaEtbH6Uipsr1Ozn0kGLc6cQLPYPWx9z/q0nLimko7Pdk8
-   hYoZdEPABoOeYCmS+GsgBsybQMwJVZy7+8qlstpf5SeDBTKxvCEVEBrD9
-   yHDmZWSMUYWPpS8CXgkn15K6T73jouq7nqeeKpzNJWOxrwmp5IZtNibQm
-   QHlpuTaorIuHGq6k30xlA4vA35tbJsaImRI5caW0W1zTs3EiYp2cEHrAO
-   JneCGT4sEcmuYrpyMQhf1TY64FujV2ma5Rqxh9aZZIIQBXw9rPO6JcGqq
-   jRTv7nVLOjc+6/JAzrHO26ybGPpls3gp0GO+ylEHMNuQC6a5B/jLPLzpe
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10856"; a="414954673"
+  bh=kVpmrADMH2OAjQk7p12/Nmhep/JaTnME5eNuTAc5Yi0=;
+  b=kbJBsKlgxP18EEBd7WFnp5MpGTsp4FjWKztVQV5vu3IwvxDWThBqLmaK
+   SXAqZmzt/LDxw7uCz7CsfWc7rCQUlv1mNvQug0MhBYq1Sk5rHk0HFd4eO
+   fyjiz5I5TYoyV7dtUWfy9ouOqEZ3A7tEwi7MEyVWN+EdvLgwaMaRiR44c
+   nMUkVbOmS9A3yE1qv4trYrlgkx5r5j+bxJ5cI7ggZx2uImb/7lkPBCzQu
+   Dr7AxIb9YG9Jg+Y5+GFX7fJIIuzPoo8EGemLSsp56fvJtQyS4ND0iQcWd
+   HHYpHORBwrt//P7ckrR4/xQhGe80q0x+W+XsQEMzu4AEvE5m339vTihMF
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10856"; a="414954675"
 X-IronPort-AV: E=Sophos;i="6.03,207,1694761200"; 
-   d="scan'208";a="414954673"
+   d="scan'208";a="414954675"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2023 15:17:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10856"; a="1083894572"
+X-IronPort-AV: E=McAfee;i="6600,9927,10856"; a="1083894573"
 X-IronPort-AV: E=Sophos;i="6.03,207,1694761200"; 
-   d="scan'208";a="1083894572"
+   d="scan'208";a="1083894573"
 Received: from lkp-server01.sh.intel.com (HELO 8a3a91ad4240) ([10.239.97.150])
   by fmsmga005.fm.intel.com with ESMTP; 07 Oct 2023 15:17:34 -0700
 Received: from kbuild by 8a3a91ad4240 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qpFc3-0004qr-2f;
+        id 1qpFc3-0004qw-2s;
         Sat, 07 Oct 2023 22:17:31 +0000
-Date:   Sun, 08 Oct 2023 06:17:00 +0800
+Date:   Sun, 08 Oct 2023 06:17:11 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:b4/fix-realtek-warnings] BUILD SUCCESS
- c17d86d4c70c813530cfcaba3597a3e36f807d6e
-Message-ID: <202310080658.3iJHPccp-lkp@intel.com>
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ c03041205901b9e62aa42c5d8288b9926718f7dc
+Message-ID: <202310080609.pVet1hIf-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -59,12 +59,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git b4/fix-realtek-warnings
-branch HEAD: c17d86d4c70c813530cfcaba3597a3e36f807d6e  pinctrl: realtek: Fix some NULL dereference warnings
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: c03041205901b9e62aa42c5d8288b9926718f7dc  65;7202;1cMerge tag 'renesas-pinctrl-fixes-for-v6.6-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into fixes
 
 elapsed time: 1445m
 
-configs tested: 106
+configs tested: 100
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -169,12 +169,6 @@ um                           x86_64_defconfig   gcc
 x86_64                            allnoconfig   gcc  
 x86_64                           allyesconfig   gcc  
 x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231007   gcc  
-x86_64                randconfig-002-20231007   gcc  
-x86_64                randconfig-003-20231007   gcc  
-x86_64                randconfig-004-20231007   gcc  
-x86_64                randconfig-005-20231007   gcc  
-x86_64                randconfig-006-20231007   gcc  
 x86_64                          rhel-8.3-rust   clang
 x86_64                               rhel-8.3   gcc  
 
