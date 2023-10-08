@@ -2,30 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 441E27BCACC
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 Oct 2023 02:49:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C800D7BCAFB
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 Oct 2023 02:50:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234348AbjJHAtw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 Oct 2023 20:49:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40756 "EHLO
+        id S234357AbjJHAut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Oct 2023 20:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234268AbjJHAtp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Oct 2023 20:49:45 -0400
+        with ESMTP id S234358AbjJHAuU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Oct 2023 20:50:20 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3453199;
-        Sat,  7 Oct 2023 17:49:23 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF8BC433CD;
-        Sun,  8 Oct 2023 00:49:20 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E577B12C;
+        Sat,  7 Oct 2023 17:49:45 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F39C433AB;
+        Sun,  8 Oct 2023 00:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696726162;
+        s=k20201202; t=1696726184;
         bh=ZxLTp2cbLb9eo1xQ5FrKJgFWIe79ItBd51kd3aNbBl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QpEXjBFfBTwfAD7tMfVSur/dauE0S90dvAfT19Z+Vq3WjoY60V336UlEmVw9t5BeR
-         iF6XX2VY/6QnoPks8yDP23ueP3iJLt7WxFkVSlVX72GpAouTWj+SL7QCamjDIR2FQ9
-         sqXLbBxCldMc8BWrQR5vyIsokhJHJiVnp2teVFBTjkxLIV8A0/LNYuz8Kz+a0JNHS2
-         3QEUfmVzAxlx+t7bSgLiPXb8QXFqtIVXYr5AF/KYg/tFf/3BJQWsmpdxgvbSmpEhgY
-         nXVhA64/AQ+xtto92oXauFfbc9Sw8YH4ySFcZuUhzWKxXRvPmKcaPhZ+/gpIwxARIQ
-         d3D6yKvKmfKWQ==
+        b=FfLUJiPGnMFrgUmeu1MEX190xSs8ZI9JqGECLpaY9fFUDtEWiW5JGn99kFvvKmnF+
+         xx9seSLs4fY0xwpflPvigKMxLflXRc9krlAsIeGnK4fH57Iy7sgq9ZCTjaTouWDaTv
+         oeXpNC9XliUYfy5c7NqF8wSRuNk+mEkZfJvacnEZ5dXMNQ/WjU8RpBc6VX3z/1iQpl
+         LO19VWqOeLR/cCP9qGEBRlcrP76WnaJyqqXeqXurzdLJstLjEfMy5VQN+pohxCpPgb
+         ajbPQeFfn10SGh6UFcGLoYP+AecuKck+f5LKWHsTMSfKAPrEWATTQ6aEY39xM2YpG0
+         0kHrO5m3BlS6w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chengfeng Ye <dg573847474@gmail.com>,
@@ -33,16 +33,16 @@ Cc:     Chengfeng Ye <dg573847474@gmail.com>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linus.walleij@linaro.org,
         brgl@bgdev.pl, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.5 15/18] gpio: timberdale: Fix potential deadlock on &tgpio->lock
-Date:   Sat,  7 Oct 2023 20:48:49 -0400
-Message-Id: <20231008004853.3767621-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 09/12] gpio: timberdale: Fix potential deadlock on &tgpio->lock
+Date:   Sat,  7 Oct 2023 20:49:26 -0400
+Message-Id: <20231008004929.3767992-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231008004853.3767621-1-sashal@kernel.org>
-References: <20231008004853.3767621-1-sashal@kernel.org>
+In-Reply-To: <20231008004929.3767992-1-sashal@kernel.org>
+References: <20231008004929.3767992-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.5.6
+X-stable-base: Linux 6.1.56
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
