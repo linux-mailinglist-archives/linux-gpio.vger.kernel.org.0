@@ -2,148 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD7F67BD7DD
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 12:03:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AA6E7BD868
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 12:22:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346001AbjJIKDD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 06:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56638 "EHLO
+        id S1345538AbjJIKWN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 06:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345880AbjJIKDC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 06:03:02 -0400
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CC797
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 03:03:01 -0700 (PDT)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231009100300euoutp0137dd25ed0a4bd43569a6e729583a82cd~MaD8w13Gh1807618076euoutp01O
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 10:03:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231009100300euoutp0137dd25ed0a4bd43569a6e729583a82cd~MaD8w13Gh1807618076euoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1696845780;
-        bh=bbOD6dpPMgs4sWcIym/2jiGXCUrUE/V/IlZWnS2scoI=;
-        h=Date:From:Subject:To:Cc:In-Reply-To:References:From;
-        b=OnnbStIBmz5/1m0uz577OY/4bkvob+VOlQ9ZjZRtvilhYD4EOStsnkW0Tn93P2GJ7
-         XEqLm29x3s3+JSqeA4CiMhwqMjhvqjIbaV6aIAefW3l2FjUy99E4XRvSdcfuRZDYTS
-         2OxKpaCxjFNULaV0jAauhUyFXmMveD4BSRJIQcMk=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20231009100259eucas1p2cc0f287ca4c5d07b144fdb7e5cf8f893~MaD8fPRNw2404224042eucas1p2-;
-        Mon,  9 Oct 2023 10:02:59 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E3.AD.11320.3DFC3256; Mon,  9
-        Oct 2023 11:02:59 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20231009100259eucas1p1721989d67fce38fb2706c38d7c68e594~MaD8FE42F0941209412eucas1p1I;
-        Mon,  9 Oct 2023 10:02:59 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20231009100259eusmtrp19534086f81a0bfd93347b0b7e91ba0a9~MaD8ELFSf2365623656eusmtrp1W;
-        Mon,  9 Oct 2023 10:02:59 +0000 (GMT)
-X-AuditID: cbfec7f4-993ff70000022c38-24-6523cfd36d60
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id D8.F9.10549.3DFC3256; Mon,  9
-        Oct 2023 11:02:59 +0100 (BST)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20231009100258eusmtip27832a1b676606d808cc3350bc4f95bae~MaD7ONnP-1545515455eusmtip2r;
-        Mon,  9 Oct 2023 10:02:58 +0000 (GMT)
-Message-ID: <c15cb2ef-81b4-4a07-94a1-4312e7886f4b@samsung.com>
-Date:   Mon, 9 Oct 2023 12:02:58 +0200
-MIME-Version: 1.0
+        with ESMTP id S1345535AbjJIKWM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 06:22:12 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2042.outbound.protection.outlook.com [40.107.21.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E2099F;
+        Mon,  9 Oct 2023 03:22:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AsGZb2pxkezlw/UAdV5Vb/mAdwMNK6Um5iPuIT0hmJqWxtMBkZAI55+JpPWZdR3TDHxjF9rk23Nt50QUU/mAxhxxg5pJCRA8B2rP54Ty8VxFjbn9gEo8hKUOh73m4W353dGMNsi84SSRHdxGds125Ih+2HBWv4JvQ+OwceDz5wjta1UxDkzmKMZSS4arc2flOg10PLuisjkV3eDiKH8QYmecU896Z8H+8wUfljE1MkfUupB1tPwSbPq0bZQqEGMtUkpbOCk6yBFB9U3Q5eEwf+BQKaBpBpJxNPwKEc/cyGr1nRPeTHkgdFLadQ6zQYVO6u601NiAJQcYTJzBJXfHKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cw3IcPxKO/a+biabGfCLAQjFkoBIAQg+XR4EPlklovM=;
+ b=J0G0rnsIdmq238ulAoMLs+7mlHjoY8YWMaLkS3KhUoIuoQhbP5t90lNxnMSQY11rC8B0FzfObwmRsCqkhrYxEMzDvZ718NsigmcfJB29YSC+JjgaohkBSkIIoXlorr2HoT9AcqI7u4tfJWcWix3G2ZWCLWja5lNjHZaKwZFoaoF9rl2k49Z3Kf7d0PxUTUYBcQBfgEpXgPYvk7Kpc3KDY4242jZb9Y+392w8vcXjRpeedPJK0oCKnaWLSIJuIv1tzbX1VXugSbMbgnICfBrWkNobdlqUfQxoQ1PJheTT22WHmzt69G2hX5Ub42qxzhUuYiHAJQoiPfja8wfFVd/2EA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cw3IcPxKO/a+biabGfCLAQjFkoBIAQg+XR4EPlklovM=;
+ b=mRFPzkXXcNocKabw/7f1RXuHBW1sBbgM8C4mvuSBHLs2sNg4xcczIKq6gIxXFg4ZnSoH4VkHp3nV4AePrEgMsJq5DkTVRh3C5HWYzE4viKUdc+vaQhuHvehoNsd7M4RU4Frm57PaRSJ6vfQKKSDkdCanVE56twRpP89emz8MeeX5rSulfEr6etW9lHQFhD55tT6lJjrJH8lVCd7DElLjhZJoxa5Ehu0/Zfb25ERw9NAApWq4l9iyAEtY2GYpe+G/QDBj6oeRLNQFlNKCOU/HEK9CJsWDOsFAqqowsXAkgqASYaxzWf/mXPNfhr1H3inULoaPA1oFgO75bY2oM0Vl5g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from DB8PR04MB7097.eurprd04.prod.outlook.com (2603:10a6:10:12a::11)
+ by VI1PR04MB6830.eurprd04.prod.outlook.com (2603:10a6:803:132::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.36; Mon, 9 Oct
+ 2023 10:22:04 +0000
+Received: from DB8PR04MB7097.eurprd04.prod.outlook.com
+ ([fe80::5ad2:2cf9:afd5:99fd]) by DB8PR04MB7097.eurprd04.prod.outlook.com
+ ([fe80::5ad2:2cf9:afd5:99fd%2]) with mapi id 15.20.6863.032; Mon, 9 Oct 2023
+ 10:22:04 +0000
+Message-ID: <a32e996a-a9ed-4332-9a07-46bf66913db7@suse.com>
+Date:   Mon, 9 Oct 2023 12:22:01 +0200
 User-Agent: Mozilla Thunderbird
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 0/4] Fix Samsung pinctrl driver static allocation of
- GPIO base warning
-To:     Mateusz Majewski <m.majewski2@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v20 1/4] usb: Add support for Intel LJCA device
+To:     Wentong Wu <wentong.wu@intel.com>, gregkh@linuxfoundation.org,
+        oneukum@suse.com, wsa@kernel.org, andi.shyti@linux.intel.com,
+        broonie@kernel.org
+Cc:     bartosz.golaszewski@linaro.org, linus.walleij@linaro.org,
+        hdegoede@redhat.com, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1696833205-16716-1-git-send-email-wentong.wu@intel.com>
+ <1696833205-16716-2-git-send-email-wentong.wu@intel.com>
 Content-Language: en-US
-In-Reply-To: <20231006125557.212681-1-m.majewski2@samsung.com>
+From:   Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <1696833205-16716-2-git-send-email-wentong.wu@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djP87qXzyunGjxuMLJ4MG8bm8Xe11vZ
-        Lab8Wc5ksenxNVaLzfP/MFpc3jWHzWLG+X1MFhOPTWa2OPymndVi1a4/jA5cHjtn3WX3uHNt
-        D5vH5iX1Hn1bVjF6fN4kF8AaxWWTkpqTWZZapG+XwJVx4t1LloJOzorVR88zNjCuY+9i5OSQ
-        EDCR+DzjOJDNxSEksIJRYl3zXUaQhJDAF0aJ+c/jIBKfGSUWr/7JBNPx4dwxJojEckaJxqtr
-        GSGcj4wSLWv+gs3lFbCTeLT/H5jNIqAisfT9ASaIuKDEyZlPWEBsUQF5ifu3ZoDVsAkYSnS9
-        7WIDsYUFYiQ+TNrGDGKLCGxllLhwLAVkAbPAQ0aJ83OWgBUxC4hL3HoyH2woJ9CypuffWSDi
-        8hLb385hBmmQEPjAIbH8/09GiLtdJLoOLYb6Wlji1fEtULaMxOnJPSwQDe2MEgt+32eCcCYw
-        SjQ8vwXVbS1x59wvoNUcQCs0Jdbv0gcxJQQcJbo+mkOYfBI33gpC3MAnMWnbdGaIMK9ER5sQ
-        xAw1iVnH18FtPXjhEvMERqVZSMEyC8lns5B8Mwth7QJGllWM4qmlxbnpqcVGeanlesWJucWl
-        eel6yfm5mxiBCer0v+NfdjAuf/VR7xAjEwfjIUYJDmYlEV7dUoVUId6UxMqq1KL8+KLSnNTi
-        Q4zSHCxK4ryqKfKpQgLpiSWp2ampBalFMFkmDk6pBiYP+ym/4iwUzMQPmV6bomdY8KY3dNk7
-        +QtNS+NW3Ndx1OxfV8KVHn7ZRyd9nt1F6QmpRVP4DkZOtXie5uQXfuNfbSf7wrZqRdekqqSp
-        Qq7b5/wqWvwx7XxLfO+B/9NlVuYb3//3QWvffiMb9c+L1C7o7/I9LruovHLHSfZd38SKE5vD
-        LX6Xv2he5H9+Z+UTtXRevpwo5SM8n2rb/G7qaqmoGsyv+6GZ8zz+3kKNl0XTZr4+Whsu9WTe
-        s5d/GF41B9u9tbpbbHLBM1ZpeaX4B/0LB9livY+Vse9b4vP8/sWf52b4dyRLC6ntEmy4En7j
-        bPUFh+73KsadJufy+u/tOXf0Saiy4j7PjdV832wXByuxFGckGmoxFxUnAgAxfkPyvwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRmVeSWpSXmKPExsVy+t/xe7qXzyunGux/JGHxYN42Nou9r7ey
-        W0z5s5zJYtPja6wWm+f/YbS4vGsOm8WM8/uYLCYem8xscfhNO6vFql1/GB24PHbOusvucefa
-        HjaPzUvqPfq2rGL0+LxJLoA1Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ
-        384mJTUnsyy1SN8uQS/jxLuXLAWdnBWrj55nbGBcx97FyMkhIWAi8eHcMaYuRi4OIYGljBLn
-        9jSxQiRkJE5Oa4CyhSX+XOtigyh6zyix+n83G0iCV8BO4tH+f2CTWARUJJa+P8AEEReUODnz
-        CQuILSogL3H/1gywGjYBQ4mut11gvcICMRL9C6axgAwVEdjKKLHm4EUwh1ngMaPElJcPwVYL
-        CUxklNh3NRnEZhYQl7j1ZD7YBk6gzU3Pv7NAxM0kurZ2MULY8hLb385hnsAoNAvJIbOQtM9C
-        0jILScsCRpZVjCKppcW56bnFhnrFibnFpXnpesn5uZsYgVG57djPzTsY5736qHeIkYmD8RCj
-        BAezkgivbqlCqhBvSmJlVWpRfnxRaU5q8SFGU2BoTGSWEk3OB6aFvJJ4QzMDU0MTM0sDU0sz
-        YyVxXs+CjkQhgfTEktTs1NSC1CKYPiYOTqkGJr+NAZlOmV86uoKrsxQc7ivMFH05IfIEU1u5
-        xokdSfwzHZUfvFFpLN737Lrmr3tLuNu9ck48j5C0vlt69qjuiRd2B7r+X/UL1pjxS9WyyHRq
-        8euwkDtVG+ar5pz0/O8WPPXJ/jT/597VsR3rtU+FXFp/5ebl0EjdC48Nu669Pr/f/R/vipK/
-        Srlq6x7LxRtOlytsSVdizT8vtEvi0wO/c46c6QVJUit+d/T3KT7Q7rPjmN669nJf2ua3+rOi
-        bf/Jaemf+Cf0ZJmWVcB0+5knV2W+nLXmw5cpE49NeVr3Nc/v9ic2mxKZFw4dMQdljPalXWG7
-        /tdYm3n++QjHjI1TP5lYSszYVGN9pvGX9L1nT5VYijMSDbWYi4oTAftRI41TAwAA
-X-CMS-MailID: 20231009100259eucas1p1721989d67fce38fb2706c38d7c68e594
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20231006130032eucas1p18c6f5c39614768911730fa6ed0201ee3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20231006130032eucas1p18c6f5c39614768911730fa6ed0201ee3
-References: <CGME20231006130032eucas1p18c6f5c39614768911730fa6ed0201ee3@eucas1p1.samsung.com>
-        <20231006125557.212681-1-m.majewski2@samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-ClientProxiedBy: FR2P281CA0010.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::20) To DB8PR04MB7097.eurprd04.prod.outlook.com
+ (2603:10a6:10:12a::11)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB8PR04MB7097:EE_|VI1PR04MB6830:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3262f6ce-89b2-48ac-2c5c-08dbc8b19510
+X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NVKqTPwRUioHpaIz2BQ2gMkIefKi88E/RIsy70j5sy+EsyTnIQvNnM2PRLX1YY0mPSk/anHCcd1a0ES3g1MoZk8YB2f42zleqw0fLbF4nlRdXWyPbtElYxjliJI2tXmZImcyQSRkHeE0yZ+tM03b80XJV2COpS941F61LGDh0aZye24wbGH6VlJrAB4u2zfPzFy2a5pz9foGVbg5QfYe3wdH34rbiaGMrPULvybLkt9INjoQ9+wTOy9+F+20fKGZg6pdSbkrfe1Msj5mqiX0mzPESNVmwPdFcCx+6AEjSpLA36Ek+sJKjjGr9c8Xa+Dul7WyQd6QCZUxwDlRIaiqzse0IS8J+p4GeqkI+43AwXP5GYR1ceg8EeSfTRvIM06j560SpCxhRgryU20mpD65VH7ThDPW+qTKEiK8mgjQKmJq6B/ZJs8eqPLcAEGfqI6xoNVwqlEsUB2/myeiX7dc1vMDW5Fl0TXs+OOeFllIr1+Uy4mj5NC4Yy6hCdnYWq8ow0yTT9P5M5yG2DnbmhvHihW0IdvV4S/H4IzXoRrXHkxfATssoWz4L4U+Sjn4rmC91Xem2vSMW/qsLygW1ocyvp7w/CGjdnE9K6e3P9LTvqumHY3TzNroE/mA8J6hPj475Po78Hveu1KnXBScbfQzTQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB7097.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(376002)(366004)(136003)(39850400004)(230922051799003)(64100799003)(186009)(1800799009)(451199024)(53546011)(2616005)(8676002)(478600001)(6506007)(6512007)(6666004)(8936002)(83380400001)(7416002)(2906002)(4326008)(66556008)(66476007)(66946007)(6486002)(5660300002)(41300700001)(316002)(38100700002)(36756003)(31696002)(86362001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T3pZTi9wSWtoQUJnUk13cWl2ejlPRitySmlXWk9pdXJRVXdQQnVQSUYwbDFt?=
+ =?utf-8?B?dUdEQVVLL0tQSTJYNDZaNFB1blg0aWl5T1ZNUVk0dGgzQlBtQ0VycWVaSW5G?=
+ =?utf-8?B?V25CTG9zaGhCS3lyYXVVdnpoWlZ0WWN2K1dnYlE2V0orZjkzRENyRDVVMTZi?=
+ =?utf-8?B?SU5IWkdWRHRmQm9paHNMM2FRNFRFLzNuZG0rZkhkR3UvTjlGNURENkpZMzJ0?=
+ =?utf-8?B?SG9sNmdZbThDenpUeWp0ZU8ydWgzNVl0WnF5SUVKMzRCMEluYUtWRE1Wam93?=
+ =?utf-8?B?aHRCVHA2UVdHVVhSRWNlVUhVVnZtT3BOT0lYeHlHenNHV040eStiamJJUmlZ?=
+ =?utf-8?B?OTBiZ1VEckRDZUNQc1hYL1dHRTlid2FWS3hnWWd3TEJ0YWZDMyt5RUpnbStR?=
+ =?utf-8?B?V1NmVmswK2VocVBDMTdvZDMya2gzS1J0MEFVREFOSTZkY04rK3pDQ0creU5v?=
+ =?utf-8?B?N2tlR3M5QkwrTjNDanVrUWVuaUhyMklyWGJJM3ljWk5sVHdoVEtKVm56eEhK?=
+ =?utf-8?B?NjhDbzI5ZnZPaVJORFMrL1RiNDFQQ0x1WG40eXVhVUlCNzdtc0FzQmZMYzNa?=
+ =?utf-8?B?T0xPcFNSSndhMjdNYjE2MHhuaVRXbVhpQzRUc0l4cGhYZGRhQ1FHTlJuNkM2?=
+ =?utf-8?B?dXpNemdYclJwVnp1VEswTkhBOEVCei9OSldXbkRmdmlPZlo5Qkt4eldyYWs1?=
+ =?utf-8?B?ZnZlU0F1cXh4aElJemZhWGsvMkJIUzg4OEoxb09UL2l1TENQblBrVkhXQVhV?=
+ =?utf-8?B?QURQeEJxVXFFRWpoa1R6a1JEWTBNeVlPc0xXRmUzRjJoR1MyMEcxQVkxVk9y?=
+ =?utf-8?B?SVFWdjZpL0VOZWFQRmVhSGV3a25ObkRHVHZKZm41Q0I0U01zSlRNYzVhc3hu?=
+ =?utf-8?B?MmY2Y2VMb21zU2gyT1dCaytRT1NuMFVIMGdsZ0Y2MEc4aXJpS2RhQmxPbDhO?=
+ =?utf-8?B?VjVEcnJ2TXlEbFgvMjhYa216Wm52NUpSQ01FT2ltbVdITlNVbFBsRnRRUUhl?=
+ =?utf-8?B?aHlDaXdzQ2QzcHlWNTBTVjl2Tk1wMUxyRzlpV0lYWVI5QnErckl5WmVCcXlB?=
+ =?utf-8?B?Wk9Rc0lIL1pSM01GMkF4S1VROWk4b0lpZzdLSDVrNUlKOUVMVlozZzNrY1oz?=
+ =?utf-8?B?RDQ4VTJUUWlZV3VYQmFYYkJPM1IxRnJTa1FrQ29GeGg4d09oNStRREVFQWp2?=
+ =?utf-8?B?aWtKZ2FEbWxza1JRN2ZYc2pyZHpDTHVpcVdPTC90UHNBYWlHL1JQQjRyV0M3?=
+ =?utf-8?B?d3JvZ09vbFJNU0I4USttL3NWeVBXbzNicWMyQlV1RGViakRzWWJtbUM2UnNI?=
+ =?utf-8?B?QUdBYWljR0ZyZzVKS2l6ZW0vUFNQQk1lRCsxYzQ0Mmo2VnhlcDlaSklYTm1I?=
+ =?utf-8?B?SjlxcUlvMnBqalBYazYwcnBLamo4dTNIazFqWXlLVC9KSjdHVFRqOVhEK3VL?=
+ =?utf-8?B?OEpQK0Z3ZnozTng4UlZsekY1OWc0ZmdDbkVKTWY1b1dYQVRFbTJTbmYxb2Rw?=
+ =?utf-8?B?aFo5RGxCeFpXS3FqdDZ6WHg5QWxrTmNVS0ttVzFFODBsbHV2WEtOT3dnWk9K?=
+ =?utf-8?B?eGhOaWJMTU1VSksyd0hGNlVjMmxPR3hPdTI2SjUvVGs5cnoxd3VPOWE3ajdI?=
+ =?utf-8?B?dkQxVUk4bmlwb0RMTHlxV0NwdWJLckdTdG5lZGt6YmtwWitQd0p1dzdjSWgr?=
+ =?utf-8?B?cE5tUUtzd1liTExVeHpqZmQrL0hiaHhXbmR6QS9aN0wrRy9HdHhHWWRrQjUx?=
+ =?utf-8?B?Q29Uc2s4c01xaS81SWRpYktEb1pwYU5odlpFNzRCb210b3VKY3lEWVB4YnRC?=
+ =?utf-8?B?Z1VtMzZIODROSzQvN293a2E4NnlGa0VXcUNHY0YyRzhVd1VHSWxKSzBlS0V1?=
+ =?utf-8?B?WUF6U211NEJncjJqS3UrT0hmTGd4TlpmS2VSaUduS0xtQldwSjRVRGordTRF?=
+ =?utf-8?B?b012aExzR0VOTGRJdDM3WmlyT3AydGdNeGRDR3QzOGRxakM3SURMdTNMRUR3?=
+ =?utf-8?B?OHpjSEVmMjlzRkNnQkp3anV0RE5KQkN3SHRCTzFsTEN5a3FkRGpJZHl4UnlK?=
+ =?utf-8?B?NWRQMkExMk9NWjdOcHdoQ3ZybmpQQXdPV21iRU1HSWFueDh6VTNvN1dQUVJm?=
+ =?utf-8?B?T1BOREcxYW9HcmNlVnFQYWpyc0h4eHVOVHg3bzNGb3kzMHlpMmtPV2lac3Rr?=
+ =?utf-8?Q?Bt7ofvezEB4zNnyjsqncchsj20zxCbtG+XpYxs9INI5M?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3262f6ce-89b2-48ac-2c5c-08dbc8b19510
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB7097.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2023 10:22:04.1193
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1/lrS4zfxai+e4ZnMNfAZABcaJ6Fcx2l+Q5Y+e+piNLkLGouk3kmyyceDJSF8m8Qip90nz9xjqXSLLvQ5RO7kQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6830
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06.10.2023 14:55, Mateusz Majewski wrote:
-> The object of this work is fixing the following warning, which appears
-> on all targets using that driver:
->
-> gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
->
-> This needs a small refactor to how we interact with the pinctrl
-> subsystem. Finally, we remove some bookkeeping that has only been
-> necessary to allocate GPIO bases correctly.
->
-> Mateusz Majewski (4):
->    pinctrl: samsung: defer pinctrl_enable
->    pinctrl: samsung: use add_pin_ranges method to add pinctrl ranges
->    pinctrl: samsung: choose GPIO numberspace base dynamically
->    pinctrl: samsung: do not offset pinctrl numberspaces
->
->   drivers/pinctrl/samsung/pinctrl-samsung.c | 56 ++++++++++++-----------
->   drivers/pinctrl/samsung/pinctrl-samsung.h |  4 +-
->   2 files changed, 31 insertions(+), 29 deletions(-)
-
-Just to let everyone know - I've tested this patchset on our test farm 
-and found no regressions on various Exynos based boards.
-
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+On 09.10.23 08:33, Wentong Wu wrote:
+> Implements the USB part of Intel USB-I2C/GPIO/SPI adapter device
+> named "La Jolla Cove Adapter" (LJCA).
+> 
+> The communication between the various LJCA module drivers and the
+> hardware will be muxed/demuxed by this driver. Three modules (
+> I2C, GPIO, and SPI) are supported currently.
+> 
+> Each sub-module of LJCA device is identified by type field within
+> the LJCA message header.
+> 
+> The sub-modules of LJCA can use ljca_transfer() to issue a transfer
+> between host and hardware. And ljca_register_event_cb is exported
+> to LJCA sub-module drivers for hardware event subscription.
+> 
+> The minimum code in ASL that covers this board is
+> Scope (\_SB.PCI0.DWC3.RHUB.HS01)
+>      {
+>          Device (GPIO)
+>          {
+>              Name (_ADR, Zero)
+>              Name (_STA, 0x0F)
+>          }
+> 
+>          Device (I2C)
+>          {
+>              Name (_ADR, One)
+>              Name (_STA, 0x0F)
+>          }
+> 
+>          Device (SPI)
+>          {
+>              Name (_ADR, 0x02)
+>              Name (_STA, 0x0F)
+>          }
+>      }
+> 
+> Signed-off-by: Wentong Wu <wentong.wu@intel.com>
+> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Oliver Neukum <oneukum@suse.com>
