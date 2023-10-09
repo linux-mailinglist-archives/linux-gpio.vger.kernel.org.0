@@ -2,137 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E0F7BD5F3
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 10:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63FA07BD654
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 11:09:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345562AbjJII6e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 04:58:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40002 "EHLO
+        id S234477AbjJIJJB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 05:09:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345563AbjJII6d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 04:58:33 -0400
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A67AC
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 01:58:31 -0700 (PDT)
-Received: by mail-vs1-xe2b.google.com with SMTP id ada2fe7eead31-4526c6579afso2931842137.0
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 01:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696841910; x=1697446710; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+IjKT0+Ypkn7zhjMVgKrjoaDsjd0guLGpl3xLXwO7Ww=;
-        b=oCVUTXigbL5LbRrTjAqaGNT9GpuC80QRXxrLi5m8XEqJ42elJ/YOeLjloqQUTQ68cs
-         l0tjZ5/WIU1xhK4NjXaJW4Lpb27ljKy34DQt8/Sl3+zVCN8MthPhFBpdyOnEfqd7bYoF
-         cApwkYUr9s8yOR2QvMptaAywR1P7FuKjMIMQK2kBIrrZzPviNCh3EN8fuNH42kzfvaY9
-         74IsdkZC1cQuezT2q+m7qvL22hE39UZtSeBY6a2OBFqsE4atY6VtAJz5fAMkXjk4QWg5
-         svXQGCkbj+UEip++wETAJzmlDBVXcUqmmL7tzh6d+Roz6ox2d8+nZQ5Zl0EK8ouGfP38
-         6C4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696841910; x=1697446710;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+IjKT0+Ypkn7zhjMVgKrjoaDsjd0guLGpl3xLXwO7Ww=;
-        b=vX10TeqWneO4h1Hfe9ON/6rD2acfQLXlQXIEIuOsxiwGdUJPMOjGdDDWBdisENFMof
-         g0iLRBXxQkUjX9ZB8eVxQyFC9QIztnBtua9ZFj60yf37ZHdLqPvBPte0cFIb7TVyNLyG
-         UwbO0lELECOMSOS3xlM1eQ/FjePKhtngEtoJ2OLNaKdXoMwyXLSBkY8IwzSm6y6r9qAN
-         v56mEVV0baGrlVzHk35DVARnQJj9JrDRobykeIo7lZMuGluZ9xdH6UM5TfIWJxZqyfr2
-         2omNoXwOwgfZVTp5iGVrLgD4v5OgCW6DLBF56LobeBCctTfBZNSjL/h3lANgVdY5Ukgl
-         RHqg==
-X-Gm-Message-State: AOJu0YyFSSHcUsZAr734+e49ogZ6B5mgyERzVJFi9+v9+YQZq5OxxPxf
-        FgWgJypw5RVcXJ48XVfMs6yQB/b97PoTVVwKt2txqQ==
-X-Google-Smtp-Source: AGHT+IF3oN2+wdoasfvC0M7azC7LrXRxULp2EbwuusLoXmW0fNMOcPoS9Dg9e8by2GRahDN3v5LJIlxSVnAbMX2vYwE=
-X-Received: by 2002:a05:6102:3a6b:b0:452:6834:b8f6 with SMTP id
- bf11-20020a0561023a6b00b004526834b8f6mr5293733vsb.3.1696841910663; Mon, 09
- Oct 2023 01:58:30 -0700 (PDT)
+        with ESMTP id S1345695AbjJIJI7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 05:08:59 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2C45A3;
+        Mon,  9 Oct 2023 02:08:57 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A6551FB;
+        Mon,  9 Oct 2023 02:09:38 -0700 (PDT)
+Received: from e120937-lin (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A700B3F7A6;
+        Mon,  9 Oct 2023 02:08:50 -0700 (PDT)
+Date:   Mon, 9 Oct 2023 10:08:48 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        sudeep.holla@arm.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+Message-ID: <ZSPDILYZkxvTnQia@e120937-lin>
+References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
+ <20231005025843.508689-6-takahiro.akashi@linaro.org>
+ <20231006132346.GA3426353-robh@kernel.org>
+ <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20231006-b4-bindings-old-version-fix-v1-0-a65f431afb97@linaro.org>
-In-Reply-To: <20231006-b4-bindings-old-version-fix-v1-0-a65f431afb97@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 9 Oct 2023 10:58:19 +0200
-Message-ID: <CAMRc=MdD5SOmPM6JgagPbkbNJHn+kHqtzu_iGjQPm-K2kFCEfA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 0/2] bindings: rust: feature gate unreleased features
-To:     Erik Schilling <erik.schilling@linaro.org>
-Cc:     Linux-GPIO <linux-gpio@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 6, 2023 at 9:24=E2=80=AFAM Erik Schilling <erik.schilling@linar=
-o.org> wrote:
->
-> When releasing the 0.2.0 version of the libgpiod crate, I did not
-> realize that there were C lib features that were not released yet.
-> Helpfully, vhost-device's CI went up in flames and revealed this [1].
->
-> This suggests a way to handle that and sketches how further updates can
-> be handled.
->
-> I acknowledge that this may be very strange to C developers...
-> Traditionally, one would just use whatever your distro provided and the
-> distro would make sure that dependencies update in lock-step.
->
-> However, in Rust the default way to consume libraries is to pull them
-> from crates.io. This is a balancing act for -sys crates which link to
-> distro-provided libraries on the system. Since crates.io does not wait
-> for distros to update their libraries, crates will need to support a
-> wider range of system libraries.
->
-> This sets up / sketches the infrastructure for that.
->
-> Only the first commit is intended to be merged. The second one just
-> sketches how a release will look like once it happens.
->
-> [1] https://buildkite.com/rust-vmm/vhost-device-ci/builds/1746#018b0110-b=
-9d3-468a-973c-c3bbc27cd479
->
-> To: Bartosz Golaszewski <brgl@bgdev.pl>
-> To: Linux-GPIO <linux-gpio@vger.kernel.org>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-> Cc: Kent Gibson <warthog618@gmail.com>
->
-> Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> ---
-> Erik Schilling (2):
->       bindings: rust: feature gate unreleased features
->       DONOTMERGE: bindings: rust: simulate v2.1 release
->
->  bindings/rust/libgpiod-sys/Cargo.toml        |  9 +++++++--
->  bindings/rust/libgpiod/Cargo.toml            |  4 ++++
->  bindings/rust/libgpiod/Makefile.am           |  2 +-
->  bindings/rust/libgpiod/README.md             | 14 ++++++++++++++
->  bindings/rust/libgpiod/src/line_request.rs   |  2 ++
->  bindings/rust/libgpiod/tests/line_request.rs |  1 +
->  6 files changed, 29 insertions(+), 3 deletions(-)
-> ---
-> base-commit: e7b02c2259d97c77107c77b68e3bc1664e6703c1
-> change-id: 20231006-b4-bindings-old-version-fix-789973703b77
->
-> Best regards,
-> --
-> Erik Schilling <erik.schilling@linaro.org>
->
+On Mon, Oct 09, 2023 at 09:49:33AM +0200, Linus Walleij wrote:
+> On Fri, Oct 6, 2023 at 3:23 PM Rob Herring <robh@kernel.org> wrote:
+> > On Thu, Oct 05, 2023 at 11:58:43AM +0900, AKASHI Takahiro wrote:
+> 
 
-I'm currently discussing a similar problem with a developer who
-offered to help make Python bindings released on PyPi more
-user-friendly. His suggestion for python bindings is what many PyPi
-packages that provide bindings to C libraries do: just compile the
-library statically and make it part of the C extension module bundled
-together with python code.
+Hi Linus and all,
 
-Given that rust programs are statically linked, maybe this is a
-solution we could use?
+> > > A dt binding for pin controller based generic gpio driver is defined in
+> > > this commit. One usable device is Arm's SCMI.
+> >
+> > You don't need a "generic" binding to have a generic driver. Keep the
+> > binding specific and then decide in the OS to whether to use a generic
+> > or specific driver. That decision could change over time, but the
+> > binding can't. For example, see simple-panel.
+> 
+> What you say is true for simple-panel (a word like "simple" should
+> always cause red flags).
+> 
+> This case is more like mfd/syscon.yaml, where the singular
+> compatible = "syscon"; is in widespread use:
+> 
+> $ git grep 'compatible = \"syscon\";' |wc -l
+> 50
+> 
+> I would accept adding a tuple compatible if you insist, so:
+> 
+> compatible = "foo-silicon", "pin-contro-gpio";
+> 
+> One case will be something like:
+> 
+> compatible = "optee-scmi-pin-control", "pin-control-gpio";
+> 
+> In this case I happen to know that we have the problem of
+> this being standardization work ahead of implementation on
+> actual hardware, and that is driven by the will known firmware
+> ambition to be completely abstract. It is supposed to sit on
+> top of pin control, or as part of pin control. Which leads me to
+> this thing (which I didn't think of before...)
+> 
+> > +    gpio0: gpio@0 {
+> > +        compatible = "pin-control-gpio";
+> > +        gpio-controller;
+> > +        #gpio-cells = <2>;
+> > +        gpio-ranges = <&scmi_pinctrl 0 10 5>,
+> > +                      <&scmi_pinctrl 5 0 0>;
+> > +        gpio-ranges-group-names = "",
+> > +                                  "pinmux_gpio";
+> > +    };
+> 
 
-Bart
+Assuming the above &scmi_pinctrl refers to the protocol node as we
+usually do,  I am a bit puzzled by this example in this RFC series, because
+usually in SCMI we DO refer to some resources using the phandle and the
+domain IDs as in:
+
+	scmi_sensor: protocol@15 {
+		reg = <15>;
+		#thermal-sensors-cells = <1>;
+	};
+
+	...
+
+	thermal_zones {
+		pmic {
+			thermal-sensor = <&scmi_sensor 0>;
+		};
+	};
+ 
+BUT in the SCMI Pinctrl case the current v4 Oleksii series takes advantage
+of the existing Pinctrl bindings and naming to describe and refer to
+pin/groups/functions, indeed #pinctrl-cells is defined as '0' in the
+upcoming SCMI DT protocol node @19 in Oleksii v4, since indeed all the
+parsing/matching is done by resource-names following the Picntrl
+framework conventions. (AFAIU)
+
+Moreover, due to how the SCMI Pinctrl protocol defines and describes the
+pins/groups/functions using a tuple like (<TYPE>, <ID>) , with TYPE
+being pin/group/function, a generic binding like the above would have to
+be defined by at least 2 cells to be able to identify an SCMI PinCtrl
+resource by index. (if that is the aim here...)
+
+Am I right to think that such a generic SCMI PinCtrl binding is still to
+be defined somewhere on the SCMI side, if needed as such by this GPIO driver ?
+
+... or I am missing something ?
+
+Thanks,
+Cristian
