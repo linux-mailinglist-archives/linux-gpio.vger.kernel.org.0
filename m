@@ -2,103 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 288D37BEB67
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 22:16:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF19F7BEC2A
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 23:00:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378538AbjJIUQd convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 9 Oct 2023 16:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44266 "EHLO
+        id S1378065AbjJIVAL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 17:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378520AbjJIUQc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 16:16:32 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1F294;
-        Mon,  9 Oct 2023 13:16:29 -0700 (PDT)
-Received: from [194.95.143.137] (helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1qpwfx-0004xo-Vr; Mon, 09 Oct 2023 22:16:26 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/20] pinctrl: rockchip: Convert to platform remove callback
- returning void
-Date:   Mon, 09 Oct 2023 22:16:25 +0200
-Message-ID: <3523328.iIbC2pHGDl@phil>
-In-Reply-To: <20231009083856.222030-12-u.kleine-koenig@pengutronix.de>
-References: <20231009083856.222030-1-u.kleine-koenig@pengutronix.de>
- <20231009083856.222030-12-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1378132AbjJIVAK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 17:00:10 -0400
+Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A11AC
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 14:00:07 -0700 (PDT)
+Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-57ddde51033so3037829eaf.1
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 14:00:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gadgetoid.com; s=google; t=1696885207; x=1697490007; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xY1LhNKxHfqHzxYuaEiJvbnkcnye1Ch7cffIuHboIiU=;
+        b=Zp82+g1HBxXRqCvdvbPs8XxKtTmhlZK/LG9mwEVcnogoQ4fI/4OeBPlD7rvvNA9zqn
+         vHd0sMQWDcOvrfIdbQxknPqYigjN+J/6AvLOt/mcYlkGw4Nb3U8kBW2LqNrEzpU0oLSV
+         tteDlOVxSaCQnx0oCBALFB46si0EUQvHA+3MLpFetYTesGeSkBLqlCu+lDlv2Wg0spBA
+         CcSQuZoRt9I+W5t2TjV8AKF/747KO2G1AZFhHpmeE6E8bZq5pDjLFXJgADPfAzAF/j5I
+         f5E6NckqwNHndbF+xoB9xsuIV0SoAD3TmDzuhJ2SQkm1mBpJ1cD/JVLQQNdbrX0J+Wvf
+         VhOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696885207; x=1697490007;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xY1LhNKxHfqHzxYuaEiJvbnkcnye1Ch7cffIuHboIiU=;
+        b=iSexT4EFFdDazTYlhawfY9sHdj8MVsZC2mwarOJaDOPM0J8R2e5jeHpu7IPBKIinUE
+         r6kLs2oHd+/llkZS5H7V0F+T/dhFiQMkJox7Wn54vBtp0ri5E8NhC0u4qTZrmnjivxoe
+         j69lFwf9vLS8c8z1esHebP7NTLZPPEguKsswTiiX/2VVU3NQDDq3/aUSZhKAjQQCVxNQ
+         NZw5OkcsUL3Ta0Gkm/cdXj4h4TzeKwjg615XpGS9RbayvkOF1xDl8jOobSjk7TCevQW9
+         MQJJyMP+HBmiBZY/nXnaH+LrM6VmWUTfzGs1DQH9UT3tc8dL7xDbXg9F7r9MOZETZElM
+         eJ4A==
+X-Gm-Message-State: AOJu0YwchuMEabBwd7k6z9zWZR/FN9DCzOkFJKt0AV20JGElGBEq2RQf
+        5dHXXYoO7Y2zzNNT+A8gTRJ+nBdVj+vuYs/2fJgXXQ==
+X-Google-Smtp-Source: AGHT+IFV6WOJZlLUq2N/1pfaFYbUXr7woxF+yBQseR5CJTL+GeHrEGKsI5g0hTZWBsXVOm06FMAKeckKd71lnqyMMFk=
+X-Received: by 2002:a05:6870:3101:b0:1c5:dcd:5d64 with SMTP id
+ v1-20020a056870310100b001c50dcd5d64mr6909601oaa.7.1696885207035; Mon, 09 Oct
+ 2023 14:00:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_BLOCKED,
-        SPF_PASS,SUSPICIOUS_RECIPS,T_SPF_HELO_TEMPERROR autolearn=no
-        autolearn_force=no version=3.4.6
+References: <20231009190729.38675-1-brgl@bgdev.pl>
+In-Reply-To: <20231009190729.38675-1-brgl@bgdev.pl>
+From:   Phil Howard <phil@gadgetoid.com>
+Date:   Mon, 9 Oct 2023 21:59:56 +0100
+Message-ID: <CA+kSVo-pkmque7Zig3a7iwRN=4OtHmi0dpyO5Zc9ttOabYd8XA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] bindings: python: replace PyModule_AddObjectRef()
+ with PyModule_AddObjectRef()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Erik Schilling <erik.schilling@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Montag, 9. Oktober 2023, 10:38:47 CEST schrieb Uwe Kleine-König:
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
-> 
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
-> 
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On Mon, 9 Oct 2023 at 20:07, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> PyModule_AddObjectRef() was added in cpython v3.10 while libgpiod claims
+> to depend on python v3.9. Replace it with an older variant that steals the
+> reference to the added object on success.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Ah, fixing this makes much more sense than bumping the dependent
+version, thank you, I will update my patch.
 
+>
+> Reported-by: Phil Howard <phil@gadgetoid.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  drivers/pinctrl/pinctrl-rockchip.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index 45e416f68e74..3bedf36a0019 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3429,7 +3429,7 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static int rockchip_pinctrl_remove(struct platform_device *pdev)
-> +static void rockchip_pinctrl_remove(struct platform_device *pdev)
->  {
->  	struct rockchip_pinctrl *info = platform_get_drvdata(pdev);
->  	struct rockchip_pin_bank *bank;
-> @@ -3450,8 +3450,6 @@ static int rockchip_pinctrl_remove(struct platform_device *pdev)
->  		}
->  		mutex_unlock(&bank->deferred_lock);
->  	}
-> -
-> -	return 0;
->  }
->  
->  static struct rockchip_pin_bank px30_pin_banks[] = {
-> @@ -3982,7 +3980,7 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
->  
->  static struct platform_driver rockchip_pinctrl_driver = {
->  	.probe		= rockchip_pinctrl_probe,
-> -	.remove		= rockchip_pinctrl_remove,
-> +	.remove_new	= rockchip_pinctrl_remove,
->  	.driver = {
->  		.name	= "rockchip-pinctrl",
->  		.pm = &rockchip_pinctrl_dev_pm_ops,
-> 
-
-
-
-
+>  bindings/python/gpiod/ext/module.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/bindings/python/gpiod/ext/module.c b/bindings/python/gpiod/ext/module.c
+> index 25c252a..b456190 100644
+> --- a/bindings/python/gpiod/ext/module.c
+> +++ b/bindings/python/gpiod/ext/module.c
+> @@ -178,9 +178,9 @@ PyMODINIT_FUNC PyInit__ext(void)
+>                 return NULL;
+>         }
+>
+> -       ret = PyModule_AddObjectRef(module, "__all__", all);
+> -       Py_DECREF(all);
+> +       ret = PyModule_AddObject(module, "__all__", all);
+>         if (ret) {
+> +               Py_DECREF(all);
+>                 Py_DECREF(module);
+>                 return NULL;
+>         }
+> --
+> 2.39.2
+>
