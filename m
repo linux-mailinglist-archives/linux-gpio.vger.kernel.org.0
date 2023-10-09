@@ -2,111 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5F617BEAAA
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 21:33:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CD337BEB2B
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 22:04:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377727AbjJITdu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 15:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47860 "EHLO
+        id S1377401AbjJIUEH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 16:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378412AbjJITdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 15:33:50 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29415B6;
-        Mon,  9 Oct 2023 12:33:49 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED7C2C433C7;
-        Mon,  9 Oct 2023 19:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696880028;
-        bh=3vSQGl8AKGsrfujKMh0CxRfl2/dxm1puOS4ZfrVqiOQ=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=kqFhJBLbV57LCCJaaGa4Cb6xeE1pwKxBLjp1vrm0M8gC8Jmygrgbw44uVuMC1xJcL
-         iIwWM0BMCU0VDZ97wHTtrGSr9jBN9zS4XQKyptleasbRpyzlDxP8vuq0ds579CS79q
-         9cqIOB4W+MAevB2BsAgJy5UyEcK1qYoCJZNFIZEzN1XFgDcWNN9l4v4+htQbiULn9x
-         3A489kPRl5cgnkrkQuOGQ2QFmbovWkMf0fjokrDYa6EW5lxFKXV5dfHCd5cv660Pqa
-         P2da3GVyqDBCKdGJLaM+b0/ybnr+3q4r45vgAyV29YJUXP0zigXz5NjG6XRsVovFdq
-         gzFlhg72cEHTQ==
-From:   Mark Brown <broonie@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S1376628AbjJIUEH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 16:04:07 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184FEA6
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 13:04:04 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1c9ad9473d7so40995ad.1
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 13:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696881843; x=1697486643; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=792ACGhD6QjX3gm4sl6mN1ZnGztud0zoUVjrdn9K8C0=;
+        b=ZHALqsmkzhqOYDFJcfu/axPofTffo1dsrCiTTswHYNc4mVcvVN02tocv8qEfvHkKw8
+         qBSg8z9vnU8sfbN+pyeWDtW5XstfK5EvKWOkeZR5M5RRx2uKBA+z21o04gfADMqsyNND
+         Y3+Rx2HUg2gksU4kdhsC+dYLMMn3FwnlxQdGhqFqaKHx2t64rqOsy+APdJeuZoxm/f8z
+         VoeeRgN9Bp9rq0YYvsU/2ebqteY14M53iq4CTJ0cFN3FQqxyiXqVNdzv5dvkj4Vkld3o
+         SivdRaHbtlR7kBrHNO9Gw3TMh6RevjJk14h+o1QGie5SwINSbfwUM2XiR3afwia6iqJf
+         gFDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696881843; x=1697486643;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=792ACGhD6QjX3gm4sl6mN1ZnGztud0zoUVjrdn9K8C0=;
+        b=O6fXEWMGkGnWuXmc2QfUrl7ZW4dz4+0YV4cGzuTLmInQTF7NSdPqE9B3WE4TOnWOwu
+         RKFMjRiQnaeGd6YUVN55OOXD+h+j9S1XFkw8klqptsr/Kw/wtITtQr2BK303ti1/YAVi
+         6RV/nddpuc4ugQBsI3TCexjxRW9Aqk3IAfSBEUV4oIwLh+QuLgzK7PYt0Fzi4+/zuJEV
+         7ki/ZqiQF8qMYE+hWaNV2iZO8k1XPeuFJeAKztodS58znmva+PRh+IPKZnDGcrSv5SF5
+         Tm/O0Z/cSXhAD7s5PnYRUYXOScF9/U8LbbQ2dt0xA95c2kV+/sFi82E2Rmx0E8tvhcLm
+         +qTg==
+X-Gm-Message-State: AOJu0YzI2dK4LJNQWyTypLrOIotMDQuFeEwdAc+QiaIDJbxFIYyN2BF/
+        Hr9w5qzwD4Tq7Biv1jXyf/DY8Q==
+X-Google-Smtp-Source: AGHT+IGoDE0HuNMIvb5i2H0sYSVhJ0lPtrnwVtRl9vcbmzHn2Ebn09gMy1XHI6WbiXHnD9jwHuRR6Q==
+X-Received: by 2002:a17:902:ec8b:b0:1c6:c41:679c with SMTP id x11-20020a170902ec8b00b001c60c41679cmr803671plg.4.1696881843213;
+        Mon, 09 Oct 2023 13:04:03 -0700 (PDT)
+Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
+        by smtp.gmail.com with ESMTPSA id k3-20020a63ab43000000b0050f85ef50d1sm8838631pgp.26.2023.10.09.13.04.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 13:04:02 -0700 (PDT)
+Date:   Mon, 9 Oct 2023 13:03:59 -0700
+From:   William McVicker <willmcvicker@google.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
+        s.nawrocki@samsung.com, linus.walleij@linaro.org,
+        wim@linux-watchdog.org, linux@roeck-us.net,
+        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+        olof@lixom.net, cw00.choi@samsung.com, tudor.ambarus@linaro.org,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        soc@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, alsa-devel@alsa-project.org
-In-Reply-To: <20231006-descriptors-asoc-mediatek-v1-0-07fe79f337f5@linaro.org>
-References: <20231006-descriptors-asoc-mediatek-v1-0-07fe79f337f5@linaro.org>
-Subject: Re: [PATCH 0/8] Convert Mediatek ASoC codecs to use GPIO
- descriptors
-Message-Id: <169688002562.148554.2449511739055608946.b4-ty@kernel.org>
-Date:   Mon, 09 Oct 2023 20:33:45 +0100
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH 19/21] google/gs101: Add dt overlay for oriole board
+Message-ID: <ZSRcr6JRbj-wZf7R@google.com>
+References: <20231005155618.700312-1-peter.griffin@linaro.org>
+ <20231005155618.700312-20-peter.griffin@linaro.org>
+ <7f2032c2-812a-46b5-8914-056cd53c37cb@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-0438c
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f2032c2-812a-46b5-8914-056cd53c37cb@linaro.org>
+X-Spam-Status: No, score=-15.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 06 Oct 2023 15:46:23 +0200, Linus Walleij wrote:
-> Convert over the Mediatek codecs to use GPIO descriptors.
+On 10/05/2023, Krzysztof Kozlowski wrote:
+> On 05/10/2023 17:56, Peter Griffin wrote:
+> > The LK bootloader on Pixel6 searches for a dt overlay in the
+> > dtbo partition with a board_id and board_rev that matches
+> > what is baked into the device. If this overlay is not present
+> > then the phone will bootloop in fastboot and you can't boot
+> > the upstream kernel.
+> > 
+> > This commit adds a dtbo for the production oriole variant.
+> > The other pre-production board overlays are not included
+> > at this time.
+> > 
+> > Adding the dtbo here allows for a better experience when
+> > building/booting the upstream kernel on Pixel devices
+> > as all the DT required to boot the device will be created
+> > as part of the kernel build process. Rather than having to
+> > fetch the dtbo from some other repo.
+> > 
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/google/Makefile          |  1 +
+> >  arch/arm64/boot/dts/google/gs101-oriole.dtso | 21 ++++++++++++++++++++
+> >  2 files changed, 22 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/google/gs101-oriole.dtso
+> > 
+> > diff --git a/arch/arm64/boot/dts/google/Makefile b/arch/arm64/boot/dts/google/Makefile
+> > index 6d2026a767d4..3f1761f8daa9 100644
+> > --- a/arch/arm64/boot/dts/google/Makefile
+> > +++ b/arch/arm64/boot/dts/google/Makefile
+> > @@ -2,5 +2,6 @@
+> >  
+> >  dtb-$(CONFIG_ARCH_GOOGLE_TENSOR) += \
+> >  	gs101-oriole.dtb \
+> > +	gs101-oriole.dtbo
+> >  
+> >  
+> > diff --git a/arch/arm64/boot/dts/google/gs101-oriole.dtso b/arch/arm64/boot/dts/google/gs101-oriole.dtso
+> > new file mode 100644
+> > index 000000000000..50832fd94204
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/google/gs101-oriole.dtso
+> > @@ -0,0 +1,21 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Oriole DVT Device Tree
+> > + *
+> > + * Copyright 2021-2023 Google,LLC
+> > + */
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +
+> > +/ {
+> > +	board_id = <0x20304>;
+> > +	board_rev = <0x10000>;
 > 
-> One few-liner affects gpiolib-of.h, I don't think there
-> will be conflicts so I suggest that all of this can be
-> merged through ASoC after review.
+> Undocumented properties. Please propose bindings... Also, underscores
+> are not allowed, so in this form it is a no-go... although I understand
+> the pain of not being able to change the bootloader.
 > 
-> 
-> [...]
+> For reference:
+> https://lore.kernel.org/all/20220605150747.GA3465286-robh@kernel.org/
+> https://lore.kernel.org/all/20220610163343.GA1787330-robh@kernel.org/
 
-Applied to
+These names are actually arbitrary and don't depend on the bootloader. They are
+passed into the mkdtimg tool [1] using --id and --rev and used to create the
+dt_table_entries. The bootloader traverses the table and picks the overlay
+based on these properties. So we can use whatever property names we want
+without changing the bootloader.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/8] gpiolib: of: Add quirk for mt2701-cs42448 ASoC sound
-      commit: 9e189e80dcb68528dea9e061d9704993f98cb84f
-[2/8] ASoC: mediatek: mt2701-cs42448: Convert to GPIO descriptors
-      commit: 654a23724072f37c0d07b31395e1d9f45f5563ab
-[3/8] ASoC: mt8173-max98090: Drop unused include
-      commit: b1306c3b6140f0c299f727edc9bb90ec79700614
-[4/8] ASoC: mt8173-rt5650-rt5514: Drop unused includes
-      commit: 94a7f618211652235f3e4b88aca477391078dba6
-[5/8] ASoC: mt8173-rt5650-rt5676: Drop unused includes
-      commit: cb1c18e8a7337c7f3ee461b613a52a45c3f723d5
-[6/8] ASoC: mt8173-rt5650: Drop unused includes
-      commit: 6dffd1f38ad76660e7fff8e269889284e892603d
-[7/8] ASoC: mt8186-mt6366-rt1019-rt5682s: Drop unused include
-      commit: 73e1f8a05bd8289ab5154c703a0592729267e979
-[8/8] ASoC: mt8192-afe-gpio: Drop unused include
-      commit: 3b5d22bdf33c4e44016fdcfc8904a0b0bf218e75
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+[1] https://android.googlesource.com/platform/system/libufdt/+/refs/heads/main/utils/
 
 Thanks,
-Mark
+Will
 
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
