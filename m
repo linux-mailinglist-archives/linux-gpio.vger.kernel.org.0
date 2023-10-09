@@ -2,156 +2,224 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 195CD7BE492
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 17:22:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AACF7BE5EB
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 18:10:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376842AbjJIPWC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 11:22:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
+        id S1377119AbjJIQKK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 12:10:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377018AbjJIPWA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 11:22:00 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74E7BA
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 08:21:54 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-4065f29e933so45382355e9.1
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 08:21:54 -0700 (PDT)
+        with ESMTP id S1377014AbjJIQKJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 12:10:09 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3278699
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 09:10:07 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1c6193d6bb4so307185ad.0
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 09:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696864913; x=1697469713; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZKSDVA5hdRk0qjHHKldrFWUuPLQwNPm888vrv06x2fQ=;
-        b=AF2qbwQ6geiPIxtj1TGbrXjBY/6paCQ5nhQS6FHWNWotr+iOt+wxLBaZzUhzIXAmPm
-         BfsIMPg32uLzqoRu0naNIVOKNYCYwAMD7U7uTLOJuW4AL+s4u/YAS5xSxfJBBYld8ejO
-         J2AFP426gs4IjsQO6NMkG3SD6WaCfuk0C39Qe2GMvFG72Yp3MwlKsVrC1bFF3sT+HETX
-         Dad0AMdZxjiX/1G/bLqbjCquj2PGHa9GLglnB62jq4gDj1BnQFxTOJQLqSjWGYYuvqa3
-         zlVe1XBTxXKF5g1kIuLk0YnEWb+alB8KNSFuzvb6hnB91RcQlIVcsVERBbS8LTki6Zy2
-         ZAjg==
+        d=google.com; s=20230601; t=1696867806; x=1697472606; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dGIYsu1MNfGtvrI3i3A4TgarZixnrBWwMgUCqpQdV34=;
+        b=mPGo3aaSt2Zs/4XhDbpboFd1/W5DgA+MxWc8D6CG825AnGVgybo9Hb73eX/zHIxQ9y
+         HAtgUnv3rlngt05B+RQl6NouHS0DUWWGHW3tN9qwOc9yEDPylMZ5wJD/TlHzy/2+lbeD
+         5MTW2odzn3ddG9+kqTHFz/dCR+5x32eFODjv0EEVWX6cjwxk7KB7smscVTeQcqFZRBIs
+         kS+8FayOi27YymTXZSyM8FqAGvPlr/3E/C79eEH6XQWm4iWY71fEpZWt4UM7vGfZQ+Cu
+         xC4xkYpN2AQKC7VXDFZm/23mOyNRTF4MhDol8ptOG3jdnTZ5l1W4he59GbMPqnz5kCb3
+         +0Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696864913; x=1697469713;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZKSDVA5hdRk0qjHHKldrFWUuPLQwNPm888vrv06x2fQ=;
-        b=n97dhzGOhhYtsdbiX4qkw33wkGcJuzre86arfVDvczrJJVYu2Bq0CfAIISVyWFWLHU
-         oBVJ88VXxMHv+lLMgjHff6c6c/bQ3ByJb/L7pq/hf5gl+IeoYyughwSpCWN9OOyMicfU
-         KVXNunFnZ7NXYhdvrOXVI5S0g6e4tLPqNQ+hz2hKnbECw0yM03+fQlyU8TViK7JvU99f
-         pnMUXVUu3/EN4c9y1fC/gEkcydkVMeHyj40okgJb7PoTJfygZd1ggHJbP69hQpSbLxdr
-         Prxum+d43DUOkSnsf2cNb9f9MIogUe5vchqKE5rNgSf4PVWgOc6WVp76d0ZPdubhgBmR
-         KuPA==
-X-Gm-Message-State: AOJu0Yz4ZaW2elBPb22lKKsflmDcXk39f7H4qCcebczup0hYCOkBQ33u
-        qaCunJbnnaTTubkJaxG+1r8nFg==
-X-Google-Smtp-Source: AGHT+IGjJSJxaBy8ExGJc372SpF9GM4SIuKM8ZU4P4jwILVJxT3hr5h2W6aBbY6nrW/Zov7Z2cfw0g==
-X-Received: by 2002:a05:600c:2242:b0:401:2fab:43e8 with SMTP id a2-20020a05600c224200b004012fab43e8mr13475875wmm.15.1696864913233;
-        Mon, 09 Oct 2023 08:21:53 -0700 (PDT)
-Received: from localhost (i5387894C.versanet.de. [83.135.137.76])
-        by smtp.gmail.com with ESMTPSA id 1-20020a05600c230100b0040644e699a0sm13776437wmo.45.2023.10.09.08.21.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Oct 2023 08:21:52 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 09 Oct 2023 17:21:52 +0200
-Message-Id: <CW40ER5HT93Q.83CW582AJP9C@ablu-work>
-Cc:     "Linux-GPIO" <linux-gpio@vger.kernel.org>,
-        "Viresh Kumar" <viresh.kumar@linaro.org>,
-        "Kent Gibson" <warthog618@gmail.com>,
-        "Phil Howard" <phil@gadgetoid.com>
-To:     "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-Subject: Re: [libgpiod][PATCH 0/2] bindings: rust: feature gate unreleased
- features
-X-Mailer: aerc 0.15.2
-References: <20231006-b4-bindings-old-version-fix-v1-0-a65f431afb97@linaro.org> <CAMRc=MdD5SOmPM6JgagPbkbNJHn+kHqtzu_iGjQPm-K2kFCEfA@mail.gmail.com> <CW3VO38FC7ML.380UJEH9HNQU8@ablu-work> <CAMRc=MfDXtDPmqKneL_XfXrJj-g7oBG=9UMZTqR3oZC0pRiQmw@mail.gmail.com> <CW3Z0GR143R8.363IQKC787V0W@ablu-work> <CAMRc=McUJ+4gJNGJ=UfBJk980BQ3Swk=kE7rjrfoKJP_0MimGg@mail.gmail.com> <29nnq.9lre8l3k31x@linaro.org>
-In-Reply-To: <29nnq.9lre8l3k31x@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        d=1e100.net; s=20230601; t=1696867806; x=1697472606;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dGIYsu1MNfGtvrI3i3A4TgarZixnrBWwMgUCqpQdV34=;
+        b=nyilnuVv21rrxVgNUa/uno/88VasBYDVU6ACJMEi0XKi0xS5eArPlOdE72NT7o0OYX
+         wLeVkBgv5s9ixCYlrDxzT0opKWWfsSFrAVQ5nONYOHZxBSWkbqWc4gSEJk/ScPE1yPJl
+         CZVL+kLPohDzI4ArquZNP92Ocwu8S1PhUs7bB8OKzp2glKHgMi+VxL3c3gfR+XV8r+O3
+         YI9IK8EBbMiGQdL2xT69TMbOgNs3t90Jft+hxTdhCR1+f2JrWEU2+Fgred4chx9J8CFh
+         F6sZKOwKmPV1Vw3zyCdklLjQ4O4q0IyFez42Zy7xumhv72qHIWDRwNYiWL0x2MkNcnU3
+         434g==
+X-Gm-Message-State: AOJu0YxjaSlmv8+n94XI+yYMnQFbbfN0+vWDlETTLp1J4ZjrbXObkDaq
+        m6jZj04aKQMZbw2IvC+/XOJN7A==
+X-Google-Smtp-Source: AGHT+IHy1UHB7+iKwEt/4HFm84LkAhlK5DfErxNNnYkX3w3H99+guWbxzofQ+qkXAw5azJ9m9sSRpw==
+X-Received: by 2002:a17:903:18c:b0:1c7:5627:2053 with SMTP id z12-20020a170903018c00b001c756272053mr721817plg.18.1696867806422;
+        Mon, 09 Oct 2023 09:10:06 -0700 (PDT)
+Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
+        by smtp.gmail.com with ESMTPSA id 17-20020a17090a001100b00274262bcf8dsm11287754pja.41.2023.10.09.09.10.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 09:10:05 -0700 (PDT)
+Date:   Mon, 9 Oct 2023 09:10:02 -0700
+From:   William McVicker <willmcvicker@google.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Griffin <peter.griffin@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        krzysztof.kozlowski+dt@linaro.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        soc@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH 18/21] arm64: dts: google: Add initial Google gs101 SoC
+ support
+Message-ID: <ZSQl2tAgsUhhE3_P@google.com>
+References: <ZR75cIvnQS2cqTT3@google.com>
+ <2023100520-cleaver-sinless-fbae@gregkh>
+ <99419159-cab0-4c79-a4a0-12229bfad3c0@linaro.org>
+ <2023100513-mashing-scrubber-ea59@gregkh>
+ <efc9f099-9c97-460b-b0c8-9891aa3b772a@linaro.org>
+ <ZR9EnFw3vB92vlYM@google.com>
+ <44816879-a3a7-4bd0-bb20-19a645107b4b@linaro.org>
+ <e8b23683-36ac-4547-9386-935a1b211d7d@app.fastmail.com>
+ <ZSA27y5CVs4yQC4a@google.com>
+ <c4ea7ce3-5132-484c-870b-a62d30e2ee7a@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4ea7ce3-5132-484c-870b-a62d30e2ee7a@linaro.org>
+X-Spam-Status: No, score=-15.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon Oct 9, 2023 at 4:39 PM CEST, Manos Pitsidianakis wrote:
-> On Mon, 09 Oct 2023 17:32, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >I'm Cc'ing Phil Howard who's the developer behind the Python bindings=20
-> >work.
+On 10/07/2023, Krzysztof Kozlowski wrote:
+> On 06/10/2023 18:33, William McVicker wrote:
+> > On 10/06/2023, Arnd Bergmann wrote:
+> >> On Fri, Oct 6, 2023, at 08:06, Krzysztof Kozlowski wrote:
+> >>> On 06/10/2023 01:19, William McVicker wrote:
+> >>>> On 10/05/2023, Krzysztof Kozlowski wrote:
+> >>>>> On 05/10/2023 21:23, Greg KH wrote:
+> >>>>
+> >>>> Being able to include SERIAL_SAMSUNG and SERIAL_MSM without all the vendor> specific drivers that ARCH_EXYNOS and ARCH_QCOM select is very
+> >>> valuable for
+> >>>> debugging early boot issues.
+> >>>
+> >>> Really? How related? The drivers are independent. You describe some
+> >>> out-of-tree development process which we never needed for upstream work.
+> >>> And we did here quite a lot of upstream, specially if you look at ARCH_QCOM.
+> >>
+> >> Right: in general, all drivers are independent of the platform
+> >> besides the typical 'depends on ARCH_FOO || COMPILE_TEST' dependency,
+> >> but I think it's worth mentioning the known exceptions, so Greg and
+> >> Will can take that fight to the respective places rather than
+> >> discussing it in the platform submission:
+> >>
+> >> - Some subsystems are considered 'special' and the maintainers
+> >>   prefer the drivers to be automatically selected based on the
+> >>   ARCH_* settings instead of having user-visible options. This is
+> >>   traditionally true for large chunks of drivers/irqchip,
+> >>   drivers/clocksource and drivers/pinctrl, though it has gotten
+> >>   better over time on all of them.
+> >>
+> >> - Some older 32-bit platforms are still not as modular as we'd
+> >>   like them to be, especially the StrongARM (ARMv4) platforms that
+> >>   require a custom kernel build, and some of ARMv4T and ARMv5
+> >>   boards that are still missing DT support. These tend to require
+> >>   drivers they directly link to from board code, so disabling
+> >>   the drivers would cause a link failure until this gets
+> >>   cleaned up.
+> >>
+> >> - A couple of drivers are force-enabled based on the ARCH_*
+> >>   options because booting without these drivers would risk
+> >>   permanent damage to hardware, e.g. in overtemp or overcurrent
+> >>   scenarios.
+> >>
+> >> - ACPI based platforms require the PCI host bridge driver to
+> >>   be built-in rather than a loadable module because ACPI
+> >>   needs to probe PCI devices during early boot.
+> >>
+> >> - Some subsystems (notably drivers/gpu/, but others as well)
+> >>   have an excessive number of 'select' statements, so you
+> >>   end up surprise-enabling a number of additional drivers
+> >>   and subsystems by enabling certain less important platform
+> >>   specific drivers.
+> >>
+> >>       Arnd
+> > 
+> > So if the argument is that the existing upstream Exynos platforms are required
+> > to have these drivers built-in to the kernel to boot:
+> >     COMMON_CLK_SAMSUNG
+> >     CLKSRC_EXYNOS_MCT
+> >     EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
+> >     EXYNOS_PMU
+> >     PINCTRL
+> >     PINCTRL_EXYNOS
+> >     PM_GENERIC_DOMAINS if PM
+> >     SOC_SAMSUNG
+> > 
+> > ...then that is understandable and we can work to fix that.
+> > 
+> > My last question then is -- why do we need a new ARCH_GOOGLE_TENSOR config in
+> > the platform Kconfig? For example, I don't really like this:
+> > 
+> > diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
+> > index 76a494e95027..4c8f173c4dec 100644
+> > --- a/drivers/clk/samsung/Kconfig
+> > +++ b/drivers/clk/samsung/Kconfig
+> > @@ -13,6 +13,7 @@ config COMMON_CLK_SAMSUNG
+> >         select EXYNOS_5420_COMMON_CLK if ARM && SOC_EXYNOS5420
+> >         select EXYNOS_ARM64_COMMON_CLK if ARM64 && ARCH_EXYNOS
+> >         select TESLA_FSD_COMMON_CLK if ARM64 && ARCH_TESLA_FSD
+> > +       select GOOGLE_GS101_COMMON_CLK if ARM64 && ARCH_GOOGLE_TENSOR
+> > 
+> > What happens when we have GOOGLE_GS101_COMMON_CLK, GOOGLE_GS201_COMMON_CLK, and
+> > so on? 
+> 
+> Nothing happens... or happens anything you wish. Did you read the
+> motivation why this was created like this?
+> 
+> 
+> > How are we going to pick the right driver when e have a generic
+> > ARCH_GOOGLE_TENSOR config?
+> 
 
-Hi!
+Okay, we can figure that out the gs201 specifics when the time comes.
 
-> >
-> >In Phil's WiP branch[1] that should soon be posted to this list the
-> >autotools flow is entirely omitted and building of the libgpiod C
-> >sources happens in setup.py directly. Can cargo compile C sources like
-> >that?
->
-> The rust compiler team maintains a library for that:
->
-> https://crates.io/crates/cc
->
-> You can find examples of it in use in many popular rust crates, like=20
-> when building the openssl crate https://docs.rs/openssl/latest/openssl/=
-=20
-> with the `vendored` feature, it uses the following build-time dependency=
-=20
-> to build the static librarie:
->
-> https://github.com/alexcrichton/openssl-src-rs/tree/main
->
-> There is no general need to put the vendoring code in a build-time=20
-> dependency by the way, it can be done in in the bindings crate's=20
-> build.rs as well.
+> You do not have to pick. You select ARCH_GOOGLE_TENSOR and proper pick
+> is done by you. Nothing to do more.
+> 
+> > Ideally, we should have one Exynos clock driver that
+> > can detect what hardware is running (using the DT) to determine what it needs
+> 
+> It's already like this. We're done.
+> 
+> > to do. If you really want to compile out the other vendor's clock drivers using
+> > some configs, then we should do that with SOC_GS101, SOC_GS201, SOC_TESLA_FSD
+> 
+> Whether you call it SOC or ARCH it is the same. We organized it as ARCH.
+> 
+> > configs (not ideal though). With that approach, we could drop the platform
+> > ARCH_GOOGLE_TENSOR config and create an SOC_GS101 config that can be used for
+> > things like the COMMON_CLK_SAMSUNG driver (for now) and building the GS101 dtb.
+> 
+> There is no need for this. ARCH does exactly the same.
 
-Right. One can use cc, there also seems to be a somewhat popular crate
-that allows calling autotools: https://crates.io/crates/autotools.
+Okay, sounds good. Thanks for the responses.
 
-That said. I am not sure if I like listing all the sources and defining
-the build process manually again. It feels like we duplicate what the
-existing build system already does for us and no longer have a single
-source of truth...
+Regards,
+Will
 
-Taking a look at the openssl build code [1] I also see all the target
-and environment specific hacks that I feared about... I guess it won't
-be as bad for libgpiod, but I guess it might be a painful way to figure
-out whether that is true.
-
-I have seen similar things happening when cmake projects attempted to
-vendor in external dependencies and are not a huge fan of marrying to
-different worlds together like this.
-
-That said. I am completely supportive to the idea of exploring static
-linking for the Rust bindings. I am just sceptical that doing that by
-default will make things more simple for consumers on the long run.
-
-[1] https://github.com/alexcrichton/openssl-src-rs/blob/main/src/lib.rs
-
->
-> >
-> >I'm not sure how that would work honestly. The stable branches in
-> >libgpiod are per libgpiod minor release. This doesn't map onto rust
-> >releases anymore with decoupled versioning. Maybe rust should get its
-> >own tags in the repo (on the master branch for major and minor
-> >releases) and its own stable branches?
->
-> In cases Rust crates want to support multiple releases, the usual route=
-=20
-> is to expose different bindings per release exposed via feature flags.
->
-> I can't say if that makes sense for libgpiod though, because I'm not=20
-> familiar that much.
-
-Thats true for attempting to support different versions of the C lib
-(and it is what I suggest in this series). However, the recent release
-became necessary to a bug in the Rust bindings, not in the C lib. So a
-stable branch could still make sense. But hopefully, we would only need
-it increasingly rarely in the future.
-
-Overall I still think what I suggest in this patch + maybe exploring
-optional static linking is the simplest path. I mostly suggested this as
-an alternative since I felt resistance to my suggestion :)
-
-- Erik
-
+> 
+> Best regards,
+> Krzysztof
+> 
