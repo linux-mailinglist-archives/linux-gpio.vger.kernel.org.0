@@ -2,66 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 412D97BDCC6
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 14:50:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 472047BDCC9
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 14:50:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376284AbjJIMuB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 08:50:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57790 "EHLO
+        id S1346619AbjJIMuX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 08:50:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376567AbjJIMuA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 08:50:00 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A456491
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 05:49:58 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id ada2fe7eead31-45765b55fb1so473027137.3
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 05:49:58 -0700 (PDT)
+        with ESMTP id S1346514AbjJIMuX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 08:50:23 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B84AB
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 05:50:21 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-49d14708479so1397002e0c.2
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 05:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696855798; x=1697460598; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696855820; x=1697460620; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rqVHBhsbROUYrkVKqcZNTMEbfx9Kq7hgDbRTjOfBx4Q=;
-        b=TD1KH/s9wbTWECAbs0LvQcLKqYvLAdaDhMYOWGlr5Lzw78IsyGECowME0mMeGM+bxg
-         RX5uYnEykgdNzSkhHv8LuOqrUTK+PNkaUHRa4mHrVMQ3i7ocxk5cDFpuY3ZAuEl66fkp
-         hD1oMEGnodxdBHdpRn6pht/d9oIPiwbyAYmgXtNWuaGSpjnbfbEolP1hSldyXxd+X8Rs
-         lVgiGuLXjOUE5TG/JYc/qrl+5CvsxolVuQ6RE74EMgs1+mW+a+yGjT8r8BW0A9LeQOjn
-         J1ar3Fw7+ct/Q9AeOTUqt+RCwVbrggCpvXwjIqyWIwwOZOHUa0d/XGxn4V8jWfqYVW1d
-         SzkA==
+        bh=fLWvYmUYdE0xN9B1W9TIs+PCJHSr+Ef1uMZQZXLtR8Q=;
+        b=Je6qy/HQlt5Hkfn9IEapBH554UeU88MfqfZt1pn6t5s6wDL9yIA556SHfZoUL5ktJw
+         KZKxnpcd0cnSRXgduMozKgoi1y9azdM82GvWUoY9mhnXKlPe8HyXQW/sSEtEKAocc6Ta
+         3jrd8ORUnEP1ohvqdwyp7/SeOzfDDFn+gdVJ4ykslCFf9uq3DBHA10an1iTfKVirjowF
+         KlW97dBnBMJtyOvec4VpM2hHNWcsaw96im4ram3LUMsaI3wGVk5bSxS0RgbKRSQZaW89
+         Z+RNx+3dLgniBxSO++ILFkhuMvBtVZYqbt/IXAiJclu9dkbBX4ZqwiByIE/AdqExqMza
+         aN8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696855798; x=1697460598;
+        d=1e100.net; s=20230601; t=1696855820; x=1697460620;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rqVHBhsbROUYrkVKqcZNTMEbfx9Kq7hgDbRTjOfBx4Q=;
-        b=sXSFFMWgiT+oiXtoErj/64RIeMdan/LUuJSi8RWk0Jyvj6bik7IMIwgYqtxI6GxxG8
-         ba0jkWcasU9qNUueXFcY5F9QkHp9Nmw0OXX4rqUD25Cn77Iod71n7ghI28XvemIhbDUM
-         FoaFZ77xy18fGz8AjUu2X6diyc9RWWnDXC9qvB/XCCbb/2m0MZ/b34QZk09tuoIWwVYW
-         CTMbCeQV8sou2s3Tt7eSwvScgvM7JxGjPiH8wWpcwz1Pb+m/7fVvNMUk5V3O+GjJtjBL
-         cbBfiThBnHNFneTbPJ63D6g7FiOmSwBpY+CNvzi30wWZoFhgYz7IYFgkMTB2vBqVcRSQ
-         rs8Q==
-X-Gm-Message-State: AOJu0YzH7gSZw5Epey0Jcg3RL21rUtV7HMfT/3xxQxiWRDyrB33QotJE
-        X3Twg/97PXEE2wQN7QiGb5K4uvGp23dh+gxfyMCDZA==
-X-Google-Smtp-Source: AGHT+IF8OlnQr0BKaBgObH7+v22TsSrBXBeHAOtNhq4x6SIT97e5mjB7RqcAehoKyOTYt/mv5/OuA3sc2lBTTsdGwGs=
-X-Received: by 2002:a67:f585:0:b0:44e:8e28:2853 with SMTP id
- i5-20020a67f585000000b0044e8e282853mr11274007vso.35.1696855797782; Mon, 09
- Oct 2023 05:49:57 -0700 (PDT)
+        bh=fLWvYmUYdE0xN9B1W9TIs+PCJHSr+Ef1uMZQZXLtR8Q=;
+        b=CrlIAjHv+E7CuL9kiQIzpnzS5Sx2N4EpjWzFTnBOtcwSm1nkjqyC2Ttu5DhFt3T3Lo
+         4v7c2B1Vwo5nVC6g8n8FgLxDzVROM4tYkipYw+KG0yna/xJzNJew/GuQKXmsPWLOs0U+
+         v33GQfx/ahox4MmY6i/960vSd/KfX+NmdKLXs/kzCnP9QnczkaGY+KsR4AuCZpYkTNUY
+         /+ijSjJSYvpbacqEl53GYAKpv2FC3yvrezuCJrdLd4VGZtoSXAa29NDroysFiGfeZolQ
+         IGBI8BmVs8csBCeW6FjRPz2JuBjlEpoHmZCoJjeuCIGSmPwlO1SUHlVuYYGDhhXtFHD+
+         6L9A==
+X-Gm-Message-State: AOJu0YwZXduTzETVyjtY4ktnSR79TBwYIjRsNvRauogQ7VSNZ30qvQSd
+        SJBz9lklHxu5mVK0qdukLEgBc38G1Kep+he4vbXB2Q==
+X-Google-Smtp-Source: AGHT+IFaZQHpN4+6inudkN2uqYcpszhAsxEnHU1O2xqvZth+Gse3cBocqCIrOYJ5YrFBZ+hMfeSkQnSqbZAQE39Z67Y=
+X-Received: by 2002:a1f:ed02:0:b0:4a0:6fd4:4333 with SMTP id
+ l2-20020a1fed02000000b004a06fd44333mr2557626vkh.13.1696855820403; Mon, 09 Oct
+ 2023 05:50:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230926145943.42814-1-brgl@bgdev.pl> <20230926145943.42814-5-brgl@bgdev.pl>
-In-Reply-To: <20230926145943.42814-5-brgl@bgdev.pl>
+References: <8bbffb51-96bc-c4b-8d13-f3bbf9a72c2@linux.intel.com>
+In-Reply-To: <8bbffb51-96bc-c4b-8d13-f3bbf9a72c2@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 9 Oct 2023 14:49:47 +0200
-Message-ID: <CAMRc=MevHb5pyrcCaGkC7uWChMtzovoP4OA5MZ2Ky7RPT4hn9A@mail.gmail.com>
-Subject: Re: [RFT PATCH 4/4] gpio: acpi: remove acpi_get_and_request_gpiod()
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+Date:   Mon, 9 Oct 2023 14:50:09 +0200
+Message-ID: <CAMRc=MfJ0fkFdXffe+yMqj4aVeq830q4TT05YGszyAa=dqd2UQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Immutable branch between pdx86 int3472 branch and GPIO
+ due for the v6.7 merge window.
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -73,16 +73,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 4:59=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Mon, Oct 9, 2023 at 2:19=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Hi Bart, Linus, et. al.,
 >
-> With no more users, we can remove acpi_get_and_request_gpiod().
+> Here's a pull-req for merging into the GPIO tree.
+> This removes the users for acpi_get_and_request_gpiod() so it
+> can be removed.
 >
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+>  - i.
+>
+>
+> The following changes since commit 0bb80ecc33a8fb5a682236443c1e740d5c917d=
+1d:
+>
+>   Linux 6.6-rc1 (2023-09-10 16:28:41 -0700)
+>
+> are available in the Git repository at:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-=
+x86.git tags/platform-drivers-x86-ib-int3472-v6.7
+>
+> for you to fetch changes up to 5ccf9873ab2bcb7c480bc2ccea55ec235d9db175:
+>
+>   platform/x86: int3472: Switch to devm_get_gpiod() (2023-10-06 13:34:58 =
++0300)
+>
+> ----------------------------------------------------------------
+> Immutable branch between pdx86 int3472 branch and GPIO due for the v6.7 m=
+erge window.
+>
+> platform-drivers-x86-ib-int3472-v6.7: v6.6-rc1 + platform-drivers-x86-int=
+3472
+> for merging into the GPIO subsystem for v6.7.
+>
+> ----------------------------------------------------------------
+> Bartosz Golaszewski (1):
+>       platform/x86: int3472: Add new skl_int3472_gpiod_get_from_temp_look=
+up() helper
+>
+> Hans de Goede (3):
+>       platform/x86: int3472: Add new skl_int3472_fill_gpiod_lookup() help=
+er
+>       platform/x86: int3472: Stop using gpiod_toggle_active_low()
+>       platform/x86: int3472: Switch to devm_get_gpiod()
+>
+>  .../platform/x86/intel/int3472/clk_and_regulator.c |  54 ++---------
+>  drivers/platform/x86/intel/int3472/common.h        |   7 +-
+>  drivers/platform/x86/intel/int3472/discrete.c      | 103 +++++++++++++++=
++-----
+>  drivers/platform/x86/intel/int3472/led.c           |  24 +----
+>  4 files changed, 94 insertions(+), 94 deletions(-)
 
-With Hans' patches applied, I queued this on top.
+Pulled, thank you!
 
 Bart
