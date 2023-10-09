@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B757BD5A9
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 10:51:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 008117BD5AD
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 10:51:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345470AbjJIIv0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 04:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58082 "EHLO
+        id S1345580AbjJIIvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 04:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345540AbjJIIvZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 04:51:25 -0400
+        with ESMTP id S1345570AbjJIIv1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 04:51:27 -0400
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C917AC;
-        Mon,  9 Oct 2023 01:51:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380D6AC;
+        Mon,  9 Oct 2023 01:51:26 -0700 (PDT)
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
         (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 4AF27660716C;
-        Mon,  9 Oct 2023 09:51:22 +0100 (BST)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 6DA5366071A0;
+        Mon,  9 Oct 2023 09:51:24 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1696841482;
-        bh=AeV4F+YxzIjrv5/reJdTrfUYSuarpl9kOSA1kuEAPvM=;
+        s=mail; t=1696841485;
+        bh=jVa5JJsIbd+rahqR791/qfoLZyjPB6foWAxVg7HpF4Q=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=C0fx5MLHjUZ5LPSlk6G1axwyJy0cOqyKNZ52QU6lB43BTBR0w0Mf7fjyUyON7X6H+
-         TKUnseRy62LLKr9BPLlejzLwT53I/XgvNNxfkkc5A9mewZd1tLHHFwF9PEXM48chFe
-         Z5w6QWRFgGPai6iV2dnoN/ojzmI+WT3ugpjIdLLlTmXzaiuob7RhvaIhbDSZXby/Pe
-         6KZousTG9vwzBtpwb2Pu75Veo4pc2hAWE8z3A/9zb56bB+t4pRtmVuC60UKU5RN5a8
-         7cDpfFVf6M3EUqOONlJjhPiq2hIwvBrB7wPQNZ7l9hNhod8O/O9UW2Wdke2vXdbXfg
-         YFbyQYJAGyibA==
-Message-ID: <dfcd36ac-712b-5169-5320-0e1591107252@collabora.com>
-Date:   Mon, 9 Oct 2023 10:51:19 +0200
+        b=d9GAwpGy1eJgl1FB0lX80aRoFnxkbYksVn/r3F1yA+ms6jfgwAvql7A7GKhH2WYER
+         9V2U0IcVwCX6VQ7/5CoDDpe0Pa5ELNiivAILkwGboSQ1eACY728vy+83J8eN/l0f5y
+         65QuLsuIasNdehhJagG5lMUZH7yzReH2mnC8/KkTG0mTlQxntDoxer2Y3cAA2M27MA
+         DZDmZfeQG8uvnX9fqKL+/uNqi/EEESo00MNgeEtwBIUFJgwqsTtrWp/Bhj9NajsPip
+         dQ7XlJLz1fnitxnnLIawJwXndTPQZRjspqz9sRauhJbnDbGZAin/uKb6b6V4d1iKDo
+         V//5RC1YpI6ng==
+Message-ID: <83998d0d-057f-191e-fd91-263f3c1eb2a7@collabora.com>
+Date:   Mon, 9 Oct 2023 10:51:22 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.0
-Subject: Re: [PATCH 1/8] gpiolib: of: Add quirk for mt2701-cs42448 ASoC sound
+Subject: Re: [PATCH 4/8] ASoC: mt8173-rt5650-rt5514: Drop unused includes
 Content-Language: en-US
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -49,10 +49,10 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, alsa-devel@alsa-project.org
 References: <20231006-descriptors-asoc-mediatek-v1-0-07fe79f337f5@linaro.org>
- <20231006-descriptors-asoc-mediatek-v1-1-07fe79f337f5@linaro.org>
+ <20231006-descriptors-asoc-mediatek-v1-4-07fe79f337f5@linaro.org>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20231006-descriptors-asoc-mediatek-v1-1-07fe79f337f5@linaro.org>
+In-Reply-To: <20231006-descriptors-asoc-mediatek-v1-4-07fe79f337f5@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -65,9 +65,9 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Il 06/10/23 15:46, Linus Walleij ha scritto:
-> These gpio names are due to old DT bindings not following the
-> "-gpio"/"-gpios" conventions. Handle it using a quirk so the
-> driver can just look up the GPIOs.
+> This driver includes the legacy GPIO header <linux/gpio.h> and
+> <linux/of_gpio.h> but does not use any symbols from either of
+> them so drop the includes.
 > 
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
