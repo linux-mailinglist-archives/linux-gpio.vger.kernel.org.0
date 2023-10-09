@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 523D27BD972
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 13:22:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52BAD7BD977
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 13:23:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346170AbjJILWQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 9 Oct 2023 07:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58358 "EHLO
+        id S1346211AbjJILXC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 9 Oct 2023 07:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345822AbjJILWP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 07:22:15 -0400
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF4099;
-        Mon,  9 Oct 2023 04:22:14 -0700 (PDT)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-579de633419so54080837b3.3;
-        Mon, 09 Oct 2023 04:22:14 -0700 (PDT)
+        with ESMTP id S1346171AbjJILXB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 07:23:01 -0400
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97CF499;
+        Mon,  9 Oct 2023 04:23:00 -0700 (PDT)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-59f4f80d084so52258737b3.1;
+        Mon, 09 Oct 2023 04:23:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696850533; x=1697455333;
+        d=1e100.net; s=20230601; t=1696850579; x=1697455379;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
         bh=NPwjpLn9USlrr/tk2CipqLIIg/Q3mvsVfg6prhm4tx8=;
-        b=MWvf845F13D75kdhCkHvZcwQndcV0R/0KjY+JVSoXumfNzp33p1gmiOp0xv/yNgEjY
-         9X78iS6uHQv5pt6FmAGhKl9JEXDzprwZHs5KFP1p9lDz9D1nlsY64BE+nugdW9p15Z9R
-         Z07uoJ1owfH/Lt9o2SEXkqB6lWPa2KLL9iYaBLkNAy+/jwEWdynP9pBatCe/MZCxcm+Z
-         oJhO+mzvohemgtLzKgGCa/rNnKSE4LIW75m77uqoqEmRzwnbaHC4Rtwy32VSzIxPE2ho
-         KAlkFEYJyyrWd31miUup03e6UAlwkomGPkDPerJmtY/uQGuymt0tdrBpyCgfBoWKySrH
-         AZQQ==
-X-Gm-Message-State: AOJu0YyHCTgf4FRCMhMFDbpkmG6QSkK70rVSYRkUxvkYX4PvQxJ7Wplx
-        w3W14w8QQb4YajNWgPIGBdD6lORJqSabGw==
-X-Google-Smtp-Source: AGHT+IF0l0Knea3PBEbzvFVLpFbCAXs5gro0QJNj9gTe8Qq6N/omFdRQCud00fWq3TdnofmZ/2UPgg==
-X-Received: by 2002:a0d:f405:0:b0:583:741c:5fe6 with SMTP id d5-20020a0df405000000b00583741c5fe6mr13004724ywf.52.1696850533241;
-        Mon, 09 Oct 2023 04:22:13 -0700 (PDT)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
-        by smtp.gmail.com with ESMTPSA id h64-20020a816c43000000b0059bc980b1eesm3602599ywc.6.2023.10.09.04.22.12
+        b=C74AHYDOw1xSQ47nMLchJzRYNXZ2qmVBmZk90A1ZuqbXg4VoyKmiYpkPxQZc4LUFtJ
+         OIlk6ySNFzrHtRIHpMAkiFhJfz3InhOsXYS9X9iPfmPT9A99EBQrF7SHsHz1Vt/bmwJ0
+         t5mW/RRcCWpbdyRoVIxOTOgh8g50R6A6HY6fVUmmkWIw+eZcECUG0kL/1njXnhhbmGut
+         543n9SnKHaXmgb3mr48ugIFRoA+s2fIOwDidhtp70BKaMMO1XEs7SaLsguHyNoTDhmN1
+         tl4ct46Nqg27OVjNQGJDefEdYi2l1AYgCw2367lKuTMpnoVDCidK0EO9wG1eOuB5KwD1
+         DmoQ==
+X-Gm-Message-State: AOJu0YzoGYn30uoBnscgXdEPOIO5EgHNzhswxxQ4OmeRXBwn4MTtDBw8
+        MqA0q6IhuLGuJxo3QIdpaEmteY7YAUifow==
+X-Google-Smtp-Source: AGHT+IF2CYZ4ST2UuCN4DHZkwmmVt45Kz3ouQI5XGUvcPKByjFT0J5PkNNykxlOSp3VPc7J7Wm6uZw==
+X-Received: by 2002:a81:af27:0:b0:5a7:ab4c:c7bf with SMTP id n39-20020a81af27000000b005a7ab4cc7bfmr174644ywh.0.1696850579634;
+        Mon, 09 Oct 2023 04:22:59 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id w205-20020a8149d6000000b005927a79333esm3627286ywa.28.2023.10.09.04.22.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Oct 2023 04:22:12 -0700 (PDT)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-579de633419so54080597b3.3;
-        Mon, 09 Oct 2023 04:22:12 -0700 (PDT)
-X-Received: by 2002:a0d:ea95:0:b0:5a1:ed8d:111f with SMTP id
- t143-20020a0dea95000000b005a1ed8d111fmr15792790ywe.1.1696850532452; Mon, 09
- Oct 2023 04:22:12 -0700 (PDT)
+        Mon, 09 Oct 2023 04:22:59 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5a7af45084eso327507b3.0;
+        Mon, 09 Oct 2023 04:22:59 -0700 (PDT)
+X-Received: by 2002:a81:af43:0:b0:5a7:af72:cb50 with SMTP id
+ x3-20020a81af43000000b005a7af72cb50mr24941ywj.19.1696850579135; Mon, 09 Oct
+ 2023 04:22:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-6-brgl@bgdev.pl>
-In-Reply-To: <20231003145114.21637-6-brgl@bgdev.pl>
+References: <20231003145114.21637-1-brgl@bgdev.pl> <20231003145114.21637-15-brgl@bgdev.pl>
+In-Reply-To: <20231003145114.21637-15-brgl@bgdev.pl>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 9 Oct 2023 13:22:00 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVxJYBeK1ntWthZS8PhYuGkGqmT+u89jBZdpph4zYR58g@mail.gmail.com>
-Message-ID: <CAMuHMdVxJYBeK1ntWthZS8PhYuGkGqmT+u89jBZdpph4zYR58g@mail.gmail.com>
-Subject: Re: [PATCH 05/36] gpio: rcar: use new pinctrl GPIO helpers
+Date:   Mon, 9 Oct 2023 13:22:47 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUp4GtrvJgOCRG149JFmWHAkHyvOu5FmE0RCvo6GeH-QQ@mail.gmail.com>
+Message-ID: <CAMuHMdUp4GtrvJgOCRG149JFmWHAkHyvOu5FmE0RCvo6GeH-QQ@mail.gmail.com>
+Subject: Re: [PATCH 14/36] pinctrl: renesas: use new pinctrl GPIO helpers
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
