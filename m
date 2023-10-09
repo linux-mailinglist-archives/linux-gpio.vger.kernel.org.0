@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 008117BD5AD
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 10:51:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 633457BD5B1
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 10:51:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345580AbjJIIvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 04:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46798 "EHLO
+        id S1345619AbjJIIvh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 04:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345570AbjJIIv1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 04:51:27 -0400
+        with ESMTP id S1345579AbjJIIvb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 04:51:31 -0400
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380D6AC;
-        Mon,  9 Oct 2023 01:51:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC59EDB;
+        Mon,  9 Oct 2023 01:51:28 -0700 (PDT)
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
         (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 6DA5366071A0;
-        Mon,  9 Oct 2023 09:51:24 +0100 (BST)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 072526607215;
+        Mon,  9 Oct 2023 09:51:26 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1696841485;
+        s=mail; t=1696841487;
         bh=jVa5JJsIbd+rahqR791/qfoLZyjPB6foWAxVg7HpF4Q=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=d9GAwpGy1eJgl1FB0lX80aRoFnxkbYksVn/r3F1yA+ms6jfgwAvql7A7GKhH2WYER
-         9V2U0IcVwCX6VQ7/5CoDDpe0Pa5ELNiivAILkwGboSQ1eACY728vy+83J8eN/l0f5y
-         65QuLsuIasNdehhJagG5lMUZH7yzReH2mnC8/KkTG0mTlQxntDoxer2Y3cAA2M27MA
-         DZDmZfeQG8uvnX9fqKL+/uNqi/EEESo00MNgeEtwBIUFJgwqsTtrWp/Bhj9NajsPip
-         dQ7XlJLz1fnitxnnLIawJwXndTPQZRjspqz9sRauhJbnDbGZAin/uKb6b6V4d1iKDo
-         V//5RC1YpI6ng==
-Message-ID: <83998d0d-057f-191e-fd91-263f3c1eb2a7@collabora.com>
-Date:   Mon, 9 Oct 2023 10:51:22 +0200
+        b=nsNl+DCI7wRFOKHmEZ+mCjUGMQ/bBWmFDv/0SAwmrlg8B16IoEBjXf+qB8r/AfGuJ
+         RNTAHIOJHuFn2XkakuonOvLjumuO8drxFVyiDmJyRsN275TK0pHbXsG+VeniIj3CK3
+         LKNouTSLHTNEbIytS7ose6WljahOJEqyK2NuBGSroD7UIlOTWidiAHBJ7rmekUm8l+
+         ruO9eyVxqLU1+h85Qmm42FeCqdD/owlh/wAj2mbatZ+3nGjxp//0fmmmCxWvloI24r
+         R2I0G7YGMOUIUFiMtzsrZr0WCThLJ+tcmoEFPSv0SXqXvHR9twjE3RKvqsxRv358LE
+         EkVv18hDRuD7g==
+Message-ID: <d8bb3cbd-08a6-5028-1cbe-8f4d3278d929@collabora.com>
+Date:   Mon, 9 Oct 2023 10:51:24 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.0
-Subject: Re: [PATCH 4/8] ASoC: mt8173-rt5650-rt5514: Drop unused includes
+Subject: Re: [PATCH 5/8] ASoC: mt8173-rt5650-rt5676: Drop unused includes
 Content-Language: en-US
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -49,10 +49,10 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, alsa-devel@alsa-project.org
 References: <20231006-descriptors-asoc-mediatek-v1-0-07fe79f337f5@linaro.org>
- <20231006-descriptors-asoc-mediatek-v1-4-07fe79f337f5@linaro.org>
+ <20231006-descriptors-asoc-mediatek-v1-5-07fe79f337f5@linaro.org>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20231006-descriptors-asoc-mediatek-v1-4-07fe79f337f5@linaro.org>
+In-Reply-To: <20231006-descriptors-asoc-mediatek-v1-5-07fe79f337f5@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
