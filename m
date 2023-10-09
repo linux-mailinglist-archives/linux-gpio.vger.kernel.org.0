@@ -2,109 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A68D7BDCED
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 14:58:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DF987BDDE0
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 15:14:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346619AbjJIM6O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 08:58:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57482 "EHLO
+        id S1376745AbjJINOG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 09:14:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346514AbjJIM6O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 08:58:14 -0400
-Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E73418F
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 05:58:09 -0700 (PDT)
-Received: by mail-ua1-x930.google.com with SMTP id a1e0cc1a2514c-7ab9488f2f0so1923476241.3
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 05:58:09 -0700 (PDT)
+        with ESMTP id S1376981AbjJINNq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 09:13:46 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE69EFE
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 06:13:36 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5a22eaafd72so56011367b3.3
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 06:13:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696856289; x=1697461089; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696857216; x=1697462016; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N+gpkzJfNccB5gH7cb9zDfW4Fonw1ieJ8gLDBd6viIU=;
-        b=Fk9y18DqDn8Ld4eFa4zdGcWjU0I9ecu1mibrvlxtvAWfQR1o0D9cTy5qamYQjBPPJ1
-         nh3XgqdRwcttrDkh52gBnfUvXJs3L2D4FVHHey8Q539kYYVIf0gYQmG4mYSaTcuRCBQL
-         0R4hVjs+fMBYcOV+RlglJDXw8BA7vTk2+TFMvWg2oM2skMrS0evfjJmtf1L9ut5rmyln
-         Gi8sPPi6ccTRpi3LF/gvejeNIsydCVIpMIuCvcm1B9gRFe4Kw/Aj20C1m8zcWPv9eUD3
-         5ghNBuc0aPOYkr/uZc0hvou66wQsQ56yJcogEJC4ddHwhpvcPvDj+rEaj72k0hKVZEEC
-         V6LQ==
+        bh=kKZKnrRJ3sYtky/2h2Hus8kthq+g2qZ6Wg41eu1H8Lg=;
+        b=bm00HPNOX1W0TXsn3nZTubMYOd4U2VYtG5z5sgnF3NZ3jNgl7keFI1QaIujZxL+Ul/
+         ULXUqfU/kXpd2NTSTjDQ7WNBx9AwRAxNy/OAWm6hqyKweQY8mwNpso13k6ZMtiyjep+E
+         y7TTA/n5PoAG4gGyquc4uJqn0Y3xF2wFzB1KiHMlkaO9Z0OoGCg4ccJ2gM67EsqEXW7q
+         9ZaEdmO/KI4ElXiMgsOIUSeC0lJRqaN9Hw7Xlg+f+0KvyLOH9Bx9o/LcVXUs2vkvm5X+
+         iFy7xmDb8h2x06/yh/zaB+7rdLwYjpkSCZt6oip+uFKX2gBSGV3GeofttNg3b6teJJLZ
+         OM4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696856289; x=1697461089;
+        d=1e100.net; s=20230601; t=1696857216; x=1697462016;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N+gpkzJfNccB5gH7cb9zDfW4Fonw1ieJ8gLDBd6viIU=;
-        b=GnrY4A9UF5IKZS6sLjwUa2nyTGd2gdoy7Dx4Kq+66803ZhcXmtmYyJydHC+wLkeQT3
-         DyK+xRfjwyQ6iJ9qrd4VZ5gbMMVJluDKyj8qcP+AeMAd553n0n/+FEcVhaDrRwE/TuLY
-         iNDJreCB9+c4HaUKLze00HJ/CkZHIWl6Js9an5WFYQEEUY75A4doJ64odFtVn91+9tVX
-         xiTUXmitZdwJQJh6NFDfMv3pSwF9RKfj+Uc1aO3/3zqKoDnq1J0Q/lT3fyxojTHwiAzw
-         YOc6JPNSsdkguY/ZhtiBuKWwSHWqARhtEDROGfyhcziwqLWkgE5Y9fc3DAL/B2QEIfMS
-         tFWw==
-X-Gm-Message-State: AOJu0YxdB4Y2CK78jGgYlc+PDTMcdcNV87qc6bGkdrrxfcclQZvVKs8s
-        ti0b+7VM0rOngXnSdPJdj7e0C9+X7k9Rsv/7/TUlsA==
-X-Google-Smtp-Source: AGHT+IFTAUfR1gTCm3D3XIrQD4F8FLARNjqBeGoPGST/5Xw+zvNixlquzd8Fm22XUFH6FlagNBuFNjaFz/vVg4Z8bjw=
-X-Received: by 2002:a67:fdc1:0:b0:454:640e:58cb with SMTP id
- l1-20020a67fdc1000000b00454640e58cbmr14963468vsq.9.1696856289019; Mon, 09 Oct
- 2023 05:58:09 -0700 (PDT)
+        bh=kKZKnrRJ3sYtky/2h2Hus8kthq+g2qZ6Wg41eu1H8Lg=;
+        b=eQG07u5iOq6g4PcCyfbvHd4rtULc+30O3xfRnyS50egaNZCgbDxPrSSXHU4BXQPAzv
+         GZWSC1yM4cB8ghJU5ihhuKVNX2PdCBBbw4LGS/zJQgLzV4898Jz7h0sl9D9diRE18lfe
+         OEvolKqQCA81KV8AB3Y13saX/hL7G2MDP1rxgvYWl4h7wUgKM3v5yJRTO1/duVqXpZzv
+         sqz0CNjEcQGJxSTEJtRku//lbuOUzBlm3cFJcdltUc5t4PNYl3Au/v7zZljlnum3tSTL
+         c3rl3j+D9EWl2dFm3nKZhFI1SiatNmKpFErlCau22VHjNrj73V7k9kvi9s/eYfCZRyCl
+         NfAw==
+X-Gm-Message-State: AOJu0Yw982tv00o8wDTMPM4qL5vu2Gbf9d5+LI5tAOsMXwlujnYv/UWV
+        NKXv9eR2Gs+1mG46gKFHf4c7S9ZdhPZV6Y3oYbYP0Q==
+X-Google-Smtp-Source: AGHT+IGt4o+K7vRBblvmGc6ypN/viBqCTAHECrQcma5UGrocmzfjWytyeGJeKtv1Oy5/0dhqamzM1xbB19zZG60qbYE=
+X-Received: by 2002:a25:768d:0:b0:d7a:e0f6:54cc with SMTP id
+ r135-20020a25768d000000b00d7ae0f654ccmr14186498ybc.26.1696857216181; Mon, 09
+ Oct 2023 06:13:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231006-descriptors-asoc-mediatek-v1-0-07fe79f337f5@linaro.org>
- <20231006-descriptors-asoc-mediatek-v1-1-07fe79f337f5@linaro.org>
- <CAMRc=MdY2DU1R5_Ntkhw6UP0Vp+uhyUvti72KChBQqSF1ruWPw@mail.gmail.com> <CACRpkdb9fQUUq5_AOwXewiWfUjmu9r2SHHy-RSjfR_33znLiFQ@mail.gmail.com>
-In-Reply-To: <CACRpkdb9fQUUq5_AOwXewiWfUjmu9r2SHHy-RSjfR_33znLiFQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 9 Oct 2023 14:57:58 +0200
-Message-ID: <CAMRc=MdKRf5aZt3sYjPD_+CUR-prsN_JTDVP9fDdu5tRzNHvvg@mail.gmail.com>
-Subject: Re: [PATCH 1/8] gpiolib: of: Add quirk for mt2701-cs42448 ASoC sound
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, alsa-devel@alsa-project.org
+References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
+ <20231005025843.508689-6-takahiro.akashi@linaro.org> <20231006132346.GA3426353-robh@kernel.org>
+ <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com> <ZSPDILYZkxvTnQia@e120937-lin>
+In-Reply-To: <ZSPDILYZkxvTnQia@e120937-lin>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 9 Oct 2023 15:13:24 +0200
+Message-ID: <CACRpkdY=eza0TuBRDb_cWk9LM2qNQg76rZSgWa-RP4TYLL=Ppw@mail.gmail.com>
+Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        sudeep.holla@arm.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 9, 2023 at 9:33=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Mon, Oct 9, 2023 at 9:09=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> > > +#if IS_ENABLED(CONFIG_SND_SOC_MT2701_CS42448)
-> > > +               { "i2s1-in-sel-gpio1",  NULL,   "mediatek,mt2701-cs42=
-448-machine" },
-> > > +               { "i2s1-in-sel-gpio2",  NULL,   "mediatek,mt2701-cs42=
-448-machine" },
-> > > +#endif
+On Mon, Oct 9, 2023 at 11:08=E2=80=AFAM Cristian Marussi
+<cristian.marussi@arm.com> wrote:
+
+> > > +    gpio0: gpio@0 {
+> > > +        compatible =3D "pin-control-gpio";
+> > > +        gpio-controller;
+> > > +        #gpio-cells =3D <2>;
+> > > +        gpio-ranges =3D <&scmi_pinctrl 0 10 5>,
+> > > +                      <&scmi_pinctrl 5 0 0>;
+> > > +        gpio-ranges-group-names =3D "",
+> > > +                                  "pinmux_gpio";
+> > > +    };
 > >
-> > I suppose this is a run-time dependency only for the other patches?
-> > Can I just pick it up into my tree?
 >
-> You can, I was just thinking about bisectability and the low risk of coll=
-isions
-> with other patches. (Actually no-one gets hurt if it's applied to both tr=
-ees
-> either, which IMO is perfectly fine in cases like this.)
->
+> Assuming the above &scmi_pinctrl refers to the protocol node as we
+> usually do,
 
-Nah, Stephen Rothwell will auto-yell at you for that. I'm fine either way.
+No it does not, it is a three-layer cake.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+scmi <-> scmi_pinctrl <-> scmi_gpio
 
-If we get any conflicts in next, then we'll deal with it with immutable tag=
-s.
+it refers to the scmi_pinctrl node.
 
-Bart
+There is no SCMI GPIO protocol, instead SCMI is using the
+operations already available in the pin controller to exercise
+GPIO. Generic pin control has operations to drive lines for
+example, and Takahiro is adding the ability for a generic pin
+controller to also read a line.
+
+Yours,
+Linus Walleij
