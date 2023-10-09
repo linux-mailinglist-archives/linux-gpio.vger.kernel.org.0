@@ -2,110 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D8677BD6C8
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 11:23:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE3AB7BD5A8
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 10:51:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345834AbjJIJXJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 05:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58228 "EHLO
+        id S1345553AbjJIIvY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 04:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345823AbjJIJW4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 05:22:56 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B981BE9
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 02:22:43 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qpmTH-0006vZ-4e; Mon, 09 Oct 2023 11:22:39 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qpmTG-000NXa-Ht; Mon, 09 Oct 2023 11:22:38 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qpmTG-00C4q3-8r; Mon, 09 Oct 2023 11:22:38 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Yangtao Li <frank.li@vivo.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 20/20] pinctrl: ti: ti-iodelay: Convert to platform remove callback returning void
-Date:   Mon,  9 Oct 2023 10:38:56 +0200
-Message-Id: <20231009083856.222030-21-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231009083856.222030-1-u.kleine-koenig@pengutronix.de>
-References: <20231009083856.222030-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1345470AbjJIIvY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 04:51:24 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8E3AC;
+        Mon,  9 Oct 2023 01:51:22 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 7A803660708F;
+        Mon,  9 Oct 2023 09:51:20 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1696841481;
+        bh=k9DxY2pZj9VNMIEbtEzEch2H2eOqQpTLPwo754uwNQI=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=bRARrHT/3htPKK0RbfsYILUajqJ8xnE4AfA8k4NWozgsApd7HnLzwhD4a1qVaSxv6
+         nj76yiKGeYsvyn/M/OeYmgUKOh/hMl+uppMl6d3FPSGx2LKAvEL3c9sTrEl7ZsIqN2
+         PgsNGQDhd7i1CE1YJZnE2Qet9yJUwIMwR2pOmRrh950giBGlAGhmd8xoSx0znxR9ml
+         kP1jnzscbYxXk9zZd6SMaQbl1pWczeBfK1oKYtC+8J8A537eekbp3ek2JDqrZhc4kz
+         zQr8OP+IiByFOcM0VcElQI9NdHe9YFMpV0XqXsCziRlR8nAtPdddxcQNs45IAkcy2w
+         QOszP5mjsRvsg==
+Message-ID: <85c73436-988e-2493-1b47-967481b279bd@collabora.com>
+Date:   Mon, 9 Oct 2023 10:51:16 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1968; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=E5trTcRoNSwSyEuUHcMDaOFkPpFFcP6BQycpHwUzrnM=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlI7wWYc+w238a15MR82zLPaznFyBypGE4m0Mmw nFuEvoswv6JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZSO8FgAKCRCPgPtYfRL+ TlQ6B/sF69klNLh4E/ZW1+7VqRXSYhnFlh058WXmc5u+eyGTwVlcZveJj5Wcq5ZnMF4YQlwlnvu egigIqMUrsIX2itLv/9KzyKGwhpa8gc0K1gbHgO+ONIXeLh/3zZ356IqS7VhyHqlLbTAg1Lhdk3 9gsxd752UUJ2Dy0mCWNK4ac+eUnb6UWjKF5b6xeUxai2NtQT6hDFOcgyEhOqo+5k8NygG5ZleZB FQGLsYAafpXpagasU9NInkHJge1t5QTrWwj4AAFk50ounnR98wsW/Aw9XLSM1L5GuvbkOTiUFlQ QeXRcTCQv6IjBJI8MKFj3K1DBRaZ1ZpkyS/Vpdviq71he9oD
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH 2/8] ASoC: mediatek: mt2701-cs42448: Convert to GPIO
+ descriptors
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, alsa-devel@alsa-project.org
+References: <20231006-descriptors-asoc-mediatek-v1-0-07fe79f337f5@linaro.org>
+ <20231006-descriptors-asoc-mediatek-v1-2-07fe79f337f5@linaro.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20231006-descriptors-asoc-mediatek-v1-2-07fe79f337f5@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is ignored (apart
-from emitting a warning) and this typically results in resource leaks.
+Il 06/10/23 15:46, Linus Walleij ha scritto:
+> The driver is pretty straight-forward to convert to use GPIO
+> descriptors, however a separate patch is needed to accept
+> the DT GPIO resources ending with "-gpio1" and "-gpio2"
+> instead of the standard "-gpio" or "-gpios" name convention.
+> 
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-To improve here there is a quest to make the remove callback return
-void. In the first step of this quest all drivers are converted to
-.remove_new(), which already returns void. Eventually after all drivers
-are converted, .remove_new() will be renamed to .remove().
-
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index f3a273562095..0ac2548ca68d 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -896,10 +896,8 @@ static int ti_iodelay_probe(struct platform_device *pdev)
- /**
-  * ti_iodelay_remove() - standard remove
-  * @pdev: platform device
-- *
-- * Return: 0 if all went fine, else appropriate error value.
-  */
--static int ti_iodelay_remove(struct platform_device *pdev)
-+static void ti_iodelay_remove(struct platform_device *pdev)
- {
- 	struct ti_iodelay_device *iod = platform_get_drvdata(pdev);
- 
-@@ -909,13 +907,11 @@ static int ti_iodelay_remove(struct platform_device *pdev)
- 	ti_iodelay_pinconf_deinit_dev(iod);
- 
- 	/* Expect other allocations to be freed by devm */
--
--	return 0;
- }
- 
- static struct platform_driver ti_iodelay_driver = {
- 	.probe = ti_iodelay_probe,
--	.remove = ti_iodelay_remove,
-+	.remove_new = ti_iodelay_remove,
- 	.driver = {
- 		   .name = DRIVER_NAME,
- 		   .of_match_table = ti_iodelay_of_match,
--- 
-2.40.1
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
