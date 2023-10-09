@@ -2,174 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30F707BE93D
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 20:28:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7AD67BE965
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Oct 2023 20:34:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233250AbjJIS2g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 14:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48876 "EHLO
+        id S1377502AbjJISeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Oct 2023 14:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231747AbjJIS2f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 14:28:35 -0400
-Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B998F9D
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 11:28:33 -0700 (PDT)
-Received: by mail-vk1-xa31.google.com with SMTP id 71dfb90a1353d-49dc95be894so1633212e0c.2
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 11:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696876113; x=1697480913; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HVTS2gNSziSCqdd4br1CWXRZan38f1zAmy1gwi7TOnI=;
-        b=oX+Vhx4KyGKyH9s3gwW4Zv3kGb42Nd5ceN8nQFUUx+7W0dEiELwTOu80KEpq0pQuo2
-         lYRoC/hxRMS50s2zgfI8XbBaE6VnYRcQs0phpHkx2iXrtTYKnkYEK96HdR4CNuCO4pVc
-         DkgjozwjvYjvlSEWZq4rvRcJe0/QAKoRV4G2Gg3UFqpUqBE+hAieFQ/x3/4+eKWQMG+0
-         7Sb6FTbEyzokVlAfNbJDy/p99et7emr1DPhh30GFI5TkPH0QMC8YfGdqZ7fYqfgzrhyl
-         fGTHwAH6AOIkKJmkK3MvjGFXxLw07w79wLmfXEmLq6m9WuItdfK9EyPQnjaOhJMW9uHy
-         QeIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876113; x=1697480913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HVTS2gNSziSCqdd4br1CWXRZan38f1zAmy1gwi7TOnI=;
-        b=E+CDVTWk0zloY0NssHUBkqTwxtan+FuX9eAtqs7cF+OQwUBA1OMqavdnxJoh24iM8m
-         l42qq/uQ22BqW+r/l38SPRZl/vJ1slW31VenaeuZMPPv7jfACIr21HbGH4tsqxUtbaT1
-         u1Uy1YilZAasWiEQvOZxkKChsCaddbnXx6oPGSTyhCsYmXOSEXhDQlOFkCq305Yo+PMh
-         0A5b573C7gpcY2InAUENO+qN9GubjRBZ0NPfBpJ3zPEGek0QS4TQck4kKZMtLET9u3Ly
-         /Bl33UJF6D8Ban3C9WWzMWn6fujjlMhe8IrHFuebRMVXgfLCddlq+VaJEHxC55Jh9TiI
-         ghxA==
-X-Gm-Message-State: AOJu0YxmRiCvguSNuUBoWZxguxz7/zlfSjDYsEk9hoSrv0gggxhk8iFS
-        gYygtx3P+7fVtvX+5HMGc4LEVFkmjWczpd5bZwhafg==
-X-Google-Smtp-Source: AGHT+IGW64Icyk4xUDU85D92Wg7PfvyQNNDjiw3TmyPPLT8U9JJKy5TL8T0zon3iZKL7xXS8pLwpxYZUqYWZC7KKpJQ=
-X-Received: by 2002:a1f:49c3:0:b0:4a0:8a35:6686 with SMTP id
- w186-20020a1f49c3000000b004a08a356686mr2006179vka.11.1696876112724; Mon, 09
- Oct 2023 11:28:32 -0700 (PDT)
+        with ESMTP id S1376990AbjJISeS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 14:34:18 -0400
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5467BA4;
+        Mon,  9 Oct 2023 11:34:15 -0700 (PDT)
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+        by mx.skole.hr (mx.skole.hr) with ESMTP id 8CE5B84F15;
+        Mon,  9 Oct 2023 20:34:13 +0200 (CEST)
+From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: [PATCH RFT v7 0/6] ARM: pxa: GPIO descriptor conversions
+Date:   Mon, 09 Oct 2023 20:33:57 +0200
+Message-Id: <20231009-pxa-gpio-v7-0-c8f5f403e856@skole.hr>
 MIME-Version: 1.0
-References: <20231006115147.18559-1-brgl@bgdev.pl> <ZSAIUVAQ6ifi8LTL@smile.fi.intel.com>
- <CAMRc=MdrLSPCEsQ6OEgRX-7Wh7ka+Rczja=QjY-srozj3cz68w@mail.gmail.com> <ZSEMnqAynnrfBxX1@smile.fi.intel.com>
-In-Reply-To: <ZSEMnqAynnrfBxX1@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 9 Oct 2023 20:28:21 +0200
-Message-ID: <CAMRc=MfFEBSeJ78NO7XeuzAMJ0KezEPAYWsWnFXXaRyQPAf3dA@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH] gpiolib: reverse-assign the fwnode to struct gpio_chip
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dipen Patel <dipenp@nvidia.com>,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJVHJGUC/13Pu2rEMBAF0F9ZVEdBr9EjVap8wLJdSCF7xmuRs
+ DZSMBsW/3uEikS4HI3OHe6DFcqJCns5PVimLZW03Orgnk5snOPtSjxhnZkSSgsvHF/vkV/XtHA
+ 9kgIEZ7w0rH5fM03p3qLe2fntwj7q45zK95J/Wvwm26olBWX+kzbJBVdewOAdeh/Ma/lcvuh5z
+ i1jU72znVPVBW+MNSgtIB6c7l3onK4uTh6BAOWkj/fMn5NCyM6Z6sSkh+CALCEcHPSu7wfVYQi
+ R7DQSRX9wtnd9P9v6ycEEKRBC6Ny+779wKZyzvAEAAA==
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-spi@vger.kernel.org,
+        =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3356;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=9HISThLWXYrKw02vad3s3jjv7OIK+LTjobe89BliE1o=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlJEebqRxXPSHSkqz3VzFiWmCYluOEsVC6FdrVX
+ kdBjEH03BqJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZSRHmwAKCRCaEZ6wQi2W
+ 4d/PEACEBwdEFzScJK2AKBhR+Sh2TExixXRhlHrijlQj6TpxuD3ccuPKBwNKoZx1nfg5Z14ao05
+ kzPcyamJc9OOofLeF+CSKg1kXy9MnQx4NPmIhk/HiZI5ZkbsbTRPUHhji7GXpD7vy37vLW8SmW+
+ U/aVMCAv2sXe3Iism4UxDi4Qgp6khIb4t3K2T2o7efDiM+9aaZOsK/5d5z+lwdTcQfZsYN04//+
+ SmnmRIZHrBREnhjCn/M0VF7Y6fXBtfcnxIXY57RfNpRjKCjF1z4gWdVaK/utVHdPBqhUHK4S5YO
+ qxxR8DmS9jOLL04bafaq9UR4ayEsQTdmIVmOE26pufWaT1MV8OAyOGuyUxnrqLIWfoDzFnPZGM4
+ lHtEhuh6t2CIVK/Yo2H7ym0MoJiZtkGgcr1g7Snch/ktNt3fLXO5WMhO7cgWmPxWQ90eaOIaAF2
+ SlRDrw10T7ZMqn2gcbMcszt9tse57mDNwMbFw8UH2C1qWphXlWa7iQ9jMWdDZ1U0Lx76PAbS1Gh
+ ozJ0uyhzzM/yc04meQpxIiI7d3+mk5yKmneRV0H96L1j8vC7QGT8Otzqnds8r0Jv3BWdnwcQVoN
+ 8LY0KS6bRzLQx+4qnIhQQtSv4Bl5dMYZK0dQHvuNsIgTIgRwMUlsk6tJ9wewoObMT3UypmEGldh
+ udURqlb2X3xSY3Q==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 7, 2023 at 9:45=E2=80=AFAM Andy Shevchenko <andy@kernel.org> wr=
-ote:
->
-> On Fri, Oct 06, 2023 at 09:07:54PM +0200, Bartosz Golaszewski wrote:
-> > On Fri, Oct 6, 2023 at 3:15=E2=80=AFPM Andy Shevchenko <andy@kernel.org=
-> wrote:
-> > >
-> > > On Fri, Oct 06, 2023 at 01:51:47PM +0200, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > struct gpio_chip is not only used to carry the information needed t=
-o
-> > > > set-up a GPIO device but is also used in all GPIOLIB callbacks and =
-is
-> > > > passed to the matching functions of lookup helpers.
-> > > >
-> > > > In that last case, it is currently impossible to match a GPIO devic=
-e by
-> > > > fwnode unless it was explicitly assigned to the chip in the provide=
-r
-> > > > code.
-> > >
-> > > That's expected behaviour.
-> >
-> > Is it though? We now have a GPIO device that represents a piece of
-> > physical hardware that has an fwnode assigned and the associated GPIO
-> > chip (tied to that device) that has none. How is that logical? It's
-> > not coherent.
->
-> To me it is pretty much logical, yes. The providers decide themselves
-> if they want to have any specific device node for the chip or inherit
-> it from the physical hardware. Note, there are two types of the FW descri=
-ptions
-> of the GPIO controller, when it's 1:1 to the banks and when it's one devi=
-ce
-> with list of children, one per bank. Due to this differences we have
-> this field in the GPIO chip to begin with.
->
+Hello,
 
-This is irrelevant for this discussion. The tegra driver in question
-knows which fwnode it's using - the one from the parent device. It's
-just that when the HTE driver tries to find the chip using either
-gpiochip_find() or gpio_device_find(), it fails and I'm pretty sure
-that if Dipen bisected it, it would point to commit daecca4b8433
-("gpiolib: Do not alter GPIO chip fwnode member").
+Small series to convert some of the board files in the mach-pxa directory
+to use the new GPIO descriptor interface.
 
-IMO the GPIO subsystem should take a phandle to the HTE engine it uses
-for timestamping and that would allow us to not do the lookup at all
-but that's a different discussion.
+Most notably, the am200epd, am300epd and Spitz matrix keypad among
+others are not converted in this series.
 
-Anyway, I think Linus' suggestion is better than this patch.
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+Changes in v7:
+- Address maintainer comments:
+  - Drop gpiod_put in OHCI
+  - Make "struct gpio_descs *leds" in Spitz LEDs global
+- Link to v6: https://lore.kernel.org/r/20231006-pxa-gpio-v6-0-981b4910d599@skole.hr
 
-Bart
+Changes in v6:
+- Address maintainer comments:
+  - Use devm_gpiod_get_optional() in OHCI
+  - Use gpiod_get_array() in Spitz LEDs
+- Update trailers
+- Link to v5: https://lore.kernel.org/r/20231004-pxa-gpio-v5-0-d99ae6fceea8@skole.hr
 
->
-> > I'm not surprised users of that code will be confused -
-> > like Dipen in this case.
->
-> Which case? I'm still unsure you pictured the issue here.
-> Where can I read about it?
->
-> > > > If the fwnode is taken from the parent device, the pointer in
-> > > > struct gpio_chip will remain NULL.
-> > >
-> > > > If we have a parent device but gc->fwnode was not assigned by the
-> > > > provider, let's assign it ourselves so that lookup by fwnode can wo=
-rk in
-> > > > all cases.
-> > >
-> > > I don't think this is a good change. We paper over the real issue whe=
-re
-> > > we and callers need to understand what they are looking for.
-> > >
-> > > ...
-> > >
-> > > > This is something that Dipen reported with one of the tegra drivers=
- where
-> > > > a GPIO lookup by fwnode does not work because the fwnode pointer in=
- struct
-> > > > gpio_chip is NULL. This patch addresses this use-case.
-> > >
-> > > I am not sure I understand the problem here. All these should have be=
-en
-> > > addressed already, no?
-> > >
-> > > So, the GPIOLIB should use dev_fwnode(&gdev->dev) inside it, outside =
-it
-> > > the GPIO drivers are free to use gc->fwnode as long as they understan=
-d
-> > > the lifetime of the respective object.
-> > >
-> > >
-> > > --
-> > > With Best Regards,
-> > > Andy Shevchenko
-> > >
-> > >
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Changes in v5:
+- Address maintainer comments:
+  - Rename "reset generator" GPIO to "reset"
+  - Rename ads7846_wait_for_sync() to ads7846_wait_for_sync_gpio()
+  - Properly bail out when requesting USB host GPIO fails
+  - Use dev_err_probe() when requesting touchscreen sync GPIO fails
+  - Use static gpio_desc for gumstix bluetooth reset
+- Pulse gumstix bluetooth reset line correctly (assert, then deassert)
+- Fix style issue in ads7846_wait_for_sync_gpio()
+- Update trailers
+- Link to v4: https://lore.kernel.org/r/20231001-pxa-gpio-v4-0-0f3b975e6ed5@skole.hr
+
+Changes in v4:
+- Address maintainer comments:
+  - Move wait_for_sync() from spitz.c to driver
+  - Register LED platform device before getting its gpiod-s
+- Add Linus' Reviewed-by
+- Link to v3: https://lore.kernel.org/r/20230929-pxa-gpio-v3-0-af8d5e5d1f34@skole.hr
+
+Changes in v3:
+- Address maintainer comments:
+  - Use GPIO_LOOKUP_IDX for LEDs
+  - Drop unnecessary NULL assignments
+  - Don't give up on *all* SPI devices if hsync cannot be set up
+- Add Linus' Acked-by
+- Link to v2: https://lore.kernel.org/r/20230926-pxa-gpio-v2-0-984464d165dd@skole.hr
+
+Changes in v2:
+- Address maintainer comments:
+  - Change mentions of function to function()
+  - Drop cast in OHCI driver dev_warn() call
+  - Use %pe in OHCI and reset drivers
+  - Use GPIO _optional() API in OHCI driver
+  - Drop unnecessary not-null check in OHCI driver
+  - Use pr_err() instead of printk() in reset driver
+- Rebase on v6.6-rc3
+- Link to v1: https://lore.kernel.org/r/20230924-pxa-gpio-v1-0-2805b87d8894@skole.hr
+
+---
+Duje Mihanović (6):
+      ARM: pxa: Convert Spitz OHCI to GPIO descriptors
+      ARM: pxa: Convert Spitz LEDs to GPIO descriptors
+      ARM: pxa: Convert Spitz CF power control to GPIO descriptors
+      ARM: pxa: Convert reset driver to GPIO descriptors
+      ARM: pxa: Convert gumstix Bluetooth to GPIO descriptors
+      input: ads7846: Move wait_for_sync() logic to driver
+
+ arch/arm/mach-pxa/gumstix.c         | 22 ++++++------
+ arch/arm/mach-pxa/reset.c           | 39 +++++++-------------
+ arch/arm/mach-pxa/reset.h           |  3 +-
+ arch/arm/mach-pxa/spitz.c           | 71 +++++++++++++++++++++++++------------
+ drivers/input/touchscreen/ads7846.c | 22 ++++++++----
+ drivers/usb/host/ohci-pxa27x.c      |  5 +++
+ include/linux/spi/ads7846.h         |  1 -
+ 7 files changed, 94 insertions(+), 69 deletions(-)
+---
+base-commit: 8a749fd1a8720d4619c91c8b6e7528c0a355c0aa
+change-id: 20230807-pxa-gpio-3ce25d574814
+
+Best regards,
+-- 
+Duje Mihanović <duje.mihanovic@skole.hr>
+
+
