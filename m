@@ -2,51 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E3CD7C04A3
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 21:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE2477C04BA
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 21:36:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231267AbjJJTbj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 15:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
+        id S1343906AbjJJTgm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 15:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbjJJTbi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 15:31:38 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35DFA93;
-        Tue, 10 Oct 2023 12:31:36 -0700 (PDT)
+        with ESMTP id S1343892AbjJJTgj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 15:36:39 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2074.outbound.protection.outlook.com [40.107.93.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7358A93;
+        Tue, 10 Oct 2023 12:36:37 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kq5o5JryZeE7zX22VNu4ah+lNJDuD9jfmwEbUfHB8tKLkNApz8gwuOJZ6grBkcDt3QUHjbM8XmkAy+hUuzxAkqmHEfKjkG7sZn5XlNb2+5V2SCm+GJfsMDf6avJWBmo9BpBp/7hNTYd/uVoForWRVuZBRQgi0o7mncK5xjaFg2EbO5NbZvQW50PEsNxbW1SM2OA527S0EopGFZsvlB4v8c/MJE/DEX/AK9Ws2pD1xHIwSevfBOciniVjHEef0piYxzhf0K3D9oTtNV2KEZ8oieZTTsnOIXNV4g3lp5QInrtKHEjFQaPrMEhOMqc3uXhiImPZ8uUc9QsNWQWxp56hsA==
+ b=WS0UABy++OvA27+cpagYWdWWMhbLud+HMJLCTFyYjTkkmi/zMc+W5qDR/jKX3BZS3frMVyJqfob4/zA49FapNuu4NvPQm53fK5RMlgEF2STKC6ALfZhfjCwphLuOWs69sW6X/q3O89tZC9R3vbiKHXygo08TpvCP8agy61IXtxvFfRn1TGgwQd/ZcfsYCut/4roVbRXVpxmIEzZgBC6ay2pE/57ol6anWe3anv3tCVUWDlcvdpCraJeVmwEjwecr9si4Jy1UqqQpFiy8U7JIQ/EAXhJ4u2nwKV9T2gisXmQrMuycTpWMlfoz1rw+ZsEqnQSli6hUkk8aj/wfWBt+7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HPMqpFmL/qkDeTPh1Uruw88jf+UrHdRvT5aQ4P5ctUc=;
- b=auENzkKKpxfYWKZOj9+7/5hF7rLB+qh3FU31T2DnmCRJUnJAqJacttt3bUEw3H8k5CsznJ0sjuI2om79ottrJ6KFj+Ovk2Q6f6GVfFw8AlCPSm6Xgus5JRo6oUReibRnnqID5EmOrX2kdI2OVQbSW6C6i89YtCEvqJU+pTxeUmIELSDCw2OVYwu3NVlhQz640QlpTF5ebiottUHeFbrblbSDJp0oAeoe1kj9L5Fox2mo3D9+b810hYkhv+fw+FP1Vw0ej1e5/WihRhAJbXDrw+G7mu04sisXFPPxY4tApzery6CFAsIwm/d6n3//enRTId60hYshVq8Vnj3HCZdkNQ==
+ bh=9iBbhc5XZGiZvErvFECEn1G5jaU0Ypb67jI/pG1Pis0=;
+ b=I4RmUX0t8jH2lszpeWeEqrjSQX6mO3/PCcnMMqRYUpS+MUTfXelXlbzOoZNt+SOG6J8mImSpmNekmqbjqP5374A2T728lEMMlB6ssnEajO8vJygnVEes7SIsfTThqFpkLxAIv6v5ugiHQM+bpVztDIJF0mhr7Q0XOWCEGkoQGRVVfmeDGpoXnwHXGey2f4bj+nSVb51yjz3iyClouyO2urVsw3mAfoWWcCgoGSC56t4GmBbkX2BxueNKEWgluWKONVhhDuQ02jWMHiw6rSmxyxKO2+lZlskIUlVJRiDW0rIqDa/d52bIUhWubUW7dUnB6WL9KbJJUQLF9SdCZGP8cg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HPMqpFmL/qkDeTPh1Uruw88jf+UrHdRvT5aQ4P5ctUc=;
- b=MDbFga1ghejwW1Th44y1WqdgUpHFTxsVh6EjLHkj9IMQvQsnCpOsfMonR8jRbrK4dmjNgH0ukLmtrHlReSYt9NjAGBCV7kAoDfYIH5fH8sgPYCoMi+6fcuWnQKtNUqACXKOasyX44qCU8GvxULbGC9JCft7Z6emhXpemnf5Mdng7/qz7UVKU56ni/rr090bCgx/DdBQN9XSbRNL0fLgO3yjCcf38LBbftpAe6x45NxD8+U6mMSOJlZ8cgEzPq5IUR/oCMcjAsa6Qr9YlOnugIzl8C3augIZ1iY1fOfF674xMp9cz3ffFQRDEGbqNp76Q9qlSYwG9SDytvwQGDmRwnA==
+ bh=9iBbhc5XZGiZvErvFECEn1G5jaU0Ypb67jI/pG1Pis0=;
+ b=tVqyThWC1MtXRz9A8EFKHSurOEMFBKjtxwS1BDgPFQYzKGLzn29o3P8X51sxLKOOXe8lkRwzYxJAOL0mQPeQdk9qUJEFUVqGIkqEUmzYPsmOoyUBlpx3aeIfKaHEsogCXH2KZSZy3B1hQq/fCiau+wgcKEMar4MtSwoDNMYGX1LIZskEDN52OKf1YabfARYjNsk6J/mltyfCZMfQnADlkmHRqxz9213U5wAszv7FStRCkEU9wH+GdA3a8nqyf1pu750aVPcVHyrppGNjIYEqyih3VOwAA+huUTs/LKYU74Mf3q8Z+9Cpz0G15+XLQZmaD5D5UCRuPd3/tOhaw17NaA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from IA1PR12MB6604.namprd12.prod.outlook.com (2603:10b6:208:3a0::7)
- by MW4PR12MB6801.namprd12.prod.outlook.com (2603:10b6:303:1e8::8) with
+ by DS0PR12MB7630.namprd12.prod.outlook.com (2603:10b6:8:11d::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.37; Tue, 10 Oct
- 2023 19:31:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Tue, 10 Oct
+ 2023 19:36:34 +0000
 Received: from IA1PR12MB6604.namprd12.prod.outlook.com
  ([fe80::8814:146:e28e:6eea]) by IA1PR12MB6604.namprd12.prod.outlook.com
  ([fe80::8814:146:e28e:6eea%4]) with mapi id 15.20.6863.032; Tue, 10 Oct 2023
- 19:31:33 +0000
-Message-ID: <147fe15c-13d3-60dc-bd49-cd0cb40126e9@nvidia.com>
-Date:   Tue, 10 Oct 2023 12:31:29 -0700
+ 19:36:34 +0000
+Message-ID: <0db37cd0-9cb9-41bc-c2aa-0a01c0295ed0@nvidia.com>
+Date:   Tue, 10 Oct 2023 12:36:31 -0700
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH v1 2/4] hte: tegra194: don't access struct gpio_chip
+Subject: Re: [PATCH v1 4/4] hte: tegra194: Switch to LATE_SIMPLE_DEV_PM_OPS()
 Content-Language: en-US
-From:   Dipen Patel <dipenp@nvidia.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -57,72 +56,72 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>
 References: <20231010151709.4104747-1-andriy.shevchenko@linux.intel.com>
- <20231010151709.4104747-3-andriy.shevchenko@linux.intel.com>
- <3e1e6acf-5862-9f35-cbe6-72bb17cf3851@nvidia.com>
+ <20231010151709.4104747-5-andriy.shevchenko@linux.intel.com>
 X-Nvconfidentiality: public
-In-Reply-To: <3e1e6acf-5862-9f35-cbe6-72bb17cf3851@nvidia.com>
+From:   Dipen Patel <dipenp@nvidia.com>
+In-Reply-To: <20231010151709.4104747-5-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0162.namprd03.prod.outlook.com
- (2603:10b6:a03:338::17) To IA1PR12MB6604.namprd12.prod.outlook.com
+X-ClientProxiedBy: BY3PR04CA0029.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::34) To IA1PR12MB6604.namprd12.prod.outlook.com
  (2603:10b6:208:3a0::7)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6604:EE_|MW4PR12MB6801:EE_
-X-MS-Office365-Filtering-Correlation-Id: 23343a93-402b-4ba2-6e93-08dbc9c782c1
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6604:EE_|DS0PR12MB7630:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8552ffe6-e341-4c89-35ea-08dbc9c8364a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YLuvtKWZcLCKcNizNWOr2YPlELvngbLGBNjYb8TVLCIPcpd6pkBvauFNdZZ0JPyytgVpnc3vV6QjG7uhzpUoBqmt6nKFk+6pb7umHKhDM7SXY0aidoF4exvWj31lpu11ema7H2et6d/3jEHKmljsVotM6/wDYz5KdU7BNkOMWtQooUhc3y41CTQ+kzgHSc/bAqCq2Dz2VRvu8Q9GqV3T23Cxnb7KM0HU2toM3WfbtqaV7Jxv+yYo4g7mcGLr3pDzKVpzz1hxjx49Onzeb0cndT72+sEKpJRp6scdxq29sD62wZ0l/WnQP3UNrFWFIj8zYxPjKBUvp8JUYYv6vcBlHJ8vhUKk0sOz0Uq/JVv1d5g+bx1hvHoLQc9rNOo2LRVn4AN7q12q0SLXlTZz63ZKDthGZjs/oDnIYUYHm4A+KwTZi+dZxG35ytxyJXMUmq3M5ZJkeqTiiX+ACobm82bN9fR9dFgSQpnKN8ZsdMQmM42RkFa1nVVxIuJkSIWdCVOJLxPJoJgDJJ7xWtlV++Kr0+b5HTOpiP8eBmqTdDYV9OVTyS1vh0BEeVSXutbPk0Q2LXZTIrZL1qokxHgaI7nmoccyS5EWRMSUj+E/Us/tl8zMhxA0iKQ4MWeKzBZURoCaAuwisERLa+WcKMzMIdAXAQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6604.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(366004)(136003)(396003)(39860400002)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(6666004)(31686004)(53546011)(2616005)(107886003)(6506007)(6512007)(86362001)(36756003)(31696002)(38100700002)(83380400001)(2906002)(7416002)(41300700001)(6486002)(478600001)(316002)(8676002)(8936002)(4326008)(66946007)(26005)(5660300002)(110136005)(66556008)(54906003)(66476007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: O/2oe5jaUBBzc/OeMviWrB53qpqF9H2pxkEokKZRo1QjgmnUtoyssRZdVBdyr/1KTp9hLp8h5vigPppeZW5QWt74VgQwRXFT++7tDU1XT857eQCuzCU6Z1wzF8GoNd4Dpbmpnhkc0ulRblY+Pqal6N15ZeGsSNQPW6huV4VsrcVr77WP4Or2koCRtP1irk4BpTY+UpSBg6Gt/FS2ghO+Zfv252DAUMDhJUD2eF3iYSyJKffRqrc0DFeRSVf0GmLejSmMiNEEIPGKRJb2paZfndRJpKLzOMLqmDfDxapfsVhADakZZQPTRB5QfKymYbrOvANVidBjqQ2VMM39IxMcd55VkSzMAYBZSG4OLQMq0ie7VA2PShO/8JqV7KQ8VLggiSCSa9Inq/mcZR6y0UKDefyBFVjVroihNJromVugHkbBhW7Om1yA+Bd+7Bl/iXbuo2Y/DVSJR4undEd3/PvtPA4iQrcJkIlLzbNiMN8K/wHc7bV4DkITh5/5PjsL+ofJVfMFicjlVIKrT+bLI7M7e9W36yP5PYi3vzNVLgKfRNionjYSZiSjye+jIPMirO9XQy0uIlEfBBWcwEH/aE907Y7K+S8MP4WseUKSGnRbaNVFXhlc2ydVezzHwSM/IL73S4Za64OGBNlx8VdbKcUJEQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6604.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(39860400002)(396003)(376002)(366004)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(107886003)(26005)(36756003)(53546011)(6512007)(2616005)(83380400001)(2906002)(86362001)(38100700002)(478600001)(6486002)(6666004)(6506007)(31686004)(110136005)(66946007)(316002)(66476007)(54906003)(66556008)(8936002)(4326008)(8676002)(41300700001)(5660300002)(7416002)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L2paRkxCa0JlTFkyUTJvcnlabzIzZjZScjlVUk0vRWV4YnhZT0hWY3RLK0Rq?=
- =?utf-8?B?anRFbjdZU05wRXFzaWNueU5wTG53aU5xVWJYd3J5VHo3Y1VuUXBudVRMdXcv?=
- =?utf-8?B?SXpHMEJtTU1jcmFQekd6eFg4a2U3MGFMNjVpVy9nWnhWZlh6aXA1eDluOWFx?=
- =?utf-8?B?R0Y1c0FBeGVnQWdkbXA4eEt4ZXRPbHQxdWJabjNKK2Y0RlFEUGxwVW1GZHZk?=
- =?utf-8?B?NXV3TkwrK2lkUDBVdTRIQy9pZEtwZWdnZWxGVFAwbWlBRUU3TzdzazBJcTd5?=
- =?utf-8?B?WFMzdVJpbnA5RTYzSXZaWUE2bER4Q3BaY3N4QUd5VWZTM3lzSWttY3NwUWFh?=
- =?utf-8?B?a1pPT0M3NjV4bmdzT2tpdmQ1dVJIckJ0ZUNhdE1WNzZNZkNkUDIxb0VyT2tt?=
- =?utf-8?B?QzA1M1I2TmN3eE8wWUk4Z0RPdUR2VE14ZEEramNQQk1qMHJ1eGpOQjVLOWJ0?=
- =?utf-8?B?N1JxcjNVMnVYYzJZZDZuYTZvL1p5dEI4Q0dpa0lBUFJtZjI4aXBVdWpxUVJr?=
- =?utf-8?B?SWVqREE1b3J0QmxGYjJ3UTdsOEVIWEgyY3B6dVF6OHNkQXU5M09UMyt4dlRT?=
- =?utf-8?B?NU5kMEhlZVRMZzhsOWJ0NUR2RWJvekd3aHI3Vy9lRXRPOHp5Ylp0NUM1ZEVu?=
- =?utf-8?B?dGFwbUNzTVgvNTEyTzB2dlFYbnBRU2hYRUVoYTkyUWx4T1V1aUNIM2x5R1ht?=
- =?utf-8?B?aEtOWit1V1dRakRrZklFQVpPMlU5Nkd0S1l4UEVZUys4Q0xDU1BnU1p4RGdT?=
- =?utf-8?B?bytaUzRHS0d1WGtBMlN3c2tnUEFRbkpTVXEySll5TXVUcHYycGhCSkUzMjBL?=
- =?utf-8?B?TEp5WkNXazNWNHdHanlCMkg1K1JrSVBZelVDTHJGT2hEV3YwZFFrdkU1ZzJi?=
- =?utf-8?B?U2s5VzhQL1crLzE1M2JoSXVYMExjY0EzNkp4UHNMbEZWaGgrd0x1ZDlJa0NO?=
- =?utf-8?B?cTN1N0hCQUluQzNUQUw4VWExNUdUSXdhUjB3M1M2cFpSZ2NKNXR3WmFJOE5w?=
- =?utf-8?B?MjVqeW5CdFRUcUlMM0hIZnV6L0NTZmx4WHZYVHF5cWxZS1ZwZWhLcFR0K0xm?=
- =?utf-8?B?YldIWGJscFdyeGo1b1VuMjdIUldGcXFsbHlkSmpWZ3RyNHRFamsvaE9iTjhl?=
- =?utf-8?B?T1dyOURxV0RQTllCSUpqdmRhNmgwU1hFcGRLUzNUMW1WRzRMa1V6cmM0NEtn?=
- =?utf-8?B?akI4RUtTVFlESFlCK29IemM3WHVFUHBuUTZlUzFOWm5hVGpua29FMzVPbHVJ?=
- =?utf-8?B?cVpjbjFpZ1RmNlI3ZmgyeWJXemVtbTc0WEYvbURaSlVVeGJ3NExIS2drVXRu?=
- =?utf-8?B?RzdkbnhYV3hoNnFGVnpWamdpTFJsSklKNk9yVThQSEtBRStsSE5xdFl6L2hQ?=
- =?utf-8?B?T21MZ1R0ckdEZ1A1amE3OS9CWDJSUE8ySHJFRXE0cm5yenJZMy9Fb3dBL3JL?=
- =?utf-8?B?VkZKSUhHeWhqSWNyZmtmRWJiWk9rTXYzcC9UL1h3QlpERkgyOW5Pclo2aCtI?=
- =?utf-8?B?by9qdUVCMjNkOFZodlg0NlBHa2JyMjU2Yk8wQS90eGQzUDd6cjlOeXZQZUtt?=
- =?utf-8?B?N0VHQm0yZUNJWTAvMW90amxGZEFCa3hyZXlxWXFpSUx0clBSU0xRZFRLZGZu?=
- =?utf-8?B?c3A4bmU3Qk9oSFV1SkhlTTdhSlVua3dvcFM5bXkyajl6Z2hRWkhCM0Npd0Vw?=
- =?utf-8?B?OE85VXlkdUMwZk91eWx4VHdwRzRIbGwzaERHNS9wbmRSODV3ZFRMRzZpQUFl?=
- =?utf-8?B?anRySkRMdWJ3dGkwM0cyMUJ4aXhCMjRaVzhXM1FoYnpLMndBbXdYNEhSR1dP?=
- =?utf-8?B?L0tCZWFCLzNieGVaTDlTUWJ4bU0raC9hOC84L0pMZzNGTXE5SEFaVFA1ZXE0?=
- =?utf-8?B?Kzh2dFc1U2FtT25OTS9ZOThhVEZHWlJ4Ky9rRGZJMXZxQ0QwV0pRQ0V3VXJ1?=
- =?utf-8?B?RXF2ZVIzVmV4YkwwRTJZSnZZU3FUWVc5Uk1hUVJXV0Q1aFQ1UzNZTXJlcVlz?=
- =?utf-8?B?M21qV2dCNWR1NVVNNnBPb28zdTFlVFNQcVlZZ09NSUpUaWpzU3VLSEErV2dK?=
- =?utf-8?B?S1NqUFlEdm9Odk1zbUczd1JpTjRWSmNHZWQ3VzdON1pJWktva21lWTJSTENj?=
- =?utf-8?Q?y2WS5bMlLzAIEUcZCTezDZRRE?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eHpXVEcyQlpzcnBrbVlBcjRSaGt6dmhJV2d1bWsyTmgyNTZhM0R4SUZ0bXl2?=
+ =?utf-8?B?RnpqNzc1Nll2aWdkNzRUZ1ZFVWpwaDN5Z0tPZExvZjljMGhGL0pDcGNRT3dB?=
+ =?utf-8?B?RVZGUnVLM0VsT1dzbzE4VUwzQWQ3aWt0TFRiZk5BWjk1OUZ0ZVJVWW1jZVAy?=
+ =?utf-8?B?OXRFUGNIbFdlYlJLZG9YeDdMWDlJWTErY0Z5WW9ieW5Hc25hYTZ1NDdtbWx3?=
+ =?utf-8?B?WkJIQ0w2eWl6dEIrV3NMTWJ3RC9GOWgrUHJqZlVGMFg5YjdtWi9zMlYyNDc4?=
+ =?utf-8?B?ZUNSaDZndnVWMzN0RlBqOUE3QWxSbUU3MjJQSmFnUGZDK0NUcVNya1RwMENw?=
+ =?utf-8?B?WjA4SjFucDBmaEVJc21VcEpKNlczMU45Njl0MFg5TUpxZ1RnOTg0TEtBKzho?=
+ =?utf-8?B?dDRRQUlGU0pnN2laUzB3d0pxSmppN3lvdVlKR3M5bkJUM083U3ZWd2JUbGdD?=
+ =?utf-8?B?Vng0MEtRdDErWUtGZEVnZHlWQ2xqSUhKQjAvbGVkeWtpYUdVeGpNdmV4VFRs?=
+ =?utf-8?B?bkJObm9HMEo2dlRVVnczelo3THhJVTJzVkI0dmZFYWFqVHFFRURRVXpybWNB?=
+ =?utf-8?B?cGZUQ0hHYVdxS1A2ampEY2ZmOVJJYk9hRi91WmtQZEszbjJTUzZBQk1zQ2ll?=
+ =?utf-8?B?UzltY1k2OHE3K1pDMWVJRUFRbktKd2dTenF6aVVta3ArUzNRS3BQblRyN1c1?=
+ =?utf-8?B?REFpNG1Beko1RktNOC9SSGNjRG9CT1ZPbFN3bHE2YVliUG9GQzNqZDMwRUhC?=
+ =?utf-8?B?R1JkV3g0V1doWFpqUjIwcGNaQ3EwbERJUnBiQ0JSWks3NkxrQUV0dHBWWGVT?=
+ =?utf-8?B?UXhuNU9VTHROYUpua0doRHZnU3hXWkxCTmRrcFpqSkpVeDVOaEczVExlcGVq?=
+ =?utf-8?B?TUpGa3VISGxLR0ozN0FmNWxKRjVINElqMldFQ3NWQnE2VDNYZ1lnWkJVRkpD?=
+ =?utf-8?B?L3ppWEZNWDZLcFFySTZFYXFVbUVKaGVQVURJeDZlblJEbUhONzhBSUZMOEx3?=
+ =?utf-8?B?TkdQTFpPczVvb3d3MktXZ3oycmdONDRzZDYrSHRzeHk0OEl0a28waEFoY3M1?=
+ =?utf-8?B?REFhWFBSUXFZdXlkRjcybGdGR0piWVBYRGlkbm1UL05QWGNZSGVRZkphOWdR?=
+ =?utf-8?B?K0hTbXFTM2NSV0tJS1hybFptRm1sS0xmai9RNDhEK0htSWVpN0FTRGF3NEhz?=
+ =?utf-8?B?Q045dnZvTWNNN3BweVlQaHZrWWpiK3VqTWluV3NVYmZjQXpNN1ZrUy9VQzN6?=
+ =?utf-8?B?eU9uVkhpbDk0UHhSRnkrWEIxY1haTEVacklTNWZ6KzBqZVFRSm9FdDhIc2Ju?=
+ =?utf-8?B?TC9KMXZ2WXN2aVI4a1N1YkZxR0E2dzR1UmFmVEZJSThSUDJwdUx0WE9EMEZV?=
+ =?utf-8?B?eW1WM0lnRTFkL3BZUDMySGlRY3ZqcXM1Lzdib2k0MDRhMjhTZUgzbFkwYmNC?=
+ =?utf-8?B?Yk9jam9aZDYxdGZVN1NFRzc5NFRaaDNyekpxbWs0YU5HMEMzOG03cFl1WW5h?=
+ =?utf-8?B?ZWRMQzhET0RXYUNDSkRmSm1lUGE0WlgzM1ZyQlZyajNJcXJ2eE8xYzVsM1FQ?=
+ =?utf-8?B?aHlNbmkvYVFJWlV3K0tMSG5CSGtsd3BLWGl2ekl1ZUQ1M0hUcUlmRVJMVEEx?=
+ =?utf-8?B?bUVzT3FyN1JzOXloM0hZdzVlZDB2RG9ZaDFqSGdyR0NRODMyQjdmcnV3NDk4?=
+ =?utf-8?B?K3RQalVjK1Y1d0lnYXZUK1h4TE1kNkV3OUd1c0loZkxjMUUxcld2QWJnSDFl?=
+ =?utf-8?B?SmVXejZ6OFo1bWo3QUtVa1NxR0RLNVM5MjZwcEFjQjlCY002UUhMYmZDRDNC?=
+ =?utf-8?B?STdNSVNrNmxNR3lYdS8ycThwTmQ4VHRPOUNndmFUaXdKeEc2OUlrRjNUSGdS?=
+ =?utf-8?B?aFBlc3hFWmFaMnZMdHdIam8xYmFoM081bG1ENTRuYnZiK21UeW16OUpFb3I4?=
+ =?utf-8?B?eW5EV0w2R1o4dWhKck9FbklaVkorTS9EVlBJWjBnZzl1amVJUzU1WlQ5TCsr?=
+ =?utf-8?B?cUFPdVgzR2p3N0JkdE14c0tQSXd3OWNLU2lHME5IaXpGTzhUekFaUHpHbUlD?=
+ =?utf-8?B?NVRncjJUcE11eERTWGQyNDQzcUI1eWVxVXc0RndJUGxkb0lqMzdPczF3NCtN?=
+ =?utf-8?Q?rpSDGaFcB8Fna6AFig2X6agmf?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23343a93-402b-4ba2-6e93-08dbc9c782c1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8552ffe6-e341-4c89-35ea-08dbc9c8364a
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6604.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2023 19:31:33.4469
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2023 19:36:34.6174
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yzQwAUu/v+qN7AXZcYCb/nWbBt3praXRHfJN8p8tQZXXWOdwcI6Ah1AEES25r54tWK2lTGcc+OVbNQaUOjL2gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6801
+X-MS-Exchange-CrossTenant-UserPrincipalName: f3Y+Uu5leruoJuBj4v3OaM2LMICERVJ588ECJpG0/xKQpNzkgwLmeCpsC3mu6yg8A+o9zRW+NigJQ5uODsUswg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7630
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
@@ -133,119 +132,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/10/23 9:19 AM, Dipen Patel wrote:
-> On 10/10/23 8:17 AM, Andy Shevchenko wrote:
->> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>
->> Using struct gpio_chip is not safe as it will disappear if the
->> underlying driver is unbound for any reason. Switch to using reference
->> counted struct gpio_device and its dedicated accessors.
->>
->> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->> Tested-by: Dipen Patel <dipenp@nvidia.com>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->> [andy: used gpio_device_find_by_fwnode()]
->> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> ---
->>  drivers/hte/hte-tegra194.c | 33 +++++++++++++++++++--------------
->>  1 file changed, 19 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/hte/hte-tegra194.c b/drivers/hte/hte-tegra194.c
->> index 9fd3c00ff695..339ff5921ec8 100644
->> --- a/drivers/hte/hte-tegra194.c
->> +++ b/drivers/hte/hte-tegra194.c
->> @@ -132,7 +132,7 @@ struct tegra_hte_soc {
->>  	const struct tegra_hte_data *prov_data;
->>  	struct tegra_hte_line_data *line_data;
->>  	struct hte_chip *chip;
->> -	struct gpio_chip *c;
->> +	struct gpio_device *gdev;
->>  	void __iomem *regs;
->>  };
->>  
->> @@ -421,7 +421,7 @@ static int tegra_hte_line_xlate(struct hte_chip *gc,
->>  	 * HTE/GTE namespace.
->>  	 */
->>  	if (gs->prov_data->type == HTE_TEGRA_TYPE_GPIO && !args) {
->> -		line_id = desc->attr.line_id - gs->c->base;
->> +		line_id = desc->attr.line_id - gpio_device_get_base(gs->gdev);
->>  		map = gs->prov_data->map;
->>  		map_sz = gs->prov_data->map_sz;
->>  	} else if (gs->prov_data->type == HTE_TEGRA_TYPE_GPIO && args) {
->> @@ -643,12 +643,15 @@ static irqreturn_t tegra_hte_isr(int irq, void *dev_id)
->>  static bool tegra_hte_match_from_linedata(const struct hte_chip *chip,
->>  					  const struct hte_ts_desc *hdesc)
->>  {
->> +	struct gpio_device *gdev __free(gpio_device_put) = NULL;
->>  	struct tegra_hte_soc *hte_dev = chip->data;
->>  
->>  	if (!hte_dev || (hte_dev->prov_data->type != HTE_TEGRA_TYPE_GPIO))
->>  		return false;
->>  
->> -	return hte_dev->c == gpiod_to_chip(hdesc->attr.line_data);
->> +	gdev = gpiod_to_device(hdesc->attr.line_data);
->> +
->> +	return hte_dev->gdev == gdev;
->>  }
->>  
->>  static const struct of_device_id tegra_hte_of_match[] = {
->> @@ -676,14 +679,11 @@ static void tegra_gte_disable(void *data)
->>  	tegra_hte_writel(gs, HTE_TECTRL, 0);
->>  }
->>  
->> -static int tegra_get_gpiochip_from_name(struct gpio_chip *chip, void *data)
->> +static void tegra_hte_put_gpio_device(void *data)
->>  {
->> -	return !strcmp(chip->label, data);
->> -}
->> +	struct gpio_device *gdev = data;
->>  
->> -static int tegra_gpiochip_match(struct gpio_chip *chip, void *data)
->> -{
->> -	return chip->fwnode == of_node_to_fwnode(data);
->> +	gpio_device_put(gdev);
->>  }
->>  
->>  static int tegra_hte_probe(struct platform_device *pdev)
->> @@ -763,8 +763,8 @@ static int tegra_hte_probe(struct platform_device *pdev)
->>  
->>  		if (of_device_is_compatible(dev->of_node,
->>  					    "nvidia,tegra194-gte-aon")) {
->> -			hte_dev->c = gpiochip_find("tegra194-gpio-aon",
->> -						tegra_get_gpiochip_from_name);
->> +			hte_dev->gdev =
->> +				gpio_device_find_by_label("tegra194-gpio-aon");
->>  		} else {
->>  			gpio_ctrl = of_parse_phandle(dev->of_node,
->>  						     "nvidia,gpio-controller",
->> @@ -775,14 +775,19 @@ static int tegra_hte_probe(struct platform_device *pdev)
->>  				return -ENODEV;
->>  			}
->>  
->> -			hte_dev->c = gpiochip_find(gpio_ctrl,
->> -						   tegra_gpiochip_match);
->> +			hte_dev->gdev =
->> +				gpio_device_find_by_fwnode(of_fnode_handle(gpio_ctrl));
-
-I think there is typo for of_fnode*. Should it be of_fwnode*?
-
->>  			of_node_put(gpio_ctrl);
->>  		}
->>  
->> -		if (!hte_dev->c)
->> +		if (!hte_dev->gdev)
->>  			return dev_err_probe(dev, -EPROBE_DEFER,
->>  					     "wait for gpio controller\n");
->> +
->> +		ret = devm_add_action_or_reset(dev, tegra_hte_put_gpio_device,
->> +					       hte_dev->gdev);
->> +		if (ret)
->> +			return ret;
->>  	}
->>  
->>  	hte_dev->chip = gc;
+On 10/10/23 8:17 AM, Andy Shevchenko wrote:
+> SET_LATE_SYSTEM_SLEEP_PM_OPS is deprecated, replace it with
+> LATE_SYSTEM_SLEEP_PM_OPS() and use pm_sleep_ptr() for setting
+> the driver's pm routines. We can now remove the __maybe_unused
+> qualifier in the suspend and resume functions.
 > 
-> Looks good to me, I will wait for others to comment and will test out (2,3,4
-> also) probably end of the day 11th Oct.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/hte/hte-tegra194.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 > 
+> diff --git a/drivers/hte/hte-tegra194.c b/drivers/hte/hte-tegra194.c
+> index 30ef1750a9fa..30fa7c0a555e 100644
+> --- a/drivers/hte/hte-tegra194.c
+> +++ b/drivers/hte/hte-tegra194.c
+> @@ -815,7 +815,7 @@ static int tegra_hte_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static int __maybe_unused tegra_hte_resume_early(struct device *dev)
+> +static int tegra_hte_resume_early(struct device *dev)
+>  {
+>  	u32 i;
+>  	struct tegra_hte_soc *gs = dev_get_drvdata(dev);
+> @@ -836,7 +836,7 @@ static int __maybe_unused tegra_hte_resume_early(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static int __maybe_unused tegra_hte_suspend_late(struct device *dev)
+> +static int tegra_hte_suspend_late(struct device *dev)
+>  {
+>  	u32 i;
+>  	struct tegra_hte_soc *gs = dev_get_drvdata(dev);
+> @@ -856,15 +856,14 @@ static int __maybe_unused tegra_hte_suspend_late(struct device *dev)
+>  }
+>  
+>  static const struct dev_pm_ops tegra_hte_pm = {
+> -	SET_LATE_SYSTEM_SLEEP_PM_OPS(tegra_hte_suspend_late,
+> -				     tegra_hte_resume_early)
+> +	LATE_SYSTEM_SLEEP_PM_OPS(tegra_hte_suspend_late, tegra_hte_resume_early)
+>  };
+>  
+>  static struct platform_driver tegra_hte_driver = {
+>  	.probe = tegra_hte_probe,
+>  	.driver = {
+>  		.name = "tegra_hte",
+> -		.pm = &tegra_hte_pm,
+> +		.pm = pm_slee_ptr(&tegra_hte_pm),
+
+typo, pm_sleep_ptr instead?
+
+>  		.of_match_table = tegra_hte_of_match,
+>  	},
+>  };
 
