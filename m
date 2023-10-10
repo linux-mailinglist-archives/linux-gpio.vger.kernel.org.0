@@ -2,157 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0740B7BF95C
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 13:12:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B097BF9F2
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 13:41:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230223AbjJJLMT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 07:12:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36570 "EHLO
+        id S229921AbjJJLlG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 07:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229958AbjJJLMS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 07:12:18 -0400
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2197EA4
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 04:12:17 -0700 (PDT)
-Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-4577f61c6adso536120137.3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 04:12:17 -0700 (PDT)
+        with ESMTP id S229770AbjJJLlF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 07:41:05 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76EB0B4
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 04:41:04 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a7c011e113so6185527b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 04:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696936336; x=1697541136; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696938063; x=1697542863; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ba3EK1pllte35KUINcDLT2ZW9CZJNr8KmgudzwFPcZ8=;
-        b=MGH8NtQAOZCydsPIZ0R4NPRQw790cSo59zmxDR++Fr2JF5LGH+74XmyEnnk/W0H3WC
-         iSNJ+c9BqLwGbwOtGIhmaW0qMx1OkDzR6b3+DBJHvNeS8164YN07nB8XkwQzm422rvny
-         BrLQIHzpizHZRHYg44UsQR9YduIl77u/IjcvTGHC4kp+r3pz2bu5hVXvUW8thGM8vlWG
-         oRywumtRZklSqi7F/t3mcQoOD/Kn2uQK2cpBHH4WBMVTuls1UyHVP2oxzFpOqmt+q66N
-         1gcCG/OzaMjZlrHWjI7uT8XuTryb3w2lp6ajWeHdv1rR4YAH3FaZS8y6mMzhRzjhayv5
-         Uzpg==
+        bh=s0k9o0rUIEiJ5XPd84FDefo81gadVXjzJ3xtE8+bTHs=;
+        b=cuf/HA4gjTdeULAPVP1HwAN7uzwa3YhzXXi9xBFBQ3mQHFqM8k2YvuHAVP/vm5StJo
+         FalHMmJOrKB254qR0vEgWTgqz1comLIafgUXOdHBpj/qjrT8qxZZxOfYeTsBNTDT8fC4
+         DTf+7KbN/NpvQhJQe44pvz8GoOSTFpcDrird2YlqVMaBaLSZ6J3cN6mXHkU1neqQHN1B
+         t689FD/pFtYUf13ubZ6SLS8X1uRjDdpjMRMOEi3SgL04b5/lEsXFnN19qvZw8tz0nayL
+         m1j9yWgMXemikSeT2cqHepRk/OwxwwZs/RW0DAi5WedCq5eECkfdn3IK0ywlY+tmLZH8
+         eINA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696936336; x=1697541136;
+        d=1e100.net; s=20230601; t=1696938063; x=1697542863;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ba3EK1pllte35KUINcDLT2ZW9CZJNr8KmgudzwFPcZ8=;
-        b=qjMY4sMd2gqu8DbfCaLrj9mUXkVzIrWXsRi6ccmesLFFA8hij5tSkuEbZKE5W1SWRO
-         Bj+WA5PsoHhjzheixeH1/z4RW7eyRuW79TGa0/LmKl5pteboizkmj+8FnfMkuJQsr2lV
-         DbqDcjUS2gSGoIskUEVyQlMR1HBW78ClwRCl5v7BpTqEFf4DcTQacQ/0gEB5mZAH68aJ
-         cRkDxVZve/aezHzkD6SqufafD6GBmR3aI9c1alPdku+Nr8cW47LabA+dR/29ecqeJbyp
-         CmEjPdZZ4zfj+DwY2ZSROfWmZvKifF6FrxR3fsG0JWRQ7DABun/gmpy6K6NogsrSxsXu
-         yoWg==
-X-Gm-Message-State: AOJu0Yy0veoIvBUXCywimPmNTTMl1aKyYMgNU4p44+QiKDGITZwW/TSu
-        3gNLGcj/1db9LB+dUTdDhmBmhjE/VEc29pOs9oXGJQ==
-X-Google-Smtp-Source: AGHT+IF4kAhVyOug7FYK3pkInw+ECV2FjriFAdEqcve9PYj+5PcUF379eb0ofLqlTLmIl6a+1ZJt5EJtpxzSOcFbrFY=
-X-Received: by 2002:a67:e941:0:b0:452:7601:e80b with SMTP id
- p1-20020a67e941000000b004527601e80bmr10391296vso.35.1696936336150; Tue, 10
- Oct 2023 04:12:16 -0700 (PDT)
+        bh=s0k9o0rUIEiJ5XPd84FDefo81gadVXjzJ3xtE8+bTHs=;
+        b=evfBnAzcOgDMbGqf8RHd6gnFb6hwaJsnd/BZJztR4b+53u2UQu3JDes2fEOe8vrD1t
+         qzHvxX6awIR1QRSmP9jukrQD0HCM46YzSiXCZnx7DSHYIlf9jIbymMgMZfmS2xsX6ugY
+         WOAg5Yw7fWrdaA60DEbYxxR/YJH7gXeYe8jP27hR+JpIc2ECrVtyrYRI7aGCxoCpBn8W
+         0vgS9EbqQ5lsVsE978om0uOnSQiE9Cckbk2X90xYv+TgxtezrrKcMxNKFEmyKH6mf2Qi
+         N7AaLCKUjBgYzofKYHN4gdsFOZOx1gKWj3rfZbznRUJWvRRSmzr+PBQR642ZHvr8MhlG
+         To1Q==
+X-Gm-Message-State: AOJu0YxOqltF4VmUTKnZwfLXg50LCeapzB7uM3HiaP2RZESgFOaNuN1C
+        SG9PUqFeHO9Gu+y0/Eit5+VYyu7N/wsQX9OBV5a+GSYKKv2dAq3F
+X-Google-Smtp-Source: AGHT+IGdKYVnJbrA2c3DmfIO8Msb0nOZXtAsiXNme33EYQ0Co6ebtOXeqRj+/YPjDz/lUSBfegDGY3jrmXsBnfEOwyM=
+X-Received: by 2002:a05:690c:4085:b0:5a7:b481:4dd2 with SMTP id
+ gb5-20020a05690c408500b005a7b4814dd2mr2557864ywb.47.1696938063696; Tue, 10
+ Oct 2023 04:41:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231009-pxa-gpio-v7-0-c8f5f403e856@skole.hr> <20231009-pxa-gpio-v7-2-c8f5f403e856@skole.hr>
-In-Reply-To: <20231009-pxa-gpio-v7-2-c8f5f403e856@skole.hr>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 10 Oct 2023 13:12:05 +0200
-Message-ID: <CAMRc=Mc7=E9bMQgiUM8qqk7UD4+exhJZqw2DucTcsnqHcttR3Q@mail.gmail.com>
-Subject: Re: [PATCH RFT v7 2/6] ARM: pxa: Convert Spitz LEDs to GPIO descriptors
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20231001150113.7752-1-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20231001150113.7752-1-biju.das.jz@bp.renesas.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 10 Oct 2023 13:40:51 +0200
+Message-ID: <CACRpkdY+OrEcA3ExaZhTq832o-t2UO5S+FyRxsottQw5L2+ojQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] atch data improvements for mcp23s08 driver
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.au@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 9, 2023 at 8:34=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic@=
-skole.hr> wrote:
->
-> Sharp's Spitz board still uses the legacy GPIO interface for configuring
-> its two onboard LEDs.
->
-> Convert them to use the GPIO descriptor interface.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> ---
->  arch/arm/mach-pxa/spitz.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/mach-pxa/spitz.c b/arch/arm/mach-pxa/spitz.c
-> index 535e2b2e997b..29907abc4513 100644
-> --- a/arch/arm/mach-pxa/spitz.c
-> +++ b/arch/arm/mach-pxa/spitz.c
-> @@ -452,16 +452,25 @@ static inline void spitz_keys_init(void) {}
->   * LEDs
->   ***********************************************************************=
-*******/
->  #if defined(CONFIG_LEDS_GPIO) || defined(CONFIG_LEDS_GPIO_MODULE)
-> +static struct gpiod_lookup_table spitz_led_gpio_table =3D {
-> +       .dev_id =3D "leds-gpio",
-> +       .table =3D {
-> +               GPIO_LOOKUP_IDX("pxa-gpio", SPITZ_GPIO_LED_ORANGE, NULL, =
-0,
-> +                               GPIO_ACTIVE_HIGH),
-> +               GPIO_LOOKUP_IDX("pxa-gpio", SPITZ_GPIO_LED_GREEN, NULL, 1=
-,
-> +                               GPIO_ACTIVE_HIGH),
-> +               { }
-> +       }
-> +};
-> +
->  static struct gpio_led spitz_gpio_leds[] =3D {
->         {
->                 .name                   =3D "spitz:amber:charge",
->                 .default_trigger        =3D "sharpsl-charge",
-> -               .gpio                   =3D SPITZ_GPIO_LED_ORANGE,
->         },
->         {
->                 .name                   =3D "spitz:green:hddactivity",
->                 .default_trigger        =3D "disk-activity",
-> -               .gpio                   =3D SPITZ_GPIO_LED_GREEN,
->         },
->  };
->
-> @@ -478,9 +487,16 @@ static struct platform_device spitz_led_device =3D {
->         },
->  };
->
-> +static struct gpio_descs *leds;
-> +
->  static void __init spitz_leds_init(void)
->  {
-> +       gpiod_add_lookup_table(&spitz_led_gpio_table);
->         platform_device_register(&spitz_led_device);
-> +       leds =3D gpiod_get_array_optional(&spitz_led_device.dev,
-> +                       NULL, GPIOD_ASIS);
-> +       spitz_gpio_leds[0].gpiod =3D leds->desc[0];
-> +       spitz_gpio_leds[1].gpiod =3D leds->desc[1];
->  }
->  #else
->  static inline void spitz_leds_init(void) {}
->
-> --
-> 2.42.0
->
->
+On Sun, Oct 1, 2023 at 5:01=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.com=
+> wrote:
 
-Gah! I should have noticed this earlier but this is a perfect
-candidate for using hogs. Can you use gpiod_add_hogs() from
-linux/gpio/machine.h instead? That would save you having the lookup
-and the static leds descriptor array.
 
-Bart
+> This patch series aims to add match data improvements for mcp23s08 driver=
+.
+> This patch series is only compile tested.
+>
+> v3->v4:
+>  * Added Rb tag from Andy for patch#3
+>  * Removed duplicate mcp23s08 in the name of variables for
+>    struct mcp23s08_info.
+
+v4 looks good to me so patches applied.
+
+Yours,
+Linus Walleij
