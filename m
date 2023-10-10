@@ -2,79 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 493287BF073
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 03:45:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CCA57BF21B
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 07:14:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379350AbjJJBpB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Oct 2023 21:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34684 "EHLO
+        id S234619AbjJJFOp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 01:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379389AbjJJBpA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Oct 2023 21:45:00 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7618F;
-        Mon,  9 Oct 2023 18:44:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F816C433C7;
-        Tue, 10 Oct 2023 01:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696902298;
-        bh=k0eRqqsMXVD3oC/A3a5V9R91vn65AeWHRVM7YZojLFo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BVuOJwP3hJprYLEK4gr0WlsjZmxuJGEWqIyoxHn/X0iIvrt7awg6Yu1Sr45riaw32
-         0RwH8muyLuuTLTzjckTO0nxJawr8Gq4APnMcv4U2TzytAWTWQyVlWLqjrAwwS5i5A4
-         NH/3P9+VvYFalHm81eVf0LDZQ5eEhQXgu4LWYojRrvyOC8lEtwu6qGlSroPhlqC6PE
-         sZ3LqwPIbQZb8aXPFqX+SwmPFcapo6V+XX0zUnTISoap7kcIONb5hqWZuFkDJPU7K9
-         QrGGLcKbML9HLzQ/qfEwZ93DKvQY7wA9+DtQc3tXJUHrAV0AjUmG0tLb5Pe6tBl/NW
-         Ytz5NA2HHdlEg==
-Date:   Tue, 10 Oct 2023 09:44:44 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+        with ESMTP id S229625AbjJJFOp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 01:14:45 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B746CA4
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 22:14:42 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-692af7b641cso901825b3a.1
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 22:14:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696914882; x=1697519682; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lQhFnAIsenhwSznaxFHDKOg/ZsGnf5ZuY98Fxq45IkU=;
+        b=ok652WnKTnG7RvB9k2L6OF1mO6beOBVFoLqB4RCpSnRNt55Q3veMZ44txBh5Exr7WE
+         +YGr/kelHSXiQtoEmUV7cvG9jnY/AEoRp7clyzRGLSFdsEZGqc6ZC6GkyNUfJhHIWMZB
+         Bs5a0XEW3/nVTrDsG4+Vgnv9NPXmO8Rvgt+qJWutIPZy1sCcnNz017v6vca1v7lLsGWR
+         Gy1wVZZq5+xNRiSxcvyxgAYpVVAousAqQL5m4sn/o2K+AEwVG741XK5jPnR79m1iEijf
+         GNT2V4f5SNfRvSwZ14EcdvBvbOu8r2eV9OWChsQaS/ZKyRnRxxETQr9LJdYEuHvIihb8
+         ikTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696914882; x=1697519682;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lQhFnAIsenhwSznaxFHDKOg/ZsGnf5ZuY98Fxq45IkU=;
+        b=lABOrTg/K7tmpOWsel02K/vunWZHc3q0qrOZuO7W6u0smwNyBcpA+ZbNPKRqmYSMC/
+         DRjSHt/6i8pEymK6C8b/aW7tZ93I+wNDL793jUlECFezq5hlBFh+YnNX1t38fkOuWWdo
+         laah2NjSYYumX0WzrKUTebjIIqhuZ3CN24ssRYwTqP+IYtcUtznVMNrkfr8C6xy1ldsF
+         5IJl0PqkwqHlNVsb6TwCaBkoicJC1vEVZqdLg0nLf5/zRa0q/1ORm3yFulIzzEfmYBe4
+         Fw1DqswiTuaWnY311ek+ExvuZ+4KpMnBiLly7e9ZdoAicVRGJQAWzJB/YxVCIaWkNDQb
+         O9aQ==
+X-Gm-Message-State: AOJu0YwgwgJNSuO8y8LsiO/JKRp//vtTKcRQqKfbuLez8KXX07RP0gpb
+        6GZ0B5MnZ5XZ9AtJKWsBLK/njA==
+X-Google-Smtp-Source: AGHT+IHaDM+YNCNE4eJtZUKYwuSPOdk4MvZD+JiNAp5tSoamQIDjMvlQP3IbKsJSsbElOx6id1n8pA==
+X-Received: by 2002:a05:6a00:1d94:b0:690:d314:38d with SMTP id z20-20020a056a001d9400b00690d314038dmr19656361pfw.1.1696914881956;
+        Mon, 09 Oct 2023 22:14:41 -0700 (PDT)
+Received: from octopus ([2400:4050:c3e1:100:d26f:f61a:9867:e809])
+        by smtp.gmail.com with ESMTPSA id a21-20020a62bd15000000b00693498a846esm7249060pff.80.2023.10.09.22.14.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 22:14:41 -0700 (PDT)
+Date:   Tue, 10 Oct 2023 14:14:37 +0900
+From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
+To:     Cristian Marussi <cristian.marussi@arm.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v5 7/7] arm64: dts: imx93: update gpio node
-Message-ID: <20231010014444.GE819755@dragon>
-References: <20231001-vf610-gpio-v5-0-8d873a8f224a@nxp.com>
- <20231001-vf610-gpio-v5-7-8d873a8f224a@nxp.com>
+        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+Message-ID: <ZSTdvROVzJU5FRAZ@octopus>
+Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
+ <20231005025843.508689-6-takahiro.akashi@linaro.org>
+ <20231006132346.GA3426353-robh@kernel.org>
+ <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
+ <ZSPDILYZkxvTnQia@e120937-lin>
+ <CACRpkdY=eza0TuBRDb_cWk9LM2qNQg76rZSgWa-RP4TYLL=Ppw@mail.gmail.com>
+ <ZSQXXW1NRiCpsENu@e120937-lin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231001-vf610-gpio-v5-7-8d873a8f224a@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <ZSQXXW1NRiCpsENu@e120937-lin>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 01, 2023 at 04:27:58PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Mon, Oct 09, 2023 at 04:08:13PM +0100, Cristian Marussi wrote:
+> On Mon, Oct 09, 2023 at 03:13:24PM +0200, Linus Walleij wrote:
+> > On Mon, Oct 9, 2023 at 11:08???AM Cristian Marussi
+> > <cristian.marussi@arm.com> wrote:
+> > 
+> > > > > +    gpio0: gpio@0 {
+> > > > > +        compatible = "pin-control-gpio";
+> > > > > +        gpio-controller;
+> > > > > +        #gpio-cells = <2>;
+> > > > > +        gpio-ranges = <&scmi_pinctrl 0 10 5>,
+> > > > > +                      <&scmi_pinctrl 5 0 0>;
+> > > > > +        gpio-ranges-group-names = "",
+> > > > > +                                  "pinmux_gpio";
+> > > > > +    };
+> > > >
+> > >
+> > > Assuming the above &scmi_pinctrl refers to the protocol node as we
+> > > usually do,
+> > 
+> > No it does not, it is a three-layer cake.
+> > 
+> > scmi <-> scmi_pinctrl <-> scmi_gpio
+> > 
+> > it refers to the scmi_pinctrl node.
+> > 
 > 
-> Per binding doc, i.MX93 GPIO supports two interrupts and one register
-> base, compatible with i.MX8ULP. The current fsl,imx7ulp-gpio compatible
-> could work for i.MX93 in gpio-vf610.c driver, it is based on the base
-> address are splited into two with offset added in device tree node.
-> 
-> Now following hardware design, using one register base in device tree node.
-> 
-> This may break users who use compatible fsl,imx7ulp-gpio to enable
-> i.MX93 GPIO.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Thanks, this explains a lot.
+> Cristian
 
-Applied, thanks!
+Just in case, 
+
+    gpio-ranges = <&scmi_pinctrl 0 10 5>;
+
+means that SCMI *pin* range [10..(10+5-1)] are mapped to this driver's
+gpio range [0..(5-1)]. So any consumer driver can access a gpio pin
+as:
+    foo-gpios = <&gpio0 3>;
+
+will refer to gpio pin#3 that is actually SCMI's 13.
+
+    gpio-ranges = <&scmi_pinctrl 5 0 0>;
+    gpio-ranges-group-names = "pinmux_gpio";
+
+means that SCMI *group*, "pinmux_gpio", are mapped to this driver's
+gpio range which starts with 5. If "pinmux_gpio" indicates SCMI *pin*
+range [20..24],
+
+    baa-gpios = <&gpio0 7>;
+will refer to gpio pin#7 that is actually SCMI's 22 (=20 + (7-5)).
+
+This way, we (consumer drivers) don't care what is the underlying pin
+controller.
+
+-Takahiro Akashi
+
+> 
+> > There is no SCMI GPIO protocol, instead SCMI is using the
+> > operations already available in the pin controller to exercise
+> > GPIO. Generic pin control has operations to drive lines for
+> > example, and Takahiro is adding the ability for a generic pin
+> > controller to also read a line.
+> 
+> 
+> > 
+> > Yours,
+> > Linus Walleij
