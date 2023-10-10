@@ -2,125 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C9847BF315
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 08:31:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29B577BF362
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 08:56:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442235AbjJJGbZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 02:31:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
+        id S1442267AbjJJG4K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 02:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442300AbjJJGbX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 02:31:23 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39B58C9
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 23:31:21 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-7b6043d0bbeso55044241.1
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 23:31:21 -0700 (PDT)
+        with ESMTP id S1442233AbjJJG4J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 02:56:09 -0400
+Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4FF199
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Oct 2023 23:56:06 -0700 (PDT)
+Received: by mail-vk1-xa30.google.com with SMTP id 71dfb90a1353d-49e035bdca7so1339718e0c.2
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Oct 2023 23:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696919480; x=1697524280; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696920966; x=1697525766; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IFFsvn1DouMyP8QgmuhXe30oXzdt0BFFDZz8hVnMg+w=;
-        b=qpxzcdSAjZviJ2t8mggTj8+MMnBQ0KZ02WyVy5JrXIzQ18yOm4rxeodaQtxWpb8egG
-         ITseqU+9vnHAUkpJyLb+WcA3Uz4JpdzqjCZZRGu7kU6W5fqs28xTijUMd2Pbs/If+WeN
-         4Fv4tGwhO4X2gMPcWaiN7JoK/TPFqUbHtTyPB+AiXNW8lJ3NnAUgGUt4c253d0nhiGr8
-         62GjFNdtwWmkSgdtyyfc+eDJ9XCRgAT6bjTbpT/uaFnggZqCwp+NeZSLxbiJ6/JWHU5P
-         LYOfmljeQjNNiu1mYKp3491b9MePYFcHi3haXclnpbgncYb35PzfnzxfuSCYTXzJPdp/
-         CUIQ==
+        bh=/1RSKToCjPJC5jzicUqwtAy2uwufMAcUfSP0hcJg1ls=;
+        b=FrtsCuYkMO3/vVF1vCFKQDbmk7LM9LyUA/Z6yUY3o9Bc7OMpg2XYQjRi4DcYQI9kek
+         ravSY5n+doRm7Q0hFejoYBSJR6vo4FqWfluxfwn7mKAVwsCqeXExppsKWYHhcT4M9cnO
+         2nde0xkKdwlXpXAm1YEU9FXZmRyNb1HkP+JZgUzqobNBeVZrYXaRvxXg6nxYiBwnzZYl
+         7JFpvn12j/ceVDs3P4bH9G8ByOx/pMH689XNvv2nJxHydgV/P3Ts5Zt0QvwUUnbDqKHr
+         kCzrjXhDOK686SaMQTb7r8Uag7YfrGAjWNslCoL6L0e7hPmiV4QL29Meg9mIEklgj4Um
+         Eh+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696919480; x=1697524280;
+        d=1e100.net; s=20230601; t=1696920966; x=1697525766;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IFFsvn1DouMyP8QgmuhXe30oXzdt0BFFDZz8hVnMg+w=;
-        b=jKMUm0ClCN353RKdHE7Nn6ZBQ7MD7KWlubV1I+5izOOspIp8fp73t3QBGdESsoVW5d
-         rdA79n78u9zZKCYUX1x122Agqvb4rA2XsKbaJxKSyjzvfD5nQQ3h5UMmFp8ti8ZYDuId
-         hObPLayW+0q1cKvuUWQSCcv5yLenQtVhKmD1/507/iLn8UGWjz8eFY1zrRBHA9ehar/a
-         cCMMY+VVBqR4Y9NdnPDhAa+M8yK112/q8DIluEEnbAb/dwg01VSQp7XCs4KLo4O63kLY
-         G4cAXMaF6x+ACYbaqHxZohC5Ae9/5dmxBHtKw8+w/+i3py3oXkZxk9VDgUkRTrQhoAz4
-         YPyg==
-X-Gm-Message-State: AOJu0YyYAvj/6bnwy7BuxIoAYdRLokWiooODUtonsKwdcCxp5BIxzYHl
-        Fxvr3ZOuOCfaTHXm6XZ1D4Smw6IyPeUuaDS316NNDA==
-X-Google-Smtp-Source: AGHT+IFb5ebXdCcfV50Lu1cRi6NBUhvPuIpP7u3O90cWFXYRDiY0J492C1Wpp0GuXwlNta6KUEwQzQFzl0+5JRvVVyM=
-X-Received: by 2002:a67:f64e:0:b0:452:db93:1ee3 with SMTP id
- u14-20020a67f64e000000b00452db931ee3mr12678518vso.30.1696919480242; Mon, 09
- Oct 2023 23:31:20 -0700 (PDT)
+        bh=/1RSKToCjPJC5jzicUqwtAy2uwufMAcUfSP0hcJg1ls=;
+        b=rhlIV/ZqcPHRM4k8vZ3v8dGjokmuQpq4jUIlSBRwcyEH8B2x6F1AyGO07OEA63FPf6
+         8tXofs9RNwd6rGUhCrXIZi2bVg1xpmLmlm7+ZQXxEOtVvnVdxCfGO4luuiCaS8dngzR3
+         eiddy+7N0MdOjBCFEdFW1Bie4TRMFZfPQOSq8RRsMZFDUmww9ltn33VG67edWfW4FcfV
+         FjbPfVSqCs6eMMnNklP2RLZ7oYVqc6pscZvwxAB1LOyPzHIbJU4X1APN9ZAoITvvc2H3
+         tNdKr5i2Qgk0lSAnLamugLjP+bgki4DypwmiWIpj44pTr4EE7PUnjyapw/mKXEHdn+qE
+         pS9A==
+X-Gm-Message-State: AOJu0YyVvvpVFNGW1F8eHB8KadvhRMwbPXob7KFTKnp9Auu/kayFzbh1
+        Kyjrp4AoeVFj7cMrK963uu6kWpN8vo7diJyO8l7ZIg==
+X-Google-Smtp-Source: AGHT+IEuZ7pjMNCUe89o4s8qlKRnxkzLKdzemokmfFPbEKUF6G5jS0h3OYF41D4TAsmkSkAuO8TWZ6pP80PiOFr4Vf8=
+X-Received: by 2002:a1f:ec43:0:b0:49d:fab:fa42 with SMTP id
+ k64-20020a1fec43000000b0049d0fabfa42mr13663173vkh.1.1696920965898; Mon, 09
+ Oct 2023 23:56:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231009190729.38675-1-brgl@bgdev.pl> <CA+kSVo-pkmque7Zig3a7iwRN=4OtHmi0dpyO5Zc9ttOabYd8XA@mail.gmail.com>
-In-Reply-To: <CA+kSVo-pkmque7Zig3a7iwRN=4OtHmi0dpyO5Zc9ttOabYd8XA@mail.gmail.com>
+References: <20231006-b4-bindings-old-version-fix-v1-0-a65f431afb97@linaro.org>
+ <CAMRc=MdD5SOmPM6JgagPbkbNJHn+kHqtzu_iGjQPm-K2kFCEfA@mail.gmail.com>
+ <CW3VO38FC7ML.380UJEH9HNQU8@ablu-work> <CAMRc=MfDXtDPmqKneL_XfXrJj-g7oBG=9UMZTqR3oZC0pRiQmw@mail.gmail.com>
+ <CW3Z0GR143R8.363IQKC787V0W@ablu-work> <CAMRc=McUJ+4gJNGJ=UfBJk980BQ3Swk=kE7rjrfoKJP_0MimGg@mail.gmail.com>
+ <29nnq.9lre8l3k31x@linaro.org> <CW40ER5HT93Q.83CW582AJP9C@ablu-work>
+In-Reply-To: <CW40ER5HT93Q.83CW582AJP9C@ablu-work>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 10 Oct 2023 08:31:09 +0200
-Message-ID: <CAMRc=Mdg2rasefCZAx+13pJh6boyKP6oWNBm6d1G_qn6VS=-gw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: python: replace PyModule_AddObjectRef()
- with PyModule_AddObjectRef()
-To:     Phil Howard <phil@gadgetoid.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Date:   Tue, 10 Oct 2023 08:55:54 +0200
+Message-ID: <CAMRc=MdZdwv2fmNBCGyeYBO0CaAONwtM3ROKNoyCv2EjvpFh9Q@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 0/2] bindings: rust: feature gate unreleased features
+To:     Erik Schilling <erik.schilling@linaro.org>
+Cc:     Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+        Linux-GPIO <linux-gpio@vger.kernel.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Erik Schilling <erik.schilling@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+        Kent Gibson <warthog618@gmail.com>,
+        Phil Howard <phil@gadgetoid.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 9, 2023 at 11:00=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wr=
-ote:
+On Mon, Oct 9, 2023 at 5:21=E2=80=AFPM Erik Schilling <erik.schilling@linar=
+o.org> wrote:
 >
-> On Mon, 9 Oct 2023 at 20:07, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > PyModule_AddObjectRef() was added in cpython v3.10 while libgpiod claim=
-s
-> > to depend on python v3.9. Replace it with an older variant that steals =
-the
-> > reference to the added object on success.
+> On Mon Oct 9, 2023 at 4:39 PM CEST, Manos Pitsidianakis wrote:
+> > On Mon, 09 Oct 2023 17:32, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > >I'm Cc'ing Phil Howard who's the developer behind the Python bindings
+> > >work.
 >
-> Ah, fixing this makes much more sense than bumping the dependent
-> version, thank you, I will update my patch.
+> Hi!
+>
+> > >
+> > >In Phil's WiP branch[1] that should soon be posted to this list the
+> > >autotools flow is entirely omitted and building of the libgpiod C
+> > >sources happens in setup.py directly. Can cargo compile C sources like
+> > >that?
+> >
+> > The rust compiler team maintains a library for that:
+> >
+> > https://crates.io/crates/cc
+> >
+> > You can find examples of it in use in many popular rust crates, like
+> > when building the openssl crate https://docs.rs/openssl/latest/openssl/
+> > with the `vendored` feature, it uses the following build-time dependenc=
+y
+> > to build the static librarie:
+> >
+> > https://github.com/alexcrichton/openssl-src-rs/tree/main
+> >
+> > There is no general need to put the vendoring code in a build-time
+> > dependency by the way, it can be done in in the bindings crate's
+> > build.rs as well.
+>
+> Right. One can use cc, there also seems to be a somewhat popular crate
+> that allows calling autotools: https://crates.io/crates/autotools.
+>
+> That said. I am not sure if I like listing all the sources and defining
+> the build process manually again. It feels like we duplicate what the
+> existing build system already does for us and no longer have a single
+> source of truth...
+>
+> Taking a look at the openssl build code [1] I also see all the target
+> and environment specific hacks that I feared about... I guess it won't
+> be as bad for libgpiod, but I guess it might be a painful way to figure
+> out whether that is true.
+>
+> I have seen similar things happening when cmake projects attempted to
+> vendor in external dependencies and are not a huge fan of marrying to
+> different worlds together like this.
+>
+> That said. I am completely supportive to the idea of exploring static
+> linking for the Rust bindings. I am just sceptical that doing that by
+> default will make things more simple for consumers on the long run.
+>
+> [1] https://github.com/alexcrichton/openssl-src-rs/blob/main/src/lib.rs
+>
+> >
+> > >
+> > >I'm not sure how that would work honestly. The stable branches in
+> > >libgpiod are per libgpiod minor release. This doesn't map onto rust
+> > >releases anymore with decoupled versioning. Maybe rust should get its
+> > >own tags in the repo (on the master branch for major and minor
+> > >releases) and its own stable branches?
+> >
+> > In cases Rust crates want to support multiple releases, the usual route
+> > is to expose different bindings per release exposed via feature flags.
+> >
+> > I can't say if that makes sense for libgpiod though, because I'm not
+> > familiar that much.
+>
+> Thats true for attempting to support different versions of the C lib
+> (and it is what I suggest in this series). However, the recent release
+> became necessary to a bug in the Rust bindings, not in the C lib. So a
+> stable branch could still make sense. But hopefully, we would only need
+> it increasingly rarely in the future.
+>
+> Overall I still think what I suggest in this patch + maybe exploring
+> optional static linking is the simplest path. I mostly suggested this as
+> an alternative since I felt resistance to my suggestion :)
+>
+> - Erik
 >
 
-And of course the commit message was supposed to read: "bindings:
-python: replace PyModule_AddObjectRef() with PyModule_AddObject()".
-
-I'll fix it when applying.
+Fair enough, I applied patch 1/2.
 
 Bart
-
-> >
-> > Reported-by: Phil Howard <phil@gadgetoid.com>
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  bindings/python/gpiod/ext/module.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/bindings/python/gpiod/ext/module.c b/bindings/python/gpiod=
-/ext/module.c
-> > index 25c252a..b456190 100644
-> > --- a/bindings/python/gpiod/ext/module.c
-> > +++ b/bindings/python/gpiod/ext/module.c
-> > @@ -178,9 +178,9 @@ PyMODINIT_FUNC PyInit__ext(void)
-> >                 return NULL;
-> >         }
-> >
-> > -       ret =3D PyModule_AddObjectRef(module, "__all__", all);
-> > -       Py_DECREF(all);
-> > +       ret =3D PyModule_AddObject(module, "__all__", all);
-> >         if (ret) {
-> > +               Py_DECREF(all);
-> >                 Py_DECREF(module);
-> >                 return NULL;
-> >         }
-> > --
-> > 2.39.2
-> >
