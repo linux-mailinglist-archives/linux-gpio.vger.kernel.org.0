@@ -2,64 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1BE37BFE11
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 15:41:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A1BF7BFE23
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 15:44:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232717AbjJJNlv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 09:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37460 "EHLO
+        id S232785AbjJJNmx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 09:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232855AbjJJNky (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 09:40:54 -0400
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 310A710C2
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 06:39:41 -0700 (PDT)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-5a2536adaf3so69202627b3.2
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 06:39:41 -0700 (PDT)
+        with ESMTP id S232425AbjJJNmO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 09:42:14 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05BA2198E
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 06:40:11 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-d9a50ac5eabso1032569276.1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 06:40:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696945180; x=1697549980; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696945210; x=1697550010; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
         bh=NHv90yeM59s0sxqLXofNmRkQi512BP/YIHCc5n2XRV8=;
-        b=Rb1RgGDQAYR3GfGAUgAovrKgkXvgkCeBS1fAjNWrmTzUD008LnCuAFfvX+s9kuBJm4
-         7O/VtlC7W9+MKbu9CsksumqAfYZDSha6ouzq51v1ib5Jf3g+P+LtA36YDr+DihIOQyNp
-         hGQuaPM71ImbTUOZHis8HaCcQWHm5g2WERrvYwH0nqvK20FNUjZIMxAQ0iqEiS/rDnsK
-         wxfCzdQcloAacOc0tHG2bfBd+NqYDV0awsbiMaWvSHhCXG25mznE7Iaka5dk7mz3UIYR
-         Ubnv9gwrVlSCPuBjMrgy9mlpTzGxt7Efn8Tum2zS7zP/12mZjK+ps4X9ixUiH1BJm7wi
-         Pzow==
+        b=iU+P3jUeRQTOL6K8ZiDZpR+KxqDJiJG3z20HoibiZzHaTMmxvrL4wKGecYVe1LCh8s
+         U5UnCHXJZu5h8IRri2QyQs8bCoBwD3bt4pNPr6Y4E3YX8VHlo+WpHKBXDgzwSyjth2r+
+         /3foJe+ReZ9QwQuASSc/t1aSqp3yvhnkh9l78EwZ1UDJPuPev0p/7ZpZ4hLG6vOiM3Pp
+         yibqs2Z7q19YZgOWPkrNyTz8ECEqw7nuac3AMWIfx8tgN2trz7n2QxvVtNjraHGqfG1w
+         ISX6q3swN+1eYbSkLBp62v2Ka0IPhnmzxDFsR9yoSK9X+gGjUiTidQBBa8IBQEPk6jT8
+         6zcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696945180; x=1697549980;
+        d=1e100.net; s=20230601; t=1696945210; x=1697550010;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
         bh=NHv90yeM59s0sxqLXofNmRkQi512BP/YIHCc5n2XRV8=;
-        b=g97XrjdgKwrjYLOhjrXB4dWHdPUfGHsooJAmLmKqfQrVHCbt1njI7HnD1K9IzUgpwA
-         u6aRGrmpyapseo6IIy2XEo4mRyX6hGLwdWHOtSYSO8KhqdTHwGxbjVIKnBQiPpTS6h78
-         Nt4z6aES7Tfl6gYhW2WCg8S0sD6IFmvBUQSknHILMaUB6dgJS8GNp3HXKrny5NhGs5mM
-         RNiIoe4PaZIZUX39JCb2MEucfhb8jIftdE+HT4FjfYwnFypgTyVjCfLcj8QKjqK8b6pz
-         zcHsil0F7WB20wnQadSFJD+L4PmSeexdt5CDDO/EAaGpu+x2GT3icpNanw50ArRFStJw
-         zKmg==
-X-Gm-Message-State: AOJu0Yybjgq4yhDef8UWNe7wd8mCVn2Nr871CY7kge63hWRXmDHnX0Wv
-        23HvL15q+y/nf7eoK75rYQHarm4+HK14c4PxuDU8Ew==
-X-Google-Smtp-Source: AGHT+IEtHtNGXfV4b/OIFYxT0p0m30lcqUfsOnETKBIs86dOxB4vQyGIRyKjEzonKsDLSTmR35U0Lrn6THw/bUsi1QM=
-X-Received: by 2002:a81:ae13:0:b0:5a7:b036:360c with SMTP id
- m19-20020a81ae13000000b005a7b036360cmr3010246ywh.23.1696945180141; Tue, 10
- Oct 2023 06:39:40 -0700 (PDT)
+        b=YlrpFmU4zgsnu7Qt5sb7p/oHKlWbEzBAIZDlvdZBL7JF7bVHjqopLvalYboJZWo2WY
+         3O1x+/sbD0OQrq/F7TL26E/DOWVwarBUbZVlYf/BZEHIqaB8gLPHbrx+hqF+xjJYl1r6
+         +sGJIF1PyyZRNB7/rVdCrAw0QzBAd97BSMQE9pVDpYp8DMJyOZaAjn9MYCYPtK6/5fP1
+         0mw8tutatDWUK4zLBZsIMV/d6/R9i8Gw1qRgrz5/3b2q829cqLPDFUzSF4o9xye8TJML
+         ITPWYXnDWHMds2uckx+MIdAYes0dXdYy+KNHrNow60dWTbgDpVITBG9U9WrE598N8a25
+         ULfA==
+X-Gm-Message-State: AOJu0YxCB3B1Uom00W4Y4vee/L0teStP6cSRATzBYVQVSnZUryeQW8EY
+        oaIvek7wfWuL4tNArEQgdNUk8bhG8xwzJtqmREdE7IXGZGCzG2d+k5g=
+X-Google-Smtp-Source: AGHT+IERlhK31X3rTtl/eFbhmoKroyjEbbBwMmyA9pS3eknMyDbLgAnhuFLtBvx1RksawYaE6uLXmvuEw9HUPksW4Bk=
+X-Received: by 2002:a05:6902:1105:b0:d81:5436:9893 with SMTP id
+ o5-20020a056902110500b00d8154369893mr19893265ybu.21.1696945210160; Tue, 10
+ Oct 2023 06:40:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231009083856.222030-1-u.kleine-koenig@pengutronix.de> <20231009083856.222030-10-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20231009083856.222030-10-u.kleine-koenig@pengutronix.de>
+References: <20231009083856.222030-1-u.kleine-koenig@pengutronix.de> <20231009083856.222030-11-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20231009083856.222030-11-u.kleine-koenig@pengutronix.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Oct 2023 15:39:29 +0200
-Message-ID: <CACRpkdbfHpGGf8f3Bngj3Ypc93bP2Gp76SB_+1HPjsXyq4wTHQ@mail.gmail.com>
-Subject: Re: [PATCH 09/20] pinctrl: artpec6: Convert to platform remove
+Date:   Tue, 10 Oct 2023 15:39:58 +0200
+Message-ID: <CACRpkdagxBPxa+BmmBEn_ngNr5u0cVGj-Pda7TMLqv018o5uew@mail.gmail.com>
+Subject: Re: [PATCH 10/20] pinctrl: as3722: Convert to platform remove
  callback returning void
 To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     Jesper Nilsson <jesper.nilsson@axis.com>,
-        Lars Persson <lars.persson@axis.com>,
-        linux-arm-kernel@axis.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
