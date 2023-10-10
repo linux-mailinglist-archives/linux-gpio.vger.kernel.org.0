@@ -2,105 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC3B07C02A9
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 19:28:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B62547C02D6
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 19:40:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234041AbjJJR14 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 13:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42902 "EHLO
+        id S233604AbjJJRkE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 13:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234134AbjJJR1s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 13:27:48 -0400
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 109EAD8;
-        Tue, 10 Oct 2023 10:27:44 -0700 (PDT)
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-        by mx.skole.hr (mx.skole.hr) with ESMTP id 5AB7B864B4;
-        Tue, 10 Oct 2023 19:27:43 +0200 (CEST)
-From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date:   Tue, 10 Oct 2023 19:27:26 +0200
-Subject: [PATCH v6 9/9] MAINTAINERS: add myself as Marvell PXA1908
- maintainer
+        with ESMTP id S233970AbjJJRkC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 13:40:02 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61093BA
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 10:39:57 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-5056ca2b6d1so86080e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 10:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696959595; x=1697564395; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r4xZpqEwWtfUV1JgIse7nmPsmTUQIv/zlM1eTbPf9Zc=;
+        b=D0BZI28AAuxlKIwt2Y0k5v38edjDTKmuGVqY4uy/m17vCEsvmGEbcvOwDu87+7Zb9V
+         0D6uCHCzHrBQJrLK/5KTiArgrqq+0ibHB9va84XZdmlUDh9QtD5GZM4bFuHEeVU9MRMU
+         9W8ZS1kPKpa5LoCDSDqj99t1Rb/Oxi4oGfL5BneZuZ+Qtoh1p8Wo7FXn/BNfu4j7H6U1
+         dCFQrt9mb7tM9LIVgnURnMzgEAwYMNJvgBPZkR7CP6Ym7oBY4JopAmdrGIsJ2rrCq3fz
+         qI+hyUqFE8OS+ZmLzq51i92wjxsPjSMs0LSIA8Ahuer7gRileC0Ia2p9cg2TsMZmWUY3
+         34Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696959595; x=1697564395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r4xZpqEwWtfUV1JgIse7nmPsmTUQIv/zlM1eTbPf9Zc=;
+        b=wsGkDjg3PqTAvn+SsZ4ELBh99haIBkJ3Drj0oiCRnjEWBDDTaGMY/O0xmKMhOA5wHZ
+         diPTKBc+THqbWezpmaJyTKnxuBT7oqYamOd3aorhJwjK/g3S6xm2jdVEzZuiNqBdzZOy
+         2bfMtC0P79kb2+8M+9IIuv906GXk8syWCv0sDwtavoY875t1vt/A9Kpfgk1pDhJ+dF0r
+         DiRB467hvY/V1MvZ8QxOWzoqNg2MvmVKcz48HtkLDGkvDeKi7a5G/eq6TkldB9vH50Qt
+         ZtiI7poM45dgDJ7Iv45MaKlGD+o0+5r1tMkO3mrXStW5FdCOqoUrkbYViFjpSPkGNnPC
+         G/VQ==
+X-Gm-Message-State: AOJu0Yw8xyi2lyAraqc8zTfpB9PQQ5ikwZJgurcyzNpeD2TRJiMxztWm
+        bZvtLS8od8wv249a7SxVzwjvKOOQlZi2WKhmbBJXeQ==
+X-Google-Smtp-Source: AGHT+IGSK51KyaDcnsl41rah8ft25iKVz+wl1YCpS4m2RF+QtVWHG/EMQEczDjGuYeiEzvYsApMjlsD9ch7wMtde8XA=
+X-Received: by 2002:a05:6512:3183:b0:503:2879:567 with SMTP id
+ i3-20020a056512318300b0050328790567mr13675359lfe.28.1696959595193; Tue, 10
+ Oct 2023 10:39:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20231010-pxa1908-lkml-v6-9-b2fe09240cf8@skole.hr>
-References: <20231010-pxa1908-lkml-v6-0-b2fe09240cf8@skole.hr>
-In-Reply-To: <20231010-pxa1908-lkml-v6-0-b2fe09240cf8@skole.hr>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+References: <20231009-pxa-gpio-v7-0-c8f5f403e856@skole.hr> <20231009-pxa-gpio-v7-2-c8f5f403e856@skole.hr>
+ <CAMRc=Mc7=E9bMQgiUM8qqk7UD4+exhJZqw2DucTcsnqHcttR3Q@mail.gmail.com> <12313687.O9o76ZdvQC@radijator>
+In-Reply-To: <12313687.O9o76ZdvQC@radijator>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 10 Oct 2023 19:39:43 +0200
+Message-ID: <CAMRc=MdWYNmBkJ6Nw6V_FzJKQw--g02tjLSztMYW_atNhisVpw@mail.gmail.com>
+Subject: Re: [PATCH RFT v7 2/6] ARM: pxa: Convert Spitz LEDs to GPIO descriptors
+To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=908;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=DFkFmWpL42a9uWB0nGtydXY8FHW5qBEo4bLkmrXA9us=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlJYl5WjZg8QhwIAcaDKEP/msa5uKIqJUNjcPss
- i4vg/GKSJOJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZSWJeQAKCRCaEZ6wQi2W
- 4VUKEACSbAQnaBn9klVqvXdvLM+kNm6pUAIIE/rRn5J4k7jpcW+wOLHoGTNjnXkgq7aW7L720yF
- aHCrch53X5gfWk47u8QIU2r1SN+3L+Mq6Z6zG75CevWDxRlMu6nzVQyVEE57TsihLBvzxvury8c
- lX28gLPUymfkl8u2fqJ9WF6/S9gUUYj5UuX3Pr/c37OEPC4TGJAI1PCc2gWsa/T0UVIim82vSEm
- uwiLFD2dOXZdwK8xyscziKphAdYf4hl+jPXmg24bZIqpe507PSUW/XFOk9tC2k/5ypJvIP8mcT8
- VtjiVVfI+RpAWw3VWJ51j1uy1S61PoreeG/qcxSR8DrYEZYpo+XOzGXEfw7beWf9+QJbR0zvexN
- S1l5kYonPYq1AEg+DPb84mw6ceNF577y981dXr9B9MXEYrrUg4aQqGjDrE1FdufmDHI4SllfrEt
- ZU8ZnCjzy84T+v+LPPuDHHfImEorL49fJagk7jTom2R/86PBlUT05wf0XGftC/o84gcJ9V/OgmF
- 9ZneerNcwzowvRd1E58Fc8NI0TXaDJfoKAW8jzYc876A0vDRkvlhykO6hrBujwqMgWbtGMSJFFE
- v1wGrv0sMcRmJdldPv1Rdv0duqPdLElUv1y9syDwZv25iIaIangQgQhKseh1qVWQdGGEIJt83+a
- CsxeEqUHFfyEpOw==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        Andy Shevchenko <andy@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add myself as the maintainer for Marvell PXA1908 SoC support.
+On Tue, Oct 10, 2023 at 6:33=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
+@skole.hr> wrote:
+>
+> On Tuesday, October 10, 2023 1:12:05 PM CEST Bartosz Golaszewski wrote:
+> > Gah! I should have noticed this earlier but this is a perfect
+> > candidate for using hogs. Can you use gpiod_add_hogs() from
+> > linux/gpio/machine.h instead? That would save you having the lookup
+> > and the static leds descriptor array.
+>
+> From what I can tell, the hogs keep a certain pin at a certain state as l=
+ong
+> as the machine is powered on. Is this really what we want to do with LEDs=
+ or
+> am I missing something?
+>
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+It doesn't seem like anyone is using these GPIOs once they're
+requested? Wouldn't the above definitios be analogous to:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6c4cce45a09d..38c99e687976 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2312,6 +2312,15 @@ F:	drivers/irqchip/irq-mvebu-*
- F:	drivers/pinctrl/mvebu/
- F:	drivers/rtc/rtc-armada38x.c
- 
-+ARM/Marvell PXA1908 SOC support
-+M:	Duje Mihanović <duje.mihanovic@skole.hr>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+T:	git https://gitlab.com/LegoLivesMatter/linux
-+F:	arch/arm64/boot/dts/marvell/pxa1908*
-+F:	drivers/clk/mmp/clk-of-pxa1908.c
-+F:	include/dt-bindings/clock/marvell,pxa1908.h
-+
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
- M:	Sean Wang <sean.wang@mediatek.com>
+GPIO_HOG("pxa-gpio", SPITZ_GPIO_LED_ORANGE, NULL, GPIO_ACTIVE_HIGH, GPIOD_A=
+SIS)
+GPIO_HOG("pxa-gpio", SPITZ_GPIO_LED_GREEN, NULL, GPIO_ACTIVE_HIGH, GPIOD_AS=
+IS)
 
--- 
-2.42.0
+?
 
-
+Bart
