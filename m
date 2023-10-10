@@ -2,71 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8262A7BFD9D
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 15:36:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B2FA7BFD9F
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 15:36:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232107AbjJJNf7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 09:35:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
+        id S232212AbjJJNgg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 09:36:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232279AbjJJNf6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 09:35:58 -0400
+        with ESMTP id S232072AbjJJNgf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 09:36:35 -0400
 Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91404CA
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 06:35:53 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5a7ba0828efso11991767b3.3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 06:35:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4F6A7
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 06:36:34 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-59f82ad1e09so70955167b3.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 06:36:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696944953; x=1697549753; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696944994; x=1697549794; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lwaODl/6SngYIesq4fd26Zf7cKEGOc6/vuChneskjdc=;
-        b=TK7X8dOdEsESKx8042hUKWzOw0x5zA3eiw59WcPmrCoaEDsT7MmpVGSK2kQ7B6+/jF
-         Vw/bLol6Dtv0H5dBDfOCOvtcuvCgwid6pokEFJQWFIZngrUQ9Sd1FzCSBmL74ocmh17P
-         F0utXAIHCZhi5mR1frIktCqs50HhHpYS5hiYYfBAugU85FSRGcvdUGF32XtBjw0KTWhC
-         eGF5uN+3E7BsTf++aDvo5kywIm74fIVGk1M+7yYMphNaLTgvCnPmzvAf0nEOQL85lvLL
-         cooEvDiLgGHVfyt3CJQv1CZHcfMTxSeeq+uhEgVhztDiBtz7pr8opCuXv5fyL/CpwMQ6
-         jr0g==
+        bh=6wXiqvYDT0weE8ui/Sbgni0MhTf5BD51PKqeFfPGPxw=;
+        b=n6W295mv4kAxT9n/ho2+UbufdEmNyndozwP6FgRjEa8aH0Mjk/ceZTEENT/j9bmCUJ
+         E8bJPfBqw3kNOvwfw2CyxoQleamYkajrCK4DTw48dYp2mxLdwokgvjmcjLmubwaCFiRk
+         nYMwFSdP0xkXnHVvzj+1585P7bkPbcw7kBbupIA7HmUa99FWZF8VQIrOcWJZtFdGFiH5
+         R7DGskUmFA9ERrkGf6HbrtAz5Z/oMTct98b8HA1v19P26AjCaIsrf/QMsAeQVy6nMPkj
+         sL1J+dzSYsTybPwMzx+HKmvklAxDkoogQ2LwnkJ4P4WhdKCf8R5BbiF2guApA1upY+jr
+         S4MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696944953; x=1697549753;
+        d=1e100.net; s=20230601; t=1696944994; x=1697549794;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lwaODl/6SngYIesq4fd26Zf7cKEGOc6/vuChneskjdc=;
-        b=A2YERexwKCFigluAbe327JnL5TrZj+oMCjj4hqh5XB1+jul9FC5PbL7pyr53BV4UA0
-         ToY+RizQlZrq3ZBl5eipvnqMEdAkhJuJkYnyjQhPkVGZllQgETDhlC5EIWl+UQar31Bl
-         qwZCoYTo4YM9JpcJLbl/RT5vcGAUGCubafjbmMBf/RD0jTLSHqM5DACP3d8ndcNYMb8b
-         sFDci6Dh5sLpf1wmNkhPX0Aro4YKV/+8McoYaMjgyVFib3XoKjS6i78JNrWKiPyQbgTE
-         /zTYMC7jX4b0ujqXBVSagiFF2lsJAJJ29tc32WUqcslhXHvS9lI72viKNig9YGjF3rUW
-         yc3w==
-X-Gm-Message-State: AOJu0Ywko/ImQhWCoKbmPmC426uBX7wixcW8Yoq8cVW65QhbZQChw3no
-        yNfyXaTRMeZgoe9O3Ug5UXnN3JNk0OBXPAlfW1npfQ==
-X-Google-Smtp-Source: AGHT+IGG3gi8s+Fcz5VP7yTY/DRWNo6Zujz9HnOJaU190QxNyFwVrfyV42NA8H4la4b2WLErva3zQYndcUdDa01huh4=
-X-Received: by 2002:a81:5cd5:0:b0:595:2094:f87 with SMTP id
- q204-20020a815cd5000000b0059520940f87mr19266136ywb.47.1696944952747; Tue, 10
- Oct 2023 06:35:52 -0700 (PDT)
+        bh=6wXiqvYDT0weE8ui/Sbgni0MhTf5BD51PKqeFfPGPxw=;
+        b=JCGNImmhDKIJRAnXrw0ScXA3VASMkN4rBAoqrjOjOxIgU0G88BmFkVgmj9fjZBaBa2
+         xoB6kw36ZWxqEiY7sga71rjdCXHXa5aIQhPJGItdE7oHjumYN/Qt60UUe/7qiTN74ifX
+         Yz8OBQzvt2KHxg8AAG+PBobKAx/ZTgQDcmu3ljN1jgtsE8Iftazln5H4BffNTOFch5E8
+         Cn8ukGzMnkE0XV0LAnZGF54GdL6baCmLMdCCZc0V+AqkqIDa85RCZdlcmD+wH9s6ZcSp
+         T+Ab7TsApBaJdRVSbS5juLM17svBWTcGGVPkbTzSeUiN+miK4nVwnACZ3f+UbrSXfvRC
+         /WIw==
+X-Gm-Message-State: AOJu0YyTIi+HgRN2rJ8XxoKNmhnYPW/05ooajiI0FPzOnJFG7YkGH04B
+        raosRr4F58P1yKqaZAJaP0NJc4gbmKH7I4ENTYdN+Q==
+X-Google-Smtp-Source: AGHT+IHsWswayOAuTJAjdAMTyZ+dNvJUEXkXvz/1XH+y4Ttw4D9hAMEjlNkq1LxFqqsRR7ICw5yWWKwX0zI5mhbxKh8=
+X-Received: by 2002:a0d:cc90:0:b0:5a7:d016:bffa with SMTP id
+ o138-20020a0dcc90000000b005a7d016bffamr634809ywd.8.1696944993840; Tue, 10 Oct
+ 2023 06:36:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231009083856.222030-1-u.kleine-koenig@pengutronix.de> <20231009083856.222030-2-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20231009083856.222030-2-u.kleine-koenig@pengutronix.de>
+References: <20231009083856.222030-1-u.kleine-koenig@pengutronix.de> <20231009083856.222030-3-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20231009083856.222030-3-u.kleine-koenig@pengutronix.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Oct 2023 15:35:41 +0200
-Message-ID: <CACRpkdYoqxP89nC=e8Yrt+Jxs1je4jnBBGtaUQfkKpjcR5vQ6Q@mail.gmail.com>
-Subject: Re: [PATCH 01/20] pinctrl: stmfx: Improve error message in
- .remove()'s error path
+Date:   Tue, 10 Oct 2023 15:36:23 +0200
+Message-ID: <CACRpkdYq0_kYJUyb90nFmW9SRrphQggepLP-OXdHeEWN4b9xcw@mail.gmail.com>
+Subject: Re: [PATCH 02/20] pinctrl: single: Drop if block with always false condition
 To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -77,15 +75,11 @@ On Mon, Oct 9, 2023 at 11:22=E2=80=AFAM Uwe Kleine-K=C3=B6nig
 <u.kleine-koenig@pengutronix.de> wrote:
 
 
-> The driver core has no handling for errors returned by the .remove()
-> callback. The only action on error is a dev_warn() with generic error
-> message that the returned value is returned.
+> pcs_remove() is only called after pcs_probe() completed successfully. In
+> this case platform_set_drvdata() was called with a non-NULL argument and
+> so platform_get_drvdata() won't return NULL.
 >
-> Replace it by a more specific and useful message. Then returning zero is
-> the right thing to do, the only effect is to suppress the core's
-> warning.
->
-> This prepares the driver for the conversion to .remove_new().
+> Simplify by removing the if block with the always false condition.
 >
 > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
