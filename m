@@ -2,33 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B0A47BF503
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 09:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CB647BF5E0
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 10:30:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442613AbjJJH5n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 03:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
+        id S1442836AbjJJIaQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 04:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442596AbjJJH5n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 03:57:43 -0400
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBFE791;
-        Tue, 10 Oct 2023 00:57:40 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D7D45C0017;
-        Tue, 10 Oct 2023 07:57:34 +0000 (UTC)
+        with ESMTP id S1442845AbjJJIaP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 04:30:15 -0400
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 804CFB7;
+        Tue, 10 Oct 2023 01:30:03 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 182D9E0008;
+        Tue, 10 Oct 2023 08:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1696924659;
+        t=1696926600;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=8HGCDW6dA/uAJ0GZAXHKMPSuwZNEP4AsO/ZK/lFHFUk=;
-        b=UAlqB76MFympUYcFakSns2mIOgF13pHihMAEYgL1b92u9tsMq8XEVIkpDSc2USgjXn29Dj
-        teMJY1lY51yixmRurzbAu6X/It5Prspi6Id1Wa32QHK/EHhiboyV1E/GwksW+XgJBr/BD+
-        gMzW3HEboeZULdc0q/po4tOFO145hK5LVo9/hA9YMl3NC5d4IgxP0MpIywwHIVhWpcYl7C
-        742U/PmD0Bnm2nlDzGfyngXvb5P5pZawz1yZlpNRIWYKL94NO72XcNjZfdd26znmNKgahB
-        ft3/z9/2lF6GWH7GXWiTQEQSVY54kM8V13b7SYnq1pYaTJi9zxGcx8zm4m1HJA==
-Date:   Tue, 10 Oct 2023 09:57:33 +0200
+        bh=NaOw8PSc0VULjmhxAa6nnKNT5QXhrjoUDdxFuVyTpCM=;
+        b=d2/GYvHBSkcMRXi9pmcOlLcCOzYlqnrIh22gZ99/gFbL/M7ys56o4fhkMnDPId8GrsjWCC
+        5ouyZmnYSGtztbw5b3KORr9N47KIDYuaBQUiGc3Xf/ZDdUH8+/jT/SFGq05ljDkT54hN13
+        hx19s0wFiBqyB6uDlurPSlGYgMd3j25Og2nZrBv+EZ8JoEtmpYOsJTJFZCGD6qgRxTFCDK
+        FZ/Gn35OaUtNi/MGYMXczmwjExd6qASdYRlrPa0Xtf0BY5UrQHKeqALrbgvp/3zYz4JUyV
+        QEMOADOF32CCiQH10GW8t3f+hFHXxsyHOaUNrGK7QRLSZ6PLjrkZyGoU9RNvDQ==
+Date:   Tue, 10 Oct 2023 10:29:45 +0200
 From:   Herve Codina <herve.codina@bootlin.com>
 To:     Jakub Kicinski <kuba@kernel.org>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -55,12 +55,13 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Simon Horman <horms@kernel.org>,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 24/30] net: wan: Add framer framework support
-Message-ID: <20231010095733.6899abbb@bootlin.com>
-In-Reply-To: <20231006150810.09e2c1a9@kernel.org>
+Subject: Re: [PATCH v7 26/30] net: wan: framer: Add support for the Lantiq
+ PEF2256 framer
+Message-ID: <20231010102945.39c27b1d@bootlin.com>
+In-Reply-To: <20231006150252.6d45be95@kernel.org>
 References: <20230928070652.330429-1-herve.codina@bootlin.com>
-        <20230928070652.330429-25-herve.codina@bootlin.com>
-        <20231006150810.09e2c1a9@kernel.org>
+        <20230928070652.330429-27-herve.codina@bootlin.com>
+        <20231006150252.6d45be95@kernel.org>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
@@ -77,67 +78,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jakub
+Hi Jakub,
 
-On Fri, 6 Oct 2023 15:08:10 -0700
+On Fri, 6 Oct 2023 15:02:52 -0700
 Jakub Kicinski <kuba@kernel.org> wrote:
 
-> On Thu, 28 Sep 2023 09:06:42 +0200 Herve Codina wrote:
-> > +menu "Framer Subsystem"
-> > +
-> > +config GENERIC_FRAMER
-> > +	bool "Framer Core"
-> > +	help
-> > +	  Generic Framer support.
-> > +	  A framer is a component in charge of an E1/T1 line interface.
-> > +	  Connected usually to a TDM bus, it converts TDM frames to/from E1/T1
-> > +	  frames. It also provides information related to the E1/T1 line.
-> > +	  Used with HDLC, the network can be reached through the E1/T1 line.
-> > +
-> > +	  This framework is designed to provide a generic interface for framer
-> > +	  devices present in the kernel. This layer will have the generic
-> > +	  API by which framer drivers can create framer using the framer
-> > +	  framework and framer users can obtain reference to the framer.
-> > +	  All the users of this framework should select this config.  
+> On Thu, 28 Sep 2023 09:06:44 +0200 Herve Codina wrote:
+> > +	for (i = 0; i < count; i++) {
+> > +		(audio_devs + i)->name = "framer-codec";
+> > +		(audio_devs + i)->of_compatible = compatible;
+> > +		(audio_devs + i)->id = i;  
 > 
-> maybe make the menu a menuconfig with info about framers but hide 
-> the GENERIC_FRAMER symbol? The driver 'select' it anyway, what's
-> the point of prompting the user..
+> Why not array notation?
 
-Yes, I will change in the next iteration.
+Will be change in the next iteration.
 
 > 
-> > +	if (WARN_ON(!dev))
-> > +		return ERR_PTR(-EINVAL);  
-> 
-> no defensive programming, let the kernel crash
-
-Will be changed.
-
-> 
-> > +	ret = framer_pm_runtime_get_sync(framer);
-> > +	if (ret < 0 && ret != -EOPNOTSUPP)
-> > +		goto err_pm_sync;
-> > +
-> > +	ret = 0; /* Override possible ret == -EOPNOTSUPP */  
-> 
-> This looks pointless given that ret is either overwritten or not used
-> later on
-
-Indeed. Will be removed in the next iteration.
-
-> 
-> > +	mutex_lock(&framer->mutex);
-> > +	if (framer->power_count == 0 && framer->ops->power_on) {
-> > +		ret = framer->ops->power_on(framer);
-> > +		if (ret < 0) {
-> > +			dev_err(&framer->dev, "framer poweron failed --> %d\n", ret);
-> > +			goto err_pwr_on;
-> > +		}
 > > +	}
-> > +	++framer->power_count;
-> > +	mutex_unlock(&framer->mutex);
-> > +	return 0;  
+> > +
+> > +	ret = mfd_add_devices(pef2256->dev, 0, audio_devs, count, NULL, 0, NULL);  
+> 
+> Should Lee be CCed for the MFD part?
+
+Will be added to the CC list.
 
 Best regards,
 Hervé
