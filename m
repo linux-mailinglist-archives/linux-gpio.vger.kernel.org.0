@@ -2,103 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54DC47C0038
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 17:18:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F68A7C0071
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 17:35:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232077AbjJJPSO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 11:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53364 "EHLO
+        id S233385AbjJJPfW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 11:35:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231578AbjJJPSN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 11:18:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F428AC;
-        Tue, 10 Oct 2023 08:18:11 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="363771718"
-X-IronPort-AV: E=Sophos;i="6.03,213,1694761200"; 
-   d="scan'208";a="363771718"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 08:18:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="823812908"
-X-IronPort-AV: E=Sophos;i="6.03,213,1694761200"; 
-   d="scan'208";a="823812908"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 08:18:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
-        (envelope-from <andy@kernel.org>)
-        id 1qqEUn-00000004NJZ-3tXk;
-        Tue, 10 Oct 2023 18:18:05 +0300
-Date:   Tue, 10 Oct 2023 18:18:05 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Dipen Patel <dipenp@nvidia.com>, linus.walleij@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] gpio: tegra186: Set fwnode of the GPIO chip
-Message-ID: <ZSVrLZyB278Q0A7I@smile.fi.intel.com>
-References: <20231009173858.723686-1-dipenp@nvidia.com>
- <ZSVN73ffDkGBzmmI@smile.fi.intel.com>
- <ZSVWKSVNsBqDcOFS@smile.fi.intel.com>
- <ZSVcFo2sDVbMCW3Z@smile.fi.intel.com>
- <ZSVewh61i8JzwxQQ@smile.fi.intel.com>
- <CAMRc=MdBGf7g1xcGid+AuWaLhm3AJEAvFjK4PFOhs2dUF35QdQ@mail.gmail.com>
+        with ESMTP id S230448AbjJJPfW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 11:35:22 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A3DAC;
+        Tue, 10 Oct 2023 08:35:17 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6c64c2c0f97so3328897a34.3;
+        Tue, 10 Oct 2023 08:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696952116; x=1697556916; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ndVd81mClEz/kosBkdySEFgzYfmv4B+oObJpOfkcufc=;
+        b=IeT/u7G4psMEi4MzEe/Ce+isjkPADg1alwkNDnLxPL0XmooXdHvhlLTZID595k8MsK
+         m+d8CjqC7kR2aXfiJE4GKFlip7kHg7YGr2b996jrG3+f0OBgS2v2HplWbPKcCGEcMoMo
+         6g+O5ab8iGS5lJH1JWZndyRp2B7huYs57Lpcosoe7l8jDeyJRir9twCSG813JDmoHVLK
+         /E26/2fa1bJyND9qLIEs9PP4nwgeGuzlTar5BcpFd1pitr6FlYhqNWUJNqtOH/jwYsz7
+         evnObzHdEJRstaMqAuKtBqqxHShF8sxVRV+V3zY6DboXkgiJOvjwZRf8V/+AN8aBIBXm
+         JacQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696952116; x=1697556916;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ndVd81mClEz/kosBkdySEFgzYfmv4B+oObJpOfkcufc=;
+        b=GI4CpdHvr4DuxDdaPX9Ygc35uf7jXAzqrLzn0Nt8+qWynB0yy9xfbkl9KtsiBYXfj8
+         UvmuK8WE2rNN4HVWNA/IYmbpzGhGDfY/VSAqBSG6pkRp/oqhyLlc6oZLe2aCeXEjRIA7
+         vgFVaCXOyZUB6qaowvcpeuRz6UbDBxcmGSB+gWl0FrsDhsFktAZ8aqY10+51aeo00vRf
+         esG5Gp7iozXKwbHdgMwq1wusUFJ4p0ZbmnwK6AIzYCH0E8B8H7zkTowCtcB5ZbB2jpi7
+         Bojq9/AzHg6VnN+Ygwd9VZwabSG0r5PD5bwsG1xaY9CHH+MPgZJgKbt3oXHiYkfv/TaN
+         h9KA==
+X-Gm-Message-State: AOJu0YwKwrkiR97EMBTg8ytRKBU5Ubj67U74Ck7OSywNgZlPaPY0Gl5j
+        MCf3yVkAdUnu96WwLRdzOQs3PBRucAMdIlW5wOw=
+X-Google-Smtp-Source: AGHT+IG+N+IBLEN5nf+W/LpicPkI30Fm/1TM+Prf6jRCdidly8Zin8PnZ6g64ry3oTTHTVSlAOtuL7FxHV1uFzE8BLg=
+X-Received: by 2002:a05:6870:c6a4:b0:1d5:a4bd:6028 with SMTP id
+ cv36-20020a056870c6a400b001d5a4bd6028mr18931770oab.8.1696952116450; Tue, 10
+ Oct 2023 08:35:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdBGf7g1xcGid+AuWaLhm3AJEAvFjK4PFOhs2dUF35QdQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20231009083856.222030-1-u.kleine-koenig@pengutronix.de>
+ <20231009083856.222030-7-u.kleine-koenig@pengutronix.de> <20231009111048.GF3208943@black.fi.intel.com>
+In-Reply-To: <20231009111048.GF3208943@black.fi.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 10 Oct 2023 18:34:40 +0300
+Message-ID: <CAHp75VdWnN1Uv0s=gFGp62DRs6SXk17FfEC6NYAEqQtgW_kGpg@mail.gmail.com>
+Subject: Re: [PATCH 06/20] pinctrl: intel: lynxpoint: Convert to platform
+ remove callback returning void
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 10, 2023 at 05:10:08PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Oct 10, 2023 at 4:25 PM Andy Shevchenko <andy@kernel.org> wrote:
-> > On Tue, Oct 10, 2023 at 05:13:42PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Oct 10, 2023 at 04:48:25PM +0300, Andy Shevchenko wrote:
-> > > > On Tue, Oct 10, 2023 at 04:13:19PM +0300, Andy Shevchenko wrote:
-> > > > > On Mon, Oct 09, 2023 at 10:38:58AM -0700, Dipen Patel wrote:
+On Mon, Oct 9, 2023 at 2:10=E2=80=AFPM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Mon, Oct 09, 2023 at 10:38:42AM +0200, Uwe Kleine-K=C3=B6nig wrote:
 
 ...
 
-> > > > > > +       /*
-> > > > > > +        * This is needed for driver using gpio device matching where it
-> > > > > > +        * has to use gpio_chip fwnode to match the gpio controller.
-> > > > > > +        */
-> > > > > > +       gpio->gpio.fwnode = of_node_to_fwnode(pdev->dev.of_node);
-> > > > >
-> > > > > of_node_to_fwnode() is specific to IRQ, in other places we use generic
-> > > > > of_fwnode_handle(). That's why better just to use dev_fwnode().
-> > > >
-> > > > On the second thought is there any parent assigned?
-> > > > At least I see that in tegra186_gpio_probe(). Are you saying
-> > > > it is not working? Or is it (matching) called _before_ we
-> > > > add a GPIO device?
-> > >
-> > > Okay, I think I got it. There is a function called tegra_gpiochip_match()
-> > > in drivers/hte/hte-tegra194.c which fails after my patch. Yeah, if provider
-> > > doesn't set fwnode, it can't match. But, since the driver sets the parent
-> > > properly it means that the matching function should be done against the
-> > > device.
-> > >
-> > > Seems to me that in HTE code the matching function is broken.
-> >
-> > I'll send a patch soon. Please, test it.
-> 
-> I'll have you know that if it is about to add any new "#include
-> ../gpio/gpiolib.h", then it's a preemptive NAK from me. :)
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Nope, see I just sent it.
+Actually this one got skipped as there is no more ->remove() in the driver!
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
-
-
