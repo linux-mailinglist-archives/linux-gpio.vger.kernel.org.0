@@ -2,61 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B097BF9F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 13:41:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E45B7BF9FB
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Oct 2023 13:42:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjJJLlG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 07:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33930 "EHLO
+        id S231430AbjJJLmQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 07:42:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbjJJLlF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 07:41:05 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76EB0B4
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 04:41:04 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a7c011e113so6185527b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 04:41:04 -0700 (PDT)
+        with ESMTP id S231401AbjJJLmP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 07:42:15 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A71199
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 04:42:14 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5a7c95b8d14so3018217b3.3
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Oct 2023 04:42:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696938063; x=1697542863; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696938133; x=1697542933; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s0k9o0rUIEiJ5XPd84FDefo81gadVXjzJ3xtE8+bTHs=;
-        b=cuf/HA4gjTdeULAPVP1HwAN7uzwa3YhzXXi9xBFBQ3mQHFqM8k2YvuHAVP/vm5StJo
-         FalHMmJOrKB254qR0vEgWTgqz1comLIafgUXOdHBpj/qjrT8qxZZxOfYeTsBNTDT8fC4
-         DTf+7KbN/NpvQhJQe44pvz8GoOSTFpcDrird2YlqVMaBaLSZ6J3cN6mXHkU1neqQHN1B
-         t689FD/pFtYUf13ubZ6SLS8X1uRjDdpjMRMOEi3SgL04b5/lEsXFnN19qvZw8tz0nayL
-         m1j9yWgMXemikSeT2cqHepRk/OwxwwZs/RW0DAi5WedCq5eECkfdn3IK0ywlY+tmLZH8
-         eINA==
+        bh=wECZ5jwKeT3uLF3SPG8Gcvy1zVNHLgGjwE0iil9pDlM=;
+        b=Nhzo1pKUmPSMd5lE5aqJIyEB/WVxSyMrNC2BkRpMIpI4+A+FD4NcXsK9TzcfJfaqeD
+         id35mFMlTFbqHz+jMyt/FdtkRaQK59zoCrjytovjAnfz+eoRQkR55b8qw00qHXx7EKFa
+         ZPuz/y/wm07zLqLNn+Zg4b4OCvu3w8r8pwNwPQKHR9zndYUDoyIuf4aLM0ljGEuHAkwX
+         GRdRBDq2hp3T/igjbsItZ/ik4HxWLeZbBP2Alq1fOqMgwMjxI4RblIyHUSDzcrKgl4sG
+         woyBO2gBLQI8ph8n1W9BhpSureudcuNV04Z8fP9w1zIkb7pWJHq5//eYbXmUw2iK/b/M
+         t4yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696938063; x=1697542863;
+        d=1e100.net; s=20230601; t=1696938133; x=1697542933;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s0k9o0rUIEiJ5XPd84FDefo81gadVXjzJ3xtE8+bTHs=;
-        b=evfBnAzcOgDMbGqf8RHd6gnFb6hwaJsnd/BZJztR4b+53u2UQu3JDes2fEOe8vrD1t
-         qzHvxX6awIR1QRSmP9jukrQD0HCM46YzSiXCZnx7DSHYIlf9jIbymMgMZfmS2xsX6ugY
-         WOAg5Yw7fWrdaA60DEbYxxR/YJH7gXeYe8jP27hR+JpIc2ECrVtyrYRI7aGCxoCpBn8W
-         0vgS9EbqQ5lsVsE978om0uOnSQiE9Cckbk2X90xYv+TgxtezrrKcMxNKFEmyKH6mf2Qi
-         N7AaLCKUjBgYzofKYHN4gdsFOZOx1gKWj3rfZbznRUJWvRRSmzr+PBQR642ZHvr8MhlG
-         To1Q==
-X-Gm-Message-State: AOJu0YxOqltF4VmUTKnZwfLXg50LCeapzB7uM3HiaP2RZESgFOaNuN1C
-        SG9PUqFeHO9Gu+y0/Eit5+VYyu7N/wsQX9OBV5a+GSYKKv2dAq3F
-X-Google-Smtp-Source: AGHT+IGdKYVnJbrA2c3DmfIO8Msb0nOZXtAsiXNme33EYQ0Co6ebtOXeqRj+/YPjDz/lUSBfegDGY3jrmXsBnfEOwyM=
-X-Received: by 2002:a05:690c:4085:b0:5a7:b481:4dd2 with SMTP id
- gb5-20020a05690c408500b005a7b4814dd2mr2557864ywb.47.1696938063696; Tue, 10
- Oct 2023 04:41:03 -0700 (PDT)
+        bh=wECZ5jwKeT3uLF3SPG8Gcvy1zVNHLgGjwE0iil9pDlM=;
+        b=EtECgirhyAe5nWGgEZ1u3WzP1YKNMBaAkhPzFVBJv+46o+nRTcpAZmrlDABHY+7UgZ
+         AF/4Cf8JYMvsX/Kuo/433fH8WgasQS3vsWHTZH9bkfvBfs20teE7/aLicj+c6JLrboV1
+         6xWq2C2h2o8UxlKvNH6VO5Lim/L0QMKeEzGM3D1LSmSnuQFZdIK2MxkkOzi2iLPcnz9O
+         WTQbeUgxyamKZ3hy90f2TU4P9J7cV7MzErdafy+SvkvNidCJObwLLZ7S6Y6VHggoc5SW
+         rzaBJND30oqEqvhvcBsLLUnnvbpY1sdBHfiEQIDh1KF11DTS8lKYMz6YXJtEL4p7Tw5Z
+         8pTQ==
+X-Gm-Message-State: AOJu0YyLgKrEjET+IuzfM2C7+3EmfsgO5FXfL13vvHz5/5UalYazCyAn
+        8Pt12DKuW6D83d6KZZCH2YXlcIJtUpDeeJCf1DT5og==
+X-Google-Smtp-Source: AGHT+IE4n/iGQ2sV9c6suZvu2EEAgFCAuiatRIMEGKd/KYttwfGWzxwtFAhkJyvc1Rvk7RdIelsJjF2svJAbfLHOhgM=
+X-Received: by 2002:a81:7b8a:0:b0:59b:c805:de60 with SMTP id
+ w132-20020a817b8a000000b0059bc805de60mr17432611ywc.45.1696938132846; Tue, 10
+ Oct 2023 04:42:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231001150113.7752-1-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20231001150113.7752-1-biju.das.jz@bp.renesas.com>
+References: <20230928134321.438547-1-festevam@gmail.com>
+In-Reply-To: <20230928134321.438547-1-festevam@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 10 Oct 2023 13:40:51 +0200
-Message-ID: <CACRpkdY+OrEcA3ExaZhTq832o-t2UO5S+FyRxsottQw5L2+ojQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] atch data improvements for mcp23s08 driver
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.au@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Tue, 10 Oct 2023 13:42:01 +0200
+Message-ID: <CACRpkdaYUVEd3J=cX7tbvzhWK2TOO72FOecUU2ZFdw-sN2GMMQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mxs: Remove undocumented 'fsl,mxs-gpio' property
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     aisheng.dong@nxp.com, ping.bai@nxp.com, linux-gpio@vger.kernel.org,
+        Fabio Estevam <festevam@denx.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,20 +68,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 1, 2023 at 5:01=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.com=
-> wrote:
+On Thu, Sep 28, 2023 at 3:43=E2=80=AFPM Fabio Estevam <festevam@gmail.com> =
+wrote:
 
 
-> This patch series aims to add match data improvements for mcp23s08 driver=
-.
-> This patch series is only compile tested.
+> From: Fabio Estevam <festevam@denx.de>
 >
-> v3->v4:
->  * Added Rb tag from Andy for patch#3
->  * Removed duplicate mcp23s08 in the name of variables for
->    struct mcp23s08_info.
+> The 'fsl,mxs-gpio' property is not documented in gpio-mxs.yaml, but
+> the imx23 and imx28 dtsi describe the gpios as:
+>
+> compatible =3D "fsl,imx28-gpio", "fsl,mxs-gpio";
+>
+> This gives schema warnings like:
+>
+> imx28-cfa10037.dtb: pinctrl@80018000: gpio@0:compatible: ['fsl,imx28-gpio=
+', 'fsl,mxs-gpio'] is too long
+>         from schema $id: http://devicetree.org/schemas/gpio/gpio-mxs.yaml=
+#
+>
+> "fsl,mxs-gpio" is only used inside pinctrl-mxs, but can be removed if
+> the compatible check is done against fsl,imx23-gpio and fsl,imx28-gpio.
+>
+> Introduce is_mxs_gpio() and remove the need for "fsl,mxs-gpio".
+>
+> Tested on a imx28-evk.
+>
+> Signed-off-by: Fabio Estevam <festevam@denx.de>
 
-v4 looks good to me so patches applied.
+Patch applied.
 
 Yours,
 Linus Walleij
