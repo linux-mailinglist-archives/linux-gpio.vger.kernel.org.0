@@ -2,119 +2,214 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 721537C52AD
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 13:59:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B261E7C52EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 14:09:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbjJKL6v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 07:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56654 "EHLO
+        id S1346324AbjJKMJN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 08:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234743AbjJKL6u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 07:58:50 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90ECBAF
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 04:58:47 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-5a7dd65052aso9561267b3.0
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 04:58:47 -0700 (PDT)
+        with ESMTP id S234820AbjJKMJL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 08:09:11 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C83098
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 05:09:06 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-50437c618b4so8567111e87.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 05:09:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697025527; x=1697630327; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dcZX87bVMqxb05uB6AITFLlBPsFoCe5WSTHnOrtHLWk=;
-        b=PCMwqTGTQSOdLQ5tzB4LsBush06zF9Zytml2uVqQkmENIq1Anj3QU+O/JMLl5UsA9O
-         CRbAFcOwQT0RPu+6/7RLcQ5TrfwJHGs7VdDD14IaWsOnPwYE+OANIc7ibaSyn98ltawr
-         pkEfoE/+K09sQdCV0je8/kBBvH6sZ1c0sumoDBXIjZrrGQKUFZUmXKqlAsnMucWux04+
-         ALpHIOj69o21eamlYt6rE013p0AM/etYpPlkAazk09YPXC3g9A0VEmIcmKhwYsFDTd4d
-         Sff5IkEAnKB6JpOir1RF++S0ZeHLahrAg7dCONmokRf0iwnYS2RqZb0VTdin48DSn+80
-         pHQw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697026144; x=1697630944; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B7hklBZsNUaG4w8NR6EldB110zRSHG31vQIP+c27WSA=;
+        b=v2Whm0Nq6Nfo+xKLDly8l+wvAeolEN/Dg6S33FmSW+QX6HAhMsUxDYQ5htWl5avXTO
+         v2w12Q4CUC3kBm8WNWOIzS8wfTkBJKgE8/fuP17TKf+Qy2GLUOnuCmA+tfA+ENDB8iW+
+         uYIt7+N1im1wSl2Umb2BjXrPKMHYfOwagI6LtC5wLyVZ+LmbHsBNj6wUuKu6UebP4JyV
+         aD+tHSm+vWqZG2PjkN1TNfgVr48gAygYtrIWAWC40cBA9MXKHYuDHOHUQ60liQsIY052
+         CasrA+vd1jNESm14pChh9coKvd/SNk3z6Bjq+COhsip6kBY4EIqOcS0/ao07zqEdJX3A
+         IHLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697025527; x=1697630327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dcZX87bVMqxb05uB6AITFLlBPsFoCe5WSTHnOrtHLWk=;
-        b=rhorwoIhIaKiort1vukNyJ3mOmMAYIemlX8fnq3GcRvj3zzNvpcFrHjJ0Gr+ZWzxlL
-         IfKweAd5Q2y/Z8jOWgM7rBzW2IuoEx/Id9OBt8hG7qJqOlUmEy6T3p1I+6x/lJfhDVgd
-         1f/Iswvkx7gyuUGvEGKq9PRNs2DtrcCc+A5N7+h4560J8dZXpTDI78FhhIJYVhujyjZS
-         /WFECsmtYuwvdKA2wlcdGZwieuTKjsXYTLUiqmfVj/6mPeg7FauqgCobhjiGOB0NzYtt
-         DGPOBCmaB5T7HuZHEbncPC3ltmoHTOO0uweAKhWkZvW9o/LfCsPuaWrZum4wY29YcK62
-         up0Q==
-X-Gm-Message-State: AOJu0Yw990gB8/RBo6xOv9Tu5+50LWmQUR0lWODunQZERG6ifE4e1Uv8
-        DTi6/w8Chb+Nyv4KkqZJijFxfAdPBHwuU4Adr9/4FA==
-X-Google-Smtp-Source: AGHT+IEMT7FKO0GU0LYWIJk61ZoZMd77YWiVGpHr+v/XgAesZ5a9ZC1QYGCxEuGoxQsKfMhFwWDDkXPOv2GeSnJqJoE=
-X-Received: by 2002:a81:5c86:0:b0:59f:4f56:59bc with SMTP id
- q128-20020a815c86000000b0059f4f5659bcmr22662562ywb.42.1697025526803; Wed, 11
- Oct 2023 04:58:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697026144; x=1697630944;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B7hklBZsNUaG4w8NR6EldB110zRSHG31vQIP+c27WSA=;
+        b=RaTPdtSEQqgRcVH5f3VU466QQH5WOcufKPhVSRK1lH/Is3bBiDX8XByWfViaw94syM
+         V2r8ZrJ7l05FWi8ah4PNj8BIKlvl0MeAD7N0HbLyH3XYVoLVVw4BvmrU5ADaxZMVG6n+
+         0ekP+TObmFTx+wBp5aLU/Jac6KaYArhXNEl7MIDBCb55mwuMqCqFiMPQt7+z6anelg9L
+         8G8wGnH3MqSC6qm3tgwF9rV9P4wC0zlRDVerm1zPIFNDdaigw2QLM8QSiC4+bhbQTT96
+         gceM5KsJ2uDBixqlfAHW8gQv2bdPgT8VXSle80CTeggy17MYvLQTDaUcpGEHf1Nfr8Dy
+         9Mlw==
+X-Gm-Message-State: AOJu0YyaXKUUGPUDB1BR0dmHle+0AmFxftlV6iYV5AJh/vrIgV57jPc9
+        avDmD2DAJyofQupBrdJubiXYvg==
+X-Google-Smtp-Source: AGHT+IE55mnDCRBWjAc+waFgWdvFtUrCBIF1JvrD2azH+1LOTtl1ams0eV2x0EFKmmu1hFjnsjeAyQ==
+X-Received: by 2002:a05:6512:3711:b0:503:522:9ca5 with SMTP id z17-20020a056512371100b0050305229ca5mr15991991lfr.27.1697026144482;
+        Wed, 11 Oct 2023 05:09:04 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e551:3946:26fc:f94])
+        by smtp.gmail.com with ESMTPSA id w21-20020a05600c015500b0040652e8ca13sm19012253wmm.43.2023.10.11.05.09.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Oct 2023 05:09:03 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2 00/62] pinctrl: don't use GPIOLIB global numberspace in helpers
+Date:   Wed, 11 Oct 2023 14:07:28 +0200
+Message-Id: <20231011120830.49324-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20231010224928.2296997-1-peter.griffin@linaro.org>
- <20231010224928.2296997-9-peter.griffin@linaro.org> <2023101111-banknote-satin-1f77@gregkh>
-In-Reply-To: <2023101111-banknote-satin-1f77@gregkh>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Oct 2023 13:58:35 +0200
-Message-ID: <CACRpkdbsP5B2=5QRNidsPGyGn8gDPJPMMLyJ7U=nhhohff8UiQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/20] dt-bindings: serial: samsung: Add
- google-gs101-uart compatible
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
-        s.nawrocki@samsung.com, wim@linux-watchdog.org, linux@roeck-us.net,
-        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-        olof@lixom.net, cw00.choi@samsung.com, tudor.ambarus@linaro.org,
-        andre.draszik@linaro.org, semen.protsenko@linaro.org,
-        saravanak@google.com, willmcvicker@google.com, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        kernel-team@android.com, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 9:48=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> >        - enum:
-> >            - apple,s5l-uart
-> >            - axis,artpec8-uart
-> > +          - google,gs101-uart
->
-> These shouldn't be needed, just declare the device as the same as what
-> the chip really is (i.e. a samsung uart), that way no .yaml or kernel
-> driver changes are needed at all.
+We have a set of pinctrl helpers for GPIOLIB drivers that take a number
+from the global GPIO numberspace as argument. We are trying to get rid
+of this global numbering. Let's rework these helpers to use the
+recommended gpio_chip + controller-relative offset instead.
 
-We strive to have these as unique as possible, as it is a hardware
-description. It is fine to write drivers in Linux or any other OS just
-being aware of a "courser" idea of what UART this is, in this case
-would have looked something like this:
+This work is split into phases: first let's introduce the new variants
+of the helpers. Next: let's convert all users one-by-one for easier
+review. After that let's remove the old helpers and rename the new
+variants to take the place of the old ones. Finally convert static
+functions in pinctrl/core.c to using the same signature and to top it
+off, let's remove now redundant wrappers around the pinctrl_helpers.
 
-    compatible =3D "google,gs101-uart", "samsung-uart";
+This series introduces no functional changes in drivers so I decided to
+not spam every single driver maintainer anymore.
 
-And the driver would be able to match to just the latter string
-(these are listed in "particularity order").
+v1 -> v2:
+- drop the conversion to using cleanup.h helpers as this is not the
+  subject of this series
+- split the patch renaming the new variants to the old names into
+  several patches that perform the operation step by step for easier
+  review
+- collect review tags and acks
+- add follow-up patches that drop the wrappers around pinctrl helpers
+  where applicable (where all the wrappers do is call the helper)
+- fix build error with PINCTRL disabled
 
-BUT! The binding authors chose not to go that path, instead they
-have one unique compatible string per hardware/integration version,
-essentially per-SoC. So in this case it is just:
+Bartosz Golaszewski (62):
+  pinctrl: remove unneeded extern specifiers from consumer.h
+  pinctrl: provide new GPIO-to-pinctrl glue helpers
+  gpiolib: generic: use new pinctrl GPIO helpers
+  gpio: cdev: use pinctrl_gpio_can_use_line_new()
+  gpio: rcar: use new pinctrl GPIO helpers
+  gpio: tegra: use new pinctrl GPIO helpers
+  gpio: em: use new pinctrl GPIO helpers
+  gpio: aspeed: use new pinctrl GPIO helpers
+  gpio: mvebu: use new pinctrl GPIO helpers
+  gpio: pxa: use new pinctrl GPIO helpers
+  gpio: rockchip: use new pinctrl GPIO helpers
+  gpio: vf610: use new pinctrl GPIO helpers
+  pinctrl: nuvoton: use new pinctrl GPIO helpers
+  pinctrl: renesas: use new pinctrl GPIO helpers
+  pinctrl: bcm: use new pinctrl GPIO helpers
+  pinctrl: stm32: use new pinctrl GPIO helpers
+  pinctrl: spear: use new pinctrl GPIO helpers
+  pinctrl: starfive: use new pinctrl GPIO helpers
+  pinctrl: ocelot: use new pinctrl GPIO helpers
+  pinctrl: rk805: use new pinctrl GPIO helpers
+  pinctrl: cirrus: use new pinctrl GPIO helpers
+  pinctrl: mediatek: use new pinctrl GPIO helpers
+  pinctrl: axp209: use new pinctrl GPIO helpers
+  pinctrl: vt8500: use new pinctrl GPIO helpers
+  pinctrl: cy8c95x0: use new pinctrl GPIO helpers
+  pinctrl: as3722: use new pinctrl GPIO helpers
+  pinctrl: ingenic: use new pinctrl GPIO helpers
+  pinctrl: intel: use new pinctrl GPIO helpers
+  pinctrl: st: use new pinctrl GPIO helpers
+  pinctrl: remove pinctrl_gpio_can_use_line()
+  pinctrl: remove pinctrl_gpio_request()
+  pinctrl: remove pinctrl_gpio_free()
+  pinctrl: remove pinctrl_gpio_direction_input()
+  pinctrl: remove pinctrl_gpio_direction_output()
+  pinctrl: remove pinctrl_gpio_set_config()
+  treewide: rename pinctrl_gpio_can_use_line_new()
+  treewide: rename pinctrl_gpio_request_new()
+  treewide: rename pinctrl_gpio_free_new()
+  treewide: rename pinctrl_gpio_direction_input_new()
+  treewide: rename pinctrl_gpio_direction_output_new()
+  treewide: rename pinctrl_gpio_set_config_new()
+  pinctrl: change the signature of pinctrl_gpio_direction()
+  pinctrl: change the signature of pinctrl_get_device_gpio_range()
+  pinctrl: change the signature of pinctrl_match_gpio_range()
+  pinctrl: change the signature of gpio_to_pin()
+  pinctrl: change the signature of pinctrl_ready_for_gpio_range()
+  pinctrl: intel: drop the wrappers around
+    pinctrl_gpio_direction_input()
+  pinctrl: st: drop the wrapper around pinctrl_gpio_direction_input()
+  pinctrl: ingenic: drop the wrapper around
+    pinctrl_gpio_direction_input()
+  pinctrl: as3722: drop the wrapper around
+    pinctrl_gpio_direction_input()
+  pinctrl: cy8c95x0: drop the wrapper around
+    pinctrl_gpio_direction_input()
+  pinctrl: vt8500: drop the wrapper around
+    pinctrl_gpio_direction_input()
+  pinctrl: axp209: drop the wrapper around
+    pinctrl_gpio_direction_input()
+  pinctrl: rk805: drop the wrapper around pinctrl_gpio_direction_input()
+  pinctrl: mediatek: drop the wrappers around
+    pinctrl_gpio_direction_input()
+  pinctrl: cirrus: drop the wrapper around
+    pinctrl_gpio_direction_input()
+  pinctrl: ocelot: drop the wrapper around
+    pinctrl_gpio_direction_input()
+  pinctrl: starfive: drop wrappers around pinctrl_gpio_request/free()
+  pinctrl: stm32: drop wrappers around pinctrl_gpio_free/input()
+  pinctrl: nuvoton: drop wrappers around pinctrl_gpio_request/free()
+  pinctrl: em: drop the wrapper around pinctrl_gpio_request()
+  pinctrl: tegra: drop the wrapper around pinctrl_gpio_request()
 
-    compatible =3D "google,gs101-uart";
+ drivers/gpio/gpio-aspeed.c                    |   6 +-
+ drivers/gpio/gpio-em.c                        |   9 +-
+ drivers/gpio/gpio-mvebu.c                     |   4 +-
+ drivers/gpio/gpio-pxa.c                       |   4 +-
+ drivers/gpio/gpio-rcar.c                      |   4 +-
+ drivers/gpio/gpio-rockchip.c                  |   4 +-
+ drivers/gpio/gpio-tegra.c                     |  13 +-
+ drivers/gpio/gpio-vf610.c                     |   4 +-
+ drivers/gpio/gpiolib-cdev.c                   |   3 +-
+ drivers/gpio/gpiolib.c                        |   6 +-
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c      |   6 +-
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c      |   9 +-
+ drivers/pinctrl/cirrus/pinctrl-lochnagar.c    |   2 +-
+ drivers/pinctrl/core.c                        | 133 ++++++++++--------
+ drivers/pinctrl/intel/pinctrl-cherryview.c    |   9 +-
+ drivers/pinctrl/intel/pinctrl-intel.c         |   9 +-
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c     |   9 +-
+ drivers/pinctrl/mediatek/pinctrl-moore.c      |   9 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c |  10 +-
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |   4 +-
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c     |  14 +-
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c     |  13 +-
+ drivers/pinctrl/pinctrl-as3722.c              |   9 +-
+ drivers/pinctrl/pinctrl-axp209.c              |   7 +-
+ drivers/pinctrl/pinctrl-cy8c95x0.c            |   9 +-
+ drivers/pinctrl/pinctrl-ingenic.c             |  19 ++-
+ drivers/pinctrl/pinctrl-ocelot.c              |  10 +-
+ drivers/pinctrl/pinctrl-rk805.c               |  10 +-
+ drivers/pinctrl/pinctrl-st.c                  |  11 +-
+ drivers/pinctrl/renesas/gpio.c                |   8 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       |   4 +-
+ drivers/pinctrl/renesas/pinctrl-rzv2m.c       |   4 +-
+ drivers/pinctrl/spear/pinctrl-plgpio.c        |   8 +-
+ .../starfive/pinctrl-starfive-jh7100.c        |  14 +-
+ .../starfive/pinctrl-starfive-jh7110.c        |  14 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c         |  20 +--
+ drivers/pinctrl/vt8500/pinctrl-wmt.c          |   9 +-
+ include/linux/pinctrl/consumer.h              |  74 +++++++---
+ 38 files changed, 218 insertions(+), 296 deletions(-)
 
-It is kind of impossible to fix now as well, because these bindings
-are already deployed. So they are like a BIOS: written in stone.
+-- 
+2.39.2
 
-It is possible to add dual compatibles for this *and following*
-variants, but I don't know how Krzysztof feels about that, and as
-others point out, probably knowledge of the exact SoC is
-necessary.
-
-Yours,
-Linus Walleij
