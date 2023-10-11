@@ -2,78 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 492D87C596D
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 18:44:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCF1E7C59A1
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 18:55:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232609AbjJKQo6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 12:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47024 "EHLO
+        id S233000AbjJKQzJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 12:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232406AbjJKQo6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 12:44:58 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CC708F;
-        Wed, 11 Oct 2023 09:44:57 -0700 (PDT)
+        with ESMTP id S232217AbjJKQzI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 12:55:08 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8804B9D;
+        Wed, 11 Oct 2023 09:55:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697042697; x=1728578697;
+  t=1697043306; x=1728579306;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=poJuXecoStHQJe7+pcHpwvtQoY5mTPxBgB6f7CIRll8=;
-  b=SM+j3wmlMdUe8+8TNqv8c3Ny1deGtE11NuThNs+XDhfnye8jf9qHIgUR
-   kqCM9c116YBXFC6ynPLNvqGeSyAyrgaiT/Wr2mtSIp7TLxyXJXycL2CUX
-   eUK/Krf5prW5nPBhC1RxWpDz2EcZqQPyrZwldcfrlmGrAYANPAJFk0koL
-   PrU3VcLZefCOcmAHAhYixth4Rvw6uNxM3GvqURyV0DqEpevSGjUA3ES0g
-   HOxrtJQc1kaedcypXSZMqZd4LuEpG6itRM0WNAABOSjP0N/u70kYMd1Z+
-   eDhF5XvATL7c3LmdsTCMq79+UMh+EQ5yP5aKIEkobaAITp5PKspdQVfN0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="383577960"
+  bh=ZraWdjDkR3JP55NOUPdJDQ5etbz9Arzzx5/PgAMMdwg=;
+  b=J+PF3dSt4W+W2hFjyt29xHqJgWmOKrgpjVawygkxq1ca9gSVSK5uhJMn
+   9Z/387CerVw0yrPXHZVncJ8UKhsOdb5mOWHDPhNfiKlwTdt507okkqzQd
+   2SGJb6Gl4hHsC4K3OoPZIx7kJUjKYOIQZLHE83NLwXdbFr3yzKXJZh/1E
+   ri7H7ctD6mB0TLvz9y2GAgwRJNhnSsjywifzrkUp3AtL6/Rsk5pud1hEX
+   Whnvw1xow+wTftP9qCNhFWskgWqOm4KX02M6px7EnjqzHx3rJk5VbDP4p
+   eRT16+EjcgkWa+sRZprHXQ2koMQ955olbwTBQMgVNMvDJc5lDAUDXxHwg
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="364998074"
 X-IronPort-AV: E=Sophos;i="6.03,216,1694761200"; 
-   d="scan'208";a="383577960"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 09:44:56 -0700
+   d="scan'208";a="364998074"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 09:55:00 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="1085296587"
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="870225141"
 X-IronPort-AV: E=Sophos;i="6.03,216,1694761200"; 
-   d="scan'208";a="1085296587"
+   d="scan'208";a="870225141"
 Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 09:44:55 -0700
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 09:54:58 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qqcKK-00000004muq-3dtN;
-        Wed, 11 Oct 2023 19:44:52 +0300
-Date:   Wed, 11 Oct 2023 19:44:52 +0300
+        id 1qqcU4-00000004n1h-16MO;
+        Wed, 11 Oct 2023 19:54:56 +0300
+Date:   Wed, 11 Oct 2023 19:54:55 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 01/62] pinctrl: remove unneeded extern specifiers from
- consumer.h
-Message-ID: <ZSbRBDONx/epMABs@smile.fi.intel.com>
+Subject: Re: [PATCH v2 31/62] pinctrl: remove pinctrl_gpio_request()
+Message-ID: <ZSbTXz6aEdMxG4Y/@smile.fi.intel.com>
 References: <20231011120830.49324-1-brgl@bgdev.pl>
- <20231011120830.49324-2-brgl@bgdev.pl>
+ <20231011120830.49324-32-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231011120830.49324-2-brgl@bgdev.pl>
+In-Reply-To: <20231011120830.49324-32-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 02:07:29PM +0200, Bartosz Golaszewski wrote:
+On Wed, Oct 11, 2023 at 02:07:59PM +0200, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> The 'extern' specifiers are not needed for function declarations. Remove
-> all of them from the pinctrl/consumer.h header.
+> There are no more users of pinctrl_gpio_request() so remove it.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+My question was and still is why can't we preserve most of the code?
+It seems with changing a prototype to a new one and using a temporary variable
+will reduce the diff noise quite a lot.
+
+Another question is can we actually derive old functions from _new ones?
+
+Like
+
+foo_new(struct gpio_chip *gc, unsigned int offset)
+{
+	...real implementation...
+}
+
+foo(unsigned gpio)
+{
+	...something to get gpio chip and offset...
+	foo_new(gc, offset);
+}
+
+?
 
 -- 
 With Best Regards,
