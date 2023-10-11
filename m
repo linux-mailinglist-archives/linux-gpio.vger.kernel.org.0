@@ -2,100 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39E207C5840
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 17:40:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68BFA7C595B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 18:41:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232712AbjJKPks (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 11:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53002 "EHLO
+        id S230050AbjJKQlt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 12:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232530AbjJKPkr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 11:40:47 -0400
-Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83FFDA4
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 08:40:46 -0700 (PDT)
-Received: by mail-ua1-x92b.google.com with SMTP id a1e0cc1a2514c-7b2ca45d5cfso7085241.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 08:40:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697038845; x=1697643645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UiqkmLVKop1bY7kTu5d76rBX8seKJtFxmVTzPnLP1bo=;
-        b=XZfm5mX20l7kN7XURvmKfywMsDFkQaUNiuQRtjomgY82Y61T6/jK/U/LCOeVdgnv1G
-         WvKVC01KnBcfUy7xXklqmPQma9i+tgQTth5ng2gjEDeKAR923l7PzOPwkE5/qTQ5asor
-         Jt3zUOSDULyfDXfSKTWbf8aNTMvOBrbr6ktcXVaKTvLBNg2JnKWNprl2o4EY74A5L1Vg
-         NO3+t/gNiApPoe18Q/tj+6w7eDNBTH2o2sPPrR3G3q91+H5WslKqx0plRHNWzHT8ZScy
-         iWBUpP7iStCNgSFMgrWYU2kykL8v+SSUPm1UlGssmZVfUzYWXOEVLuXq7QB9LIutKMvm
-         W2fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697038845; x=1697643645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UiqkmLVKop1bY7kTu5d76rBX8seKJtFxmVTzPnLP1bo=;
-        b=PURM8kpLUsDrJnncBQWdLawGnbAZ1m67Gp6ETswG65GbpOkIYeFZrnLEVpW0a46Inz
-         5N2U0FgoXY4YF1/kFlq0Yh8eFSoQgZOLU0tsdJO0RkkvZeqMfT8mSAdzLhk4W1Pbds2u
-         xDx+9eDBVpE7+MDfoJQvSNOcnJxn1T3swCxa8kAeoFpb+dN4YuggX5vJt+V7xHBUws/5
-         Ny0X5/C3q8PqR9rgwyeu2jeml9Ued+EUoSK6MlsRV9/AaU9O3rqMus7zDiHicdVE3S69
-         A+tu+2VGihSuCR5+99N/sL61GSx0TMN9Ou4MA2LFrSkjH873VcDISMYQJn1k+sLQ6tRB
-         eIvA==
-X-Gm-Message-State: AOJu0YzXVQ4z4eceT74rYKM0L79b/fN2Ldo+FYcpErAhhiHxBwgCqhJf
-        fNEPnkjWErOQZ1KXl4X3PiEIO7xdJFtEbuKno9gT0A==
-X-Google-Smtp-Source: AGHT+IG5JPt7jU/kX+X7eDlJt7BFoHK21OdgrQOLlEuTAOd7ghzmyiZ7IZjjbLxUGh+HsuIIZJ+c5yN5NRQaFOz0b9o=
-X-Received: by 2002:a67:b908:0:b0:452:5c6d:78c9 with SMTP id
- q8-20020a67b908000000b004525c6d78c9mr20597977vsn.12.1697038845467; Wed, 11
- Oct 2023 08:40:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231011-pxa-gpio-v8-0-eed08a0fcac8@skole.hr> <20231011-pxa-gpio-v8-2-eed08a0fcac8@skole.hr>
- <CAMRc=McWj1RHw-um2OcCpkToxXg6R63vLGTGfMTFiMSr4WXkJg@mail.gmail.com> <5740986.DvuYhMxLoT@radijator>
-In-Reply-To: <5740986.DvuYhMxLoT@radijator>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 11 Oct 2023 17:40:34 +0200
-Message-ID: <CAMRc=MczBWwY96pkn1j5-EGK6ibrH3s12R_4Y4+OfDJWE4WbJw@mail.gmail.com>
-Subject: Re: [PATCH RFT v8 2/6] ARM: pxa: Convert Spitz LEDs to GPIO descriptors
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        with ESMTP id S232406AbjJKQls (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 12:41:48 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8834291;
+        Wed, 11 Oct 2023 09:41:47 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12BFC433C9;
+        Wed, 11 Oct 2023 16:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697042507;
+        bh=pp6h+Teww6WAGFU9BVf+1XuHU3fEDR07+S2e12wuiXI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bg7NOtUR+QdVpFPWbD/PanI4jiaGuI+4DJ7xihWEh6A7q3cB3jq/XXh5VTxWFPzRs
+         9Rp2+rOLO/Pv9vRScTB77gtitd0kOwgfYsV7YbeoZDmFMHDicLzNyELz0bsDiJVu53
+         AJyRxqsiWRSZG26xcMiOdRBkMR+PMiZSrOlWMBXQhhrR2LEg1ui2zGqVGLd4a5eahd
+         KwyLJ0naFmjy3SjSBB+V+wgsv1tDUBmOg4QmMeK/h+qsHv6D2ZrdmsmGin/ZF0loMs
+         ZBMD1cbOAQaCyvwUFv6Ic/S8Y4vsn5uy0zp8ms4FbJLSQ+et8Qr1DcFHDZux6FMVwr
+         grxPmo5/8XhHQ==
+Date:   Wed, 11 Oct 2023 18:41:44 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Peter Rosin <peda@axentia.se>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andy@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Peter Korsgaard <peter.korsgaard@barco.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 3/3] i2c: mux: gpio: don't fiddle with GPIOLIB internals
+Message-ID: <ZSbQSEpdIWUQiB5s@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Peter Korsgaard <peter.korsgaard@barco.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20231011130204.52265-1-brgl@bgdev.pl>
+ <20231011130204.52265-4-brgl@bgdev.pl>
+ <b660e39e-24ad-c755-7962-aa56e8cdf4f7@axentia.se>
+ <CAMRc=Mep2_u_JdGo_W1VsOR9ajscw49KA2gK7GN3K9j_rUEn_Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2RmhSKGzY9QqH2Cc"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mep2_u_JdGo_W1VsOR9ajscw49KA2gK7GN3K9j_rUEn_Q@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 5:17=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
-@skole.hr> wrote:
->
-> On Wednesday, October 11, 2023 4:21:39 PM CEST Bartosz Golaszewski wrote:
-> > Which driver consumes these GPIOs? Doesn't it need any conversion?
->
-> That is drivers/leds/leds-gpio.c which has already been converted to the
-> descriptor API way back in 5c51277a9aba ("leds: leds-gpio: Add support fo=
-r
-> GPIO descriptors").
->
-> Regards,
-> Duje
->
->
->
 
-Perfect. In that case:
+--2RmhSKGzY9QqH2Cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Bartosz,
+
+> > > -/* FIXME: stop poking around inside gpiolib */
+> > > -#include "../../gpio/gpiolib.h"
+> > > +#include <linux/gpio/driver.h>
+
+Hooray! \o/
+
+> gpiod_to_gpio_device() will be used in at least 10 other places. I
+> haven't identified any other potential user for
+> gpio_device_to_device() yet but I haven't looked hard yet either.
+
+Same here. Looked a little bit, found nothing.
+
+Acked-by: Wolfram Sang <wsa@kernel.org>
+
+
+--2RmhSKGzY9QqH2Cc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmUm0EgACgkQFA3kzBSg
+KbZbKw/9F0F2LTUIM4gQCeHMesmhkwWoXuUWFU15QPyGy8qOmP5GgkOQCu4Mw6IT
+G4f84snezHVfiuSb0GOYlLnNeLrgdO944Q2m/dZiIAt53WfBs9yX2c/1Fu1Ca+Ik
+cOno3Jzk+pv0A82H65ObxpgYMch8TUOsjy9YmKzchzwCt4McZkyGxK3inQrKWJmB
+oPghllldo0MiT1/24I1kBSh2mThBrIBVlX6rS6os3ObJVpsVSZkm1Eu8BO2SuPkD
+CsatEZ1xjNycr0zcoyXdat90wnsGOtNEtF3L8ChDy20oNrXQqcraM9KaoDKase12
+joGg1jKdB1VPrx8ITyQGvp9brPDoRUfXgcor2aCRthqNABLYtRsLWHNH6/XWC/zH
+iZ22vSg9r5IsZr7GZNxMpQWyXccBxAcqgCN0H5hquvalg+avvKCN6RPQC1KJ1hK+
+Op4MlYt8nSQj6ymiiblOCS521p2o4uC6+/RBCkIBdlq3Pi4n/8PCR+5spbdupFQ0
+NjcZ7+k0EXWWjMgHX2fCDCOYzhT+KYRXNWFyoCHgVGquL+sIGsuhcmBg9m5/0Ri/
+o34c/Qq6MrDO3UQbvow8c80/4eTYxt3V5HKltrPmnYyNGt8Ft5L23hFHMSWA3sVd
+aSlJOwdqQs2wGn18/B0W4Xtync902ueeDXuAkr8ZcOhlpsUYW1E=
+=fwMz
+-----END PGP SIGNATURE-----
+
+--2RmhSKGzY9QqH2Cc--
