@@ -2,133 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4264A7C4CF1
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 10:20:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C98A47C4D6C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 10:42:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbjJKIUA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 04:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52420 "EHLO
+        id S230392AbjJKImx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 04:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229846AbjJKIUA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 04:20:00 -0400
+        with ESMTP id S230496AbjJKImv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 04:42:51 -0400
 Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE2392
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 01:19:58 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-99de884ad25so1164332666b.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 01:19:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AD8DDB
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 01:42:49 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9ba081173a3so740910466b.1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 01:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697012397; x=1697617197; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/vx1kyUP6/ZxJGlfJMrj7ldpOvOceNDkGredIy3LXfU=;
-        b=LmE34sifhpO4tJ/PTD2SZ7qECRRZy3x/zB4lAkM4+5R600I2Xcmn8ttvWUhAc5ZP4M
-         RloCANXmbkRamH5XMLzLrfWKruhddyH6vG5a4ImAuXmfLmrtLDPTbauoqQt6WHCUpNsl
-         qlw7dEKZ44Hpj0OA/2eHYtNTtFlQbyevjaqOsbIvl9K26plS2H9lpYfrv/ikKkZNsjWk
-         moozJgeSkP21r3zibybLOxAh1jPtflojFXEIy/acTXCiNCJeEJ+vGuL/2cWzVmOF/mCX
-         sWtn0mIooxCDf95fdakXdkU/oTN+E8JjrMoC355O8zMcOMehBXke55tMxt1WyEX3XvSE
-         BCww==
+        d=linaro.org; s=google; t=1697013768; x=1697618568; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SQVblcaazyZyyU0Xz3jnKqUUTme4HT3sP0gqd9Rl6LQ=;
+        b=nGskIy8t17VQGUMqu+P1RGj8PpN/Cncib72u3CzB1TeWEWCjp11pkjflmMwI9VTxhx
+         1PGwA8U2r4l6UCuXh26mNq3ZM6ZBHtnXlSEW+FjPg0C7XtjJsfziE1NGkdI5dK0AMBNu
+         Y+z/BgKyuME17W3hraarej06cbrDSvQGQBA2WGvs2mSTqQAYzyVVeBi7SXYrrMfw4HP8
+         +Q7Wh2tJxu21x06a84E4CdhcGIakC3bOncY+rJoHtbBStsgGQIcnQWLbZRhdGPgr5VqF
+         2LsFuWupNM7ywYzskw3SlV4GNvBlA7p4iaOjUcegLHia+o8htd6K2NrCyzYzKpZl7zdD
+         LCXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697012397; x=1697617197;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/vx1kyUP6/ZxJGlfJMrj7ldpOvOceNDkGredIy3LXfU=;
-        b=IA/5L6QUBqbN9HVvYs91QXWdSv38GL0XODTsL6dzukhU+pSOQp0iGkix/+4UN/9b9K
-         scK1WYMJ9LSq7e2pLUeq5PJMFZ0ZkHQmoJiB6BcXGPMhsVesRXclzFaYwBdmsoutp4/f
-         A1c6EtpZJsTpsTVOJBOZisfgfq7bHNGWz4JeKtfz9P+GWH681PiNBniFWLwtjvzI1g/w
-         FSPK+CEjNHIOAdFb1i5YNGHPSKBlC9gy0F0UeUi3fr7vPWgoVSQpjZq41g93ncwmMUg/
-         hldCGYWamFMyuMvN7TGoxD8KfjgUAgEKOc+Xk+qpomdzgqCE8trmv8cuI7yTHie/1xUs
-         Z7EA==
-X-Gm-Message-State: AOJu0YwJZ6/LWl8xn6HNTZweMv8KpfO4cyHleYDijiNwer1f4yO+VkoU
-        3wLNXJ0p61e7hL2SRgeHXYNQcwk4Z7P3WqCDkaI=
-X-Google-Smtp-Source: AGHT+IEWiepv1Ggk2+xD00ayyXqm9mi81i3Oi3DcfgfvIfRqAyUoT1CMp1+NxweLAr5+JjysbERi5g==
-X-Received: by 2002:a17:906:221c:b0:9a5:b876:b1e3 with SMTP id s28-20020a170906221c00b009a5b876b1e3mr16858705ejs.20.1697012397094;
-        Wed, 11 Oct 2023 01:19:57 -0700 (PDT)
-Received: from localhost (i5C743875.versanet.de. [92.116.56.117])
-        by smtp.gmail.com with ESMTPSA id pw23-20020a17090720b700b009ae05f9eab3sm9443843ejb.65.2023.10.11.01.19.56
+        d=1e100.net; s=20230601; t=1697013768; x=1697618568;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SQVblcaazyZyyU0Xz3jnKqUUTme4HT3sP0gqd9Rl6LQ=;
+        b=IGpl5s0dOU+32To4MhAt2XFPzclo9E7cdkoWUGiG93OJ/vxeVT30ejvdGwxfzuZ2nS
+         V7YGJrg3QkVy7iIKYAZ2OY9m99DVzkfurv/TvO1HDP7TVRmRaj/HYuu/GIDHlS/d8lXV
+         ba0pDbYSKS3Psy3Zq9DJORugE0lEzkMh55tCQeQILG3lui70WpuAzR1aMDpqYOsT4Ejr
+         h8ZMxlU4Oim3E3Y/AsN6yBUYQX5WcnFTUz4tiDOcufWoIU4MnMuNDF2f23Aje73vX0ak
+         zbUELQUb2yZ5RUJ6TJIvrtRmLB1H5dgxrXKQn0hFVtAYJz9UvNP6ohIyo12LzJUPZECN
+         882w==
+X-Gm-Message-State: AOJu0YwU2WvamXeJ285WRj00VGNyNjiB5P3NCUciVbG03mTtZkFl/NsO
+        c5OTrjE1fG9OfrQuZEuqdDiVig==
+X-Google-Smtp-Source: AGHT+IFFg9jr8zTjiY0TW0V0idrabs2Pvc3T+NkXfL0RZxNQvIFEQsPwLLN6izM2Z3nlnBAnK9uYbg==
+X-Received: by 2002:a17:906:1097:b0:9b2:b786:5e9c with SMTP id u23-20020a170906109700b009b2b7865e9cmr17958158eju.28.1697013767910;
+        Wed, 11 Oct 2023 01:42:47 -0700 (PDT)
+Received: from [192.168.2.107] ([79.115.63.123])
+        by smtp.gmail.com with ESMTPSA id e12-20020a17090681cc00b009a9fbeb15f2sm9536588ejx.62.2023.10.11.01.42.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Oct 2023 01:19:56 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Oct 2023 01:42:47 -0700 (PDT)
+Message-ID: <14bb7d8d-0f99-4a5e-aee6-b0db1d17c1e6@linaro.org>
+Date:   Wed, 11 Oct 2023 09:42:43 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/20] Add minimal Tensor/GS101 SoC support and
+ Oriole/Pixel6 board
+Content-Language: en-US
+To:     Peter Griffin <peter.griffin@linaro.org>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
+        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, wim@linux-watchdog.org,
+        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
+        arnd@arndb.de, olof@lixom.net, cw00.choi@samsung.com,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        saravanak@google.com, willmcvicker@google.com, soc@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@android.com, linux-serial@vger.kernel.org
+References: <20231010224928.2296997-1-peter.griffin@linaro.org>
+ <92de302a-f6b5-465c-a5da-2a711861089e@linaro.org>
+ <CADrjBPqOmGEzeVEKiysxQNo9+B0=zD3Z+G24fPDKrFsgUXYJjQ@mail.gmail.com>
+From:   Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <CADrjBPqOmGEzeVEKiysxQNo9+B0=zD3Z+G24fPDKrFsgUXYJjQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 11 Oct 2023 10:19:56 +0200
-Message-Id: <CW5GOSB0GGOI.19V32RRNJ19UT@ablu-work>
-Subject: Re: [libgpiod][PATCH] bindings: rust: libgpiod: release 0.2.1
-Cc:     "Linux-GPIO" <linux-gpio@vger.kernel.org>,
-        "Viresh Kumar" <viresh.kumar@linaro.org>,
-        "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>,
-        "Kent Gibson" <warthog618@gmail.com>
-To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-X-Mailer: aerc 0.15.2
-References: <20231010-b4-libgpiod-0-2-1-v1-1-291cb0cd23d4@linaro.org>
- <CAMRc=Meji1JCrdCbwOLg1d2ZizTHxKvo7x=T7PzP-bq22_utBw@mail.gmail.com>
-In-Reply-To: <CAMRc=Meji1JCrdCbwOLg1d2ZizTHxKvo7x=T7PzP-bq22_utBw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed Oct 11, 2023 at 10:16 AM CEST, Bartosz Golaszewski wrote:
-> On Tue, Oct 10, 2023 at 9:13=E2=80=AFAM Erik Schilling
-> <erik.schilling@linaro.org> wrote:
-> >
-> > While the release technically removes a function, that function was not
-> > available in any released libgpiod version. Therefore, this only bumps
-> > the minor.
-> >
-> > This release fixes building with releases from the 2.x series of the C
-> > lib.
-> >
-> > Changelog:
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
-> > acebcf2 (bindings: rust: feature gate unreleased features, 2023-10-06)
-> >
-> > Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-> > ---
-> > Same as last release: Once this is merged, I will publish a new release
-> > of the crate to crates.io.
-> > ---
-> >  bindings/rust/libgpiod/Cargo.toml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod=
-/Cargo.toml
-> > index 3fd1d74..3ce05df 100644
-> > --- a/bindings/rust/libgpiod/Cargo.toml
-> > +++ b/bindings/rust/libgpiod/Cargo.toml
-> > @@ -4,7 +4,7 @@
-> >
-> >  [package]
-> >  name =3D "libgpiod"
-> > -version =3D "0.2.0"
-> > +version =3D "0.2.1"
-> >  authors =3D ["Viresh Kumar <viresh.kumar@linaro.org>"]
-> >  description =3D "libgpiod wrappers"
-> >  repository =3D "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.=
-git"
-> >
-> > ---
-> > base-commit: acebcf2cbefb735eaddc06ee52eb1b1c85886d1b
-> > change-id: 20231010-b4-libgpiod-0-2-1-fc79302ea752
-> >
-> > Best regards,
-> > --
-> > Erik Schilling <erik.schilling@linaro.org>
-> >
+
+
+On 10/11/23 09:16, Peter Griffin wrote:
+> Hi Tudor,
+> 
+> Thanks for your reply.
+> 
+> On Wed, 11 Oct 2023 at 07:10, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+>>
+>> Hi, Peter,
+>>
+>> On 10/10/23 23:49, Peter Griffin wrote:
+>>> Note 3: In `dt-bindings: pinctrl: samsung: add google,gs101-pinctrl
+>>> compatible` I tried to narrow the interrupts check to
+>>> google,gs101-pinctrl but I still see a warning: gs101-oriole.dtb:
+>>> pinctrl@174d0000: interrupts: [[0, 0, 4],[..] is too long If anyone can
+>>> educate me on what I've done wrong here it would be most appreciated!
+>>
+>> I guess the initial definition of the number of interrupts should
+>> include the largest min/maxItems. I no longer see the warning with this
+>> change:
+> 
+> Yes that is how it was in v1. The review feedback though was to narrow
+> the scope to just google,gs101-pinctrl compatible using if: then: else: which
+> is what I can't get to work properly.
 >
-> Applied, thanks!
 
-Released: https://crates.io/crates/libgpiod/versions
-
-Thanks!
-
-- Erik
-
+Right. The diff that I sent is on top of your changes (patch 6/20).
+I expect that when the interrupts property is defined it should include
+the min/maxItems of all the available SoCs. Then use "if Soc" to narrow
+the range.
