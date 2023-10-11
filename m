@@ -2,102 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EF5A7C5256
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 13:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6437D7C525E
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 13:45:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234710AbjJKLnt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 07:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37530 "EHLO
+        id S231506AbjJKLpl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 07:45:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234583AbjJKLnt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 07:43:49 -0400
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D3CA4
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 04:43:46 -0700 (PDT)
-Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-d857c8a1d50so7035056276.3
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 04:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697024626; x=1697629426; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8ms2vtbDlNLotZRA9zziKsDWimhPIOZieH9Xxbts9Gc=;
-        b=Xgf5xcA9ZmI0rsdXBX4sb5GATD/BhmMDXZVQyg8yDgHqWHRIZ6TEIzbzllWM3lq6Dn
-         bbkPxYiA3MI8rJmSSZwTwnCxbVEL98vpnY5+k3IXZMJvZxT4VOj0L7DcmrrgRlA75QQi
-         FHIW66s+wEqgQXWpVe703uZzZB/Za+w3/4VF7ggergduZe7EkxpglfACWZIEjiztOSPR
-         cijCEBPcjdGy4X5vbL7nIXjZcdt87teHNIXFFq6jxSzLwSEmO2jKiHA+Q3CVtZHqB2vv
-         N5bm4FCbpIoAr+nC1gpKzCq8NbnyBcQUd9YIuRYrznCVHhqFqPm87gCDcrz6BzxrkO8N
-         rz3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697024626; x=1697629426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8ms2vtbDlNLotZRA9zziKsDWimhPIOZieH9Xxbts9Gc=;
-        b=CILW81TU4ovmFgCficlHeaDmG2CGHwJJhI8+TvPeZDJHyn39hrsny0ZTNRf5lSVRoW
-         xS7GWBsgWKg2bV4ZANRv23KJkWR3BdyYY/Pi+zAm69kCrZEKBVXTZAJ/gwEJ8rOVGJ+3
-         +bfm4UBTs46Z1uxoJf0pEt9mWQjtCIOhzmGdzq/54gZEDURXP3nVNmGeDbCXrA5+fhqo
-         38WfLAGJh9uTWNgHIb8fLuw6oeSvrFDoiA/375ZxaV4qOlH3zdDma4z05Z3Jb0bBgHc4
-         pKzwM5TrlRwCBJiI0DZOqA0vboENWtAem6Mvd6qgs0UlY2SJiD9wB1UcCS004aaVVL1B
-         ptMw==
-X-Gm-Message-State: AOJu0YycRBwqrbxHQJDNzeeRKVBAShY8syvhW6IVqQ59mOMDSrC0Wpk+
-        dFxO+6TBfH4D8TIw/LZaX3AXzF0xHzRRjXiRiZSOcA==
-X-Google-Smtp-Source: AGHT+IGv903cvmdbSYh+DAb+5Tz4rULNvXAQTlBg+7mdFxAdgy0NyhnbXdLN6utN8XfBDPbmB7i+1uIbbVMACSQpBvk=
-X-Received: by 2002:a25:ccc1:0:b0:d6b:6b53:d1ab with SMTP id
- l184-20020a25ccc1000000b00d6b6b53d1abmr19665014ybf.38.1697024626069; Wed, 11
- Oct 2023 04:43:46 -0700 (PDT)
+        with ESMTP id S234715AbjJKLpk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 07:45:40 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F1098;
+        Wed, 11 Oct 2023 04:45:38 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D906C433C8;
+        Wed, 11 Oct 2023 11:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697024738;
+        bh=2rNnRPbutD2jUkamVsQTXHOGYyI/vgTPHfVJILJMjwI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CuxlfmYBe3Ygxsc2dKYGwo2ts/CUK4/jGB0tD3A8UgZi/YudGX8rhZ4Elsjg7+rQG
+         ZvEfvBvgc5kpQQBnuYJjDXqNpNLNPW4DS9qMfHpTcPcxcPwMODhKSA2XIIv2IqCd/V
+         HvGrQ1KdMsArRi6vBkiyWMyo8QJVepL7NHCB45djElooihPFX769nQ8nCL3O8F65P7
+         0dvuGg7v8S/h/o6Yg/NScOvQ8opAVhh7eI+JslIOOdxAmjtPnHzrYWRyGroeQX/d4c
+         6ww6ujsAxdHD+CaKzDkRpJDQQQGfpg5ljSRJl25z8PX/QkMBSXKbz4QIj79B0X1NM/
+         xcROJvZ3ZxzWQ==
+Date:   Wed, 11 Oct 2023 12:45:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] spi: bcm2835: add a sentinel at the end of the lookup
+ array
+Message-ID: <f1b8555b-5acb-43cd-b48b-1dfafdb8d27c@sirena.org.uk>
+References: <20231004183906.97845-1-brgl@bgdev.pl>
+ <169696282723.222014.3485016870976123694.b4-ty@kernel.org>
+ <CAMRc=MenBeJV+p6LirsCfyaPRWfAvSrVQayqUc77KOyvRGMqvQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20231010151709.4104747-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20231010151709.4104747-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Oct 2023 13:43:34 +0200
-Message-ID: <CACRpkdbEzT-VWOP26oDWc7YE=t_wNOJKo=CfQxZ-vk5Rsmzt8A@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] hte: Improve GPIO handling and other cleanups
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Dipen Patel <dipenp@nvidia.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-tegra@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="afp+guHfXX9/pd8X"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MenBeJV+p6LirsCfyaPRWfAvSrVQayqUc77KOyvRGMqvQ@mail.gmail.com>
+X-Cookie: What an artist dies with me!
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 10, 2023 at 5:18=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
 
-> This is a series provides a new API to GPIO library (so far only
-> available in the GPIO tree), and respective update to the Tegra
-> HTE driver. On top a couple of other cleaups (patches 3 & 4, they
-> can be applied separately).
->
-> Patch 2 inherited tags from its respective discussion thread [1],
-> but I believe the Tested-by needs to be confirmed again.
->
-> Due to dependencies this either should be applied to the GPIO tree,
-> or to the HTE when GPIO updates land the upstream (optionally with
-> the first patch be applied even now to the GPIO tree independently).
->
-> Another option is to have an immutable branch or tag, but I assume
-> that was discussed and rejected (?) in [1].
->
-> Link: https://lore.kernel.org/linux-gpio/20230905185309.131295-15-brgl@bg=
-dev.pl/ [1]
-> Cc: Dipen Patel <dipenp@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
+--afp+guHfXX9/pd8X
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is good stuff. The series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Wed, Oct 11, 2023 at 09:36:19AM +0200, Bartosz Golaszewski wrote:
+> On Tue, Oct 10, 2023 at 8:33=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
+> > On Wed, 04 Oct 2023 20:39:06 +0200, Bartosz Golaszewski wrote:
 
-Yours,
-Linus Walleij
+> > [1/1] spi: bcm2835: add a sentinel at the end of the lookup array
+> >       commit: 9aaa25df9b02bfe5579cbc9b4cc1177c662ec33f
+
+> Can you provide me with an immutable branch containing commit
+> 21f252cd29f08892d48739fd7513ad79c1cff96a (the one this one fixes)?
+
+> We are very close to removing gpiochip_find() from the GPIOLIB and
+> with this pulled we could remove it for v6.7.
+
+Ugh, *please* say this sort of thing when sending patches rather than
+waiting until after they've been applied.  The default is just to add
+patches to the normal development branches which means they have the
+whole history for the release cycle after them and may well have other
+things applied on top of them before you get round to asking for them to
+be applied on a different branch as is the case here.
+
+--afp+guHfXX9/pd8X
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUmitoACgkQJNaLcl1U
+h9D+4Af8CJ5+ct01+tn2WsdFFMcvKELu0E7FSpEIegfW7OyA0n4hHQFdJIUS83hH
+VBwCQ//WgRkIgr616SqVaxKy3XYgi34kMOCUWUUGFuPTUnSfuSZ8HkXBmY+e/eHf
+5oepsYewqtgd4QqsQuTD+jVFM4K+/X5EtT4wl4gGXDLXaCjYZZpF37N3BwdaUOFL
+EuZ0OyiUWhcY7BUv2a0jZJklE7J4fuTAT2DhE2xLd9WNrIM1P9JWzBNvy1JeoprG
+v1fGaLY/pUNxJTh0o2i9qpo+IRuyAcrP69q4n6lnrGce7kdXC9PakeEIoUK81fAw
+4v45+QwKR2do3HAR24Uy0g+zssca8g==
+=/G22
+-----END PGP SIGNATURE-----
+
+--afp+guHfXX9/pd8X--
