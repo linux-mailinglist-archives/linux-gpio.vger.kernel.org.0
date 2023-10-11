@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB4F97C5F7F
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 23:52:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 705C27C5F84
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 23:53:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233476AbjJKVwP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 17:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52612 "EHLO
+        id S233702AbjJKVxJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 17:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233703AbjJKVwO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 17:52:14 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631AEDA
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 14:52:11 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1c9b70b9671so27145ad.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 14:52:11 -0700 (PDT)
+        with ESMTP id S233625AbjJKVxJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 17:53:09 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF2AB6
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 14:53:06 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c9d4f08d7cso61355ad.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 14:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697061130; x=1697665930; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697061186; x=1697665986; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
         bh=2PmcXQ0mdd2fjr08gUutFL5TrBrbl9n8zgazyjOunRA=;
-        b=fcdI+qpSBR6pmaQCXolsXSkAWkNvmE45RhvX1ATtKm1xP6kt37soc1o+ahIHDNB8sC
-         T9Tg41/zLQ0HhvtA829I34GaLpmA7l+kHVkpMcmN8t2BUMlPL24g1Mif1i4qgHhkCv+i
-         iV+Qlbw9ZLWjvLRiu7K3jRMFpuejYhvPIhEs/C4vVf5xzHUd8CShpG0twxDZBAGD66SO
-         OQuKHIK41pIe4x9lDPDn5/B0T6vujjQuVJHZbHqphFT2HWP/05+SqkVgLYEUYsENFfSH
-         HbJXX368l5ci7t43Xuf2gLZq5A0Tx66eyxWZt5RDxniUuiG0ZtlYlg+YhW8cmkdKkA09
-         B49g==
+        b=regXjae8T0hvJS8tuA2fPEn2N8JLb+GLKIJm7n36ZCBkkl+RE/RWMEgC7RPYqn8bhX
+         5dmOpgCFlMWoWkfG+R6728MAo/+FglpAZLcCdn6oVfUkXvHAWfpSlLery8iLDpTf9EL1
+         yRBvyMKBhOWisU6k7ldNv0ElAVbpggTY+0X5cn+/0P/SlGhoTwfWlRlGo2lZcmytAb95
+         649ErjyxcBzCrk3VepJoO60cQ0N0y1U9zNxSx4ViPN2gsfH48zPNi8XJ5DT55HgVS8Mv
+         duogtPMSyo7Q3s5qxcPxWFsCQEg6PIVb3KOr+pUEIn1NhVb1g/wB4oljvIgCoInK1qn9
+         8lWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697061130; x=1697665930;
+        d=1e100.net; s=20230601; t=1697061186; x=1697665986;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
         bh=2PmcXQ0mdd2fjr08gUutFL5TrBrbl9n8zgazyjOunRA=;
-        b=ZZFvGvWcOHkClEZP6EQZnDtsmdf59dGUS0QCsubUE86iezqmksWMWgp8OTGoybpZMy
-         2h9pNsQ79LPaAYHjc2RzkrLM66sImLqTuasafTgs7GZwda/Lww4LRG5Ex9Lruwzardkh
-         +xcsqLVrgJd+AKEEv5BWGdQ3Mw/e2LWjE3O2fG6lVduIYwk6BnQNIGd8qGqt10mbELZs
-         1o+0jYkR0U9z6kMUj829TLTEP8NP0xZLTEsFLIoWNSQOBsOcFZ2iy/JdQ2dIeBt0W4qs
-         1VrU7UTz3Z0Nsbb9M4dNmotNAJ0xq+lW/qDaf1+IaiQ7z4Q+2ReoSqA1tFgcpc6nOE4p
-         PYkA==
-X-Gm-Message-State: AOJu0YyUPaPiv+FsF1IX4Lxc3K1jtAn9RtEANk81WvGCWay0FXjUow8B
-        zFkD5HVHAWnEmzSdPS1tLK+yPA==
-X-Google-Smtp-Source: AGHT+IGe013CnVnmhJmp+zhSawUy8VO5ZSj0A2/Kukg+lVArKQgWW9d0Gmq7bxgllBE09dqzGlmtOA==
-X-Received: by 2002:a17:902:f9d0:b0:1bd:b75a:e95f with SMTP id kz16-20020a170902f9d000b001bdb75ae95fmr362993plb.0.1697061130035;
-        Wed, 11 Oct 2023 14:52:10 -0700 (PDT)
+        b=iclVjE9HiBUUoCf+YqVrtlNvtVWC8/h7HLozpr10MFLa2sQHiGUvalegKae16PtyAe
+         /lBidkHRg521CaH6R131jQMF5ommpPWHu68aAq5cHjOD28QXMHoQdeSDPDarlPs8sJul
+         m7lonXG++dKk49aQ4NMXzL28wdIpTDnafipOE1w4mISQd0wIBrpEVs2Sg2mlf5X0xy+T
+         ZITInrU5D4JhmHEqKQTK51jGLuJfOK5tU7cDpoco0gEO4FlH2ebS0za0do/ay9/hDinU
+         oYmi2/m0KxzCQ3sIvxM8TJctcSyfnj0FkZCFn2NOhAHZFIhtpQrLfU4aMHkECC9yx8cz
+         Yl4g==
+X-Gm-Message-State: AOJu0Ywzz5iKSV1w5Ns0vQVlUKFUNPXTggdzT7TvYPuM/ZBZdPoaUQKV
+        GtpQUWnvfkm+ukS8iEHNXt6k0w==
+X-Google-Smtp-Source: AGHT+IETsYqem1IywYVaGoBv99oO2PNNSqnOYFfqteKpW8/yjwJCjGz76Y2GZW8cZaRKl9qk3jEipw==
+X-Received: by 2002:a17:903:228f:b0:1c3:976e:22e6 with SMTP id b15-20020a170903228f00b001c3976e22e6mr363213plh.12.1697061186005;
+        Wed, 11 Oct 2023 14:53:06 -0700 (PDT)
 Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
-        by smtp.gmail.com with ESMTPSA id c5-20020a6566c5000000b0058988954686sm263715pgw.90.2023.10.11.14.52.08
+        by smtp.gmail.com with ESMTPSA id z21-20020a170902ee1500b001c8836a3795sm309662plb.271.2023.10.11.14.53.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 14:52:08 -0700 (PDT)
-Date:   Wed, 11 Oct 2023 14:52:05 -0700
+        Wed, 11 Oct 2023 14:53:05 -0700 (PDT)
+Date:   Wed, 11 Oct 2023 14:53:02 -0700
 From:   William McVicker <willmcvicker@google.com>
 To:     Peter Griffin <peter.griffin@linaro.org>
 Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
@@ -66,7 +66,7 @@ Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         kernel-team@android.com, linux-serial@vger.kernel.org
 Subject: Re: [PATCH v3 14/20] pinctrl: samsung: Add gs101 SoC pinctrl
  configuration
-Message-ID: <ZScZBbFmLUdhE1hD@google.com>
+Message-ID: <ZScZPstpJInZxwlD@google.com>
 References: <20231011184823.443959-1-peter.griffin@linaro.org>
  <20231011184823.443959-15-peter.griffin@linaro.org>
 MIME-Version: 1.0
