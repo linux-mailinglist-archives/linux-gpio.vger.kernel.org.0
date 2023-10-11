@@ -2,100 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DFD97C5DF3
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 22:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EDCA7C5E5B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 22:27:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233170AbjJKUAL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 16:00:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60072 "EHLO
+        id S1376358AbjJKU0x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 16:26:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233103AbjJKUAL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 16:00:11 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BFB94;
-        Wed, 11 Oct 2023 13:00:09 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-32799639a2aso204511f8f.3;
-        Wed, 11 Oct 2023 13:00:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697054408; x=1697659208; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tX0FgbDhoDy/c6Xp48Q/Lp6Lf1CmRpkAa0uRPBrtEzI=;
-        b=kS85T0iNm6PXIkQ0vwA6Dm5UsGu/i7zsw06X4JZXfjdmX984sUoC42aDac/l4TSMSF
-         TJfcLQseLgukjFaia7yoJiX9XLZKu5vifaUrc0v7XvJRZfUO+FyjP5RC5k5x9bSa/K8g
-         dZBG9fvWCPNj9Ty6oZ9lMiN539hwHIu3qaTlLOi96Zlg8btjnNOWnqMFqAkH1cHOgeca
-         g+sWDAD+5rSRhuIp63ekbg469lob8lKoDHYVzpHKXN1/GXj/SXOJkKInkiHO6hPkf4xI
-         8ReZ9qemD54ZWMlwXYmzev9LpP/0qh2+NadbqLgVnppFD+73QHFpYIZ01orfDjKgP4xG
-         e41Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697054408; x=1697659208;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tX0FgbDhoDy/c6Xp48Q/Lp6Lf1CmRpkAa0uRPBrtEzI=;
-        b=Lx3INY8AhvvYmRNypE70JsvujhRski+yYNTaI1U7CObkWH15oagUI1flg8R0TYCKnJ
-         810Djq6GwsFMAwvQnLfdts1NsM8AEyLMUQjdqpAG9aVY0df4B866RHrletyaGiJDDyWf
-         VIZc5Yahj5qKbUA+7gXa8yXVlkiSQTm6XtT8Ymbd08JZfiS9qLjJKyvAqoSl/L6muAxA
-         711UmgoCBnePXvzPgJR0Iolad1Rc1OBCp4JKFlUV0s+/vavXE031LCprm/EZurPRO2IL
-         2mEPl8MZKY5yZuZqoNAQxVouBDQ6SXonyjK1/NM6tuqExAxI8gLznygzFKLOF/BUgYAB
-         U8Eg==
-X-Gm-Message-State: AOJu0YxPm6BxU9iKVzHMD35r93aBJ2QeBo3AE4aRYo5hJeHijA4WHhf3
-        lr+8akn1Ti+f86N5yRth0/8=
-X-Google-Smtp-Source: AGHT+IFE2hIFhU90VcqiD1hYI+viGbFaj9N2hYTLBPhgD1g5g2LebpwK9LSugAQZhx3RtB8KGn3BQg==
-X-Received: by 2002:a5d:4586:0:b0:31f:eb88:e3c8 with SMTP id p6-20020a5d4586000000b0031feb88e3c8mr18897299wrq.32.1697054407705;
-        Wed, 11 Oct 2023 13:00:07 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2501:c701:b8af:68b0:4272:ed0d])
-        by smtp.gmail.com with ESMTPSA id r18-20020adfe692000000b0031912c0ffebsm16329039wrm.23.2023.10.11.13.00.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 13:00:07 -0700 (PDT)
-From:   Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] pinctrl: renesas: rzg2l: Enhance driver to support interrupt affinity setting
-Date:   Wed, 11 Oct 2023 20:59:23 +0100
-Message-Id: <20231011195923.67404-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S1376412AbjJKU0v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 16:26:51 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C73091;
+        Wed, 11 Oct 2023 13:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697056010; x=1728592010;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dE6YTAgpIUGjQqgWImfLh5Fh6tJ6lKZxZUBMMvpIri0=;
+  b=HjFt7l/ILMgfeVj1xTeuzDpTI552tgynytWTU+bI3rE1+y0iEdz9CIyn
+   G10o+p28IzbSpKJ7eOB1ftbw13U8AnBT9ZQExSWt8qgEC53kIO6UV16Fy
+   NNb/LOISXDhzg33Wjf4iydMLNFwN6w3EwC6m9feHdWgQggBi5pJT7UhCB
+   K8CPLWeVcIJAT9BryXEhOEkFuW4RZxuZkpRxXnD4Tq6wi7C6k/0q4jDjW
+   bmgH2M6kdZ5rJRyt/Qq9uw6YrDLcMbf7w8OhG1/7sMJHznu/wvIjHz6gi
+   zBOYKZdf4xQ9R3URxLHGKuubHsxNvtcIh5wP5akg4ipwmUHNtF8pqZ8nn
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="471015144"
+X-IronPort-AV: E=Sophos;i="6.03,217,1694761200"; 
+   d="scan'208";a="471015144"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 13:26:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10860"; a="783393505"
+X-IronPort-AV: E=Sophos;i="6.03,217,1694761200"; 
+   d="scan'208";a="783393505"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 11 Oct 2023 13:26:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id ED1B7430; Wed, 11 Oct 2023 23:26:41 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dipen Patel <dipenp@nvidia.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-tegra@vger.kernel.org
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: [PATCH v2 0/4] hte: Improve GPIO handling and other cleanups
+Date:   Wed, 11 Oct 2023 23:26:34 +0300
+Message-Id: <20231011202638.372382-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+This is a series that provides a new API to GPIO library (so far only
+available in the GPIO tree), and respective update to the Tegra
+HTE driver. On top a couple of other cleaups (patches 3 & 4, they
+can be applied separately).
 
-Implement irq_set_affinity callback so that we can set affinity
-for GPIO IRQs.
+Patch 2 inherited tags from its respective discussion thread [1].
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 1 +
- 1 file changed, 1 insertion(+)
+Due to dependencies this either should be applied to the GPIO tree,
+or to the HTE when GPIO updates land the upstream (optionally with
+the first patch be applied even now to the GPIO tree independently).
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index c7c6d912a975..e6bf66fca074 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -1576,6 +1576,7 @@ static const struct irq_chip rzg2l_gpio_irqchip = {
- 	.irq_set_type = rzg2l_gpio_irq_set_type,
- 	.irq_eoi = rzg2l_gpio_irqc_eoi,
- 	.irq_print_chip = rzg2l_gpio_irq_print_chip,
-+	.irq_set_affinity = irq_chip_set_affinity_parent,
- 	.flags = IRQCHIP_IMMUTABLE,
- 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
+Another option is to have an immutable branch or tag, but I assume
+that was discussed and rejected (?) in [1].
+
+In v2:
+- collected tags (Linus, Dipen) 
+- fixed couple of typos (Dipen)
+
+Link: https://lore.kernel.org/linux-gpio/20230905185309.131295-15-brgl@bgdev.pl/ [1]
+Cc: Dipen Patel <dipenp@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+
+Andy Shevchenko (3):
+  gpiolib: provide gpio_device_find_by_fwnode()
+  hte: tegra194: Remove redundant dev_err()
+  hte: tegra194: Switch to LATE_SIMPLE_DEV_PM_OPS()
+
+Bartosz Golaszewski (1):
+  hte: tegra194: don't access struct gpio_chip
+
+ drivers/gpio/gpiolib.c      | 20 ++++++++++++++++
+ drivers/hte/hte-tegra194.c  | 46 +++++++++++++++++++------------------
+ include/linux/gpio/driver.h |  1 +
+ 3 files changed, 45 insertions(+), 22 deletions(-)
+
 -- 
-2.34.1
+2.40.0.1.gaa8946217a0b
 
