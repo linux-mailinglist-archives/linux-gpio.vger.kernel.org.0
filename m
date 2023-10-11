@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CCFC7C4979
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 07:54:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 258177C497C
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 07:56:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344168AbjJKFyt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 01:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51350 "EHLO
+        id S1343968AbjJKF4A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 01:56:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344167AbjJKFys (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 01:54:48 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B795F94;
-        Tue, 10 Oct 2023 22:54:46 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id ada2fe7eead31-4527d436ddfso2473018137.1;
-        Tue, 10 Oct 2023 22:54:46 -0700 (PDT)
+        with ESMTP id S229952AbjJKFz7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 01:55:59 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD638E;
+        Tue, 10 Oct 2023 22:55:58 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-66ceef95b89so10170236d6.3;
+        Tue, 10 Oct 2023 22:55:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697003686; x=1697608486; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1697003757; x=1697608557; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DiBJtKSXozbM0r46s6SPSgE4x00q8wuaRms3SXA5/DM=;
-        b=GD1bzNVTm6EgK1eEEzL4tYSV0pe3Kf9MNyz/czGLnxM4im///+MEi7i/wxhxPMeyAT
-         +gIyTgobrl1jukAECl1f5FSqpNMI1QLglM0jdQHnoGJzWmkX6disbSw79tZYF1pW99yB
-         tcSa1VTU7Igonhn9MO1UuA4lffZu0pQjmNPP4dlHRFbbJiE7Y1Qgkmpq5aM2+qczgxXY
-         FOP2IR9fQsgax03lXhjxCZha1Kb2F0I0iPBglv9TsCYfdTxeXlk4406ZecnDIaOrrUvb
-         BeVBXO6nkMoAnGYX/IfLvmoxVt4ys5D7py5XR902VHExjPGEp03aLaOqVW1AdTwJudAE
-         v/Bg==
+        bh=mTjpQvyMHkbUpLu3ihyopH9dpMDT8ryAdeqR+3nM3c0=;
+        b=OLPtboIWHO20M6k/i2vUhscVgWm+Ft3DbTQ8YVmpUCPrddwgoGU6tPM0AzxNjU89Tc
+         hIMXF61k/RvC4O0LaggYNkBPMP1nJHT0Uy+KFJp06ifjLZ8MTzaKjOKpM3v5Xk8wqcIZ
+         TxwcnMxRT4GBxMDRZ1sRqGb+bzoaRFo20l96TTX6t08xZEdVXVFO9mwaNm/wdq8rnIYl
+         kFFl37ki+eog1q5X99UdPJoeuRdGOFI/tnnDFyuJe9XH+hKhupkwtOzqO7euSHcvovP4
+         mldgWmEtXywS06AX+g7PgbCObDBVK8F8K2QGBVQ+RDxAmfCRcLLri2nb18Yf/mzdFlMx
+         bn5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697003686; x=1697608486;
+        d=1e100.net; s=20230601; t=1697003757; x=1697608557;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DiBJtKSXozbM0r46s6SPSgE4x00q8wuaRms3SXA5/DM=;
-        b=RCCHi3kE+0vkywnF6bPkbFOD58Yilm26yFJ8OQp9qsFBrcCwLjO2IX8aUvhrW5oUNl
-         xzNLsnzWNusljoJs+36MFR5bWogum0kW4kvDIFnP88QYAFrUClaXQ1q52/bFiXy//k/L
-         dMpSbyctNhz+hzpwN+H6enJSdfoHWWD5708eQv8p5KAsDwVk53nzxocZWNtm23s42UAx
-         o/MoVWtDXgTaqh3TX0cJagpqULFQVXxNLZuNrUXD+Gb16/+bGShfk7JivqLpCMdc92Py
-         f59SoYWQ5W4Se3vn1j4CsQ6/3nxETshdIcW96Lr62FQLS72apVXACxCprIKFs6tbGWw3
-         Offw==
-X-Gm-Message-State: AOJu0YyNGebjOXzQv+ugPqsu+O1hrYS+DliNAgbzH0BwsGqgr0pZ9NjS
-        Xlg1BGJ1Ae5BKVCypLseQ5migzlKYIzpRZWoEeJBn5KJ1FQ=
-X-Google-Smtp-Source: AGHT+IHA9B34pMhcmDUBfDewbK1peGnr0ieNQbmb7QYwL7I9suY7sO1Vkh0n8/Iorr3X+CjyMV9ta3PrINSdPOu6mrE=
-X-Received: by 2002:a67:fe88:0:b0:44e:9313:b045 with SMTP id
- b8-20020a67fe88000000b0044e9313b045mr19458526vsr.7.1697003685723; Tue, 10 Oct
- 2023 22:54:45 -0700 (PDT)
+        bh=mTjpQvyMHkbUpLu3ihyopH9dpMDT8ryAdeqR+3nM3c0=;
+        b=a7Fe6EfC0Qevo6Eaxg3nGTl9P4E4zTuKvpQ9Rs6LSJieV57DdywaQF5zL6Z8ksNCMo
+         CnnGR23tvo5FFrsCByrKgwsZXHQ3hQjKveUNhK7TW6Gtd10uBuU4pFeysgoAYo1F7gXo
+         0tlB56D8/+kmIwaOOEuZ8tUr0MfQR9RdaxI3IRYzaL2TEpY+eyNrcsZMPNP7NJ5dDTFE
+         3VTp0PPmM3AUZb5j/qIfoP0i4yU/g+JIgq5ZBD3zvq8XWYFloQbLN6/IoOTBCB88fv3R
+         CXrzvyNcjTwXfrjOBCiTu05J59G0KmaPeAKlBEp37dOOdY5mmgUYLf2GN8OVzEAIeRlF
+         da4A==
+X-Gm-Message-State: AOJu0YzQOoVMrUz14mh85LgUErODsta1dYqHARZtyG5bKXMneVHoxqjV
+        R60TUoD4rAANBS2ZgrTGhVFm2qctSdNfLD4YxF0hLAMqS9Y=
+X-Google-Smtp-Source: AGHT+IFIeFo8MDm4RDbVOvfQd2TQwRCkzHVhlunlbXpiCiir1RpoyTNxTr2ClGYp+hsDBzw9ZQx44MeKbyGLy1S7+ew=
+X-Received: by 2002:a0c:f194:0:b0:66c:ff4f:a35f with SMTP id
+ m20-20020a0cf194000000b0066cff4fa35fmr3144687qvl.51.1697003757216; Tue, 10
+ Oct 2023 22:55:57 -0700 (PDT)
 MIME-Version: 1.0
 References: <20231010151709.4104747-1-andriy.shevchenko@linux.intel.com>
- <20231010151709.4104747-3-andriy.shevchenko@linux.intel.com>
- <3e1e6acf-5862-9f35-cbe6-72bb17cf3851@nvidia.com> <147fe15c-13d3-60dc-bd49-cd0cb40126e9@nvidia.com>
-In-Reply-To: <147fe15c-13d3-60dc-bd49-cd0cb40126e9@nvidia.com>
+ <20231010151709.4104747-5-andriy.shevchenko@linux.intel.com> <0db37cd0-9cb9-41bc-c2aa-0a01c0295ed0@nvidia.com>
+In-Reply-To: <0db37cd0-9cb9-41bc-c2aa-0a01c0295ed0@nvidia.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 11 Oct 2023 08:54:09 +0300
-Message-ID: <CAHp75VdgM0riV6Y2PHnU14ZTN_4-eiXevFhi-gsbQPwrkicArw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] hte: tegra194: don't access struct gpio_chip
+Date:   Wed, 11 Oct 2023 08:55:21 +0300
+Message-ID: <CAHp75VcRKnWRNxTafsG2f+tWrF-6yQjECLpyn_S-VK78SfL8VQ@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] hte: tegra194: Switch to LATE_SIMPLE_DEV_PM_OPS()
 To:     Dipen Patel <dipenp@nvidia.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
@@ -77,18 +76,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 10, 2023 at 10:31=E2=80=AFPM Dipen Patel <dipenp@nvidia.com> wr=
+On Tue, Oct 10, 2023 at 10:36=E2=80=AFPM Dipen Patel <dipenp@nvidia.com> wr=
 ote:
-> On 10/10/23 9:19 AM, Dipen Patel wrote:
-> > On 10/10/23 8:17 AM, Andy Shevchenko wrote:
+> On 10/10/23 8:17 AM, Andy Shevchenko wrote:
 
-> >> +                    hte_dev->gdev =3D
-> >> +                            gpio_device_find_by_fwnode(of_fnode_handl=
-e(gpio_ctrl));
+> > +             .pm =3D pm_slee_ptr(&tegra_hte_pm),
 >
-> I think there is typo for of_fnode*. Should it be of_fwnode*?
+> typo, pm_sleep_ptr instead?
 
-Yep, it's a typo, can you. fix manually for the test, please?
+Indeed. On my x86_64 this code slipped from compilation. I will try
+harder to compile-test it next time.
 
 --=20
 With Best Regards,
