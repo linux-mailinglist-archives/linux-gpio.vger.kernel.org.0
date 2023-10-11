@@ -2,172 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20EFB7C4FF0
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 12:19:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 583057C4FF9
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 12:21:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231367AbjJKKTq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 06:19:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38498 "EHLO
+        id S231582AbjJKKVb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 06:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231207AbjJKKTp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 06:19:45 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA79192;
-        Wed, 11 Oct 2023 03:19:42 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 961635C0116;
-        Wed, 11 Oct 2023 06:19:39 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 11 Oct 2023 06:19:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1697019579; x=1697105979; bh=do
-        IlIC9EeuIMVa/VZ1WnSYIgbZ+zY86Stgz8IJ2yHW4=; b=ZPTus0CyEZNzQ3ZYKm
-        vLTrtlZZoL2M6dMhXvw7rdMMA3wsa1FYnEACrecc2ztl1WDIhfslaXER4S5jbcgb
-        hrDzBxPG1Tvy/cu/cRxuoRxOocI/ilrFu8QeXpoWTaKNDQIg7rwfNoB/TVKml2fU
-        JdjYlo0AIDlLAhIOISWCEJlWzXc5Fu/bhQMwDQWXIUU/Vx1npy+zkmNn7ctCE4P9
-        9Acrw62yBDVubO8PIMtRxhu2B3aYMuqwz4cxO/vWHYNlTih+fmQ+eMTvB5Sdsda2
-        6ok0s4mIi74f9u92Kt8QdHWdAxfz/e46T2kOki+C/8OBV5ZCZrPIV0DBiDDkprOZ
-        SkoQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1697019579; x=1697105979; bh=doIlIC9EeuIMV
-        a/VZ1WnSYIgbZ+zY86Stgz8IJ2yHW4=; b=BlWfsK3XtX6m9FTqsj5z+1lUlMtVa
-        uSmnhdJzR9VOmXkLB8Sg7CqlmHnsdQrCS9nff7eODRcC0FLRrX4dpKgs4JpDK5uJ
-        ymtB7FHWWwyXprS3R33M66wU24sHYVMYG9vnBO5gKIED7l3Y71rlJqplNDRvGvLL
-        XqfFxbMTUWedWoqXKeifaPqHOcDtjTfd4b0jcBJJxnylBAFyt69//H8G82sczviD
-        Zc15LmU9PssJ1peroeRSsjlh/pqbKT3yiSrAaImPXAkd5Q6sZ7ucvOzT9pOLybO2
-        cySWW720H6hmb/0RZrsqaCI7I5KqEdLTYCfqh7OeHbu2l+VwyWP+yIUxA==
-X-ME-Sender: <xms:unYmZQET4dYl0UoyJjuZ_fB3T1xzGXWTaEpTBatGe-U2yFN3tlqJYA>
-    <xme:unYmZZUZyl_2BgDDmlQsE-0cD7Q8ehnanhh1grHoC6sIKH3IjNwup37wWtGtVx1z0
-    F3apLa6N32LtyOaNTc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrheekgddvgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:unYmZaIaxR6H4udLyS5OVwVlsBNx6B9mLcmyLeuDThy_R7jQ9TzNMQ>
-    <xmx:unYmZSFPFX4dh4pSv2FHaQfC4fvguak-1Pdc4tFpdUO0do8tM0jeBg>
-    <xmx:unYmZWUb2qBaTOgabSaKnUOm46EBwGyf30U_NflTf0hSL3j1KH3gGw>
-    <xmx:u3YmZZnW7p2LztIhQz51H5hhZsTE5xhCBwF_Cy8pNMRab5eVYrtLgg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 85FC8B60089; Wed, 11 Oct 2023 06:19:38 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1019-ged83ad8595-fm-20231002.001-ged83ad85
+        with ESMTP id S231207AbjJKKV3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 06:21:29 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D616794;
+        Wed, 11 Oct 2023 03:21:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697019688; x=1728555688;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/cYWT/4fm7jXsKnDZ4BU0yY6cJwahfXPWVnGMGjbcsM=;
+  b=VIeWU83bLvIUuBBVheASpygqGR67OfO2po2QRufat1UAd7c771nPnieN
+   qke+mncSsVYK2FsIruJRW+jU6K+XLX6bd7Zndjjg15/5+YWvJyJL/axyv
+   TDovcmIDnajM4mJC3s8Yq+C8kOaNr4eChcBEGbrh38srpMuVamyvn8wrQ
+   5+SUKrUW7toVZHTzGzIAucFQT3Id9Y+y3SsHVJHaK/h/2Y2t1t950ISAP
+   ltHUsxBHyZhDNvTR8+lpJD6XUUoZDorRVxGf5QAhqGUL5zzlXwvKlzKjM
+   osi32NGu6DUWogmTLWZ4uAjnXvCKBdxUE0sn0Sk3SRm/5hgGiab5I5AMJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="415673273"
+X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
+   d="scan'208";a="415673273"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 03:21:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="897579128"
+X-IronPort-AV: E=Sophos;i="6.03,214,1694761200"; 
+   d="scan'208";a="897579128"
+Received: from unknown (HELO smile.fi.intel.com) ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2023 03:19:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1qqWLB-00000004an8-1jYb;
+        Wed, 11 Oct 2023 13:21:21 +0300
+Date:   Wed, 11 Oct 2023 13:21:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Wentong Wu <wentong.wu@intel.com>
+Cc:     gregkh@linuxfoundation.org, oneukum@suse.com, wsa@kernel.org,
+        andi.shyti@linux.intel.com, broonie@kernel.org,
+        bartosz.golaszewski@linaro.org, linus.walleij@linaro.org,
+        hdegoede@redhat.com, linux-usb@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        sakari.ailus@linux.intel.com, zhifeng.wang@intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v20 1/4] usb: Add support for Intel LJCA device
+Message-ID: <ZSZ3IPgLk7uC5UGI@smile.fi.intel.com>
+References: <1696833205-16716-1-git-send-email-wentong.wu@intel.com>
+ <1696833205-16716-2-git-send-email-wentong.wu@intel.com>
 MIME-Version: 1.0
-Message-Id: <c454503a-8f89-4bcf-949d-4970595540fc@app.fastmail.com>
-In-Reply-To: <2023101126-stash-manor-7162@gregkh>
-References: <20231010224928.2296997-1-peter.griffin@linaro.org>
- <20231010224928.2296997-9-peter.griffin@linaro.org>
- <2023101111-banknote-satin-1f77@gregkh>
- <a6c57156-d3a5-4524-8ef8-6f27cf0a2c97@linaro.org>
- <2023101137-fester-rerun-5c39@gregkh>
- <fe7cf585-622a-420e-8138-10de1cbca511@app.fastmail.com>
- <2023101126-stash-manor-7162@gregkh>
-Date:   Wed, 11 Oct 2023 12:19:18 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc:     "Tudor Ambarus" <tudor.ambarus@linaro.org>,
-        "Peter Griffin" <peter.griffin@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        "Conor Dooley" <conor+dt@kernel.org>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        "Tomasz Figa" <tomasz.figa@gmail.com>,
-        "Sylwester Nawrocki" <s.nawrocki@samsung.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Wim Van Sebroeck" <wim@linux-watchdog.org>,
-        "Guenter Roeck" <linux@roeck-us.net>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>, "Olof Johansson" <olof@lixom.net>,
-        "Chanwoo Choi" <cw00.choi@samsung.com>, andre.draszik@linaro.org,
-        semen.protsenko@linaro.org, saravanak@google.com,
-        "William McVicker" <willmcvicker@google.com>, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, kernel-team@android.com,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 08/20] dt-bindings: serial: samsung: Add google-gs101-uart
- compatible
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1696833205-16716-2-git-send-email-wentong.wu@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023, at 11:42, Greg Kroah-Hartman wrote:
-> On Wed, Oct 11, 2023 at 11:30:25AM +0200, Arnd Bergmann wrote:
->> On Wed, Oct 11, 2023, at 10:57, Greg KH wrote:
->> >
->> >> It's not only the IP itself
->> >> that can differ, it's also the integration of the IP into the final
->> >> product that could have an influence on the behavior.
->> >
->> > This is for the Pixel 6, a device that is no longer even shipping.  The
->> > "final product" is long stable, so this should not be an issue.
->> 
->> The driver does have soc specific settings for each compatible
->> string, in this case it looks like it overrides the FIFO size
->> based on driver specific data and the order in which the
->> ports are probed [1]. I don't understand why the driver does
->> this, but my impression is that if we wanted to change it to no
->> longer rely on that data, we'd also need a new compatible
->> string.
->
-> As I reviewed that patch already, it is just duplicating an existing
-> quirk/device that the driver already supports, so there is no need for
-> any "new device type" to be added to that driver, just use the existing
-> hardware description in the dt and all should be fine.
+On Mon, Oct 09, 2023 at 02:33:22PM +0800, Wentong Wu wrote:
+> Implements the USB part of Intel USB-I2C/GPIO/SPI adapter device
+> named "La Jolla Cove Adapter" (LJCA).
+> 
+> The communication between the various LJCA module drivers and the
+> hardware will be muxed/demuxed by this driver. Three modules (
+> I2C, GPIO, and SPI) are supported currently.
+> 
+> Each sub-module of LJCA device is identified by type field within
+> the LJCA message header.
+> 
+> The sub-modules of LJCA can use ljca_transfer() to issue a transfer
+> between host and hardware. And ljca_register_event_cb is exported
+> to LJCA sub-module drivers for hardware event subscription.
+> 
+> The minimum code in ASL that covers this board is
+> Scope (\_SB.PCI0.DWC3.RHUB.HS01)
+>     {
+>         Device (GPIO)
+>         {
+>             Name (_ADR, Zero)
+>             Name (_STA, 0x0F)
+>         }
+> 
+>         Device (I2C)
+>         {
+>             Name (_ADR, One)
+>             Name (_STA, 0x0F)
+>         }
+> 
+>         Device (SPI)
+>         {
+>             Name (_ADR, 0x02)
+>             Name (_STA, 0x0F)
+>         }
+>     }
 
-The thing is, I suspect that the FIFO size override is actually
-wrong for the exynos850 as well, and is almost certainly wrong
-for both exynosautov9 and google-gs101:
+This commit message is not true anymore, or misleading at bare minimum.
+The ACPI specification is crystal clear about usage _ADR and _HID, i.e.
+they must NOT be used together for the same device node. So, can you
+clarify how the DSDT is organized and update the commit message and
+it may require (quite likely) to redesign the architecture of this
+driver. Sorry I missed this from previous rounds as I was busy by
+something else.
 
-- The driver overrides an exynos850 compatible uart to use a
-  256 byte FIFO on whichever port is probed first, 64 byte
-  on the next three ports, and the setting from DT on any
-  later ones, falling back to 16 bytes if the DT does not set
-  anything.
+Greg, please do not promote this to the next before above will be clarified.
 
-- exynos850 only actually has three of these ports, not
-  four. It does not lists  FIFO size in the dts at all.
+P.S> Using _ADR and _HID together is an immediate NAK from me.
 
-- exynosautov9 has a total of 11 ports, each of these
-  compatible with both "samsung,exynosautov9-uart" as
-  the specific value and "samsung,exynos850-uart" as
-  the generic fallback. The DT lists a FIFO size of 256
-  bytes for ports 0, 1, and 6, but lists FIFO size 64
-  for each of the other ones.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-- google-gs101 only lists a single uart in the dts,
-  and sets it to a 256 byte FIFO.
 
-- testla-fsd claims to be compatible with exynos4210,
-  which also overrides the first two ports in probe
-  order to 256 and 64 bytes respectively (like exynos850),
-  but it only has two ports.
-
-- artpec8 has a separate compatible string so it overrides
-  all ports to 64 bytes.
-
-I don't know why probe order would have anything to do
-with this, so most likely these are all the same thing
-and should just put a fixed FIFO size into the DT for
-each port instance.
-
-      Arnd
