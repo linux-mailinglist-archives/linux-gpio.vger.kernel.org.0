@@ -2,377 +2,476 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FC097C5EFC
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 23:20:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 734CA7C5F53
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 23:49:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233521AbjJKVUX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 17:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59734 "EHLO
+        id S1376414AbjJKVsv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 17:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233496AbjJKVUW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 17:20:22 -0400
-Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 435ECA9;
-        Wed, 11 Oct 2023 14:20:17 -0700 (PDT)
-Received: by mail-vk1-xa30.google.com with SMTP id 71dfb90a1353d-49d6bd3610cso91837e0c.1;
-        Wed, 11 Oct 2023 14:20:17 -0700 (PDT)
+        with ESMTP id S235174AbjJKVsv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 17:48:51 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC28C4
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 14:48:46 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c9c496c114so61285ad.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 14:48:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697059216; x=1697664016; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697060925; x=1697665725; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lhywIaYgyHV+8Wb5qCLR80dSpBUwcZQjWfKFyAdOsWk=;
-        b=D/uYOCSk3o1jmPbAF3QxBmDIPiE/x1gGZmF4VSiEc2s3aVm5baEPWd5moJb4vrLa0i
-         y0cDvghbyZ18EX+s4dWetBwkvepPZxDX68cHUgJ1g5iF3NEGy1qGJGdiFzuvT6uHT/rK
-         wdCYPI+XSI7aq5VDdTKjFhgB0r6Y71lWZ/InuszicyO0hoixti9bbJOyYfxsK3UcAhZ9
-         vWLojzy5cekhiwW1suRciUMPA258iFzKT/wLIHamQhNt7Vt2/kBCVP0CbDPcntZ6GOyp
-         7ggCsd1mJXMzva2uvUXETdIK581lXRslM8umgeuVO5LUg5inZiwQbJchq0Jrg7t9q2BH
-         mclw==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iR3zZoSVmCOly7wUnDXqUwXPhBwKadL2uGHRkM5jNlY=;
+        b=gXcqYpZLsL2y2VECgugYLhaCeP4NDLWfKV+uOatfgzeejl/hHgne+KYxbsqf/+F1tx
+         GgmBgtixo+OaSuV2c23oSTfq2zy6sK7Qeqb9xu8AdG3RipkjpB0wgwYP0he+q/t74xFH
+         l4sxXH/cxXrc2uGM2rL+zrvra4migos0B6bUiX6Vk68hfcE/dsQ2ylB/qcZF41hmdIr1
+         5pYxF3sUuwbzm8hBYnKdzCAPmkA4N6dyoaAcoZDkzgWDwL+bayHx2g571qURla//AvPu
+         IZgIvQu1a3fLuQDhZznUYxuvnMqfq3do3cVg/96iuhJjClXvozfa28nIkq2wpUAVAlpq
+         mH+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697059216; x=1697664016;
+        d=1e100.net; s=20230601; t=1697060925; x=1697665725;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lhywIaYgyHV+8Wb5qCLR80dSpBUwcZQjWfKFyAdOsWk=;
-        b=thAejaKR7CWNw8rO2TbHbX2ZmHRcEESqCu9aw4N5hVEbquX0LdE29vLTDkEDmPzAAl
-         SL9Exo2oAcnHZB/LXiGN6/5ThpzG0xI324RTPG1HqoNFK+s/ZQrJsVEXHWdMoD6B9zmb
-         RQbuE9xQC2k+mUrD9wkKFZDqSbe/3ARQmaf5yP+DX057o5/J4ov9/Bn95weLzNs10jba
-         XTjfV+NS4I6vHdK/rMI4jKdDoeOXN64ti+m2FlwlpsL0Yn0wGoWBueoRKnUbxbWSF9Ha
-         fmhWMxWybhLDyJpxQAv2mn+NS0/raBwGBcBoGQCumG5MP6r3af6v8jx1XWk4oOH/Ennb
-         +HsQ==
-X-Gm-Message-State: AOJu0YxtnjwTpTEJboasI/XILzzMeNREqxWzP2DkEw6mNDP05k8y2fzX
-        apH8zyQx4etBhRjc16Rg0L0=
-X-Google-Smtp-Source: AGHT+IGftkULkb6AubRC6ZgI5xrsnD8uhx3YRI2APpn3ekErSGeIKoj0bn8ygO/93y1FvayCBIo+jA==
-X-Received: by 2002:a05:6102:34f6:b0:455:c426:1b22 with SMTP id bi22-20020a05610234f600b00455c4261b22mr21636570vsb.16.1697059216184;
-        Wed, 11 Oct 2023 14:20:16 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l29-20020ab053dd000000b007b5ff005318sm886292uaa.17.2023.10.11.14.20.14
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iR3zZoSVmCOly7wUnDXqUwXPhBwKadL2uGHRkM5jNlY=;
+        b=YMCBVLDB2nakjKzUeC8Zt41XDu7L4pGqv54wPQ1q+fmnToMtz1NIZqqqei3TpxbQ8j
+         jHdnnYuSMZW9NF2EQQZYFZhyf3Vpsvqhb0TohIGF5KuEzm1ARueJLOjFP3RkRhxnk1s5
+         iXAPX8wodhwEYjxvLoV5fpg1HB+Et/ctnhwWViReR0A1KHne+IB8CIugHiV8c/YcgLrz
+         nghVILHeN6oWpVVNk27XJIckdaQ4MwfN83I1mQYZS3wVeYsPGonimMXUgMPQ4sMcqrsU
+         kymoWRmvHCuSWpFU93zwyJX3li1K07us1wyN0pWsq2xh6nupr1agkntATiHWkhV6/iEL
+         RdQQ==
+X-Gm-Message-State: AOJu0Yz46wSr+oxrJLA9xpsBq0um+yGpNOY0qIj0NrXq2W5Jckhm09u6
+        K1ZBS/WIFsolZQP604rTSKO6LA==
+X-Google-Smtp-Source: AGHT+IHdTpvA+37BkNrxxAEbpPlFZRl9ooB4OlzIJ84d1rfe9XsW4NiWMbrc1Z8kqPd1QSvkPn6dlA==
+X-Received: by 2002:a17:903:2347:b0:1c9:af6a:6d0d with SMTP id c7-20020a170903234700b001c9af6a6d0dmr308850plh.9.1697060925204;
+        Wed, 11 Oct 2023 14:48:45 -0700 (PDT)
+Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
+        by smtp.gmail.com with ESMTPSA id c15-20020a170903234f00b001c62b9a51c0sm322940plh.103.2023.10.11.14.48.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 14:20:15 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Wed, 11 Oct 2023 14:20:13 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
+        Wed, 11 Oct 2023 14:48:44 -0700 (PDT)
+Date:   Wed, 11 Oct 2023 14:48:41 -0700
+From:   William McVicker <willmcvicker@google.com>
 To:     Peter Griffin <peter.griffin@linaro.org>
 Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
         tomasz.figa@gmail.com, s.nawrocki@samsung.com,
         linus.walleij@linaro.org, wim@linux-watchdog.org,
-        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-        olof@lixom.net, gregkh@linuxfoundation.org, cw00.choi@samsung.com,
-        tudor.ambarus@linaro.org, andre.draszik@linaro.org,
-        semen.protsenko@linaro.org, saravanak@google.com,
-        willmcvicker@google.com, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
+        arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org,
+        cw00.choi@samsung.com, tudor.ambarus@linaro.org,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        saravanak@google.com, soc@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
         kernel-team@android.com, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3 15/20] watchdog: s3c2410_wdt: Add support for Google
- tensor SoCs
-Message-ID: <36dd4a24-00a0-4901-b621-b50384b1020c@roeck-us.net>
+Subject: Re: [PATCH v3 02/20] dt-bindings: clock: Add Google gs101 clock
+ management unit bindings
+Message-ID: <ZScYOUi7qhvGmMIF@google.com>
 References: <20231011184823.443959-1-peter.griffin@linaro.org>
- <20231011184823.443959-16-peter.griffin@linaro.org>
+ <20231011184823.443959-3-peter.griffin@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231011184823.443959-16-peter.griffin@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20231011184823.443959-3-peter.griffin@linaro.org>
+X-Spam-Status: No, score=-15.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 07:48:18PM +0100, Peter Griffin wrote:
-> This patch adds the compatibles and drvdata for the Google
-> gs101 & gs201 SoCs found in Pixel 6 and Pixel 7 phones. Similar
-> to Exynos850 it has two watchdog instances, one for each cluster
-> and has some control bits in PMU registers.
-> 
-> The watchdog IP found in gs101 SoCs also supports a few
-> additional bits/features in the WTCON register which we add
-> support for and an additional register detailed below.
-> 
-> dbgack-mask - Enables masking WDT interrupt and reset request
-> according to asserted DBGACK input
-> 
-> windowed-mode - Enabled Windowed watchdog mode
-> 
-> Windowed watchdog mode also has an additional register WTMINCNT.
-> If windowed watchdog is enabled and you reload WTCNT when the
-> value is greater than WTMINCNT, it prompts interrupt or reset
-> request as if the watchdog time has expired.
-
-Sorry, I don't understand what the code is doing here.
-
-It looks like it enables window mode unconditionally (?). If so,
-what is the impact ? Does it mean that any code requesting multiple
-keepalives in a row on the affected hardware will now cause an
-immediate reset ? If so, what is the rationale ?
-
-Alternatively, if it enables window mode and configures it such
-that WTMINCNT is always equal or larger than WTCNT, what is the
-point of enabling window mode in the first place ?
-
-Thanks,
-Guenter
-
+On 10/11/2023, Peter Griffin wrote:
+> Provide dt-schema documentation for Google gs101 SoC clock controller.
+> Currently this adds support for cmu_top, cmu_misc and cmu_apm.
 > 
 > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+
+Tested-by: Will McVicker <willmcvicker@google.com>
+
+Thanks,
+Will
+
 > ---
->  drivers/watchdog/s3c2410_wdt.c | 127 ++++++++++++++++++++++++++++++---
->  1 file changed, 116 insertions(+), 11 deletions(-)
+>  .../bindings/clock/google,gs101-clock.yaml    | 125 ++++++++++
+>  include/dt-bindings/clock/google,gs101.h      | 232 ++++++++++++++++++
+>  2 files changed, 357 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+>  create mode 100644 include/dt-bindings/clock/google,gs101.h
 > 
-> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-> index 0b4bd883ff28..36c170047180 100644
-> --- a/drivers/watchdog/s3c2410_wdt.c
-> +++ b/drivers/watchdog/s3c2410_wdt.c
-> @@ -31,12 +31,14 @@
->  #define S3C2410_WTDAT		0x04
->  #define S3C2410_WTCNT		0x08
->  #define S3C2410_WTCLRINT	0x0c
-> -
-> +#define S3C2410_WTMINCNT	0x10
->  #define S3C2410_WTCNT_MAXCNT	0xffff
->  
-> -#define S3C2410_WTCON_RSTEN	(1 << 0)
-> -#define S3C2410_WTCON_INTEN	(1 << 2)
-> -#define S3C2410_WTCON_ENABLE	(1 << 5)
-> +#define S3C2410_WTCON_RSTEN		(1 << 0)
-> +#define S3C2410_WTCON_INTEN		(1 << 2)
-> +#define S3C2410_WTCON_ENABLE		(1 << 5)
-> +#define S3C2410_WTCON_DBGACK_MASK	(1 << 16)
-> +#define S3C2410_WTCON_WINDOWED_WD	(1 << 20)
->  
->  #define S3C2410_WTCON_DIV16	(0 << 3)
->  #define S3C2410_WTCON_DIV32	(1 << 3)
-> @@ -51,6 +53,7 @@
->  
->  #define S3C2410_WATCHDOG_ATBOOT		(0)
->  #define S3C2410_WATCHDOG_DEFAULT_TIME	(15)
-> +#define S3C2410_WINDOW_MULTIPLIER	2
->  
->  #define EXYNOS5_RST_STAT_REG_OFFSET		0x0404
->  #define EXYNOS5_WDT_DISABLE_REG_OFFSET		0x0408
-> @@ -67,6 +70,13 @@
->  #define EXYNOSAUTOV9_CLUSTER0_WDTRESET_BIT	25
->  #define EXYNOSAUTOV9_CLUSTER1_WDTRESET_BIT	24
->  
-> +#define GS_CLUSTER0_NONCPU_OUT			0x1220
-> +#define GS_CLUSTER1_NONCPU_OUT			0x1420
-> +#define GS_CLUSTER0_NONCPU_INT_EN		0x1244
-> +#define GS_CLUSTER1_NONCPU_INT_EN		0x1444
-> +#define GS_CLUSTER2_NONCPU_INT_EN		0x1644
-> +#define GS_RST_STAT_REG_OFFSET			0x3B44
+> diff --git a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+> new file mode 100644
+> index 000000000000..f74494594b3b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+> @@ -0,0 +1,125 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/google,gs101-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  /**
->   * DOC: Quirk flags for different Samsung watchdog IP-cores
->   *
-> @@ -106,6 +116,8 @@
->  #define QUIRK_HAS_PMU_RST_STAT			(1 << 2)
->  #define QUIRK_HAS_PMU_AUTO_DISABLE		(1 << 3)
->  #define QUIRK_HAS_PMU_CNT_EN			(1 << 4)
-> +#define QUIRK_HAS_DBGACK_BIT			(1 << 5)
-> +#define QUIRK_HAS_WTMINCNT_REG			(1 << 6)
->  
->  /* These quirks require that we have a PMU register map */
->  #define QUIRKS_HAVE_PMUREG \
-> @@ -263,6 +275,54 @@ static const struct s3c2410_wdt_variant drv_data_exynosautov9_cl1 = {
->  		  QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_CNT_EN,
->  };
->  
-> +static const struct s3c2410_wdt_variant drv_data_gs101_cl0 = {
-> +	.mask_reset_reg = GS_CLUSTER0_NONCPU_INT_EN,
-> +	.mask_bit = 2,
-> +	.mask_reset_inv = true,
-> +	.rst_stat_reg = GS_RST_STAT_REG_OFFSET,
-> +	.rst_stat_bit = 0,
-> +	.cnt_en_reg = GS_CLUSTER0_NONCPU_OUT,
-> +	.cnt_en_bit = 8,
-> +	.quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> +		  QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_WTMINCNT_REG,
-> +};
+> +title: Google GS101 SoC clock controller
 > +
-> +static const struct s3c2410_wdt_variant drv_data_gs101_cl1 = {
-> +	.mask_reset_reg = GS_CLUSTER1_NONCPU_INT_EN,
-> +	.mask_bit = 2,
-> +	.mask_reset_inv = true,
-> +	.rst_stat_reg = GS_RST_STAT_REG_OFFSET,
-> +	.rst_stat_bit = 1,
-> +	.cnt_en_reg = GS_CLUSTER1_NONCPU_OUT,
-> +	.cnt_en_bit = 7,
-> +	.quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> +		  QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_WTMINCNT_REG,
-> +};
+> +maintainers:
+> +  - Peter Griffin <peter.griffin@linaro.org>
 > +
-> +static const struct s3c2410_wdt_variant drv_data_gs201_cl0 = {
-> +	.mask_reset_reg = GS_CLUSTER0_NONCPU_INT_EN,
-> +	.mask_bit = 2,
-> +	.mask_reset_inv = true,
-> +	.rst_stat_reg = GS_RST_STAT_REG_OFFSET,
-> +	.rst_stat_bit = 0,
-> +	.cnt_en_reg = GS_CLUSTER0_NONCPU_OUT,
-> +	.cnt_en_bit = 8,
-> +	.quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> +		  QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_WTMINCNT_REG,
-> +};
+> +description: |
+> +  Google GS101 clock controller is comprised of several CMU units, generating
+> +  clocks for different domains. Those CMU units are modeled as separate device
+> +  tree nodes, and might depend on each other. The root clock in that clock tree
+> +  is OSCCLK (24.576 MHz). That external clock must be defined as a fixed-rate
+> +  clock in dts.
 > +
-> +static const struct s3c2410_wdt_variant drv_data_gs201_cl1 = {
-> +	.mask_reset_reg = GS_CLUSTER1_NONCPU_INT_EN,
-> +	.mask_bit = 2,
-> +	.mask_reset_inv = true,
-> +	.rst_stat_reg = GS_RST_STAT_REG_OFFSET,
-> +	.rst_stat_bit = 1,
-> +	.cnt_en_reg = GS_CLUSTER1_NONCPU_OUT,
-> +	.cnt_en_bit = 7,
-> +	.quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> +		  QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_WTMINCNT_REG,
-> +};
+> +  CMU_TOP is a top-level CMU, where all base clocks are prepared using PLLs and
+> +  dividers; all other leaf clocks (other CMUs) are usually derived from CMU_TOP.
 > +
->  static const struct of_device_id s3c2410_wdt_match[] = {
->  	{ .compatible = "samsung,s3c2410-wdt",
->  	  .data = &drv_data_s3c2410 },
-> @@ -278,6 +338,10 @@ static const struct of_device_id s3c2410_wdt_match[] = {
->  	  .data = &drv_data_exynos850_cl0 },
->  	{ .compatible = "samsung,exynosautov9-wdt",
->  	  .data = &drv_data_exynosautov9_cl0 },
-> +	{ .compatible = "google,gs101-wdt",
-> +	  .data = &drv_data_gs101_cl0 },
-> +	{ .compatible = "google,gs201-wdt",
-> +	  .data = &drv_data_gs201_cl0 },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
-> @@ -375,6 +439,21 @@ static int s3c2410wdt_enable(struct s3c2410_wdt *wdt, bool en)
->  	return 0;
->  }
->  
-> +static void s3c2410wdt_mask_dbgack(struct s3c2410_wdt *wdt, bool mask)
-> +{
-> +	unsigned long wtcon;
+> +  Each clock is assigned an identifier and client nodes can use this identifier
+> +  to specify the clock which they consume. All clocks available for usage
+> +  in clock consumer nodes are defined as preprocessor macros in
+> +  'dt-bindings/clock/gs101.h' header.
 > +
-> +	if (!(wdt->drv_data->quirks & QUIRK_HAS_DBGACK_BIT))
-> +		return;
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - google,gs101-cmu-top
+> +      - google,gs101-cmu-apm
+> +      - google,gs101-cmu-misc
 > +
-> +	wtcon = readl(wdt->reg_base + S3C2410_WTCON);
-> +	if (mask)
-> +		wtcon |= S3C2410_WTCON_DBGACK_MASK;
-> +	else
-> +		wtcon &= ~S3C2410_WTCON_DBGACK_MASK;
-> +	writel(wtcon, wdt->reg_base + S3C2410_WTCON);
-> +}
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
 > +
->  static int s3c2410wdt_keepalive(struct watchdog_device *wdd)
->  {
->  	struct s3c2410_wdt *wdt = watchdog_get_drvdata(wdd);
-> @@ -410,7 +489,7 @@ static int s3c2410wdt_stop(struct watchdog_device *wdd)
->  
->  static int s3c2410wdt_start(struct watchdog_device *wdd)
->  {
-> -	unsigned long wtcon;
-> +	unsigned long wtcon, wtmincnt;
->  	struct s3c2410_wdt *wdt = watchdog_get_drvdata(wdd);
->  	unsigned long flags;
->  
-> @@ -432,6 +511,12 @@ static int s3c2410wdt_start(struct watchdog_device *wdd)
->  	dev_dbg(wdt->dev, "Starting watchdog: count=0x%08x, wtcon=%08lx\n",
->  		wdt->count, wtcon);
->  
-> +	if (wdt->drv_data->quirks & QUIRK_HAS_WTMINCNT_REG) {
-> +		wtcon |= S3C2410_WTCON_WINDOWED_WD;
-> +		wtmincnt = wdt->count * S3C2410_WINDOW_MULTIPLIER;
-> +		writel(wtmincnt, wdt->reg_base + S3C2410_WTMINCNT);
-> +	}
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
 > +
->  	writel(wdt->count, wdt->reg_base + S3C2410_WTDAT);
->  	writel(wdt->count, wdt->reg_base + S3C2410_WTCNT);
->  	writel(wtcon, wdt->reg_base + S3C2410_WTCON);
-> @@ -447,7 +532,7 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
->  	unsigned long freq = s3c2410wdt_get_freq(wdt);
->  	unsigned int count;
->  	unsigned int divisor = 1;
-> -	unsigned long wtcon;
-> +	unsigned long wtcon, wtmincnt;
->  
->  	if (timeout < 1)
->  		return -EINVAL;
-> @@ -478,6 +563,11 @@ static int s3c2410wdt_set_heartbeat(struct watchdog_device *wdd,
->  	count = DIV_ROUND_UP(count, divisor);
->  	wdt->count = count;
->  
-> +	if (wdt->drv_data->quirks & QUIRK_HAS_WTMINCNT_REG) {
-> +		wtmincnt = count * S3C2410_WINDOW_MULTIPLIER;
-> +		writel(wtmincnt, wdt->reg_base + S3C2410_WTMINCNT);
-> +	}
+> +  "#clock-cells":
+> +    const: 1
 > +
->  	/* update the pre-scaler */
->  	wtcon = readl(wdt->reg_base + S3C2410_WTCON);
->  	wtcon &= ~S3C2410_WTCON_PRESCALE_MASK;
-> @@ -496,14 +586,20 @@ static int s3c2410wdt_restart(struct watchdog_device *wdd, unsigned long action,
->  {
->  	struct s3c2410_wdt *wdt = watchdog_get_drvdata(wdd);
->  	void __iomem *wdt_base = wdt->reg_base;
-> +	unsigned long wtcon;
->  
->  	/* disable watchdog, to be safe  */
->  	writel(0, wdt_base + S3C2410_WTCON);
->  
->  	/* put initial values into count and data */
-> +	if (wdt->drv_data->quirks & QUIRK_HAS_WTMINCNT_REG)
-> +		writel(0x100, wdt_base + S3C2410_WTMINCNT);
->  	writel(0x80, wdt_base + S3C2410_WTCNT);
->  	writel(0x80, wdt_base + S3C2410_WTDAT);
->  
-> +	if (wdt->drv_data->quirks & QUIRK_HAS_WTMINCNT_REG)
-> +		wtcon |= S3C2410_WTCON_WINDOWED_WD;
+> +  reg:
+> +    maxItems: 1
 > +
->  	/* set the watchdog to go and reset... */
->  	writel(S3C2410_WTCON_ENABLE | S3C2410_WTCON_DIV16 |
->  		S3C2410_WTCON_RSTEN | S3C2410_WTCON_PRESCALE(0x20),
-> @@ -585,9 +681,11 @@ s3c2410_get_wdt_drv_data(struct platform_device *pdev, struct s3c2410_wdt *wdt)
->  	}
->  
->  #ifdef CONFIG_OF
-> -	/* Choose Exynos850/ExynosAutov9 driver data w.r.t. cluster index */
-> +	/* Choose Exynos850/ExynosAutov9/gsx01 driver data w.r.t. cluster index */
->  	if (variant == &drv_data_exynos850_cl0 ||
-> -	    variant == &drv_data_exynosautov9_cl0) {
-> +	    variant == &drv_data_exynosautov9_cl0 ||
-> +	    variant == &drv_data_gs101_cl0 ||
-> +	    variant == &drv_data_gs201_cl0) {
->  		u32 index;
->  		int err;
->  
-> @@ -600,9 +698,14 @@ s3c2410_get_wdt_drv_data(struct platform_device *pdev, struct s3c2410_wdt *wdt)
->  		case 0:
->  			break;
->  		case 1:
-> -			variant = (variant == &drv_data_exynos850_cl0) ?
-> -				&drv_data_exynos850_cl1 :
-> -				&drv_data_exynosautov9_cl1;
-> +			if (variant == &drv_data_exynos850_cl0)
-> +				variant = &drv_data_exynos850_cl1;
-> +			else if (variant == &drv_data_exynosautov9_cl0)
-> +				variant = &drv_data_exynosautov9_cl1;
-> +			else if (variant == &drv_data_gs101_cl0)
-> +				variant = &drv_data_gs101_cl1;
-> +			else if (variant == &drv_data_gs201_cl0)
-> +				variant = &drv_data_gs201_cl1;
->  			break;
->  		default:
->  			return dev_err_probe(dev, -EINVAL, "wrong cluster index: %u\n", index);
-> @@ -700,6 +803,8 @@ static int s3c2410wdt_probe(struct platform_device *pdev)
->  	wdt->wdt_device.bootstatus = s3c2410wdt_get_bootstatus(wdt);
->  	wdt->wdt_device.parent = dev;
->  
-> +	s3c2410wdt_mask_dbgack(wdt, true);
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: google,gs101-cmu-top
 > +
->  	/*
->  	 * If "tmr_atboot" param is non-zero, start the watchdog right now. Also
->  	 * set WDOG_HW_RUNNING bit, so that watchdog core can kick the watchdog.
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: External reference clock (24.576 MHz)
+> +
+> +        clock-names:
+> +          items:
+> +            - const: oscclk
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: google,gs101-cmu-misc
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: External reference clock (24.576 MHz)
+> +            - description: Misc bus clock (from CMU_TOP)
+> +
+> +        clock-names:
+> +          items:
+> +            - const: oscclk
+> +            - const: dout_cmu_misc_bus
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: google,gs101-cmu-apm
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: External reference clock (24.576 MHz)
+> +
+> +        clock-names:
+> +          items:
+> +            - const: oscclk
+> +
+> +required:
+> +  - compatible
+> +  - "#clock-cells"
+> +  - clocks
+> +  - clock-names
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # Clock controller node for CMU_TOP
+> +  - |
+> +    #include <dt-bindings/clock/google,gs101.h>
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <1>;
+> +
+> +        cmu_top: clock-controller@1e080000 {
+> +            compatible = "google,gs101-cmu-top";
+> +            reg = <0x0 0x1e080000 0x8000>;
+> +            #clock-cells = <1>;
+> +            clocks = <&ext_24_5m>;
+> +            clock-names = "oscclk";
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/include/dt-bindings/clock/google,gs101.h b/include/dt-bindings/clock/google,gs101.h
+> new file mode 100644
+> index 000000000000..7765ba68f734
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/google,gs101.h
+> @@ -0,0 +1,232 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (C) 2023 Linaro Ltd.
+> + * Author: Peter Griffin <peter.griffin@linaro.org>
+> + *
+> + * Device Tree binding constants for Google gs101 clock controller.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLOCK_GOOGLE_GS101_H
+> +#define _DT_BINDINGS_CLOCK_GOOGLE_GS101_H
+> +
+> +/* CMU_TOP PLL*/
+> +#define CLK_FOUT_SHARED0_PLL		1
+> +#define CLK_FOUT_SHARED1_PLL		2
+> +#define CLK_FOUT_SHARED2_PLL		3
+> +#define CLK_FOUT_SHARED3_PLL		4
+> +#define CLK_FOUT_SPARE_PLL		5
+> +
+> +/* CMU_TOP MUX*/
+> +#define CLK_MOUT_SHARED0_PLL		6
+> +#define CLK_MOUT_SHARED1_PLL		7
+> +#define CLK_MOUT_SHARED2_PLL		8
+> +#define CLK_MOUT_SHARED3_PLL		9
+> +#define CLK_MOUT_SPARE_PLL		10
+> +#define CLK_MOUT_BUS0_BUS		11
+> +#define CLK_MOUT_CMU_BOOST		12
+> +#define CLK_MOUT_BUS1_BUS		13
+> +#define CLK_MOUT_BUS2_BUS		14
+> +#define CLK_MOUT_CORE_BUS		15
+> +#define CLK_MOUT_EH_BUS			16
+> +#define CLK_MOUT_CPUCL2_SWITCH		17
+> +#define CLK_MOUT_CPUCL1_SWITCH		18
+> +#define CLK_MOUT_CPUCL0_SWITCH		19
+> +#define CLK_MOUT_CPUCL0_DBG		20
+> +#define CLK_MOUT_CMU_HPM		21
+> +#define CLK_MOUT_G3D_SWITCH		22
+> +#define CLK_MOUT_G3D_GLB		23
+> +#define CLK_MOUT_DPU_BUS		24
+> +#define CLK_MOUT_DISP_BUS		25
+> +#define CLK_MOUT_G2D_G2D		26
+> +#define CLK_MOUT_G2D_MSCL		27
+> +#define CLK_MOUT_HSI0_USB31DRD		28
+> +#define CLK_MOUT_HSI0_BUS		29
+> +#define CLK_MOUT_HSI0_DPGTC		30
+> +#define CLK_MOUT_HSI0_USBDPDGB		31
+> +#define CLK_MOUT_HSI1_BUS		32
+> +#define CLK_MOUT_HSI1_PCIE		33
+> +#define CLK_MOUT_HSI2_BUS		34
+> +#define CLK_MOUT_HSI2_PCIE		35
+> +#define CLK_MOUT_HSI2_UFS_EMBD		36
+> +#define CLK_MOUT_HSI2_MMC_CARD		37
+> +#define CLK_MOUT_CSIS			38
+> +#define CLK_MOUT_PDP_BUS		39
+> +#define CLK_MOUT_PDP_VRA		40
+> +#define CLK_MOUT_IPP_BUS		41
+> +#define CLK_MOUT_G3AA			42
+> +#define CLK_MOUT_ITP			43
+> +#define CLK_MOUT_DNS_BUS		44
+> +#define CLK_MOUT_TNR_BUS		45
+> +#define CLK_MOUT_MCSC_ITSC		46
+> +#define CLK_MOUT_MCSC_MCSC		47
+> +#define CLK_MOUT_GDC_SCSC		48
+> +#define CLK_MOUT_GDC_GDC0		49
+> +#define CLK_MOUT_GDC_GDC1		50
+> +#define CLK_MOUT_MFC_MFC		51
+> +#define CLK_MOUT_MIF_SWITCH		52
+> +#define CLK_MOUT_MIF_BUS		53
+> +#define CLK_MOUT_MISC_BUS		54
+> +#define CLK_MOUT_MISC_SSS		55
+> +#define CLK_MOUT_PERIC0_IP		56
+> +#define CLK_MOUT_PERIC0_BUS		57
+> +#define CLK_MOUT_PERIC1_IP		58
+> +#define CLK_MOUT_PERIC1_BUS		59
+> +#define CLK_MOUT_TPU_TPU		60
+> +#define CLK_MOUT_TPU_TPUCTL		61
+> +#define CLK_MOUT_TPU_BUS		62
+> +#define CLK_MOUT_TPU_UART		63
+> +#define CLK_MOUT_TPU_HPM		64
+> +#define CLK_MOUT_BO_BUS			65
+> +#define CLK_MOUT_G3D_BUSD		66
+> +
+> +/* CMU_TOP Dividers*/
+> +#define CLK_DOUT_SHARED0_DIV3		67
+> +#define CLK_DOUT_SHARED0_DIV2		68
+> +#define CLK_DOUT_SHARED0_DIV4		69
+> +#define CLK_DOUT_SHARED0_DIV5		70
+> +#define CLK_DOUT_SHARED1_DIV3		71
+> +#define CLK_DOUT_SHARED1_DIV2		72
+> +#define CLK_DOUT_SHARED1_DIV4		73
+> +#define CLK_DOUT_SHARED2_DIV2		74
+> +#define CLK_DOUT_SHARED3_DIV2		75
+> +#define CLK_DOUT_BUS0_BUS		76
+> +#define CLK_DOUT_CMU_BOOST		77
+> +#define CLK_DOUT_BUS1_BUS		78
+> +#define CLK_DOUT_BUS2_BUS		79
+> +#define CLK_DOUT_CORE_BUS		80
+> +#define CLK_DOUT_EH_BUS			81
+> +#define CLK_DOUT_CPUCL2_SWITCH		82
+> +#define CLK_DOUT_CPUCL1_SWITCH		83
+> +#define CLK_DOUT_CPUCL0_SWITCH		84
+> +#define CLK_DOUT_CPUCL0_DBG		85
+> +#define CLK_DOUT_CMU_HPM		86
+> +#define CLK_DOUT_G3D_SWITCH		87
+> +#define CLK_DOUT_G3D_GLB		88
+> +#define CLK_DOUT_DPU_BUS		89
+> +#define CLK_DOUT_DISP_BUS		90
+> +#define CLK_DOUT_G2D_G2D		91
+> +#define CLK_DOUT_G2D_MSCL		92
+> +#define CLK_DOUT_HSI0_USB31DRD		93
+> +#define CLK_DOUT_HSI0_BUS		94
+> +#define CLK_DOUT_HSI0_DPGTC		95
+> +#define CLK_DOUT_HSI0_USBDPDGB		96
+> +#define CLK_DOUT_HSI1_BUS		97
+> +#define CLK_DOUT_HSI1_PCIE		98
+> +#define CLK_DOUT_HSI2_BUS		100
+> +#define CLK_DOUT_HSI2_PCIE		101
+> +#define CLK_DOUT_HSI2_UFS_EMBD		102
+> +#define CLK_DOUT_HSI2_MMC_CARD		103
+> +#define CLK_DOUT_CSIS			104
+> +#define CLK_DOUT_PDP_BUS		105
+> +#define CLK_DOUT_PDP_VRA		106
+> +#define CLK_DOUT_IPP_BUS		107
+> +#define CLK_DOUT_G3AA			108
+> +#define CLK_DOUT_ITP			109
+> +#define CLK_DOUT_DNS_BUS		110
+> +#define CLK_DOUT_TNR_BUS		111
+> +#define CLK_DOUT_MCSC_ITSC		112
+> +#define CLK_DOUT_MCSC_MCSC		113
+> +#define CLK_DOUT_GDC_SCSC		114
+> +#define CLK_DOUT_GDC_GDC0		115
+> +#define CLK_DOUT_GDC_GDC1		116
+> +#define CLK_DOUT_MFC_MFC		117
+> +#define CLK_DOUT_MIF_BUS		118
+> +#define CLK_DOUT_MISC_BUS		119
+> +#define CLK_DOUT_MISC_SSS		120
+> +#define CLK_DOUT_PERIC0_BUS		121
+> +#define CLK_DOUT_PERIC0_IP		122
+> +#define CLK_DOUT_PERIC1_BUS		123
+> +#define CLK_DOUT_PERIC1_IP		124
+> +#define CLK_DOUT_TPU_TPU		125
+> +#define CLK_DOUT_TPU_TPUCTL		126
+> +#define CLK_DOUT_TPU_BUS		127
+> +#define CLK_DOUT_TPU_UART		128
+> +#define CLK_DOUT_TPU_HPM		129
+> +#define CLK_DOUT_BO_BUS			130
+> +
+> +/* CMU_TOP Gates*/
+> +#define CLK_GOUT_BUS0_BUS		131
+> +#define CLK_GOUT_BUS1_BUS		132
+> +#define CLK_GOUT_BUS2_BUS		133
+> +#define CLK_GOUT_CORE_BUS		134
+> +#define CLK_GOUT_EH_BUS			135
+> +#define CLK_GOUT_CPUCL2_SWITCH		136
+> +#define CLK_GOUT_CPUCL1_SWITCH		137
+> +#define CLK_GOUT_CPUCL0_SWITCH		138
+> +#define CLK_GOUT_CPUCL0_DBG		139
+> +#define CLK_GOUT_CMU_HPM		140
+> +#define CLK_GOUT_G3D_SWITCH		141
+> +#define CLK_GOUT_G3D_GLB		142
+> +#define CLK_GOUT_DPU_BUS		143
+> +#define CLK_GOUT_DISP_BUS		144
+> +#define CLK_GOUT_G2D_G2D		145
+> +#define CLK_GOUT_G2D_MSCL		146
+> +#define CLK_GOUT_HSI0_USB31DRD		147
+> +#define CLK_GOUT_HSI0_BUS		148
+> +#define CLK_GOUT_HSI0_DPGTC		149
+> +#define CLK_GOUT_HSI0_USBDPDGB		150
+> +#define CLK_GOUT_HSI1_BUS		151
+> +#define CLK_GOUT_HSI1_PCIE		152
+> +#define CLK_GOUT_HSI2_BUS		153
+> +#define CLK_GOUT_HSI2_PCIE		154
+> +#define CLK_GOUT_HSI2_UFS_EMBD		155
+> +#define CLK_GOUT_HSI2_MMC_CARD		156
+> +#define CLK_GOUT_CSIS			157
+> +#define CLK_GOUT_PDP_BUS		158
+> +#define CLK_GOUT_PDP_VRA		159
+> +#define CLK_GOUT_IPP_BUS		160
+> +#define CLK_GOUT_G3AA			161
+> +#define CLK_GOUT_ITP			162
+> +#define CLK_GOUT_DNS_BUS		163
+> +#define CLK_GOUT_TNR_BUS		164
+> +#define CLK_GOUT_MCSC_ITSC		165
+> +#define CLK_GOUT_MCSC_MCSC		166
+> +#define CLK_GOUT_GDC_SCSC		167
+> +#define CLK_GOUT_GDC_GDC0		168
+> +#define CLK_GOUT_GDC_GDC1		169
+> +#define CLK_GOUT_MFC_MFC		170
+> +#define CLK_GOUT_MIF_SWITCH		171
+> +#define CLK_GOUT_MIF_BUS		172
+> +#define CLK_GOUT_MISC_BUS		173
+> +#define CLK_GOUT_MISC_SSS		174
+> +#define CLK_GOUT_PERIC0_BUS		175
+> +#define CLK_GOUT_PERIC0_IP		176
+> +#define CLK_GOUT_PERIC1_BUS		177
+> +#define CLK_GOUT_PERIC1_IP		178
+> +#define CLK_GOUT_TPU_TPU		179
+> +#define CLK_GOUT_TPU_TPUCTL		180
+> +#define CLK_GOUT_TPU_BUS		181
+> +#define CLK_GOUT_TPU_UART		182
+> +#define CLK_GOUT_TPU_HPM		183
+> +#define CLK_GOUT_BO_BUS			184
+> +#define CLK_GOUT_CMU_BOOST		185
+> +
+> +/* CMU_APM */
+> +
+> +#define CLK_MOUT_APM_FUNC					1
+> +#define CLK_MOUT_APM_FUNCSRC					2
+> +#define CLK_DOUT_APM_BOOST					3
+> +#define CLK_DOUT_APM_USI0_UART					4
+> +#define CLK_DOUT_APM_USI0_USI					5
+> +#define CLK_DOUT_APM_USI1_UART					6
+> +#define CLK_GOUT_APM_FUNC					7
+> +#define CLK_GOUT_APM_UID_APBIF_GPIO_ALIVE_IPCLKPORT_PCLK	8
+> +#define CLK_GOUT_APM_UID_APBIF_GPIO_FAR_ALIVE_IPCLKPORT_PCLK	9
+> +#define CLK_GOUT_APM_UID_APBIF_PMU_ALIVE_IPCLKPORT_PCLK		10
+> +#define CLK_GOUT_APM_UID_SYSREG_APM_IPCLKPORT_PCLK		11
+> +#define CLK_APM_PLL_DIV2_APM					12
+> +#define CLK_APM_PLL_DIV4_APM					13
+> +#define CLK_APM_PLL_DIV16_APM					14
+> +
+> +/* CMU_MISC */
+> +
+> +#define CLK_MOUT_MISC_BUS_USER					1
+> +#define CLK_MOUT_MISC_SSS_USER					2
+> +#define CLK_DOUT_MISC_BUSP					3
+> +#define CLK_DOUT_MISC_GIC					4
+> +#define CLK_GOUT_MISC_PCLK					5
+> +#define CLK_GOUT_MISC_SYSREG_PCLK				6
+> +#define CLK_GOUT_MISC_WDT_CLUSTER0				7
+> +#define CLK_GOUT_MISC_WDT_CLUSTER1				8
+> +
+> +#endif /* _DT_BINDINGS_CLOCK_GOOGLE_GS101_H */
 > -- 
 > 2.42.0.655.g421f12c284-goog
 > 
