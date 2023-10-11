@@ -2,126 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 254C37C4C5B
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 09:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EF887C4C73
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 09:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230154AbjJKHvW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 03:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46562 "EHLO
+        id S230045AbjJKH72 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 03:59:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230287AbjJKHvN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 03:51:13 -0400
-X-Greylist: delayed 362 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 11 Oct 2023 00:51:01 PDT
-Received: from new3-smtp.messagingengine.com (new3-smtp.messagingengine.com [66.111.4.229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5459F10B;
-        Wed, 11 Oct 2023 00:51:00 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 891765804C1;
-        Wed, 11 Oct 2023 03:44:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 11 Oct 2023 03:44:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1697010297; x=1697017497; bh=JZ
-        ToOnQlaLQI+R1OJZjMd5txCt25LannQJkkFemkr7A=; b=2I1Uee41GqQiS5mRa7
-        b+oLFHaHse24HaozrZAH5aB5O6tH1OPeNXTHMFgWUHQJ+EJrC95eZNw0k/kn8TZb
-        d6GCEPJJATP1hL/7LLiPs0dvVLy8RoNLfmxVDGtXO4ipZcHbiVIT1NI8sArIRDOi
-        YDGadkOLR5hnJyg7EPvK9G+ig7LRP5tS9geD5LCHiKDX6NUQw4JC1uWIZt65jSZK
-        8bRYsHbC42O24GL2BsXZKGaB7ycIUgDZ35VrUzyduSd68q8XBij2krCyq+GZQNYh
-        Kq6ZqaWI+slgetPhXhJo7c8WPDuI73LD4ayto3V5YDYrbx0gsQ5OfiDcVInJZ40p
-        0gYQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1697010297; x=1697017497; bh=JZToOnQlaLQI+
-        R1OJZjMd5txCt25LannQJkkFemkr7A=; b=QQKKGB5UoVL3YQ4FtdrsWsjqKcufn
-        37TnvP56+FqTFex/vwIupr3qRdQVV6X2EN77rH/ZNuY6bb9D6MP4/rZPooCFVk0M
-        F3SPsWyKMjwEqeO3KolFnelceT5+rSaIEmm58c62wdJ9G1IURsJzIPoswNjDRAdI
-        173HETIxvG91z1fOkEvVRki7NY2I8XbVCOX5F/V/3gnuDO2SjoOHesDFb/8Q6Ey6
-        0kqrfdQ2i+Ntru8WNRY5wDWQFPgF0Hf/fChlcV2REkh171SUXjK3YlRDy0EYodqE
-        WHcNY7lzlv0ZeiyxZNbNcBJmmH7Nv72e+moVHzabqtZ631FoEb0nogqYw==
-X-ME-Sender: <xms:eFImZej4eHDXn_Ru6WgufJrf4kJLu_4wat-r3vbGWJUgjAli7pT8ww>
-    <xme:eFImZfCG-IC8RIx8_MLrdpmX8ABknJIFkLOnpp2QKfWhOnzcg-Iaj3U2K7p8oHRMs
-    k3Cx-zzzijiAw>
-X-ME-Received: <xmr:eFImZWFsra_F7BfmAimk0JZCBx8cgzCGV50sPziqXQC9edJzx9dShwXQ-JKfpVct_6WI9-87IMUeO-zHEUAuLxI_XpSraHxY-E5fMczONP4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrheejgdekudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeehgedvve
-    dvleejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueefhffgheekteenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhh
-    drtghomh
-X-ME-Proxy: <xmx:eFImZXS3hehWydKzE9FCS1Sofv1sITbomg94NeHwJ3ml1wLj3qFBvw>
-    <xmx:eFImZbwY9RZWoEXZgGd9ZlKbXYRoRshZv_o6MT-02QoNXjo085Itgw>
-    <xmx:eFImZV4My1BsUQZ15GES-Nc6HIUF3bbFldSh1_jvRjCuSEZbj6fhBw>
-    <xmx:eVImZTMd-gdYVE_hUjMN2G9PoVBnopKaS3wkDx9nBKgBmBcMR6ZgLw>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 11 Oct 2023 03:44:55 -0400 (EDT)
-Date:   Wed, 11 Oct 2023 09:44:52 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Peter Griffin <peter.griffin@linaro.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
-        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, wim@linux-watchdog.org,
-        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
-        arnd@arndb.de, olof@lixom.net, cw00.choi@samsung.com,
-        tudor.ambarus@linaro.org, andre.draszik@linaro.org,
-        semen.protsenko@linaro.org, saravanak@google.com,
-        willmcvicker@google.com, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        kernel-team@android.com, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 00/20] Add minimal Tensor/GS101 SoC support and
- Oriole/Pixel6 board
-Message-ID: <2023101101-mauve-underarm-1b48@gregkh>
-References: <20231010224928.2296997-1-peter.griffin@linaro.org>
+        with ESMTP id S230012AbjJKH72 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 03:59:28 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA1998
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 00:59:26 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id ada2fe7eead31-45289a987ddso2375289137.0
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 00:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697011165; x=1697615965; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4T+G3IiEpAugHoIlaD3hRukPzEGsZANvnqJPVq5ffG8=;
+        b=jtSdGqV2QaB1dOZo3W8RC2BtHpnoWBXPFoZBsrbiBrX+lRAozmlcb3QzUwCgAUIVk6
+         ELN119v7dd4ks9xxLOu9cTvqgzOt9DWwTEzjsgCGtvHRKY6c2t3UQvmKBLb24ty4q0vh
+         NTPbPVe8ciCe+LA2FlYgSTIW6BFZLA9wTUl+//dDA14PSdxc9S24vx9qrovAHpwZD5/y
+         GLEwzIdjZqOdk7Ukz51ZHO41UVP7CcxfPQhbefK9ViUlO5eLaUNFkKIvcNMsOgECxKsh
+         w8EeLSLrq+zytqqyPzsrqU4c99R4uku5BwHZLtiWcYCzuFHsOSFI6MqfsPicfUdROCSr
+         GfLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697011165; x=1697615965;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4T+G3IiEpAugHoIlaD3hRukPzEGsZANvnqJPVq5ffG8=;
+        b=Mc0MnYDZtYyV3wVQi3sIV0X56YAXk+lTIX9tHdlBnE3gEgq86TZo2NqpV0w6GG8ZAO
+         wiV5mceyNnQBi2bRwptjwUnvi7JMlSfe3qHnfQw5r9E+nq0o/aPSykvxbNYD41ic3BcC
+         oRJv/bGR8sTaA+DdWidsdtBOOVz+GHcvs/eeQTSXXyxzmWuhORW2IfWjlvVgVc4eNXqp
+         zu/7jm8BkXPCw/45LkCWfivBzC9FE/hPEAbP7mzePV36B+yu5pmIZeX1dJAb5I4DSi9s
+         z2aLeMq7Y0h5tg5IJ8HHfymgVqF40Zr2WP6r27zB4Z9J/S1/cumWiYq27Hby/W/FDHAu
+         DJtw==
+X-Gm-Message-State: AOJu0YzfeEXRjrNycggyzsAleqZXXmTnSMivpklB02jkFpaTSqnUjjI1
+        u5oCHr+JU2xKnERaXQgupmAdN4mpnOLeuyxVPrXttQ==
+X-Google-Smtp-Source: AGHT+IEUbJzy5iOn2Ns9Aln42pFrnXXQ7IdE1abA3Z4713vj8tR+ayKZo6qJyvwJCRhJxXfDbVJASyLhzCqOOBRnH/o=
+X-Received: by 2002:a67:f950:0:b0:44e:8c20:a92d with SMTP id
+ u16-20020a67f950000000b0044e8c20a92dmr14800228vsq.7.1697011165108; Wed, 11
+ Oct 2023 00:59:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231010224928.2296997-1-peter.griffin@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20231009-pxa-gpio-v7-0-c8f5f403e856@skole.hr> <20231009-pxa-gpio-v7-2-c8f5f403e856@skole.hr>
+ <CAMRc=Mc7=E9bMQgiUM8qqk7UD4+exhJZqw2DucTcsnqHcttR3Q@mail.gmail.com>
+ <12313687.O9o76ZdvQC@radijator> <CAMRc=MdWYNmBkJ6Nw6V_FzJKQw--g02tjLSztMYW_atNhisVpw@mail.gmail.com>
+ <CACRpkda4ZeQ8eYKqXBR7XmWj9jJF58C+PLeRWqx2m7aSf2FWQw@mail.gmail.com>
+In-Reply-To: <CACRpkda4ZeQ8eYKqXBR7XmWj9jJF58C+PLeRWqx2m7aSf2FWQw@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 11 Oct 2023 09:59:14 +0200
+Message-ID: <CAMRc=Mc6ww7Te+JvzW_=+X9Tj_jjKnQaVRJMKgU4zTuXViPxcg@mail.gmail.com>
+Subject: Re: [PATCH RFT v7 2/6] ARM: pxa: Convert Spitz LEDs to GPIO descriptors
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 10, 2023 at 11:49:08PM +0100, Peter Griffin wrote:
-> Hi folks,
-> 
-> Firstly, thanks to everyone who reviewed the v1 series! V2 incorporates all
-> the review feedback received so far.
-> 
-> This series adds initial SoC support for the GS101 SoC and also initial board
-> support for Pixel 6 phone (Oriole).
-> 
-> The gs101 / Tensor SoC is also used in Pixel6a (bluejay) and Pixel 6 Pro
-> (raven) phones. Currently DT is added for the gs101 SoC and Oriole.
-> As you can see from the patches the SoC is based on a Samsung Exynos SoC,
-> and therefore lots of the low level Exynos drivers can be re-used.
-> 
-> The support added in this series consists of:
-> * cpus
-> * pinctrl
-> * some CCF implementation
-> * watchdog
-> * uart
-> * gpio
+On Tue, Oct 10, 2023 at 10:04=E2=80=AFPM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+>
+> On Tue, Oct 10, 2023 at 7:39=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+>
+> > It doesn't seem like anyone is using these GPIOs once they're
+> > requested? Wouldn't the above definitios be analogous to:
+> >
+> > GPIO_HOG("pxa-gpio", SPITZ_GPIO_LED_ORANGE, NULL, GPIO_ACTIVE_HIGH, GPI=
+OD_ASIS)
+> > GPIO_HOG("pxa-gpio", SPITZ_GPIO_LED_GREEN, NULL, GPIO_ACTIVE_HIGH, GPIO=
+D_ASIS)
+>
+> They are used:
+> +       spitz_gpio_leds[0].gpiod =3D leds->desc[0];
+> +       spitz_gpio_leds[1].gpiod =3D leds->desc[1];
+>
+> The descriptors are passed to the leds-gpio driver.
+>
+> But wait: no.
+>
+> This whole thing:
+>
+> +static struct gpio_descs *leds;
+> +
+> (...)
+> +       leds =3D gpiod_get_array_optional(&spitz_led_device.dev,
+> +                       NULL, GPIOD_ASIS);
+> +       spitz_gpio_leds[0].gpiod =3D leds->desc[0];
+> +       spitz_gpio_leds[1].gpiod =3D leds->desc[1];
+>
+> Just delete all that.
+>
+> The leds-gpio driver will request and use the lines.
+>
+> It was just so unorthodox that I missed it. Adding the descriptor
+> table is enough.
 
-So you have sent a patch series that crosses multiple subsystems, who is
-supposed to be taking these patches?  Or do you not want them actually
-merged?
+Ah, good catch. Your suggestion is of course the correct one.
 
-confused,
+Bart
 
-greg k-h
+>
+> Yours,
+> Linus Walleij
