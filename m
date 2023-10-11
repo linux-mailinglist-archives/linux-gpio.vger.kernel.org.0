@@ -2,297 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EF187C45B9
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 01:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E68DC7C47B5
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Oct 2023 04:19:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344207AbjJJX4R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Oct 2023 19:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49978 "EHLO
+        id S1344791AbjJKCTW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Oct 2023 22:19:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjJJX4Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 19:56:16 -0400
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC5B8F;
-        Tue, 10 Oct 2023 16:56:14 -0700 (PDT)
-Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-49dd647a477so2257687e0c.3;
-        Tue, 10 Oct 2023 16:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696982174; x=1697586974; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=81q6JGyTrQkoGOoIsyVbwevzEO/VUyof31ZjWP977mU=;
-        b=Fk4NUQe7bpnBvb9wO5Kp0SVXIBxYSWD+uBc6PV+oRiz5pQNIoCKAr1CC1qeQAnzlSu
-         KWL6tgxbRZYikjtObicvYRWaqXfL5ppLXLxXCgDLx8EJAuijLaCdpytVG+jgFzN69umY
-         8+S2ZqCy2cubyEA5gY0E3AneTVtCkOBUjiS4QOOuOEszi14zMm9aFzQs+9TtnRB3yACg
-         iqAvLNHAGKB0zLTwiSWBVbqcfGKWWG0/MDSfeIJpAV8MWQkcDRCN1Tb92XkkYiH9loKm
-         ukYFHTiaIsS1wF+7igQjR6lCA0UzQdfqFgu2R9y9ju27U25gvd8cKBF+PFHtBANZ+FhX
-         MYFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696982174; x=1697586974;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=81q6JGyTrQkoGOoIsyVbwevzEO/VUyof31ZjWP977mU=;
-        b=t2C1qmsrlnVbWM5uBpSZF/nVXOMxsbb6MnZD9cIV4zhmdU5hjTylZPJfHYNbOlbHMC
-         Wu6rFqLTjHYbJ28Niz7LA7cxfe0QPTBLnvJW898aT+ZcJOKmLUGF808YGTIM2yWZhJQH
-         dCkl1N0WL8CCgSB2Ad+qfBJ6FD/TM+I/QIoS+JtF81B6Nr4KPPiuVCMRZFETOgFGsD59
-         uZ/BoQTTg5x0d2mT1Kwr3lpij6Iu241O5iQyVdyx3S8R/GrFiauzqdKHurr2adkruvnS
-         dceqZ/Xuy+dWmCMyOhDNtMTnl7Vr8QxZ1URBfEsyQ+NbJBPXOpE1W8Aog6Yxj/wraRCU
-         73eg==
-X-Gm-Message-State: AOJu0YxAOWnlU4Lz5wlq2AF1fitlNCmFo4ztaiBJZ85Idf2M89siTAIL
-        ae4J6WZo5Ldc1/Mcy+TA3Yc=
-X-Google-Smtp-Source: AGHT+IFxOSIstbwDUhScD3UnbX41CGxXoQr7rYjO1d7eEYKArjvWODITwh3Sfy4A8h03bKu8fyHOiQ==
-X-Received: by 2002:a1f:ca83:0:b0:49d:d91:8b27 with SMTP id a125-20020a1fca83000000b0049d0d918b27mr15458605vkg.2.1696982173711;
-        Tue, 10 Oct 2023 16:56:13 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 10-20020ac5ce8a000000b0049a5b8d475csm2305003vke.34.2023.10.10.16.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Oct 2023 16:56:13 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Tue, 10 Oct 2023 16:56:12 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Peter Griffin <peter.griffin@linaro.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
-        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, wim@linux-watchdog.org,
-        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-        olof@lixom.net, cw00.choi@samsung.com, tudor.ambarus@linaro.org,
-        andre.draszik@linaro.org, semen.protsenko@linaro.org,
-        saravanak@google.com, willmcvicker@google.com, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        kernel-team@android.com, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 15/20] watchdog: s3c2410_wdt: Add support for Google
- tensor SoCs
-Message-ID: <e2320e90-5e3b-4b50-8af9-56dee639d022@roeck-us.net>
-References: <20231010224928.2296997-1-peter.griffin@linaro.org>
- <20231010224928.2296997-16-peter.griffin@linaro.org>
+        with ESMTP id S1344769AbjJKCTV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Oct 2023 22:19:21 -0400
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2054.outbound.protection.outlook.com [40.107.102.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E8894;
+        Tue, 10 Oct 2023 19:19:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U3SauPiKYDeiowuFil25TsWxbgZNnHl6EBoeNP+/f5ntNB4eARMFFk9iuN+jcslwOn8MxIRJkaiwC/NNPsrbOL49L8V51hQIzd/0eY9L2bWtcH16F/Agiendn43nhhdA2PmK3xwtY/Rtl+l/Y0hAf3KUwyk5puwxebcybPqT1qL9KDvEF4XUcznrw6PUUdGNYYTR0K2n6jGJwiYyINqH6y7x444ebLpacI2momU4aju1mr5aiYYzMtFOhPVId4he46hkg/iwSpz7fx7ZB6DB6XocBOrsyNJYidIhpDxaG9Rsipzb8NEEv5urXl/YoRSiZ7gmSxNHh7Tc93bPM1HYPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cU1NcBH9MazxTsy3LzuO/bGFhdZmBTc+h+rHARJ8wQo=;
+ b=fznxvCqqMTj+yzxDEcNbB6c5GQ1t5Q2vO0uIksKBuR1Hz/Tb0u00KbQLdeZJXvgPT+g7tNRBOfLSUcX+35pocZukQMYjYb5EHbf3WH8Pwp8v8Jf50jwTxU9zcgRo/bs6sBW4gPGupcoYJ6dHe+5QHttEoP2d/xugGEIq4rsWG6ULq91rRBiIUZcI4Y+pAtIUlG1yTphPSAEGVuVh/eequGWy8peeoMCgW0TQCC3La6lRBOzUXh8gmL7kFdh8SRG1X6Nvls7ZvwhbzrPlQWvSTLbNk04sJDYMS5JoN1qjb4+2wujtzi8P6aH1TRaCupzF2W79rwTSUwcz0dNEVROQ4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cU1NcBH9MazxTsy3LzuO/bGFhdZmBTc+h+rHARJ8wQo=;
+ b=S8D4svpb3Qbt2tp1O+auymOF+baL5Z7AxYMEe+XxIzni97FDEuWvGo64MjkbSCaVk71rf242oup3JlkP97JoSsOZv96iRK87/eGlNC+U9ZoTUbt9Q8Wq2PxKcwreYKzar5APc5qjAtZAyIUtbgVge80ktCQw5VDPwwN+lbs+4gPXN4++iNNMJro8pW6FqU6WFnMUqAIlgD0bkFG5/EpHh98upGoyWVsHnskVk6orS3/X8lFQlhmhQD/qR92BLulroa4SLGK+9YBgP1mLF9Lk6guVCCB3caiWUXPTRPDatYB3y9QdqY+58TqpuCMeY3vAkXiCNwu6gezQOPCLEUtO4A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA1PR12MB6604.namprd12.prod.outlook.com (2603:10b6:208:3a0::7)
+ by LV2PR12MB5773.namprd12.prod.outlook.com (2603:10b6:408:17b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.38; Wed, 11 Oct
+ 2023 02:19:18 +0000
+Received: from IA1PR12MB6604.namprd12.prod.outlook.com
+ ([fe80::8814:146:e28e:6eea]) by IA1PR12MB6604.namprd12.prod.outlook.com
+ ([fe80::8814:146:e28e:6eea%4]) with mapi id 15.20.6863.032; Wed, 11 Oct 2023
+ 02:19:18 +0000
+Message-ID: <d378d545-e14e-7e7a-8085-1e4dae87d66a@nvidia.com>
+Date:   Tue, 10 Oct 2023 19:19:14 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH v1 3/4] hte: tegra194: Remove redundant dev_err()
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        timestamp@lists.linux.dev, linux-tegra@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+References: <20231010151709.4104747-1-andriy.shevchenko@linux.intel.com>
+ <20231010151709.4104747-4-andriy.shevchenko@linux.intel.com>
+X-Nvconfidentiality: public
+From:   Dipen Patel <dipenp@nvidia.com>
+In-Reply-To: <20231010151709.4104747-4-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR06CA0054.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::31) To IA1PR12MB6604.namprd12.prod.outlook.com
+ (2603:10b6:208:3a0::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231010224928.2296997-16-peter.griffin@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6604:EE_|LV2PR12MB5773:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54128e1a-e30c-4da1-af86-08dbca0078ce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5lerNfGbuc+NcChFovicFhOZ6yT2/A25IMCBWMVxQ93z097dGuiNpy4XYiJC0ZCiUO4AxXE1lxpfLgOe6emAqPrpbCC6EAUDjUtZ4ih/eGwbPij86Fz+M/ToEZ7GF/JKy6v/3hM2yVRlOSp5SgwujwjueyVdZ9XgTT8yWnVtN/thpIIYux0XaoI3r0psUxYGVriNfrc+ge04DVaBahKNBtkHYgJIc6oEAlruKvaUCpMR+8SfEzMNYcaSC8WKpHKaoGbagFN7mXQtPshohV2QuD6eAjkShOTdVAbPT4sAhWF92HUKlJ+ZXkXTiDKUB4LOGUWZXluRzF2Bhjcs2qQeJ90UZZtaVdJ4DDxO5L2hBZU6mLVw+atBNokf+Ts9idfrfzQDznoSmQplBHmtsGJKgkTPWv+CvGsgtkHry7rBT1hASYZF89bqXEV9e99BLmM9SQQU38An7Fs5ghWuHQMyrzF6M5OI3FhB3HGdFGOXXNjo4dfnr5kWttnEnFGEUO5Df69b9pKBD/HW3LgwRLb4CMZ26v4AAzer1Iv5CYiO22+MWdGdRCt93UopGH5d/0Z+Wz6B6/eE7snb6mC4ZZDxr5/uK3EKOkx9LTAWY2023hJhWsWrhCztrHKOD2JhGS8LVWMdH1qwfl0NiXSQ6w7jKQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6604.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(376002)(136003)(346002)(366004)(230922051799003)(451199024)(64100799003)(186009)(1800799009)(2906002)(26005)(86362001)(53546011)(31696002)(6512007)(107886003)(2616005)(478600001)(6666004)(6506007)(36756003)(38100700002)(83380400001)(6486002)(5660300002)(41300700001)(66556008)(66946007)(110136005)(66476007)(316002)(54906003)(31686004)(8936002)(4326008)(8676002)(7416002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T0lGQ0VZaWR3RVVEbkYxQ29YelZIZ01QU3dmOG1RZWFId1I2V1pJZnFaaDUy?=
+ =?utf-8?B?Y0w5UTZ3Y2llbm03aUNCR0l3eTlFK2ZBSFdCcWZyeE0vbmVCMmJiK01tUHhu?=
+ =?utf-8?B?c0ZSS0xnUFpBeWs4ekxLSHY5WFVTMmNWRjVTWlo3eXJVQ3NOR2ZzUEpKbzRy?=
+ =?utf-8?B?Tm85bHQxMHU3RVNwYVRJbVE2eVJramlabXBsZFE4cllOWmgyUlBUQkxaTDg1?=
+ =?utf-8?B?cGJ5emxSRkwzN0x0bVFmakpBNlVJTFQ0NUVKOXhWcUt4L0l4bVRwbUhVTlgv?=
+ =?utf-8?B?Z2Q1Z3o2ZVJ0WFRicUltcjdmUklkb1FseUplWFhFd1dTZ21PdktBVWkyRUFD?=
+ =?utf-8?B?VS9vWU9YMkt2QWt2WUxsRnI5aldKbk82aDdxTHg5NDhRa0pGcktlREdtUUhY?=
+ =?utf-8?B?aGkwd3M5MmxUWHdxRjZqK0o0NFVhTXR1bHdRZG5aZ3p0TE53VXlOaTA0Qm5G?=
+ =?utf-8?B?aXJIYUdSMHFMSlYrL1YzZCs3RlJhZHhGcnpTWXNqVVUyVVJGL0lnS1VhN2tI?=
+ =?utf-8?B?djQrcnl0NS8vWEx4UkFzL1doTjgyazVKQkdZbldXMnIxcXJYekJ4ZXN0UTdj?=
+ =?utf-8?B?cXJzZEtvVndPU2R1Q2NNRXJDaGo0NVVGbUVJeWUxaFVsUm4xMGJPRFN1WGV5?=
+ =?utf-8?B?Vkk1MjNRMUdlUVY0cGd0bUhmb2VBWktmK0VMTXF6azVSSEZobmVYRmpoMXc0?=
+ =?utf-8?B?THRXdUt0SkdqWW5lZ0tIOWJpc0UvaUE1MDI5L1lFZW9sNVczV1Z0RHB5TmxT?=
+ =?utf-8?B?MU5DbjlROWdqamZrSENXT1dWL29tN0N0WG5NMWI4RzlzeVZMSFV3U25LM20x?=
+ =?utf-8?B?ZXBmYWVWUS9ud21tK1pqVVl3c05iUmhhRytzdWhaZWovTE5vUDd6ekVxRkFu?=
+ =?utf-8?B?R1BFTEZMVTZMYm5qY05qbEJYS2tWa2pyQzdOWlMwZmhGNE5ud1hnNDZWQTh0?=
+ =?utf-8?B?ZW1FaWVoK2IxZkJTQzVtRFBBOVpUTllNd2pBdWJXeDdKbkVMU3FRTWFxa0JQ?=
+ =?utf-8?B?U3Z3N0U4NW0zVnpUTENzR1c1NExUUlVleitJaWk4dUk4aUxlYkM5Nnh1REI4?=
+ =?utf-8?B?MXpTYVFSR05lVEVOZzVDQmhLTjNyUmMxY2pXSlBkTi9BUUt4eXZKZUVhT0I4?=
+ =?utf-8?B?bk5SYmVXVjJLMXpDaVlTeUNXbnQrRGQ2TWVIemJaTHREU2xsL25qai9GUndY?=
+ =?utf-8?B?bmRMVmpzRjlwbHFOUFdza3V5Z0I1aFhqblJkUEpxeWY5bnZ1Mm00TUQvb0Vk?=
+ =?utf-8?B?Mll1c0FFV2lqZVpXcGVrb3l1ZXpDT0xmMEhTT2RKYStuT2l2S0tCTzFDcEVo?=
+ =?utf-8?B?M1dzVnlUdGxLODFoMk14WTJlTzBpdXpyZllGcU85YWFUdkNuQjA2WmlOdnk4?=
+ =?utf-8?B?ZnVIdU9JMmNIblJORW9URmRVbjZoVzJEei9QeTJMdHRRVDBoOXdVU3FJejZ3?=
+ =?utf-8?B?WndReERPb2hHdm1BV3R3dk5xMzJDeU9SbHJ1RERwS3FqekVrK1MzMkJSeG9l?=
+ =?utf-8?B?dWhSbTZkSXBsczFLSzZTRmxSNE03NWx1V3R2WmJQM3hJbkhUYlQ2T09EMm8y?=
+ =?utf-8?B?aGZXOTg1aThTTzA4eVNMQ2NNS0hSa1VURXd2cXdkQWxObGhsV25NYzc3RWNz?=
+ =?utf-8?B?ZW85NVBmblY1V2FWNkU4TDhjVGlSMk9wTmRCWHVVYXozYjYzS2tHK0h6T21K?=
+ =?utf-8?B?SkNTT21Ga2I1bndZVjI5eGIvVG8xZDcveEpSM2hkZmp2Sm1OSHJzRlMwVFFD?=
+ =?utf-8?B?VFRvWUlWQSt2ckFOV3JyMmNmejNEYjJ6QVRJUi9JaVJSYzdiajVMTjJPaW5L?=
+ =?utf-8?B?S1NZYk1XKzhiMW81ZVRlSGhoNSt3cm5YZEprVmE1S2hibUNsWlRBUkYyc1F6?=
+ =?utf-8?B?d005NWNaRGpvR08raFdtVWdOc3pxc3V2aXZwWjE0d1R4aksxOEl5R1ArU0FS?=
+ =?utf-8?B?N2gzcDQvcnJ1M3J3WEhVcDVKMS9idnMxeERqaElmZDhXN1NLTGRNWmRKZVEr?=
+ =?utf-8?B?c0M1b1JZM2o2NXpZZGJENW01VzFJSTFYNmJDNDdGQ2RkQXlzeDR0OHRvaElu?=
+ =?utf-8?B?T1lyS3poS3FuR1pwR1hob2swaVdRZzA0WjY5YWdBQmdsdkh0NzF2M3ljSjB2?=
+ =?utf-8?Q?26EFUK81d5HAB+2ddJpQF9stm?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54128e1a-e30c-4da1-af86-08dbca0078ce
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6604.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2023 02:19:18.0706
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6Cih4hfMxuAT+O9ePajcrK3dW/dlVDQvni6uihLODTxxKRxZ46an0O6NjW5+xxHJtL6uAxI5DlC6kRwA+bF8tQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5773
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 10, 2023 at 11:49:23PM +0100, Peter Griffin wrote:
-> This patch adds the compatibles and drvdata for the Google
-> gs101 & gs201 SoCs found in Pixel 6 and Pixel 7 phones. Similar
-> to Exynos850 it has two watchdog instances, one for each cluster
-> and has some control bits in PMU registers.
+On 10/10/23 8:17 AM, Andy Shevchenko wrote:
+> There is no need to call the dev_err() function directly to print a custom
+> message when handling an error from platform_get_irq() function as it is
+> going to display an appropriate error message in case of a failure.
 > 
-> The watchdog IP found in gs101 SoCs also supports a few
-> additional bits/features in the WTCON register which we add
-> support for and an additional register detailed below.
-> 
-> dbgack-mask - Enables masking WDT interrupt and reset request
-> according to asserted DBGACK input
-> 
-> windowed-mode - Enabled Windowed watchdog mode
-> 
-> Windowed watchdog mode also has an additional register WTMINCNT.
-> If windowed watchdog is enabled and you reload WTCNT when the
-> value is greater than WTMINCNT, it prompts interrupt or reset
-> request as if the watchdog time has expired.
-
-I am a bit lost with this one. The patch adds QUIRK_HAS_WTMINCNT_REG
-but doesn't use it. It also adds S3C2410_WTMINCNT but does not use it
-either.
-
-What is the point of doing that ? It is just confusing.
-
-Guenter
-
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/watchdog/s3c2410_wdt.c | 104 ++++++++++++++++++++++++++++++---
->  1 file changed, 95 insertions(+), 9 deletions(-)
+>  drivers/hte/hte-tegra194.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-> index 0b4bd883ff28..08a775c01c57 100644
-> --- a/drivers/watchdog/s3c2410_wdt.c
-> +++ b/drivers/watchdog/s3c2410_wdt.c
-> @@ -31,12 +31,14 @@
->  #define S3C2410_WTDAT		0x04
->  #define S3C2410_WTCNT		0x08
->  #define S3C2410_WTCLRINT	0x0c
-> -
-> +#define S3C2410_WTMINCNT	0x10
->  #define S3C2410_WTCNT_MAXCNT	0xffff
+> diff --git a/drivers/hte/hte-tegra194.c b/drivers/hte/hte-tegra194.c
+> index 339ff5921ec8..30ef1750a9fa 100644
+> --- a/drivers/hte/hte-tegra194.c
+> +++ b/drivers/hte/hte-tegra194.c
+> @@ -731,10 +731,8 @@ static int tegra_hte_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
 >  
-> -#define S3C2410_WTCON_RSTEN	(1 << 0)
-> -#define S3C2410_WTCON_INTEN	(1 << 2)
-> -#define S3C2410_WTCON_ENABLE	(1 << 5)
-> +#define S3C2410_WTCON_RSTEN		(1 << 0)
-> +#define S3C2410_WTCON_INTEN		(1 << 2)
-> +#define S3C2410_WTCON_ENABLE		(1 << 5)
-> +#define S3C2410_WTCON_DBGACK_MASK	(1 << 16)
-> +#define S3C2410_WTCON_WINDOWED_WD	(1 << 20)
->  
->  #define S3C2410_WTCON_DIV16	(0 << 3)
->  #define S3C2410_WTCON_DIV32	(1 << 3)
-> @@ -67,6 +69,12 @@
->  #define EXYNOSAUTOV9_CLUSTER0_WDTRESET_BIT	25
->  #define EXYNOSAUTOV9_CLUSTER1_WDTRESET_BIT	24
->  
-> +#define GS_CLUSTER0_NONCPU_OUT			0x1220
-> +#define GS_CLUSTER1_NONCPU_OUT			0x1420
-> +#define GS_CLUSTER0_NONCPU_INT_EN		0x1244
-> +#define GS_CLUSTER1_NONCPU_INT_EN		0x1444
-> +#define GS_CLUSTER2_NONCPU_INT_EN		0x1644
-> +#define GS_RST_STAT_REG_OFFSET			0x3B44
->  /**
->   * DOC: Quirk flags for different Samsung watchdog IP-cores
->   *
-> @@ -106,6 +114,8 @@
->  #define QUIRK_HAS_PMU_RST_STAT			(1 << 2)
->  #define QUIRK_HAS_PMU_AUTO_DISABLE		(1 << 3)
->  #define QUIRK_HAS_PMU_CNT_EN			(1 << 4)
-> +#define QUIRK_HAS_DBGACK_BIT			(1 << 5)
-> +#define QUIRK_HAS_WTMINCNT_REG			(1 << 6)
->  
->  /* These quirks require that we have a PMU register map */
->  #define QUIRKS_HAVE_PMUREG \
-> @@ -263,6 +273,54 @@ static const struct s3c2410_wdt_variant drv_data_exynosautov9_cl1 = {
->  		  QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_CNT_EN,
->  };
->  
-> +static const struct s3c2410_wdt_variant drv_data_gs101_cl0 = {
-> +	.mask_reset_reg = GS_CLUSTER0_NONCPU_INT_EN,
-> +	.mask_bit = 2,
-> +	.mask_reset_inv = true,
-> +	.rst_stat_reg = GS_RST_STAT_REG_OFFSET,
-> +	.rst_stat_bit = 0,
-> +	.cnt_en_reg = GS_CLUSTER0_NONCPU_OUT,
-> +	.cnt_en_bit = 8,
-> +	.quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> +		  QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_WTMINCNT_REG,
-> +};
-> +
-> +static const struct s3c2410_wdt_variant drv_data_gs101_cl1 = {
-> +	.mask_reset_reg = GS_CLUSTER1_NONCPU_INT_EN,
-> +	.mask_bit = 2,
-> +	.mask_reset_inv = true,
-> +	.rst_stat_reg = GS_RST_STAT_REG_OFFSET,
-> +	.rst_stat_bit = 1,
-> +	.cnt_en_reg = GS_CLUSTER1_NONCPU_OUT,
-> +	.cnt_en_bit = 7,
-> +	.quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> +		  QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_WTMINCNT_REG,
-> +};
-> +
-> +static const struct s3c2410_wdt_variant drv_data_gs201_cl0 = {
-> +	.mask_reset_reg = GS_CLUSTER0_NONCPU_INT_EN,
-> +	.mask_bit = 2,
-> +	.mask_reset_inv = true,
-> +	.rst_stat_reg = GS_RST_STAT_REG_OFFSET,
-> +	.rst_stat_bit = 0,
-> +	.cnt_en_reg = GS_CLUSTER0_NONCPU_OUT,
-> +	.cnt_en_bit = 8,
-> +	.quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> +		  QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_WTMINCNT_REG,
-> +};
-> +
-> +static const struct s3c2410_wdt_variant drv_data_gs201_cl1 = {
-> +	.mask_reset_reg = GS_CLUSTER1_NONCPU_INT_EN,
-> +	.mask_bit = 2,
-> +	.mask_reset_inv = true,
-> +	.rst_stat_reg = GS_RST_STAT_REG_OFFSET,
-> +	.rst_stat_bit = 1,
-> +	.cnt_en_reg = GS_CLUSTER1_NONCPU_OUT,
-> +	.cnt_en_bit = 7,
-> +	.quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> +		  QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_WTMINCNT_REG,
-> +};
-> +
->  static const struct of_device_id s3c2410_wdt_match[] = {
->  	{ .compatible = "samsung,s3c2410-wdt",
->  	  .data = &drv_data_s3c2410 },
-> @@ -278,6 +336,10 @@ static const struct of_device_id s3c2410_wdt_match[] = {
->  	  .data = &drv_data_exynos850_cl0 },
->  	{ .compatible = "samsung,exynosautov9-wdt",
->  	  .data = &drv_data_exynosautov9_cl0 },
-> +	{ .compatible = "google,gs101-wdt",
-> +	  .data = &drv_data_gs101_cl0 },
-> +	{ .compatible = "google,gs201-wdt",
-> +	  .data = &drv_data_gs201_cl0 },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
-> @@ -375,6 +437,21 @@ static int s3c2410wdt_enable(struct s3c2410_wdt *wdt, bool en)
->  	return 0;
->  }
->  
-> +static void s3c2410wdt_mask_dbgack(struct s3c2410_wdt *wdt, bool mask)
-> +{
-> +	unsigned long wtcon;
-> +
-> +	if (!(wdt->drv_data->quirks & QUIRK_HAS_DBGACK_BIT))
-> +		return;
-> +
-> +	wtcon = readl(wdt->reg_base + S3C2410_WTCON);
-> +	if (mask)
-> +		wtcon |= S3C2410_WTCON_DBGACK_MASK;
-> +	else
-> +		wtcon &= ~S3C2410_WTCON_DBGACK_MASK;
-> +	writel(wtcon, wdt->reg_base + S3C2410_WTCON);
-> +}
-> +
->  static int s3c2410wdt_keepalive(struct watchdog_device *wdd)
->  {
->  	struct s3c2410_wdt *wdt = watchdog_get_drvdata(wdd);
-> @@ -585,9 +662,11 @@ s3c2410_get_wdt_drv_data(struct platform_device *pdev, struct s3c2410_wdt *wdt)
->  	}
->  
->  #ifdef CONFIG_OF
-> -	/* Choose Exynos850/ExynosAutov9 driver data w.r.t. cluster index */
-> +	/* Choose Exynos850/ExynosAutov9/gsx01 driver data w.r.t. cluster index */
->  	if (variant == &drv_data_exynos850_cl0 ||
-> -	    variant == &drv_data_exynosautov9_cl0) {
-> +	    variant == &drv_data_exynosautov9_cl0 ||
-> +	    variant == &drv_data_gs101_cl0 ||
-> +	    variant == &drv_data_gs201_cl0) {
->  		u32 index;
->  		int err;
->  
-> @@ -600,9 +679,14 @@ s3c2410_get_wdt_drv_data(struct platform_device *pdev, struct s3c2410_wdt *wdt)
->  		case 0:
->  			break;
->  		case 1:
-> -			variant = (variant == &drv_data_exynos850_cl0) ?
-> -				&drv_data_exynos850_cl1 :
-> -				&drv_data_exynosautov9_cl1;
-> +			if (variant == &drv_data_exynos850_cl0)
-> +				variant = &drv_data_exynos850_cl1;
-> +			else if (variant == &drv_data_exynosautov9_cl0)
-> +				variant = &drv_data_exynosautov9_cl1;
-> +			else if (variant == &drv_data_gs101_cl0)
-> +				variant = &drv_data_gs101_cl1;
-> +			else if (variant == &drv_data_gs201_cl0)
-> +				variant = &drv_data_gs201_cl1;
->  			break;
->  		default:
->  			return dev_err_probe(dev, -EINVAL, "wrong cluster index: %u\n", index);
-> @@ -700,6 +784,8 @@ static int s3c2410wdt_probe(struct platform_device *pdev)
->  	wdt->wdt_device.bootstatus = s3c2410wdt_get_bootstatus(wdt);
->  	wdt->wdt_device.parent = dev;
->  
-> +	s3c2410wdt_mask_dbgack(wdt, true);
-> +
->  	/*
->  	 * If "tmr_atboot" param is non-zero, start the watchdog right now. Also
->  	 * set WDOG_HW_RUNNING bit, so that watchdog core can kick the watchdog.
-> -- 
-> 2.42.0.609.gbb76f46606-goog
-> 
+>  	ret = platform_get_irq(pdev, 0);
+> -	if (ret < 0) {
+> -		dev_err_probe(dev, ret, "failed to get irq\n");
+> +	if (ret < 0)
+>  		return ret;
+> -	}
+>  	hte_dev->hte_irq = ret;
+>  	ret = devm_request_irq(dev, hte_dev->hte_irq, tegra_hte_isr, 0,
+>  			       dev_name(dev), hte_dev);
+
+Reviewed-by: Dipen Patel <dipenp@nvidia.com>
