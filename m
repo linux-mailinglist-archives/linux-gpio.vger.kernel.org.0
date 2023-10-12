@@ -2,63 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 532A67C766B
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 21:10:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFF9D7C7690
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 21:17:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442009AbjJLTKh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 15:10:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59798 "EHLO
+        id S1347366AbjJLTRj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 15:17:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1441905AbjJLTKg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 15:10:36 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD61383
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:10:34 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-4526a936dcaso574150137.2
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:10:34 -0700 (PDT)
+        with ESMTP id S1344140AbjJLTRj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 15:17:39 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C161EB7
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:17:37 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-7b625ed7208so639212241.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697137834; x=1697742634; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pomX1w2WgeB5WW7tgCy2p9CdEdyTGeDobeCiyw2koDw=;
-        b=wzooeSMuKnh9tfQttv9dY2wZlUVXTdBaw8N2VgUKpp3VpFPZzFFsJptpiatoYMoMma
-         8ow3/3gXxPuYqNulO2YJcpGo0m4gTAYBvWW5MPZxub77mhfkq8bMgSkiJxbV4gNicJ1x
-         jG2YCAvGhOIvBR/42Wb7ehR9JiCjSXqmEgOEY4dYwgi27Wt5bzxnk5HoJ++l6H3bBqQK
-         nWNhye2210ohAHB09depaz+m3x3NmXCe6IDNbEP7sYaZ8mICbSxs4e4dM/2E0zp2ikys
-         p8VnmFlW1ezHpr/5l2FgdLdfWWUcEWDOXAUKlb9YS/24/T0pGdACjgolJ7E47VH/Jn1u
-         xdpw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697138257; x=1697743057; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VWlcOqQJAlOvQMeSN7HvN9BPiuEy/WlCkRpM5FGqZu0=;
+        b=mLPlHdcLoWNXiuxisaim/AyippKaq3AyMkqRhmE7cByO8o1bghK/Ccyq+cIGThApwH
+         TT4EWU8Pravdm5U+ro2lcevOBhiZAqqVKM1+DCp+1Km9f07w8LqYSozjNr/CZyoefkTo
+         jbtQdh31N2H8PNkFsMpUDBjU9HHS5h3SBcjrz9dMzJ+yygFMyQncgo+Fog/S5NXOvsih
+         MaXTEYeNxKpLWbzWEPI5Ct68WaXI+c99cPBswKwwCcrmfEiLZGXUKI6aYR614rhkTkdw
+         wyePHs/NLuiyj/EbsD9KDySrMG4DuJg7KL1zh9qxOzfbG0dWKkl38yjcraQWigMZ4+E2
+         QEMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697137834; x=1697742634;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pomX1w2WgeB5WW7tgCy2p9CdEdyTGeDobeCiyw2koDw=;
-        b=aZk0c8u+ArbfSZGHUmTGGmzaQrI5OTRfnwuL/nMZNWhhyJU2spgplWSuJ+cPTnTgej
-         H9c7FwbeqCROdKIbtjA2PijkVkN77Rf5pbnkIl9/vz4zkLOzntMbd4MNWybF0SzQge+/
-         rH7pt+UE9XQCIP8404N+Hql1LkmpRwv1izheZtVYKQh+RX3INle1OHOYBHmar/9iFYvB
-         oy9xhNvN3mp7L5CNCaju5d26/ujOk4Wct/o9kQAPhpff9ZcNoUlgwOPc+nWonUvRhcIB
-         WkTaThy0LwmGu6ryTwYnUhZn/XDdCbl8zONAErlUK9Wg/537eTSTj46hQvJSHQUOb/uM
-         v0GQ==
-X-Gm-Message-State: AOJu0YwBSjCoYPV5vI6+jIblQ72OaLaHOkCT9aRnzvbGBKnTq0OKydpj
-        wPwaxlUoYWZeXR0zhepgLEMLjscK0gDaSuyWBBk9sg==
-X-Google-Smtp-Source: AGHT+IEIWG2Beh6kPlr0Dd7tLlf0nGgxdwYkiJW2Q7DzJdd5V7CjupefddByxZcidBLedjsz1yTrs+mzU+6YiiSyh3M=
-X-Received: by 2002:a67:ea18:0:b0:452:f119:20f with SMTP id
- g24-20020a67ea18000000b00452f119020fmr22780912vso.8.1697137833829; Thu, 12
- Oct 2023 12:10:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231011121246.9467-1-phil@gadgetoid.com> <20231011121246.9467-3-phil@gadgetoid.com>
-In-Reply-To: <20231011121246.9467-3-phil@gadgetoid.com>
+        d=1e100.net; s=20230601; t=1697138257; x=1697743057;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VWlcOqQJAlOvQMeSN7HvN9BPiuEy/WlCkRpM5FGqZu0=;
+        b=GjV138N9l2wjHpsghTc4gD2pDQeM6tJye8mniJvsbOEQFd0inLHTRXeQ+6RgfOBrQF
+         xgHjzApB4BG590XsJM7nYnGSya0UwMz14ns8VvHu7Ja+QRcMMT6AX79BY+VA53S8TTSE
+         S9kp8n2KPEN9B5dSi5H9cCFCXrsSw6Gdod+SSvVLNc1aFn6RdgAsI/eF/0ymwGh2pbVb
+         +j0yCskrWQCBXAClWBSoPJYIsjMKvALAUzkhErXS+/qIwO3GOiCyzEjPd2lBtvGkKNvn
+         sTANoEPSWS5mXL+9ZXMgWDL5OwmcF9RNWztyTqzBm7bzYvGvPMOGqj7VW01So3bT3vq7
+         LcmQ==
+X-Gm-Message-State: AOJu0Yx7+j0ij8qRiYFw8eQLDGbGxSyhrl/yY43BRzmEo4mKFS219iCH
+        QBYXqLJBJjkaffpvjtIZt0KYvTm6x+VGywXZgYQXCw==
+X-Google-Smtp-Source: AGHT+IGrA5kF3HcOtUPVT43XJ1zxNH2szPpy6WwhWhnH3/667zKWyI8Q9/VTzKpURDNSvTgSAOPy8KO3OtxI+JdUjJc=
+X-Received: by 2002:a67:ea59:0:b0:450:c666:fe14 with SMTP id
+ r25-20020a67ea59000000b00450c666fe14mr21646364vso.30.1697138256780; Thu, 12
+ Oct 2023 12:17:36 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 12 Oct 2023 12:17:36 -0700
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 12 Oct 2023 21:10:23 +0200
-Message-ID: <CAMRc=MftA25nZ19qr=Y4mW5W_n+yi0gh0Justs9pkZ-qBEJAaw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 2/3] bindings: python: add pyproject.toml, pep 518
+In-Reply-To: <20231012120925.58508-2-phil@gadgetoid.com>
+MIME-Version: 1.0
+References: <20231012120925.58508-1-phil@gadgetoid.com> <20231012120925.58508-2-phil@gadgetoid.com>
+Date:   Thu, 12 Oct 2023 12:17:36 -0700
+Message-ID: <CAMRc=MfG0AUYoy7mRTB+K=zKPcOPeojF2a=3Ctab8Tr+xhVaKA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 1/1] bindings: python: don't use exec to get __version__
 To:     Phil Howard <phil@gadgetoid.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -68,32 +69,57 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 2:13=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wr=
-ote:
->
-> Add pyproject.toml to prevent spurious deprecation warnings from pip.
+On Thu, 12 Oct 2023 14:09:25 +0200, Phil Howard <phil@gadgetoid.com> said:
+> Import __version__ from gpiod.version instead of using exec
+> since the latter is potentially unsafe and unnecessary.
 >
 > Signed-off-by: Phil Howard <phil@gadgetoid.com>
 > ---
->  bindings/python/pyproject.toml | 2 ++
->  1 file changed, 2 insertions(+)
->  create mode 100644 bindings/python/pyproject.toml
+>  bindings/python/setup.py | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/bindings/python/pyproject.toml b/bindings/python/pyproject.t=
-oml
-> new file mode 100644
-> index 0000000..d1e6ae6
-> --- /dev/null
-> +++ b/bindings/python/pyproject.toml
-> @@ -0,0 +1,2 @@
-> +[build-system]
-> +requires =3D ["setuptools", "wheel"]
+> diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+> index 66b7908..278baee 100644
+> --- a/bindings/python/setup.py
+> +++ b/bindings/python/setup.py
+> @@ -5,6 +5,7 @@ from os import environ, path
+>  from setuptools import setup, Extension, find_packages
+>  from setuptools.command.build_ext import build_ext as orig_build_ext
+>  from shutil import rmtree
+> +from gpiod.version import __version__
+>
+>
+>  class build_ext(orig_build_ext):
+> @@ -54,9 +55,6 @@ if "GPIOD_WITH_TESTS" in environ and environ["GPIOD_WITH_TESTS"] == "1":
+>      extensions.append(gpiosim_ext)
+>      extensions.append(procname_ext)
+>
+> -with open("gpiod/version.py", "r") as fd:
+> -    exec(fd.read())
+> -
+>  setup(
+>      name="libgpiod",
+>      packages=find_packages(exclude=["tests", "tests.*"]),
 > --
 > 2.34.1
 >
+>
 
-Please add licensing and copyright headers like what you see in all
-the other files. I know this is a very small configuration file but
-otherwise `reuse lint` complains.
+I get the following with this patch applied:
+
+GPIOD_WITH_TESTS=1 \
+/usr/bin/python setup.py build_ext --inplace \
+	--include-dirs=../../include/:../../tests/gpiosim/ \
+	--library-dirs=../../lib/.libs/:../../tests/gpiosim/.libs/
+Traceback (most recent call last):
+  File "/home/brgl/workspace/gitbook/libgpiod/bindings/python/setup.py",
+line 8, in <module>
+    from gpiod.version import __version__
+  File "/home/brgl/workspace/gitbook/libgpiod/bindings/python/gpiod/__init__.py",
+line 10, in <module>
+    from . import _ext
+ImportError: cannot import name '_ext' from partially initialized
+module 'gpiod' (most likely due to a circular import)
+(/home/brgl/workspace/gitbook/libgpiod/bindings/python/gpiod/__init__.py)
 
 Bart
