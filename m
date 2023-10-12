@@ -2,78 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 776B47C6BAE
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 12:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A63C7C6C11
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 13:15:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347140AbjJLK5O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 06:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60032 "EHLO
+        id S1378233AbjJLLP2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 07:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347137AbjJLK5N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 06:57:13 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D962BC6
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 03:57:08 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id 3f1490d57ef6-d9a7a3e17d1so864172276.2
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 03:57:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697108228; x=1697713028; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eXsH2wAbuu1LZ+xVuXFZUVdPOgCW2cpv03v3rr+MUKM=;
-        b=HOM19ZedhaIEcq8oEbdJIjEKhWK8hLoy9tDKgnFBrrADp3LL9OO/pnIvaxGaGVbfHp
-         ukltIpyLtM1V6X0x1UmtMGjWBRC+oGP2w8NMhxoC1S+8KnGzaZRHikSlBDMdDrWy3mBv
-         faDsYYbutNkewVwQimrQZ8muEUUYovbv1NZtNmKS54J4JGbvHxIF3o5OD3u8gv5vEdth
-         y0Yu2QxGYzcKEpAMqFjuWPB1HengGo1KU5GLw62NT60ZKTd3gJhuJ2aemT+L/QNSE2L/
-         +/H61H8hM7KXeCPZhO9slcADzaFm6nFz4N6HiVzdlGM8F91uQaTEf0hgZbti5MGGyIJL
-         DjIQ==
+        with ESMTP id S1378237AbjJLLP1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 07:15:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B265690
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 04:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1697109277;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DRaC+0mMS0mqrKmBhT+mt/F7wkHtGnlArsECVSA7S7c=;
+        b=MdUGu5Pbgm6Yo5uFU6/2O8yVvBABluHE3s7VVBT8Pty11oov8a96z9IU1dqwzm9U0IUDg1
+        Vo0HJ3v6ghrOOCN1S3BDgdW28dX1P9w7EkZ5D/SkF7J9BCzI2geEP5U6IRh3UTRtDUVbHc
+        OvKVp+Fr+i2OtaZi167uoAZ68+GnjzU=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-Bb47AmuwP72D6g4eFwMxPw-1; Thu, 12 Oct 2023 07:14:26 -0400
+X-MC-Unique: Bb47AmuwP72D6g4eFwMxPw-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9b65b6bcfb7so64020066b.2
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 04:14:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697108228; x=1697713028;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eXsH2wAbuu1LZ+xVuXFZUVdPOgCW2cpv03v3rr+MUKM=;
-        b=hKYZHkeNpnk6j343dpDmHc158jL838a5YPADlETUf76EewaPNS1sYAwo8GAtKvoPvt
-         k6ASLjZDgV1CWAYRMlVUaLCTIJ4mUQArSO0nuFtAm61OWc415hCLAZ864NV+E3PTfS43
-         93L5IdlDpy223/Kpmno1datsm8gjiuRYqK42vQyAMKzuGfWeOsrv8hhWQmg8nXhAUHaL
-         JHNWy+JKBR3++ITded+O3iNxhEvV6NzbDQpsRVxTT3P07IVt2+FE2YDaVtI41fJ44hJ9
-         2q4GMWEThKpHmUlxoa1fjp7ZrpyhLGGDAcb9qXvp+ptdpFJp6Oq/rPRpyADa3K6lxvoi
-         35eg==
-X-Gm-Message-State: AOJu0Yzhu0yli0sTMALKo8ewTK+u5CLUWSdTVwUl3RfkW25O+FWxwoLw
-        8yfc3ktiAS0mPyCKMXYS2/S5gU95DD92WibGhUkDvQ==
-X-Google-Smtp-Source: AGHT+IHoONc3hJii7RYcVkxb1UvFrk39Aq1j5ObRTTPqLaWzUuSZjNk8uWTkxQSzrzNgSo8ZjFPFsI+716xNwL6U+X0=
-X-Received: by 2002:a25:d48:0:b0:d9a:4e29:6354 with SMTP id
- 69-20020a250d48000000b00d9a4e296354mr8267648ybn.39.1697108228053; Thu, 12 Oct
- 2023 03:57:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697109265; x=1697714065;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DRaC+0mMS0mqrKmBhT+mt/F7wkHtGnlArsECVSA7S7c=;
+        b=o1FwBoYRRyMwCOZnH98w9+mEBPuMic0qAoP9XxoMXonM2jHXcTA0atE0teOaFruCvQ
+         ycrzuQSB1QmgQHh6FzUpexViXCuxu6B1HZSpQdb1RlWRwRYerqfHB8Hra+Se75ZbD5R4
+         Y72hBHJUUQUCqZ7I9OWpS3VB3YTDMqhKKDOig/4ul3sOUFGTlAJM1G/NvBk/9hDc6/yf
+         18NgGL2+8tFI/jiwKGErx+eyuqy742B6fKP7GMRj7f4kvDNw4wqo7hfIatLKpACaxxbH
+         DitoT1pPpZeDy77l5swnfzEXyBbTiOicQI+ubzcgBq/PvRZ42bdDgwn3EDKAxmUn3rjW
+         bD3Q==
+X-Gm-Message-State: AOJu0Yx90el/oUnUzF2juZFm9RfDC+ll9mM5PCpiUMChrWgWorLqQBCd
+        jeKjXmhmdUQn36uTLmqbtKHvkVNDNNWYyUcYIQs0lzVAWr3ELM9j0JkxjyRwELH2RHjp23ppaN1
+        o1uFzKHvWjXIxOy8mO31rqA==
+X-Received: by 2002:a17:907:720b:b0:9a1:f4e8:87b9 with SMTP id dr11-20020a170907720b00b009a1f4e887b9mr25620936ejc.45.1697109265301;
+        Thu, 12 Oct 2023 04:14:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHs8ShNQHDZ6hbq2SG2uMzUpUZfypOCB88v9DfbsSj8Zps3xEVjhs2Lqn/YHWow7aMfu9rhnQ==
+X-Received: by 2002:a17:907:720b:b0:9a1:f4e8:87b9 with SMTP id dr11-20020a170907720b00b009a1f4e887b9mr25620912ejc.45.1697109264928;
+        Thu, 12 Oct 2023 04:14:24 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ks8-20020a170906f84800b0099b6becb107sm11078691ejb.95.2023.10.12.04.14.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Oct 2023 04:14:24 -0700 (PDT)
+Message-ID: <5d2e9eba-a941-ea9a-161a-5b97d09d5d35@redhat.com>
+Date:   Thu, 12 Oct 2023 13:14:23 +0200
 MIME-Version: 1.0
-References: <20231011184823.443959-1-peter.griffin@linaro.org>
- <20231011184823.443959-5-peter.griffin@linaro.org> <CAPLW+4m4zUFfRWMo+KC1ymGAgHtbLxyx6L99Qd0vJYQXmmCvbw@mail.gmail.com>
-In-Reply-To: <CAPLW+4m4zUFfRWMo+KC1ymGAgHtbLxyx6L99Qd0vJYQXmmCvbw@mail.gmail.com>
-From:   Peter Griffin <peter.griffin@linaro.org>
-Date:   Thu, 12 Oct 2023 11:56:56 +0100
-Message-ID: <CADrjBPpgPKO49Ndtu=L30iqidpfZO8hUZKQrorZGzsb7tztDhg@mail.gmail.com>
-Subject: Re: [PATCH v3 04/20] dt-bindings: watchdog: Document Google gs101 &
- gs201 watchdog bindings
-To:     Sam Protsenko <semen.protsenko@linaro.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
-        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, wim@linux-watchdog.org,
-        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
-        arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org,
-        cw00.choi@samsung.com, tudor.ambarus@linaro.org,
-        andre.draszik@linaro.org, saravanak@google.com,
-        willmcvicker@google.com, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        kernel-team@android.com, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v20 1/4] usb: Add support for Intel LJCA device
+Content-Language: en-US, nl
+To:     "Wu, Wentong" <wentong.wu@intel.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "oneukum@suse.com" <oneukum@suse.com>,
+        "wsa@kernel.org" <wsa@kernel.org>,
+        "andi.shyti@linux.intel.com" <andi.shyti@linux.intel.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
+        "Wang, Zhifeng" <zhifeng.wang@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1696833205-16716-1-git-send-email-wentong.wu@intel.com>
+ <1696833205-16716-2-git-send-email-wentong.wu@intel.com>
+ <ZSZ3IPgLk7uC5UGI@smile.fi.intel.com>
+ <6a87b43a-0648-28d4-6c69-e0f684e44eb6@redhat.com>
+ <DM6PR11MB4316BE44F53E276384FF06C88DCCA@DM6PR11MB4316.namprd11.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <DM6PR11MB4316BE44F53E276384FF06C88DCCA@DM6PR11MB4316.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,56 +98,145 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sam,
+Hi,
 
-Thanks for the review.
+On 10/11/23 14:50, Wu, Wentong wrote:
+>> From: Hans de Goede <hdegoede>
+>>
+>> Hi,
+>>
+>> On 10/11/23 12:21, Andy Shevchenko wrote:
+>>> On Mon, Oct 09, 2023 at 02:33:22PM +0800, Wentong Wu wrote:
+>>>> Implements the USB part of Intel USB-I2C/GPIO/SPI adapter device
+>>>> named "La Jolla Cove Adapter" (LJCA).
+>>>>
+>>>> The communication between the various LJCA module drivers and the
+>>>> hardware will be muxed/demuxed by this driver. Three modules ( I2C,
+>>>> GPIO, and SPI) are supported currently.
+>>>>
+>>>> Each sub-module of LJCA device is identified by type field within the
+>>>> LJCA message header.
+>>>>
+>>>> The sub-modules of LJCA can use ljca_transfer() to issue a transfer
+>>>> between host and hardware. And ljca_register_event_cb is exported to
+>>>> LJCA sub-module drivers for hardware event subscription.
+>>>>
+>>>> The minimum code in ASL that covers this board is Scope
+>>>> (\_SB.PCI0.DWC3.RHUB.HS01)
+>>>>     {
+>>>>         Device (GPIO)
+>>>>         {
+>>>>             Name (_ADR, Zero)
+>>>>             Name (_STA, 0x0F)
+>>>>         }
+>>>>
+>>>>         Device (I2C)
+>>>>         {
+>>>>             Name (_ADR, One)
+>>>>             Name (_STA, 0x0F)
+>>>>         }
+>>>>
+>>>>         Device (SPI)
+>>>>         {
+>>>>             Name (_ADR, 0x02)
+>>>>             Name (_STA, 0x0F)
+>>>>         }
+>>>>     }
+>>>
+>>> This commit message is not true anymore, or misleading at bare minimum.
+>>> The ACPI specification is crystal clear about usage _ADR and _HID, i.e.
+>>> they must NOT be used together for the same device node. So, can you
+>>> clarify how the DSDT is organized and update the commit message and it
+>>> may require (quite likely) to redesign the architecture of this
+>>> driver. Sorry I missed this from previous rounds as I was busy by
+>>> something else.
+>>
+>> This part of the commit message unfortunately is not accurate.
+>> _ADR is not used in either DSDTs of shipping hw; nor in the code.
+> 
+> We have covered the _ADR in the code like below, it first try to find the
+> child device based on _ADR, if not found, it will check the _HID, and there
+> is clear comment in the function.
+> 
+> /* bind auxiliary device to acpi device */
+> static void ljca_auxdev_acpi_bind(struct ljca_adapter *adap,
+> 				   struct auxiliary_device *auxdev,
+> 				   u64 adr, u8 id)
+> {
+> 	struct ljca_match_ids_walk_data wd = { 0 };
+> 	struct acpi_device *parent, *adev;
+> 	struct device *dev = adap->dev;
+> 	char uid[4];
+> 
+> 	parent = ACPI_COMPANION(dev);
+> 	if (!parent)
+> 		return;
+> 
+> 	/*
+> 	 * get auxdev ACPI handle from the ACPI device directly
+> 	 * under the parent that matches _ADR.
+> 	 */
+> 	adev = acpi_find_child_device(parent, adr, false);
+> 	if (adev) {
+> 		ACPI_COMPANION_SET(&auxdev->dev, adev);
+> 		return;
+> 	}
+> 
+> 	/*
+> 	 * _ADR is a grey area in the ACPI specification, some
+> 	 * platforms use _HID to distinguish children devices.
+> 	 */
+> 	switch (adr) {
+> 	case LJCA_GPIO_ACPI_ADR:
+> 		wd.ids = ljca_gpio_hids;
+> 		break;
+> 	case LJCA_I2C1_ACPI_ADR:
+> 	case LJCA_I2C2_ACPI_ADR:
+> 		snprintf(uid, sizeof(uid), "%d", id);
+> 		wd.uid = uid;
+> 		wd.ids = ljca_i2c_hids;
+> 		break;
+> 	case LJCA_SPI1_ACPI_ADR:
+> 	case LJCA_SPI2_ACPI_ADR:
+> 		wd.ids = ljca_spi_hids;
+> 		break;
+> 	default:
+> 		dev_warn(dev, "unsupported _ADR\n");
+> 		return;
+> 	}
+> 
+> 	acpi_dev_for_each_child(parent, ljca_match_device_ids, &wd);
 
-On Wed, 11 Oct 2023 at 23:58, Sam Protsenko <semen.protsenko@linaro.org> wr=
-ote:
->
-> On Wed, Oct 11, 2023 at 1:49=E2=80=AFPM Peter Griffin <peter.griffin@lina=
-ro.org> wrote:
-> >
-> > Add the "google,gs101-wdt" and "google,gs201-wdt" compatibles to the
-> > dt-schema documentation.
-> >
-> > gs101 SoC has two CPU clusters and each cluster has its own dedicated
-> > watchdog timer (similar to exynos850 and exynosautov9 SoCs).
-> >
-> > These WDT instances are controlled using different bits in PMU
-> > registers.
-> >
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  .../devicetree/bindings/watchdog/samsung-wdt.yaml      | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yam=
-l b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > index 8fb6656ba0c2..67c8767f0499 100644
-> > --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > @@ -17,6 +17,8 @@ description: |+
-> >  properties:
-> >    compatible:
-> >      enum:
-> > +      - google,gs101-wdt                      # for Google gs101
-> > +      - google,gs201-wdt                      # for Google gs201
-> >        - samsung,s3c2410-wdt                   # for S3C2410
-> >        - samsung,s3c6410-wdt                   # for S3C6410, S5PV210 a=
-nd Exynos4
-> >        - samsung,exynos5250-wdt                # for Exynos5250
-> > @@ -42,13 +44,13 @@ properties:
-> >    samsung,cluster-index:
-> >      $ref: /schemas/types.yaml#/definitions/uint32
-> >      description:
-> > -      Index of CPU cluster on which watchdog is running (in case of Ex=
-ynos850)
-> > +      Index of CPU cluster on which watchdog is running (in case of Ex=
-ynos850 or Google gsx01)
->
-> Please stick to 80 characters per line when possible.
+Ah ok, I see. So the code:
 
-Will fix in v4.
+1. First tries to find the matching child acpi_device for the auxdev by ADR
 
-Peter
+2. If 1. fails then falls back to HID + UID matching
+
+And there are DSDTs which use either:
+
+1. Only use _ADR to identify which child device is which, like the example
+   DSDT snippet from the commit msg.
+
+2. Only use _HID + _UID like the 2 example DSDT snippets from me email
+
+But there never is a case where both _ADR and _HID are used at
+the same time (which would be an ACPI spec violation as Andy said).
+
+So AFAICT there is no issue here since  _ADR and _HID are never
+user at the same time and the commit message correctly describes
+scenario 1. from above, so the commit message is fine too.
+
+So I believe that we can continue with this patch series in
+its current v20 form, which has already been staged for
+going into -next by Greg.
+
+Andy can you confirm that moving ahead with the current
+version is ok ?
+
+Regards,
+
+Hans
+
+
+
