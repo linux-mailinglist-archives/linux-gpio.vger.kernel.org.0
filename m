@@ -2,80 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E9FA7C620D
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 03:08:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBF847C6218
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 03:15:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235248AbjJLBI0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Oct 2023 21:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
+        id S233980AbjJLBPJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Oct 2023 21:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233729AbjJLBIZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 21:08:25 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBF40A9
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 18:08:23 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-692af7b641cso106679b3a.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 18:08:23 -0700 (PDT)
+        with ESMTP id S233901AbjJLBPI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Oct 2023 21:15:08 -0400
+Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E76B6
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 18:15:06 -0700 (PDT)
+Received: by mail-oo1-xc2f.google.com with SMTP id 006d021491bc7-57f137dffa5so52655eaf.1
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 18:15:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697072903; x=1697677703; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1697073306; x=1697678106; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references
          :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5Hqg5K5lCDwesjzlytbXw7y9NPHtgi5OC1j95rwRDts=;
-        b=h3Fais/epn5+luxL2Xsm/KMzuWv4DkBMrBixViTzH8w2KKThFVDBaXUT346npXFs3o
-         QaWpAa24DXo3bdhrK+vBbEA4I/TKDDx7gMAcsfvudnWrZC13et+ymVfh8soevm2OOIH/
-         1VfpjPSyKn5YfD62ovq1QWao1Q1h8vHpbmkXIyENParBdCoOkOdcjF3IMQA+d9m/dT8D
-         0BkWH+aw35C0jsFIdFZtHZCYYTf77rtlWZyQJtdf0SM+DQfDHAebOO5m9J7SZB/Fxhd7
-         6srr239OZfwqFvsd1x9lwdN/lZr+flhE9SEorA7xUIUGgGP/4bHeLntbifi0dnA+eiWI
-         ZBMQ==
+        bh=pgOKZxofitClM+o1lLshkyVp5VF97o2K5OR3XWz9MEg=;
+        b=YkJEqLkyoOzm6YBPOnGXJ38ZL07TGjyNcaJbVzZyLfJgXmCp9+u29Ywfp2K5omsJJQ
+         NeKfgelklnAgF1mbYkIEiY/wUahN0yIvKRAswGco8zRXlgb8nw4VzmE4qzGYmbl/wINv
+         oZxUoxtEVy/IdOvA7ztSW+S6eCAGqxtlt5/ag24LWLo71yxeX8e8/UQIYh14ldOJK2Qp
+         QF+i1XWCCevezGlmWjG7b5VykUd3lav48BwmjTdG3fu/zw7bDJ47zH73kYaMFZRH7q9X
+         ucsGyxH9BZLZzDEHbvhFKqZu/H6WRI21qRTsXiVaqWEs+bStln3uqXHxSibzscdsLHBx
+         pOiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697072903; x=1697677703;
+        d=1e100.net; s=20230601; t=1697073306; x=1697678106;
         h=in-reply-to:content-disposition:mime-version:references
          :mail-followup-to:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Hqg5K5lCDwesjzlytbXw7y9NPHtgi5OC1j95rwRDts=;
-        b=Etu9XtnS/rA47QxpvSbjhMgO9RBQ2x0oq+90QDyoDQq1/XA0mSwS/zYf7bFS2qwr+i
-         sSGk0cW+FZ2sy2afhwVae02hJj14KNs+ntQw1FyKJdnVuTNxjE8js1pc6sFSxENfRMuw
-         KPAfWvMLdBwPrxCgUex+YHN39rM9Q5r9o33XAObNwkhbaiqvllyjBgCbhBvmiJTBEDi6
-         iKPVL9x2mxZ4V6eWqeIE3T1mRpdxYec/m1UiW2FHtaAjNhL7vJmeIhrAiLqTvhsFtpi0
-         tQZ2vpsxAUH+X/7hpip9P5Vh1FH+23t2WJrg1Gzkk49p6IMDh28Ng5F1dl5v1V/4st2L
-         dTLA==
-X-Gm-Message-State: AOJu0YwLiJxrQL8XwyYhTUYOD6ubbgtqY4kDNd4u0CyqhQfoG/ADkECa
-        x6A3nsgmhRXbU42BE5mfPbtrtA==
-X-Google-Smtp-Source: AGHT+IGpxl6YkWuTo1INXVAtkAIE60MX0AlQ4nrSuCV88LRkBuh+MynPfutMlVzITCYoPfp66FDd1g==
-X-Received: by 2002:a05:6a20:8408:b0:172:55c1:f1d4 with SMTP id c8-20020a056a20840800b0017255c1f1d4mr6361133pzd.4.1697072903036;
-        Wed, 11 Oct 2023 18:08:23 -0700 (PDT)
+        bh=pgOKZxofitClM+o1lLshkyVp5VF97o2K5OR3XWz9MEg=;
+        b=juS9+3bAqihhzoBOgjUwSuxwqOSpCZGti+dYn2ir2kCv1tdsT9bgt8U75LExsGi/g+
+         PS3rlRW0D+mliK7y8k9s9g0CUBdm1h3iYqJmljvdlAsrpwH5hURrdZ1/jWrDeCC/3zYZ
+         iPVTqFr6+SOF3uU9A5ONqF1a0Wmk2l8q2O+xW1WVf3daEDQI2+Eyb7CkeQaRfjzv4kHS
+         xlG8ok4BrLpUTSDvVW0OVaMzFl37AnnOu538NUzkzAbJfp0uA7MEjrL3FWNa4494yT9k
+         KHxU4cKKMp7sHfYt20ZXtKpsDQXgDTS4IZVFSy5W4z1jweRgklWJ0CCQ5bwmMdj5uVtY
+         hfuA==
+X-Gm-Message-State: AOJu0YxZJsShIi7UOQJT2A0jbtOR/khanWPc42OrT8M2pDtVZwynYq1n
+        +ir5M2trjLSGkrEV4ad+YAdbFw==
+X-Google-Smtp-Source: AGHT+IE3yeeBoXFf4sEvkSsuyliBNq7zk3TnWf86xikV3WfID6a2o3LkesKNFo/NtOJRUJpc2tbduw==
+X-Received: by 2002:a05:6359:6418:b0:166:8ba6:d36d with SMTP id sh24-20020a056359641800b001668ba6d36dmr714395rwb.0.1697073306042;
+        Wed, 11 Oct 2023 18:15:06 -0700 (PDT)
 Received: from octopus ([2400:4050:c3e1:100:f7a8:3d44:f8cb:28e])
-        by smtp.gmail.com with ESMTPSA id jd22-20020a170903261600b001bc930d4517sm526508plb.42.2023.10.11.18.08.19
+        by smtp.gmail.com with ESMTPSA id t17-20020aa79391000000b00694fee1011asm10706296pfe.208.2023.10.11.18.15.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 18:08:22 -0700 (PDT)
-Date:   Thu, 12 Oct 2023 10:08:17 +0900
+        Wed, 11 Oct 2023 18:15:05 -0700 (PDT)
+Date:   Thu, 12 Oct 2023 10:15:01 +0900
 From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Oleksii_Moisieiev@epam.com
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, sudeep.holla@arm.com,
-        cristian.marussi@arm.com, robh+dt@kernel.org,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     sudeep.holla@arm.com, cristian.marussi@arm.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        linus.walleij@linaro.org, Oleksii_Moisieiev@epam.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [RFC v2 4/5] gpio: add pinctrl based generic gpio driver
-Message-ID: <ZSdHAYsmh/mzISKC@octopus>
+Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+Message-ID: <ZSdIlaom+QO8IlKW@octopus>
 Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleksii_Moisieiev@epam.com, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         sudeep.holla@arm.com, cristian.marussi@arm.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        linus.walleij@linaro.org, Oleksii_Moisieiev@epam.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
- <20231005025843.508689-5-takahiro.akashi@linaro.org>
- <CACRpkdZ+QkZp7_se7vN7i_Nx_c3woT_OzVnj3YHju3mZS+Ku8A@mail.gmail.com>
+ <20231005025843.508689-6-takahiro.akashi@linaro.org>
+ <a8d31c42-1248-4738-b01a-3abeedfd49eb@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZ+QkZp7_se7vN7i_Nx_c3woT_OzVnj3YHju3mZS+Ku8A@mail.gmail.com>
+In-Reply-To: <a8d31c42-1248-4738-b01a-3abeedfd49eb@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -84,57 +84,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus and Oleksii,
-
-On Tue, Oct 10, 2023 at 02:00:40PM +0200, Linus Walleij wrote:
-> On Thu, Oct 5, 2023 at 4:59???AM AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> 
-> 
-> > Some pin controllers provide not only a method to set up lines but
-> > also gpio function. With this commit, a new generic gpio driver will
-> > be provided. It is implemented purely by using pinctrl interfaces.
-> > One of such pin controllers is Arm's SCMI.
-> >
+On Thu, Oct 05, 2023 at 09:48:09PM +0200, Krzysztof Kozlowski wrote:
+> On 05/10/2023 04:58, AKASHI Takahiro wrote:
+> > A dt binding for pin controller based generic gpio driver is defined in
+> > this commit. One usable device is Arm's SCMI.
+> > 
 > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > ---
-> > RFC v2 (Oct 5, 2023)
 > 
-> RFC v2 looks very good to me, definitely something that can be merged
-> as a starting point once the hardware has been tested.
-
-Thank you for your support.
-I think the easiest and best way to test the code is that Oleskii will try
-my patch on his platform, r-car, on which I believe that SCMI FW for pin
-controller is already available since he tested his pinctrl driver.
-
-@Oleskii, can you please take a time for the test?
-(I will assist you in case of any error.)
-
-> > +static int pin_control_gpio_direction_input(struct gpio_chip *chip,
-> > +                                           unsigned int offset)
-> > +{
-> > +       return pinctrl_gpio_direction_input(chip->gpiodev->base + offset);
-> > +}
 > > +
-> > +static int pin_control_gpio_direction_output(struct gpio_chip *chip,
-> > +                                            unsigned int offset, int val)
-> > +{
-> > +       return pinctrl_gpio_direction_output(chip->gpiodev->base + offset);
-> > +}
+> > +required:
+> > +  - compatible
+> > +  - gpio-controller
+> > +  - "#gpio-cells"
+> > +  - gpio-ranges
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    gpio0: gpio@0 {
 > 
-> IIRC Bartosz is working on a patch set getting rid of this kludge having to
-> call with base + offset in every driver, replacing it with generic calls that
-> you can just assign in the gpio_chip.
-> 
-> When this gets applied these changes will likely be in place so you will
-> get rid of this too.
+> No reg, so no unit address.
 
-I will try to keep eyes on Bartosz's patch.
+My intention was to allow for multiple nodes (instances) of
+pinctrl based gpio devices. But I don't care the naming.
 
-Thanks,
+> Drop also unused label.
+
+Okay, I already dropped an example consumer device and have no need
+for the label any longer.
+
 -Takahiro Akashi
 
-
-> Yours,
-> Linus Walleij
+> 
+> > +        compatible = "pin-control-gpio";
+> > +        gpio-controller;
+> 
+> Best regards,
+> Krzysztof
+> 
