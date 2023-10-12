@@ -2,64 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFF9D7C7690
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 21:17:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 146B27C7694
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 21:19:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347366AbjJLTRj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 15:17:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
+        id S1441868AbjJLTTG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 15:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344140AbjJLTRj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 15:17:39 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C161EB7
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:17:37 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-7b625ed7208so639212241.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:17:37 -0700 (PDT)
+        with ESMTP id S1442062AbjJLTTF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 15:19:05 -0400
+Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A4C3C0
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:19:04 -0700 (PDT)
+Received: by mail-vs1-xe36.google.com with SMTP id ada2fe7eead31-457bc2de48dso155442137.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697138257; x=1697743057; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWlcOqQJAlOvQMeSN7HvN9BPiuEy/WlCkRpM5FGqZu0=;
-        b=mLPlHdcLoWNXiuxisaim/AyippKaq3AyMkqRhmE7cByO8o1bghK/Ccyq+cIGThApwH
-         TT4EWU8Pravdm5U+ro2lcevOBhiZAqqVKM1+DCp+1Km9f07w8LqYSozjNr/CZyoefkTo
-         jbtQdh31N2H8PNkFsMpUDBjU9HHS5h3SBcjrz9dMzJ+yygFMyQncgo+Fog/S5NXOvsih
-         MaXTEYeNxKpLWbzWEPI5Ct68WaXI+c99cPBswKwwCcrmfEiLZGXUKI6aYR614rhkTkdw
-         wyePHs/NLuiyj/EbsD9KDySrMG4DuJg7KL1zh9qxOzfbG0dWKkl38yjcraQWigMZ4+E2
-         QEMQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697138343; x=1697743143; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3eLEvq1MH4odouWj7v9hygXqEPevwuiOFBVN2oIUquE=;
+        b=n/56E/RwMfgZ2RQhdeAsSYpn1kCuKm/CHAHOXcKOijPfEBy3shRYs884ptZ2ZXSqSD
+         oRDWZ1bqWSPxoAGuII62xZd4kDWw0ocadywD/hu0Me1C7h7NhnmbNr3XQYRWymFFcz7g
+         t7E46nP6m8imx3a9UM1lnQ3CbfsjPkRNtKgmthrHkofihq2DpaNCFFkExgrr7N5ed+0M
+         b/khQk9Z8tWqz8qoAQ5ZATQls0HkFPdwcHudiHYokOWVWr2W8Kg8qostqE/Ust084uEb
+         7LThjL2PN7mrBrDYyWMMSCkRVXaF8RgIuS7NdGVtQ6wIoFihRxhrvrlMHhy6Sruf5Gvo
+         XXzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697138257; x=1697743057;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWlcOqQJAlOvQMeSN7HvN9BPiuEy/WlCkRpM5FGqZu0=;
-        b=GjV138N9l2wjHpsghTc4gD2pDQeM6tJye8mniJvsbOEQFd0inLHTRXeQ+6RgfOBrQF
-         xgHjzApB4BG590XsJM7nYnGSya0UwMz14ns8VvHu7Ja+QRcMMT6AX79BY+VA53S8TTSE
-         S9kp8n2KPEN9B5dSi5H9cCFCXrsSw6Gdod+SSvVLNc1aFn6RdgAsI/eF/0ymwGh2pbVb
-         +j0yCskrWQCBXAClWBSoPJYIsjMKvALAUzkhErXS+/qIwO3GOiCyzEjPd2lBtvGkKNvn
-         sTANoEPSWS5mXL+9ZXMgWDL5OwmcF9RNWztyTqzBm7bzYvGvPMOGqj7VW01So3bT3vq7
-         LcmQ==
-X-Gm-Message-State: AOJu0Yx7+j0ij8qRiYFw8eQLDGbGxSyhrl/yY43BRzmEo4mKFS219iCH
-        QBYXqLJBJjkaffpvjtIZt0KYvTm6x+VGywXZgYQXCw==
-X-Google-Smtp-Source: AGHT+IGrA5kF3HcOtUPVT43XJ1zxNH2szPpy6WwhWhnH3/667zKWyI8Q9/VTzKpURDNSvTgSAOPy8KO3OtxI+JdUjJc=
-X-Received: by 2002:a67:ea59:0:b0:450:c666:fe14 with SMTP id
- r25-20020a67ea59000000b00450c666fe14mr21646364vso.30.1697138256780; Thu, 12
- Oct 2023 12:17:36 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 12 Oct 2023 12:17:36 -0700
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <20231012120925.58508-2-phil@gadgetoid.com>
+        d=1e100.net; s=20230601; t=1697138343; x=1697743143;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3eLEvq1MH4odouWj7v9hygXqEPevwuiOFBVN2oIUquE=;
+        b=hxPStpfcxch4IYZ4Q8tU0sKHPAx+ujPN6xfzweRjzFmNQ/iJKe5chKjrzN7BEXhnLB
+         vKP0Afc2Kl/x011/JTxKjtIN5s2ZSRYwF5NgDkf6ah24xwLHgKORZiu1I2856HLBpah2
+         /c7zPAOQIr143LciFc6yv0bGb5DLJOyFMwc2N87ojdf3UA2aT0t6V4i+R4oqDthDGFdF
+         FezOfvxtmG/5vMQudL8hPbKFfZujMeJma6qhR06vv94VOxG0BFg7ip2jxYcH1C6uJNiO
+         sjkZ42tJuV/9pWjkXV6ql3Jbll4iPtVCTp3nWOddokatNnfLBLYAtcBMmvDPUwP2nUAX
+         QoMg==
+X-Gm-Message-State: AOJu0Yw6jmsO3eIHT6cYVjBVwYFZYftoV0YK80b+JLz3lGgmcQeTMAdQ
+        zv5K4/wgP9vsXRqCCG9BoRsRWWkjUknuRjZzhtBP9g==
+X-Google-Smtp-Source: AGHT+IHt7V4D8/TLVBj4kuaddBzGcRTwBuyu/K4mvUAbOJq/0nCZKid4wb7WEfP+0DpP4c9TAIHepKsr5Su1rPYr0ag=
+X-Received: by 2002:a67:cb97:0:b0:457:b2f5:3fc9 with SMTP id
+ h23-20020a67cb97000000b00457b2f53fc9mr2303754vsl.25.1697138343426; Thu, 12
+ Oct 2023 12:19:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231012120925.58508-1-phil@gadgetoid.com> <20231012120925.58508-2-phil@gadgetoid.com>
-Date:   Thu, 12 Oct 2023 12:17:36 -0700
-Message-ID: <CAMRc=MfG0AUYoy7mRTB+K=zKPcOPeojF2a=3Ctab8Tr+xhVaKA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 1/1] bindings: python: don't use exec to get __version__
+References: <20231011121246.9467-1-phil@gadgetoid.com> <20231011121246.9467-2-phil@gadgetoid.com>
+ <ZSbXNQ1sx+lDl7JV@smile.fi.intel.com> <CA+kSVo-YKOzSmk73jkmg0Cn0r95dXFw14SPjBZBBvW09Ca-r3g@mail.gmail.com>
+In-Reply-To: <CA+kSVo-YKOzSmk73jkmg0Cn0r95dXFw14SPjBZBBvW09Ca-r3g@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 12 Oct 2023 21:18:52 +0200
+Message-ID: <CAMRc=Mf+Uhh46Bs9gWLJjTCMJCXtB-yFzBcA5xvzO91Sz8_9+Q@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 1/3] bindings: python: optionally include module
+ in sdist
 To:     Phil Howard <phil@gadgetoid.com>
-Cc:     linux-gpio@vger.kernel.org,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -69,57 +70,65 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 12 Oct 2023 14:09:25 +0200, Phil Howard <phil@gadgetoid.com> said:
-> Import __version__ from gpiod.version instead of using exec
-> since the latter is potentially unsafe and unnecessary.
+On Thu, Oct 12, 2023 at 11:03=E2=80=AFAM Phil Howard <phil@gadgetoid.com> w=
+rote:
 >
-> Signed-off-by: Phil Howard <phil@gadgetoid.com>
-> ---
->  bindings/python/setup.py | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> On Wed, 11 Oct 2023 at 18:11, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Wed, Oct 11, 2023 at 01:12:44PM +0100, Phil Howard wrote:
+> > > Build gpiod into Python module.
+> > >
+> > > Optional environment var USE_SYSTEM_GPIO=3D1 to
+> > > generate a module that depends upon system gpiod.
+> >
+> > ...
 >
-> diff --git a/bindings/python/setup.py b/bindings/python/setup.py
-> index 66b7908..278baee 100644
-> --- a/bindings/python/setup.py
-> +++ b/bindings/python/setup.py
-> @@ -5,6 +5,7 @@ from os import environ, path
->  from setuptools import setup, Extension, find_packages
->  from setuptools.command.build_ext import build_ext as orig_build_ext
->  from shutil import rmtree
-> +from gpiod.version import __version__
+> *sigh*
 >
+> >
+> > > --- /dev/null
+> > > +++ b/bindings/python/include
+> > > @@ -0,0 +1 @@
+> > > +../../include
+> >
+> > > \ No newline at end of file
+> >
+> > These lines are bothering me, why the new line can't be added to all af=
+fected files?
 >
->  class build_ext(orig_build_ext):
-> @@ -54,9 +55,6 @@ if "GPIOD_WITH_TESTS" in environ and environ["GPIOD_WITH_TESTS"] == "1":
->      extensions.append(gpiosim_ext)
->      extensions.append(procname_ext)
+> Is it convention for symlinks to include a newline, is it even possible?
 >
-> -with open("gpiod/version.py", "r") as fd:
-> -    exec(fd.read())
-> -
->  setup(
->      name="libgpiod",
->      packages=find_packages(exclude=["tests", "tests.*"]),
-> --
-> 2.34.1
+> I'm not super sure about the symlink approach, actually.
 >
+> It's the path of least complexity but after some research into the
+> usage of "shutil.copytree"
+> to copy dependent and packaged files at build time I'm starting to
+> wonder if a more complex
+> setup.py isn't necessarily a bad idea.
 >
 
-I get the following with this patch applied:
-
-GPIOD_WITH_TESTS=1 \
-/usr/bin/python setup.py build_ext --inplace \
-	--include-dirs=../../include/:../../tests/gpiosim/ \
-	--library-dirs=../../lib/.libs/:../../tests/gpiosim/.libs/
-Traceback (most recent call last):
-  File "/home/brgl/workspace/gitbook/libgpiod/bindings/python/setup.py",
-line 8, in <module>
-    from gpiod.version import __version__
-  File "/home/brgl/workspace/gitbook/libgpiod/bindings/python/gpiod/__init__.py",
-line 10, in <module>
-    from . import _ext
-ImportError: cannot import name '_ext' from partially initialized
-module 'gpiod' (most likely due to a circular import)
-(/home/brgl/workspace/gitbook/libgpiod/bindings/python/gpiod/__init__.py)
+How about not having links in the repo but creating them as required
+at build-time?
 
 Bart
+
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+> >
+> >
+>
+>
+> --
+> Philip Howard
+> Technology & Lifestyle Writer
+> gadgetoid.com
+>
+> Gadgetoid gadg-et-oid [gaj-it-oid]
+>
+>                                      -adjective
+>
+> 1. having the characteristics or form of a gadget; resembling a
+> mechanical contrivance or device.
