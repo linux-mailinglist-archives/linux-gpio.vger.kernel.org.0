@@ -2,123 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 481177C685F
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 10:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1BC27C68A1
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 10:56:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235623AbjJLIld (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 04:41:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55106 "EHLO
+        id S232023AbjJLI4f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 04:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235565AbjJLIlL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 04:41:11 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9273AE0
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 01:41:05 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-7b2ca45d5cfso381887241.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 01:41:05 -0700 (PDT)
+        with ESMTP id S232199AbjJLI4e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 04:56:34 -0400
+Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883B69D
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 01:56:31 -0700 (PDT)
+Received: by mail-vk1-xa2a.google.com with SMTP id 71dfb90a1353d-49d6bd360f8so266918e0c.2
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 01:56:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697100064; x=1697704864; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZUchK6yJhWz//C11XsP9G4+UgwQz+J3953UrtKHKsyw=;
-        b=vGCe0GShGTAC9HXmSE+ZVlC2obZlIVJFaDBkJT7AbyXnZc5QlToNo5SYJKFg1LQhn+
-         LZFc25bflj8y0KZUMsoxQdcxU2Q/Ay+/Xm+1nU5Af6YI3LFldT8/9RKPOwmDKgk3UzGB
-         JEm6tJqSjU6J9yW9NY0AdDsWq/i4wA6ICUQip1BsV04Zt61Yp1bdizRkXylLrrZkR1Ta
-         erllzsf9w/d8FujiTHxaWU11xOOreL8TpnyrH6tLxKj7bL9pwf5Sicz99UC/UcLsGIch
-         z7Jno8etSNMfTPRwMqLX9YHOsSR0wo+iW8OmsTlQFJ89h1io2pJ+JZk+f/HF4B3DzSuG
-         EsMQ==
+        d=linaro.org; s=google; t=1697100990; x=1697705790; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pPBtRkAyR8/yvLpXM2v/s42WseLth6/jHTmdZIsTmP0=;
+        b=h+nB6pHrr77EtQ4S5o4MRd7OTpOniGIk1qmH0SD7P1yihaFadtNX08ZAa3UC4n+z+w
+         egb3mxjqXvdZVieow3GbzQ0T8dPal4vUmMeILL1RDrVf8ni43FoTUwCHvr2Z6uENnib9
+         zv+O0fuspWiqBIEcJF/7nyw48/R1tj+B+ENxZhdQpyX2CxWToMaDGNAG12M9pdKErOci
+         1Ke1h3Uj0y/TuNBElQ/h3w66J8/o2p70L8KrTkEyNhYJP6G8OuTzeMCXhxulXgOkfSrx
+         D2jXyaoFNlq3EoYUKZmP2v+J12ptE0XY3qKRcpZu504cKvXK9yAXdUu71AOoWYIfBYkS
+         sfHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697100064; x=1697704864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZUchK6yJhWz//C11XsP9G4+UgwQz+J3953UrtKHKsyw=;
-        b=NJ978vEtfA12Q6wino8oLGYdThWcvPUPQ2iM1qzfmkhwglmYtxdZHhLBGSFvBFhtal
-         3WqaY9Cr3h+ItW1KlYmXYDpQ4qCUKJEr8JFM1KwgOy3VNv7vaFzMleG8+5lqmomKaGRV
-         5F4WrZE++l9lUD/Ax3v92r7aYaGTJ/rSPvLNsRvnVgIEmUNnivTtexsU7egvaQ8DlpQ/
-         MYEwSeffrbV4ptA8kYMPOd6NjuV6tdPKSFv7ihJWMKZY9rYSTFULWB9isMHNpTx3AkRd
-         dYGZh5v0aec9BQ/lKmJtMt1BJSKIoo633xx+BV/KgD/GyoL+UIoZB/eSCaEpqaDrjifI
-         6Kng==
-X-Gm-Message-State: AOJu0YxbmR1oXMc7byd009702uf8IN49vabyI0nU7q+Pv+ZoQxYl97At
-        b0InfenBg2gSD7nC5YjZR9oo6VVmpvujCq152Etouw==
-X-Google-Smtp-Source: AGHT+IF9dUsX+Hz7Ltj1VdhDlRQXrND9ZDGSpF/nQuUTN95JKBLTZeKF9tkB6NlevfWnHqdaQynTkwpw0WqGRUIvfv8=
-X-Received: by 2002:a67:f6c1:0:b0:452:7748:4700 with SMTP id
- v1-20020a67f6c1000000b0045277484700mr22457659vso.2.1697100064677; Thu, 12 Oct
- 2023 01:41:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697100990; x=1697705790;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pPBtRkAyR8/yvLpXM2v/s42WseLth6/jHTmdZIsTmP0=;
+        b=XDkxOUU0TVfuAQxSy/CK6zwf4f2Qxsy5PVA39qvMiJMHR1Vlgps+QuAkxX0S31QRFT
+         ONP+dvkeh5Wav4H6N99j+CMm0zF4H+v/HrrYhCRiz8ogxLJrb0h5+6a0dyPCOVXo/pzj
+         iyT8HVsz7DutOu6cqJLeaPyeetElqGaH3pfbjgGwLCVfkouoas8x8ir62Tkvvqjh96bl
+         0qiOUsWEeXUN6xq5xFGOmxZqlCxap/FFfgT5cBCxwJy2nPNqb1XVxl8R4naVHBVDkrUL
+         7vdCuUVNX034Fy1mTHGRsQbHGUF5hUX+OmDorjG8ChGbuZ0TR8aZZjdSFj4unrjs5lkb
+         WYlA==
+X-Gm-Message-State: AOJu0YzvM/Ixo0stn9O5sDUowxq4dApwwSdbMBrIxO3nKZqAh+qXTs9o
+        seJPTJGnXJ67IzPOk1g26a8tz6Ex8ywJn3n7a7+Q9w==
+X-Google-Smtp-Source: AGHT+IFo3Lm+2RcnGTHf/V2J1XBT43I24bimP6qoGhCOeQNixS13RWY5pVJxbWa7Xp+lhHh0Is6YyxIfDwTn7aNz6FQ=
+X-Received: by 2002:a67:e2cb:0:b0:452:c3a4:1f8c with SMTP id
+ i11-20020a67e2cb000000b00452c3a41f8cmr18858896vsm.2.1697100990608; Thu, 12
+ Oct 2023 01:56:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231004183906.97845-1-brgl@bgdev.pl> <169696282723.222014.3485016870976123694.b4-ty@kernel.org>
- <CAMRc=MenBeJV+p6LirsCfyaPRWfAvSrVQayqUc77KOyvRGMqvQ@mail.gmail.com>
- <f1b8555b-5acb-43cd-b48b-1dfafdb8d27c@sirena.org.uk> <CAMRc=MdLXjnYiTjfoKjqAVcLvG5r3p5mWYbSupDM3Di-BAe5eQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MdLXjnYiTjfoKjqAVcLvG5r3p5mWYbSupDM3Di-BAe5eQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 12 Oct 2023 10:40:53 +0200
-Message-ID: <CAMRc=McY2d0tHE18qn5WAPYwTwFn+TVZt48WA-t5tMwzkPsjvg@mail.gmail.com>
-Subject: Re: [PATCH] spi: bcm2835: add a sentinel at the end of the lookup array
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>
+References: <20231011184823.443959-1-peter.griffin@linaro.org>
+ <20231011184823.443959-3-peter.griffin@linaro.org> <ZScYOUi7qhvGmMIF@google.com>
+ <e4523fc3-e1dd-4791-b950-98dfc6dce1f5@linaro.org>
+In-Reply-To: <e4523fc3-e1dd-4791-b950-98dfc6dce1f5@linaro.org>
+From:   Peter Griffin <peter.griffin@linaro.org>
+Date:   Thu, 12 Oct 2023 09:56:19 +0100
+Message-ID: <CADrjBPpntJMsxb6oGQ7zuX3f0dgE3oYFepL4OdxamBz=_or7kw@mail.gmail.com>
+Subject: Re: [PATCH v3 02/20] dt-bindings: clock: Add Google gs101 clock
+ management unit bindings
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     William McVicker <willmcvicker@google.com>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
+        s.nawrocki@samsung.com, linus.walleij@linaro.org,
+        wim@linux-watchdog.org, linux@roeck-us.net,
+        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+        olof@lixom.net, gregkh@linuxfoundation.org, cw00.choi@samsung.com,
+        tudor.ambarus@linaro.org, andre.draszik@linaro.org,
+        semen.protsenko@linaro.org, saravanak@google.com, soc@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@android.com, linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 1:52=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> On Wed, Oct 11, 2023 at 1:45=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
-rote:
-> >
-> > On Wed, Oct 11, 2023 at 09:36:19AM +0200, Bartosz Golaszewski wrote:
-> > > On Tue, Oct 10, 2023 at 8:33=E2=80=AFPM Mark Brown <broonie@kernel.or=
-g> wrote:
-> > > > On Wed, 04 Oct 2023 20:39:06 +0200, Bartosz Golaszewski wrote:
-> >
-> > > > [1/1] spi: bcm2835: add a sentinel at the end of the lookup array
-> > > >       commit: 9aaa25df9b02bfe5579cbc9b4cc1177c662ec33f
-> >
-> > > Can you provide me with an immutable branch containing commit
-> > > 21f252cd29f08892d48739fd7513ad79c1cff96a (the one this one fixes)?
-> >
-> > > We are very close to removing gpiochip_find() from the GPIOLIB and
-> > > with this pulled we could remove it for v6.7.
-> >
-> > Ugh, *please* say this sort of thing when sending patches rather than
-> > waiting until after they've been applied.  The default is just to add
-> > patches to the normal development branches which means they have the
-> > whole history for the release cycle after them and may well have other
-> > things applied on top of them before you get round to asking for them t=
-o
-> > be applied on a different branch as is the case here.
->
-> I'm sorry. I didn't expect the removal process to go as fast as there
-> were quite a few users but it turned out to be almost ready now.
->
-> We can wait until rc7 when your for-next branch will be more or less
-> immutable and then you can tag
-> 21f252cd29f08892d48739fd7513ad79c1cff96a alone (it only has a few
-> commits between it and v6.6-rc1) if that works for you?
->
-> Bart
+Hi Krzysztof,
 
-Alternatively - if you send your SPI PR to Linus early in the merge
-window, I will send the patch removing gpiochip_find() later on top of
-it?
+On Thu, 12 Oct 2023 at 07:07, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 11/10/2023 23:48, William McVicker wrote:
+> > On 10/11/2023, Peter Griffin wrote:
+> >> Provide dt-schema documentation for Google gs101 SoC clock controller.
+> >> Currently this adds support for cmu_top, cmu_misc and cmu_apm.
+> >>
+> >> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> >
+> > Tested-by: Will McVicker <willmcvicker@google.com>
+>
+> And how do you perform testing of a binding?
 
-Bart
+I guess if William is using my script to build and flash the kernel it actually
+runs the DTC checks as part of the build process.
+
+See https://git.codelinaro.org/linaro/googlelt/pixelscripts/-/blob/clo/main/buildp21upstream.sh#L44
+
+regards,
+
+Peter.
