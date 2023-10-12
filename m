@@ -2,545 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A0B77C71F5
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 18:02:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22C817C7263
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 18:24:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233988AbjJLQCe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 12:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
+        id S1344029AbjJLQYH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 12:24:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235744AbjJLQCd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 12:02:33 -0400
-Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A61ED6
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 09:02:29 -0700 (PDT)
-Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-66d122f6294so6526716d6.0
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 09:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697126548; x=1697731348; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=auzWZTkNkOhSnTuWwifp7L9TKLyMwCJTlnFYF7BkftM=;
-        b=D4CNdc2VXIPeidiYcN/HdWfbyddSZSZ0S903iUbjOang3AYsC19NHdWXwZC1WOdcHH
-         zq7xVVRlpyXUOlj3mSfKQUpSkmzhyFvMtNL2vLNOlstzmvSWKkWHt/vljVD11SIQvOi2
-         XzB7/e+A/MFmTjhCr/PTpnBPhn5l8x2eMG2qmfituzVFmdK43reMu/MbDqXUT5D/iMA2
-         v3LI6PNW/BHCY/YIeQZ8m468Mrw4I73OXcz6LonqbwQB2UWPwykwPM6kglUl7FaL3O1w
-         Mu4gBxdchYbQ4IGiL+GLq8XLktM6uCxkVqO86VylcdeEsroBXhNVEtpIEBr3CuLI2V/u
-         T0vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697126548; x=1697731348;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=auzWZTkNkOhSnTuWwifp7L9TKLyMwCJTlnFYF7BkftM=;
-        b=BFicDoHC91qKZUsYEIp7TGidMhnRWa7e+X0f1vOL/jtaJDqJCQ1gbva0aIX/wll9ME
-         hbQf5nYBKGkeUXLzSawJ/c5BHp5IUkk01HIeysL8x3zwUvcJMj8f426wNbehdSMxqKMO
-         EQmaD9PPW6aYE51SVgh7vArCvDLq9MrQC1lsyeIP4Ioak2c4Gqykw1GgYVvxWoZCgTMv
-         4fXXSaSWtHJgY4EJ1g25uQlE0/DEE+6qdTZbt6vBFHyhJYdzFhYuSKi8Z6JXEMD86s9I
-         ySCvXY3HmD5l60qkg90CrBrMgBtQYEIqvbvXvllDUTgaZOJySNwVjPesBgr3zT2BAUkH
-         fHLw==
-X-Gm-Message-State: AOJu0YyEBXDYO+fAWyKK9r00gA3CpTSEQNIKdT0HX48WuNzllmdcZ6pN
-        2MBzs7jhQTb9qD6oLLjgGm/EKZYLNbK7fNy3T/jOfg==
-X-Google-Smtp-Source: AGHT+IEZFm6hn8divcDTbNqZkY7iwajNMa6Y2EKv+TVHjBCKsaRklEAPZxFKBkloX0lXBqL29OYHYEDQ/CKrUv4xxHE=
-X-Received: by 2002:a0c:eccf:0:b0:65b:a66:3109 with SMTP id
- o15-20020a0ceccf000000b0065b0a663109mr27898247qvq.8.1697126548118; Thu, 12
- Oct 2023 09:02:28 -0700 (PDT)
+        with ESMTP id S1344015AbjJLQYG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 12:24:06 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2103.outbound.protection.outlook.com [40.107.113.103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 041B5A9;
+        Thu, 12 Oct 2023 09:24:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IZUVGnvkfJnJxue5+Y68hy9b2YYglXbeaB1slF4GFgI9VF1tGSK4kCWMffgQoiMRhIVkBmYjmG0LgZb1MMOP3y5/+4ohshMxjvzO6I/7mFVkq9zuXTg/eEUCitunR3Aqs+kycxarmtTpgqXFVQrYlFp3GyCLgeT2G2XO6UJoi2pVvmR3+qip1k+Tp5BI8nR5J8wTWGV2NJ6VjjqsLz8HlYmlA2zr5bZkUviFDkfGfHixF6/gjOLAZKsrsz/HA8oGgcFS1RhiiZ09rqVe2WUbilJ8pkezHCbHQxlw3RJhOL8Fj+3Z0YGzyY2cF+k5F1yir2LnZcslQluf58gR7StG7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ag+bUrbPwVENSmVxQbJJlZ2Pfh1V+kHRTMmIySevRzo=;
+ b=eRONJP3ru6niO6iuqVgv7IscJS865fTCYtCItXigNBfr7IYHoA1moqhRLOGaWzJltKy0zeUb8vEz7/oVat02A7AmLg8v6zdLC9chhojnE+T2rGxdeyAlp5iUHvT0o170cr/rgLx4JddcSS8c0GUXy/qpxFCk3xWycRKXv9rqxQbceF2wuLEBNshW+Tfk7E08XwPiOd8B1fMdKP/eIFbfY8YP4buW7f4tfLmF+zVPOmQDveAqJKLMNdh6taX5h5D1v51fUl/E8sfc2CDRuJORfluXOy7bua0xCOnNomfDzijdBtc7CAZHU3kPE3kBTJ4nn52/WoWspFB3BtbIl7gtZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ag+bUrbPwVENSmVxQbJJlZ2Pfh1V+kHRTMmIySevRzo=;
+ b=PmDm8pZs318DQnE25FUqHI4OxNB6Si9+U8bIHRb8apxxJYCI83EwCEaPThEEh6sW7rtbwQPGDo0kjgYsrzcj8SZ5q+V1TXibBeIlxr7J7igLMZEoIi8KfZ7jBkqvVVMfUXoR6cvetbWJDVPay+fhlAZ6L4EqdJHPFlb9DTv7VXQ=
+Received: from TYCPR01MB11269.jpnprd01.prod.outlook.com
+ (2603:1096:400:3c0::10) by OS3PR01MB9481.jpnprd01.prod.outlook.com
+ (2603:1096:604:1ca::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.45; Thu, 12 Oct
+ 2023 16:24:00 +0000
+Received: from TYCPR01MB11269.jpnprd01.prod.outlook.com
+ ([fe80::db75:e192:bbfa:78a2]) by TYCPR01MB11269.jpnprd01.prod.outlook.com
+ ([fe80::db75:e192:bbfa:78a2%3]) with mapi id 15.20.6863.043; Thu, 12 Oct 2023
+ 16:24:00 +0000
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Biju Das <biju.das.au@gmail.com>
+Subject: RE: [PATCH] pinctrl: renesas: rzg2l: Configure interrupt input mode
+Thread-Topic: [PATCH] pinctrl: renesas: rzg2l: Configure interrupt input mode
+Thread-Index: AQHZ+E84jgPTKvQQA0qBpCo0m1EvJ7BGUrqAgAAJ28A=
+Date:   Thu, 12 Oct 2023 16:24:00 +0000
+Message-ID: <TYCPR01MB112691C60EC823F8B55C6AEBB86D3A@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+References: <20231006121823.229193-1-biju.das.jz@bp.renesas.com>
+ <CAMuHMdWHkhonVmbjVCfc-s1iiUSOBNg9djWxaURNLHoAEaS3+w@mail.gmail.com>
+In-Reply-To: <CAMuHMdWHkhonVmbjVCfc-s1iiUSOBNg9djWxaURNLHoAEaS3+w@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB11269:EE_|OS3PR01MB9481:EE_
+x-ms-office365-filtering-correlation-id: 4ab0df2d-a3d0-42c1-fc08-08dbcb3fa482
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FGpkP506xFCB7EZlwZi4rs/eexg3V2CFCsKgnjHy2zfHBW0OFw1+8c8EsNPcSY6DV6jsjpAHptHT9GgcXL7xYkgbUYasZt020MiR7gpv9d3R03zta75CHluZ8grqLgIXGk64y/2r4NSDwU0sUii/H4jcyywLuO6MPgBOgmLQ6w2YzRXhE92g0fcuABRtOle0yuCVHOI+u6PknUPuLVcxH4Lzhd69x3Q9Dn/nw0xdMGlXjUUcZYuKx8zBkzoQdaJGvxYcLOdwLnTDjZ4BgenG1SRYAP7janBduw5osfLRLS2WZudXqpe2nUPOfNEKjwvUxA3GNBOL65rIfpDhFssfKV1YcLUUsLvVen9O0I1bzvWF4iygnjEL63wj1vVWRsx+id7zzGuwkMubp9BSnz71NvskeziUqIuKrqVvRLRM40q9tIPJUoK/KXxpc/Ip4Egw8tteJ3PVuWjbpZ+AWTpb8UgZGiQ4B0l1sxUn+imixeNMWTLwbchkSh0P4Egr4sShO5g3CWQeYLBiT1r2r8AVc5FhleeFqpU/oFR2/Ur7f11e0Qf6kCCHLUGu4JWorPkES6/FPbDRtZpcgKo1ZCDi2avMhu9GuiRqiUDNQpvHscNj1EhFksaPChVxIOx2Zb6E
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11269.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(346002)(366004)(396003)(376002)(230922051799003)(1800799009)(186009)(64100799003)(451199024)(76116006)(316002)(66946007)(64756008)(66446008)(54906003)(66476007)(66556008)(6916009)(9686003)(478600001)(4326008)(8676002)(8936002)(41300700001)(5660300002)(52536014)(7696005)(6506007)(55016003)(53546011)(38100700002)(38070700005)(122000001)(86362001)(2906002)(26005)(83380400001)(33656002)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MFlWKzNsMGpHcHVtUzhaWGtWY0NwOEw5ZUdNQWtaSHVKZW9oakhUdTh6WkxC?=
+ =?utf-8?B?Y1R4UzFKbjJIRTdiVkdXWnY3YlYzemIzcTVRdzQvWTJwNmVGWnNZaDlLVjBN?=
+ =?utf-8?B?UTVwWGREVkRpSDE5N1dHeDdZcUhvQVRlV0N5aWtoWFNHVnRWaCtUR21aejM2?=
+ =?utf-8?B?eFhDeWt1WXh2cnk3aXVtVjRDaDEvQnNYWjFoM1V4SjFXcyt1NmlVYjRNS25X?=
+ =?utf-8?B?UkxQdHFCWjJOR0wxSW16c2puaDE0TTFocDBIazFvNUQvWG5EMVVuS3dmU1Ew?=
+ =?utf-8?B?K3BHV3ZLdEZFQUNmWlRjTDJlQ0RycklFci8yU0tkakR2OWlBTTlJYklWdHFQ?=
+ =?utf-8?B?a1pZVEFKWHBsQkVuQWRWK1pYU0lIeHZHRDRrMk9FQ3dKWVk1amh3N0xMelNi?=
+ =?utf-8?B?V3R5eGtiYzNzNitOd2RybjI5TzZORnZUaDBVckFhdlcyZGhRS09Ed2R3aUl6?=
+ =?utf-8?B?S1lpVjVNZlZXRHlYOVhHQnhUUWxZQ1Z0cDZuQlBCRzVPcmp2S1ZreVFNQjFK?=
+ =?utf-8?B?NWhFckQzK25mQmpoeW9KN0RKOG9HRFJCWVcvSjJJbnltZHI2bE5hZFd4SW5N?=
+ =?utf-8?B?T09qTWRaZGl2QzlrZEl2cDY5YWZSRWE5QlpKaHZPWkM5d2dLZWlQdjRJRmNv?=
+ =?utf-8?B?UkFvazZxWkI5cDVMdFpOWThiNTlTM2RXam5SRjNsYjFZdnlLQjI5Ym5mMzZF?=
+ =?utf-8?B?SmRac1g0VzJZMXVwWVhTd0pGN0RKN3RMajZvenpqak9kcWlVTzhtUlRXRldT?=
+ =?utf-8?B?MDIwd1IyMCtJbFhTUGtlaW93N2lhbXVpYjhhYldDZmQrQVl6VFdHb2RwMnVr?=
+ =?utf-8?B?b2tSSE4vKy9qVFBBRDU4QjZpbG5lN2F2SWFCMVcxSXMzU2x6MVpLVHpjcnM5?=
+ =?utf-8?B?WWlweEtHZGt1WVpObUxyb2VFSzdrUktQVlFGZmszN29Bd1FvWXdYZ3NRWnk2?=
+ =?utf-8?B?Y3ZnSDU0VUFUeG1tTHpIOVdpd0RyT2NjY3dHYnlNWllSZUlacnNqeGpzMzAy?=
+ =?utf-8?B?UzRZSlV3R1gvUWJFVDdCY3ZTT0g0UCtRT0JNdHYxN2E2REd6ZnVQMUdwdjB2?=
+ =?utf-8?B?dmJoN1BWOUt5LytNZm9ncDZkcGpMZmVGeDM1UW5GNUdIeHVPVjRybVoxczlw?=
+ =?utf-8?B?L0VsY2o3VC9idUovUG1Ma2VZOVdYZExLTzVJdDZPWGQxb2JJak16OWdzUGVm?=
+ =?utf-8?B?UjVBd3BHMWlEdVdnU1JIM0YxTDlWRnNva1hsRTJyNk1XTGNBQ1pneDV6a1Rx?=
+ =?utf-8?B?SGdDN0NBdlFrWU42UCtYeWV6bkl5RTNOaVFDOXArdWxiNWdHdFR5NFVQeC9o?=
+ =?utf-8?B?K2xVK0V1T0RFQzkvSWlZc3RSb3VKMENPTWdEaHY4N3lXY2pmZHlYZTYySldv?=
+ =?utf-8?B?N2wzNFVoSndveGhDTjBDNjVaSHV2RlgveS9aamdoZHRjS3NoOVdOL1BadFd3?=
+ =?utf-8?B?dENvN2lUaGI1Rk9lQW1pVlpSZWFEdUFnL09iVmxMWSsway85SjNUcmJZQ2ZX?=
+ =?utf-8?B?VVFveUQ1OER2NGROWWlzMUNzZXFKUXZoVlZQNGR5RDA1M3hLOVhOYlFRZTdV?=
+ =?utf-8?B?SVI0YUMrZHlMUVRXclErb202VkJDZDBwWTBkVUxvWkJqVUtGUndnaG12U2xk?=
+ =?utf-8?B?YlBCNUpVcmdUSmpycEIwYkt0UVFtT0xsMklOdDFDbWtobFBuQUxqVVNiaml0?=
+ =?utf-8?B?UnpLOUtwNFhaRmVWZFl4TW5lQWN3ZmdLMGtMSXo4SEVQODdTYmcxc3h1QmVs?=
+ =?utf-8?B?YVhYREtEck4zQ0tJbFJqSzJId3cxOUYraXJaZnU3R0RsNnB6anlXY1NFN1E4?=
+ =?utf-8?B?cG94bmJBOHpXQ2Rsb1VTeGtZd3RnbTE3SmFSVWQ3OVZiVTdQbklwNWxkT1lL?=
+ =?utf-8?B?Zml2L05SaVlHekg1bGppSFF3SWpTT0NSWnQzSU1Sa2hRYzBrNndnQUk2YWlC?=
+ =?utf-8?B?aFM0UXJLM1N6dm03K081a3JrdVNFZ1R3M1dSaHNjcXVPMEF0ZnNCMStKK0po?=
+ =?utf-8?B?ZWM2MVVJY09KUjV1U3pNa2JGYjk1RDQvZUlNNWN4d0h6TFNzYUxHS0libjV1?=
+ =?utf-8?B?UkQxM1BtMllXaHlxUWk4clNwZHBJSEwvQ1hXY0xzRlQ2aHhSbkRYS3ZOZkxi?=
+ =?utf-8?B?by9wbk9saDRaaGZnZk1qM1VlN2UzcFNlajNyVjd4ZkFPRW43cGlUcnR4N1hS?=
+ =?utf-8?B?QUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20231011184823.443959-1-peter.griffin@linaro.org>
- <20231011184823.443959-13-peter.griffin@linaro.org> <CAPLW+4n_ay5Mjq_0u=wZBhv4m6pta8nYDJctGHTH81pWV5yZ_w@mail.gmail.com>
-In-Reply-To: <CAPLW+4n_ay5Mjq_0u=wZBhv4m6pta8nYDJctGHTH81pWV5yZ_w@mail.gmail.com>
-From:   Peter Griffin <peter.griffin@linaro.org>
-Date:   Thu, 12 Oct 2023 17:02:16 +0100
-Message-ID: <CADrjBPooSiDhsBnue6E9XX=xpV3=cZ05+U5Pm75h6_X5JpK-qw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/20] clk: samsung: clk-gs101: Add support for
- CMU_MISC clock unit
-To:     Sam Protsenko <semen.protsenko@linaro.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
-        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, wim@linux-watchdog.org,
-        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
-        arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org,
-        cw00.choi@samsung.com, tudor.ambarus@linaro.org,
-        andre.draszik@linaro.org, saravanak@google.com,
-        willmcvicker@google.com, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        kernel-team@android.com, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=no autolearn_force=no
-        version=3.4.6
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11269.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ab0df2d-a3d0-42c1-fc08-08dbcb3fa482
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Oct 2023 16:24:00.6015
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uL5NlPfmyp/KIIqtfrkbi0Xe6k6xPg0998A+TF0F/P18ZNtgOmqtoj4imuMD9bR8uQmXeu3A0Qzg3eIxMf+lCzFCwk4naTdO1ggFsJYPb58=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB9481
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sam,
-
-On Thu, 12 Oct 2023 at 01:12, Sam Protsenko <semen.protsenko@linaro.org> wr=
-ote:
->
-> On Wed, Oct 11, 2023 at 1:49=E2=80=AFPM Peter Griffin <peter.griffin@lina=
-ro.org> wrote:
-> >
-> > CMU Misc clocks IPs such as Watchdog. Add support for the
-> > muxes, dividers and gates in this CMU.
-> >
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  drivers/clk/samsung/clk-gs101.c | 312 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 312 insertions(+)
-> >
-> > diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-=
-gs101.c
-> > index 525f95e60665..bf2bd8cd39d0 100644
-> > --- a/drivers/clk/samsung/clk-gs101.c
-> > +++ b/drivers/clk/samsung/clk-gs101.c
-> > @@ -20,6 +20,7 @@
-> >  /* NOTE: Must be equal to the last clock ID increased by one */
-> >  #define TOP_NR_CLK                     (CLK_GOUT_CMU_BOOST + 1)
-> >  #define APM_NR_CLK                     (CLK_APM_PLL_DIV16_APM + 1)
-> > +#define MISC_NR_CLK                    (CLK_GOUT_MISC_WDT_CLUSTER1 + 1=
-)
->
-> Tabs for the indentation.
-
-Thanks for the review. Will fix in v4.
-
-Peter
-
->
-> >
-> >  /* ---- CMU_TOP ------------------------------------------------------=
-------- */
-> >
-> > @@ -1815,6 +1816,314 @@ static const struct samsung_cmu_info apm_cmu_in=
-fo __initconst =3D {
-> >         .nr_clk_regs            =3D ARRAY_SIZE(apm_clk_regs),
-> >  };
-> >
-> > +/* ---- CMU_MISC -----------------------------------------------------=
--------- */
-> > +/* Register Offset definitions for CMU_MISC (0x10010000) */
-> > +#define PLL_CON0_MUX_CLKCMU_MISC_BUS_USER      0x0600
-> > +#define PLL_CON1_MUX_CLKCMU_MISC_BUS_USER      0x0604
-> > +#define PLL_CON0_MUX_CLKCMU_MISC_SSS_USER      0x0610
-> > +#define PLL_CON1_MUX_CLKCMU_MISC_SSS_USER      0x0614
-> > +#define MISC_CMU_MISC_CONTROLLER_OPTION                0x0800
-> > +#define CLKOUT_CON_BLK_MISC_CMU_MISC_CLKOUT0   0x0810
-> > +#define CLK_CON_MUX_MUX_CLK_MISC_GIC           0x1000
-> > +#define CLK_CON_DIV_DIV_CLK_MISC_BUSP          0x1800
-> > +#define CLK_CON_DIV_DIV_CLK_MISC_GIC           0x1804
-> > +#define CLK_CON_GAT_CLK_BLK_MISC_UID_MISC_CMU_MISC_IPCLKPORT_PCLK     =
-         0x2000
-> > +#define CLK_CON_GAT_CLK_BLK_MISC_UID_OTP_CON_BIRA_IPCLKPORT_I_OSCCLK  =
-         0x2004
-> > +#define CLK_CON_GAT_CLK_BLK_MISC_UID_OTP_CON_BISR_IPCLKPORT_I_OSCCLK  =
-         0x2008
-> > +#define CLK_CON_GAT_CLK_BLK_MISC_UID_OTP_CON_TOP_IPCLKPORT_I_OSCCLK   =
-         0x200c
-> > +#define CLK_CON_GAT_CLK_BLK_MISC_UID_RSTNSYNC_CLK_MISC_OSCCLK_IPCLKPOR=
-T_CLK    0x2010
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_ADM_AHB_SSS_IPCLKPORT_HCLKM     =
-         0x2014
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_AD_APB_DIT_IPCLKPORT_PCLKM      =
-         0x2018
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_AD_APB_PUF_IPCLKPORT_PCLKM      =
-         0x201c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_DIT_IPCLKPORT_ICLKL2A           =
-         0x2020
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_D_TZPC_MISC_IPCLKPORT_PCLK      =
-         0x2024
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_GIC_IPCLKPORT_GICCLK            =
-         0x2028
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_GPC_MISC_IPCLKPORT_PCLK         =
-         0x202c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_LHM_AST_ICC_CPUGIC_IPCLKPORT_I_C=
-LK       0x2030
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_LHM_AXI_D_SSS_IPCLKPORT_I_CLK   =
-         0x2034
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_LHM_AXI_P_GIC_IPCLKPORT_I_CLK   =
-         0x2038
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_LHM_AXI_P_MISC_IPCLKPORT_I_CLK  =
-         0x203c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_LHS_ACEL_D_MISC_IPCLKPORT_I_CLK =
-         0x2040
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_LHS_AST_IRI_GICCPU_IPCLKPORT_I_C=
-LK       0x2044
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_LHS_AXI_D_SSS_IPCLKPORT_I_CLK   =
-         0x2048
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_MCT_IPCLKPORT_PCLK              =
-         0x204c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_OTP_CON_BIRA_IPCLKPORT_PCLK     =
-         0x2050
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_OTP_CON_BISR_IPCLKPORT_PCLK     =
-         0x2054
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_OTP_CON_TOP_IPCLKPORT_PCLK      =
-         0x2058
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_PDMA_IPCLKPORT_ACLK             =
-         0x205c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_PPMU_DMA_IPCLKPORT_ACLK         =
-         0x2060
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_PPMU_MISC_IPCLKPORT_ACLK        =
-         0x2064
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_PPMU_MISC_IPCLKPORT_PCLK        =
-         0x2068
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_PUF_IPCLKPORT_I_CLK             =
-         0x206c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_DIT_IPCLKPORT_ACLK           =
-         0x2070
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_DIT_IPCLKPORT_PCLK           =
-         0x2074
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_PDMA_IPCLKPORT_ACLK          =
-         0x2078
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_PDMA_IPCLKPORT_PCLK          =
-         0x207c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_PPMU_DMA_IPCLKPORT_ACLK      =
-         0x2080
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_PPMU_DMA_IPCLKPORT_PCLK      =
-         0x2084
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_RTIC_IPCLKPORT_ACLK          =
-         0x2088
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_RTIC_IPCLKPORT_PCLK          =
-         0x208c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_SPDMA_IPCLKPORT_ACLK         =
-         0x2090
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_SPDMA_IPCLKPORT_PCLK         =
-         0x2094
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_SSS_IPCLKPORT_ACLK           =
-         0x2098
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_SSS_IPCLKPORT_PCLK           =
-         0x209c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_RSTNSYNC_CLK_MISC_BUSD_IPCLKPORT=
-_CLK     0x20a0
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_RSTNSYNC_CLK_MISC_BUSP_IPCLKPORT=
-_CLK     0x20a4
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_RSTNSYNC_CLK_MISC_GIC_IPCLKPORT_=
-CLK      0x20a8
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_RSTNSYNC_CLK_MISC_SSS_IPCLKPORT_=
-CLK      0x20ac
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_RTIC_IPCLKPORT_I_ACLK           =
-         0x20b0
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_RTIC_IPCLKPORT_I_PCLK           =
-         0x20b4
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SPDMA_IPCLKPORT_ACLK            =
-         0x20b8
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_DIT_IPCLKPORT_ACLK         =
-         0x20bc
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_DIT_IPCLKPORT_PCLK         =
-         0x20c0
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_PDMA_IPCLKPORT_ACLK        =
-         0x20c4
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_PDMA_IPCLKPORT_PCLK        =
-         0x20c8
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_PPMU_DMA_IPCLKPORT_ACLK    =
-         0x20cc
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_PPMU_DMA_IPCLKPORT_PCLK    =
-         0x20d0
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_RTIC_IPCLKPORT_ACLK        =
-         0x20d4
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_RTIC_IPCLKPORT_PCLK        =
-         0x20d8
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_SPDMA_IPCLKPORT_ACLK       =
-                 0x20dc
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_SPDMA_IPCLKPORT_PCLK       =
-                 0x20e0
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_SSS_IPCLKPORT_ACLK         =
-         0x20e4
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_SSS_IPCLKPORT_PCLK         =
-         0x20e8
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSS_IPCLKPORT_I_ACLK            =
-         0x20ec
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SSS_IPCLKPORT_I_PCLK            =
-         0x20f0
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SYSMMU_MISC_IPCLKPORT_CLK_S2    =
-         0x20f4
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SYSMMU_SSS_IPCLKPORT_CLK_S1     =
-         0x20f8
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_SYSREG_MISC_IPCLKPORT_PCLK      =
-         0x20fc
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_TMU_SUB_IPCLKPORT_PCLK          =
-         0x2100
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_TMU_TOP_IPCLKPORT_PCLK          =
-         0x2104
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_WDT_CLUSTER0_IPCLKPORT_PCLK     =
-         0x2108
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_WDT_CLUSTER1_IPCLKPORT_PCLK     =
-         0x210c
-> > +#define CLK_CON_GAT_GOUT_BLK_MISC_UID_XIU_D_MISC_IPCLKPORT_ACLK       =
-                 0x2110
-> > +#define DMYQCH_CON_PPMU_DMA_QCH                        0x3000
-> > +#define DMYQCH_CON_PUF_QCH                     0x3004
-> > +#define PCH_CON_LHM_AXI_D_SSS_PCH              0x300c
-> > +#define PCH_CON_LHM_AXI_P_GIC_PCH              0x3010
-> > +#define PCH_CON_LHM_AXI_P_MISC_PCH             0x3014
-> > +#define PCH_CON_LHS_ACEL_D_MISC_PCH            0x3018
-> > +#define PCH_CON_LHS_AST_IRI_GICCPU_PCH         0x301c
-> > +#define PCH_CON_LHS_AXI_D_SSS_PCH              0x3020
-> > +#define QCH_CON_ADM_AHB_SSS_QCH                        0x3024
-> > +#define QCH_CON_DIT_QCH                                0x3028
-> > +#define QCH_CON_GIC_QCH                                0x3030
-> > +#define QCH_CON_LHM_AST_ICC_CPUGIC_QCH         0x3038
-> > +#define QCH_CON_LHM_AXI_D_SSS_QCH              0x303c
-> > +#define QCH_CON_LHM_AXI_P_GIC_QCH              0x3040
-> > +#define QCH_CON_LHM_AXI_P_MISC_QCH             0x3044
-> > +#define QCH_CON_LHS_ACEL_D_MISC_QCH            0x3048
-> > +#define QCH_CON_LHS_AST_IRI_GICCPU_QCH         0x304c
-> > +#define QCH_CON_LHS_AXI_D_SSS_QCH              0x3050
-> > +#define QCH_CON_MCT_QCH                                0x3054
-> > +#define QCH_CON_MISC_CMU_MISC_QCH              0x3058
-> > +#define QCH_CON_OTP_CON_BIRA_QCH               0x305c
-> > +#define QCH_CON_OTP_CON_BISR_QCH               0x3060
-> > +#define QCH_CON_OTP_CON_TOP_QCH                        0x3064
-> > +#define QCH_CON_PDMA_QCH                       0x3068
-> > +#define QCH_CON_PPMU_MISC_QCH                  0x306c
-> > +#define QCH_CON_QE_DIT_QCH                     0x3070
-> > +#define QCH_CON_QE_PDMA_QCH                    0x3074
-> > +#define QCH_CON_QE_PPMU_DMA_QCH                        0x3078
-> > +#define QCH_CON_QE_RTIC_QCH                    0x307c
-> > +#define QCH_CON_QE_SPDMA_QCH                   0x3080
-> > +#define QCH_CON_QE_SSS_QCH                     0x3084
-> > +#define QCH_CON_RTIC_QCH                       0x3088
-> > +#define QCH_CON_SPDMA_QCH                      0x308c
-> > +#define QCH_CON_SSMT_DIT_QCH                   0x3090
-> > +#define QCH_CON_SSMT_PDMA_QCH                  0x3094
-> > +#define QCH_CON_SSMT_PPMU_DMA_QCH              0x3098
-> > +#define QCH_CON_SSMT_RTIC_QCH                  0x309c
-> > +#define QCH_CON_SSMT_SPDMA_QCH                 0x30a0
-> > +#define QCH_CON_SSMT_SSS_QCH                   0x30a4
-> > +#define QCH_CON_SSS_QCH                                0x30a8
-> > +#define QCH_CON_SYSMMU_MISC_QCH                        0x30ac
-> > +#define QCH_CON_SYSMMU_SSS_QCH                 0x30b0
-> > +#define QCH_CON_SYSREG_MISC_QCH                        0x30b4
-> > +#define QCH_CON_TMU_SUB_QCH                    0x30b8
-> > +#define QCH_CON_TMU_TOP_QCH                    0x30bc
-> > +#define QCH_CON_WDT_CLUSTER0_QCH               0x30c0
-> > +#define QCH_CON_WDT_CLUSTER1_QCH               0x30c4
-> > +#define QUEUE_CTRL_REG_BLK_MISC_CMU_MISC       0x3c00
-> > +
-> > +static const unsigned long misc_clk_regs[] __initconst =3D {
-> > +       PLL_CON0_MUX_CLKCMU_MISC_BUS_USER,
-> > +       PLL_CON1_MUX_CLKCMU_MISC_BUS_USER,
-> > +       PLL_CON0_MUX_CLKCMU_MISC_SSS_USER,
-> > +       PLL_CON1_MUX_CLKCMU_MISC_SSS_USER,
-> > +       MISC_CMU_MISC_CONTROLLER_OPTION,
-> > +       CLKOUT_CON_BLK_MISC_CMU_MISC_CLKOUT0,
-> > +       CLK_CON_MUX_MUX_CLK_MISC_GIC,
-> > +       CLK_CON_DIV_DIV_CLK_MISC_BUSP,
-> > +       CLK_CON_DIV_DIV_CLK_MISC_GIC,
-> > +       CLK_CON_GAT_CLK_BLK_MISC_UID_MISC_CMU_MISC_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_CLK_BLK_MISC_UID_OTP_CON_BIRA_IPCLKPORT_I_OSCCLK,
-> > +       CLK_CON_GAT_CLK_BLK_MISC_UID_OTP_CON_BISR_IPCLKPORT_I_OSCCLK,
-> > +       CLK_CON_GAT_CLK_BLK_MISC_UID_OTP_CON_TOP_IPCLKPORT_I_OSCCLK,
-> > +       CLK_CON_GAT_CLK_BLK_MISC_UID_RSTNSYNC_CLK_MISC_OSCCLK_IPCLKPORT=
-_CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_ADM_AHB_SSS_IPCLKPORT_HCLKM,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_AD_APB_DIT_IPCLKPORT_PCLKM,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_AD_APB_PUF_IPCLKPORT_PCLKM,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_DIT_IPCLKPORT_ICLKL2A,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_D_TZPC_MISC_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_GIC_IPCLKPORT_GICCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_GPC_MISC_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_LHM_AST_ICC_CPUGIC_IPCLKPORT_I_CL=
-K,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_LHM_AXI_D_SSS_IPCLKPORT_I_CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_LHM_AXI_P_GIC_IPCLKPORT_I_CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_LHM_AXI_P_MISC_IPCLKPORT_I_CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_LHS_ACEL_D_MISC_IPCLKPORT_I_CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_LHS_AST_IRI_GICCPU_IPCLKPORT_I_CL=
-K,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_LHS_AXI_D_SSS_IPCLKPORT_I_CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_MCT_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_OTP_CON_BIRA_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_OTP_CON_BISR_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_OTP_CON_TOP_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_PDMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_PPMU_DMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_PPMU_MISC_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_PPMU_MISC_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_PUF_IPCLKPORT_I_CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_DIT_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_DIT_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_PDMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_PDMA_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_PPMU_DMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_PPMU_DMA_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_RTIC_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_RTIC_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_SPDMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_SPDMA_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_SSS_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_QE_SSS_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_RSTNSYNC_CLK_MISC_BUSD_IPCLKPORT_=
-CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_RSTNSYNC_CLK_MISC_BUSP_IPCLKPORT_=
-CLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_RSTNSYNC_CLK_MISC_GIC_IPCLKPORT_C=
-LK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_RSTNSYNC_CLK_MISC_SSS_IPCLKPORT_C=
-LK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_RTIC_IPCLKPORT_I_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_RTIC_IPCLKPORT_I_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SPDMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_DIT_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_DIT_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_PDMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_PDMA_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_PPMU_DMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_PPMU_DMA_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_RTIC_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_RTIC_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_SPDMA_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_SPDMA_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_SSS_IPCLKPORT_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSMT_SSS_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSS_IPCLKPORT_I_ACLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SSS_IPCLKPORT_I_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SYSMMU_MISC_IPCLKPORT_CLK_S2,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SYSMMU_SSS_IPCLKPORT_CLK_S1,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_SYSREG_MISC_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_TMU_SUB_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_TMU_TOP_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_WDT_CLUSTER0_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_WDT_CLUSTER1_IPCLKPORT_PCLK,
-> > +       CLK_CON_GAT_GOUT_BLK_MISC_UID_XIU_D_MISC_IPCLKPORT_ACLK,
-> > +       DMYQCH_CON_PPMU_DMA_QCH,
-> > +       DMYQCH_CON_PUF_QCH,
-> > +       PCH_CON_LHM_AXI_D_SSS_PCH,
-> > +       PCH_CON_LHM_AXI_P_GIC_PCH,
-> > +       PCH_CON_LHM_AXI_P_MISC_PCH,
-> > +       PCH_CON_LHS_ACEL_D_MISC_PCH,
-> > +       PCH_CON_LHS_AST_IRI_GICCPU_PCH,
-> > +       PCH_CON_LHS_AXI_D_SSS_PCH,
-> > +       QCH_CON_ADM_AHB_SSS_QCH,
-> > +       QCH_CON_DIT_QCH,
-> > +       QCH_CON_GIC_QCH,
-> > +       QCH_CON_LHM_AST_ICC_CPUGIC_QCH,
-> > +       QCH_CON_LHM_AXI_D_SSS_QCH,
-> > +       QCH_CON_LHM_AXI_P_GIC_QCH,
-> > +       QCH_CON_LHM_AXI_P_MISC_QCH,
-> > +       QCH_CON_LHS_ACEL_D_MISC_QCH,
-> > +       QCH_CON_LHS_AST_IRI_GICCPU_QCH,
-> > +       QCH_CON_LHS_AXI_D_SSS_QCH,
-> > +       QCH_CON_MCT_QCH,
-> > +       QCH_CON_MISC_CMU_MISC_QCH,
-> > +       QCH_CON_OTP_CON_BIRA_QCH,
-> > +       QCH_CON_OTP_CON_BISR_QCH,
-> > +       QCH_CON_OTP_CON_TOP_QCH,
-> > +       QCH_CON_PDMA_QCH,
-> > +       QCH_CON_PPMU_MISC_QCH,
-> > +       QCH_CON_QE_DIT_QCH,
-> > +       QCH_CON_QE_PDMA_QCH,
-> > +       QCH_CON_QE_PPMU_DMA_QCH,
-> > +       QCH_CON_QE_RTIC_QCH,
-> > +       QCH_CON_QE_SPDMA_QCH,
-> > +       QCH_CON_QE_SSS_QCH,
-> > +       QCH_CON_RTIC_QCH,
-> > +       QCH_CON_SPDMA_QCH,
-> > +       QCH_CON_SSMT_DIT_QCH,
-> > +       QCH_CON_SSMT_PDMA_QCH,
-> > +       QCH_CON_SSMT_PPMU_DMA_QCH,
-> > +       QCH_CON_SSMT_RTIC_QCH,
-> > +       QCH_CON_SSMT_SPDMA_QCH,
-> > +       QCH_CON_SSMT_SSS_QCH,
-> > +       QCH_CON_SSS_QCH,
-> > +       QCH_CON_SYSMMU_MISC_QCH,
-> > +       QCH_CON_SYSMMU_SSS_QCH,
-> > +       QCH_CON_SYSREG_MISC_QCH,
-> > +       QCH_CON_TMU_SUB_QCH,
-> > +       QCH_CON_TMU_TOP_QCH,
-> > +       QCH_CON_WDT_CLUSTER0_QCH,
-> > +       QCH_CON_WDT_CLUSTER1_QCH,
-> > +       QUEUE_CTRL_REG_BLK_MISC_CMU_MISC,
-> > +};
-> > +
-> > +/* List of parent clocks for Muxes in CMU_MISC */
-> > +PNAME(mout_misc_bus_user_p)            =3D { "oscclk", "dout_cmu_misc_=
-bus" };
-> > +PNAME(mout_misc_sss_user_p)            =3D { "oscclk", "dout_cmu_misc_=
-sss" };
-> > +
-> > +static const struct samsung_mux_clock misc_mux_clks[] __initconst =3D =
-{
-> > +       MUX(CLK_MOUT_MISC_BUS_USER, "mout_misc_bus_user", mout_misc_bus=
-_user_p,
-> > +           PLL_CON0_MUX_CLKCMU_MISC_BUS_USER, 4, 1),
-> > +       MUX(CLK_MOUT_MISC_SSS_USER, "mout_misc_sss_user", mout_misc_sss=
-_user_p,
-> > +           PLL_CON0_MUX_CLKCMU_MISC_SSS_USER, 4, 1),
-> > +};
-> > +
-> > +static const struct samsung_div_clock misc_div_clks[] __initconst =3D =
-{
-> > +       DIV(CLK_DOUT_MISC_BUSP, "dout_misc_busp", "mout_misc_bus_user",
-> > +           CLK_CON_DIV_DIV_CLK_MISC_BUSP, 0, 3),
-> > +       DIV(CLK_DOUT_MISC_GIC, "dout_misc_gic", "mout_misc_bus_user",
-> > +           CLK_CON_DIV_DIV_CLK_MISC_GIC, 0, 3),
-> > +};
-> > +
-> > +static const struct samsung_gate_clock misc_gate_clks[] __initconst =
-=3D {
-> > +       GATE(CLK_GOUT_MISC_PCLK, "gout_misc_pclk", "dout_misc_busp",
-> > +            CLK_CON_GAT_CLK_BLK_MISC_UID_MISC_CMU_MISC_IPCLKPORT_PCLK,
-> > +            21, 0, 0),
-> > +
->
-> No need in empty lines.
->
-> > +       GATE(CLK_GOUT_MISC_SYSREG_PCLK, "gout_misc_sysreg_pclk", "dout_=
-misc_busp",
-> > +            CLK_CON_GAT_GOUT_BLK_MISC_UID_SYSREG_MISC_IPCLKPORT_PCLK,
-> > +            21, 0, 0),
-> > +
-> > +       GATE(CLK_GOUT_MISC_WDT_CLUSTER0, "gout_misc_wdt_cluster0", "dou=
-t_misc_busp",
-> > +            CLK_CON_GAT_GOUT_BLK_MISC_UID_WDT_CLUSTER0_IPCLKPORT_PCLK,
-> > +            21, 0, 0),
-> > +
-> > +       GATE(CLK_GOUT_MISC_WDT_CLUSTER1, "gout_misc_wdt_cluster1", "dou=
-t_misc_busp",
-> > +            CLK_CON_GAT_GOUT_BLK_MISC_UID_WDT_CLUSTER1_IPCLKPORT_PCLK,
-> > +            21, 0, 0),
-> > +
->
-> Unnecessary empty line.
->
-> > +};
-> > +
-> > +static const struct samsung_cmu_info misc_cmu_info __initconst =3D {
-> > +       .mux_clks               =3D misc_mux_clks,
-> > +       .nr_mux_clks            =3D ARRAY_SIZE(misc_mux_clks),
-> > +       .div_clks               =3D misc_div_clks,
-> > +       .nr_div_clks            =3D ARRAY_SIZE(misc_div_clks),
-> > +       .gate_clks              =3D misc_gate_clks,
-> > +       .nr_gate_clks           =3D ARRAY_SIZE(misc_gate_clks),
-> > +       .nr_clk_ids             =3D MISC_NR_CLK,
-> > +       .clk_regs               =3D misc_clk_regs,
-> > +       .nr_clk_regs            =3D ARRAY_SIZE(misc_clk_regs),
-> > +       .clk_name               =3D "dout_misc_bus",
-> > +};
-> > +
-> >  /* ---- platform_driver ----------------------------------------------=
-------- */
-> >
-> >  static int __init gs101_cmu_probe(struct platform_device *pdev)
-> > @@ -1832,6 +2141,9 @@ static const struct of_device_id gs101_cmu_of_mat=
-ch[] =3D {
-> >         {
-> >                 .compatible =3D "google,gs101-cmu-apm",
-> >                 .data =3D &apm_cmu_info,
-> > +       }, {
-> > +               .compatible =3D "google,gs101-cmu-misc",
-> > +               .data =3D &misc_cmu_info,
-> >         }, {
-> >         },
-> >  };
-> > --
-> > 2.42.0.655.g421f12c284-goog
-> >
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0hdIHBpbmN0cmw6IHJlbmVzYXM6IHJ6ZzJsOiBDb25maWd1cmUgaW50ZXJydXB0IGlucHV0
+DQo+IG1vZGUNCj4gDQo+IEhpIEJpanUsDQo+IA0KPiBPbiBGcmksIE9jdCA2LCAyMDIzIGF0IDI6
+MTjigK9QTSBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+
+IENvbmZpZ3VyZSBHUElPIGludGVycnVwdCBhcyBpbnB1dCBtb2RlLiBBbHNvIGlmIHRoZSBib290
+bG9hZGVyIHNldHMNCj4gPiBncGlvIGludGVycnVwdCBwaW4gYXMgZnVuY3Rpb24sIG92ZXJyaWRl
+IGl0IGFzIGdwaW8uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXMu
+anpAYnAucmVuZXNhcy5jb20+DQo+IA0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+IA0KPiA+
+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9yZW5lc2FzL3BpbmN0cmwtcnpnMmwuYw0KPiA+ICsrKyBi
+L2RyaXZlcnMvcGluY3RybC9yZW5lc2FzL3BpbmN0cmwtcnpnMmwuYw0KPiA+IEBAIC0xNTgwLDYg
+KzE1ODAsMjYgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBpcnFfY2hpcCByemcybF9ncGlvX2lycWNo
+aXAgPQ0KPiB7DQo+ID4gICAgICAgICBHUElPQ0hJUF9JUlFfUkVTT1VSQ0VfSEVMUEVSUywgIH07
+DQo+ID4NCj4gPiArc3RhdGljIGludCByemcybF9ncGlvX2ludGVycnVwdF9pbnB1dF9tb2RlKHN0
+cnVjdCBncGlvX2NoaXAgKmNoaXAsDQo+ID4gK3Vuc2lnbmVkIGludCBvZmZzZXQpIHsNCj4gPiAr
+ICAgICAgIHN0cnVjdCByemcybF9waW5jdHJsICpwY3RybCA9IGdwaW9jaGlwX2dldF9kYXRhKGNo
+aXApOw0KPiA+ICsgICAgICAgY29uc3Qgc3RydWN0IHBpbmN0cmxfcGluX2Rlc2MgKnBpbl9kZXNj
+ID0gJnBjdHJsLQ0KPiA+ZGVzYy5waW5zW29mZnNldF07DQo+ID4gKyAgICAgICB1MzIgKnBpbl9k
+YXRhID0gcGluX2Rlc2MtPmRydl9kYXRhOw0KPiA+ICsgICAgICAgdTMyIG9mZiA9IFJaRzJMX1BJ
+Tl9DRkdfVE9fUE9SVF9PRkZTRVQoKnBpbl9kYXRhKTsNCj4gPiArICAgICAgIHU4IGJpdCA9IFJa
+RzJMX1BJTl9JRF9UT19QSU4ob2Zmc2V0KTsNCj4gPiArICAgICAgIHU4IHJlZzg7DQo+ID4gKyAg
+ICAgICBpbnQgcmV0Ow0KPiA+ICsNCj4gPiArICAgICAgIHJlZzggPSByZWFkYihwY3RybC0+YmFz
+ZSArIFBNQyhvZmYpKTsNCj4gPiArICAgICAgIGlmIChyZWc4ICYgQklUKGJpdCkpIHsNCj4gPiAr
+ICAgICAgICAgICAgICAgcmV0ID0gcnpnMmxfZ3Bpb19yZXF1ZXN0KGNoaXAsIG9mZnNldCk7DQo+
+IA0KPiBXaG8gaXMgdGFraW5nIGNhcmUgb2YgY2FsbGluZyBwaW5jdHJsX2dwaW9fZnJlZSgpIHdo
+ZW4gdGhlIGludGVycnVwdCBoYXMNCj4gYmVlbiBmcmVlZD8NCg0KQXQgdGhlIG1vbWVudCBubywg
+bWF5YmUgd2UgY2FuIHVzZSBvZiByemcybF9ncGlvX2lycV9kb21haW5fZnJlZSgpIHRvIGNhbGwg
+cGluY3RybF9ncGlvX2ZyZWUoKSwNClNpbWlsYXIgdG8gZnJlZWluZyBiaXRtYXAgcmVnaW9uPz8N
+Cg0KPiANCj4gPiArICAgICAgICAgICAgICAgaWYgKHJldCkNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIHJl
+dHVybiByemcybF9ncGlvX2RpcmVjdGlvbl9pbnB1dChjaGlwLCBvZmZzZXQpOyB9DQo+ID4gKw0K
+PiA+ICBzdGF0aWMgaW50IHJ6ZzJsX2dwaW9fY2hpbGRfdG9fcGFyZW50X2h3aXJxKHN0cnVjdCBn
+cGlvX2NoaXAgKmdjLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgdW5zaWduZWQgaW50IGNoaWxkLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgdW5zaWduZWQgaW50IGNoaWxkX3R5cGUsDQo+ID4gQEAgLTE1ODks
+MTEgKzE2MDksMTYgQEAgc3RhdGljIGludA0KPiByemcybF9ncGlvX2NoaWxkX3RvX3BhcmVudF9o
+d2lycShzdHJ1Y3QgZ3Bpb19jaGlwICpnYywNCj4gPiAgICAgICAgIHN0cnVjdCByemcybF9waW5j
+dHJsICpwY3RybCA9IGdwaW9jaGlwX2dldF9kYXRhKGdjKTsNCj4gPiAgICAgICAgIHVuc2lnbmVk
+IGxvbmcgZmxhZ3M7DQo+ID4gICAgICAgICBpbnQgZ3Bpb2ludCwgaXJxOw0KPiA+ICsgICAgICAg
+aW50IHJldDsNCj4gPg0KPiA+ICAgICAgICAgZ3Bpb2ludCA9IHJ6ZzJsX2dwaW9fZ2V0X2dwaW9p
+bnQoY2hpbGQsIHBjdHJsLT5kYXRhKTsNCj4gPiAgICAgICAgIGlmIChncGlvaW50IDwgMCkNCj4g
+PiAgICAgICAgICAgICAgICAgcmV0dXJuIGdwaW9pbnQ7DQo+ID4NCj4gPiArICAgICAgIHJldCA9
+IHJ6ZzJsX2dwaW9faW50ZXJydXB0X2lucHV0X21vZGUoZ2MsIGNoaWxkKTsNCj4gPiArICAgICAg
+IGlmIChyZXQpDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICAg
+ICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoJnBjdHJsLT5iaXRtYXBfbG9jaywgZmxhZ3MpOw0KPiA+
+ICAgICAgICAgaXJxID0gYml0bWFwX2ZpbmRfZnJlZV9yZWdpb24ocGN0cmwtPnRpbnRfc2xvdCwN
+Cj4gUlpHMkxfVElOVF9NQVhfSU5URVJSVVBULCBnZXRfb3JkZXIoMSkpOw0KPiA+ICAgICAgICAg
+c3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmcGN0cmwtPmJpdG1hcF9sb2NrLCBmbGFncyk7DQo+IA0K
+PiBUQkgsIGl0J3Mgbm90IHZlcnkgY2xlYXIgdG8gbWUgaG93IHRoaXMgaXMgdXNlZC4uLg0KPiBJ
+IGFzc3VtZSB0aGlzIGlzIGNhbGxlZCBhcyBnaXJxLT5jaGlsZF90b19wYXJlbnRfaHdpcnEoKSBm
+cm9tDQo+IGdwaW9jaGlwX2hpZXJhcmNoeV9pcnFfZG9tYWluX2FsbG9jKCk/DQo+IElzIHRoYXQg
+ZG9uZSBmcm9tIHJlcXVlc3RfaXJxKCksIG9yIGF0IGludGVycnVwdCBjb250cm9sbGVyIGluaXRp
+YWxpemF0aW9uDQo+IHRpbWU/DQoNCkJhc2ljYWxseSBkdXJpbmcgaTJjX2RldmljZV9wcm9iZSgp
+LiBTZWUgdGhlIHN0YWNrIHRyYWNlLg0KDQpbICAgIDguMzcxODk2XSAgcnpnMmxfZ3Bpb19jaGls
+ZF90b19wYXJlbnRfaHdpcnErMHhjNC8weDFiOA0KWyAgICA4LjM3Nzg4Ml0gIGdwaW9jaGlwX2hp
+ZXJhcmNoeV9pcnFfZG9tYWluX2FsbG9jKzB4OTAvMHgxYTQNClsgICAgOC4zODQxNTZdICBpcnFf
+ZG9tYWluX2FsbG9jX2lycXNfbG9ja2VkKzB4ZmMvMHgzNTQNClsgICAgOC4zODk3OTFdICBpcnFf
+Y3JlYXRlX2Z3c3BlY19tYXBwaW5nKzB4MjA4LzB4MzUwDQpbICAgIDguMzk1MjE3XSAgaXJxX2Ny
+ZWF0ZV9vZl9tYXBwaW5nKzB4NjgvMHg4Yw0KWyAgICA4LjQwMDA4N10gIG9mX2lycV9nZXQrMHg4
+OC8weGNjDQpbICAgIDguNDAzODgxXSAgaTJjX2RldmljZV9wcm9iZSsweDI3MC8weDI4NA0KDQpD
+aGVlcnMsDQpCaWp1DQo=
