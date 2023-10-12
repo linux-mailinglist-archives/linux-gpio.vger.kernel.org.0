@@ -2,105 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1BC27C68A1
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 10:56:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97C8B7C68F6
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 11:03:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232023AbjJLI4f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 04:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
+        id S235493AbjJLJDo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 05:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232199AbjJLI4e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 04:56:34 -0400
-Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883B69D
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 01:56:31 -0700 (PDT)
-Received: by mail-vk1-xa2a.google.com with SMTP id 71dfb90a1353d-49d6bd360f8so266918e0c.2
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 01:56:31 -0700 (PDT)
+        with ESMTP id S235457AbjJLJDa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 05:03:30 -0400
+Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E327310C
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 02:03:14 -0700 (PDT)
+Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-57de6e502fcso396265eaf.3
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 02:03:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697100990; x=1697705790; darn=vger.kernel.org;
+        d=gadgetoid.com; s=google; t=1697101394; x=1697706194; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pPBtRkAyR8/yvLpXM2v/s42WseLth6/jHTmdZIsTmP0=;
-        b=h+nB6pHrr77EtQ4S5o4MRd7OTpOniGIk1qmH0SD7P1yihaFadtNX08ZAa3UC4n+z+w
-         egb3mxjqXvdZVieow3GbzQ0T8dPal4vUmMeILL1RDrVf8ni43FoTUwCHvr2Z6uENnib9
-         zv+O0fuspWiqBIEcJF/7nyw48/R1tj+B+ENxZhdQpyX2CxWToMaDGNAG12M9pdKErOci
-         1Ke1h3Uj0y/TuNBElQ/h3w66J8/o2p70L8KrTkEyNhYJP6G8OuTzeMCXhxulXgOkfSrx
-         D2jXyaoFNlq3EoYUKZmP2v+J12ptE0XY3qKRcpZu504cKvXK9yAXdUu71AOoWYIfBYkS
-         sfHg==
+        bh=PBOrf3o70reLViQWMTOFz5hCd8+8NRmJnUQ+IRtShBw=;
+        b=ImPrCI+W2eEboYSD9lglrKeuZ5G809+EuJ/zk8QWUYb0bKf9GzMhH6XQ62l4507InO
+         +TX4cJ2qIInkidF/+SXJ/6r7RcBblCjuVNHHQsLOQP4RueBAdU2bs2MHQ2DRF++XWtzo
+         Ly2qSlq1tCympE78Mjo83Q+7CRXOluLHqERiKgsfAg3eniC60JkiqFsAMnfjGWwy07Fm
+         3YOndQKn2B1/Wh3ZHITZiLJf/VUatdmMP/Eatvi+wbjScHP8asNVqeyLviGlRv/yeuzV
+         U6/3AWQMUEKcWNVeEf67E0xONa79noGdh8Y53jYsvp2bKV+My3PKFm30T21sEQ1qFyBJ
+         69OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697100990; x=1697705790;
+        d=1e100.net; s=20230601; t=1697101394; x=1697706194;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pPBtRkAyR8/yvLpXM2v/s42WseLth6/jHTmdZIsTmP0=;
-        b=XDkxOUU0TVfuAQxSy/CK6zwf4f2Qxsy5PVA39qvMiJMHR1Vlgps+QuAkxX0S31QRFT
-         ONP+dvkeh5Wav4H6N99j+CMm0zF4H+v/HrrYhCRiz8ogxLJrb0h5+6a0dyPCOVXo/pzj
-         iyT8HVsz7DutOu6cqJLeaPyeetElqGaH3pfbjgGwLCVfkouoas8x8ir62Tkvvqjh96bl
-         0qiOUsWEeXUN6xq5xFGOmxZqlCxap/FFfgT5cBCxwJy2nPNqb1XVxl8R4naVHBVDkrUL
-         7vdCuUVNX034Fy1mTHGRsQbHGUF5hUX+OmDorjG8ChGbuZ0TR8aZZjdSFj4unrjs5lkb
-         WYlA==
-X-Gm-Message-State: AOJu0YzvM/Ixo0stn9O5sDUowxq4dApwwSdbMBrIxO3nKZqAh+qXTs9o
-        seJPTJGnXJ67IzPOk1g26a8tz6Ex8ywJn3n7a7+Q9w==
-X-Google-Smtp-Source: AGHT+IFo3Lm+2RcnGTHf/V2J1XBT43I24bimP6qoGhCOeQNixS13RWY5pVJxbWa7Xp+lhHh0Is6YyxIfDwTn7aNz6FQ=
-X-Received: by 2002:a67:e2cb:0:b0:452:c3a4:1f8c with SMTP id
- i11-20020a67e2cb000000b00452c3a41f8cmr18858896vsm.2.1697100990608; Thu, 12
- Oct 2023 01:56:30 -0700 (PDT)
+        bh=PBOrf3o70reLViQWMTOFz5hCd8+8NRmJnUQ+IRtShBw=;
+        b=xB4eguLsCF4DiRHnfjNmsi6p4h4FBAg/+Rfo6kOITS2H1eft77mfXqe4UdPXIgyecw
+         MN7xfPHvx3UBZuxNxwPsRqvcSApCHL4s0wYgEXBCkEo1MK1rXbiMZ3qWwRsUv+HVAVnJ
+         3G0x0UKaztRHNxqicyK2BdeR3zmVx0pbm9zA9MzTEXCfagqs09b5zd3oM4wdYYlYBThI
+         615eOH8mwf1G7tue0aXn9hQrGmiN78u35BZuztXG//mvHqySAr4QpvL4y13XQFj5ksfD
+         ZwN6TnDu95czK87EycrV1KTmqnPx9IRI0qQfc5F3kEBKMdidRTjr5gXr+1Dwf8YXRB7/
+         ToMg==
+X-Gm-Message-State: AOJu0YyQWeZLaEDvb+m3fgeDFMCnEvFfRWHQ8gMzwmJTiGUxl0cd4SIi
+        ZK5kGiV9/TdBll9kozOASUQmdF5ubncY8e/b3ww6NA==
+X-Google-Smtp-Source: AGHT+IFQngSDmPteCi3pOo1G0APEEl0tNZH0k7PYpllNKrCL0LOoay2Ila7nYSI9UBmqtEZ2ooRpP7cpdOF6fgcTrpw=
+X-Received: by 2002:a05:6870:588c:b0:1d0:f5bd:6d2 with SMTP id
+ be12-20020a056870588c00b001d0f5bd06d2mr27811789oab.38.1697101394194; Thu, 12
+ Oct 2023 02:03:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231011184823.443959-1-peter.griffin@linaro.org>
- <20231011184823.443959-3-peter.griffin@linaro.org> <ZScYOUi7qhvGmMIF@google.com>
- <e4523fc3-e1dd-4791-b950-98dfc6dce1f5@linaro.org>
-In-Reply-To: <e4523fc3-e1dd-4791-b950-98dfc6dce1f5@linaro.org>
-From:   Peter Griffin <peter.griffin@linaro.org>
-Date:   Thu, 12 Oct 2023 09:56:19 +0100
-Message-ID: <CADrjBPpntJMsxb6oGQ7zuX3f0dgE3oYFepL4OdxamBz=_or7kw@mail.gmail.com>
-Subject: Re: [PATCH v3 02/20] dt-bindings: clock: Add Google gs101 clock
- management unit bindings
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     William McVicker <willmcvicker@google.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
-        s.nawrocki@samsung.com, linus.walleij@linaro.org,
-        wim@linux-watchdog.org, linux@roeck-us.net,
-        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-        olof@lixom.net, gregkh@linuxfoundation.org, cw00.choi@samsung.com,
-        tudor.ambarus@linaro.org, andre.draszik@linaro.org,
-        semen.protsenko@linaro.org, saravanak@google.com, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        kernel-team@android.com, linux-serial@vger.kernel.org
+References: <20231011121246.9467-1-phil@gadgetoid.com> <20231011121246.9467-2-phil@gadgetoid.com>
+ <ZSbXNQ1sx+lDl7JV@smile.fi.intel.com>
+In-Reply-To: <ZSbXNQ1sx+lDl7JV@smile.fi.intel.com>
+From:   Phil Howard <phil@gadgetoid.com>
+Date:   Thu, 12 Oct 2023 10:03:03 +0100
+Message-ID: <CA+kSVo-YKOzSmk73jkmg0Cn0r95dXFw14SPjBZBBvW09Ca-r3g@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 1/3] bindings: python: optionally include module
+ in sdist
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzysztof,
-
-On Thu, 12 Oct 2023 at 07:07, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Wed, 11 Oct 2023 at 18:11, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On 11/10/2023 23:48, William McVicker wrote:
-> > On 10/11/2023, Peter Griffin wrote:
-> >> Provide dt-schema documentation for Google gs101 SoC clock controller.
-> >> Currently this adds support for cmu_top, cmu_misc and cmu_apm.
-> >>
-> >> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> On Wed, Oct 11, 2023 at 01:12:44PM +0100, Phil Howard wrote:
+> > Build gpiod into Python module.
 > >
-> > Tested-by: Will McVicker <willmcvicker@google.com>
+> > Optional environment var USE_SYSTEM_GPIO=1 to
+> > generate a module that depends upon system gpiod.
 >
-> And how do you perform testing of a binding?
+> ...
 
-I guess if William is using my script to build and flash the kernel it actually
-runs the DTC checks as part of the build process.
+*sigh*
 
-See https://git.codelinaro.org/linaro/googlelt/pixelscripts/-/blob/clo/main/buildp21upstream.sh#L44
+>
+> > --- /dev/null
+> > +++ b/bindings/python/include
+> > @@ -0,0 +1 @@
+> > +../../include
+>
+> > \ No newline at end of file
+>
+> These lines are bothering me, why the new line can't be added to all affected files?
 
-regards,
+Is it convention for symlinks to include a newline, is it even possible?
 
-Peter.
+I'm not super sure about the symlink approach, actually.
+
+It's the path of least complexity but after some research into the
+usage of "shutil.copytree"
+to copy dependent and packaged files at build time I'm starting to
+wonder if a more complex
+setup.py isn't necessarily a bad idea.
+
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+
+
+-- 
+Philip Howard
+Technology & Lifestyle Writer
+gadgetoid.com
+
+Gadgetoid gadg-et-oid [gaj-it-oid]
+
+                                     -adjective
+
+1. having the characteristics or form of a gadget; resembling a
+mechanical contrivance or device.
