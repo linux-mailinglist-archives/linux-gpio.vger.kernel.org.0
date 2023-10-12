@@ -2,121 +2,294 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DFBB7C6B5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 12:45:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70A897C6B71
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 12:48:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235668AbjJLKpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 06:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54716 "EHLO
+        id S1377813AbjJLKsl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 06:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235672AbjJLKpt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 06:45:49 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6053EC4
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 03:45:47 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-5a7af20c488so9873167b3.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 03:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697107546; x=1697712346; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Y1HcKX9gLg/2u91PTGxysXLbI09E4OA7x2vijjT4oo=;
-        b=MkBV1PGU6ITEclP07GUvtvRscL427hCkMvhgCt/0j+IEpjJ8okKZ9Z0Psd4m0/7UMK
-         VnBPmJwdZfONRlhmwsj5EsKqvVkWk1nTX2l1cQ1lzrpovlMRuQnDxyLsZYKty7fRlfqF
-         ICXH1QklmNoCj4ebcFO4ja2U4vBPcgGlql2aBb/tO0vx5JFXfDspcKGb33Hs8NMEj4hr
-         nTF0jRiSAmfBzHo1zTAXU8Iu9W3+eDekcj6r2quOWkFebN051DwbYtoODU+LdoISxwl0
-         ZDt1WBgAhSch0/UJgFXGAws2k4Dbzs3JRwodxskWcEpkqJ82V/nLY3PyI9t3aYCnwdfY
-         49Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697107546; x=1697712346;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1Y1HcKX9gLg/2u91PTGxysXLbI09E4OA7x2vijjT4oo=;
-        b=WgcKPBk/ImyehS89h5uSIJZFBVOT6uNu1jw+l1x002Q/z5he6Voq8Zl0/ihoK3lufg
-         7h+mXUIcbRs5yKRSQSd+b5VKfeC61q1ajkv0KaymatuKTVPCJdVfqFXUCJLfgkf2C0hT
-         VNySta3Mxk4toJjqH+fHoRhaqV7OHq7xvnPShYF9cYy5R0lojB0YFuofuG8bol7a52rd
-         LafLMDVKHHjYqZuy1GLrO3Sk3/2RZo/etc+0AMD28HPaAFo+v92/9mXApvEXMdLUoMBw
-         yaGCTSlTBwjdjrc60t2EHvHWm+STNaf9OCyPGdjImckCRAYuc2fh6XHzCgE8xQ1jH61f
-         bCHg==
-X-Gm-Message-State: AOJu0YwSU2E3mkdGG5OFApq/xSL+IDPfRLLDEPoveKnYJGYW0FcnDBWw
-        LjOaMIF21aHjKWHnOqaMVOggSMk8fna8y3hWBa0APg==
-X-Google-Smtp-Source: AGHT+IGB+FxE7ccc2MEU8WMKyKb6JfbaLjOX2/doWAHH3NmtLFyPGOAqUKNJex39lRrnodJof8jLL2wunY4kkN6We6s=
-X-Received: by 2002:a0d:ee01:0:b0:59b:c6a4:15c7 with SMTP id
- x1-20020a0dee01000000b0059bc6a415c7mr21411976ywe.46.1697107546553; Thu, 12
- Oct 2023 03:45:46 -0700 (PDT)
+        with ESMTP id S1343833AbjJLKsk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 06:48:40 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5CBE0;
+        Thu, 12 Oct 2023 03:48:37 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C72C433C7;
+        Thu, 12 Oct 2023 10:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697107717;
+        bh=U0hMGPxYBypB2NvZ8YnTjA9Tbnxy+4MevT22wzxdMqM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fZ3HDiLLAGSfZ6Y2dnnBm7WymmTwvDogNkaXgNdniwNDT20AhUxaTGzKQCxyPOqsV
+         Wk/lzFF5hMAE0ZqNNWp44NxnrqQvJImI8doFMLFw0kMRTokW7aTBWrukmWSf0Iv86h
+         35z/PcAmuesMJRIYgHgQf89dhnUHvo922C2eoKe5low9pLavFUVUfcQmiojabjBHgR
+         sXk5+Vwjo6+MuKB/9mOCPHHfhpyfiQ/7OIxnVuO6vZ6KLGdoO59HKWlYwvJ49Ehvjv
+         xLQzIr+UHYdg+nwahUF4ZYGtfKwuXFMH23gOdQQXrySwGvNlTUxoziBMxeJydAQok+
+         +2YaWZETDSdCQ==
+Date:   Thu, 12 Oct 2023 11:48:30 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] spi: bcm2835: add a sentinel at the end of the lookup
+ array
+Message-ID: <3f57f5d5-85d6-4bad-9e79-ecc7396aac4d@sirena.org.uk>
+References: <20231004183906.97845-1-brgl@bgdev.pl>
+ <169696282723.222014.3485016870976123694.b4-ty@kernel.org>
+ <CAMRc=MenBeJV+p6LirsCfyaPRWfAvSrVQayqUc77KOyvRGMqvQ@mail.gmail.com>
+ <f1b8555b-5acb-43cd-b48b-1dfafdb8d27c@sirena.org.uk>
+ <CAMRc=MdLXjnYiTjfoKjqAVcLvG5r3p5mWYbSupDM3Di-BAe5eQ@mail.gmail.com>
+ <CAMRc=McY2d0tHE18qn5WAPYwTwFn+TVZt48WA-t5tMwzkPsjvg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20231011184823.443959-1-peter.griffin@linaro.org>
- <20231011184823.443959-3-peter.griffin@linaro.org> <ZScYOUi7qhvGmMIF@google.com>
- <e4523fc3-e1dd-4791-b950-98dfc6dce1f5@linaro.org> <CADrjBPpntJMsxb6oGQ7zuX3f0dgE3oYFepL4OdxamBz=_or7kw@mail.gmail.com>
- <21742fbf-8484-42ab-aba1-379305091946@linaro.org>
-In-Reply-To: <21742fbf-8484-42ab-aba1-379305091946@linaro.org>
-From:   Peter Griffin <peter.griffin@linaro.org>
-Date:   Thu, 12 Oct 2023 11:45:35 +0100
-Message-ID: <CADrjBPpF3Ta67QzUqyXD1YSFV_kFWqujCxPAjKbvRNhgXeMmOg@mail.gmail.com>
-Subject: Re: [PATCH v3 02/20] dt-bindings: clock: Add Google gs101 clock
- management unit bindings
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     William McVicker <willmcvicker@google.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
-        s.nawrocki@samsung.com, linus.walleij@linaro.org,
-        wim@linux-watchdog.org, linux@roeck-us.net,
-        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
-        olof@lixom.net, gregkh@linuxfoundation.org, cw00.choi@samsung.com,
-        tudor.ambarus@linaro.org, andre.draszik@linaro.org,
-        semen.protsenko@linaro.org, saravanak@google.com, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        kernel-team@android.com, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rvXSvR0GYI9eQ1Cu"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McY2d0tHE18qn5WAPYwTwFn+TVZt48WA-t5tMwzkPsjvg@mail.gmail.com>
+X-Cookie: I've Been Moved!
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzysztof,
 
-On Thu, 12 Oct 2023 at 10:36, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 12/10/2023 10:56, Peter Griffin wrote:
-> > Hi Krzysztof,
-> >
-> > On Thu, 12 Oct 2023 at 07:07, Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 11/10/2023 23:48, William McVicker wrote:
-> >>> On 10/11/2023, Peter Griffin wrote:
-> >>>> Provide dt-schema documentation for Google gs101 SoC clock controller.
-> >>>> Currently this adds support for cmu_top, cmu_misc and cmu_apm.
-> >>>>
-> >>>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> >>>
-> >>> Tested-by: Will McVicker <willmcvicker@google.com>
-> >>
-> >> And how do you perform testing of a binding?
-> >
-> > I guess if William is using my script to build and flash the kernel it actually
-> > runs the DTC checks as part of the build process.
-> >
-> > See https://git.codelinaro.org/linaro/googlelt/pixelscripts/-/blob/clo/main/buildp21upstream.sh#L44
->
-> So it is a build test? We do not consider building as a test procedure,
-> otherwise I should add my and robots tested-by to many other patches.
+--rvXSvR0GYI9eQ1Cu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok so I should only add the Tested-by on the .c patches?
+On Thu, Oct 12, 2023 at 10:40:53AM +0200, Bartosz Golaszewski wrote:
 
-> Shall I consider other Tested-by tags here also as build-tested only?
+> Alternatively - if you send your SPI PR to Linus early in the merge
+> window, I will send the patch removing gpiochip_find() later on top of
+> it?
 
-No. William indicated here
-https://lore.kernel.org/linux-arm-kernel/ZScZu-QB2LmB4CSM@google.com/T/#mbd96a26b725d6c85eb4193de8cd70ff277bc728e
-that he booted it on his Oriole device.
+The following changes since commit 0bb80ecc33a8fb5a682236443c1e740d5c917d1d:
 
-Peter.
+  Linux 6.6-rc1 (2023-09-10 16:28:41 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-=
+bcm2835-sentinel
+
+for you to fetch changes up to 9aaa25df9b02bfe5579cbc9b4cc1177c662ec33f:
+
+  spi: bcm2835: add a sentinel at the end of the lookup array (2023-10-10 1=
+3:12:11 +0100)
+
+----------------------------------------------------------------
+spi: Share current state with GPIO tree
+
+This is the current state of the SPI tree, shared with the GPIO tree in
+order to facilitate some treewide improvements there.  Unfortunaetly the
+desire for this treewide work was realised after all the SPI patches had
+been applied and there were further dependencies with similar issues
+that caused issues trying to pull things out into a minimal branch.
+
+It's expected that this will be merged into Linus' tree as part of the
+full SPI pull request before the GPIO changes go in.
+
+----------------------------------------------------------------
+Andy Shevchenko (3):
+      spidev: Decrease indentation level in spidev_ioctl() SPI_IOC_RD_MODE*
+      spidev: Switch to use spi_get_csgpiod()
+      spidev: Simplify SPI_IOC_RD_MODE* cases in spidev_ioctl()
+
+Bartosz Golaszewski (2):
+      spi: bcm2835: reduce the abuse of the GPIO API
+      spi: bcm2835: add a sentinel at the end of the lookup array
+
+Christophe JAILLET (1):
+      spi: at91-usart: Remove some dead code
+
+Dhruva Gole (2):
+      spi: spi-cadence-quadspi: add runtime pm support
+      spi: spi-cadence-quadspi: Fix missing unwind goto warnings
+
+Geert Uytterhoeven (1):
+      spi: mpc52xx-psc: Make mpc52xx_psc_spi_transfer_one_message() static
+
+Greg Kroah-Hartman (1):
+      spi: spidev: make spidev_class constant
+
+Kees Cook (1):
+      spi: mchp-pci1xxxx: Annotate struct pci1xxxx_spi with __counted_by
+
+Li Zetao (25):
+      spi: ar934x: Use helper function devm_clk_get_enabled()
+      spi: armada-3700: Use helper function devm_clk_get_prepared()
+      spi: aspeed: Use helper function devm_clk_get_enabled()
+      spi: ath79: Use helper function devm_clk_get_enabled()
+      spi: spi-axi-spi-engine: Use helper function devm_clk_get_enabled()
+      spi: bcm2835: Use helper function devm_clk_get_enabled()
+      spi: bcm2835aux: Use helper function devm_clk_get_enabled()
+      spi: spi-cadence: Use helper function devm_clk_get_enabled()
+      spi: spi-cavium-thunderx: Use helper function devm_clk_get_enabled()
+      spi: davinci: Use helper function devm_clk_get_enabled()
+      spi: dw-bt1: Use helper function devm_clk_get_enabled()
+      spi: dw-mmio: Use helper function devm_clk_get_*()
+      spi: spi-fsl-dspi: Use helper function devm_clk_get_enabled()
+      spi: lantiq-ssc: Use helper function devm_clk_get_enabled()
+      spi: meson-spicc: Use helper function devm_clk_get_enabled()
+      spi: spi-meson-spifc: Use helper function devm_clk_get_enabled()
+      spi: microchip-core-qspi: Use helper function devm_clk_get_enabled()
+      spi: microchip-core: Use helper function devm_clk_get_enabled()
+      spi: mtk-snfi: Use helper function devm_clk_get_enabled()
+      spi: npcm-fiu: Use helper function devm_clk_get_enabled()
+      spi: orion: Use helper function devm_clk_get_enabled()
+      spi: pic32-sqi: Use helper function devm_clk_get_enabled()
+      spi: pic32: Use helper function devm_clk_get_enabled()
+      spi: spl022: Use helper function devm_clk_get_enabled()
+      spi: rockchip: Use helper function devm_clk_get_enabled()
+
+Mark Brown (6):
+      spi: sun6i: fix RX data corruption in DMA mode
+      Merge existing fixes from spi/for-6.6 into new branch
+      spidev: A few cleanups
+      spi: switch to use modern name (part3)
+      spi: Use devm_clk_get_*() helper function to
+      spi: qup: Allow scaling power domains and
+
+Rob Herring (3):
+      spi: dt-bindings: arm,pl022: Move child node properties to separate s=
+chema
+      spi: dt-bindings: st,stm32-spi: Move "st,spi-midi-ns" to spi-peripher=
+al-props.yaml
+      spi: dt-bindings: Make "additionalProperties: true" explicit
+
+Stephan Gerhold (4):
+      spi: dt-bindings: qup: Document power-domains and OPP
+      spi: qup: Parse OPP table for DVFS support
+      spi: dt-bindings: qup: Document interconnects
+      spi: qup: Vote for interconnect bandwidth to DRAM
+
+Uwe Kleine-K=F6nig (1):
+      spi: Drop warning from spi_stop_queue()
+
+Vaishnav Achath (1):
+      spi: omap2-mcspi: Fix hardcoded reference clock
+
+Vijaya Krishna Nivarthi (1):
+      spi: spi-geni-qcom: Rename the label unmap_if_dma
+
+Yang Yingliang (21):
+      spi: lm70llp: switch to use modern name
+      spi: lp-8841: switch to use modern name
+      spi: meson-spicc: switch to use modern name
+      spi: meson-spifc: switch to use modern name
+      spi: microchip-core-qspi: switch to use modern name
+      spi: microchip-core: switch to use modern name
+      spi: mpc512x-psc: switch to use modern name
+      spi: mpc52xx-psc: switch to use modern name
+      spi: mpc52xx: switch to use modern name
+      spi: mt65xx: switch to use modern name
+      spi: mt7621: switch to use modern name
+      spi: mtk-nor: switch to use modern name
+      spi: mtk-snfi: switch to use modern name
+      spi: mux: switch to use spi_alloc_host()
+      spi: mxic: switch to use modern name
+      spi: mxs: switch to use modern name
+      spi: npcm-pspi: switch to use modern name
+      spi: nxp-fspi: switch to use modern name
+      spi: oc-tiny: switch to use modern name
+      spi: omap-uwire: switch to use modern name
+      spi: omap2-mcspi: switch to use modern name
+
+Zhang Shurong (1):
+      spi: tegra: Fix missing IRQ check in tegra_slink_probe()
+
+ .../bindings/spi/allwinner,sun4i-a10-spi.yaml      |   2 +
+ .../bindings/spi/allwinner,sun6i-a31-spi.yaml      |   2 +
+ .../bindings/spi/arm,pl022-peripheral-props.yaml   |  61 +++++
+ .../bindings/spi/nvidia,tegra210-quad.yaml         |   1 +
+ .../devicetree/bindings/spi/qcom,spi-qup.yaml      |  13 +
+ .../devicetree/bindings/spi/rockchip-sfc.yaml      |   2 +
+ .../devicetree/bindings/spi/snps,dw-apb-ssi.yaml   |   2 +
+ .../bindings/spi/spi-peripheral-props.yaml         |   6 +
+ .../devicetree/bindings/spi/spi-pl022.yaml         |  51 ----
+ .../devicetree/bindings/spi/st,stm32-spi.yaml      |  20 --
+ drivers/spi/spi-ar934x.c                           |  22 +-
+ drivers/spi/spi-armada-3700.c                      |  23 +-
+ drivers/spi/spi-aspeed-smc.c                       |  16 +-
+ drivers/spi/spi-at91-usart.c                       |  22 +-
+ drivers/spi/spi-ath79.c                            |  11 +-
+ drivers/spi/spi-axi-spi-engine.c                   |  25 +-
+ drivers/spi/spi-bcm2835.c                          |  69 +++---
+ drivers/spi/spi-bcm2835aux.c                       |  23 +-
+ drivers/spi/spi-cadence-quadspi.c                  |  45 +++-
+ drivers/spi/spi-cadence.c                          |  23 +-
+ drivers/spi/spi-cavium-thunderx.c                  |   8 +-
+ drivers/spi/spi-davinci.c                          |  11 +-
+ drivers/spi/spi-dw-bt1.c                           |  23 +-
+ drivers/spi/spi-dw-mmio.c                          |  31 +--
+ drivers/spi/spi-fsl-dspi.c                         |  12 +-
+ drivers/spi/spi-geni-qcom.c                        |   6 +-
+ drivers/spi/spi-lantiq-ssc.c                       |  10 +-
+ drivers/spi/spi-lm70llp.c                          |  20 +-
+ drivers/spi/spi-lp8841-rtc.c                       |  56 ++---
+ drivers/spi/spi-meson-spicc.c                      | 121 ++++------
+ drivers/spi/spi-meson-spifc.c                      |  79 +++----
+ drivers/spi/spi-microchip-core-qspi.c              |  39 +--
+ drivers/spi/spi-microchip-core.c                   |  83 +++----
+ drivers/spi/spi-mpc512x-psc.c                      |  54 ++---
+ drivers/spi/spi-mpc52xx-psc.c                      |  38 +--
+ drivers/spi/spi-mpc52xx.c                          |  56 ++---
+ drivers/spi/spi-mt65xx.c                           | 190 +++++++--------
+ drivers/spi/spi-mt7621.c                           |  50 ++--
+ drivers/spi/spi-mtk-nor.c                          |  14 +-
+ drivers/spi/spi-mtk-snfi.c                         |  67 +-----
+ drivers/spi/spi-mux.c                              |   2 +-
+ drivers/spi/spi-mxic.c                             |  68 +++---
+ drivers/spi/spi-mxs.c                              |  70 +++---
+ drivers/spi/spi-npcm-fiu.c                         |  14 +-
+ drivers/spi/spi-npcm-pspi.c                        |  68 +++---
+ drivers/spi/spi-nxp-fspi.c                         |  30 +--
+ drivers/spi/spi-oc-tiny.c                          |  30 +--
+ drivers/spi/spi-omap-uwire.c                       |  32 +--
+ drivers/spi/spi-omap2-mcspi.c                      | 263 +++++++++++------=
+----
+ drivers/spi/spi-orion.c                            |  11 +-
+ drivers/spi/spi-pci1xxxx.c                         |   2 +-
+ drivers/spi/spi-pic32-sqi.c                        |  27 +--
+ drivers/spi/spi-pic32.c                            |   8 +-
+ drivers/spi/spi-pl022.c                            |  11 +-
+ drivers/spi/spi-qup.c                              |  50 +++-
+ drivers/spi/spi-rockchip.c                         |  30 +--
+ drivers/spi/spi-tegra20-slink.c                    |   2 +
+ drivers/spi/spi.c                                  |   4 -
+ drivers/spi/spidev.c                               |  42 ++--
+ 59 files changed, 969 insertions(+), 1202 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/arm,pl022-periphe=
+ral-props.yaml
+
+--rvXSvR0GYI9eQ1Cu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmUnzv0ACgkQJNaLcl1U
+h9B4Wwf/VdovpeQrgbM4wSLy49bYtSVE2XY8F8d+IwzA/VB3yWxtis24a/VX0x9l
+OZ7w9LeLR4QZWDfK5WktPGcOPyzC8vQaD951W5mb/+TNjwuDJyUiweRMTQQbagzb
+0VR22o8yscatRuMWhKTNhxwqY0rfoX6YxALZ++HoV3ddHJWk90/NnMgvvfoAnlj7
+2C5HLM4tnXTGa3LJuhjnE2P67yjekHSXG00Q+xfkXCk9sPVWwkufiRhxZJqOiNl2
+PtNb1sQrW9PA9r2H0qta4X5UTiwFC7rLvDvAxV2cs0lh5FvyEzaMJAhmRy2WCW+p
+2AIMekTSQH89gLgtBuN42QkqEnR6Gw==
+=RkSe
+-----END PGP SIGNATURE-----
+
+--rvXSvR0GYI9eQ1Cu--
