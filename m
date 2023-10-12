@@ -2,69 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98FD37C6704
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 09:57:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B45A77C66F6
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 09:57:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347110AbjJLH1u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 03:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46602 "EHLO
+        id S232199AbjJLHjp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 03:39:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235303AbjJLH1u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 03:27:50 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837CBB8
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 00:27:48 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9b95622c620so110550466b.0
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 00:27:48 -0700 (PDT)
+        with ESMTP id S233718AbjJLHjo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 03:39:44 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62EFFBA
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 00:39:41 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-32d8c2c6dfdso628754f8f.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 00:39:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697095667; x=1697700467; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1697096380; x=1697701180; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cpO+8N6ggvMIyIG5am2jOjkv+iT3BhhzojmCAW1bjhU=;
-        b=u1CgikyTBN4LI2mF0ECLMZKTCTHTDYtWzlK6xNXqj/jLkr93PVUmhB2gWKZKeNUobb
-         48/cwP8lBxIJWDEv+YX1MTD9IqRobEf5AWJn0xBbkPuTOS2FPKs9l6CFBg7+0WuiKitc
-         QoObNAFs2zjCs1gaf+30fGsAjDkCCZFB2B4CSBPlZ4F+f3ccID5GxpsxXXuwS4Ig6J2I
-         FphebwSsDgaRUtQAtFO5Mc0OxnORTq/6V5xx6iBU3tw8CBKk6Q2BwGwSyAaKO5IRgeej
-         xB+ny1c4R67vEjURH3blQgmhm/LKxsJ87lhI5iV2eedOGQulBxgHRefnU3KJgvQdPFhD
-         z2hA==
+        bh=jq4pcZfc1W+TFJeWnT4fKP7AUIOJHCSytA/kznt6DHE=;
+        b=wtWKjrss9S2VVwQVELOIXFjGj398Ho3Fj0V1g2hgfDcybM5csVkb6yeFApGeyBWCL0
+         mh1d4gocn9DfQ1mDaOr/yZJ+GpAGHFb3SGwz/WJfhEzNOO9oukaRMeLJ8OnteuatNlBo
+         WVCDWq35XhAP58FKI3jJSLFMt8NuNQsch/ir3cXSRCBTQcagz5rph+ZO2nD6cT+mFczq
+         3aZU12utqKZQ0zUyq8G5oSFcNW1RJ2i5uf4nFCQctvw4o60/9i1XJM4sMc+3a3WfKIHp
+         2ZBkBX5xO8h7guTxi+nzEYtf1DAH72Y1fCdRnRNX1baznIA/PYGuFBzDpDTqPbH0Js+y
+         bE6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697095667; x=1697700467;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1697096380; x=1697701180;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cpO+8N6ggvMIyIG5am2jOjkv+iT3BhhzojmCAW1bjhU=;
-        b=BOAabHxMrprgyrCnqHqgKJw2O8ZLgZYsD4VfryjxaYvrqgeBTT0bUtN+pnVJXpy27m
-         gUa3Co3a0Kb4Z3VJnZxQkfbkP6k3Vnpu0q8/KQlNNes84XEUpHGKHeA3uf5Cb1rPh1Ui
-         d3ZEtEg262316E7muikQe16j6+m2wTv2LmhyPNGYF7ba3Sj/XHhUmkqtUXG09PbsdsYN
-         a/YNafR6q1tHbHnq36D4D4joXv6BkIpGGW7efAXQc47gIa+uDtlWWYLNc3338ZwVp366
-         1B9cuyvp7ed0/XJmPyLKAu7KsF3vWvYpPjoAKOCmr/nRvck1fd3FeqDjJm3gb1K1/Vxe
-         q2SA==
-X-Gm-Message-State: AOJu0YwFge49eKtC4nkkmd3WbYjx4wouCn+xdK1YfHWoAQxN7pjaEcFH
-        imjW+WfNJ+TJmKbZdi88EWnCBg==
-X-Google-Smtp-Source: AGHT+IFV5FyEWmQEHtYUOXzcf6lrsEV0dDQD8M8rY8XCw88pqG1snmHCe3Q5hfRSUw4MIyV2eHG9Qg==
-X-Received: by 2002:a17:906:530e:b0:9b9:fdb2:376d with SMTP id h14-20020a170906530e00b009b9fdb2376dmr14533548ejo.39.1697095666983;
-        Thu, 12 Oct 2023 00:27:46 -0700 (PDT)
+        bh=jq4pcZfc1W+TFJeWnT4fKP7AUIOJHCSytA/kznt6DHE=;
+        b=bI53r86PGixsFvJim3IYAZZVxJkWxx00ApI9TogsGMJy1lKz/uj37M0RBFoBcrgZEg
+         opLQbvx7/MHjwOAU3HNfHagX9LXtkAxhPqYok5WGVRH5ggWuTv7NGFBBf/T2WkAcVWKf
+         mS7TB0vVQHUVbEdU/X8W6WpLb7imiBftvbOjOSpWTiBepADFoLN6F30Ikm3jGqqbar0W
+         J2D9xpCEeEWJHVRpvYFGtJw+nhin7xJ50qV2X7EYCnoXOZTF2oi1/mGA1zZeIHae3sP2
+         N/HOZdI4jbb6jss+6+Qxj3Uvak5tVzlLhkeB7R3m5AnJ2wT35acMrQx3cjzwsj+azCF5
+         9XcQ==
+X-Gm-Message-State: AOJu0Yw1KHdMc2bFxWiicXkDu7Y1yLkelZDge/ueWU7QsZvz/YfgU9K/
+        6F/wuhRGTIU/a+IQbTqdq9hd8Q==
+X-Google-Smtp-Source: AGHT+IEy+Won7VtTOhXXMCBSuPCMGf1w+H8V04AmQwkwqSGHaVIUhNjY+aTN2rs9eHPMgUGczKfuyA==
+X-Received: by 2002:adf:ea4f:0:b0:32d:8958:c570 with SMTP id j15-20020adfea4f000000b0032d8958c570mr2730777wrn.29.1697096379853;
+        Thu, 12 Oct 2023 00:39:39 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.219.100])
-        by smtp.gmail.com with ESMTPSA id e10-20020a1709062c0a00b009b64987e1absm10597891ejh.139.2023.10.12.00.27.45
+        by smtp.gmail.com with ESMTPSA id k7-20020a5d66c7000000b0031fd849e797sm17492784wrw.105.2023.10.12.00.39.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Oct 2023 00:27:46 -0700 (PDT)
-Message-ID: <771d633a-04da-4982-9ce5-13c9dd7639a7@linaro.org>
-Date:   Thu, 12 Oct 2023 09:27:44 +0200
+        Thu, 12 Oct 2023 00:39:39 -0700 (PDT)
+Message-ID: <ae13c25f-6131-4ef2-8116-bb04aef389b0@linaro.org>
+Date:   Thu, 12 Oct 2023 09:39:36 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
- generic gpio driver
+Subject: Re: [PATCH v3 17/20] arm64: dts: google: Add initial Google gs101 SoC
+ support
 Content-Language: en-US
-To:     AKASHI Takahiro <takahiro.akashi@linaro.org>, sudeep.holla@arm.com,
-        cristian.marussi@arm.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        linus.walleij@linaro.org, Oleksii_Moisieiev@epam.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
- <20231005025843.508689-6-takahiro.akashi@linaro.org>
- <a8d31c42-1248-4738-b01a-3abeedfd49eb@linaro.org> <ZSdIlaom+QO8IlKW@octopus>
+To:     Sam Protsenko <semen.protsenko@linaro.org>,
+        Peter Griffin <peter.griffin@linaro.org>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
+        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, wim@linux-watchdog.org,
+        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
+        arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org,
+        cw00.choi@samsung.com, tudor.ambarus@linaro.org,
+        andre.draszik@linaro.org, saravanak@google.com,
+        willmcvicker@google.com, soc@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@android.com, linux-serial@vger.kernel.org
+References: <20231011184823.443959-1-peter.griffin@linaro.org>
+ <20231011184823.443959-18-peter.griffin@linaro.org>
+ <CAPLW+4=uDEcsJBbkjy48NMF5DPvheJ1ygO8=542=fb91ff8COw@mail.gmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -110,7 +119,7 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZSdIlaom+QO8IlKW@octopus>
+In-Reply-To: <CAPLW+4=uDEcsJBbkjy48NMF5DPvheJ1ygO8=542=fb91ff8COw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -123,20 +132,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/10/2023 03:15, AKASHI Takahiro wrote:
-
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    gpio0: gpio@0 {
->>
->> No reg, so no unit address.
+On 12/10/2023 09:23, Sam Protsenko wrote:
+>> +
+>> +               cpu0: cpu@0 {
+>> +                       device_type = "cpu";
+>> +                       compatible = "arm,armv8";
 > 
-> My intention was to allow for multiple nodes (instances) of
-> pinctrl based gpio devices. But I don't care the naming.
+> Is there maybe any more specific Cortex compatible?
 
-How can you have unit address without reg? This causes warnings.
+Thanks for noticing. It must be a specific compatible. This is *ONLY*
+for software models.
+
+I really wished people stopped upstreaming junk vendor DTS, but instead
+take recent, clean DTS and customize it. The approach with junk vendor
+DTS is always a pain. For everyone.
+
 
 Best regards,
 Krzysztof
