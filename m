@@ -2,158 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 233F87C6519
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 08:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6BD47C6520
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 08:07:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347055AbjJLGHp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 02:07:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
+        id S233879AbjJLGH5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 02:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232786AbjJLGHp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 02:07:45 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EEC8A9;
-        Wed, 11 Oct 2023 23:07:43 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0BBF95C029F;
-        Thu, 12 Oct 2023 02:07:40 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 12 Oct 2023 02:07:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1697090860; x=1697177260; bh=aU
-        +SwGF3D8irJzbJ0XYZdXz2nuYhoW1FhSN9OYu/qZw=; b=qFg5oooM+mQN2i04VE
-        XTEA/XCGavynglnQzBxjXl+adadKDGYGTffRzmDIYS0zJ7QVtnVe+K+Nlbiz3i5q
-        wntkaoLbg5awW5r4lueh2xnO/jVu/tMxEGFWq9pCzwzgKTXTYbE2r5EAzj+Mvzxh
-        DRFRAeA4Cavd96BgYWY9faT18rQZ4sIZ5Gt4iOnT1bG8C8LXMD59UKIVueZuRs66
-        6fSquMXWeOtZ18c6lMwa4BbhW5CWbrUEsu6WY7jtNQ4lTvvbHQrPGqhXGKdhGkZg
-        NJgHpsiJN5aOzeP1giGIpf2oPUhz9lk2kGe/TL088B5WCkYeM2IaZv9UqL2tBJXc
-        9q2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1697090860; x=1697177260; bh=aU+SwGF3D8irJ
-        zbJ0XYZdXz2nuYhoW1FhSN9OYu/qZw=; b=M/QWXTAwvAuw7KcvGOxlDK+qPW0uz
-        uRx4oY9zl88YWsIQuzUoOewHDY5J52Kw6cPUDivUe88+frNhtG7bTp0h4Lx0Eyej
-        XmNIvvCMyHxo6ETN0GsVkeuEAOsixdJ9nUTj6OF/AM4ehh+lPvpke1SXmCkDg4B8
-        LVhoinUKebgCNpaHXDys+nu7CkxENWwwu0+LrfiLU4rIZ+2NtSGyUYXhTwT7DpPD
-        7aIgm7tztMVZs+6d/LqocfT9J2SvXLSx4gCb5sDCOImNC4PCCMtk//Gel4SREOC8
-        4xZTVNprKRKYeC4zISz+w7qkrKq31IJsxDX201RSfM59MyMciQ/iv1b8w==
-X-ME-Sender: <xms:K40nZQLaRXsVM90Qxyo0jM_y3TsuihL4DRc917nySxruJI5FyPTFrQ>
-    <xme:K40nZQK7aTyqqwY01Yi8oxXvRzekX5Xu1MbjZjPjhdy4PeW5RhaseccfsZrZ0rivC
-    5GYFj01x7yt2E6Ldrw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrheelgddutdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:K40nZQvEQNDCQYq4caXMHtCLm0roe7pCMmqlnYP3EpGmNIzPVNVKKg>
-    <xmx:K40nZdbGvGRICocFpuA-k-fg7Y0hCQ2456IOk09ff7sFbuDs9jC5Og>
-    <xmx:K40nZXaxkJyOwqwbjJFHmTq9mRplrgLEsoW9DHf9TDIVZ6EhjMLfxw>
-    <xmx:LI0nZVZkm3ptp8gOSDu7fFjuZ3HfqcoBeQZNYd1bWWymPo4wJbJBXA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2B043B6008D; Thu, 12 Oct 2023 02:07:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1019-ged83ad8595-fm-20231002.001-ged83ad85
+        with ESMTP id S1377184AbjJLGH4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 02:07:56 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30177BE
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 23:07:51 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-4065dea9a33so6515635e9.3
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Oct 2023 23:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697090869; x=1697695669; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=iiBkhIc1H6jTMySk6KuTtv18GiDy08QttS5wrhvQDw8=;
+        b=rxr0nXFIU2uokAr45iwmek0VJ/5VjGcYLsBZFvGX3K3sQCmZ7zFKDbs/i2reZ42TJ0
+         5fD0O2cMu39mfMc45/g/qWAfyeJ0gYvxqXOzcRvCzfjF6Danw1dvQjrfj9eJk/1mYG8I
+         iuW5tYoaL6ti3+W/Q6mEwhkBQkcbLXK/PG/uK9DJSMXb4JWPQGPLvGcRqfbdcTifKO2c
+         v+o4dhW8/VgsRl9qb+l95C1vfMoyTqhiEE0GnqDYQoFcw4Z2VqnnVDF9AyzkqgJ0CT/4
+         Lg9G4n/iNDKhh46DidN6OBrMYtFPxP1humXYbtiUZlLC4d6dDX2M6HyS60N6HI4xVu9p
+         4V3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697090869; x=1697695669;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iiBkhIc1H6jTMySk6KuTtv18GiDy08QttS5wrhvQDw8=;
+        b=is+LyZpaFP70R0LomK9be+VlrMRYS2w3xeafeMHskdI6juvCrX++bdxXYNOYDoE8L+
+         tzfP+TZIVWHlT+VvEgu8nWpLl4gc6vlhyebs1gxCxsaW2L9tzjaShixBtrpdc4aCuffg
+         yCKihD2iECw3Y/Rs6ggOUeMgqvdg8upbOLGmZVuQVGCaQDJmnkXTPCtLs8mzD/WyI3ei
+         TaBt6wkwvltOaRxnhIdj2DvdDHPwqMUqUQpY76EMg3IsSp431wTCh9JKDgAyZRXuURlg
+         iUTfLdpQOiVzb1p9BVdHc3dq9t6um3mnleSZ4vKs4P6UsVoEB5T+8x+RNpRDGRXEtwpT
+         RqfQ==
+X-Gm-Message-State: AOJu0YyuX50w4yGJqI0R76Xj3hNALG+zbT0le91hMVu2gEQJbcxkIW0i
+        5Rk6ge9zsJVZCywYdrRWUVTE4A==
+X-Google-Smtp-Source: AGHT+IG3EwN8wooPwhog6t44GMmWyiZnvMyZyvdN/O4YY7UTLugFZrQL0vKZL0KbDSbvBVXX8tiIiA==
+X-Received: by 2002:a1c:7917:0:b0:405:3d27:70e8 with SMTP id l23-20020a1c7917000000b004053d2770e8mr19665470wme.36.1697090869564;
+        Wed, 11 Oct 2023 23:07:49 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.100])
+        by smtp.gmail.com with ESMTPSA id q15-20020a7bce8f000000b00405391f485fsm18504681wmj.41.2023.10.11.23.07.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Oct 2023 23:07:49 -0700 (PDT)
+Message-ID: <e4523fc3-e1dd-4791-b950-98dfc6dce1f5@linaro.org>
+Date:   Thu, 12 Oct 2023 08:07:45 +0200
 MIME-Version: 1.0
-Message-Id: <eca9feea-b4a6-438c-83c7-452e8fe388c6@app.fastmail.com>
-In-Reply-To: <20231011184823.443959-17-peter.griffin@linaro.org>
-References: <20231011184823.443959-1-peter.griffin@linaro.org>
- <20231011184823.443959-17-peter.griffin@linaro.org>
-Date:   Thu, 12 Oct 2023 08:07:18 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Peter Griffin" <peter.griffin@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        krzysztof.kozlowski+dt@linaro.org,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        "Conor Dooley" <conor+dt@kernel.org>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        "Tomasz Figa" <tomasz.figa@gmail.com>,
-        "Sylwester Nawrocki" <s.nawrocki@samsung.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Wim Van Sebroeck" <wim@linux-watchdog.org>,
-        "Guenter Roeck" <linux@roeck-us.net>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Will Deacon" <will@kernel.org>, "Olof Johansson" <olof@lixom.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Chanwoo Choi" <cw00.choi@samsung.com>
-Cc:     "Tudor Ambarus" <tudor.ambarus@linaro.org>,
-        andre.draszik@linaro.org,
-        "Sam Protsenko" <semen.protsenko@linaro.org>, saravanak@google.com,
-        "William McVicker" <willmcvicker@google.com>, soc@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/20] dt-bindings: clock: Add Google gs101 clock
+ management unit bindings
+To:     William McVicker <willmcvicker@google.com>,
+        Peter Griffin <peter.griffin@linaro.org>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
+        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, wim@linux-watchdog.org,
+        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
+        arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org,
+        cw00.choi@samsung.com, tudor.ambarus@linaro.org,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        saravanak@google.com, soc@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org, kernel-team@android.com,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v3 16/20] tty: serial: samsung: Add gs101 compatible and SoC data
-Content-Type: text/plain
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@android.com, linux-serial@vger.kernel.org
+References: <20231011184823.443959-1-peter.griffin@linaro.org>
+ <20231011184823.443959-3-peter.griffin@linaro.org>
+ <ZScYOUi7qhvGmMIF@google.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ZScYOUi7qhvGmMIF@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023, at 20:48, Peter Griffin wrote:
-> Add serial driver data for Google Tensor gs101 SoC.
->
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+On 11/10/2023 23:48, William McVicker wrote:
+> On 10/11/2023, Peter Griffin wrote:
+>> Provide dt-schema documentation for Google gs101 SoC clock controller.
+>> Currently this adds support for cmu_top, cmu_misc and cmu_apm.
+>>
+>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> 
+> Tested-by: Will McVicker <willmcvicker@google.com>
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+And how do you perform testing of a binding?
 
-While the patch is now correct, I would point out a few
-improvements we could make on top:
+Best regards,
+Krzysztof
 
-> +static const struct s3c24xx_serial_drv_data gs101_serial_drv_data = {
-> +	EXYNOS_COMMON_SERIAL_DRV_DATA(),
-> +	/* rely on samsung,uart-fifosize DT property for fifosize */
-> +	.fifosize = { 0 },
-> +};
-> +
->  #define EXYNOS4210_SERIAL_DRV_DATA (&exynos4210_serial_drv_data)
->  #define EXYNOS5433_SERIAL_DRV_DATA (&exynos5433_serial_drv_data)
->  #define EXYNOS850_SERIAL_DRV_DATA (&exynos850_serial_drv_data)
-> +#define GS101_SERIAL_DRV_DATA (&gs101_serial_drv_data)
-
-Since this is now actually correct for any Exynos variant that
-has the FIFO size listed in the DT, we could use a variable/macro
-name that leads itself to being used by future chips.
-
-There is also the question of whether we want to address the
-ordering bug for the other SoC types. The way I understand it,
-the .fifosize array logic is wrong because it relies on having
-a particular alias for each of the ports to match the entry in
-the array. For the exynosautov9, this would be trivially fixed
-by using the same data as gs101 (since it already lists the
-correct size in DT), but for the other ones we'd need a different
-logic.
-
-> @@ -2688,6 +2696,9 @@ static const struct platform_device_id 
-> s3c24xx_serial_driver_ids[] = {
->  	}, {
->  		.name		= "artpec8-uart",
->  		.driver_data	= (kernel_ulong_t)ARTPEC8_SERIAL_DRV_DATA,
-> +	}, {
-> +		.name		= "gs101-uart",
-> +		.driver_data	= (kernel_ulong_t)GS101_SERIAL_DRV_DATA,
->  	},
->  	{ },
->  };
-
-I just noticed that the platform_device_id array is currently
-only used for mach-crag6410, since everything else uses DT
-based probing. s3c64xx is scheduled for removal in early 2024
-(though no patch has been sent), and we can probably just
-remove all the atags/platform_device based code when that happens.
-
-      Arnd
