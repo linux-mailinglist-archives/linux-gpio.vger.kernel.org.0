@@ -2,52 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53A017C784E
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 23:02:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 398137C7850
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 23:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347407AbjJLVC4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 17:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
+        id S1347412AbjJLVC5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 17:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344156AbjJLVCz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 17:02:55 -0400
-Received: from mail-wm1-x363.google.com (mail-wm1-x363.google.com [IPv6:2a00:1450:4864:20::363])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BE09D
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 14:02:50 -0700 (PDT)
-Received: by mail-wm1-x363.google.com with SMTP id 5b1f17b1804b1-40535597f01so14945345e9.3
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 14:02:50 -0700 (PDT)
+        with ESMTP id S1442372AbjJLVC4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 17:02:56 -0400
+Received: from mail-wm1-x361.google.com (mail-wm1-x361.google.com [IPv6:2a00:1450:4864:20::361])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA8ABB
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 14:02:51 -0700 (PDT)
+Received: by mail-wm1-x361.google.com with SMTP id 5b1f17b1804b1-4065f29e933so16728805e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 14:02:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gadgetoid.com; s=google; t=1697144569; x=1697749369; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ep6OOghLF5+vq6Lh1txic8qzGOAwoRiWUkW50QZcCg=;
-        b=IBgvfd58rn2GsVPPRvp/aroUa5DeuxQAM85eo5hKBYXktwpdkDYnraU7MVaw7FxEx6
-         8Ms3vWgGTXIwoBk9A2ZK3KjCijqWDSNt+l3Culie4sSglMBSG0UWxz2SzLmMGDC0q+3L
-         ghPtvLKqN4Relf1Rw+UUaxziE1ipU25PvTFvwZy6sGOlSEXbw9cApqBpsi8Tfdj7A/O3
-         GZbN8i3krK9+Keii/hwChHbsLaE8MINjn7U9YyTxdoXpLCA5QoobRNU+NcKi7Wy8hG82
-         WCP54ppkUAqdBv87Y/tXfPTWHdx1Z5ymWjnQh8u/pSHj945SDXzJv/IxHAfc+eaNUSNf
-         MegA==
+        d=gadgetoid.com; s=google; t=1697144570; x=1697749370; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lV1MLXoSVHpabbiqLyt2YycMm4ihe1CRcqKSmP+RTm4=;
+        b=gkh02C1z6WNtr8T2tAR9gGQu1R5TddrZGFJlKRP6QFfO9JUva7AYbNqoZAUEU3woNR
+         lMwbKbqMdNPeToW8djay8bQDxcNbV45fsYs8Q8Yvo73wSIeIpzbt5p+X0sssu075nowM
+         GjcsUaHrFfsOhZsw8gI9Y/JgjQhhBnYPsapHfVUpqtiRLEonwZdZ7U5j6A/YJRLWvQAL
+         skXTny+Pe82jFf9WEJpj7I+2EFB1uWUiOIbunXkX1tAWy057uF4EzalviCnN0G0Pofru
+         QIouxHWi1vTGGOsKffckaeQKFa13Gq/bDdh0ZhBQKErwXRS0o7TjbUrTVu0TLg1F+eiV
+         SRbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697144569; x=1697749369;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0ep6OOghLF5+vq6Lh1txic8qzGOAwoRiWUkW50QZcCg=;
-        b=eSwFPLrSdAV6jzqLqMtRF4YpDfppDIOy4z/W551NruSzo3IIZC2HhyhcBJNsCR6R4v
-         I1zNHWKAbjDqdqWrpdyMCqk/dspOjt7A3bi2Wg23hrvvz7dtNvAQBRfxUugN5k9tnPDM
-         MKtT1T1VA7CwdhhvbVz+37d5fGZfadCdw+wklgchs1i+T2XGNEAUfOgPzK4jJa97r7bx
-         6bqwmsz/AvVwRskYuFmrgkMwgZHtzx9oUBwR2Op/TEZva+NF1pUrLFiOsp5hct8apbRU
-         YhyGHbmuquF0f4CM92lYZN65I+fjhFtRTbDrxGYYrkymRfWiLtpAItlroqgsQYIG9uW4
-         b4WA==
-X-Gm-Message-State: AOJu0Ywk44jrZYFjvIUJXB3yQD5H+UDl35B33q7LGdoL3+KOYrkTkdlu
-        7srXzxwDCVqOoTv4ImVokDbYbJfYqWJ0RzPtGgMCwFq4KNx87w==
-X-Google-Smtp-Source: AGHT+IGzxZ6pgtfqUUM55W1NTnwKRTlsZYGUUf4RuxMsJD5h1BI5Qbm5agSRJwPSGn+undl+sU1C8JXOO8yt
-X-Received: by 2002:a05:600c:3b18:b0:407:536d:47ae with SMTP id m24-20020a05600c3b1800b00407536d47aemr8434724wms.38.1697144568997;
-        Thu, 12 Oct 2023 14:02:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697144570; x=1697749370;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lV1MLXoSVHpabbiqLyt2YycMm4ihe1CRcqKSmP+RTm4=;
+        b=No7JMvK0qMHgumt2c/83vPJmw4y/GuuuyxiMQA07QYabXgLWxpH5yYIehWRatcabjf
+         Mux/G/Oubu3bOm5qahnHrif4iWah/R2Ohjh52PPEaW2fvWHGUm9FGpSglPWdFmKjclRs
+         Nlsa8nSQx20Z5Dyrwy4pH3fILQD8lPh+rCkIX1v9tTSb5fkSZbqxJudH7la1af7leYJj
+         Pmwd13tGsq3IQ8lLAr/uwmD8DblYGaQhE9ma09KvtaHLrOy4q5c0AAF2aaSHO4zXXlA2
+         9LoxjN9eLIkFH3QaZJUIF9gPCID4fLpJRKzonF/hqzzTd2HPHeCGY6F7aIDfdmrTecd0
+         k4mg==
+X-Gm-Message-State: AOJu0Yz6NC76NCAze3xn7wXzf3o5C3q0M5YKM10SPcEQxFtGapCZUQOA
+        aAmhMwraqzUJ3cMnKSGxOaa4AHXOo4Hxm8uVGA8xVjNBHPvgzw==
+X-Google-Smtp-Source: AGHT+IGTi3XvaeuTshAcWvWQA4ftzFOrdtK2R5Z8S3q9JSarWrLhSWPfs8tAgNwBE7IIy0FPbNBJSlE5V/Tl
+X-Received: by 2002:a7b:c851:0:b0:406:5301:4320 with SMTP id c17-20020a7bc851000000b0040653014320mr22503187wml.16.1697144569652;
+        Thu, 12 Oct 2023 14:02:49 -0700 (PDT)
 Received: from pop-os.. (cpc91242-cmbg18-2-0-cust972.5-4.cable.virginm.net. [82.8.131.205])
-        by smtp-relay.gmail.com with ESMTPS id k13-20020a05600c0b4d00b004073d6c3626sm103194wmr.28.2023.10.12.14.02.48
+        by smtp-relay.gmail.com with ESMTPS id k13-20020a05600c0b4d00b004073d6c3626sm103194wmr.28.2023.10.12.14.02.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 14:02:48 -0700 (PDT)
+        Thu, 12 Oct 2023 14:02:49 -0700 (PDT)
 X-Relaying-Domain: gadgetoid.com
 From:   Phil Howard <phil@gadgetoid.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
@@ -55,10 +56,12 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Kent Gibson <warthog618@gmail.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     linux-gpio@vger.kernel.org, Phil Howard <phil@gadgetoid.com>
-Subject: [libgpiod][PATCH v2 0/2] bindings: python: optionally include (...)
-Date:   Thu, 12 Oct 2023 22:02:26 +0100
-Message-Id: <20231012210228.101513-1-phil@gadgetoid.com>
+Subject: [libgpiod][PATCH v2 1/2] bindings: python: optionally include module in sdist
+Date:   Thu, 12 Oct 2023 22:02:27 +0100
+Message-Id: <20231012210228.101513-2-phil@gadgetoid.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231012210228.101513-1-phil@gadgetoid.com>
+References: <20231012210228.101513-1-phil@gadgetoid.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,55 +73,167 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This changeset vendors the gpiod library into the Python package, and adds
-a pyproject.toml for minimum compatibility with modern Python packaging.
+Build libgpiod into Python module for build_ext or bdist_wheel.
 
-Why?
+Include libgpiod source in sdist so that the Python module
+can be built from source by end users, even with a missing
+or mismatched system libgpiod.
 
-So that setup.py can produce an sdist that is installable irrespective of the
-availability or version of a distro-supplied libgpiod.
+Add optional environment variable "LINK_SYSTEM_LIBGPIOD=1" to
+generate a module via build_ext or bdist_wheel that links
+against system libgpiod.
 
-This prevents a libgpiod pypi package install balking because the distro
-libgpiod is outdated or otherwise incompatible. This happens when attempting to
-install the current libgpiod from pypi onto - for example - the Debian Bookworm
-based Raspberry Pi OS.
+Signed-off-by: Phil Howard <phil@gadgetoid.com>
+---
+ bindings/python/MANIFEST.in |  4 ++
+ bindings/python/setup.py    | 95 +++++++++++++++++++++++++++++++------
+ 2 files changed, 84 insertions(+), 15 deletions(-)
 
-The availability of a distro agnostic package also ensures that libgpiod can be
-installed via pypi into an isolated virtual environment, safely specified as a
-dependency for Python packages and allows Python developers to target the newest
-API version irrespective of their distro supplied libgpiod.
-
-This is essential, since a venv is now widely *required* for user Python
-projects due to recommendations in pep-688 - https://peps.python.org/pep-0668/
-
-For Raspberry Pi this sdist can also be converted into a precompiled wheel by
-piwheels [1] which is, by default, added to Raspberry Pi OS as a pip index.
-
-How?
-
-If "LINK_SYSTEM_LIBGPIOD=1" is not specified then the gpiod._ext C Extension is
-amended to include all of the C sources for gpiod, so it can be built as a
-standalone module without depending upon a shared distro library.
-
-The gpiod sources are included by copying the lib and include directories up
-to the parent module, and updating MANIFEST.in to include the source files when
-an sdist is built.
-
-The resulting source distribution can then be uploaded to pypi and from there
-can be built and installed by any user with python3-dev installed.
-
-[1] - https://www.piwheels.org/
-
-Phil Howard (2):
-  bindings: python: optionally include module in sdist
-  bindings: python: add pyproject.toml, pep 518
-
- bindings/python/MANIFEST.in    |  4 ++
- bindings/python/pyproject.toml |  5 ++
- bindings/python/setup.py       | 95 ++++++++++++++++++++++++++++------
- 3 files changed, 89 insertions(+), 15 deletions(-)
- create mode 100644 bindings/python/pyproject.toml
-
+diff --git a/bindings/python/MANIFEST.in b/bindings/python/MANIFEST.in
+index c7124d4..eff8977 100644
+--- a/bindings/python/MANIFEST.in
++++ b/bindings/python/MANIFEST.in
+@@ -11,3 +11,7 @@ recursive-include gpiod/ext *.h
+ 
+ recursive-include tests/gpiosim *.c
+ recursive-include tests/procname *.c
++
++recursive-include lib *.c
++recursive-include lib *.h
++recursive-include include *.h
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+index fd674aa..e3b571c 100644
+--- a/bindings/python/setup.py
++++ b/bindings/python/setup.py
+@@ -4,7 +4,30 @@
+ from os import environ, path
+ from setuptools import setup, Extension, find_packages
+ from setuptools.command.build_ext import build_ext as orig_build_ext
+-from shutil import rmtree
++from setuptools.command.sdist import sdist as orig_sdist
++from shutil import rmtree, copytree
++
++
++def copy_libgpiod_files(func):
++    """
++    In order to include the lib and include directories in the sdist
++    we must temporarily copy them up into the python bindings directory.
++
++    If "./lib" exists we are building from an sdist package and will not
++    try to copy the files again.
++    """
++
++    def wrapper(self):
++        copy_src = not path.exists("./lib")
++        if copy_src:
++            copytree("../../lib", "./lib")
++            copytree("../../include", "./include")
++        func(self)
++        if copy_src:
++            rmtree("./lib")
++            rmtree("./include")
++
++    return wrapper
+ 
+ 
+ class build_ext(orig_build_ext):
+@@ -14,24 +37,69 @@ class build_ext(orig_build_ext):
+     were built (and possibly copied to the source directory if inplace is set).
+     """
+ 
++    @copy_libgpiod_files
+     def run(self):
+         super().run()
+         rmtree(path.join(self.build_lib, "tests"), ignore_errors=True)
+ 
+ 
++class sdist(orig_sdist):
++    """
++    Wrap sdist so that we can copy the lib and include files into . where
++    MANIFEST.in will include them in the source package.
++    """
++
++    @copy_libgpiod_files
++    def run(self):
++        super().run()
++
++
++with open("gpiod/version.py", "r") as fd:
++    exec(fd.read())
++
++sources = [
++    # gpiod Python bindings
++    "gpiod/ext/chip.c",
++    "gpiod/ext/common.c",
++    "gpiod/ext/line-config.c",
++    "gpiod/ext/line-settings.c",
++    "gpiod/ext/module.c",
++    "gpiod/ext/request.c",
++]
++
++if environ.get("LINK_SYSTEM_LIBGPIOD") == "1":
++    libraries = ["gpiod"]
++    include_dirs = ["gpiod"]
++else:
++    sources += [
++        # gpiod library
++        "lib/chip.c",
++        "lib/chip-info.c",
++        "lib/edge-event.c",
++        "lib/info-event.c",
++        "lib/internal.c",
++        "lib/line-config.c",
++        "lib/line-info.c",
++        "lib/line-request.c",
++        "lib/line-settings.c",
++        "lib/misc.c",
++        "lib/request-config.c",
++    ]
++    libraries = []
++    include_dirs = ["include", "lib", "gpiod/ext"]
++
++
+ gpiod_ext = Extension(
+     "gpiod._ext",
+-    sources=[
+-        "gpiod/ext/chip.c",
+-        "gpiod/ext/common.c",
+-        "gpiod/ext/line-config.c",
+-        "gpiod/ext/line-settings.c",
+-        "gpiod/ext/module.c",
+-        "gpiod/ext/request.c",
+-    ],
++    libraries=libraries,
++    sources=sources,
+     define_macros=[("_GNU_SOURCE", "1")],
+-    libraries=["gpiod"],
+-    extra_compile_args=["-Wall", "-Wextra"],
++    include_dirs=include_dirs,
++    extra_compile_args=[
++        "-Wall",
++        "-Wextra",
++        '-DGPIOD_VERSION_STR="{}"'.format(__version__),
++    ],
+ )
+ 
+ gpiosim_ext = Extension(
+@@ -54,15 +122,12 @@ if "GPIOD_WITH_TESTS" in environ and environ["GPIOD_WITH_TESTS"] == "1":
+     extensions.append(gpiosim_ext)
+     extensions.append(procname_ext)
+ 
+-with open("gpiod/version.py", "r") as fd:
+-    exec(fd.read())
+-
+ setup(
+     name="libgpiod",
+     packages=find_packages(exclude=["tests", "tests.*"]),
+     python_requires=">=3.9.0",
+     ext_modules=extensions,
+-    cmdclass={"build_ext": build_ext},
++    cmdclass={"build_ext": build_ext, "sdist": sdist},
+     version=__version__,
+     author="Bartosz Golaszewski",
+     author_email="brgl@bgdev.pl",
 -- 
 2.34.1
 
