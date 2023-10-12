@@ -2,212 +2,405 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27A1B7C7703
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 21:37:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D183D7C771C
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Oct 2023 21:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442234AbjJLThU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Oct 2023 15:37:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47464 "EHLO
+        id S1442512AbjJLTld (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Oct 2023 15:41:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442210AbjJLThU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 15:37:20 -0400
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90711A9
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:37:17 -0700 (PDT)
-Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-4547428694dso583029137.3
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:37:17 -0700 (PDT)
+        with ESMTP id S1442515AbjJLTla (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Oct 2023 15:41:30 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9835ED9
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:41:22 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-31fa15f4cc6so1264745f8f.2
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 12:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697139436; x=1697744236; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eOmD8i0JrrUs6c6lMqCE0sAtg4KGvFFSR+3CONF503g=;
-        b=IgbTqh0dHBwMDzuLqdY0GsipzErfiKJnPjq3ipIz/d4ss8KFObVsly1r/sX8fp+ieN
-         nSKViAZWqaB0QeWyNwNJoBwx1PqaF8la1XUMbAYOVIBvwEV5+ZU62LAM21nIAnba94Hr
-         e2QPKp91YwsEQ25GyECzZ/z/L4mjBFF8JuoYPW36AAjf+oU8RulhTrL9KJEvuaTniDtI
-         uOP3lbPgZDkYm85u2j7g7fLtIpWrrQECwiR5FPIlQtshkYkMUGync2aTBqKc089kGw2F
-         dbbA7b75jSn1eoCiKOJsrQPoumJ8WLHU5BGM2zBzqZrHYRKeVBb77GDmaLWqlF69st3A
-         NPuw==
+        d=linaro.org; s=google; t=1697139681; x=1697744481; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/wgpeFdv2HfH35FWvjAPXJBapYWy7YrOOF1gDlYaHWk=;
+        b=VwSh40EF0IkfBrNiBohy223KONyqQ9sWL5bO5RROD5qWYZFNo+KwJwrvH57nbDriZd
+         8FDjd55KFM9NLAmOyp1RqyrVQYul/rDN/usqysc192Jt6TUZkPGKStrgs4g/7RzDWJOw
+         9dWlaNbE1Z7PEbbKEQ1h2ERM46QE7bEyvx+/Z0miJb6ouLxYlv/wraItUJUOsLXdrNjf
+         NiASXL8JH/g2gppL+oQ3OJCAmn96TTmODElI9o19XCBljEpWIz/Ln+1g5If7+HzgCCoA
+         SypYQhOFiUFKqlc3rv19J5BVi1Wt9jYjPYSEcvOCYiHLYA9RT4sB02xUvwhUgEzcjz6k
+         yZiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697139436; x=1697744236;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eOmD8i0JrrUs6c6lMqCE0sAtg4KGvFFSR+3CONF503g=;
-        b=iIWCEzC9ph2xqy8F+bPyH+Ot72RK+hiTEQbk/Zn/zHFlGsGM5QPVr+TB82jeQ07yUp
-         qGzl386uxIh/2gyu5xx6FO0iLVGzjjJoV9pcUVflUS8P7oMbl2jysL4x/j82p+7vlAmS
-         xJKbUxPau0prxy9clKEI44Qdv3ZV7CLguvInRADjvd+J6Lv8KoXw6azyDBa8gWDcqUpJ
-         uhyOex/QTJSnvT7dkCrfDcCmqssU2YCIfIGj6ugV/wOT7hBoH0ELr5H57SGdVmoLlVYF
-         C6eThHd7Hyx7fkFhiF/Gr9nYhxooPFwsySOh5yQYSofXMxfeTc5Q9ygtlcnLQA5lSCiE
-         al+w==
-X-Gm-Message-State: AOJu0YxU4yTC6+75cVy9aYqHOmq407/p657mm4JyKWYtroJNpL9ccMmw
-        49KEsjd0ErrnJMo1GHsRPbXpvX8fWp7cQ4cVxVHTOA==
-X-Google-Smtp-Source: AGHT+IGezVCRlCR/x5FLiWVajD91xTg0yU55Q/swTou5HdAZfEP3+sEcl8XsBIQ6etCqYODz+1U2jOmp8YMXQ8c3DNI=
-X-Received: by 2002:a67:c205:0:b0:457:b8a8:f58f with SMTP id
- i5-20020a67c205000000b00457b8a8f58fmr1500798vsj.8.1697139436247; Thu, 12 Oct
- 2023 12:37:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697139681; x=1697744481;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/wgpeFdv2HfH35FWvjAPXJBapYWy7YrOOF1gDlYaHWk=;
+        b=BtwOyIQjr182lB2qDCgvitJfAAFvuVujG13L+uwptzUPK032X7Pi79QaagvxnlrpPk
+         M/srCUUxHMb9CRKeE11pNisMbwpqT3iaBseYcuZf9IufFaXqhy6vL0q/IfLsKkquTkb9
+         CFcd1c1KS4YQkDFdPDfxihKRKZ8K1XH3ZkqCWKgexCbxv4BMG0buYi8UCq/tHCILkF7V
+         kBqQVni9UEJLiR6YKrPXb2muaWvs6IFyl20v6qcieQ7wzBsxoDMw/hidGpp0kVYqbx0y
+         m5UKLK+g2ol1vh2uz9w6UZQo0oqVEyOhyIV7klwRczOnpELVOvvrEbsM1qFlIeoiok/z
+         mGEw==
+X-Gm-Message-State: AOJu0Yyv7NtgGZThqLwUjKG4zkGNkqwTOknI3vO6/aKJdzFwJZBInHNW
+        N3Uf3eltUi4SNCcQvhvhrYpW4w==
+X-Google-Smtp-Source: AGHT+IGf4B+HUj0U5ncSLbqyNABJe7JvinG0PwVugzcmOfiB+7m4r60TLM4JXV8GHBya9Zu/idyYIQ==
+X-Received: by 2002:a5d:6daf:0:b0:32d:62e7:8ff9 with SMTP id u15-20020a5d6daf000000b0032d62e78ff9mr9125125wrs.34.1697139680871;
+        Thu, 12 Oct 2023 12:41:20 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.100])
+        by smtp.gmail.com with ESMTPSA id q15-20020a7bce8f000000b00405ee9dc69esm625824wmj.18.2023.10.12.12.41.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Oct 2023 12:41:20 -0700 (PDT)
+Message-ID: <7800b2d6-33c4-4c4f-8d0c-c11ff0e47535@linaro.org>
+Date:   Thu, 12 Oct 2023 21:41:18 +0200
 MIME-Version: 1.0
-References: <20231011121246.9467-1-phil@gadgetoid.com> <20231011121246.9467-2-phil@gadgetoid.com>
-In-Reply-To: <20231011121246.9467-2-phil@gadgetoid.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 12 Oct 2023 21:37:05 +0200
-Message-ID: <CAMRc=MeFeopJB3_UQFY3nkHsQS+kwHU3yqBLhnEH_j1k8xZG6g@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 1/3] bindings: python: optionally include module
- in sdist
-To:     Phil Howard <phil@gadgetoid.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: Document nuvoton ma35d1 pin
+ control
+Content-Language: en-US
+To:     Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        schung@nuvoton.com, Jacky Huang <ychuang3@nuvoton.com>
+References: <20231011090510.114476-1-ychuang570808@gmail.com>
+ <20231011090510.114476-3-ychuang570808@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231011090510.114476-3-ychuang570808@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 2:13=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wr=
-ote:
->
-> Build gpiod into Python module.
->
-> Optional environment var USE_SYSTEM_GPIO=3D1 to
-
-Let's call it USE_SYSTEM_GPIOD or USE_SYSTEM_LIBGPIOD or even
-LINK_SYSTEM_LIBGPIOD?
-
-> generate a module that depends upon system gpiod.
->
-> Signed-off-by: Phil Howard <phil@gadgetoid.com>
+On 11/10/2023 11:05, Jacky Huang wrote:
+> From: Jacky Huang <ychuang3@nuvoton.com>
+> 
+> Add the dt-bindings header for nuvoton ma35d1 pinctrl, that gets shared
+> between the pin control driver and pin configuration in the dts.
+> 
+> Add documentation to describe nuvoton ma35d1 pin control and GPIO.
+> 
+> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
 > ---
->  bindings/python/MANIFEST.in |  4 +++
->  bindings/python/include     |  1 +
->  bindings/python/lib         |  1 +
->  bindings/python/setup.py    | 57 ++++++++++++++++++++++++++++---------
->  4 files changed, 50 insertions(+), 13 deletions(-)
->  create mode 120000 bindings/python/include
->  create mode 120000 bindings/python/lib
->
-> diff --git a/bindings/python/MANIFEST.in b/bindings/python/MANIFEST.in
-> index c7124d4..eff8977 100644
-> --- a/bindings/python/MANIFEST.in
-> +++ b/bindings/python/MANIFEST.in
-> @@ -11,3 +11,7 @@ recursive-include gpiod/ext *.h
->
->  recursive-include tests/gpiosim *.c
->  recursive-include tests/procname *.c
-> +
-> +recursive-include lib *.c
-> +recursive-include lib *.h
-> +recursive-include include *.h
-> diff --git a/bindings/python/include b/bindings/python/include
-> new file mode 120000
-> index 0000000..fcffffb
+>  .../pinctrl/nuvoton,ma35d1-pinctrl.yaml       | 180 ++++++++++++++++++
+>  include/dt-bindings/pinctrl/ma35d1-pinfunc.h  |  38 ++++
+>  2 files changed, 218 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
+>  create mode 100644 include/dt-bindings/pinctrl/ma35d1-pinfunc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..0ddedbad4b78
 > --- /dev/null
-> +++ b/bindings/python/include
-> @@ -0,0 +1 @@
-> +../../include
-> \ No newline at end of file
+> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
+> @@ -0,0 +1,180 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,ma35d1-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Nuvoton MA35D1 pin control and GPIO
+> +
+> +maintainers:
+> +  - Shan-Chun Hung <schung@nuvoton.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nuvoton,ma35d1-pinctrl
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+> +
+> +  nuvoton,sys:
+> +    description:
+> +      phandle to the syscon node
 
-Addressing Andy's remark: I think this is just how git generates diffs
-for links, nothing we can do about it.
+sys is quite generic. Description explains nothing except duplicating
+known information. Drop duplicated info and instead explain to what this
+phandle points and how it is going to be used.
 
-I would prefer not to have links in the repo anyway, it would be great
-if we could create them at build-time.
 
-Bart
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      maxItems: 1
 
-> diff --git a/bindings/python/lib b/bindings/python/lib
-> new file mode 120000
-> index 0000000..58677dd
+So just phandle, not phandle-array, unless it is defined like this in
+some other binding.
+
+> +
+> +  ranges: true
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+
+allOf: goes after required: block.
+
+> +
+> +patternProperties:
+> +  "gpio[a-n]@[0-9a-f]+$":
+
+^gpio@[0-9a-f]+$":
+
+
+> +    type: object
+> +    additionalProperties: false
+> +    properties:
+> +
+
+Drop blank line
+
+> +      gpio-controller: true
+> +
+> +      '#gpio-cells':
+> +        const: 2
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      clocks:
+> +        maxItems: 1
+> +
+> +      interrupt-controller: true
+> +
+> +      '#interrupt-cells':
+> +        const: 2
+> +
+> +      interrupts:
+> +        description:
+> +          The interrupt outputs to sysirq.
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +      - interrupts
+> +      - interrupt-controller
+> +      - '#interrupt-cells'
+> +      - gpio-controller
+> +      - '#gpio-cells'
+
+Keep the same order as in list of properties.
+
+> +
+> +  "pcfg-[a-z0-9-.]+$":
+
+Why using different naming than other Nuvoton SoCs? You also accept
+"foobarpcfg-1", which does not look intentional.
+
+
+> +    type: object
+> +    description:
+> +      A pinctrl node should contain at least one subnodes representing the
+> +      pinctrl groups available on the machine. Each subnode will list the
+> +      pins it needs, and how they should be configured, with regard to muxer
+> +      configuration, pullups, drive strength, input enable/disable and input
+> +      schmitt.
+> +
+> +    allOf:
+> +      - $ref: pincfg-node.yaml#
+
+missing additional/unevaluatedProperties: false.
+
+> +
+> +    properties:
+> +      bias-disable: true
+
+Why do you need this and other ones?
+
+> +
+> +      bias-pull-down: true
+> +
+> +      bias-pull-up: true
+> +
+> +      drive-strength:
+> +        minimum: 0
+
+0 mA? Is it really valid? Are you sure you used correct property?
+
+
+> +        maximum: 7
+> +
+> +      input-enable: true
+> +
+> +      input-schmitt-enable: true
+> +
+> +      power-source:
+> +        description:
+> +          I/O voltage in millivolt.
+> +        enum: [ 1800, 3300 ]
+
+Missing units in property name. power-source also does not really
+describe the property.
+
+> +
+> +additionalProperties:
+> +  type: object
+> +  additionalProperties:
+> +    type: object
+
+Wait, what? What are you describing here?
+
+> +    properties:
+> +      nuvoton,pin:
+> +        description:
+> +          Each entry consists of 4 parameters and represents the mux and config
+> +          setting for one pin.
+> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +        minItems: 1
+> +        items:
+> +          items:
+> +            - minimum: 0x80
+> +              maximum: 0xec
+> +              description:
+> +                The pinctrl register offset in syscon registers.
+> +            - minimum: 0
+> +              maximum: 30
+> +              description:
+> +                The bit offset in the pinctrl register.
+> +            - minimum: 0
+> +              maximum: 15
+> +              description:
+> +                The multi-function pin value.
+> +            - description:
+> +                The phandle of a node contains the generic pinconfig options
+> +                to use as described in pinctrl-bindings.txt.
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/clock/nuvoton,ma35d1-clk.h>
+> +    #include <dt-bindings/pinctrl/ma35d1-pinfunc.h>
+> +
+> +    pinctrl@40040000 {
+> +        compatible = "nuvoton,ma35d1-pinctrl";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        nuvoton,sys = <&sys>;
+> +        ranges = <0 0x40040000 0xc00>;
+> +
+> +        gpioa@40040000 {
+> +                reg = <0x0 0x40>;
+> +                interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> +                clocks = <&clk GPA_GATE>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +        };
+> +
+> +        pcfg_default: pcfg-default {
+> +                slew-rate = <0>;
+> +                input-schmitt-disable;
+> +                bias-disable;
+> +                power-source = <3300>;
+> +                drive-strength = <0>;
+
+Really 0 mA?
+
+Why this is so incomplete?
+
+> +        };
+> +    };
+> +
+> +    pinctrl {> +        uart13 {
+> +                pinctrl_uart13: uart13grp {
+
+According to your bindings this does not belong here.
+
+> +                        nuvoton,pins =
+> +                                <MA35_SYS_REG_GPH_H 24 2 &pcfg_default>,
+> +                                <MA35_SYS_REG_GPH_H 28 2 &pcfg_default>;
+> +                };
+> +        };
+> +    };
+> +
+> +    serial@407d0000 {
+
+Drop node, not related at all.
+
+> +        compatible = "nuvoton,ma35d1-uart";
+> +        reg = <0x407d0000 0x100>;
+> +        interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&clk UART13_GATE>;
+> +        pinctrl-0 = <&pinctrl_uart13>;
+> +    };
+> diff --git a/include/dt-bindings/pinctrl/ma35d1-pinfunc.h b/include/dt-bindings/pinctrl/ma35d1-pinfunc.h
+> new file mode 100644
+> index 000000000000..a2609d466dc9
 > --- /dev/null
-> +++ b/bindings/python/lib
-> @@ -0,0 +1 @@
-> +../../lib
-> \ No newline at end of file
-> diff --git a/bindings/python/setup.py b/bindings/python/setup.py
-> index 66b7908..2e25981 100644
-> --- a/bindings/python/setup.py
-> +++ b/bindings/python/setup.py
-> @@ -19,19 +19,53 @@ class build_ext(orig_build_ext):
->          rmtree(path.join(self.build_lib, "tests"), ignore_errors=3DTrue)
->
->
-> +with open("gpiod/version.py", "r") as fd:
-> +    exec(fd.read())
+> +++ b/include/dt-bindings/pinctrl/ma35d1-pinfunc.h
+
+Filename matching bindings. The same name.
+
+> @@ -0,0 +1,38 @@
+> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) */
+> +/*
+> + * Copyright (C) 2023 Nuvoton Technologies.
+> + */
 > +
+> +#ifndef __DT_BINDINGS_PINCTRL_NUVOTON_MA35D1_H
+> +#define __DT_BINDINGS_PINCTRL_NUVOTON_MA35D1_H
 > +
-> +sources =3D [
-> +    # gpiod Python bindings
-> +    "gpiod/ext/chip.c",
-> +    "gpiod/ext/common.c",
-> +    "gpiod/ext/line-config.c",
-> +    "gpiod/ext/line-settings.c",
-> +    "gpiod/ext/module.c",
-> +    "gpiod/ext/request.c",
-> +]
-> +
-> +if "USE_SYSTEM_GPIOD" in environ and environ["USE_SYSTEM_GPIOD"] =3D=3D =
-"1":
-> +    libraries =3D ["gpiod"]
-> +    include_dirs =3D ["gpiod"]
-> +else:
-> +    sources +=3D [
-> +        # gpiod library
-> +        "lib/chip.c",
-> +        "lib/chip-info.c",
-> +        "lib/edge-event.c",
-> +        "lib/info-event.c",
-> +        "lib/internal.c",
-> +        "lib/line-config.c",
-> +        "lib/line-info.c",
-> +        "lib/line-request.c",
-> +        "lib/line-settings.c",
-> +        "lib/misc.c",
-> +        "lib/request-config.c",
-> +    ]
-> +    libraries =3D []
-> +    include_dirs =3D ["include", "lib", "gpiod/ext"]
-> +
-> +
->  gpiod_ext =3D Extension(
->      "gpiod._ext",
-> -    sources=3D[
-> -        "gpiod/ext/chip.c",
-> -        "gpiod/ext/common.c",
-> -        "gpiod/ext/line-config.c",
-> -        "gpiod/ext/line-settings.c",
-> -        "gpiod/ext/module.c",
-> -        "gpiod/ext/request.c",
-> -    ],
-> +    libraries=3Dlibraries,
-> +    sources=3Dsources,
->      define_macros=3D[("_GNU_SOURCE", "1")],
-> -    libraries=3D["gpiod"],
-> -    extra_compile_args=3D["-Wall", "-Wextra"],
-> +    include_dirs=3Dinclude_dirs,
-> +    extra_compile_args=3D[
-> +        "-Wall",
-> +        "-Wextra",
-> +        '-DGPIOD_VERSION_STR=3D"{}"'.format(__version__),
-> +    ],
->  )
->
->  gpiosim_ext =3D Extension(
-> @@ -54,9 +88,6 @@ if "GPIOD_WITH_TESTS" in environ and environ["GPIOD_WIT=
-H_TESTS"] =3D=3D "1":
->      extensions.append(gpiosim_ext)
->      extensions.append(procname_ext)
->
-> -with open("gpiod/version.py", "r") as fd:
-> -    exec(fd.read())
-> -
->  setup(
->      name=3D"libgpiod",
->      packages=3Dfind_packages(exclude=3D["tests", "tests.*"]),
-> --
-> 2.34.1
->
+> +#define MA35_SYS_REG_GPA_L	0x80
+
+Registry addresses are not suitable for bindings. There is also no need
+to have REG address in the binding. Drop entire file.
+
+Best regards,
+Krzysztof
+
