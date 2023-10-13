@@ -2,124 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3DAD7C7EC7
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 09:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 848477C806B
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 10:35:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbjJMHot (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Oct 2023 03:44:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43260 "EHLO
+        id S230134AbjJMIf4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Oct 2023 04:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbjJMHot (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 03:44:49 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D64A8BF;
-        Fri, 13 Oct 2023 00:44:47 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6b1d1099a84so490218b3a.1;
-        Fri, 13 Oct 2023 00:44:47 -0700 (PDT)
+        with ESMTP id S230131AbjJMIfz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 04:35:55 -0400
+Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93901CE
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 01:35:51 -0700 (PDT)
+Received: by mail-vs1-xe33.google.com with SMTP id ada2fe7eead31-457cb2fe3abso6385137.3
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 01:35:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697183087; x=1697787887; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EqBTcnUOXt5OHFJjY+Q7SG+N2WHaqyyhi4YSnip+8v0=;
-        b=Qn5oCKsmnr6SHYEFlZVy2naSYslWXccXiq1+0zLs0ppcEo/g6dSTuucH0S+m+OjaNz
-         HBCr74uviX3Zmkq/igIPTD946LeIQB5a0qyS5GXZm2M1Dvpene/YnN5/+sgVDRrYYI4G
-         mYa9tW9YWXsd6YHXzyLpOx85vZjOfIop4bjtVXSUuGxabZ20HJDIr7PVZnIGCY5rhOcv
-         neYGkiKkB7grhYJTcw6OuIAdWsRtNR0kNu3N+yY9dWN1Lwnyb9sPGkGA10DqF2cywOf0
-         8HYWIgGA7rw8VO6LJUXuglkfHX2kqvb8QTU1Dm/pIm2GPjgUsMG43LJytPwpkcJWNSEL
-         38Aw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697186150; x=1697790950; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FqKFJ5HKNwgOVoPJVGlaLE8bD08GdnsVYILHhjC7ofM=;
+        b=FvpaodkEaTOKtNO9wY/pF6OZNUfaArz6+uzTmnduQrotzGs1N5EflI2kWYUaDek2Op
+         ug2/kcYMaW9BF1OzRVfJFQQDrUDY45XA9bS9YuwDpjaSIJqbcYNjH+GigHnElBnBT81h
+         1yoxj+Yev2CgJYL0tQ8iyArNHNie7Gm1xQsOuarDULH5wTq1YjsV3U6+8OC6Y6ULl+j0
+         OIQJqYOgEiTm2YMt9MA8W/OzI33cBAgojttyM1Tl60+0ghUSBE1mHKE1wcFLuJWYWkDk
+         dNLwXcdPLmn6/9EG2kdOkuoH+s/cR9mY6EjWoBy09yHVyO0Hd8ZDGtUwDQtZycmZQF95
+         FXCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697183087; x=1697787887;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EqBTcnUOXt5OHFJjY+Q7SG+N2WHaqyyhi4YSnip+8v0=;
-        b=lbVbpaRYFTGwmhI/XwTu8zmki283YzuoEPhWqeL5XKYWzt0FAIZM/rYkUhIr76XI5/
-         dYNCcncnltDDgrgQrUR58rZVCxjAVuJq/d2u6ao0+y9BRny/51Jh2irpBy/GPL+Ly2zz
-         EzfzGzNbTb/1P+SvGeySjbgRYJA++C3alyae0KT3W1MtQOvKMJeegJIm0v7EY3qEFwHN
-         MAQMqeeJE9bqh0+QDL7dFFwX+B258BZilKX2cJyRYFzYQW1hG/5bKo+Pg2NiEiri/9JK
-         u/onj4Qm14fhpSvrUN1S+cOKHeSnm6U/9REG2fUwqObPqGPDok0an91XbWyjfY/qFLPE
-         3QLA==
-X-Gm-Message-State: AOJu0Yz7D9Vi5sbePORWRTDmyvnFZIjuAjXcP/dJRKnaES0BO+BjC1m8
-        1uJDKctbsNrXN4Es9/embmnjD6QYHPk=
-X-Google-Smtp-Source: AGHT+IHWWgk1zmQhykDCekt0aGL7OS4rB/SGDK7iEV5xnq7IIWvi8IxXalAeKUjv5J2lc05leLCvKA==
-X-Received: by 2002:a05:6a00:9a2:b0:68a:3ba3:e249 with SMTP id u34-20020a056a0009a200b0068a3ba3e249mr31611101pfg.16.1697183087186;
-        Fri, 13 Oct 2023 00:44:47 -0700 (PDT)
-Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id z125-20020a633383000000b0058a381de499sm2839266pgz.77.2023.10.13.00.44.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Oct 2023 00:44:46 -0700 (PDT)
-Message-ID: <c7419e6e-d53e-4820-83da-3ddf188e8fd7@gmail.com>
-Date:   Fri, 13 Oct 2023 15:44:43 +0800
+        d=1e100.net; s=20230601; t=1697186150; x=1697790950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FqKFJ5HKNwgOVoPJVGlaLE8bD08GdnsVYILHhjC7ofM=;
+        b=krGlBeygKiBJn6d6kXS6GXu58Br/ScP5WIDoNdYbVTQvytu7Ub7VsMeFMyPkyRcraN
+         EUc4f6JA/scfiJpRgH8hDq60v8QMoleL0bv0PVLp5aLdiPKx4bH9F5oaqFzV/iCjCZXm
+         kury5KitAbmqJXP5H13Fwpk6Nm2cATMqVtW6dR+T1Nb62jE9k7RhYdUIFhrFJWHb7wr1
+         rcG8UmjBUcoxH2HzSXN1rkVq0d0TnwqZm/U0y/czPgxwlZGzBC1cPnbkYMmK81pDDz/m
+         PmFvMryVYGUKOsAyEM/tAq5+pGS1tSiV606qbkfcYDS1xcjxQOKVD6E4AAqgzBeak2hU
+         1tog==
+X-Gm-Message-State: AOJu0YwTSheCUTsx+WpU5eqnQG6LZBMiSLn0CFpow9RbrNnQosMvRW50
+        e6gx8SCyHnXZVcWTSYRiE4JXzdiBbWz8VUFigyPmTg==
+X-Google-Smtp-Source: AGHT+IEOHMUe96OoepAD3N5k49Tsfr1FQm3zp+9rNrRW5YkokmFiywG7fO0dB73BuU3FnWFGcZU2kkxd8zx/YZVr5/Q=
+X-Received: by 2002:a05:6102:415:b0:44d:e70d:8a4b with SMTP id
+ d21-20020a056102041500b0044de70d8a4bmr22274041vsq.8.1697186150655; Fri, 13
+ Oct 2023 01:35:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] arm64: dts: nuvoton: Add pinctrl support for ma35d1
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        p.zabel@pengutronix.de, j.neuschaefer@gmx.net
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        schung@nuvoton.com, Jacky Huang <ychuang3@nuvoton.com>
-References: <20231011090510.114476-1-ychuang570808@gmail.com>
- <20231011090510.114476-4-ychuang570808@gmail.com>
- <9a831a6e-ab5e-4911-8011-f6eb82dd3d6a@linaro.org>
- <507e491a-e40f-47e2-8e11-5a7886a8c2ab@gmail.com>
- <420f9132-b277-4476-bd74-9cc4cd87456f@linaro.org>
-From:   Jacky Huang <ychuang570808@gmail.com>
-In-Reply-To: <420f9132-b277-4476-bd74-9cc4cd87456f@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20231012210228.101513-1-phil@gadgetoid.com> <20231012210228.101513-3-phil@gadgetoid.com>
+In-Reply-To: <20231012210228.101513-3-phil@gadgetoid.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 13 Oct 2023 10:35:39 +0200
+Message-ID: <CAMRc=Mf4=c6hLu5=eUVQ+EB_Z-rsodmqvt3B0evZL04aa4ys4Q@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2 2/2] bindings: python: add pyproject.toml,
+ pep 518
+To:     Phil Howard <phil@gadgetoid.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 2023/10/13 下午 03:06, Krzysztof Kozlowski wrote:
-> On 13/10/2023 08:52, Jacky Huang wrote:
->>>> +
->>>> +&pinctrl {
->>>> +	uart0 {
->>>> +		pinctrl_uart0: uart0grp {
->>>> +			nuvoton,pins =
->>>> +				<MA35_SYS_REG_GPE_H 24 1 &pcfg_default>,
->>>> +				<MA35_SYS_REG_GPE_H 28 1 &pcfg_default>;
->>> This does not look like generic pinctrl bindings. Looks
->>> over-complicated. From where did you get it? Which recent bindings and
->>> drivers where used as an example? Register addresses should be in the
->>> driver. Bit offsets as well. "multi-pin-function-value" confuses me. All
->>> this is not really suitable for DTS.
->> Okay, I will update the first and second items to 'pin bank' and 'pin
->> bank index,
->> just as others have done, and leave the driver to handle the conversion into
->> registers and offsets.
-> Instead use existing common properties, like "pins" and "groups" (or
-> pinmux).
-
-I will reference how others have done it to make the changes.
-
->> The term "multi-pin-function-value" is used to specify the device function.
->> I will use the name "device function" instead of "multi-pin-function-value.
-> Use existing common properties, like "function". Do not reinvent the
-> bindings.
+On Thu, Oct 12, 2023 at 11:02=E2=80=AFPM Phil Howard <phil@gadgetoid.com> w=
+rote:
+>
+> Add pyproject.toml to prevent spurious deprecation warnings from pip.
+>
+> Signed-off-by: Phil Howard <phil@gadgetoid.com>
+> ---
+>  bindings/python/pyproject.toml | 5 +++++
+>  1 file changed, 5 insertions(+)
+>  create mode 100644 bindings/python/pyproject.toml
+>
+> diff --git a/bindings/python/pyproject.toml b/bindings/python/pyproject.t=
+oml
+> new file mode 100644
+> index 0000000..fcf6bbe
+> --- /dev/null
+> +++ b/bindings/python/pyproject.toml
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# SPDX-FileCopyrightText: 2023 Phil Howard <phil@gadgetoid.com>
+> +
+> +[build-system]
+> +requires =3D ["setuptools", "wheel"]
+> --
+> 2.34.1
 >
 
-Okay, I got it. Thank you.
+Applied, thanks!
 
->
-> Best regards,
-> Krzysztof
->
-
-
-Best Regards,
-Jacky Huang
-
+Bart
