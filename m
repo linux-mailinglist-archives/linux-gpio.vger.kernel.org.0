@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D99407C882A
+	by mail.lfdr.de (Postfix) with ESMTP id 1CB917C8828
 	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 16:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232241AbjJMO7o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Oct 2023 10:59:44 -0400
+        id S232254AbjJMO7q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Oct 2023 10:59:46 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232221AbjJMO7n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 10:59:43 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69B495
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 07:59:41 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-405524e6769so14282535e9.1
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 07:59:41 -0700 (PDT)
+        with ESMTP id S232249AbjJMO7p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 10:59:45 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235EBBF
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 07:59:43 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-4064876e8b8so25407845e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 07:59:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697209180; x=1697813980; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1697209181; x=1697813981; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6XixNF8rcGeT14/86b+PK/uBZUvKiNOeydeAMM5h+qM=;
-        b=Lsi3e3LGJnfI/w5D3y8+oG85IYXqdA7QV5Yc662qKbFs6tbGpGMj51Ai+JNrvxYoLy
-         Ur/bqy/Wlw2/B+8XkCOBACG51kwuOd25UfBThoJBjlupbgRFI2cmHdO/EJBbU0IFk3T0
-         OY+T3zRP5IBFVYgBJVsXjxESVuLiNPoDn6EgC83950Ys5PiVAaO041DlaixhKYxlhq2Q
-         LscH0K+3x4YeEU3uTZiTBYgSxCy09aREGkIGdqdGerxjpqK4l2ZZG82eyC3dMFFi0F5H
-         a77MEftT56uQzn+fePmggD6ojY9B9bZPrhCofp9YSMus4mLgYr5I3ZQdt1zSHpbWu7kz
-         TPig==
+        bh=Os1SaGixPymAzc87N0J0x0jFQUdmX5KiKLLsTm7SPUs=;
+        b=R3O9SfM1Pg6PUl/2zAkP3AkJ6ME3y0m7sSZM0TnE1dfsWiwA8afQJ6QjA0BsruXN/D
+         Nrcmzq0Et8Gmc7IpbVvaMmFRmsnWw4XK+x/F6zcINFxeAkgOhlg6K1cKNIJzr3xdHReC
+         R6/s9GUyfXtRVI+COtW3AF2pJ+EZPjOBknF5ET6INWSTDL2v4x/JRVqEoMXXcKDZRUil
+         ss8Rj/WbBVOd7hs90gCNAzSznqnwfmPZnqBeUkMJekDZhOvFGAD93FYRT8yh6mPEXW3E
+         IlkqCbgczYz28lug4O2/P4f1kLUyPCU4SUbfNnhWa3r8o2UnPDCppKOCnSd4kv0jMOJy
+         J0ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697209180; x=1697813980;
+        d=1e100.net; s=20230601; t=1697209181; x=1697813981;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6XixNF8rcGeT14/86b+PK/uBZUvKiNOeydeAMM5h+qM=;
-        b=C/Xbd140RdLixQvukqYS2qtzblVtDsVgR2M02mG7T2CLoZotIFGh9y8uMHfm32cDEJ
-         WefJcvnYqeteWXgAng253Y2cH/ABpA33pLdH95ajrCpPe7pQv1DHzgEb2wpveuFYkus+
-         idfTBq4xB+3e3cGLQPbGTZ+kIoS4q3Ql5RFd/dokvtWtPKT2HUYuW9Of+JWRkPKasYHh
-         Y4e1uu2KKPuYU/Iesh8t9tqsiraG39gYSDx1sCKsKvKDWqHiD5G3RG0rIbXPJkS02irH
-         eLcdsBE+TQgh1XhaXDjcUqtGiSftpaoixnkrdIobJkCeeMhjaOOTEbrnVN/lQWpJNN1E
-         z9nQ==
-X-Gm-Message-State: AOJu0YylSR4DgckJC6nC0oOfpRx8mzvmG24B3KwDROANZG+TNO7lTFX4
-        lfvEI+dh0mRNnInWNqof8L4Xsg==
-X-Google-Smtp-Source: AGHT+IEPQNQrI0nwaQkzVKmF+/qzLrm2eHCyV21p+KfzM81DrT5slU2YLvJSulhh31z+gRCVN4Fj7Q==
-X-Received: by 2002:a05:600c:3c83:b0:403:aced:f7f4 with SMTP id bg3-20020a05600c3c8300b00403acedf7f4mr308030wmb.12.1697209180272;
-        Fri, 13 Oct 2023 07:59:40 -0700 (PDT)
+        bh=Os1SaGixPymAzc87N0J0x0jFQUdmX5KiKLLsTm7SPUs=;
+        b=jVgs+a44OfT1q+YbE9fKG6ykqjqSGhwH0AFVzvy/vt0aLewHz6DtOwrHvfqARsDWOR
+         4k3tTQnTwms7CmHebmFnMA6iaFqx+L/socXSgph0db2fq7j6FV+s3GFI1s8WOlRXmRDf
+         U7EkqizjmIscev+25VF/KxxNWQUSKtKJhWKuV8Zb2zPEa29P1A8EhuT0UkZvPpLU2lAA
+         zlriatwdgUUiZcDsXbBJwIi/XY6YAexekphl3+oQmaYQ/xCj9QD7wK1OfR8EbbbTjyxi
+         cGN6V0Wjv0Tg4QdIaGR+f9V0vkk2Gna5NkfHLFgRRtLNIv7oDT54rOtTARvUENn/2PW/
+         ipKg==
+X-Gm-Message-State: AOJu0Yxji228c6YFysUHsUoTK5Oh16qEZBGlmKKFlJxNeztqrTYoXRf/
+        w7TmI/4sC8FDVQrg0Sxv5RuvDn+eIKxcZ2GzEVU=
+X-Google-Smtp-Source: AGHT+IFo2I+V7vf/Zl0BTreJTldq95ey32tamdgWaZW37F9sPTzdpjO8i3XgGGnytWGGlG7Bi07wzQ==
+X-Received: by 2002:adf:a2dc:0:b0:32d:8108:500 with SMTP id t28-20020adfa2dc000000b0032d81080500mr7223064wra.58.1697209181547;
+        Fri, 13 Oct 2023 07:59:41 -0700 (PDT)
 Received: from krzk-bin.. ([178.197.219.100])
-        by smtp.gmail.com with ESMTPSA id dh13-20020a0560000a8d00b00327cd5e5ac1sm6428267wrb.1.2023.10.13.07.59.39
+        by smtp.gmail.com with ESMTPSA id dh13-20020a0560000a8d00b00327cd5e5ac1sm6428267wrb.1.2023.10.13.07.59.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 07:59:39 -0700 (PDT)
+        Fri, 13 Oct 2023 07:59:41 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -57,16 +57,16 @@ To:     Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 1/2] pinctrl: qcom: lpass-lpi: split slew rate set to separate function
-Date:   Fri, 13 Oct 2023 16:59:34 +0200
-Message-Id: <20231013145935.220945-2-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 2/2] pinctrl: qcom: lpass-lpi: allow slew rate bit in main pin config register
+Date:   Fri, 13 Oct 2023 16:59:35 +0200
+Message-Id: <20231013145935.220945-3-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231013145935.220945-1-krzysztof.kozlowski@linaro.org>
 References: <20231013145935.220945-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -75,98 +75,101 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Setting slew rate for each pin will grow with upcoming Qualcomm SoCs,
-so split the code responsible for this into separate function for easier
-readability and maintenance.
+Existing Qualcomm SoCs have the LPASS pin controller slew rate control
+in separate register, however this will change with upcoming Qualcomm
+SoCs.  The slew rate will be part of the main register for pin
+configuration, thus second device IO address space is not needed.
+
+Prepare for supporting new SoCs by adding flag customizing the driver
+behavior for slew rate.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 ---
 
 Changes in v2:
-1. None
+1. Reversed xmas tree
+
+v1: https://lore.kernel.org/all/20230901090224.27770-1-krzysztof.kozlowski@linaro.org/
 ---
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 53 +++++++++++++++---------
- 1 file changed, 33 insertions(+), 20 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 20 ++++++++++++++------
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.h |  7 +++++++
+ 2 files changed, 21 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index 9651aed048cf..4fb808545f7f 100644
+index 4fb808545f7f..9e410a281bfa 100644
 --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
 +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -186,6 +186,35 @@ static int lpi_config_get(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
-+static int lpi_config_set_slew_rate(struct lpi_pinctrl *pctrl,
-+				    const struct lpi_pingroup *g,
-+				    unsigned int group, unsigned int slew)
-+{
-+	unsigned long sval;
-+	int slew_offset;
-+
-+	if (slew > LPI_SLEW_RATE_MAX) {
-+		dev_err(pctrl->dev, "invalid slew rate %u for pin: %d\n",
-+			slew, group);
-+		return -EINVAL;
-+	}
-+
-+	slew_offset = g->slew_offset;
-+	if (slew_offset == LPI_NO_SLEW)
-+		return 0;
-+
-+	mutex_lock(&pctrl->lock);
-+
-+	sval = ioread32(pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
-+	sval &= ~(LPI_SLEW_RATE_MASK << slew_offset);
-+	sval |= slew << slew_offset;
-+	iowrite32(sval, pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
-+
-+	mutex_unlock(&pctrl->lock);
-+
-+	return 0;
-+}
-+
- static int lpi_config_set(struct pinctrl_dev *pctldev, unsigned int group,
- 			  unsigned long *configs, unsigned int nconfs)
+@@ -191,6 +191,7 @@ static int lpi_config_set_slew_rate(struct lpi_pinctrl *pctrl,
+ 				    unsigned int group, unsigned int slew)
  {
-@@ -193,8 +222,7 @@ static int lpi_config_set(struct pinctrl_dev *pctldev, unsigned int group,
- 	unsigned int param, arg, pullup = LPI_GPIO_BIAS_DISABLE, strength = 2;
- 	bool value, output_enabled = false;
- 	const struct lpi_pingroup *g;
--	unsigned long sval;
--	int i, slew_offset;
-+	int i, ret;
- 	u32 val;
+ 	unsigned long sval;
++	void __iomem *reg;
+ 	int slew_offset;
  
- 	g = &pctrl->data->groups[group];
-@@ -226,24 +254,9 @@ static int lpi_config_set(struct pinctrl_dev *pctldev, unsigned int group,
- 			strength = arg;
- 			break;
- 		case PIN_CONFIG_SLEW_RATE:
--			if (arg > LPI_SLEW_RATE_MAX) {
--				dev_err(pctldev->dev, "invalid slew rate %u for pin: %d\n",
--					arg, group);
--				return -EINVAL;
--			}
--
--			slew_offset = g->slew_offset;
--			if (slew_offset == LPI_NO_SLEW)
--				break;
--
--			mutex_lock(&pctrl->lock);
--
--			sval = ioread32(pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
--			sval &= ~(LPI_SLEW_RATE_MASK << slew_offset);
--			sval |= arg << slew_offset;
--			iowrite32(sval, pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
--
--			mutex_unlock(&pctrl->lock);
-+			ret = lpi_config_set_slew_rate(pctrl, g, group, arg);
-+			if (ret)
-+				return ret;
- 			break;
- 		default:
- 			return -EINVAL;
+ 	if (slew > LPI_SLEW_RATE_MAX) {
+@@ -203,12 +204,17 @@ static int lpi_config_set_slew_rate(struct lpi_pinctrl *pctrl,
+ 	if (slew_offset == LPI_NO_SLEW)
+ 		return 0;
+ 
++	if (pctrl->data->flags & LPI_FLAG_SLEW_RATE_SAME_REG)
++		reg = pctrl->tlmm_base + LPI_TLMM_REG_OFFSET * group + LPI_GPIO_CFG_REG;
++	else
++		reg = pctrl->slew_base + LPI_SLEW_RATE_CTL_REG;
++
+ 	mutex_lock(&pctrl->lock);
+ 
+-	sval = ioread32(pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
++	sval = ioread32(reg);
+ 	sval &= ~(LPI_SLEW_RATE_MASK << slew_offset);
+ 	sval |= slew << slew_offset;
+-	iowrite32(sval, pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
++	iowrite32(sval, reg);
+ 
+ 	mutex_unlock(&pctrl->lock);
+ 
+@@ -452,10 +458,12 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, PTR_ERR(pctrl->tlmm_base),
+ 				     "TLMM resource not provided\n");
+ 
+-	pctrl->slew_base = devm_platform_ioremap_resource(pdev, 1);
+-	if (IS_ERR(pctrl->slew_base))
+-		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
+-				     "Slew resource not provided\n");
++	if (!(data->flags & LPI_FLAG_SLEW_RATE_SAME_REG)) {
++		pctrl->slew_base = devm_platform_ioremap_resource(pdev, 1);
++		if (IS_ERR(pctrl->slew_base))
++			return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
++					     "Slew resource not provided\n");
++	}
+ 
+ 	ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+ 	if (ret)
+diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+index 387d83ee95b5..206b2c0ca828 100644
+--- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
++++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+@@ -60,6 +60,12 @@ struct pinctrl_pin_desc;
+ 		.nfuncs = 5,				\
+ 	}
+ 
++/*
++ * Slew rate control is done in the same register as rest of the
++ * pin configuration.
++ */
++#define LPI_FLAG_SLEW_RATE_SAME_REG			BIT(0)
++
+ struct lpi_pingroup {
+ 	struct group_desc group;
+ 	unsigned int pin;
+@@ -82,6 +88,7 @@ struct lpi_pinctrl_variant_data {
+ 	int ngroups;
+ 	const struct lpi_function *functions;
+ 	int nfunctions;
++	unsigned int flags;
+ };
+ 
+ int lpi_pinctrl_probe(struct platform_device *pdev);
 -- 
 2.34.1
 
