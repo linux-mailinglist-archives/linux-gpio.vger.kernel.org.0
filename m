@@ -2,58 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 848477C806B
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 10:35:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B74847C8073
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 10:37:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbjJMIf4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Oct 2023 04:35:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56042 "EHLO
+        id S229998AbjJMIhE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Oct 2023 04:37:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230131AbjJMIfz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 04:35:55 -0400
-Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93901CE
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 01:35:51 -0700 (PDT)
-Received: by mail-vs1-xe33.google.com with SMTP id ada2fe7eead31-457cb2fe3abso6385137.3
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 01:35:51 -0700 (PDT)
+        with ESMTP id S230123AbjJMIhD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 04:37:03 -0400
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC19A9
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 01:37:01 -0700 (PDT)
+Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-45271a44cc4so788943137.2
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 01:37:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697186150; x=1697790950; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697186221; x=1697791021; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FqKFJ5HKNwgOVoPJVGlaLE8bD08GdnsVYILHhjC7ofM=;
-        b=FvpaodkEaTOKtNO9wY/pF6OZNUfaArz6+uzTmnduQrotzGs1N5EflI2kWYUaDek2Op
-         ug2/kcYMaW9BF1OzRVfJFQQDrUDY45XA9bS9YuwDpjaSIJqbcYNjH+GigHnElBnBT81h
-         1yoxj+Yev2CgJYL0tQ8iyArNHNie7Gm1xQsOuarDULH5wTq1YjsV3U6+8OC6Y6ULl+j0
-         OIQJqYOgEiTm2YMt9MA8W/OzI33cBAgojttyM1Tl60+0ghUSBE1mHKE1wcFLuJWYWkDk
-         dNLwXcdPLmn6/9EG2kdOkuoH+s/cR9mY6EjWoBy09yHVyO0Hd8ZDGtUwDQtZycmZQF95
-         FXCQ==
+        bh=fg4DDsIiD4lD3ytlo+JCwwwhkKNn4/39lFt3BKLtjr4=;
+        b=Cg2APVZri4Pr5bhYd+X1pLS2UvDPDkXvigaGQqZzMXEoqX20uytLgrACOvB6JwFkt9
+         RfLX4byd+wLZbIP+z18gjQugNBmZCfpLCzp+PhomcYhzhX5cjRnppHjRi5NkhByH7dsP
+         lCLeHw2uYPnL5rzaBDEv9HKKtMvYd52iwXmE04LuE42mosIH7S30cDP/WMLBaS9dmUmm
+         S+e5VQZXuaLoPN08ertgJrGwZ+//VhWgEeWZCERiFy+6VIu5wuGhxiwgkZm/s1u+83GJ
+         L/Y9O6Ju772Z4+KV5eN2Ait4VhlZXw2tl8bMjR/pYLTpT6b+Mn0qiLRy355r4U52iJ5r
+         Fv9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697186150; x=1697790950;
+        d=1e100.net; s=20230601; t=1697186221; x=1697791021;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FqKFJ5HKNwgOVoPJVGlaLE8bD08GdnsVYILHhjC7ofM=;
-        b=krGlBeygKiBJn6d6kXS6GXu58Br/ScP5WIDoNdYbVTQvytu7Ub7VsMeFMyPkyRcraN
-         EUc4f6JA/scfiJpRgH8hDq60v8QMoleL0bv0PVLp5aLdiPKx4bH9F5oaqFzV/iCjCZXm
-         kury5KitAbmqJXP5H13Fwpk6Nm2cATMqVtW6dR+T1Nb62jE9k7RhYdUIFhrFJWHb7wr1
-         rcG8UmjBUcoxH2HzSXN1rkVq0d0TnwqZm/U0y/czPgxwlZGzBC1cPnbkYMmK81pDDz/m
-         PmFvMryVYGUKOsAyEM/tAq5+pGS1tSiV606qbkfcYDS1xcjxQOKVD6E4AAqgzBeak2hU
-         1tog==
-X-Gm-Message-State: AOJu0YwTSheCUTsx+WpU5eqnQG6LZBMiSLn0CFpow9RbrNnQosMvRW50
-        e6gx8SCyHnXZVcWTSYRiE4JXzdiBbWz8VUFigyPmTg==
-X-Google-Smtp-Source: AGHT+IEOHMUe96OoepAD3N5k49Tsfr1FQm3zp+9rNrRW5YkokmFiywG7fO0dB73BuU3FnWFGcZU2kkxd8zx/YZVr5/Q=
-X-Received: by 2002:a05:6102:415:b0:44d:e70d:8a4b with SMTP id
- d21-20020a056102041500b0044de70d8a4bmr22274041vsq.8.1697186150655; Fri, 13
- Oct 2023 01:35:50 -0700 (PDT)
+        bh=fg4DDsIiD4lD3ytlo+JCwwwhkKNn4/39lFt3BKLtjr4=;
+        b=NaJgHv4dcwvQ6tsJMUp5gIF406FlOmGdEaXJGWOFHeoLSdzSyoO90KgPneDKPWhIbF
+         +V5eYuO1Smgz13pWiZiEa95yE2wy/umu2zxO7pqy/1n0jcsMD0YdPK3Us2CcE443SvPJ
+         mMSBq/eWNCkT7tpk8V9Ll9DwY6vOnTzxg8Sr6PKSuNqeH9T1ICcgL0gNJ8efcj1PQDQU
+         H4WrBAki4Fh/lIWKo9mFicIJDo8DM+spHkyfUyBQLj3CsLWIZJYXYa04b11d40+G5B3n
+         ROn6FoW9Crd+mj45kKKfZlz3Ey2CSgzP6KoD58fnx55K282quKUejsfqEeWIqhlcJuS/
+         Y6eA==
+X-Gm-Message-State: AOJu0Ywaivb4/mCj//pLVKa9qwaWwt8Z8pWA2cJR5yWyfITjj4QHEc5z
+        Qrban4pzGJTSEg3+0jh6+aAPbvtc4Bq0pG0DZmldCg==
+X-Google-Smtp-Source: AGHT+IGyuBVlYXvuv+Cmdv3EQCkPdQR24IPx3eBQuW/OzXRMH4F7SxaUJlbDKOKrOAGNRGgfXNmqSRe4Iq5nef/EaNY=
+X-Received: by 2002:a67:c205:0:b0:457:b8a8:f58f with SMTP id
+ i5-20020a67c205000000b00457b8a8f58fmr2869944vsj.8.1697186220789; Fri, 13 Oct
+ 2023 01:37:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231012210228.101513-1-phil@gadgetoid.com> <20231012210228.101513-3-phil@gadgetoid.com>
-In-Reply-To: <20231012210228.101513-3-phil@gadgetoid.com>
+References: <20231012195139.81613-1-phil@gadgetoid.com>
+In-Reply-To: <20231012195139.81613-1-phil@gadgetoid.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 13 Oct 2023 10:35:39 +0200
-Message-ID: <CAMRc=Mf4=c6hLu5=eUVQ+EB_Z-rsodmqvt3B0evZL04aa4ys4Q@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 2/2] bindings: python: add pyproject.toml,
- pep 518
+Date:   Fri, 13 Oct 2023 10:36:50 +0200
+Message-ID: <CAMRc=MexQJd9wx3Qmof2t88VMD1VenJx81_dcvn09oPcqJ2u4Q@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] bindings: python: simplify environ access
 To:     Phil Howard <phil@gadgetoid.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -69,29 +68,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 12, 2023 at 11:02=E2=80=AFPM Phil Howard <phil@gadgetoid.com> w=
-rote:
+On Thu, Oct 12, 2023 at 9:51=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wr=
+ote:
 >
-> Add pyproject.toml to prevent spurious deprecation warnings from pip.
+> Use environ.get() in lieu of an explicit check for GPIOD_WITH_TESTS in
+> os.environ.
+>
+> Returns None and evaluates as False if GPIOD_WITH_TESTS =3D=3D "1" is
+> not specified.
 >
 > Signed-off-by: Phil Howard <phil@gadgetoid.com>
 > ---
->  bindings/python/pyproject.toml | 5 +++++
->  1 file changed, 5 insertions(+)
->  create mode 100644 bindings/python/pyproject.toml
+>  bindings/python/setup.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/bindings/python/pyproject.toml b/bindings/python/pyproject.t=
-oml
-> new file mode 100644
-> index 0000000..fcf6bbe
-> --- /dev/null
-> +++ b/bindings/python/pyproject.toml
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +# SPDX-FileCopyrightText: 2023 Phil Howard <phil@gadgetoid.com>
-> +
-> +[build-system]
-> +requires =3D ["setuptools", "wheel"]
+> diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+> index fd674aa..df10e18 100644
+> --- a/bindings/python/setup.py
+> +++ b/bindings/python/setup.py
+> @@ -50,7 +50,7 @@ procname_ext =3D Extension(
+>  )
+>
+>  extensions =3D [gpiod_ext]
+> -if "GPIOD_WITH_TESTS" in environ and environ["GPIOD_WITH_TESTS"] =3D=3D =
+"1":
+> +if environ.get("GPIOD_WITH_TESTS") =3D=3D "1":
+>      extensions.append(gpiosim_ext)
+>      extensions.append(procname_ext)
+>
 > --
 > 2.34.1
 >
