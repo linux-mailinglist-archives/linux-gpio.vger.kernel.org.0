@@ -2,117 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EAF6E7C7E8E
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 09:28:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3DAD7C7EC7
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 09:44:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbjJMH2Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Oct 2023 03:28:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
+        id S229924AbjJMHot (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Oct 2023 03:44:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbjJMH2W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 03:28:22 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC01CB7
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 00:28:20 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-59b5484fbe6so22454797b3.1
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 00:28:20 -0700 (PDT)
+        with ESMTP id S229886AbjJMHot (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 03:44:49 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D64A8BF;
+        Fri, 13 Oct 2023 00:44:47 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6b1d1099a84so490218b3a.1;
+        Fri, 13 Oct 2023 00:44:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697182100; x=1697786900; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Yib7OMBCHm6UwuQ9QWk+F7jjtT8gG/POYcXA2UHH3Q=;
-        b=wJXJzn9Jn8PgNzhFAr4Cdh2wrn3+J3jFZugZWZ10zAdsBr4MNR4UfbjmZE0P3PHq3+
-         r4X81CwvaBe75/GmzghkqX2JhCIOrUHTg/L3LKBr6sdleuLdwo/fZM3fwEzHMKY7w5Xv
-         A4edZo5jOfLNFO+qqmGGGNu/9dZPdN7h+E14hM2QiGafxK+aBeDb2TjZRNsgfZrmqpZh
-         LFnasiW3St4y54ge5NLsHp8ggREMB4BFLPehUj8dePwqBL6cN5LJKYSpyaqCl+BthtKh
-         x7NhXLRIP53MRgSXxoAgl8ClsH9Md+17qM88QMRT42S9UfovHZ3Y24qfMPJt7r2Jvl9g
-         +c6g==
+        d=gmail.com; s=20230601; t=1697183087; x=1697787887; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EqBTcnUOXt5OHFJjY+Q7SG+N2WHaqyyhi4YSnip+8v0=;
+        b=Qn5oCKsmnr6SHYEFlZVy2naSYslWXccXiq1+0zLs0ppcEo/g6dSTuucH0S+m+OjaNz
+         HBCr74uviX3Zmkq/igIPTD946LeIQB5a0qyS5GXZm2M1Dvpene/YnN5/+sgVDRrYYI4G
+         mYa9tW9YWXsd6YHXzyLpOx85vZjOfIop4bjtVXSUuGxabZ20HJDIr7PVZnIGCY5rhOcv
+         neYGkiKkB7grhYJTcw6OuIAdWsRtNR0kNu3N+yY9dWN1Lwnyb9sPGkGA10DqF2cywOf0
+         8HYWIgGA7rw8VO6LJUXuglkfHX2kqvb8QTU1Dm/pIm2GPjgUsMG43LJytPwpkcJWNSEL
+         38Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697182100; x=1697786900;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3Yib7OMBCHm6UwuQ9QWk+F7jjtT8gG/POYcXA2UHH3Q=;
-        b=xGIfZZd9a4BdDY9E9wxYXye/YA095mYZKPZS9VXf6gmbAWnwssyFeqToCP9Q/EWzXh
-         5+kI/bhOoSFNxW8Pr0yrqYRGKtmCbkjEewIY3F5IZPFrrSSUAJVoIjBMqHkHFISyatft
-         8Ntcqz0g+S0LlSG1GtUPuWaU5i96FEoDzjLlrNtX6UFeJQ6IyNZopk0Ilusj/eqhw7vS
-         rWzTpZ4zepIOlo1uQWbc2GJVuLSy++1rjIxfASgJPM1uENMeD+z1atLGtaiopwaNy8G0
-         1U8X36/dK0E9CMGoHtApfRJny4O9ZaZGuyolCUlKnA3I9BEBibprPfQC+qaSbAQAsPnm
-         Ki2Q==
-X-Gm-Message-State: AOJu0YwE3ZCgWCCVO68WO2YWaclmbVlxva8a/zKKDFFcdATRjsv+5CJW
-        59vdRZ8cGXiSQAia+JkVqKV9sTa3R0gWhpmw7Gbl4g==
-X-Google-Smtp-Source: AGHT+IFxcVBk7eoQexdweiHt3Yo+0O2fd32UCQ4GSzNtaxh1rBliV/v1wrURbnVQuCUenuheYmfpHotoLjiXHCM+lvg=
-X-Received: by 2002:a25:a525:0:b0:d7b:9211:51a5 with SMTP id
- h34-20020a25a525000000b00d7b921151a5mr24066162ybi.44.1697182100158; Fri, 13
- Oct 2023 00:28:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697183087; x=1697787887;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EqBTcnUOXt5OHFJjY+Q7SG+N2WHaqyyhi4YSnip+8v0=;
+        b=lbVbpaRYFTGwmhI/XwTu8zmki283YzuoEPhWqeL5XKYWzt0FAIZM/rYkUhIr76XI5/
+         dYNCcncnltDDgrgQrUR58rZVCxjAVuJq/d2u6ao0+y9BRny/51Jh2irpBy/GPL+Ly2zz
+         EzfzGzNbTb/1P+SvGeySjbgRYJA++C3alyae0KT3W1MtQOvKMJeegJIm0v7EY3qEFwHN
+         MAQMqeeJE9bqh0+QDL7dFFwX+B258BZilKX2cJyRYFzYQW1hG/5bKo+Pg2NiEiri/9JK
+         u/onj4Qm14fhpSvrUN1S+cOKHeSnm6U/9REG2fUwqObPqGPDok0an91XbWyjfY/qFLPE
+         3QLA==
+X-Gm-Message-State: AOJu0Yz7D9Vi5sbePORWRTDmyvnFZIjuAjXcP/dJRKnaES0BO+BjC1m8
+        1uJDKctbsNrXN4Es9/embmnjD6QYHPk=
+X-Google-Smtp-Source: AGHT+IHWWgk1zmQhykDCekt0aGL7OS4rB/SGDK7iEV5xnq7IIWvi8IxXalAeKUjv5J2lc05leLCvKA==
+X-Received: by 2002:a05:6a00:9a2:b0:68a:3ba3:e249 with SMTP id u34-20020a056a0009a200b0068a3ba3e249mr31611101pfg.16.1697183087186;
+        Fri, 13 Oct 2023 00:44:47 -0700 (PDT)
+Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id z125-20020a633383000000b0058a381de499sm2839266pgz.77.2023.10.13.00.44.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Oct 2023 00:44:46 -0700 (PDT)
+Message-ID: <c7419e6e-d53e-4820-83da-3ddf188e8fd7@gmail.com>
+Date:   Fri, 13 Oct 2023 15:44:43 +0800
 MIME-Version: 1.0
-References: <202310131321.jDp5kiph-lkp@intel.com>
-In-Reply-To: <202310131321.jDp5kiph-lkp@intel.com>
-From:   Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date:   Fri, 13 Oct 2023 09:28:09 +0200
-Message-ID: <CACMJSeuX40z=+qaS833kYvr84Sv=S1P-5Nz6nHG7T+Usy7KmpA@mail.gmail.com>
-Subject: Re: [brgl:gpio/devel 48/62] drivers/pinctrl/pinctrl-st.c:1326:9:
- error: implicit declaration of function 'st_gpio_direction_input'; did you
- mean 'st_gpio_direction_output'?
-To:     kernel test robot <lkp@intel.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] arm64: dts: nuvoton: Add pinctrl support for ma35d1
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        schung@nuvoton.com, Jacky Huang <ychuang3@nuvoton.com>
+References: <20231011090510.114476-1-ychuang570808@gmail.com>
+ <20231011090510.114476-4-ychuang570808@gmail.com>
+ <9a831a6e-ab5e-4911-8011-f6eb82dd3d6a@linaro.org>
+ <507e491a-e40f-47e2-8e11-5a7886a8c2ab@gmail.com>
+ <420f9132-b277-4476-bd74-9cc4cd87456f@linaro.org>
+From:   Jacky Huang <ychuang570808@gmail.com>
+In-Reply-To: <420f9132-b277-4476-bd74-9cc4cd87456f@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 13 Oct 2023 at 07:25, kernel test robot <lkp@intel.com> wrote:
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/devel
-> head:   78853aac42280ea9b48d7abc74b348463cf8588d
-> commit: e1e2007b6bb0ba0e1bb89235ffde4c0330655c29 [48/62] pinctrl: st: drop the wrapper around pinctrl_gpio_direction_input()
-> config: arm-randconfig-001-20231013 (https://download.01.org/0day-ci/archive/20231013/202310131321.jDp5kiph-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231013/202310131321.jDp5kiph-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202310131321.jDp5kiph-lkp@intel.com/
->
-> All errors (new ones prefixed by >>):
->
->    drivers/pinctrl/pinctrl-st.c: In function 'st_gpio_irq_request_resources':
-> >> drivers/pinctrl/pinctrl-st.c:1326:9: error: implicit declaration of function 'st_gpio_direction_input'; did you mean 'st_gpio_direction_output'? [-Werror=implicit-function-declaration]
->     1326 |         st_gpio_direction_input(gc, d->hwirq);
->          |         ^~~~~~~~~~~~~~~~~~~~~~~
->          |         st_gpio_direction_output
->    cc1: some warnings being treated as errors
->
->
-> vim +1326 drivers/pinctrl/pinctrl-st.c
->
-> 727b0f71a56de6 Srinivas Kandagatla 2014-01-16  1321
-> e855fa9a65c407 Patrice Chotard     2017-03-16  1322  static int st_gpio_irq_request_resources(struct irq_data *d)
-> e855fa9a65c407 Patrice Chotard     2017-03-16  1323  {
-> e855fa9a65c407 Patrice Chotard     2017-03-16  1324     struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> e855fa9a65c407 Patrice Chotard     2017-03-16  1325
-> e855fa9a65c407 Patrice Chotard     2017-03-16 @1326     st_gpio_direction_input(gc, d->hwirq);
-> e855fa9a65c407 Patrice Chotard     2017-03-16  1327
-> c36f8c06ebd0c4 Linus Walleij       2023-04-04  1328     return gpiochip_reqres_irq(gc, d->hwirq);
-> e855fa9a65c407 Patrice Chotard     2017-03-16  1329  }
-> e855fa9a65c407 Patrice Chotard     2017-03-16  1330
->
-> :::::: The code at line 1326 was first introduced by commit
-> :::::: e855fa9a65c40788b5069abb0d094537daa22e05 pinctrl: st: add irq_request/release_resources callbacks
->
-> :::::: TO: Patrice Chotard <patrice.chotard@st.com>
-> :::::: CC: Linus Walleij <linus.walleij@linaro.org>
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
 
-Now fixed in the gpio/devel branch.
 
-Bart
+On 2023/10/13 下午 03:06, Krzysztof Kozlowski wrote:
+> On 13/10/2023 08:52, Jacky Huang wrote:
+>>>> +
+>>>> +&pinctrl {
+>>>> +	uart0 {
+>>>> +		pinctrl_uart0: uart0grp {
+>>>> +			nuvoton,pins =
+>>>> +				<MA35_SYS_REG_GPE_H 24 1 &pcfg_default>,
+>>>> +				<MA35_SYS_REG_GPE_H 28 1 &pcfg_default>;
+>>> This does not look like generic pinctrl bindings. Looks
+>>> over-complicated. From where did you get it? Which recent bindings and
+>>> drivers where used as an example? Register addresses should be in the
+>>> driver. Bit offsets as well. "multi-pin-function-value" confuses me. All
+>>> this is not really suitable for DTS.
+>> Okay, I will update the first and second items to 'pin bank' and 'pin
+>> bank index,
+>> just as others have done, and leave the driver to handle the conversion into
+>> registers and offsets.
+> Instead use existing common properties, like "pins" and "groups" (or
+> pinmux).
+
+I will reference how others have done it to make the changes.
+
+>> The term "multi-pin-function-value" is used to specify the device function.
+>> I will use the name "device function" instead of "multi-pin-function-value.
+> Use existing common properties, like "function". Do not reinvent the
+> bindings.
+>
+
+Okay, I got it. Thank you.
+
+>
+> Best regards,
+> Krzysztof
+>
+
+
+Best Regards,
+Jacky Huang
+
