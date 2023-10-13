@@ -2,174 +2,199 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CB917C8828
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 16:59:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FBB67C8953
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 17:58:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232254AbjJMO7q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Oct 2023 10:59:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57882 "EHLO
+        id S232486AbjJMP60 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Oct 2023 11:58:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232249AbjJMO7p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 10:59:45 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235EBBF
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 07:59:43 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-4064876e8b8so25407845e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 07:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697209181; x=1697813981; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Os1SaGixPymAzc87N0J0x0jFQUdmX5KiKLLsTm7SPUs=;
-        b=R3O9SfM1Pg6PUl/2zAkP3AkJ6ME3y0m7sSZM0TnE1dfsWiwA8afQJ6QjA0BsruXN/D
-         Nrcmzq0Et8Gmc7IpbVvaMmFRmsnWw4XK+x/F6zcINFxeAkgOhlg6K1cKNIJzr3xdHReC
-         R6/s9GUyfXtRVI+COtW3AF2pJ+EZPjOBknF5ET6INWSTDL2v4x/JRVqEoMXXcKDZRUil
-         ss8Rj/WbBVOd7hs90gCNAzSznqnwfmPZnqBeUkMJekDZhOvFGAD93FYRT8yh6mPEXW3E
-         IlkqCbgczYz28lug4O2/P4f1kLUyPCU4SUbfNnhWa3r8o2UnPDCppKOCnSd4kv0jMOJy
-         J0ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697209181; x=1697813981;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Os1SaGixPymAzc87N0J0x0jFQUdmX5KiKLLsTm7SPUs=;
-        b=jVgs+a44OfT1q+YbE9fKG6ykqjqSGhwH0AFVzvy/vt0aLewHz6DtOwrHvfqARsDWOR
-         4k3tTQnTwms7CmHebmFnMA6iaFqx+L/socXSgph0db2fq7j6FV+s3GFI1s8WOlRXmRDf
-         U7EkqizjmIscev+25VF/KxxNWQUSKtKJhWKuV8Zb2zPEa29P1A8EhuT0UkZvPpLU2lAA
-         zlriatwdgUUiZcDsXbBJwIi/XY6YAexekphl3+oQmaYQ/xCj9QD7wK1OfR8EbbbTjyxi
-         cGN6V0Wjv0Tg4QdIaGR+f9V0vkk2Gna5NkfHLFgRRtLNIv7oDT54rOtTARvUENn/2PW/
-         ipKg==
-X-Gm-Message-State: AOJu0Yxji228c6YFysUHsUoTK5Oh16qEZBGlmKKFlJxNeztqrTYoXRf/
-        w7TmI/4sC8FDVQrg0Sxv5RuvDn+eIKxcZ2GzEVU=
-X-Google-Smtp-Source: AGHT+IFo2I+V7vf/Zl0BTreJTldq95ey32tamdgWaZW37F9sPTzdpjO8i3XgGGnytWGGlG7Bi07wzQ==
-X-Received: by 2002:adf:a2dc:0:b0:32d:8108:500 with SMTP id t28-20020adfa2dc000000b0032d81080500mr7223064wra.58.1697209181547;
-        Fri, 13 Oct 2023 07:59:41 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.219.100])
-        by smtp.gmail.com with ESMTPSA id dh13-20020a0560000a8d00b00327cd5e5ac1sm6428267wrb.1.2023.10.13.07.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 07:59:41 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 2/2] pinctrl: qcom: lpass-lpi: allow slew rate bit in main pin config register
-Date:   Fri, 13 Oct 2023 16:59:35 +0200
-Message-Id: <20231013145935.220945-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231013145935.220945-1-krzysztof.kozlowski@linaro.org>
-References: <20231013145935.220945-1-krzysztof.kozlowski@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S232448AbjJMP6Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 11:58:25 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64492BF
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 08:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697212667; x=1728748667;
+  h=date:from:to:cc:subject:message-id;
+  bh=UpF4C6GbOX45QV5W9x/IS3jm/vz3TASOfedefzBxUX4=;
+  b=FR2z0Ya7oc8f3yBXHHhaZdN7U2ZVZKVKOro5uczkFdoOXj8OtHGNDzLL
+   /grj5vbtezL6Am4d+YZIM+Mks6BlMzYMJZOBUXUc2ZhgP+ZaIaU/Oc8FB
+   QUo6UzC97xK9VyOgvjyt/VUJGvbu/vYUbo77Nk7g5jOqbNCKs+ueK59Hr
+   b9zPC1yEqvraxkHhV/Qzq0iERVAByDKp56BI+1c9T2MzfHd3gsT6Nxva2
+   52Y9FqYOXY4WirrRqooCPwR907FpdsnMf3XAfGmGsFtv24eEZgIH22a+A
+   3BuGQEKCunl31O9BlK3qM+08kcn6fLTeRpr5dTfKxsAKPgFMzOsEEdqTP
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="384077681"
+X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
+   d="scan'208";a="384077681"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 08:57:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="704692507"
+X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
+   d="scan'208";a="704692507"
+Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 13 Oct 2023 08:57:45 -0700
+Received: from kbuild by f64821696465 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qrKXn-00053p-1U;
+        Fri, 13 Oct 2023 15:57:43 +0000
+Date:   Fri, 13 Oct 2023 23:57:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ f055ff23c331f28aa4ace4b72dc56f63b9a726c8
+Message-ID: <202310132313.qfs3REEc-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Existing Qualcomm SoCs have the LPASS pin controller slew rate control
-in separate register, however this will change with upcoming Qualcomm
-SoCs.  The slew rate will be part of the main register for pin
-configuration, thus second device IO address space is not needed.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: f055ff23c331f28aa4ace4b72dc56f63b9a726c8  pinctrl: renesas: rzn1: Enable missing PINMUX
 
-Prepare for supporting new SoCs by adding flag customizing the driver
-behavior for slew rate.
+elapsed time: 1929m
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+configs tested: 123
+configs skipped: 2
 
----
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Changes in v2:
-1. Reversed xmas tree
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20231012   gcc  
+arc                   randconfig-001-20231013   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   randconfig-001-20231013   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231013   gcc  
+i386                  randconfig-002-20231013   gcc  
+i386                  randconfig-003-20231013   gcc  
+i386                  randconfig-004-20231013   gcc  
+i386                  randconfig-005-20231013   gcc  
+i386                  randconfig-006-20231013   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231012   gcc  
+loongarch             randconfig-001-20231013   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                        bcm63xx_defconfig   clang
+mips                           ip27_defconfig   clang
+mips                           rs90_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                      ppc6xx_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                    nommu_virt_defconfig   clang
+riscv                 randconfig-001-20231012   gcc  
+riscv                 randconfig-001-20231013   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231012   gcc  
+s390                  randconfig-001-20231013   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                            migor_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                 randconfig-001-20231013   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-001-20231013   gcc  
+x86_64                randconfig-002-20231013   gcc  
+x86_64                randconfig-003-20231013   gcc  
+x86_64                randconfig-004-20231013   gcc  
+x86_64                randconfig-005-20231013   gcc  
+x86_64                randconfig-006-20231013   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-ltp   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
 
-v1: https://lore.kernel.org/all/20230901090224.27770-1-krzysztof.kozlowski@linaro.org/
----
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 20 ++++++++++++++------
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.h |  7 +++++++
- 2 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index 4fb808545f7f..9e410a281bfa 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -191,6 +191,7 @@ static int lpi_config_set_slew_rate(struct lpi_pinctrl *pctrl,
- 				    unsigned int group, unsigned int slew)
- {
- 	unsigned long sval;
-+	void __iomem *reg;
- 	int slew_offset;
- 
- 	if (slew > LPI_SLEW_RATE_MAX) {
-@@ -203,12 +204,17 @@ static int lpi_config_set_slew_rate(struct lpi_pinctrl *pctrl,
- 	if (slew_offset == LPI_NO_SLEW)
- 		return 0;
- 
-+	if (pctrl->data->flags & LPI_FLAG_SLEW_RATE_SAME_REG)
-+		reg = pctrl->tlmm_base + LPI_TLMM_REG_OFFSET * group + LPI_GPIO_CFG_REG;
-+	else
-+		reg = pctrl->slew_base + LPI_SLEW_RATE_CTL_REG;
-+
- 	mutex_lock(&pctrl->lock);
- 
--	sval = ioread32(pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
-+	sval = ioread32(reg);
- 	sval &= ~(LPI_SLEW_RATE_MASK << slew_offset);
- 	sval |= slew << slew_offset;
--	iowrite32(sval, pctrl->slew_base + LPI_SLEW_RATE_CTL_REG);
-+	iowrite32(sval, reg);
- 
- 	mutex_unlock(&pctrl->lock);
- 
-@@ -452,10 +458,12 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(pctrl->tlmm_base),
- 				     "TLMM resource not provided\n");
- 
--	pctrl->slew_base = devm_platform_ioremap_resource(pdev, 1);
--	if (IS_ERR(pctrl->slew_base))
--		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
--				     "Slew resource not provided\n");
-+	if (!(data->flags & LPI_FLAG_SLEW_RATE_SAME_REG)) {
-+		pctrl->slew_base = devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(pctrl->slew_base))
-+			return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
-+					     "Slew resource not provided\n");
-+	}
- 
- 	ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
- 	if (ret)
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-index 387d83ee95b5..206b2c0ca828 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-@@ -60,6 +60,12 @@ struct pinctrl_pin_desc;
- 		.nfuncs = 5,				\
- 	}
- 
-+/*
-+ * Slew rate control is done in the same register as rest of the
-+ * pin configuration.
-+ */
-+#define LPI_FLAG_SLEW_RATE_SAME_REG			BIT(0)
-+
- struct lpi_pingroup {
- 	struct group_desc group;
- 	unsigned int pin;
-@@ -82,6 +88,7 @@ struct lpi_pinctrl_variant_data {
- 	int ngroups;
- 	const struct lpi_function *functions;
- 	int nfunctions;
-+	unsigned int flags;
- };
- 
- int lpi_pinctrl_probe(struct platform_device *pdev);
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
