@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FBB67C8953
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 17:58:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D085A7C8B38
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 18:35:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232486AbjJMP60 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Oct 2023 11:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48034 "EHLO
+        id S229958AbjJMQWH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Oct 2023 12:22:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232448AbjJMP6Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 11:58:25 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64492BF
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 08:57:47 -0700 (PDT)
+        with ESMTP id S230081AbjJMQVt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 12:21:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 958B1269F
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Oct 2023 09:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697212667; x=1728748667;
+  t=1697214059; x=1728750059;
   h=date:from:to:cc:subject:message-id;
-  bh=UpF4C6GbOX45QV5W9x/IS3jm/vz3TASOfedefzBxUX4=;
-  b=FR2z0Ya7oc8f3yBXHHhaZdN7U2ZVZKVKOro5uczkFdoOXj8OtHGNDzLL
-   /grj5vbtezL6Am4d+YZIM+Mks6BlMzYMJZOBUXUc2ZhgP+ZaIaU/Oc8FB
-   QUo6UzC97xK9VyOgvjyt/VUJGvbu/vYUbo77Nk7g5jOqbNCKs+ueK59Hr
-   b9zPC1yEqvraxkHhV/Qzq0iERVAByDKp56BI+1c9T2MzfHd3gsT6Nxva2
-   52Y9FqYOXY4WirrRqooCPwR907FpdsnMf3XAfGmGsFtv24eEZgIH22a+A
-   3BuGQEKCunl31O9BlK3qM+08kcn6fLTeRpr5dTfKxsAKPgFMzOsEEdqTP
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="384077681"
+  bh=B8+WqUeBYHgq6pDFMrkLJWng1uODHIgeaSepD7MY9Ik=;
+  b=CpyGFZ8L3Z3/y2n/2opVqa//EHyo4hXk2rbJGSTlIKB5/sdcQU+CUqTG
+   1I+M5TK4lUi7KMperGgNoKzkL7v3dzVt8luiOFb5DjPzh0rX75rJOxiIU
+   qH0LRJwX0S53W0e8t0P34So8aPBtQDEKtW3Yrq8/jUW2iOYuivULyQN1v
+   R+4N0h7b0S9oAbMSlbBX2DNzPzHXUB89p2mTga0tDW9yrTUxtPzXxq/ap
+   cTzzmAjfHIGeA3oY4MFgXCdGkaJqlnUDUGabea3fkKlCWD5ls3lWtdgXY
+   7Y93EAo0aE8rylqvgE5XPS15G7+0fE8qUgMgnxp8Cf0O8iJML1XEX57ba
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="364579089"
 X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
-   d="scan'208";a="384077681"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 08:57:47 -0700
+   d="scan'208";a="364579089"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2023 09:20:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="704692507"
+X-IronPort-AV: E=McAfee;i="6600,9927,10862"; a="748398802"
 X-IronPort-AV: E=Sophos;i="6.03,222,1694761200"; 
-   d="scan'208";a="704692507"
+   d="scan'208";a="748398802"
 Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 13 Oct 2023 08:57:45 -0700
+  by orsmga007.jf.intel.com with ESMTP; 13 Oct 2023 09:20:51 -0700
 Received: from kbuild by f64821696465 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1qrKXn-00053p-1U;
-        Fri, 13 Oct 2023 15:57:43 +0000
-Date:   Fri, 13 Oct 2023 23:57:15 +0800
+        id 1qrKu9-00056n-0N;
+        Fri, 13 Oct 2023 16:20:49 +0000
+Date:   Sat, 14 Oct 2023 00:19:55 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- f055ff23c331f28aa4ace4b72dc56f63b9a726c8
-Message-ID: <202310132313.qfs3REEc-lkp@intel.com>
+Subject: [brgl:at24/for-next] BUILD SUCCESS
+ 4791146e9055dd4c21a1a725514512167b8ee75b
+Message-ID: <202310140052.P3Iltzc3-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -59,10 +59,10 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: f055ff23c331f28aa4ace4b72dc56f63b9a726c8  pinctrl: renesas: rzn1: Enable missing PINMUX
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git at24/for-next
+branch HEAD: 4791146e9055dd4c21a1a725514512167b8ee75b  eeprom: at24: add ST M24C32-D Additional Write lockable page support
 
-elapsed time: 1929m
+elapsed time: 1802m
 
 configs tested: 123
 configs skipped: 2
