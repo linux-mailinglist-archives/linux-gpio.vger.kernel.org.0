@@ -2,123 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54F997C7DC8
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 08:40:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 637BE7C7E12
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Oct 2023 08:50:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbjJMGke (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Oct 2023 02:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39940 "EHLO
+        id S229853AbjJMGux (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Oct 2023 02:50:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjJMGkd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 02:40:33 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2B1BC;
-        Thu, 12 Oct 2023 23:40:32 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6b5673a685cso9354b3a.2;
-        Thu, 12 Oct 2023 23:40:32 -0700 (PDT)
+        with ESMTP id S229839AbjJMGuw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Oct 2023 02:50:52 -0400
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4185FD6
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 23:50:49 -0700 (PDT)
+Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-49dd647a477so617684e0c.3
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Oct 2023 23:50:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697179232; x=1697784032; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dJYgBUfn3JyABPlo6kuxWrpZ75y0tXyEmz+uIYcP7cM=;
-        b=fAewwhi/XYFNHJrJmv2WaB21bzlrE6bcedKb3SokDwIWT2TOdCkQcyElMlpVLoJBEi
-         Lk7X1X9zbO+td8+nFans1I5m5YWUotTMxD8tcRS55x1dwN1d4z90st6/A3lOBrIIasWs
-         ALH3GR5Df3nsCSnSpTDCWW1Oj1vzG6MM0qKoar/gYLDQ4nBiJnMiN4ES4mGV+beiUK9Y
-         rwx3KMAqGgKPt3aP0vNTXjA51tCi3evChRczKiPXqy54ldfXzhQG0maxyGgHWpOFBniH
-         cXZeYb4AUEJjwr1fdAs8eTR7Ye3qX9ahbFTtI/TR0MXqCOLwqyff2yHEdgKG/m0w9hKR
-         geLw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697179848; x=1697784648; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+21d47K5pMKUUp+ZZCwfOqG7e0i0/Qbr9a+Z9J91e90=;
+        b=1gD/aYlmA5tguC/7wZbdgXm6yj6Jkt1on3VVnC3meMX0Mt6OFGpGWakVr3vheUBbCb
+         VRDXBzd2fUzO06/ul8kuSyUg/2ozbnQVm8o2CAjz404b4aEx/iMfpri+Y+/rEHMr1Gko
+         TaWpJ5zAd5h0nNQWETAhuL6aLCnOx5sBR7ypH4HAHE0XI/Ld8QdoDNT+3cZjjP5Kdlyu
+         MSWSmUJzp3vr9VVKfM9r4pQYjgyvA/9mHDSGA43uYOYaVEC6XCBXWbIulyjuvfpHT7PQ
+         QOgLFlGWQvWrsdC+zhMfo8uAabjKJ9npT0OfSM1mrj/ffGUNbszOp6A5WNSm1r6PaFFx
+         l+9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697179232; x=1697784032;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dJYgBUfn3JyABPlo6kuxWrpZ75y0tXyEmz+uIYcP7cM=;
-        b=voe4tZVRskYOo40uQDlctAMwuSPOWSPfansDddekmmW7ueh8bROaZVIije0Q+kd1/0
-         tYfZdmykj8g9jlx1B8YTq3R+4AbYlUd5Ll7R08Y/dUN26QiFuCUaRHSsWDAjhkk274VB
-         JmHZzdsaHPAaV4WZbIqNL5baCk/ouBOiezEZFyiSyGuF7uXQMrdDxu6gHt8nh6jGUxxN
-         j9YlFgs0sL6rt/316YRbCF8YolR52VObe/kNzk6hhIRcEfMIYuHc6Ya+Fmk0DMRnrUox
-         Ftq5ojHOBw4rrUh/jkw9PPo20Mm8eieukC0s2bMllD3CWlY3O/boA6BJcwY/JdPvR6VX
-         IeWg==
-X-Gm-Message-State: AOJu0YzxhPuG4grMJzAdEKuSie3P2zOEuSPCAqcyw5g3idYcB04eL2Fr
-        vl+I3llXP9VqoLyxiKFx/C4=
-X-Google-Smtp-Source: AGHT+IHl7DHaVweH2LzrPvfmwvBbj9lbHxnbrjT77Hgk0+DvIPJqdE09qkDz8LZTwaU+fJIYlFG61Q==
-X-Received: by 2002:a05:6a20:4420:b0:153:78c1:c40f with SMTP id ce32-20020a056a20442000b0015378c1c40fmr29626412pzb.15.1697179231861;
-        Thu, 12 Oct 2023 23:40:31 -0700 (PDT)
-Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id g12-20020a170902934c00b001b9da42cd7dsm3034551plp.279.2023.10.12.23.40.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Oct 2023 23:40:31 -0700 (PDT)
-Message-ID: <331e7f14-579c-4a5b-9d35-36b93b2a0b11@gmail.com>
-Date:   Fri, 13 Oct 2023 14:40:28 +0800
+        d=1e100.net; s=20230601; t=1697179848; x=1697784648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+21d47K5pMKUUp+ZZCwfOqG7e0i0/Qbr9a+Z9J91e90=;
+        b=mAHuel7+nvqKmkb1id3RID19HPEm3t/TW8Q5TPJuCmNZzyiR310jwI8YWTeMv/jBOv
+         Mw5+WdQzY3iVnvi9y08wfG0lHXqYHYj88TH2RdQD21nEOWoxxgFBL1ezAMjz3/paubqH
+         /vuBvEUWPLO+rVpMBEiqxCSniYTpzEAy6oSU1U7rm/Xc9wtHk8S9o+2BKJNL8UIdU9T4
+         4DaMkxyGLKKkd+dmkImfBA84AXG3dr8vE+vr5aZbljPG96T2qnqw29RtwVPHMITa5Phk
+         aFA8AZUq4XHY76E5uygz8SPAt9+P7IBJ71bSg/Wbo9KIUKPXgPhtdqtYWQMFusJxi6CD
+         ePGQ==
+X-Gm-Message-State: AOJu0Yzg1I0OZZtG8RD2iPCq8bm5y2k7Bv0eyBszJXmZT0C6D237IWob
+        O9kM9R9r0gg35arNUekKbac0j7ZwCuSf1p9t1ePJ6A==
+X-Google-Smtp-Source: AGHT+IGUPPVDzkY+t6V7na/IoGgX3NTGckYGIbPTAIBlmkhFGXFHY0fa90vJx5ZFBdKtS4pGD5mDtMUpnJLiElATz+A=
+X-Received: by 2002:a1f:e2c3:0:b0:49c:37a1:2358 with SMTP id
+ z186-20020a1fe2c3000000b0049c37a12358mr21402810vkg.14.1697179848192; Thu, 12
+ Oct 2023 23:50:48 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: reset: Add syscon to nuvoton ma35d1
- system-management node
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>
-Cc:     linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, p.zabel@pengutronix.de, j.neuschaefer@gmx.net,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        schung@nuvoton.com, Jacky Huang <ychuang3@nuvoton.com>
-References: <20231011090510.114476-1-ychuang570808@gmail.com>
- <20231011090510.114476-2-ychuang570808@gmail.com>
- <20231012203944.GA1699468-robh@kernel.org>
-From:   Jacky Huang <ychuang570808@gmail.com>
-In-Reply-To: <20231012203944.GA1699468-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20231011130204.52265-1-brgl@bgdev.pl>
+In-Reply-To: <20231011130204.52265-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 13 Oct 2023 08:50:37 +0200
+Message-ID: <CAMRc=MdxF-0TE2uTOCQU8XJdgtQf_8t_yZPd2+xbF6_0WUmSGA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] i2c: mux: don't access GPIOLIB internal structures
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Peter Korsgaard <peter.korsgaard@barco.com>,
+        Peter Rosin <peda@axentia.se>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Rob,
-
-Thank you for the review.
-
-On 2023/10/13 上午 04:39, Rob Herring wrote:
-> On Wed, Oct 11, 2023 at 09:05:07AM +0000, Jacky Huang wrote:
->> From: Jacky Huang <ychuang3@nuvoton.com>
->>
->> Add compatible 'syscon' to the system-management node.
->>
->> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
->> ---
->>   .../devicetree/bindings/reset/nuvoton,ma35d1-reset.yaml        | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/reset/nuvoton,ma35d1-reset.yaml b/Documentation/devicetree/bindings/reset/nuvoton,ma35d1-reset.yaml
->> index 34c5c1c08ec1..3ce7dcecd87a 100644
->> --- a/Documentation/devicetree/bindings/reset/nuvoton,ma35d1-reset.yaml
->> +++ b/Documentation/devicetree/bindings/reset/nuvoton,ma35d1-reset.yaml
->> @@ -18,6 +18,7 @@ properties:
->>     compatible:
->>       items:
->>         - const: nuvoton,ma35d1-reset
->> +      - const: syscon
-> Presumably you already have a driver for nuvoton,ma35d1-reset, so just
-> make it create a regmap. I assume this is the reason you want to add
-> 'syscon'?
+On Wed, Oct 11, 2023 at 3:02=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
-> Rob
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> The backstory for this short series is that we are identyfing and
+> removing all unauthorized uses of GPIOLIB structures across the kernel.
+>
+> For example: there are many users that access struct gpio_chip when the
+> only user allowed to safely do this is the provider of that chip.
+>
+> We are very close to removing gpiochip_find(). Another function that
+> poses a similar problem is gpiod_to_chip() which also returns the
+> address of the underlying gpio_chip without assuring that it will not go
+> away e.g. due to a hot-unplug event or a device unbind.
+>
+> We'll need to replace it with gpiod_to_gpio_device() across the entire
+> tree. Let's start by actually providing it and adding the first user:
+> the i2c-mux-gpio driver which dereferences the otherwise opaque struct
+> gpio_desc.
+>
+> Let's also add a helper that allows to retrieve the address of the
+> struct device backing the GPIO device as this is another valid use-case.
+>
+> Finally, let's un-include the GPIO private header and fix the code to
+> access the device in a safe way.
+>
+> As the change is pretty minor, it would be best if patch 3/3 could be
+> acked by the I2C mux maintainers and went through the GPIO tree.
+> Otherwise, I can apply patches 1 and 2 and provide an immutable branch.
+>
+> Bartosz Golaszewski (3):
+>   gpiolib: provide gpio_device_to_device()
+>   gpiolib: provide gpiod_to_gpio_device()
+>   i2c: mux: gpio: don't fiddle with GPIOLIB internals
+>
+>  drivers/gpio/gpiolib.c           | 38 ++++++++++++++++++++++++++++++++
+>  drivers/i2c/muxes/i2c-mux-gpio.c | 12 +++++-----
+>  include/linux/gpio/driver.h      |  3 +++
+>  3 files changed, 47 insertions(+), 6 deletions(-)
+>
+> --
+> 2.39.2
+>
 
-Yes, we have a driver for 'nuvoton,ma35d1-reset' with a register space 
-mapped to
-the system control registers. The other ma35d1 drivers may also require 
-access
-to the system control registers. I added 'syscon' to this node so that 
-other drivers
-can utilize 'regmap' via the phandle of this node.
+Queued for v6.7.
 
-Best Regards,
-Jacky Huang
-
-
-
+Bart
