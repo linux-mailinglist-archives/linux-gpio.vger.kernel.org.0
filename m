@@ -2,51 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AEE47CB014
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Oct 2023 18:44:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38B9E7CB13F
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Oct 2023 19:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232921AbjJPQoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Oct 2023 12:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51774 "EHLO
+        id S229848AbjJPRVO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Oct 2023 13:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343939AbjJPQoW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 12:44:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B82987D91;
-        Mon, 16 Oct 2023 09:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697474105; x=1729010105;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XHgG6AwTXSuXo/oRlKIUbP9Fwdm8hlGaOqwUtMzxG9Q=;
-  b=TGUwP/giY1PoHbxk5Bj7Yyne8ae41HJKPbw/7C1ilF2o/y9QsfJI+oQh
-   3Ola4RwzF8mD/wa4sWx4bTHCtuekTiIh+Gy5tL08HAvsoxOPN7rGW8HJ7
-   lFgmT3PK4OivcAwxMPi9aWC/RWPyMoVFAchCMqk6PyBGHOaduLFkRNK+w
-   C/kUb/WFXEoAikvIYkqnQgpZ0ktKLSfqK5ZAupNi21YpnJGDJDWV6attv
-   Jt6rzc+Exc38607fnAOMeBl8MJgOkzTaZJRkuxEFH9R7UVAf7j31Ybch+
-   gVLhW1eVKNcy4mSiFZKu/9q1YHpg3w2SJ0ebUzAwOCJqzJ1+vdDGff742
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10865"; a="449786465"
-X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="449786465"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 09:35:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10865"; a="759461692"
-X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
-   d="scan'208";a="759461692"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 09:34:59 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC2)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1qsQ5w-000000062PB-24R4;
-        Mon, 16 Oct 2023 19:05:28 +0300
-Date:   Mon, 16 Oct 2023 19:05:28 +0300
-From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-To:     "Wu, Wentong" <wentong.wu@intel.com>
+        with ESMTP id S233841AbjJPRVI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 13:21:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77169F
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 10:20:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1697476822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IB8ijEdDwJemoPTssoo1rbFdLIyoQawFS03Tg5RD9fQ=;
+        b=HZc/JTankE+lWC8WPpMmNGtvpnI5USQJZ5JLRSZ/X5LEYnuhQy39GjlpBmPxw3EZ6eLZAd
+        lGpR/OrCfWT0DXftNrVxnMvRWh5u88wNyXZNeHEaPeeed9J+oAn9hKI2qNlMUowW9gzXvW
+        p6mhZgGBLQvj8KO5760q+wtjJc8/MnU=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-70-ewVGzr0rNyaNR15LKQf5DA-1; Mon, 16 Oct 2023 13:20:20 -0400
+X-MC-Unique: ewVGzr0rNyaNR15LKQf5DA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-99bca0b9234so144125466b.2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 10:20:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697476819; x=1698081619;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IB8ijEdDwJemoPTssoo1rbFdLIyoQawFS03Tg5RD9fQ=;
+        b=FFAcvZ5G46/jt8a7vdHVWpzBTcGf7YkaBUNUD3oXuELGqbgJQeEW77qrc1OWA5DaNu
+         XQCjuoEMfAQ4Ds0r4XrqDLMUK5p3bXl+p4qINwbhsanE/wUmgtMM8H4/oxTAgRtSgmDw
+         VAPMJDpkz7+JtIVkoOyZhIklIkieGwty0LMQDwfTP6knmIPN7uQ8I9ZvHg20wV8WcSKp
+         ufgsI6i8x8WM1iQDkokgUQghUdIPNbL9pdfLZxDpD7h1nmPSXKbI+TFz/8557x33uK1K
+         m3rCK79Cs/AwlEDv86BVau/LDWupDYojzweEGFByFvOxilMsGv3myKI1H9C6mfqIlW2g
+         72/A==
+X-Gm-Message-State: AOJu0Ywv//r5Ar7btEGdKhODqhJOGOyg8mSsAvOfC9FwWzQOJSerJ5Oj
+        uVjAV5NEKPMMC10023xktMS2FujGRianUJ7hFjqXV538hPY6xuceUxXxzLtYyRdU9f4ilC4pXu3
+        N+jX5RTvwGTkMxGU3WTPCYw==
+X-Received: by 2002:a17:906:4fc7:b0:9be:dce3:6e07 with SMTP id i7-20020a1709064fc700b009bedce36e07mr5538510ejw.32.1697476819513;
+        Mon, 16 Oct 2023 10:20:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFyQXWWwAP/eW5eefiiR9ndnCb91EORwxQ3opyiCWlj496ZaVbyT5HGgZWO9aC83VCWTOXj4A==
+X-Received: by 2002:a17:906:4fc7:b0:9be:dce3:6e07 with SMTP id i7-20020a1709064fc700b009bedce36e07mr5538478ejw.32.1697476819117;
+        Mon, 16 Oct 2023 10:20:19 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id r20-20020a1709062cd400b009ad8084e08asm4363084ejr.0.2023.10.16.10.20.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Oct 2023 10:20:18 -0700 (PDT)
+Message-ID: <5747b78e-1956-8249-8f5e-85426b3efd01@redhat.com>
+Date:   Mon, 16 Oct 2023 19:20:17 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v20 1/4] usb: Add support for Intel LJCA device
+To:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Wu, Wentong" <wentong.wu@intel.com>
 Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
         "oneukum@suse.com" <oneukum@suse.com>,
         "wsa@kernel.org" <wsa@kernel.org>,
         "andi.shyti@linux.intel.com" <andi.shyti@linux.intel.com>,
@@ -60,8 +77,6 @@ Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "Wang, Zhifeng" <zhifeng.wang@intel.com>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v20 1/4] usb: Add support for Intel LJCA device
-Message-ID: <ZS1fSPhfREVlELLD@smile.fi.intel.com>
 References: <6a87b43a-0648-28d4-6c69-e0f684e44eb6@redhat.com>
  <DM6PR11MB4316BE44F53E276384FF06C88DCCA@DM6PR11MB4316.namprd11.prod.outlook.com>
  <5d2e9eba-a941-ea9a-161a-5b97d09d5d35@redhat.com>
@@ -72,62 +87,114 @@ References: <6a87b43a-0648-28d4-6c69-e0f684e44eb6@redhat.com>
  <DM6PR11MB4316382324D15985A70E531C8DD7A@DM6PR11MB4316.namprd11.prod.outlook.com>
  <2023101653-shiftless-scorebook-19e3@gregkh>
  <DM6PR11MB4316711C71937AE3C0516C7B8DD7A@DM6PR11MB4316.namprd11.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR11MB4316711C71937AE3C0516C7B8DD7A@DM6PR11MB4316.namprd11.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+ <ZS1fSPhfREVlELLD@smile.fi.intel.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZS1fSPhfREVlELLD@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 06:44:21PM +0300, Wu, Wentong wrote:
-> > From: gregkh@linuxfoundation.org
-> > On Mon, Oct 16, 2023 at 03:05:09PM +0000, Wu, Wentong wrote:
-> > > > From: Shevchenko, Andriy
-> > > > On Mon, Oct 16, 2023 at 08:52:28AM +0300, Wu, Wentong wrote:
+Hi,
 
-...
-
-> > > > But this does not confirm if you have such devices. Moreover, My
-> > > > question about _CID per function stays the same. Why firmware is not using
-> > it?
-> > >
-> > > Yes, both _ADR and _CID can stop growing list in the driver. And for
-> > > _ADR, it also only require one ID per function. I don't know why BIOS
-> > > team doesn't select _CID, but I have suggested use _ADR internally,
-> > > and , to make things moving forward, the driver adds support for _ADR here
-> > first.
-> > >
-> > > But you're right, _CID is another solution as well, we will discuss it
-> > > with firmware team more.
-> > 
-> > Should I revert this series now until this gets sorted out?
+On 10/16/23 18:05, Shevchenko, Andriy wrote:
+> On Mon, Oct 16, 2023 at 06:44:21PM +0300, Wu, Wentong wrote:
+>>> From: gregkh@linuxfoundation.org
+>>> On Mon, Oct 16, 2023 at 03:05:09PM +0000, Wu, Wentong wrote:
+>>>>> From: Shevchenko, Andriy
+>>>>> On Mon, Oct 16, 2023 at 08:52:28AM +0300, Wu, Wentong wrote:
 > 
-> Current _ADR support is a solution, I don't think _CID is better than _ADR to both
-> stop growing list in driver and support the shipped hardware at the same time.
+> ...
 > 
-> Andy, what's your idea? 
+>>>>> But this does not confirm if you have such devices. Moreover, My
+>>>>> question about _CID per function stays the same. Why firmware is not using
+>>> it?
+>>>>
+>>>> Yes, both _ADR and _CID can stop growing list in the driver. And for
+>>>> _ADR, it also only require one ID per function. I don't know why BIOS
+>>>> team doesn't select _CID, but I have suggested use _ADR internally,
+>>>> and , to make things moving forward, the driver adds support for _ADR here
+>>> first.
+>>>>
+>>>> But you're right, _CID is another solution as well, we will discuss it
+>>>> with firmware team more.
+>>>
+>>> Should I revert this series now until this gets sorted out?
+>>
+>> Current _ADR support is a solution, I don't think _CID is better than _ADR to both
+>> stop growing list in driver and support the shipped hardware at the same time.
+>>
+>> Andy, what's your idea? 
+> 
+> In my opinion if _CID can be made, it's better than _ADR. As using _ADR like
+> you do is a bit of grey area in the ACPI specification. I.o.w. can you get
+> a confirmation, let's say, from Microsoft, that they will go your way for other
+> similar devices?
+> 
+> Btw, Microsoft has their own solution actually using _ADR for the so called
+> "wired" USB devices. Is it your case? If so, I'm not sure why _HID has been
+> used from day 1...
+> 
+> Also I suggest to wait for Hans' opinion on the topic.
 
-In my opinion if _CID can be made, it's better than _ADR. As using _ADR like
-you do is a bit of grey area in the ACPI specification. I.o.w. can you get
-a confirmation, let's say, from Microsoft, that they will go your way for other
-similar devices?
+I definitely don't think we should revert the entire series since this
+supports actual hw which has already been shipping for years.
 
-Btw, Microsoft has their own solution actually using _ADR for the so called
-"wired" USB devices. Is it your case? If so, I'm not sure why _HID has been
-used from day 1...
+But if the _ADR support is only there to support future hw and
+it is not even certain yet that that future hw is actually going
+to be using _ADR support then I believe that a follow-up patch
+to drop _ADR support for now is in order. We can then re-introduce
+it (revert the follow up patch) if future hw actually starts
+using _ADR support.
 
-Also I suggest to wait for Hans' opinion on the topic.
+Specifically what I'm suggesting is something like the following:
 
--- 
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/usb/misc/usb-ljca.c b/drivers/usb/misc/usb-ljca.c
+index c9decd0396d4..e1bbaf964786 100644
+--- a/drivers/usb/misc/usb-ljca.c
++++ b/drivers/usb/misc/usb-ljca.c
+@@ -457,8 +457,8 @@ static void ljca_auxdev_acpi_bind(struct ljca_adapter *adap,
+ 				  u64 adr, u8 id)
+ {
+ 	struct ljca_match_ids_walk_data wd = { 0 };
+-	struct acpi_device *parent, *adev;
+ 	struct device *dev = adap->dev;
++	struct acpi_device *parent;
+ 	char uid[4];
+ 
+ 	parent = ACPI_COMPANION(dev);
+@@ -466,17 +466,7 @@ static void ljca_auxdev_acpi_bind(struct ljca_adapter *adap,
+ 		return;
+ 
+ 	/*
+-	 * get auxdev ACPI handle from the ACPI device directly
+-	 * under the parent that matches _ADR.
+-	 */
+-	adev = acpi_find_child_device(parent, adr, false);
+-	if (adev) {
+-		ACPI_COMPANION_SET(&auxdev->dev, adev);
+-		return;
+-	}
+-
+-	/*
+-	 * _ADR is a grey area in the ACPI specification, some
++	 * Currently LJCA hw does not use _ADR instead current
+ 	 * platforms use _HID to distinguish children devices.
+ 	 */
+ 	switch (adr) {
+
+As a follow-up patch to the existing series.
+
+Regards,
+
+Hans
 
 
