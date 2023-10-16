@@ -2,64 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 621157CA470
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Oct 2023 11:42:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D7D87CA8B1
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Oct 2023 14:58:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230507AbjJPJmm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Oct 2023 05:42:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55468 "EHLO
+        id S232163AbjJPM6d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Oct 2023 08:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229784AbjJPJml (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 05:42:41 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7277AD
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 02:42:39 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-59e88a28b98so36049317b3.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 02:42:39 -0700 (PDT)
+        with ESMTP id S229459AbjJPM6c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 08:58:32 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9995CAD
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 05:58:29 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a8628e54d4so10947207b3.0
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 05:58:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697449359; x=1698054159; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1697461109; x=1698065909; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h/nnCBN46Tnq7Ei6+gKfmkaaPzuzJg0HiZNdB/zb6f4=;
-        b=aeh7Tmlp5/qkLmKlK2h40b3vJDH6JC122/CUXRfztmijmV3bQ1THqt7BkMbkAHVpMS
-         flqXQ7Hju9cOcBtVVKt/unylhjs5ojYNffdrYPiPmCvKTSXnBWe/THFGxPHYWGyd5/rQ
-         fMS31KJRzEdBqekIIv/SdJin4NJyuPyG0ugmYWGb03uqHXwtUBFL2uNCaisVoy10zwX7
-         RkujXiUovo2Mv4lc+4X+ZJe9BzQBFb0LiCnq6iHxISLVibJ4jn4OSc1qAbFp26lg9hn3
-         81feR5lwfE5qipcYqzxvII5Q55+DC6XMLCrmQPbkksIvPpHrNjXe9PoEQIxlf51RY7yB
-         E3PA==
+        bh=YqpzVrhZyZozpiYjtHgOesuqQhqMKFkX4Btaax5HP/A=;
+        b=XZy1TEMOgiOKqf77F/+NH3h4HVrGztdOQzgj4uhq1ZT1WZiWdMaqPUh4BmcbS1CyFi
+         tp5k4yUKIU5t/ODSMoZM2xFvUw7j8d8E6ZW58Ykj1BO9zQuA7t0YtGUZX7tmj559m7PC
+         NWmPbuiEtgCxsI5xZi3CNyAoDkYJn06OVYdJJLN1vR2m89QvrjzkZQjCTEdcfg1UTaAr
+         AyMBXF1rOhmnaHgON2ipbm8GV8eD7+x74BQIg+0shmgqNdYBiwKBArEzs98QzlKd2K4m
+         nue419CScKyxPZO5L7Nv2vSVvrhhCJhDxwl6F3Uj94Nrf2E8s+fUbBcKh8QVg3oNQzJ9
+         nWKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697449359; x=1698054159;
+        d=1e100.net; s=20230601; t=1697461109; x=1698065909;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h/nnCBN46Tnq7Ei6+gKfmkaaPzuzJg0HiZNdB/zb6f4=;
-        b=tQeVwAtqeG4vdSoFV96Vmjsmnf4K1HIedr2WYG+mOHpkox47dWiaaEv5TVsj6uJIQR
-         FLiiWZUHoK5nd5Pc8+mdt1DgGlnugLd2czklgdVwBvMtKI6T0RMNlD2pa21N5uSPECfo
-         zv33voGrQ6We+AV/9urpSU6MbR2nhM8HcGZHWIRhzsXAX482ryaXcFTLop9ShGtDMrgO
-         //51mCjslJ4LGW8z+zX74eI2E4RkEslmcNPA9WiIc3Oj27gLshakR4OWjYWKTQ1Y16Qs
-         3KCzJZbdCzwbJ+56UzB0u/GJmgtev2K0LeYsv1KROjopVvzw17KLbf/kZ0Kb3MvVgjDM
-         Tkaw==
-X-Gm-Message-State: AOJu0Yyfezs/6Dweb2gtJGScjAoQ89u6pR6YcfQvfdaYhv+wIFeOBk3C
-        GV/KMUes8gSxjiedjE0YWdaRT+5k571rj2bb7yX5UA==
-X-Google-Smtp-Source: AGHT+IGaIwKO1dkSLYSmXTSXBK1J2DFomuGXdajOOcKSa1k8aM+feXePbt2MHAoxM4aQIfbHtumb7fu07KMXVV6qSYg=
-X-Received: by 2002:a05:690c:fc6:b0:5a7:c8c2:2947 with SMTP id
- dg6-20020a05690c0fc600b005a7c8c22947mr4240127ywb.16.1697449358511; Mon, 16
- Oct 2023 02:42:38 -0700 (PDT)
+        bh=YqpzVrhZyZozpiYjtHgOesuqQhqMKFkX4Btaax5HP/A=;
+        b=TmyizTENLVlBbpw0SzT2sO+XyxscboDmtTd3/Z9kzb82G9wfmRghZFoohfF4C4dWZf
+         5pMH9+RxDX6b39Tq+3cAx90x4SpSxanqhSprGXGIveZ4HCWWL3r9/C3EmLGATsTD+wze
+         +Tskw2j55OuIniKpDDGNd/mkXvnDOi7+vP/9NGRdQLp2UqP+zXmZP/mHTH/jjMTYWcf5
+         v2qwINvtYNq9shRkVkS96xhsOGXczzqxyKEz/S2WFw8iLWSod8LdabhBeLIqfiB4qXD5
+         yZYtXEplneEibNX+zhvcJJMqWYjy+OzHOlVM1aO/gdH8VAWMyJiK3NmXA8umPD6qY/G4
+         m+Fw==
+X-Gm-Message-State: AOJu0YyM/4RvVuGS0qpIc/3nrt0cZun77SYd58Qi9JR5g0us4poJzfa5
+        Al5+2O9XdO5Wqo4+3Vcvn9Ly6yCm4LilGvd53XnH2Q==
+X-Google-Smtp-Source: AGHT+IEY9xc9MLbOxQayOC2CIwTNUCGEN0BwcVh5yvAKFOrPVCkbItp5sV/n6OwMrpQoOqRvEmz2F1crhgfhpP7vLqw=
+X-Received: by 2002:a81:5281:0:b0:59b:cd92:779f with SMTP id
+ g123-20020a815281000000b0059bcd92779fmr3973966ywb.6.1697461108826; Mon, 16
+ Oct 2023 05:58:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231016073709.27851-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20231016073709.27851-1-krzysztof.kozlowski@linaro.org>
+References: <20231013145705.219954-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20231013145705.219954-1-krzysztof.kozlowski@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Oct 2023 11:42:26 +0200
-Message-ID: <CACRpkdY6k9T3DOr+zuXs3uu7eJqOd79EPNQ2CfYx8gGt=k3xvg@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: samsung: drivers for v6.7
+Date:   Mon, 16 Oct 2023 14:58:17 +0200
+Message-ID: <CACRpkdaybnYEmkgv7VG4fh5sXQ7uwHm2wH2Khja-P1b6idYr8w@mail.gmail.com>
+Subject: Re: [RESEND PATCH] pinctrl: qcom: lpass-lpi: fix concurrent register updates
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,28 +72,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 9:37=E2=80=AFAM Krzysztof Kozlowski
+On Fri, Oct 13, 2023 at 4:57=E2=80=AFPM Krzysztof Kozlowski
 <krzysztof.kozlowski@linaro.org> wrote:
 
 
-> The following changes since commit 0bb80ecc33a8fb5a682236443c1e740d5c917d=
-1d:
+> The Qualcomm LPASS LPI pin controller driver uses one lock for guarding
+> Read-Modify-Write code for slew rate registers.  However the pin
+> configuration and muxing registers have exactly the same RMW code but
+> are not protected.
 >
->   Linux 6.6-rc1 (2023-09-10 16:28:41 -0700)
+> Pin controller framework does not provide locking here, thus it is
+> possible to trigger simultaneous change of pin configuration registers
+> resulting in non-atomic changes.
 >
-> are available in the Git repository at:
+> Protect from concurrent access by re-using the same lock used to cover
+> the slew rate register.  Using the same lock instead of adding second
+> one will make more sense, once we add support for newer Qualcomm SoC,
+> where slew rate is configured in the same register as pin
+> configuration/muxing.
 >
->   https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tag=
-s/samsung-pinctrl-6.7
+> Fixes: 6e261d1090d6 ("pinctrl: qcom: Add sm8250 lpass lpi pinctrl driver"=
+)
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >
-> for you to fetch changes up to 8aec97decfd0f444a69a765b2f00d64b42752824:
+> ---
 >
->   pinctrl: samsung: do not offset pinctrl numberspaces (2023-10-09 12:37:=
-21 +0200)
+> Added Linus' review. Resending because no one picked up this patch.
 
-Pulled in!
-
-Thanks Krzysztof!
+What a mess, I applied the patch for fixes so I try to cram in a last
+pull request before the merge window.
 
 Yours,
 Linus Walleij
