@@ -2,331 +2,326 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 340867CABC5
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Oct 2023 16:41:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8A287CACE5
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Oct 2023 17:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbjJPOlw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Oct 2023 10:41:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49646 "EHLO
+        id S233485AbjJPPFo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Oct 2023 11:05:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231891AbjJPOlv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 10:41:51 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C59B83
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 07:41:49 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-49b289adca9so1808375e0c.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 07:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697467308; x=1698072108; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zvHc4cRiQTUpvS7DyDwU/uXwIcNXs9DifCRBpQ4RQkU=;
-        b=jToQ6ShY75qprkJJeuHS0Ne4wd8BLmcR4PgM8ICJlODkkqtRfg1lteeSE3MuGoASwT
-         F2XDdB/+ENQVbjFQnUsa2nlfWofdks/9ICXa/z1E/8wrXcrwofT2TsnVN3s6RCCM+Pg0
-         Ux7teANgTLuXHxBylRP5sMlUVZgx2CfZ6kHThCRpFfXTGHZ+1oP0b1r35h8VeeaHnDKu
-         2758n8BJvrH03ydyPmDvE3iQBts/y1JuQdyDqCiyGuaLqwav9kGXrg47RTC6V9IoaOvj
-         fAQb6afbYpVXgICo1NwwSx0kOeIlrBLLJuhnBHNMKsy4ReVxDeh2OLL8DHCNKJHTBNJb
-         0HNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697467308; x=1698072108;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zvHc4cRiQTUpvS7DyDwU/uXwIcNXs9DifCRBpQ4RQkU=;
-        b=Bc9MoLVbpkOwZ+4IYanhdJWZmxPaYTMXDMYUNa015Q9L27th2OS+rTtku/JyW1k6dB
-         w0REPUga3B/8we2DDPgb5amhVdJRZsWylSjRNHojKrtZxs2xxAFALXlgW9FjVBgGrw8k
-         ZnvgOiVw0SsvYkI1utc6y2FC/NuuX/6FtgE8jhkLmuZrqDta7ZMKY36p5SXlZmuYg/M9
-         4Yyi/k/mfXgY7mOqYMZRJg7uyUsbfuVshCq39CMDn8TLW7AcoGFlzbDPYxMGO95CUYpM
-         +kvcDaw0fqQjuvvkBFIv1A+IgDZEe0An5lsDwVeowNmCBUyTPkzgU6ManfR6YXvzokTq
-         s6Jw==
-X-Gm-Message-State: AOJu0YypguLXDOq/uaX7G5C36wF0qAXAbdPNPF4rbFeBPSm3rD8mjDSw
-        BCy5NbdRyFe8NY+QbbVml5eZmJibmTvblAT8aD0nbg==
-X-Google-Smtp-Source: AGHT+IECwAJmipzV+HCxG12xHnlztuWYM/OyG4PWLmag3PrmY7RqvzH45vxf0NAQemGQtjtV99iRiHnYKVM1zvsVAFk=
-X-Received: by 2002:a1f:4f86:0:b0:495:c10c:ec39 with SMTP id
- d128-20020a1f4f86000000b00495c10cec39mr26641669vkb.2.1697467308617; Mon, 16
- Oct 2023 07:41:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231013112812.148021-1-phil@gadgetoid.com> <20231013112812.148021-2-phil@gadgetoid.com>
- <CAMRc=Mdc=XXasOm0=wya6vhC1SMDW7BJDSZ4n3h+0Qcg-MQ4TQ@mail.gmail.com> <CA+kSVo8v-9g5zYQD66JrtuVw6GGsqxwbWf=kxtr_PxUQKUNJQQ@mail.gmail.com>
-In-Reply-To: <CA+kSVo8v-9g5zYQD66JrtuVw6GGsqxwbWf=kxtr_PxUQKUNJQQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Oct 2023 16:41:37 +0200
-Message-ID: <CAMRc=MfLByTk3pkmWDeA3xtiwD6D9jdRSpJRf09hQYyGk2DyXg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v3 1/1] bindings: python: optionally include
- module in sdist
-To:     Phil Howard <phil@gadgetoid.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S231508AbjJPPFn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 11:05:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE451B4;
+        Mon, 16 Oct 2023 08:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697468740; x=1729004740;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=ukKUWut59IN3BmoYR8GrHML1DrBmaakLCHv6nYqYSTo=;
+  b=R0L5bTl07n+1SCPbGvxTaHtgHGBJNlx1K0kf5rpQn5MtFyhtLaUbPr+r
+   LFLk8tKkuTHTMbFTOqmcF7k790MeL1+73IsF5k0t0wb/lZCyHxVdRlE/+
+   BistykGf4urboeF00Q0Z9rQwADx+U+ftXf6C+QEvClZ9gOq3gC68cS+PR
+   3SpGdlzOTGca9widaPV6tVdLCLPgq51jJM/mCzVEtT0g4uqSQLn4JZLyB
+   8LX0qt0+vLbul/LVOgaa57WFHf2UkmkfN2FT4YSvrkXR767WzLQS1ig44
+   SmtTK+i2EbNPyO7ExVfSUzuIRfmsyMbtGb63gycwZAhZHDvmlDIJqG37j
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="389409899"
+X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
+   d="scan'208";a="389409899"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2023 08:05:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="872143720"
+X-IronPort-AV: E=Sophos;i="6.03,229,1694761200"; 
+   d="scan'208";a="872143720"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Oct 2023 08:05:25 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Mon, 16 Oct 2023 08:05:24 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Mon, 16 Oct 2023 08:05:23 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Mon, 16 Oct 2023 08:05:23 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Mon, 16 Oct 2023 08:05:21 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VDCVAirXyqBcjCWMq4LkPe5SM4sOh7aAx+fNqa+r2vwDNlY2YQ4Ea4fd2CJr6MY/DKJIO9kvt80eYMcGVtNyNrNX8hX11T8PtK9SIi8UjkuunSB9PYwb/naY233cExgYDwmCJD3M0uS1JWNuAHZ25nLZvNfw+vZv/UUC6IbKKnEVXGUbkQti+gI+jWkwElFspsZfLpfHeiJt5pGICaOBQkMYpG89PBIEwNo9r6Pk+G5b0HTdove8tBxCNCCN8FkfhbTZ7BHkfsoxdrPGdoq1mVaEyb3iX6RlU1sA1LuTKP/F1oh9FXkRxZONMocc8ic3h8d91jK70+ItyfSryXeExQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=L99e7Lw0SEikiplpGHUKcKtLFKje2U9Po5gHTRpHn/4=;
+ b=CLfItsJEXv1C5T3lsa4fug7BNCjhX5nLP1bWq3H6d3PTJr+AlW8w7++C8VIzKhOpAYKBF9aymnY0EXU8WPzCmwk6C0Cz8iTwxDHq88heD4Zp/rSpMY4Bkp3oBjT6DzKlEW3yjooalzBFLP5xM65xisnWpM4ZYGqSJwC/Gnh0GaMq3nnGwTz5CfsU8BlUFTMYAx4xdiQLpM4Y2Fi7w5VoVK5RWeAjVkW/7xzBe9B6IRulyI4aEwqcMgFA7G7lXOWVFb4QpoWJAoBw7mlDVLPSNRyDkI9MoRxE5+T2BV8Re6Lp9V2bB/bsbPW7TsON9Wlx7KC/hv4jAaZ3lT6ZGELkPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM6PR11MB4316.namprd11.prod.outlook.com (2603:10b6:5:205::16)
+ by CH3PR11MB8702.namprd11.prod.outlook.com (2603:10b6:610:1cb::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.34; Mon, 16 Oct
+ 2023 15:05:09 +0000
+Received: from DM6PR11MB4316.namprd11.prod.outlook.com
+ ([fe80::e836:4003:6244:2466]) by DM6PR11MB4316.namprd11.prod.outlook.com
+ ([fe80::e836:4003:6244:2466%7]) with mapi id 15.20.6863.046; Mon, 16 Oct 2023
+ 15:05:09 +0000
+From:   "Wu, Wentong" <wentong.wu@intel.com>
+To:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+CC:     Hans de Goede <hdegoede@redhat.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "oneukum@suse.com" <oneukum@suse.com>,
+        "wsa@kernel.org" <wsa@kernel.org>,
+        "andi.shyti@linux.intel.com" <andi.shyti@linux.intel.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
+        "Wang, Zhifeng" <zhifeng.wang@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v20 1/4] usb: Add support for Intel LJCA device
+Thread-Topic: [PATCH v20 1/4] usb: Add support for Intel LJCA device
+Thread-Index: AQHZ+nqZYOWB2QQzm0agSGlxpBPNmbBEZGUAgAAEnYCAAByScIABf/iAgAImwQCAAPlcAIACx//wgAAk8gCAAHc9cA==
+Date:   Mon, 16 Oct 2023 15:05:09 +0000
+Message-ID: <DM6PR11MB4316382324D15985A70E531C8DD7A@DM6PR11MB4316.namprd11.prod.outlook.com>
+References: <1696833205-16716-1-git-send-email-wentong.wu@intel.com>
+ <1696833205-16716-2-git-send-email-wentong.wu@intel.com>
+ <ZSZ3IPgLk7uC5UGI@smile.fi.intel.com>
+ <6a87b43a-0648-28d4-6c69-e0f684e44eb6@redhat.com>
+ <DM6PR11MB4316BE44F53E276384FF06C88DCCA@DM6PR11MB4316.namprd11.prod.outlook.com>
+ <5d2e9eba-a941-ea9a-161a-5b97d09d5d35@redhat.com>
+ <ZSmjEKfYzFuAHXW+@smile.fi.intel.com>
+ <9a080d06-586d-686f-997e-674cb8d16099@redhat.com>
+ <DM6PR11MB43169A9ADDA7681DB7D9347C8DD7A@DM6PR11MB4316.namprd11.prod.outlook.com>
+ <ZSzogNhlX9njvOIU@smile.fi.intel.com>
+In-Reply-To: <ZSzogNhlX9njvOIU@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM6PR11MB4316:EE_|CH3PR11MB8702:EE_
+x-ms-office365-filtering-correlation-id: 87ccc3ab-c830-45c2-d32b-08dbce594a3d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oRrCRw0IQw1Ua963bRFJFysMOP6ITd88HZW4FYtaH3zE0VMPhnXgbsQahKKnPCi2+HTZSPBGhjHfgolDSGCEwxr1rUKGDtoGUz30Miqo3o4LvCFursRnGt1xA412WRKDATYJ6x5lGh1NqtbvZ8XS3gcswcHhkn3vMtooOkDs2N6An0J7CXz0ZKt/knnSrHCwsjDKzyEtoI7g1nvfRwSyT1ubvHc5SiIhNyHNbIZhUYotYzrg025TF6omcuYxghDHWckCEDnpwPgOAfo0M+7cUB7SYvzDtQMlROgJvzx9/kCUZsfsgI6Q+GVs6aWEVFm9xQ3jSrlfp546XfSMc/NUY1BR4Vo3w+AmgOpjzc9S2Yd6MnCHWQqvX7CCPvu+c3u1T9rW7fuhiA7gmQ1mrnnAAj8yGWbGmFY0S6ItYSUhZ/nS6CdBnzEpbvuOKQJ2oGPRNxiEDqWZbGFrDkQ+nlUBEUJjrrbnIUk9idgFY9zHXbNd+Qu1xBS8mpim4RSJGaoHnopHW4iPNHDTQr1XnVpouRPFzvXbmFF16Jo8SguhlYqyoWmQEViu/xB1WOfVwi9PEOgvWEKiYoqUlOeLz4+2mQ+pKOfv7X000uG+wiGJI+JB8fnX52SliMEV9JJPEZRg
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4316.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(39860400002)(346002)(136003)(396003)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(66899024)(55016003)(82960400001)(122000001)(38070700005)(38100700002)(83380400001)(9686003)(26005)(71200400001)(7696005)(6506007)(316002)(76116006)(66946007)(66476007)(6636002)(478600001)(66556008)(64756008)(66446008)(53546011)(54906003)(2906002)(41300700001)(86362001)(7416002)(8676002)(5660300002)(8936002)(4326008)(52536014)(33656002)(6862004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ZcyLCdNxqYmPyJQUhIa8+K4WLFS9R5agEnkdQaWCKisbdeWn781oBClTMl2t?=
+ =?us-ascii?Q?M0SOP/N4K/KdLYrLchpjVIptyjfZo+qp09O679oHUpfq0WaBxVSuzuBX9bBz?=
+ =?us-ascii?Q?pGjKrexrbW/tAzc5oezlyutT/VS4pJS1RxN/PLH13Xnq0PQYXYYMWHpAg+xU?=
+ =?us-ascii?Q?Pmn+vM2p+AZ5Vnfb/XQ4G4nLILdkRANeGheZA8Yyr7RgkokpHcEQ3qGFVsg0?=
+ =?us-ascii?Q?c1Q2Vq4cHF8CCgK1PRlqgkV8rRHlYpjnJNAqa8NDi6sKUIxBEr+BNUSBdtGU?=
+ =?us-ascii?Q?kzhK692Ot1EYPqN9uj43456ovI2JK9j3qf8+REY95rWspgrLJ3s7mgld2rVR?=
+ =?us-ascii?Q?vnmQL54ApUqF538E1EI20i2R6bzJ8qPc3NypG84G8wKIhuSPAs2/P2f5uo8k?=
+ =?us-ascii?Q?OqjiXWGc1o9MYbckjRmRiyWe7RvvJqqu6Blo4R8schaX+VCYfMAM0Zd0Uz7E?=
+ =?us-ascii?Q?srazghTMcK4fSSLnRzOkcfe+b4V+GWdQv/pKkr18gAeWhaATmiu9CZ20/1H+?=
+ =?us-ascii?Q?70LDag/FuvDr3+u9TMd3QUTaLeUrFwgPJrIqKqdvs061GD41dL0OQDyalzeb?=
+ =?us-ascii?Q?uDN5V3ZFHJqaZ7NfKxJJb6d9lxqqjmKXVVY5lbSmLSnNQiDtJiYE5WBCDGi2?=
+ =?us-ascii?Q?ft9zHxmhR3I7Ab54rbzQqnJfzlytNrttRWfB0zLZhWd0iisySuSg/BG9scSr?=
+ =?us-ascii?Q?fgTusit8P9reLSzNBBO9fIxXM5XfKl8tea+3KjjQ5AdU3Mn7q4xlDa+Klqmn?=
+ =?us-ascii?Q?sme/VKLY8bmmQcNOiEtUUz58jlrqWqWG0dTcqOI0N1+ZoV0vm+lBzEgSE3u8?=
+ =?us-ascii?Q?goFuMrV3Y5D8Frr+mRb2Qo/9YlECsylGtpn2dz1kOqOoImG8t6SOUiyaCfjC?=
+ =?us-ascii?Q?NzMd6/ph67pA5gWH8QFkOQKnBWXCH4XSfTsCf7F9Rz7ddr4vOz2fCKOiUWkt?=
+ =?us-ascii?Q?Ay/osdgnK23ELcIOF6tlFas0ldHm7G4zWdbVrEjZFgdAkU/sUuioGG3kjzDG?=
+ =?us-ascii?Q?4HfXoqDU10knHXtGzIJMaaphGK7DclEQ96SVMkhpqnsr4WH81Si4tR3KQTi8?=
+ =?us-ascii?Q?pZreQ/J5oWeCrahplKdPLNpJUz3k41PsYtYDEm2kktNqaErTVXc02T3BjBCu?=
+ =?us-ascii?Q?MLIMbDtNylfqgZOVEM2IHsJPu+UQlzSKLv/I+c7MZrBCsh4EIHcHeuC5gCyS?=
+ =?us-ascii?Q?R4j8HTQ0XjgymnobNzuVZgEwiAoQw9v7fwlKDL8k7Ujp/McrCm8Se0tbVD/U?=
+ =?us-ascii?Q?INuCYiGmEoydxiwQmTAiluSEXWda+tW9NGGzuykw12Fj9RElqDkeNX+Zd0lt?=
+ =?us-ascii?Q?s7DeMs9f9j5EH3/CyFGNwm/+R3bOCLSBue4nPSfh9lByOZvcT8D7M5uX5tyI?=
+ =?us-ascii?Q?e/qFONqMN62AKC/5g5OtRBrEIjeoqslCvrnFniEpeDr2oE0vDc9wX93BxIRN?=
+ =?us-ascii?Q?YukhK/E8Ol2LOmSUdVJNy7vRygdLkr1rxghP4U/5bWE/IZYjqphs3Q8Oa2El?=
+ =?us-ascii?Q?5r4AGS3DrYtiimLJte6mPpllAsVRqRMiCiejOouKCCJQsfVX0OWSTCWuIoAY?=
+ =?us-ascii?Q?sb2yrG9aNu/VeVsKOACxjyAPfY9d9YJZG7Q731Ur?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4316.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87ccc3ab-c830-45c2-d32b-08dbce594a3d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Oct 2023 15:05:09.6000
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ojsVHtlK9qEjx8yq9E0NIOYKTO20ZD4oDqMWPNK0z7G/iJBvJtZM4ugChEkFPPj/jEkPGV4MygDwtbajL9fQGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8702
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 3:45=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wr=
-ote:
->
-> On Mon, 16 Oct 2023 at 14:10, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Shevchenko, Andriy
+> On Mon, Oct 16, 2023 at 08:52:28AM +0300, Wu, Wentong wrote:
+> > > On 10/13/23 22:05, Shevchenko, Andriy wrote:
+> > > > On Thu, Oct 12, 2023 at 01:14:23PM +0200, Hans de Goede wrote:
+>=20
+> <snip>
+>=20
+> > > >> Ah ok, I see. So the code:
+> > > >>
+> > > >> 1. First tries to find the matching child acpi_device for the
+> > > >> auxdev by ADR
+> > > >>
+> > > >> 2. If 1. fails then falls back to HID + UID matching
+> > > >>
+> > > >> And there are DSDTs which use either:
+> > > >>
+> > > >> 1. Only use _ADR to identify which child device is which, like the=
+ example
+> > > >>    DSDT snippet from the commit msg.
+> > > >>
+> > > >> 2. Only use _HID + _UID like the 2 example DSDT snippets from me
+> > > >> email
+> > > >>
+> > > >> But there never is a case where both _ADR and _HID are used at
+> > > >> the same time (which would be an ACPI spec violation as Andy said)=
+.
+> > > >>
+> > > >> So AFAICT there is no issue here since  _ADR and _HID are never
+> > > >> user at the same time and the commit message correctly describes
+> > > >> scenario 1. from above, so the commit message is fine too.
+> > > >>
+> > > >> So I believe that we can continue with this patch series in its
+> > > >> current v20 form, which has already been staged for going into
+> > > >> -next by Greg.
+> > > >>
+> > > >> Andy can you confirm that moving ahead with the current version
+> > > >> is ok ?
+> > > >
+> > > > Yes as we have a few weeks to fix corner cases.
+> > > >
+> > > > What I'm worrying is that opening door for _ADR that seems never
+> > > > used is kinda an overkill here (resolving non-existing problem).
+> > >
+> > > I assume that there actually some DSDTs using the _ADR approach and
+> > > that this support is not there just for fun.
 > >
-> > On Fri, Oct 13, 2023 at 1:28=E2=80=AFPM Phil Howard <phil@gadgetoid.com=
-> wrote:
-> > >
-> > > Build libgpiod into Python module for build_ext or bdist_wheel.
-> > >
-> > > Include libgpiod source in sdist so that the Python module
-> > > can be built from source by end users, even with a missing
-> > > or mismatched system libgpiod.
-> > >
-> > > Add optional environment variable "LINK_SYSTEM_LIBGPIOD=3D1" to
-> > > generate a module via build_ext or bdist_wheel that links
-> > > against system libgpiod.
-> > >
-> > > Update build to pass "GPIOD_VERSION_STR" as an environment
-> > > variable when calling setup.py. This is saved to
-> > > "gpiod-version-str.txt" and included in the sdist for
-> > > standalone builds.
-> > >
-> > > The old make/make install behaviour is preserved by
-> > > supplying "LINK_SYSTEM_LIBGPIOD=3D1" and an additional sdist
-> > > package is built and saved into dist/ for upload to pypi.
-> > >
-> > > Signed-off-by: Phil Howard <phil@gadgetoid.com>
-> > > ---
-> > >  bindings/python/MANIFEST.in |   5 ++
-> > >  bindings/python/Makefile.am |   5 ++
-> > >  bindings/python/setup.py    | 107 ++++++++++++++++++++++++++++++----=
---
-> > >  3 files changed, 101 insertions(+), 16 deletions(-)
-> > >
-> > > diff --git a/bindings/python/MANIFEST.in b/bindings/python/MANIFEST.i=
-n
-> > > index c7124d4..acf9391 100644
-> > > --- a/bindings/python/MANIFEST.in
-> > > +++ b/bindings/python/MANIFEST.in
-> > > @@ -2,6 +2,7 @@
-> > >  # SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszew=
-ski@linaro.org>
-> > >
-> > >  include setup.py
-> > > +include gpiod-version-str.txt
-> > >
-> > >  recursive-include gpiod *.py
-> > >  recursive-include tests *.py
-> > > @@ -11,3 +12,7 @@ recursive-include gpiod/ext *.h
-> > >
-> > >  recursive-include tests/gpiosim *.c
-> > >  recursive-include tests/procname *.c
-> > > +
-> > > +recursive-include lib *.c
-> > > +recursive-include lib *.h
-> > > +recursive-include include *.h
-> > > diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.a=
-m
-> > > index 079ceb1..fda8f94 100644
-> > > --- a/bindings/python/Makefile.am
-> > > +++ b/bindings/python/Makefile.am
-> > > @@ -12,10 +12,15 @@ BUILD_TESTS =3D 1
-> > >  endif
-> > >
-> > >  all-local:
-> > > +       GPIOD_VERSION_STR=3D$(VERSION_STR) \
-> > >         GPIOD_WITH_TESTS=3D$(BUILD_TESTS) \
-> > > +       LINK_SYSTEM_LIBGPIOD=3D1 \
-> > >         $(PYTHON) setup.py build_ext --inplace \
-> > >                 --include-dirs=3D$(top_srcdir)/include/:$(top_srcdir)=
-/tests/gpiosim/ \
-> > >                 --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_src=
-dir)/tests/gpiosim/.libs/
-> > > +       GPIOD_VERSION_STR=3D$(VERSION_STR) \
-> > > +       $(PYTHON) setup.py sdist
-> > > +
-> > >
-> > >  install-exec-local:
-> > >         GPIOD_WITH_TESTS=3D \
-> > > diff --git a/bindings/python/setup.py b/bindings/python/setup.py
-> > > index df10e18..878c38d 100644
-> > > --- a/bindings/python/setup.py
-> > > +++ b/bindings/python/setup.py
-> > > @@ -1,10 +1,43 @@
-> > >  # SPDX-License-Identifier: GPL-2.0-or-later
-> > >  # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> > >
-> > > -from os import environ, path
-> > > +from os import environ, path, unlink
-> > >  from setuptools import setup, Extension, find_packages
-> > >  from setuptools.command.build_ext import build_ext as orig_build_ext
-> > > -from shutil import rmtree
-> > > +from setuptools.command.sdist import sdist as orig_sdist
-> > > +from shutil import rmtree, copytree
-> > > +
-> > > +
-> > > +def get_gpiod_version_str():
-> > > +    try:
-> > > +        return environ["GPIOD_VERSION_STR"]
+> > right, it's not for fun, we use _ADR here is to reduce the maintain
+> > effort because currently it defines _HID for every new platform and
+> > the drivers have to be updated accordingly, while _ADR doesn't have tha=
+t
+> problem.
+>=20
+> But this does not confirm if you have such devices. Moreover, My question
+> about _CID per function stays the same. Why firmware is not using it?
+
+Yes, both _ADR and _CID can stop growing list in the driver. And for _ADR, =
+it also
+only require one ID per function. I don't know why BIOS team doesn't select=
+ _CID,
+but I have suggested use _ADR internally, and , to make things moving forwa=
+rd,
+the driver adds support for _ADR here first.=20
+
+But you're right, _CID is another solution as well, we will discuss it with=
+ firmware
+team more.
+
+> In that case you need only one ID per function in the driver (it might re=
+quire some
+> IDs in the _HID, I don't remember that part of the spec by heart, i.e.  i=
+f _CID can be
+> only provided with existing _HID or not).
+>=20
+> > > Wentong, can you confirm that the _ADR using codepaths are actually
+> > > used on some hardware / with some DSDTs out there ?
 > >
-> > Would it be possible - in order to keep the default behavior really
-> > backward compatible - to make this optional, and if it wasn't passed
-> > then we don't allow built-in libgpiod packaging?
->
-> Seems reasonable. I'll change it.
-
-Maybe add some warning too at setup.py sdist invokation? Like:
-
-GPIOD_VERSION_STR not set, stand-alone build disabled
-
-Or something similar.
-
-Bart
-
->
-> > This way, the yocto recipe wouldn't require any changes at all, which
-> > would be preferable.
->
-> Ah for some reason I'd thought yocto would just use automake.
->
-> > Bart
+> > what I can share is that we will see.
 > >
-> > > +    except KeyError:
-> > > +        return open("gpiod-version-str.txt", "r").read()
-> > > +
-> > > +
-> > > +def copy_libgpiod_files(func):
-> > > +    """
-> > > +    In order to include the lib and include directories in the sdist
-> > > +    we must temporarily copy them up into the python bindings direct=
-ory.
-> > > +
-> > > +    If "./lib" exists we are building from an sdist package and will=
- not
-> > > +    try to copy the files again.
-> > > +    """
-> > > +
-> > > +    def wrapper(self):
-> > > +        copy_src =3D not path.exists("./lib")
-> > > +        if copy_src:
-> > > +            gpiod_version_str =3D get_gpiod_version_str()
-> > > +            open("gpiod-version-str.txt", "w").write(gpiod_version_s=
-tr)
-> > > +            copytree("../../lib", "./lib")
-> > > +            copytree("../../include", "./include")
-> > > +        func(self)
-> > > +        if copy_src:
-> > > +            unlink("gpiod-version-str.txt")
-> > > +            rmtree("./lib")
-> > > +            rmtree("./include")
-> > > +
-> > > +    return wrapper
+> > > > Looking at the design of the
+> > > > driver I'm not sure why ACPI HIDs are collected somewhere else
+> > > > than in the respective drivers.
+> >
+> > AFAIK, auxiliary bus doesn't support parsing fwnodes currently.
+> > Probably we can support it for auxiliary bus in another patch.
+>=20
+> This is good idea!
+>=20
+>=20
+> > > > And looking at the ID lists themselves I am not sure why the
+> > > > firmware of the respective hardware platforms are not using
+> > > _CID.
+> >
+> > I think firmware can select _CID as well, but the shipped hw doesn't
+> > use _CID, the driver has to make sure the shipped hw working as well.
+> > And switching to _CID for the shipped hw is not easy, and it has to cha=
+nge
+> windows driver as well.
+>=20
+> I understand, but at least you may stop growing list in the driver.
+Yes,=20
+
+> And actually using separate IDs for multifunctional device seems not idea=
+l
+> solution to me.
+Agree, I will consider _CID more, but currently to avoid this and also supp=
+ort
+shipped hardware, _ADR is at least a choice.
+
+BR,
+Wentong
+
+> > > This is a USB device which has 4 functions:
+>=20
+> Yes, I understand this part, but thank you for elaboration about auxbus, =
+which
+> seems lack of needed support. And I would really like to see someone adds=
+ it
+> there.
+>=20
+> > > 1. GPIO controller
+> > > 2. I2C controller 1
+> > > 3. I2C controller 2
+> > > 4. SPI controller
 > > >
+> > > The driver for the main USB interface uses the new auxbus to create
+> > > 4 child devices. The _ADR or if that fails _HID + _UID matching is
+> > > done to find the correct acpi_device child of the acpi_device which
+> > > is the ACPI-companion of the main USB device.
 > > >
-> > >  class build_ext(orig_build_ext):
-> > > @@ -14,24 +47,69 @@ class build_ext(orig_build_ext):
-> > >      were built (and possibly copied to the source directory if inpla=
-ce is set).
-> > >      """
+> > > After looking up the correct acpi_device child this is then set as
+> > > the fwnode / ACPI-companion of the auxbus device created for that fun=
+ction.
 > > >
-> > > +    @copy_libgpiod_files
-> > >      def run(self):
-> > >          super().run()
-> > >          rmtree(path.join(self.build_lib, "tests"), ignore_errors=3DT=
-rue)
+> > > Having the correct fwnode is important because other parts of the
+> > > DSDT reference this fwnode to specify GPIO / I2C / SPI resources and
+> > > if the fwnode of the aux-device is not set correctly then the
+> > > resources for other devices referencing it (typically a camera
+> > > sensor) can not be found.
 > > >
-> > >
-> > > +class sdist(orig_sdist):
-> > > +    """
-> > > +    Wrap sdist so that we can copy the lib and include files into . =
-where
-> > > +    MANIFEST.in will include them in the source package.
-> > > +    """
-> > > +
-> > > +    @copy_libgpiod_files
-> > > +    def run(self):
-> > > +        super().run()
-> > > +
-> > > +
-> > > +with open("gpiod/version.py", "r") as fd:
-> > > +    exec(fd.read())
-> > > +
-> > > +sources =3D [
-> > > +    # gpiod Python bindings
-> > > +    "gpiod/ext/chip.c",
-> > > +    "gpiod/ext/common.c",
-> > > +    "gpiod/ext/line-config.c",
-> > > +    "gpiod/ext/line-settings.c",
-> > > +    "gpiod/ext/module.c",
-> > > +    "gpiod/ext/request.c",
-> > > +]
-> > > +
-> > > +if environ.get("LINK_SYSTEM_LIBGPIOD") =3D=3D "1":
-> > > +    libraries =3D ["gpiod"]
-> > > +    include_dirs =3D ["gpiod"]
-> > > +else:
-> > > +    sources +=3D [
-> > > +        # gpiod library
-> > > +        "lib/chip.c",
-> > > +        "lib/chip-info.c",
-> > > +        "lib/edge-event.c",
-> > > +        "lib/info-event.c",
-> > > +        "lib/internal.c",
-> > > +        "lib/line-config.c",
-> > > +        "lib/line-info.c",
-> > > +        "lib/line-request.c",
-> > > +        "lib/line-settings.c",
-> > > +        "lib/misc.c",
-> > > +        "lib/request-config.c",
-> > > +    ]
-> > > +    libraries =3D []
-> > > +    include_dirs =3D ["include", "lib", "gpiod/ext"]
-> > > +
-> > > +
-> > >  gpiod_ext =3D Extension(
-> > >      "gpiod._ext",
-> > > -    sources=3D[
-> > > -        "gpiod/ext/chip.c",
-> > > -        "gpiod/ext/common.c",
-> > > -        "gpiod/ext/line-config.c",
-> > > -        "gpiod/ext/line-settings.c",
-> > > -        "gpiod/ext/module.c",
-> > > -        "gpiod/ext/request.c",
-> > > -    ],
-> > > +    libraries=3Dlibraries,
-> > > +    sources=3Dsources,
-> > >      define_macros=3D[("_GNU_SOURCE", "1")],
-> > > -    libraries=3D["gpiod"],
-> > > -    extra_compile_args=3D["-Wall", "-Wextra"],
-> > > +    include_dirs=3Dinclude_dirs,
-> > > +    extra_compile_args=3D[
-> > > +        "-Wall",
-> > > +        "-Wextra",
-> > > +        '-DGPIOD_VERSION_STR=3D"{}"'.format(get_gpiod_version_str())=
-,
-> > > +    ],
-> > >  )
-> > >
-> > >  gpiosim_ext =3D Extension(
-> > > @@ -54,15 +132,12 @@ if environ.get("GPIOD_WITH_TESTS") =3D=3D "1":
-> > >      extensions.append(gpiosim_ext)
-> > >      extensions.append(procname_ext)
-> > >
-> > > -with open("gpiod/version.py", "r") as fd:
-> > > -    exec(fd.read())
-> > > -
-> > >  setup(
-> > >      name=3D"libgpiod",
-> > >      packages=3Dfind_packages(exclude=3D["tests", "tests.*"]),
-> > >      python_requires=3D">=3D3.9.0",
-> > >      ext_modules=3Dextensions,
-> > > -    cmdclass=3D{"build_ext": build_ext},
-> > > +    cmdclass=3D{"build_ext": build_ext, "sdist": sdist},
-> > >      version=3D__version__,
-> > >      author=3D"Bartosz Golaszewski",
-> > >      author_email=3D"brgl@bgdev.pl",
-> > > --
-> > > 2.34.1
-> > >
+> > > As for why the driver for the auxbus devices / children do not use
+> > > HID matching, AFAIK the auxbus has no support for using ACPI (or DT)
+> > > matching for aux-devices and these drivers need to be
+> > > auxiliary_driver's and bind to the auxbus device and not to a
+> > > platform_device instantiated for the acpi_device since they need the =
+auxbus
+> device to access the USB device.
+> >
+> > Yes, total agree. Thanks
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
+
