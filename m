@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C44F97CAB5A
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Oct 2023 16:25:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 340867CABC5
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Oct 2023 16:41:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233555AbjJPOZH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Oct 2023 10:25:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
+        id S229633AbjJPOlw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Oct 2023 10:41:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233765AbjJPOZF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 10:25:05 -0400
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A8F9F
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 07:25:03 -0700 (PDT)
-Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-49d0d90a7ddso1539001e0c.0
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 07:25:03 -0700 (PDT)
+        with ESMTP id S231891AbjJPOlv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 10:41:51 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C59B83
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 07:41:49 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-49b289adca9so1808375e0c.3
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 07:41:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697466302; x=1698071102; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697467308; x=1698072108; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/UTXlcznzsqTW1QC+xDUx/2A4sUVLhGWpAUguFRhfJQ=;
-        b=EjxVFt++bvD6QQdT1VV4ov/90rTj00XYu8SrPnSLRJpT4pblgUvQsusNMVuq4a0D+i
-         U+v9+q7kZTBdkSzSB7jpAuG5pPGxHO0jkc2ehbDqF8ESnh9zMdjXarjsF4YBbutiSVfZ
-         01xdeU7k7SrUW9SsLBnpL4Nfv9f/5sU0/QdGNomMXk6K51nwEFPzcu9fbBYpBAWZBAzg
-         Wx3y9jTfsSBKIxP6HhWpRBAzFSTdd1xeG3IcjnUgkmaIFXXPuQT5+k4ak0QMan3KwswI
-         PLhwJc1kNghPEBiDJDTXjv/M/+DmVWFxt6pGVbd6Xav3+kqcR7KDht69F4Mrc9NVoOA/
-         4ixw==
+        bh=zvHc4cRiQTUpvS7DyDwU/uXwIcNXs9DifCRBpQ4RQkU=;
+        b=jToQ6ShY75qprkJJeuHS0Ne4wd8BLmcR4PgM8ICJlODkkqtRfg1lteeSE3MuGoASwT
+         F2XDdB/+ENQVbjFQnUsa2nlfWofdks/9ICXa/z1E/8wrXcrwofT2TsnVN3s6RCCM+Pg0
+         Ux7teANgTLuXHxBylRP5sMlUVZgx2CfZ6kHThCRpFfXTGHZ+1oP0b1r35h8VeeaHnDKu
+         2758n8BJvrH03ydyPmDvE3iQBts/y1JuQdyDqCiyGuaLqwav9kGXrg47RTC6V9IoaOvj
+         fAQb6afbYpVXgICo1NwwSx0kOeIlrBLLJuhnBHNMKsy4ReVxDeh2OLL8DHCNKJHTBNJb
+         0HNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697466302; x=1698071102;
+        d=1e100.net; s=20230601; t=1697467308; x=1698072108;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/UTXlcznzsqTW1QC+xDUx/2A4sUVLhGWpAUguFRhfJQ=;
-        b=XghlvBzv81Unh4l8o1EZ8NznlSVPu1rvsYEngumRBboMmctkA/qs1FZ0FhHqBkg0nS
-         GXZkX1jvmPWp9MU/2LNOSj1uxDrnaCuXtUNJZ8CdfFd8SAlbLNGQZHjC2Uih8nqXI1Xg
-         L/0G+atxlQwC1f+gPxSAFiPyv1kJgbC09AblltYhDBjwu0r9YzecyDFMFuQrts57nUAQ
-         fotjXgS0YNkNM+DTHtEJ2u1b8Ql5PncDvMdWAM57zBFeKRhv6SnUcXX162oYGWKfoGB+
-         xS0qEmG9hsgztV/guiCqNZ6pLkkqVf3UYXUayRBWYC0FUhZJG6VJDuUqBOdOcgIKBr45
-         RsCg==
-X-Gm-Message-State: AOJu0YysY38uEYdkqTxGM/qsM/r3gz2fTa5bKzv7YDH1Gps5o78M3kTR
-        rj2jg/NNeZuZx97mAuI7ZxFOPIlUcgc2C6FJusOHRA==
-X-Google-Smtp-Source: AGHT+IG8kUJDz4ArGnhjAi4zpHOsxTydTtztaI6+ISHowmy8ptbZv2549nj7vTxOzlEF07jajvfo3UUPCBJmVv6HmFw=
-X-Received: by 2002:a1f:e041:0:b0:49a:6dc0:5a89 with SMTP id
- x62-20020a1fe041000000b0049a6dc05a89mr26945803vkg.5.1697466302077; Mon, 16
- Oct 2023 07:25:02 -0700 (PDT)
+        bh=zvHc4cRiQTUpvS7DyDwU/uXwIcNXs9DifCRBpQ4RQkU=;
+        b=Bc9MoLVbpkOwZ+4IYanhdJWZmxPaYTMXDMYUNa015Q9L27th2OS+rTtku/JyW1k6dB
+         w0REPUga3B/8we2DDPgb5amhVdJRZsWylSjRNHojKrtZxs2xxAFALXlgW9FjVBgGrw8k
+         ZnvgOiVw0SsvYkI1utc6y2FC/NuuX/6FtgE8jhkLmuZrqDta7ZMKY36p5SXlZmuYg/M9
+         4Yyi/k/mfXgY7mOqYMZRJg7uyUsbfuVshCq39CMDn8TLW7AcoGFlzbDPYxMGO95CUYpM
+         +kvcDaw0fqQjuvvkBFIv1A+IgDZEe0An5lsDwVeowNmCBUyTPkzgU6ManfR6YXvzokTq
+         s6Jw==
+X-Gm-Message-State: AOJu0YypguLXDOq/uaX7G5C36wF0qAXAbdPNPF4rbFeBPSm3rD8mjDSw
+        BCy5NbdRyFe8NY+QbbVml5eZmJibmTvblAT8aD0nbg==
+X-Google-Smtp-Source: AGHT+IECwAJmipzV+HCxG12xHnlztuWYM/OyG4PWLmag3PrmY7RqvzH45vxf0NAQemGQtjtV99iRiHnYKVM1zvsVAFk=
+X-Received: by 2002:a1f:4f86:0:b0:495:c10c:ec39 with SMTP id
+ d128-20020a1f4f86000000b00495c10cec39mr26641669vkb.2.1697467308617; Mon, 16
+ Oct 2023 07:41:48 -0700 (PDT)
 MIME-Version: 1.0
 References: <20231013112812.148021-1-phil@gadgetoid.com> <20231013112812.148021-2-phil@gadgetoid.com>
  <CAMRc=Mdc=XXasOm0=wya6vhC1SMDW7BJDSZ4n3h+0Qcg-MQ4TQ@mail.gmail.com> <CA+kSVo8v-9g5zYQD66JrtuVw6GGsqxwbWf=kxtr_PxUQKUNJQQ@mail.gmail.com>
 In-Reply-To: <CA+kSVo8v-9g5zYQD66JrtuVw6GGsqxwbWf=kxtr_PxUQKUNJQQ@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Oct 2023 16:24:51 +0200
-Message-ID: <CAMRc=MeHT38RoY=5LQ+qd1RDgRfH69QnMrr+yAepXGBWUSiWhA@mail.gmail.com>
+Date:   Mon, 16 Oct 2023 16:41:37 +0200
+Message-ID: <CAMRc=MfLByTk3pkmWDeA3xtiwD6D9jdRSpJRf09hQYyGk2DyXg@mail.gmail.com>
 Subject: Re: [libgpiod][PATCH v3 1/1] bindings: python: optionally include
  module in sdist
 To:     Phil Howard <phil@gadgetoid.com>
@@ -176,18 +176,21 @@ dir)/tests/gpiosim/.libs/
 > > then we don't allow built-in libgpiod packaging?
 >
 > Seems reasonable. I'll change it.
+
+Maybe add some warning too at setup.py sdist invokation? Like:
+
+GPIOD_VERSION_STR not set, stand-alone build disabled
+
+Or something similar.
+
+Bart
+
 >
 > > This way, the yocto recipe wouldn't require any changes at all, which
 > > would be preferable.
 >
 > Ah for some reason I'd thought yocto would just use automake.
 >
-
-It actually uses pypi for the python bindings. They were factored out
-of the main recipe and put into meta-python.
-
-Bart
-
 > > Bart
 > >
 > > > +    except KeyError:
