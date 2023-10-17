@@ -2,132 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CA847CC5C3
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Oct 2023 16:18:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 203FC7CC6D5
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Oct 2023 16:53:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344060AbjJQOSO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Oct 2023 10:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53954 "EHLO
+        id S235033AbjJQOw7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Oct 2023 10:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343900AbjJQOSN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Oct 2023 10:18:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C63F5;
-        Tue, 17 Oct 2023 07:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697552292; x=1729088292;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Om9o9QaVlYqcLv+tCTlmT2MX/mZatt3OQzBysjJ7J04=;
-  b=jln7WuXGteYKscIf3gXWXPx9jtfL8EUSHbub27qblZ14LrhWyYlPTkOV
-   /CGjK3654XFpGELVX5gkzFQ1cgKzxa1bQ8i8P3I941oAvvfIcbyJr0uMX
-   o6shPeF0Hsk/GDjihThAHumlBbQHtAG/W2EnRpvYW295X3/c5pwqENzd0
-   /T4s7hkdQZpK5hiVz9hkC+nPQuWHejJBBjVMGEc5otVW+apAkGRBx0LWn
-   hbjamxp325m9icE7nHZJeeUVUs6LnJywVbuvakKCFBp84iV9h+uFYpSY2
-   eE5xC2ut2kO5jtc65FRr0wRPOzQYJsqTTLAXVfkpTv0jo+QLn42xY7O6J
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="4389200"
-X-IronPort-AV: E=Sophos;i="6.03,232,1694761200"; 
-   d="scan'208";a="4389200"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 07:18:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="732736205"
-X-IronPort-AV: E=Sophos;i="6.03,232,1694761200"; 
-   d="scan'208";a="732736205"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 17 Oct 2023 07:18:09 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 0BEC1193; Tue, 17 Oct 2023 17:18:07 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ferry Toth <ftoth@exalondelft.nl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] Revert "pinctrl: avoid unsafe code pattern in find_pinctrl()"
-Date:   Tue, 17 Oct 2023 17:18:06 +0300
-Message-Id: <20231017141806.535191-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+        with ESMTP id S235116AbjJQOwx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Oct 2023 10:52:53 -0400
+Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 068975BAD
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Oct 2023 07:51:16 -0700 (PDT)
+Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-49abb53648aso1695967e0c.0
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Oct 2023 07:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697554274; x=1698159074; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u5z2VQERwTnHSvknuk1StgxnUpwCYFIbvu15sN77nf8=;
+        b=ExI/2OghZTU9pTVV/9CR3BC7+9IYLeHgKYDhyi7JBD+SX/jKyTVIq/9i1kYsNpeZv1
+         c2ZLeybdo1fjGNQGcwhfhpU25eQtF9mMOrZJ8SIrlHAmgacohP3Pa6Hlqa+H/4xD+RTW
+         vwe4Dzetgsap+NW9kRDlN7C1a77mLL84hkwyRajoHzkFfq5f+zBoh14dE9tQj8W3GobW
+         rIj+ycCnTJa2IooVR3oGKbA0G7iWO7LstP0EIiHzi2Uf+rWMvzqLDRaCMV8YXoMQbhOn
+         k8MEmhpLR30oNOGFyUTkiAs9VDy+ylDEdc2IDaV9QlA6kpMkM+ES71VyQvFaUP8AAq5f
+         REEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697554274; x=1698159074;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u5z2VQERwTnHSvknuk1StgxnUpwCYFIbvu15sN77nf8=;
+        b=vVecAwTzTy1bYxw/H4ZljyA74RPSNwNbgGKHPRE8HPMOagjFG6joAfHVT/t8N1bcFn
+         xmJa+egf3qcpVCOpvVOMaWllnsDVLd7yJ6RcefDBMobcskPrqvTNVtHLiByeh7b19IUs
+         MGJITx9jMM4HT5WSNWcoEtUzh+q0oLAUcmnXSQFBWXv3d4PPymRjakBcxFhPcRwyj5AH
+         NCoe/4X419+Qp9LJUUCmj5bM+gm+vRg7V9l5sW202BPrctRZfKdHDUHpdX/0UZZpmcca
+         N57q1NkiR85hJZbQELD/9lWD3qXsv+i3TRTiAb/XAWJR1fwhDk2SMf1TjyofON0J2U6w
+         p/Dw==
+X-Gm-Message-State: AOJu0Yxx51wLIgKeelnDz64WJiRlVF2NiBzBfozNY2190ekng0dRaodO
+        u6DcEvJ6xVcHeAQ3lPhbJCRx3xW/o0vbvuUTbMlSPA==
+X-Google-Smtp-Source: AGHT+IFFPrIjuefWAoeXE7go+vf4kjVm1qdFs1yYBsBZd3y39xkFMYkhc2D3dpLUSosB32vra9pyqU0YRgTDlXfGs3U=
+X-Received: by 2002:a05:6122:182a:b0:49d:f67:208 with SMTP id
+ ay42-20020a056122182a00b0049d0f670208mr2648080vkb.1.1697554273799; Tue, 17
+ Oct 2023 07:51:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20231017120431.68847-1-brgl@bgdev.pl> <20231017120431.68847-55-brgl@bgdev.pl>
+ <ZS6BAkfFeA+6GYfz@smile.fi.intel.com> <CACMJSesgT-a8krB8gvf0gJ-C+p6s1TdRcE6W_42CxR9bDvrGHg@mail.gmail.com>
+ <ZS6CGcRPNzkCdnoD@smile.fi.intel.com> <CAMRc=MdbYN+ropwecPbTptV7KEt-0NdWOHn1Uq_2dgWcPv-D=A@mail.gmail.com>
+ <ZS6JNXWPkDW+aoYs@smile.fi.intel.com>
+In-Reply-To: <ZS6JNXWPkDW+aoYs@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 17 Oct 2023 16:51:02 +0200
+Message-ID: <CAMRc=MeXJiLoHJBR4zK7q6rY1cbBwyiAQWUNxLtfZzPDDkC+vw@mail.gmail.com>
+Subject: Re: [PATCH v3 54/73] pinctrl: intel: drop the wrappers around pinctrl_gpio_direction_input()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The commit breaks MMC enumeration on the Intel Merrifield
-plaform.
+On Tue, Oct 17, 2023 at 3:16=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Oct 17, 2023 at 02:55:07PM +0200, Bartosz Golaszewski wrote:
+> > On Tue, Oct 17, 2023 at 2:46=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Tue, Oct 17, 2023 at 02:44:25PM +0200, Bartosz Golaszewski wrote:
+> > > > On Tue, 17 Oct 2023 at 14:41, Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > >
+> > > > > On Tue, Oct 17, 2023 at 02:04:12PM +0200, Bartosz Golaszewski wro=
+te:
+> > > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > > >
+> > > > > > pinctrl_gpio_direction_input() now has the same signature as th=
+e
+> > > > > > wrappers around it so we can drop them.
+> > > > >
+> > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > >
+> > > > > Now, for the sake of symmetry can you add (at least to the all
+> > > > > Intel drivers you modified in this series) the following:
+> > > >
+> > > > Good idea but this is v6.8 material, I don't want to extend this
+> > > > series anymore at this point.
+> > >
+> > > Then let's postpone at least Intel and Cypress patches after v6.8-rc1=
+ is out.
+> >
+> > But then we'd have to postpone the renaming and we'd be stuck with
+> > both variants in the tree. This is suboptimal. We'd also have this
+> > huge series spanning two subsystems for 3 months during the v6.8
+> > release cycle in the tree causing conflicts and other issues.
+>
+> I don't see how this is related. What I'm talking is only related to drop=
+ping
+> the wrappers in the drivers _after_ whatever you do with generic APIs.
 
-Before:
-[   36.439057] mmc0: SDHCI controller on PCI [0000:00:01.0] using ADMA
-[   36.450924] mmc2: SDHCI controller on PCI [0000:00:01.3] using ADMA
-[   36.459355] mmc1: SDHCI controller on PCI [0000:00:01.2] using ADMA
-[   36.706399] mmc0: new DDR MMC card at address 0001
-[   37.058972] mmc2: new ultra high speed DDR50 SDIO card at address 0001
-[   37.278977] mmcblk0: mmc0:0001 H4G1d 3.64 GiB
-[   37.297300]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
+Ah, I misunderstood you. Ok, I'll drop them from the tree.
 
-After:
-[   36.436704] mmc2: SDHCI controller on PCI [0000:00:01.3] using ADMA
-[   36.436720] mmc1: SDHCI controller on PCI [0000:00:01.0] using ADMA
-[   36.463685] mmc0: SDHCI controller on PCI [0000:00:01.2] using ADMA
-[   36.720627] mmc1: new DDR MMC card at address 0001
-[   37.068181] mmc2: new ultra high speed DDR50 SDIO card at address 0001
-[   37.279998] mmcblk1: mmc1:0001 H4G1d 3.64 GiB
-[   37.302670]  mmcblk1: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
-
-This reverts commit c153a4edff6ab01370fcac8e46f9c89cca1060c2.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/core.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index e2f7519bef04..e9dc9638120a 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1022,20 +1022,17 @@ static int add_setting(struct pinctrl *p, struct pinctrl_dev *pctldev,
- 
- static struct pinctrl *find_pinctrl(struct device *dev)
- {
--	struct pinctrl *entry, *p = NULL;
-+	struct pinctrl *p;
- 
- 	mutex_lock(&pinctrl_list_mutex);
--
--	list_for_each_entry(entry, &pinctrl_list, node) {
--		if (entry->dev == dev) {
--			p = entry;
--			kref_get(&p->users);
--			break;
-+	list_for_each_entry(p, &pinctrl_list, node)
-+		if (p->dev == dev) {
-+			mutex_unlock(&pinctrl_list_mutex);
-+			return p;
- 		}
--	}
- 
- 	mutex_unlock(&pinctrl_list_mutex);
--	return p;
-+	return NULL;
- }
- 
- static void pinctrl_free(struct pinctrl *p, bool inlist);
-@@ -1143,6 +1140,7 @@ struct pinctrl *pinctrl_get(struct device *dev)
- 	p = find_pinctrl(dev);
- 	if (p) {
- 		dev_dbg(dev, "obtain a copy of previously claimed pinctrl\n");
-+		kref_get(&p->users);
- 		return p;
- 	}
- 
--- 
-2.40.0.1.gaa8946217a0b
-
+Bart
