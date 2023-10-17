@@ -2,94 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74D697CC33A
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Oct 2023 14:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBDF57CC360
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Oct 2023 14:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234909AbjJQMdT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Oct 2023 08:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33904 "EHLO
+        id S234922AbjJQMlp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Oct 2023 08:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234647AbjJQMdS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Oct 2023 08:33:18 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DF295
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Oct 2023 05:33:17 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-7b5fafed01aso2033054241.0
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Oct 2023 05:33:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697545996; x=1698150796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8zOK25AhejJsCNGYHq5emnXVPEw8aJuYMYEOx/eSslY=;
-        b=X6ZEI6VKLdgy4hArHuidZnwO95llrqocYliUr98W8TEQgc5asJtQU/Rl8hhXNmY41Z
-         UMaUtWRKW6n6GJt1TreHcWHTKVVoJuhfcKkEmj8rgeVkJceDA8SlOjzky44uncQAPDPt
-         7IWpIGAODf+cvNy4Hau5rbJExKUNmPkBl9mG5IU/qMkf9ju50TDsAoci/7twxkDKWUVc
-         KQTn+KYpeLA/QdLRtjkxdxLYTY0iNG+zOAvYAbyl/Mz2Gf0jqNdIhCw/s+ywvt1zSrfy
-         EVYTl+8Na+IuZCQTrkKFUKtcrMKmWcU4UlIjYbq6s0ss6yudnkwr7vxZMWOHCLRJuulU
-         1tYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697545996; x=1698150796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8zOK25AhejJsCNGYHq5emnXVPEw8aJuYMYEOx/eSslY=;
-        b=D/uOrCQyfpFaf0Ilc0bcp4TpS7tMF/D7sOO8Sh+bDeR0G03sEy3N7GnidUX+ytKJa4
-         UeuU//uw5FWDgef7LorZ/ohHvaPQaiAAOyxHs8as8/StV0sP4NjyaP00aoIzM9eTKE3n
-         BgFRgwLffrj/RmWSYO3NGOprlqHhbsAj8WApNbPErJpls5UBQIz14blNoAlcVGVg2bCM
-         Kpd4dNnmXsuw9m4mTNyHorOFegMzlE2qQB3AxpHrfDOA7uvz5qVSCKLi2VwijvnPAH9b
-         qpXz0VVUJGFxi1cDZtw1TTzJFHChCpXEfGS/FqdOcxZfXYlhY7x9uFIps/To3kbvEOrh
-         FSyA==
-X-Gm-Message-State: AOJu0YyebmE06UGigJC3+9d3+BdD8djEk69fhkjbXWzz957XqHbaIM+T
-        BNaQp2W0ZxQPHKoZ/iwPxkDdzgYhNNvOo8vOiyTLHg==
-X-Google-Smtp-Source: AGHT+IHKa+vZOJw8H/LStebORG+Pgptjzt7WNiFEvBeVqbXr67kxtc+SjG30gXChUZuW6l9vM5obq62BORTYPHo3M/g=
-X-Received: by 2002:a05:6102:2a57:b0:457:bff9:f51e with SMTP id
- gt23-20020a0561022a5700b00457bff9f51emr2478802vsb.27.1697545995341; Tue, 17
- Oct 2023 05:33:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231017120431.68847-1-brgl@bgdev.pl> <20231017120431.68847-54-brgl@bgdev.pl>
- <ZS59+F8trJIjZ1hl@smile.fi.intel.com>
-In-Reply-To: <ZS59+F8trJIjZ1hl@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 17 Oct 2023 14:33:04 +0200
-Message-ID: <CAMRc=Mdj5FvTcpbJ=6UvsGRjcz_dL+cqEwUNsyAcQXBXNiyq4Q@mail.gmail.com>
-Subject: Re: [PATCH v3 53/73] pinctrl: intel: lynxpoint: drop the wrappers
- around pinctrl_gpio_direction_input()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S233345AbjJQMlp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Oct 2023 08:41:45 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFFA2B6;
+        Tue, 17 Oct 2023 05:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697546504; x=1729082504;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DqvnkqZQqzze6HgU3TyN9STbBqmIck9svTPXj7BsI6o=;
+  b=MsxJTOB77B+242DBDHi/DWMrG5diPk+mYX8D3ZH9yUhnrwYo6cwLlERv
+   w5rpn3Ok8YJIOmbBLRR6b20IRa8zprB4C4XMcu9QQfetjqiwVBFoFsGfR
+   3bCGDjYGrFvkBdqzS/Nt4qapHdwQ3YPyu4A99zYhMl0a5is4YZU8YG9SK
+   AEeiSiSFf97BlfqmnCSC6qxWfNV6YyexSc2jDbrvxBPwwHS7WdYcduMZL
+   jUJ0EKfZf14Dt6dgog4LX/HTeHfEbBSx1h3Rw1kG8pLRXROzbLsUznaIR
+   8c6FinJlSei4fq8J+9CWQNf1c464uWxtPtQszg7RWNzKGpYOWrGJZztzQ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10865"; a="376137314"
+X-IronPort-AV: E=Sophos;i="6.03,232,1694761200"; 
+   d="scan'208";a="376137314"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 05:41:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10865"; a="732712448"
+X-IronPort-AV: E=Sophos;i="6.03,232,1694761200"; 
+   d="scan'208";a="732712448"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 05:41:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qsjOF-00000006Ho0-00jH;
+        Tue, 17 Oct 2023 15:41:39 +0300
+Date:   Tue, 17 Oct 2023 15:41:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v3 54/73] pinctrl: intel: drop the wrappers around
+ pinctrl_gpio_direction_input()
+Message-ID: <ZS6BAkfFeA+6GYfz@smile.fi.intel.com>
+References: <20231017120431.68847-1-brgl@bgdev.pl>
+ <20231017120431.68847-55-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231017120431.68847-55-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 17, 2023 at 2:28=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Oct 17, 2023 at 02:04:11PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > pinctrl_gpio_direction_input() now has the same signature as the
-> > wrappers around it so we can drop them.
->
-> W/o "intel:" part in the Subj
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Tue, Oct 17, 2023 at 02:04:12PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> pinctrl_gpio_direction_input() now has the same signature as the
+> wrappers around it so we can drop them.
 
-Unless something new comes up, I'll fix this in tree in order to not
-spam the list anymore with these patch bombs.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Bart
+Now, for the sake of symmetry can you add (at least to the all
+Intel drivers you modified in this series) the following:
 
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+
+int pinctrl_gpio_direction_output_with_value(struct gpio_chip *gc,
+					     unsigned int offset, int value)
+{
+	gc->set(gc, offset, value);
+        return pinctrl_gpio_direction_output(gc, offset);
+}
+
+
+?
+
+And respectively in this driver
+
+	.direction_output = pincttl_gpio_direction_output_with_value,
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
