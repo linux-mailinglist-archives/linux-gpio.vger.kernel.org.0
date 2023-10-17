@@ -2,114 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 203FC7CC6D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Oct 2023 16:53:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79F407CC6FD
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Oct 2023 17:06:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235033AbjJQOw7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Oct 2023 10:52:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58038 "EHLO
+        id S1344258AbjJQPG3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Oct 2023 11:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235116AbjJQOwx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Oct 2023 10:52:53 -0400
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 068975BAD
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Oct 2023 07:51:16 -0700 (PDT)
-Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-49abb53648aso1695967e0c.0
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Oct 2023 07:51:16 -0700 (PDT)
+        with ESMTP id S235097AbjJQPGQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Oct 2023 11:06:16 -0400
+Received: from mail-lf1-x163.google.com (mail-lf1-x163.google.com [IPv6:2a00:1450:4864:20::163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9388427761
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Oct 2023 07:56:25 -0700 (PDT)
+Received: by mail-lf1-x163.google.com with SMTP id 2adb3069b0e04-507973f3b65so6821727e87.3
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Oct 2023 07:56:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1697554274; x=1698159074; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u5z2VQERwTnHSvknuk1StgxnUpwCYFIbvu15sN77nf8=;
-        b=ExI/2OghZTU9pTVV/9CR3BC7+9IYLeHgKYDhyi7JBD+SX/jKyTVIq/9i1kYsNpeZv1
-         c2ZLeybdo1fjGNQGcwhfhpU25eQtF9mMOrZJ8SIrlHAmgacohP3Pa6Hlqa+H/4xD+RTW
-         vwe4Dzetgsap+NW9kRDlN7C1a77mLL84hkwyRajoHzkFfq5f+zBoh14dE9tQj8W3GobW
-         rIj+ycCnTJa2IooVR3oGKbA0G7iWO7LstP0EIiHzi2Uf+rWMvzqLDRaCMV8YXoMQbhOn
-         k8MEmhpLR30oNOGFyUTkiAs9VDy+ylDEdc2IDaV9QlA6kpMkM+ES71VyQvFaUP8AAq5f
-         REEQ==
+        d=gadgetoid.com; s=google; t=1697554584; x=1698159384; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UilswDwlvBkabuCwvX6yKYehmGuxJHWmDtUkDRSp1wc=;
+        b=VA/cvoewPm9MSNOKZ71Ux/V9aC4hJbSJ0F1msAvHLuZqwiPW3mpbKbi1NS7KxOaFEF
+         r1t6SmQm2DyfNgArA9AiYeioVtXsTXGqrAFF4QviNaJ4M43oRG7BA5wdmzcKHqL3eQHV
+         DL5Lx+GI/7FvAwtoXmo73I6itoVL5SrZjsTEBya+MP1De61X1Pa4jRv4kXf4wy3atXol
+         ofCRhDxBlHjiJyYRJBSlVCIBFqHsGtH5rRuU4mW1WSmYQDcqcrlMwUArzM95y/r7loSp
+         iNRp9bCYIEqioEkE3B0frFXS1HZ9i3aDLGY5ABaTTcWwQrEWEzo6CaxZTQkpTCOuZSOG
+         5QVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697554274; x=1698159074;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u5z2VQERwTnHSvknuk1StgxnUpwCYFIbvu15sN77nf8=;
-        b=vVecAwTzTy1bYxw/H4ZljyA74RPSNwNbgGKHPRE8HPMOagjFG6joAfHVT/t8N1bcFn
-         xmJa+egf3qcpVCOpvVOMaWllnsDVLd7yJ6RcefDBMobcskPrqvTNVtHLiByeh7b19IUs
-         MGJITx9jMM4HT5WSNWcoEtUzh+q0oLAUcmnXSQFBWXv3d4PPymRjakBcxFhPcRwyj5AH
-         NCoe/4X419+Qp9LJUUCmj5bM+gm+vRg7V9l5sW202BPrctRZfKdHDUHpdX/0UZZpmcca
-         N57q1NkiR85hJZbQELD/9lWD3qXsv+i3TRTiAb/XAWJR1fwhDk2SMf1TjyofON0J2U6w
-         p/Dw==
-X-Gm-Message-State: AOJu0Yxx51wLIgKeelnDz64WJiRlVF2NiBzBfozNY2190ekng0dRaodO
-        u6DcEvJ6xVcHeAQ3lPhbJCRx3xW/o0vbvuUTbMlSPA==
-X-Google-Smtp-Source: AGHT+IFFPrIjuefWAoeXE7go+vf4kjVm1qdFs1yYBsBZd3y39xkFMYkhc2D3dpLUSosB32vra9pyqU0YRgTDlXfGs3U=
-X-Received: by 2002:a05:6122:182a:b0:49d:f67:208 with SMTP id
- ay42-20020a056122182a00b0049d0f670208mr2648080vkb.1.1697554273799; Tue, 17
- Oct 2023 07:51:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697554584; x=1698159384;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UilswDwlvBkabuCwvX6yKYehmGuxJHWmDtUkDRSp1wc=;
+        b=LrBC3lGkYw21ow/Ff4wwuVzCXqUXgwuQSKEIElOsvRWhNcUr+DaB6t9MABFIALhqwZ
+         SydObndDFYcT80DwBckMN0dsNoLcv9F7nNGM90+Ppo6Y6yDAkAwJ6/zORBKB0WTTni3x
+         LZ93DGmROYjpeJtkQoD+D/eapfndEyAMMPUtb9O8OAUoKwFdtivF+0HWqEg2VL86J3BG
+         W72cM/45KQ4QfErWyEb6gLYt00/afGHyI8pYREcMdFDzDug7TPpKCb7n0iAK1ppHBJz4
+         tdu+/VLrucMpEkNPvFQRgv3WrJnq1wqz8WxqiirW8HULZsYz0meIlEeEn8y6pOGyrbAM
+         Fk1w==
+X-Gm-Message-State: AOJu0YxkzZJgURLXvmyEVa6hq08j3OK6Wg4uVOd6e1SjeEmvVVft+Mvj
+        ftWPMbf2cw7yUBhzT8ygDaicJ57KK8rIOkr/p9/9gvqFJvR8hg==
+X-Google-Smtp-Source: AGHT+IGZaiRX1PGAr4TFtJNBLOJogNpk8raJRxIEBWitv/qMvY78TPwrJkm6PrpHLUEELFRfqQnHYS3Pd4+Q
+X-Received: by 2002:ac2:4282:0:b0:507:9a55:c463 with SMTP id m2-20020ac24282000000b005079a55c463mr1951843lfh.9.1697554583456;
+        Tue, 17 Oct 2023 07:56:23 -0700 (PDT)
+Received: from pop-os.. (cpc91242-cmbg18-2-0-cust972.5-4.cable.virginm.net. [82.8.131.205])
+        by smtp-relay.gmail.com with ESMTPS id y9-20020ac255a9000000b0050338aa1da7sm305798lfg.41.2023.10.17.07.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Oct 2023 07:56:23 -0700 (PDT)
+X-Relaying-Domain: gadgetoid.com
+From:   Phil Howard <phil@gadgetoid.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, Phil Howard <phil@gadgetoid.com>
+Subject: [libgpiod][PATCH 0/1] bindings: python: move long_description into README.md
+Date:   Tue, 17 Oct 2023 15:55:48 +0100
+Message-Id: <20231017145549.179355-1-phil@gadgetoid.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20231017120431.68847-1-brgl@bgdev.pl> <20231017120431.68847-55-brgl@bgdev.pl>
- <ZS6BAkfFeA+6GYfz@smile.fi.intel.com> <CACMJSesgT-a8krB8gvf0gJ-C+p6s1TdRcE6W_42CxR9bDvrGHg@mail.gmail.com>
- <ZS6CGcRPNzkCdnoD@smile.fi.intel.com> <CAMRc=MdbYN+ropwecPbTptV7KEt-0NdWOHn1Uq_2dgWcPv-D=A@mail.gmail.com>
- <ZS6JNXWPkDW+aoYs@smile.fi.intel.com>
-In-Reply-To: <ZS6JNXWPkDW+aoYs@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 17 Oct 2023 16:51:02 +0200
-Message-ID: <CAMRc=MeXJiLoHJBR4zK7q6rY1cbBwyiAQWUNxLtfZzPDDkC+vw@mail.gmail.com>
-Subject: Re: [PATCH v3 54/73] pinctrl: intel: drop the wrappers around pinctrl_gpio_direction_input()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 17, 2023 at 3:16=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Oct 17, 2023 at 02:55:07PM +0200, Bartosz Golaszewski wrote:
-> > On Tue, Oct 17, 2023 at 2:46=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Tue, Oct 17, 2023 at 02:44:25PM +0200, Bartosz Golaszewski wrote:
-> > > > On Tue, 17 Oct 2023 at 14:41, Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > >
-> > > > > On Tue, Oct 17, 2023 at 02:04:12PM +0200, Bartosz Golaszewski wro=
-te:
-> > > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > > >
-> > > > > > pinctrl_gpio_direction_input() now has the same signature as th=
-e
-> > > > > > wrappers around it so we can drop them.
-> > > > >
-> > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > >
-> > > > > Now, for the sake of symmetry can you add (at least to the all
-> > > > > Intel drivers you modified in this series) the following:
-> > > >
-> > > > Good idea but this is v6.8 material, I don't want to extend this
-> > > > series anymore at this point.
-> > >
-> > > Then let's postpone at least Intel and Cypress patches after v6.8-rc1=
- is out.
-> >
-> > But then we'd have to postpone the renaming and we'd be stuck with
-> > both variants in the tree. This is suboptimal. We'd also have this
-> > huge series spanning two subsystems for 3 months during the v6.8
-> > release cycle in the tree causing conflicts and other issues.
->
-> I don't see how this is related. What I'm talking is only related to drop=
-ping
-> the wrappers in the drivers _after_ whatever you do with generic APIs.
+Move the long_description text from setup.py (which appears as the
+description on pypi) into a separate README.md and include it in the
+project.
 
-Ah, I misunderstood you. Ok, I'll drop them from the tree.
+This README assumes that "bindings: python: optionally include module in
+sdist" has been applied and that the pypi package will be uploaded to
+"gpiod", replacing the unofficial pure-Python bindings that currently live
+there.
 
-Bart
+It also includes some very basic usage examples.
+
+Phil Howard (1):
+  bindings: python: move long_description into README.md
+
+ bindings/python/MANIFEST.in |   1 +
+ bindings/python/README.md   | 104 ++++++++++++++++++++++++++++++++++++
+ bindings/python/setup.py    |   4 +-
+ 3 files changed, 107 insertions(+), 2 deletions(-)
+ create mode 100644 bindings/python/README.md
+
+-- 
+2.34.1
+
