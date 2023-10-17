@@ -2,167 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 398017CB86D
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Oct 2023 04:32:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EF5A7CB942
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Oct 2023 05:25:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231856AbjJQCcU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Oct 2023 22:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
+        id S234022AbjJQDZ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Oct 2023 23:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbjJQCcT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 22:32:19 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD828E8
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 19:32:17 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-27d8a1aed37so543116a91.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 19:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697509937; x=1698114737; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=trHmVVa3HVQtG4Xt2doqvC4B0sQ9SbK5P7sWmT0onTo=;
-        b=Govb0Z/u4covux+X1yFkUr7/NBoiwPJ9CmtzIkLGTBlixGituoiSBzhgnoGI/bX17P
-         nW4kUiYyec2FbLFc43vRfWbo23b8+zqQNVISgLXERwNW4kbu9GZ7A5+ZqK+hor9+WYBu
-         8Rq2+Ed2ay52cXzNP2vYb7F3fstOpIVMCiij5S88bEULwgvHeDUXgPM+sBJAcMrQrI2e
-         r/s7Yuuttsa/i2pmEvBdoajWP4hmE6KhwGhfN7OmawYUf6/SKbypnqXbspOTDkIPhS3w
-         ZA89Wr3me7gERgE8IXYSxfcGtS9QV/bMCgK/TzSyseAzcOLZDsOYXS34zwgjicfp0VX+
-         gnSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697509937; x=1698114737;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=trHmVVa3HVQtG4Xt2doqvC4B0sQ9SbK5P7sWmT0onTo=;
-        b=Bu5pTTXqvT5O78zFZZC+NwVqD7nP6foLcsPCvkPFNqAb70SD4rgJQihHktaUOgc51m
-         m97P7hzX0buFUdkCGieJ3pz40q15y+NVCFCkdlUUQPvZDHUBLY+4F+A3i+rzUZEsfPd0
-         ND3F8H3e9F69b39SSXi/wWI3tzITlsW+rZb1o6ByTF1fNxYdYo8RigwapXWRWDxXkPaz
-         uQ2j6FJ53xxz0g+Z11EUctXr7Xl0FJS6Z6OaPnhU2yH5iDZ8/o9Tj/j+fTmYUE4VGRrU
-         miEKzgBhy9KIBgdr/a+ckHdgW08/XvwJagslEPE2Bruw0AFbP8Pgx5Rx0ae8R72LIhhQ
-         2WYg==
-X-Gm-Message-State: AOJu0Ywfrhc1Amalew/v2SXjJsoj86hYy0wXg4G2/6JHjzEwmU5GFb8t
-        UwODCFobGBByLn1B2TwGqR+l0g==
-X-Google-Smtp-Source: AGHT+IGdPnaBYT7c8lIIVrIXW+cFRIDzNmwPorn8Hdp88GfjSDfiCtDs/2w9Fxd3AznDtYhsuNugYw==
-X-Received: by 2002:a17:902:dace:b0:1ca:8e79:53ae with SMTP id q14-20020a170902dace00b001ca8e7953aemr1081353plx.1.1697509937071;
-        Mon, 16 Oct 2023 19:32:17 -0700 (PDT)
-Received: from octopus ([2400:4050:c3e1:100:b992:c10c:3bda:e666])
-        by smtp.gmail.com with ESMTPSA id j14-20020a170902da8e00b001c9bca1d705sm284757plx.242.2023.10.16.19.32.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 19:32:16 -0700 (PDT)
-Date:   Tue, 17 Oct 2023 11:32:11 +0900
-From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
-        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
- generic gpio driver
-Message-ID: <ZS3yK/f12Mxw9rXe@octopus>
-Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
-        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
- <20231005025843.508689-6-takahiro.akashi@linaro.org>
- <20231006132346.GA3426353-robh@kernel.org>
- <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
- <ZSTgTC4cFFpofYAk@octopus>
- <CACRpkdYD6pkccYoy90AfzV3KT7oYkBPD2_4ZW-AXzT1eUVpchA@mail.gmail.com>
+        with ESMTP id S231856AbjJQDZ5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Oct 2023 23:25:57 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2041.outbound.protection.outlook.com [40.107.6.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152099F
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Oct 2023 20:25:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I3RKtdvA83PpnQ8SmxK0sQCEWG7BTj61d9EkrsxedZCcwPO2Z57ldQ2itigh8XYMCYeWwKNC8dcRzVC3+HjnhfIL9dGwBK5gaMkpPd6wL/KIV26EYzPN54dpwt+f9Xw8co8Gb6NJJS5150vCgDPgoAWUo/0DH4It2KQApbUzFl0GissEZTeVmVO+c4R1sJm2j7W7gpNGT+Mn/sFchXo1SQEp5ZLmKH9p8/TK8OeaBMNq589BGl57qZYNiBlcH/hI51VIoRsoFW6kLE8LUH24FlRS4AuDG3G2NPELd0GjbxBz6XG6dUmfAxDWkrIR0XAzP90LFh72ETsEjDoo+fOqKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fhYRKhos8bjI9tfnu5ukcLa1FX+xt5JSlluvPGkLNCM=;
+ b=ERscxt1UuMsS7+ovF+y7DuTCfOK6HvQcqCnpmQfQPldp63lH+9tPHMZ3JkF2CSibYibGU+L2AuwfUUr2kz3JK7LIVg2VI8Tahb7r4mCVVM/JV1TxV72+Uj2wh4Te643KDstnjRhna4DQo0b+YxDMi9FQhDCdBs/cp/ePVqsG8AP4KUazuPU6IpvEUzgCiFbgQwvzNmCVWejQlIylIj+4xaQRigLOjBwaZY73sQoyY+bNa+FifKGDIw69/7yHV1XE6IK9PE+lDSrB4Pt/tRgmjcDHKH4rm/ir1VXWCo/+U8waVZZ3wzGDZPPAx+YRrPh1kJ5zTPKa0yGDxAgi/vqNNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fhYRKhos8bjI9tfnu5ukcLa1FX+xt5JSlluvPGkLNCM=;
+ b=L2K6RxUH9f1gDqWmPjw5BQTPvMTeHrL4oNuuAF0j05OqD8vDYKp1zLWIKwWrFvnXSBhnwrgIyH6iIhNfti+wS8/wfyXzd9OvQTYIYBb9xLk1oknKRxQfaHHMTP6j5+p2FUir96ZMAdxdwQy0di8VEH7ZBVlmWizr8Umi5oJJG+w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB7PR04MB4010.eurprd04.prod.outlook.com (2603:10a6:5:21::30) by
+ AS8PR04MB8515.eurprd04.prod.outlook.com (2603:10a6:20b:342::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.36; Tue, 17 Oct
+ 2023 03:25:50 +0000
+Received: from DB7PR04MB4010.eurprd04.prod.outlook.com
+ ([fe80::e796:8366:5d4:4188]) by DB7PR04MB4010.eurprd04.prod.outlook.com
+ ([fe80::e796:8366:5d4:4188%4]) with mapi id 15.20.6886.034; Tue, 17 Oct 2023
+ 03:25:50 +0000
+From:   haibo.chen@nxp.com
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     andy@kernel.org, haibo.chen@nxp.com, linux-gpio@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: [PATCH 1/2] gpio: vf610: mask the gpio irq in system suspend and support wakeup
+Date:   Tue, 17 Oct 2023 11:30:38 +0800
+Message-Id: <20231017033039.1245959-1-haibo.chen@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0008.apcprd02.prod.outlook.com
+ (2603:1096:4:1f7::14) To DB7PR04MB4010.eurprd04.prod.outlook.com
+ (2603:10a6:5:21::30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYD6pkccYoy90AfzV3KT7oYkBPD2_4ZW-AXzT1eUVpchA@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB7PR04MB4010:EE_|AS8PR04MB8515:EE_
+X-MS-Office365-Filtering-Correlation-Id: 259f0f83-51ce-46f4-d6e3-08dbcec0c2b9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bYB1RV7hk9AzCFu99cOBQt1WF9CRNLkYSl6ReneAlQMGSo/uLjcizy2O63mH/YvEEMQthAaO+YtKzxbCOlzhgUwr4//HQ2PtVyUuKbQ8qy0i0uWgiv33WRm16zZa+SYjKnz/zhQfdpLf6P/l/Br+BUwFXYrbYzWe2mPR6nr18JGtp8LXyxgNCUAlQWGuKmJHUn/t0rodugiQmGX/0YTknd1b7HPDrnQAI62xKck0t5v9oyKvXpV9sfJ02xfwcIAKMCqL0UwiytgpRvkHbCaoK86c3ExcQESURLg2WD+wyQgo4bhN0OXTfE5DEAuIHlgva6fIcjzoCpN5KSl+yEvw4yAnL1uJ5UV09wn9OYaOhgYlbbVtpr5nXr1JV/XF3HwokxpohbkE1KXhnHc7Nmcl9arr7Ofd8cmjmSpDiaq3roLlEtx2Uc2eOpMsS0zRP6oaCaiy45EDoo2sMctinRGS9LoP6rXiOos3xjvgq6xAd0fvd5UuhPHOoZ8xkIeubScZznro6bntzmtgYnqguAuKmDLN7/5mUNPP1GjX/DpzrnDRTI65YZbgXjzpyK/TEnw4vs5nXMTp04TUJKnPaoCql6+LVrjvpQuWvC1PkMlPqZg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4010.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(366004)(136003)(39860400002)(230922051799003)(451199024)(64100799003)(186009)(1800799009)(2906002)(6666004)(9686003)(38350700005)(6512007)(15650500001)(8936002)(8676002)(5660300002)(4326008)(41300700001)(316002)(66556008)(66476007)(66946007)(6486002)(478600001)(38100700002)(6506007)(52116002)(83380400001)(86362001)(36756003)(1076003)(26005)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eUJ4gnkV8S+6R/y73fcf8oaByTJn95vm/Ri3sfWO6tkormbF6nnN60tba3sG?=
+ =?us-ascii?Q?nwEltNNhOJLWeHXgJk0Qi902DWW3bodvqGMPYa5050A+6rTvEqLgBIItOZcn?=
+ =?us-ascii?Q?Rq/f0Bd2w6Oe99yHCGIG/p/5pYId+xvFNyiASRhUH3ivae/AQNRVHdkunFD9?=
+ =?us-ascii?Q?OImBGgrxSFwC/1teNa0sDxK6SG7LYhHL9bO6PvAYse/VMT3FVf2WBAT7U86R?=
+ =?us-ascii?Q?OXXB/ja4E7rapdjA0jViRVjT7W0Le+aNt2w5K5aStT2uKXL/Cz80ufKkaen8?=
+ =?us-ascii?Q?t1YbHnJ4uLzXiCwdeb726XpJlZwxuIYhkRXEg648K+3rTIhVheY4u4UJml6O?=
+ =?us-ascii?Q?JNRFLRyYqn3UujwrfmgxVyokadrD9ng72mPD0zRmbfa/rW5ajuA0qJqdXSoo?=
+ =?us-ascii?Q?L7fMHdDASgSYjVLYhWKRvgXe0yCpIajl0nRngIbhEEyUJWT1zUnqUaXituq+?=
+ =?us-ascii?Q?XDpX6EPVL6dSWFCuMS5n4mA/CARTNOJZj7snPctrIikZFfFx09xkbrSKTYKd?=
+ =?us-ascii?Q?/5giDNmONwmw4FWGmhjIfM8ce0mB/iBoLMfaoZesISXZCHrN71CmF9+pYXU8?=
+ =?us-ascii?Q?/Qk6QRGLEkVxkFn79Mp9p878OpAAATHjG1J3UNuxtnE5CiLbeUxWINrkXbol?=
+ =?us-ascii?Q?mSki/iAuIhS3q6s0XIB0jtD2mGhGuevipCeEtgNoEfEHe9327pgMyO2akJ9V?=
+ =?us-ascii?Q?4uW/TYEdrUYFsgZbCD8Ocz1H3qEQsxwgmAcqmDnj+xRPFCwYrCWlhZDGNueb?=
+ =?us-ascii?Q?QJTqaFUQan8nuXBj6rGEbvK9qgOnCIHi2qRr9PDdBBYLqpq49TjFn4Y0x8A3?=
+ =?us-ascii?Q?ipDbuw9Iz6rJbMlXHkL9ywA+9tPCrCLxSdgpzT+QJJU+nXJes5rVwsGFFe7r?=
+ =?us-ascii?Q?C1hnaloK+w+xs4SPDMAXZB2MyCfhE2ESUYEQqMQFM+3Grw5852wnFC23Dw4i?=
+ =?us-ascii?Q?jFyBew8JA6+9EcLqsOAzNjIl+WKSxB0LUPydvnxy1pVd5FM93ZdZlnUvNXIN?=
+ =?us-ascii?Q?IXeOZ5PIjjmN0cJYN0M8Ky7mkKpeBO8k5gqLJsNs6L4paVZpABkvMtT9VtUs?=
+ =?us-ascii?Q?GXrjdGnpB34yVC4mMQ8lpNF2stTGZxIBjs/HbdQt4gTc9fUuOcz8v3kYTW2C?=
+ =?us-ascii?Q?Vy+xXgXIGeMQ7gWCqMZF9TBEBfn8a7fCiRfx/wt1ReA24nLBz3lohOAZVFdB?=
+ =?us-ascii?Q?+M7wQtbpM8qHDr8rkDqsoDCs2Oiyg3YSN82ZxgfOJgYz9oUaxmySdr1NteYm?=
+ =?us-ascii?Q?gKulxhFGwLNvcaZlfVLTrPx7d71dBsCXiID5fupAkoVnybANwZRitZiMECNe?=
+ =?us-ascii?Q?ew7D/a6gCmfE8k2iCcAhbGoCaaCtzC1ayHzc0t/0gzlTbW+2cMbEHeYPWcwk?=
+ =?us-ascii?Q?491fNa8obv4ohiD17Q/hQK/Sazc4EA/eDVaEh+Cb9d97wOOI4t+lPgOLnWrP?=
+ =?us-ascii?Q?LY4SRJQyphiyQNP6+uRPFA7HRJo0Pu4Vv4pnUL+QhBeIs3JjiIWVsAKxSYnc?=
+ =?us-ascii?Q?6NPB2n09OTydWGps2CwEBozKdcT7yAwBRgkiiFn/psLJ548mhbVTdfWTJ+Xw?=
+ =?us-ascii?Q?jI893steZxWXXI1vLTfwJHrkUxwQKDr5JEKlo7Qi?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 259f0f83-51ce-46f4-d6e3-08dbcec0c2b9
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4010.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2023 03:25:50.2710
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: N2cFbSa7bVejcJuy0zTVw3A1CuSngnZ0RZavJBGOESf4MgqhJhfAfB2GW6tjIesK7UJq9FeI7BuEwJ5l6OeBnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8515
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+From: Haibo Chen <haibo.chen@nxp.com>
 
-On Thu, Oct 12, 2023 at 09:25:20AM +0200, Linus Walleij wrote:
-> On Tue, Oct 10, 2023 at 7:25???AM AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> 
-> > > We can probably mandate that this has to be inside a pin controller
-> > > since it is a first.
-> >
-> > Yeah, my U-Boot implementation tentatively supports both (inside and
-> > outside pin controller). But it is not a user's choice, but we should
-> > decide which way to go.
-> 
-> OK I have decided we are going to put it inside the pin control node,
-> as a subnode. (I don't expect anyone to object.)
+Add flag IRQCHIP_MASK_ON_SUSPEND to make sure gpio irq is masked on
+suspend, if lack this flag, current irq arctitecture will not mask
+the irq, and these unmasked gpio irq will wrongly wakeup the system
+even they are not config as wakeup source.
 
-While I'm still thinking of how I can modify my current implementation
-to fit into 'inside' syntax, there are a couple of concerns:
+Also add flag IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND to make sure the gpio
+irq which is configed as wakeup source can work as expect.
 
-1) invoke gpiochip_add_data() at probe function
-Probably we no longer need "compatible" property, but instead we need to
-call gpiochip_add_data() explicitly in SCMI pin controller's probe
-as follows:
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+---
+ drivers/gpio/gpio-vf610.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-scmi_pinctrl_probe()
-    ...
-    devm_pinctrl_register_and_init(dev, ..., pctrldev);
-    pinctrl_enable(pctrldev);
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index a89ae84a1fa0..77d5b8dd2bd5 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -260,7 +260,8 @@ static const struct irq_chip vf610_irqchip = {
+ 	.irq_unmask = vf610_gpio_irq_unmask,
+ 	.irq_set_type = vf610_gpio_irq_set_type,
+ 	.irq_set_wake = vf610_gpio_irq_set_wake,
+-	.flags = IRQCHIP_IMMUTABLE,
++	.flags = IRQCHIP_IMMUTABLE | IRQCHIP_MASK_ON_SUSPEND
++			| IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND,
+ 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+-- 
+2.34.1
 
-    device_for_each_child_node(dev, fwnode)
-        if (fwnode contains "gpio-controller") {
-            /* what pin_control_gpio_probe() does */
-            gc->get_direction = ...;
-            ...
-            devm_gpiochip_data_add(dev, gc, ...);
-        }
-
-2) gpio-by-pinctrl.c
-While this file is SCMI-independent now, due to a change at (1),
-it would be better to move the whole content inside SCMI pin controller
-driver (because there is no other user for now).
-
-3) Then, pin-control-gpio.yaml may also be put into SCMI binding
-(i.e. firmware/arm,scmi.yaml). Can we leave the gpio binding outside?
-
-4) phandle in "gpio-ranges" property
-(As you mentioned)
-The first element in a tuple of "gpio-ranges" is a phandle to a pin
-controller node. Now that the gpio node is a sub node of pin controller,
-the phandle is trivial. But there is no easier way to represent it
-than using an explicit label:
-(My U-Boot implementation does this.)
-
-scmi {
-    ...
-    scmi_pinctrl: protocol@19 {
-        ...
-        gpio {
-            gpio-controller;
-            ...
-            gpio-ranges = <&scmi_pinctrl ... >;
-        }
-    }
-}
-
-I tried:
-    gpio-ranges = <0 ...>; // dtc passed, but '0' might be illegal by spec.
-    gpio-ranges = <(-1) ...>; // dtc passed, but ...
-    gpio-ranges = <&{..} ...>; // dtc error because it's not a full path.
-
-Do you have any other idea? Otherwise, I will modify my RFC
-with the changes above.
-
--Takahiro Akashi
-
-
-> It makes everything easier and clearer for users I think.
-> 
-> Yours,
-> Linus Walleij
