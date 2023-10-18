@@ -2,121 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59ED17CDADE
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Oct 2023 13:41:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C41E7CE07D
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Oct 2023 16:58:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231367AbjJRLlt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Oct 2023 07:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34502 "EHLO
+        id S231247AbjJRO56 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Oct 2023 10:57:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjJRLls (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Oct 2023 07:41:48 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA0611B
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 04:41:47 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5a7af52ee31so81537017b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 04:41:47 -0700 (PDT)
+        with ESMTP id S235251AbjJRO56 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Oct 2023 10:57:58 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA388F7
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 07:57:55 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-53d82bea507so11966649a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 07:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697629306; x=1698234106; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/wt7hBmTjyhHKxT1iU8w6hvI4yVCQQDXaEm9aRSBcGw=;
-        b=e5WzcXpU2fytb9XN+joCyQquPfEHbbmxmTZYnsphwz4tGBfw/uY1+dZa1pLJeAsaWQ
-         zBaSGvkkSZiYlF4+gzArH/Eyr4RxfNjIy9VhRXPGrJ6LF5LFc2ePfEth/pywQDlaKC4t
-         kLITA9ddJneRhayKWYbgKk5azhhkXA6HNgkWtsFSWZyUkCrUQq0ljXSC/eP/pXTjvsJ0
-         S5qFZrGNS0ValRPoh869NYvQZEYj9IbABWnX9J9+KpJDvfO0SCiyva/Hqlqcr2kb9yN2
-         Hwjwv3yF+XTNXDh8C6OnBTFduXVgnwWy+TLmQi8qCqJX3op6y6uWx/42zz9qDX9K5YC3
-         ebMA==
+        d=linaro.org; s=google; t=1697641074; x=1698245874; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ru2R7zuvY45hV9RylJTA2u/cUA8xp2Mn6s4hLcqrWjk=;
+        b=XlGFl4slyc37E0A9PVGSExMMi0jnmIava72qbqtsGfGEbxf2iljWLNXVJRE4qH23v1
+         tZqXwWHtYNLzhdYz4uNgoDW93Fs38cawcvQODXSmresAURRI2XKnhRQy4qe7zX8dxxvA
+         wkc+H5FdfP+d6KIGHK3MOXKGuVjoTELdB0YoCIk+mKz5sPoTkTW8dvE5MIcGjvFgJBYG
+         dfwcO/paVbQO5Fq4UJt0Jrj9MpFSCyDkFA0/8lTeG3o4tFPPomgnbTlyE+BwCOc+25V0
+         ycPOsJLqxBs4tBTRJrrDJ89l3DmFPxgk9PvW2KNZ/twN1uruI/khSZAZgD88iiNOq4Rj
+         FjZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697629306; x=1698234106;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/wt7hBmTjyhHKxT1iU8w6hvI4yVCQQDXaEm9aRSBcGw=;
-        b=F5noEBKcruIeRSJJ0EPBRorZYxxsF6JL9IUMz/1X/aRFbqeHnxAsybmFyTXHFfU+mz
-         EDRyPmJphvgQLRI9ynqmYvw+i9VA6bcdCWpt9zrP/K7QQEQcyDfDb5D1r1fLUUqsVlXL
-         Oh2IQy8SmcIGwrXjHf3TxNHWnMQ0FG8Jy8veyhnC62gIvEeychprIXjsqBodaxGvO5ex
-         wl0k0eCk72oggtkLQFYiV4b9C4dspKXGqJ60gw+XzsZsrn5QxuU4RG8+KbhLI9/YCRsF
-         ym1YHElHLsX1iUkEVYoGcxcuhsqKfMsec6zjsV+puXXJ+t0M+tLsd9muOG+v0GrTLvTp
-         FvFw==
-X-Gm-Message-State: AOJu0Yz4H5Gy70zGrPHkCIyiNghx2Mps8caqFM9lxwj2eC93XSHsqLgA
-        qs3+H31Q4lj4jEj/4Z23v5YrH8kDRj8GiQFzjH1I5w==
-X-Google-Smtp-Source: AGHT+IH6Ar5ABgryO9a/1CG5P1p4amLNNPBAwWHOK/HFmzy/cNuiZKpFEYqQoBzaYhl7Y/eFSIxDdQy3k/YTcrkku00=
-X-Received: by 2002:a81:92c8:0:b0:59f:6675:7771 with SMTP id
- j191-20020a8192c8000000b0059f66757771mr4389883ywg.35.1697629306289; Wed, 18
- Oct 2023 04:41:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697641074; x=1698245874;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ru2R7zuvY45hV9RylJTA2u/cUA8xp2Mn6s4hLcqrWjk=;
+        b=ushHS++jpfoZcG/+adjelQnmnMWBBZMouvNE314617MohW/m2Ab4yP2aOBAHSLv4iw
+         xlk01c2ED2VJGey2ZUyZA+DrszxFcS6WodcbhumhPcOhb2yoTbdWN9L22s+O+M3gPegF
+         Kecfewewtu0hlx5+4OWXutHQ8IJBiZSakpBTU4z2GXHGJYV12D6a6tzgDhxaQfD9ueN5
+         7zoaD2hsnWyZOWIAMNAt9pfxOQwZc8+jfhhyIBgh5BxjzKD8HTqXAZONVqa+OBuO//HA
+         Z2ITMQSYJqh19zcGOQb8XQUcQMJMOHrlzoG5VQua7n2P5CzFlp3fZ8C5bhz2TuiYnHzd
+         to9Q==
+X-Gm-Message-State: AOJu0Yy7J04J1L/Yq4cGPnmy3sPEIB1ZdlwY41JCB1ybd7Ex6ffoA5pK
+        pQfH/i67g6zvAbTEgfcGTD2bNALm+qV8qNALsYk=
+X-Google-Smtp-Source: AGHT+IF3KKzONpdhTXHuqkIwWMJvt0YLy7is0f4aGGbq4QIrdEF6b1TfFbNUCBYfaeYF9w08njGe7Q==
+X-Received: by 2002:a50:a446:0:b0:53e:10a1:21d with SMTP id v6-20020a50a446000000b0053e10a1021dmr4191660edb.35.1697641074233;
+        Wed, 18 Oct 2023 07:57:54 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.154])
+        by smtp.gmail.com with ESMTPSA id t29-20020a50ab5d000000b0053ed70ebd7csm2983570edc.31.2023.10.18.07.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Oct 2023 07:57:53 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] dt-bindings: pinctrl: qcom,sa8775p-tlmm: add missing wakeup-parent
+Date:   Wed, 18 Oct 2023 16:57:50 +0200
+Message-Id: <20231018145750.429385-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20231011090510.114476-1-ychuang570808@gmail.com>
- <20231011090510.114476-3-ychuang570808@gmail.com> <7800b2d6-33c4-4c4f-8d0c-c11ff0e47535@linaro.org>
- <17a80031-98bf-48bf-8cea-c0ca4400f142@gmail.com> <254837e5-a0fa-4796-8928-277db4b98bf1@linaro.org>
- <CACRpkdaiihOex19SavWwC+S8o5qp=F=XMNm9+UXh=q2nVbOFkA@mail.gmail.com> <4ca28f03-eb05-4cd7-ace5-8cbc0d108b6c@linaro.org>
-In-Reply-To: <4ca28f03-eb05-4cd7-ace5-8cbc0d108b6c@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 18 Oct 2023 13:41:34 +0200
-Message-ID: <CACRpkdbXm5f7aCnnQ58=XN6PohviPzab0LRw4f6Jq=JZXiVCqA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: Document nuvoton ma35d1 pin control
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Jacky Huang <ychuang570808@gmail.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        p.zabel@pengutronix.de, j.neuschaefer@gmx.net,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        schung@nuvoton.com, Jacky Huang <ychuang3@nuvoton.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 18, 2023 at 11:53=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> On 18/10/2023 10:18, Linus Walleij wrote:
-> > On Mon, Oct 16, 2023 at 9:52=E2=80=AFPM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >
-> >>> I noticed that 'xlnx,zynq-pinctrl.yaml' and 'xlnx,zynq-pinctrl.yaml' =
-use
-> >>> 'power source' to specify the output voltage.  Should I follow their
-> >>> approach or define a vendor-specific one?
-> >>
-> >> Maybe Rob or Linus have here some recommendation, but I would suggest =
-to
-> >> go either with rtd1319d-pinctrl.yaml approach or add a generic propert=
-y
-> >> to pincfg-node expressed in real units like "io-microvolt".
-> >>
-> >> Rob, Linus, any ideas for generic property replacing register-specific
-> >> power-source?
-> >
-> > The existing power-source is generally used to select between (usually
-> > two) different chip-internal power rails, such as 1.8V and 3.3V.
-> > The format is a driver-specific enumerator.
-> >
-> > We *could* just patch the documentation for power-source to
-> > say that microvolts is the preferred format but legacy users may
-> > be using a custom enumerator.
-> >
-> > io-microvolt seems like a more long-term viable option if a wider
-> > range of voltages are to be supported so I'm happy with that if the
-> > DT folks think it's nicer. However notice that the power-source
-> > property is already being hard-coded into things such as SCMI
-> > and ACPI so it's not like it will ever be replaced by io-microvolt
-> > and phased out as far as Linux is concerned. Not the next 50
-> > years at least.
->
-> This I understand.
->
-> I think It is better in general if generic properties use units (e.g.
-> drive-strength-microamp, output-impedance-ohms), so it could be here
-> "io-microvolt". At least for the new bindings.
+Add missing wakeup-parent property, already used by DTS to indicate that
+pins are wakeup capable:
 
-I agree. Even io-voltage-microvolt perhaps.
+  sa8775p-ride.dtb: pinctrl@f000000: 'wakeup-parent' does not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
 
-Yours,
-Linus Walleij
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
+index e119a226a4b1..2173c5255638 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sa8775p-tlmm.yaml
+@@ -28,6 +28,7 @@ properties:
+   gpio-controller: true
+   "#gpio-cells": true
+   gpio-ranges: true
++  wakeup-parent: true
+ 
+   gpio-reserved-ranges:
+     minItems: 1
+-- 
+2.34.1
+
