@@ -2,304 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E0387CD2A6
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Oct 2023 05:26:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E71D7CD353
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Oct 2023 07:01:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbjJRD03 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Oct 2023 23:26:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57818 "EHLO
+        id S229447AbjJRFBh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Oct 2023 01:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjJRD02 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Oct 2023 23:26:28 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46E3BA;
-        Tue, 17 Oct 2023 20:26:26 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1bf55a81eeaso43598565ad.0;
-        Tue, 17 Oct 2023 20:26:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697599586; x=1698204386; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PHviYvEcpPmVkvkxsXVgEvF0IjYVpOyRZvIZTPHvuAc=;
-        b=R0qQdZqwIgH9z/5NaNp0aLzqkLlX3Tr1WmKY0mW2oyg8BsqAlOpI9Wp1uUbBazaSlh
-         3bXUaAgfw2ZBMWZPQ+O/o7Q5ZkjxlxTj8v8d/Gf7zPr1PRvk7U2L3+i+xjYLVEnq8YMs
-         GcNcM0kkYYlAXRmmF7BxCWORMyejgNZDRLAcoPy9NA+mWgUI3I9Q5TSN+b6LgIkZJqYd
-         yTiutZWD/9vvdIouXB0vVbATCj/fkoXotA/ZhK/3xC6dhFzq5nOipWOFCnaa+JUyBHuk
-         HdHH6MDbOwXbyFVOgX9xc3+oYsYLIKiAdfDoDyoInYao3pZhcpNIaPJGCNnNf620VEtU
-         nijQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697599586; x=1698204386;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PHviYvEcpPmVkvkxsXVgEvF0IjYVpOyRZvIZTPHvuAc=;
-        b=gz1XqWpQT1rwfdQhndJkCxuqFrBdjLF8aQpfpkwqpVv7lyKcSn+OHtdhng5vxNgjIz
-         WqDc1CxtoDZlHisO5SlEfh+lZXtmKi+t8CCLFzvOc3oNEbpBvpYnva8ANqIvlS4LuhYH
-         GAMfX7TWy/bJafgHuJL0rWNQz2pB3YKnci0fRRq4dkAQwkAgeTCV3ZQ/dnfl0SWuuA5j
-         CSNswJvntmLBq3zs1uQhxK0UD7aB0KZkgUY+eOwGHk5q5LVffibkfTirzIjNd7WMBzie
-         kIbrps3ifJldlLYL2nQ9bBRplywJQ65HeRJYr+HNECgjWwUAuexydx/vUYxm0akYCufK
-         20rw==
-X-Gm-Message-State: AOJu0YyWsP7Ydh4Hi45gPn58LaD+kWb/Q3iFSutaSid8AXVLGZ3PfYoY
-        s1xYCreJ7yXWEWOyDdNUdLOQ/RW8QMI=
-X-Google-Smtp-Source: AGHT+IFw85MD3M6uPf/yTnwSEICiOIUnNEgW2hmGP7tvPfmUGI+pJ+r5CWuCD+qsBdx+/YR8e9yRsg==
-X-Received: by 2002:a17:902:c649:b0:1c4:4462:f1bd with SMTP id s9-20020a170902c64900b001c44462f1bdmr3340196pls.35.1697599586067;
-        Tue, 17 Oct 2023 20:26:26 -0700 (PDT)
-Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id 20-20020a170902c25400b001c9b70609e8sm2336469plg.256.2023.10.17.20.26.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Oct 2023 20:26:25 -0700 (PDT)
-Message-ID: <8e983479-709f-4ec8-85e2-c46a5256a2ec@gmail.com>
-Date:   Wed, 18 Oct 2023 11:26:21 +0800
+        with ESMTP id S229563AbjJRFBf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Oct 2023 01:01:35 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08662103;
+        Tue, 17 Oct 2023 22:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697605294; x=1729141294;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xa+xut1TfI2HMab1q65v9qAkFEYsv5oUYEFQQ4ltZ4M=;
+  b=Julb1pfO13XJyWaefCiEmekd69bJj5BDrQL0cS5SH43Azy2RDyCQrCK0
+   5x7uPO1XBZIXngPRJccEvFGX4z/2YhouMMvZxXYnK3hxJ44H55tedAk4c
+   KMnCP7L19faMqfLp/SQOMwLcCQVmB4JDgwT0yrJ+yKrjH6ge7q/eipWLv
+   nhYbplyyVkSpLbSS4odvSdLCnindetXq02lOj60yg6FNvmzqITsB/Diz1
+   f+MYT1U4V3L2qfy4Q/4eqY0eJXK+Gb4vlWCk+9S5aTzd61g8ckvNDOZgT
+   inC0CfxOKfVileVWRHHpOZ+0erU9KIoAOI9mPXj3EViI0mAsycgR//fvN
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="389813958"
+X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
+   d="scan'208";a="389813958"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 22:01:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="1003626061"
+X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
+   d="scan'208";a="1003626061"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 22:01:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qsygO-00000006VXl-0ZsZ;
+        Wed, 18 Oct 2023 08:01:24 +0300
+Date:   Wed, 18 Oct 2023 08:01:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ferry Toth <ftoth@exalondelft.nl>
+Subject: Re: [PATCH v1 1/1] Revert "pinctrl: avoid unsafe code pattern in
+ find_pinctrl()"
+Message-ID: <ZS9mo4/jnRNoTE+v@smile.fi.intel.com>
+References: <20231017141806.535191-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbHJHsgJ=3pYveP-x-Vuwwf3ib6TnFOt3UpCrKevf=d1w@mail.gmail.com>
+ <ZS7TuodhwNxU9Ez6@smile.fi.intel.com>
+ <CACRpkdZfzq81SZnEpB_Acp_=8Xc2TEMNi8yS_j4wNBcQKXgrgg@mail.gmail.com>
+ <ZS7kY/+80Be4geGM@smile.fi.intel.com>
+ <ZS7_5VGvRnw99gzd@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: Document nuvoton ma35d1 pin
- control
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        p.zabel@pengutronix.de, j.neuschaefer@gmx.net
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        schung@nuvoton.com, Jacky Huang <ychuang3@nuvoton.com>
-References: <20231011090510.114476-1-ychuang570808@gmail.com>
- <20231011090510.114476-3-ychuang570808@gmail.com>
- <7800b2d6-33c4-4c4f-8d0c-c11ff0e47535@linaro.org>
- <17a80031-98bf-48bf-8cea-c0ca4400f142@gmail.com>
- <254837e5-a0fa-4796-8928-277db4b98bf1@linaro.org>
-From:   Jacky Huang <ychuang570808@gmail.com>
-In-Reply-To: <254837e5-a0fa-4796-8928-277db4b98bf1@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZS7_5VGvRnw99gzd@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Krzysztof,
+On Tue, Oct 17, 2023 at 02:43:01PM -0700, Dmitry Torokhov wrote:
+> On Tue, Oct 17, 2023 at 10:45:39PM +0300, Andy Shevchenko wrote:
 
-Thank you for the review.
+Thanks for your response.
 
+...
 
-On 2023/10/17 上午 03:52, Krzysztof Kozlowski wrote:
-> On 16/10/2023 06:32, Jacky Huang wrote:
->>>> +  '#size-cells':
->>>> +    const: 1
->>>> +
->>>> +  nuvoton,sys:
->>>> +    description:
->>>> +      phandle to the syscon node
->>> sys is quite generic. Description explains nothing except duplicating
->>> known information. Drop duplicated info and instead explain to what this
->>> phandle points and how it is going to be used.
-> Read comments carefully.
+> I wonder, could you please post entire dmesg for your system?
 
+Working, non-working or both?
 
-I will update the description of 'nuvoton,sys'.
+...
 
->
->>>
->>>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>>> +    items:
->>>> +      maxItems: 1
->>> So just phandle, not phandle-array, unless it is defined like this in
->>> some other binding.
->> I would like to update this as:
->>
->>     nuvoton,sys:
-> Nothing improved.
+> I think the right answer is "fix the userspace" really in this case. We
+> could also try extend of_alias_get_id() to see if we could pass some
+> preferred numbering on x86. But this will again be fragile if the
+> knowledge resides in the driver and is not tied to a particular board
+> (as it is in DT case): there could be multiple controllers, things will
+> be shifting board to board...
 
-Here just fix  the 'phandle-array' to 'phandle' and remove 'maxItems'.
+Any suggestion how should it be properly done in the minimum shell environment?
+(Busybox uses mdev with static tables IIRC and there is no fancy udev or so)
 
->>       $ref: /schemas/types.yaml#/definitions/phandle
->>       description:
->>         Help pinctrl driver to access system registers by means of regmap.
-> Driver is not relevant here. Say which part of syscon are necessary for
-> pinctrl operation.
->
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I will update description as:
-
-   nuvoton,sys:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
-       The pin function control registers are located in the system
-       control register space. This phandle provides pinctrl the
-       ability to access the pin function control registers through
-       the use of regmap.
-
-
->>
->>
->>>> +
->>>> +  ranges: true
->>>> +
->>>> +allOf:
->>>> +  - $ref: pinctrl.yaml#
->>> allOf: goes after required: block.
->> I will fix it.
->>
->>>> +
->>>> +patternProperties:
->>>> +  "gpio[a-n]@[0-9a-f]+$":
->>> ^gpio@[0-9a-f]+$":
->> I will fix this, and also fix the dtsi.
->>
->>>> +    type: object
->>>> +    additionalProperties: false
->>>> +    properties:
->>>> +
->>> Drop blank line
->> I will fix it.
->>
->>>> +      gpio-controller: true
->>>> +
->>>> +      '#gpio-cells':
->>>> +        const: 2
->>>> +
->>>> +      reg:
->>>> +        maxItems: 1
->>>> +
->>>> +      clocks:
->>>> +        maxItems: 1
->>>> +
->>>> +      interrupt-controller: true
->>>> +
->>>> +      '#interrupt-cells':
->>>> +        const: 2
->>>> +
->>>> +      interrupts:
->>>> +        description:
->>>> +          The interrupt outputs to sysirq.
->>>> +        maxItems: 1
->>>> +
->>>> +    required:
->>>> +      - reg
->>>> +      - interrupts
->>>> +      - interrupt-controller
->>>> +      - '#interrupt-cells'
->>>> +      - gpio-controller
->>>> +      - '#gpio-cells'
->>> Keep the same order as in list of properties.
->> I will fix the order.
->>
->>>> +
->>>> +  "pcfg-[a-z0-9-.]+$":
->>> Why using different naming than other Nuvoton SoCs? You also accept
->>> "foobarpcfg-1", which does not look intentional.
->>>
->> I will use '"^pin-[a-z0-9-.]+$" instead.
-> [.] is redundant... What exactly do you want to match?
-
-I want to match the name like "-1.8v" or "-3.3v".
-However, this should be specified in the property, so I will drop the "-.".
-
-
->>
->>>> +    type: object
->>>> +    description:
->>>> +      A pinctrl node should contain at least one subnodes representing the
->>>> +      pinctrl groups available on the machine. Each subnode will list the
->>>> +      pins it needs, and how they should be configured, with regard to muxer
->>>> +      configuration, pullups, drive strength, input enable/disable and input
->>>> +      schmitt.
->>>> +
->>>> +    allOf:
->>>> +      - $ref: pincfg-node.yaml#
->>> missing additional/unevaluatedProperties: false.
->> I will add unevaluatedProperties: false.
->>
->>>> +
->>>> +    properties:
->>>> +      bias-disable: true
->>> Why do you need this and other ones?
->> We expect the pin configuration to select one of ==>
->> bias-disable;
->> bias-pull-down;
->> bias-pull-up;
->>
->> This is the same as rockchip,pinctrl.yaml and renesas,rzv2m-pinctrl.yaml.
-> OK, then go with nuvoton approach. List the properties (:true) and use
-> additionalProperties: false.
-
-I got it.
-
->>>> +
->>>> +      bias-pull-down: true
->>>> +
->>>> +      bias-pull-up: true
->>>> +
->>>> +      drive-strength:
->>>> +        minimum: 0
->>> 0 mA? Is it really valid? Are you sure you used correct property?
->> We treat this value as the value to be written to the control register,
->> not as
->> a current value in mA. I will correct this mistake.
-> Instead treat it as mA. Is this possible?
-
-I will update it as:
-
-       drive-strength-microamp:
-         oneOf:
-           - enum: [ 2900, 4400, 5800, 7300, 8600, 10100, 11500, 13000 ]
-             description: 1.8V I/O driving strength
-           - enum: [ 17100, 25600, 34100, 42800, 48000, 56000, 77000, 
-82000 ]
-             description: 3.3V I/O driving strength
-
-And use a lookup table in the pinctrl driver to translate it into 
-register value.
-
-
->>>> +        maximum: 7
->>>> +
->>>> +      input-enable: true
->>>> +
->>>> +      input-schmitt-enable: true
->>>> +
->>>> +      power-source:
->>>> +        description:
->>>> +          I/O voltage in millivolt.
->>>> +        enum: [ 1800, 3300 ]
->>> Missing units in property name. power-source also does not really
->>> describe the property.
->>
->> The output voltage level of GPIO can be configured as 1.8V or 3.3V,
->> but I cannot find any suitable output properties in 'pincfg-node.yaml.'
-> There is actually power-source, but treated as actual choice of power
-> supplies.
->
->> I noticed that 'xlnx,zynq-pinctrl.yaml' and 'xlnx,zynq-pinctrl.yaml' use
->> 'power source' to specify the output voltage.  Should I follow their
->> approach or define a vendor-specific one?
-> Maybe Rob or Linus have here some recommendation, but I would suggest to
-> go either with rtd1319d-pinctrl.yaml approach or add a generic property
-> to pincfg-node expressed in real units like "io-microvolt".
-
-OK, I will update it as:
-
-       power-source:
-         description: |
-           Valid arguments are described as below:
-           0: power supply of 1.8V
-           1: power supply of 3.3V
-         enum: [0, 1]
-
-
-> Rob, Linus, any ideas for generic property replacing register-specific
-> power-source?
->
->
-> Best regards,
-> Krzysztof
->
-
-Best Regards,
-Jacky Huang
 
