@@ -2,204 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F5FE7CD5DF
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Oct 2023 10:01:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D4677CD633
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Oct 2023 10:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbjJRIB2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Oct 2023 04:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47070 "EHLO
+        id S230050AbjJRISW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Oct 2023 04:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229897AbjJRIB1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Oct 2023 04:01:27 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920ADBC
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 01:01:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697616085; x=1729152085;
-  h=date:from:to:cc:subject:message-id;
-  bh=ANHnNcR+kEz0BRwRMwqzTy16s5+NlitDLICL+Uo5WAM=;
-  b=IERq3VfPUdM3hkiL+ykNt3mOzOoN1pDpHj0OWdEoRpbx5fVqFW/gPgcO
-   1k+vOlLysI82g8r2MyLouRMtjYo2dbBCBoFJAEUc/suWIRciuctrmZChM
-   oxGv5loUS7ZXB2fZKPhKf2ni1786gsXy7AxL1pLq8K1u+nQna3vMOLz9A
-   00oJcAt5awQs56NTSFtAikZlhzw/aGXDfsoo8FFg6Gcdf4nhSPdU8RbfF
-   ttZZdJySL9Nw8NusOElVU3rkijbut02IX33GulpM5Mb//yNSwG+X7pDIp
-   PZ1m9HMIJyGbCvcYuo9nY223B31otb5+9O9vlqSCDO853UEWWDZ3PNqkl
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="388826397"
-X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
-   d="scan'208";a="388826397"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2023 01:01:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="847162140"
-X-IronPort-AV: E=Sophos;i="6.03,234,1694761200"; 
-   d="scan'208";a="847162140"
-Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Oct 2023 01:01:23 -0700
-Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qt1UX-00006K-1W;
-        Wed, 18 Oct 2023 08:01:21 +0000
-Date:   Wed, 18 Oct 2023 16:00:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/devel] BUILD SUCCESS
- 25d0d2280a42f210d2ec6d13ae0e7593caa4b1cb
-Message-ID: <202310181623.p00bYS7v-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229966AbjJRISV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Oct 2023 04:18:21 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F42EA
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 01:18:19 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-d84c24a810dso7635811276.2
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 01:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697617099; x=1698221899; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FaEmtppYZAhMsYDBHeyk5qHJOFganXNI4hJEHgjEbgc=;
+        b=xiFrIP6fjZCSXHuVPOgbEzSqeYUB+FMSEL4NRfS3k2N3TeUnHL3edBbvuS0YtdTTnL
+         l59zCNthfddQ/eXB8mq4AZmtREcp9+iNd15A4D+ofPxsKlZr7jxzHkd1xKwcnB5j7YCR
+         UNSbEZW9pvsVdV1PLJprETk8dDh8GGdLuMvdwQ8TwN/JrjZwn9HJAajPZtv6N5tEbsGB
+         pjP8dQ8hrDXRK4yTM3rZhWA4YIIophv6ZGypz/4Y+VY6fqziCcmAegx0GhgC4mMOiaBj
+         qM5c8OTDFZ/QjAGF7UPODPsi7XQn6XBPfBMkBkHCJrWUBMft7QvrxoH2U9m+OK/kZhzI
+         ltPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697617099; x=1698221899;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FaEmtppYZAhMsYDBHeyk5qHJOFganXNI4hJEHgjEbgc=;
+        b=ZFVzw+6m1dE0Q6x3RNGTPtY7IiaPetDirLAqLRMrwdAKer9yrU+iNMlClOq6mZ8IZl
+         0CMRS7hz36KmMMv0W6hdZ2K9KG89gJPJagmgakXje4ps8skM0KU1GrQOEs2L56ne29KE
+         j20zrno+r88vcVNb5Bf93ixgsJHe5F7k0sKn1c7XPwbgJsy38gn8uXaeA5O1jmYroAAi
+         FKOAH24dpoSwVCpfMVwntx82uU86VgkhfoDRQqgsP3hDmwnU+z5z1fXPj7oDGq2O0wEQ
+         T1dYjnZU02IFGY5RokmJddbmC6TKMrSzE8byWKLfp5J6/cEW2OIntSgfYLBLwu4ikcy9
+         0MQQ==
+X-Gm-Message-State: AOJu0Yzki4qJGqznMyyU86sYAFkx8fDS12oHJJocHMjkRhDgeZodY4aT
+        40q2e34LWCLPGUcW6H19A81WpTPEKRF5dPijjPqQvg==
+X-Google-Smtp-Source: AGHT+IHS+aRA61sStPYBODFMrmmJRiulx2KlXd75EfRcMgJwP5MT9v5x1H3ytS7hzs2Li0IIu8G73H57gxRh3paxT6s=
+X-Received: by 2002:a25:db07:0:b0:d9b:5428:d601 with SMTP id
+ g7-20020a25db07000000b00d9b5428d601mr4246998ybf.21.1697617098878; Wed, 18 Oct
+ 2023 01:18:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20231011090510.114476-1-ychuang570808@gmail.com>
+ <20231011090510.114476-3-ychuang570808@gmail.com> <7800b2d6-33c4-4c4f-8d0c-c11ff0e47535@linaro.org>
+ <17a80031-98bf-48bf-8cea-c0ca4400f142@gmail.com> <254837e5-a0fa-4796-8928-277db4b98bf1@linaro.org>
+In-Reply-To: <254837e5-a0fa-4796-8928-277db4b98bf1@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 18 Oct 2023 10:18:07 +0200
+Message-ID: <CACRpkdaiihOex19SavWwC+S8o5qp=F=XMNm9+UXh=q2nVbOFkA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] dt-bindings: pinctrl: Document nuvoton ma35d1 pin control
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Jacky Huang <ychuang570808@gmail.com>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        p.zabel@pengutronix.de, j.neuschaefer@gmx.net,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        schung@nuvoton.com, Jacky Huang <ychuang3@nuvoton.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/devel
-branch HEAD: 25d0d2280a42f210d2ec6d13ae0e7593caa4b1cb  pinctrl: tegra: drop the wrapper around pinctrl_gpio_request()
+On Mon, Oct 16, 2023 at 9:52=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-elapsed time: 946m
+> > I noticed that 'xlnx,zynq-pinctrl.yaml' and 'xlnx,zynq-pinctrl.yaml' us=
+e
+> > 'power source' to specify the output voltage.  Should I follow their
+> > approach or define a vendor-specific one?
+>
+> Maybe Rob or Linus have here some recommendation, but I would suggest to
+> go either with rtd1319d-pinctrl.yaml approach or add a generic property
+> to pincfg-node expressed in real units like "io-microvolt".
+>
+> Rob, Linus, any ideas for generic property replacing register-specific
+> power-source?
 
-configs tested: 128
-configs skipped: 2
+The existing power-source is generally used to select between (usually
+two) different chip-internal power rails, such as 1.8V and 3.3V.
+The format is a driver-specific enumerator.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+We *could* just patch the documentation for power-source to
+say that microvolts is the preferred format but legacy users may
+be using a custom enumerator.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231018   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20231018   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231018   gcc  
-i386         buildonly-randconfig-002-20231018   gcc  
-i386         buildonly-randconfig-003-20231018   gcc  
-i386         buildonly-randconfig-004-20231018   gcc  
-i386         buildonly-randconfig-005-20231018   gcc  
-i386         buildonly-randconfig-006-20231018   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231018   gcc  
-i386                  randconfig-002-20231018   gcc  
-i386                  randconfig-003-20231018   gcc  
-i386                  randconfig-004-20231018   gcc  
-i386                  randconfig-005-20231018   gcc  
-i386                  randconfig-006-20231018   gcc  
-i386                  randconfig-011-20231018   gcc  
-i386                  randconfig-012-20231018   gcc  
-i386                  randconfig-013-20231018   gcc  
-i386                  randconfig-014-20231018   gcc  
-i386                  randconfig-015-20231018   gcc  
-i386                  randconfig-016-20231018   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231018   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231018   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231018   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20231018   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20231018   gcc  
-x86_64       buildonly-randconfig-002-20231018   gcc  
-x86_64       buildonly-randconfig-003-20231018   gcc  
-x86_64       buildonly-randconfig-004-20231018   gcc  
-x86_64       buildonly-randconfig-005-20231018   gcc  
-x86_64       buildonly-randconfig-006-20231018   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231018   gcc  
-x86_64                randconfig-002-20231018   gcc  
-x86_64                randconfig-003-20231018   gcc  
-x86_64                randconfig-004-20231018   gcc  
-x86_64                randconfig-005-20231018   gcc  
-x86_64                randconfig-006-20231018   gcc  
-x86_64                randconfig-011-20231018   gcc  
-x86_64                randconfig-012-20231018   gcc  
-x86_64                randconfig-013-20231018   gcc  
-x86_64                randconfig-014-20231018   gcc  
-x86_64                randconfig-015-20231018   gcc  
-x86_64                randconfig-016-20231018   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+io-microvolt seems like a more long-term viable option if a wider
+range of voltages are to be supported so I'm happy with that if the
+DT folks think it's nicer. However notice that the power-source
+property is already being hard-coded into things such as SCMI
+and ACPI so it's not like it will ever be replaced by io-microvolt
+and phased out as far as Linux is concerned. Not the next 50
+years at least.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yours,
+Linus Walleij
