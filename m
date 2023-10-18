@@ -2,52 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 578407CE976
+	by mail.lfdr.de (Postfix) with ESMTP id AF8F27CE977
 	for <lists+linux-gpio@lfdr.de>; Wed, 18 Oct 2023 22:57:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbjJRU5j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S229721AbjJRU5j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 18 Oct 2023 16:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229721AbjJRU5i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Oct 2023 16:57:38 -0400
-Received: from mail-lf1-x164.google.com (mail-lf1-x164.google.com [IPv6:2a00:1450:4864:20::164])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782F59B
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 13:57:35 -0700 (PDT)
-Received: by mail-lf1-x164.google.com with SMTP id 2adb3069b0e04-507c91582fdso1431605e87.2
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 13:57:35 -0700 (PDT)
+        with ESMTP id S229757AbjJRU5j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Oct 2023 16:57:39 -0400
+Received: from mail-lj1-x261.google.com (mail-lj1-x261.google.com [IPv6:2a00:1450:4864:20::261])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A87FFA
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 13:57:36 -0700 (PDT)
+Received: by mail-lj1-x261.google.com with SMTP id 38308e7fff4ca-2b9c907bc68so95491251fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Oct 2023 13:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gadgetoid.com; s=google; t=1697662653; x=1698267453; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AuMYwd5Rd3ukjenqTnU55melqFhFNWSOwsYeFHOp5Wc=;
-        b=eJTttBs+9pnu/3ZvX8gBKjVS0vxPkh5p6LCFWEb9oG9VI0xVIe2gje8xRfpNHssOun
-         AFNbLe8oiy/uwuzAZGpWJdSKqS+xs4f0gfuCXO2cvFOwBP/NeZlxpj3m87fNncIEjEoW
-         Mx67OOFPFS3PgYXyBNcFt2OIbHYdl8syo8e9maUDWzDnghAfT/mBjy+hAHyRYWzmPH5c
-         GRz2clj4jKL3CCh91hsGKXznyp5m7Llaux4UMLbrhL//PFSV56PBKzVZ+h33OKH/7ZN+
-         SXANy8znDyGYEM2jRx3dPXgqPr1ehiX78yC6th5lS3/JgJ6ZaU2MzKxhe58XBlSU/sEG
-         T3Qg==
+        d=gadgetoid.com; s=google; t=1697662655; x=1698267455; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1q/VH9RSxB+yV6R333BiXTdqjCwuOooj5gLHEV8h598=;
+        b=R31IFmvChvaz8tTiBTNCWsstM6yU9VmKN8GGLJ/UID8AV/W9/2pPe6McpPPjFyGgZj
+         nwuV9T5Wo+R9e7niJ+H7eTLrUov437Nhcyiy/k6cBTCPAhpevTPNqjZu4c9JJQZJ77qI
+         wmEpLJ7+QsD/lLbZ/isOMHtv+kpCIRwSLwAZdx76l0HuRHvEdTjrfyNNTvnZ5rBU+dSw
+         d8w7CwFvb6ddhTxTKaxM1qSQMkKbqhxXEutMNSSaalnAaXvdiyF/VwkpVdI3+g+Z1b2U
+         LlPvkBQmv3eJS/QMfolU5bzpP2ltPgoOhg5hnpBIpyriVDwqFWyyJgDfDNj9H+9pn04M
+         vA5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697662653; x=1698267453;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AuMYwd5Rd3ukjenqTnU55melqFhFNWSOwsYeFHOp5Wc=;
-        b=dljLYWH2acmD5KUx1FYyzMm+0hj1nTu/hDfDhvnmIo0UqwAwbGlIGRXgKiSqSQ2un7
-         l5ki3QYV04z1FPmPtsgRoz6CNWy3w5eMh1zuNlyfKgk+bQjV8oQb2vsPtj0IMZxeP/JZ
-         YzodOFxYFXot06G+cxCSRflLeeF2QKkWw8aoesZs45iU45IljjQ0RYudl2P97+WU/yOJ
-         YH0mWF+wITcKKehKinY5wUYoz/5QjJqSSXbGjCmUDajScqwP0D6iRN+zYV2MoR6HmZKq
-         Z1/4EuSnYmax32dqQ2V36pqOwY2jjgFrVaRLLmqblwP16PL/Q5iTZEAEkArUQv7rkZnK
-         ZtJw==
-X-Gm-Message-State: AOJu0Yyjt5FVswUJThAJaVPgje9s7K8J1IZXyPNAvDWF2pLKgxaVja25
-        tm/FzlkB2wMKUUNQ0NuRx2pygSx7D8HMJT0zENYwCbuc3sNhrg==
-X-Google-Smtp-Source: AGHT+IG4g3fRZxbndaozzL3HQvKP3tLa9iP/Cpv6EWdDrip8Mf2El6dLkZ1iqHJjcniffYskiuNYhEnBzpeF
-X-Received: by 2002:ac2:4574:0:b0:507:a671:3230 with SMTP id k20-20020ac24574000000b00507a6713230mr109840lfm.16.1697662653198;
-        Wed, 18 Oct 2023 13:57:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697662655; x=1698267455;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1q/VH9RSxB+yV6R333BiXTdqjCwuOooj5gLHEV8h598=;
+        b=UUWodD5x/eMx83EVCmo0H6bpfqU6CWyRFrRLVBIPfIff1EzXEtTMXCp1Ezprv/PEYV
+         iRUpFTc7shpjH1MF7Yl+BvSL9Z4nTDhjqX6D9UE9ZbBCJq7x4m8BNNvqndumRkJGE2LJ
+         Nceh4jgv+774bMqaodMaW4GomkI/Mq7FM0Y0ezog05EW5+jaZP4uqA1srWuoayoKmvTr
+         5iqLpxY5UY0LeYIsDPSsN+H2MxNGzVntwkdaxYcGGTsAVWMq9h/gImu2qB8CE+Laq9bG
+         pX/cN4UtIyUgdtd1M0dIQlxGTVSllSUua0cwoHIi+p7ORkDzkermzYON0uz1mwnrsS6R
+         zJoA==
+X-Gm-Message-State: AOJu0YyP77z+o1i2EQPwutVJgjBQD1nFvglJcFS9LD47UPiE2zea4eF6
+        EyBvwxZGs9noOjo6VTHs9t5W/lhbXKQmuCbuGWYfG7VKl/6VMA==
+X-Google-Smtp-Source: AGHT+IEaBEFS38KPJXHpLNr49iQ8FPGLvvjakFYZH0ZQScawKEX5P4Mw93+5egQmQkGhnzqKPF7xb41K4zaS
+X-Received: by 2002:ac2:5215:0:b0:507:9a06:7dbe with SMTP id a21-20020ac25215000000b005079a067dbemr96922lfl.21.1697662654529;
+        Wed, 18 Oct 2023 13:57:34 -0700 (PDT)
 Received: from pop-os.. (cpc91242-cmbg18-2-0-cust972.5-4.cable.virginm.net. [82.8.131.205])
-        by smtp-relay.gmail.com with ESMTPS id j18-20020a056512399200b0050460f3dd0csm927117lfu.115.2023.10.18.13.57.32
+        by smtp-relay.gmail.com with ESMTPS id j18-20020a056512399200b0050460f3dd0csm927117lfu.115.2023.10.18.13.57.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Oct 2023 13:57:33 -0700 (PDT)
+        Wed, 18 Oct 2023 13:57:34 -0700 (PDT)
 X-Relaying-Domain: gadgetoid.com
 From:   Phil Howard <phil@gadgetoid.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
@@ -55,10 +56,12 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Kent Gibson <warthog618@gmail.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     linux-gpio@vger.kernel.org, Phil Howard <phil@gadgetoid.com>
-Subject: [libgpiod][PATCH v5 0/1] bindings: python: optionally include module in sdist
-Date:   Wed, 18 Oct 2023 21:57:27 +0100
-Message-Id: <20231018205728.284068-1-phil@gadgetoid.com>
+Subject: [libgpiod][PATCH v5 1/1] bindings: python: optionally include module in sdist
+Date:   Wed, 18 Oct 2023 21:57:28 +0100
+Message-Id: <20231018205728.284068-2-phil@gadgetoid.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231018205728.284068-1-phil@gadgetoid.com>
+References: <20231018205728.284068-1-phil@gadgetoid.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,94 +73,231 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This changeset vendors the gpiod library into the Python package.
+Optionally vendor libgpiod source into sdist so that the Python module can
+be built from source, even with a missing or mismatched system libgpiod.
 
-Why?
+Add two new environment variables "LINK_SYSTEM_LIBGPIOD" and
+"GPIOD_VERSION" to control what kind of package setup.py will build.
 
-So that setup.py can produce an sdist that is installable irrespective of
-the availability or version of a distro-supplied libgpiod.
+In order to build an sdist or wheel package with a vendored libgpiod a
+version must be specified via the "GPIOD_VERSION" environment variable.
 
-This prevents a libgpiod pypi package install balking because the distro
-libgpiod is outdated or otherwise incompatible. This happens when
-attempting to install the current libgpiod from pypi onto - for example -
-the Debian Bookworm based Raspberry Pi OS or Ubuntu 23.10 Mantic which both
-ship with libgpiod v1.6.3.
+This will instruct setup.py to fetch the tarball matching the requested
+version from git.kernel.org, unpack it, and copy the lib and include
+directories into the package root so they can be included in sdist or used
+to build a binary wheel.
 
-The availability of a distro agnostic package also ensures that libgpiod
-can be installed via pypi into an isolated virtual environment, safely
-specified as a dependency for Python packages and allows Python developers
-to target the newest API version irrespective of their distro supplied
-libgpiod.
+eg: GPIOD_VERSION=2.0.2 python3 setup.py sdist
 
-This is essential, since a venv is now widely *required* for user Python
-projects due to recommendations in pep-688 [1]
+Will build a source distribution with gpiod version 2.0.2 source included.
 
-For Raspberry Pi this sdist can also be converted into a precompiled wheel
-by piwheels [2] which is, by default, added to Raspberry Pi OS as a pip
-index.
+It will also save the gpiod version into "gpiod-version.txt" so that it can
+be passed to the build when the sdist is built by pip.
 
-How?
+Requiring an explicit version ensures that the Python bindings - which
+can be changed and versions independent of libgpiod -  are built against a
+stable libgpiod release.
 
-If "LINK_SYSTEM_LIBGPIOD=1" is not specified and a valid "GPIOD_VERSION" is
-supplied then setup.py will fetch the requested, stable tarball from
-git.kernel.org, unpack the lib and include directories and vendor them into
-the output sdist. It will also drop a "gpiod-version.txt" so that the sdist
-knows what GPIOD_VERSION_STR to pass into the gpiod build, eg:
+In order to force a package with vendored gpiod source to link the system
+libgpiod, the "LINK_SYSTEM_LIBGPIOD" environment variable can be used:
 
-GPIOD_VERSION="2.0.2" python3 -m build . --sdist
+eg: LINK_SYSTEM_LIBGPIOD=1 pip install libgpiod
 
-Will output dist/libgpiod-2.0.1.tar.gz vendoring libgpiod v2.0.2.
-
-When a user builds or installs an sdist (via pip install or otherwise) if a
-"gpiod-version.txt" exists and "LINK_SYSTEM_LIBGPIOD=1" is not specified in
-their environment then the gpiod._ext C Extension is amended to include all
-of the vendored C sources for gpiod and the resulting module build will
-function independently of the system libgpiod.
-
-Fetching libgpiod tarballs is an effort to reconsile the fact that both
-libgpiod and the Python bindings live in the same source tree but are
-versioned independently of each other. Bugfixes and changes to Python
-bindings should not vendor unstable, development versions of libgpiod.
-
-No effort has been made to allow an unstable, vendored build since it's
-assumed developers will build and install libgpiod and use
-"LINK_SYSTEM_LIBGPIOD".
-
-While the output sdist will - by default - build a standalone gpiod module
-it's possible for the end user to supply the "LINK_SYSTEM_LIBGPIOD=1" env
-variable to override this behaviour and attempt to link their system
-libgpiod (this will fail if it's incompatible with the bindings) eg:
-
-LINK_SYSTEM_LIBPGIOD=1 pip install libgpiod
-
-[1] - https://peps.python.org/pep-0668/
-[2] - https://www.piwheels.org/
-
-Changes v4 -> v5
-- Move logic from main program flow to build_ext and sdist overloads
-- GPIOD_VERSION_STR is now GPIOD_VERSION
-- Fetch sources from a libgpiod tarball if GPIOD_VERSION is supplied
-- Removed changes to bindings/python/Makefile.am
-- Moved and rephrased comment about build_ext rmtree("tests")
-
-Changes v3 -> v4
-- Check for lack of "GPIOD_VERSION_STR" and revert to original behaviour
-- Add status messages to setup.py, hinting at the package build mode
-
-Changes v2 -> v3
-- Pass in correct "GPIOD_VERSION_STR" from build
-- Output an sdist build for pypi
-
-Changes v1 -> v2
-- Switch from symlinks to explicit file copy
-
-Phil Howard (1):
-  bindings: python: optionally include module in sdist
-
+Signed-off-by: Phil Howard <phil@gadgetoid.com>
+---
  bindings/python/MANIFEST.in |   5 ++
  bindings/python/setup.py    | 131 +++++++++++++++++++++++++++++++++---
  2 files changed, 125 insertions(+), 11 deletions(-)
 
+diff --git a/bindings/python/MANIFEST.in b/bindings/python/MANIFEST.in
+index c7124d4..0aa9079 100644
+--- a/bindings/python/MANIFEST.in
++++ b/bindings/python/MANIFEST.in
+@@ -2,6 +2,7 @@
+ # SPDX-FileCopyrightText: 2023 Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+ 
+ include setup.py
++include gpiod-version.txt
+ 
+ recursive-include gpiod *.py
+ recursive-include tests *.py
+@@ -11,3 +12,7 @@ recursive-include gpiod/ext *.h
+ 
+ recursive-include tests/gpiosim *.c
+ recursive-include tests/procname *.c
++
++recursive-include lib *.c
++recursive-include lib *.h
++recursive-include include *.h
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+index df10e18..f0d5c1f 100644
+--- a/bindings/python/setup.py
++++ b/bindings/python/setup.py
+@@ -1,24 +1,136 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+ 
+-from os import environ, path
+-from setuptools import setup, Extension, find_packages
++import tarfile
++from os import getenv, path, unlink
++from shutil import copytree, rmtree
++from urllib.request import urlretrieve
++
++from setuptools import Extension, find_packages, setup
+ from setuptools.command.build_ext import build_ext as orig_build_ext
+-from shutil import rmtree
++from setuptools.command.sdist import sdist as orig_sdist
++
++LINK_SYSTEM_LIBGPIOD = getenv("LINK_SYSTEM_LIBGPIOD") == "1"
++GPIOD_VERSION = getenv("GPIOD_VERSION")
++GPIOD_WITH_TESTS = getenv("GPIOD_WITH_TESTS") == "1"
++SRC_BASE_URL = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/"
++SRC_FILENAME = "libgpiod-{version}.tar.gz"
++
++# __version__
++with open("gpiod/version.py", "r") as fd:
++    exec(fd.read())
++
++
++def fetch_tarball(func):
++    # If no GPIOD_VERSION is specified in env, just run the task
++    if GPIOD_VERSION is None:
++        return func
++
++    # If GPIOD_VERSION is specified, fetch the requested version tarball
++    # and create gpiod-version.txt so the sdist package knows what version
++    # it's building.
++    def wrapper(self):
++        TARBALL = SRC_FILENAME.format(version=GPIOD_VERSION)
++
++        print(f"fetching: {SRC_BASE_URL + TARBALL}")
++
++        filename, headers = urlretrieve(SRC_BASE_URL + TARBALL, TARBALL)
++
++        if not tarfile.is_tarfile(filename):
++            print(f"error: refusing to build sdist (invalid tarball {TARBALL})")
++            return
++
++        # Unpack the downloaded tarball
++        print(f"unpacking: {filename}")
++        file = tarfile.open(filename)
++        file.extractall(".")
++        file.close()
++        unlink(filename)
++
++        # Copy the include and lib directories we need to build libgpiod
++        copytree(f"libgpiod-{GPIOD_VERSION}/include/", "./include")
++        copytree(f"libgpiod-{GPIOD_VERSION}/lib/", "./lib")
++        rmtree(f"libgpiod-{GPIOD_VERSION}")
++
++        # Save the gpiod version for sdist
++        open("gpiod-version.txt", "w").write(GPIOD_VERSION)
++
++        func(self)
++
++        rmtree("./lib", ignore_errors=True)
++        rmtree("./include", ignore_errors=True)
++        unlink("gpiod-version.txt")
++
++    return wrapper
+ 
+ 
+ class build_ext(orig_build_ext):
+     """
+-    setuptools install all C extentions even if they're excluded in setup().
+-    As a workaround - remove the tests directory right after all extensions
+-    were built (and possibly copied to the source directory if inplace is set).
++    Wrap build_ext to amend the module sources and settings to build
++    the bindings and gpiod into a combined module when a version is
++    specified and LINK_SYSTEM_LIBGPIOD=1 is not present in env.
++
++    run is wrapped with @fetch_tarball in order to fetch the sources
++    needed to build binary wheels when GPIOD_VERSION is specified, eg:
++
++    GPIOD_VERSION="2.0.2" python3 -m build .
+     """
+ 
++    @fetch_tarball
+     def run(self):
++        # Try to get the gpiod version from the .txt file included in sdist
++        try:
++            gpiod_version = open("gpiod-version.txt", "r").read()
++        except OSError:
++            gpiod_version = GPIOD_VERSION
++
++        if gpiod_version and not LINK_SYSTEM_LIBGPIOD:
++            # When building the extension from an sdist with a vendored
++            # amend gpiod._ext sources and settings accordingly.
++            gpiod_ext = self.ext_map["gpiod._ext"]
++            gpiod_ext.sources += [
++                "lib/chip.c",
++                "lib/chip-info.c",
++                "lib/edge-event.c",
++                "lib/info-event.c",
++                "lib/internal.c",
++                "lib/line-config.c",
++                "lib/line-info.c",
++                "lib/line-request.c",
++                "lib/line-settings.c",
++                "lib/misc.c",
++                "lib/request-config.c",
++            ]
++            gpiod_ext.libraries = []
++            gpiod_ext.include_dirs = ["include", "lib", "gpiod/ext"]
++            gpiod_ext.extra_compile_args.append(
++                f'-DGPIOD_VERSION_STR="{gpiod_version}"',
++            )
++
+         super().run()
++
++        # We don't ever want the module tests directory in our package
++        # since this might include gpiosim._ext or procname._ext from a
++        # previous dirty build tree.
+         rmtree(path.join(self.build_lib, "tests"), ignore_errors=True)
+ 
+ 
++class sdist(orig_sdist):
++    """
++    Wrap sdist in order to fetch the libgpiod source files for vendoring
++    into a source distribution.
++
++    run is wrapped with @fetch_tarball in order to fetch the sources
++    needed to build binary wheels when GPIOD_VERSION is specified, eg:
++
++    GPIOD_VERSION="2.0.2" python3 -m build . --sdist
++    """
++
++    @fetch_tarball
++    def run(self):
++        super().run()
++
++
+ gpiod_ext = Extension(
+     "gpiod._ext",
+     sources=[
+@@ -50,19 +162,16 @@ procname_ext = Extension(
+ )
+ 
+ extensions = [gpiod_ext]
+-if environ.get("GPIOD_WITH_TESTS") == "1":
++if GPIOD_WITH_TESTS:
+     extensions.append(gpiosim_ext)
+     extensions.append(procname_ext)
+ 
+-with open("gpiod/version.py", "r") as fd:
+-    exec(fd.read())
+-
+ setup(
+     name="libgpiod",
+     packages=find_packages(exclude=["tests", "tests.*"]),
+     python_requires=">=3.9.0",
+     ext_modules=extensions,
+-    cmdclass={"build_ext": build_ext},
++    cmdclass={"build_ext": build_ext, "sdist": sdist},
+     version=__version__,
+     author="Bartosz Golaszewski",
+     author_email="brgl@bgdev.pl",
 -- 
 2.34.1
 
