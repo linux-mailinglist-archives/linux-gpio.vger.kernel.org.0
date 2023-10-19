@@ -2,65 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35D277CF222
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Oct 2023 10:13:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 902087CF225
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Oct 2023 10:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232926AbjJSINM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Oct 2023 04:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40710 "EHLO
+        id S235102AbjJSINj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Oct 2023 04:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232897AbjJSINM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Oct 2023 04:13:12 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482E010F
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Oct 2023 01:13:10 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-5a82f176860so72920877b3.1
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Oct 2023 01:13:10 -0700 (PDT)
+        with ESMTP id S232897AbjJSINj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Oct 2023 04:13:39 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E5911F
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Oct 2023 01:13:37 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-5a2536adaf3so103174737b3.2
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Oct 2023 01:13:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697703189; x=1698307989; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1697703216; x=1698308016; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SNXAg6WXAZAsL2lMx9e2qvm8h7lypLA4sU9HIno/7Ac=;
-        b=CbM48R1Ta6XNWpCc+/vYUA2vOBM/sbqtdW53wvVg0cDxIvlXaHFsOFcEejYyMPYNga
-         NHroH8W+zYrTjVhTs/3pVnz28/zX4iRaeeEEWtjck50oIL1TGdkNG1mz4yLOPp04Cw40
-         6XXzs3W8GG9YMVfMXoQGlm2i6TIXZe5UAgL338kWPyZYpFbUlqW7ftnQVI619xGyWFn9
-         X5YVCELkOHjtu3VLJDZ8Gpyrl3ruzVTOsO3X3sDRbG7Lt3qfpFYYEkoJmX8+kjHwxAnY
-         7DevgxnRp+Afhh56lfMPyqSqr8NRsHw4g9UfNkpoMv2VxhRVB0737cAE47sYNndvnbWE
-         DjqA==
+        bh=i9fhwJmlR888T70x9Uiw048WLxhTWy/cYSAVt4Gvh1A=;
+        b=TA8w8XQhS0CYGJ8/hoZ94FUOBWfWMuiFzgh+tI/t3kc/ryQ8MAqa3BGTkKUSXvzB3a
+         OMSASFciFqA/c/MEbWOGIlbMkfQqODORyu7ZxHG4y86yb0hNHCPEMT4lI0G3H1vk/d0u
+         7iwG8krNXWCp5W2h+qwM0gqJuOz9LbVwIpf+mN6uM8geS+h0xQWIWCsW9YK4uq5C+EiT
+         GXb/1HC8FcZ03pDui9yveZokgp+R1MMqE10mdpr31GAhI8Zp9HA2OgkGooNDK8+i6pMC
+         vQA0asLhfpXjdaWZyWDvQ0thPVUyd+b0kKj1Rg/U+4HfuY8Fx2lFxmY4Ram8iRB4dS+D
+         BuXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697703189; x=1698307989;
+        d=1e100.net; s=20230601; t=1697703216; x=1698308016;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SNXAg6WXAZAsL2lMx9e2qvm8h7lypLA4sU9HIno/7Ac=;
-        b=VnMbY1UIkj4q4MPzUYAHxLn/+C6zYTouUvSWy6bcdX8Nu0HnFJMvJoHJIjwnk64IVl
-         OZsw3AzIQ/qquwQwPvOd8s/veeWtFry7B6SbqVCu6MaiCTcYrH2qgK0E6mhq879Ux/zd
-         qEniVW67q3qqX9to6Y8IIMOmuDtbhhiRy5ERzgZVoeiY5GuRcXMoxaCbNIys/UjaQSIS
-         DQqjXbkH+j5voO/bBW/QOqsEbaz3GmGnXFv9zIvT2opuK8kjJb6tayRJj3zu+sDt1So8
-         Oj8oEs6OXN2A+HnvuDTrAMy/fjNl8kEn2tVeIcZ4FbbQ8w4dk72Od8cTmsI2vRXCR6Z4
-         AR3Q==
-X-Gm-Message-State: AOJu0YzScy5Fr8TEQPDjmsO91FeyVtmLoEjNJYhXaNEXQx+Jjl+bxwzr
-        WMeLJBTgXGkLJ9iw2ChAjcX0hQGf2TTR2OS2DltieBlu3zNpA86z+vE=
-X-Google-Smtp-Source: AGHT+IG5/me75SiraO/3My6hz1nX11lqSMH1zP+XrnVS62FOFGKt+YA7jS5F5Cc3ovhRHVneD+/m1Jf4WUkFXTNa7Fc=
-X-Received: by 2002:a05:690c:101:b0:5a8:e303:1db2 with SMTP id
- bd1-20020a05690c010100b005a8e3031db2mr193504ywb.23.1697703189456; Thu, 19 Oct
- 2023 01:13:09 -0700 (PDT)
+        bh=i9fhwJmlR888T70x9Uiw048WLxhTWy/cYSAVt4Gvh1A=;
+        b=oTroSRke1k56GbeqUkRXS1tsr5rWxeLCK/DjBwCKDm6wB1iq8lok16nyaMgns664Fm
+         1PL+XB+l2CSkeUl6nGptDJnD6O+mo6TayrKInrnUE+XIrv6PL9HX0cs3xgYy4yQk7auk
+         m0Z8ma67gCZzVUcJvDQTEQ4L5SwqIxVUd4r6voBpVy/dj2KtmUcgJl7jJD/WpFYQXLll
+         AiUb48bBFGii0OakXmq+4VnO8brIv0LC8lWv7UOJnE0EocTx+R5vA3FMTlxnlnOY/5vE
+         DINKgrDBnIzh+eQO8Pj5Exi/IcZXJr0vy9rZov0rNiLb/o2nVD2/AJQHonj8t/sjtRU2
+         2LVw==
+X-Gm-Message-State: AOJu0YxmrxgIYLMbywspys/JbSMCH5K6dBO8eQ9HVqcZXEnOzX3BNmd5
+        9LYgH35sgbSSPZCUOHLej1Ls8tR6zoR3Uk8iLflQqg==
+X-Google-Smtp-Source: AGHT+IHBd1+CaBIqmM2Ccl54AyWx1wdFGrKQjzy3cvBUKP57YP7Xo7lRZQp/InkGvDJiozj5p0zCtls8KQ/5oXL7mi0=
+X-Received: by 2002:a0d:d303:0:b0:5a7:d9e6:8fd4 with SMTP id
+ v3-20020a0dd303000000b005a7d9e68fd4mr1691317ywd.12.1697703216544; Thu, 19 Oct
+ 2023 01:13:36 -0700 (PDT)
 MIME-Version: 1.0
 References: <20231017141806.535191-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdbHJHsgJ=3pYveP-x-Vuwwf3ib6TnFOt3UpCrKevf=d1w@mail.gmail.com>
- <ZS7TuodhwNxU9Ez6@smile.fi.intel.com> <CACRpkdZfzq81SZnEpB_Acp_=8Xc2TEMNi8yS_j4wNBcQKXgrgg@mail.gmail.com>
- <ZS7kY/+80Be4geGM@smile.fi.intel.com> <ZS7_5VGvRnw99gzd@google.com>
- <ZS9mo4/jnRNoTE+v@smile.fi.intel.com> <ZTBfFIyCsl2gkp6f@google.com>
-In-Reply-To: <ZTBfFIyCsl2gkp6f@google.com>
+In-Reply-To: <20231017141806.535191-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 Oct 2023 10:12:57 +0200
-Message-ID: <CACRpkdZ0cnJpYuzU=47-oW-7N_YGMo2vXpKOeXeNi5PhPY7QMA@mail.gmail.com>
+Date:   Thu, 19 Oct 2023 10:13:25 +0200
+Message-ID: <CACRpkdYZonHWTtArvYLGBWJz6rae-aDHS5J5QHtzAb7qCkxTKQ@mail.gmail.com>
 Subject: Re: [PATCH v1 1/1] Revert "pinctrl: avoid unsafe code pattern in find_pinctrl()"
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Ferry Toth <ftoth@exalondelft.nl>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -74,59 +69,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 19, 2023 at 12:41=E2=80=AFAM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Tue, Oct 17, 2023 at 4:18=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> Linus, BTW, I think there are more problems there with pinctrl lookup,
-> because, if we assume there are concurrent accesses to pinctrl_get(),
-> the fact that we did not find an instance while scanning the list does
-> not mean we will not find it when we go to insert a newly created one.
 
-I'm not surprised. Pinctrl comes from a time when the probing was
-mostly serial, and since subsystems (such as MMC) has increasingly
-added asynchronous probing, accompanied by rework of device tree
-core etc (device tree didn't even exist when we started pin control)
-to parallelize probing based on device hierarchy topology etc.
+> The commit breaks MMC enumeration on the Intel Merrifield
+> plaform.
+>
+> Before:
+> [   36.439057] mmc0: SDHCI controller on PCI [0000:00:01.0] using ADMA
+> [   36.450924] mmc2: SDHCI controller on PCI [0000:00:01.3] using ADMA
+> [   36.459355] mmc1: SDHCI controller on PCI [0000:00:01.2] using ADMA
+> [   36.706399] mmc0: new DDR MMC card at address 0001
+> [   37.058972] mmc2: new ultra high speed DDR50 SDIO card at address 0001
+> [   37.278977] mmcblk0: mmc0:0001 H4G1d 3.64 GiB
+> [   37.297300]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
+>
+> After:
+> [   36.436704] mmc2: SDHCI controller on PCI [0000:00:01.3] using ADMA
+> [   36.436720] mmc1: SDHCI controller on PCI [0000:00:01.0] using ADMA
+> [   36.463685] mmc0: SDHCI controller on PCI [0000:00:01.2] using ADMA
+> [   36.720627] mmc1: new DDR MMC card at address 0001
+> [   37.068181] mmc2: new ultra high speed DDR50 SDIO card at address 0001
+> [   37.279998] mmcblk1: mmc1:0001 H4G1d 3.64 GiB
+> [   37.302670]  mmcblk1: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
+>
+> This reverts commit c153a4edff6ab01370fcac8e46f9c89cca1060c2.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The people making probes ever more asynchronous probably just
-tested if the system still boots and did not bother to go and look at
-any rough edges in resource supplying subsystems, including clk,
-regulator, gpio, reset, pin control...
-
-There is a reason to why it mostly works, which I explain below:
-
-> Another problem, as far as I can see, that there is not really a defined
-> owner of pinctrl structure, it is created on demand, and destroyed when
-> last user is gone. So if we execute last pintctrl_put() and there is
-> another pinctrl_get() running simultaneously, we may get and bump up the
-> refcount, and then release (pinctrl_free) will acquire the mutex, and
-> zap the structure.
-
-You mean we need to acquire the mutex in the code that calls
-find_pinctrl() instead of inside find_pinctrl()? Yes I think you're right,
-wanna do a patch?
-
-It is largely theoretical because of the following:
-
-A pin control handle is
-usually taken by a driver for a device, it is usually unique
-for that exact hardware (in difference from a clock, or a regulator,
-which is often shared), so the scenario you are designing for here
-would be that the driver for a device is probing the *same* hardware
-on two runpaths, which is not going happen, right?
-
-So while the software is not race-safe, the nature of the hardware
-makes it safe: there is just one device instance per pin control
-handle.
-
-I haven't thought it through in detail so there may be corner
-cases.
-
-> Given that there are more issues in that code, maybe we should revert
-> the patch for now so Andy has a chance to convert to UUID/LABEL booting?
-
-Yeah I reverted it, the above elaboration may apply to this patch
-too and makes me feel we are "mostly safe" in this regard anyway.
+Patch applied for pronto fixes!
 
 Yours,
 Linus Walleij
