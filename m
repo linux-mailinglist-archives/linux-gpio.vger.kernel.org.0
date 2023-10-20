@@ -2,93 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FD947D14C3
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Oct 2023 19:22:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0ECB7D1588
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Oct 2023 20:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229850AbjJTRWp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 20 Oct 2023 13:22:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38240 "EHLO
+        id S230084AbjJTSMA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Oct 2023 14:12:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbjJTRWo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Oct 2023 13:22:44 -0400
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986FB13E;
-        Fri, 20 Oct 2023 10:22:40 -0700 (PDT)
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-57f137dffa5so61830eaf.1;
-        Fri, 20 Oct 2023 10:22:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697822560; x=1698427360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WExMwOi8yEvexXOlKKBpSe1onE84T9t/cK767zdHnCI=;
-        b=bSDR9vzNmoK5uxNx/8K3cV6d4+2CIf1FOPrdcmW0LocSBZAlSueNa76IPmHdI3IrNb
-         4ruFdYZOpyjjFiidRq4v/wkXaCV3/PGqNkk82RTpTrRt3ziCwUMWsbqBjZdwQeBWEAVD
-         T1OVk22RVMBSylQJD+pnXbH8TkFDqE4dKK82zzZ56pNWn6zKTjGtsgnGR27BynnF1RXQ
-         tuASOHz1p38cnrTC5yBnTsCvkSctsI5+q1SKo6XX8wCAlY52DNIn75rYoUEt/kvF5MyW
-         Fi7pNWMn1I9u4kTathvK2Bwcg07viTblAEZQPU2xvjSd2iWhpOJjJQIG1CSLXUvPKHTI
-         e7aA==
-X-Gm-Message-State: AOJu0YzoxW3U/SaRl8ISZNqo95J3eJgha6YkkwrAMau8qqRKGBNPrJcT
-        pLe3aX1h3kelrlJie4oVMrcw9Jv/XHLIGQR9xJQ=
-X-Google-Smtp-Source: AGHT+IH9r9pBkMk4eODC0OIDRDLecdjQbDcsz5fF3rVx/e5d06YRe98srBD0VUQXPGsNansNseJslea96o8USjeX9rg=
-X-Received: by 2002:a4a:bd84:0:b0:581:ed38:5505 with SMTP id
- k4-20020a4abd84000000b00581ed385505mr2726894oop.0.1697822559885; Fri, 20 Oct
- 2023 10:22:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231020084732.17130-1-raag.jadav@intel.com> <20231020084732.17130-7-raag.jadav@intel.com>
-In-Reply-To: <20231020084732.17130-7-raag.jadav@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 20 Oct 2023 19:22:28 +0200
-Message-ID: <CAJZ5v0g7kkFhk8tNp1PMxuKkS7jv5rp16X-jvK0kc1TO0NTwFQ@mail.gmail.com>
-Subject: Re: [PATCH v1 6/8] perf: qcom: use acpi_device_uid() for fetching _UID
-To:     Raag Jadav <raag.jadav@intel.com>
-Cc:     rafael@kernel.org, len.brown@intel.com, robert.moore@intel.com,
-        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mark.rutland@arm.com, will@kernel.org, linux@roeck-us.net,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S229604AbjJTSL7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Oct 2023 14:11:59 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDA0D51;
+        Fri, 20 Oct 2023 11:11:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697825517; x=1729361517;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=voEK7holIGvvAdy/wSR3LlIkMHvaF8zMe1eSBNdjLo0=;
+  b=B1QX3J8GLxMwkTk4bzQv0Z5pGwap0f7oOlbYpBbTOO+HoQZh3Z5cw5Vk
+   v4extxesYF00z4anLvZwERyKTVUxkfKwhQWBh9Q5TWdzfklI1SdEZwMs7
+   yVVYND7NSZ8WwiwbkTgh7cbPdEHDt7j/a5nQlLHDFGRRaHyfWmQBFajje
+   mDYAsl2Kdayjo6VC1jLuGgSaujzkBqDNZiODRK6cnqrXdy8x2Ziod2pxb
+   6kbl7SY7c4qNs03JsGJLdvuxtRqtdI7+k12/mH4Rlk5yS6Mq9pOGprVwl
+   sn+hU2F4hx3iUtLMRxWujr95qMS170efEmYNqZTxfIIdD5EV/FxqvXjty
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="8110224"
+X-IronPort-AV: E=Sophos;i="6.03,239,1694761200"; 
+   d="scan'208";a="8110224"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2023 11:11:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="873998519"
+X-IronPort-AV: E=Sophos;i="6.03,239,1694761200"; 
+   d="scan'208";a="873998519"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2023 11:11:51 -0700
+Date:   Fri, 20 Oct 2023 21:11:48 +0300
+From:   Raag Jadav <raag.jadav@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        len.brown@intel.com, robert.moore@intel.com,
+        mika.westerberg@linux.intel.com, mark.rutland@arm.com,
+        will@kernel.org, linux@roeck-us.net, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         acpica-devel@lists.linuxfoundation.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
         mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v1 4/8] ACPI: utils: use acpi_dev_uid_match() for
+ matching _UID
+Message-ID: <ZTLC5Jo97gYsL5wX@black.fi.intel.com>
+References: <20231020084732.17130-1-raag.jadav@intel.com>
+ <20231020084732.17130-5-raag.jadav@intel.com>
+ <ZTJYK02w8HZg26eI@smile.fi.intel.com>
+ <ZTJmnv6CsZUt0pIS@black.fi.intel.com>
+ <CAJZ5v0jvAeibnXSq92CBd1uXUgRnvsP0kEqfL8Du552=LT1dog@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0jvAeibnXSq92CBd1uXUgRnvsP0kEqfL8Du552=LT1dog@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 20, 2023 at 10:48 AM Raag Jadav <raag.jadav@intel.com> wrote:
->
-> Convert manual _UID references to use standard ACPI helpers.
->
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
->  drivers/perf/qcom_l3_pmu.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
-> index 2887edb4eb0b..f16783d03db7 100644
-> --- a/drivers/perf/qcom_l3_pmu.c
-> +++ b/drivers/perf/qcom_l3_pmu.c
-> @@ -742,8 +742,8 @@ static int qcom_l3_cache_pmu_probe(struct platform_device *pdev)
->
->         l3pmu = devm_kzalloc(&pdev->dev, sizeof(*l3pmu), GFP_KERNEL);
->         name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "l3cache_%s_%s",
-> -                     acpi_dev_parent(acpi_dev)->pnp.unique_id,
-> -                     acpi_dev->pnp.unique_id);
-> +                     acpi_device_uid(acpi_dev_parent(acpi_dev)),
-> +                     acpi_device_uid(acpi_dev));
->         if (!l3pmu || !name)
->                 return -ENOMEM;
->
-> --
+On Fri, Oct 20, 2023 at 07:11:53PM +0200, Rafael J. Wysocki wrote:
+> On Fri, Oct 20, 2023 at 1:38 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> >
+> > On Fri, Oct 20, 2023 at 01:36:27PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Oct 20, 2023 at 02:17:28PM +0530, Raag Jadav wrote:
+> > > > Convert manual _UID references to use standard ACPI helpers.
+> > >
+> > > Yes, while not so obvious this is the correct replacement.
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > I think this is the only case which would suffer from the more obvious
+> > behaviour, i.e.
+> >
+> > bool acpi_dev_uid_match(struct acpi_device *adev, const char *uid2)
+> > {
+> >         const char *uid1 = acpi_device_uid(adev);
+> >
+> >         return uid1 && uid2 && !strcmp(uid1, uid2);
+> > }
+> >
+> > That said, we can't be particularly sure about it's potential future users,
+> > especially when the usage will not be limited to just ACPI core since we're
+> > exporting it.
+> 
+> I actually agree with this, so please switch over to the above.
 
-Applied as 6.7 material.
+Will send out a v2, thanks.
 
-QCom perf maintainers, if you'd rather take this yourselves, please let me know.
+Andy, can I add your review for this?
 
-Thanks!
+Raag
