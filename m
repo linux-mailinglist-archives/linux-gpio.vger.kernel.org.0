@@ -2,137 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B2657D131E
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Oct 2023 17:49:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 188DE7D1475
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Oct 2023 19:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377676AbjJTPtl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Oct 2023 11:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48558 "EHLO
+        id S229812AbjJTRAi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Oct 2023 13:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377663AbjJTPtk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Oct 2023 11:49:40 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2B51A3;
-        Fri, 20 Oct 2023 08:49:37 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SBpsm1khlz67M1H;
-        Fri, 20 Oct 2023 23:49:00 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 20 Oct
- 2023 16:49:34 +0100
-Date:   Fri, 20 Oct 2023 16:49:33 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Raag Jadav <raag.jadav@intel.com>
-CC:     <rafael@kernel.org>, <len.brown@intel.com>,
-        <robert.moore@intel.com>, <mika.westerberg@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <linux@roeck-us.net>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <acpica-devel@lists.linuxfoundation.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-hwmon@vger.kernel.org>,
-        <mallikarjunappa.sangannavar@intel.com>, <bala.senthil@intel.com>
-Subject: Re: [PATCH v1 1/8] ACPI: utils: Introduce acpi_dev_uid_match() for
- matching _UID
-Message-ID: <20231020164933.00002f53@Huawei.com>
-In-Reply-To: <20231020084732.17130-2-raag.jadav@intel.com>
-References: <20231020084732.17130-1-raag.jadav@intel.com>
-        <20231020084732.17130-2-raag.jadav@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229692AbjJTRAh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Oct 2023 13:00:37 -0400
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC76218F;
+        Fri, 20 Oct 2023 10:00:35 -0700 (PDT)
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-57e4459aa29so537574eaf.0;
+        Fri, 20 Oct 2023 10:00:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697821235; x=1698426035;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gzgDuBFq97Xw3QhiJlj4wHN5k/h9ggUGNAdZwlEm5kY=;
+        b=WD5kBW3EzWl+4QsIBxzDAGjjNu/8dJf/9LEEuDWQW/KiD/sGMfrYMl6mO2vNtUfj0d
+         sdJqta0knaz8l8H2V1Cm+rthGYSfJPDtw4S3oeQqRKSTwQCvedngd9D9UvmPEO9y5fpl
+         XjVoW4mGgomqZ7TwqK7qrdwtPz/iTArl6olnc/nk53fo4fhaMUi8z+ZDfTu3l01NcBOu
+         WBQPqCtUuhRQQDxsAboXSX077J7X/XjVhfYgPT+cnTDzT0vYbt1ak3ISyKSyHn6zLiL3
+         XlrEDmu0aUU3Hm96J/pK+Ikvutcz4AmWf4qn4OoiFTvVWcDq96qZqXkMGFGsUFyD+3uj
+         bQBA==
+X-Gm-Message-State: AOJu0YzWHeHeY3ORzF6nFP9jtjY8f79NS+YFO+sT3FP8WNLPl8fsWjgd
+        LxTAyHRMU7j5sJJAT4a9dQ==
+X-Google-Smtp-Source: AGHT+IFG7MQg/Qf1uISRBgyZiD5wS21l6aF1H40nmlPqP8OxAlGR4K8MKN3DrHBYbbg49jFjRIE3Ug==
+X-Received: by 2002:a4a:c4ca:0:b0:581:f262:dde0 with SMTP id g10-20020a4ac4ca000000b00581f262dde0mr1202983ooq.3.1697821234626;
+        Fri, 20 Oct 2023 10:00:34 -0700 (PDT)
+Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id ce12-20020a056820218c00b0055975f57993sm409614oob.42.2023.10.20.10.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Oct 2023 10:00:33 -0700 (PDT)
+Received: (nullmailer pid 3613652 invoked by uid 1000);
+        Fri, 20 Oct 2023 17:00:32 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: nuvoton,npcm845: Add missing additionalProperties on gpio child nodes
+Date:   Fri, 20 Oct 2023 12:00:16 -0500
+Message-ID: <20231020170017.3610978-1-robh@kernel.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 20 Oct 2023 14:17:25 +0530
-Raag Jadav <raag.jadav@intel.com> wrote:
+Just as unevaluatedProperties or additionalProperties are required at
+the top level of schemas, they should (and will) also be required for
+child node schemas. That ensures only documented properties are
+present for any node. Add the missing addtionalProperties to the 'gpio'
+child nodes.
 
-> Introduce acpi_dev_uid_match() helper that matches the device with
-> supplied _UID string.
-> 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->  /**
->   * acpi_dev_hid_uid_match - Match device by supplied HID and UID
->   * @adev: ACPI device to match.
->   * @hid2: Hardware ID of the device.
->   * @uid2: Unique ID of the device, pass NULL to not check _UID.
->   *
-> - * Matches HID and UID in @adev with given @hid2 and @uid2.
-> - * Returns true if matches.
-> + * Matches HID and UID in @adev with given @hid2 and @uid2. Absence of @uid2
-> + * will be treated as a match. If user wants to validate @uid2, it should be
-> + * done before calling this function. This behaviour is as needed by most of
-> + * its current users.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml     | 1 +
+ 1 file changed, 1 insertion(+)
 
-If there are other other users that need different behavior are they
-buggy?  Also what behavior is this referring to?
-
-I'd just drop the at last sentence as confusing and not adding much.
-
-> + *
-> + * Returns:
-> + *  - %true if matches or @uid2 is NULL.
-> + *  - %false otherwise.
->   */
->  bool acpi_dev_hid_uid_match(struct acpi_device *adev,
->  			    const char *hid2, const char *uid2)
->  {
->  	const char *hid1 = acpi_device_hid(adev);
-> -	const char *uid1 = acpi_device_uid(adev);
->  
->  	if (strcmp(hid1, hid2))
->  		return false;
->  
-> -	if (!uid2)
-> -		return true;
-> -
-> -	return uid1 && !strcmp(uid1, uid2);
-> +	return acpi_dev_uid_match(adev, uid2);
->  }
->  EXPORT_SYMBOL(acpi_dev_hid_uid_match);
->  
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 254685085c82..d1fe6446ffe0 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -760,6 +760,7 @@ static inline bool acpi_device_can_poweroff(struct acpi_device *adev)
->  		adev->power.states[ACPI_STATE_D3_HOT].flags.explicit_set);
->  }
->  
-> +bool acpi_dev_uid_match(struct acpi_device *adev, const char *uid2);
->  bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2);
->  int acpi_dev_uid_to_integer(struct acpi_device *adev, u64 *integer);
->  
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index afd94c9b8b8a..db3a33e19c97 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -787,6 +787,11 @@ static inline bool acpi_dev_present(const char *hid, const char *uid, s64 hrv)
->  
->  struct acpi_device;
->  
-> +static inline bool acpi_dev_uid_match(struct acpi_device *adev, const char *uid2)
-> +{
-> +	return false;
-> +}
-> +
->  static inline bool
->  acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2)
->  {
+diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+index e4b9f3da2cf0..3e8472898800 100644
+--- a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+@@ -35,6 +35,7 @@ properties:
+ patternProperties:
+   '^gpio@':
+     type: object
++    additionalProperties: false
+ 
+     description:
+       Eight GPIO banks that each contain 32 GPIOs.
+-- 
+2.42.0
 
