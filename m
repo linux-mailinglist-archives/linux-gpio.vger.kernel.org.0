@@ -2,85 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0927D7D1F42
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Oct 2023 22:02:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C94957D1F49
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Oct 2023 22:04:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232050AbjJUUCp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 21 Oct 2023 16:02:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59972 "EHLO
+        id S232101AbjJUUEM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 Oct 2023 16:04:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231997AbjJUUCo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Oct 2023 16:02:44 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81864D52
-        for <linux-gpio@vger.kernel.org>; Sat, 21 Oct 2023 13:02:37 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-53fc7c67a41so3845010a12.0
-        for <linux-gpio@vger.kernel.org>; Sat, 21 Oct 2023 13:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1697918554; x=1698523354; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUr0abvZCLa5ZjROveiZrf82Tea/s9MUxEcODZD/52U=;
-        b=fLoPhxEmosIQSnD+e8PYsLoFNZIz39aM0Gh8ClsvTDawFjPLala1beRJrDd13M8raF
-         cMAgSejIXJrl8D504LgBhaV0o1fUhv7/PDFrKrWtQ8jUIwTTJyRKbmL+h5CtydRGjrnJ
-         gekFO/J2vSXAmn7TOmnv5SUN8yfIhGFIeQDW0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697918554; x=1698523354;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BUr0abvZCLa5ZjROveiZrf82Tea/s9MUxEcODZD/52U=;
-        b=GyLdRGcXy95oiOQnnlKzR8rOtBfWFzkVgetUYdofQo1sT/dayQRZSIJ1lfV/2nIi14
-         Xd/mZG9dlVavOPLT0lPw3Cdlg7yhXEI3m7QH4Kq6m+Hy8xkZodXL5N5QJfyj59VyhywG
-         1/5rFm51Ubcbxi4YSUI4NTo6lbFK2aD158gho8bsJL3qJCtclUqtw70ZFx1433HHerel
-         o876GfuOFC+P3vTATiIrsjbY+gSlTWqgGVBZ9VvZdfLrM4tlb2Zgi20V1LdUbB5zMwyq
-         8ssu2uMm87Gm4M8P6xCijQNCyGLDJ0LstJOAjSDdcNmhXaZeLckFmVKY78xeZVz5sRH5
-         VIBw==
-X-Gm-Message-State: AOJu0YyV5Fr01PDDgdpyf2OedzEzzMhNU5i3JhdQjr61vyPEFpmSniVI
-        FNAGVOl46n0SoOReKWQ9Rqn6+1q0IgQc2X3NTcLCVSm1
-X-Google-Smtp-Source: AGHT+IEY8qWGsq+iXo3cWywuRTIkRcRwgtUrfMORqcXNuUx2jrbJbwMAGvkFKEMTc82k4Pi7BbKtXw==
-X-Received: by 2002:a17:907:9491:b0:9ad:8a9e:23ee with SMTP id dm17-20020a170907949100b009ad8a9e23eemr4624556ejc.13.1697918554693;
-        Sat, 21 Oct 2023 13:02:34 -0700 (PDT)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id z23-20020a170906075700b009a1be9c29d7sm4082442ejb.179.2023.10.21.13.02.33
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Oct 2023 13:02:33 -0700 (PDT)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-53b32dca0bfso4179663a12.0
-        for <linux-gpio@vger.kernel.org>; Sat, 21 Oct 2023 13:02:33 -0700 (PDT)
-X-Received: by 2002:a05:6402:214e:b0:53e:1207:5b69 with SMTP id
- bq14-20020a056402214e00b0053e12075b69mr7077779edb.10.1697918553480; Sat, 21
- Oct 2023 13:02:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231021183925.22831-1-brgl@bgdev.pl>
-In-Reply-To: <20231021183925.22831-1-brgl@bgdev.pl>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 21 Oct 2023 13:02:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiOJO8nfcDeUMwYXPQHLtTnngSDd4ieUWegW1Aru8TbnQ@mail.gmail.com>
-Message-ID: <CAHk-=wiOJO8nfcDeUMwYXPQHLtTnngSDd4ieUWegW1Aru8TbnQ@mail.gmail.com>
+        with ESMTP id S232152AbjJUUEL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Oct 2023 16:04:11 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B3E1A8;
+        Sat, 21 Oct 2023 13:04:09 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 88D77C433C8;
+        Sat, 21 Oct 2023 20:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697918649;
+        bh=edF7HgVFXCsjn+Nkmeq1Y5LTQ2/2dxV4GJfVJ1I6iQY=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=oQ4LlLEA2vjUv3kCQjx1Vvynq+gAUlegIEKtNYT94dF7gQ+FgB48PCrvZk7zkvCwL
+         SAo3hbdgoGT2ZXnH/W01ocF31Sju/e7ifXZdmQukAIug62/yyp95SDOl2wzFBCpxnA
+         rO/e6PMDYOa+orJ1eYqwTJ1mhg6cDwi7NFy6z7OoHGVCgNE1sDVR3N+FjbUCupRzZU
+         GJr8MIeNwQgglqVRLfm8WRH2jeCYSbOU52J8G5vh1H52JH0LwffLO/2LwaBPPPxtfr
+         vBHl94DDVgB5COCkgMbwzy+eTOpE28aHADNqqS2w2lfRojn1kiHQuIniFNX0n/F0B3
+         NobyuU7SyrqoQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 759EAC04DD9;
+        Sat, 21 Oct 2023 20:04:09 +0000 (UTC)
 Subject: Re: [GIT PULL] gpio: fixes for v6.6-rc7
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20231021183925.22831-1-brgl@bgdev.pl>
+References: <20231021183925.22831-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20231021183925.22831-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.6-rc7
+X-PR-Tracked-Commit-Id: 479ac419206b5fe4ce4e40de61ac3210a36711aa
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d537ae43f8a107761fb5a85c3f0cfce5ca79bcb1
+Message-Id: <169791864947.17709.5454949955924110702.pr-tracker-bot@kernel.org>
+Date:   Sat, 21 Oct 2023 20:04:09 +0000
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 21 Oct 2023 at 11:39, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
->  drivers/gpio/gpio-vf610.c   | 15 ++++++++-------
->  drivers/gpio/gpiolib-acpi.c |  1 +
->  2 files changed, 9 insertions(+), 7 deletions(-)
+The pull request you sent on Sat, 21 Oct 2023 20:39:25 +0200:
 
-I have no idea how you get that diffstat.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.6-rc7
 
-             Linus
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d537ae43f8a107761fb5a85c3f0cfce5ca79bcb1
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
