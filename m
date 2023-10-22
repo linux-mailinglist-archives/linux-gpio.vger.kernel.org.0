@@ -2,94 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A17837D235A
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Oct 2023 16:32:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CA077D24F7
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Oct 2023 19:35:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231793AbjJVOc3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 22 Oct 2023 10:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53626 "EHLO
+        id S229500AbjJVRfa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 22 Oct 2023 13:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231616AbjJVOc2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Oct 2023 10:32:28 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0458EF4
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Oct 2023 07:32:22 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2c5071165d5so1733841fa.0
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Oct 2023 07:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1697985140; x=1698589940; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dZX41vcGZiltzB8LzTi24NnB45xpP9Gd2/KAsXXU0T4=;
-        b=TVVt/6NzFokoeRT/wMi3AJHqYzo+OLTn6kv5C5XPWyR8hmGgqvNcMuHTiYFGiOc4vV
-         b054Q1uXpCp/hW4eF4QQ+My6O5crxRcbcMwA4X/UNol8ImE+nVVghSpGxlllNM9XTl+r
-         AKqTPMUAgxtCuAZZoc4yDwaReo0WBkIeKFUho=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697985140; x=1698589940;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dZX41vcGZiltzB8LzTi24NnB45xpP9Gd2/KAsXXU0T4=;
-        b=gAd84hkbldGu4SW0I3BzpvLVQeiVaELMwwj3CAsQuGOf/oIEcAZvFMOBlmDp/RGseD
-         awXuiyRJPCusutpBtATam71G4gtQE8PWUooYdcamQfNSd0UGe4ZTRCLUFkdKOyO8aElh
-         mvAfz1zCmu9QgJLjs1mnyAGjxXMMIosa1QtIY/ARZu9s2ftlsnZYMnsFNBW978kI6Rr3
-         iYEcBTpm3GfjtbKBsL4CC82mUUwhHHDMYTLVSOX05zQyCzZPsMLhyPL78kDlbFyIWIIB
-         rX8Toa0Pga5hAp8ucWnGCJlsjwK/wwam/YZIRKdAPOxjwrRMw9Eg6tktjCsAfi99apuR
-         LFvA==
-X-Gm-Message-State: AOJu0Yw+/SnRe3XY5Dk1kR5uPnO6ucSYsXrs10LVTbwWq5U/6gV5J2F4
-        QIpjxV7u+xMlTzVjDMVR0TkOrUyoDQhVc53ZA0RfnA==
-X-Google-Smtp-Source: AGHT+IFAzxHa+IAwlY9YtT9XDVej+TUy31GYKFEVySklySN3aPPSisfmjs4mwY/oxvQ0+BPgHAXBzg==
-X-Received: by 2002:ac2:4852:0:b0:507:a58f:79ad with SMTP id 18-20020ac24852000000b00507a58f79admr4386934lfy.61.1697985139881;
-        Sun, 22 Oct 2023 07:32:19 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id l16-20020aa7d950000000b0053e799314d7sm4885397eds.73.2023.10.22.07.32.19
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Oct 2023 07:32:19 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so3581050a12.1
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Oct 2023 07:32:19 -0700 (PDT)
-X-Received: by 2002:a50:9f83:0:b0:53d:be55:5fc with SMTP id
- c3-20020a509f83000000b0053dbe5505fcmr3807228edf.27.1697985138915; Sun, 22 Oct
- 2023 07:32:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231021183925.22831-1-brgl@bgdev.pl> <CAHk-=wiOJO8nfcDeUMwYXPQHLtTnngSDd4ieUWegW1Aru8TbnQ@mail.gmail.com>
- <CAMRc=Mc-oz4e4d9pJbvki3kGgMj1DzSS1EDKcycswJKCNAbqOQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc-oz4e4d9pJbvki3kGgMj1DzSS1EDKcycswJKCNAbqOQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 22 Oct 2023 07:32:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiVNOFP1dzKdCqXvoery5p8QoBB5THiJUMbZ1TxJb7FhQ@mail.gmail.com>
-Message-ID: <CAHk-=wiVNOFP1dzKdCqXvoery5p8QoBB5THiJUMbZ1TxJb7FhQ@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: fixes for v6.6-rc7
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S232582AbjJVRf3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Oct 2023 13:35:29 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDF0E6;
+        Sun, 22 Oct 2023 10:35:27 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82EADC433C7;
+        Sun, 22 Oct 2023 17:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697996127;
+        bh=+RDNXfr09gHQffArCIyEozXJfIbsRgoaUkMmT9nAQcQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eLkBckyNDlVImV6OmWVubPL8xno7BMuzseCqIL3vonmAX2lr7NWo32iXbn7x329lq
+         WBmBv5FKUlX0Zen72FOVJfSeggC712Wl6JuCOuCd9IR55st2uLprrpMjZ9fUZZ+eVl
+         XbTqr7uvU8iA3/c+NKe+NkPGnZFOGzZ4WB7QjxBE8NFvv1q7DFvKk0fRHfpUTM/Yy3
+         ELu7ofnQHMlVeT+01DnzQFIlZWEv+NgxtPfcVXY+AHciEFXx5Y7Cc9hRDUCY33aW9Q
+         FQ7k1H0JkowwcDWor3eSXTsmSLuFfhcKBt1LnWIYRYBvkfhBCXSVXyDBTlJHKx1pyD
+         2tcWgJrfdaG6A==
+Date:   Sun, 22 Oct 2023 18:35:22 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: nuvoton,npcm845: Add missing
+ additionalProperties on gpio child nodes
+Message-ID: <20231022-imprison-gruffly-7a54a48918a6@spud>
+References: <20231020170017.3610978-1-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zjBK80u1y4Q2cFRB"
+Content-Disposition: inline
+In-Reply-To: <20231020170017.3610978-1-robh@kernel.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 22 Oct 2023 at 06:12, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> I have diff.algorithm = patience in my gitconfig. Typically this
-> results in better diffs but not this time for some reason.
 
-Yeah, that picks a really odd diff in this case.
+--zjBK80u1y4Q2cFRB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-May I actually suggest the 'histogram' diff algorithm to you? It's
-kind of a "smarter patience" version, and at least for me it's been
-the best of the choices.
+On Fri, Oct 20, 2023 at 12:00:16PM -0500, Rob Herring wrote:
+> Just as unevaluatedProperties or additionalProperties are required at
+> the top level of schemas, they should (and will) also be required for
+> child node schemas. That ensures only documented properties are
+> present for any node. Add the missing addtionalProperties to the 'gpio'
+> child nodes.
+>=20
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Of course, there's always going to be some odd case where for one
-reason or another one of the diff algorithms does better than the
-others, but histogram does seem to result in good diffs most of the
-time.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-              Linus
+Thanks,
+Conor.
+
+> ---
+>  .../devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml     | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pi=
+nctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinc=
+trl.yaml
+> index e4b9f3da2cf0..3e8472898800 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.y=
+aml
+> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.y=
+aml
+> @@ -35,6 +35,7 @@ properties:
+>  patternProperties:
+>    '^gpio@':
+>      type: object
+> +    additionalProperties: false
+> =20
+>      description:
+>        Eight GPIO banks that each contain 32 GPIOs.
+> --=20
+> 2.42.0
+>=20
+
+--zjBK80u1y4Q2cFRB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTVdWgAKCRB4tDGHoIJi
+0nCNAQC4n/8blQKppMM0k1acuJdQK7No/wYvFuR+achfFZtDgQEA42l10lATlk8v
+JinAMIUTJAq/UBAw9oma3JH5StDPDwo=
+=sxmL
+-----END PGP SIGNATURE-----
+
+--zjBK80u1y4Q2cFRB--
