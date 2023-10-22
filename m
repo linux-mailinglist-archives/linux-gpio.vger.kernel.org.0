@@ -2,95 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 137927D2565
-	for <lists+linux-gpio@lfdr.de>; Sun, 22 Oct 2023 20:43:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 862397D2621
+	for <lists+linux-gpio@lfdr.de>; Sun, 22 Oct 2023 23:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232375AbjJVSnP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 22 Oct 2023 14:43:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40596 "EHLO
+        id S232520AbjJVVrU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 22 Oct 2023 17:47:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjJVSnO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Oct 2023 14:43:14 -0400
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E044E0
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Oct 2023 11:43:12 -0700 (PDT)
-Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-49ab0641e77so1094692e0c.0
-        for <linux-gpio@vger.kernel.org>; Sun, 22 Oct 2023 11:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1698000192; x=1698604992; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AFBzhBHfJGAdxrzBo65ARLhrUEXHoWpeGGwEKhF39R8=;
-        b=yUDJLBPrBLg8ySZcpNFifsb5/zrHoB30ge+tJMqxtiBcTmsHM6p9kx1JRWpdnWNRfD
-         fzqt08U3veKl2FA8BldhHj9PL2XJH+3JnEjqRCIUZ/6nVFhB+J36gb2fRSFrgrIzcVsv
-         k+8qWek01jd00dUiQul3vGuDu4IDxKRQU6EwXO7LKlqF2UbZw5yHw0KjiV9lLqK4LSSv
-         xzZGOlI2mmk8JAXyAiEp9m9i7CgYJgk/PFFNc83K6Jb5WGDgnn4SuopddoHEddmvB0t/
-         h7E/Y6VdT8YfKTd2PQ3yTRfMVpBR6ISS2RR+24yR7zVhrU4d8x9wVR7l4KKnXgzqOBrV
-         cy/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698000192; x=1698604992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AFBzhBHfJGAdxrzBo65ARLhrUEXHoWpeGGwEKhF39R8=;
-        b=XATrFetzGbF+qPPtUgRs+f7L/xOMrpd8tz6ofwtxHAtfEgIm55LWVirItJWGsX2vs7
-         +EsX7pu97CRVMl9deO2pDJsOpPNZPL5pgXhACGxO4n/brAz7oGreXMJcpBmHo5UcHP2y
-         C1CzNsJaPdxLyJw6UpkNPLiZ/1qybEpy2TwTX5y7NrnGQYL/8U6nsXGuaPd2gXkM/oIv
-         3t2eJjpA3UeHkK4dtF2lyoY1porhxxGmduE6MzC/87V1thMBw6eMVfK5CP4cSpCoYYr1
-         TZ+lFEYA2yonnwY1fHxkizQcXj6W4SqNrls30VE+Mxclj26PsZwq7X2Ygv1x9CyQOLgk
-         wTUA==
-X-Gm-Message-State: AOJu0YwmOGNZ+YG283chUAl7b87MdckwgEBv0laxZ9YEHkargGOeYKPq
-        AHnzf0wuqaspxkcIz2tdGKf8SvL6IJrwQNMAwb6dv6YoGFDhmC1D
-X-Google-Smtp-Source: AGHT+IGiZKxzKxcabuTtjw9YgtwMX4YfPKb1BC7tx2cMURaMOAYnK+6uOptvRh9ClEI8Hk0rSt471/51wbmQo8a0AY0=
-X-Received: by 2002:a05:6102:160d:b0:452:6b50:1e7e with SMTP id
- cu13-20020a056102160d00b004526b501e7emr5749208vsb.35.1698000191741; Sun, 22
- Oct 2023 11:43:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231021183925.22831-1-brgl@bgdev.pl> <CAHk-=wiOJO8nfcDeUMwYXPQHLtTnngSDd4ieUWegW1Aru8TbnQ@mail.gmail.com>
- <CAMRc=Mc-oz4e4d9pJbvki3kGgMj1DzSS1EDKcycswJKCNAbqOQ@mail.gmail.com> <CAHk-=wiVNOFP1dzKdCqXvoery5p8QoBB5THiJUMbZ1TxJb7FhQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wiVNOFP1dzKdCqXvoery5p8QoBB5THiJUMbZ1TxJb7FhQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sun, 22 Oct 2023 20:43:00 +0200
-Message-ID: <CAMRc=MezGuMdd=H_vdSmdm++YDm59gB6TK2HbqDQypqDOSjj8A@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: fixes for v6.6-rc7
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S229452AbjJVVrT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 22 Oct 2023 17:47:19 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B825E5;
+        Sun, 22 Oct 2023 14:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698011237; x=1729547237;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Dx6B+Uq17MjpqqV7Z+3SvjBqDXDUCQ6dU1sRUyxAXsY=;
+  b=PpsoXpZi4E7W4NxtoZAF+MY763xcXHfoQRcjVJN8EemRe5DSrAt8mNbm
+   RLp0660Xd8JbPHUqOeGfs/Gkx2p9+RvHrtLcxeOTpB9SDUQgYyg+32Lih
+   1vbghHgs06/nEousQH12YpmzHPMkH/0WJd0pGsyhKrGRquid+rj3BC31r
+   buF3DCjIz873nrtWuNx6PTs7PXrl5K5CfSyRatKBe+MYgbLvb5iI6s12E
+   Y7PRuSa5L7X4NJQwo76uEo5EXfGS4T8DR8lCz8DqXgc/uI+aon3pglW6J
+   hUUta8amCSSq5qU1Xiwe+0jVOCvu672nBMHuyepaPwtRB8i0FeipZ+L1Q
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="390621599"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="390621599"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2023 14:47:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="901624719"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="901624719"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2023 14:44:55 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qugHs-0006Hg-2m;
+        Sun, 22 Oct 2023 21:47:08 +0000
+Date:   Mon, 23 Oct 2023 05:46:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: Re: [PATCH v6 7/9] arm64: Kconfig.platforms: Add config for Marvell
+ PXA1908 platform
+Message-ID: <202310230518.zs9Qpg3j-lkp@intel.com>
+References: <20231010-pxa1908-lkml-v6-7-b2fe09240cf8@skole.hr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231010-pxa1908-lkml-v6-7-b2fe09240cf8@skole.hr>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 22, 2023 at 4:32=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sun, 22 Oct 2023 at 06:12, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > I have diff.algorithm =3D patience in my gitconfig. Typically this
-> > results in better diffs but not this time for some reason.
->
-> Yeah, that picks a really odd diff in this case.
->
-> May I actually suggest the 'histogram' diff algorithm to you? It's
-> kind of a "smarter patience" version, and at least for me it's been
-> the best of the choices.
->
-> Of course, there's always going to be some odd case where for one
-> reason or another one of the diff algorithms does better than the
-> others, but histogram does seem to result in good diffs most of the
-> time.
->
+Hi Duje,
 
-Sure, I'll use it from now on.
+kernel test robot noticed the following build errors:
 
-Thanks,
-Bartosz
+[auto build test ERROR on 94f6f0550c625fab1f373bb86a6669b45e9748b3]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Duje-Mihanovi/clk-mmp-Switch-to-use-struct-u32_fract-instead-of-custom-one/20231011-012919
+base:   94f6f0550c625fab1f373bb86a6669b45e9748b3
+patch link:    https://lore.kernel.org/r/20231010-pxa1908-lkml-v6-7-b2fe09240cf8%40skole.hr
+patch subject: [PATCH v6 7/9] arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
+config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20231023/202310230518.zs9Qpg3j-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231023/202310230518.zs9Qpg3j-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310230518.zs9Qpg3j-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   /tmp/cc7DnLj6.s: Assembler messages:
+>> /tmp/cc7DnLj6.s:2851: Error: unknown mnemonic `ldmia' -- `ldmia x23,{r0,r1,r2,r3}'
+>> /tmp/cc7DnLj6.s:2852: Error: unknown mnemonic `stmia' -- `stmia x19!,{r0,r1,r2,r3}'
+>> /tmp/cc7DnLj6.s:3125: Error: unknown mnemonic `ldmia' -- `ldmia x19!,{r0,r1,r2,r3}'
+>> /tmp/cc7DnLj6.s:3126: Error: unknown mnemonic `stmia' -- `stmia x23,{r0,r1,r2,r3}'
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for SND_ARM
+   Depends on [n]: SOUND [=y] && SND [=y] && ARM
+   Selected by [y]:
+   - SND_MMP_SOC_SSPA [=y] && SOUND [=y] && SND [=y] && SND_SOC [=y] && ARCH_MMP [=y]
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
