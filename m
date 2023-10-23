@@ -2,101 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DF8F7D29B1
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Oct 2023 07:36:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E4D67D2C4F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Oct 2023 10:13:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233316AbjJWFgn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Oct 2023 01:36:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54352 "EHLO
+        id S229476AbjJWIND (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Oct 2023 04:13:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbjJWFgb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Oct 2023 01:36:31 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EB1E9;
-        Sun, 22 Oct 2023 22:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698039390; x=1729575390;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=3yrAjMBirTIUAhTanyYbEMtK/J+a0HZi5Xr6F7vjCTw=;
-  b=limts0eBIeR5M9GBaWRZJWPuasKW9qBDxQ2p566yP4Yty4lsBbuYtd0K
-   8b5ra+0vpIcvy4C0L8wBM2g4tQxqFnubUcQx+QmuNMHG8t0taUzkUHniT
-   QYbmo08sYHcofYXGUb7grwPFres+uwHEy6UvwlL6u2vwbgj5JpndLtD1g
-   T21+1BanJ7OKzDnFkISn1bAKKNvL4avXBWnSxwWz5ayhG3Z6QnRQSJgU6
-   3shnK7Tf6pjL9QHkB7+yfRWBCtZTcKxezwGXtio4mmaDd4SiQ5LvO496o
-   ldFZOTayNOqVdoo+3zlIT6GH0tgUxb2uakzvh9boO5gDhqhDUjR1S4jl9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="417905465"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="417905465"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2023 22:36:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="734556713"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="734556713"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by orsmga006.jf.intel.com with ESMTP; 22 Oct 2023 22:36:24 -0700
-From:   Raag Jadav <raag.jadav@intel.com>
-To:     rafael@kernel.org, len.brown@intel.com, robert.moore@intel.com,
-        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mark.rutland@arm.com, will@kernel.org, linux@roeck-us.net,
-        Jonathan.Cameron@Huawei.com
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acpica-devel@lists.linuxfoundation.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com,
-        Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2 6/6] perf: arm_cspmu: use acpi_dev_hid_uid_match() for matching _HID and _UID
-Date:   Mon, 23 Oct 2023 11:05:30 +0530
-Message-Id: <20231023053530.5525-7-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20231023053530.5525-1-raag.jadav@intel.com>
-References: <20231023053530.5525-1-raag.jadav@intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232511AbjJWIMu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Oct 2023 04:12:50 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8721170E
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Oct 2023 01:12:34 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-d9a4c0d89f7so2763661276.1
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Oct 2023 01:12:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698048754; x=1698653554; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KOXl3zXklTx9wCua1qCqiebuh4VwsRY3XD6ewu+wjFQ=;
+        b=ZioSy2MFMKiDfxY4LAACQLtfERaN46XQrEIqIk7alIHhPrxg4u1+Ru9+hYcN4jK9sm
+         sQigmk7m2poHDqdANTEn4tnzHWnbaTW1x6t5tfEmE+mV4mmYcMGXlDY0sUO5ATMPrLno
+         Ka5KXtwQqVwwHqUKGVFPjFBmTzoQFQOMsHl6J2eFx3mjLLiksXRfTiownLf6PaHlP5L8
+         lORk6QpC+nqwQ7y3TCGM6wI9ZqicRhuwAtc+dLo6L0IU1ewXf43Wtj2vUtPlBcEQhF7r
+         cki34jucVJPr1K0DPTI2tlgR27yZYMznirQsypeQr1TpHbnu/GHOjgqbdVI1UKDikgHr
+         xG0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698048754; x=1698653554;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KOXl3zXklTx9wCua1qCqiebuh4VwsRY3XD6ewu+wjFQ=;
+        b=Z9eoQCzBYUaNOG9k+i+pmn+qEHyAmIM6Meo71IuWwb+52kjgHpiFiDg4fvkeqDvjKv
+         dUBjc/4jQNB/BOPe7FpWZjLa3vRRrp/uZTcZn5Di+QgKqsjWYPsC89+pZ+phBzk+nIaS
+         QVDCvRoINYUpKmckMmCvxO6y3OgYdq+ZF3rTpSivP6Dc5r5LUu7xl4nNdWSt9sVooRu1
+         d79Mavz5tEWB/PeL815ArgQdsx5HC11LDf8LJKYx87HZudobIr0mHYYrwT62dL1vquQI
+         hQGXiQcLRSrPk4Z7S+dUcCYf71vmQ+g+k3ClpCb++6C2BqHrzRcuhdJwsUhO8GrqzkQX
+         1drQ==
+X-Gm-Message-State: AOJu0YxnwmxVljG3u/Ue7jSRBfSHDmSWQOVWAhubiVJtaAW+v3w+ktl/
+        YkcbhDd0FgnZOcaNM0HtOe7oyF30RI7oxB8Z/GTsWA==
+X-Google-Smtp-Source: AGHT+IFXX0nvmPQFS5PyZqKJz1HMNh/MzcEwcEmsEUeQld3hNYTdxItm6I8zeBAdbTNsZXsNtjg2DeR9/VfiwNASl7c=
+X-Received: by 2002:a25:455:0:b0:d7b:9211:51a5 with SMTP id
+ 82-20020a250455000000b00d7b921151a5mr7215623ybe.44.1698048753902; Mon, 23 Oct
+ 2023 01:12:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
+ <20231005025843.508689-6-takahiro.akashi@linaro.org> <20231006132346.GA3426353-robh@kernel.org>
+ <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
+ <ZSTgTC4cFFpofYAk@octopus> <CACRpkdYD6pkccYoy90AfzV3KT7oYkBPD2_4ZW-AXzT1eUVpchA@mail.gmail.com>
+ <ZS3yK/f12Mxw9rXe@octopus>
+In-Reply-To: <ZS3yK/f12Mxw9rXe@octopus>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 23 Oct 2023 10:12:21 +0200
+Message-ID: <CACRpkdarDrVkPmyDawhZ+H94S4F=dtDSDVuKegi-eNfQNDY3rg@mail.gmail.com>
+Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
+        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert manual _UID references to use the standard ACPI helpers.
+Hi Takashi,
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/perf/arm_cspmu/arm_cspmu.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+sorry for slow response :(
 
-diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
-index e2b7827c4563..f0e6d14281d6 100644
---- a/drivers/perf/arm_cspmu/arm_cspmu.c
-+++ b/drivers/perf/arm_cspmu/arm_cspmu.c
-@@ -1061,7 +1061,7 @@ static int arm_cspmu_request_irq(struct arm_cspmu *cspmu)
- 
- static inline int arm_cspmu_find_cpu_container(int cpu, u32 container_uid)
- {
--	u32 acpi_uid;
-+	u64 acpi_uid;
- 	struct device *cpu_dev;
- 	struct acpi_device *acpi_dev;
- 
-@@ -1071,10 +1071,8 @@ static inline int arm_cspmu_find_cpu_container(int cpu, u32 container_uid)
- 
- 	acpi_dev = ACPI_COMPANION(cpu_dev);
- 	while (acpi_dev) {
--		if (!strcmp(acpi_device_hid(acpi_dev),
--			    ACPI_PROCESSOR_CONTAINER_HID) &&
--		    !kstrtouint(acpi_device_uid(acpi_dev), 0, &acpi_uid) &&
--		    acpi_uid == container_uid)
-+		if (acpi_dev_hid_uid_match(acpi_dev, ACPI_PROCESSOR_CONTAINER_HID, NULL) &&
-+		    !acpi_dev_uid_to_integer(acpi_dev, &acpi_uid) && acpi_uid == container_uid)
- 			return 0;
- 
- 		acpi_dev = acpi_dev_parent(acpi_dev);
--- 
-2.17.1
+On Tue, Oct 17, 2023 at 4:32=E2=80=AFAM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
 
+> > > > We can probably mandate that this has to be inside a pin controller
+> > > > since it is a first.
+> > >
+> > > Yeah, my U-Boot implementation tentatively supports both (inside and
+> > > outside pin controller). But it is not a user's choice, but we should
+> > > decide which way to go.
+> >
+> > OK I have decided we are going to put it inside the pin control node,
+> > as a subnode. (I don't expect anyone to object.)
+>
+> While I'm still thinking of how I can modify my current implementation
+> to fit into 'inside' syntax, there are a couple of concerns:
+>
+> 1) invoke gpiochip_add_data() at probe function
+> Probably we no longer need "compatible" property,
+
+The DT binding people made it clear to me that they really
+like compatibles for this kind of stuff so we should probably
+keep it.
+
+> but instead we need to
+> call gpiochip_add_data() explicitly in SCMI pin controller's probe
+> as follows:
+>
+> scmi_pinctrl_probe()
+>     ...
+>     devm_pinctrl_register_and_init(dev, ..., pctrldev);
+>     pinctrl_enable(pctrldev);
+>
+>     device_for_each_child_node(dev, fwnode)
+>         if (fwnode contains "gpio-controller") {
+>             /* what pin_control_gpio_probe() does */
+>             gc->get_direction =3D ...;
+>             ...
+>             devm_gpiochip_data_add(dev, gc, ...);
+>         }
+
+I think it is better of the pin controller just parse and add any
+subdevices (GPIO or other) using of_platform_default_populate()
+(just grep for this function and you will see how many device
+drivers use that).
+
+What is good with this approach is that if you place this call
+last in the probe() we know the GPIO driver has all resources
+it needs when it probes so it won't defer.
+
+> 2) gpio-by-pinctrl.c
+> While this file is SCMI-independent now, due to a change at (1),
+> it would be better to move the whole content inside SCMI pin controller
+> driver (because there is no other user for now).
+
+That works, too. I have no strong opinion on this subject.
+
+> 3) Then, pin-control-gpio.yaml may also be put into SCMI binding
+> (i.e. firmware/arm,scmi.yaml). Can we leave the gpio binding outside?
+
+There is no clear pattern whether to put subdevice bindings into
+the parent device binding or not. Maybe? A lot of MFD devices does
+this for sure.
+
+> 4) phandle in "gpio-ranges" property
+> (As you mentioned)
+> The first element in a tuple of "gpio-ranges" is a phandle to a pin
+> controller node. Now that the gpio node is a sub node of pin controller,
+> the phandle is trivial. But there is no easier way to represent it
+> than using an explicit label:
+> (My U-Boot implementation does this.)
+>
+> scmi {
+>     ...
+>     scmi_pinctrl: protocol@19 {
+>         ...
+>         gpio {
+>             gpio-controller;
+>             ...
+>             gpio-ranges =3D <&scmi_pinctrl ... >;
+>         }
+>     }
+> }
+>
+> I tried:
+>     gpio-ranges =3D <0 ...>; // dtc passed, but '0' might be illegal by s=
+pec.
+>     gpio-ranges =3D <(-1) ...>; // dtc passed, but ...
+>     gpio-ranges =3D <&{..} ...>; // dtc error because it's not a full pat=
+h.
+>
+> Do you have any other idea? Otherwise, I will modify my RFC
+> with the changes above.
+
+If you have the GPIO node inside the pin controller node
+and have all the details of the existing ranges available, there
+is no need to put that into the device tree at all, just omit it?
+
+Instead just call gpiochip_add_pin_range() directly in Linux
+after adding the pin controller and gpio_chip.
+C.f. drivers/pinctrl/pinctrl-sx150x.c for an example of a driver
+doing this. In this case the SX150X is hot-plugged (on a slow
+bus) so it needs to figure out all ranges at runtime anyway.
+
+Yours,
+Linus Walleij
