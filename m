@@ -2,83 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 757567D4BF1
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 11:24:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35F627D4C48
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 11:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234013AbjJXJYy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 05:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45840 "EHLO
+        id S234292AbjJXJ3m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Oct 2023 05:29:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234033AbjJXJYw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 05:24:52 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D59510C3
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 02:24:49 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-d9a4c0d89f7so3894761276.1
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 02:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698139488; x=1698744288; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jvtw3R4g4yrWaCPe3OnX3OGqAz4Ysoana75anOWAYR4=;
-        b=dL1VnuvzBNr7p2VtGrgJ2YMxxalsZwAOP2rGfZWZbhmajLFcbZY3Lm89A6ef04MOw9
-         2DhAdz4udDbvACievBwRk+rVJcccWi1Seh+ZM0dUMJBEdIjnLkk/0nJaqN8Rrs+6XB8J
-         3xWsSTkXGOjD9o9mwZYwwHgASiNklO1XRN9d7WqOKVoVUFjUOs3OHfzfIDSlqJfMNYEo
-         DbwX3KGlDXATrMnn7ckXB2tBUjcEYneEiTgsbt24HWfCN/GMuf0CYk3t2dGt5cX9ya2q
-         5LY89XDHaIsj+x5tTJd0/WWzqz6kmOySBK7p1JC3kA6UCcGVCOsMi95AOwAGcoAmPQjR
-         8/iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698139488; x=1698744288;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jvtw3R4g4yrWaCPe3OnX3OGqAz4Ysoana75anOWAYR4=;
-        b=UP/a8XZNez6jqhzT5YsiotwURC6A8Y8SoJ6c4ARF19cs7lBeIHwtDbSbHSCRKsyKO4
-         f/g4e+QgQW87JmdwK83USeva+JkyCQKv+PMiocNE+zl56ZdkMr9zS5o/lVq7wlqUdxw9
-         OF/HgDZjXCPj7LvYxyFxcOOtcM0R9NfJIuBZOL7qbXvqqbG/3PSqavk8PG4j39FRaTWE
-         2IWhNzEowHJ98rtCZFRw1XjOkBeK9FVFYF2XqNOOfbXGxT7EVLR9behRcs0WjXpZOwma
-         A9cTQ8MufrbuoGR29Rlcmtc+IlkDlIBtkUxJ3j//IvAGQ4hbo/YyCbGcokKWx2fxIfOQ
-         5kLg==
-X-Gm-Message-State: AOJu0YxpgJ9NX4FSTfAYJmTtkhrEj1ngS0Eg7Yno6C9nX9QVX5v5Jvfi
-        M0wmOrTRA67mZ7tpuJldYcSiVRhMahO3TSPNlfWygOEcsROhToFP
-X-Google-Smtp-Source: AGHT+IEjjXEh1q5UaxdtvCQj9zoNGBvaRwRDI5Q+oryObRZl50AcnXsTDbsRJJ5cG/pHer6xoQElF+sLHgofyO9u4cg=
-X-Received: by 2002:a25:cf14:0:b0:d9b:f161:5fce with SMTP id
- f20-20020a25cf14000000b00d9bf1615fcemr11908547ybg.63.1698139488699; Tue, 24
- Oct 2023 02:24:48 -0700 (PDT)
+        with ESMTP id S234310AbjJXJ3W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 05:29:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B7E2120;
+        Tue, 24 Oct 2023 02:28:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698139726; x=1729675726;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TSB8pAAViMB/8p//BjKSeKwLOijnQ7uOJx1vlqPV8yg=;
+  b=d2pycOIegWmaiBPuhL0h9V7Rwvf6X6JJnSDd7LFcZcEP+mQgcROs44xe
+   FZVMWHkKU83iek/6+K3s5qtX4BwU7UbjUfUGbzWj6jOLbHXJCAl0C8+3W
+   u92kotQVO487mJ13BTNdSKp4wb5PDv0x2VtaC2LZi44VGuQBg4dy0pDJU
+   6Y033a/ed2f8KMgUPJTBeD0cumS7orMMBPIa49yhnSbsTY1s+avs5u+zs
+   G5YOI42yKFQTrslzzrVB1IIWQyXvROqbPfODyrsOJh6+YkQMatK1gI6NM
+   yav9LWgJerxpxlae412EFRx/KuSvMohp15v1L4m9PCqnT8BsCiGII9CzS
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="451251855"
+X-IronPort-AV: E=Sophos;i="6.03,247,1694761200"; 
+   d="scan'208";a="451251855"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 02:28:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="1089786072"
+X-IronPort-AV: E=Sophos;i="6.03,247,1694761200"; 
+   d="scan'208";a="1089786072"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Oct 2023 02:28:40 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 55BD794; Tue, 24 Oct 2023 12:28:39 +0300 (EEST)
+Date:   Tue, 24 Oct 2023 12:28:39 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Raag Jadav <raag.jadav@intel.com>
+Cc:     rafael@kernel.org, len.brown@intel.com, robert.moore@intel.com,
+        andriy.shevchenko@linux.intel.com, mark.rutland@arm.com,
+        will@kernel.org, linux@roeck-us.net, Jonathan.Cameron@huawei.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acpica-devel@lists.linuxfoundation.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
+Subject: Re: [PATCH v3 1/6] ACPI: utils: Introduce acpi_dev_uid_match() for
+ matching _UID
+Message-ID: <20231024092839.GE3208943@black.fi.intel.com>
+References: <20231024062018.23839-1-raag.jadav@intel.com>
+ <20231024062018.23839-2-raag.jadav@intel.com>
 MIME-Version: 1.0
-References: <20231024090631.3359592-1-jim.t90615@gmail.com> <20231024090631.3359592-2-jim.t90615@gmail.com>
-In-Reply-To: <20231024090631.3359592-2-jim.t90615@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 24 Oct 2023 11:24:36 +0200
-Message-ID: <CACRpkdZ_Xkw-rRL4YPQxP8Wp00SL=k5W=S1X4bdEpfmMedeXdg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: gpio: add NPCM sgpio driver bindings
-To:     Jim Liu <jim.t90615@gmail.com>
-Cc:     JJLIU0@nuvoton.com, krzysztof.kozlowski+dt@linaro.org,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231024062018.23839-2-raag.jadav@intel.com>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 24, 2023 at 11:07=E2=80=AFAM Jim Liu <jim.t90615@gmail.com> wro=
-te:
+On Tue, Oct 24, 2023 at 11:50:13AM +0530, Raag Jadav wrote:
+> +/**
+> + * acpi_dev_uid_match - Match device by supplied UID
+> + * @adev: ACPI device to match.
+> + * @uid2: Unique ID of the device.
+> + *
+> + * Matches UID in @adev with given @uid2.
+> + *
+> + * Returns:
+> + *  - %true if matches.
+> + *  - %false otherwise.
 
+Nit: these actually do not get formatted like above so you can just
+write it as
 
-> Add dt-bindings document for the Nuvoton NPCM7xx sgpio driver
->
-> Signed-off-by: Jim Liu <jim.t90615@gmail.com>
+Returns: %true in case UIDs match, %false otherwise.
 
-This looks fair to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+If it is even needed, I think it is pretty obvious from the function
+name what it returns.
