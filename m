@@ -2,150 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68FA07D5C00
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 21:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AB2B7D5C17
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 22:04:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344312AbjJXT71 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 15:59:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
+        id S1344246AbjJXUEx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Oct 2023 16:04:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344254AbjJXT70 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 15:59:26 -0400
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C995610D4
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 12:59:24 -0700 (PDT)
-Received: by mail-yb1-xb30.google.com with SMTP id 3f1490d57ef6-d9c687f83a2so4615173276.3
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 12:59:24 -0700 (PDT)
+        with ESMTP id S1344155AbjJXUEw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 16:04:52 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF10B10D0
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 13:04:49 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-5a7be88e9ccso50209447b3.2
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 13:04:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698177564; x=1698782364; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=X3Nt1tRk4oZwItsFbTrN6/wGS4LwWRGecYFcsIlq7X4=;
-        b=zCY6bt73oxGhskUCk9Pmpg3Fr5C0HGIzHPrzyiD02102LmKzG2+0XavVDjrSloZHlK
-         Hi0x2JXaM9fPh/boGIED52dneytai+pJJJ/yO9InBcm51VqKpzK1mU3KVMgSyPUi36w4
-         FomEShm6P4u3vy1ukzfkBLEk9SFo+jWDCjdjDPcvJqKSvcF1KRoAGIfyuqJzoM/dXwCk
-         g8DIlkQxu8Dh5H8ixbv18amksyiLNBwoQg9IAgbA/q3z/oZeycS54HiAoydQzTvj6ShM
-         QZ0qjjX3+FW42Zc5LFjsey9401CaLHDJmQkHFrvUC7l1sEBlKXf/RhDLuzPvUiB2+pcx
-         NX3Q==
+        d=linaro.org; s=google; t=1698177889; x=1698782689; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vVAbANXp0EE+0d4oW9xtpYRorj1M/cLLrnm2DJJ699U=;
+        b=W0qOXJUYufeX7YnjuxWbS+Nejf4NWjUXU2mczkv3gbixSORoAevNE/Sl0FRTpTQjDW
+         li/oIrjWnCJ2Yf1B7W2lXdv8DqBUid+b1QpED5RvQ9ADwPiFNPMZqeWbIKLc/hC3Oi5m
+         +ay0GdiWo7TZxIDUOcaSpxYEFqRmzAo8SUZYoVOAA7hq3/328AdHFjKV9RXnGKl+PFA8
+         DJ2Lgfs01UMWSZpYrcUItN/eu7ntmrBPHw1iQTmr3l2Vg7/0pczfmK2IBaYIEpo0QWWX
+         n1SO07NBYl7D0mxi8wRn4cfDNtzFZFo7hmcQoZn7DBLRzdUYOFM/bWulOs0f8BSdNk8y
+         5Wvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698177564; x=1698782364;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X3Nt1tRk4oZwItsFbTrN6/wGS4LwWRGecYFcsIlq7X4=;
-        b=ee3hDzZwZmRcAJOPh4oFNSX0hysza7dVLf9JGP2Wk8hHN0JxUpcomMkQtps/ZBXJg6
-         yIbcp4UJ9C98W8CqlxJhGn6APT9INOvP9Tybq1++Hpnyca5ItYRC/fogoOXCvPLCqngu
-         WVvQJMRvTZauKVFVjFHS6o9wKV4tOM6jcWgj+tTZ5XUmSnPCquk/CXkBDr7gatp813O0
-         dBw/mF4W8BuM9fWkdymb2NQ7fC9sycB4rLQ4HskPJsY5DwVAVLe2OL6cCl+Xy3U4MQtk
-         QJePAizBierp6rLJuvTahhi8Z/FJtjUFv1o9G+vftMTY+aHMXNNcbclGxyU50g4qTXD5
-         c+vQ==
-X-Gm-Message-State: AOJu0YyAdVHGf6ieSFnfqmY0hK8wFnVjxG7klM7Sdb0XDQLSVQn14pOQ
-        /n7s5qnHkbpNgbnW4vLGw//Tqiy7c5KA7Co95HJTbA==
-X-Google-Smtp-Source: AGHT+IGIKU90txs7qDa16dt6ToUY7ImKSmv34abro4cWrTktqbf66JlzZobnbOCvfV97zA6I4eFI/43VsNo0lIy2q0k=
-X-Received: by 2002:a25:51c3:0:b0:d9b:b6:ad72 with SMTP id f186-20020a2551c3000000b00d9b00b6ad72mr13160609ybb.50.1698177564020;
- Tue, 24 Oct 2023 12:59:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698177889; x=1698782689;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vVAbANXp0EE+0d4oW9xtpYRorj1M/cLLrnm2DJJ699U=;
+        b=rWkeHmsewoSxMfVRRvibALzFV+8SA7ngCMGvooaNZAcpMU3tW4oJENmOqhLLTCd0sa
+         tNwj9ybPR3rYIadEBHMM8IFtx1V9EXPTE/blwQWALTEaCJ9oNK+T+aSEImUpai9HolqA
+         xv7aCYTgRBVgRFF80Jc9kkADyYfGdaXW7HFU/maxisz9DMaBELJquTRJ40qnMj2JH6QV
+         jHLXf5i+QBqiswaFIuYSmp0mkAbQau2TpqfdySxQk6azwsKYO4XY1jTs4SvIhn5C1FFF
+         aamMvATq40LF3lp2pVf1zxbGWKyWnFkgEEXTs9KAiqsek1OiPmrYXmzoNG2zKlwm83Qr
+         8pPA==
+X-Gm-Message-State: AOJu0YxYmkEVPuapqBmV4EhINWfANsypBHm8yG5saQfXt3CfaIxCqGfR
+        x1GWqeK3VBhfD/OqOvWjHBCgJ5TbV71rWkKbqeuzHw==
+X-Google-Smtp-Source: AGHT+IEUgNxJjKrz0nd2I1uU4RPgPHlVfmbMZ1dQGcjU8PMkwdFh+iGnBNsSn0kKET1VoRgHJoEQTVk+TFQcmQm5wVc=
+X-Received: by 2002:a05:690c:10:b0:5a7:b53f:c304 with SMTP id
+ bc16-20020a05690c001000b005a7b53fc304mr15947380ywb.37.1698177888974; Tue, 24
+ Oct 2023 13:04:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <1696440338-12561-1-git-send-email-quic_mojha@quicinc.com> <1696440338-12561-2-git-send-email-quic_mojha@quicinc.com>
-In-Reply-To: <1696440338-12561-2-git-send-email-quic_mojha@quicinc.com>
+References: <1696440338-12561-1-git-send-email-quic_mojha@quicinc.com>
+ <f3a4c114-b430-47ce-a746-4a840994dc58@quicinc.com> <CAA8EJpr0Nnn5Tr=2CBAADYfNU6cnKuq==x5L5YQoko9C=3q2tg@mail.gmail.com>
+ <d6f48748-22c4-4e4c-a1e9-7a6940b9b432@quicinc.com>
+In-Reply-To: <d6f48748-22c4-4e4c-a1e9-7a6940b9b432@quicinc.com>
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Tue, 24 Oct 2023 22:59:12 +0300
-Message-ID: <CAA8EJprscPcr0pMM=fz4yGWsgprk7bAXCcbbZJQmdv0siKASow@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] firmware: qcom_scm: provide a read-modify-write function
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+Date:   Tue, 24 Oct 2023 23:04:37 +0300
+Message-ID: <CAA8EJpqd-1=sFd3Hm-XbAq8WJfY+hL2Hd5mc23RnCimMbQM69w@mail.gmail.com>
+Subject: Re: [PATCH 0/3 v7] Misc SCM changes
+To:     Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+Cc:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org,
         p.zabel@pengutronix.de, linus.walleij@linaro.org,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 4 Oct 2023 at 20:26, Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+On Tue, 24 Oct 2023 at 19:00, Kathiravan Thirumoorthy
+<quic_kathirav@quicinc.com> wrote:
 >
-> It was realized by Srinivas K. that there is a need of
-> read-modify-write scm exported function so that it can
-> be used by multiple clients.
 >
-> Let's introduce qcom_scm_io_update_field() which masks
-> out the bits and write the passed value to that bit-offset.
+> On 10/24/2023 8:38 PM, Dmitry Baryshkov wrote:
 >
-> Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> Tested-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com> # IPQ9574 and IPQ5332
-> ---
->  drivers/firmware/qcom_scm.c            | 20 ++++++++++++++++++++
->  include/linux/firmware/qcom/qcom_scm.h |  2 ++
->  2 files changed, 22 insertions(+)
+> On Tue, 24 Oct 2023 at 16:31, Kathiravan Thirumoorthy
+> <quic_kathirav@quicinc.com> wrote:
 >
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 520de9b5633a..084e4782b88d 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -122,6 +122,7 @@ static const char * const qcom_scm_convention_names[] = {
->  };
+> On 10/4/2023 10:55 PM, Mukesh Ojha wrote:
 >
->  static struct qcom_scm *__scm;
-> +static DEFINE_SPINLOCK(lock);
+> I have given version to this series as v7 as it has already
+> gone through v6 and later got added to minidump patch series
+> However, these 3 patches can go independently and has no
+> relation with minidump hence, separated it from minidump series.
+>
+> Mukesh, Can you rebase this series on top of linux-next, since there is
+> a conflict?
+>
+>
+> Bjorn, after rebase is done, will you able to pick it up for v6.7 if
+> there is a time? These patches(#1  and #3) are required for the crash
+> dump collection on IPQ9574 and IPQ5332 SoCs.
+>
+> It is not obvious that they are fixes for the crash. You did not add
+> Fixes tags, you didn't follow
+> Documentation/process/stable-kernel-rules.rst. Cover letter is
+> useless. How can we guess that they are urgent / important?
+>
+>
+> Dmitry,
 
-Please move the spinlock inside __scm.
+Could you please turn off HTML message composition. For example your
+message completely messed up the quoting in the text above.
+
+> These patches are not the *fixes* for the existing crashes, these are req=
+uired to *enable* the crash dump / ram dump collection by boot loader when =
+qcom_scm.download_mode is set to 1 on IPQ9574 and IPQ5332 SoCs.
+
+Please excuse me, I misread your message, mea culpa. Indeed, they are
+not a fix for the existing error...
 
 >
->  static int qcom_scm_clk_enable(void)
->  {
-> @@ -481,6 +482,25 @@ static int qcom_scm_disable_sdi(void)
->         return ret ? : res.result[0];
->  }
+> Reason why I *requested* to pick it up for 6.7 if possible is, initial ve=
+rsion is submitted in Jan 2023 by Poovendhan[1] and then later Mukesh integ=
+rated the initial series into his minidump series. Then I separated out the=
+se patches[2] from mindump series since there is no dependency for these pa=
+tches to be part of minidump series but unfortunately again integrated back=
+ into the minidump series. Finally Mukesh again separated out these patches=
+ now.
 >
-> +int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask, unsigned int val)
-
-qcom_scm_io_rmw ? qcom_scm_io_update_bits? These might be better names
-and they follow the existing function names.
-
-> +{
-> +       unsigned int old, new;
-> +       int ret;
-> +
-> +       spin_lock(&lock);
-> +       ret = qcom_scm_io_readl(addr, &old);
-> +       if (ret)
-> +               goto unlock;
-> +
-> +       new = (old & ~mask) | (val & mask);
-> +
-> +       ret = qcom_scm_io_writel(addr, new);
-> +unlock:
-> +       spin_unlock(&lock);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_scm_io_update_field);
-> +
->  static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
->  {
->         struct qcom_scm_desc desc = {
-> diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
-> index ccaf28846054..5497eaf9c7b5 100644
-> --- a/include/linux/firmware/qcom/qcom_scm.h
-> +++ b/include/linux/firmware/qcom/qcom_scm.h
-> @@ -82,6 +82,8 @@ bool qcom_scm_pas_supported(u32 peripheral);
->
->  int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
->  int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
-> +int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask,
-> +                            unsigned int val);
->
->  bool qcom_scm_restore_sec_cfg_available(void);
->  int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
-> --
-> 2.7.4
+> Since there are no active comments to be addressed, I was hoping this ser=
+ies to be picked for 6.7. As long as these patches doesn't go out of the ra=
+dar, I'm fine :)
 >
 
 
--- 
+--
 With best wishes
 Dmitry
