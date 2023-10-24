@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDEBA7D50DF
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 15:03:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06BC07D5123
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 15:13:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234589AbjJXNDS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 09:03:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39088 "EHLO
+        id S232084AbjJXNNG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Oct 2023 09:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234683AbjJXNCB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 09:02:01 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDAAC1733
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 06:01:33 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id 3f1490d57ef6-d9ac9573274so4069133276.0
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 06:01:33 -0700 (PDT)
+        with ESMTP id S231951AbjJXNNG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 09:13:06 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14B0CC
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 06:13:03 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-d84c24a810dso3959958276.2
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 06:13:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698152493; x=1698757293; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=linaro.org; s=google; t=1698153183; x=1698757983; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WdiQyW/DR0saP5hyzIEWBzZ94+Rea1U1vbWoFnm3Jwk=;
-        b=yiDmmu1fMz8EXLYU231mPxIe/WZTzCpSnRY9wHniXSUz0Z3XATmxHRYzIOsG1uyACv
-         b0ZnEFNLFtMDmprpBGv/vMfQ0OUnogf4r+foyAYYOgHiBTMZPRNI1KADPivor8wTOcYS
-         Mc6Al5fUzWJL9Pwa8k+h3iEZU3WOTJJdDf9I/7LZRY9i707hCOzW2GBssQ8W9U0+qbaF
-         qLWAAEPhV+Ak6tr+yVyLhgCwaNhssBLUVex8Wp3xPCgcMEPB/YNoTBDuOboTwKjm/V7R
-         5RuTAVMvGCjtL6Dln4fHw2ROcq7l1VW2NmWv62zGFEA977CoX9CRLlJB4NJyJ36jUIOU
-         L+EQ==
+        bh=DxhEyjBJFg+nNZl60fRB3lLtFYlPjJhwsqt5NZemaGg=;
+        b=RpCMjppHRRvki1+EhUXQE1hk3PhN2xBMEc90YbZT47xFduEYB/RplO1yzh+5W5JXxW
+         cfd7Imak4NFCbsfivqgrRFY2EzoO6ucpXYbQtEwBew8oJxI7zT659Cb/FdV6OUL7gsN3
+         Vj/CzTN7CDkY3yONNnB9cDMzBlYkZ6Tr2CwhAd1gfx6JQJaLX9acYrR8al747t5akHhC
+         as5o9ejjpvkR2QMbBYty6DUIkdnFSLP4eX/uaVvSe9OS889p8cAF50oUeKAPHl9gHu/z
+         ZnYml3FrYmE0uanPZDc7feKSNl8ZOBF89+HTMzaAkMfTiSAJRfuNdG+RhLkep5NNPz7K
+         nM6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698152493; x=1698757293;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1698153183; x=1698757983;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WdiQyW/DR0saP5hyzIEWBzZ94+Rea1U1vbWoFnm3Jwk=;
-        b=BzdcuMo6aEDFS+/pNMbUeqHf62R5SRmEtu9lfHlEJ6CgF+aoliAOGiirZW4zRIQxUz
-         sEXfB7CBNZQLXIYvOdU5Kvo0sthhTYvd/1Yep9QRWo1asks3PQ2CnceDBivbMm0ctjrw
-         xysIGzxL3XGuvfzurP6nCoEY8PUcYORohub7mCe5TXsv0DamRMgHZDs8UHNkYVPWSP/T
-         fkxp3RlTckbKa0vxo2j1ie/0bfgtCBiksGGZ9trD07v2VliQXDofIV2vZGcEhv5UxIju
-         OWXKEP7V+JA1UwZ2/QH6LzGdnieAyZv24gWNeshMmWOXzSDfuuJmmVWt0QzluWhz0qPp
-         s02A==
-X-Gm-Message-State: AOJu0YyUiejs+NV7WsKzjlIwM3SdYUPwdEF6/xaHWNG374Kn91aCrj8u
-        hyX/pOJmZO2Ky2DQfDHx8pFfIZmMibxXN3LER9PqMQAZk9ftZYxK
-X-Google-Smtp-Source: AGHT+IGTYcmpmdeet3GcOIVCZdUeYXb/bVrngkL8EkuljSeAX1GNPGKhi8aceTk4IEt+bjxWe8gW2+TDsv4nvL3FDsI=
-X-Received: by 2002:a25:b53:0:b0:d9a:ccdf:3873 with SMTP id
- 80-20020a250b53000000b00d9accdf3873mr10818054ybl.48.1698152491198; Tue, 24
- Oct 2023 06:01:31 -0700 (PDT)
+        bh=DxhEyjBJFg+nNZl60fRB3lLtFYlPjJhwsqt5NZemaGg=;
+        b=HCNBLdnvq+Km7PyBtFxdfIq6+chaf5ZyGFyzB+R9WeeJ+xYiOw0lPsGR7PA7FgWnbZ
+         rtGo5hToHC62+3ArUa9tBJef7HLiAtzsN8zkYlqjJbrJAXconbTUqklX6sS/mGPeGjiz
+         cNYkyZD/sh1Mdk/P13P2Gx/je3Pa8DvXOon92JR8tR8XOQvcfUMh64K/ipUDT0UUbWJo
+         4+7Z0jXrfEmapxzewuE4Vk80ghag2FVK6LpE4H3SDyGZG0t0Q2KOjAPUAxS/8FSx6ASu
+         32xvrhjYIN2Tl6idkpxsPTvZygXgHnGRSPU6y7AJKdZ2dB3yUhhAjNr3+lDHrGl69qoZ
+         LiiQ==
+X-Gm-Message-State: AOJu0YxbcTvqCDjx587RuggTXAVkwXRYcNVyCL2yi45Q+DuksE2VIV3v
+        6TSARxByLkybla5hn4eru7oNKQHU5LX93KQV5Azxsw==
+X-Google-Smtp-Source: AGHT+IErrrJZqHr9Mi8c9Lwy4ZFjFvA+JxkTdG5/38hd7daxCpYKkX6EQ4emeikgVsqQo7An76DCm1JB7nJUvPuC/IU=
+X-Received: by 2002:a25:dc52:0:b0:da0:4bda:dc41 with SMTP id
+ y79-20020a25dc52000000b00da04bdadc41mr1112835ybe.37.1698153182803; Tue, 24
+ Oct 2023 06:13:02 -0700 (PDT)
 MIME-Version: 1.0
 References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
  <20231005025843.508689-6-takahiro.akashi@linaro.org> <20231006132346.GA3426353-robh@kernel.org>
@@ -53,20 +53,20 @@ References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
  <ZSTgTC4cFFpofYAk@octopus> <CACRpkdYD6pkccYoy90AfzV3KT7oYkBPD2_4ZW-AXzT1eUVpchA@mail.gmail.com>
  <ZS3yK/f12Mxw9rXe@octopus> <CACRpkdarDrVkPmyDawhZ+H94S4F=dtDSDVuKegi-eNfQNDY3rg@mail.gmail.com>
  <ZTduWx7CH1ifI5Uc@octopus> <CACRpkdba=echR=rZYKVbROfaOp4mzjTQ9RphHFyzqSNgE1jZqg@mail.gmail.com>
- <ZTeitAqfwyse9Vkj@pluto>
-In-Reply-To: <ZTeitAqfwyse9Vkj@pluto>
+ <ZTemAK/jBtv9b5xP@octopus>
+In-Reply-To: <ZTemAK/jBtv9b5xP@octopus>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 24 Oct 2023 15:01:19 +0200
-Message-ID: <CACRpkdYi5rLvXwhWnBRGg8hxZ_tNa0g92Q_fSLnCt_vetjeS8Q@mail.gmail.com>
+Date:   Tue, 24 Oct 2023 15:12:51 +0200
+Message-ID: <CACRpkdY-5uS9EeXfDFVOiRKiFmwwSn3jRVGhT-n4JMqesHEumw@mail.gmail.com>
 Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
  generic gpio driver
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        Oleksii_Moisieiev@epam.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
+        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -78,40 +78,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 24, 2023 at 12:55=E2=80=AFPM Cristian Marussi
-<cristian.marussi@arm.com> wrote:
+On Tue, Oct 24, 2023 at 1:10=E2=80=AFPM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
 
-> ...a maybe dumb question from my side, BUT does the SCMI Pinctrl carry
-> enough information as it stands for the driver to derive autonomously
-> and efficently the possible/applicable gpio ranges ?
+> As far as I understand, there is only one way for SCMI gpio driver
+> to know which pins are actually GPIO pins; Calling PINCNTRL_CONFIG_GET
+> command with "Input-mode" or "Output-mode" configuration type
+> against *every* pin-controller's pins.
+> (Here I assume that the command would fail with INVALID_PARAMETERS or
+> NOT_SUPPORTED if configuring the given pin as a GPIO input or output
+> is not possible. But the specification seems to be a bit ambiguous.)
 
-I don't know, that's part of the problem I suppose. But if the
-pin controller can report functions supported by certain pins
-or groups of pins, then certainly "gpio" should be one of those
-functions or else the pin cannot be used for GPIO at all?
+As I also wrote in the reply to Christian, I expect the SCMI firmware
+to consider GPIO a function on the pins, and either individual pins
+(groups with just one pin in it) or entire groups of pins can be switched
+to perform the "gpio function". ("gpio function" is akin to "i2c function"
+or "HDMI function" etc.)
 
-Then maybe that function is just a name convention, such
-as "all pins are members of a 1-pin group named 'gpioN'
-where N is the pin number" then you need to switch the pin
-into this function in order to use the pin as a GPIO line.
-Pins that do not have this group associated with them
-cannot be used for GPIO.
+If the SCMI protocol considers GPIO usage to be something else
+than a function of a pin, that is going to be a problem. Then the SCMI
+protocol need some other way of determining that the pin is in
+GPIO mode, and perhaps something would need to be added to
+the protocol for that.
 
-This is incidentally exactly the method used by the Qualcomm
-pin control driver (IIRC).
+The reason is that in practice a lot of hardware has to decouple
+the pin from any internal function in order to use it as GPIO, and
+connect it to the GPIO block that can drive the line high and low.
+And we don't select that as a function, how is the firmware going
+to know that it needs to do this? Implicitly from the call requesting
+the line to be output perhaps. But if the firmware can be altered
+to do that, the firmware can just as well be altered to present
+GPIO as a proper function.
 
-If the SCMI protocol has not though about GPIO as a special
-function, or mentioned anything about group name
-conventions for the GPIO function, then there is a hole
-in the specification, and this is likely best filled by creating
-one-pin groups as per above and feed this back to the
-spec.
+Using a function makes most sense, because the board firmware
+knows which pins are GPIO lines and what they are used for
+(such as a LED or camera flash) and at boot certainly put them
+into GPIO function and drive them high/low or set them as
+input (high impedance).
 
-If the GPIO usecase isn't even considered a function by SCMI,
-or (more likely) "nobody thought about that" then this is
-a good time to send it back to the drawing board for
-specification, right? It's normal for specs to run into a bit
-of friction when confronted with the real world.
+> It means that, if SCMI firmware has 100 pinctrl pins, the driver needs
+> to call the command 200 times in order to get the answer.
+
+I think we should only need to check which function each pin
+has and those that are in the GPIO function we put into the ranges.
 
 Yours,
 Linus Walleij
