@@ -2,115 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC4A57D4CAD
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 11:40:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75D727D4CB4
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 11:41:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234317AbjJXJkh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 05:40:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55028 "EHLO
+        id S234473AbjJXJla (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Oct 2023 05:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234390AbjJXJk3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 05:40:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689E9198A;
-        Tue, 24 Oct 2023 02:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698139818; x=1729675818;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mSD40iH+sPX+DrU5ENcXUhxksvpVp9Sfw5JZjf5AJFA=;
-  b=cEbSB0HhGd5FKGuA2NJOQxdMb7ZKRypszTrQ9THJLwAhbH1P7sgg4yt4
-   gv6VpdWWCPXumRaDbvVoDxjmyk3xvAuMK1VzLxasqGj+98j5cevmB+5rO
-   JX2JwenP5GkvtXJVxfAC44NIvX2p1JHJDHY+v+Aj65it/y9S9drPQGhdN
-   pZM66Taw25/7qvZN25TT+TAycNza9gC6ExE2aafOQhsIYk4hhcl8wrPib
-   xysPfCNrZ5X5K0bK5jF4Ze7jbq1L354gkHjFDl7D0UU9chnL5xxiXUYm1
-   L28qh2O11r4u6JQFRhtNqOuigdbObCrLKMBOysJe1SYwGROThN+XL644g
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="8570434"
-X-IronPort-AV: E=Sophos;i="6.03,247,1694761200"; 
-   d="scan'208";a="8570434"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 02:30:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="708224038"
-X-IronPort-AV: E=Sophos;i="6.03,247,1694761200"; 
-   d="scan'208";a="708224038"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 24 Oct 2023 02:30:11 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 6358894; Tue, 24 Oct 2023 12:30:10 +0300 (EEST)
-Date:   Tue, 24 Oct 2023 12:30:10 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Raag Jadav <raag.jadav@intel.com>
-Cc:     rafael@kernel.org, len.brown@intel.com, robert.moore@intel.com,
-        andriy.shevchenko@linux.intel.com, mark.rutland@arm.com,
-        will@kernel.org, linux@roeck-us.net, Jonathan.Cameron@huawei.com,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acpica-devel@lists.linuxfoundation.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
-Subject: Re: [PATCH v3 0/6] Refine _UID references across kernel
-Message-ID: <20231024093010.GF3208943@black.fi.intel.com>
-References: <20231024062018.23839-1-raag.jadav@intel.com>
+        with ESMTP id S234493AbjJXJlI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 05:41:08 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5652C10C0
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 02:40:13 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5a7be88e9ccso43880547b3.2
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 02:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698140412; x=1698745212; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nrczhLGD57ThZZUAC+aPmJYkJuVGn0gGizSYS9IZ/6k=;
+        b=v01xorbj2vmZyjz9Rj3CPHBIV7wt17LnkRj58c/9qqkOTe50XFHd8P4ADFnUKxerpe
+         RFmDuMFq4jBB7hxX14M/Q+/55PUVGnuzOUX4ev9I8YauKRjT5ROYX3COc901GAOPV3/0
+         2M0/zlmH1AAIrPKja7YymH7a9Ldxfvc/k9P3Jy106hSgsBKwV0XBdVQI0nQTrzoHjyyq
+         2bl09BqWn1REMeIRamilUfr2RlfDVXNU4oG2Z1HXmJsSofgXOvepzNdfMVmykCwbA3Q1
+         eTR3h84GDKk9V4U4HlB46ufjMhodhzwMtex85Bpqc4YPM99wn+656+hPPl4gVpsQpbP1
+         EFmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698140412; x=1698745212;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nrczhLGD57ThZZUAC+aPmJYkJuVGn0gGizSYS9IZ/6k=;
+        b=OAAzJpYyRB4mwVP4F8l8AjkoE2PMMDT9ncWYfS0wHpzgfC4iwoiUAI5aQT8uENgzzy
+         +EHMLoseEooMtOS6/3+WiujTYGV+IqTGCpthFj0gHmeIWFl6Spp7CEYFXbmCYUUEJvC+
+         dIhCjJQD49pn7EnhCEcBqmbHXdv9euc3gq/n3ATINIiZG2BGzhiIBLA9Qw00N3+XX7dl
+         dsgooUeGkTy27mGR9z8D06hColjTxMfYOJUoviCe21WEJiUgDsBNfT0jf6r15qkDjkeX
+         z05FIGrqXdLbFHgRf1FqSdxqWG+Y190vFsVj9c1A6z2SyC+TXYDsscxsL/n3JZg0Q3K2
+         llVA==
+X-Gm-Message-State: AOJu0YxDoVoE+1cQeH4qDlefVoIX2aIz7djSwMD0DtD8BxRF8kN+lfXl
+        uXJoaoKQuJIr+Rst0g1Hf6EhrJcbCNnB0Kl2BFLAdw==
+X-Google-Smtp-Source: AGHT+IEBUnte3cbamxmESNlJIBXSuCRqI8PlmjdcCiUugmIDijJyrb7FLwNcmIUw9OQ4VyjnZgimIJ0DGWbebl3BoME=
+X-Received: by 2002:a05:690c:f87:b0:59f:b0d9:5df2 with SMTP id
+ df7-20020a05690c0f8700b0059fb0d95df2mr15122020ywb.0.1698140412349; Tue, 24
+ Oct 2023 02:40:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231024062018.23839-1-raag.jadav@intel.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
+ <20231005025843.508689-6-takahiro.akashi@linaro.org> <20231006132346.GA3426353-robh@kernel.org>
+ <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
+ <ZSTgTC4cFFpofYAk@octopus> <CACRpkdYD6pkccYoy90AfzV3KT7oYkBPD2_4ZW-AXzT1eUVpchA@mail.gmail.com>
+ <ZS3yK/f12Mxw9rXe@octopus> <CACRpkdarDrVkPmyDawhZ+H94S4F=dtDSDVuKegi-eNfQNDY3rg@mail.gmail.com>
+ <ZTduWx7CH1ifI5Uc@octopus>
+In-Reply-To: <ZTduWx7CH1ifI5Uc@octopus>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 24 Oct 2023 11:40:00 +0200
+Message-ID: <CACRpkdba=echR=rZYKVbROfaOp4mzjTQ9RphHFyzqSNgE1jZqg@mail.gmail.com>
+Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
+        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 24, 2023 at 11:50:12AM +0530, Raag Jadav wrote:
-> This series refines _UID references across kernel by:
-> 
-> - Extracting _UID matching functionality from acpi_dev_hid_uid_match()
->   helper and introducing it as a separate acpi_dev_uid_match() helper.
-> 
-> - Converting manual _UID references to use the standard ACPI helpers.
-> 
-> Changes since v2:
-> - Drop review tags as suggested by Andy.
-> 
-> Changes since v1:
-> - Change acpi_dev_uid_match() to return false in case of NULL argument.
-> - Drop accepted patches.
-> 
-> Raag Jadav (6):
->   ACPI: utils: Introduce acpi_dev_uid_match() for matching _UID
->   pinctrl: intel: use acpi_dev_uid_match() for matching _UID
->   ACPI: utils: use acpi_dev_uid_match() for matching _UID
->   ACPI: x86: use acpi_dev_uid_match() for matching _UID
->   hwmon: nct6775: use acpi_dev_hid_uid_match() for matching _HID and
->     _UID
->   perf: arm_cspmu: use acpi_dev_hid_uid_match() for matching _HID and
->     _UID
+Hi Takahiro,
 
-For the series,
+On Tue, Oct 24, 2023 at 9:12=E2=80=AFAM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > I think it is better of the pin controller just parse and add any
+> > subdevices (GPIO or other) using of_platform_default_populate()
+> > (just grep for this function and you will see how many device
+> > drivers use that).
+>
+> IICU, then, we will have to add a "compatible" to pinctrl node
+> to make of_platform_default_populate() work as expected. That is:
+>
+> scmi {
+>     ...
+>     protocol@19 {
+>         compatible =3D "simple-bus"; // <- added
 
->  drivers/acpi/utils.c                  | 34 ++++++++++++++++++++++-----
->  drivers/acpi/x86/utils.c              |  3 +--
->  drivers/hwmon/nct6775-platform.c      |  4 +---
->  drivers/perf/arm_cspmu/arm_cspmu.c    |  8 +++----
->  drivers/pinctrl/intel/pinctrl-intel.c |  2 +-
+Hm right, but you could also use
+of_platform_populate(np, NULL, NULL, dev);
 
-This pinctrl one is also fine by me so if Andy does not have objections,
-feel free to add my,
+Then the compatible match is of no concern.
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Sorry for my lack of attention to details :/
 
->  include/acpi/acpi_bus.h               |  1 +
->  include/linux/acpi.h                  |  5 ++++
->  7 files changed, 40 insertions(+), 17 deletions(-)
-> 
-> 
-> base-commit: a4ed5bffbeb19cfb7e21ac3b3f09d7bfe39a849b
-> -- 
-> 2.17.1
+If you want to restrict the population to a few select compatibles
+(maybe only "pin-control-gpio") then you can do
+that with
+
+const struct of_device_id of_scmi_protocol_19_match_table[] =3D {
+        { .compatible =3D "pin-control-gpio", },
+        {}
+};
+of_platform_populate(np, of_scmi_protocol_19_match_table, NULL, dev);
+
+> Is this what you meant?
+> In this case, however, "protocol@19" has a mixture of sub-nodes,
+> most are pinconf definitions which are the properties of the pin
+> controller, while "scmi_gpio" is a separate device.
+
+That looks good to me, it makes sense to have the GPIO as a subnode
+here and mandate it with a compatible to match.
+
+> The code will work, but is it sane from DT binding pov?
+
+Let's let the DT people jump in on that.
+
+> > Instead just call gpiochip_add_pin_range() directly in Linux
+> > after adding the pin controller and gpio_chip.
+> > C.f. drivers/pinctrl/pinctrl-sx150x.c for an example of a driver
+> > doing this. In this case the SX150X is hot-plugged (on a slow
+> > bus) so it needs to figure out all ranges at runtime anyway.
+>
+> Are you suggesting implementing a custom function for parsing "gpio-range=
+s"
+> and calling it in pin_control_gpio_probe() instead of a generic helper?
+
+The generic helper will always be attempted but if there are
+no ranges in the device tree, it will just continue without adding
+any ranges. I suggest putting *no* ranges into the device tree.
+
+> Or do you want to always map all the pin controller's pins to
+> gpio pins as sx150x does?
+
+I think since the SCMI firmware knows about the available line
+and pins etc, it makes sense that the driver comes up with the
+applicable ranges on its own (derived from the information from
+the SCMI firmware) and add them, instead of trying to put that
+information into the device tree at all. Just omit it, and make your
+own ranges, and add them in the Linux driver with
+gpiochip_add_pin_range() without involving DT at all when defining
+the ranges.
+
+I'm sorry if I'm unclear sometimes.
+
+Yours,
+Linus Walleij
