@@ -2,156 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75D727D4CB4
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 11:41:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA96F7D4D08
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 11:56:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234473AbjJXJla (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 05:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        id S234195AbjJXJ4S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Oct 2023 05:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234493AbjJXJlI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 05:41:08 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5652C10C0
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 02:40:13 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5a7be88e9ccso43880547b3.2
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 02:40:13 -0700 (PDT)
+        with ESMTP id S234258AbjJXJ4Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 05:56:16 -0400
+Received: from mail-lf1-x168.google.com (mail-lf1-x168.google.com [IPv6:2a00:1450:4864:20::168])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D1E83
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 02:56:13 -0700 (PDT)
+Received: by mail-lf1-x168.google.com with SMTP id 2adb3069b0e04-507c1936fd5so5992179e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 02:56:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698140412; x=1698745212; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nrczhLGD57ThZZUAC+aPmJYkJuVGn0gGizSYS9IZ/6k=;
-        b=v01xorbj2vmZyjz9Rj3CPHBIV7wt17LnkRj58c/9qqkOTe50XFHd8P4ADFnUKxerpe
-         RFmDuMFq4jBB7hxX14M/Q+/55PUVGnuzOUX4ev9I8YauKRjT5ROYX3COc901GAOPV3/0
-         2M0/zlmH1AAIrPKja7YymH7a9Ldxfvc/k9P3Jy106hSgsBKwV0XBdVQI0nQTrzoHjyyq
-         2bl09BqWn1REMeIRamilUfr2RlfDVXNU4oG2Z1HXmJsSofgXOvepzNdfMVmykCwbA3Q1
-         eTR3h84GDKk9V4U4HlB46ufjMhodhzwMtex85Bpqc4YPM99wn+656+hPPl4gVpsQpbP1
-         EFmw==
+        d=gadgetoid.com; s=google; t=1698141372; x=1698746172; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sERZc6BuURBnjr6rrRIZvNq/9fpr4Vjxq/sz0hGYYiY=;
+        b=MLPJrgN6IAES6T24hOjQMBFhejyN7Dhn5M2fkzphqBLC4rFearB/oDZJ9pwIKcazsA
+         GUkvTtZrs119VrDVH+BSYAf/HfoErG0G+/LvU4nEIBbxdFq8TVw2GS2uz//XsVGSdM1n
+         siJZu/PcDKjJftH7oCQw/YySiiUDidgUkqcg4Z+L7k6igjTlZMYjk7M6+8ya/pl5lDiC
+         I/LLFyRNmefZzAkoPP11GU7fSp121KtoOH6K15YqK7cYzafNMyPgqu0+TSI4FCe5bYka
+         80QTm7l8UqRUA9dcYaBREgnJDYhoIstMhEEURnXUiApHUpJIr82X+5E3nOImR+knmrWY
+         LQuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698140412; x=1698745212;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nrczhLGD57ThZZUAC+aPmJYkJuVGn0gGizSYS9IZ/6k=;
-        b=OAAzJpYyRB4mwVP4F8l8AjkoE2PMMDT9ncWYfS0wHpzgfC4iwoiUAI5aQT8uENgzzy
-         +EHMLoseEooMtOS6/3+WiujTYGV+IqTGCpthFj0gHmeIWFl6Spp7CEYFXbmCYUUEJvC+
-         dIhCjJQD49pn7EnhCEcBqmbHXdv9euc3gq/n3ATINIiZG2BGzhiIBLA9Qw00N3+XX7dl
-         dsgooUeGkTy27mGR9z8D06hColjTxMfYOJUoviCe21WEJiUgDsBNfT0jf6r15qkDjkeX
-         z05FIGrqXdLbFHgRf1FqSdxqWG+Y190vFsVj9c1A6z2SyC+TXYDsscxsL/n3JZg0Q3K2
-         llVA==
-X-Gm-Message-State: AOJu0YxDoVoE+1cQeH4qDlefVoIX2aIz7djSwMD0DtD8BxRF8kN+lfXl
-        uXJoaoKQuJIr+Rst0g1Hf6EhrJcbCNnB0Kl2BFLAdw==
-X-Google-Smtp-Source: AGHT+IEBUnte3cbamxmESNlJIBXSuCRqI8PlmjdcCiUugmIDijJyrb7FLwNcmIUw9OQ4VyjnZgimIJ0DGWbebl3BoME=
-X-Received: by 2002:a05:690c:f87:b0:59f:b0d9:5df2 with SMTP id
- df7-20020a05690c0f8700b0059fb0d95df2mr15122020ywb.0.1698140412349; Tue, 24
- Oct 2023 02:40:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698141372; x=1698746172;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sERZc6BuURBnjr6rrRIZvNq/9fpr4Vjxq/sz0hGYYiY=;
+        b=fdAle4aC9ZcRNiERO7j9wSxN5G/GoaHHKaMoZhks+FMaPoueTq9vSaHubqbkkd2fLK
+         PdwwLbUjxIFFYHmkVJ0imlM5t06tqO9P+ZPgclrC4SO7FjSnB2sepu6NR0z1grkCkHNV
+         jIMjLAPIGB+/zOEl5/LkMgE4Vbbk5yJhzxq6QbHPI8jaYOCH085FRrisYjk+SradYRfn
+         2ck3ZJCk401ewkKSJjULrnO7nAmgYISWroLkk5K8eCohkHjGdKvL+1loQHJTwPq7CZCU
+         0JYF6RGmhIqsipbehoUPBFwTAYmF+3W/fAwVKbr2WD5dKDareXzgcC2R8uolFmabBqab
+         Z1/Q==
+X-Gm-Message-State: AOJu0Yx3/JhuopZk7J7a+ikBxwNBhcS3r6C5Mye472ci7aOVafsCp0tE
+        Yp1mzIhywxtAMWk3zWEbSSCSc16qtCqGkPH/b0nwJ4DwTMqD/g==
+X-Google-Smtp-Source: AGHT+IEcXUFTBeq5frj09p96KALDgnuPayAGidep+3O1iqPPTC49MT84WINg43paoEeV+lAETLhbTGHGZAD1
+X-Received: by 2002:a05:6512:230c:b0:4fd:daa0:aed8 with SMTP id o12-20020a056512230c00b004fddaa0aed8mr5601818lfu.4.1698141371436;
+        Tue, 24 Oct 2023 02:56:11 -0700 (PDT)
+Received: from pop-os.. (cpc91242-cmbg18-2-0-cust972.5-4.cable.virginm.net. [82.8.131.205])
+        by smtp-relay.gmail.com with ESMTPS id d1-20020a0565123d0100b00507b8d9c7f2sm928844lfv.91.2023.10.24.02.56.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 02:56:11 -0700 (PDT)
+X-Relaying-Domain: gadgetoid.com
+From:   Phil Howard <phil@gadgetoid.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, Phil Howard <phil@gadgetoid.com>
+Subject: [libgpiod][PATCH v7 0/1] bindings: python: optionally include module in sdist
+Date:   Tue, 24 Oct 2023 10:56:04 +0100
+Message-Id: <20231024095605.713554-1-phil@gadgetoid.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
- <20231005025843.508689-6-takahiro.akashi@linaro.org> <20231006132346.GA3426353-robh@kernel.org>
- <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
- <ZSTgTC4cFFpofYAk@octopus> <CACRpkdYD6pkccYoy90AfzV3KT7oYkBPD2_4ZW-AXzT1eUVpchA@mail.gmail.com>
- <ZS3yK/f12Mxw9rXe@octopus> <CACRpkdarDrVkPmyDawhZ+H94S4F=dtDSDVuKegi-eNfQNDY3rg@mail.gmail.com>
- <ZTduWx7CH1ifI5Uc@octopus>
-In-Reply-To: <ZTduWx7CH1ifI5Uc@octopus>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 24 Oct 2023 11:40:00 +0200
-Message-ID: <CACRpkdba=echR=rZYKVbROfaOp4mzjTQ9RphHFyzqSNgE1jZqg@mail.gmail.com>
-Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
- generic gpio driver
-To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
-        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Takahiro,
+This changeset vendors the gpiod library into the Python package.
 
-On Tue, Oct 24, 2023 at 9:12=E2=80=AFAM AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
+Why?
 
-> > I think it is better of the pin controller just parse and add any
-> > subdevices (GPIO or other) using of_platform_default_populate()
-> > (just grep for this function and you will see how many device
-> > drivers use that).
->
-> IICU, then, we will have to add a "compatible" to pinctrl node
-> to make of_platform_default_populate() work as expected. That is:
->
-> scmi {
->     ...
->     protocol@19 {
->         compatible =3D "simple-bus"; // <- added
+So that setup.py can produce an sdist that is installable irrespective of
+the availability or version of a distro-supplied libgpiod.
 
-Hm right, but you could also use
-of_platform_populate(np, NULL, NULL, dev);
+This prevents a libgpiod pypi package install balking because the distro
+libgpiod is outdated or otherwise incompatible. This happens when
+attempting to install the current libgpiod from pypi onto - for example -
+the Debian Bookworm based Raspberry Pi OS or Ubuntu 23.10 Mantic which both
+ship with libgpiod v1.6.3.
 
-Then the compatible match is of no concern.
+The availability of a distro agnostic package also ensures that libgpiod
+can be installed via pypi into an isolated virtual environment, safely
+specified as a dependency for Python packages and allows Python developers
+to target the newest API version irrespective of their distro supplied
+libgpiod.
 
-Sorry for my lack of attention to details :/
+This is essential, since a venv is now widely *required* for user Python
+projects due to recommendations in pep-688 [1]
 
-If you want to restrict the population to a few select compatibles
-(maybe only "pin-control-gpio") then you can do
-that with
+For Raspberry Pi this sdist can also be converted into a precompiled wheel
+by piwheels [2] which is, by default, added to Raspberry Pi OS as a pip
+index.
 
-const struct of_device_id of_scmi_protocol_19_match_table[] =3D {
-        { .compatible =3D "pin-control-gpio", },
-        {}
-};
-of_platform_populate(np, of_scmi_protocol_19_match_table, NULL, dev);
+How?
 
-> Is this what you meant?
-> In this case, however, "protocol@19" has a mixture of sub-nodes,
-> most are pinconf definitions which are the properties of the pin
-> controller, while "scmi_gpio" is a separate device.
+If "LINK_SYSTEM_LIBGPIOD=1" is not specified and a valid "GPIOD_VERSION" is
+supplied then setup.py will first verify the requested version meets or
+exceeds "GPIOD_MINIMUM_VERSION".
 
-That looks good to me, it makes sense to have the GPIO as a subnode
-here and mandate it with a compatible to match.
+If this check passes it will fetch the requested, stable tarball from
+mirrors.edge.kernel.org, verify the checksum, unpack the "lib" and
+"include" directories and vendor them into the output sdist.
 
-> The code will work, but is it sane from DT binding pov?
+It will also drop a "gpiod-version.txt" so that the sdist knows what
+GPIOD_VERSION_STR to pass into the gpiod build, eg:
 
-Let's let the DT people jump in on that.
+GPIOD_VERSION="2.1.0" python3 -m build . --sdist
 
-> > Instead just call gpiochip_add_pin_range() directly in Linux
-> > after adding the pin controller and gpio_chip.
-> > C.f. drivers/pinctrl/pinctrl-sx150x.c for an example of a driver
-> > doing this. In this case the SX150X is hot-plugged (on a slow
-> > bus) so it needs to figure out all ranges at runtime anyway.
->
-> Are you suggesting implementing a custom function for parsing "gpio-range=
-s"
-> and calling it in pin_control_gpio_probe() instead of a generic helper?
+Will output dist/libgpiod-2.1.0.tar.gz vendoring libgpiod v2.1.0.
 
-The generic helper will always be attempted but if there are
-no ranges in the device tree, it will just continue without adding
-any ranges. I suggest putting *no* ranges into the device tree.
+Runtime dependencies for fetching and vendoring a tarball are only imported
+when an sdist or build_ext command is triggered with "GPIOD_VERSION".
 
-> Or do you want to always map all the pin controller's pins to
-> gpio pins as sx150x does?
+When a user builds or installs an sdist (via pip install or otherwise) if a
+"gpiod-version.txt" exists and "LINK_SYSTEM_LIBGPIOD=1" is not specified in
+their environment then the gpiod._ext C Extension is amended to include all
+of the vendored C sources for gpiod and the resulting module build will
+function independently of the system libgpiod.
 
-I think since the SCMI firmware knows about the available line
-and pins etc, it makes sense that the driver comes up with the
-applicable ranges on its own (derived from the information from
-the SCMI firmware) and add them, instead of trying to put that
-information into the device tree at all. Just omit it, and make your
-own ranges, and add them in the Linux driver with
-gpiochip_add_pin_range() without involving DT at all when defining
-the ranges.
+Fetching libgpiod tarballs is an effort to reconsile the fact that both
+libgpiod and the Python bindings live in the same source tree but are
+versioned independently of each other. Bugfixes and changes to Python
+bindings should not vendor unstable, development versions of libgpiod.
 
-I'm sorry if I'm unclear sometimes.
+No effort has been made to allow an unstable, vendored build since it's
+assumed developers will build and install libgpiod and use
+"LINK_SYSTEM_LIBGPIOD".
 
-Yours,
-Linus Walleij
+While the output sdist will - by default - build a standalone gpiod module
+it's possible for the end user to supply the "LINK_SYSTEM_LIBGPIOD=1" env
+variable to override this behaviour and attempt to link their system
+libgpiod (this will fail if it's incompatible with the bindings) eg:
+
+LINK_SYSTEM_LIBPGIOD=1 pip install libgpiod
+
+[1] - https://peps.python.org/pep-0668/
+[2] - https://www.piwheels.org/
+
+Changes v6 -> v7
+- Added GPIOD_MINIMUM_VERSION to catch builds against incompatible libgpiod
+- Set GPIOD_MINIMUM_VERSION to 2.1.0
+- New requirement "packaging" added to pyproject.toml
+
+Changes v5 -> v6
+- Change SRC_BASE_URL to mirrors.edge.kernel.org
+- Fetch sha256sums.asc and verify tarball signature
+- Moved tarfile and urllib imports to fetch_tarball for fewer runtime deps
+- Download and extract into a temporary directory
+- Changed print to log.info
+- Changed print/return errors to raise BaseError
+- Check for lib/include in build tree and bail early
+
+Changes v4 -> v5
+- Move logic from main program flow to build_ext and sdist overloads
+- GPIOD_VERSION_STR is now GPIOD_VERSION
+- Fetch sources from a libgpiod tarball if GPIOD_VERSION is supplied
+- Removed changes to bindings/python/Makefile.am
+- Moved and rephrased comment about build_ext rmtree("tests")
+
+Changes v3 -> v4
+- Check for lack of "GPIOD_VERSION_STR" and revert to original behaviour
+- Add status messages to setup.py, hinting at the package build mode
+
+Changes v2 -> v3
+- Pass in correct "GPIOD_VERSION_STR" from build
+- Output an sdist build for pypi
+
+Changes v1 -> v2
+- Switch from symlinks to explicit file copy
+
+Phil Howard (1):
+  bindings: python: optionally include module in sdist
+
+ bindings/python/MANIFEST.in    |   5 +
+ bindings/python/pyproject.toml |   2 +-
+ bindings/python/setup.py       | 196 +++++++++++++++++++++++++++++++--
+ 3 files changed, 191 insertions(+), 12 deletions(-)
+
+-- 
+2.34.1
+
