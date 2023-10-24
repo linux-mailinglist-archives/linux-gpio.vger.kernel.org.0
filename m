@@ -2,93 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F8387D4E74
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 13:01:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B18A97D4E92
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 13:10:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbjJXLBL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 07:01:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57428 "EHLO
+        id S229517AbjJXLKG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Oct 2023 07:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229795AbjJXLBJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 07:01:09 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD8712C;
-        Tue, 24 Oct 2023 04:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698145267; x=1729681267;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=75KjUTqZS/fnnT7oRhWogkQjn6g67+ZS64Oru9+MmVU=;
-  b=OVTqXZ9pp95xjiBXRzhrbaV7HNWBCvOGuY24b7tfKXFGm1sCQWg9bzb7
-   2aooeQKN3o3ImrclTd9wZ5UT80sLLYDtWENwfFscV70fbyFSlNLI4HAbT
-   nG3D21rVAlmfLhx364LaluN8VtE9NE3kNT+2jSZvwmWzjMkSJAJYUkyEf
-   trwLe6qbVUBLpCUiu0be35wq5gN2Cd8WwQgKMgaOwvDEjFzBOpgb8mSkE
-   REW8B7YLG8o/J17L/DOLfsuz9j1+erfv7Logx0vqXWGmiyiHkHa7kYHTB
-   56lykVIcR3Uud24GvGj/422LDaYNLTqSRv1X0BAb2Sq1sy6d5f/v9zp4O
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="453491329"
-X-IronPort-AV: E=Sophos;i="6.03,247,1694761200"; 
-   d="scan'208";a="453491329"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 04:01:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="875034670"
-X-IronPort-AV: E=Sophos;i="6.03,247,1694761200"; 
-   d="scan'208";a="875034670"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 04:01:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qvF9f-00000008Bp9-0sdU;
-        Tue, 24 Oct 2023 14:00:59 +0300
-Date:   Tue, 24 Oct 2023 14:00:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Raag Jadav <raag.jadav@intel.com>, rafael@kernel.org,
-        len.brown@intel.com, robert.moore@intel.com, mark.rutland@arm.com,
-        will@kernel.org, linux@roeck-us.net, Jonathan.Cameron@huawei.com,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acpica-devel@lists.linuxfoundation.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
-Subject: Re: [PATCH v3 0/6] Refine _UID references across kernel
-Message-ID: <ZTej6hlCCYFRCNtl@smile.fi.intel.com>
-References: <20231024062018.23839-1-raag.jadav@intel.com>
- <20231024093010.GF3208943@black.fi.intel.com>
+        with ESMTP id S229470AbjJXLKF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 07:10:05 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE81B3
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 04:10:02 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-6bbfb8f7ac4so913498b3a.0
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Oct 2023 04:10:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698145802; x=1698750602; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RE1wsH4r/PT9CdvJUxnqs/kAns7JcqtTbkS2nbmYIlM=;
+        b=Y4YmxgKCt2HVyW75f+YrxDHiakcKG9Q6nBVxQLg01RAvOdk5mOPUg+E2S3OTsW243a
+         75uUBbWtaBDapss81wUA6151bfQbnrmz0oelW7E07XY/ISjF9Q//ftrDEXZ2Mn9jyXNt
+         TVofZ6Njca9DghJYbwzPQF+56hG1kIrlMKRyj4ctIuQ4ZhzAftOCHOYjkFD+B7Ga1QwC
+         EHVI/oYvJ0uhQLav4nLxOn9cjT0EDt92Q0S5MmYLMJSlxJcDQS3SC5qWZjUh4Pvv/1qm
+         Yx9leHD7TZmIoO549gWkllEHbSkYDTdI9ALw1SKp7jOBmLP/MyvWv6gVJ2KlRsKdnfI5
+         i94A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698145802; x=1698750602;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RE1wsH4r/PT9CdvJUxnqs/kAns7JcqtTbkS2nbmYIlM=;
+        b=hgUANJDSZ17xMPwIKOjmO1p4M/ncCDdBgwOvHMSs8lThpDqF6ggOs5Det8u3t2TGTM
+         UbeCsQ5rNnkFQppAyISV1SubGHeV+Wu+D8KchDyuQpyf/hyNAAtP36551/g165aMqigt
+         sntYwOidvlewGY+0pdV9/CilIviLSeGQ0Edk3kG4DAXupDdrL0MH5tNVj5ASMFyZAAoP
+         rVryeEs7+VcObpI+nwsuxe0jYd07nLr0MR9IAMqORCCauXqdLhf2QO7L8ui4Px6BtBXy
+         RsVAupw19vbUzqvfrupx88V/DnLBaGV7AwTQL9o9B6PXZNzkLTRCtL/gmHDCFx2LBX4B
+         +hAQ==
+X-Gm-Message-State: AOJu0YxfJuxzrniTr00O7hW6lueZGkvFaowSqWeRQ3uhmY6Tk05zcgLj
+        mcqH6c1XqJotGbjDKmRX0wH8Yg==
+X-Google-Smtp-Source: AGHT+IEX6WuqA5vIkcaujPmdybMRkAiT+hemmNEfBNRefkfhx9JKBoVLMwM5Lt2yToWxR/gWgGlVNg==
+X-Received: by 2002:a05:6a21:8cc5:b0:17b:170c:2d11 with SMTP id ta5-20020a056a218cc500b0017b170c2d11mr11510054pzb.6.1698145801901;
+        Tue, 24 Oct 2023 04:10:01 -0700 (PDT)
+Received: from octopus ([2400:4050:c3e1:100:7c15:610f:1205:f10c])
+        by smtp.gmail.com with ESMTPSA id f125-20020a625183000000b0065a1b05193asm7801805pfb.185.2023.10.24.04.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 04:10:01 -0700 (PDT)
+Date:   Tue, 24 Oct 2023 20:09:52 +0900
+From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
+        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
+ generic gpio driver
+Message-ID: <ZTemAK/jBtv9b5xP@octopus>
+Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
+        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20231005025843.508689-1-takahiro.akashi@linaro.org>
+ <20231005025843.508689-6-takahiro.akashi@linaro.org>
+ <20231006132346.GA3426353-robh@kernel.org>
+ <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
+ <ZSTgTC4cFFpofYAk@octopus>
+ <CACRpkdYD6pkccYoy90AfzV3KT7oYkBPD2_4ZW-AXzT1eUVpchA@mail.gmail.com>
+ <ZS3yK/f12Mxw9rXe@octopus>
+ <CACRpkdarDrVkPmyDawhZ+H94S4F=dtDSDVuKegi-eNfQNDY3rg@mail.gmail.com>
+ <ZTduWx7CH1ifI5Uc@octopus>
+ <CACRpkdba=echR=rZYKVbROfaOp4mzjTQ9RphHFyzqSNgE1jZqg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231024093010.GF3208943@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CACRpkdba=echR=rZYKVbROfaOp4mzjTQ9RphHFyzqSNgE1jZqg@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 24, 2023 at 12:30:10PM +0300, Mika Westerberg wrote:
-> On Tue, Oct 24, 2023 at 11:50:12AM +0530, Raag Jadav wrote:
-> > This series refines _UID references across kernel by:
+Hi Linus,
 
-...
-
-> >  drivers/pinctrl/intel/pinctrl-intel.c |  2 +-
+On Tue, Oct 24, 2023 at 11:40:00AM +0200, Linus Walleij wrote:
+> Hi Takahiro,
 > 
-> This pinctrl one is also fine by me so if Andy does not have objections,
-> feel free to add my,
+> On Tue, Oct 24, 2023 at 9:12???AM AKASHI Takahiro
+> <takahiro.akashi@linaro.org> wrote:
+> 
+> > > I think it is better of the pin controller just parse and add any
+> > > subdevices (GPIO or other) using of_platform_default_populate()
+> > > (just grep for this function and you will see how many device
+> > > drivers use that).
+> >
+> > IICU, then, we will have to add a "compatible" to pinctrl node
+> > to make of_platform_default_populate() work as expected. That is:
+> >
+> > scmi {
+> >     ...
+> >     protocol@19 {
+> >         compatible = "simple-bus"; // <- added
+> 
+> Hm right, but you could also use
+> of_platform_populate(np, NULL, NULL, dev);
+> 
+> Then the compatible match is of no concern.
+> 
+> Sorry for my lack of attention to details :/
+> 
+> If you want to restrict the population to a few select compatibles
+> (maybe only "pin-control-gpio") then you can do
+> that with
+> 
+> const struct of_device_id of_scmi_protocol_19_match_table[] = {
+>         { .compatible = "pin-control-gpio", },
+>         {}
+> };
+> of_platform_populate(np, of_scmi_protocol_19_match_table, NULL, dev);
+> 
+> > Is this what you meant?
+> > In this case, however, "protocol@19" has a mixture of sub-nodes,
+> > most are pinconf definitions which are the properties of the pin
+> > controller, while "scmi_gpio" is a separate device.
+> 
+> That looks good to me, it makes sense to have the GPIO as a subnode
+> here and mandate it with a compatible to match.
+> 
+> > The code will work, but is it sane from DT binding pov?
+> 
+> Let's let the DT people jump in on that.
+> 
+> > > Instead just call gpiochip_add_pin_range() directly in Linux
+> > > after adding the pin controller and gpio_chip.
+> > > C.f. drivers/pinctrl/pinctrl-sx150x.c for an example of a driver
+> > > doing this. In this case the SX150X is hot-plugged (on a slow
+> > > bus) so it needs to figure out all ranges at runtime anyway.
+> >
+> > Are you suggesting implementing a custom function for parsing "gpio-ranges"
+> > and calling it in pin_control_gpio_probe() instead of a generic helper?
+> 
+> The generic helper will always be attempted but if there are
+> no ranges in the device tree, it will just continue without adding
+> any ranges. I suggest putting *no* ranges into the device tree.
+> 
+> > Or do you want to always map all the pin controller's pins to
+> > gpio pins as sx150x does?
+> 
+> I think since the SCMI firmware knows about the available line
+> and pins etc, it makes sense that the driver comes up with the
+> applicable ranges on its own (derived from the information from
+> the SCMI firmware) and add them, instead of trying to put that
+> information into the device tree at all. Just omit it, and make your
+> own ranges, and add them in the Linux driver with
+> gpiochip_add_pin_range() without involving DT at all when defining
+> the ranges.
 
-TL;DR: I had, but Rafael seems wanted your opinion. Whatever, I'm not
-preventing this from happening, but I still consider that the uid check
-for NULL in the helper should mimic the same logic as in
-acpi_dev_hid_uid_match(). That's why I asked to drop my tags from this
-series.
+As far as I understand, there is only one way for SCMI gpio driver
+to know which pins are actually GPIO pins; Calling PINCNTRL_CONFIG_GET
+command with "Input-mode" or "Output-mode" configuration type
+against *every* pin-controller's pins.
+(Here I assume that the command would fail with INVALID_PARAMETERS or
+NOT_SUPPORTED if configuring the given pin as a GPIO input or output
+is not possible. But the specification seems to be a bit ambiguous.)
 
--- 
-With Best Regards,
-Andy Shevchenko
+It means that, if SCMI firmware has 100 pinctrl pins, the driver needs
+to call the command 200 times in order to get the answer.
+
+It is possible but I believe that it is clunky and painful for the driver
+initialization.
+I'd like to see explicit "gpio-ranges" property in a device tree.
+
+Thanks,
+-Takahiro Akashi
 
 
+
+> I'm sorry if I'm unclear sometimes.
+> 
+> Yours,
+> Linus Walleij
