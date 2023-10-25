@@ -2,136 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46AA07D5FAD
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 04:05:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0C567D6095
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 05:50:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbjJYCFO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 22:05:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59404 "EHLO
+        id S232093AbjJYDuL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Oct 2023 23:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjJYCFN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 22:05:13 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2529F10D5;
-        Tue, 24 Oct 2023 19:05:11 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-d9a58f5f33dso4722106276.1;
-        Tue, 24 Oct 2023 19:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698199510; x=1698804310; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WbdytW0refUglybCsXX0Y9h8CNgKWOlTE2eFIrGTl4M=;
-        b=BH4NtPknv7zzofaqxPicccCF8PWycl0Hbmaxxo5Aa5LJQVNISQayehHeiXXhwaHmGV
-         qaA9MxSr+nn8VTl7s1X2HagOLitwaSFrt65ZfTggVwu4G07kvPAXA2oJYwcgJiVP5/6V
-         KbsxIkHijUrQtWBafP0yYouStpmYE/Vh/at2+X9ov7kVJ1PyvQPZdUXX6DCSS/GRW+xE
-         pVW9srUV0uDCphu4ItQinALub3Kq/Fy2fHXh0Jxky9JEedwYO7XBc5nJHG4X2bAZggTn
-         u1qDW7lj447TQ5Wmp9NayBhezIq6SY0r2VmqP7t7uLrrGiWJT0iPJYrW1m1t3TUG/eE9
-         95hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698199510; x=1698804310;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WbdytW0refUglybCsXX0Y9h8CNgKWOlTE2eFIrGTl4M=;
-        b=JvigR/rQUuF88HxLvsp9QXf8cyCVrn6fIXT34vqgDG6N2qGM3kR6kbRRvHB/7VL5rv
-         BHfADocN3aqy9Ym8Mv5njH/rBQXjwRJ5kbPa9PFvjLceB9a0QCNi/JzeLNRsyc50CJUy
-         Yhh4vkwODSL8KT0kD1AUcyJCcQNrqr55xpIav/oZ45+LMcTj9VkLlPnoaKnRk4EqSO4I
-         q74ABs/30K9VlnJCo75aZw5vMA54dGd7sIWY8/oep+IhmvzX3EjJq9ARlzlYJKR81/Pl
-         fiKm8R29ykRWVwVJcLqks1Tthg2Rab4tXOkn/rIA54NXvKzKVk7dMAtnYFXOKKKywoqz
-         x1yw==
-X-Gm-Message-State: AOJu0YzYzvBXeKiUU/wTpEtXG7t7LK7wj4uCwmPADPQQyi6wPjvSuJra
-        G8ERKgihTsNqBd2qTgoM2SU=
-X-Google-Smtp-Source: AGHT+IERNV1QcSoqDHejS2ogA8dmntWOcfRPDiTPSWgt5OxcGIpls9S0uiTOXeqKjsqjLApnPEgISA==
-X-Received: by 2002:a05:6902:1083:b0:d9c:7b92:90b9 with SMTP id v3-20020a056902108300b00d9c7b9290b9mr16261960ybu.14.1698199510279;
-        Tue, 24 Oct 2023 19:05:10 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b136-20020a25348e000000b00d89679f6d22sm4022356yba.64.2023.10.24.19.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 19:05:09 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Tue, 24 Oct 2023 19:05:08 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Raag Jadav <raag.jadav@intel.com>, len.brown@intel.com,
-        robert.moore@intel.com, andriy.shevchenko@linux.intel.com,
-        mark.rutland@arm.com, will@kernel.org, Jonathan.Cameron@huawei.com,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acpica-devel@lists.linuxfoundation.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
-Subject: Re: [PATCH v3 0/6] Refine _UID references across kernel
-Message-ID: <16cf6c19-20d2-4d11-80b1-b8e3c7e58803@roeck-us.net>
-References: <20231024062018.23839-1-raag.jadav@intel.com>
- <20231024093010.GF3208943@black.fi.intel.com>
- <CAJZ5v0hLYcN_CxUOocKoN8EsQTwyL-sLbWENfFaQ+f3fjHRvqw@mail.gmail.com>
+        with ESMTP id S230093AbjJYDuK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 23:50:10 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C372F90;
+        Tue, 24 Oct 2023 20:50:08 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39P30CMx011193;
+        Wed, 25 Oct 2023 03:50:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=rZmYiKo8tWy9GaB0AD6lA01FHY8CzNZxdNsmy7s2JBw=;
+ b=eiqMjyIDKU7AFdZoq1B6XT2MjhmC9qk6Z2Uk2AI7f4kzKq6CnPBV9RC9YPu6JVPnhabx
+ SXrUcYifr+kqSAk73Jg0aEn1VU91/uLdeZpPKL+cWA0zMxVF6Dsvkjs1gGLQWy+1N1Ok
+ u5x8kI8BJzl9r4IDP7mGxrpeDSCflFFULGnO4XDoa+pP3A53t/oh+fuES4XvqjrHYftg
+ NPh9Fnv6EV+JxDg2QCpKxuwekTLjoO60NUsG2ZzSd0M6veAwwd6pI26EZmt8jhhvCjoB
+ TJxK0vTO5+p6FlDpALor5lRFwM3IW3V2Gwz5J61dSbLQVkBx2PxqcV615qX2kxEBTh2d Sg== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3txngvgm30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Oct 2023 03:50:01 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39P3o00X008552
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Oct 2023 03:50:00 GMT
+Received: from [10.201.2.96] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 24 Oct
+ 2023 20:49:56 -0700
+Message-ID: <0fa6630b-ca9f-4441-b698-f983ed8b9748@quicinc.com>
+Date:   Wed, 25 Oct 2023 09:19:52 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hLYcN_CxUOocKoN8EsQTwyL-sLbWENfFaQ+f3fjHRvqw@mail.gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3 v7] Misc SCM changes
+Content-Language: en-US
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC:     Mukesh Ojha <quic_mojha@quicinc.com>, <agross@kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <p.zabel@pengutronix.de>, <linus.walleij@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1696440338-12561-1-git-send-email-quic_mojha@quicinc.com>
+ <f3a4c114-b430-47ce-a746-4a840994dc58@quicinc.com>
+ <CAA8EJpr0Nnn5Tr=2CBAADYfNU6cnKuq==x5L5YQoko9C=3q2tg@mail.gmail.com>
+ <d6f48748-22c4-4e4c-a1e9-7a6940b9b432@quicinc.com>
+ <CAA8EJpqd-1=sFd3Hm-XbAq8WJfY+hL2Hd5mc23RnCimMbQM69w@mail.gmail.com>
+From:   Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+In-Reply-To: <CAA8EJpqd-1=sFd3Hm-XbAq8WJfY+hL2Hd5mc23RnCimMbQM69w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 9MB8euq6kkXIVYVe34pFj1iGcjGIdNJF
+X-Proofpoint-ORIG-GUID: 9MB8euq6kkXIVYVe34pFj1iGcjGIdNJF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-25_01,2023-10-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 clxscore=1015 adultscore=0 spamscore=0
+ bulkscore=0 mlxlogscore=895 impostorscore=0 mlxscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310170001 definitions=main-2310250031
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 24, 2023 at 09:51:08PM +0200, Rafael J. Wysocki wrote:
-> On Tue, Oct 24, 2023 at 11:30 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Tue, Oct 24, 2023 at 11:50:12AM +0530, Raag Jadav wrote:
-> > > This series refines _UID references across kernel by:
-> > >
-> > > - Extracting _UID matching functionality from acpi_dev_hid_uid_match()
-> > >   helper and introducing it as a separate acpi_dev_uid_match() helper.
-> > >
-> > > - Converting manual _UID references to use the standard ACPI helpers.
-> > >
-> > > Changes since v2:
-> > > - Drop review tags as suggested by Andy.
-> > >
-> > > Changes since v1:
-> > > - Change acpi_dev_uid_match() to return false in case of NULL argument.
-> > > - Drop accepted patches.
-> > >
-> > > Raag Jadav (6):
-> > >   ACPI: utils: Introduce acpi_dev_uid_match() for matching _UID
-> > >   pinctrl: intel: use acpi_dev_uid_match() for matching _UID
-> > >   ACPI: utils: use acpi_dev_uid_match() for matching _UID
-> > >   ACPI: x86: use acpi_dev_uid_match() for matching _UID
-> > >   hwmon: nct6775: use acpi_dev_hid_uid_match() for matching _HID and
-> > >     _UID
-> > >   perf: arm_cspmu: use acpi_dev_hid_uid_match() for matching _HID and
-> > >     _UID
-> >
-> > For the series,
-> >
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >
-> > >  drivers/acpi/utils.c                  | 34 ++++++++++++++++++++++-----
-> > >  drivers/acpi/x86/utils.c              |  3 +--
-> > >  drivers/hwmon/nct6775-platform.c      |  4 +---
-> > >  drivers/perf/arm_cspmu/arm_cspmu.c    |  8 +++----
-> > >  drivers/pinctrl/intel/pinctrl-intel.c |  2 +-
-> >
-> > This pinctrl one is also fine by me so if Andy does not have objections,
-> > feel free to add my,
-> >
-> > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+
+On 10/25/2023 1:34 AM, Dmitry Baryshkov wrote:
+> On Tue, 24 Oct 2023 at 19:00, Kathiravan Thirumoorthy
+> <quic_kathirav@quicinc.com> wrote:
+>>
+>>
+>> On 10/24/2023 8:38 PM, Dmitry Baryshkov wrote:
+>>
+>> On Tue, 24 Oct 2023 at 16:31, Kathiravan Thirumoorthy
+>> <quic_kathirav@quicinc.com> wrote:
+>>
+>> On 10/4/2023 10:55 PM, Mukesh Ojha wrote:
+>>
+>> I have given version to this series as v7 as it has already
+>> gone through v6 and later got added to minidump patch series
+>> However, these 3 patches can go independently and has no
+>> relation with minidump hence, separated it from minidump series.
+>>
+>> Mukesh, Can you rebase this series on top of linux-next, since there is
+>> a conflict?
+>>
+>>
+>> Bjorn, after rebase is done, will you able to pick it up for v6.7 if
+>> there is a time? These patches(#1  and #3) are required for the crash
+>> dump collection on IPQ9574 and IPQ5332 SoCs.
+>>
+>> It is not obvious that they are fixes for the crash. You did not add
+>> Fixes tags, you didn't follow
+>> Documentation/process/stable-kernel-rules.rst. Cover letter is
+>> useless. How can we guess that they are urgent / important?
+>>
+>>
+>> Dmitry,
 > 
-> Whole series applied as 6.7 material with tags as per the above, thanks!
+> Could you please turn off HTML message composition. For example your
+> message completely messed up the quoting in the text above.
 
-Ok, that means I will _not_ apply the hwmon patch through
-the hwmon tree.
 
-FWIW, please note that I would have very much preferred applying
-it through the hwmon tree, and I did _not_ Ack it.
+My bad. After the mail client update, HTML message composition is enabled.
 
-Guenter
+> 
+>> These patches are not the *fixes* for the existing crashes, these are required to *enable* the crash dump / ram dump collection by boot loader when qcom_scm.download_mode is set to 1 on IPQ9574 and IPQ5332 SoCs.
+> 
+> Please excuse me, I misread your message, mea culpa. Indeed, they are
+> not a fix for the existing error...
+
+
+Yeah, no problem at all.
+
+
+> 
+>>
+>> Reason why I *requested* to pick it up for 6.7 if possible is, initial version is submitted in Jan 2023 by Poovendhan[1] and then later Mukesh integrated the initial series into his minidump series. Then I separated out these patches[2] from mindump series since there is no dependency for these patches to be part of minidump series but unfortunately again integrated back into the minidump series. Finally Mukesh again separated out these patches now.
+>>
+>> Since there are no active comments to be addressed, I was hoping this series to be picked for 6.7. As long as these patches doesn't go out of the radar, I'm fine :)
+>>
+> 
+> 
+> --
+> With best wishes
+> Dmitry
