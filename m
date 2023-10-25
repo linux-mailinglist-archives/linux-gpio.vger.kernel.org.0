@@ -2,73 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A71637D74A6
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 21:48:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32EC37D74E3
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 21:55:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjJYTsB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Oct 2023 15:48:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
+        id S229629AbjJYTzb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Oct 2023 15:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjJYTsB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 15:48:01 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA8F93;
-        Wed, 25 Oct 2023 12:47:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD50C433C7;
-        Wed, 25 Oct 2023 19:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698263279;
-        bh=h4BRsvufsuFwSxNjBiJ/P4K5+hKj62Otlj2Fx1zE7Yc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=agL6oJC/Uo/LtgyG6fI1q5xGq6xxjN+xbfVkC2zmSbjh56jDwuehSxu9XNKIPLCcU
-         3ms5dxw7YS84RoE9b4FIFpThw8BOo8/Qm/56ptNZYnBA6mD+xezsYYBvqPkOVUyE6J
-         2GZJTDRahrOnO41NemvJcqoLHZy7pJSU/qcMvrOu2pH5QcSIdwngBfz3OrC/F0h9GF
-         JzA8BxCpieNh17KRvAnXvQ6+ZfrJLotTNuPCYxN4Vu0y++c63fNtBQWIaiuGYDxlTD
-         cHRt8KC5SOvuc8C2beUaF3Q5iNSU/GKATpljTdsdxt8Ayjq7gksKr1CT24oRtY6iuQ
-         VMsVsTwfelZfw==
-Date:   Wed, 25 Oct 2023 20:47:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Li Yang <leoyang.li@nxp.com>,
-        Herve Codina <herve.codina@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        Simon Horman <horms@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 00/30] Add support for QMC HDLC, framer infrastructure
- and PEF2256 framer
-Message-ID: <a02dd435-9b7b-418e-a87c-28fad56f8004@sirena.org.uk>
-References: <20231011061437.64213-1-herve.codina@bootlin.com>
- <20231013164647.7855f09a@kernel.org>
- <20231025170051.27dc83ea@bootlin.com>
- <20231025123215.5caca7d4@kernel.org>
+        with ESMTP id S229557AbjJYTzb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 15:55:31 -0400
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 223ED12A
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 12:55:27 -0700 (PDT)
+Received: by mail-oi1-x231.google.com with SMTP id 5614622812f47-3b40d5ea323so62577b6e.0
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 12:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698263726; x=1698868526; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LVfs2vQPn6075GttomjikJbq1FdZzRDZ6l0gLyS0UXY=;
+        b=L3Fa/njmA3EkAUK3JY7DH7uHw2sSPrYxfEyF/V65uSeMOKZkWRZjv3UKRLz5chXKxb
+         dmnBtR280sROIOiQt4947zEw+k52NUU7MKrRymeF+gdoTZf7GV85OcKgsRcshr+D6BTU
+         KDkLjYzzazwjF0bBC7ofq5h37rho4lme7SuyF9b34RthaGs3QcqIfiE6xxZ2XTAZzoL6
+         VN8jEBXAdrJhz5Lc+WlO8gRAVimyQEwC01vo685MZ0ZGin7nkjTEHEUkRQ+722u2feQK
+         7gJSuoG9WHIyUdcC+HJSgqk0KC/KlqoPfj1aPjvOxwVd4/Pw0hFL5XDDI/I/lsePHJI0
+         tnYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698263726; x=1698868526;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LVfs2vQPn6075GttomjikJbq1FdZzRDZ6l0gLyS0UXY=;
+        b=VugE2sg/F+3Bn2EjWLHWUIOQA2tHG0Ft28WISy8rkrQ2gA8AqWVCMteWmGPFbvv5Mz
+         ZQiAqdIY2Cw0QA4DQ5p20g1rog3qcIc9i2GUUXWlB0/uFIerVFZMUm0SNo6IHav2SamO
+         r4OM5pllr+ZubJsHGE0FsAhSx1SdnkENoV5bjMKaZMS9LrlBjSKfHU1F6osaCBH3WuHZ
+         qv+qr0/nfZ135u1TLN/6kasB9g5jxrJAjOXLFY/R3IuUUEGIYRp1IQEvw90gVy4uImEE
+         BYkISCllPK5EKYDS7r7r8tMmQZVRXm9iC6TvaoQC3KWg0COmtSAJztaHqWS7bZFOMMc7
+         NlrQ==
+X-Gm-Message-State: AOJu0Yx1ocOAh8e2wSYG79RMx0tFKrBZ3lNrHJkBYakrcSdla2VuOkl3
+        1zjLgmrRKQghfswBvXHu+rkzEJdOakxXtzfXwhg6Sg==
+X-Google-Smtp-Source: AGHT+IE5aFGh12IgD6465G/P90VCx3AJDx5zrTXXimxuEuhvkas9UEy1EiU1Xj52N1div6ehkYg4X+nOL8OdN0SShD8=
+X-Received: by 2002:a05:6808:1586:b0:3ae:5c48:6f41 with SMTP id
+ t6-20020a056808158600b003ae5c486f41mr20419217oiw.28.1698263726480; Wed, 25
+ Oct 2023 12:55:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TVHY9B7BnvBaREJ9"
-Content-Disposition: inline
-In-Reply-To: <20231025123215.5caca7d4@kernel.org>
-X-Cookie: There's no time like the pleasant.
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+References: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 25 Oct 2023 21:55:15 +0200
+Message-ID: <CACRpkda+qSzAQggm0_MhhvK-D+f_V77O3=u=03zEOWWVTV_TJQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] gpio: mmio: Make driver agnostic
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,44 +74,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Oct 25, 2023 at 8:50=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
---TVHY9B7BnvBaREJ9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Driver uses so far some OF APIs when generic fwnode ones can be used.
+> Replace these APIs accordingly. Note, this will help to clean up OF
+> headers even more.
 
-On Wed, Oct 25, 2023 at 12:32:15PM -0700, Jakub Kicinski wrote:
-> On Wed, 25 Oct 2023 17:00:51 +0200 Herve Codina wrote:
-> > > Which way will those patches go? Via some FSL SoC tree? =20
+Clean, elegant and does exactly what we want.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> > This series seems mature now.
-> > What is the plan next in order to have it applied ?
-
-> > Don't hesitate to tell me if you prefer split series.
-
-> FWIW we are happy to take the drivers/net/ parts if there is no hard
-> dependency. But there's no point taking that unless the SoC bits
-> also go in for 6.7.
-
-> Li Yang, what are your expectations WRT merging this series?
-
-I did previously ask for the generic framer bit as a tag so I could
-apply the ASoC part but nobody responded and I've been getting repeated
-resends of the series :(
-
---TVHY9B7BnvBaREJ9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmU5cN4ACgkQJNaLcl1U
-h9BOigf/QB+M3jhpcGgpYNTcVVEM0JK0u1Vxzv91903ZwQlHKd6PSPWKFGwkPrbV
-PkNR8xoBtGJp1rgu8AIQMhy8U+OFmf9Bsgc9Fzvakvb5/5oUOIAEyjCqLVOi9oVl
-JiN7xM7bMd9vOk6g+b0UxRJjsF7+gqTYApUqigiblxG72qBLI0PYj9WauqiNNXkQ
-stdLTuSDHBvXROKADqtlrjsSfU9kGw51/ZAILd4/s845m68TP4zRa9Ajz4vBWuRU
-Re9dpEoBUQpd6lSkvAAlYJiYeOIeW2/EJqo1pU9areKbPkS4xwyKJKw4FQaXhwOA
-hpVhGkXT/PcTml0V0pDfQyKUsbFWMA==
-=1u2S
------END PGP SIGNATURE-----
-
---TVHY9B7BnvBaREJ9--
+Yours,
+Linus Walleij
