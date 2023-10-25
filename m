@@ -2,99 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76F3F7D7057
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 17:02:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8EEE7D7392
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 20:50:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343719AbjJYPBI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Oct 2023 11:01:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52784 "EHLO
+        id S229796AbjJYSue (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Oct 2023 14:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344433AbjJYPBG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 11:01:06 -0400
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57711A2;
-        Wed, 25 Oct 2023 08:00:56 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E8F43C000F;
-        Wed, 25 Oct 2023 15:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1698246054;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yH7ih/sENBHheaY4sC23vjZWR5QPhO2FB5uDgGmBUEE=;
-        b=Q3kFInjh7UIlv2i9yjPV+QU4V85L5o5uVFoPjbdjL//6+E7uHPH6qKo6VtFDApky9mvBZR
-        DLu9NkXUD5OxfTo6itNQvOGypacNFCTLN9WVTaPz0FqcOhRwPMyGfxtOcSfDuL7/skp8vX
-        Xi0TkyJYpNrsUrKOLGJVtQuYOi+gWoYdjSS/UVjEa2e22L9HGWc4DrymLHD7I/JWSwkFqm
-        89zhexE6c2ltXbqig51XVG6K1DOiQZZDzAVHFzwstX5/KXfaw66BE90pcuR8wCZ76roTNp
-        RW+shC4dBtvTe/L6r6lvIDt4EzZod8+c2krxeBAs7QIBUwZpDZyN+x2UlhjNHw==
-Date:   Wed, 25 Oct 2023 17:00:51 +0200
-From:   Herve Codina <herve.codina@bootlin.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        Simon Horman <horms@kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 00/30] Add support for QMC HDLC, framer
- infrastructure and PEF2256 framer
-Message-ID: <20231025170051.27dc83ea@bootlin.com>
-In-Reply-To: <20231013164647.7855f09a@kernel.org>
-References: <20231011061437.64213-1-herve.codina@bootlin.com>
-        <20231013164647.7855f09a@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+        with ESMTP id S229598AbjJYSud (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 14:50:33 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D5F111;
+        Wed, 25 Oct 2023 11:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698259832; x=1729795832;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Tyuad4CLXZh+vdA2dSWx/kiizQs1zXdiTr0LZZF2EVE=;
+  b=Tavz6p3mOcXodSrlTzlQQsL7v68RUYygves+XyA5ItERHHw7N7UT8uVS
+   z/yv6ITjqkFqZrlKbw+G2oSY6HOE7F/o6nSPsnpvnYWZvdNZmVvcx05I6
+   wgsYJMRluRqcGjdtEjbnKNg7GA93eN5lhjbkjAcJ0IppcPDhKGJJcv3hn
+   QP5jXN9jdF+NFfWb7rCNf1fG/br5EHhv0mZ11FFpafxtiHDg9XCj9pZ+3
+   9Q/XVXLbEsXQYxQXBDHUwdlmak37vV0t2MjnLBEIrN6WISU79zZxgXk+6
+   JgDSOQnclibuPL+ImwRBzWZ1hR4SxbDBRrE0jmklTVmRLzzF8jysTSFUm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="176167"
+X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
+   d="scan'208";a="176167"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 11:50:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="902642575"
+X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
+   d="scan'208";a="902642575"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Oct 2023 11:48:03 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id C8283125; Wed, 25 Oct 2023 21:43:01 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v1 0/3] gpio: mmio: Make driver agnostic
+Date:   Wed, 25 Oct 2023 21:42:56 +0300
+Message-Id: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi All, Maintainers
+Driver uses so far some OF APIs when generic fwnode ones can be used.
+Replace these APIs accordingly. Note, this will help to clean up OF
+headers even more.
 
-On Fri, 13 Oct 2023 16:46:47 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+Andy Shevchenko (3):
+  device property: Implement device_is_big_endian()
+  gpio: mmio: Make use of device properties
+  gpio: mmio: Clean up headers
 
-> On Wed, 11 Oct 2023 08:14:04 +0200 Herve Codina wrote:
-> > Compare to the previous iteration
-> >   https://lore.kernel.org/linux-kernel/20230928070652.330429-1-herve.codina@bootlin.com/
-> > This v8 series:
-> >  - Fixes a race condition
-> >  - Uses menuconfig instead of menu and hides CONFIG_GENERIC_FRAMER
-> >  - Performs minor changes  
-> 
-> Which way will those patches go? Via some FSL SoC tree?
+ drivers/gpio/gpio-mmio.c | 53 +++++++++++++++-------------------------
+ include/linux/property.h | 26 ++++++++++++++++++++
+ 2 files changed, 46 insertions(+), 33 deletions(-)
 
-This series seems mature now.
-What is the plan next in order to have it applied ?
+-- 
+2.40.0.1.gaa8946217a0b
 
-Don't hesitate to tell me if you prefer split series.
-
-Best regards,
-Hervé
