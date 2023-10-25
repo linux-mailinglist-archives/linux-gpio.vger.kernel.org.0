@@ -2,127 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A70C87D7394
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 20:50:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 180CD7D73BA
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 20:59:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234033AbjJYSuf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Oct 2023 14:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
+        id S229733AbjJYS7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Oct 2023 14:59:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233950AbjJYSue (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 14:50:34 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF78111;
-        Wed, 25 Oct 2023 11:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698259833; x=1729795833;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DsRoRBNKoqw/Cc7dTmkqie/fv1TrhPx6ZfTLpdADeQM=;
-  b=BQ+akP4gxHkswTNgcXluntrWQ/4GEekGAf0UhauyDzq+86J+BOZ7f5xx
-   CvN7Kk46z7OwnjKZQt14kzIZedifL+fvv6Xakpdlr1CbmXwIiu5ro+ec0
-   ZVhdPFO0L2tSlczybu9WEliKvKM46fHFwyVoOazZg7kicRNeZJHwmI+f5
-   5l5akgILpjSTayBEv7OdbAw465hLDAXUUpQXNzKrR9GyCKAjsUFOy9Olp
-   FendhJZV4N2HBqETUIRoi9QdOqTCU9BX8UhaCH0+M+zfRIbP/A+LMtwwz
-   mJDFOBDZWyoXLvv6rqB8ky5j/V4J8NiP5a4w8EvirplkhovBxXPbAPfiS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="176173"
-X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="176173"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 11:50:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="902642576"
-X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="902642576"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Oct 2023 11:48:03 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id EABB12F3; Wed, 25 Oct 2023 21:43:01 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v1 3/3] gpio: mmio: Clean up headers
-Date:   Wed, 25 Oct 2023 21:42:59 +0300
-Message-Id: <20231025184259.250588-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-In-Reply-To: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
-References: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S229797AbjJYS7T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 14:59:19 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E87123;
+        Wed, 25 Oct 2023 11:59:17 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1cc04494653so39285ad.2;
+        Wed, 25 Oct 2023 11:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698260357; x=1698865157; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wT/xmiiSCLh2Y6rSvgnA+8oiaYPyDP9YFnNHMvs/gJ0=;
+        b=eWJCIBHzvGSr9z63EcWSkpu65+T5sAWpoqU1jWhnGkWPfaltRsUfKQErEl0iP644Gv
+         kYQRkMXZQKwJBoP8b733EAU26fv/T3gm8oYBx4vzG60JTAFp6ZR1U3I2FhabA+C35b5B
+         YwFi8sajmf3B20r3Y+82Byo6YeVJsAQ2plAmQ0MsP21CVXc4ZU+XP/hxZGfcgvZViApv
+         99lCM4CnjnbYYi/bO6PKQlO/6WE+0CkPqZpVsLzgLTVGQqr+Qz+qhSshwVtsXfBj6zpB
+         /1sNAMeRWgqTtmswPLnFA+fXADdJtQaYUehFxwR6MpU1sAUX/ByWGIHgvRl7dMexTlag
+         kZRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698260357; x=1698865157;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wT/xmiiSCLh2Y6rSvgnA+8oiaYPyDP9YFnNHMvs/gJ0=;
+        b=pbW5CkKjUgKWVru/E+jnSDLLTEo9XolIP2div3dPf/y08u+3Dmq7e4VT8i4YjzJDha
+         O9EHHtbGXV9eyI2JRfqImCt+8Z6g4wK3QHi5DObtoh7qlkHPfEjZvti5q9ZF/4lzlg14
+         gnweDqozPKfjCHwLahYhvBUVH+5usTHiMgwf6jwxe6A3R7QqBT7pgL5X+lNrL5mYJSZt
+         TXywV+6bbyNu97A/LQxV7DxPRQH0VZ4d96iz4oBfodjSMXD/9KbiyBPWsHKcmI/KBrjX
+         9vzDwZo/kyaLBSqSuVRflX6e6aswS+THQDkYlfb49n0/1zQf8VJuxwYhZJ+VjKlghFZf
+         4l5g==
+X-Gm-Message-State: AOJu0YxVjuLL7+2/E1eWXZbX92TggvsDJkCuv8mpBjFKyWCOddq6/2v5
+        kXk8tu3uPp3DEaK7T2sHPEa7niEDkmI=
+X-Google-Smtp-Source: AGHT+IFhm4YyvzAerma1M6k1s4kSO5X5DGgk6SBjZTke2iY40XTEWUcHPEcDP9BOolEpzhECGXlMAw==
+X-Received: by 2002:a17:903:294f:b0:1ca:5d1a:e77f with SMTP id li15-20020a170903294f00b001ca5d1ae77fmr11322986plb.43.1698260357028;
+        Wed, 25 Oct 2023 11:59:17 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id jf20-20020a170903269400b001ca4c7bee0csm9591441plb.232.2023.10.25.11.59.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Oct 2023 11:59:16 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 25 Oct 2023 11:59:15 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Raag Jadav <raag.jadav@intel.com>
+Cc:     rafael@kernel.org, len.brown@intel.com, robert.moore@intel.com,
+        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        mark.rutland@arm.com, will@kernel.org, Jonathan.Cameron@huawei.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acpica-devel@lists.linuxfoundation.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
+Subject: Re: [PATCH v3 5/6] hwmon: nct6775: use acpi_dev_hid_uid_match() for
+ matching _HID and _UID
+Message-ID: <1de5bd70-5001-4661-93e5-6135597bd9c1@roeck-us.net>
+References: <20231024062018.23839-1-raag.jadav@intel.com>
+ <20231024062018.23839-6-raag.jadav@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231024062018.23839-6-raag.jadav@intel.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There is a few things done:
-- include only the headers we are direct user of
-- add missing headers
-- group generic headers and subsystem headers
-- sort each group alphabetically
+On Tue, Oct 24, 2023 at 11:50:17AM +0530, Raag Jadav wrote:
+> Convert manual _UID references to use the standard ACPI helper.
+> 
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-mmio.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+Applied.
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index 66308b165a0d..71e1af7c2184 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -40,24 +40,22 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
-  *               `.......````.```
-  */
- 
--#include <linux/init.h>
--#include <linux/err.h>
--#include <linux/bug.h>
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/spinlock.h>
--#include <linux/compiler.h>
--#include <linux/types.h>
--#include <linux/errno.h>
--#include <linux/log2.h>
--#include <linux/ioport.h>
--#include <linux/io.h>
--#include <linux/gpio/driver.h>
--#include <linux/slab.h>
- #include <linux/bitops.h>
-+#include <linux/compiler.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/log2.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
--#include <linux/mod_devicetable.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+
-+#include <linux/gpio/driver.h>
- 
- #include "gpiolib.h"
- 
--- 
-2.40.0.1.gaa8946217a0b
-
+Guenter
