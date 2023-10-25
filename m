@@ -2,146 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0C567D6095
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 05:50:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 621317D6358
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 09:35:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232093AbjJYDuL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 23:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54380 "EHLO
+        id S234088AbjJYHfv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Oct 2023 03:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbjJYDuK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 23:50:10 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C372F90;
-        Tue, 24 Oct 2023 20:50:08 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39P30CMx011193;
-        Wed, 25 Oct 2023 03:50:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=rZmYiKo8tWy9GaB0AD6lA01FHY8CzNZxdNsmy7s2JBw=;
- b=eiqMjyIDKU7AFdZoq1B6XT2MjhmC9qk6Z2Uk2AI7f4kzKq6CnPBV9RC9YPu6JVPnhabx
- SXrUcYifr+kqSAk73Jg0aEn1VU91/uLdeZpPKL+cWA0zMxVF6Dsvkjs1gGLQWy+1N1Ok
- u5x8kI8BJzl9r4IDP7mGxrpeDSCflFFULGnO4XDoa+pP3A53t/oh+fuES4XvqjrHYftg
- NPh9Fnv6EV+JxDg2QCpKxuwekTLjoO60NUsG2ZzSd0M6veAwwd6pI26EZmt8jhhvCjoB
- TJxK0vTO5+p6FlDpALor5lRFwM3IW3V2Gwz5J61dSbLQVkBx2PxqcV615qX2kxEBTh2d Sg== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3txngvgm30-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Oct 2023 03:50:01 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39P3o00X008552
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Oct 2023 03:50:00 GMT
-Received: from [10.201.2.96] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 24 Oct
- 2023 20:49:56 -0700
-Message-ID: <0fa6630b-ca9f-4441-b698-f983ed8b9748@quicinc.com>
-Date:   Wed, 25 Oct 2023 09:19:52 +0530
+        with ESMTP id S234034AbjJYHfX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 03:35:23 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666E81BF7
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 00:33:56 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-40859c466efso31338705e9.3
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 00:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698219235; x=1698824035; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GrfbcuwNlTwyLcYogLMFiWCSoSNX4VqPPgIIWBUGDNI=;
+        b=IcKqe3ZMbxVBk4b+UPwlUqdQyqj4XFYieG2HRPou96OVXqlSpZg8CkBtX1QZm6E3NP
+         zxF2KXJqdvONVX/6ewdb+cVImCc5TKAAH2bdDetAEamPUz8fif7zoGkcTRATWSm/1/fQ
+         1NunF6+1XRDvYWwIQxN+uDf3WJpNvg58a9bm1kSz6w+uMNFDS5iKJdDVsU3OYRYJeH3v
+         zCCyvk38g/97aCPXiOxcuuqjTobS/4QE/39MGv/33hszUQbd5S0/uveB/nEAFaDJqEvE
+         8ZCMnbFxhbZlTpGzdI2kkREIUwp//ylzWgbdUw3RTm0Ht/AVzj1G6oHaVB2CFLhadawa
+         DArg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698219235; x=1698824035;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GrfbcuwNlTwyLcYogLMFiWCSoSNX4VqPPgIIWBUGDNI=;
+        b=oR0yDjEgStpCMki3YcJKPl95d/LRYU47fbchNRdh82UNaEF8+QFAMsoAXHLNm5hwKd
+         mZe0Txf8IwxsITnzEwBwjg90jGFtgdMnlM+nk8Kqt38GRAjz05xueB2zbaHok7Wfnjuk
+         9uQWtpUnDfKYmDtlCgDpUfLWroEo3YAa3fL7lAKFrFT3tuOhYYIjYJ3mcp31jIe8UtXx
+         q1iO1kjGk5ojuCDHfz9OK1+kDfwD/qsARB1e45jDVkS0Xhlp0Sn8N5mwT5lcJq6p3Y/E
+         JZzuBSLnjuBLi4ID5+LTOndk6W9Y0/kwi/wh+7LgSbQ9SdNCmR5ZENNL2q+TSoz68IU6
+         tnhA==
+X-Gm-Message-State: AOJu0Yz+RPhz+ScyJ1KA/5wg8QG4U9F8n6R+8hujRHnv2+414LYPjuri
+        CEY3b/a3diHZDkozafCNa293+A==
+X-Google-Smtp-Source: AGHT+IHQMIavMxtXbbVlgJhx7eeBOBeGAhAjpReKFHjbMtG45n+Gy3xr2uIxR5/wFUFF9zNN48jXng==
+X-Received: by 2002:a05:6000:50:b0:321:6f5f:789f with SMTP id k16-20020a056000005000b003216f5f789fmr10133469wrx.39.1698219234705;
+        Wed, 25 Oct 2023 00:33:54 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id k17-20020a5d66d1000000b00327cd5e5ac1sm11546605wrw.1.2023.10.25.00.33.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Oct 2023 00:33:54 -0700 (PDT)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH 0/3] pinctrl: qcom: Introduce Pinctrl/GPIO for SM8650
+Date:   Wed, 25 Oct 2023 09:33:50 +0200
+Message-Id: <20231025-topic-sm8650-upstream-tlmm-v1-0-4e3d84a3a46b@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3 v7] Misc SCM changes
-Content-Language: en-US
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC:     Mukesh Ojha <quic_mojha@quicinc.com>, <agross@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <p.zabel@pengutronix.de>, <linus.walleij@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1696440338-12561-1-git-send-email-quic_mojha@quicinc.com>
- <f3a4c114-b430-47ce-a746-4a840994dc58@quicinc.com>
- <CAA8EJpr0Nnn5Tr=2CBAADYfNU6cnKuq==x5L5YQoko9C=3q2tg@mail.gmail.com>
- <d6f48748-22c4-4e4c-a1e9-7a6940b9b432@quicinc.com>
- <CAA8EJpqd-1=sFd3Hm-XbAq8WJfY+hL2Hd5mc23RnCimMbQM69w@mail.gmail.com>
-From:   Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-In-Reply-To: <CAA8EJpqd-1=sFd3Hm-XbAq8WJfY+hL2Hd5mc23RnCimMbQM69w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9MB8euq6kkXIVYVe34pFj1iGcjGIdNJF
-X-Proofpoint-ORIG-GUID: 9MB8euq6kkXIVYVe34pFj1iGcjGIdNJF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-25_01,2023-10-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 malwarescore=0 clxscore=1015 adultscore=0 spamscore=0
- bulkscore=0 mlxlogscore=895 impostorscore=0 mlxscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310170001 definitions=main-2310250031
+X-B4-Tracking: v=1; b=H4sIAN7EOGUC/x3MQQqDMBAF0KvIrB1IjIrtVaQLSb/tgNGQiUUQ7
+ 27o8m3eSYokUHpWJyX8RGVbC2xdkf9O6wcs72JqTOOssT3nLYpnDUPfGd6j5oQpcF5C4BYerms
+ xO/ugEsSEWY5/Pr6u6wZZtdWGbAAAAA==
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1637;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=m6+6Lw3b6NzvC5o8Z3ERp2+18RGFKp8bBRONhG0avNo=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlOMTgAlruNS1Xcec/bkmeC0l8C8zHe5uu+bo/fkMr
+ OfLTmzSJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZTjE4AAKCRB33NvayMhJ0WvED/
+ 4k4lo3g57mR+I5gMlRF8hq+LgocRZt+Qi8q+BZhwdi01zYN7N12x4ooMr1p7L2Z+Gl7drFBC9x7+Y7
+ l6CC3lpS3HFuzVHDCm8KhEU1ddbTiZtDXkMgTEA+27fFYDGagCRW9ojuxaJmvNcOWgzJBAZI+9ChKA
+ Zfg/NNXVf/iMEuMQ5Qafy6vpfH4e8cKrfwxgbC6LDpP2e1A0TwDIxBtu275c5QGAZEDHvRnP3Q5vih
+ Z0XtdQfzN4axUvLw5VU8SzkW61eAbWTxwNsN5sQYLPheU21uQKHeaeUCJXIjSk7JIpvngQVk8kaNBz
+ JhE8KCFBDnHbRJiDN7I7rD/YB3N/2ItoJWBnlxLyrMvabPLs4gGJtwTrmDhHsXjY/Iz1jQORNhC1ft
+ MWsvA7h8EnZ15ZziQyO7Vf9xpO/OcfKFTRZ3M9VqBPeMBHvD3YmIpvBvuiONoEv/WTPRyf6zVrMSym
+ 5uHbSQj7ob8i4+amZuKX7VBrOfUdeq28hTmD9ZgCqeTFYkupsjqY1Px/pRGYqvSPfHRcZ9s716mosQ
+ AlQfRdwnZgPPzE1RW47lVaaTY+Q4G/+K729ysryMxivgK7UdKo7AaIvKP6egiXCIE14JHkd2PRd8om
+ h/NPl4Pe3l7EJw7Y4K524o5Ge+2Nuyt+3KGMReOQ8EGRCufgAOk66Xvuai4g==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The SM8650 Top Level Mode Multiplexer supports 211 GPIOs,
+and the usual UFS Reset, SDC Clk/Cmd/Data special pins.
 
+An handful of pins can have their IRQ generated by the PDC
+module, and for this support for the new wakeup_present &
+wakeup_enable_bit is required to allow the "wakeup" event
+to be passed to PDC and generate an interrupt or a wakeup
+system event.
 
-On 10/25/2023 1:34 AM, Dmitry Baryshkov wrote:
-> On Tue, 24 Oct 2023 at 19:00, Kathiravan Thirumoorthy
-> <quic_kathirav@quicinc.com> wrote:
->>
->>
->> On 10/24/2023 8:38 PM, Dmitry Baryshkov wrote:
->>
->> On Tue, 24 Oct 2023 at 16:31, Kathiravan Thirumoorthy
->> <quic_kathirav@quicinc.com> wrote:
->>
->> On 10/4/2023 10:55 PM, Mukesh Ojha wrote:
->>
->> I have given version to this series as v7 as it has already
->> gone through v6 and later got added to minidump patch series
->> However, these 3 patches can go independently and has no
->> relation with minidump hence, separated it from minidump series.
->>
->> Mukesh, Can you rebase this series on top of linux-next, since there is
->> a conflict?
->>
->>
->> Bjorn, after rebase is done, will you able to pick it up for v6.7 if
->> there is a time? These patches(#1  and #3) are required for the crash
->> dump collection on IPQ9574 and IPQ5332 SoCs.
->>
->> It is not obvious that they are fixes for the crash. You did not add
->> Fixes tags, you didn't follow
->> Documentation/process/stable-kernel-rules.rst. Cover letter is
->> useless. How can we guess that they are urgent / important?
->>
->>
->> Dmitry,
-> 
-> Could you please turn off HTML message composition. For example your
-> message completely messed up the quoting in the text above.
+As SM8550, it also supports the i2c_pull_bit bit to enable the
+on-SoC load resistor for I2C busses.
 
+Dependencies: None
 
-My bad. After the mail client update, HTML message composition is enabled.
+For convenience, a regularly refreshed linux-next based git tree containing
+all the SM8650 related work is available at:
+https://git.codelinaro.org/neil.armstrong/linux/-/tree/topic/sm85650/upstream/integ
 
-> 
->> These patches are not the *fixes* for the existing crashes, these are required to *enable* the crash dump / ram dump collection by boot loader when qcom_scm.download_mode is set to 1 on IPQ9574 and IPQ5332 SoCs.
-> 
-> Please excuse me, I misread your message, mea culpa. Indeed, they are
-> not a fix for the existing error...
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Neil Armstrong (3):
+      dt-bindings: pinctrl: document the SM8650 Top Level Mode Multiplexer
+      pinctrl: qcom: handle intr_target_reg wakeup_present/enable bits
+      pinctrl: qcom: Introduce the SM8650 Top Level Mode Multiplexer driver
 
+ .../bindings/pinctrl/qcom,sm8650-tlmm.yaml         |  157 ++
+ drivers/pinctrl/qcom/Kconfig.msm                   |    8 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |   32 +
+ drivers/pinctrl/qcom/pinctrl-msm.h                 |    5 +
+ drivers/pinctrl/qcom/pinctrl-sm8650.c              | 1762 ++++++++++++++++++++
+ 6 files changed, 1965 insertions(+)
+---
+base-commit: fe1998aa935b44ef873193c0772c43bce74f17dc
+change-id: 20231016-topic-sm8650-upstream-tlmm-4ece354ef319
 
-Yeah, no problem at all.
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
 
-
-> 
->>
->> Reason why I *requested* to pick it up for 6.7 if possible is, initial version is submitted in Jan 2023 by Poovendhan[1] and then later Mukesh integrated the initial series into his minidump series. Then I separated out these patches[2] from mindump series since there is no dependency for these patches to be part of minidump series but unfortunately again integrated back into the minidump series. Finally Mukesh again separated out these patches now.
->>
->> Since there are no active comments to be addressed, I was hoping this series to be picked for 6.7. As long as these patches doesn't go out of the radar, I'm fine :)
->>
-> 
-> 
-> --
-> With best wishes
-> Dmitry
