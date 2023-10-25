@@ -2,62 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82AEE7D5CDF
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Oct 2023 23:05:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46AA07D5FAD
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 04:05:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344129AbjJXVFL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Oct 2023 17:05:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44080 "EHLO
+        id S231167AbjJYCFO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Oct 2023 22:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232399AbjJXVFK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 17:05:10 -0400
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2831C10CE;
-        Tue, 24 Oct 2023 14:05:09 -0700 (PDT)
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-581d4f9a2c5so3174517eaf.0;
-        Tue, 24 Oct 2023 14:05:09 -0700 (PDT)
+        with ESMTP id S229557AbjJYCFN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Oct 2023 22:05:13 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2529F10D5;
+        Tue, 24 Oct 2023 19:05:11 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-d9a58f5f33dso4722106276.1;
+        Tue, 24 Oct 2023 19:05:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698199510; x=1698804310; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WbdytW0refUglybCsXX0Y9h8CNgKWOlTE2eFIrGTl4M=;
+        b=BH4NtPknv7zzofaqxPicccCF8PWycl0Hbmaxxo5Aa5LJQVNISQayehHeiXXhwaHmGV
+         qaA9MxSr+nn8VTl7s1X2HagOLitwaSFrt65ZfTggVwu4G07kvPAXA2oJYwcgJiVP5/6V
+         KbsxIkHijUrQtWBafP0yYouStpmYE/Vh/at2+X9ov7kVJ1PyvQPZdUXX6DCSS/GRW+xE
+         pVW9srUV0uDCphu4ItQinALub3Kq/Fy2fHXh0Jxky9JEedwYO7XBc5nJHG4X2bAZggTn
+         u1qDW7lj447TQ5Wmp9NayBhezIq6SY0r2VmqP7t7uLrrGiWJT0iPJYrW1m1t3TUG/eE9
+         95hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698181508; x=1698786308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I9Jm9ApzQsIzZy9Gg4QWmLADDrD7P3P/rQ+FPHDJPLY=;
-        b=n0McznPp9pEICAf0LUESvwAzCvnfOQJTjTn7pIiWp25W6MlUXoIPTb6Mt2h8j9F5ul
-         +kgua5CKnY8lg2HHem9R/OHvhyuiA+EA9sJrdeZY3GPzwswSkr0h2ZM9r6SBBzXqHkGw
-         jKwik/llSKkCtkddJeCtVXg3ovBDDMhvr/YXZ3X4lBrUpFpaAJMcPISsyAqUYxxSqPXS
-         1oGvHZIYvUNcZZ5KGAcC/QLup7gUhw8EgQXXSW1BR5jePPqEwi4wkUzDl33L39A2O9u2
-         TCfCwl5NLffPZvWuK+tYWUTy/X9JLMeSiRCJFzyg3obEb0idvMcl1jzEwER7E0i86YrV
-         kA1w==
-X-Gm-Message-State: AOJu0YyOc0xzgvrolK+hFGE7ntPnSPOYH3UMFuForJthobAhBqez2v1E
-        p/qF2TN0ZRMYOmgYZuAitw==
-X-Google-Smtp-Source: AGHT+IF7Nx137HVm0cdS3eQV3tQRM+AfGLBpEp3+amIbNonfpHoo43OeYB/YL3TfKLtWBudotEAICg==
-X-Received: by 2002:a4a:da54:0:b0:571:28d5:2c71 with SMTP id f20-20020a4ada54000000b0057128d52c71mr12909779oou.2.1698181508427;
-        Tue, 24 Oct 2023 14:05:08 -0700 (PDT)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id e22-20020a4a5516000000b0057e54da7201sm2178503oob.35.2023.10.24.14.05.07
+        d=1e100.net; s=20230601; t=1698199510; x=1698804310;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WbdytW0refUglybCsXX0Y9h8CNgKWOlTE2eFIrGTl4M=;
+        b=JvigR/rQUuF88HxLvsp9QXf8cyCVrn6fIXT34vqgDG6N2qGM3kR6kbRRvHB/7VL5rv
+         BHfADocN3aqy9Ym8Mv5njH/rBQXjwRJ5kbPa9PFvjLceB9a0QCNi/JzeLNRsyc50CJUy
+         Yhh4vkwODSL8KT0kD1AUcyJCcQNrqr55xpIav/oZ45+LMcTj9VkLlPnoaKnRk4EqSO4I
+         q74ABs/30K9VlnJCo75aZw5vMA54dGd7sIWY8/oep+IhmvzX3EjJq9ARlzlYJKR81/Pl
+         fiKm8R29ykRWVwVJcLqks1Tthg2Rab4tXOkn/rIA54NXvKzKVk7dMAtnYFXOKKKywoqz
+         x1yw==
+X-Gm-Message-State: AOJu0YzYzvBXeKiUU/wTpEtXG7t7LK7wj4uCwmPADPQQyi6wPjvSuJra
+        G8ERKgihTsNqBd2qTgoM2SU=
+X-Google-Smtp-Source: AGHT+IERNV1QcSoqDHejS2ogA8dmntWOcfRPDiTPSWgt5OxcGIpls9S0uiTOXeqKjsqjLApnPEgISA==
+X-Received: by 2002:a05:6902:1083:b0:d9c:7b92:90b9 with SMTP id v3-20020a056902108300b00d9c7b9290b9mr16261960ybu.14.1698199510279;
+        Tue, 24 Oct 2023 19:05:10 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b136-20020a25348e000000b00d89679f6d22sm4022356yba.64.2023.10.24.19.05.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 14:05:07 -0700 (PDT)
-Received: (nullmailer pid 591081 invoked by uid 1000);
-        Tue, 24 Oct 2023 21:05:06 -0000
-Date:   Tue, 24 Oct 2023 16:05:06 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jim Liu <jim.t90615@gmail.com>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        openbmc@lists.ozlabs.org, krzysztof.kozlowski+dt@linaro.org,
-        devicetree@vger.kernel.org, brgl@bgdev.pl,
-        linux-kernel@vger.kernel.org, JJLIU0@nuvoton.com
-Subject: Re: [PATCH v6 1/3] dt-bindings: gpio: add NPCM sgpio driver bindings
-Message-ID: <169818150576.590864.5480268670179831271.robh@kernel.org>
-References: <20231024090631.3359592-1-jim.t90615@gmail.com>
- <20231024090631.3359592-2-jim.t90615@gmail.com>
+        Tue, 24 Oct 2023 19:05:09 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Tue, 24 Oct 2023 19:05:08 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Raag Jadav <raag.jadav@intel.com>, len.brown@intel.com,
+        robert.moore@intel.com, andriy.shevchenko@linux.intel.com,
+        mark.rutland@arm.com, will@kernel.org, Jonathan.Cameron@huawei.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acpica-devel@lists.linuxfoundation.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        mallikarjunappa.sangannavar@intel.com, bala.senthil@intel.com
+Subject: Re: [PATCH v3 0/6] Refine _UID references across kernel
+Message-ID: <16cf6c19-20d2-4d11-80b1-b8e3c7e58803@roeck-us.net>
+References: <20231024062018.23839-1-raag.jadav@intel.com>
+ <20231024093010.GF3208943@black.fi.intel.com>
+ <CAJZ5v0hLYcN_CxUOocKoN8EsQTwyL-sLbWENfFaQ+f3fjHRvqw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231024090631.3359592-2-jim.t90615@gmail.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hLYcN_CxUOocKoN8EsQTwyL-sLbWENfFaQ+f3fjHRvqw@mail.gmail.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,33 +82,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On Tue, 24 Oct 2023 17:06:29 +0800, Jim Liu wrote:
-> Add dt-bindings document for the Nuvoton NPCM7xx sgpio driver
+On Tue, Oct 24, 2023 at 09:51:08PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Oct 24, 2023 at 11:30 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Tue, Oct 24, 2023 at 11:50:12AM +0530, Raag Jadav wrote:
+> > > This series refines _UID references across kernel by:
+> > >
+> > > - Extracting _UID matching functionality from acpi_dev_hid_uid_match()
+> > >   helper and introducing it as a separate acpi_dev_uid_match() helper.
+> > >
+> > > - Converting manual _UID references to use the standard ACPI helpers.
+> > >
+> > > Changes since v2:
+> > > - Drop review tags as suggested by Andy.
+> > >
+> > > Changes since v1:
+> > > - Change acpi_dev_uid_match() to return false in case of NULL argument.
+> > > - Drop accepted patches.
+> > >
+> > > Raag Jadav (6):
+> > >   ACPI: utils: Introduce acpi_dev_uid_match() for matching _UID
+> > >   pinctrl: intel: use acpi_dev_uid_match() for matching _UID
+> > >   ACPI: utils: use acpi_dev_uid_match() for matching _UID
+> > >   ACPI: x86: use acpi_dev_uid_match() for matching _UID
+> > >   hwmon: nct6775: use acpi_dev_hid_uid_match() for matching _HID and
+> > >     _UID
+> > >   perf: arm_cspmu: use acpi_dev_hid_uid_match() for matching _HID and
+> > >     _UID
+> >
+> > For the series,
+> >
+> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >
+> > >  drivers/acpi/utils.c                  | 34 ++++++++++++++++++++++-----
+> > >  drivers/acpi/x86/utils.c              |  3 +--
+> > >  drivers/hwmon/nct6775-platform.c      |  4 +---
+> > >  drivers/perf/arm_cspmu/arm_cspmu.c    |  8 +++----
+> > >  drivers/pinctrl/intel/pinctrl-intel.c |  2 +-
+> >
+> > This pinctrl one is also fine by me so if Andy does not have objections,
+> > feel free to add my,
+> >
+> > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > 
-> Signed-off-by: Jim Liu <jim.t90615@gmail.com>
-> ---
-> Changes for v6:
->    - Drop quotes for $ref
->    - Add and drop '|' for description
->    - Add space after 'exposed.'
->    - remove status
-> Changes for v5:
->    - remove bus bus-frequency
->    - modify in/out description
-> Changes for v4:
->    - modify in/out property
->    - modify bus-frequency property
-> Changes for v3:
->    - modify description
->    - modify in/out property name
-> Changes for v2:
->    - modify description
-> ---
->  .../bindings/gpio/nuvoton,sgpio.yaml          | 86 +++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
-> 
+> Whole series applied as 6.7 material with tags as per the above, thanks!
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ok, that means I will _not_ apply the hwmon patch through
+the hwmon tree.
 
+FWIW, please note that I would have very much preferred applying
+it through the hwmon tree, and I did _not_ Ack it.
+
+Guenter
