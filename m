@@ -2,201 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C83527D6D86
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 15:44:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00BD87D6E4E
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 16:04:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233249AbjJYNoM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Oct 2023 09:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
+        id S235046AbjJYNv4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Oct 2023 09:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233757AbjJYNoM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 09:44:12 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96B4138
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 06:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698241449; x=1729777449;
-  h=date:from:to:cc:subject:message-id;
-  bh=2H3BTgPnZDQzCZkG1SnoWucqbDIWE3CJ0idbbQbIp74=;
-  b=Sgoq75+UyhoyXw+9yYLQFeKtDpuDyXdhLGadH/S5Q57aAlZhktsJ/BuS
-   YAwPceGbKNhDuxOMQl7zLwtSCfs4Pmk2zVr+yaVIOboWqxa6YijYCfgIC
-   yDCsY9RpNS8aRdUd30pNmpATQIIyrse1aSwF/sSF0WSzVfQt7KwfiyPur
-   zZdLWkLnYi9Es2ZU3KoodUDe/nalCr25YOgJX7K7xGGIIjofmIqcBy8ec
-   h1kw2UKy2Y1IkF2t0ZK8DOpzDhWyUGMbOAvg98wQFQCMsXpmqqGeGGcQH
-   qO6xYvgB786v+jfU/Xiz2VstH7JDcM2wk2A+9VTLesB2mCis7AXXM+o3k
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="391179487"
-X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="391179487"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2023 06:44:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.03,250,1694761200"; 
-   d="scan'208";a="91740"
-Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 25 Oct 2023 06:43:34 -0700
-Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qveB4-0008ug-0X;
-        Wed, 25 Oct 2023 13:44:06 +0000
-Date:   Wed, 25 Oct 2023 21:43:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/devel] BUILD SUCCESS
- 1dc76c3a750230979d782ab44920c6731b592935
-Message-ID: <202310252112.RJM0CE7f-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S235056AbjJYNvy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 09:51:54 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78136183;
+        Wed, 25 Oct 2023 06:51:49 -0700 (PDT)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39PDPwAc031410;
+        Wed, 25 Oct 2023 13:51:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=2puYTceWJ8DwCbWwt9w1wkUS6+QbFQPa4PwAzf59AP4=;
+ b=jlzbVKNdtFQXt/jZXu9wAy9LJ4HM7IubviifZ8gO3UciuvmcMMzsev8qT5dL/S68eVbb
+ WuSpwfKw8qTy2nRLu4IPggvMNPFp5uq7KVTVc8SIAVy9EUuV3kqUesTmEZ0uAmoybOqs
+ obkZu4KGjDVs1ehI44sWxuLhgEmZFmeQS8sE8Iw2m/Tofmkt9gdZ3sWhSsEgHc9jxnpl
+ BcTR8QdlEHUV7vs1N3iBHZ8wykd56bEYcQ+SSy2+IIoJCdrurvzi6Nay9eoa4kk7mdD+
+ aUZDYxhf7sa4VS/o7IGfkOObCIgco7bfbTzdIg2RlH3nlH9NVV8JZtwudryFimQAFx7C 7w== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3txuj7h0bq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Oct 2023 13:51:43 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39PDpIHS018394
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Oct 2023 13:51:18 GMT
+Received: from blr-ubuntu-87.ap.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.39; Wed, 25 Oct 2023 06:51:12 -0700
+From:   Sibi Sankar <quic_sibis@quicinc.com>
+To:     <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>
+CC:     <agross@kernel.org>, <conor+dt@kernel.org>,
+        <quic_rjendra@quicinc.com>, <abel.vesa@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <quic_tsoni@quicinc.com>, <neil.armstrong@linaro.org>,
+        Sibi Sankar <quic_sibis@quicinc.com>
+Subject: [PATCH 0/2] pinctrl: qcom: Introduce Pinctrl/GPIO for SC8380XP
+Date:   Wed, 25 Oct 2023 19:20:56 +0530
+Message-ID: <20231025135058.11268-1-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: BvTMePDD64dfBC9_j67t2wQdLZAQryZ3
+X-Proofpoint-GUID: BvTMePDD64dfBC9_j67t2wQdLZAQryZ3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-25_02,2023-10-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 mlxscore=0 adultscore=0 mlxlogscore=507
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310170001
+ definitions=main-2310250120
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/devel
-branch HEAD: 1dc76c3a750230979d782ab44920c6731b592935  pinctrl: tegra: drop the wrapper around pinctrl_gpio_request()
+This series adds pinctrl/gpio support for the Qualcomm SC8380XP platform, aka Snapdragon X Elite.
 
-elapsed time: 3131m
+Release Link: https://www.qualcomm.com/news/releases/2023/10/qualcomm-unleashes-snapdragon-x-elite--the-ai-super-charged-plat
 
-configs tested: 126
-configs skipped: 2
+Rajendra Nayak (2):
+  dt-bindings: pinctrl: qcom: Add SC8380XP pinctrl
+  pinctrl: qcom: Add SC8380XP pinctrl driver
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231023   gcc  
-arm                               allnoconfig   gcc  
-arm                                 defconfig   gcc  
-arm                   randconfig-001-20231024   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                              allnoconfig   gcc  
-i386         buildonly-randconfig-001-20231024   gcc  
-i386         buildonly-randconfig-002-20231024   gcc  
-i386         buildonly-randconfig-003-20231024   gcc  
-i386         buildonly-randconfig-004-20231024   gcc  
-i386         buildonly-randconfig-005-20231024   gcc  
-i386         buildonly-randconfig-006-20231024   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231024   gcc  
-i386                  randconfig-002-20231024   gcc  
-i386                  randconfig-003-20231024   gcc  
-i386                  randconfig-004-20231024   gcc  
-i386                  randconfig-005-20231024   gcc  
-i386                  randconfig-006-20231024   gcc  
-i386                  randconfig-011-20231024   gcc  
-i386                  randconfig-012-20231024   gcc  
-i386                  randconfig-013-20231024   gcc  
-i386                  randconfig-014-20231024   gcc  
-i386                  randconfig-015-20231024   gcc  
-i386                  randconfig-016-20231024   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231023   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231023   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231023   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20231024   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20231023   gcc  
-x86_64       buildonly-randconfig-002-20231023   gcc  
-x86_64       buildonly-randconfig-003-20231023   gcc  
-x86_64       buildonly-randconfig-004-20231023   gcc  
-x86_64       buildonly-randconfig-005-20231023   gcc  
-x86_64       buildonly-randconfig-006-20231023   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231024   gcc  
-x86_64                randconfig-002-20231024   gcc  
-x86_64                randconfig-003-20231024   gcc  
-x86_64                randconfig-004-20231024   gcc  
-x86_64                randconfig-005-20231024   gcc  
-x86_64                randconfig-006-20231024   gcc  
-x86_64                randconfig-011-20231024   gcc  
-x86_64                randconfig-012-20231024   gcc  
-x86_64                randconfig-013-20231024   gcc  
-x86_64                randconfig-014-20231024   gcc  
-x86_64                randconfig-015-20231024   gcc  
-x86_64                randconfig-016-20231024   gcc  
-x86_64                randconfig-071-20231024   gcc  
-x86_64                randconfig-072-20231024   gcc  
-x86_64                randconfig-073-20231024   gcc  
-x86_64                randconfig-074-20231024   gcc  
-x86_64                randconfig-075-20231024   gcc  
-x86_64                randconfig-076-20231024   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+ .../bindings/pinctrl/qcom,sc8380xp-tlmm.yaml  |  143 ++
+ drivers/pinctrl/qcom/Kconfig.msm              |   10 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-sc8380xp.c       | 1876 +++++++++++++++++
+ 4 files changed, 2030 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc8380xp-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sc8380xp.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
