@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 903DE7D649D
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 10:11:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C564B7D64B8
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Oct 2023 10:16:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230147AbjJYIL2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Oct 2023 04:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55222 "EHLO
+        id S233862AbjJYIQ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Oct 2023 04:16:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231542AbjJYIL0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 04:11:26 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EC0C1
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 01:11:24 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9ae2cc4d17eso803600666b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 01:11:23 -0700 (PDT)
+        with ESMTP id S233782AbjJYIQY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 04:16:24 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59300128
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 01:16:22 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-4084095722aso43686585e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Oct 2023 01:16:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698221482; x=1698826282; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1698221781; x=1698826581; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pmHAkiZSBWdTXTD4oGRmomkl9FLnUtzH0axDDUoy7iM=;
-        b=kxfFIPoY2NYTW9HZeF0jhtyLjfYYZ7w08BcSJ8ym1p+v1lnO0DUeLQQ265Fn8Ke72m
-         G0CCfmnhSb3kFdJ8/ELq6NW/wqsx10N8kGy/cg4rnnqOYC73gyNKkX2GCkA/54E/At6T
-         JrMoQZJk8dcH/FxGXY4teFZfkzygHFfTpb8UOoIQ5PU5fLYWUHplLnNd6fA9Kmki2nmT
-         8c0HLXv6STcvyEPbd8MBXRmiZ8NPBekgg+pZbxDi6H8ahUrowrUXJJxsxV6EXGLs4JCb
-         1ISGurQ0tyKoVrkfZi81ZA+Y2PmymMwQQ3AuAfAVxjohx1V2iKGiBOCXpxu2YgnecfJa
-         3Q7g==
+        bh=FY0JWHmlhPx8MxvwZOUReB8mPKqDhX996EGqeMpXUoQ=;
+        b=mztN9BU47aFP5GlJVEv/+I9IFNECiCpncqMsYgPf3kJwi9YS650VZKM4VbXZD7UHLk
+         UU7iRY9X8UAVLYbtbdsIjZhVYTCMYKqoXF3xUWTXdka2Zau02ElHAgeWNZGmHw94zHKd
+         mfCJbHtAc0pbo7knxe0/JRg/DeSivRm7WhoUwUj0WohyXGKd0tPWx49Cv5A1EBfE6klx
+         qEu1r4zwhRMCOb0nAW+mK8A9R/H+5jSeGlB92pBpNL0AyNBE7xoCI9l9WCih/f54VR5c
+         KHWjtKq7BMsfGas6+c89dBA46mYYYsKlZU8sS/hmqjz2Mx/lR36LdYCe7R6d3ZRqYGEs
+         y8ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698221482; x=1698826282;
+        d=1e100.net; s=20230601; t=1698221781; x=1698826581;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pmHAkiZSBWdTXTD4oGRmomkl9FLnUtzH0axDDUoy7iM=;
-        b=Tt5Fy3VRdAY+iZ29Ff9uLvlv2fd3EZB1oxHbtUDco6wDfgcScMq7u13kAKwUPsSc75
-         f7G6jjIryrqo1j7gP5HJoCF7MPKj65uNtb/RsAsRlw5DKlRLB6Fph2NCUceVGNKjE04/
-         u2Z5oWBAPzJizamHrKxdV2b7hepivFm0yBB7NS7gqmK4xqLvBBcCbdJ3QUJ0Kqpu3Q4T
-         YYkEQAyrPvB4DyDhVcRqqnZImcA5P5TzbBjDpqKOkEyrDoOLxVaeCSUsV7ov539AGddx
-         zoHc3tJlGuaPDWLd8dp+5MUtqKDAL3/iJgNW1bYKzsHTry6OOeXJRokJmv1GxvDE4qhN
-         xLoA==
-X-Gm-Message-State: AOJu0YwNPqtfjRrO9gkNBpMrAp1HV/IQYy/YeNC4QkpGTxxcmveX68to
-        nUUOvRCHgWmGJKb7irWlAAIEVA==
-X-Google-Smtp-Source: AGHT+IEZxxwvbIACPWNEIDwLFXM4CjcZv2qOHT6u2psb/jnffDc3kZ2fNlQQ87uOqqQfT+np12onwQ==
-X-Received: by 2002:a17:907:948e:b0:9c6:6f65:def1 with SMTP id dm14-20020a170907948e00b009c66f65def1mr11745937ejc.35.1698221482453;
-        Wed, 25 Oct 2023 01:11:22 -0700 (PDT)
+        bh=FY0JWHmlhPx8MxvwZOUReB8mPKqDhX996EGqeMpXUoQ=;
+        b=HOHRAyrxDTeMPOPB11Sc/GGNb5kZ+6TTcVNOd02/hBvnZPQDfj5mrONyl4OchcyBzx
+         4Zq/lI3llspk0LGiMlKPbo8mInjxTGfCVPEVv1f+pUBmPccTG1VMs4qYf4L+tJDgLCVc
+         P9hCbzculNcHAVb7uK/ZO9uTqZRzgiGZd1VO+77SqZ7FR6b/vWS/r+RmTxdx1QYMSwj2
+         uMHeib8/5VGKo75yWj2+bvjsOq6MwTvItl5g1GBmfiz1WnKKTm8GI85O9K4m7kDm9MoX
+         csfY0mwsesmMYAhcfML66/4S5fw4Mf7T6L+0y1y6SLcN1DGNohend+UNmZ44FqJXMKIH
+         o4IQ==
+X-Gm-Message-State: AOJu0Yy56QEXrwi3CD25ZnnqNnAsv66BcmhTSY1EyZr+sU0P91b0Mz+C
+        cwz6mjLMbfO+7M0pIiIMl3iIyQ==
+X-Google-Smtp-Source: AGHT+IFVoSCxq9swR1N/5XqhTWUhfrbXUNOovhzRD1ZDkCSxOrTlFyzNb+TQBLnB591ZYaLkmIvxMQ==
+X-Received: by 2002:a05:600c:1f85:b0:407:5a7d:45a8 with SMTP id je5-20020a05600c1f8500b004075a7d45a8mr11893507wmb.31.1698221780753;
+        Wed, 25 Oct 2023 01:16:20 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id pj19-20020a170906d79300b009ad829ed144sm9378723ejb.130.2023.10.25.01.11.20
+        by smtp.gmail.com with ESMTPSA id b11-20020a05600010cb00b00324853fc8adsm11519714wrx.104.2023.10.25.01.16.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Oct 2023 01:11:21 -0700 (PDT)
-Message-ID: <8246f8a1-459f-4c12-a63a-c5206d67d284@linaro.org>
-Date:   Wed, 25 Oct 2023 10:11:20 +0200
+        Wed, 25 Oct 2023 01:16:20 -0700 (PDT)
+Message-ID: <13707da9-b28c-45cf-9288-af71558be57b@linaro.org>
+Date:   Wed, 25 Oct 2023 10:16:18 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pinctrl: qcom: Introduce the SM8650 Top Level Mode
- Multiplexer driver
+Subject: Re: [PATCH 2/3] pinctrl: qcom: handle intr_target_reg
+ wakeup_present/enable bits
 Content-Language: en-US
 To:     Neil Armstrong <neil.armstrong@linaro.org>,
         Andy Gross <agross@kernel.org>,
@@ -67,7 +67,7 @@ To:     Neil Armstrong <neil.armstrong@linaro.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20231025-topic-sm8650-upstream-tlmm-v1-0-4e3d84a3a46b@linaro.org>
- <20231025-topic-sm8650-upstream-tlmm-v1-3-4e3d84a3a46b@linaro.org>
+ <20231025-topic-sm8650-upstream-tlmm-v1-2-4e3d84a3a46b@linaro.org>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -113,7 +113,7 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231025-topic-sm8650-upstream-tlmm-v1-3-4e3d84a3a46b@linaro.org>
+In-Reply-To: <20231025-topic-sm8650-upstream-tlmm-v1-2-4e3d84a3a46b@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -126,16 +126,23 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 25/10/2023 09:33, Neil Armstrong wrote:
-> Add Top Level Mode Multiplexer (pinctrl) support for the SM8650 platform.
+> New platforms uses a new set of bits to control the wakeirq
+> delivery to the PDC block.
+> 
+> The intr_wakeup_present_bit indicates if the GPIO supports
+> wakeirq and intr_wakeup_enable_bit enables wakeirq delivery
+> to the PDC block.
+> 
+> While the name seems to imply this only enables wakeup events,
+> it is required to allow interrupts events to the PDC block.
+> 
+> Enable this bit in the irq resource request/free if:
+> - gpio is in wakeirq map
+> - has the intr_wakeup_present_bit
+> - the intr_wakeup_enable_bit is set
 > 
 > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
->  drivers/pinctrl/qcom/Kconfig.msm      |    8 +
->  drivers/pinctrl/qcom/Makefile         |    1 +
->  drivers/pinctrl/qcom/pinctrl-sm8650.c | 1762 +++++++++++++++++++++++++++++++++
->  3 files changed, 1771 insertions(+)
-> 
-
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
