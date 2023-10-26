@@ -2,97 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C519D7D829D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Oct 2023 14:27:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 193047D83E2
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Oct 2023 15:52:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344922AbjJZM1j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Oct 2023 08:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39098 "EHLO
+        id S230514AbjJZNwT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Oct 2023 09:52:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344930AbjJZM1i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Oct 2023 08:27:38 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E32C1194;
-        Thu, 26 Oct 2023 05:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698323257; x=1729859257;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tqtDdD4xvu4zyFQWZK9HVGuWrLui8+ZbecV2jxa/D7U=;
-  b=N6WDbtEo+fYNGc7VpPh3MYquGO5wdb4GYjXCC8h6cNBxfrZPoDNXUlKO
-   /rbu2LX9cHkJs9QxAMW0pthYlVKFh8cz6wxgyew65L1f1cxFY7vLVNS91
-   /TIUHbgsfXeY4xU/yqgb8mX3KPQOFcbnv8m2qJnGfOQKFnRC/NL3JHxng
-   1vWeniNp+C5LYs5moMgun6a8dtthDghtmuzZPoH+Bg25tmEp2qSt2lQmG
-   4JBsIRR3y0IAG3F9WhFV4vg6hNv+Pnx+HKvtINLiuccQa4rVrsxA42doX
-   fTReoFlzxcCJ3jQnETIa0votrE8sh1IiAbz31i80nLttlOMrsmJ6QQH7a
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="391397268"
-X-IronPort-AV: E=Sophos;i="6.03,253,1694761200"; 
-   d="scan'208";a="391397268"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 05:27:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10874"; a="794185006"
-X-IronPort-AV: E=Sophos;i="6.03,253,1694761200"; 
-   d="scan'208";a="794185006"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2023 05:27:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC3)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qvzSU-00000008qtb-0Q5s;
-        Thu, 26 Oct 2023 15:27:30 +0300
-Date:   Thu, 26 Oct 2023 15:27:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/3] device property: Implement device_is_big_endian()
-Message-ID: <ZTpbMVSdKlOgLbwv@smile.fi.intel.com>
-References: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
- <20231025184259.250588-2-andriy.shevchenko@linux.intel.com>
- <2023102624-moonshine-duller-3043@gregkh>
+        with ESMTP id S235012AbjJZNwS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Oct 2023 09:52:18 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F7641AE
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Oct 2023 06:52:15 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-5a7b91faf40so7105757b3.1
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Oct 2023 06:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698328334; x=1698933134; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5l1pXXPojYJERfyGbdEpNZqOClr1acgIl7421/gNGH0=;
+        b=mxFdr4SC0qtnzbV6PAGMQA4W7/7r2CJPyZECw1TMM5yR41EId/0VZRHp9F6GiRkd3F
+         ZkTOKozF0IyO0eHP1YOv25Y39/6bUzZ0gutNCWxC1TzcFXZ+e3nmQQIG+DOJth/0E25N
+         TTqjHZCPjMqM/vihPdrmtWV+47nCaPuD1s02V3xk0OBFKgf+qhh1Xt/UkXYyHRJOrnwp
+         KUKiaQGcuRCn/GtLC1KdqdZP06OHjq/za2+1TV4w9VYbeKCzYMl+vu4kSUcUxhoLx2/m
+         Vk8xdgAfm7cqNisU99MfUu6ABGlTsvx9QzhUGk/ZKccpqOlcGN+F4W9Gpa6nTfW49loh
+         9XDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698328334; x=1698933134;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5l1pXXPojYJERfyGbdEpNZqOClr1acgIl7421/gNGH0=;
+        b=hs3z1uhujSI4BM3UPfT9jQSH4ZT+D68ZRim2QThUC/tFktGAb3CvrinWUYzcGUIJQY
+         pgJL3DGY2cu+ElPxc0dHoK6/J8O1mb+NNgZtQn0H7IS2sOw5ziumdAkxUDdl/1qZNgmn
+         khaKxIFeHduHa7K2bIIXMXDGJCpLlnMRh3Jgk7RcnJ8yXqCQ+9ds5dpuDb2CbcZTSMkw
+         RlbeyDHhyuVhBOA+uXpM97nYM995Le4fSvwYZ0OzZcHbLffMX2/ByARY9wiFS9etvCUL
+         Ug+DWRdwB8rcAkO8bcF3G+XVG2wNQGhn9H06GxoQzlbypnPvbha/2oPTUyAiNjoYF10p
+         iMKw==
+X-Gm-Message-State: AOJu0YwuemkJnPahNLBkNUKND4hoYKb8tuUf5VXg6RT/h3C2SaYaSUqf
+        SodMDsEcAz3ytZEcgT02Gn60juBVImOAAlCR7TFuhQ==
+X-Google-Smtp-Source: AGHT+IHfP/O7KN1EAK1myIjKq27giWPODeYiJ0sVAkgkirwOVfNgi1SOykk4KY59v73CE8NRUJB2ldzUl35zFlzaUsc=
+X-Received: by 2002:a0d:dd0c:0:b0:5a7:d11c:f0ed with SMTP id
+ g12-20020a0ddd0c000000b005a7d11cf0edmr20160216ywe.33.1698328334604; Thu, 26
+ Oct 2023 06:52:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2023102624-moonshine-duller-3043@gregkh>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20231018145750.429385-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20231018145750.429385-1-krzysztof.kozlowski@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 26 Oct 2023 15:52:03 +0200
+Message-ID: <CACRpkdZZhm+h-ZXy6X6xX6DE1bVbWPR3hd9EpgEDUUNX_t4S2g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sa8775p-tlmm: add missing wakeup-parent
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 26, 2023 at 07:25:35AM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Oct 25, 2023 at 09:42:57PM +0300, Andy Shevchenko wrote:
-> > Some users want to use the struct device pointer to see if the
-> > device is big endian in terms of Open Firmware specifications,
-> > i.e. if it has a "big-endian" property, or if the kernel was
-> > compiled for BE *and* the device has a "native-endian" property.
-> > 
-> > Provide inline helper for the users.
-> 
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Wed, Oct 18, 2023 at 4:57=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-Thank you, Greg.
+> Add missing wakeup-parent property, already used by DTS to indicate that
+> pins are wakeup capable:
+>
+>   sa8775p-ride.dtb: pinctrl@f000000: 'wakeup-parent' does not match any o=
+f the regexes: '-state$', 'pinctrl-[0-9]+'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Bart, would it be still possible to take this into next?
-I would like to have at least this patch applied (with the first user)
-to allow conversion of others (I have some more users of new API).
+Patch applied.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
