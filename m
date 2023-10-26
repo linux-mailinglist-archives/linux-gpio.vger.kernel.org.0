@@ -2,173 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E531D7D7AAB
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Oct 2023 04:05:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 014137D7B1E
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Oct 2023 04:57:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233051AbjJZCFv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Oct 2023 22:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44352 "EHLO
+        id S231218AbjJZC5Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Oct 2023 22:57:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232946AbjJZCFu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 22:05:50 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBB6B194;
-        Wed, 25 Oct 2023 19:05:47 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77420C433C7;
-        Thu, 26 Oct 2023 02:05:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698285947;
-        bh=wdYiEIeuPkKdvgg6KAstrOuZq1wQmLMrxjIDacgycTo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q2HzjdfIB2JR79TKCvENv+dnDPOLofWHhaYzzZqKI1gg/f+gPD+YZHQv7l3KuqM8i
-         dRO5XB4RwIC5rbIcT8TfcnRQ7AFywresCW+ZkL1duWxzhIPl0fjcq1HKpCm1SYH+t/
-         Ln+YXk8DCKziltY+V8/GOq1Am8e3RzZL9QmtsPssRZ4UYcvATsYXO2MqVYafZmMcgf
-         bD7YtT2SMURo4oJIKrbaoJy9PTUDyY3XUwz0RnwNGybXdTWpvwxmL2cTgGGg6zWFV1
-         cYlPI2tUYnh7z2bxyy675Zy0R71zn1b4VTKqcvUmUNbIaWSUlQyNo3OVaS4ZAzkjwB
-         NRjABYoOT5lFA==
-Date:   Wed, 25 Oct 2023 19:10:03 -0700
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] pinctrl: qcom: handle intr_target_reg
- wakeup_present/enable bits
-Message-ID: <vtr3s7fyrionospnmzvm2xl2plsue2jlrc3tjifqua3ihucxao@6hxi3i22bwxs>
-References: <20231025-topic-sm8650-upstream-tlmm-v1-0-4e3d84a3a46b@linaro.org>
- <20231025-topic-sm8650-upstream-tlmm-v1-2-4e3d84a3a46b@linaro.org>
+        with ESMTP id S231337AbjJZC5Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Oct 2023 22:57:24 -0400
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF0E3194;
+        Wed, 25 Oct 2023 19:57:18 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Vuw6fix_1698289034;
+Received: from 30.97.48.63(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Vuw6fix_1698289034)
+          by smtp.aliyun-inc.com;
+          Thu, 26 Oct 2023 10:57:15 +0800
+Message-ID: <e8833e78-8678-e2fc-9de1-0b2531e179e1@linux.alibaba.com>
+Date:   Thu, 26 Oct 2023 10:57:30 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231025-topic-sm8650-upstream-tlmm-v1-2-4e3d84a3a46b@linaro.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH V2 5/6] pinctrl: sprd: Increase the range of register
+ values
+To:     xu lh <xulh0829@gmail.com>
+Cc:     Linhua Xu <Linhua.xu@unisoc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Zhirong Qiu <zhirong.qiu@unisoc.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+References: <20230908055146.18347-1-Linhua.xu@unisoc.com>
+ <20230908055146.18347-6-Linhua.xu@unisoc.com>
+ <c714149e-9a54-40c1-fd55-bf2297eebe17@linux.alibaba.com>
+ <CAPjKKSrs9X2msnDg=9rC8H57Dq8FPd7SWyBsr2MCwL0FMNkHPA@mail.gmail.com>
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAPjKKSrs9X2msnDg=9rC8H57Dq8FPd7SWyBsr2MCwL0FMNkHPA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-13.2 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 25, 2023 at 09:33:52AM +0200, Neil Armstrong wrote:
-> New platforms uses a new set of bits to control the wakeirq
-> delivery to the PDC block.
-> 
-> The intr_wakeup_present_bit indicates if the GPIO supports
-> wakeirq and intr_wakeup_enable_bit enables wakeirq delivery
-> to the PDC block.
-> 
-> While the name seems to imply this only enables wakeup events,
-> it is required to allow interrupts events to the PDC block.
-> 
-> Enable this bit in the irq resource request/free if:
-> - gpio is in wakeirq map
-> - has the intr_wakeup_present_bit
-> - the intr_wakeup_enable_bit is set
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 32 ++++++++++++++++++++++++++++++++
->  drivers/pinctrl/qcom/pinctrl-msm.h |  5 +++++
->  2 files changed, 37 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 395040346d0f..2489a9ac8455 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1196,6 +1196,7 @@ static int msm_gpio_irq_reqres(struct irq_data *d)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->  	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> +	const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
->  	int ret;
->  
->  	if (!try_module_get(gc->owner))
-> @@ -1221,6 +1222,24 @@ static int msm_gpio_irq_reqres(struct irq_data *d)
->  	 */
->  	irq_set_status_flags(d->irq, IRQ_DISABLE_UNLAZY);
->  
-> +	/*
-> +	 * If the wakeup_enable bit is present and marked as available for the
-> +	 * requested GPIO, it should be enabled when the GPIO is marked as
-> +	 * wake irq in order to allow the interrupt event to be transfered to
-> +	 * the PDC HW.
-> +	 * While the name implies only the wakeup event, it's also required for
-> +	 * the interrupt event.
-> +	 */
-> +	if (test_bit(d->hwirq, pctrl->skip_wake_irqs) && g->intr_wakeup_present_bit) {
-> +		u32 intr_cfg;
-> +
-> +		intr_cfg = msm_readl_intr_cfg(pctrl, g);
-> +		if (intr_cfg & BIT(g->intr_wakeup_present_bit)) {
-> +			intr_cfg |= BIT(g->intr_wakeup_enable_bit);
-> +			msm_writel_intr_cfg(intr_cfg, pctrl, g);
 
-If I understand correctly, the two modified functions are hooked
-straight into the irq_chip, which would imply that nothing prevent
-concurrent execution of this and the other accessors of intr_cfg.
 
-If I'm reading this correctly, I think we should perform this
-read-modify-write under the spinlock.
-
-Regards,
-Bjorn
-
-> +		}
-> +	}
-> +
->  	return 0;
->  out:
->  	module_put(gc->owner);
-> @@ -1230,6 +1249,19 @@ static int msm_gpio_irq_reqres(struct irq_data *d)
->  static void msm_gpio_irq_relres(struct irq_data *d)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> +	const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
-> +
-> +	/* Disable the wakeup_enable bit if it has been set in msm_gpio_irq_reqres() */
-> +	if (test_bit(d->hwirq, pctrl->skip_wake_irqs) && g->intr_wakeup_present_bit) {
-> +		u32 intr_cfg;
-> +
-> +		intr_cfg = msm_readl_intr_cfg(pctrl, g);
-> +		if (intr_cfg & BIT(g->intr_wakeup_present_bit)) {
-> +			intr_cfg &= ~BIT(g->intr_wakeup_enable_bit);
-> +			msm_writel_intr_cfg(intr_cfg, pctrl, g);
-> +		}
-> +	}
->  
->  	gpiochip_unlock_as_irq(gc, d->hwirq);
->  	module_put(gc->owner);
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index 4968d08a384d..63852ed70295 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -58,6 +58,9 @@ struct pinctrl_pin_desc;
->   * @intr_enable_bit:      Offset in @intr_cfg_reg for enabling the interrupt for this group.
->   * @intr_status_bit:      Offset in @intr_status_reg for reading and acking the interrupt
->   *                        status.
-> + * @intr_wakeup_present_bit: Offset in @intr_target_reg specifying the GPIO can generate
-> + *			  wakeup events.
-> + * @intr_wakeup_enable_bit: Offset in @intr_target_reg to enable wakeup events for the GPIO.
->   * @intr_target_bit:      Offset in @intr_target_reg for configuring the interrupt routing.
->   * @intr_target_width:    Number of bits used for specifying interrupt routing target.
->   * @intr_target_kpss_val: Value in @intr_target_bit for specifying that the interrupt from
-> @@ -100,6 +103,8 @@ struct msm_pingroup {
->  	unsigned intr_status_bit:5;
->  	unsigned intr_ack_high:1;
->  
-> +	unsigned intr_wakeup_present_bit:5;
-> +	unsigned intr_wakeup_enable_bit:5;
->  	unsigned intr_target_bit:5;
->  	unsigned intr_target_width:5;
->  	unsigned intr_target_kpss_val:5;
+On 10/25/2023 7:29 PM, xu lh wrote:
+> On Tue, Sep 12, 2023 at 4:37 PM Baolin Wang <baolin.wang@linux.alibaba.com>
+> wrote:
 > 
-> -- 
-> 2.34.1
+>>
+>>
+>> On 9/8/2023 1:51 PM, Linhua Xu wrote:
+>>> From: Linhua Xu <Linhua.Xu@unisoc.com>
+>>>
+>>> As the UNISOC pin controller version iterates, more registers are
+>> required
+>>> to meet new functional requirements. Thus modify them.
+>>>
+>>> Signed-off-by: Linhua Xu <Linhua.Xu@unisoc.com>
+>>> ---
+>>>    drivers/pinctrl/sprd/pinctrl-sprd.h | 30 +++++++++++++++--------------
+>>>    1 file changed, 16 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.h
+>> b/drivers/pinctrl/sprd/pinctrl-sprd.h
+>>> index a696f81ce663..5357874186fd 100644
+>>> --- a/drivers/pinctrl/sprd/pinctrl-sprd.h
+>>> +++ b/drivers/pinctrl/sprd/pinctrl-sprd.h
+>>> @@ -7,30 +7,32 @@
+>>>    #ifndef __PINCTRL_SPRD_H__
+>>>    #define __PINCTRL_SPRD_H__
+>>>
+>>> +#include <linux/bits.h>
+>>> +
+>>>    struct platform_device;
+>>>
+>>> -#define NUM_OFFSET   (20)
+>>> -#define TYPE_OFFSET  (16)
+>>> -#define BIT_OFFSET   (8)
+>>> -#define WIDTH_OFFSET (4)
+>>> +#define NUM_OFFSET   22
+>>> +#define TYPE_OFFSET  18
+>>> +#define BIT_OFFSET   10
+>>> +#define WIDTH_OFFSET 6
+>>>
+>>>    #define SPRD_PIN_INFO(num, type, offset, width, reg)        \
+>>> -             (((num) & 0xFFF) << NUM_OFFSET |        \
+>>> -              ((type) & 0xF) << TYPE_OFFSET |        \
+>>> -              ((offset) & 0xFF) << BIT_OFFSET |      \
+>>> -              ((width) & 0xF) << WIDTH_OFFSET |      \
+>>> -              ((reg) & 0xF))
+>>> +             (((num) & GENMASK(10, 0)) << NUM_OFFSET |       \
+>>> +              ((type) & GENMASK(3, 0)) << TYPE_OFFSET |      \
+>>> +              ((offset) & GENMASK(7, 0)) << BIT_OFFSET |     \
+>>> +              ((width) & GENMASK(3, 0)) << WIDTH_OFFSET |    \
+>>> +              ((reg) & GENMASK(5, 0)))
+>>
+>> Can you define some readable macro for the mask bits?
 > 
+> 
+>>> okay. Do you think the following modification is okay?
+> +#define PIN_ID         GENMASK(10, 0)
+> +#define PIN_TYPE       GENMASK(3, 0)
+> +#define FIELD_OFFSET   GENMASK(7, 0)
+> +#define FIELD_WIDTH    GENMASK(3, 0)
+> +#define PIN_REG                GENMASK(5, 0)
+
+Looks better. To keep consistent, I perfer to something as below:
+#define NUM_MASK xxx
+#define TYPE_MASK xxx
+#define BIT_MASK xxx
+#define WIDTH_MASK xxx
+#define REG_MASK xxx
