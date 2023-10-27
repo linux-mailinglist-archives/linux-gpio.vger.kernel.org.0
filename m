@@ -2,124 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A38DF7D92D5
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 10:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 967A27D92F8
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 11:03:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345601AbjJ0I4c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Oct 2023 04:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49992 "EHLO
+        id S231305AbjJ0JDs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Oct 2023 05:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345544AbjJ0I4b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 04:56:31 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF9FBD
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Oct 2023 01:56:28 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-507bd64814fso2540944e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Oct 2023 01:56:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698396987; x=1699001787; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y7nivA7Y4G+DJle+MuF/UdLNZEk2svAAlFKkW3ePDro=;
-        b=CDqkk7pmnlRuGYnnJs7zy9HYAvf5cc0OSHCstQSkR15zk1NNE6RjObrRavpLJ3uZe6
-         owVeLslPC/zl3zcjUUvecfBxXy5wpkZi1zGv49OgJpH8/6F3wKtqiS7QsScdB8tRQBE/
-         O/eYqlc6A5Fw1wT/A0thCUpQHZo76pDFsehnVXxQGo4q5avUdnx9o8meVtUv39dM861k
-         MuOl7ueJYumQym+g+tOanJLCZUtTtrGqTw6aJWWrpAYpxrOWO+2Tfp/BQRTaguL0vmR9
-         9iWNOogff7+gYa+Pvl6DqXIgy6QF8Qm1reJ3SNnkzFF/6bzxXdKE5WQdTg51cP1iTifC
-         zzQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698396987; x=1699001787;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y7nivA7Y4G+DJle+MuF/UdLNZEk2svAAlFKkW3ePDro=;
-        b=eLvsRzYRvp8vrs76dvGjrkg17f4duUxK9m2yP35rsGW9C03RU83CanorRB3D5wSTkJ
-         pi0ZAU01tlePW3Ab+IYJvRKhc5jCHU2qAK3/b0W2k5IPm0WxOmzheP+Rgup3vP6PCb3y
-         RKLHvH0VkWFCKXovizbRUSGOLeGcUcqaHXke8pHv+u7494ymJlrDvE56JAPTCXW6An0N
-         u4p/tatkt/RbXVZbkVMSO0PrY6Pdf011nmyOyih5JXhzu0FBkvuUL+B9s6UUxoiagYiz
-         o0r007ZL8SpEpl/n6wWruT4mkGCHdA6qPDZtcCXKftc1KGxYHjJppDSZFj5rXznlDqmj
-         9+XA==
-X-Gm-Message-State: AOJu0Ywl/PeN7HO5yt1iIxTUPsRNDoX4B1O1DCYo2WH9NwOVk9ZIcNrF
-        TQX/WJg0PHzvMlflfYsYNYoL3Q==
-X-Google-Smtp-Source: AGHT+IF43FFbNCsmjCkp5cEvjMhNfSi05VarIu12T+ZPsQrSZwYLkT/LM0cEbyp+tEO1NBinGsEj1w==
-X-Received: by 2002:a19:5517:0:b0:500:b7ed:1055 with SMTP id n23-20020a195517000000b00500b7ed1055mr1125542lfe.56.1698396986962;
-        Fri, 27 Oct 2023 01:56:26 -0700 (PDT)
-Received: from [192.168.0.22] ([78.10.206.168])
-        by smtp.gmail.com with ESMTPSA id f24-20020ac251b8000000b005079ff16d9fsm193169lfk.138.2023.10.27.01.56.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Oct 2023 01:56:26 -0700 (PDT)
-Message-ID: <0ce0c283-3c1c-4dbe-8b0c-ff2e2d5420c9@linaro.org>
-Date:   Fri, 27 Oct 2023 10:56:24 +0200
+        with ESMTP id S230101AbjJ0JDs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 05:03:48 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 144A4191;
+        Fri, 27 Oct 2023 02:03:46 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39R8EY6h005282;
+        Fri, 27 Oct 2023 09:03:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=QIF4haLHnJoHI7/jtt1OSlXGkYPIeGzdyJdLiwq4lGA=;
+ b=dP4WUOYsvHPe36JcnUd6OKBKZaa8AgJB6wbq/BCDoFznx5v7k2FI2lqrBe5Qgh7NK2wy
+ 8j8YVrOIyWwdlPmwoyc1RyNf837CtV5BXPChtASCeBo/Noo40uc4vQNz2eStuNVv6wAo
+ lRCLaEYzs2sxQlJb1RyFMEYgctwIIQLxtNOZHzu6T72Lxc9cb496iF7JsywV4mEkS+1a
+ oNOnCt0hAb4qH+uL5t5Zp/IUKSfMYT8YyW+KRknnszpi7iILm08sqFmD4GR8HHsnWSF2
+ 48tiij+gXvHLQcWeWYYRSphNiw8tRKFexW21yxRy1dh5s84UlzQKUvP6qn0OFEKVeuV3 Uw== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tyxas1h1v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Oct 2023 09:03:42 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39R93flv028162
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Oct 2023 09:03:41 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Fri, 27 Oct
+ 2023 02:03:38 -0700
+Message-ID: <bc090d9e-9f3e-3e0e-3cc3-147d2d5bea55@quicinc.com>
+Date:   Fri, 27 Oct 2023 14:33:32 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v5 5/5] dt-bindings: firmware: arm,scmi: Add support for
- pinctrl protocol
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v8 2/3] firmware: scm: Modify only the download bits in
+ TCSR register
 Content-Language: en-US
-To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>
-Cc:     Cristian Marussi <cristian.marussi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
- <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
-Content-Type: text/plain; charset=UTF-8
+To:     Elliot Berman <quic_eberman@quicinc.com>, <agross@kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+References: <1698235506-16993-1-git-send-email-quic_mojha@quicinc.com>
+ <1698235506-16993-3-git-send-email-quic_mojha@quicinc.com>
+ <8b0d1ab1-e4e6-4152-bcb6-c83909060652@quicinc.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <8b0d1ab1-e4e6-4152-bcb6-c83909060652@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: oY6rameKF6HFdd0wF7MyA-ePk-Ze_6q3
+X-Proofpoint-ORIG-GUID: oY6rameKF6HFdd0wF7MyA-ePk-Ze_6q3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-27_06,2023-10-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ phishscore=0 suspectscore=0 clxscore=1015 spamscore=0 mlxscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2310240000 definitions=main-2310270077
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -128,48 +84,96 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 27/10/2023 08:28, Oleksii Moisieiev wrote:
-> Add new SCMI v3.2 pinctrl protocol bindings definitions and example.
+
+
+On 10/26/2023 5:23 AM, Elliot Berman wrote:
 > 
-> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
 > 
-> ---
-> Changes v3 -> v4
->   - reworked protocol@19 format
-> ---
->  .../bindings/firmware/arm,scmi.yaml           | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
+> On 10/25/2023 5:05 AM, Mukesh Ojha wrote:
+>> Crashdump collection is done based on DLOAD bits of TCSR register.
+>> To retain other bits, scm driver need to read the register and
+>> modify only the DLOAD bits, as other bits in TCSR may have their
+>> own significance.
+>>
+>> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+>> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> Tested-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com> # IPQ9574 and IPQ5332
+>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>> ---
+>>   drivers/firmware/qcom/qcom_scm.c | 12 ++++++++++--
+>>   1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+>> index 25549178a30f..f1c4a9f9a53f 100644
+>> --- a/drivers/firmware/qcom/qcom_scm.c
+>> +++ b/drivers/firmware/qcom/qcom_scm.c
+>> @@ -4,6 +4,8 @@
+>>    */
+>>   
+>>   #include <linux/arm-smccc.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/bits.h>
+>>   #include <linux/clk.h>
+>>   #include <linux/completion.h>
+>>   #include <linux/cpumask.h>
+>> @@ -117,6 +119,10 @@ static const u8 qcom_scm_cpu_warm_bits[QCOM_SCM_BOOT_MAX_CPUS] = {
+>>   #define QCOM_SMC_WAITQ_FLAG_WAKE_ONE	BIT(0)
+>>   #define QCOM_SMC_WAITQ_FLAG_WAKE_ALL	BIT(1)
+>>   
+>> +#define QCOM_DLOAD_MASK		GENMASK(5, 4)
+>> +#define QCOM_DLOAD_FULLDUMP	0x1
+>> +#define QCOM_DLOAD_NODUMP	0x0
+>> +
 > 
-> diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> index 5824c43e9893..5318fe72354e 100644
-> --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> @@ -233,6 +233,39 @@ properties:
->        reg:
->          const: 0x18
->  
-> +  protocol@19:
-> +    type: object
-> +    allOf:
-> +      - $ref: "#/$defs/protocol-node"
-> +      - $ref: "../pinctrl/pinctrl.yaml"
+> 
+> Enum would be better here for related constants.
+> 
+> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+> index f1c4a9f9a53f..95f73a8c51d7 100644
+> --- a/drivers/firmware/qcom/qcom_scm.c
+> +++ b/drivers/firmware/qcom/qcom_scm.c
+> @@ -122,4 +122,6 @@ static const u8 qcom_scm_cpu_warm_bits[QCOM_SCM_BOOT_MAX_CPUS] = {
+>   #define QCOM_DLOAD_MASK                GENMASK(5, 4)
+> -#define QCOM_DLOAD_FULLDUMP    0x1
+> -#define QCOM_DLOAD_NODUMP      0x0
+> +enum qcom_dload_mode {
+> +       QCOM_DLOAD_NODUMP       = 0,
+> +       QCOM_DLOAD_FULLDUMP     = 1,
+> +};
 
-This is a friendly reminder during the review process.
+Would it be fine, if i do it during when i add some more modes with
+minidump ?
 
-It seems my previous comments were not fully addressed. Maybe my
-feedback got lost between the quotes, maybe you just forgot to apply it.
-Please go back to the previous discussion and either implement all
-requested changes or keep discussing them.
+Please ack, otherwise, will send another version.
 
-Thank you.
+-Mukesh
 
-
-It does not look like you tested the bindings, at least after quick
-look. Please run `make dt_binding_check` (see
-Documentation/devicetree/bindings/writing-schema.rst for instructions).
-Maybe you need to update your dtschema and yamllint.
-
-
-Best regards,
-Krzysztof
-
+>   
+> 
+> 
+>>   static const char * const qcom_scm_convention_names[] = {
+>>   	[SMC_CONVENTION_UNKNOWN] = "unknown",
+>>   	[SMC_CONVENTION_ARM_32] = "smc arm 32",
+>> @@ -523,6 +529,7 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+>>   
+>>   static void qcom_scm_set_download_mode(bool enable)
+>>   {
+>> +	u32 val = enable ? QCOM_DLOAD_FULLDUMP : QCOM_DLOAD_NODUMP;
+>>   	bool avail;
+>>   	int ret = 0;
+>>   
+>> @@ -532,8 +539,9 @@ static void qcom_scm_set_download_mode(bool enable)
+>>   	if (avail) {
+>>   		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+>>   	} else if (__scm->dload_mode_addr) {
+>> -		ret = qcom_scm_io_writel(__scm->dload_mode_addr,
+>> -				enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
+>> +		ret = qcom_scm_io_rmw(__scm->dload_mode_addr,
+>> +					       QCOM_DLOAD_MASK,
+>> +					       FIELD_PREP(QCOM_DLOAD_MASK, val));
+>>   	} else {
+>>   		dev_err(__scm->dev,
+>>   			"No available mechanism for setting download mode\n");
+> 
+> - Elliot
