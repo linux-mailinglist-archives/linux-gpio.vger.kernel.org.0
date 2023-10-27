@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F39F7D967E
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 13:24:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B302A7D96B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 13:33:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbjJ0LYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Oct 2023 07:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60042 "EHLO
+        id S231572AbjJ0LdJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Oct 2023 07:33:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230101AbjJ0LYQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 07:24:16 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECA31B3;
-        Fri, 27 Oct 2023 04:24:13 -0700 (PDT)
+        with ESMTP id S231770AbjJ0LdG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 07:33:06 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA3F1AC;
+        Fri, 27 Oct 2023 04:33:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698405853; x=1729941853;
+  t=1698406385; x=1729942385;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=KPmjQF1ZqvViT3kYc13mgp+PgobpjuMwTCfo1SiwZS0=;
-  b=Kg+TQ4V+AfOC6Akm/AQ4y1qlN55ete+A+hA6aMOuw9bHcDwMarLJQZ4b
-   r1GPGzCVmKG9G9YRWTfMa6wyp/q8KXXxO3EeihB/+nnU/TPLELWdMuJcO
-   lQBJBArceU2oSAbf4T16r1AlfbC6r9c+r0VPQBEdicBIX0E31KpqDxPVV
-   PEe2labQHIrkJqG0TP2eecUS9C3pKqEwSJg9poMXJ3l1D7z/UuR7JdBtR
-   MAgJhb79nHz8T/ji8MDpvUA+qpdMvLXXsztK3bUnUJR3ERmappG1m8BA6
-   celE8GulBfRFSsyuvF36IxoarP9G4p1+LQR63V3hCowGnNLcA3KZyMYDc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="367967798"
+  bh=dRYmGR3I5MgS4CYaxSz229MI2vtrH0ER7fq+BA+NuSw=;
+  b=IRq+7+iuLpp+aOuNLs8AoySMCizgMlrwWTnLCfAp4d4ZSi0sfsxrd6/q
+   iGJ3Rt1jtyBJt1TCEt/b/3fHWttX7pt+gCkHoWoCPF+BF5FmsW4d4KpWq
+   kffNMXUd5l3VOKNt2zoiv9774lNm3zSgIBdgqHsNbhee9+A8jlygMW77O
+   ipGGDspjxvimZ5kPTy1GeqPdZ8uP9tNwoTkbqKPG73Zol8oF5KBQP4KuV
+   0tD+pLM/Vf7fRXKS0UbtXGgxE3YadFpF1JOccUh1fd2ff30HBwPCcQbxP
+   9mQzEVr//INsQMr9Rb4F8iG163Swz/t4neLZxrhOravlIf3g5xnfnBRGl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="9297396"
 X-IronPort-AV: E=Sophos;i="6.03,256,1694761200"; 
-   d="scan'208";a="367967798"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 04:24:13 -0700
+   d="scan'208";a="9297396"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 04:33:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="794549216"
+X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="825314891"
 X-IronPort-AV: E=Sophos;i="6.03,256,1694761200"; 
-   d="scan'208";a="794549216"
+   d="scan'208";a="825314891"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 04:24:10 -0700
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 04:33:01 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC3)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qwKwh-0000000984N-25aY;
-        Fri, 27 Oct 2023 14:24:07 +0300
-Date:   Fri, 27 Oct 2023 14:24:07 +0300
+        id 1qwL1o-0000000988M-2LVq;
+        Fri, 27 Oct 2023 14:29:24 +0300
+Date:   Fri, 27 Oct 2023 14:29:24 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linhua Xu <Linhua.xu@unisoc.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -53,41 +53,74 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         lh xu <xulh0829@gmail.com>,
         Zhirong Qiu <zhirong.qiu@unisoc.com>,
         Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Subject: Re: [PATCH V3 3/6] pinctrl: sprd: Move common and misc offset
- parameters to private data
-Message-ID: <ZTud17B4VeASo0os@smile.fi.intel.com>
+Subject: Re: [PATCH V3 1/6] pinctrl: sprd: Modify pull-up parameters
+Message-ID: <ZTufFGSJM+041nO6@smile.fi.intel.com>
 References: <20231027071426.17724-1-Linhua.xu@unisoc.com>
- <20231027071426.17724-4-Linhua.xu@unisoc.com>
+ <20231027071426.17724-2-Linhua.xu@unisoc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231027071426.17724-4-Linhua.xu@unisoc.com>
+In-Reply-To: <20231027071426.17724-2-Linhua.xu@unisoc.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 27, 2023 at 03:14:23PM +0800, Linhua Xu wrote:
+On Fri, Oct 27, 2023 at 03:14:21PM +0800, Linhua Xu wrote:
 > From: Linhua Xu <Linhua.Xu@unisoc.com>
 > 
-> For UNISOC pin controller, the offset values of the common
-> register and misc register will be different. So add SoC
-> structure in sprd_pinctrl_of_match() and parse it in sprd-pinctrl_core.
+> For UNISOC pin controller, there are three different configurations of
+> pull-up drive current. Modify the 20K pull-up resistor configuration and
+> add the 1.8K pull-up resistor configuration.
+
+> Fixes:<1fb4b907e808> ("pinctrl: sprd: Add Spreadtrum pin control driver")
+> 
+> Signed-off-by: Linhua Xu <Linhua.Xu@unisoc.com>
+
+I guess I already pointed out that there must not be blank lines in the tag
+block, besides that read "Submitting Patches" document to see how properly
+format the Fixes: tag.
 
 ...
 
-> +	priv_data = of_device_get_match_data(&pdev->dev);
-> +	if (!priv_data)
-> +		return -EINVAL;
+> -#define PULL_UP_4_7K			(BIT(12) | BIT(7))
+> +#define PULL_UP_1_8K			(BIT(12) | BIT(7))
+> +#define PULL_UP_4_7K			BIT(12)
+>  #define PULL_UP_20K			BIT(7)
 
-I believe there is the idea to make that API local to the device property core,
-so use device_get_match_data() instead.
+>  #define PULL_UP_MASK			0x21
+>  #define PULL_UP_SHIFT			7
+
+Basically these two repeat the above 1.8K case.
+But I see that you try to take care in the next patch about them.
+Still, the better is to use those _MASKs and _SHIFTs in the code.
+See below.
+
+...
+
+>  			if ((reg & (SLEEP_PULL_DOWN | SLEEP_PULL_UP)) ||
+> -			    (reg & (PULL_DOWN | PULL_UP_4_7K | PULL_UP_20K)))
+> +			    (reg & (PULL_DOWN | PULL_UP_4_7K | PULL_UP_20K | PULL_UP_1_8K)))
+
+			if ((reg & (SLEEP_PULL_DOWN | SLEEP_PULL_UP)) ||
+			    (reg & (PULL_DOWN | (PULL_UP_MASK << PULL_UP_SHIFT))))
+
+>  				return -EINVAL;
+
+...
+
+>  					mask = PULL_DOWN | PULL_UP_20K |
+> -						PULL_UP_4_7K;
+> +						PULL_UP_4_7K | PULL_UP_1_8K;
+
+					mask = PULL_DOWN | (PULL_UP_MASK << PULL_UP_SHIFT);
+
+Ditto.
 
 -- 
 With Best Regards,
