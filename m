@@ -2,69 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26C0D7D9173
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 10:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A38DF7D92D5
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 10:56:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231233AbjJ0I1X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Oct 2023 04:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42304 "EHLO
+        id S1345601AbjJ0I4c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Oct 2023 04:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231429AbjJ0I1W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 04:27:22 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72158196
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Oct 2023 01:27:19 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-50797cf5b69so2526232e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Oct 2023 01:27:19 -0700 (PDT)
+        with ESMTP id S1345544AbjJ0I4b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 04:56:31 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF9FBD
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Oct 2023 01:56:28 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-507bd64814fso2540944e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Oct 2023 01:56:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698395238; x=1699000038; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1698396987; x=1699001787; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iEujmnZvnql2e3y6grmwR8JxP8Ty2ZgJ3ybHB+Uf3EE=;
-        b=M5dENJLOifIGnPZeG5Q7QlH+6hIok3yVZPd5NQls9RbjC9uXIFwGa4egykZGIOVqV9
-         nHqPyn4VNgDuq2karaL9EoeZr4+Lm003/3jMjcPFx2vItCN7ecj+tWA5u5n/QLpRA2MU
-         ASv/QKDtOlopGLvP9RD80izJQXqqjaq8IHAmaMfVE7udgcaa5CkfYIgIlKKEZV9dddaJ
-         rcF15lrhehaAMKNN0GXtOCe6S2OfEMseAJPUEBCRLhkPdjZr+3o26JW/P4a9s58qC6vj
-         Fzp5rgufDb0daZ3CMzOSttD/V3HrWKGsnHXl8huw4dC8QzbheQReYooXl2GasItkT5ba
-         Jm5A==
+        bh=Y7nivA7Y4G+DJle+MuF/UdLNZEk2svAAlFKkW3ePDro=;
+        b=CDqkk7pmnlRuGYnnJs7zy9HYAvf5cc0OSHCstQSkR15zk1NNE6RjObrRavpLJ3uZe6
+         owVeLslPC/zl3zcjUUvecfBxXy5wpkZi1zGv49OgJpH8/6F3wKtqiS7QsScdB8tRQBE/
+         O/eYqlc6A5Fw1wT/A0thCUpQHZo76pDFsehnVXxQGo4q5avUdnx9o8meVtUv39dM861k
+         MuOl7ueJYumQym+g+tOanJLCZUtTtrGqTw6aJWWrpAYpxrOWO+2Tfp/BQRTaguL0vmR9
+         9iWNOogff7+gYa+Pvl6DqXIgy6QF8Qm1reJ3SNnkzFF/6bzxXdKE5WQdTg51cP1iTifC
+         zzQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698395238; x=1699000038;
+        d=1e100.net; s=20230601; t=1698396987; x=1699001787;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iEujmnZvnql2e3y6grmwR8JxP8Ty2ZgJ3ybHB+Uf3EE=;
-        b=SzC2vTy5Gf5fAF7OqWg7ImMmLAmkV/8/X0Zyq1U6Mb6pAfNLd19aunn+qryfS6Vae2
-         7p/SVJZz/QVSNAx1jZ3zilMHvTsg5JUc2NqKhdFtdOO2d8DnB6dGeloBNpAjQo/svoQ4
-         nMJXmdGT+umCXINCqbSj9hU6ye+UL5rR+jj8yhEGTJiqXV6VTI6UUhJboreC8+etmCUO
-         9jFDw+dd0Dkn25j4v3wm2X2lWjWJ6OHyhD63NbbAZUhW/tIktp6E1SoAvbxPGyRnBzhk
-         T5+6+bO5ocv3ltMEqjmSoKQiHWiBy1l9cLKGjx6nkyg9LNmnXnph84EkO84J9zNI2qKl
-         xMCQ==
-X-Gm-Message-State: AOJu0Yz9fk0yrJRql590UmVX7u4RkzryUr29m6cP2RdbZcj+VeHdqH4H
-        V/1Q/fbljyc3073S9R02TmeZIA==
-X-Google-Smtp-Source: AGHT+IG+Nt6cHKKNtrksds/BdbfNF6kOlfsvXlmyldkw6QhwS7xsJxjS9BRVAtUQgmFPUSOFXb6zsA==
-X-Received: by 2002:a05:6512:5cc:b0:503:7c0:ae96 with SMTP id o12-20020a05651205cc00b0050307c0ae96mr1313075lfo.20.1698395237738;
-        Fri, 27 Oct 2023 01:27:17 -0700 (PDT)
+        bh=Y7nivA7Y4G+DJle+MuF/UdLNZEk2svAAlFKkW3ePDro=;
+        b=eLvsRzYRvp8vrs76dvGjrkg17f4duUxK9m2yP35rsGW9C03RU83CanorRB3D5wSTkJ
+         pi0ZAU01tlePW3Ab+IYJvRKhc5jCHU2qAK3/b0W2k5IPm0WxOmzheP+Rgup3vP6PCb3y
+         RKLHvH0VkWFCKXovizbRUSGOLeGcUcqaHXke8pHv+u7494ymJlrDvE56JAPTCXW6An0N
+         u4p/tatkt/RbXVZbkVMSO0PrY6Pdf011nmyOyih5JXhzu0FBkvuUL+B9s6UUxoiagYiz
+         o0r007ZL8SpEpl/n6wWruT4mkGCHdA6qPDZtcCXKftc1KGxYHjJppDSZFj5rXznlDqmj
+         9+XA==
+X-Gm-Message-State: AOJu0Ywl/PeN7HO5yt1iIxTUPsRNDoX4B1O1DCYo2WH9NwOVk9ZIcNrF
+        TQX/WJg0PHzvMlflfYsYNYoL3Q==
+X-Google-Smtp-Source: AGHT+IF43FFbNCsmjCkp5cEvjMhNfSi05VarIu12T+ZPsQrSZwYLkT/LM0cEbyp+tEO1NBinGsEj1w==
+X-Received: by 2002:a19:5517:0:b0:500:b7ed:1055 with SMTP id n23-20020a195517000000b00500b7ed1055mr1125542lfe.56.1698396986962;
+        Fri, 27 Oct 2023 01:56:26 -0700 (PDT)
 Received: from [192.168.0.22] ([78.10.206.168])
-        by smtp.gmail.com with ESMTPSA id i14-20020a056512340e00b00502ae64f46asm184429lfr.126.2023.10.27.01.27.16
+        by smtp.gmail.com with ESMTPSA id f24-20020ac251b8000000b005079ff16d9fsm193169lfk.138.2023.10.27.01.56.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Oct 2023 01:27:17 -0700 (PDT)
-Message-ID: <de0164fa-d8c4-4b3c-9cb7-77cea9a6fe43@linaro.org>
-Date:   Fri, 27 Oct 2023 10:27:16 +0200
+        Fri, 27 Oct 2023 01:56:26 -0700 (PDT)
+Message-ID: <0ce0c283-3c1c-4dbe-8b0c-ff2e2d5420c9@linaro.org>
+Date:   Fri, 27 Oct 2023 10:56:24 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Add SC8380XP pinctrl driver
+Subject: Re: [RFC v5 5/5] dt-bindings: firmware: arm,scmi: Add support for
+ pinctrl protocol
 Content-Language: en-US
-To:     Sibi Sankar <quic_sibis@quicinc.com>, andersson@kernel.org,
-        konrad.dybcio@linaro.org, linus.walleij@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
-Cc:     agross@kernel.org, conor+dt@kernel.org, quic_rjendra@quicinc.com,
-        abel.vesa@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, quic_tsoni@quicinc.com,
-        neil.armstrong@linaro.org
-References: <20231025135058.11268-1-quic_sibis@quicinc.com>
- <20231025135058.11268-3-quic_sibis@quicinc.com>
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>
+Cc:     Cristian Marussi <cristian.marussi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
+ <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -110,39 +115,60 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231025135058.11268-3-quic_sibis@quicinc.com>
+In-Reply-To: <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/10/2023 15:50, Sibi Sankar wrote:
-> From: Rajendra Nayak <quic_rjendra@quicinc.com>
+On 27/10/2023 08:28, Oleksii Moisieiev wrote:
+> Add new SCMI v3.2 pinctrl protocol bindings definitions and example.
 > 
-> Add initial pinctrl driver to support pin configuration with pinctrl
-> framework for SC8380XP SoC.
+> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
 > 
-> Co-developed-by: Abel Vesa <abel.vesa@linaro.org>
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> Signed-off-by: Rajendra Nayak <quic_rjendra@quicinc.com>
-> Co-developed-by: Sibi Sankar <quic_sibis@quicinc.com>
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
 > ---
->  drivers/pinctrl/qcom/Kconfig.msm        |   10 +
->  drivers/pinctrl/qcom/Makefile           |    1 +
->  drivers/pinctrl/qcom/pinctrl-sc8380xp.c | 1876 +++++++++++++++++++++++
->  3 files changed, 1887 insertions(+)
->  create mode 100644 drivers/pinctrl/qcom/pinctrl-sc8380xp.c
+> Changes v3 -> v4
+>   - reworked protocol@19 format
+> ---
+>  .../bindings/firmware/arm,scmi.yaml           | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> index 5824c43e9893..5318fe72354e 100644
+> --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> @@ -233,6 +233,39 @@ properties:
+>        reg:
+>          const: 0x18
+>  
+> +  protocol@19:
+> +    type: object
+> +    allOf:
+> +      - $ref: "#/$defs/protocol-node"
+> +      - $ref: "../pinctrl/pinctrl.yaml"
+
+This is a friendly reminder during the review process.
+
+It seems my previous comments were not fully addressed. Maybe my
+feedback got lost between the quotes, maybe you just forgot to apply it.
+Please go back to the previous discussion and either implement all
+requested changes or keep discussing them.
+
+Thank you.
 
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+It does not look like you tested the bindings, at least after quick
+look. Please run `make dt_binding_check` (see
+Documentation/devicetree/bindings/writing-schema.rst for instructions).
+Maybe you need to update your dtschema and yamllint.
+
 
 Best regards,
 Krzysztof
