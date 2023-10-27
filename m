@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B302A7D96B4
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 13:33:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6843E7D96B2
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 13:33:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231572AbjJ0LdJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Oct 2023 07:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56546 "EHLO
+        id S229633AbjJ0LdC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Oct 2023 07:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231770AbjJ0LdG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 07:33:06 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA3F1AC;
-        Fri, 27 Oct 2023 04:33:04 -0700 (PDT)
+        with ESMTP id S231493AbjJ0LdB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 07:33:01 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FAD1B3;
+        Fri, 27 Oct 2023 04:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698406385; x=1729942385;
+  t=1698406379; x=1729942379;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=dRYmGR3I5MgS4CYaxSz229MI2vtrH0ER7fq+BA+NuSw=;
-  b=IRq+7+iuLpp+aOuNLs8AoySMCizgMlrwWTnLCfAp4d4ZSi0sfsxrd6/q
-   iGJ3Rt1jtyBJt1TCEt/b/3fHWttX7pt+gCkHoWoCPF+BF5FmsW4d4KpWq
-   kffNMXUd5l3VOKNt2zoiv9774lNm3zSgIBdgqHsNbhee9+A8jlygMW77O
-   ipGGDspjxvimZ5kPTy1GeqPdZ8uP9tNwoTkbqKPG73Zol8oF5KBQP4KuV
-   0tD+pLM/Vf7fRXKS0UbtXGgxE3YadFpF1JOccUh1fd2ff30HBwPCcQbxP
-   9mQzEVr//INsQMr9Rb4F8iG163Swz/t4neLZxrhOravlIf3g5xnfnBRGl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="9297396"
+  bh=OApmSqXXZbIaoiJzOhkxdZnJfAMT4marLH+AGdbwU0U=;
+  b=hrGvThSgf5j0kiHxvHzeJLH2MLAX+tT4BhPJsDaDIOQPVbIa/yvc6x49
+   2ri7Jl2XyePxQVXKzjKTFSFN41D2WmZo4NBn1dsX7ZDozDm/80aacqytU
+   LWvfi+XLvYI+2XiedIQm6s9OcRe1CQQa6O28nvQJw+6O22skolcPNc6fj
+   DqA/7mRX6ORkdx+xBPD383mABo5C6ZxnCKRNtOC2PB282dJSBLiKgMXJe
+   wjz1TndIgZK4/WeVQW7fAytnnmfRj5I+Z+yASljb6kt50J5aIz5tPDRG2
+   vRi21ZWX+CVpyR3jtSWgBnRXujIoJ1sb0vKeFjrL1mgRPO3yBG0bLLfI+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="451997562"
 X-IronPort-AV: E=Sophos;i="6.03,256,1694761200"; 
-   d="scan'208";a="9297396"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 04:33:04 -0700
+   d="scan'208";a="451997562"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 04:32:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="825314891"
+X-IronPort-AV: E=McAfee;i="6600,9927,10875"; a="883160448"
 X-IronPort-AV: E=Sophos;i="6.03,256,1694761200"; 
-   d="scan'208";a="825314891"
+   d="scan'208";a="883160448"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 04:33:01 -0700
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2023 04:32:56 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC3)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qwL1o-0000000988M-2LVq;
-        Fri, 27 Oct 2023 14:29:24 +0300
-Date:   Fri, 27 Oct 2023 14:29:24 +0300
+        id 1qwL5B-000000098Aj-35H6;
+        Fri, 27 Oct 2023 14:32:53 +0300
+Date:   Fri, 27 Oct 2023 14:32:53 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linhua Xu <Linhua.xu@unisoc.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -53,74 +53,63 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         lh xu <xulh0829@gmail.com>,
         Zhirong Qiu <zhirong.qiu@unisoc.com>,
         Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Subject: Re: [PATCH V3 1/6] pinctrl: sprd: Modify pull-up parameters
-Message-ID: <ZTufFGSJM+041nO6@smile.fi.intel.com>
+Subject: Re: [PATCH V3 2/6] pinctrl: sprd: Fix the incorrect mask and shift
+ definition
+Message-ID: <ZTuf5fk8PV/LqHwr@smile.fi.intel.com>
 References: <20231027071426.17724-1-Linhua.xu@unisoc.com>
- <20231027071426.17724-2-Linhua.xu@unisoc.com>
+ <20231027071426.17724-3-Linhua.xu@unisoc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231027071426.17724-2-Linhua.xu@unisoc.com>
+In-Reply-To: <20231027071426.17724-3-Linhua.xu@unisoc.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 27, 2023 at 03:14:21PM +0800, Linhua Xu wrote:
+On Fri, Oct 27, 2023 at 03:14:22PM +0800, Linhua Xu wrote:
 > From: Linhua Xu <Linhua.Xu@unisoc.com>
 > 
-> For UNISOC pin controller, there are three different configurations of
-> pull-up drive current. Modify the 20K pull-up resistor configuration and
-> add the 1.8K pull-up resistor configuration.
+> Pull-up and pull-down are mutually exclusive. When setting one of them,
+> the bit of the other needs to be clear. Now, there are cases where pull-up
+> and pull-down are set at the same time in the code, thus fix them.
+
+...
 
 > Fixes:<1fb4b907e808> ("pinctrl: sprd: Add Spreadtrum pin control driver")
 > 
 > Signed-off-by: Linhua Xu <Linhua.Xu@unisoc.com>
 
-I guess I already pointed out that there must not be blank lines in the tag
-block, besides that read "Submitting Patches" document to see how properly
-format the Fixes: tag.
+Same comment  about the Fixes: tag.
 
 ...
 
-> -#define PULL_UP_4_7K			(BIT(12) | BIT(7))
-> +#define PULL_UP_1_8K			(BIT(12) | BIT(7))
-> +#define PULL_UP_4_7K			BIT(12)
->  #define PULL_UP_20K			BIT(7)
+> -#define SLEEP_PULL_DOWN_MASK		0x1
+> +#define SLEEP_PULL_DOWN_MASK		GENMASK(1, 0)
+>  #define SLEEP_PULL_DOWN_SHIFT		2
 
->  #define PULL_UP_MASK			0x21
->  #define PULL_UP_SHIFT			7
+No, this is an incorrect (prone to errors and confusion) change.
+You need to introduce new mask for both of them and use in the code.
 
-Basically these two repeat the above 1.8K case.
-But I see that you try to take care in the next patch about them.
-Still, the better is to use those _MASKs and _SHIFTs in the code.
-See below.
+#define SLEEP_PULL_UP_DOWN_MASK		GENMASK(1, 0)
+#define SLEEP_PULL_UP_DOWN_SHIFT	2
 
 ...
 
->  			if ((reg & (SLEEP_PULL_DOWN | SLEEP_PULL_UP)) ||
-> -			    (reg & (PULL_DOWN | PULL_UP_4_7K | PULL_UP_20K)))
-> +			    (reg & (PULL_DOWN | PULL_UP_4_7K | PULL_UP_20K | PULL_UP_1_8K)))
-
-			if ((reg & (SLEEP_PULL_DOWN | SLEEP_PULL_UP)) ||
-			    (reg & (PULL_DOWN | (PULL_UP_MASK << PULL_UP_SHIFT))))
-
->  				return -EINVAL;
-
-...
-
->  					mask = PULL_DOWN | PULL_UP_20K |
-> -						PULL_UP_4_7K;
-> +						PULL_UP_4_7K | PULL_UP_1_8K;
-
-					mask = PULL_DOWN | (PULL_UP_MASK << PULL_UP_SHIFT);
+> -#define PULL_DOWN_MASK			0x1
+> +#define PULL_DOWN_MASK			(GENMASK(1, 0) | BIT(6))
+>  #define PULL_DOWN_SHIFT			6
 
 Ditto.
+
+#define PULL_UP_DOWN_MASK		(GENMASK(1, 0) | BIT(6))
+#define PULL_UP_DOWN_SHIFT		6
 
 -- 
 With Best Regards,
