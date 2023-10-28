@@ -2,86 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54C167DA28A
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Oct 2023 23:36:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 261F87DA70D
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Oct 2023 15:05:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235062AbjJ0Vgd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Oct 2023 17:36:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
+        id S229454AbjJ1NFa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 28 Oct 2023 09:05:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235083AbjJ0Vgc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Oct 2023 17:36:32 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AC91B5;
-        Fri, 27 Oct 2023 14:36:30 -0700 (PDT)
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6c4a25f6390so1662410a34.2;
-        Fri, 27 Oct 2023 14:36:30 -0700 (PDT)
+        with ESMTP id S229521AbjJ1NF3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Oct 2023 09:05:29 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8415E0
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Oct 2023 06:05:25 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2c518a1d83fso45623831fa.3
+        for <linux-gpio@vger.kernel.org>; Sat, 28 Oct 2023 06:05:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698498324; x=1699103124; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q7REDLfQsAJ7SndjWElaiqS1d/sO15e1fwlkWpCSSgw=;
+        b=BifJbxzZaHymXPjwPjLh1ve4DxlSJA2V7NuNHazcXuy74j7I6jMT02rm9eCQF+wuHW
+         /dCEhHKdSKOZJ5B+JwDGVmKf8xcNtbqGEgie+I/sVUYoxtVFIeN3ntKHkkE/oHtS5OxI
+         OHnk47HLT+nDRQY6goIKyYM5yLQC18OMgCmwveXjKbdh8iOVZj5q6v8SFDNT6J2K9HIk
+         DC+6G6p8JqnLkPe+uvA+iR+AAXk7BiFAZLEIDM4qL0d/U+Z4/eznnDrotbnXdgLsR5bf
+         XaQhvesybQ8FX5VCKQ7e5CaUF6WbpPfZgIkU2U3960YG4UDXmWailYfakZhKCfQ/qhdj
+         Bb8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698442589; x=1699047389;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DOW1gEyiWmEb/ezKdyTSa7aCrvLtzejrHPgIEGPvmy0=;
-        b=jpfDoL2cTkyHz5rWEBU3ywhoBa9r4fkAO0Qy2gAgOJ6TRf7+qzGo7Y//i6TyIyvOMq
-         f+rQQb03PMaDbqW5kwpvMI8pOhtETPT2FCnyPcMDH8lKlnhOnu9taQL/YU6WoN4ReAYp
-         k2LLQYoc9+iKvSRbOOL+kHJDWB7w539mHIHNnqWXiLj75795K1G6Oor1oXHu+yA7vq8y
-         qP4HofdYGxcwM4g7cHoi9FlcqfrhlIAakGmhAxq4M3CHi9J5MpOMj6hqzA7TbGzHKdCY
-         Fu72jE7+6SAW5B46t9D6owvfsQ9M4M613JMPOm3RQ5J5UtzY6cr0mmjQp5f3AFDqUi4B
-         UtPQ==
-X-Gm-Message-State: AOJu0YxCna6n3v9c+MK7C1xZFihCtEVFeJNRO7xxwRx9uMQJO707vOBX
-        7fWbq0NDcmRhbD+5obnkuw==
-X-Google-Smtp-Source: AGHT+IFip7ODb1zb61QmrdBN36ulxahgE6GgTEI4aD6ID2yrNuo5bR0hxSJHwxDIywoUx9LZKxej8A==
-X-Received: by 2002:a05:6830:2b23:b0:6b4:5ed3:8246 with SMTP id l35-20020a0568302b2300b006b45ed38246mr5754653otv.2.1698442589625;
-        Fri, 27 Oct 2023 14:36:29 -0700 (PDT)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id m6-20020a05683026c600b006b9e872c0a0sm411926otu.68.2023.10.27.14.36.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 14:36:28 -0700 (PDT)
-Received: (nullmailer pid 3413620 invoked by uid 1000);
-        Fri, 27 Oct 2023 21:36:27 -0000
-Date:   Fri, 27 Oct 2023 16:36:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-arm-msm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom,sm8650-lpass-lpi-pinctrl:
- add SM8650 LPASS
-Message-ID: <169844258726.3413571.7068196166115912913.robh@kernel.org>
-References: <20231027093615.140656-1-krzysztof.kozlowski@linaro.org>
- <20231027093615.140656-2-krzysztof.kozlowski@linaro.org>
+        d=1e100.net; s=20230601; t=1698498324; x=1699103124;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q7REDLfQsAJ7SndjWElaiqS1d/sO15e1fwlkWpCSSgw=;
+        b=FeSNh5x6isNsHDmWGmdtBFguSACqFiiEhTbHbpvhgchyQWovgYqumRsUdu9lU7ghl+
+         P8Gs4dOAUK2G2CbSufsQZqM5ZOozHILg+wlSni/369QK7fQWDu6l6uxJuJc6qHYeEAmp
+         SB37f8mEbFXwDPCqMVLkR6OiQiCAJJl7K7VBFsxWnFaumVSJWuyqg0jY4GRaCy87fe8u
+         JcAMHJagnE4tLgcnrk11BgEPkSHgs+81H/RLbMk1EsArnw6wGSx94qtP42E/6DGnp7wS
+         4J6VX1qFgUocHJFZ0lnHbGIqlXmLn4tAx5qojo5Nj4RLEp5Z0SLrwZYzJ78znioOkR7C
+         ATvQ==
+X-Gm-Message-State: AOJu0YxoP6e4//FLKq9sbHgAT+qMoBn/VxQ4hSSvfAMDmxqYUc/CRPUb
+        teEeyGOpq1Dg6X/xmm4yiwPx2g==
+X-Google-Smtp-Source: AGHT+IEff08NZ+taaIxvODn3ijskDQen0I7LF1xmT9yvVdzmz0sGH6Mjy906q4wa1YMvfHtWuelFLQ==
+X-Received: by 2002:a2e:a70f:0:b0:2c0:293c:ad12 with SMTP id s15-20020a2ea70f000000b002c0293cad12mr3226120lje.17.1698498323978;
+        Sat, 28 Oct 2023 06:05:23 -0700 (PDT)
+Received: from [192.168.130.123] (178235177183.dynamic-4-waw-k-1-1-0.vectranet.pl. [178.235.177.183])
+        by smtp.gmail.com with ESMTPSA id z21-20020a2e8415000000b002b6ce8b0dd6sm618828ljg.75.2023.10.28.06.05.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Oct 2023 06:05:23 -0700 (PDT)
+Message-ID: <42fa773d-b58a-4bd9-b12d-3e9931d2ae6c@linaro.org>
+Date:   Sat, 28 Oct 2023 15:05:21 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231027093615.140656-2-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] pinctrl: qcom: sm8650-lpass-lpi: add SM8650 LPASS
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231027093615.140656-1-krzysztof.kozlowski@linaro.org>
+ <20231027093615.140656-3-krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20231027093615.140656-3-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On Fri, 27 Oct 2023 11:36:14 +0200, Krzysztof Kozlowski wrote:
-> Add bindings for the pin controller in Low Power Audio SubSystem (LPASS)
+On 27.10.2023 11:36, Krzysztof Kozlowski wrote:
+> Add driver for the pin controller in Low Power Audio SubSystem (LPASS)
 > of Qualcomm SM8650 SoC.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../qcom,sm8650-lpass-lpi-pinctrl.yaml        | 148 ++++++++++++++++++
->  1 file changed, 148 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8650-lpass-lpi-pinctrl.yaml
+> Notable differences against SM8550 LPASS pin controller:
+> 1. Additional address space for slew rate thus driver uses
+>    LPI_FLAG_SLEW_RATE_SAME_REG and sets slew rate via different
+>    register.
 > 
+> 2. Two new pin mux functions: qca_swr_clk and qca_swr_data
+Hmmm so slimbus is entirely removed on 8650?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Diffing it against 8550, looks sane
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
