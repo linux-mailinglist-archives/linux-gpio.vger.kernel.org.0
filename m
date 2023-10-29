@@ -2,45 +2,45 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A577A7DB06A
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Oct 2023 00:06:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6FA07DB0F2
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Oct 2023 00:24:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231653AbjJ2XGY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Oct 2023 19:06:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
+        id S232085AbjJ2XYk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Oct 2023 19:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231924AbjJ2XFs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Oct 2023 19:05:48 -0400
+        with ESMTP id S232252AbjJ2XY2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Oct 2023 19:24:28 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DAAE1BF0;
-        Sun, 29 Oct 2023 16:00:11 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F38F2C433CB;
-        Sun, 29 Oct 2023 22:58:55 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6A8C6F86;
+        Sun, 29 Oct 2023 16:01:47 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09072C116B2;
+        Sun, 29 Oct 2023 22:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698620336;
-        bh=N2GhLGzvByo70gknAYMVbehs0LxfFZF6ASb0Ij8w2og=;
+        s=k20201202; t=1698620400;
+        bh=FMQrM8rvPb+BR3jkz89P0nM8HxUUIDo2skSSGYxw9PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WTFNni1K6v1zcpyRMzGk+wszYAlfBybWkMi7AgktT5qC+Fw3l6bm+a7WHNNcR1WXR
-         vi2MblA8ziLP6x10qV6AEt55ubquVixfUnUBZC8jFbX1dpRepcyizCeuCGheCafLyR
-         aiNi3bs6AaPWO3x2p3lrEEIQ8cql+z0FQfxnpneYYfZYqI0cP+GKsKRtCh7EW/ufDF
-         8P9+o+5HQTIv4ud6kpZvX6WANf9q5LLsWwJxMMWe/1lkO/w+6fMVl71xIt4Gi4qxf1
-         GkiEgcKU/BKFv5NOTLNhEo81QvZmSQlFAkepoEmaReRH32Zk0bNcfozWC4MC4NUN6J
-         FRR+DhRrtrrJw==
+        b=E5k88aQYiKsD1kwxHo0MottDmDlsK5cds5G8c5aOM01lW90RN5Su55HYxssMiWPl9
+         lg2uoFz8OIrdBDJJaQ0ArhtupBh0jicOAo2aYTCPXajVBvhRz60VtZiL5w/0Ivispl
+         iUyqM6q+RJo7MDTCIVkal0LeBgcs3og5n/M7mzPfqtYsjlbARYmI78wizR+lnxmxEw
+         m6Ivyy/AsPgx8jt82vhzkaqQXOFu8uLVbxc/LMHw1nR+qo8j0Q3ffANMzINwK8J8J9
+         470VtLfINvA0xC5GqXFDr59imC2mJkkUqtebmeQOxH8JZpbl1difquXRyhswx1f5B5
+         51+efl/MUWxTA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 38/39] Revert "pinctrl: avoid unsafe code pattern in find_pinctrl()"
-Date:   Sun, 29 Oct 2023 18:57:10 -0400
-Message-ID: <20231029225740.790936-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 28/28] Revert "pinctrl: avoid unsafe code pattern in find_pinctrl()"
+Date:   Sun, 29 Oct 2023 18:59:03 -0400
+Message-ID: <20231029225916.791798-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231029225740.790936-1-sashal@kernel.org>
-References: <20231029225740.790936-1-sashal@kernel.org>
+In-Reply-To: <20231029225916.791798-1-sashal@kernel.org>
+References: <20231029225916.791798-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.60
+X-stable-base: Linux 5.15.137
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -82,7 +82,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 27e41873c04ff..9e57f4c62e609 100644
+index 17c6931211c65..ffe39336fcaca 100644
 --- a/drivers/pinctrl/core.c
 +++ b/drivers/pinctrl/core.c
 @@ -1007,20 +1007,17 @@ static int add_setting(struct pinctrl *p, struct pinctrl_dev *pctldev,
