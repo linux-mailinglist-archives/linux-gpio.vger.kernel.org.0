@@ -2,147 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 232C37DA760
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Oct 2023 15:44:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 485CC7DB1A3
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Oct 2023 01:02:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbjJ1Nny (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 28 Oct 2023 09:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59434 "EHLO
+        id S229795AbjJ3ACh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Oct 2023 20:02:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230064AbjJ1NWV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 28 Oct 2023 09:22:21 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29B210A
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Oct 2023 06:22:18 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-507a55302e0so3969219e87.0
-        for <linux-gpio@vger.kernel.org>; Sat, 28 Oct 2023 06:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698499337; x=1699104137; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=E6pdZ2aO7b/DBuGDGSOI5y96/5iv9R+X1Oz+3eai3ok=;
-        b=hS/3xj0C1OacD/bsuv3/FLrDLxotoWEw9Ef0PbZn6O0ixBSS62V99OCS+Cm5jPWXWw
-         1kgEjkgsokMdA01V8EL/IfLha9hh1u1HPtWNCt8FC8JmU4Fnn30IJ6+PDS1SpXp/yaw4
-         Lkc8sEQSYPhUAfb4Vqd4rcoksTk+4+qPI9FYYT9EfOePcs+0C7/14kkCPOqV2TcJVl8j
-         D9ZAeckrkbtOyFTg8GJ5J0KiI/Zj/w1FSm6PSozdTjX2uW13JvMs8dfAOKvf0rHWg6zf
-         UlKLoL2deZaoYY/s4tOYW7Pejn90y55DUfwt1/QgOmxTCKwYy92LzigVCfbvl9P39is1
-         J5Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698499337; x=1699104137;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E6pdZ2aO7b/DBuGDGSOI5y96/5iv9R+X1Oz+3eai3ok=;
-        b=Vr52o9JSv9mevT6L0N8ZsUlZOJJ2k4LmcylEsyKXifwcU33Fpu8wW6S4SE3uDNaavM
-         BDDWaEjhGiWQSshVAO9zEWYKBwbjYblryAILiMkR01sAnxyy6K+yTt6mSfkarJxTVV8s
-         T40jCCYK1Zk3FcTojPpq+JivceOTSf5zpwYITgrQHcnHrH8zxlEmNU4gMXKRVNKtG+K9
-         A0F12/4Z/tpnv+kVIS3e2cA8o9ZItRaJegfkyL/u9AfzlFOZdf0zfyvCM2H5DuvI2Uhq
-         uVDOd45ZuG4wFV4gxTG3wPmN9bf/GMk+5eEdBzmpPk2FhFbiNvE5s44tCITFsgeL1aAr
-         IClg==
-X-Gm-Message-State: AOJu0YxZRr9TFdwAPVpCItzbvYtuu1IgsY1DlTisWfE2mn0znACj6vXy
-        dYVyh8AZh9HVxbgbMpnDoLagtA==
-X-Google-Smtp-Source: AGHT+IE0R3d+X38ySMp+r2Oc1WdHuTCVp+cuogvftVJkW1ddwVa5XisoXzYmVnWm4VN29UV31jKb8w==
-X-Received: by 2002:a19:8c0f:0:b0:503:1783:d5a9 with SMTP id o15-20020a198c0f000000b005031783d5a9mr3214741lfd.3.1698499337060;
-        Sat, 28 Oct 2023 06:22:17 -0700 (PDT)
-Received: from [192.168.0.22] ([78.10.206.168])
-        by smtp.gmail.com with ESMTPSA id z12-20020a19504c000000b00507b869b068sm662877lfj.302.2023.10.28.06.22.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Oct 2023 06:22:16 -0700 (PDT)
-Message-ID: <ff0577a5-a46a-4f0c-ad7d-5db8e61cae70@linaro.org>
-Date:   Sat, 28 Oct 2023 15:22:15 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] pinctrl: qcom: sm8650-lpass-lpi: add SM8650 LPASS
-Content-Language: en-US
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
+        with ESMTP id S230481AbjJ3ACg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Oct 2023 20:02:36 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F89110C8;
+        Sun, 29 Oct 2023 15:57:55 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1BBC433B6;
+        Sun, 29 Oct 2023 22:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698620225;
+        bh=quEiwnh0HWwxQJhsPx6tXqzN6tx0b2hgZcdHoPkuRJY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Aq8DlL55Cs4OCyyynaq5Kp6zNME7yhllx5ZmLFIdfqc1+NO4MTnevhzzsObKIxRji
+         pq1KNX9FBAyCBm5m0QBYPczQpZzLp2/JRJRexzXa+ECY8eFI2NBQYMUQB39a3lVSDL
+         ZMv+pALhNcppmUtXntxpGjKyP+jMA8SsebRp7wEImhb8GhOUudIOGf6EIzs+/V/B6d
+         AVR+cHaexC6EZkXHArkDEJfySRBJ81AochyeC4m4Opr7Oglgtfns1U0DchP9Qp+r4x
+         uCQm8mYbGiwzd2icIgDjF/cWOodlw83S3HVI/ox65S6KiThXyI8fTka1duHkDOTuuu
+         3zkTEeXqUZSCA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231027093615.140656-1-krzysztof.kozlowski@linaro.org>
- <20231027093615.140656-3-krzysztof.kozlowski@linaro.org>
- <42fa773d-b58a-4bd9-b12d-3e9931d2ae6c@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <42fa773d-b58a-4bd9-b12d-3e9931d2ae6c@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.5 51/52] Revert "pinctrl: avoid unsafe code pattern in find_pinctrl()"
+Date:   Sun, 29 Oct 2023 18:53:38 -0400
+Message-ID: <20231029225441.789781-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231029225441.789781-1-sashal@kernel.org>
+References: <20231029225441.789781-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.5.9
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/10/2023 15:05, Konrad Dybcio wrote:
-> On 27.10.2023 11:36, Krzysztof Kozlowski wrote:
->> Add driver for the pin controller in Low Power Audio SubSystem (LPASS)
->> of Qualcomm SM8650 SoC.
->>
->> Notable differences against SM8550 LPASS pin controller:
->> 1. Additional address space for slew rate thus driver uses
->>    LPI_FLAG_SLEW_RATE_SAME_REG and sets slew rate via different
->>    register.
->>
->> 2. Two new pin mux functions: qca_swr_clk and qca_swr_data
-> Hmmm so slimbus is entirely removed on 8650?
-> 
-> Diffing it against 8550, looks sane
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-No, the slimbus functions were there as well.
+[ Upstream commit 62140a1e4dec4594d5d1e1d353747bf2ef434e8b ]
 
-Best regards,
-Krzysztof
+The commit breaks MMC enumeration on the Intel Merrifield
+plaform.
+
+Before:
+[   36.439057] mmc0: SDHCI controller on PCI [0000:00:01.0] using ADMA
+[   36.450924] mmc2: SDHCI controller on PCI [0000:00:01.3] using ADMA
+[   36.459355] mmc1: SDHCI controller on PCI [0000:00:01.2] using ADMA
+[   36.706399] mmc0: new DDR MMC card at address 0001
+[   37.058972] mmc2: new ultra high speed DDR50 SDIO card at address 0001
+[   37.278977] mmcblk0: mmc0:0001 H4G1d 3.64 GiB
+[   37.297300]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
+
+After:
+[   36.436704] mmc2: SDHCI controller on PCI [0000:00:01.3] using ADMA
+[   36.436720] mmc1: SDHCI controller on PCI [0000:00:01.0] using ADMA
+[   36.463685] mmc0: SDHCI controller on PCI [0000:00:01.2] using ADMA
+[   36.720627] mmc1: new DDR MMC card at address 0001
+[   37.068181] mmc2: new ultra high speed DDR50 SDIO card at address 0001
+[   37.279998] mmcblk1: mmc1:0001 H4G1d 3.64 GiB
+[   37.302670]  mmcblk1: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
+
+This reverts commit c153a4edff6ab01370fcac8e46f9c89cca1060c2.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20231017141806.535191-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/core.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index b84781cfc2596..401886c813449 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1012,20 +1012,17 @@ static int add_setting(struct pinctrl *p, struct pinctrl_dev *pctldev,
+ 
+ static struct pinctrl *find_pinctrl(struct device *dev)
+ {
+-	struct pinctrl *entry, *p = NULL;
++	struct pinctrl *p;
+ 
+ 	mutex_lock(&pinctrl_list_mutex);
+-
+-	list_for_each_entry(entry, &pinctrl_list, node) {
+-		if (entry->dev == dev) {
+-			p = entry;
+-			kref_get(&p->users);
+-			break;
++	list_for_each_entry(p, &pinctrl_list, node)
++		if (p->dev == dev) {
++			mutex_unlock(&pinctrl_list_mutex);
++			return p;
+ 		}
+-	}
+ 
+ 	mutex_unlock(&pinctrl_list_mutex);
+-	return p;
++	return NULL;
+ }
+ 
+ static void pinctrl_free(struct pinctrl *p, bool inlist);
+@@ -1133,6 +1130,7 @@ struct pinctrl *pinctrl_get(struct device *dev)
+ 	p = find_pinctrl(dev);
+ 	if (p) {
+ 		dev_dbg(dev, "obtain a copy of previously claimed pinctrl\n");
++		kref_get(&p->users);
+ 		return p;
+ 	}
+ 
+-- 
+2.42.0
 
