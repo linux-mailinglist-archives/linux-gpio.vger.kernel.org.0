@@ -2,57 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9B807DBB6B
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Oct 2023 15:10:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E11197DBB7E
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Oct 2023 15:14:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbjJ3OKs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Oct 2023 10:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44184 "EHLO
+        id S231919AbjJ3OOL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Oct 2023 10:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjJ3OKr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Oct 2023 10:10:47 -0400
+        with ESMTP id S231433AbjJ3OOL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Oct 2023 10:14:11 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3211BC0;
-        Mon, 30 Oct 2023 07:10:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11865C1;
+        Mon, 30 Oct 2023 07:14:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698675045; x=1730211045;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vyhDZlVvoZgL6YwfFJ3a7ANMHT3BRYGYddeuTV3c88M=;
-  b=OWRPlBzO/vAFBGa+eEZ3QHkTDA8kmX44//2c4TcMUnt8SWkywDPwsl2A
-   Y87JOEryje7DSCt2SlrzvDsH9ILUfEy6jv6/Oj7LdmdB66HEK1+aCxzH0
-   0yDovpUXRYRpg4HAhkoXdj6zdR57ogqyi7Hj2BeizTx50sM8O0l3nU+kh
-   +L3rrnFqGNKV1Gt6CFS/nEFgb+MXac898IbD0tOPqKgJOycurV2pX3mOb
-   htBFly13rsbQyQGQvoo08fZWA3nbGyryw6ms3p8hiBiogDTBl03pYwJI1
-   ZlHKQtDtx8sW2TBtNsIHtvsP4hj2VhNTatjLGN9GkED8I2ewqU8xSsgqQ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="378447164"
+  t=1698675249; x=1730211249;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RbRt9CJjjdF4MIbpEP7sGvcVuzygZE5pqZR+8QLCnEA=;
+  b=D0idpo8NTe+Cv6kdMGnIgcnmNSkUv5jzPnZh77sSzZtKdrHnHFgRK917
+   4MzmcaaDtMFY013yxqpZmr5T70BrXVi6JlWwjeWzZPzMkn6D1BlUTFhd3
+   TKT96YgrtPH0UOFrnuVVssEELH79O1MU0HCrZcJrXRZwFJW03Jxw5aSzb
+   AgE0gL0mXcgn5ZGxRO++jGb9CPrJByujbNYeTaQ7EAC0qIQEEsvFNsRvn
+   8tUkeLR4ryTR+BZAoiN/WkhUk4AEn3Nj5yiK7HlENDFzDorQzXRT37L2P
+   fGU6AqwvBsUmuklh33Uiwd/cTCWrrMezgn6wqGuvI7NZeB2GswausTO6R
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="378447803"
 X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
-   d="scan'208";a="378447164"
+   d="scan'208";a="378447803"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 07:10:44 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 07:14:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="710102224"
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="710104216"
 X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
-   d="scan'208";a="710102224"
+   d="scan'208";a="710104216"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 30 Oct 2023 07:10:42 -0700
+  by orsmga003.jf.intel.com with ESMTP; 30 Oct 2023 07:14:06 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 95163331; Mon, 30 Oct 2023 16:10:40 +0200 (EET)
+        id 03883330; Mon, 30 Oct 2023 16:14:04 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Raag Jadav <raag.jadav@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andy@kernel.org>,
+        Raag Jadav <raag.jadav@intel.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 3/3] pinctrl: intel: Add ACPI ID to the generic platform driver
-Date:   Mon, 30 Oct 2023 16:10:34 +0200
-Message-Id: <20231030141034.3241674-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: tangier: Enable 910 Ohm bias
+Date:   Mon, 30 Oct 2023 16:14:04 +0200
+Message-Id: <20231030141404.3242102-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
-In-Reply-To: <20231030141034.3241674-1-andriy.shevchenko@linux.intel.com>
-References: <20231030141034.3241674-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -65,27 +63,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The INTC105F is an ACPI _CID that reflects compatibility with
-the _DSD shema supported by the generic Intel pin control
-platform driver. Add it there.
+Family 7 (I2C) supports special bias value, i.e. 910 Ohm.
+
+Enable it for configuring pin.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-intel-platform.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/intel/pinctrl-tangier.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel-platform.c b/drivers/pinctrl/intel/pinctrl-intel-platform.c
-index 2305d8befdd3..5605583b1a34 100644
---- a/drivers/pinctrl/intel/pinctrl-intel-platform.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel-platform.c
-@@ -203,6 +203,7 @@ static int intel_platform_pinctrl_probe(struct platform_device *pdev)
- }
- 
- static const struct acpi_device_id intel_platform_pinctrl_acpi_match[] = {
-+	{ "INTC105F" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, intel_platform_pinctrl_acpi_match);
+diff --git a/drivers/pinctrl/intel/pinctrl-tangier.c b/drivers/pinctrl/intel/pinctrl-tangier.c
+index 40dd60c9e526..007bca1cf224 100644
+--- a/drivers/pinctrl/intel/pinctrl-tangier.c
++++ b/drivers/pinctrl/intel/pinctrl-tangier.c
+@@ -382,6 +382,9 @@ static int tng_config_set_pin(struct tng_pinctrl *tp, unsigned int pin,
+ 		case 2000:
+ 			term = BUFCFG_PUPD_VAL_2K;
+ 			break;
++		case 910:
++			term = BUFCFG_PUPD_VAL_910;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -405,6 +408,9 @@ static int tng_config_set_pin(struct tng_pinctrl *tp, unsigned int pin,
+ 		case 2000:
+ 			term = BUFCFG_PUPD_VAL_2K;
+ 			break;
++		case 910:
++			term = BUFCFG_PUPD_VAL_910;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
 -- 
 2.40.0.1.gaa8946217a0b
 
