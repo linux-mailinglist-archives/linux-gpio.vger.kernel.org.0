@@ -2,56 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A6AF7DBD53
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Oct 2023 17:02:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 012647DBDC6
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Oct 2023 17:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233798AbjJ3QCF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Oct 2023 12:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55630 "EHLO
+        id S233514AbjJ3Q0o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Oct 2023 12:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233754AbjJ3QCC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Oct 2023 12:02:02 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D5BF1;
-        Mon, 30 Oct 2023 09:01:58 -0700 (PDT)
+        with ESMTP id S229569AbjJ3Q0n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Oct 2023 12:26:43 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503EA9E;
+        Mon, 30 Oct 2023 09:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698681718; x=1730217718;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JWSWeGFuQ2uKtzVehSq0/MF2kVkMz/a2iCsUEOeG8Ac=;
-  b=lIDyueU+MQmDtvlycXtTjHX5LyA0Gtb956qJsZz5EiWtqeqGbthrjuAT
-   8vEUn6S11jp1ViGc1/c7fhGZig2jcfRH+CYchaBuYPw7S5iQtdwf75T3h
-   BTzNgiugNnxDje18IBR9/wImILoujR+TMiGa2XmxXLzIymbeFpAcCerip
-   ODRb/PoJMe0hk5WWoNyRhFt4iP08XW2/cRpJedYipia0vLERNqk/06Ll+
-   yKnlCNHHSIilKoX8nHEZxnbGvzsIugPluRryWk6FEDXV6Js2EaEjaZsqy
-   pou6FqLrAGnj8PAIjfNqHFDS/u3Km2nTRtBox7ofYroq6tK/ZsrdYMUZP
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="419216698"
+  t=1698683201; x=1730219201;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=d9S6c/pVGFDBczd8S2/JaIcyqT/Qv2W1jh05agMin1c=;
+  b=ah4FJr09nw0esnZMDFOrOvNwnk++j1egVDwyYD6p/TFrOTVK/3Z3RqgA
+   V/+767eL2o8GEq7v+9KpydmdDwCdJwSeIzkC53RuOHnasLs36/F8s0Wb/
+   ULAOfDuFp1DWKhdV/enKhbv7KXUx9SQ13rzqkKfpUfrRCuHyn36d3xLra
+   z6K4VbeMj6AQ+16Q4Te5bLUUpi0Ddx7hjsdAjdtNoTnjlYpBj/FQMi2IS
+   f6+ZaNRD/Uo31LxK/PNh3rdZ2m+fESYh2k/FF0SlLaz8x/qXd81ScI1ce
+   kh9UMv7RxLG93Axm3p8tznYRDt5cQT3W6IUV9nXtKB2S4YcdWwDIRzp6P
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="390973606"
 X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
-   d="scan'208";a="419216698"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 08:59:11 -0700
+   d="scan'208";a="390973606"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 09:26:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="933810503"
+X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="877186870"
 X-IronPort-AV: E=Sophos;i="6.03,263,1694761200"; 
-   d="scan'208";a="933810503"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 30 Oct 2023 08:59:09 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E38032AA; Mon, 30 Oct 2023 17:59:07 +0200 (EET)
+   d="scan'208";a="877186870"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 09:26:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC3)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qxUip-00000009vbO-010K;
+        Mon, 30 Oct 2023 18:02:35 +0200
+Date:   Mon, 30 Oct 2023 18:02:34 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy@kernel.org>,
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 1/1] pinctrl: intel: Refactor intel_pinctrl_get_soc_data()
-Date:   Mon, 30 Oct 2023 17:59:06 +0200
-Message-Id: <20231030155906.3492801-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+Subject: Re: [PATCH v1 1/1] pinctrl: baytrail: Move default strength
+ assignment to a switch-case
+Message-ID: <ZT_TmmFBNpexS-Pl@smile.fi.intel.com>
+References: <20231030155427.3468671-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231030155427.3468671-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
@@ -62,43 +66,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Refactor intel_pinctrl_get_soc_data() to drop initial assignment
-of the data variable. It's only used in ACPI case and instead
-we may always assign it there as the ACPI ID table has the terminator
-entry that has driver data set to NULL.
+On Mon, Oct 30, 2023 at 05:54:27PM +0200, Andy Shevchenko wrote:
+> iWhen ->pin_config_set() is called from the GPIO library (assumed
+> GpioIo() ACPI resource), the argument can be 1, when, for example,
+> PullDefault is provided. In such case we supply sane default in
+> the driver. Move that default assingment to a switch-case, so
+> it will be consolidated in one place.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Scratch this, it will be part of the bigger series.
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 9b78e112fe60..3e8010607d32 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1660,7 +1660,7 @@ EXPORT_SYMBOL_NS_GPL(intel_pinctrl_probe_by_uid, PINCTRL_INTEL);
- const struct intel_pinctrl_soc_data *intel_pinctrl_get_soc_data(struct platform_device *pdev)
- {
- 	const struct intel_pinctrl_soc_data * const *table;
--	const struct intel_pinctrl_soc_data *data = NULL;
-+	const struct intel_pinctrl_soc_data *data;
- 	struct device *dev = &pdev->dev;
- 
- 	table = device_get_match_data(dev);
-@@ -1669,11 +1669,10 @@ const struct intel_pinctrl_soc_data *intel_pinctrl_get_soc_data(struct platform_
- 		unsigned int i;
- 
- 		for (i = 0; table[i]; i++) {
--			if (acpi_dev_uid_match(adev, table[i]->uid)) {
--				data = table[i];
-+			if (acpi_dev_uid_match(adev, table[i]->uid))
- 				break;
--			}
- 		}
-+		data = table[i];
- 	} else {
- 		const struct platform_device_id *id;
- 
 -- 
-2.40.0.1.gaa8946217a0b
+With Best Regards,
+Andy Shevchenko
+
 
