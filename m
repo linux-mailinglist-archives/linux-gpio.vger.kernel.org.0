@@ -2,89 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B69BB7DC7FD
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Oct 2023 09:15:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B1C37E0DE1
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Nov 2023 05:58:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230478AbjJaIPr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Oct 2023 04:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46404 "EHLO
+        id S233766AbjKDE6V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 Nov 2023 00:58:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231301AbjJaIPq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Oct 2023 04:15:46 -0400
-X-Greylist: delayed 338 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 31 Oct 2023 01:15:43 PDT
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71319ED
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Oct 2023 01:15:43 -0700 (PDT)
-Received: from localhost (unknown [124.16.138.129])
-        by APP-05 (Coremail) with SMTP id zQCowADXcJRHtkBlw4i_AQ--.26667S2;
-        Tue, 31 Oct 2023 16:09:43 +0800 (CST)
-From:   Chen Ni <nichen@iscas.ac.cn>
-To:     linus.walleij@linaro.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@foss.st.com, robh@kernel.org,
-        geert+renesas@glider.be, jernej.skrabec@gmail.com,
-        valentin.caron@foss.st.com, bero@baylibre.com, nichen@iscas.ac.cn,
-        dario.binacchi@amarulasolutions.com, linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: stm32: Add check for devm_kcalloc
-Date:   Tue, 31 Oct 2023 08:08:07 +0000
-Message-Id: <20231031080807.3600656-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S234323AbjKDE6Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Nov 2023 00:58:16 -0400
+X-Greylist: delayed 4283 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 03 Nov 2023 21:58:12 PDT
+Received: from mail.profitpathwaygo.com (mail.profitpathwaygo.com [141.94.21.238])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF58D51
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Nov 2023 21:58:12 -0700 (PDT)
+Received: by mail.profitpathwaygo.com (Postfix, from userid 1002)
+        id 5F09D50450; Tue, 31 Oct 2023 08:30:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=profitpathwaygo.com;
+        s=mail; t=1698741052;
+        bh=qp3Ofokho6Ql+WtI8ZPVilyHYhskXL7fod7u9CWs8W4=;
+        h=Date:From:To:Subject:From;
+        b=p+9rnFhvQz19cIN53baax9Yz/UqH+zDxdi7IjdAN6IiU5RKrzj4CpRrKP0671PpCJ
+         ZkEs0RJXMc3PCnMvz69clxim7T8WU18jfD1y/3CHkOwKgAz8l8/3PeGrQ/iosLt/PD
+         74PLMZ2BFaeSqhL+zFiVe/4D19uLBB9o1HiUBLMxtZPq7IO3absz/dEBHFHzCYwjba
+         9SvbQgvFHSZNcPWrXRXjXTlv9jyK7eMiw2Q+04TOb+uccklSfEt1zlC+6Lnl5l2K0B
+         OZU9+EKXLHl1B0TCoWnrHd5vbkjN6shtQlLQm8mVfCjUuHBaYthU3sJqiwDNXprNaV
+         ZjQBDxODCOlLA==
+Received: by mail.profitpathwaygo.com for <linux-gpio@vger.kernel.org>; Tue, 31 Oct 2023 08:30:48 GMT
+Message-ID: <20231031074500-0.1.2t.15r28.0.1rf44q8s3q@profitpathwaygo.com>
+Date:   Tue, 31 Oct 2023 08:30:48 GMT
+From:   "Adam Charachuta" <adam.charachuta@profitpathwaygo.com>
+To:     <linux-gpio@vger.kernel.org>
+Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania_?=
+X-Mailer: mail.profitpathwaygo.com
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowADXcJRHtkBlw4i_AQ--.26667S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Wr18Cr4DZrWfJw1fWFyxGrg_yoWDJwc_CF
-        y8J34DGFyj9r97Ar1jqrn5ZF9Y9F4DZw109rsYqF13Cr9xuw15GrWkXr17Gws7CF13tasx
-        GFyj9ry3JrW7AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-        Y2ka0xkIwI1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7VUjFksDUUUUU==
-X-Originating-IP: [124.16.138.129]
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,
+        RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED,URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0050]
+        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: profitpathwaygo.com]
+        *  1.3 RCVD_IN_VALIDITY_RPBL RBL: Relay in Validity RPBL,
+        *      https://senderscore.org/blocklistlookup/
+        *      [141.94.21.238 listed in bl.score.senderscore.com]
+        *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: profitpathwaygo.com]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [141.94.21.238 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: profitpathwaygo.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add check for the return value of devm_kcalloc() and return the error
-if it fails in order to avoid NULL pointer dereference.
+Dzie=C5=84 dobry,
 
-Fixes: 32c170ff15b0 ("pinctrl: stm32: set default gpio line names using pin names")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/pinctrl/stm32/pinctrl-stm32.c | 5 +++++
- 1 file changed, 5 insertions(+)
+zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
+=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
+o dalszych rozm=C3=B3w.=20
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index a73385a431de..419eca49ccec 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -1378,6 +1378,11 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl, struct fwnode
- 	}
- 
- 	names = devm_kcalloc(dev, npins, sizeof(char *), GFP_KERNEL);
-+	if (!names) {
-+		err = -ENOMEM;
-+		goto err_clk;
-+	}
-+
- 	for (i = 0; i < npins; i++) {
- 		stm32_pin = stm32_pctrl_get_desc_pin_from_gpio(pctl, bank, i);
- 		if (stm32_pin && stm32_pin->pin.name)
--- 
-2.25.1
+Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
+=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
+=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
+strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
 
+Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+
+
+Pozdrawiam serdecznie
+Adam Charachuta
