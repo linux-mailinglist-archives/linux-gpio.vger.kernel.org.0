@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 354847DDD02
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Nov 2023 08:13:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC1677DDD09
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Nov 2023 08:15:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229885AbjKAHNf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Nov 2023 03:13:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47678 "EHLO
+        id S230143AbjKAHPz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Nov 2023 03:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbjKAHNe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Nov 2023 03:13:34 -0400
+        with ESMTP id S229445AbjKAHPy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Nov 2023 03:15:54 -0400
 Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A88F4
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Nov 2023 00:13:28 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9c603e2354fso116848466b.1
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Nov 2023 00:13:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D703FF4
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Nov 2023 00:15:47 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9d10f94f70bso644182066b.3
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Nov 2023 00:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698822806; x=1699427606; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1698822946; x=1699427746; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ENaMuPR8qfkGXGxRWAFLfxwcQPKTYImOPy2ccrDRxmU=;
-        b=IohWOM3nAGVBJZPQeC+6mGZvS8SfcbREBLxUahViOGvSq//7QAz9RN/OGaOl0vcIhT
-         RUumo+iUUxGDk2agg27gybEU8zwBxP+TO5QQudEKaZ7cBfgMCUcAVFfjhMweLYCOno/b
-         LzUeCFRbcJGNTwRCvsyOPJewVdUXC8eEOtbJA4aTOGz4DeBhskrB0cKXntRhQRKK/owv
-         T0Y5hzz0588XhyzDk3m/7E/qQDh0/M9rI6NePo3bDVpoIrNXuoXFLz6wyAxVhQVbJqyB
-         i30bZn3ZJ30jFzqw5njnpSwUFK3XnUA7Uq93JLDNIFAm7/aoD2rIdCxEM8Gn2jnAFfrT
-         ZxUQ==
+        bh=CpCLipAbLr8Dr2vPD2scJOySJWTj/POf6fuygWnoTxU=;
+        b=Ps0S3IAiHVX+DbINHTAqwOMIt9FUbje8cC6Z30nzw0IAqypl9EpV7RZW6DAa7dLc4I
+         Xdq8ZesGbj2/m/Pc2MimB6MCoW+35zzq/FAbo10aI4+DI8WyrQnTDNA6xdIzHs3TSd9U
+         fVAA2I7yQvPQghUO7tLL7EiDvL9+y68BCue7EYRK1hMcUnvb9TEN7a/HVhuP9N/lT6NB
+         UsWKodP/ul4NHjUH04peMq7ehEgDWG/mAMjWBaKgbdb8s6DddP/gegO6UaIJmx4H5gSu
+         +H9TVI38ZqsfTtnvuzvviMmgAnQqNjfZuPNIQ/2i7i24ztho7N5blW/2TGJidlgKr80Q
+         TOHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698822806; x=1699427606;
+        d=1e100.net; s=20230601; t=1698822946; x=1699427746;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ENaMuPR8qfkGXGxRWAFLfxwcQPKTYImOPy2ccrDRxmU=;
-        b=gyGxdch5mRIWIWv3u8S+Z2Usi1vNJne4Yk6xS+dTNnTz03YjwzosAcG9NjVvvWCKcx
-         qVjmZlVicv3cMoLKs74N7M2uo0Yj4puncy+yqJgSSIzfuqYuf7xTZ/HFOJRPhqh/PDut
-         1LDOpTkGVbSpyiq4yd/1fC/DLb5NEnBy8vswNeEbGtmz7tJmmo7QhyOb+MEI7xKyzCA0
-         VB7MgZHyGOU+6POgvksLZjkxlpE3MDk0mGL3kxyP5+8v03NxcsIeQrdoYZj0cg6C7Zjw
-         fy7Bg0GinQJSYggJgKNd/Psr6aB31wKhLHZczs17YKgnGIAYwDgbzY8d9BP1wactcEwN
-         DI2A==
-X-Gm-Message-State: AOJu0YxRgT80nXjezrWWtd2q2akQ2jUapTA2FoQffqWMdrZrBHLmWyiu
-        AmtIq6tTpnwVM91Mx1U62ehaJQ==
-X-Google-Smtp-Source: AGHT+IFA6hSi6XpPHUFncVCgMzMhp4wb56Px3YVwbUXjKoT7OJk+RGKnY7/dHtb7b57cFjarBTipGQ==
-X-Received: by 2002:a17:906:2408:b0:9ae:65d6:a51f with SMTP id z8-20020a170906240800b009ae65d6a51fmr1486666eja.18.1698822806422;
-        Wed, 01 Nov 2023 00:13:26 -0700 (PDT)
+        bh=CpCLipAbLr8Dr2vPD2scJOySJWTj/POf6fuygWnoTxU=;
+        b=vZBs9/KJC3CY57c/bxpy1+9ASD7QiPa7lv3Y597wrYCOtLjkuh/3sNuK/kkjDEy6e2
+         wBjJyGNALtb9KKHkAi2xUlUldab8ABgjyMBCq44WdpcgPr5MMcx0gcPYXn28xXV9cLFt
+         y86rkdQQgcw+19MgwpEnqGRjblLYYgyZxxsPtNGayI5v0GbPnOQl3zKD7J33oB/FyoYQ
+         xEYY4L3RF9wYyPgsX5bsbru4bdEMcdrgGRCZm30bBRbXtzpcb+gH0uRrrJkhgwCfHzde
+         +AvyRK78I0uxEW2uvjtVa/lXi3rfAwsccBPsfCR+LlEa9oJkofKOgteI5M+rLSdyY5HK
+         OpwA==
+X-Gm-Message-State: AOJu0Yze9f5C0gkbKeig8e5JhxD4pXU6O7cb383oY6L+CQqoyt2yM4ad
+        quPNDA1eX/mY+E4CVNyuojeKMg==
+X-Google-Smtp-Source: AGHT+IHBzDnEU3sZNzIb1iFrj72jfWdxiV4xte+nzG+0NUPxkyB5prhMBWpsaG9br3UId8caGScDtQ==
+X-Received: by 2002:a17:907:7d93:b0:9b2:b7f2:bc7b with SMTP id oz19-20020a1709077d9300b009b2b7f2bc7bmr1054404ejc.37.1698822946113;
+        Wed, 01 Nov 2023 00:15:46 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id rp16-20020a170906d97000b009ae57888718sm2034143ejb.207.2023.11.01.00.13.24
+        by smtp.gmail.com with ESMTPSA id m12-20020a17090607cc00b009c7608eb499sm2055003ejc.94.2023.11.01.00.15.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Nov 2023 00:13:25 -0700 (PDT)
-Message-ID: <6a09f16e-0a41-4619-b7bb-b5561f7e36ce@linaro.org>
-Date:   Wed, 1 Nov 2023 08:13:24 +0100
+        Wed, 01 Nov 2023 00:15:45 -0700 (PDT)
+Message-ID: <e18a7ee0-a5e3-4180-9f8a-99b21d1303e6@linaro.org>
+Date:   Wed, 1 Nov 2023 08:15:43 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: gpio: realtek: Add realtek,rtd-gpio
- bindings
+Subject: Re: [PATCH 1/2] gpio: realtek: Add GPIO support for RTD SoC variants
 Content-Language: en-US
 To:     Tzuyi Chang <tychang@realtek.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -66,7 +65,7 @@ To:     Tzuyi Chang <tychang@realtek.com>,
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20231101025802.3744-1-tychang@realtek.com>
- <20231101025802.3744-3-tychang@realtek.com>
+ <20231101025802.3744-2-tychang@realtek.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -112,7 +111,7 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231101025802.3744-3-tychang@realtek.com>
+In-Reply-To: <20231101025802.3744-2-tychang@realtek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -126,82 +125,148 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 01/11/2023 03:58, Tzuyi Chang wrote:
-> This patch adds the device tree bindings for the Realtek DHC RTD SoCs
-> GPIO controllers.
+> This commit adds GPIO support for Realtek DHC RTD SoCs.
+
+Please do not use "This commit/patch", but imperative mood. See longer
+explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+
 > 
-
-A nit, subject: drop second/last, redundant "bindings". The
-"dt-bindings" prefix is already stating that these are bindings.
-
+> This driver enables configuration of GPIO direction, GPIO values, GPIO
+> debounce settings and handles GPIO interrupts.
+> 
 > Signed-off-by: Tzuyi Chang <tychang@realtek.com>
 > ---
->  .../bindings/gpio/realtek,rtd-gpio.yaml       | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
 
-How does your binding come after the user?
-
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml b/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
-> new file mode 100644
-> index 000000000000..6cab7ec50c88
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2023 Realtek Semiconductor Corporation
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/realtek,rtd-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Realtek DHC GPIO controller
-
-What is DHC? Where is it explained in the binding?
+...
 
 > +
-> +maintainers:
-> +  - TY Chang <tychang@realtek.com>
+> +static int rtd_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct rtd_gpio *data;
+> +	const struct of_device_id *match;
+> +	struct device_node *node;
+> +	int ret;
+> +	int i;
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - realtek,rtd-gpio
-
-What is "rtd"? Generic name? Drop. You cannot have generic compatibles.
-
-
-> +      - realtek,rtd1295-misc-gpio
-> +      - realtek,rtd1295-iso-gpio
-> +      - realtek,rtd1395-iso-gpio
-> +      - realtek,rtd1619-iso-gpio
+> +	node = pdev->dev.of_node;
+> +	match = of_match_node(rtd_gpio_of_matches, pdev->dev.of_node);
+> +	if (!match || !match->data)
+> +		return -EINVAL;
 > +
-> +  reg:
-> +    maxItems: 2
-
-You need to describe the items instead.
-
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
 > +
-> +  interrupts:
-> +    maxItems: 2
+> +	data->assert_irq = irq_of_parse_and_map(node, 0);
+> +	if (!data->assert_irq)
+> +		goto deferred;
+> +
+> +	data->deassert_irq = irq_of_parse_and_map(node, 1);
+> +	if (!data->deassert_irq)
+> +		goto deferred;
 
-You need to describe the items instead.
+So this goes to cleanup path...
 
 > +
-> +  gpio-ranges: true
+> +	data->info = match->data;
+> +	spin_lock_init(&data->lock);
 > +
-> +  gpio-controller: true
+> +	data->base = of_iomap(node, 0);
+> +	if (!data->base)
+> +		return -ENXIO;
+
+But this does not? What?
+
 > +
-> +  "#gpio-cells":
-> +    const: 2
+> +	data->irq_base = of_iomap(node, 1);
+> +	if (!data->irq_base)
+> +		return -ENXIO;
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - gpio-ranges
-> +  - gpio-controller
-> +  - "#gpio-cells"
+> +	data->gpio_chip.parent = &pdev->dev;
+> +	data->gpio_chip.label = dev_name(&pdev->dev);
+> +	data->gpio_chip.of_gpio_n_cells = 2;
+> +	data->gpio_chip.base = data->info->gpio_base;
+> +	data->gpio_chip.ngpio = data->info->num_gpios;
+> +	data->gpio_chip.request = rtd_gpio_request;
+> +	data->gpio_chip.free = rtd_gpio_free;
+> +	data->gpio_chip.get_direction = rtd_gpio_get_direction;
+> +	data->gpio_chip.direction_input = rtd_gpio_direction_input;
+> +	data->gpio_chip.direction_output = rtd_gpio_direction_output;
+> +	data->gpio_chip.set = rtd_gpio_set;
+> +	data->gpio_chip.get = rtd_gpio_get;
+> +	data->gpio_chip.set_config = rtd_gpio_set_config;
+> +	data->gpio_chip.to_irq = rtd_gpio_to_irq;
+> +	data->irq_chip = rtd_gpio_irq_chip;
+> +	data->irq_chip.name = data->info->name;
+> +
+> +	ret = devm_gpiochip_add_data(&pdev->dev, &data->gpio_chip, data);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Adding GPIO chip failed (%d)\n", ret);
+
+And here no cleanup? It's some random choice.
+
+> +		return ret;
+> +	}
+> +
+> +	data->domain = irq_domain_add_linear(node, data->gpio_chip.ngpio,
+> +				&irq_domain_simple_ops, data);
+> +	if (!data->domain) {
+> +		devm_kfree(&pdev->dev, data);
+
+NAK, test your patch.
+
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for (i = 0; i < data->gpio_chip.ngpio; i++) {
+> +		int irq = irq_create_mapping(data->domain, i);
+> +
+> +		irq_set_chip_data(irq, data);
+> +		irq_set_chip_and_handler(irq, &data->irq_chip, handle_simple_irq);
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(data->assert_irq, rtd_gpio_assert_irq_handle, data);
+> +	irq_set_chained_handler_and_data(data->deassert_irq, rtd_gpio_deassert_irq_handle, data);
+> +
+> +	dev_dbg(&pdev->dev, "probed\n");
+
+Nop, drop all silly, simple entry/exit messages.
+
+> +
+> +	return 0;
+> +
+> +deferred:
+> +	devm_kfree(&pdev->dev, data);
+
+NAK, test your patch.
+
+> +	return -EPROBE_DEFER;
+> +}
+> +
+> +static struct platform_driver rtd_gpio_platform_driver = {
+> +	.driver = {
+> +		.name = "gpio-rtd",
+> +		.of_match_table = rtd_gpio_of_matches,
+> +	},
+> +	.probe = rtd_gpio_probe,
+> +};
+> +
+> +static int rtd_gpio_init(void)
+> +{
+> +	return platform_driver_register(&rtd_gpio_platform_driver);
+> +}
+> +
+> +subsys_initcall(rtd_gpio_init);
+> +
+> +static void __exit rtd_gpio_exit(void)
+> +{
+> +	platform_driver_unregister(&rtd_gpio_platform_driver);
+> +}
+> +module_exit(rtd_gpio_exit);
+> +
+> +MODULE_DESCRIPTION("Realtek DHC SoC gpio driver");
+> +MODULE_LICENSE("GPL v2");
 
 Best regards,
 Krzysztof
