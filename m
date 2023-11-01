@@ -2,69 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 984C57DDC21
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Nov 2023 06:14:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EBFD7DDCCC
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Nov 2023 07:43:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347631AbjKAEy3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Nov 2023 00:54:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42154 "EHLO
+        id S234553AbjKAGnR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Nov 2023 02:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347420AbjKAEy2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Nov 2023 00:54:28 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB3BA2;
-        Tue, 31 Oct 2023 21:54:26 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0297DC433C8;
-        Wed,  1 Nov 2023 04:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698814466;
-        bh=BNmQ1yGJk2sYpGPl8yhPBCxluGIpYLRQ8Af/9zOYCyo=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=uak5AfGZ3eCyZCEyKcPdgxBmQ5QC9HqfuRhoOxZstRl/UYNYYvw172lQ+Rb71rsz3
-         WrZ2apdqoBNqTENxE2F/ZHDc+w2Mygnf1hD17OOpT6yKlQFjg2/S6HJz9c9n8kjFhV
-         kch+XTSznRxLV4brlUretxWYu5xrgcbrIu2EUtMIZTV3K30jwfa7xo2zLIs2NEjABt
-         dxpwCpUo318VHO9+vrL4j0lAKJ4HDq/l/osTGFMOI2UwAGodgT2Q5YTETMkiH2dYqH
-         Wl93zkFBQUxmZVHnUk/rUMLX9JeRXsBG2Wk9F2ZOWtJSlD1g5v+VOe2kiPrnMiQtPD
-         3JUi1zMLQH+Ag==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E595EC4166F;
-        Wed,  1 Nov 2023 04:54:25 +0000 (UTC)
-Subject: Re: [GIT PULL] hte: Changes for v6.7-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20231031161220.978069-1-dipenp@nvidia.com>
-References: <20231031161220.978069-1-dipenp@nvidia.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20231031161220.978069-1-dipenp@nvidia.com>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/pateldipen1984/linux.git tags/for-6.7-rc1
-X-PR-Tracked-Commit-Id: fc62d5e214df2dd64f5d675f01b609d86a422a2b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c52894359395ea0a562b3ed556848ed66fbfff86
-Message-Id: <169881446593.23637.4546887163521210840.pr-tracker-bot@kernel.org>
-Date:   Wed, 01 Nov 2023 04:54:25 +0000
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        timestamp@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S234380AbjKAGnO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Nov 2023 02:43:14 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBECAF7;
+        Tue, 31 Oct 2023 23:43:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698820988; x=1730356988;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ldcrNXcpF8P35uuZgLgIsrYAfKX7Vsm4RFFm2udWw1Q=;
+  b=LIyaFtoOtuAo63QHzG1vErf5NUsOXRU2+wSiQ8a9RvYdqOcM3BBbipmx
+   HUEoc1wHyb/1s0lGbfQkLa/ZTx1YpfMwMbJOhh/QiDU7rJl+DK2MEbrCh
+   rd57G+p+ZlgQKK8PWNwTjy98Pu2gctBtCKfM/e7uKNgsRDrm9Swm7F3Kh
+   1Q1ZwEImupNJdDxQHt0OqLtlK3hvcoW0PBZ7M/wYzRc2tGhcnVsdq14OH
+   uAnbgAyibC3vqRw9J40Otff4JmHVY7tx0UgBaOogAVyTOHATlQzkgbVGH
+   5Gzu7cxBgZBTNCsYfNNivIAjf0jEpTxrroN+vTouXOinr5sRirZk1mJM5
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="452731715"
+X-IronPort-AV: E=Sophos;i="6.03,267,1694761200"; 
+   d="scan'208";a="452731715"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2023 23:43:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="831270934"
+X-IronPort-AV: E=Sophos;i="6.03,267,1694761200"; 
+   d="scan'208";a="831270934"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Oct 2023 23:43:02 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 04FA752A; Wed,  1 Nov 2023 08:32:45 +0200 (EET)
+Date:   Wed, 1 Nov 2023 08:32:45 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 3/3] pinctrl: intel: Add ACPI ID to the generic
+ platform driver
+Message-ID: <20231101063245.GA17433@black.fi.intel.com>
+References: <20231030141034.3241674-1-andriy.shevchenko@linux.intel.com>
+ <20231030141034.3241674-4-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231030141034.3241674-4-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Tue, 31 Oct 2023 09:12:20 -0700:
+On Mon, Oct 30, 2023 at 04:10:34PM +0200, Andy Shevchenko wrote:
+> The INTC105F is an ACPI _CID that reflects compatibility with
+> the _DSD shema supported by the generic Intel pin control
+> platform driver. Add it there.
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/pateldipen1984/linux.git tags/for-6.7-rc1
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c52894359395ea0a562b3ed556848ed66fbfff86
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+You can add this in the patch introducing the driver.
