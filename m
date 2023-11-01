@@ -2,61 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 079CD7DDB49
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Nov 2023 04:01:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 984C57DDC21
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Nov 2023 06:14:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376750AbjKAC6p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Oct 2023 22:58:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
+        id S1347631AbjKAEy3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Nov 2023 00:54:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376749AbjKAC6o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Oct 2023 22:58:44 -0400
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643C0F4;
-        Tue, 31 Oct 2023 19:58:38 -0700 (PDT)
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3A12wQnkD944736, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-        by rtits2.realtek.com.tw (8.15.2/2.93/5.92) with ESMTPS id 3A12wQnkD944736
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Nov 2023 10:58:26 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Wed, 1 Nov 2023 10:58:25 +0800
-Received: from RTEXH36505.realtek.com.tw (172.21.6.25) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Wed, 1 Nov 2023 10:58:23 +0800
-Received: from localhost.localdomain (172.21.252.101) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server id
- 15.1.2375.32 via Frontend Transport; Wed, 1 Nov 2023 10:58:23 +0800
-From:   Tzuyi Chang <tychang@realtek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, TY Chang <tychang@realtek.com>
-Subject: [PATCH 2/2] dt-bindings: gpio: realtek: Add realtek,rtd-gpio bindings
-Date:   Wed, 1 Nov 2023 10:58:02 +0800
-Message-ID: <20231101025802.3744-3-tychang@realtek.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231101025802.3744-1-tychang@realtek.com>
-References: <20231101025802.3744-1-tychang@realtek.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-KSE-ServerInfo: RTEXMBS06.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: license violation
-X-KSE-Antivirus-Attachment-Filter-Interceptor-Info: license violation
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        with ESMTP id S1347420AbjKAEy2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Nov 2023 00:54:28 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB3BA2;
+        Tue, 31 Oct 2023 21:54:26 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0297DC433C8;
+        Wed,  1 Nov 2023 04:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698814466;
+        bh=BNmQ1yGJk2sYpGPl8yhPBCxluGIpYLRQ8Af/9zOYCyo=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=uak5AfGZ3eCyZCEyKcPdgxBmQ5QC9HqfuRhoOxZstRl/UYNYYvw172lQ+Rb71rsz3
+         WrZ2apdqoBNqTENxE2F/ZHDc+w2Mygnf1hD17OOpT6yKlQFjg2/S6HJz9c9n8kjFhV
+         kch+XTSznRxLV4brlUretxWYu5xrgcbrIu2EUtMIZTV3K30jwfa7xo2zLIs2NEjABt
+         dxpwCpUo318VHO9+vrL4j0lAKJ4HDq/l/osTGFMOI2UwAGodgT2Q5YTETMkiH2dYqH
+         Wl93zkFBQUxmZVHnUk/rUMLX9JeRXsBG2Wk9F2ZOWtJSlD1g5v+VOe2kiPrnMiQtPD
+         3JUi1zMLQH+Ag==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E595EC4166F;
+        Wed,  1 Nov 2023 04:54:25 +0000 (UTC)
+Subject: Re: [GIT PULL] hte: Changes for v6.7-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20231031161220.978069-1-dipenp@nvidia.com>
+References: <20231031161220.978069-1-dipenp@nvidia.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20231031161220.978069-1-dipenp@nvidia.com>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/pateldipen1984/linux.git tags/for-6.7-rc1
+X-PR-Tracked-Commit-Id: fc62d5e214df2dd64f5d675f01b609d86a422a2b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c52894359395ea0a562b3ed556848ed66fbfff86
+Message-Id: <169881446593.23637.4546887163521210840.pr-tracker-bot@kernel.org>
+Date:   Wed, 01 Nov 2023 04:54:25 +0000
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        timestamp@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,77 +56,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds the device tree bindings for the Realtek DHC RTD SoCs
-GPIO controllers.
+The pull request you sent on Tue, 31 Oct 2023 09:12:20 -0700:
 
-Signed-off-by: Tzuyi Chang <tychang@realtek.com>
----
- .../bindings/gpio/realtek,rtd-gpio.yaml       | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/pateldipen1984/linux.git tags/for-6.7-rc1
 
-diff --git a/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml b/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
-new file mode 100644
-index 000000000000..6cab7ec50c88
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2023 Realtek Semiconductor Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/realtek,rtd-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Realtek DHC GPIO controller
-+
-+maintainers:
-+  - TY Chang <tychang@realtek.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - realtek,rtd-gpio
-+      - realtek,rtd1295-misc-gpio
-+      - realtek,rtd1295-iso-gpio
-+      - realtek,rtd1395-iso-gpio
-+      - realtek,rtd1619-iso-gpio
-+
-+  reg:
-+    maxItems: 2
-+
-+  interrupts:
-+    maxItems: 2
-+
-+  gpio-ranges: true
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - gpio-ranges
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio@100 {
-+      compatible = "realtek,rtd-gpio";
-+      reg = <0x100 0x100>,
-+            <0x000 0x0b0>;
-+      interrupt-parent = <&iso_irq_mux>;
-+      interrupts = <19>, <20>;
-+      gpio-ranges = <&pinctrl 0 0 82>;
-+      gpio-controller;
-+      #gpio-cells = <2>;
-+    };
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c52894359395ea0a562b3ed556848ed66fbfff86
+
+Thank you!
+
 -- 
-2.42.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
