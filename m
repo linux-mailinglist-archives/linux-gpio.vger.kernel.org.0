@@ -2,63 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCDAB7DF2F6
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Nov 2023 13:56:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14BC27DF2FF
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Nov 2023 13:58:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234351AbjKBM42 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Nov 2023 08:56:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
+        id S233231AbjKBM6P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Nov 2023 08:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbjKBM41 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Nov 2023 08:56:27 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC59112
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Nov 2023 05:56:20 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-5a82f176860so11188817b3.1
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Nov 2023 05:56:20 -0700 (PDT)
+        with ESMTP id S229665AbjKBM6O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Nov 2023 08:58:14 -0400
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5808DBD
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Nov 2023 05:58:08 -0700 (PDT)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-5a84204e7aeso11256317b3.0
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Nov 2023 05:58:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698929780; x=1699534580; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1698929887; x=1699534687; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OsAjcGl2UpHPgEQeJujj5h3M2CG8DtmrGk5g/mrx/Gk=;
-        b=QzuHAefrSZCMQDhfvQt41JRfqMsy37D2hBR/5PWZW9QiY4HBiTdRB3KRW71sq+qCay
-         qm02OvTRM3BTJ9OKXEX4YBjezDiznpe4UxwIPeJR0vkkAlHf2FANjJ8Tuilzy6yQT8Zf
-         0wFWypNmL8HpmwJhee0gfcHKeRzK3LdDqSOFkzguIeeInSYxWtkYhdgiSEOlK9cg1Vgd
-         m9f+QScfiX2M+xkeG/r5vDt/hYVpIqNLCKhYUkvY0iWWb2D5j5jJOCRWIzZWWHkznK2o
-         uUu+W8OXuDOIK3UhMWlYeHcpr6FbvVo9qfrcGOInLP0i5SrmeO1rcoBqYXGutxJBxVDG
-         qLRw==
+        bh=dCCONn8E1n3ofwv6haSRwqO8XLggJEnfeXJadE+g31c=;
+        b=Jf8C7iKKsSMX0bRonOaIBv3hBaPaEWu8RmmeuRKP0MqTFIjTe8eTndCLSJM/cGj92b
+         /TMmfmAjX9ufPr0Jg5o/eJNCzhtwAS1ctTUb7j3BBxftu/1q3zg2HSL7r2dlvr28/Qef
+         vxGDxQfCqs1fx34d0BzzR93nnPKFopHsae7i6MrfFVrxxvUTwliy6Z83p0CH9tbJWT5z
+         lHRTCqYzaUGbvJFfb5IQpFzqv0w24wnpbQOVJq+EhlmUpVhousxbmTpa8MBViKx/Stgj
+         7pK7SWEXnJ6VVRGvi0HCvB6bUGkY7cEePIvJtV/T137KlHckStamwtbDxhg4qWIpYwS0
+         IXEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698929780; x=1699534580;
+        d=1e100.net; s=20230601; t=1698929887; x=1699534687;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OsAjcGl2UpHPgEQeJujj5h3M2CG8DtmrGk5g/mrx/Gk=;
-        b=oUla07lFY8DyZ6xIhUXio/PdN4tg1JZmxZg0pDeUDeiNYxKkoHdPcDFTVlIkVpR0PA
-         7kR/5XmURC04ryZLxUUzofcd6ey++rpizSpVKaqEFW0jSbec4q4JZOKSXTQKNKS1zHyo
-         4H67f6CLb7uRfZoZHf3F2SfhMWbuVGeu9bJee8712j1ayttMBPpO9Y6g+anqdmP79alh
-         jctTeE552lgZBXX8DKVFccXoJ9yRs+o4R7hCf0j/4uRvVp9qmq5W/F3rlrWyovQqrgkO
-         zbISgn6Cn4iOVIUSkkO8lZqViP98O4crIjMjetOIismgH4QnMLJlQVX+mfzuaZhZSWsO
-         Fvew==
-X-Gm-Message-State: AOJu0YyHonuq+n3CxFSs8XLPDiGUwXTFGDBu7nDVe4SZAcEK/V/awaLa
-        l44mc3SVk5IflenHib0SrdL+RZubxthKgyGWsUy2uw==
-X-Google-Smtp-Source: AGHT+IEz9bjCq1ln/F8/UzX3flETc6xhBQrn1tNDeiGtyC5Mern9SR/xTfC/eMkvZYPtbRtdn/D38/AQ5b9I5g/B2qI=
-X-Received: by 2002:a05:690c:fd6:b0:5b4:501c:b719 with SMTP id
- dg22-20020a05690c0fd600b005b4501cb719mr4293035ywb.31.1698929779854; Thu, 02
- Nov 2023 05:56:19 -0700 (PDT)
+        bh=dCCONn8E1n3ofwv6haSRwqO8XLggJEnfeXJadE+g31c=;
+        b=XJ0KssXZkVXLy9hnqMgOFqwDyQ583UqZsuufC9tcQUtsL+7QXpKaqyuYMeBwc4jU9i
+         tf0JEy6DUdYMYIYlbtJgy1+1X/989RcNgbswZa6ND5MSS9ckrEVVUkxwVMdFFIWucTNh
+         7zlyi+j6QSWQdtR99H0YuEU0mnTKxvJ3ebQP2iPG+RNOnxbA8EJFW0m1cWmPP6ZmxmfN
+         42sEalRVOb7XiNd77qMaIdWcgF5RpWNPaagzdz9MvmXlmhXFFKlobKrSWPsdq0QK2exj
+         J+cVwmhUe56Msibu4JPOzVeKZ53/GbXH3XUFsqJwOr578ky55W2nlP78H48QumqFliFZ
+         iYSQ==
+X-Gm-Message-State: AOJu0Yx8Catkrraz4sCwelmeH61/U+DNhbNp5CSnnYXYSng2rv72VSTY
+        yZNSptDPjYPAXBrToxx47M34b8TfCxZsrEvgFEqymA==
+X-Google-Smtp-Source: AGHT+IHcgHYJhzP5Y7dFQbPW7i51z51wvIBnxWK2BKswP/EfWsiw4NQNlN+H23Rr8yHC8tbOVmgUopyu2cV9Ga7Vhgk=
+X-Received: by 2002:a81:ac09:0:b0:5a7:d412:af32 with SMTP id
+ k9-20020a81ac09000000b005a7d412af32mr19926040ywh.10.1698929887555; Thu, 02
+ Nov 2023 05:58:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231030155340.3468528-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdb3wLAZfU+_E0r5Rr_HD-bdFpf7K6bMD6dqiK1Ryv7NAQ@mail.gmail.com> <ZUOXVSij9497HrBR@smile.fi.intel.com>
-In-Reply-To: <ZUOXVSij9497HrBR@smile.fi.intel.com>
+References: <20231030120734.2831419-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20231030120734.2831419-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 2 Nov 2023 13:56:08 +0100
-Message-ID: <CACRpkdaYpgg7Umc3=QZ1QxH=jzt-wJh+msu5DuVn1aRUvzkeGA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: tangier: Move default strength assignment
- to a switch-case
+Date:   Thu, 2 Nov 2023 13:57:56 +0100
+Message-ID: <CACRpkdY1Ckc6SQDKKMEVkzOLe8jHNDA=P-7AF_W4QbVb75DFkQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/17] pinctrl: intel: Use NOIRQ PM helper
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Raag Jadav <raag.jadav@intel.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -71,23 +71,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 2, 2023 at 1:34=E2=80=AFPM Andy Shevchenko
+On Mon, Oct 30, 2023 at 1:07=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
-> On Thu, Nov 02, 2023 at 08:36:11AM +0100, Linus Walleij wrote:
 
-> > So where does this 1 come from in the end? That's the piece I
-> > am missing in this explanation. Somewhere, someone decided
-> > to pass 1 to indicate "pull to default resistance".
-> >
-> > Is it coming from ACPI firmware?
->
-> No, it's pure Linux kernel decision.
-> gpio_set_bias() is who made that. That's why it needs to be chosen on glo=
-bal
-> level.
+> Intel pin control drivers use NOIRQ variant of the PM callbacks.
+> To make them smaller and less error prone against different
+> kernel configurations (with possible defined but not used variables)
+> switch to use NOIRQ PM helper.
 
-Aha I see, that makes sense.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Makes sense. The series:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
