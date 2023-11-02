@@ -2,370 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 821F17DF23E
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Nov 2023 13:24:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A12487DF28C
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Nov 2023 13:37:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230070AbjKBMYL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Nov 2023 08:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50210 "EHLO
+        id S1346677AbjKBMhj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Nov 2023 08:37:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjKBMYK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Nov 2023 08:24:10 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF41F112;
-        Thu,  2 Nov 2023 05:24:04 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="373739750"
+        with ESMTP id S1347626AbjKBMhC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Nov 2023 08:37:02 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EFBC199;
+        Thu,  2 Nov 2023 05:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698928475; x=1730464475;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=yCF7BDVIYKalEi/HaZ90Ts9couhyZV50EQlfDFbgZIY=;
+  b=htP2uhNlz6Mlq+wxP2Njc8djy8LZkdugHVw027SxHWCRF/ZY7mxgyNcI
+   jmA34gnwRffGeIY+CUEqjw8sHD4Ee24lvODvjPbpruTJPgykfy/EVx21R
+   I0YU8eh77Wd+JIHkNOKuNVme/uqGM31LKGCMbFiGdV1fdAcdxLZFSpcIf
+   ozUE+fA9Q5qa1F5LttYmRd0jbBRNSjcWxqMnfzsRw1dzecRa/VgXpdJ7O
+   94Jxy6Vp5qns4vpe4p71Ydu+6tYSeiwWJtKhrogvCE9k7AIpfeb/lmHPQ
+   NjEJgpvI+F/C2IL0z6aWKvOTDlGvFneYvJjlTcUOtAWfqy7Cs7/cNOyfc
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="368906158"
 X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
-   d="scan'208";a="373739750"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 05:24:04 -0700
+   d="scan'208";a="368906158"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 05:34:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="904995201"
+X-IronPort-AV: E=McAfee;i="6600,9927,10881"; a="790383087"
 X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
-   d="scan'208";a="904995201"
+   d="scan'208";a="790383087"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 05:24:00 -0700
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 05:34:32 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC3)
-        (envelope-from <andy@kernel.org>)
-        id 1qyWjt-0000000AgRR-2vm0;
-        Thu, 02 Nov 2023 14:23:57 +0200
-Date:   Thu, 2 Nov 2023 14:23:57 +0200
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Jim Liu <jim.t90615@gmail.com>
-Cc:     JJLIU0@nuvoton.com, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, benjaminfair@google.com, brgl@bgdev.pl,
-        robh@kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 3/3] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
-Message-ID: <ZUOU3eImmWnqmO8Q@smile.fi.intel.com>
-References: <20231101025110.1704543-1-jim.t90615@gmail.com>
- <20231101025110.1704543-4-jim.t90615@gmail.com>
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qyWu6-0000000AgYp-0xdv;
+        Thu, 02 Nov 2023 14:34:30 +0200
+Date:   Thu, 2 Nov 2023 14:34:29 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Raag Jadav <raag.jadav@intel.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: tangier: Move default strength
+ assignment to a switch-case
+Message-ID: <ZUOXVSij9497HrBR@smile.fi.intel.com>
+References: <20231030155340.3468528-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdb3wLAZfU+_E0r5Rr_HD-bdFpf7K6bMD6dqiK1Ryv7NAQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231101025110.1704543-4-jim.t90615@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdb3wLAZfU+_E0r5Rr_HD-bdFpf7K6bMD6dqiK1Ryv7NAQ@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 01, 2023 at 10:51:10AM +0800, Jim Liu wrote:
-> Add Nuvoton BMC NPCM7xx/NPCM8xx sgpio driver support.
-> Nuvoton NPCM SGPIO module is combine serial to parallel IC (HC595)
-> and parallel to serial IC (HC165), and use APB3 clock to control it.
-> This interface has 4 pins  (D_out , D_in, S_CLK, LDSH).
-> BMC can use this driver to increase 64 gpi pins and 64 gpo pins to use.
-
-GPI
-GPO
-
-...
-
-> Reported-by: kernel test robot <lkp@intel.com>
-
-Can't be true. The absence of a new code may not be "reported".
-
-...
-
-> +config GPIO_NPCM_SGPIO
-> +	bool "Nuvoton SGPIO support"
-> +	depends on (ARCH_NPCM || COMPILE_TEST) && OF_GPIO
-
-No new driver should use OF_GPIO.
-And I do not see where it's being used. Care to elaborate?
-
-> +	select GPIO_GENERIC
-> +	select GPIOLIB_IRQCHIP
-
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/hashtable.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/string.h>
-
-...
-
-> +#define  NPCM_IXOEVCFG_MASK		0x3
-
-GENMASK()
-
-...
-
-> +#define  NPCM_IXOEVCFG_FALLING	0x2
-> +#define  NPCM_IXOEVCFG_RISING	0x1
-
-BIT()
-
-> +#define  NPCM_IXOEVCFG_BOTH		0x3
-
-#define  NPCM_IXOEVCFG_BOTH	(NPCM_IXOEVCFG_FALLING | NPCM_IXOEVCFG_RISING)
-
-...
-
-> +#define NPCM_CLK_TH 8000000
-
-Hmm... What is the units here? Hz? Can you use HZ_PER_MHZ multiplier?
-
-> +#define GPIO_BANK(x)    ((x) / 8)
-> +#define GPIO_BIT(x)     ((x) % 8)
-
-...
-
-> +struct npcm_clk_cfg {
-> +	const unsigned int *SFT_CLK;
-> +	const unsigned int *CLK_SEL;
-
-Why capital?
-
-> +	const unsigned int cfg_opt;
-> +};
-
-How const for all of them makes any sense here? Just mark the entire struct
-with const whenever you are using it.
-
-...
-
-> +struct npcm_sgpio {
-> +	struct gpio_chip chip;
-> +	struct clk *pclk;
-> +	struct irq_chip intc;
-> +	spinlock_t lock; /*protect event config*/
-
-Missing spaces inside the comment.
-
-> +	void __iomem *base;
-> +	int irq;
-> +	u8 nin_sgpio;
-> +	u8 nout_sgpio;
-> +	u8 in_port;
-> +	u8 out_port;
-> +	u8 int_type[MAX_NR_HW_SGPIO];
-> +};
-
-...
-
-> +static void __iomem *bank_reg(struct npcm_sgpio *gpio,
-> +			      const struct npcm_sgpio_bank *bank,
-> +				const enum npcm_sgpio_reg reg)
-
-Something wrong with indentation.
-
-> +{
-> +	switch (reg) {
-> +	case READ_DATA:
-> +		return gpio->base + bank->rdata_reg;
-> +	case WRITE_DATA:
-> +		return gpio->base + bank->wdata_reg;
-> +	case EVENT_CFG:
-> +		return gpio->base + bank->event_config;
-> +	case EVENT_STS:
-> +		return gpio->base + bank->event_status;
-> +	default:
-> +		/* actually if code runs to here, it's an error case */
-> +		WARN(true, "Getting here is an error condition");
-
-You have a device pointer, why not dev_WARN()?
-
-> +	}
-> +}
-
-...
-
-> +static void irqd_to_npcm_sgpio_data(struct irq_data *d,
-> +				    struct npcm_sgpio **gpio,
-> +				    const struct npcm_sgpio_bank **bank,
-> +				    u8 *bit, int *offset)
-
-offset should be of the proper type.
-
-> +{
-> +	struct npcm_sgpio *internal;
-> +
-> +	*offset = irqd_to_hwirq(d);
-> +	internal = irq_data_get_irq_chip_data(d);
-
-> +	WARN_ON(!internal);
-
-When does this make sense? I.o.w. when the internal can be NULL?
-
-> +
-> +	*gpio = internal;
-> +	*offset -= internal->nout_sgpio;
-> +	*bank = offset_to_bank(*offset);
-> +	*bit = GPIO_BIT(*offset);
-> +}
-
-...
-
-> +static int npcm_sgpio_init_port(struct npcm_sgpio *gpio)
-> +{
-> +	u8 in_port, out_port, set_port, reg;
-> +
-> +	in_port = gpio->nin_sgpio / 8;
-> +	if (gpio->nin_sgpio % 8 > 0)
-> +		in_port += 1;
-
-You created macros and you don't use them?
-
-> +	out_port = gpio->nout_sgpio / 8;
-> +	if (gpio->nout_sgpio % 8 > 0)
-> +		out_port += 1;
-
-Ditto.
-
-> +	gpio->in_port = in_port;
-> +	gpio->out_port = out_port;
-
-> +	set_port = ((out_port & 0xf) << 4) | (in_port & 0xf);
-
-GENMASK() ?
-
-> +	iowrite8(set_port, gpio->base + NPCM_IOXCFG2);
-> +
-> +	reg = ioread8(gpio->base + NPCM_IOXCFG2);
-> +
-> +	return reg == set_port ? 0 : -EINVAL;
-> +
-> +}
-
-...
-
-> +static int npcm_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
-> +{
-> +	struct npcm_sgpio *gpio = gpiochip_get_data(gc);
-> +
-> +	if (offset < gpio->nout_sgpio) {
-> +		gc->set(gc, offset, val);
-> +		return 0;
-> +	}
-
-> +	return -EINVAL;
-
-When is this true? Same question to all these checks over the code.
-
-> +}
-
-...
-
-> +	if (val)
-> +		reg |= (val << GPIO_BIT(offset));
-
-And if val == 3? See below as well.
-
-> +	else
-> +		reg &= ~(1 << GPIO_BIT(offset));
-
-Why not BIT() macro?
-
-...
-
-> +		reg = (reg >> GPIO_BIT(offset)) & 0x01;
-
-		reg = !!(reg & GPIO_BIT(...));
-
-...
-
-> +		reg = (reg >> GPIO_BIT(offset)) & 0x01;
-
-Ditto.
-
-...
-
-> +	.flags		= IRQCHIP_IMMUTABLE | IRQCHIP_MASK_ON_SUSPEND,
-
-Indentation issue...
-
-Check entire code for this.
-
-...
-
-It's a big driver and you have a lot of different kinds of problems.
-One of them is RT kernel support. You have an IRQ chip implementation
-here, can it be used in RT?
-If so, consider different type of lock.
-
-Also use cleanup.h.
-
-...
-
-> +static const struct of_device_id npcm_sgpio_of_table[] = {
-> +	{ .compatible = "nuvoton,npcm750-sgpio", .data = &npcm750_sgpio_pdata, },
-> +	{ .compatible = "nuvoton,npcm845-sgpio", .data = &npcm845_sgpio_pdata, },
-> +	{}
-> +};
-
-> +
-
-Redundant blank line.
-
-> +MODULE_DEVICE_TABLE(of, npcm_sgpio_of_table);
-
-...
-
-> +	rc = device_property_read_u32(&pdev->dev, "nuvoton,input-ngpios", &nin_gpios);
-> +	if (rc < 0) {
-> +		dev_err(&pdev->dev, "Could not read ngpios property\n");
-> +		return -EINVAL;
-
-		return dev_err_probe();
-
-> +	}
-
-...
-
-> +	rc = device_property_read_u32(&pdev->dev, "nuvoton,output-ngpios", &nout_gpios);
-> +	if (rc < 0) {
-> +		dev_err(&pdev->dev, "Could not read ngpios property\n");
-> +		return -EINVAL;
-
-Ditto. And so on for the entire ->probe() stage.
-
-> +	}
-
-...
-
-> +	gpio->pclk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(gpio->pclk)) {
-> +		dev_err(&pdev->dev, "Could not get pclk\n");
-> +		return PTR_ERR(gpio->pclk);
-
-Not using dev_err_probe() will spam the log.
-
-> +	}
-
-...
-
-> +	gpio->chip.request = NULL;
-> +	gpio->chip.free = NULL;
-> +	gpio->chip.set_config = NULL;
-
-Redundant assignments.
-
-...
-
-> +	dev_info(&pdev->dev, "NPCM: SGPIO module is ready\n");
-
-Useless noisy message.
-
-...
-
-> +
-
-Unneeded blank line.
-
-> +module_platform_driver(npcm_sgpio_driver);
+On Thu, Nov 02, 2023 at 08:36:11AM +0100, Linus Walleij wrote:
+> On Mon, Oct 30, 2023 at 4:54 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+
+(...)
+
+> > +               case 1: /* Set default strength value in case none is given */
+> 
+> So where does this 1 come from in the end? That's the piece I
+> am missing in this explanation. Somewhere, someone decided
+> to pass 1 to indicate "pull to default resistance".
+> 
+> Is it coming from ACPI firmware?
+
+No, it's pure Linux kernel decision.
+gpio_set_bias() is who made that. That's why it needs to be chosen on global
+level.
+
+We may even document somewhere that arguments let's say up to 10 do not make
+any sense in real life, as even for 1.2 v it will give 120 mA current on a single
+pin. Yet, theoretically that's possible for discrete industrial GPIOs, so we
+can choose "very big number" if such case appears in the future. I don't want
+to change 1 to something else right now as it may break things.
+
+> for default pull" should be added to the constant definition in the
+> code.
 
 -- 
 With Best Regards,
