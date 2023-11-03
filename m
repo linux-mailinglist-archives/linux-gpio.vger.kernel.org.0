@@ -2,62 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12D727DFEF6
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Nov 2023 06:57:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 368257E0127
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Nov 2023 11:31:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbjKCF5s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Nov 2023 01:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54842 "EHLO
+        id S231825AbjKCGyE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Nov 2023 02:54:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjKCF5s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Nov 2023 01:57:48 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C69018E;
-        Thu,  2 Nov 2023 22:57:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698991062; x=1730527062;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nIH8a3I05QjeWYShgTeqgrqQswhk+kQYWZvX+TJYrGs=;
-  b=ljzsOIwoSUz6bTk1w9zBwf3O3O5v+eCh9UcZnr02vFmfTw5qU3hHHaBf
-   OW1c6mvF2nxPglGbhIQCHWZqSBMF88BStRZuCmp2pmBlQppkRqHCQtzoj
-   +fweKLBDXBEOaHYIOkWTXc7FpNQA5DV89PE7wBl8FpoUn/OATAQZUaGVm
-   8mWIob2yiLNXCbL3UtKoelOocvXzb7wT3WfFvkZ5KqpLr88Ya7BdAh2k+
-   qYgExEGR9heYZAB4K5kcJh2+1jwREmU2I/VFChA4/LSKV+QurzWzheDiF
-   XK7L1djIsdB6SDJC6fHb6esc9XOdh+0YQCcs9iV2lpUqADd6KI2rsXLpA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="1758557"
-X-IronPort-AV: E=Sophos;i="6.03,273,1694761200"; 
-   d="scan'208";a="1758557"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 22:57:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="831934900"
-X-IronPort-AV: E=Sophos;i="6.03,273,1694761200"; 
-   d="scan'208";a="831934900"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Nov 2023 22:57:40 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 2C29F2A6; Fri,  3 Nov 2023 07:57:38 +0200 (EET)
-Date:   Fri, 3 Nov 2023 07:57:38 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 2/3] pinctrl: intel: Add a generic Intel pin control
- platform driver
-Message-ID: <20231103055738.GO17433@black.fi.intel.com>
-References: <20231030141034.3241674-1-andriy.shevchenko@linux.intel.com>
- <20231030141034.3241674-3-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S231461AbjKCGyD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Nov 2023 02:54:03 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F1CE3;
+        Thu,  2 Nov 2023 23:54:00 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 125A1C433C8;
+        Fri,  3 Nov 2023 06:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698994439;
+        bh=QWFKEsU9Ac1wwx/HwWT9oj6Ee5Vuf1uhms6rIYVW5VI=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ilKpxSyrwm39CU0MLdqyY6Ur8+9nzaUJewJdsIUoJDQZ0m5l2ceP8AFPW3jcfjrx9
+         RcRRp/u8G99nvOpCZJ/R9VIM4ViDlXoHX/V7uqOvSfJT3c1p4oOBsHCCuHiPKkoGMw
+         mNwvCntMlgtCT7o43oZNs5JX+ov1FELTaOiZ4pZ4WbaSuECxGUVCWnVbrGVV1OJ9op
+         gV31q91OpGUi0rYrUZ+eiF8ZoeaJmIPntCdVcfcQ6DNCL8QLOvEPKSSYBIx68Wg0aE
+         m8NIo2j8GjgeXaPQRrOKls1rJ2lr2MprgzJvMW3c8gbJvG1FFOP1LLYIQPzTtUVpY0
+         b10sHPV+MDYFA==
+Message-ID: <8cefc3d6-5d7b-4695-b1db-143f7124f5fe@kernel.org>
+Date:   Fri, 3 Nov 2023 07:53:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231030141034.3241674-3-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] pinctrl: tps6594: Add driver for TPS6594 pinctrl and
+ GPIOs
+Content-Language: en-US
+To:     Esteban Blanc <eblanc@baylibre.com>, linus.walleij@linaro.org
+Cc:     andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jpanis@baylibre.com,
+        jneanne@baylibre.com, u-kumar1@ti.com
+References: <20231102101357.977886-1-eblanc@baylibre.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20231102101357.977886-1-eblanc@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,302 +95,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 30, 2023 at 04:10:33PM +0200, Andy Shevchenko wrote:
-> New generations of Intel platforms will provide better description
-> of the pin control devices in the ACPI tables. Hence, we may provide
-> a generic pin control platform driver to cover all of them.
+On 02/11/2023 11:13, Esteban Blanc wrote:
+> TI TPS6594 PMIC has 11 GPIOs which can be used
+> for different functions.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pinctrl/intel/Kconfig                 |   8 +
->  drivers/pinctrl/intel/Makefile                |   1 +
->  .../pinctrl/intel/pinctrl-intel-platform.c    | 223 ++++++++++++++++++
->  3 files changed, 232 insertions(+)
->  create mode 100644 drivers/pinctrl/intel/pinctrl-intel-platform.c
+> This patch adds a pinctrl and GPIO drivers in
+> order to use those functions.
 > 
-> diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
-> index d66f4f6932d8..42a6bc8b7a45 100644
-> --- a/drivers/pinctrl/intel/Kconfig
-> +++ b/drivers/pinctrl/intel/Kconfig
-> @@ -37,6 +37,14 @@ config PINCTRL_INTEL
->  	select GPIOLIB
->  	select GPIOLIB_IRQCHIP
->  
-> +config PINCTRL_INTEL_PLATFORM
-> +	tristate "Intel pinctrl and GPIO platform driver"
-> +	depends on ACPI
-> +	select PINCTRL_INTEL
-> +	help
-> +	  This pinctrl driver provides an interface that allows configuring
-> +	  of Intel PCH pins and using them as GPIOs.
+> Signed-off-by: Esteban Blanc <eblanc@baylibre.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Add here some description that explains why this needs to be enabled,
-for example for Lunar Lake. Now it is all too generic for distro folks
-to understand if this is needed or not.
+...
 
 > +
->  config PINCTRL_ALDERLAKE
->  	tristate "Intel Alder Lake pinctrl and GPIO driver"
->  	select PINCTRL_INTEL
-> diff --git a/drivers/pinctrl/intel/Makefile b/drivers/pinctrl/intel/Makefile
-> index f6d30f2d973a..96c93ed4bd58 100644
-> --- a/drivers/pinctrl/intel/Makefile
-> +++ b/drivers/pinctrl/intel/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_PINCTRL_TANGIER)		+= pinctrl-tangier.o
->  obj-$(CONFIG_PINCTRL_MERRIFIELD)	+= pinctrl-merrifield.o
->  obj-$(CONFIG_PINCTRL_MOOREFIELD)	+= pinctrl-moorefield.o
->  obj-$(CONFIG_PINCTRL_INTEL)		+= pinctrl-intel.o
-> +obj-$(CONFIG_PINCTRL_INTEL_PLATFORM)	+= pinctrl-intel-platform.o
->  obj-$(CONFIG_PINCTRL_ALDERLAKE)		+= pinctrl-alderlake.o
->  obj-$(CONFIG_PINCTRL_BROXTON)		+= pinctrl-broxton.o
->  obj-$(CONFIG_PINCTRL_CANNONLAKE)	+= pinctrl-cannonlake.o
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel-platform.c b/drivers/pinctrl/intel/pinctrl-intel-platform.c
-> new file mode 100644
-> index 000000000000..2305d8befdd3
-> --- /dev/null
-> +++ b/drivers/pinctrl/intel/pinctrl-intel-platform.c
-> @@ -0,0 +1,223 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel PCH pinctrl/GPIO driver
-> + *
-> + * Copyright (C) 2021-2023, Intel Corporation
-
-That's 2023
-
-> + * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> + */
-> +
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm.h>
-> +#include <linux/property.h>
-> +#include <linux/string_helpers.h>
-> +
-> +#include <linux/pinctrl/pinctrl.h>
-> +
-> +#include "pinctrl-intel.h"
-> +
-> +struct intel_platform_pins {
-> +	struct pinctrl_pin_desc *pins;
-> +	size_t npins;
-> +};
-> +
-> +static int intel_platform_pinctrl_prepare_pins(struct device *dev, size_t base,
-> +					       const char *name, u32 size,
-> +					       struct intel_platform_pins *pins)
-> +{
-> +	struct pinctrl_pin_desc *descs;
-> +	char **pin_names;
-> +	unsigned int i;
-> +
-> +	pin_names = devm_kasprintf_strarray(dev, name, size);
-> +	if (IS_ERR(pin_names))
-> +		return PTR_ERR(pin_names);
-> +
-> +	descs = devm_krealloc_array(dev, pins->pins, base + size, sizeof(*descs), GFP_KERNEL);
-> +	if (!descs)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < size; i++) {
-> +		unsigned int pin_number = base + i;
-> +		char *pin_name = pin_names[i];
-> +		struct pinctrl_pin_desc *desc;
-> +
-> +		/* Unify delimiter for pin name */
-> +		strreplace(pin_name, '-', '_');
-> +
-> +		desc = &descs[pin_number];
-> +		desc->number = pin_number;
-> +		desc->name = pin_name;
-> +	}
-> +
-> +	pins->pins = descs;
-> +	pins->npins = base + size;
-> +
-> +	return 0;
-> +}
-> +
-> +static int intel_platform_pinctrl_prepare_group(struct device *dev,
-> +						struct fwnode_handle *child,
-> +						struct intel_padgroup *gpp,
-> +						struct intel_platform_pins *pins)
-> +{
-> +	size_t base = pins->npins;
-> +	const char *name;
-> +	u32 size;
-> +	int ret;
-> +
-> +	ret = fwnode_property_read_string(child, "intc-gpio-group-name", &name);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = fwnode_property_read_u32(child, "intc-gpio-pad-count", &size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = intel_platform_pinctrl_prepare_pins(dev, base, name, size, pins);
-> +	if (ret)
-> +		return ret;
-> +
-> +	gpp->base = base;
-> +	gpp->size = size;
-> +	gpp->gpio_base = INTEL_GPIO_BASE_MATCH;
-> +
-> +	return 0;
-> +}
-> +
-> +static int intel_platform_pinctrl_prepare_community(struct device *dev,
-> +						    struct intel_community *community,
-> +						    struct intel_platform_pins *pins)
-> +{
-> +	struct fwnode_handle *child;
-> +	struct intel_padgroup *gpps;
-> +	unsigned int group;
-> +	size_t ngpps;
-> +	u32 offset;
-> +	int ret;
-> +
-> +	ret = device_property_read_u32(dev, "intc-gpio-pad-ownership-offset", &offset);
-> +	if (ret)
-> +		return ret;
-> +	community->padown_offset = offset;
-> +
-> +	ret = device_property_read_u32(dev, "intc-gpio-pad-configuration-lock-offset", &offset);
-> +	if (ret)
-> +		return ret;
-> +	community->padcfglock_offset = offset;
-> +
-> +	ret = device_property_read_u32(dev, "intc-gpio-host-software-pad-ownership-offset", &offset);
-> +	if (ret)
-> +		return ret;
-> +	community->hostown_offset = offset;
-> +
-> +	ret = device_property_read_u32(dev, "intc-gpio-gpi-interrupt-status-offset", &offset);
-> +	if (ret)
-> +		return ret;
-> +	community->is_offset = offset;
-> +
-> +	ret = device_property_read_u32(dev, "intc-gpio-gpi-interrupt-enable-offset", &offset);
-> +	if (ret)
-> +		return ret;
-> +	community->ie_offset = offset;
-> +
-> +	ngpps = device_get_child_node_count(dev);
-> +	if (ngpps == 0)
-
-if (!nggps)
-
-> +		return -ENODEV;
-> +
-> +	gpps = devm_kcalloc(dev, ngpps, sizeof(*gpps), GFP_KERNEL);
-> +	if (!gpps)
-> +		return -ENOMEM;
-> +
-> +	group = 0;
-> +	device_for_each_child_node(dev, child) {
-> +		struct intel_padgroup *gpp = &gpps[group];
-> +
-> +		gpp->reg_num = group;
-> +
-> +		ret = intel_platform_pinctrl_prepare_group(dev, child, gpp, pins);
-> +		if (ret)
-> +			return ret;
-> +
-> +		group++;
-> +	}
-> +
-> +	community->ngpps = ngpps;
-> +	community->gpps = gpps;
-> +
-> +	return 0;
-> +}
-> +
-> +static int intel_platform_pinctrl_prepare_soc_data(struct device *dev,
-> +						   struct intel_pinctrl_soc_data *data)
-> +{
-> +	struct intel_platform_pins pins = {};
-> +	struct intel_community *communities;
-> +	size_t ncommunities;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	ncommunities = 1,
-
-Why this is 1? Can't we have more communities?
-
-> +	communities = devm_kcalloc(dev, ncommunities, sizeof(*communities), GFP_KERNEL);
-> +	if (!communities)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < ncommunities; i++) {
-> +		struct intel_community *community = &communities[i];
-> +
-> +		community->barno = i;
-> +		community->pin_base = pins.npins;
-> +
-> +		ret = intel_platform_pinctrl_prepare_community(dev, community, &pins);
-> +		if (ret)
-> +			return ret;
-> +
-> +		community->npins = pins.npins - community->pin_base;
-> +	}
-> +
-> +	data->ncommunities = ncommunities;
-> +	data->communities = communities;
-> +
-> +	data->npins = pins.npins;
-> +	data->pins = pins.pins;
-> +
-> +	return 0;
-> +}
-> +
-> +static int intel_platform_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct intel_pinctrl_soc_data *data;
-
-
-Change the ordering of the above:
-
-	struct intel_pinctrl_soc_data *data;
-	struct device *dev = &pdev->dev;
-
-> +	int ret;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	ret = intel_platform_pinctrl_prepare_soc_data(dev, data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return intel_pinctrl_probe(pdev, data);
-> +}
-> +
-> +static const struct acpi_device_id intel_platform_pinctrl_acpi_match[] = {
-> +	{ }
-
-And add the _CID here in this patch as I commented in the last patch.
-
-> +};
-> +MODULE_DEVICE_TABLE(acpi, intel_platform_pinctrl_acpi_match);
-> +
-> +static struct platform_driver intel_platform_pinctrl_driver = {
-> +	.probe = intel_platform_pinctrl_probe,
+> +static struct platform_driver tps6594_pinctrl_driver = {
+> +	.probe = tps6594_pinctrl_probe,
 > +	.driver = {
-> +		.name = "intel-pinctrl",
-> +		.acpi_match_table = intel_platform_pinctrl_acpi_match,
-> +		.pm = pm_sleep_ptr(&intel_pinctrl_pm_ops),
+> +		.name = "tps6594-pinctrl",
 > +	},
 > +};
-> +module_platform_driver(intel_platform_pinctrl_driver);
+> +module_platform_driver(tps6594_pinctrl_driver);
 > +
-> +MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
-> +MODULE_DESCRIPTION("Intel PCH pinctrl/GPIO driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_IMPORT_NS(PINCTRL_INTEL);
-> -- 
-> 2.40.0.1.gaa8946217a0b
+> +MODULE_ALIAS("platform:tps6594-pinctrl");
+
+Since kbuild reports build error (which is surprise for v8...), drop
+also MODULE_ALIAS and use proper ID table.
+
+Best regards,
+Krzysztof
+
