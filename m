@@ -2,178 +2,273 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4006C7E0724
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Nov 2023 18:02:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3B0B7E0789
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Nov 2023 18:36:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376504AbjKCRCs convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 3 Nov 2023 13:02:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54026 "EHLO
+        id S230124AbjKCRgw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Nov 2023 13:36:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376478AbjKCRCr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Nov 2023 13:02:47 -0400
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E718C1BD;
-        Fri,  3 Nov 2023 10:02:43 -0700 (PDT)
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-        by mx.skole.hr (mx.skole.hr) with ESMTP id C6CB684BE2;
-        Fri,  3 Nov 2023 18:02:41 +0100 (CET)
-From:   Duje =?utf-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Leo Yan <leoy@marvell.com>,
-        Zhangfei Gao <zhangfei.gao@marvell.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Karel Balej <balejk@matfyz.cz>
-Subject: Re: [PATCH v7 08/10] arm64: Kconfig.platforms: Add config for Marvell PXA1908
- platform
-Date:   Fri, 03 Nov 2023 18:02:31 +0100
-Message-ID: <2919185.e9J7NaK4W3@radijator>
-In-Reply-To: <ffb08cc2-705a-468e-b6d2-9ce591c08ab4@arm.com>
-References: <20231102152033.5511-1-duje.mihanovic@skole.hr>
- <20231102152033.5511-3-duje.mihanovic@skole.hr>
- <ffb08cc2-705a-468e-b6d2-9ce591c08ab4@arm.com>
+        with ESMTP id S230203AbjKCRgv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Nov 2023 13:36:51 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037CFD5E
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Nov 2023 10:36:44 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1cc209561c3so13155ad.0
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Nov 2023 10:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1699033003; x=1699637803; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ljFKvtFUqqFsbXgmTSkchkcxGOyzN4hSb2DoRM1Sf0Y=;
+        b=rEIfWicHcvQ5TOaqPpqzrEeeR53a9MnXt1aIu6assMVyezOa+Jrsj+2l8opxDWO4+w
+         87AZjLAw3cWV3jBv9XpsOPWXyzzmqRv4HzcvJgkmRrITkV5ptl9pdbk4AsoaC6I6BDEi
+         mwxTXKnSo3IxPAD6QHSoNkIEjVY0txbshql/Lu+ZbCbawAdhy95a0BeFkBFEriqCPMGr
+         KXSPivFFWgXuovHxL+XL/4+cnvbP9pBTT8iTUxataCw42oJ+qRb/6PtFoXFJSCEmhcaF
+         yMTQ7Jq823eKDIipJYFJJ4lYnwmCjeAg5WgIdpAw+DXvEH9gj0IN5Wnz/rWpgKTJ8mD7
+         SDQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699033003; x=1699637803;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ljFKvtFUqqFsbXgmTSkchkcxGOyzN4hSb2DoRM1Sf0Y=;
+        b=vfJzrfAV2abFIQCu3QwAa93ADnJpltSWMssuhZTDQ3KDMGbGBkOSXpD3cFOpmJhmCz
+         /3qigM/iEMzJNBh0T8RDoa/uNS6gOPK8m71cVG08bm8h5SBemJEuXJWpr2/urz1bsj41
+         kEUs8XB/i0CgD7b5iLaZJ2J8n0C7FxBCd7innsfN6HBiX3gkEA3oaCrV4y5T27vhdK/i
+         AFCDmcyjAuLb5/tbqobr+EVnQwNb4UuUUguIijcmUpyvEPrBAg4WTvV/NFCLw1UG08pe
+         +ntnmAamDdsnvUZK/5qQDHOy0pe1ppp0nZpP0wQ7YGBcgQBqE/O6Lq4AfpcwShcBLRis
+         jUkQ==
+X-Gm-Message-State: AOJu0Yx8leMRgz3DH7TGSN4CMUGcTSl9rq1IdbHELEz8cOeQleYXLAOY
+        RsO3oNV/lXH5QvS6OoMOerotWg==
+X-Google-Smtp-Source: AGHT+IHNZ7RrKpl3RUjqk7Qy3sQdAOqNm0LQBFDyIHRujlLtgghzH2cAyzRycaalNK3KDTTCVhOc8w==
+X-Received: by 2002:a17:902:7d89:b0:1b8:b564:b528 with SMTP id a9-20020a1709027d8900b001b8b564b528mr13284plm.7.1699033003056;
+        Fri, 03 Nov 2023 10:36:43 -0700 (PDT)
+Received: from google.com (137.22.168.34.bc.googleusercontent.com. [34.168.22.137])
+        by smtp.gmail.com with ESMTPSA id q16-20020a17090311d000b001ca2484e87asm1622600plh.262.2023.11.03.10.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Nov 2023 10:36:42 -0700 (PDT)
+Date:   Fri, 3 Nov 2023 10:36:39 -0700
+From:   William McVicker <willmcvicker@google.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Maksym Holovach <maksym.holovach.an.2022@lpnu.ua>,
+        Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
+        s.nawrocki@samsung.com, linus.walleij@linaro.org,
+        wim@linux-watchdog.org, linux@roeck-us.net,
+        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+        olof@lixom.net, cw00.choi@samsung.com, tudor.ambarus@linaro.org,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        saravanak@google.com, soc@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@android.com, linux-serial@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH v2 00/20] Add minimal Tensor/GS101 SoC support and
+ Oriole/Pixel6 board
+Message-ID: <ZUUvp3kqM7NPlyZ_@google.com>
+References: <20231010224928.2296997-1-peter.griffin@linaro.org>
+ <3d489d6c-2098-4f0c-9ec4-f6040665753e@lpnu.ua>
+ <CADrjBPp+fyNoPdix6=Wp4cDCRFq2Mui8NS6WENejcHn+H1M-jA@mail.gmail.com>
+ <48e1c0bd-9518-4927-b490-f3206256bbd4@lpnu.ua>
+ <c0b8f356-0f26-459d-850d-ec0fa1fd3987@linaro.org>
 MIME-Version: 1.0
-Autocrypt: addr=duje.mihanovic@skole.hr;
- keydata=
- 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
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0b8f356-0f26-459d-850d-ec0fa1fd3987@linaro.org>
+X-Spam-Status: No, score=-15.9 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Friday, November 3, 2023 4:34:54 PM CET Robin Murphy wrote:
-> On 2023-11-02 3:20 pm, Duje Mihanović wrote:
-> > +config ARCH_MMP
-> > +	bool "Marvell MMP SoC Family"
-> > +	select ARM_GIC
-> > +	select ARM_ARCH_TIMER
-> > +	select ARM_SMMU
+Hi Maksym, Krzysztof, Peter,
+
+On 11/03/2023, Krzysztof Kozlowski wrote:
+> On 03/11/2023 14:56, Maksym Holovach wrote:
+> > Hi Peter,
+> > 
+> > On 11/3/23 15:11, Peter Griffin wrote:
+> >> Hi Maksym,
+> >>
+> >> Thanks for your feedback.
+> >>
+> >> On Thu, 2 Nov 2023 at 22:32, Maksym Holovach
+> >> <maksym.holovach.an.2022@lpnu.ua> wrote:
+> >>> Hi, all
+> >>>
+> >>> I wanted to inquire about how do you all feel about calling this SoC by
+> >>> the Google "gs101" name.
+> >> Interesting question, I think calling it gs101 is the correct approach see
+> >> below for my rationale.
+> >>
+> >>> I believe the proper name for it should be the actual Samsung name,
+> >>> written in the silicon and reported in the Chip ID hardware: Exynos9845.
+> >>> This also touches the Tensor G2 (Exynos9855), Tensor G3 (Exynos9865),
+> >>> and possibly the "Tesla" SoCs.
+> >>>
+> >>> I do not think the Linux kernel should be a marketing material: it
+> >>> should reflect reality. The chip is almost 100% composed of Samsung
+> >>> Exynos IP blocks and should be called that way.
+> >> As you alluded to Tesla fsd and Axis artpec8 SoCs are also based on
+> >> Exynos designs and support upstream uses the axis,artpec8* or tesla,fsd*
+> >> compatibles.
+> >>
+> >> So using google,gs101 is consistent with the existing upstream naming
+> >> scheme, for customized ASICs that were based off a Exynos design. But
+> >> it also reflects the reality that this SoC is not a Exynos9845 as there is
+> >> also a lot of Google owned and other third party IP integrated that is not
+> >> found in Exynos9845.
+> > 
+> > A quick question: Do you imply Exynos9845 exists outside of the context 
+> > of Tensor G1? I used to believe Exynos9845 **is** Tensor G1.
+
+Yes, the gs101 SoC is *not* equivalent to the Exynos9845. Similar to how Tesla
+FSD licenses Exynos IP blocks, gs101 does not only comprise of Exynos IP
+blocks. The final design is unique to Google and comprises of several different
+vendor IP blocks (not only Exynos).
+
+> > 
+> > Also, what kind of Google IP are you talking about? I believe only the 
+> > neural accelerator should be custom-ish.
+> > 
+> > Additionally, I believe it having or not having Google IP is irrelevant: 
+> > for example, the new Raspberry Pi 5 Broadcom SoC has a lot of 
+> > Raspberry's own IP, but it's still called Broadcom as it's the real 
+> > manufacturer and designer of the chip.
 > 
-> NAK, not only is selecting user-visible symbols generally frowned upon,
-> and ignoring their dependencies even worse, but for a multiplatform
-> kernel the user may well want this to be a module.
+> That's a good argument. Indeed BCM2712 contains "New Raspberry
+> Pi-developed ISP".
+> https://www.raspberrypi.com/documentation/computers/processors.html
 > 
-> If having the SMMU driver built-in is somehow fundamentally required for
-> this platform to boot, that would represent much bigger problems.
+> There aren't many patches but GPU is still called brcm,2712.
+> 
+> For Tesla FSD, there was discussion and output was not very consisting.
+> First, the name itself was used for everything - SoC architecture, one
+> given SoC and eventually the board.
+> https://lore.kernel.org/all/5ab62673-8d46-ec1d-1c80-696421ab69ca@canonical.com/
+> 
+> Eventually the last part - board - was renamed to "Evaluation board",
+> but I don't know how true or real it is.
+> 
+> See also:
+> "I would argue that if this SoC shares the pinctrl, clock, spi, adc,
+> and timer implementation
+> with Exynos, we should consider it part of the Exynos family,"
+> https://lore.kernel.org/all/CAK8P3a31bCHNcNWrLX+QW+4RuK=DBpxLA_j5BFKxXxXKCT8PFQ@mail.gmail.com/
+> 
+> However it was also claimed:
+> 
+> "AFA architecture is concerns both Exynos and FSD has completely
+> different architecture (at least at HW level)."
+> https://lore.kernel.org/all/07ce01d8091e$9a6fd9c0$cf4f8d40$@samsung.com/
+> 
+> >> I guess the same is also true for `axis,artpec8` and `tesla,fsd` SoCs.
+> >> IMO the SoC compatible string should be uniquely identifying the actual
+> >> SoC, not a close relative.
+> >>
+> >> Regarding product_id you are correct this reads 0x09845000 but even
+> >> within Samsung Exynos family there are examples where the register
+> >> value does not match the SoC compatible. For example Exynos850 SoC
+> >> has a product ID value of "E3830". Where the Linux compatible is
+> >> matching the Samsung marketing name, not the internal/outdated name.
+> > 
+> > I did not know Exynos 850 is also not going under it's real name. 
+> > Ultimately, I believe all of those SoCs should go under their technical 
+> > name in the exynos/ directory.
+> 
+> The initial technical name does not exist outside of vendor sources and
+> part name. E.g. Winlink E850 board hardware manual calls it:
+> "Samsung Exynos 850, S5E3830"
+> and everywhere else Exynos 850 SoC is used.
+> 
+> If you start calling it Exynos 3830, only me and Sam (who mainlined it)
+> would know what is it. Everyone else, all users of kernel, would be
+> confused.
+> 
+> Therefore using well known final product name is for Exynos850 reasonable.
 
-The SoC can boot without SMMU and PDMA, but not GIC, pinctrl or the arch 
-timer. I see that most other SoCs still select drivers and frameworks they 
-presumably need for booting, with the exceptions of ARCH_BITMAIN, ARCH_LG1K 
-and a couple others. Which of these two options should I go for?
+I agree with this. By using the final (well known) product SoC name -- gs101 --
+other developers will be able to easily identify the particular SoC.
 
-Regards,
-Duje
+> 
+> > 
+> > Another concern is that Google could in the future license other SoC: be 
+> > it Qualcomm, Nvidia or anything. If we put completely different hw under 
+> > google/ directory, does it really make sense? In that case, who'll 
+> > maintain the google/ directory? Exynos people? Qualcomm people if they 
+> > license it? Some other people?
 
+I don't understand why the architecture of the SoC would dictate which folder
+to put the device tree files under. It makes more sense to group board DT files
+together based on who distributes them. Having all the Pixel DT board files
+together allows Google to create a single device tree binary per SoC coupled
+with the set of device tree overlays per board variant (this is the dtbo.img)
+to ship to all their devices. If you look at all the in-market Pixel devices
+with Tensor SoCs, you will find that you could create one dtb (concatenate
+gs101.dtb, gs201.dtb, and zuma.dtb) and one dtbo image for 10 devices which
+significantly simplifies the maintenance, testing, and software distribution
+for all 10 of those products.
 
+> 
+> That's indeed a problem. Future Tesla SoC might have just few pieces
+> similar to FSD. There would be no common SoC part, except the actual
+> Tesla IP.
+> 
+> Same for Google. Future GSXXX, if done by Qualcomm, will be absolutely
+> different than GS101 and the only common part would be the TPU (Tensor).
+> 
+> So now let's decide what is the common denominator:
+> 1. Core SoC architecture, like buses, pinctrl, clocks, timers, serial,
+> and many IP blocks, which constitute 95% of Devicetree bindings and drivers,
+> 2. The one, big piece made by Samsung's customer: TPU, NPU or whatever.
 
+As mentioned above, I think this should be based on how the DTBs and DTBOs are
+used and distributed. What is the benefit of adding the gs101 board files under
+the exynos folder?
 
+Thanks,
+Will
+
+> 
+> > 
+> > Then, I don't think Tensor G3 has a proper "GS" name, it goes by "Zuma" 
+> > in decompiled kernel modules as far as I see.
+> > 
+> > Finally, Tesla people already tried to submit drivers called by Tesla 
+> > name, but which basically copied the functionality of the Exynos 
+> > drivers. We would want to avoid that, ideally.
+> > 
+> > My opinion is that all the Tesla and Google SoCs should be in the 
+> > exynos/ directory, not only because they are basically Samsung Exynos, 
+> > but also because they don't really need a separate directory: neither 
+> > Google nor Tesla didn't neither manufacture or design those SoCs from 
+> > scratch. The only reason I can think of for them to have it in a 
+> > separate directory is maybe because Google and Tesla actually paid 
+> > Samsung money for the right to call Exynos "Google designed" SoCs, but I 
+> > believe the kernel should be left out of that.
+> 
+> For some reason, although I know which, Cc-list is here trimmed and
+> misses Alim...
+> 
+> So standard reply follow (it makes me really, really grumpy, because it
+> means you develop on some crazy old kernel or do not use tools which
+> automate the process):
+> 
+> Please use scripts/get_maintainers.pl to get a list of necessary people
+> and lists to CC (and consider --no-git-fallback argument). It might
+> happen, that command when run on an older kernel, gives you outdated
+> entries. Therefore please be sure you base your patches on recent Linux
+> kernel.
+> 
+> Best regards,
+> Krzysztof
+> 
