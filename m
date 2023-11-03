@@ -2,104 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66EA07E07C2
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Nov 2023 18:51:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6C947E0951
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Nov 2023 20:15:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbjKCRvv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Nov 2023 13:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
+        id S230246AbjKCTPH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Nov 2023 15:15:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjKCRvu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Nov 2023 13:51:50 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1B1A1D42;
-        Fri,  3 Nov 2023 10:51:47 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77F962F4;
-        Fri,  3 Nov 2023 10:52:29 -0700 (PDT)
-Received: from [10.57.81.32] (unknown [10.57.81.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D4DC3F738;
-        Fri,  3 Nov 2023 10:51:41 -0700 (PDT)
-Message-ID: <1cbc6def-8255-4a13-99b0-145d3f8ffcac@arm.com>
-Date:   Fri, 3 Nov 2023 17:51:39 +0000
+        with ESMTP id S229605AbjKCTPH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Nov 2023 15:15:07 -0400
+Received: from mail-wr1-x461.google.com (mail-wr1-x461.google.com [IPv6:2a00:1450:4864:20::461])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84B4D51
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Nov 2023 12:15:00 -0700 (PDT)
+Received: by mail-wr1-x461.google.com with SMTP id ffacd0b85a97d-32fb95dfe99so512529f8f.2
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Nov 2023 12:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gadgetoid.com; s=google; t=1699038899; x=1699643699; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d674onrrLvCtMopWGzODVvgOe+Z9nwSN0YIsFhe0KZE=;
+        b=chAHieLtYBQwcHMRZDHxfhtpn9WE5PLDt00AuKysZsoKCRKL+xNIIdluJpz8DieLKM
+         7wJQMEdREmuFN5cf0j0+92FDjd9raYZ8tEAKrpMDlztF/NRPlNR3ecbnyaOe6qKp0DF5
+         MvugJBGfhVJu0rX97IR5QafOjm60Ea9d8Ik2BZYi+vwrGYW1TwRtLpe32SEkUfeHEX3L
+         FwCi/u0MZJaXcXIdshJK3z6qFKl1yG76GCIFtNI2T/Zq680xcwzcQjlz/08P05vyrFGx
+         Py6SiQWg23WMKYkbLsEPnJ71dbxUwXF7DBG5X5XmljfRnmX51xFTeYFzhrK+jd/CsmeC
+         YW/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699038899; x=1699643699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d674onrrLvCtMopWGzODVvgOe+Z9nwSN0YIsFhe0KZE=;
+        b=C29FoofvTsyT0zp14sL+uKf1mKPnMz/FC0KzEZymhk4kY96e2sJPGdRkCqvA8J2kdP
+         PKTbDgmr5/1VIYkndaQAmRPoOQ2bdLqn8XvQFel5piY3hCpC/uaddn3XkNrEXBOAgP09
+         Qpw1mWmNZtmA0iL8hPS0edK0aKdoQvNNBveT2njARcNEY7ESJd+J5Mtfi3cmM6nfdY7s
+         iNylbC6EcTjYxyIVd2+Q8lDMh+o5w+3wUIw+UytE0vRx0oTZztg9YRVPbileHspByG22
+         XYPHIOaJtIPjs4oqsLzdlEB2AYu8ejP3L8e2EHHTTFkXrzSfn/p8f9v8P0mQfNEIyuBB
+         PArQ==
+X-Gm-Message-State: AOJu0YxQGqJHBxlOih7I8OSNZxncgeMSjAtYsnhtM2L8jijeRhbFrY6P
+        kU8p541UIJowfbycdQfUjy0jLKHWjztSV20QheVyZaL8X2thqA==
+X-Google-Smtp-Source: AGHT+IHzGcxdeEmhg8f6liUUxTAHKRWT9LVj5WrYMel00HDXzybZgIrgDfkp8U8q24ObIqMohCTq8wPix8da
+X-Received: by 2002:a5d:6c63:0:b0:32f:7fe4:45f2 with SMTP id r3-20020a5d6c63000000b0032f7fe445f2mr15266666wrz.4.1699038899042;
+        Fri, 03 Nov 2023 12:14:59 -0700 (PDT)
+Received: from pop-os.. (cpc91242-cmbg18-2-0-cust972.5-4.cable.virginm.net. [82.8.131.205])
+        by smtp-relay.gmail.com with ESMTPS id o7-20020a05600002c700b003196eead436sm1239610wry.94.2023.11.03.12.14.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Nov 2023 12:14:59 -0700 (PDT)
+X-Relaying-Domain: gadgetoid.com
+From:   Phil Howard <phil@gadgetoid.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, Phil Howard <phil@gadgetoid.com>
+Subject: [libgpiod][PATCH] bindings: python: fix README.md SPDX license tags
+Date:   Fri,  3 Nov 2023 19:14:55 +0000
+Message-Id: <20231103191455.2441883-1-phil@gadgetoid.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 08/10] arm64: Kconfig.platforms: Add config for Marvell
- PXA1908 platform
-Content-Language: en-GB
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Leo Yan <leoy@marvell.com>,
-        Zhangfei Gao <zhangfei.gao@marvell.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Karel Balej <balejk@matfyz.cz>
-References: <20231102152033.5511-1-duje.mihanovic@skole.hr>
- <20231102152033.5511-3-duje.mihanovic@skole.hr>
- <ffb08cc2-705a-468e-b6d2-9ce591c08ab4@arm.com> <2919185.e9J7NaK4W3@radijator>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <2919185.e9J7NaK4W3@radijator>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2023-11-03 5:02 pm, Duje Mihanović wrote:
-> On Friday, November 3, 2023 4:34:54 PM CET Robin Murphy wrote:
->> On 2023-11-02 3:20 pm, Duje Mihanović wrote:
->>> +config ARCH_MMP
->>> +	bool "Marvell MMP SoC Family"
->>> +	select ARM_GIC
->>> +	select ARM_ARCH_TIMER
->>> +	select ARM_SMMU
->>
->> NAK, not only is selecting user-visible symbols generally frowned upon,
->> and ignoring their dependencies even worse, but for a multiplatform
->> kernel the user may well want this to be a module.
->>
->> If having the SMMU driver built-in is somehow fundamentally required for
->> this platform to boot, that would represent much bigger problems.
-> 
-> The SoC can boot without SMMU and PDMA, but not GIC, pinctrl or the arch
-> timer. I see that most other SoCs still select drivers and frameworks they
-> presumably need for booting, with the exceptions of ARCH_BITMAIN, ARCH_LG1K
-> and a couple others. Which of these two options should I go for?
+Replace the # (which is a markdown heading) with HTML tags to hide SPDX
+identifier tags within the project description on pypi.
 
-Well, you don't really need to select ARM_GIC or ARM_ARCH_TIMER here 
-either, since those are already selected by ARM64 itself. Keeping 
-PINCTRL_SINGLE is fair, although you should also select PINCTRL as its 
-dependency.
+Signed-off-by: Phil Howard <phil@gadgetoid.com>
+---
+ bindings/python/README.md | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-As an additional nit, the file seems to be primarily ordered by symbol 
-name, so it might be nice to slip ARCH_MMC in between ARCH_MESON and 
-ARCH_MVEBU.
+diff --git a/bindings/python/README.md b/bindings/python/README.md
+index abb69da..325c63d 100644
+--- a/bindings/python/README.md
++++ b/bindings/python/README.md
+@@ -1,5 +1,5 @@
+-# SPDX-License-Identifier: CC-BY-SA-4.0
+-# SPDX-FileCopyrightText: 2023 Phil Howard <phil@gadgetoid.com>
++<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
++<!-- SPDX-FileCopyrightText: 2023 Phil Howard <phil@gadgetoid.com> -->
+ 
+ # gpiod
+ 
+-- 
+2.34.1
 
-Cheers,
-Robin.
