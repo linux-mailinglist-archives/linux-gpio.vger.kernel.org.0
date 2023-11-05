@@ -2,81 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF2487E16FE
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Nov 2023 22:59:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63FB77E16E6
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Nov 2023 22:50:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229772AbjKEV7T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 5 Nov 2023 16:59:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43754 "EHLO
+        id S229485AbjKEVus (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Nov 2023 16:50:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjKEV7S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Nov 2023 16:59:18 -0500
-X-Greylist: delayed 5169 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 05 Nov 2023 13:59:15 PST
-Received: from SMTP-HCRC-200.brggroup.vn (mail.hcrc.vn [42.112.212.144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA28CC;
-        Sun,  5 Nov 2023 13:59:15 -0800 (PST)
-Received: from SMTP-HCRC-200.brggroup.vn (localhost [127.0.0.1])
-        by SMTP-HCRC-200.brggroup.vn (SMTP-CTTV) with ESMTP id 844A215768;
-        Mon,  6 Nov 2023 01:57:29 +0700 (+07)
-Received: from zimbra.hcrc.vn (unknown [192.168.200.66])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by SMTP-HCRC-200.brggroup.vn (SMTP-CTTV) with ESMTPS id 7D3F4171D7;
-        Mon,  6 Nov 2023 01:57:29 +0700 (+07)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.hcrc.vn (Postfix) with ESMTP id 199B21B8252B;
-        Mon,  6 Nov 2023 01:57:31 +0700 (+07)
-Received: from zimbra.hcrc.vn ([127.0.0.1])
-        by localhost (zimbra.hcrc.vn [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id aREbjDdrr8pp; Mon,  6 Nov 2023 01:57:31 +0700 (+07)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.hcrc.vn (Postfix) with ESMTP id DC6011B8250F;
-        Mon,  6 Nov 2023 01:57:30 +0700 (+07)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.hcrc.vn DC6011B8250F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hcrc.vn;
-        s=64D43D38-C7D6-11ED-8EFE-0027945F1BFA; t=1699210650;
-        bh=WOZURJ77pkiMUL2pPLC14ifVPRvyTQIBEQmxuN1ezAA=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=ZmNflaH+yzlLmVve74LnG0r0LIb0orAc6A0NDozskRA5/84un83k9D9eUR6AG9cc3
-         57+vdHdibtytyPk3cgigMYw7g+utPb1SIhZGFGYIHhvhbexuMPFBsMnZf6qIyiwOTQ
-         sCDQatME2aoLjFZMBYJTARGVGBCxlNPG5ngJiOxx6zGMrL34zG8RD7E9X3kktRKn2O
-         9HCGE/ArYsbAP/YNjpKCWj0lhY6OjjCSLnZ/J+QeVvxUR210u/digy7Ig09ZF/XHfU
-         YnWdcu8fFB5iCTjJlbCbsoRkfgzP0BE6fG88nAFjJq7yEkDpvOGvwj9YS0UDv5KAt5
-         HIngBy/OQjv9w==
-X-Virus-Scanned: amavisd-new at hcrc.vn
-Received: from zimbra.hcrc.vn ([127.0.0.1])
-        by localhost (zimbra.hcrc.vn [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id vXlRdQ8Lympa; Mon,  6 Nov 2023 01:57:30 +0700 (+07)
-Received: from [192.168.1.152] (unknown [51.179.100.52])
-        by zimbra.hcrc.vn (Postfix) with ESMTPSA id 8698D1B8223A;
-        Mon,  6 Nov 2023 01:57:24 +0700 (+07)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S229447AbjKEVur (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Nov 2023 16:50:47 -0500
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8CC5B7
+        for <linux-gpio@vger.kernel.org>; Sun,  5 Nov 2023 13:50:43 -0800 (PST)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-5b499b18b28so46432407b3.0
+        for <linux-gpio@vger.kernel.org>; Sun, 05 Nov 2023 13:50:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1699221043; x=1699825843; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hr90dwu2WPmXaV4AOaADTw6spiSJ6baUUUEIFJOSjZY=;
+        b=a7PP9pAuklVXMrs/bRGWxE4gXaokmyt2253HQZVSn//yuYepZ4H6f+ietUitc/767A
+         0iJopoPV104WAHp9Wf1utyP9kgmAo9+R+DR5h5zspzW2iXG8DePvTDf8t169KZKoiXZQ
+         JHq1aP81+9hUAJWT29Oq+nBrjMXdzM5hFQ7iHBGlupv1fUv8gtrmikDC/tzYy+2Jb4cW
+         QqWAjVG1Dc0YpwEkrPUAzj5fHvoF2HuUiMdtvDNMAsSKQMI7n7/5x8AL9Ef+0wXFsBQu
+         LYR4PlUqyQ0HrdRl3NHMXi4CZC9nSN6lEdCSrDMdgtVo1tSmDNhT0HS/jQy2o8VMeCOl
+         jCWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699221043; x=1699825843;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hr90dwu2WPmXaV4AOaADTw6spiSJ6baUUUEIFJOSjZY=;
+        b=kXXYPwrjo4FmlWEKKCrJbBjVAv1yVKhJkPQmolGLYhnE2lA2ciXIOiwZT94u+sbvJc
+         a58ltNbYQkR6GlRCJsU0lXx1NAHkCUegsqbJd3NX6Z7Qzf9qOLWd3cB3LY4PNMd1Kcxj
+         aI20ePFG306sYXBg+C+nyV15/TRHo+iMKXUml2zCEzJZx9YY6juGeipYi3buhjJdlAXj
+         ayFtfI1MLVbYW3YdZNeWnrPYfycUDA1D3KdGUB+pAIjtO230ypt1ku1MXekiBL7eVXDM
+         B7WmurzG8iD7XJOcXUmRuPnLDDu3fFhTmLez9sj4VXr44oWMMKbc6WeCmjAilLweS8Xo
+         zGRA==
+X-Gm-Message-State: AOJu0Yyn4LPj4+x7j19CR81pmHRoYe4JOxMjIUgMyTnhnlqBIiQa3kie
+        r5XKR7EcR0QCC8zW4X7Qr4937YO9nDSSJCqY6aX9qA==
+X-Google-Smtp-Source: AGHT+IH3pT1GWz389sFqirKn5caQD4B9kLeKnqxw6mJ3o9PSnnJ5ODaLO9iXH2fcFh44UlzTYX6nLVYHv1RqiDHHBUo=
+X-Received: by 2002:a0d:cc4e:0:b0:5a8:5079:422 with SMTP id
+ o75-20020a0dcc4e000000b005a850790422mr8924478ywd.26.1699221043009; Sun, 05
+ Nov 2023 13:50:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?b?4oKsIDEwMC4wMDAuMDAwPw==?=
-To:     Recipients <ch.31hamnghi@hcrc.vn>
-From:   ch.31hamnghi@hcrc.vn
-Date:   Sun, 05 Nov 2023 19:57:14 +0100
-Reply-To: joliushk@gmail.com
-Message-Id: <20231105185724.8698D1B8223A@zimbra.hcrc.vn>
-X-Spam-Status: No, score=2.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
+In-Reply-To: <cover.1698353854.git.oleksii_moisieiev@epam.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 5 Nov 2023 22:50:31 +0100
+Message-ID: <CACRpkdZ4GborirSpa3GK_PwMgCvY0ePEmZO+CwnLcP6nAdieow@mail.gmail.com>
+Subject: Re: [RFC v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Takahiro Akashi <takahiro.akashi@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Goededag,
-Ik ben mevrouw Joanna Liu en een medewerker van Citi Bank Hong Kong.
-Kan ik =E2=82=AC 100.000.000 aan u overmaken? Kan ik je vertrouwen
+Hi Oleksii,
 
+thanks for this patch, which still looks very good to me.
 
-Ik wacht op jullie reacties
-Met vriendelijke groeten
-mevrouw Joanna Liu
+A question that was raised in discussion with Takahiro Akashi was how we
+identify pins that can be used for GPIO and if the spec or implementation
+has given any thought to that.
 
+I can think of a few, such that:
+
+1. Pins that can be used for GPIO all belong to some group - possibly even
+  one group per pin such as "gpioA1", "gpioA2", "gpioA3" etc - that can be
+  assigned a function named "gpio" or similar.
+
+2. GPIO is seen as something external or "third usecase" that is handled
+  by pin config, not by pin mux.
+
+If it is 1 - which I find likely - it would be good to standardize the name of
+the function to be "gpio" and somehow make it clear that all pins that are
+desired to be used for GPIO need to have a (group, function) tuple pair
+such as ("gpio001", "gpio") that will put the pin into GPIO mode.
+
+If the assumption is anything goes, i.e. a vendor could say something
+like ("io-group-99", "generic-io") to put a certain pin into GPIO mode,
+that is maybe not so optimal, because it's nice for the GPIO driver
+(which will come up) to be able to figure out by e.g. string name
+conventions that a pin is in GPIO mode, and which group and function
+that will put it into GPIO mode.
+
+If this generality is not desired, having standard names for GPIO
+functions and groups is still going to be an upside, if it can be achieved.
+But maybe this isn't attainable at this point?
+
+Yours,
+Linus Walleij
