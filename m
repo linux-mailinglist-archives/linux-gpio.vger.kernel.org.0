@@ -2,131 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BDE87E174E
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Nov 2023 23:16:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C39F7E1895
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Nov 2023 03:26:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229597AbjKEWPo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 5 Nov 2023 17:15:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
+        id S229717AbjKFC0V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Nov 2023 21:26:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjKEWPo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Nov 2023 17:15:44 -0500
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23121DB
-        for <linux-gpio@vger.kernel.org>; Sun,  5 Nov 2023 14:15:41 -0800 (PST)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-5a7af20c488so46425787b3.1
-        for <linux-gpio@vger.kernel.org>; Sun, 05 Nov 2023 14:15:41 -0800 (PST)
+        with ESMTP id S229485AbjKFC0U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Nov 2023 21:26:20 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529D5FA
+        for <linux-gpio@vger.kernel.org>; Sun,  5 Nov 2023 18:26:17 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-2800db61af7so1303646a91.0
+        for <linux-gpio@vger.kernel.org>; Sun, 05 Nov 2023 18:26:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699222540; x=1699827340; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JrqCjnNBchrd9FLn5hEJeuZodiLvnKhusQVXvM/Nn54=;
-        b=E0Szbm7N7Iegktaa14GlXFTvfjQubA4PmaE8hKJny12mcr4+Fbd3rqnxL4cPnlfffA
-         WlAEowmBmAn6CztIn4QRiluhtM4CtIdzckwZqGj796ATzK0BQ6wzUILS+vU31FNt5waE
-         xRjhq8fxO6Fasgvv8Gv+9wrssDiT9YeQ1NOhqcbL6y2HFgp5La/TdlioGQcDHcdxq6/t
-         yClNkjk2SF43q3a5Sx6uLHgmJRB7x0b24Q5k1qFbt2kdm8HTYOGeLNsDdXMI9YsaDGr6
-         7rknbOyeMbjl3b3La9uJgg3nGk0F/Mv1p8uTomLKOzgzl3ZS45YyVKsGMZp+u4TFuMte
-         4KTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699222540; x=1699827340;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=linaro.org; s=google; t=1699237577; x=1699842377; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JrqCjnNBchrd9FLn5hEJeuZodiLvnKhusQVXvM/Nn54=;
-        b=O5hfR72aWqtEc2+X9Yp98Nn416rxJVyV0E8gjNXPOdLe2l2gluGMhS41u0ehaboTRt
-         BJMJormRzXU0eCCwNrJeroxBkYrZqVUGSeq9X8Zv1M/HHNAnSSVvT0uj1IPQ1I9FBZxE
-         1RltVWt8x4M1PHbdLIXmeY8mv/0r+a584TKnRMcUiWN0C3uN5L3F/1AJ8/nehQI3v9Rc
-         DQSo13+2ImvulcKnKINtqcG9xnKAvFHy7UIITQFB0YYylRHjOt/Rra4EozvELT1sKJIu
-         DqACIec9wlOOGLHwcLEo44pa5cbYBVo/I6U++QfyXUyFpMPKn1lQNJh9k5jiuYT2nlqG
-         Deew==
-X-Gm-Message-State: AOJu0YzHTJiUTVxlwc2qCxDCta2SQj58dKbrjqojjx+WoYSHZmpzDeJA
-        ZQ0kxUAXBNopmRqfwLmvWC75EEJaY5oEdxApyL1Bsw==
-X-Google-Smtp-Source: AGHT+IH4yXKr5aMVYMhvGN4m10IZVbD2G5FmoNaU4DuDBb1msb3GO0RY10mUZGCROsJWs0eOoN711XTj7uTN22WCTwU=
-X-Received: by 2002:a0d:df4a:0:b0:5a8:1654:4b6f with SMTP id
- i71-20020a0ddf4a000000b005a816544b6fmr9302434ywe.17.1699222540310; Sun, 05
- Nov 2023 14:15:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20231006132346.GA3426353-robh@kernel.org> <CACRpkdaLsfSBEG-h9ZNT2_Lm8tW8AZO7tedDVNeuZoQAqSkyjw@mail.gmail.com>
- <ZSTgTC4cFFpofYAk@octopus> <CACRpkdYD6pkccYoy90AfzV3KT7oYkBPD2_4ZW-AXzT1eUVpchA@mail.gmail.com>
- <ZS3yK/f12Mxw9rXe@octopus> <CACRpkdarDrVkPmyDawhZ+H94S4F=dtDSDVuKegi-eNfQNDY3rg@mail.gmail.com>
- <ZTduWx7CH1ifI5Uc@octopus> <CACRpkdba=echR=rZYKVbROfaOp4mzjTQ9RphHFyzqSNgE1jZqg@mail.gmail.com>
- <ZTemAK/jBtv9b5xP@octopus> <CACRpkdY-5uS9EeXfDFVOiRKiFmwwSn3jRVGhT-n4JMqesHEumw@mail.gmail.com>
- <ZTfJ4b7VdTkA0sxo@octopus>
-In-Reply-To: <ZTfJ4b7VdTkA0sxo@octopus>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 5 Nov 2023 23:15:29 +0100
-Message-ID: <CACRpkdY5R+Jg6c8dOopyyMMur0Vq76u2fgTVgdn-RB2NhHcWZw@mail.gmail.com>
-Subject: Re: [RFC v2 5/5] dt-bindings: gpio: Add bindings for pinctrl based
- generic gpio driver
-To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        bh=4+zjHfcFj8TqUlH84WYwsqc/8Y29BbFUby3pKruCyyo=;
+        b=ByT/Wdw8UiJKQFJ8L2fbJIKApIh/PJcgdYD9GkG37Rx/iqC+uPXVB99IpXfzZdh9J3
+         rdfbWs9zVKXZZrIhiayi/GMPJv0w8VqHLLSogiYELRaMY2MlnG3gZ4uhck89cfYP0h0F
+         8VvruuSrW+YeMIJpXkHpCFFAtqaDJH0ue8lS0t7GfmiybLqKFql6riuXaZdEXVBx/lU0
+         sbLO1p+1EPzXx/vcwJjT2zzKQN3QLou9Zbi7R5EAg2iNwcfaF6WJ7W42NtWg7Jocuhjo
+         7gPAuuCQfCTnZ2XvbB+wkQkoC5bk2I+tWDwWIKpQjmv+cZ0VnAPD02wS01mcauyh5yVz
+         zw4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699237577; x=1699842377;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4+zjHfcFj8TqUlH84WYwsqc/8Y29BbFUby3pKruCyyo=;
+        b=rQeT7KqViO7FSwdvT0c3bR3WtbrWDpv1MFvTSHzMPJnh9XwUzcBFRdMY2GRt1sOYef
+         qhAKnN+i2bUv2O7nxNbjxRBU/rrZbL5VcOIlijxy/Hz6vy0B6nohxdze1a/ol335wAzj
+         sRFoQpQnUomyW7qyTLoDBtcsLJ7fs7pRXwzwiLuLUu7DN8rbjpZVCRZhseFw0K2vRx3o
+         2JQn9tKngJFGljWOAfLOPzVWQABuG054e8Iho8ssRBXXF37+GPP76AIreP/J67SSInmF
+         h6hLv57tvClUFm+RLWb6qz+5j9E//e7JTrppWwD6SY/+g0QmxbmVR3xn/6HQuDoAFrdn
+         WITQ==
+X-Gm-Message-State: AOJu0Yza9U1w9XqLFQGQ4kWC/JEicyCwoqgrJZ9CZ4Qz2rSABdkqYiwz
+        qGVbnUDyAMxl84+RKJ8WmctLAA==
+X-Google-Smtp-Source: AGHT+IGXh2OTE0HtTz18uLoZnkxoWT3Ir57Kp8XxMeM0i7FeY+b193kXNd3C1M/38jDoZnuejggAsQ==
+X-Received: by 2002:a17:90b:3781:b0:27d:15e3:3aa9 with SMTP id mz1-20020a17090b378100b0027d15e33aa9mr26980182pjb.3.1699237576750;
+        Sun, 05 Nov 2023 18:26:16 -0800 (PST)
+Received: from octopus ([2400:4050:c3e1:100:44eb:593c:2134:f5ea])
+        by smtp.gmail.com with ESMTPSA id cq13-20020a17090af98d00b00280c285f878sm4447627pjb.55.2023.11.05.18.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Nov 2023 18:26:16 -0800 (PST)
+Date:   Mon, 6 Nov 2023 11:26:11 +0900
+From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>, sudeep.holla@arm.com,
-        cristian.marussi@arm.com, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, Oleksii_Moisieiev@epam.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC v5 3/5] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZUhOw0+HVcJYmvp6@octopus>
+Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
+ <7300b8804396075d2ae565f46de51a980ce846e6.1698353854.git.oleksii_moisieiev@epam.com>
+ <ZUNYkRtXUPeM4ppS@pluto>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZUNYkRtXUPeM4ppS@pluto>
+X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URI_DOTEDU autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Takahiro,
+On Thu, Nov 02, 2023 at 08:06:41AM +0000, Cristian Marussi wrote:
+> On Fri, Oct 27, 2023 at 06:28:10AM +0000, Oleksii Moisieiev wrote:
+> > Add basic implementation of the SCMI v3.2 pincontrol protocol.
+> > 
+> > Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> > ---
+> 
+> Hi Oleksii,
+> 
+> the new get/set v3.2 implementation seems finer to me at first sight.
+> I'll try to test this next days and give you more feedback.
 
-On Tue, Oct 24, 2023 at 3:43=E2=80=AFPM AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
+I don't think that this version addresses my comment yet:
 
-> First of all, there is no pre-defined naming convention either for
-> pins, groups or functions. SCMI firmware can give them any names.
+https://lkml.iu.edu//hypermail/linux/kernel/2308.2/07483.html
 
-OK maybe that should be added to the spec?
+I hope that it will be fixed in your *final* v5.
 
-[NB: I poked the pinctrl implementers in a separate mail, you
-are on CC.]
+-Takahiro Akashi
 
-Otherwise I think this is one of those cases where firmware
-authors will simply start to use a certain naming convention if
-the Linux driver requires it.
-
-> Secondly, What you said in the above is already implemented in
-> my RFC patch. Please remember the example that I gave:
->
-> >     gpio-ranges =3D <&scmi_pinctrl 6 0 0>;
-> >     gpio-ranges-group-names =3D "pinmux_gpio";
-> >
-> > means that SCMI *group*, "pinmux_gpio", are mapped to this driver's
-> > gpio range which starts with 5. If "pinmux_gpio" indicates SCMI *pin*
-> > range [20..24],
-> >
-> >     baa-gpios =3D <&gpio0 7>;
-> > will refer to gpio pin#7 that is actually SCMI's 22 (=3D20 + (7-5)).
-
-Right! I am so unused to the gpio-ranges-group-names that
-I didn't parse that properly :(
-
-> After all, I still believe we need "gpio-ranges" property in most of
-> all use cases (The only exception is, as I mentioned, to unconditionally
-> map all pinctrl's pins to GPIO (if possible) when SCMI firmware provides
-> only GPIO function for all pins. I think it is a simple and yet likely
-> use case.
-
-I suppose it is a bit of placement question.
-
-The device tree GPIO ranges will have to duplicate more information
-that the SCMI firmware already knows (what ranges are GPIOs, the
-name of the GPIO mux function), that is my main concern.
-And when we have information in two places that need to be matched,
-invariably we get mismatches.
-
-I'm trying to figure out what is the best way forward here but I think
-we need some feedback from the pinctrl driver authors.
-
-Yours,
-Linus Walleij
+> Thanks,
+> Cristian
