@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C39F7E1895
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Nov 2023 03:26:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB4057E189A
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Nov 2023 03:28:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjKFC0V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 5 Nov 2023 21:26:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
+        id S229715AbjKFC2M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Nov 2023 21:28:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjKFC0U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Nov 2023 21:26:20 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529D5FA
-        for <linux-gpio@vger.kernel.org>; Sun,  5 Nov 2023 18:26:17 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-2800db61af7so1303646a91.0
-        for <linux-gpio@vger.kernel.org>; Sun, 05 Nov 2023 18:26:17 -0800 (PST)
+        with ESMTP id S229447AbjKFC2L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Nov 2023 21:28:11 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976AFFB
+        for <linux-gpio@vger.kernel.org>; Sun,  5 Nov 2023 18:28:08 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1ca85ff26afso7747505ad.1
+        for <linux-gpio@vger.kernel.org>; Sun, 05 Nov 2023 18:28:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699237577; x=1699842377; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1699237688; x=1699842488; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4+zjHfcFj8TqUlH84WYwsqc/8Y29BbFUby3pKruCyyo=;
-        b=ByT/Wdw8UiJKQFJ8L2fbJIKApIh/PJcgdYD9GkG37Rx/iqC+uPXVB99IpXfzZdh9J3
-         rdfbWs9zVKXZZrIhiayi/GMPJv0w8VqHLLSogiYELRaMY2MlnG3gZ4uhck89cfYP0h0F
-         8VvruuSrW+YeMIJpXkHpCFFAtqaDJH0ue8lS0t7GfmiybLqKFql6riuXaZdEXVBx/lU0
-         sbLO1p+1EPzXx/vcwJjT2zzKQN3QLou9Zbi7R5EAg2iNwcfaF6WJ7W42NtWg7Jocuhjo
-         7gPAuuCQfCTnZ2XvbB+wkQkoC5bk2I+tWDwWIKpQjmv+cZ0VnAPD02wS01mcauyh5yVz
-         zw4g==
+         :mail-followup-to:message-id:subject:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8ICXDgrUHS6vF/SNPSijdTNrJfbN2u8WpcsExfAzl5Y=;
+        b=e1o5xTU2yVE18YW1DnaNuNCjKDFO5m3ZS5/vS9lcdpUjkj8FMblQEF6s+J9/7kq9q0
+         SBd08vzClQdFYQjWsOxTmwiNWMXZCOMSJr+YvTmvgoPGbb//J/h5+QnQj/4qki2UDX+x
+         j/FQM8AERkjkTlYmFA1JG96ixAC/YEQN9/RT3j7VRgb+k9+xKYQm/E1WfJ05BYzAyAhr
+         2d6saErNaSxfx0lPKfE4LrRn6tIIkckuMvysYpfNhQskUBRDSwYnllT1DSz4KoynpZCo
+         U88xr1xzzZLjRDBGGtRHnakcMrd+INeyJuG1PQi+dXS8yfeIyjcHU11jJ+39hDc+LA1Y
+         Hauw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699237577; x=1699842377;
+        d=1e100.net; s=20230601; t=1699237688; x=1699842488;
         h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4+zjHfcFj8TqUlH84WYwsqc/8Y29BbFUby3pKruCyyo=;
-        b=rQeT7KqViO7FSwdvT0c3bR3WtbrWDpv1MFvTSHzMPJnh9XwUzcBFRdMY2GRt1sOYef
-         qhAKnN+i2bUv2O7nxNbjxRBU/rrZbL5VcOIlijxy/Hz6vy0B6nohxdze1a/ol335wAzj
-         sRFoQpQnUomyW7qyTLoDBtcsLJ7fs7pRXwzwiLuLUu7DN8rbjpZVCRZhseFw0K2vRx3o
-         2JQn9tKngJFGljWOAfLOPzVWQABuG054e8Iho8ssRBXXF37+GPP76AIreP/J67SSInmF
-         h6hLv57tvClUFm+RLWb6qz+5j9E//e7JTrppWwD6SY/+g0QmxbmVR3xn/6HQuDoAFrdn
-         WITQ==
-X-Gm-Message-State: AOJu0Yza9U1w9XqLFQGQ4kWC/JEicyCwoqgrJZ9CZ4Qz2rSABdkqYiwz
-        qGVbnUDyAMxl84+RKJ8WmctLAA==
-X-Google-Smtp-Source: AGHT+IGXh2OTE0HtTz18uLoZnkxoWT3Ir57Kp8XxMeM0i7FeY+b193kXNd3C1M/38jDoZnuejggAsQ==
-X-Received: by 2002:a17:90b:3781:b0:27d:15e3:3aa9 with SMTP id mz1-20020a17090b378100b0027d15e33aa9mr26980182pjb.3.1699237576750;
-        Sun, 05 Nov 2023 18:26:16 -0800 (PST)
+         :mail-followup-to:message-id:subject:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8ICXDgrUHS6vF/SNPSijdTNrJfbN2u8WpcsExfAzl5Y=;
+        b=GwTkNeuJsDJ1yQLYq9JJsJVeOXpcWd1mGsJ04UVlFNqLDpRuG/1KzCw9lj4ZUnX/Rm
+         g55RuN6qrchqUMVY4MMI8fJ/rrBGnjXfBblKr3xlWLs9z3NXsD9SdX2s4G/P8YlVPmRE
+         22E46s6wzwHbaGSyFkwGRqjDPFsVnJH+b2/X3o4OIuOkkh3nu2ta76QRIYKhgcT7tcWY
+         6QsVi5eyODaC0OxeLCyj6x6/iif65wZKBvO+fMOzT/NlhZNFlywA9zBaigLJIaOXARGO
+         tatww7dm8K0LCMmxNI/8jIEmZ+0ysr5Xn809VpBX8kZP6R8wPAjMEfdandd2tTeHU8S8
+         2NTg==
+X-Gm-Message-State: AOJu0YzzOnc5PssjyCYQJ0/AVcvU/gHhL0PJzmdB4pvYftUh+iBTonKy
+        WAB0AoYtu7iXUaicrF+6gu88bA==
+X-Google-Smtp-Source: AGHT+IGKeESJ321fkysf/ehuZaNxdclt+G5XHCOjmYZoDKjWobUxbFP67O0IeMp/d/iW1j9dzcL4Nw==
+X-Received: by 2002:a17:902:c649:b0:1cc:3202:dcca with SMTP id s9-20020a170902c64900b001cc3202dccamr23138767pls.2.1699237687807;
+        Sun, 05 Nov 2023 18:28:07 -0800 (PST)
 Received: from octopus ([2400:4050:c3e1:100:44eb:593c:2134:f5ea])
-        by smtp.gmail.com with ESMTPSA id cq13-20020a17090af98d00b00280c285f878sm4447627pjb.55.2023.11.05.18.26.13
+        by smtp.gmail.com with ESMTPSA id jc15-20020a17090325cf00b001cc0d1af177sm4735588plb.229.2023.11.05.18.28.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Nov 2023 18:26:16 -0800 (PST)
-Date:   Mon, 6 Nov 2023 11:26:11 +0900
+        Sun, 05 Nov 2023 18:28:07 -0800 (PST)
+Date:   Mon, 6 Nov 2023 11:28:03 +0900
 From:   AKASHI Takahiro <takahiro.akashi@linaro.org>
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+To:     Cristian Marussi <cristian.marussi@arm.com>,
+        Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
         "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -65,7 +65,7 @@ Cc:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Subject: Re: [RFC v5 3/5] firmware: arm_scmi: Add SCMI v3.2 pincontrol
  protocol basic support
-Message-ID: <ZUhOw0+HVcJYmvp6@octopus>
+Message-ID: <ZUhPMxpho1WR5b+8@octopus>
 Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
         Cristian Marussi <cristian.marussi@arm.com>,
         Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
@@ -81,10 +81,11 @@ Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
 References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
  <7300b8804396075d2ae565f46de51a980ce846e6.1698353854.git.oleksii_moisieiev@epam.com>
  <ZUNYkRtXUPeM4ppS@pluto>
+ <ZUhOw0+HVcJYmvp6@octopus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZUNYkRtXUPeM4ppS@pluto>
+In-Reply-To: <ZUhOw0+HVcJYmvp6@octopus>
 X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URI_DOTEDU autolearn=no
@@ -95,25 +96,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 02, 2023 at 08:06:41AM +0000, Cristian Marussi wrote:
-> On Fri, Oct 27, 2023 at 06:28:10AM +0000, Oleksii Moisieiev wrote:
-> > Add basic implementation of the SCMI v3.2 pincontrol protocol.
+On Mon, Nov 06, 2023 at 11:26:11AM +0900, AKASHI Takahiro wrote:
+> On Thu, Nov 02, 2023 at 08:06:41AM +0000, Cristian Marussi wrote:
+> > On Fri, Oct 27, 2023 at 06:28:10AM +0000, Oleksii Moisieiev wrote:
+> > > Add basic implementation of the SCMI v3.2 pincontrol protocol.
+> > > 
+> > > Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> > > ---
 > > 
-> > Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> > ---
+> > Hi Oleksii,
+> > 
+> > the new get/set v3.2 implementation seems finer to me at first sight.
+> > I'll try to test this next days and give you more feedback.
 > 
-> Hi Oleksii,
+> I don't think that this version addresses my comment yet:
 > 
-> the new get/set v3.2 implementation seems finer to me at first sight.
-> I'll try to test this next days and give you more feedback.
+> https://lkml.iu.edu//hypermail/linux/kernel/2308.2/07483.html
+> 
+> I hope that it will be fixed in your *final* v5.
 
-I don't think that this version addresses my comment yet:
+Oops, this comment should better go against patch#4/5.
 
-https://lkml.iu.edu//hypermail/linux/kernel/2308.2/07483.html
 
-I hope that it will be fixed in your *final* v5.
-
--Takahiro Akashi
-
-> Thanks,
-> Cristian
+> -Takahiro Akashi
+> 
+> > Thanks,
+> > Cristian
