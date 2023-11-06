@@ -2,73 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 245E97E229A
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Nov 2023 14:00:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 379DA7E2390
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Nov 2023 14:12:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjKFNA3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Nov 2023 08:00:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
+        id S232136AbjKFNMx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Nov 2023 08:12:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231590AbjKFNA2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Nov 2023 08:00:28 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93D6B8
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Nov 2023 05:00:25 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-99bdeae1d0aso673952466b.1
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Nov 2023 05:00:25 -0800 (PST)
+        with ESMTP id S232134AbjKFNMw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Nov 2023 08:12:52 -0500
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9215125
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Nov 2023 05:12:48 -0800 (PST)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5ae143e08b1so51594427b3.1
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Nov 2023 05:12:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699275624; x=1699880424; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:subject:from:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1699276368; x=1699881168; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wgmXTfsucsyc2mEwxncXwhLY2vliZRkVbdof4kDhbdE=;
-        b=gMGfzAIhZth54zZSWlLYfndP1x4z4ux9A54wbyPUIy2XPxWiT9ECAfDWjtPZJZsRe7
-         AZEeFgu7WF4ahStgJmXTc0u9gS1rbMPIe4lSjUfT8D2K8jw00jPc7n4cp8DNtsLCcNs8
-         qF7k88yexRPOF3kcZgVU+EbH/4C8IITFMBcP/pLnlz+8maikzwK6MPyEpVWC+06eEe96
-         e80baJzsMISO+T6yWPUrl9FTeFWWM4b8Xi5wrgL+8cvm7wN6aQRCItfN5osMVGZ02E2n
-         1g4x/eKgJ29mRAMX4vvnc9luEq9/adg6gBKrBoCTNC2H77zY+XglX4ak32qAPL1fKCtf
-         DDjQ==
+        bh=MxpPF2PaBL3CNmfmQemDqBdiN737CxFp3aHV5kAbiR8=;
+        b=TtkLGhSTEltoS3Bv5fxtYantLwI7UJ+S2h2ei0zBl1TG1h8CsdGSofiTGBa1nfhu4z
+         gCJ/PY9xP5J1XOK6t4OlLcHIxhKqVt/kXLMnRin1JVPbdZQFGcrOtCj+f68pyhVZuJ+J
+         B5E5pJYKorUC9QygwPRpXvjUltvymzRGy7gfAeg6fFC43dk6AU1DDFaE0re/0ox33TeB
+         ghYGO4wLa9mYCk8jU/KO7yvXQxvLSVGipSMy6Wh71WCK//17+YcBCGGoOGAWj+ULZ5Rq
+         mmy+kUOk6azSrHyvAAzI0Ndg6W1tm/hBwlYmQlONHHC99fQIKYY3C3xnQ+MbSkHiMyWk
+         ycxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699275624; x=1699880424;
-        h=in-reply-to:references:cc:subject:from:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wgmXTfsucsyc2mEwxncXwhLY2vliZRkVbdof4kDhbdE=;
-        b=RB3gFhZ1FtrQGk7FaHcGaGEPL/ef3jf40BnY/Eciuh9qBHpFN1btN872n3t9adwYrC
-         1f/05ktKB0EaovjwKds9FfI3yAMnonmhxlw1NKGGVbHK6uSf5CpZgTfSK8HFOFUf+enN
-         QLMZQXvu3akp+5yuTgb/67GjId37fcCIL/3Bd9WXLFjs43ZXevAUWkAbeB8drOpVnCWd
-         FQNByqUebuBeIiTLiGpP66xiFa1DLISdnvM7GNdgCD7OPLcgrD33tiaQpHTVm9l5S2zj
-         Pnay5WsCUgT5NrWvz+tFRa5qAzLRHaXaGuDM1/UhzpKlKrGO/dR41Wv+52vDQI2D6Uwz
-         NfSg==
-X-Gm-Message-State: AOJu0YxrzDM3WIl5y1t2+1lZqAGgHti3PPDGJP51mtLDed7o13LN+DHw
-        2qce5qB7UyUDwf9UtQbrMtv4Joomn13fDXV05xQ=
-X-Google-Smtp-Source: AGHT+IFW8o9SxHfLUzaWPa6cgdJyZJg7DyGK9O9Wy90gSrRCd5zYmWyWB2xGnVYyuabCEtaUMcJbDQ==
-X-Received: by 2002:a17:907:806:b0:9c4:bb5f:970f with SMTP id wv6-20020a170907080600b009c4bb5f970fmr15884995ejb.32.1699275624175;
-        Mon, 06 Nov 2023 05:00:24 -0800 (PST)
-Received: from localhost ([2001:9e8:d5bf:3200::f39])
-        by smtp.gmail.com with ESMTPSA id u18-20020a1709064ad200b0099bd86f9248sm4094095ejt.63.2023.11.06.05.00.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Nov 2023 05:00:23 -0800 (PST)
-Mime-Version: 1.0
+        d=1e100.net; s=20230601; t=1699276368; x=1699881168;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MxpPF2PaBL3CNmfmQemDqBdiN737CxFp3aHV5kAbiR8=;
+        b=ssVL2aNXtCncKJi0jbwNECWnlPB9r98WFHRDt6QVjBn9zR/Z1vQDXSouat7059azse
+         csmOIf+4KfPSWFndHx+3fdNO+fhuvnAboyZhISBhqx2+xk1NNsljjFYHgXKPw7N4YnGY
+         6hk/0nQS2PotP3IcUk7Lec0eLk7BiG8XBEI4niOHZdz9ThNSTSr25rOIVJ9bHU2ntE3K
+         YWcxVdbzrNpVl2AR1MADbMuZJoi1iqHqetrQp2s2/hNOWIJuLesgyZ+GgyYFbEmjkPQH
+         bsxB6oslQsqmD+ircgzrrAXOtCAxoVp/0AvjZOZk6rRdLihk9dXx8JOMCyp8zStacVwc
+         s3rQ==
+X-Gm-Message-State: AOJu0YwBcuUMlcUTCFIvJoTMxBlW16MpwXdspKiZjATEC9mGHzgwgTAL
+        9u6l5evN6M/2yqjLyDJOtLR+JwWVA1oVzAgMJXogQA==
+X-Google-Smtp-Source: AGHT+IEFyhcttwC2AVcJ6l458vobu3PLKnKPb9gZbnAPMBAItuOH18+eViIXYZ8jDfE6HXw27sxS5z1tCCF8lr3YnKk=
+X-Received: by 2002:a81:838e:0:b0:577:51cd:1b4a with SMTP id
+ t136-20020a81838e000000b0057751cd1b4amr11212499ywf.41.1699276367940; Mon, 06
+ Nov 2023 05:12:47 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1698353854.git.oleksii_moisieiev@epam.com> <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
+In-Reply-To: <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 6 Nov 2023 14:12:36 +0100
+Message-ID: <CACRpkdYW-xmejyOo9H9XSkcabvYgBqPvpjppvNe_RF6RLxyxKA@mail.gmail.com>
+Subject: Re: [RFC v5 5/5] dt-bindings: firmware: arm,scmi: Add support for
+ pinctrl protocol
+To:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+Cc:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Takahiro Akashi <takahiro.akashi@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 06 Nov 2023 14:00:23 +0100
-Message-Id: <CWRQXOJ5TFLJ.1NYFSAPXR0HCY@ablu-work>
-To:     "Phil Howard" <phil@gadgetoid.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Kent Gibson" <warthog618@gmail.com>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>
-From:   "Erik Schilling" <erik.schilling@linaro.org>
-Subject: Re: [libgpiod][PATCH] bindings: python: fix README.md SPDX license
- tags
-Cc:     <linux-gpio@vger.kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20231103191455.2441883-1-phil@gadgetoid.com>
-In-Reply-To: <20231103191455.2441883-1-phil@gadgetoid.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,50 +78,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri Nov 3, 2023 at 8:14 PM CET, Phil Howard wrote:
-> Replace the # (which is a markdown heading) with HTML tags to hide SPDX
-> identifier tags within the project description on pypi.
->
-> Signed-off-by: Phil Howard <phil@gadgetoid.com>
-> ---
->  bindings/python/README.md | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/bindings/python/README.md b/bindings/python/README.md
-> index abb69da..325c63d 100644
-> --- a/bindings/python/README.md
-> +++ b/bindings/python/README.md
-> @@ -1,5 +1,5 @@
-> -# SPDX-License-Identifier: CC-BY-SA-4.0
-> -# SPDX-FileCopyrightText: 2023 Phil Howard <phil@gadgetoid.com>
-> +<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
-> +<!-- SPDX-FileCopyrightText: 2023 Phil Howard <phil@gadgetoid.com> -->
+On Fri, Oct 27, 2023 at 8:28=E2=80=AFAM Oleksii Moisieiev
+<Oleksii_Moisieiev@epam.com> wrote:
 
-I went with a single block when I fixed this for the Rust bindings [1].
-But I got no opinion on which way is better. I guess as long as the
-tools work it should be fine.
+> +                keys_pins: keys-pins {
+> +                    pins =3D "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+> +                    bias-pull-up;
+> +                };
 
-Acked-by: Erik Schilling <erik.schilling@linaro.org>
+This is kind of interesting and relates to my question about naming groups =
+and
+functions of GPIO pins.
 
-[1]:
-  commit fd25c0ea05fec3997f44d986b2fb904ba029e812
-  Author: Erik Schilling <erik.schilling@linaro.org>
-  Date:   Fri May 26 17:27:32 2023 +0200
+Here we see four pins suspiciously named "GP_*" which I read as
+"generic purpose"
+and they are not muxed to *any* function, yes pulled up.
 
-      rust: bindings: turn SPDX tags into comments
-   =20
-      In markdown `# Foo` generates a top-level heading. This leads to to s=
-ome
-      weird, huge SPDX tags being rendered before the start of the actual
-      content.
-   =20
-      Lacking good examples, I just took the syntax that `reuse addheader`[=
-1]
-      outputs.
-   =20
-      [1] https://github.com/fsfe/reuse-tool
-   =20
-      Signed-off-by: Erik Schilling <erik.schilling@linaro.org>
-      Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-      Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+I would have expected something like:
 
+keys_pins: keys-pins {
+  groups =3D "GP_5_17_grp", "GP_5_20_grp", "GP_5_22_grp", "GP_2_1_grp";
+  function =3D "gpio";
+  pins =3D "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+  bias-pull-up;
+};
+
+I hope this illustrates what I see as a problem in not designing in
+GPIO as an explicit
+function, I get the impression that these pins are GPIO because it is hardw=
+are
+default.
+
+Yours,
+Linus Walleij
