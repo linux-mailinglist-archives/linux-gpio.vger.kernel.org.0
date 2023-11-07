@@ -2,30 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22D8D7E43DC
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Nov 2023 16:48:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35E3E7E4572
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Nov 2023 17:10:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344204AbjKGPsb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Nov 2023 10:48:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32812 "EHLO
+        id S235329AbjKGQKC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Nov 2023 11:10:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344207AbjKGPsF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Nov 2023 10:48:05 -0500
+        with ESMTP id S1344494AbjKGQI6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Nov 2023 11:08:58 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FFE10CC;
-        Tue,  7 Nov 2023 07:47:42 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A44BC433C8;
-        Tue,  7 Nov 2023 15:47:41 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCC8134;
+        Tue,  7 Nov 2023 07:49:32 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC42FC433C7;
+        Tue,  7 Nov 2023 15:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699372062;
-        bh=tKFpKQIGfyOOkAon60Qttv+lJyaDdDfp75P/GJCyMuU=;
+        s=k20201202; t=1699372172;
+        bh=wQ1PQM7f/JCvzuyybW/BE93r8Z0xUqIiIBrvLO+vPEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pReNISxOJDZLjeoNcLWR0uX9kVcMwZFOLQGY2tV0ii6jC9sU3iDcUoXCIJR/P4Bpx
-         tADtHIxBPC88vjg1Es6uPAYOasLNfrJh4PllyNfWi2hgUCYcMtHhLLrQLB7yb//2K6
-         vxcJ+QoQQq18thXhsBbwzL47I/t6WeCC61k4yhC2LCNYLlNcY+vSnSSuTFxjk+5/70
-         yFE0YgUwu7ks+29WeTj/r03QxG6rLW648xSI5hg1ik7sO1n0UqongR9i2S2lAHDfLT
-         t3IY61ZGlIAG5zrcQMJwD8nKTbxFIo2UwvpVmoDa96kdK5LulM5a9/3OOEubSh6c+t
-         CRUEGMFpTIaFQ==
+        b=f8TmrTSZtf6pcmxeRiV70QUW6c5JcFs2HQgOnOAOqo25TTtho7qxV4jSByKiAWeuq
+         lNAcoAQ+Lb+98rlIgdYa62bl5hl9ef327xMAYFy3CHBru5hxtOGFRvd713Ws17onfk
+         A4KOuMzy63jTE30EueW/vZgA72jHLeQA9HHN0C/6k7GwDRHLztpEOlkNpcJjb/Wq3c
+         2V1u+g/NQPGQsbce9LHizFN+5kimavvGAHZEzFSAsTAP7KNVW5iRoIlYTrol1y6TYV
+         TxuADtwBbeULL+ESf43w34qUXEDZrm/OeN2jHbvoVcBu1qpBGFbCU/RoFsaLcm/J/o
+         u9AK+z9uEuKbQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -37,16 +37,16 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         matthias.bgg@gmail.com, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 19/36] gpiolib: of: Add quirk for mt2701-cs42448 ASoC sound
-Date:   Tue,  7 Nov 2023 10:46:01 -0500
-Message-ID: <20231107154654.3765336-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.5 17/34] gpiolib: of: Add quirk for mt2701-cs42448 ASoC sound
+Date:   Tue,  7 Nov 2023 10:47:57 -0500
+Message-ID: <20231107154846.3766119-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231107154654.3765336-1-sashal@kernel.org>
-References: <20231107154654.3765336-1-sashal@kernel.org>
+In-Reply-To: <20231107154846.3766119-1-sashal@kernel.org>
+References: <20231107154846.3766119-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6
+X-stable-base: Linux 6.5.10
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 531faabead0f4..d9525d95e818d 100644
+index 1436cdb5fa268..219bf8a82d8f9 100644
 --- a/drivers/gpio/gpiolib-of.c
 +++ b/drivers/gpio/gpiolib-of.c
-@@ -512,6 +512,10 @@ static struct gpio_desc *of_find_gpio_rename(struct device_node *np,
+@@ -496,6 +496,10 @@ static struct gpio_desc *of_find_gpio_rename(struct device_node *np,
  #if IS_ENABLED(CONFIG_SND_SOC_CS42L56)
  		{ "reset",	"cirrus,gpio-nreset",	"cirrus,cs42l56" },
  #endif
