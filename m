@@ -2,53 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1F757E3C45
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Nov 2023 13:14:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D6927E3D1F
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Nov 2023 13:26:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232216AbjKGMOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Nov 2023 07:14:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
+        id S234610AbjKGM0E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Nov 2023 07:26:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234125AbjKGMNP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Nov 2023 07:13:15 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A75481FD4;
-        Tue,  7 Nov 2023 04:10:42 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF382C433C7;
-        Tue,  7 Nov 2023 12:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699359042;
-        bh=bcrKVV8egxRQAkPTrxVpTxLY2BjScAAmgOvyRPmnfqI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZDCPiVnZnVA8G/oEeUFM/YFWZ619Wv3kA/jFoJiK64xYb1XgCRQc7ipH4xU5kFNXC
-         0INxJ89hKD/MgqIr4Fe11WlRGKhg3P8lumK41lPEqIeZRYlna6MITlgU0uTwf1MYEY
-         4+8gqzbm6yYnXFHw21Jw1O1uUkrF81d0MN4Dsp0O0fHOYs2GNpkxjMcsLgWqdSg5jo
-         oyrGEYrXr1s1tvjgo6Xxzo+ek9dp/ESQBowBPI/bSK07T6RU3qh8UhmF0Moatqlhuc
-         gVQil/q/jbf3oBy8f8dgjQegJrdUFgc/cj+PP8YXTGpVI7R8tNrNj2ti0fPY4ou90l
-         0IIEknrcrYCVQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        andriy.shevchenko@linux.intel.com, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.5 27/30] gpiolib: acpi: Add a ignore interrupt quirk for Peaq C1010
-Date:   Tue,  7 Nov 2023 07:08:42 -0500
-Message-ID: <20231107120922.3757126-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231107120922.3757126-1-sashal@kernel.org>
-References: <20231107120922.3757126-1-sashal@kernel.org>
+        with ESMTP id S234082AbjKGMZo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Nov 2023 07:25:44 -0500
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F1ED28A6B
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Nov 2023 04:18:32 -0800 (PST)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5a7af20c488so67404557b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Nov 2023 04:18:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1699359512; x=1699964312; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AjUrVizqyH1nfI6x/UZaYgw1z+MKM3l8dtyFAmAVDWw=;
+        b=yaKLipwya77Nb9STHS6f5skNVFquQj9pxhrnBIy2ZOUQXhjwxxZ4DX79l/+lRFDIiw
+         zDFUnybuJO3nLdzgtIO+5Cy+DsdzxBer0kY4Bb4KeKdg6w6qZ9mRMWYjpEx+ivHny6vt
+         2nWCGqyaWhriac5mfb+XpB6Vjv1V1yJ12CT7Ii50NVnStSye11JRJuGLParf5lk4xYkk
+         tOUxhS6zXvRTdoFmmV50HkmUuwEW6XH2JlYhKFE+vIrNd6QL8fu/GoDiuSQt6eaIucvQ
+         it3dGbFKcjBQHYGKbveLKw0sJachoGYFKF/dJgSJMen8OrMQySq09VlGpe8Kcd6yZTjk
+         NSrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699359512; x=1699964312;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AjUrVizqyH1nfI6x/UZaYgw1z+MKM3l8dtyFAmAVDWw=;
+        b=wxcd13/X2PrN+cPKz0nxyO+E+iIfhmL0lhroW1Cd3rmm5j/l7nA6a4LBMzVtGRUhiD
+         8RwubpCRCXT7o0pP3snL8tBG+5RfsVCyhxlTxYYwCHI696CGeTxRDKgofiMt7U6PbfIt
+         cQmRGyIyim4NfNuhfYJd9Nxs2Wp5EoELL4GRQYHZQzbhevHnenM39pJs3T5sWmHt5kPU
+         SnM8PgLO3erX1J1u6I07aRg91kNj+H5azKs5ILlPfn3R63ZBnlXxr0f8uvpda9m8shVY
+         5tChtJC8eirX8+dLvtBYTyqXyog5WpK0PEGJvjF2ZFHB1CQhJYEZwJs0MPgsWvWDpXMb
+         kQrw==
+X-Gm-Message-State: AOJu0YyIbKWwpJOMYl9NXfhkhXu7ZrQ12WkykKD/mZZIEXkdkZIioQ7a
+        A3oigK2DJwROErOyUGtuEslKCAL9X2kmEW18Jeb9aw==
+X-Google-Smtp-Source: AGHT+IEfNk5GXDy4Op4JDSJ5jjpGKCs5RJ5m+Jq4s18y1HSS1sLqrMJRFHEjKKMGNS3lWsWeWVrZ/XIvsrSt6UA57OM=
+X-Received: by 2002:a0d:e6cb:0:b0:5a8:62f2:996a with SMTP id
+ p194-20020a0de6cb000000b005a862f2996amr14903778ywe.6.1699359511723; Tue, 07
+ Nov 2023 04:18:31 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.5.10
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+References: <20231011184823.443959-1-peter.griffin@linaro.org>
+ <20231011184823.443959-7-peter.griffin@linaro.org> <20231016134106.GA2643742-robh@kernel.org>
+In-Reply-To: <20231016134106.GA2643742-robh@kernel.org>
+From:   Peter Griffin <peter.griffin@linaro.org>
+Date:   Tue, 7 Nov 2023 12:18:20 +0000
+Message-ID: <CADrjBPqB_tDjo68qODKsJMQLmDRoQo9U-LFR7os8bExjDNeEZw@mail.gmail.com>
+Subject: Re: [PATCH v3 06/20] dt-bindings: pinctrl: samsung: add
+ google,gs101-pinctrl compatible
+To:     Rob Herring <robh@kernel.org>
+Cc:     krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
+        s.nawrocki@samsung.com, linus.walleij@linaro.org,
+        wim@linux-watchdog.org, linux@roeck-us.net,
+        catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+        olof@lixom.net, gregkh@linuxfoundation.org, cw00.choi@samsung.com,
+        tudor.ambarus@linaro.org, andre.draszik@linaro.org,
+        semen.protsenko@linaro.org, saravanak@google.com,
+        willmcvicker@google.com, soc@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@android.com, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,70 +79,77 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+Hi Rob,
 
-[ Upstream commit 6cc64f6173751d212c9833bde39e856b4f585a3e ]
+Thanks for your review.
 
-On the Peaq C1010 2-in-1 INT33FC:00 pin 3 is connected to
-a "dolby" button. At the ACPI level an _AEI event-handler
-is connected which sets an ACPI variable to 1 on both
-edges. This variable can be polled + cleared to 0 using WMI.
+On Mon, 16 Oct 2023 at 14:41, Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Oct 11, 2023 at 07:48:09PM +0100, Peter Griffin wrote:
+> > Add the "google,gs101-pinctrl" compatible to the dt-schema bindings
+> > documentation.
+> >
+> > Add maxItems of 50 for the interrupts property as gs101 can have
+> > multiple irqs.
+> >
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  .../bindings/pinctrl/samsung,pinctrl.yaml     | 22 ++++++++++++++++++-
+> >  1 file changed, 21 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> > index 26614621774a..6dc648490668 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> > +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> > @@ -35,6 +35,7 @@ properties:
+> >
+> >    compatible:
+> >      enum:
+> > +      - google,gs101-pinctrl
+> >        - samsung,s3c2412-pinctrl
+> >        - samsung,s3c2416-pinctrl
+> >        - samsung,s3c2440-pinctrl
+> > @@ -58,7 +59,8 @@ properties:
+> >    interrupts:
+> >      description:
+> >        Required for GPIO banks supporting external GPIO interrupts.
+> > -    maxItems: 1
+> > +    minItems: 1
+> > +    maxItems: 50
+> >
+> >    power-domains:
+> >      maxItems: 1
+> > @@ -134,6 +136,24 @@ allOf:
+> >            minItems: 1
+> >            maxItems: 1
+> >
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: google,gs101-pinctrl
+> > +    then:
+> > +      properties:
+> > +        interrupts:
+> > +          description:
+> > +            Required for external wakeup interrupts. List all external
+>
+> Is it external GPIO interrupts or wakeup interrupts?
 
-Since the variable is set on both edges the WMI interface is pretty
-useless even when polling. So instead of writing a custom WMI
-driver for this the x86-android-tablets code instantiates
-a gpio-keys platform device for the "dolby" button.
+These are external wakeup interrupts.
 
-Add an ignore_interrupt quirk for INT33FC:00 pin 3 on the Peaq C1010,
-so that it is not seen as busy when the gpio-keys driver requests it.
+Looking again I believe this can be dropped entirely as re-reading
+samsung,pinctrl-gpio-bank.yaml we are already defining the
+external wake-up interrupts on each bank in gs101-pinctrl.dtsi.
 
-Note this replaces a hack in x86-android-tablets where it would
-call acpi_gpiochip_free_interrupts() on the INT33FC:00 GPIO
-controller. acpi_gpiochip_free_interrupts() is considered private
-(internal) gpiolib API so x86-android-tablets should stop using it.
+>
+> > +            wakeup interrupts supported by this bank.
+> > +          minItems: 1
+> > +          maxItems: 50
+>
+> For a given SoC, I don't see how this is variable? If it is variable,
+> how do you know which entry is what?
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Link: https://lore.kernel.org/r/20230909141816.58358-3-hdegoede@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpiolib-acpi.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+It isn't variable.
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index a775d2bdac94f..980ec04892173 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1655,6 +1655,26 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
- 			.ignore_wake = "SYNA1202:00@16",
- 		},
- 	},
-+	{
-+		/*
-+		 * On the Peaq C1010 2-in-1 INT33FC:00 pin 3 is connected to
-+		 * a "dolby" button. At the ACPI level an _AEI event-handler
-+		 * is connected which sets an ACPI variable to 1 on both
-+		 * edges. This variable can be polled + cleared to 0 using
-+		 * WMI. But since the variable is set on both edges the WMI
-+		 * interface is pretty useless even when polling.
-+		 * So instead the x86-android-tablets code instantiates
-+		 * a gpio-keys platform device for it.
-+		 * Ignore the _AEI handler for the pin, so that it is not busy.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PEAQ"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "PEAQ PMM C1010 MD99187"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_interrupt = "INT33FC:00@3",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
- 
--- 
-2.42.0
-
+Peter.
