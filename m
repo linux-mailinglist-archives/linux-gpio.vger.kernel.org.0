@@ -2,79 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A42DE7E413B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Nov 2023 14:53:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ACF77E4152
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Nov 2023 14:57:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234601AbjKGNxW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Nov 2023 08:53:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60050 "EHLO
+        id S231855AbjKGN51 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Nov 2023 08:57:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234925AbjKGNwy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Nov 2023 08:52:54 -0500
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FED110E9
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Nov 2023 05:51:44 -0800 (PST)
-Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-45db3badadbso1275652137.3
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Nov 2023 05:51:44 -0800 (PST)
+        with ESMTP id S232134AbjKGN5Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Nov 2023 08:57:25 -0500
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6819BDF
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Nov 2023 05:57:21 -0800 (PST)
+Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-66d17bdabe1so39733246d6.0
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Nov 2023 05:57:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699365103; x=1699969903; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oFbhgesTUnqxhtDQL2m5PAauT+IbKwZ6JL+G8+IHHdQ=;
-        b=k16zXvaxUbR/1P7PTzeBhhcULujmCr3FUFKcqL6LRXxm6G/+lSvQFWYGrc3VKQ8Zwf
-         SfvHqUNn1sYolhL1965mNtPob4akS0ZjARodFpdZ6Dc2Tb6NaDSYFS5fpCkaglfjOW9J
-         Kwcxy2J52rJ2EM9UIETM3IqhHsuPPh9Wq/Z9/LS3og3MlLjuHxQlW9Z1yGt3UBpS+DCg
-         KkaBMeACgRz+r/pT7vvpDhaEd+OcyAp/dDaCvaVEM0cgSMh3XQwOx1k1xrj7ZrFfJFsg
-         n4B8F1jbVXSr13JF8z8dSNsvtE9GFUyxVyrO53xoqeUypQ6VNPHVB4tsb4UJuPJq82cm
-         XmZw==
+        d=linaro.org; s=google; t=1699365440; x=1699970240; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CbqpJ5gw9GOJ91Wt05ZBQ3B3ajCS3+ZL+yYMKlVS/7w=;
+        b=IjbOo4faoEMViNBUpWlV1QZx/HopQt16gv26gV9X86KEP+BznglaZRA2Kyg+2RcgIa
+         kB2tYLVfGWnyV1RRKFQgjLg4FIFYiYYLL808Vj7ABZrkZhv7UjnCvy8zIFHYlfzFCjEr
+         6f3AyfnEoZNDcEWae0QE/xQJkjv3nspH8oUtzJ6qDyVuKsc680CMk+LS1RsSOdromTek
+         w0RTpbaWmoYMiPXafccIL482Sg+cXP06FSClyO2WvGrRCBq4u4m8v7BSRuqnJeT7fAOb
+         nhMlVfrKYvTBcEHYLbHT1Mi+chI1SEcRmgS9xkx/cM7TgmPOv+8qOiPhwJBvz/KGVDEg
+         GBHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699365103; x=1699969903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oFbhgesTUnqxhtDQL2m5PAauT+IbKwZ6JL+G8+IHHdQ=;
-        b=Q3vXB3v7Rn+buNNlxnROumW0MUxqwxoj0EpHGTUzEby+vXs1sCOIKukggqTT1+vRi9
-         t7c3mSDeKZmYJX+r7sdaY/WiNQx1m79/DK1nYJRh+Ii58KWtde+o8tCbKDeZnPj8UFAj
-         f7YTsk0xX1gvfkHt7UCWL1kcLKy5Hozs2sgPeQjwpy0UBX6AjXh5XWlb5TmwhkbfbUdM
-         j46rCC7QfxXYwp+k7QILgRhLVULZuoYL9L1/b3SeJS9c9qFW10lWkxPUkQF1Eub3IeYR
-         e2/7GFIV1aQxJX7TLSA7dU2SPDkDKVCwa6QFZi2ulmOKFhk0EEdaC53G7A1KLWeLNSCU
-         m3xw==
-X-Gm-Message-State: AOJu0YxWT1UC5YZvoFAxgePw4BT+Rb+BT4OaNXL+bWvKFY1bwZPGk2E0
-        iBXHrnbao9XHz/E95ynSdRnrEZu2TXjnX4M+A/pitA==
-X-Google-Smtp-Source: AGHT+IEYK3VvFqFlqkqCX6v5oLDKyDaPY5K2oNNBOIIHvCR8ElKbDarcbIVw0JRJQkyIBzCUOD6vzk6X2p3e7cEnjYU=
-X-Received: by 2002:a67:c113:0:b0:45f:274:8c32 with SMTP id
- d19-20020a67c113000000b0045f02748c32mr6745817vsj.32.1699365103136; Tue, 07
- Nov 2023 05:51:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699365440; x=1699970240;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CbqpJ5gw9GOJ91Wt05ZBQ3B3ajCS3+ZL+yYMKlVS/7w=;
+        b=E7/5NJY6h/Tm5EP2B2LyGcCBdoIxQ8RhS94vfsf1tMcBwbS8SkRiW90GuYn54M17xr
+         KQ+B3TP/3Xu2vUfoW9cJwfq+vApZaGVBTGwD9MnqVwk1NUIk3OIPQjftMoHIMCDRzI/j
+         VxYTkxCVRz/TzYHxn8HLALJ9t3IKurosTLnS2e8MhIzf+RLrIS6bzCt6QjZZS144pFg4
+         yPIAHDGWM/9gughUszoRQ4JLxlno6IwnT8YCUvLGcQvk/hNZhhHJI8ENSJgTZ7/Nn9FU
+         98W9Ps6poqxnLXwV3BxBg8gu37ErzzJo8tlDutxbD5X0BX5PQKSC0GhQgaJ0KLqqnCA1
+         9knA==
+X-Gm-Message-State: AOJu0Yzks7dbQxe+rSWfQzN7cPKAyppaNjqTfzIcUyMBBNtXJiOslH9K
+        zTgowXdMpGJpuFnNgeSCxYi+u3PPn5iQIU760Nyc9w==
+X-Google-Smtp-Source: AGHT+IFPmCDJWmXuqEspf2Hkzm+uYMa/h3WFcFn4tmvryaRRUPo6gpp0HW4f25qoMF9Xg4paJyLmxWpEpUjIXDfQnzY=
+X-Received: by 2002:a05:6214:529b:b0:66d:3474:a93a with SMTP id
+ kj27-20020a056214529b00b0066d3474a93amr37508496qvb.30.1699365440438; Tue, 07
+ Nov 2023 05:57:20 -0800 (PST)
 MIME-Version: 1.0
-References: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
- <ZAocZRZh4FQRH3lc@smile.fi.intel.com> <CA+G9fYsOttth+k3Ki8LK_ZiayvXa0bAg-DmQAaFHZeEyR=6Lrw@mail.gmail.com>
- <CACRpkdbUYWcFiRh+Y=MOekv2RjSP4sB2t5tVrSsz54Eez6wmVg@mail.gmail.com> <ZJHWdcP+PDaNrw07@smile.fi.intel.com>
-In-Reply-To: <ZJHWdcP+PDaNrw07@smile.fi.intel.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 7 Nov 2023 19:21:32 +0530
-Message-ID: <CA+G9fYvReHr+ofJAW4yfA5EWT6-MRpR2+fOQG24hROjSd+dY0g@mail.gmail.com>
-Subject: Re: selftests: gpio: crash on arm64
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pengfei Xu <pengfei.xu@intel.com>, yi1.lai@intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>
+References: <20231011184823.443959-1-peter.griffin@linaro.org>
+ <20231011184823.443959-11-peter.griffin@linaro.org> <aae4e6cd-dcfc-442d-9ed7-d5a73c419ba8@kernel.org>
+In-Reply-To: <aae4e6cd-dcfc-442d-9ed7-d5a73c419ba8@kernel.org>
+From:   Peter Griffin <peter.griffin@linaro.org>
+Date:   Tue, 7 Nov 2023 13:57:09 +0000
+Message-ID: <CADrjBPrUsSigThoLU9thmZiaG4690B9-BcZYrBn44K9Fc8z3vg@mail.gmail.com>
+Subject: Re: [PATCH v3 10/20] clk: samsung: clk-gs101: Add cmu_top registers,
+ plls, mux and gates
+To:     Chanwoo Choi <chanwoo@kernel.org>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org,
+        tomasz.figa@gmail.com, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, wim@linux-watchdog.org,
+        linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org,
+        arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org,
+        cw00.choi@samsung.com, tudor.ambarus@linaro.org,
+        andre.draszik@linaro.org, semen.protsenko@linaro.org,
+        saravanak@google.com, willmcvicker@google.com, soc@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel-team@android.com, linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,49 +79,174 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus and Bartosz,
+Hi Chanwoo,
 
-On Tue, 20 Jun 2023 at 22:11, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Apr 11, 2023 at 10:57:28AM +0200, Linus Walleij wrote:
-> > On Mon, Apr 10, 2023 at 11:16=E2=80=AFAM Naresh Kamboju
-> > <naresh.kamboju@linaro.org> wrote:
->
-> ...
->
-> > Add a pr_info() devm_gpio_chip_release() in drivers/gpio/gpiolib-devres=
-.c
-> > and see if the callback is even called. I think this could be the
-> > problem: if that isn't cleaned up, there will be dangling references.
->
-> Side note: Since we have devres tracepoints, your patch seems an overkill=
- :-)
-> Just enable devres tracepoints and filter out by the function name. I bel=
-ieve
-> that should work.
+Thanks for your review!
 
-Since I have been tracking open issues on the stable-rc kernel,
-The reported problem on stable-rc linux.6.3.y has been solved
-on the stable-rc linux.6.6.y branch.
+On Wed, 18 Oct 2023 at 17:51, Chanwoo Choi <chanwoo@kernel.org> wrote:
+>
+> Hi Peter,
+>
+> On 23. 10. 12. 03:48, Peter Griffin wrote:
+> > CMU_TOP is the top level clock management unit which contains PLLs, muxes
+> > and gates that feed the other clock management units.
+> >
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  drivers/clk/samsung/Kconfig     |    9 +
+> >  drivers/clk/samsung/Makefile    |    2 +
+> >  drivers/clk/samsung/clk-gs101.c | 1551 +++++++++++++++++++++++++++++++
+> >  3 files changed, 1562 insertions(+)
+> >  create mode 100644 drivers/clk/samsung/clk-gs101.c
+> >
+> > diff --git a/drivers/clk/samsung/Kconfig b/drivers/clk/samsung/Kconfig
+> > index 76a494e95027..14362ec9c543 100644
+> > --- a/drivers/clk/samsung/Kconfig
+> > +++ b/drivers/clk/samsung/Kconfig
+> > @@ -12,6 +12,7 @@ config COMMON_CLK_SAMSUNG
+> >       select EXYNOS_5410_COMMON_CLK if ARM && SOC_EXYNOS5410
+> >       select EXYNOS_5420_COMMON_CLK if ARM && SOC_EXYNOS5420
+> >       select EXYNOS_ARM64_COMMON_CLK if ARM64 && ARCH_EXYNOS
+> > +     select GOOGLE_GS101_COMMON_CLK if ARM64 && ARCH_GOOGLE_TENSOR
+> >       select TESLA_FSD_COMMON_CLK if ARM64 && ARCH_TESLA_FSD
+> >
+> >  config S3C64XX_COMMON_CLK
+> > @@ -95,6 +96,14 @@ config EXYNOS_CLKOUT
+> >         status of the certains clocks from SoC, but it could also be tied to
+> >         other devices as an input clock.
+> >
+> > +config GOOGLE_GS101_COMMON_CLK
+> > +     bool "Google gs101 clock controller support" if COMPILE_TEST
+> > +     depends on COMMON_CLK_SAMSUNG
+> > +     depends on EXYNOS_ARM64_COMMON_CLK
+> > +     help
+> > +       Support for the clock controller present on the Google gs101 SoC.
+> > +       Choose Y here only if you build for this SoC.
+> > +
+>
+> (snip)
+>
+> > +
+> > +/* gs101 */
+> > +static const struct samsung_mux_clock cmu_top_mux_clks[] __initconst = {
+> > +     /* CMU_TOP_PURECLKCOMP */
+> > +     MUX(CLK_MOUT_SHARED0_PLL, "mout_shared0_pll", mout_shared0_pll_p,
+> > +         PLL_CON0_PLL_SHARED0, 4, 1),
+> > +     MUX(CLK_MOUT_SHARED1_PLL, "mout_shared1_pll", mout_shared1_pll_p,
+> > +         PLL_CON0_PLL_SHARED1, 4, 1),
+> > +     MUX(CLK_MOUT_SHARED2_PLL, "mout_shared2_pll", mout_shared2_pll_p,
+> > +         PLL_CON0_PLL_SHARED2, 4, 1),
+> > +     MUX(CLK_MOUT_SHARED3_PLL, "mout_shared3_pll", mout_shared3_pll_p,
+> > +         PLL_CON0_PLL_SHARED3, 4, 1),
+> > +     MUX(CLK_MOUT_SPARE_PLL, "mout_spare_pll", mout_spare_pll_p,
+> > +         PLL_CON0_PLL_SPARE, 4, 1),
+> > +
+> > +     /* BUS0 */
+> > +     MUX(CLK_MOUT_BUS0_BUS, "mout_cmu_bus0_bus", mout_cmu_bus0_bus_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_BUS0_BUS, 0, 2),
+> > +     MUX(CLK_MOUT_CMU_BOOST, "mout_cmu_boost", mout_cmu_cmu_boost_p,
+>
+> In order to keep the consistent naming style,
+> I think that need to change from 'mout_cmu_boost' to 'mout_cmu_cmu_boost'.
 
-Thanks for fixing this reported issue.
-
-Upstream links about this fix and discussion,
-
-Commit daecca4b8433
-gpiolib: Do not alter GPIO chip fwnode member
-
-[1] https://lore.kernel.org/linux-gpio/20230703142308.5772-4-andriy.shevche=
-nko@linux.intel.com/
-[2] https://lore.kernel.org/linux-gpio/CAMRc=3DMfFEBSeJ78NO7XeuzAMJ0KezEPAY=
-WsWnFXXaRyQPAf3dA@mail.gmail.com/
-[3] https://lore.kernel.org/linux-gpio/CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGU=
-CdD-26X5XavL3Ag@mail.gmail.com/
+Yes, that's a good point, and a good spot! Will fix it in v4.
 
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> > +         CLK_CON_MUX_MUX_CLKCMU_CMU_BOOST, 0, 2),
+> > +
+> > +     /* BUS1 */
+> > +     MUX(CLK_MOUT_BUS1_BUS, "mout_cmu_bus1_bus", mout_cmu_bus1_bus_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_BUS1_BUS, 0, 2),
+> > +
+> > +     /* BUS2 */
+> > +     MUX(CLK_MOUT_BUS2_BUS, "mout_cmu_bus2_bus", mout_cmu_bus2_bus_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_BUS2_BUS, 0, 2),
+> > +
+> > +     /* CORE */
+> > +     MUX(CLK_MOUT_CORE_BUS, "mout_cmu_core_bus", mout_cmu_core_bus_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_CORE_BUS, 0, 2),
+> > +
+> > +     /* EH */
+> > +     MUX(CLK_MOUT_EH_BUS, "mout_cmu_eh_bus", mout_cmu_eh_bus_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_CORE_BUS, 0, 2),
 >
+> 'mout_cmu_core_bus' and 'mout_cmu_eh_bus' uses the same register/shift/width information.
+> I think it should be modified by changing the regiter or changing the shift/width information.
+
+It should be using the CLK_CON_MUX_MUX_CLKCMU_EH_BUS register.
+Will fix it in v4.
+
 >
+> > +
+> > +     /* CPUCL{0,1,2,} */
+> > +     MUX(CLK_MOUT_CPUCL2_SWITCH, "mout_cmu_cpucl2_switch", mout_cmu_cpucl2_switch_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_CPUCL2_SWITCH, 0, 2),
+> > +
+> > +     MUX(CLK_MOUT_CPUCL1_SWITCH, "mout_cmu_cpucl1_switch", mout_cmu_cpucl1_switch_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_CPUCL1_SWITCH, 0, 2),
+> > +
+> > +     MUX(CLK_MOUT_CPUCL0_SWITCH, "mout_cmu_cpucl0_switch", mout_cmu_cpucl0_switch_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_CPUCL0_SWITCH, 0, 2),
+> > +
+> > +     MUX(CLK_MOUT_CPUCL0_DBG, "mout_cmu_cpucl0_dbg", mout_cmu_cpucl0_dbg_p,
+> > +         CLK_CON_DIV_CLKCMU_CPUCL0_DBG, 0, 2),
+> > +
+> > +     MUX(CLK_MOUT_CMU_HPM, "mout_cmu_hpm", mout_cmu_hpm_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_HPM, 0, 2),
+> >
+>
+> (snip)
+>
+> > +     /* PDP */
+> > +     MUX(CLK_MOUT_PDP_BUS, "mout_cmu_pdp_bus", mout_cmu_pdp_bus_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_PDP_BUS, 0, 2),
+> > +
+> > +     /* PDP */
+> > +     MUX(CLK_MOUT_PDP_VRA, "mout_cmu_pdp_vra", mout_cmu_pdp_vra_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_PDP_VRA, 0, 2),
+> > +
+> > +     /* IPP */
+> > +     MUX(CLK_MOUT_IPP_BUS, "mout_cmu_ipp_bus", mout_cmu_ipp_bus_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_IPP_BUS, 0, 2),
+> > +
+> > +     /* G3AA */
+> > +     MUX(CLK_MOUT_G3AA, "mout_cmu_g3aa", mout_cmu_g3aa_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_G3AA_G3AA, 0, 2),
+>
+> I think that need to change the mux name and mux parent name
+> because other mux name use the twice word according to the register name
+> even if use the same work such as 'mout_cmu_g2d_g2d', 'mout_cmu_mcsc_mcsc' and 'mout_cmu_mfc_mfc'.
+> - mout_cmu_g3aa -> mout_cmu_g3aa_g3aa
+> - mout_cmu_g3aa_p -> mount_cmu_g3aa_g3aa_p
+
+Will fix in v4
+
+>
+> (snip)
+>
+> > +     /* CSIS */
+> > +     GATE(CLK_GOUT_CSIS, "gout_cmu_csis_bus", "mout_cmu_csis_bus",
+> > +          CLK_CON_GAT_GATE_CLKCMU_CSIS_BUS, 21, 0, 0),
+> > +     /* PDP */
+> > +     GATE(CLK_GOUT_PDP_BUS, "gout_cmu_pdp_bus", "mout_cmu_pdp_bus",
+> > +          CLK_CON_GAT_GATE_CLKCMU_PDP_BUS, 21, 0, 0),
+> > +
+> > +     GATE(CLK_GOUT_PDP_VRA, "gout_cmu_pdp_vra", "mout_cmu_pdp_vra",
+> > +          CLK_CON_GAT_GATE_CLKCMU_PDP_BUS, 21, 0, 0),
+> > +
+> > +     /* IPP */
+> > +     GATE(CLK_GOUT_IPP_BUS, "gout_cmu_ipp_bus", "mout_cmu_ipp_bus",
+> > +          CLK_CON_GAT_GATE_CLKCMU_IPP_BUS, 21, 0, 0),
+> > +     /* G3AA */
+> > +     GATE(CLK_GOUT_G3AA, "gout_cmu_g3aa", "mout_cmu_g3aa",
+> > +          CLK_CON_MUX_MUX_CLKCMU_G3AA_G3AA, 21, 0, 0),
+>
+> ditto.
+> gout_cmu_g3aa -> gout_cmu_g3aa_g3aa
+> mout_cmu_g3aa -> mout_cmu_g3aa_g3aa
+
+Will fix in V4
+
+regards,
+
+Peter.
