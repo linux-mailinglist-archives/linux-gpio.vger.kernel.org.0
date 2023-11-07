@@ -2,68 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C97F57E4102
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Nov 2023 14:49:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A42DE7E413B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Nov 2023 14:53:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234882AbjKGNts (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Nov 2023 08:49:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42800 "EHLO
+        id S234601AbjKGNxW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Nov 2023 08:53:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234925AbjKGNtc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Nov 2023 08:49:32 -0500
-Received: from mail-lj1-x261.google.com (mail-lj1-x261.google.com [IPv6:2a00:1450:4864:20::261])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BDF1721
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Nov 2023 05:47:24 -0800 (PST)
-Received: by mail-lj1-x261.google.com with SMTP id 38308e7fff4ca-2c6b30acacdso75513731fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Nov 2023 05:47:24 -0800 (PST)
+        with ESMTP id S234925AbjKGNwy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Nov 2023 08:52:54 -0500
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FED110E9
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Nov 2023 05:51:44 -0800 (PST)
+Received: by mail-vs1-xe34.google.com with SMTP id ada2fe7eead31-45db3badadbso1275652137.3
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Nov 2023 05:51:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gadgetoid.com; s=google; t=1699364842; x=1699969642; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1699365103; x=1699969903; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7dT8HNQOrxIm3pkuqT2pRA4XkMhzWg9k/6qHhenud2A=;
-        b=CP4zAY5vEi8UJtnFyGECT4yr2osFXpOmKrhgUqdNiugNrK6TcDkceHV9xBIwcsxO0J
-         ATDI8O6GU4Zdm6Zg7Wd2L60OkRywEagMT+/cTFQHpDpf2nyj8OtXAlYISY0yqZvqZb9U
-         7+0VCMPaveJ0pAUB+BFN8CNw9LAAuethP+8lmuGPzR0MiaZyf5g62p6GdkZMIzR+SL8f
-         UiLV6ERNtIHtWHBup4qM17CIgKMu29uhN4CRwlLPHqG+ZzkEEpiHERkYQLO2NghudxvM
-         OWn2oWJEasqF4lxU0K7iWw0itFCja0/vrVQS7UtgYWd6seBt2sFU0lgyy09kURO35x3K
-         Q2Ug==
+        bh=oFbhgesTUnqxhtDQL2m5PAauT+IbKwZ6JL+G8+IHHdQ=;
+        b=k16zXvaxUbR/1P7PTzeBhhcULujmCr3FUFKcqL6LRXxm6G/+lSvQFWYGrc3VKQ8Zwf
+         SfvHqUNn1sYolhL1965mNtPob4akS0ZjARodFpdZ6Dc2Tb6NaDSYFS5fpCkaglfjOW9J
+         Kwcxy2J52rJ2EM9UIETM3IqhHsuPPh9Wq/Z9/LS3og3MlLjuHxQlW9Z1yGt3UBpS+DCg
+         KkaBMeACgRz+r/pT7vvpDhaEd+OcyAp/dDaCvaVEM0cgSMh3XQwOx1k1xrj7ZrFfJFsg
+         n4B8F1jbVXSr13JF8z8dSNsvtE9GFUyxVyrO53xoqeUypQ6VNPHVB4tsb4UJuPJq82cm
+         XmZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699364842; x=1699969642;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1699365103; x=1699969903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7dT8HNQOrxIm3pkuqT2pRA4XkMhzWg9k/6qHhenud2A=;
-        b=GPJ7vuIDpQ42aChJxnW2dn/296K3M6Kz+ceJ5wo+OZRHhHr7eYrpMtOPjDNAuqsMfL
-         PZJu3nPn8XmT93NbOGl+ETZkMKmeAU0Mv3KewN9bZIx1jTvwH39tMdB+vcuVFqeHjQb2
-         v4ph7OVB4l20SAXZ6vmpAjKM8CQKmIUeIFnE2urwgwTib8r2AgiSGui4Z5MPuwL2glbl
-         jLEmvVib6rZjurTql8qOz3vgfLfRcjXaGVXPR2imo/c9ujwdF0I8FU8Dmt8PbwycARKM
-         aC2KDrwJ8UcGDEeHKs1qeoEvxuxhren9Xz3rNTtndA3WUFztA3YqA+b1CWxO90QzENjM
-         a1RQ==
-X-Gm-Message-State: AOJu0YzWtLIePHRr+iWvDDrYUEriGd2ZhHtQUWzkz5PjOCXvSMtl7xjV
-        iM+G7Oys9espjeVN7aK3lQQBqCLfckwMnEYTcKD3qOKgdDJWmA==
-X-Google-Smtp-Source: AGHT+IHyctoVVuPshnlL40GpsjVRt9xwgrMfJDFxe8gnyu8YqyTnkxXmo0l+2C4O3Urt+6wYYo4f6IKNE2dd
-X-Received: by 2002:a19:430d:0:b0:507:9d70:b297 with SMTP id q13-20020a19430d000000b005079d70b297mr22347999lfa.60.1699364842167;
-        Tue, 07 Nov 2023 05:47:22 -0800 (PST)
-Received: from pop-os.. (cpc91242-cmbg18-2-0-cust972.5-4.cable.virginm.net. [82.8.131.205])
-        by smtp-relay.gmail.com with ESMTPS id x8-20020a5d4908000000b0032db2e770f1sm66153wrq.66.2023.11.07.05.47.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Nov 2023 05:47:22 -0800 (PST)
-X-Relaying-Domain: gadgetoid.com
-From:   Phil Howard <phil@gadgetoid.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org, Phil Howard <phil@gadgetoid.com>
-Subject: [libgpiod][PATCH 2/2] bindings: python: use absolute paths for python test builds
-Date:   Tue,  7 Nov 2023 13:47:18 +0000
-Message-Id: <20231107134718.2913223-2-phil@gadgetoid.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231107134718.2913223-1-phil@gadgetoid.com>
-References: <20231107134718.2913223-1-phil@gadgetoid.com>
+        bh=oFbhgesTUnqxhtDQL2m5PAauT+IbKwZ6JL+G8+IHHdQ=;
+        b=Q3vXB3v7Rn+buNNlxnROumW0MUxqwxoj0EpHGTUzEby+vXs1sCOIKukggqTT1+vRi9
+         t7c3mSDeKZmYJX+r7sdaY/WiNQx1m79/DK1nYJRh+Ii58KWtde+o8tCbKDeZnPj8UFAj
+         f7YTsk0xX1gvfkHt7UCWL1kcLKy5Hozs2sgPeQjwpy0UBX6AjXh5XWlb5TmwhkbfbUdM
+         j46rCC7QfxXYwp+k7QILgRhLVULZuoYL9L1/b3SeJS9c9qFW10lWkxPUkQF1Eub3IeYR
+         e2/7GFIV1aQxJX7TLSA7dU2SPDkDKVCwa6QFZi2ulmOKFhk0EEdaC53G7A1KLWeLNSCU
+         m3xw==
+X-Gm-Message-State: AOJu0YxWT1UC5YZvoFAxgePw4BT+Rb+BT4OaNXL+bWvKFY1bwZPGk2E0
+        iBXHrnbao9XHz/E95ynSdRnrEZu2TXjnX4M+A/pitA==
+X-Google-Smtp-Source: AGHT+IEYK3VvFqFlqkqCX6v5oLDKyDaPY5K2oNNBOIIHvCR8ElKbDarcbIVw0JRJQkyIBzCUOD6vzk6X2p3e7cEnjYU=
+X-Received: by 2002:a67:c113:0:b0:45f:274:8c32 with SMTP id
+ d19-20020a67c113000000b0045f02748c32mr6745817vsj.32.1699365103136; Tue, 07
+ Nov 2023 05:51:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGUCdD-26X5XavL3Ag@mail.gmail.com>
+ <ZAocZRZh4FQRH3lc@smile.fi.intel.com> <CA+G9fYsOttth+k3Ki8LK_ZiayvXa0bAg-DmQAaFHZeEyR=6Lrw@mail.gmail.com>
+ <CACRpkdbUYWcFiRh+Y=MOekv2RjSP4sB2t5tVrSsz54Eez6wmVg@mail.gmail.com> <ZJHWdcP+PDaNrw07@smile.fi.intel.com>
+In-Reply-To: <ZJHWdcP+PDaNrw07@smile.fi.intel.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 7 Nov 2023 19:21:32 +0530
+Message-ID: <CA+G9fYvReHr+ofJAW4yfA5EWT6-MRpR2+fOQG24hROjSd+dY0g@mail.gmail.com>
+Subject: Re: selftests: gpio: crash on arm64
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pengfei Xu <pengfei.xu@intel.com>, yi1.lai@intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -74,29 +82,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Change the paths used to build test C extensions in place to their abs
-counterparts. Avoids issues locating files if the build behaviour changes.
+Hi Linus and Bartosz,
 
-Signed-off-by: Phil Howard <phil@gadgetoid.com>
----
- bindings/python/Makefile.am | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, 20 Jun 2023 at 22:11, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Apr 11, 2023 at 10:57:28AM +0200, Linus Walleij wrote:
+> > On Mon, Apr 10, 2023 at 11:16=E2=80=AFAM Naresh Kamboju
+> > <naresh.kamboju@linaro.org> wrote:
+>
+> ...
+>
+> > Add a pr_info() devm_gpio_chip_release() in drivers/gpio/gpiolib-devres=
+.c
+> > and see if the callback is even called. I think this could be the
+> > problem: if that isn't cleaned up, there will be dangling references.
+>
+> Side note: Since we have devres tracepoints, your patch seems an overkill=
+ :-)
+> Just enable devres tracepoints and filter out by the function name. I bel=
+ieve
+> that should work.
 
-diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
-index b2f2779..95edfff 100644
---- a/bindings/python/Makefile.am
-+++ b/bindings/python/Makefile.am
-@@ -14,8 +14,8 @@ endif
- all-local:
- 	GPIOD_WITH_TESTS=$(BUILD_TESTS) \
- 	$(PYTHON) setup.py build_ext --inplace \
--		--include-dirs=$(top_srcdir)/include/:$(top_srcdir)/tests/gpiosim/ \
--		--library-dirs=$(top_builddir)/lib/.libs/:$(top_builddir)/tests/gpiosim/.libs/
-+		--include-dirs=$(abs_top_srcdir)/include/:$(abs_top_srcdir)/tests/gpiosim/ \
-+		--library-dirs=$(abs_top_builddir)/lib/.libs/:$(abs_top_builddir)/tests/gpiosim/.libs/
- 
- install-exec-local:
- 	GPIOD_WITH_TESTS= \
--- 
-2.34.1
+Since I have been tracking open issues on the stable-rc kernel,
+The reported problem on stable-rc linux.6.3.y has been solved
+on the stable-rc linux.6.6.y branch.
 
+Thanks for fixing this reported issue.
+
+Upstream links about this fix and discussion,
+
+Commit daecca4b8433
+gpiolib: Do not alter GPIO chip fwnode member
+
+[1] https://lore.kernel.org/linux-gpio/20230703142308.5772-4-andriy.shevche=
+nko@linux.intel.com/
+[2] https://lore.kernel.org/linux-gpio/CAMRc=3DMfFEBSeJ78NO7XeuzAMJ0KezEPAY=
+WsWnFXXaRyQPAf3dA@mail.gmail.com/
+[3] https://lore.kernel.org/linux-gpio/CA+G9fYv94gx8+-JMzbmQaue3q3y6QdBmsGU=
+CdD-26X5XavL3Ag@mail.gmail.com/
+
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
