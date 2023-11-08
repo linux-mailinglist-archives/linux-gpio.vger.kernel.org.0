@@ -2,52 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 169A67E5A78
+	by mail.lfdr.de (Postfix) with ESMTP id 707917E5A79
 	for <lists+linux-gpio@lfdr.de>; Wed,  8 Nov 2023 16:52:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232108AbjKHPwK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Nov 2023 10:52:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50600 "EHLO
+        id S232410AbjKHPwL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Nov 2023 10:52:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232016AbjKHPwJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Nov 2023 10:52:09 -0500
+        with ESMTP id S232249AbjKHPwK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Nov 2023 10:52:10 -0500
 Received: from mail-lf1-x164.google.com (mail-lf1-x164.google.com [IPv6:2a00:1450:4864:20::164])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A491BFF
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Nov 2023 07:52:07 -0800 (PST)
-Received: by mail-lf1-x164.google.com with SMTP id 2adb3069b0e04-507cee17b00so9219012e87.2
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Nov 2023 07:52:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E9A1BC3
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Nov 2023 07:52:08 -0800 (PST)
+Received: by mail-lf1-x164.google.com with SMTP id 2adb3069b0e04-50930f126b1so8787695e87.3
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Nov 2023 07:52:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gadgetoid.com; s=google; t=1699458726; x=1700063526; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=koCquLI0VNj/DMjqknLAZhWF9poQSxp4BoPI82MEkys=;
-        b=TP0IL3YryWM9SO68wdoXJZ1Pgxw7KbRdC8Oaqv0WgLFHC5DazABjdcNAK4d7pX6P/z
-         Oa0H3w//20ap749UDNg/ecdA9vctIvTUykIXf0sqr6uoZFeBP/0tNoiXFRxVqqm7CswK
-         1SCuba/qAyotKFR2Qn0bJ0Ur3tPgND2isCzt4OA2ZwDxafmX0mZq7ig0bO7m/pDZdQ/K
-         GLUOQf0l623+EheyfP30IQV5aKf5g/OWl47RMrh2r+y2TR3AU3R/C8YlLFkBjlBfCSVD
-         MvvrDhZTBejs0MNr/V7MAeTa37dl0PzEckX47zKPyixMpgT8KyXhfKKhwzjWyHhWRDhx
-         X4Pg==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OsysV5eruwPdrtc0oefirnLVr+6DpwR5v34oQmz7Bl4=;
+        b=eLbiwmdQA/ydjG/Kt+BLiftRCmQtn3EOJ4iJz2N6qKAVElVlPw5xgMtzmt/BUPH91U
+         qAIbbppHd4you6EZv6P+qbAa8/ORa1EIJvqlFn10n9TTxO/1dLXoV+YahJklSxIcpxdl
+         +dj3uiX35FkGdlQH0kyJoF4WQ9qcLMEPryQIOsFbaOytnPEA9MGgk3kNL2TmbV8J2Xge
+         zrtsYqrCMjBouk5wLvvfQJzDNTK1gzi6+1bEik7gxnB/Y/aKd6dd89yVH6OhvYQhJ2fe
+         vscrB5SNqpQNT4dcmG1RSv1s/meWzTKJBhdIXKNx1QsAZwIbaXhL8EjXVQi/FMv6svMk
+         3urw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1699458726; x=1700063526;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=koCquLI0VNj/DMjqknLAZhWF9poQSxp4BoPI82MEkys=;
-        b=nLaMRQDS5KrXL8v1fgYL5YR9487/dhGezJmJT9gbi647ZogRKbEI8r8uOI8PO/G1Rn
-         hV4C6e6REG4/9bYUE/yvRo+lamv22n8So+7cAuH6L53+5Vw3ILFsokdIxIDBeMiSayMC
-         hu2jlTxFcUzHn6WI1kTGdPD4MB33SKhwyGaU+S6SgUjxUuJl6GPI4NlSnDCgImB4jOh8
-         XJIjVNrSP477pMDpFqFZioxcY1kmUW61VRredxVuuMuPBfK1O27miSguNHMDsy2LI3Eu
-         sQFtZMaaJ+Pczew7VMOcXVDviUowwOsBTVzaZZhCrvELSiWwzM4gdIf5ughZD6KoDUfH
-         9H1w==
-X-Gm-Message-State: AOJu0Yy0Z/0WbMUCiGi7mByHzji1AHFzYFm+g2NVgWo6NgTjm2gWcS5B
-        lUSid0MGZKSz8yuFMjvrz6elMo0/Gb9H7lNvnNQSPAajaIn3mg==
-X-Google-Smtp-Source: AGHT+IFgifYIazgTAdkgl+r/PCuDirZQ7zoSanV1hiI7jK9ncvBOKVs/1fmwFQQCxaWP7yvXWR7RzBfkCSNK
-X-Received: by 2002:a05:6512:1052:b0:507:a620:6ba0 with SMTP id c18-20020a056512105200b00507a6206ba0mr2044695lfb.64.1699458725270;
-        Wed, 08 Nov 2023 07:52:05 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OsysV5eruwPdrtc0oefirnLVr+6DpwR5v34oQmz7Bl4=;
+        b=Rai9LZBYEYnIthh35OZRI0qv03U7vWCZ05AjR9Fm3bQWHBCLhzsgS8VcpUNo2dXY3u
+         vO0fuC3L3k9vvA5ez1UMOkP4Dh+qPghXADrEoA9HoLII6Ww6TB8guHdBSVmDKwuX84Xk
+         Q/Lr2uwpfKZeW1oEjjyaNOGjUDfGDuYoM9y9FY/IMQedmX/Q5YsvW5jKW3MGQvrspQTy
+         UBLz4YH9ONIZP84IWB5ttKEoRG+I3bxoTu7bA8sW7yR5+17SLKLYWpf+fkzJL6XQUtiB
+         WNZwH2CYju6eNC2QfyaJ570p5pYC2tCC/vpgHpoLUr5G4ynkFMtJRm5ZCZdXXsWpgkMR
+         gTQA==
+X-Gm-Message-State: AOJu0YyGcFBc4/JPZPLIdnwGkaYZ73t1AGscDTsj8h4hMz6yK+rPaBjR
+        63RzjwKXPG0TiJAx46xfZ7W8Rd792cpDvuUSRllE9i8ZQ19K/g==
+X-Google-Smtp-Source: AGHT+IEk5owFtks/FCUjpbdxSjr6MS/VD52Rf/oneHRot23FvY6r+fA7jKDEnPkVZ8xIXGlXdzj/hhh1MWRP
+X-Received: by 2002:a05:6512:2246:b0:504:30eb:f2ac with SMTP id i6-20020a056512224600b0050430ebf2acmr2004059lfu.68.1699458726243;
+        Wed, 08 Nov 2023 07:52:06 -0800 (PST)
 Received: from pop-os.. (cpc91242-cmbg18-2-0-cust972.5-4.cable.virginm.net. [82.8.131.205])
-        by smtp-relay.gmail.com with ESMTPS id f19-20020a05651232d300b005094a2523b3sm1052844lfg.29.2023.11.08.07.52.04
+        by smtp-relay.gmail.com with ESMTPS id f19-20020a05651232d300b005094a2523b3sm1052844lfg.29.2023.11.08.07.52.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Nov 2023 07:52:05 -0800 (PST)
+        Wed, 08 Nov 2023 07:52:06 -0800 (PST)
 X-Relaying-Domain: gadgetoid.com
 From:   Phil Howard <phil@gadgetoid.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
@@ -55,63 +56,247 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Kent Gibson <warthog618@gmail.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     linux-gpio@vger.kernel.org, Phil Howard <phil@gadgetoid.com>
-Subject: [libgpiod][PATCH v2 0/1] bindings: python: standalone build tooling for tests
-Date:   Wed,  8 Nov 2023 15:51:59 +0000
-Message-Id: <20231108155200.3050417-1-phil@gadgetoid.com>
+Subject: [libgpiod][PATCH v2 1/1] bindings: python: standalone build tooling for tests
+Date:   Wed,  8 Nov 2023 15:52:00 +0000
+Message-Id: <20231108155200.3050417-2-phil@gadgetoid.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231108155200.3050417-1-phil@gadgetoid.com>
+References: <20231108155200.3050417-1-phil@gadgetoid.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-After much delibration about how in-place test builds should work, I have
-pulled out all of the test extension code from setup.py into a new
-build_tests.py and updated Makefile.am to invoke it.
+Move extension definitions and tooling for building tests into
+`build_tests.py` and update Makefile.am to call it with appropriate path
+prefixes.
 
-This replaces the old `python3 setup.py build_ext --inplace` with enough
-setuptools tooling to replicate that behaviour, while also putting it
-in a better place to avoid problems arising from the deprecation of direct
-setup.py invocation [1].
+`build_tests.py` will perform a standalone build of the text extensions,
+keeping any build noise in a temporary directory and copying the final
+built modules automatically out to `tests/gpiosim` and `tests/procname`.
 
-Since receipients of the gpiod Python bindings (in tar.gz source or .whl 
-binary format) won't need the test C extensions (and can't run them anyway
-without the accompanying Python modules) the test extension code has been
-removed from setup.py rather than duplicated into this new file.
+Add "python-tests-run" to Makefile.am so it's clear how to run the tests.
 
-The new build_tests.py creates a temporary directory and redirects all
-build-time output into it. A final step - handled by build_ext and internal
-to setuptools - then moves the built _ext.<python_version>-<arch>-<os>.so C
-extensions into gpiod, tests/gpiosim and tests/procname where they can be
-imported.
+Add .so object files generated by build_test.py to Makefile.am's
+clean-local.
 
-Since release packages and tests no longer share the build/ directory I
-have removed the "rmtree" hack from the "build_ext" override in setup.py.
-There should be no cases where test extensions can accidentally end up
-being installed into the system/user Python environment.
-
-To build and run tests:
-- `make python-tests`
-- `(sudo) make python-tests-run` (I need root for the gpiosim module)
-
-Tested with setuptools==68.2.2 (Sep 2023), setuptools==59.8.0 (Dec 2021)
-and setuptools==42.0.2 (Dec 2019).
-
-Changes v1 -> v2:
-- Add the gpiod ext module to build_tests.py (using glob for sources)
-- Formalize the command for running tests by adding it to Makefile.am
-- Add build_tests.py output artefacts to Makefile.am's clean-local target
-- Sort distutils.log imports (DEBUG before set_verbosity)
-
-Phil Howard (1):
-  bindings: python: standalone build tooling for tests
-
+Signed-off-by: Phil Howard <phil@gadgetoid.com>
+---
  bindings/python/Makefile.am    | 33 +++++++++---
  bindings/python/build_tests.py | 95 ++++++++++++++++++++++++++++++++++
  bindings/python/setup.py       | 28 +---------
  3 files changed, 121 insertions(+), 35 deletions(-)
  create mode 100644 bindings/python/build_tests.py
 
+diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
+index 079ceb1..389da9d 100644
+--- a/bindings/python/Makefile.am
++++ b/bindings/python/Makefile.am
+@@ -7,19 +7,36 @@ EXTRA_DIST = \
+ 
+ if WITH_TESTS
+ 
+-BUILD_TESTS = 1
++python-tests:
++	TOP_SRCDIR=$(abs_top_builddir) \
++	TOP_BUILDDIR=$(abs_top_builddir) \
++	$(PYTHON) build_tests.py
++
++python-tests-run:
++	PYTHONPATH=$(abs_top_srcdir)/bindings/python
++	LD_LIBRARY_PATH=$(abs_top_builddir)/lib/.libs/:\
++$(abs_top_builddir)/tests/gpiosim/.libs/ \
++    python3 -B -m tests
++
++else
++
++python-tests:
+ 
+ endif
+ 
+-all-local:
+-	GPIOD_WITH_TESTS=$(BUILD_TESTS) \
+-	$(PYTHON) setup.py build_ext --inplace \
+-		--include-dirs=$(top_srcdir)/include/:$(top_srcdir)/tests/gpiosim/ \
+-		--library-dirs=$(top_builddir)/lib/.libs/:$(top_srcdir)/tests/gpiosim/.libs/
++clean-local:
++	rm -rf dist
++	rm -f gpiod/_ext.*.so
++	rm -f tests/*/_ext.*.so
++
++all-local: python-tests
++	CFLAGS="-I$(abs_top_srcdir)/include/ -I$(abs_top_srcdir)/tests/gpiosim \
++	-L$(abs_top_builddir)/lib/.libs/ -L$(abs_top_builddir)/tests/gpiosim/.libs/" \
++	$(PYTHON) -m build
+ 
+ install-exec-local:
+-	GPIOD_WITH_TESTS= \
+-	$(PYTHON) setup.py install --prefix=$(DESTDIR)$(prefix)
++	$(PYTHON) -m pip install dist/*.whl \
++	--prefix=$(DESTDIR)$(prefix)
+ 
+ SUBDIRS = gpiod
+ 
+diff --git a/bindings/python/build_tests.py b/bindings/python/build_tests.py
+new file mode 100644
+index 0000000..1760257
+--- /dev/null
++++ b/bindings/python/build_tests.py
+@@ -0,0 +1,95 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2023 Phil Howard <phil@gadgetoid.com>
++
++"""
++Bring up just enough of setuptools/distutils in order to build the gpiod
++test module C extensions.
++
++Set "build_temp" and "build_lib" so that our source directory is not
++polluted with artefacts in build/
++
++Builds:
++
++    tests/gpiosim/_ext.<target>.so
++    tests/procname/_ext.<target>.so
++
++"""
++
++import glob
++import tempfile
++from os import getenv, path
++
++from setuptools import Distribution, Extension
++from setuptools.command.build_ext import build_ext
++
++TOP_SRCDIR = getenv("TOP_SRCDIR", "../../")
++TOP_BUILDDIR = getenv("TOP_BUILDDIR", "../../")
++
++# __version__
++with open("gpiod/version.py", "r") as fd:
++    exec(fd.read())
++
++# The tests are run in-place with PYTHONPATH set to bindings/python
++# so we need the gpiod extension module too.
++gpiod_ext = Extension(
++    "gpiod._ext",
++    sources=glob.glob("gpiod/ext/*.c"),
++    define_macros=[("_GNU_SOURCE", "1")],
++    libraries=["gpiod"],
++    extra_compile_args=["-Wall", "-Wextra"],
++    include_dirs=[
++        path.join(TOP_SRCDIR, "include"),
++    ],
++    library_dirs=[
++        path.join(TOP_BUILDDIR, "lib/.libs"),
++    ],
++)
++
++gpiosim_ext = Extension(
++    "tests.gpiosim._ext",
++    sources=["tests/gpiosim/ext.c"],
++    define_macros=[("_GNU_SOURCE", "1")],
++    libraries=["gpiosim"],
++    extra_compile_args=["-Wall", "-Wextra"],
++    include_dirs=[
++        path.join(TOP_SRCDIR, "include"),
++        path.join(TOP_SRCDIR, "tests/gpiosim"),
++    ],
++    library_dirs=[
++        path.join(TOP_BUILDDIR, "lib/.libs"),
++        path.join(TOP_BUILDDIR, "tests/gpiosim/.libs"),
++    ],
++)
++
++procname_ext = Extension(
++    "tests.procname._ext",
++    sources=["tests/procname/ext.c"],
++    define_macros=[("_GNU_SOURCE", "1")],
++    extra_compile_args=["-Wall", "-Wextra"],
++)
++
++dist = Distribution(
++    {
++        "name": "gpiod",
++        "ext_modules": [gpiosim_ext, procname_ext, gpiod_ext],
++        "version": __version__,
++        "platforms": ["linux"],
++    }
++)
++
++try:
++    from setuptools.logging import configure
++
++    configure()
++except ImportError:
++    from distutils.log import DEBUG, set_verbosity
++
++    set_verbosity(DEBUG)
++
++with tempfile.TemporaryDirectory(prefix="libgpiod-") as temp_dir:
++    command = build_ext(dist)
++    command.inplace = True
++    command.build_temp = temp_dir
++    command.build_lib = temp_dir
++    command.finalize_options()
++    command.run()
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+index e8704d5..9607a28 100644
+--- a/bindings/python/setup.py
++++ b/bindings/python/setup.py
+@@ -13,7 +13,6 @@ from setuptools.errors import BaseError
+ LINK_SYSTEM_LIBGPIOD = getenv("LINK_SYSTEM_LIBGPIOD") == "1"
+ LIBGPIOD_MINIMUM_VERSION = "2.1"
+ LIBGPIOD_VERSION = getenv("LIBGPIOD_VERSION")
+-GPIOD_WITH_TESTS = getenv("GPIOD_WITH_TESTS") == "1"
+ SRC_BASE_URL = "https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/"
+ TAR_FILENAME = "libgpiod-{version}.tar.gz"
+ ASC_FILENAME = "sha256sums.asc"
+@@ -189,11 +188,6 @@ class build_ext(orig_build_ext):
+ 
+         super().run()
+ 
+-        # We don't ever want the module tests directory in our package
+-        # since this might include gpiosim._ext or procname._ext from a
+-        # previous dirty build tree.
+-        rmtree(path.join(self.build_lib, "tests"), ignore_errors=True)
+-
+ 
+ class sdist(orig_sdist):
+     """
+@@ -226,32 +220,12 @@ gpiod_ext = Extension(
+     extra_compile_args=["-Wall", "-Wextra"],
+ )
+ 
+-gpiosim_ext = Extension(
+-    "tests.gpiosim._ext",
+-    sources=["tests/gpiosim/ext.c"],
+-    define_macros=[("_GNU_SOURCE", "1")],
+-    libraries=["gpiosim"],
+-    extra_compile_args=["-Wall", "-Wextra"],
+-)
+-
+-procname_ext = Extension(
+-    "tests.procname._ext",
+-    sources=["tests/procname/ext.c"],
+-    define_macros=[("_GNU_SOURCE", "1")],
+-    extra_compile_args=["-Wall", "-Wextra"],
+-)
+-
+-extensions = [gpiod_ext]
+-if GPIOD_WITH_TESTS:
+-    extensions.append(gpiosim_ext)
+-    extensions.append(procname_ext)
+-
+ setup(
+     name="gpiod",
+     url="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git",
+     packages=find_packages(exclude=["tests", "tests.*"]),
+     python_requires=">=3.9.0",
+-    ext_modules=extensions,
++    ext_modules=[gpiod_ext],
+     cmdclass={"build_ext": build_ext, "sdist": sdist},
+     version=__version__,
+     author="Bartosz Golaszewski",
 -- 
 2.34.1
 
