@@ -2,1766 +2,677 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 681007E5176
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Nov 2023 08:58:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 236227E5386
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Nov 2023 11:41:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232425AbjKHH6h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Nov 2023 02:58:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
+        id S1344346AbjKHKlc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Nov 2023 05:41:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231587AbjKHH6g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Nov 2023 02:58:36 -0500
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6591712
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Nov 2023 23:58:33 -0800 (PST)
-Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2c72e275d96so23379041fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Nov 2023 23:58:33 -0800 (PST)
+        with ESMTP id S1344335AbjKHKlb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Nov 2023 05:41:31 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D32221BF0
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Nov 2023 02:41:27 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-32fadd4ad09so4360798f8f.1
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Nov 2023 02:41:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699430312; x=1700035112; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8To552w1iOkDCGDyDXCq580Qte0/9NeRCnN/SLW1af8=;
-        b=bY/9RLnpUZr04n2VDvgU+d1C731fByJSka7bGe4KyumA0NTWzn/VMr4PzpXVioM70h
-         hESNBysl4UeMTNdEu/HSg1hKi7heOHMZ9ygmUZbI4fSgolqZwG4AnEGw90db02b2HMzB
-         23E9+c+S0yMb9PHP0uKwrqMEPoWY0C0q2iYJgc7fpASOHmuNCSRfeuaZKVQSsEmbIHBv
-         4BDGnANReVxVTNli9RApAqjJy0JrlXjGWwMkEwKkNJsa5gF/xpjLcfarRxfuScCAGFRx
-         L83pcCKcKo1lz3GPCjyIi07xKMJ9O0jo2izjueQO/TyBYR9RKEurN73fM0fcGGcyLIe8
-         iRcA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699440086; x=1700044886; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KvfH9IH1x6ij2rl8eoo/SeNW+9Xv7Dr/qgGw3e+oi/4=;
+        b=1DukRho1dnMCVXG07l6IX5w6S1zg+zJgM/ixu+6UtHJGFUzsXBqkr1mXRDgf+5H+Ao
+         Cp6He56cjuBwt45ENkl0uImwXoORkjIo/uRp3ZxV5s11paLpBYmgJsdosARHeqXN7WXc
+         dQdNyXkccKNdzJEZZPs8rIq+JguQW4IbHwLM0b8LmLAO1OKVs5CO+lzQoHFvDNti+UIp
+         gSItLTi3p2OmsiSdeQQX94KegXBh/kTfR2uNJbkMDUNQwhRt6Vpmbtx2xQf+PL8xSg98
+         8f1+eRkqRCOyU2v67H9KC4Q0MxJMI3CIhagLeDMPi0/5IBff8z4r50o95zyx6IOrSb03
+         aqnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699430312; x=1700035112;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8To552w1iOkDCGDyDXCq580Qte0/9NeRCnN/SLW1af8=;
-        b=aMdARyf+2YphZkjDkv3f8N3goGPkFJPmERXymnAcNcht1LAvpEldLNZiEbVhoDRcz3
-         Ajf9RC5oqeUlMat/2ykchadqc9pPqfge9aWQFhQPpeRtHXmEl2Ob6Muo2S1j3jse1H8O
-         caURGrxuCK7tnBPncJ075IAOdyzReRnuOp9/rpAep0/q1wbc3eu8y8cemjs0uyaeU7HA
-         QCWygegYUVvu72F3DSTS0PqqIUO7AMzrA+99zjxSDfGIbsgPUJoQX54e0B9o5NA/X755
-         NrB74Vw5yz1ny7NPm0o73TpDgQ0kL9pZqsfvWhvRO4Nf3ZRQgM9ZL7Ay35FnJBvVsx3a
-         VYfw==
-X-Gm-Message-State: AOJu0YyYi7+mfhBbHQIkdkTWvimYeTOdlxawXokMYzUuunLw14tm93WR
-        HeFmhu6Pj1CYrtEB7Ot9TovFcynfBwpZC8a9Mp8=
-X-Google-Smtp-Source: AGHT+IHxbLX2lr6v79HYyFKuNVD9GDwxkrWDUtzdOuOzRJIHWb5woLRyh0DxMBE03QuXwl+6uzzfFQ==
-X-Received: by 2002:a2e:2c15:0:b0:2c6:f51f:c96d with SMTP id s21-20020a2e2c15000000b002c6f51fc96dmr949079ljs.13.1699430311938;
-        Tue, 07 Nov 2023 23:58:31 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id f16-20020a7bc8d0000000b0040684abb623sm17647507wml.24.2023.11.07.23.58.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Nov 2023 23:58:31 -0800 (PST)
-Message-ID: <684670c3-d749-43fd-8ae7-89b26843aec8@linaro.org>
-Date:   Wed, 8 Nov 2023 08:58:28 +0100
+        d=1e100.net; s=20230601; t=1699440086; x=1700044886;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KvfH9IH1x6ij2rl8eoo/SeNW+9Xv7Dr/qgGw3e+oi/4=;
+        b=e7BgDuvgKGti5W6vrDDYEaqaBamtMP/Etk2ziREm2lM0K6CIQDoFarlPI+oBAz81vE
+         MFWswdXaq7s88nyw+S4XDvURHlkpwO0x+DfsxIfkpXnDeW6FwxGomwjt2zhqJL3mJGIn
+         yM0RUilDweCZXmPD+Rh/Gs4YbgO7pX+l0C1AJc1fSwHVT5rXN9158NxBbK8wEeh5iWP1
+         3vhoM40NYAZC6tP3p4Jx9Djo50lwUAa4FU2oRDw3lJr8XIrU5gUCgRj23X27XvlESb6k
+         O2Pm+hho3UjJvlvR1Zk5WG+vTXsvy6pY27JtvYebIp/mcwdMhQeYpJkb5E9MQN3Etlkw
+         nYPA==
+X-Gm-Message-State: AOJu0Yye640xTlWyQASDb+F2YN6K2rNW6gFFSKzQzdfBUZHpKm1TYOk1
+        8mQV7eyrL06zREpSi8H9bWPGnQ==
+X-Google-Smtp-Source: AGHT+IEC0r7xyftJM7/oUdtuL4bA9vPG+pIISdQ7qepvDQKxjtzWk+jIW1syvBAvqUaPbN9HxKMJkg==
+X-Received: by 2002:a5d:6d07:0:b0:329:6e92:8d77 with SMTP id e7-20020a5d6d07000000b003296e928d77mr1220297wrq.51.1699440085798;
+        Wed, 08 Nov 2023 02:41:25 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e0a:448:76e0:c772:1e2d:a3af:5b9a])
+        by smtp.gmail.com with ESMTPSA id i16-20020a5d55d0000000b0032d8354fb43sm4607389wrw.76.2023.11.08.02.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Nov 2023 02:41:25 -0800 (PST)
+From:   Esteban Blanc <eblanc@baylibre.com>
+To:     linus.walleij@linaro.org
+Cc:     andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jpanis@baylibre.com,
+        jneanne@baylibre.com, eblanc@baylibre.com, u-kumar1@ti.com
+Subject: [PATCH v10] pinctrl: tps6594: Add driver for TPS6594 pinctrl and GPIOs
+Date:   Wed,  8 Nov 2023 11:41:24 +0100
+Message-Id: <20231108104124.2818275-1-eblanc@baylibre.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/10] arm64: dts: exynos: add initial support for
- exynosautov920 SoC
-Content-Language: en-US
-To:     Jaewon Kim <jaewon02.kim@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20231031094852.118677-1-jaewon02.kim@samsung.com>
- <CGME20231031095021epcas2p352c4ace8652d7bf1f74a9b32ab61a913@epcas2p3.samsung.com>
- <20231031094852.118677-10-jaewon02.kim@samsung.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231031094852.118677-10-jaewon02.kim@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 31/10/2023 10:47, Jaewon Kim wrote:
-> Samsung ExynosAutov920 is ARMv8-based automotive-oriented SoC.
-> It has AE(Automotive Enhanced) IPs for safety.
->  * Cortex-A78AE 10-cores
->  * GIC-600AE
-> 
-> This is minimal support for ExynosAutov920 SoC.
->  * Enumerate all pinctrl nodes
->  * Enable Chip-Id
->  * Serial0 for console
->  * PWM
-> 
-> Since the clock driver is not yet implemented, it is supported as
-> fixed-clock.
-> 
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-> ---
->  .../dts/exynos/exynosautov920-pinctrl.dtsi    | 1266 +++++++++++++++++
->  .../arm64/boot/dts/exynos/exynosautov920.dtsi |  318 +++++
->  2 files changed, 1584 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
->  create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-> new file mode 100644
-> index 000000000000..63b958b96c48
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-> @@ -0,0 +1,1266 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Samsung's ExynosAutov920 SoC pin-mux and pin-config device tree source
-> + *
-> + * Copyright (c) 2023 Samsung Electronics Co., Ltd.
-> + *
-> + * Samsung's ExynosAutov920 SoC pin-mux and pin-config options are listed as
-> + * device tree nodes in this file.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +#include "exynos-pinctrl.h"
-> +
-> +&pinctrl_alive {
-> +	gpa0: gpa0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	gpa1: gpa1-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	gpq0: gpq0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +};
-> +
-> +&pinctrl_aud {
-> +	gpb0: gpb0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpb1: gpb1-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpb2: gpb2-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpb3: gpb3-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpb4: gpb4-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpb5: gpb5-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpb6: gpb6-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +};
-> +
-> +&pinctrl_hsi0 {
-> +	gph0: gph0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gph1: gph1-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +};
-> +
-> +&pinctrl_hsi1 {
-> +	gph8: gph8-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +};
-> +
-> +&pinctrl_hsi2 {
-> +	gph3: gph3-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gph4: gph4-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gph5: gph5-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gph6: gph6-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +};
-> +
-> +&pinctrl_hsi2ufs {
-> +	gph2: gph2-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	ufs_rst_n: ufs-rst-n-pins {
-> +		samsung,pins = "gph2-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-con-pdn = <EXYNOS_PIN_PULL_DOWN>;
-> +	};
-> +
-> +	ufs_refclk_out: ufs-refclk-out-pins {
-> +		samsung,pins = "gph2-0";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-con-pdn = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	ufs_rst_n_1: ufs-rst-n-1-pins {
-> +		samsung,pins = "gph2-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-con-pdn = <EXYNOS_PIN_PULL_DOWN>;
-> +	};
-> +
-> +	ufs_refclk_out_1: ufs-refclk-out-1-pins {
-> +		samsung,pins = "gph2-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-con-pdn = <EXYNOS_PIN_PULL_DOWN>;
-> +	};
-> +};
-> +
-> +&pinctrl_peric0 {
-> +	gpp0: gpp0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp1: gpp1-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp2: gpp2-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp3: gpp3-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp4: gpp4-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpg0: gpg0-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpg2: gpg2-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpg3: gpg3-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpg4: gpg4-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpg5: gpg5-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	/* UART PERIC0_USI00 */
-> +	uart0_bus: uart0-bus-pins {
-> +		samsung,pins = "gpp0-0", "gpp0-1", "gpp0-2", "gpp0-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart0_bus_dual: uart0-bus-dual-pins {
-> +		samsung,pins = "gpp0-0", "gpp0-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC0_USI01 */
-> +	uart1_bus: uart1-bus-pins {
-> +		samsung,pins = "gpp0-4", "gpp0-5", "gpp0-6", "gpp0-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart1_bus_dual: uart1-bus-dual-pins {
-> +		samsung,pins = "gpp0-4", "gpp0-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC0_USI02 */
-> +	uart2_bus: uart2-bus-pins {
-> +		samsung,pins = "gpp1-0", "gpp1-1", "gpp1-2", "gpp1-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart2_bus_dual: uart2-bus-dual-pins {
-> +		samsung,pins = "gpp1-0", "gpp1-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC0_USI03 */
-> +	uart3_bus: uart3-bus-pins {
-> +		samsung,pins = "gpp1-4", "gpp1-5", "gpp1-6", "gpp1-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart3_bus_dual: uart3-bus-dual-pins {
-> +		samsung,pins = "gpp1-4", "gpp1-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC0_USI04 */
-> +	uart4_bus: uart4-bus-pins {
-> +		samsung,pins = "gpp2-0", "gpp2-1", "gpp2-2", "gpp2-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart4_bus_dual: uart4-bus-dual-pins {
-> +		samsung,pins = "gpp2-0", "gpp2-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC0_USI05 */
-> +	uart5_bus: uart5-bus-pins {
-> +		samsung,pins = "gpp2-4", "gpp2-5", "gpp2-6", "gpp2-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart5_bus_dual: uart5-bus-dual-pins {
-> +		samsung,pins = "gpp2-4", "gpp2-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC0_USI06 */
-> +	uart6_bus: uart6-bus-pins {
-> +		samsung,pins = "gpp3-0", "gpp3-1", "gpp3-2", "gpp3-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart6_bus_dual: uart6-bus-dual-pins {
-> +		samsung,pins = "gpp3-0", "gpp3-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC0_USI07 */
-> +	uart7_bus: uart7-bus-pins {
-> +		samsung,pins = "gpp3-4", "gpp3-5", "gpp3-6", "gpp3-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart7_bus_dual: uart7-bus-dual-pins {
-> +		samsung,pins = "gpp3-4", "gpp3-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC0_USI08 */
-> +	uart8_bus: uart8-bus-pins {
-> +		samsung,pins = "gpp4-0", "gpp4-1", "gpp4-2", "gpp4-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart8_bus_dual: uart8-bus-dual-pins {
-> +		samsung,pins = "gpp4-0", "gpp4-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI00  */
-> +	hsi2c0_bus: hsi2c0-bus-pins {
-> +		samsung,pins = "gpp0-0", "gpp0-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI00_I2C */
-> +	hsi2c1_bus: hsi2c1-bus-pins {
-> +		samsung,pins = "gpp0-2", "gpp0-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI01 */
-> +	hsi2c2_bus: hsi2c2-bus-pins {
-> +		samsung,pins = "gpp0-4", "gpp0-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI01_I2C */
-> +	hsi2c3_bus: hsi2c3-bus-pins {
-> +		samsung,pins = "gpp0-6", "gpp0-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI02 */
-> +	hsi2c4_bus: hsi2c4-bus-pins {
-> +		samsung,pins = "gpp1-0", "gpp1-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI02_I2C */
-> +	hsi2c5_bus: hsi2c5-bus-pins {
-> +		samsung,pins = "gpp1-2", "gpp1-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI03 */
-> +	hsi2c6_bus: hsi2c6-bus-pins {
-> +		samsung,pins = "gpp1-4", "gpp1-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI03_I2C */
-> +	hsi2c7_bus: hsi2c7-bus-pins {
-> +		samsung,pins = "gpp1-6", "gpp1-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI04 */
-> +	hsi2c8_bus: hsi2c8-bus-pins {
-> +		samsung,pins = "gpp2-0", "gpp2-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI04_I2C */
-> +	hsi2c9_bus: hsi2c9-bus-pins {
-> +		samsung,pins = "gpp2-2", "gpp2-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI05 */
-> +	hsi2c10_bus: hsi2c10-bus-pins {
-> +		samsung,pins = "gpp2-4", "gpp2-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI05_I2C */
-> +	hsi2c11_bus: hsi2c11-bus-pins {
-> +		samsung,pins = "gpp2-6", "gpp2-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI06 */
-> +	hsi2c12_bus: hsi2c12-bus-pins {
-> +		samsung,pins = "gpp3-0", "gpp3-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI06_I2C */
-> +	hsi2c13_bus: hsi2c13-bus-pins {
-> +		samsung,pins = "gpp3-2", "gpp3-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI07 */
-> +	hsi2c14_bus: hsi2c14-bus-pins {
-> +		samsung,pins = "gpp3-4", "gpp3-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI07_I2C */
-> +	hsi2c15_bus: hsi2c15-bus-pins {
-> +		samsung,pins = "gpp3-6", "gpp3-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI08 */
-> +	hsi2c16_bus: hsi2c16-bus-pins {
-> +		samsung,pins = "gpp4-0", "gpp4-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC0 USI08_I2C */
-> +	hsi2c17_bus: hsi2c17-bus-pins {
-> +		samsung,pins = "gpp4-2", "gpp4-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI00 */
-> +	spi0_bus: spi0-bus-pins {
-> +		samsung,pins = "gpp0-0", "gpp0-1", "gpp0-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi0_cs: spi0-cs-pins {
-> +		samsung,pins = "gpp0-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi0_cs_func: spi0-cs-func-pins {
-> +		samsung,pins = "gpp0-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI01 */
-> +	spi1_bus: spi1-bus-pins {
-> +		samsung,pins = "gpp0-4", "gpp0-5", "gpp0-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi1_cs: spi1-cs-pins {
-> +		samsung,pins = "gpp0-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi1_cs_func: spi1-cs-func-pins {
-> +		samsung,pins = "gpp0-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI02 */
-> +	spi2_bus: spi2-bus-pins {
-> +		samsung,pins = "gpp1-0", "gpp1-1", "gpp1-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi2_cs: spi2-cs-pins {
-> +		samsung,pins = "gpp1-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi2_cs_func: spi2-cs-func-pins {
-> +		samsung,pins = "gpp1-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI03 */
-> +	spi3_bus: spi3-bus-pins {
-> +		samsung,pins = "gpp1-4", "gpp1-5", "gpp1-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi3_cs: spi3-cs-pins {
-> +		samsung,pins = "gpp1-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi3_cs_func: spi3-cs-func-pins {
-> +		samsung,pins = "gpp1-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI04 */
-> +	spi4_bus: spi4-bus-pins {
-> +		samsung,pins = "gpp2-0", "gpp2-1", "gpp2-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi4_cs: spi4-cs-pins {
-> +		samsung,pins = "gpp2-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi4_cs_func: spi4-cs-func-pins {
-> +		samsung,pins = "gpp2-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI05 */
-> +	spi5_bus: spi5-bus-pins {
-> +		samsung,pins = "gpp2-4", "gpp2-5", "gpp2-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi5_cs: spi5-cs-pins {
-> +		samsung,pins = "gpp2-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi5_cs_func: spi5-cs-func-pins {
-> +		samsung,pins = "gpp2-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI06 */
-> +	spi6_bus: spi6-bus-pins {
-> +		samsung,pins = "gpp3-0", "gpp3-1", "gpp3-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi6_cs: spi6-cs-pins {
-> +		samsung,pins = "gpp3-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi6_cs_func: spi6-cs-func-pins {
-> +		samsung,pins = "gpp3-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI07 */
-> +	spi7_bus: spi7-bus-pins {
-> +		samsung,pins = "gpp3-4", "gpp3-5", "gpp3-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi7_cs: spi7-cs-pins {
-> +		samsung,pins = "gpp3-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi7_cs_func: spi7-cs-func-pins {
-> +		samsung,pins = "gpp3-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC0 USI08 */
-> +	spi8_bus: spi8-bus-pins {
-> +		samsung,pins = "gpp4-0", "gpp4-1", "gpp4-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi8_cs: spi8-cs-pins {
-> +		samsung,pins = "gpp4-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi8_cs_func: spi8-cs-func-pins {
-> +		samsung,pins = "gpp4-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I3C PERIC0 */
-> +	i3c0_bus: i3c0-bus-pins {
-> +		samsung,pins = "gpp2-6", "gpp2-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	i3c1_bus: i3c1-bus-pins {
-> +		samsung,pins = "gpp3-2", "gpp3-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	i3c2_bus: i3c2-bus-pins {
-> +		samsung,pins = "gpp3-6", "gpp3-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	i3c3_bus: i3c3-bus-pins {
-> +		samsung,pins = "gpp4-2", "gpp4-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* PWM PERIC0 */
-> +	pwm_tout0: pwm-tout0-pins {
-> +		samsung,pins = "gpg0-0";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	pwm_tout1: pwm-tout1-pins {
-> +		samsung,pins = "gpg0-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	pwm_tout2: pwm-tout2-pins {
-> +		samsung,pins = "gpg0-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	pwm_tout3: pwm-tout3-pins {
-> +		samsung,pins = "gpg0-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +};
-> +
-> +&pinctrl_peric1 {
-> +	gpp5: gpp5-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp6: gpp6-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp7: gpp7-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp8: gpp8-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp9: gpp9-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp10: gpp10-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp11: gpp11-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpp12: gpp12-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	gpg1: gpg1-gpio-bank {
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +	};
-> +
-> +	/* UART PERIC1 USI09 */
-> +	uart9_bus: uart9-bus-pins {
-> +		samsung,pins = "gpp5-0", "gpp5-1", "gpp5-2", "gpp5-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart9_bus_dual: uart9-bus-dual-pins {
-> +		samsung,pins = "gpp5-0", "gpp5-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC1 USI10 */
-> +	uart10_bus: uart10-bus-pins {
-> +		samsung,pins = "gpp5-4", "gpp5-5", "gpp5-6", "gpp5-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart10_bus_dual: uart10-bus-dual-pins {
-> +		samsung,pins = "gpp5-4", "gpp5-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC1 USI11 */
-> +	uart11_bus: uart11-bus-pins {
-> +		samsung,pins = "gpp10-0", "gpp10-1", "gpp10-2", "gpp10-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart11_bus_dual: uart11-bus-dual-pins {
-> +		samsung,pins = "gpp10-0", "gpp10-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC1_USI12 */
-> +	uart12_bus: uart12-bus-pins {
-> +		samsung,pins = "gpp7-0", "gpp7-1", "gpp7-2", "gpp7-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart12_bus_dual: uart12-bus-dual-pins {
-> +		samsung,pins = "gpp7-0", "gpp7-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC1_USI13 */
-> +	uart13_bus: uart13-bus-pins {
-> +		samsung,pins = "gpp7-4", "gpp7-5", "gpp7-6", "gpp7-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart13_bus_dual: uart13-bus-dual-pins {
-> +		samsung,pins = "gpp7-4", "gpp7-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC1 USI14 */
-> +	uart14_bus: uart14-bus-pins {
-> +		samsung,pins = "gpp8-0", "gpp8-1", "gpp8-2", "gpp8-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart14_bus_dual: uart14-bus-dual-pins {
-> +		samsung,pins = "gpp8-0", "gpp8-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC1 USI15 */
-> +	uart15_bus: uart15-bus-pins {
-> +		samsung,pins = "gpp11-0", "gpp11-1", "gpp11-2", "gpp11-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart15_bus_dual: uart15-bus-dual-pins {
-> +		samsung,pins = "gpp11-0", "gpp11-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC1 USI16 */
-> +	uart16_bus: uart16-bus-pins {
-> +		samsung,pins = "gpp9-0", "gpp9-1", "gpp9-2", "gpp9-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart16_bus_dual: uart16-bus-dual-pins {
-> +		samsung,pins = "gpp9-0", "gpp9-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* UART PERIC1 USI17 */
-> +	uart17_bus: uart17-bus-pins {
-> +		samsung,pins = "gpp12-0", "gpp12-1", "gpp12-2", "gpp12-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	uart17_bus_dual: uart17-bus-dual-pins {
-> +		samsung,pins = "gpp12-0", "gpp12-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI09 */
-> +	hsi2c18_bus: hsi2c18-bus-pins {
-> +		samsung,pins = "gpp5-0", "gpp5-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI09_I2C */
-> +	hsi2c19_bus: hsi2c19-bus-pins {
-> +		samsung,pins = "gpp5-2", "gpp5-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI10 */
-> +	hsi2c20_bus: hsi2c20-bus-pins {
-> +		samsung,pins = "gpp5-4", "gpp5-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI10_I2C */
-> +	hsi2c21_bus: hsi2c21-bus-pins {
-> +		samsung,pins = "gpp5-6", "gpp5-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI11 */
-> +	hsi2c22_bus: hsi2c22-bus-pins {
-> +		samsung,pins = "gpp10-0", "gpp10-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI11_I2C */
-> +	hsi2c23_bus: hsi2c23-bus-pins {
-> +		samsung,pins = "gpp10-2", "gpp10-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI12 */
-> +	hsi2c24_bus: hsi2c24-bus-pins {
-> +		samsung,pins = "gpp7-0", "gpp7-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI12_I2C */
-> +	hsi2c25_bus: hsi2c25-bus-pins {
-> +		samsung,pins = "gpp7-2", "gpp7-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI13 */
-> +	hsi2c26_bus: hsi2c26-bus-pins {
-> +		samsung,pins = "gpp7-4", "gpp7-5";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI13_I2C */
-> +	hsi2c27_bus: hsi2c27-bus-pins {
-> +		samsung,pins = "gpp7-6", "gpp7-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI14 */
-> +	hsi2c28_bus: hsi2c28-bus-pins {
-> +		samsung,pins = "gpp8-0", "gpp8-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI14_I2C */
-> +	hsi2c29_bus: hsi2c29-bus-pins {
-> +		samsung,pins = "gpp8-2", "gpp8-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI15 */
-> +	hsi2c30_bus: hsi2c30-bus-pins {
-> +		samsung,pins = "gpp11-0", "gpp11-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI15_I2C */
-> +	hsi2c31_bus: hsi2c31-bus-pins {
-> +		samsung,pins = "gpp11-2", "gpp11-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI16 */
-> +	hsi2c32_bus: hsi2c32-bus-pins {
-> +		samsung,pins = "gpp9-0", "gpp9-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI16_I2C */
-> +	hsi2c33_bus: hsi2c33-bus-pins {
-> +		samsung,pins = "gpp9-2", "gpp9-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI17 */
-> +	hsi2c34_bus: hsi2c34-bus-pins {
-> +		samsung,pins = "gpp12-0", "gpp12-1";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I2C PERIC1 USI17_I2C */
-> +	hsi2c35_bus: hsi2c35-bus-pins {
-> +		samsung,pins = "gpp12-2", "gpp12-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI09 */
-> +	spi9_bus: spi9-bus-pins {
-> +		samsung,pins = "gpp5-0", "gpp5-1", "gpp5-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi9_cs: spi9-cs-pins {
-> +		samsung,pins = "gpp5-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi9_cs_func: spi9-cs-func-pins {
-> +		samsung,pins = "gpp5-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI10 */
-> +	spi10_bus: spi10-bus-pins {
-> +		samsung,pins = "gpp5-4", "gpp5-5", "gpp5-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi10_cs: spi10-cs-pins {
-> +		samsung,pins = "gpp5-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi10_cs_func: spi10-cs-func-pins {
-> +		samsung,pins = "gpp5-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI11 */
-> +	spi11_bus: spi11-bus-pins {
-> +		samsung,pins = "gpp10-0", "gpp10-1", "gpp10-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi11_cs: spi11-cs-pins {
-> +		samsung,pins = "gpp10-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi11_cs_func: spi11-cs-func-pins {
-> +		samsung,pins = "gpp10-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI12 */
-> +	spi12_bus: spi12-bus-pins {
-> +		samsung,pins = "gpp7-0", "gpp7-1", "gpp7-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi12_cs: spi12-cs-pins {
-> +		samsung,pins = "gpp7-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi12_cs_func: spi12-cs-func-pins {
-> +		samsung,pins = "gpp7-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI13 */
-> +	spi13_bus: spi13-bus-pins {
-> +		samsung,pins = "gpp7-4", "gpp7-5", "gpp7-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi13_cs: spi13-cs-pins {
-> +		samsung,pins = "gpp7-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi13_cs_func: spi13-cs-func-pins {
-> +		samsung,pins = "gpp7-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI14 */
-> +	spi14_bus: spi14-bus-pins {
-> +		samsung,pins = "gpp8-0", "gpp8-1", "gpp8-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi14_cs: spi14-cs-pins {
-> +		samsung,pins = "gpp8-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi14_cs_func: spi14-cs-func-pins {
-> +		samsung,pins = "gpp8-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI15 */
-> +	spi15_bus: spi15-bus-pins {
-> +		samsung,pins = "gpp11-0", "gpp11-1", "gpp11-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi15_cs: spi15-cs-pins {
-> +		samsung,pins = "gpp11-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi15_cs_func: spi15-cs-func-pins {
-> +		samsung,pins = "gpp11-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI16 */
-> +	spi16_bus: spi16-bus-pins {
-> +		samsung,pins = "gpp9-0", "gpp9-1", "gpp9-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi16_cs: spi16-cs-pins {
-> +		samsung,pins = "gpp9-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi16_cs_func: spi16-cs-func-pins {
-> +		samsung,pins = "gpp9-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* SPI PERIC1 USI17 */
-> +	spi17_bus: spi17-bus-pins {
-> +		samsung,pins = "gpp12-0", "gpp12-1", "gpp12-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi17_cs: spi17-cs-pins {
-> +		samsung,pins = "gpp12-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	spi17_cs_func: spi17-cs-func-pins {
-> +		samsung,pins = "gpp12-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	/* I3C PERIC1 */
-> +	i3c4_bus: i3c4-bus-pins {
-> +		samsung,pins = "gpp7-2", "gpp7-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	i3c5_bus: i3c5-bus-pins {
-> +		samsung,pins = "gpp7-6", "gpp7-7";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	i3c6_bus: i3c6-bus-pins {
-> +		samsung,pins = "gpp8-2", "gpp8-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	i3c7_bus: i3c7-bus-pins {
-> +		samsung,pins = "gpp11-2", "gpp11-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-> new file mode 100644
-> index 000000000000..ec704fec323f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-> @@ -0,0 +1,318 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Samsung's ExynosAutov920 SoC device tree source
-> + *
-> + * Copyright (c) 2023 Samsung Electronics Co., Ltd.
-> + *
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/soc/samsung,exynos-usi.h>
-> +
-> +/ {
-> +	compatible = "samsung,exynosautov920";
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +
-> +	interrupt-parent = <&gic>;
-> +
-> +	aliases {
-> +		pinctrl0 = &pinctrl_alive;
-> +		pinctrl1 = &pinctrl_aud;
-> +		pinctrl2 = &pinctrl_hsi0;
-> +		pinctrl3 = &pinctrl_hsi1;
-> +		pinctrl4 = &pinctrl_hsi2;
-> +		pinctrl5 = &pinctrl_hsi2ufs;
-> +		pinctrl6 = &pinctrl_peric0;
-> +		pinctrl7 = &pinctrl_peric1;
-> +	};
-> +
-> +	arm-pmu {
-> +		compatible = "arm,cortex-a78-pmu";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	chosen: chosen {
-> +		bootargs = "console=ttySAC0,115200n8 loglevel=3 printk.devkmsg=on log_buf_len=512K";
+TI TPS6594 PMIC has 11 GPIOs which can be used
+for different functions.
 
-Drop bootargs. Instead use stdout path for console.
+This patch adds a pinctrl and GPIO drivers in
+order to use those functions.
 
-> +		linux,initrd-start = <0x85000000>;
-> +		linux,initrd-end =   <0x8AFFFFFF>;
+Signed-off-by: Esteban Blanc <eblanc@baylibre.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
 
-Lowercase hex please.
+Notes:
+    This patch was picked in V7 from a series since there is no dependency between
+    the two patches.
+    
+    Changes since v9:
+	https://lore.kernel.org/lkml/20231107094720.2223541-1-eblanc@baylibre.com/
+    - Add missing OF Kconfig dependency. I'm testing with arm64 which select
+      OF, so I didn't see that there was still an issue while fixing the
+      missing GENERIC_PINCONF in v8. Sorry for that...
+    The 2 Reviewed-by tags were kept as this new version does not change the
+    driver inner working.
+    
+    Changes since v8:
+    https://lore.kernel.org/lkml/20231102101357.977886-1-eblanc@baylibre.com/
+    - Add missing GENERIC_PINCONF Kconfig dependency.
+    - Drop MODULE_ALIAS in favoir of ID table as requested by Krzysztof Kozlowski.
+    The 2 Reviewed-by tags were kept as this new version does not change the
+    driver inner working.
+    
+    Changes since v7:
+    https://lore.kernel.org/lkml/20230628133021.500477-1-eblanc@baylibre.com/
+    - Fix indentation of a macro
+    - Remove useless return after a switch case
+    
+    Here is the old cover-letter:
+    TPS6594 is a Power Management IC which provides regulators and others
+    features like GPIOs, RTC, watchdog, ESMs (Error Signal Monitor), and
+    PFSM (Pre-configurable Finite State Machine). The SoC and the PMIC can
+    communicate through the I2C or SPI interfaces.
+    TPS6594 is the super-set device while TPS6593 and LP8764 are derivatives.
+    
+    This series adds support to TI TPS6594 PMIC and its derivatives.
+    
+    This should be applied on top of other patch series:
+    - https://lore.kernel.org/all/20230511095126.105104-1-jpanis@baylibre.com/
+      For core MFD driver. The necessary part of this patch series is already
+      applied in linux-next.
+    
+    The features implemented in this series are:
+    - RTC (child device)
+    - Pinmux/GPIO (child device)
+    - Regulator (child device)
+    
+    RTC description:
+    The TPS6594 family has an RTC built-in, except for LP8764.
+    It provides time and an alarm.
+    
+    Pinmux/GPIO:
+    TPS6594 family has 11 GPIOs. Those GPIO can also serve different
+    functions such as I2C or SPI interface, watchdog disable functions.
+    The driver provides both pinmuxing for the functions and GPIO capability.
+    
+    Regulator:
+    TPS6594/TPS6593: 5 BUCKs and 4LDOs
+    LP8764: 4 BUCKs and no LDO
+    Bucks can be used in multipahse mode.
+    
+    Regulators were applied to linux-next by Mark Brown on 06/06/2023 so this
+    patch has been dropped from the patch series.
+    There were some pending comments from Andy Shevchenko so a follow up patch will
+    be sent later.
+    
+    Changes since v1:
+    https://lore.kernel.org/all/20230224133129.887203-1-eblanc@baylibre.com/
+    Rtc:
+    - Removed struct tps6594_rtc.
+    - Removed some dev_err messages.
+    - Removed some comments.
+    - Remove some whitespaces in comments and error messages.
+    - Check if RTC is running before reading a timestamp in read_rtc.
+    - Stop RTC at the end of probe to wait for a timestamp to be set.
+    - Add default MFD_TPS6594 to Kconfig.
+    
+    Pinctrl:
+    - Removed #define DEBUG.
+    - Add default MFD_TPS6594 to Kconfig.
+    - Fix typo and reword help message of Kconfig.
+    
+    Regulators:
+    Further to Mark Brown review:
+    - File header whole block C++ style.
+    - Configuring modes not supported: omit all mode operations
+    - Log the error before notifying.
+    - Request the interrupts while registering the regulators (then remove
+      the lookup function).
+    Further to Matti review:
+    - Postponed: devm_regulator_irq_helper() and
+      regulator_irq_map_event_simple() can probably be used but code.
+      refactoring is not so trivial. This can be done later as an enhancement
+      after this patch list is merged.
+    Buck Multi phase management:
+    - Multiphase property can take an array when 2 multi phase buck, buck12
+      and buck34.
+    - Configuration multi phase buck34 without multiphase buck12 is not
+      supported (when only one multiphase, must be buck12). Not clear from the
+      spec but confirmed by TI.
+    - Supported multiphase conficurations: buck12, buck123, buck1234,
+      buck12 + buck34.
+    - All interrupts are attached to the multiphase buck (ie: for regulator
+      buck12, buck1 & buck2 interrupts are registered).
+    
+    Changes since v2:
+    https://lore.kernel.org/all/20230328091448.648452-1-eblanc@baylibre.com/
+    Rtc:
+    - Add logic to avoid reinitializing a working clock.
+    - Fix some multiline comments format.
+    
+    Regulators:
+    Further to Mark Brown review:
+    - Log the error before notifying.
+    - Request the interrupts while registering the regulators.
+    Further to Krzysztof Kozlowski:
+    https://lore.kernel.org/all/75f0a18d-aed9-8610-2925-4e604b4b0241@baylibre.com/
+    - Remove ti, multi-phase-id property which is redundant with buck dts naming
+      rules.
+    
+    Changes since v3:
+    https://lore.kernel.org/lkml/20230414101217.1342891-1-eblanc@baylibre.com/
+    RTC:
+    - Add wakeup source
+    
+    Pinctrl:
+    - Switch to GPIO_REGMAP framework
+    
+    Change since v4:
+    https://lore.kernel.org/lkml/20230512141755.1712358-1-eblanc@baylibre.com/
+    Update Copyright notice date
+    Reorder includes
+    
+    RTC:
+    - Rework some comments, fixing punctuation and style
+    - Use NANO macro from units.h for PPB_MULT
+    - Rework to use bitwise types
+    - Remove unnecessary casts
+    - Add SAFETY comments
+    - Use `dev_err_probe(...)` instead of print then return
+    
+    Pinctrl:
+    - Reword help message and add module name in Kconfig
+    - Rework code to use struct pinfunction and PINCTRL_PINFUNCTION() macro
+    - Remove unnecessary casts
+    - Use `dev_err_probe(...)` instead of print then return
+    - Replace TPS6594_REG_GPIO1_CONF with a comment for TPS6594_REG_GPIOX_CONF
+    
+    Regulators:
+    - nits: Add missing tabs, standard spaces, group "buck_multi".
+    - Use OF dedicated of_node_cmp API instead of standard strcmp.
+    - Use devm_kmalloc_array(...) API instead of devm_kmalloc(...) wherever
+      possible.
+    - return dev_err_probe(...) wherever possible.
+    
+    Changes since v5:
+    https://lore.kernel.org/lkml/20230522163115.2592883-1-eblanc@baylibre.com/
+    
+    Pinctrl:
+    - Rework code for clarity
+    - Rework macro to fix checkpatch macro argument reuse
+    - Coding style fixes
+    - Reword some comments
+    
+    Rtc:
+    - Grammar fixes
+    - Removed unused macros
+    - Use type MIN/MAX macro instead of magic numbers
+    - Fix return code in calibration
+    - Use cpu_to_le16 and le16_to_cpu APIs instead of casting.
+    - Reintroduce mdelay before reading BIT_RUN as otherwise both AM62 and J784S4
+      will report a -ENODEV on a working RTC.
+    
+    Changes since v6:
+    https://lore.kernel.org/all/20230612125248.1235581-1-eblanc@baylibre.com/
+    
+    Pinctrl:
+    - Remove a comment
 
-> +	};
-> +
-> +	cpus: cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +				core2 {
-> +					cpu = <&cpu2>;
-> +				};
-> +				core3 {
-> +					cpu = <&cpu3>;
-> +				};
-> +			};
-> +
-> +			cluster1 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +				core2 {
-> +					cpu = <&cpu2>;
-> +				};
-> +				core3 {
-> +					cpu = <&cpu3>;
-> +				};
-> +			};
-> +
-> +			cluster2 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu1: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x100>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x200>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x300>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu4: cpu@10000 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x10000>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu5: cpu@10100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x10100>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu6: cpu@10200 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x10200>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu7: cpu@10300 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x10300>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu8: cpu@20000 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x20000>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu9: cpu@20100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a78ae";
-> +			reg = <0x0 0x20100>;
-> +			enable-method = "psci";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	timer {
+ drivers/pinctrl/Kconfig           |  16 ++
+ drivers/pinctrl/Makefile          |   1 +
+ drivers/pinctrl/pinctrl-tps6594.c | 373 ++++++++++++++++++++++++++++++
+ 3 files changed, 390 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-tps6594.c
 
-Please keep the nodes sorted alphabetically, so this goes after "soc". I
-know that not every Exynos files follows this convention, but let's try
-to keep it for new ones.
-
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 12 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	fixed-rate-clocks {
-
-Drop the node and keep the clocks in top-level only.
-
-> +		xtcxo: clock {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-output-names = "oscclk";
-> +		};
-> +
-> +		/*
-> +		 * Keep the stub clock for serial driver, until proper clock
-
-Prefix with: FIXME:
-
-> +		 * driver is implemented.
-> +		 */
-> +		usi_clock: usi-clock {
-
-Node name: clock-usi
-
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <200000000>;
-> +			clock-output-names = "usi";
-> +		};
-> +	};
-> +
-> +	soc: soc@0 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x0 0x20000000>;
-> +
-> +		chipid@10000000 {
-> +			compatible = "samsung,exynos850-chipid";
-
-Let's add everywhere specific compatibles. I'll fix existing sources.
-
-> +			reg = <0x10000000 0x24>;
-> +		};
-> +
-> +		gic: interrupt-controller@10400000 {
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <0>;
-> +			interrupt-controller;
-> +			reg = <0x10400000 0x10000>,
-> +			      <0x10460000 0x140000>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_alive: pinctrl@11850000 {
-> +			compatible = "samsung,exynosautov920-pinctrl";
-> +			reg = <0x11850000 0x10000>;
-> +
-> +			wakeup-interrupt-controller {
-> +				compatible = "samsung,exynosautov920-wakeup-eint";
-> +			};
-> +		};
-> +
-> +		pinctrl_aud: pinctrl@1a460000 {
-> +			compatible = "samsung,exynosautov920-pinctrl";
-> +			reg = <0x1a460000 0x10000>;
-> +		};
-> +
-> +		pinctrl_hsi0: pinctrl@16040000 {
-> +			compatible = "samsung,exynosautov920-pinctrl";
-> +			reg = <0x16040000 0x10000>;
-> +			interrupts = <GIC_SPI 442 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_hsi1: pinctrl@16450000 {
-> +			compatible = "samsung,exynosautov920-pinctrl";
-> +			reg = <0x16450000 0x10000>;
-> +			interrupts = <GIC_SPI 456 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_hsi2: pinctrl@16c10000 {
-> +			compatible = "samsung,exynosautov920-pinctrl";
-> +			reg = <0x16c10000 0x10000>;
-> +			interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_hsi2ufs: pinctrl@16d20000 {
-> +			compatible = "samsung,exynosautov920-pinctrl";
-> +			reg = <0x16d20000 0x10000>;
-> +			interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_peric0: pinctrl@10830000 {
-> +			compatible = "samsung,exynosautov920-pinctrl";
-> +			reg = <0x10830000 0x10000>;
-> +			interrupts = <GIC_SPI 753 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pinctrl_peric1: pinctrl@10c30000 {
-> +			compatible = "samsung,exynosautov920-pinctrl";
-> +			reg = <0x10c30000 0x10000>;
-> +			interrupts = <GIC_SPI 781 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pmu_system_controller: system-controller@11860000 {
-> +			compatible = "samsung,exynos7-pmu", "syscon";
-
-Specific compatible (with these fallbacks), please.
-
-> +			reg = <0x11860000 0x10000>;
-> +		};
-> +
-> +		pwm: pwm@109b0000 {
-> +			compatible = "samsung,exynosautov920-pwm",
-> +				     "samsung,exynos4210-pwm";
-> +			reg = <0x109b0000 0x100>;
-> +			samsung,pwm-outputs = <0>, <1>, <2>, <3>;
-> +			#pwm-cells = <3>;
-> +			clocks = <&xtcxo>;
-> +			clock-names = "timers";
-> +			status = "disabled";
-> +		};
-> +
-> +		syscon_peric0: syscon@102820000 {
-> +			compatible = "samsung,exynosautov920-peric0-sysreg",
-> +				     "samsung,exynosautov920-sysreg", "syscon";
-
-Drop "samsung,exynosautov920-sysreg"
-
-> +			reg = <0x10820000 0x2000>;
-> +		};
-> +
-> +		syscon_peric1: syscon@10c21000 {
-> +			compatible = "samsung,exynosautov920-peric1-sysreg",
-> +				     "samsung,exynosautov920-sysreg", "syscon";
-
-Ditto
-
-> +			reg = <0x10c21000 0x2000>;
-> +		};
-> +
-> +		usi_0: usi@108800c0 {
-> +			compatible = "samsung,exynosautov920-usi",
-> +				     "samsung,exynos850-usi";
-> +			reg = <0x108800c0 0x20>;
-> +			samsung,sysreg = <&syscon_peric0 0x1000>;
-> +			samsung,mode = <USI_V2_UART>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			clocks = <&usi_clock>, <&usi_clock>;
-> +			clock-names = "pclk", "ipclk";
-> +			status = "disabled";
-> +
-
-
-Best regards,
-Krzysztof
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 7dfb7190580e..9de6ccf9fecb 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -469,6 +469,22 @@ config PINCTRL_TB10X
+ 	depends on OF && ARC_PLAT_TB10X
+ 	select GPIOLIB
+ 
++config PINCTRL_TPS6594
++	tristate "Pinctrl and GPIO driver for TI TPS6594 PMIC"
++	depends on OF && MFD_TPS6594
++	default MFD_TPS6594
++	select PINMUX
++	select GPIOLIB
++	select REGMAP
++	select GPIO_REGMAP
++	select GENERIC_PINCONF
++	help
++	  Say Y to select the pinmuxing and GPIOs driver for the TPS6594
++	  PMICs chip family.
++
++	  This driver can also be built as a module
++	  called tps6594-pinctrl.
++
+ config PINCTRL_ZYNQ
+ 	bool "Pinctrl driver for Xilinx Zynq"
+ 	depends on ARCH_ZYNQ
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index dd6cda270294..4d37be622b85 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -48,6 +48,7 @@ obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
+ obj-$(CONFIG_PINCTRL_STMFX) 	+= pinctrl-stmfx.o
+ obj-$(CONFIG_PINCTRL_SX150X)	+= pinctrl-sx150x.o
+ obj-$(CONFIG_PINCTRL_TB10X)	+= pinctrl-tb10x.o
++obj-$(CONFIG_PINCTRL_TPS6594)	+= pinctrl-tps6594.o
+ obj-$(CONFIG_PINCTRL_ZYNQMP)	+= pinctrl-zynqmp.o
+ obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
+ 
+diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
+new file mode 100644
+index 000000000000..66985e54b74a
+--- /dev/null
++++ b/drivers/pinctrl/pinctrl-tps6594.c
+@@ -0,0 +1,373 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Pinmux and GPIO driver for tps6594 PMIC
++ *
++ * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
++ */
++
++#include <linux/gpio/driver.h>
++#include <linux/gpio/regmap.h>
++#include <linux/module.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/platform_device.h>
++#include <linux/mod_devicetable.h>
++
++#include <linux/mfd/tps6594.h>
++
++#define TPS6594_PINCTRL_PINS_NB 11
++
++#define TPS6594_PINCTRL_GPIO_FUNCTION 0
++#define TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
++#define TPS6594_PINCTRL_TRIG_WDOG_FUNCTION 1
++#define TPS6594_PINCTRL_CLK32KOUT_FUNCTION 1
++#define TPS6594_PINCTRL_SCLK_SPMI_FUNCTION 1
++#define TPS6594_PINCTRL_SDATA_SPMI_FUNCTION 1
++#define TPS6594_PINCTRL_NERR_MCU_FUNCTION 1
++#define TPS6594_PINCTRL_PDOG_FUNCTION 1
++#define TPS6594_PINCTRL_SYNCCLKIN_FUNCTION 1
++#define TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION 2
++#define TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION 2
++#define TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION 2
++#define TPS6594_PINCTRL_NERR_SOC_FUNCTION 2
++#define TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION 3
++#define TPS6594_PINCTRL_NSLEEP1_FUNCTION 4
++#define TPS6594_PINCTRL_NSLEEP2_FUNCTION 5
++#define TPS6594_PINCTRL_WKUP1_FUNCTION 6
++#define TPS6594_PINCTRL_WKUP2_FUNCTION 7
++
++/* Special muxval for recalcitrant pins */
++#define TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8 2
++#define TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8 3
++#define TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9 3
++
++#define TPS6594_OFFSET_GPIO_SEL 5
++
++#define FUNCTION(fname, v)									\
++{											\
++	.pinfunction = PINCTRL_PINFUNCTION(#fname,					\
++					tps6594_##fname##_func_group_names,		\
++					ARRAY_SIZE(tps6594_##fname##_func_group_names)),\
++	.muxval = v,									\
++}
++
++static const struct pinctrl_pin_desc tps6594_pins[TPS6594_PINCTRL_PINS_NB] = {
++	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
++	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
++	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
++	PINCTRL_PIN(6, "GPIO6"),   PINCTRL_PIN(7, "GPIO7"),
++	PINCTRL_PIN(8, "GPIO8"),   PINCTRL_PIN(9, "GPIO9"),
++	PINCTRL_PIN(10, "GPIO10"),
++};
++
++static const char *const tps6594_gpio_func_group_names[] = {
++	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
++	"GPIO6", "GPIO7", "GPIO8", "GPIO9", "GPIO10",
++};
++
++static const char *const tps6594_nsleep1_func_group_names[] = {
++	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
++	"GPIO6", "GPIO7", "GPIO8", "GPIO9", "GPIO10",
++};
++
++static const char *const tps6594_nsleep2_func_group_names[] = {
++	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
++	"GPIO6", "GPIO7", "GPIO8", "GPIO9", "GPIO10",
++};
++
++static const char *const tps6594_wkup1_func_group_names[] = {
++	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
++	"GPIO6", "GPIO7", "GPIO8", "GPIO9", "GPIO10",
++};
++
++static const char *const tps6594_wkup2_func_group_names[] = {
++	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
++	"GPIO6", "GPIO7", "GPIO8", "GPIO9", "GPIO10",
++};
++
++static const char *const tps6594_scl_i2c2_cs_spi_func_group_names[] = {
++	"GPIO0",
++	"GPIO1",
++};
++
++static const char *const tps6594_nrstout_soc_func_group_names[] = {
++	"GPIO0",
++	"GPIO10",
++};
++
++static const char *const tps6594_trig_wdog_func_group_names[] = {
++	"GPIO1",
++	"GPIO10",
++};
++
++static const char *const tps6594_sda_i2c2_sdo_spi_func_group_names[] = {
++	"GPIO1",
++};
++
++static const char *const tps6594_clk32kout_func_group_names[] = {
++	"GPIO2",
++	"GPIO3",
++	"GPIO7",
++};
++
++static const char *const tps6594_nerr_soc_func_group_names[] = {
++	"GPIO2",
++};
++
++static const char *const tps6594_sclk_spmi_func_group_names[] = {
++	"GPIO4",
++};
++
++static const char *const tps6594_sdata_spmi_func_group_names[] = {
++	"GPIO5",
++};
++
++static const char *const tps6594_nerr_mcu_func_group_names[] = {
++	"GPIO6",
++};
++
++static const char *const tps6594_syncclkout_func_group_names[] = {
++	"GPIO7",
++	"GPIO9",
++};
++
++static const char *const tps6594_disable_wdog_func_group_names[] = {
++	"GPIO7",
++	"GPIO8",
++};
++
++static const char *const tps6594_pdog_func_group_names[] = {
++	"GPIO8",
++};
++
++static const char *const tps6594_syncclkin_func_group_names[] = {
++	"GPIO9",
++};
++
++struct tps6594_pinctrl_function {
++	struct pinfunction pinfunction;
++	u8 muxval;
++};
++
++static const struct tps6594_pinctrl_function pinctrl_functions[] = {
++	FUNCTION(gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
++	FUNCTION(nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
++	FUNCTION(nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
++	FUNCTION(wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
++	FUNCTION(wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
++	FUNCTION(scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
++	FUNCTION(nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
++	FUNCTION(trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
++	FUNCTION(sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
++	FUNCTION(clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
++	FUNCTION(nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
++	FUNCTION(sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
++	FUNCTION(sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
++	FUNCTION(nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
++	FUNCTION(syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
++	FUNCTION(disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
++	FUNCTION(pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
++	FUNCTION(syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
++};
++
++struct tps6594_pinctrl {
++	struct tps6594 *tps;
++	struct gpio_regmap *gpio_regmap;
++	struct pinctrl_dev *pctl_dev;
++	const struct tps6594_pinctrl_function *funcs;
++	const struct pinctrl_pin_desc *pins;
++};
++
++static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
++				     unsigned int base, unsigned int offset,
++				     unsigned int *reg, unsigned int *mask)
++{
++	unsigned int line = offset % 8;
++	unsigned int stride = offset / 8;
++
++	switch (base) {
++	case TPS6594_REG_GPIOX_CONF(0):
++		*reg = TPS6594_REG_GPIOX_CONF(offset);
++		*mask = TPS6594_BIT_GPIO_DIR;
++		return 0;
++	case TPS6594_REG_GPIO_IN_1:
++	case TPS6594_REG_GPIO_OUT_1:
++		*reg = base + stride;
++		*mask = BIT(line);
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int tps6594_pmx_func_cnt(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(pinctrl_functions);
++}
++
++static const char *tps6594_pmx_func_name(struct pinctrl_dev *pctldev,
++					 unsigned int selector)
++{
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	return pinctrl->funcs[selector].pinfunction.name;
++}
++
++static int tps6594_pmx_func_groups(struct pinctrl_dev *pctldev,
++				   unsigned int selector,
++				   const char *const **groups,
++				   unsigned int *num_groups)
++{
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	*groups = pinctrl->funcs[selector].pinfunction.groups;
++	*num_groups = pinctrl->funcs[selector].pinfunction.ngroups;
++
++	return 0;
++}
++
++static int tps6594_pmx_set(struct tps6594_pinctrl *pinctrl, unsigned int pin,
++			   u8 muxval)
++{
++	u8 mux_sel_val = muxval << TPS6594_OFFSET_GPIO_SEL;
++
++	return regmap_update_bits(pinctrl->tps->regmap,
++				  TPS6594_REG_GPIOX_CONF(pin),
++				  TPS6594_MASK_GPIO_SEL, mux_sel_val);
++}
++
++static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
++			       unsigned int function, unsigned int group)
++{
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	u8 muxval = pinctrl->funcs[function].muxval;
++
++	/* Some pins don't have the same muxval for the same function... */
++	if (group == 8) {
++		if (muxval == TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION)
++			muxval = TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8;
++		else if (muxval == TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION)
++			muxval = TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8;
++	} else if (group == 9) {
++		if (muxval == TPS6594_PINCTRL_CLK32KOUT_FUNCTION)
++			muxval = TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9;
++	}
++
++	return tps6594_pmx_set(pinctrl, group, muxval);
++}
++
++static int tps6594_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
++					  struct pinctrl_gpio_range *range,
++					  unsigned int offset, bool input)
++{
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	u8 muxval = pinctrl->funcs[TPS6594_PINCTRL_GPIO_FUNCTION].muxval;
++
++	return tps6594_pmx_set(pinctrl, offset, muxval);
++}
++
++static const struct pinmux_ops tps6594_pmx_ops = {
++	.get_functions_count = tps6594_pmx_func_cnt,
++	.get_function_name = tps6594_pmx_func_name,
++	.get_function_groups = tps6594_pmx_func_groups,
++	.set_mux = tps6594_pmx_set_mux,
++	.gpio_set_direction = tps6594_pmx_gpio_set_direction,
++	.strict = true,
++};
++
++static int tps6594_groups_cnt(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(tps6594_pins);
++}
++
++static int tps6594_group_pins(struct pinctrl_dev *pctldev,
++			      unsigned int selector, const unsigned int **pins,
++			      unsigned int *num_pins)
++{
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	*pins = &pinctrl->pins[selector].number;
++	*num_pins = 1;
++
++	return 0;
++}
++
++static const char *tps6594_group_name(struct pinctrl_dev *pctldev,
++				      unsigned int selector)
++{
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	return pinctrl->pins[selector].name;
++}
++
++static const struct pinctrl_ops tps6594_pctrl_ops = {
++	.dt_node_to_map = pinconf_generic_dt_node_to_map_group,
++	.dt_free_map = pinconf_generic_dt_free_map,
++	.get_groups_count = tps6594_groups_cnt,
++	.get_group_name = tps6594_group_name,
++	.get_group_pins = tps6594_group_pins,
++};
++
++static int tps6594_pinctrl_probe(struct platform_device *pdev)
++{
++	struct tps6594 *tps = dev_get_drvdata(pdev->dev.parent);
++	struct device *dev = &pdev->dev;
++	struct tps6594_pinctrl *pinctrl;
++	struct pinctrl_desc *pctrl_desc;
++	struct gpio_regmap_config config = {};
++
++	pctrl_desc = devm_kzalloc(dev, sizeof(*pctrl_desc), GFP_KERNEL);
++	if (!pctrl_desc)
++		return -ENOMEM;
++	pctrl_desc->name = dev_name(dev);
++	pctrl_desc->owner = THIS_MODULE;
++	pctrl_desc->pins = tps6594_pins;
++	pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
++	pctrl_desc->pctlops = &tps6594_pctrl_ops;
++	pctrl_desc->pmxops = &tps6594_pmx_ops;
++
++	pinctrl = devm_kzalloc(dev, sizeof(*pinctrl), GFP_KERNEL);
++	if (!pinctrl)
++		return -ENOMEM;
++	pinctrl->tps = dev_get_drvdata(dev->parent);
++	pinctrl->funcs = pinctrl_functions;
++	pinctrl->pins = tps6594_pins;
++	pinctrl->pctl_dev = devm_pinctrl_register(dev, pctrl_desc, pinctrl);
++	if (IS_ERR(pinctrl->pctl_dev))
++		return dev_err_probe(dev, PTR_ERR(pinctrl->pctl_dev),
++				     "Couldn't register pinctrl driver\n");
++
++	config.parent = tps->dev;
++	config.regmap = tps->regmap;
++	config.ngpio = TPS6594_PINCTRL_PINS_NB;
++	config.ngpio_per_reg = 8;
++	config.reg_dat_base = TPS6594_REG_GPIO_IN_1;
++	config.reg_set_base = TPS6594_REG_GPIO_OUT_1;
++	config.reg_dir_out_base = TPS6594_REG_GPIOX_CONF(0);
++	config.reg_mask_xlate = tps6594_gpio_regmap_xlate;
++
++	pinctrl->gpio_regmap = devm_gpio_regmap_register(dev, &config);
++	if (IS_ERR(pinctrl->gpio_regmap))
++		return dev_err_probe(dev, PTR_ERR(pinctrl->gpio_regmap),
++				     "Couldn't register gpio_regmap driver\n");
++
++	return 0;
++}
++
++static const struct platform_device_id tps6594_pinctrl_id_table[] = {
++	{ "tps6594-pinctrl", },
++	{}
++};
++MODULE_DEVICE_TABLE(platform, tps6594_pinctrl_id_table);
++
++static struct platform_driver tps6594_pinctrl_driver = {
++	.probe = tps6594_pinctrl_probe,
++	.driver = {
++		.name = "tps6594-pinctrl",
++	},
++	.id_table = tps6594_pinctrl_id_table,
++};
++module_platform_driver(tps6594_pinctrl_driver);
++
++MODULE_AUTHOR("Esteban Blanc <eblanc@baylibre.com>");
++MODULE_DESCRIPTION("TPS6594 pinctrl and GPIO driver");
++MODULE_LICENSE("GPL");
+-- 
+2.40.1
 
