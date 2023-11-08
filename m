@@ -2,105 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64B7D7E5EC5
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Nov 2023 20:38:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 269447E6118
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 00:39:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbjKHTiI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Nov 2023 14:38:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47746 "EHLO
+        id S229566AbjKHXjD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Nov 2023 18:39:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjKHTiH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Nov 2023 14:38:07 -0500
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982AF1FFC
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Nov 2023 11:38:05 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-45f3b583ce9so762586137.0
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Nov 2023 11:38:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1699472284; x=1700077084; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U9jmA62WJ3dXDEDJ8zs60+IqD631L0FgH5nOpMqDxWQ=;
-        b=si4XSq3cpFjl61aywG6Jo+qFzXc+z/SQ9SGdbMnUuR7vg/aiH1hpcfwli4oQJkiKfa
-         XLnnxl07DRM6XMTLxEN5HU3HK50xWSzTfT6a3JjsCaSjkB3qQ3afckVgpDqzG1M3J8vq
-         mHvC8RPbCNI7vTYPSx2uDCNJU6QLvKxQlqHhUS9HWmzx/J1rGt8njwE1MlZ3HT6pBWXr
-         VOB6AFIfU7aR/Av8UNDoVeCjGMLdUpiJOEK5DqQCrzLifORBji3xmwiasyhV8Jjqwd26
-         S20dxSxunSINXNc3/R7Dy1cpEBPsr+AibDWgdeNDgTwpzOop1LreXkj88fCqVH/jfzuM
-         p33g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699472284; x=1700077084;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U9jmA62WJ3dXDEDJ8zs60+IqD631L0FgH5nOpMqDxWQ=;
-        b=O9cfvL+vZkKnY5UNxaKqDziVVA1RT6xvGo74WYogersyJcufcoyYiPMWMMjwHEp0Zv
-         oC5gKEAuiXAXHtaj5EutZyJx3C76Z23bzqQL5RoV1Q03P9GTD/eOcv+cks+zU6TrWn9A
-         r+yJiuyPnfmGHIpAIICcDRwkw/ofTLOqmh7wddlfHrdmdbm4MMKYSZHNq+dz52tFad91
-         g5X+6yaVrJdIWBJJmCH4W+ZR0r0wAbsyJp8MvGlGj17X2L+mN7DR3FtzY/nFidQcplOO
-         FUSiRq72uv8cOLsM633WZojtpXQhOeQQksoza4zi+MsyBuhFBFzQf0ZpZP013SJBwe8Q
-         a1Lw==
-X-Gm-Message-State: AOJu0Yzqbm2o1zWXZM/OMrFGmFgiyHL2wWA5A8L2rqwDbCTT7LR49xmA
-        oRbw412+aWUqgh9VIKszN6uG2FfUeKGifpuEVOnUvJzSmQmnH0Tm
-X-Google-Smtp-Source: AGHT+IEkLGfULOwTcWrlUVpDK7oc/DKEA/jBDqGoGdOPG3OVpodm+KGIR9+Qh1aC3Gi5c/CmNhO4rkKA9olprJmuNaw=
-X-Received: by 2002:a05:6102:20c3:b0:450:cebb:4f15 with SMTP id
- i3-20020a05610220c300b00450cebb4f15mr1514130vsr.1.1699472284625; Wed, 08 Nov
- 2023 11:38:04 -0800 (PST)
+        with ESMTP id S229473AbjKHXjD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Nov 2023 18:39:03 -0500
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4583025B5;
+        Wed,  8 Nov 2023 15:38:59 -0800 (PST)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1BEB6240002;
+        Wed,  8 Nov 2023 23:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1699486737;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZWGdlfzeQ997IaAZInKpU2sKbuC+Orz4F3vDh0PjvMg=;
+        b=N5+lAS1QuxDD2SdkvbVdLw6qWEExpftDZPduFcY4jvX3tX20kCAWoNxKTCbZRtf9w+ouLF
+        l4fKQQcmYAJfL8NzZdxIG/Zw2NQvea1Blg8JDbZhLzGFqwUFZSMLAZQbKEtgh+f0oxmK4T
+        EpVXWt1UurkD/XfaaScPMdGHnbdIhAsxc8NUUIWyZcFHTWS+vs9cASEwT34LE+hQQNy3eN
+        0IDd6wLXmMcmnxq54uddsLKPdwBZzrwtOTy4lTn/ffsBGYKNJFjj8vvBRXDFioGx8SKIzF
+        K8zpiBozZs5QOnMp5PMhArdwmbRirW7GuvBX/PaIdsbwc92dALc61l+dNbST7Q==
+Date:   Thu, 9 Nov 2023 00:38:54 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 06/17] dt-bindings: rtc: s3c-rtc: add specific
+ compatibles for existing SoC
+Message-ID: <202311082338542f79f576@mail.local>
+References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
+ <20231108104343.24192-7-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-References: <20231107134718.2913223-1-phil@gadgetoid.com> <CAMRc=MeGp7+UN52-2sh_gTea+y2evbyseJ+rko9-=3vDT46=ZQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MeGp7+UN52-2sh_gTea+y2evbyseJ+rko9-=3vDT46=ZQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 8 Nov 2023 20:37:53 +0100
-Message-ID: <CAMRc=Mef7XW8NuV_sA1ARAqUoL0py2RmK__DuUgn-2auf3nfXg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] bindings: python: fix library path for python test builds
-To:     Phil Howard <phil@gadgetoid.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231108104343.24192-7-krzysztof.kozlowski@linaro.org>
+X-GND-Sasl: alexandre.belloni@bootlin.com
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 8, 2023 at 2:08=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> On Tue, Nov 7, 2023 at 2:47=E2=80=AFPM Phil Howard <phil@gadgetoid.com> w=
-rote:
-> >
-> > Correct top_srcdir to top_builddir for out of tree builds.
-> >
-> > Signed-off-by: Phil Howard <phil@gadgetoid.com>
-> > ---
-> >  bindings/python/Makefile.am | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
-> > index 079ceb1..b2f2779 100644
-> > --- a/bindings/python/Makefile.am
-> > +++ b/bindings/python/Makefile.am
-> > @@ -15,7 +15,7 @@ all-local:
-> >         GPIOD_WITH_TESTS=3D$(BUILD_TESTS) \
-> >         $(PYTHON) setup.py build_ext --inplace \
-> >                 --include-dirs=3D$(top_srcdir)/include/:$(top_srcdir)/t=
-ests/gpiosim/ \
-> > -               --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_srcdi=
-r)/tests/gpiosim/.libs/
-> > +               --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_build=
-dir)/tests/gpiosim/.libs/
-> >
-> >  install-exec-local:
-> >         GPIOD_WITH_TESTS=3D \
-> > --
-> > 2.34.1
-> >
->
-> Phil, please squash these two patches together as you're modifying a
-> line in the first one just to change it again in the second.
->
-> Bart
+On 08/11/2023 11:43:32+0100, Krzysztof Kozlowski wrote:
+> Samsung Exynos SoC reuses several devices from older designs, thus
+> historically we kept the old (block's) compatible only.  This works fine
+> and there is no bug here, however guidelines expressed in
+> Documentation/devicetree/bindings/writing-bindings.rst state that:
+> 1. Compatibles should be specific.
+> 2. We should add new compatibles in case of bugs or features.
+> 
+> Add compatibles specific to each SoC in front of all old-SoC-like
+> compatibles.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Nevermind, I squashed it myself.
+> 
+> ---
+> 
+> I propose to take the patch through Samsung SoC (me). See cover letter
+> for explanation.
+> ---
+>  Documentation/devicetree/bindings/rtc/s3c-rtc.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> index d51b236939bf..bf4e11d6dffb 100644
+> --- a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> @@ -17,6 +17,11 @@ properties:
+>            - samsung,s3c2416-rtc
+>            - samsung,s3c2443-rtc
+>            - samsung,s3c6410-rtc
+> +      - items:
+> +          - enum:
+> +              - samsung,exynos7-rtc
+> +              - samsung,exynos850-rtc
+> +          - const: samsung,s3c6410-rtc
+>        - const: samsung,exynos3250-rtc
+>          deprecated: true
+>  
+> -- 
+> 2.34.1
+> 
+> 
 
-Bart
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
