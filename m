@@ -2,116 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42F057E5D7E
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Nov 2023 19:56:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64B7D7E5EC5
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Nov 2023 20:38:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjKHS4g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Nov 2023 13:56:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40918 "EHLO
+        id S229715AbjKHTiI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Nov 2023 14:38:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjKHS4f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Nov 2023 13:56:35 -0500
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45212210D;
-        Wed,  8 Nov 2023 10:56:33 -0800 (PST)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-1f0f94943d9so1269626fac.2;
-        Wed, 08 Nov 2023 10:56:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699469792; x=1700074592;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        with ESMTP id S229558AbjKHTiH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Nov 2023 14:38:07 -0500
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982AF1FFC
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Nov 2023 11:38:05 -0800 (PST)
+Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-45f3b583ce9so762586137.0
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Nov 2023 11:38:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1699472284; x=1700077084; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C0s3leUhfdCXtqd2GQERP13Q2t1M8oOeLUmcRLyKV8Y=;
-        b=kCHCZdLlgHL2Z8THYqohXsXQLyceJubLKF+B9kWnJIbjy74FfGwGcf8nDZKlI+98yI
-         vVFYoAEalh04e/y69MlLQVtAUdoQvFZ/6LfvU0GaXL0SP4MmVZGLA+diOrVN2RKkNlUf
-         s5ggPo8kUvFz3SXkfH6r3ZHrNPfhuccZmToh5CSgGXj1iHECfhh2Ub2Jaq+FXy2DfZqD
-         dugVwK29TgynEpAZT4sTnq4kOJO6WgJvpCcNB7oZ46Mmi01hFYM9Ac1E58m8jKzGyDxE
-         UjHonWdNpCSKqs1SyegXnS4EBgMchxYvn0ZAJwFXTVN83nIDrWaFNephfOJVmDAfU/62
-         R1AA==
-X-Gm-Message-State: AOJu0YxGrZg9s8KlZb+1tTEWVn3LGopjphhD99+LHS6I9SEFM94cS2jU
-        4JdtqnLs3ObX6XBfjkBkVw==
-X-Google-Smtp-Source: AGHT+IE0mbiHvR9GjYeolkzHi9SUwOP9v8XsmJuVs9xWh9Zkn8dD1A7MBvs46KqOAxR54Xhtj5FP+A==
-X-Received: by 2002:a05:6870:fe91:b0:1e9:af81:54c2 with SMTP id qm17-20020a056870fe9100b001e9af8154c2mr2838245oab.45.1699469792539;
-        Wed, 08 Nov 2023 10:56:32 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id ef4-20020a0568701a8400b001efb3910402sm408267oab.0.2023.11.08.10.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Nov 2023 10:56:31 -0800 (PST)
-Received: (nullmailer pid 2748787 invoked by uid 1000);
-        Wed, 08 Nov 2023 18:56:30 -0000
-Date:   Wed, 8 Nov 2023 12:56:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     linux-i2c@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-serial@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-iio@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Lee Jones <lee@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        alsa-devel@alsa-project.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-sound@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        David Airlie <airlied@gmail.com>
-Subject: Re: [PATCH 01/17] dt-bindings: hwinfo: samsung,exynos-chipid: add
- specific compatibles for existing SoC
-Message-ID: <169946978921.2748598.1967407376619995212.robh@kernel.org>
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
- <20231108104343.24192-2-krzysztof.kozlowski@linaro.org>
+        bh=U9jmA62WJ3dXDEDJ8zs60+IqD631L0FgH5nOpMqDxWQ=;
+        b=si4XSq3cpFjl61aywG6Jo+qFzXc+z/SQ9SGdbMnUuR7vg/aiH1hpcfwli4oQJkiKfa
+         XLnnxl07DRM6XMTLxEN5HU3HK50xWSzTfT6a3JjsCaSjkB3qQ3afckVgpDqzG1M3J8vq
+         mHvC8RPbCNI7vTYPSx2uDCNJU6QLvKxQlqHhUS9HWmzx/J1rGt8njwE1MlZ3HT6pBWXr
+         VOB6AFIfU7aR/Av8UNDoVeCjGMLdUpiJOEK5DqQCrzLifORBji3xmwiasyhV8Jjqwd26
+         S20dxSxunSINXNc3/R7Dy1cpEBPsr+AibDWgdeNDgTwpzOop1LreXkj88fCqVH/jfzuM
+         p33g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699472284; x=1700077084;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U9jmA62WJ3dXDEDJ8zs60+IqD631L0FgH5nOpMqDxWQ=;
+        b=O9cfvL+vZkKnY5UNxaKqDziVVA1RT6xvGo74WYogersyJcufcoyYiPMWMMjwHEp0Zv
+         oC5gKEAuiXAXHtaj5EutZyJx3C76Z23bzqQL5RoV1Q03P9GTD/eOcv+cks+zU6TrWn9A
+         r+yJiuyPnfmGHIpAIICcDRwkw/ofTLOqmh7wddlfHrdmdbm4MMKYSZHNq+dz52tFad91
+         g5X+6yaVrJdIWBJJmCH4W+ZR0r0wAbsyJp8MvGlGj17X2L+mN7DR3FtzY/nFidQcplOO
+         FUSiRq72uv8cOLsM633WZojtpXQhOeQQksoza4zi+MsyBuhFBFzQf0ZpZP013SJBwe8Q
+         a1Lw==
+X-Gm-Message-State: AOJu0Yzqbm2o1zWXZM/OMrFGmFgiyHL2wWA5A8L2rqwDbCTT7LR49xmA
+        oRbw412+aWUqgh9VIKszN6uG2FfUeKGifpuEVOnUvJzSmQmnH0Tm
+X-Google-Smtp-Source: AGHT+IEkLGfULOwTcWrlUVpDK7oc/DKEA/jBDqGoGdOPG3OVpodm+KGIR9+Qh1aC3Gi5c/CmNhO4rkKA9olprJmuNaw=
+X-Received: by 2002:a05:6102:20c3:b0:450:cebb:4f15 with SMTP id
+ i3-20020a05610220c300b00450cebb4f15mr1514130vsr.1.1699472284625; Wed, 08 Nov
+ 2023 11:38:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231108104343.24192-2-krzysztof.kozlowski@linaro.org>
+References: <20231107134718.2913223-1-phil@gadgetoid.com> <CAMRc=MeGp7+UN52-2sh_gTea+y2evbyseJ+rko9-=3vDT46=ZQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MeGp7+UN52-2sh_gTea+y2evbyseJ+rko9-=3vDT46=ZQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 8 Nov 2023 20:37:53 +0100
+Message-ID: <CAMRc=Mef7XW8NuV_sA1ARAqUoL0py2RmK__DuUgn-2auf3nfXg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] bindings: python: fix library path for python test builds
+To:     Phil Howard <phil@gadgetoid.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Nov 8, 2023 at 2:08=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> On Tue, Nov 7, 2023 at 2:47=E2=80=AFPM Phil Howard <phil@gadgetoid.com> w=
+rote:
+> >
+> > Correct top_srcdir to top_builddir for out of tree builds.
+> >
+> > Signed-off-by: Phil Howard <phil@gadgetoid.com>
+> > ---
+> >  bindings/python/Makefile.am | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
+> > index 079ceb1..b2f2779 100644
+> > --- a/bindings/python/Makefile.am
+> > +++ b/bindings/python/Makefile.am
+> > @@ -15,7 +15,7 @@ all-local:
+> >         GPIOD_WITH_TESTS=3D$(BUILD_TESTS) \
+> >         $(PYTHON) setup.py build_ext --inplace \
+> >                 --include-dirs=3D$(top_srcdir)/include/:$(top_srcdir)/t=
+ests/gpiosim/ \
+> > -               --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_srcdi=
+r)/tests/gpiosim/.libs/
+> > +               --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_build=
+dir)/tests/gpiosim/.libs/
+> >
+> >  install-exec-local:
+> >         GPIOD_WITH_TESTS=3D \
+> > --
+> > 2.34.1
+> >
+>
+> Phil, please squash these two patches together as you're modifying a
+> line in the first one just to change it again in the second.
+>
+> Bart
 
-On Wed, 08 Nov 2023 11:43:27 +0100, Krzysztof Kozlowski wrote:
-> Samsung Exynos SoC reuses several devices from older designs, thus
-> historically we kept the old (block's) compatible only.  This works fine
-> and there is no bug here, however guidelines expressed in
-> Documentation/devicetree/bindings/writing-bindings.rst state that:
-> 1. Compatibles should be specific.
-> 2. We should add new compatibles in case of bugs or features.
-> 
-> Add compatibles specific to each SoC in front of all old-SoC-like
-> compatibles.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> I propose to take the patch through Samsung SoC (me). See cover letter
-> for explanation.
-> ---
->  .../bindings/hwinfo/samsung,exynos-chipid.yaml  | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
+Nevermind, I squashed it myself.
 
-Acked-by: Rob Herring <robh@kernel.org>
-
+Bart
