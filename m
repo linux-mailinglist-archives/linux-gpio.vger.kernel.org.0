@@ -2,163 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A45BE7E7233
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 20:22:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFAE47E7290
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 21:04:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbjKITWg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Nov 2023 14:22:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
+        id S230135AbjKIUEo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Nov 2023 15:04:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231908AbjKITWf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 14:22:35 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1781FCB;
-        Thu,  9 Nov 2023 11:22:33 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F579C433C7;
-        Thu,  9 Nov 2023 19:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699557753;
-        bh=omrfxaa+J/5nWgwxOCEybAtDNlYVqN5puZowfEYsMSk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YUeOjbHTod/exJRIzEO3Bc/EhP4cF4eBTgn1g7kTB0rpx5kqwcGVWt0RytI4KLnXh
-         1APpsJe+a4/cr3mx7h7Uz1sxSfi3zFttR3D3cEAVA9q9NABSLncSenV2qHokN/JHUw
-         gSDuYGjsG20CsTuJHqTtJrjS8lAkFUYCOUPtMH74/cndN/Cb2eOWLWNH3WMJ/zkDst
-         Ayxcaa1lS5giHEtUhvmFVbQH4ZvllDtHkIcDRGrH0IrY+vl1v+qchyi4vOJamPRCCL
-         5nqo52Z79ZMrWF/cdVmgNFZAf2rnclaOYArtQYoa3ajhP1rHjT5sn19VZkI8hrAyl3
-         ox1+KO4roURAQ==
-Date:   Thu, 9 Nov 2023 20:22:29 +0100
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 03/17] dt-bindings: i2c: samsung,s3c2410-i2c: add
- specific compatibles for existing SoC
-Message-ID: <ZU0xdeMX7g856J81@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
- <20231108104343.24192-4-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229560AbjKIUEn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 15:04:43 -0500
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903C044AD
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 12:04:41 -0800 (PST)
+Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3b512dd7d5bso829486b6e.1
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 12:04:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1699560281; x=1700165081; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gurrzsyi3h6rH42vsqVDKvAofCXnzICRIL3vNDe+fus=;
+        b=DHqWPCaDgxRHEPAIQo9ae5SKeIlzAvw9gDSgpcV960oV6azlyJU3Ro63mFo4fSRG7C
+         qo7GuJtFCzWyjSLA9crF7VQBcHIy3D9+nhitTRflu7W/qgDHRDtO43CpOgLNxhJRYMtv
+         Xj+Tr/lDd2CW9nkaSmLX2Y/c3vFcEbzjvumFp+WbfNxOeKCzxcUkIQbmPTQfsg0ZcaYN
+         ev35qVNnHei+7ctE/O98snPR479g6AJv1d7kmvPRLVag+HhHYLHLlJNTyFOWPm2DXwcf
+         gdRfzhIyiq9ovGTfMxHnO0vFe5Mc+DdzGKmLGMk01Wz6CK7S8ouPqLqHjEaCECZmBdJu
+         jI/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699560281; x=1700165081;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gurrzsyi3h6rH42vsqVDKvAofCXnzICRIL3vNDe+fus=;
+        b=jfkOLmimkfAFvNv1pjFM2E/+ruMykYwS4oCHrLyfgp+fe/4F287Pu7qaudAmyvVZgQ
+         gyifDqEnbZrxt/3rhU3G+R0hchBhxWL4yOTRlZ+qCJT6wnzyp0STXlG7TTH3lWdNM/WB
+         hCRsvl+mWnAV0sNkAWPWXvo7Rp3RLEmvD1L9Zur6YKRiYLzFHVNjeOU/Kt26rAVN2vgJ
+         zcP+6aN0JU5whlJQ3mh51Ydw3iv8vzFO8xRuFqA1I/T3SMmztUCyJr49+lcleQkNxxa9
+         f7/pJIeLn8jiUhBFh1883g5pxyv8qJ9k6VRmE/YOA8OkDZy7O+ftCXCv/dLSLqmd/pnL
+         aKEA==
+X-Gm-Message-State: AOJu0Yx0lPNtG850CvqxTTsoHAjmd9vuxQfLK7AYhV6N6cpuWE+YvRAk
+        MEkB1d/eZuoXVqp8w9T/TLr/lPJMCmITn2rGuZcrmQ==
+X-Google-Smtp-Source: AGHT+IETIUVwHq1zIY4M+aVZCbZgANNdHNAAgIMW1KsS5AXkkWpfo5TSLmh9VnLznLVTgog16/0MxGU20DyDEga0gsM=
+X-Received: by 2002:a05:6358:8a8:b0:168:d12b:a166 with SMTP id
+ m40-20020a05635808a800b00168d12ba166mr6735541rwj.17.1699560280709; Thu, 09
+ Nov 2023 12:04:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="W725bfiX4yCK58gL"
-Content-Disposition: inline
-In-Reply-To: <20231108104343.24192-4-krzysztof.kozlowski@linaro.org>
+References: <20230926160255.330417-1-robert.marko@sartura.hr>
+ <CACRpkdZem9Gtd==gQM4EQ9R8MN2ZQ0JCyMCoTjg0kqCNDjuFMA@mail.gmail.com> <CA+HBbNFeVmc2CJeo+u9jbZrzsrDTOttW_4+aeLJFcOjDJ8DwyQ@mail.gmail.com>
+In-Reply-To: <CA+HBbNFeVmc2CJeo+u9jbZrzsrDTOttW_4+aeLJFcOjDJ8DwyQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 9 Nov 2023 21:04:29 +0100
+Message-ID: <CACRpkdYUW-mO6vhh-zkZAuqQOHpwMeJsNw=jSLzbgoEtoCTtNQ@mail.gmail.com>
+Subject: Re: [PATCH] i2c: core: dont change pinmux state to GPIO during
+ recovery setup
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     wsa@kernel.org, codrin.ciubotariu@microchip.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@armlinux.org.uk, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Robert!
 
---W725bfiX4yCK58gL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for getting back on this issue.
 
-On Wed, Nov 08, 2023 at 11:43:29AM +0100, Krzysztof Kozlowski wrote:
-> Samsung Exynos SoC reuses several devices from older designs, thus
-> historically we kept the old (block's) compatible only.  This works fine
-> and there is no bug here, however guidelines expressed in
-> Documentation/devicetree/bindings/writing-bindings.rst state that:
-> 1. Compatibles should be specific.
-> 2. We should add new compatibles in case of bugs or features.
->=20
-> Add compatibles specific to each SoC in front of all old-SoC-like
-> compatibles.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->=20
-> ---
->=20
-> I propose to take the patch through Samsung SoC (me). See cover letter
-> for explanation.
+On Thu, Nov 9, 2023 at 8:10=E2=80=AFPM Robert Marko <robert.marko@sartura.h=
+r> wrote:
 
-I am fine that you take it once all review comments are addressed. Given
-that:
+> Yes, I2C recovery is required on this board as otherwise the I2C bus will
+> get stuck after a certain number of SFP module plug/unplug events or
+> sometimes even just randomly, I2C recovery allows the bus to recover
+> and continue working.
 
-Acked-by: Wolfram Sang <wsa@kernel.org>
+OK makes sense.
 
+> Maybe my commit message was confusing, so I will try and explain further.
+> I2C recovery did work on Armada 3720 just fine until the driver was conve=
+rted
+> to use the generic I2C recovery which is now part of the I2C core.
+>
+> After it was converted to it, the I2C bus completely stopped working
+> on Armada 3720
+> if I2C recovery is enabled by making the recovery pinctrl available in DT=
+S.
 
---W725bfiX4yCK58gL
-Content-Type: application/pgp-signature; name="signature.asc"
+Shouldn't we just revert that patch until we can figure this out then?
 
------BEGIN PGP SIGNATURE-----
+> I then spent quite a while trying to bisect the exact change that
+> causes this issue
+> in the conversion as code is almost identical to what the driver was
+> doing previously,
+> and have bisected it down to pinctrl_select_state(bri->pinctrl,
+> bri->pins_gpio) being
+> called before SDA and SCL pins are obtained via devm_gpiod_get().
+>
+> Then I thought that maybe there was a HW bug in the Armada 3720 as the
+> pin function
+> was being set to GPIO twice via register write so I made sure the
+> register was being
+> written to only if the desired value is different than the current one
+> but that did not help
+> at all.
+> For whatever reason calling pinctrl_select_state(bri->pinctrl,
+> bri->pins_gpio) causes
+> the pins to basically lock up, but the weird thing is that calling
+> devm_gpiod_get() will
+> also end up with the kernel changing the pin function to GPIO and this
+> works, hence
+> this patch.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmVNMXUACgkQFA3kzBSg
-Kbay9g//eXyEFLH18ObMaht1tYo+nQsZvUuCog4jMbrdmYAYGKemdGIdx9SYI5tz
-O8iW5KlaMLIKzUgzCpBLz6RDj18NG3D+MRTVThCprfw7snkHBj/34WRhtzC2LodT
-vZ4vxmCILUOJBZv8p1qdNkeTEHg9O1KiqBlldgEbns/vx5fYloMFBVwmFQygzpqa
-HoZz31DZ0p3V09kpaHoN4Wccv9VxT9vqFxsxsfzsXOoxlQuFTIr/szokmb2Or2N/
-IyjXeWc5XgS9Y+39ti58bW5dCMNaCy4B6VZTQi8eymjIZDAxb+P1Ljp7r8tFuc8p
-sVFUwmY5m0iELY9GSvqzCQeX16pzj/Jmg7hXNY8+JqGjVWBrPCXjgpr80e17tdeN
-4ESfEK5Rc/8EYZ7djg8DTaTM/gVS8A5tAbsQL4v4NUkIodzyJoZBYfAJ5DNKmUTG
-+LuOhGjv8Ut1sdc/v2Mm2Nwz3L+J3Gixde0B9UmPIJ4gTQ56f/Q45wBaBuGAkD5n
-jIGqmIxgC1dg0M5hWoj/AC5WjYBtOMaKhK+FStBH9YuyvekZYq9v/0xFTnvl2emq
-iQ+bcHzNwIVk0NDGhVU3xUARyiRFZRJTYEjNe2gcTtBczA423vOOkPvyNou9hgXw
-uRQYM46Y2STJ5a4NuIcaLNyvbQNWa+LlKaohyW/FxFXW1tF9Z40=
-=0tv7
------END PGP SIGNATURE-----
+That sounds like a race condition... such as if the pin control block is
+not clocked when the first pinctrl_select_state() comes in.
 
---W725bfiX4yCK58gL--
+Or maybe the i2c hardware needs to be initialized/clocked before
+touching it's mux? (Weird but could happen.)
+
+One thing that makes me a bit suspicious is this:
+i2c/busses/i2c-pxa.c:
+subsys_initcall(i2c_adap_pxa_init);
+
+While:
+pinctrl/mvebu/pinctrl-armada-37xx.c
+builtin_platform_driver_probe(armada_37xx_pinctrl_driver,
+                              armada_37xx_pinctrl_probe);
+
+If there is no probe reordering then the i2c driver will probe before
+pin control.
+
+What happens if you move the i2c_adap_pxa_init() call to
+module_init() instead of subsys_initcall()?
+
+Yours,
+Linus Walleij
