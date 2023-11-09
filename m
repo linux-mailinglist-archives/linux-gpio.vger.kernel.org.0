@@ -2,116 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41C187E6B18
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 14:16:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A70E67E6BB5
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 14:54:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230218AbjKINQz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Nov 2023 08:16:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39548 "EHLO
+        id S231214AbjKINyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Nov 2023 08:54:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230055AbjKINQz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 08:16:55 -0500
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66D930CD
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 05:16:52 -0800 (PST)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1f0f160e293so489916fac.0
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 05:16:52 -0800 (PST)
+        with ESMTP id S232193AbjKINyY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 08:54:24 -0500
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 654DD272C;
+        Thu,  9 Nov 2023 05:54:22 -0800 (PST)
+Received: by mail-qv1-xf34.google.com with SMTP id 6a1803df08f44-6707401e1edso5663596d6.1;
+        Thu, 09 Nov 2023 05:54:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gadgetoid.com; s=google; t=1699535812; x=1700140612; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1699538061; x=1700142861; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=duGI+QnVDD+gmXWRCdlzxN+ZsIAFqqTDfeZNwawnuZM=;
-        b=JcalvDp0uEgzDX0ZslrV20KpZ7RSf0eH/iaYtzWPGVH2dvSrawm98IcKIg6pERu6Oa
-         8pQMHPRB8UxdXEnQor9TEPVfKXPDZkORU/ZdkQ9nLHnchv1BNhMKwjU8xf7TJryTnSD2
-         +OC+krUAEf2v2miinqmTbUgX5ueHmXGjQWXbFFDlkhqbkgT9s2/KQ1CvYxj78mLmmoHL
-         py2QOQC1Pblc7z4Jo1ktLr2uDTDAfE+jAQSUhq4HCo3OSy3onYyDYeiuhoWBI0LThQC9
-         xE82RbtFRijQtpOXZ7ZA7IbGVF+HVlO7uN86JTUWPsM5SxtP3FSfqzkqPS1o8LlMWvJE
-         V2gw==
+        bh=Z42HWweLYTdSGX0W+HlQsOPqVhtBfxSukaDoEFV1YIc=;
+        b=Y2rEq1T9KvlTrchTQ2UGZ1IkHn+b9gr+ie7Z3wEcXA1gbOYdGWlfGs0WMKRlLWERmg
+         kQLg4PWuhotFisZ8V8CX5buLRE9kkihc9YazASSOq0RxFO7evjPE5tp5eL81oGFQ7W8g
+         i/cRBndnrJh8EE6SWm96M+cWL5Ke11iwyyVGbWU+fK1qxs96V8bYRsYwFDW2qFmOjA6+
+         Q6EmLGd0En4GR+AkW4s0DJZcqoVRJKIq8NZr45s5Tnk84akvUg/ByqfLIohjn3mTjsey
+         EZgPUCPWkPf+ezrnZP88pGoW1zsWRAVTPUmTMzskTpwRE6Dr4N7DO5DMmTV1JYl8E5Bd
+         zAKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699535812; x=1700140612;
+        d=1e100.net; s=20230601; t=1699538061; x=1700142861;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=duGI+QnVDD+gmXWRCdlzxN+ZsIAFqqTDfeZNwawnuZM=;
-        b=WJOSwhh3U8nudwnCYjXk9EUcGmYvUVqVCXrCo/hWsvpea99fTCMER4Mks7bmQy1Laq
-         Bc2g7uxDrm3jukUWofUW1dZ0t1MAmAJTSHrtw8T+9x4CvT+tLYWxxI6AqRG5mA2y1QHa
-         yH8EYkBg1aXzimqEbVX108PggGlnYKjKdpqYQEZVGjFc7TJvm61yVDMHR4Fay/xPms+z
-         dmWB+AYfS6U2v5ZYgPoqmxDUSkPB1nzb6yQ3F97gzlSKYZnjvJcTlQEqoMfXH1ndVu9M
-         PghYikj7R+xQm315pYWMoEMEjjZZaUJp47Ew1REX94owoenldUon0Q2Za+eX6dwTVA6E
-         m6mg==
-X-Gm-Message-State: AOJu0Yw9CJRMhxfbiQ7p+zJ1inxLSC7WGgYeYLLjCCYMgvhC1BQAtT+r
-        MvlVM2QwdYPCIQmoNLn/GT8QdSZLTtWiFpXzZgUVEg==
-X-Google-Smtp-Source: AGHT+IGgZW1PSFbZvbMn9Ey7Bnj1vDB+MLhuh7xvv9xo4Ek7N1fnEz1L1RWQ8DgR0SAuK7bObQ2U7n2rPmoMlcHv3HU=
-X-Received: by 2002:a05:6870:14d4:b0:1ea:647f:a9b6 with SMTP id
- l20-20020a05687014d400b001ea647fa9b6mr5546475oab.44.1699535812191; Thu, 09
- Nov 2023 05:16:52 -0800 (PST)
+        bh=Z42HWweLYTdSGX0W+HlQsOPqVhtBfxSukaDoEFV1YIc=;
+        b=g59UySEDgAGmE9R/qXi4QDcF/jDnE56QCwuZQXx/M8HgOMM39gQ9KsjN6xlscR1JsC
+         wmly+HfJNp14whRqCDFp8woeC6rRgTH/AFo11YFR43TIojlEWsp2wIdvTG0qqwDZShmt
+         hkL3U6GpB1mpBd5GxZjbjTthTMGbV1uoBtTIbZy9VBnc5Tj4/RwF9shvObQ6WKPNCaQW
+         rlwGoda0l1Xrz8sY/+BSeEHwgTS7dxfZJWU2N0TMDMx0SjYLk7YH9XpiKziPQsiyvTmP
+         UvydLBcLnHytMt8bM3ms7YTm3NvBaS6qJoEFrfMB1r1VmuTVB2Aef++8L3HWWQCzypNK
+         d1jg==
+X-Gm-Message-State: AOJu0Yzboq2obdR19qQtyoZMwBZ3u9/dJNUusEHkgfp/19cM3zMq+WuX
+        3Z/QAhh4HrZsOfoK/s6/umaz3vtk6wU3AiU8vLk=
+X-Google-Smtp-Source: AGHT+IGADWikO6oNTwaA0U14hvH4C+OCIsQvy7sSD8b7QQ4FEnhv+kPj1zSEv3ve+XNsJqkQ0pLn8siSSOi7dUBWSdg=
+X-Received: by 2002:ad4:5e8f:0:b0:66d:627e:24c0 with SMTP id
+ jl15-20020ad45e8f000000b0066d627e24c0mr5336741qvb.38.1699538061503; Thu, 09
+ Nov 2023 05:54:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20231107134718.2913223-1-phil@gadgetoid.com> <CAMRc=MeGp7+UN52-2sh_gTea+y2evbyseJ+rko9-=3vDT46=ZQ@mail.gmail.com>
- <CAMRc=Mef7XW8NuV_sA1ARAqUoL0py2RmK__DuUgn-2auf3nfXg@mail.gmail.com>
-In-Reply-To: <CAMRc=Mef7XW8NuV_sA1ARAqUoL0py2RmK__DuUgn-2auf3nfXg@mail.gmail.com>
-From:   Phil Howard <phil@gadgetoid.com>
-Date:   Thu, 9 Nov 2023 13:16:41 +0000
-Message-ID: <CA+kSVo851PMrRshCk+B=QtZn1nrzT8KBqyuFTz4hHZJxyBopLQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] bindings: python: fix library path for python test builds
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
+References: <20231109085419.84948-1-heminhong@kylinos.cn> <ZUzSM37FWz6sgH9n@rigel>
+In-Reply-To: <ZUzSM37FWz6sgH9n@rigel>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Nov 2023 15:53:45 +0200
+Message-ID: <CAHp75Vd5Ea_yFb7tEQw5ZBr90CcETa-_BsbfpfFshFx8ddZqQA@mail.gmail.com>
+Subject: Re: [PATCH] tools/gpio: prevent resource leak
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     heminhong <heminhong@kylinos.cn>, linus.walleij@linaro.org,
+        brgl@bgdev.pl, andy@kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 8 Nov 2023 at 19:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Nov 9, 2023 at 2:36=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
+rote:
 >
-> On Wed, Nov 8, 2023 at 2:08=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+> On Thu, Nov 09, 2023 at 04:54:19PM +0800, heminhong wrote:
+> > In the main() function, the open() function is used to open the file.
+> > When the file is successfully opened, fd is used to interact with the f=
+ile,
+> > but the fd is not closed, it will cause resource leak.
 > >
-> > On Tue, Nov 7, 2023 at 2:47=E2=80=AFPM Phil Howard <phil@gadgetoid.com>=
- wrote:
-> > >
-> > > Correct top_srcdir to top_builddir for out of tree builds.
-> > >
-> > > Signed-off-by: Phil Howard <phil@gadgetoid.com>
-> > > ---
-> > >  bindings/python/Makefile.am | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.a=
-m
-> > > index 079ceb1..b2f2779 100644
-> > > --- a/bindings/python/Makefile.am
-> > > +++ b/bindings/python/Makefile.am
-> > > @@ -15,7 +15,7 @@ all-local:
-> > >         GPIOD_WITH_TESTS=3D$(BUILD_TESTS) \
-> > >         $(PYTHON) setup.py build_ext --inplace \
-> > >                 --include-dirs=3D$(top_srcdir)/include/:$(top_srcdir)=
-/tests/gpiosim/ \
-> > > -               --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_src=
-dir)/tests/gpiosim/.libs/
-> > > +               --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_bui=
-lddir)/tests/gpiosim/.libs/
-> > >
-> > >  install-exec-local:
-> > >         GPIOD_WITH_TESTS=3D \
-> > > --
-> > > 2.34.1
-> > >
-> >
-> > Phil, please squash these two patches together as you're modifying a
-> > line in the first one just to change it again in the second.
-> >
-> > Bart
 >
-> Nevermind, I squashed it myself.
->
-> Bart
+> All open files are automatically closed when a process exits.
+> That includes both those returned by open() and by the GPIO ioctls.
+> So explicitly closing them here before exiting is redundant.
 
-Thanks, I sent them split since the latter speculative fix hides the previo=
-us
-actual bugfix but perhaps a better commit message could have worked.
+I would argue that this is a good practice for GPIO cases.
+More the GPIOs we have, the more line handles we can get, then default
+MAX open FD limit may occur. The best is to combine both.
 
 --=20
-Phil
+With Best Regards,
+Andy Shevchenko
