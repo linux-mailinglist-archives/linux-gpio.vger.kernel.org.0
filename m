@@ -2,116 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3339F7E65C2
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 09:54:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 189347E6853
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 11:37:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233778AbjKIIy6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Nov 2023 03:54:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55850 "EHLO
+        id S231897AbjKIKhe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Nov 2023 05:37:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233801AbjKIIy6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 03:54:58 -0500
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC851A4;
-        Thu,  9 Nov 2023 00:54:54 -0800 (PST)
-X-UUID: 3900c660da5e4cf2b348184e57410291-20231109
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.32,REQID:cda4ced0-dae3-4949-9d13-c6be1de23bf2,IP:15,
-        URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
-        ION:release,TS:-15
-X-CID-INFO: VERSION:1.1.32,REQID:cda4ced0-dae3-4949-9d13-c6be1de23bf2,IP:15,UR
-        L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-        N:release,TS:-15
-X-CID-META: VersionHash:5f78ec9,CLOUDID:9e98dd5f-c89d-4129-91cb-8ebfae4653fc,B
-        ulkID:231109163617DP84HWM9,BulkQuantity:1,Recheck:0,SF:66|38|24|17|19|44|1
-        02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:40,QS:nil,BEC:nil,COL
-        :0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 3900c660da5e4cf2b348184e57410291-20231109
-X-User: heminhong@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.169)] by mailgw
-        (envelope-from <heminhong@kylinos.cn>)
-        (Generic MTA)
-        with ESMTP id 187487715; Thu, 09 Nov 2023 16:54:44 +0800
-From:   heminhong <heminhong@kylinos.cn>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        heminhong <heminhong@kylinos.cn>
-Subject: [PATCH] tools/gpio: prevent resource leak
-Date:   Thu,  9 Nov 2023 16:54:19 +0800
-Message-Id: <20231109085419.84948-1-heminhong@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230055AbjKIKhe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 05:37:34 -0500
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC411FFB
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 02:37:32 -0800 (PST)
+Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7ba46683a88so261821241.2
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 02:37:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1699526251; x=1700131051; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pkfOegWGNIoV4w5klVDyY9I+g15Mde+osV7Y8IGIlag=;
+        b=ZlU0kwfNJqw3qEWf/zw4uw2ZhsySmjQEjH9yRVPOpnfzsKqlCQwpubERZ/yXye3HlT
+         Dk2nOPzJAGt14aESzRzgMErymXaXt5kbobf2eXF8WCmFpfK5UtSqpSvY9PrE76WDCB+U
+         oRwyTCpm+itNJLGqxG+/jGqZSGKtph42PH4dTteWxOj+6Uz+W5yQtqhU687OFI+jmTr4
+         LylbIPganhDJaqA1aryUiUUP/VzWlXRQi5D4dVGnm4GzfLRlDp728IlKpLfikbiFGckr
+         ehQvZiYs01d+Xr6ilVfUm1OK+iaxdh0Bpq29mZ7ESACf73EXM9SE7j05X2YzmHY+QOZ8
+         0FiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699526251; x=1700131051;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pkfOegWGNIoV4w5klVDyY9I+g15Mde+osV7Y8IGIlag=;
+        b=Y5YsuvWaOLaYIgncgqrnzXjBv53CZ+mzW7xegFYQf+17BozjJ1i4Ep+C4MP50VMCfM
+         6rCFuepqTd3XmiZqxYJF1YPA9gUlctPWPPhdshPlDX54dryFdMxkDUYVAdbWmT0nRsJK
+         W2RP9U172ky1MeD+mGfqyfZI1KVXwtGueHuaT7lps56tzz6ZHK3+I/G+OYXWYdZwIUPI
+         Cio+H9A3In+KGR4+qVBj1j4pP3RrCKfi3X4I1kt86hI7b7tCGLkdX/AP/dpTnyYRI68g
+         sOGuC7qkBIZVTd6ieDt1WdNJkKsqFVp2a+qz4U7ocEqlURJYf3UYwrmj5B3gb6M7flAE
+         zdrA==
+X-Gm-Message-State: AOJu0Ywhkx4DNCy0IYCLKgTNlZnqkfCcATRgi3YUA0RKzYprDBwI73j9
+        HIZLbi3zUWNWq/QSTzzyPrbBYempHuNVS8Q6DMb3kQ==
+X-Google-Smtp-Source: AGHT+IEF5ia86C4IBJ0bLef7C5nxzZuRs5VFOq33kPfR3gI5jnRtRuubF5bFENkiGgA31dreLnAXyGiHiPsbropq2vc=
+X-Received: by 2002:a67:cc0c:0:b0:45d:89b1:9dbd with SMTP id
+ q12-20020a67cc0c000000b0045d89b19dbdmr4307034vsl.2.1699526251298; Thu, 09 Nov
+ 2023 02:37:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231108155200.3050417-1-phil@gadgetoid.com> <20231108155200.3050417-2-phil@gadgetoid.com>
+In-Reply-To: <20231108155200.3050417-2-phil@gadgetoid.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 9 Nov 2023 11:37:20 +0100
+Message-ID: <CAMRc=McQsK1mvc1yRW=DyWaz-t7PwbkSwKnz8P2Pw-wx5OowSQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2 1/1] bindings: python: standalone build
+ tooling for tests
+To:     Phil Howard <phil@gadgetoid.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In the main() function, the open() function is used to open the file.
-When the file is successfully opened, fd is used to interact with the file,
-but the fd is not closed, it will cause resource leak.
+On Wed, Nov 8, 2023 at 4:52=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wro=
+te:
+>
+> Move extension definitions and tooling for building tests into
+> `build_tests.py` and update Makefile.am to call it with appropriate path
+> prefixes.
+>
+> `build_tests.py` will perform a standalone build of the text extensions,
+> keeping any build noise in a temporary directory and copying the final
+> built modules automatically out to `tests/gpiosim` and `tests/procname`.
+>
+> Add "python-tests-run" to Makefile.am so it's clear how to run the tests.
+>
+> Add .so object files generated by build_test.py to Makefile.am's
+> clean-local.
+>
+> Signed-off-by: Phil Howard <phil@gadgetoid.com>
+> ---
 
-Signed-off-by: heminhong <heminhong@kylinos.cn>
----
- tools/gpio/gpio-watch.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Thanks, this works quite nicely. I applied it and will release python
+bindings v2.1.2 to pypi.
 
-diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
-index 41e76d244192..162c2a8f07c8 100644
---- a/tools/gpio/gpio-watch.c
-+++ b/tools/gpio/gpio-watch.c
-@@ -42,11 +42,14 @@ int main(int argc, char **argv)
- 		memset(&req, 0, sizeof(req));
- 
- 		req.offset = strtoul(argv[j], &end, 0);
--		if (*end != '\0')
-+		if (*end != '\0') {
-+			close(fd);
- 			goto err_usage;
-+		}
- 
- 		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_WATCH_IOCTL, &req);
- 		if (ret) {
-+			close(fd);
- 			perror("unable to set up line watch");
- 			return EXIT_FAILURE;
- 		}
-@@ -58,6 +61,7 @@ int main(int argc, char **argv)
- 	for (;;) {
- 		ret = poll(&pfd, 1, 5000);
- 		if (ret < 0) {
-+			close(pfd.fd);
- 			perror("error polling the linechanged fd");
- 			return EXIT_FAILURE;
- 		} else if (ret > 0) {
-@@ -66,7 +70,7 @@ int main(int argc, char **argv)
- 			if (rd < 0 || rd != sizeof(chg)) {
- 				if (rd != sizeof(chg))
- 					errno = EIO;
--
-+				close(pfd.fd);
- 				perror("error reading line change event");
- 				return EXIT_FAILURE;
- 			}
-@@ -82,6 +86,7 @@ int main(int argc, char **argv)
- 				event = "config changed";
- 				break;
- 			default:
-+				close(pfd.fd);
- 				fprintf(stderr,
- 					"invalid event type received from the kernel\n");
- 				return EXIT_FAILURE;
-@@ -91,7 +96,7 @@ int main(int argc, char **argv)
- 			       chg.info.offset, event, (uint64_t)chg.timestamp_ns);
- 		}
- 	}
--
-+	close(pfd.fd);
- 	return 0;
- 
- err_usage:
--- 
-2.25.1
-
+Bart
