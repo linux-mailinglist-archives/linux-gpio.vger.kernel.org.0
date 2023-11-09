@@ -2,268 +2,228 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC717E6CD4
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 16:02:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D1F37E70DB
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 18:52:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232308AbjKIPC4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Nov 2023 10:02:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
+        id S1344879AbjKIRw3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Nov 2023 12:52:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbjKIPC4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 10:02:56 -0500
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83FB2D62
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 07:02:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699542174; x=1731078174;
-  h=date:from:to:cc:subject:message-id;
-  bh=F6tc5XhGKcbIgD9TQVGXUEoRJUxhUFocPHLFX1LPjwU=;
-  b=mygSOhxPKV5uPjjRKcsi8sQF8tBqha+107k4mC0x1JXDwx4VnWiXdOp6
-   QAqhiRNjjbvq42+zAjbeEpqS47ehGPWd72VV4TL8TDYYLiIj2AsB4Ucoi
-   1GF7wRnIqpwTvFnLXWVEqFd2gufqZAqOeT0pfQpb9JDlDqu6a0E3p4b8i
-   r4+balqzVcm2jqUvW7rCq+Gq5Kp0DOmv98Bq3agEcvh8ngKo0HNWLi7qD
-   3cOS/f/5mq0zciJQHO80T7ktmBAhrLMnzuxT7q/aXZBQaq7O5vSaf5p3X
-   QquxLvRi5Zuj7FSBWtEQ7Asd2Ktg2sZQD4BU+YYRiu6Uf00P+Vi2ah3DX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="3030914"
-X-IronPort-AV: E=Sophos;i="6.03,289,1694761200"; 
-   d="scan'208";a="3030914"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 07:02:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="763426607"
-X-IronPort-AV: E=Sophos;i="6.03,289,1694761200"; 
-   d="scan'208";a="763426607"
-Received: from lkp-server01.sh.intel.com (HELO 17d9e85e5079) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 09 Nov 2023 07:02:50 -0800
-Received: from kbuild by 17d9e85e5079 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1r16YR-0008pX-1q;
-        Thu, 09 Nov 2023 15:02:47 +0000
-Date:   Thu, 09 Nov 2023 23:02:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-gpio:b4/fix-mips-nand] BUILD SUCCESS
- d4c5bc8e0ff6796052b332a4813a6b23dfa12435
-Message-ID: <202311092309.UYux5lMh-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        with ESMTP id S1344878AbjKIRw2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 12:52:28 -0500
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 650743A81;
+        Thu,  9 Nov 2023 09:52:26 -0800 (PST)
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231109175224epoutp0346aeaa927f8395919c5b0afe62126022~WBdpSexJ53065630656epoutp03p;
+        Thu,  9 Nov 2023 17:52:24 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231109175224epoutp0346aeaa927f8395919c5b0afe62126022~WBdpSexJ53065630656epoutp03p
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1699552344;
+        bh=Jr4GkdM+Bcpg8gm8bIo+jzqmZO8HZv8wA9+FSyovLkU=;
+        h=From:To:In-Reply-To:Subject:Date:References:From;
+        b=rNWcCyRvqCsbNNbtJS8hnVFqLX0X+mdOAyIcmVoeUTU3fYTHs8YjgZK2PcXNdyKXF
+         jqYNeO2M/J0VLmO2D90WVk7ibI/miK9MBdzDUCjVsI167qKtzC1kZ8QB7vuwYEt+et
+         fQcL/enqMIjsZgZFpaR9hSWAM6pWB/KrY+5QRnXg=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20231109175223epcas5p289edecb303291727ca24d9369ec4f1df~WBdoJqbIn2986229862epcas5p2K;
+        Thu,  9 Nov 2023 17:52:23 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.177]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4SR8fs58yRz4x9Pr; Thu,  9 Nov
+        2023 17:52:21 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B7.62.09672.55C1D456; Fri, 10 Nov 2023 02:52:21 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20231109175220epcas5p418e9ad19525bcc38a27890fb6ff869d1~WBdl4qPQd0671006710epcas5p4u;
+        Thu,  9 Nov 2023 17:52:20 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20231109175220epsmtrp1ac258fa50bc37d72285b233cfbdc3f02~WBdl1B-eQ1825218252epsmtrp13;
+        Thu,  9 Nov 2023 17:52:20 +0000 (GMT)
+X-AuditID: b6c32a4b-60bfd700000025c8-16-654d1c553d5c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AA.E8.07368.45C1D456; Fri, 10 Nov 2023 02:52:20 +0900 (KST)
+Received: from INBRO000447 (unknown [107.122.12.5]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20231109175215epsmtip186a8ffcbe4dc89c370df647558f4d401~WBdgrX6BO0328003280epsmtip1x;
+        Thu,  9 Nov 2023 17:52:15 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
+        "'David Airlie'" <airlied@gmail.com>,
+        "'Daniel Vetter'" <daniel@ffwll.ch>,
+        "'Maarten Lankhorst'" <maarten.lankhorst@linux.intel.com>,
+        "'Maxime Ripard'" <mripard@kernel.org>,
+        "'Thomas Zimmermann'" <tzimmermann@suse.de>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Krzysztof Kozlowski'" <krzysztof.kozlowski+dt@linaro.org>,
+        "'Conor Dooley'" <conor+dt@kernel.org>,
+        "'Andi Shyti'" <andi.shyti@kernel.org>,
+        "'Jonathan Cameron'" <jic23@kernel.org>,
+        "'Lars-Peter Clausen'" <lars@metafoo.de>,
+        "'Lee Jones'" <lee@kernel.org>,
+        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
+        "'Tomasz Figa'" <tomasz.figa@gmail.com>,
+        "'Sylwester Nawrocki'" <s.nawrocki@samsung.com>,
+        "'Linus Walleij'" <linus.walleij@linaro.org>,
+        "'Thierry Reding'" <thierry.reding@gmail.com>,
+        =?utf-8?Q?'Uwe_Kleine-K=C3=B6nig'?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "'Alessandro Zummo'" <a.zummo@towertech.it>,
+        "'Alexandre Belloni'" <alexandre.belloni@bootlin.com>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Jiri Slaby'" <jirislaby@kernel.org>,
+        "'Liam Girdwood'" <lgirdwood@gmail.com>,
+        "'Mark Brown'" <broonie@kernel.org>,
+        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
+        "'Sam Protsenko'" <semen.protsenko@linaro.org>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
+In-Reply-To: <20231108104343.24192-2-krzysztof.kozlowski@linaro.org>
+Subject: RE: [PATCH 01/17] dt-bindings: hwinfo: samsung,exynos-chipid: add
+ specific compatibles for existing SoC
+Date:   Thu, 9 Nov 2023 23:22:14 +0530
+Message-ID: <029f01da1335$7c8ed1e0$75ac75a0$@samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQGWJB6kbFUwx2+cGuz2YrV1SxstmQMHgSm7AhTeUd+w0T+DcA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHc1/fawtZzbOweVeN65rhRIO2UvDi1DnF+aK44Y9l0ZlA076A
+        obRNW/wx4yQKBTSCpSLKLCAldak4FFA7tMiQX8KCgAUdrEMRf1QUfyHaSWEtDzf++55zPuec
+        e87N4bL4wxwBd7tKT2tVMqWIHYhfvBb6edh3s9bT4rE+ESrt6OKg5lslGMoYsnKQs6MOQ32v
+        MwHKuzvARmWONgyNXzSyUFF9G4Gcr5+x0QFLORvd/sdAoDv7bRgaMs9C2Y/uspBj8AIHlZqK
+        CGQ3nMLRiDMTQ0dHT2Oo4l43gSqLRgHK9A4DVFg/hKOb1SfZqH48ByCXywZQ4xknGx2/UYOh
+        PyyHOcj84CgLnXpxAUeGLCuB0h31HHTtSQaBHmb7EE91IY5s1b56VU+MBOo1mgBqOvv9ilDq
+        3Kv9bKqwbA/lGCnGqd8KXByqwpbFpv7qvuLzX99AXTWXcai+Q00YVVm6jyp9UkdQOV4xlV1l
+        A1Rl6x4qv9CDUa8qZseSW5OWJtIyBa0V0iq5WrFdlbBMtG5T3Kq4iEixJEwShRaLhCpZMr1M
+        FB0TG/b1dqVvwSLhDpkyxeeKlel0ooXLl2rVKXpamKjW6ZeJaI1CqZFqFuhkyboUVcICFa1f
+        IhGLF0X4wPikxJq8YVzTPHeXcawNSwXP5hwEAVxISuEJ49/4QRDI5ZOXAeyqcgHGeAmgPdeD
+        McYIgI1v2on3KWXeWjYTcACY3VOO+QN88hGAOVaJX7PJMGi3GCagYPIyD9682o/7AwFkNMw9
+        18ry6yBSC7vHz05UxcnPYJX5PMeveWQU/H3wDcHo6fD6iYGJXBY5H1pPDbKYVwih5751ggkm
+        V8KXA4cJhpkB3Q31HIZxBMKxtkk+Gtpb3ZMTBMHHTVWTjAC6cww+zfVpCpaMChh3Inx6uhww
+        +ktY6zyJ+xEWGQrLqxcynabBw+8GMCaTBzMNfIYOgQeGunBGz4TGQ4cmm1Kw7653crkdAPY+
+        8BJHgLBgypAFU4YsmDJMwf+diwFuAx/TGl1yAq2L0ISr6J3//bdcnVwBJs5v3jo76L/zfEEd
+        wLigDkAuSxTMa5fG0HyeQrb7R1qrjtOmKGldHYjwbd7IEnwoV/vuV6WPk0ijxNLIyEhpVHik
+        RDSDN5huVvDJBJmeTqJpDa19n4dxAwSp2Ax5Ki+1KLDBciSWGvIMG9tDT3rOuJIso+mGwbz2
+        +Xszcjvb3bdMl+6UevOzA7y7b7jH82Ni+udmbU5etbJn4+pfeqavF7W8fdA6bW93vOmNrGUX
+        yp018+GVDSHieyFLcoM2Z17u32Zt/mDHi29KxsLnCLfVao/lr1Bu2RJCyxuIICz2/rmtaxXv
+        LJ90fssLnhYV737n/nRH2rGdxGPpD3/uNXdtth5YdEk7Imj4dbWzd5XK9FGUK2uFvHj8QnjA
+        4oXHkySvZm9cI/mJLzv/tLJFm9YoWY9/tbtfuu/5F4q05Wx7y9o1JeKQdcWm2zWVi2pqKu6Z
+        3yYrOxXdDT8HNio3dfGJDBGuS5RJ5rG0Otm/Uxm8vQcFAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAKsWRmVeSWpSXmKPExsWy7bCSnG6IjG+qwZy7WhZLLl5ltzhxfRGT
+        Rfu7ZewWVy4eYrK4/7WD0WLqwydsFmv2nmOy+L9tIrPF/CPnWC2ufH3PZtG8eD2bxY1fbawW
+        D5pWMVm8mytj0ffiIbPF3tdb2S2WTJ7ParGjbSGLxbcrHUwWU/4sZ7LY9Pgaq8Xm+X8YLTr+
+        fmG0mHfkHYvF5V1z2CyO/O9ntLh7dxWjxbHVV9gsZpzfx2RxZnEvu8XcZ1OYLRZ+3Mpi0da5
+        jNWide8RdovDb9pZLZ73AZX83DWPxWLVLqB5W95MZLW4PXEyo8XxteEOmh4bPjexecxbU+2x
+        99sCFo+ds+6ye2xa1cnmcefaHqD4yUCP/XPXsHvc7z7O5LF5Sb3HkjeHWD36/xp49G1Zxeix
+        +XS1x/R5P5k8Pm+SCxCI4rJJSc3JLEst0rdL4MpY+G0HY0G/XMXTGYINjM2SXYycHBICJhJr
+        /h5g62Lk4hAS2M0oMenLCTaIhLTE9Y0T2CFsYYmV/56D2UICzxgl9u8Fs9kEdCV2LG4DqxcR
+        uMkrcfqOP8Sgs4wSzS2rWUESnAIuEpM2nGYGsYUFCiQ2LfgP1sAioCKxZe5GsEG8ApYSB19/
+        Z4WwBSVOznzCAmIzC2hLPL35FM5etvA1M8RBChI/ny5jhVjsJPHpSS8rRI24xMujR9gnMArN
+        QjJqFpJRs5CMmoWkZQEjyypGydSC4tz03GTDAsO81HK94sTc4tK8dL3k/NxNjOBEp6Wxg/He
+        /H96hxiZOBgPMUpwMCuJ8F4w8UkV4k1JrKxKLcqPLyrNSS0+xCjNwaIkzms4Y3aKkEB6Yklq
+        dmpqQWoRTJaJg1OqgelYhI6zuqa1m9j/6Sr/DqpxseqWhLh90nZ+vTP0mYH4Z7nJ1fHhpY33
+        o/Tq0vaX/qx6+O7vG4WSJw6900qmebEdqD3j8KI/+a8rx14JEd3W2Fvy9S1LfjvKvlpSHfP1
+        plyaMENM3YIT628zcefxmVYcaStnWrtO2GDiJ7XINiEh74ANnoz2Mb7yPScLd8inlZ+6EHOw
+        +sWG/k9FiUbG1fVfOKc5icQo9V++82WTxNWV2c13P6q1CKj3dKziU1kzoTBOZ+XilbH31CSV
+        QyycuqWn2DPNbz50M+TK3XmVl01uybJuDl6tttt344v26c5d587G9a2ff//h7sI3Ly7nvvh5
+        e/HlXXotz385/1r2TImlOCPRUIu5qDgRAD2dvGXjAwAA
+X-CMS-MailID: 20231109175220epcas5p418e9ad19525bcc38a27890fb6ff869d1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231108104402epcas5p433b83d080a784bae895d74091df15a25
+References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
+        <CGME20231108104402epcas5p433b83d080a784bae895d74091df15a25@epcas5p4.samsung.com>
+        <20231108104343.24192-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/fix-mips-nand
-branch HEAD: d4c5bc8e0ff6796052b332a4813a6b23dfa12435  mtd: rawnand: gpio: Rename file
 
-elapsed time: 1451m
 
-configs tested: 197
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231108   gcc  
-arc                   randconfig-001-20231109   gcc  
-arc                   randconfig-002-20231108   gcc  
-arc                   randconfig-002-20231109   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         assabet_defconfig   gcc  
-arm                     davinci_all_defconfig   clang
-arm                                 defconfig   gcc  
-arm                           h3600_defconfig   gcc  
-arm                      integrator_defconfig   gcc  
-arm                       multi_v4t_defconfig   gcc  
-arm                          pxa910_defconfig   gcc  
-arm                   randconfig-001-20231109   gcc  
-arm                   randconfig-002-20231109   gcc  
-arm                   randconfig-003-20231109   gcc  
-arm                   randconfig-004-20231109   gcc  
-arm                        shmobile_defconfig   gcc  
-arm                           tegra_defconfig   gcc  
-arm64                 randconfig-001-20231109   gcc  
-arm64                 randconfig-002-20231109   gcc  
-arm64                 randconfig-003-20231109   gcc  
-arm64                 randconfig-004-20231109   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20231108   gcc  
-csky                  randconfig-001-20231109   gcc  
-csky                  randconfig-002-20231108   gcc  
-csky                  randconfig-002-20231109   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231109   gcc  
-i386         buildonly-randconfig-002-20231109   gcc  
-i386         buildonly-randconfig-003-20231109   gcc  
-i386         buildonly-randconfig-004-20231109   gcc  
-i386         buildonly-randconfig-005-20231109   gcc  
-i386         buildonly-randconfig-006-20231109   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231109   gcc  
-i386                  randconfig-002-20231109   gcc  
-i386                  randconfig-003-20231109   gcc  
-i386                  randconfig-004-20231109   gcc  
-i386                  randconfig-005-20231109   gcc  
-i386                  randconfig-006-20231109   gcc  
-i386                  randconfig-011-20231109   gcc  
-i386                  randconfig-012-20231109   gcc  
-i386                  randconfig-013-20231109   gcc  
-i386                  randconfig-014-20231109   gcc  
-i386                  randconfig-015-20231109   gcc  
-i386                  randconfig-016-20231109   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231108   gcc  
-loongarch             randconfig-001-20231109   gcc  
-loongarch             randconfig-002-20231108   gcc  
-loongarch             randconfig-002-20231109   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                           xway_defconfig   gcc  
-nios2                         10m50_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20231109   gcc  
-nios2                 randconfig-002-20231109   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20231109   gcc  
-parisc                randconfig-002-20231109   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                  mpc885_ads_defconfig   clang
-powerpc               randconfig-001-20231109   gcc  
-powerpc               randconfig-002-20231109   gcc  
-powerpc               randconfig-003-20231109   gcc  
-powerpc                     sequoia_defconfig   gcc  
-powerpc                     tqm8540_defconfig   clang
-powerpc                     tqm8541_defconfig   gcc  
-powerpc                      walnut_defconfig   clang
-powerpc64             randconfig-001-20231109   gcc  
-powerpc64             randconfig-002-20231109   gcc  
-powerpc64             randconfig-003-20231109   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                    nommu_k210_defconfig   gcc  
-riscv                 randconfig-001-20231109   gcc  
-riscv                 randconfig-002-20231109   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231109   gcc  
-s390                  randconfig-002-20231109   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        edosk7760_defconfig   gcc  
-sh                    randconfig-001-20231109   gcc  
-sh                    randconfig-002-20231109   gcc  
-sh                          rsk7203_defconfig   gcc  
-sh                           se7722_defconfig   gcc  
-sh                           se7750_defconfig   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sh                  sh7785lcr_32bit_defconfig   gcc  
-sparc                            alldefconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20231109   gcc  
-sparc                 randconfig-002-20231109   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20231109   gcc  
-sparc64               randconfig-002-20231109   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20231109   gcc  
-um                    randconfig-002-20231109   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20231109   gcc  
-x86_64       buildonly-randconfig-002-20231109   gcc  
-x86_64       buildonly-randconfig-003-20231109   gcc  
-x86_64       buildonly-randconfig-004-20231109   gcc  
-x86_64       buildonly-randconfig-005-20231109   gcc  
-x86_64       buildonly-randconfig-006-20231109   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-001-20231109   gcc  
-x86_64                randconfig-002-20231109   gcc  
-x86_64                randconfig-003-20231109   gcc  
-x86_64                randconfig-004-20231109   gcc  
-x86_64                randconfig-005-20231109   gcc  
-x86_64                randconfig-006-20231109   gcc  
-x86_64                randconfig-011-20231109   gcc  
-x86_64                randconfig-012-20231109   gcc  
-x86_64                randconfig-013-20231109   gcc  
-x86_64                randconfig-014-20231109   gcc  
-x86_64                randconfig-015-20231109   gcc  
-x86_64                randconfig-016-20231109   gcc  
-x86_64                randconfig-071-20231109   gcc  
-x86_64                randconfig-072-20231109   gcc  
-x86_64                randconfig-073-20231109   gcc  
-x86_64                randconfig-074-20231109   gcc  
-x86_64                randconfig-075-20231109   gcc  
-x86_64                randconfig-076-20231109   gcc  
-x86_64                           rhel-8.3-bpf   gcc  
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                         rhel-8.3-kunit   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                          iss_defconfig   gcc  
-xtensa                randconfig-001-20231109   gcc  
-xtensa                randconfig-002-20231109   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzysztof.kozlowski=40linaro.org>
+> Sent: Wednesday, November 8, 2023 4:13 PM
+> To: David Airlie <airlied=40gmail.com>; Daniel Vetter <daniel=40ffwll.ch>=
+;
+> Maarten Lankhorst <maarten.lankhorst=40linux.intel.com>; Maxime Ripard
+> <mripard=40kernel.org>; Thomas Zimmermann <tzimmermann=40suse.de>;
+> Rob Herring <robh+dt=40kernel.org>; Krzysztof Kozlowski
+> <krzysztof.kozlowski+dt=40linaro.org>; Conor Dooley
+> <conor+dt=40kernel.org>; Alim Akhtar <alim.akhtar=40samsung.com>; Andi
+> Shyti <andi.shyti=40kernel.org>; Jonathan Cameron <jic23=40kernel.org>; L=
+ars-
+> Peter Clausen <lars=40metafoo.de>; Lee Jones <lee=40kernel.org>; Ulf
+> Hansson <ulf.hansson=40linaro.org>; Tomasz Figa <tomasz.figa=40gmail.com>=
+;
+> Sylwester Nawrocki <s.nawrocki=40samsung.com>; Linus Walleij
+> <linus.walleij=40linaro.org>; Thierry Reding <thierry.reding=40gmail.com>=
+; Uwe
+> Kleine-K=C3=B6nig=20<u.kleine-koenig=40pengutronix.de>;=20Alessandro=20Zu=
+mmo=0D=0A>=20<a.zummo=40towertech.it>;=20Alexandre=20Belloni=0D=0A>=20<alex=
+andre.belloni=40bootlin.com>;=20Greg=20Kroah-Hartman=0D=0A>=20<gregkh=40lin=
+uxfoundation.org>;=20Jiri=20Slaby=20<jirislaby=40kernel.org>;=20Liam=0D=0A>=
+=20Girdwood=20<lgirdwood=40gmail.com>;=20Mark=20Brown=20<broonie=40kernel.o=
+rg>;=0D=0A>=20Jaehoon=20Chung=20<jh80.chung=40samsung.com>;=20Sam=20Protsen=
+ko=0D=0A>=20<semen.protsenko=40linaro.org>;=20dri-devel=40lists.freedesktop=
+.org;=0D=0A>=20devicetree=40vger.kernel.org;=20linux-kernel=40vger.kernel.o=
+rg;=20linux-arm-=0D=0A>=20kernel=40lists.infradead.org;=20linux-samsung-soc=
+=40vger.kernel.org;=20linux-=0D=0A>=20i2c=40vger.kernel.org;=20linux-iio=40=
+vger.kernel.org;=20linux-mmc=40vger.kernel.org;=0D=0A>=20linux-gpio=40vger.=
+kernel.org;=20linux-pwm=40vger.kernel.org;=20linux-=0D=0A>=20rtc=40vger.ker=
+nel.org;=20linux-serial=40vger.kernel.org;=20alsa-devel=40alsa-=0D=0A>=20pr=
+oject.org;=20linux-sound=40vger.kernel.org=0D=0A>=20Cc:=20Krzysztof=20Kozlo=
+wski=20<krzysztof.kozlowski=40linaro.org>=0D=0A>=20Subject:=20=5BPATCH=2001=
+/17=5D=20dt-bindings:=20hwinfo:=20samsung,exynos-chipid:=20add=0D=0A>=20spe=
+cific=20compatibles=20for=20existing=20SoC=0D=0A>=20=0D=0A>=20Samsung=20Exy=
+nos=20SoC=20reuses=20several=20devices=20from=20older=20designs,=20thus=0D=
+=0A>=20historically=20we=20kept=20the=20old=20(block's)=20compatible=20only=
+.=20=20This=20works=20fine=20and=0D=0A>=20there=20is=20no=20bug=20here,=20h=
+owever=20guidelines=20expressed=20in=0D=0A>=20Documentation/devicetree/bind=
+ings/writing-bindings.rst=20state=20that:=0D=0A>=201.=20Compatibles=20shoul=
+d=20be=20specific.=0D=0A>=202.=20We=20should=20add=20new=20compatibles=20in=
+=20case=20of=20bugs=20or=20features.=0D=0A>=20=0D=0A>=20Add=20compatibles=
+=20specific=20to=20each=20SoC=20in=20front=20of=20all=20old-SoC-like=20comp=
+atibles.=0D=0A>=20=0D=0A>=20Signed-off-by:=20Krzysztof=20Kozlowski=20<krzys=
+ztof.kozlowski=40linaro.org>=0D=0A>=20=0D=0AReviewed-by:=20Alim=20Akhtar=20=
+<alim.akhtar=40samsung.com>=0D=0A=0D=0A>=20---=0D=0A>=20=0D=0A>=20I=20propo=
+se=20to=20take=20the=20patch=20through=20Samsung=20SoC=20(me).=20See=20cove=
+r=20letter=20for=0D=0A>=20explanation.=0D=0A>=20---=0D=0A>=20=20.../binding=
+s/hwinfo/samsung,exynos-chipid.yaml=20=20=7C=2017=20++++++++++++++---=0D=0A=
+>=20=201=20file=20changed,=2014=20insertions(+),=203=20deletions(-)=0D=0A>=
+=20=0D=0A>=20diff=20--git=20a/Documentation/devicetree/bindings/hwinfo/sams=
+ung,exynos-=0D=0A>=20chipid.yaml=0D=0A>=20b/Documentation/devicetree/bindin=
+gs/hwinfo/samsung,exynos-chipid.yaml=0D=0A>=20index=2095cbdcb56efe..45f3d46=
+8db7c=20100644=0D=0A>=20---=20a/Documentation/devicetree/bindings/hwinfo/sa=
+msung,exynos-=0D=0A>=20chipid.yaml=0D=0A>=20+++=20b/Documentation/devicetre=
+e/bindings/hwinfo/samsung,exynos-=0D=0A>=20chipid.yam=0D=0A>=20+++=20l=0D=
+=0A>=20=40=40=20-11,9=20+11,20=20=40=40=20maintainers:=0D=0A>=20=0D=0A>=20=
+=20properties:=0D=0A>=20=20=20=20compatible:=0D=0A>=20-=20=20=20=20enum:=0D=
+=0A>=20-=20=20=20=20=20=20-=20samsung,exynos4210-chipid=0D=0A>=20-=20=20=20=
+=20=20=20-=20samsung,exynos850-chipid=0D=0A>=20+=20=20=20=20oneOf:=0D=0A>=
+=20+=20=20=20=20=20=20-=20enum:=0D=0A>=20+=20=20=20=20=20=20=20=20=20=20-=
+=20samsung,exynos4210-chipid=0D=0A>=20+=20=20=20=20=20=20=20=20=20=20-=20sa=
+msung,exynos850-chipid=0D=0A>=20+=20=20=20=20=20=20-=20items:=0D=0A>=20+=20=
+=20=20=20=20=20=20=20=20=20-=20enum:=0D=0A>=20+=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20-=20samsung,exynos5433-chipid=0D=0A>=20+=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20-=20samsung,exynos7-chipid=0D=0A>=20+=20=20=20=20=
+=20=20=20=20=20=20-=20const:=20samsung,exynos4210-chipid=0D=0A>=20+=20=20=
+=20=20=20=20-=20items:=0D=0A>=20+=20=20=20=20=20=20=20=20=20=20-=20enum:=0D=
+=0A>=20+=20=20=20=20=20=20=20=20=20=20=20=20=20=20-=20samsung,exynos7885-ch=
+ipid=0D=0A>=20+=20=20=20=20=20=20=20=20=20=20=20=20=20=20-=20samsung,exynos=
+autov9-chipid=0D=0A>=20+=20=20=20=20=20=20=20=20=20=20-=20const:=20samsung,=
+exynos850-chipid=0D=0A>=20=0D=0A>=20=20=20=20reg:=0D=0A>=20=20=20=20=20=20m=
+axItems:=201=0D=0A>=20--=0D=0A>=202.34.1=0D=0A=0D=0A=0D=0A
