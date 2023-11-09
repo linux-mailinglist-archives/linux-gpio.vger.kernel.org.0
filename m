@@ -2,88 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 189347E6853
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 11:37:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68EDD7E6AAA
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 13:36:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231897AbjKIKhe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Nov 2023 05:37:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59822 "EHLO
+        id S231826AbjKIMgM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Nov 2023 07:36:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230055AbjKIKhe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 05:37:34 -0500
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC411FFB
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 02:37:32 -0800 (PST)
-Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7ba46683a88so261821241.2
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 02:37:32 -0800 (PST)
+        with ESMTP id S231439AbjKIMgL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 07:36:11 -0500
+Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB3BB4;
+        Thu,  9 Nov 2023 04:36:09 -0800 (PST)
+Received: by mail-ot1-x336.google.com with SMTP id 46e09a7af769-6ce2988d62eso423836a34.1;
+        Thu, 09 Nov 2023 04:36:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1699526251; x=1700131051; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pkfOegWGNIoV4w5klVDyY9I+g15Mde+osV7Y8IGIlag=;
-        b=ZlU0kwfNJqw3qEWf/zw4uw2ZhsySmjQEjH9yRVPOpnfzsKqlCQwpubERZ/yXye3HlT
-         Dk2nOPzJAGt14aESzRzgMErymXaXt5kbobf2eXF8WCmFpfK5UtSqpSvY9PrE76WDCB+U
-         oRwyTCpm+itNJLGqxG+/jGqZSGKtph42PH4dTteWxOj+6Uz+W5yQtqhU687OFI+jmTr4
-         LylbIPganhDJaqA1aryUiUUP/VzWlXRQi5D4dVGnm4GzfLRlDp728IlKpLfikbiFGckr
-         ehQvZiYs01d+Xr6ilVfUm1OK+iaxdh0Bpq29mZ7ESACf73EXM9SE7j05X2YzmHY+QOZ8
-         0FiA==
+        d=gmail.com; s=20230601; t=1699533369; x=1700138169; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1hmvKxQt/uNJBfR60KY5o7j2krVVjyiERZNcYaN4kaM=;
+        b=G4qgdPW7v16dMMrc1AL+w+I0vXx5iWVQdcgJxsBf8iJs4wYwVbLTByehXI5rxwxudq
+         BnaiX0ERBU3XJqHI0TVGPOPQDv15C9FfL+jalF8zH69Fe6JoHMOfNp+EJgDUiMNhsJrT
+         3415xdPMUf+RsnwY+D655ad6qMJGo72D0alraVUJq0zBQHmBvcplur4dC/xC5fn/CamF
+         gWaDFPInxajcv8duu2Mei2ZjZS66RhWYtIaovZT0fpeQy9i2G0EFIJhc4BYE4W1tAw9U
+         /p0VwmQcjJW7bNX/Y5czgyYPkf2OsUbJnEyR1vRdFEjl+7S6in2HVwjO/Abh+SBlYDHB
+         K8Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699526251; x=1700131051;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pkfOegWGNIoV4w5klVDyY9I+g15Mde+osV7Y8IGIlag=;
-        b=Y5YsuvWaOLaYIgncgqrnzXjBv53CZ+mzW7xegFYQf+17BozjJ1i4Ep+C4MP50VMCfM
-         6rCFuepqTd3XmiZqxYJF1YPA9gUlctPWPPhdshPlDX54dryFdMxkDUYVAdbWmT0nRsJK
-         W2RP9U172ky1MeD+mGfqyfZI1KVXwtGueHuaT7lps56tzz6ZHK3+I/G+OYXWYdZwIUPI
-         Cio+H9A3In+KGR4+qVBj1j4pP3RrCKfi3X4I1kt86hI7b7tCGLkdX/AP/dpTnyYRI68g
-         sOGuC7qkBIZVTd6ieDt1WdNJkKsqFVp2a+qz4U7ocEqlURJYf3UYwrmj5B3gb6M7flAE
-         zdrA==
-X-Gm-Message-State: AOJu0Ywhkx4DNCy0IYCLKgTNlZnqkfCcATRgi3YUA0RKzYprDBwI73j9
-        HIZLbi3zUWNWq/QSTzzyPrbBYempHuNVS8Q6DMb3kQ==
-X-Google-Smtp-Source: AGHT+IEF5ia86C4IBJ0bLef7C5nxzZuRs5VFOq33kPfR3gI5jnRtRuubF5bFENkiGgA31dreLnAXyGiHiPsbropq2vc=
-X-Received: by 2002:a67:cc0c:0:b0:45d:89b1:9dbd with SMTP id
- q12-20020a67cc0c000000b0045d89b19dbdmr4307034vsl.2.1699526251298; Thu, 09 Nov
- 2023 02:37:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699533369; x=1700138169;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1hmvKxQt/uNJBfR60KY5o7j2krVVjyiERZNcYaN4kaM=;
+        b=vOKjkvqbU5Ok/IS0hzWikzhWUKW1AfjB/6JxBVMQjdBjjSkt/T9Z8bne22JuWWHCtq
+         qTlGdjlWOf41M6PWgDQ+iO62Hbw2qzbJlNWgtZRw2yCRmuBwaV5+2IsGAg7ZjQLWyYCC
+         HdvwqpVwAf+CEzcBUjPWuVjELI08a1sr9o7CnGBAEeMKCJNo5Jh1ye+PGkuTMYM+y1WO
+         WN92cLUAbk8902jBR1majuJl2Ja/Aw7SKF1uCqENG2a58e26L20KAXYQPjo0zE/1E4lk
+         YVpEOMG7Cjq6OXo+KeXQs0x6LLo3h23wrtEQiN24EGF2kxEEXaQXNR2cBPNgvTWyamsW
+         9JRA==
+X-Gm-Message-State: AOJu0YxeDwqsnLnInolHCB1vSKAea8c8N5jRmSb7ZVBJ5j020uZVkj3Z
+        gSwf2c4uYCSobv8xDVH4S/5i0tT5jeI=
+X-Google-Smtp-Source: AGHT+IGbPCSZ0oO0sMkuEFaKtAn57MvJ6tpF5KdTWjv5VA5hj5an1Y3HY5hsaViT0A7sFWGG4YiNDQ==
+X-Received: by 2002:a9d:6acc:0:b0:6d4:73d3:11b0 with SMTP id m12-20020a9d6acc000000b006d473d311b0mr4986325otq.16.1699533368842;
+        Thu, 09 Nov 2023 04:36:08 -0800 (PST)
+Received: from rigel (14-203-18-70.tpgi.com.au. [14.203.18.70])
+        by smtp.gmail.com with ESMTPSA id z19-20020a63e113000000b005b7e3eddb87sm4638653pgh.61.2023.11.09.04.36.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Nov 2023 04:36:08 -0800 (PST)
+Date:   Thu, 9 Nov 2023 20:36:03 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     heminhong <heminhong@kylinos.cn>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools/gpio: prevent resource leak
+Message-ID: <ZUzSM37FWz6sgH9n@rigel>
+References: <20231109085419.84948-1-heminhong@kylinos.cn>
 MIME-Version: 1.0
-References: <20231108155200.3050417-1-phil@gadgetoid.com> <20231108155200.3050417-2-phil@gadgetoid.com>
-In-Reply-To: <20231108155200.3050417-2-phil@gadgetoid.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 9 Nov 2023 11:37:20 +0100
-Message-ID: <CAMRc=McQsK1mvc1yRW=DyWaz-t7PwbkSwKnz8P2Pw-wx5OowSQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 1/1] bindings: python: standalone build
- tooling for tests
-To:     Phil Howard <phil@gadgetoid.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231109085419.84948-1-heminhong@kylinos.cn>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 8, 2023 at 4:52=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wro=
-te:
+On Thu, Nov 09, 2023 at 04:54:19PM +0800, heminhong wrote:
+> In the main() function, the open() function is used to open the file.
+> When the file is successfully opened, fd is used to interact with the file,
+> but the fd is not closed, it will cause resource leak.
 >
-> Move extension definitions and tooling for building tests into
-> `build_tests.py` and update Makefile.am to call it with appropriate path
-> prefixes.
->
-> `build_tests.py` will perform a standalone build of the text extensions,
-> keeping any build noise in a temporary directory and copying the final
-> built modules automatically out to `tests/gpiosim` and `tests/procname`.
->
-> Add "python-tests-run" to Makefile.am so it's clear how to run the tests.
->
-> Add .so object files generated by build_test.py to Makefile.am's
-> clean-local.
->
-> Signed-off-by: Phil Howard <phil@gadgetoid.com>
-> ---
 
-Thanks, this works quite nicely. I applied it and will release python
-bindings v2.1.2 to pypi.
+All open files are automatically closed when a process exits.
+That includes both those returned by open() and by the GPIO ioctls.
+So explicitly closing them here before exiting is redundant.
 
-Bart
+Cheers,
+Kent.
