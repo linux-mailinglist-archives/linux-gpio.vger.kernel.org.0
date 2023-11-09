@@ -2,88 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 183C07E6AD2
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 13:50:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41C187E6B18
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 14:16:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230110AbjKIMuS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Nov 2023 07:50:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42446 "EHLO
+        id S230218AbjKINQz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Nov 2023 08:16:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230107AbjKIMuR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 07:50:17 -0500
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B052D72
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 04:50:15 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a81ab75f21so9743647b3.2
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 04:50:15 -0800 (PST)
+        with ESMTP id S230055AbjKINQz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 08:16:55 -0500
+Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66D930CD
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 05:16:52 -0800 (PST)
+Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1f0f160e293so489916fac.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 05:16:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699534214; x=1700139014; darn=vger.kernel.org;
+        d=gadgetoid.com; s=google; t=1699535812; x=1700140612; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k9QkNEZK+idQ7+J77TT5hbKke59G7z1CkfstDJ5u5Ow=;
-        b=w9AnDqTsv5FtyKNGv0IcsRhz0Vf18JSgYz8Oe1wFWCn8lyzx1cHb9z1vWtJqR+O6jw
-         oHHWXYMsleKbg3ws+vBJZUc7BsmDzBdkuWvkF0v9lvvnRBiHN5RjTkJJVwKgJTFgYj/O
-         9w/tRgrNe1Z5Ckm6wwBJ1PmPWQHC+scCoSyvD95DHqNOFRbL8FLE+UdMFWRAKiD6LskQ
-         HNkxziP6vf3IrdZRAratOGPjYI1LoO4lBqBGAHW7GeA6cTJfntcKUuOndJxXWS6EdlZ3
-         Rpao/nOnk8RykeyVemNr8wh8wJADNfJbdlZRzQfg7KGT7aD0MFb7AhpdF36SOn0P6kQ8
-         gPtg==
+        bh=duGI+QnVDD+gmXWRCdlzxN+ZsIAFqqTDfeZNwawnuZM=;
+        b=JcalvDp0uEgzDX0ZslrV20KpZ7RSf0eH/iaYtzWPGVH2dvSrawm98IcKIg6pERu6Oa
+         8pQMHPRB8UxdXEnQor9TEPVfKXPDZkORU/ZdkQ9nLHnchv1BNhMKwjU8xf7TJryTnSD2
+         +OC+krUAEf2v2miinqmTbUgX5ueHmXGjQWXbFFDlkhqbkgT9s2/KQ1CvYxj78mLmmoHL
+         py2QOQC1Pblc7z4Jo1ktLr2uDTDAfE+jAQSUhq4HCo3OSy3onYyDYeiuhoWBI0LThQC9
+         xE82RbtFRijQtpOXZ7ZA7IbGVF+HVlO7uN86JTUWPsM5SxtP3FSfqzkqPS1o8LlMWvJE
+         V2gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699534214; x=1700139014;
+        d=1e100.net; s=20230601; t=1699535812; x=1700140612;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k9QkNEZK+idQ7+J77TT5hbKke59G7z1CkfstDJ5u5Ow=;
-        b=JfsY76NUIAod6RpgIHGFG5lxLfIX4ErDx2J+E2VbUegMxjwAvXuGnrhdqCqUi2c8OE
-         iXM9dvfNN5rPYst1FdwwstJE23AUYzd9dXKQdh8HABAF3YgA0Z7kLHKNv1nDIeExlrMH
-         mT9z92gMvHdEDWE++3w+4pbwgMqqi8FWvsXX2FZn+q/iyABMdjtiNus+GyycC2FaEWkf
-         /zwJscbzn3fOlrTMrVyLN/EFUQEKGiLhh6guxhEH0GQF77328G4UTtv5o71heJhup7gs
-         BXsVdSiIWPoy8IWV11BbwTMm3p9TI4oJkmMf639sAdoNckESlXBpClP3VE3ZumKNP2me
-         a/9Q==
-X-Gm-Message-State: AOJu0YyULjbT66HrQeRz5QUuEGB9KF9mxNvUqrD+k8zPeCc+goCt1+dZ
-        BjAlU5y7tfZJWDkzsLcWPHpS6oBEqa0g8SrxKE/v5A==
-X-Google-Smtp-Source: AGHT+IHp+SM2yGUTokG4IzIbO8fHH9Otm9D7ZLbf1ZTxB+cIiqKlz50s1PbdFXn6HFqQ5ZgJs+2kLuirk/PMOgI3A34=
-X-Received: by 2002:a0d:f3c2:0:b0:59b:54b5:7d66 with SMTP id
- c185-20020a0df3c2000000b0059b54b57d66mr4948891ywf.34.1699534214575; Thu, 09
- Nov 2023 04:50:14 -0800 (PST)
+        bh=duGI+QnVDD+gmXWRCdlzxN+ZsIAFqqTDfeZNwawnuZM=;
+        b=WJOSwhh3U8nudwnCYjXk9EUcGmYvUVqVCXrCo/hWsvpea99fTCMER4Mks7bmQy1Laq
+         Bc2g7uxDrm3jukUWofUW1dZ0t1MAmAJTSHrtw8T+9x4CvT+tLYWxxI6AqRG5mA2y1QHa
+         yH8EYkBg1aXzimqEbVX108PggGlnYKjKdpqYQEZVGjFc7TJvm61yVDMHR4Fay/xPms+z
+         dmWB+AYfS6U2v5ZYgPoqmxDUSkPB1nzb6yQ3F97gzlSKYZnjvJcTlQEqoMfXH1ndVu9M
+         PghYikj7R+xQm315pYWMoEMEjjZZaUJp47Ew1REX94owoenldUon0Q2Za+eX6dwTVA6E
+         m6mg==
+X-Gm-Message-State: AOJu0Yw9CJRMhxfbiQ7p+zJ1inxLSC7WGgYeYLLjCCYMgvhC1BQAtT+r
+        MvlVM2QwdYPCIQmoNLn/GT8QdSZLTtWiFpXzZgUVEg==
+X-Google-Smtp-Source: AGHT+IGgZW1PSFbZvbMn9Ey7Bnj1vDB+MLhuh7xvv9xo4Ek7N1fnEz1L1RWQ8DgR0SAuK7bObQ2U7n2rPmoMlcHv3HU=
+X-Received: by 2002:a05:6870:14d4:b0:1ea:647f:a9b6 with SMTP id
+ l20-20020a05687014d400b001ea647fa9b6mr5546475oab.44.1699535812191; Thu, 09
+ Nov 2023 05:16:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20231109085419.84948-1-heminhong@kylinos.cn> <ZUzSM37FWz6sgH9n@rigel>
-In-Reply-To: <ZUzSM37FWz6sgH9n@rigel>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Nov 2023 13:50:02 +0100
-Message-ID: <CACRpkdZfTbrPLFGH5akY=od8Rma=2c6F=nPz2nmAz2my_f7OeQ@mail.gmail.com>
-Subject: Re: [PATCH] tools/gpio: prevent resource leak
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     heminhong <heminhong@kylinos.cn>, brgl@bgdev.pl, andy@kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231107134718.2913223-1-phil@gadgetoid.com> <CAMRc=MeGp7+UN52-2sh_gTea+y2evbyseJ+rko9-=3vDT46=ZQ@mail.gmail.com>
+ <CAMRc=Mef7XW8NuV_sA1ARAqUoL0py2RmK__DuUgn-2auf3nfXg@mail.gmail.com>
+In-Reply-To: <CAMRc=Mef7XW8NuV_sA1ARAqUoL0py2RmK__DuUgn-2auf3nfXg@mail.gmail.com>
+From:   Phil Howard <phil@gadgetoid.com>
+Date:   Thu, 9 Nov 2023 13:16:41 +0000
+Message-ID: <CA+kSVo851PMrRshCk+B=QtZn1nrzT8KBqyuFTz4hHZJxyBopLQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] bindings: python: fix library path for python test builds
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 9, 2023 at 1:36=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
-rote:
-> On Thu, Nov 09, 2023 at 04:54:19PM +0800, heminhong wrote:
-
-> > In the main() function, the open() function is used to open the file.
-> > When the file is successfully opened, fd is used to interact with the f=
-ile,
-> > but the fd is not closed, it will cause resource leak.
+On Wed, 8 Nov 2023 at 19:38, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> All open files are automatically closed when a process exits.
-> That includes both those returned by open() and by the GPIO ioctls.
-> So explicitly closing them here before exiting is redundant.
+> On Wed, Nov 8, 2023 at 2:08=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> >
+> > On Tue, Nov 7, 2023 at 2:47=E2=80=AFPM Phil Howard <phil@gadgetoid.com>=
+ wrote:
+> > >
+> > > Correct top_srcdir to top_builddir for out of tree builds.
+> > >
+> > > Signed-off-by: Phil Howard <phil@gadgetoid.com>
+> > > ---
+> > >  bindings/python/Makefile.am | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.a=
+m
+> > > index 079ceb1..b2f2779 100644
+> > > --- a/bindings/python/Makefile.am
+> > > +++ b/bindings/python/Makefile.am
+> > > @@ -15,7 +15,7 @@ all-local:
+> > >         GPIOD_WITH_TESTS=3D$(BUILD_TESTS) \
+> > >         $(PYTHON) setup.py build_ext --inplace \
+> > >                 --include-dirs=3D$(top_srcdir)/include/:$(top_srcdir)=
+/tests/gpiosim/ \
+> > > -               --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_src=
+dir)/tests/gpiosim/.libs/
+> > > +               --library-dirs=3D$(top_builddir)/lib/.libs/:$(top_bui=
+lddir)/tests/gpiosim/.libs/
+> > >
+> > >  install-exec-local:
+> > >         GPIOD_WITH_TESTS=3D \
+> > > --
+> > > 2.34.1
+> > >
+> >
+> > Phil, please squash these two patches together as you're modifying a
+> > line in the first one just to change it again in the second.
+> >
+> > Bart
+>
+> Nevermind, I squashed it myself.
+>
+> Bart
 
-Yup. And this is one of the reasons why we have the character device
-in the first place.
+Thanks, I sent them split since the latter speculative fix hides the previo=
+us
+actual bugfix but perhaps a better commit message could have worked.
 
-The character device gets released and all GPIOs are released
-if the program crashes.
-
-You can imagine what happens with the sysfs ABI if a bash
-script crashes halfway through some complex allocating and
-banging GPIOs left and right. Not good at all.
-
-Yours,
-Linus Walleij
+--=20
+Phil
