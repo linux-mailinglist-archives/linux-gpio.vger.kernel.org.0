@@ -2,157 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A794D7E7371
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Nov 2023 22:16:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 326497E7626
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Nov 2023 01:58:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231484AbjKIVQN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Nov 2023 16:16:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51892 "EHLO
+        id S229491AbjKJA6r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Nov 2023 19:58:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbjKIVQM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 16:16:12 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA1BD63
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 13:16:09 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1cc29f39e7aso10666025ad.0
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 13:16:09 -0800 (PST)
+        with ESMTP id S229581AbjKJA6r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 19:58:47 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C610A3A91
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 16:58:44 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id 46e09a7af769-6d339b93423so12097a34.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 16:58:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura; t=1699564569; x=1700169369; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KkATN4wwZE6+H0LWBM3J8nfeagxSwway3jN9y5UmPbU=;
-        b=IbfAaU8505DUvWNn+mcOyCFRXem4sMiWsPR7xvKwhsLm8wo7u6xUcr1wqEyqzo5DKC
-         SG7YkpJ5+5QhjoWiQagdWdyATQUzYUlH+Ldx4Dm007z0o8Yc07+/6ZXIxq7hdkLBD0uq
-         YwZWp3inMCGRJuwExjL3ZaSsd0mfo88UvMJfws5JvGxQzIFFjqTee5+O8KpJMdMYRx1L
-         qTieedq5HHe+zjmari1IC5YZH2b5bTnbaEqtrxcw04IyZpQkDnX+2NP67zcKmDscaG5T
-         950TSPbirBd3FQoPra1Li6Sg/UwGOozlmcESlx1txcOy0yoLAOelnHU9laQythJqoQhl
-         Fefg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699564569; x=1700169369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=linaro.org; s=google; t=1699577924; x=1700182724; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KkATN4wwZE6+H0LWBM3J8nfeagxSwway3jN9y5UmPbU=;
-        b=LQKOtQKS2FBoxO2qgfT5Y8LsQp9fF4IKb6J7ZLr/zV4rpXra2EodQOghktMmj1DHf/
-         ssqSJPiHAO+9aH/zbN04fnZI2lC409arZBlbV1GD9c/FZQ+KoTSG7JFHnQfGuMHok40/
-         BfRZGDVzyhSN/vfB0kq1X3doEf4T8z4gTZxwmoiL7JiUoELE6nfCRjnWLDprhybQ/9OM
-         B4pgQPA56pN1iz1LbJzoVIGkuA2Osw9CK5GLk1Hj9ON8zR/UinwIfSe/WLH3Yin7Ekph
-         Rb6NzVGqkuNZDTUQJWxIzJ1WvLs953FMG3+gTUwfPS5k/eBW7MY0Ze+0lsEbBIJcarc+
-         O7LQ==
-X-Gm-Message-State: AOJu0YzS/XQevq/ErldLoetbES40dCMgM4yHpHJWNCpVK/fImgc64h+B
-        ZDrn9yVDKmyxu2+vj6Pn3ujj/CZ5KeSIaZ4RkORurg==
-X-Google-Smtp-Source: AGHT+IFuFSvFDFIoIHsPanXhu+zG/WJWZIONx2EFtzj7wSPX1ldg1yfvWX7GDLFyCrp47j4e3XP+v3X6fxX8edKq+9g=
-X-Received: by 2002:a17:90b:3843:b0:27c:ef18:d270 with SMTP id
- nl3-20020a17090b384300b0027cef18d270mr2430439pjb.20.1699564569375; Thu, 09
- Nov 2023 13:16:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20230926160255.330417-1-robert.marko@sartura.hr>
- <CACRpkdZem9Gtd==gQM4EQ9R8MN2ZQ0JCyMCoTjg0kqCNDjuFMA@mail.gmail.com>
- <CA+HBbNFeVmc2CJeo+u9jbZrzsrDTOttW_4+aeLJFcOjDJ8DwyQ@mail.gmail.com>
- <CACRpkdYUW-mO6vhh-zkZAuqQOHpwMeJsNw=jSLzbgoEtoCTtNQ@mail.gmail.com>
- <ZU1BSmyD931BRwSD@shell.armlinux.org.uk> <CACRpkdZBR1ROkQ_w_QonVmvPB1nxh4c7BQksuP-k=hQG92FmDw@mail.gmail.com>
-In-Reply-To: <CACRpkdZBR1ROkQ_w_QonVmvPB1nxh4c7BQksuP-k=hQG92FmDw@mail.gmail.com>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Thu, 9 Nov 2023 22:15:58 +0100
-Message-ID: <CA+HBbNFGKeX5x92aw=Skry5Qrpm4s2emv7-todX+iVFfaaRR+g@mail.gmail.com>
-Subject: Re: [PATCH] i2c: core: dont change pinmux state to GPIO during
- recovery setup
+        bh=xJVrXuXFcu3DgtWdnbXpFzASR1Czvt1UEeVrRTmaZPQ=;
+        b=V5c558bwpJbS+RsMjl+81BnZskU9iA2PziT2KM/lWdWWWu9sF61J7xxbkit5dKirS2
+         r46y3F7gdM+v0QWicY8k7FIYJb5Dw3lpnFUDM3m4L8n8WniI4rH9r8J2k99Wtdjlx3Fb
+         cwZB48T+NKxPi43z6rvgfk/gCXdrlX5dBOCqrgDLWe5aYioerEi22D0WnIYhJA53bF61
+         2Wt2HG7wPkxoF3tCC0mKbYrB8/JhenDUbnG+eH0+lc2Y4Db7+Gy38b34eL/xGguoIOwW
+         3M3hrwMEaHFE2CBRj16ppDuBnYjw4ba78bTRKl83sEIGAc3ygF8yvXkwM6qFYWp3ifyr
+         /Wxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699577924; x=1700182724;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJVrXuXFcu3DgtWdnbXpFzASR1Czvt1UEeVrRTmaZPQ=;
+        b=vrrIaCXgaWbnJdeZx5UCswnQyaz76nXtrU+az6Tmimn90tCr/A00YXAKCZFkLdSSjc
+         3hSj9NrsLAbyafVio5UJbhSXCB3lSoy4XlJcMgPS7JMohdBsH9pBOz463pKbUAMpyDbE
+         7sdiCi7YXy3RNEBlzM3SqWe+7WhQWsS94iuojfAecCCgeE0/6iHfkd+HvphuRolUkuHR
+         oZnBcYfByuGGONSQvVqNP0cyL7r8svSQv4naWJnBGhlw0ZVpFoVXiJ1S2JUL/rOw4Kb0
+         70aKyOploBI6TZ9kGWQGKQqPkJCoAkUMDvG5yIHErupRg2Fwpu/J5GnD0l8ULO8Xn+0W
+         ptEg==
+X-Gm-Message-State: AOJu0Yyh/OUR/AqO6X6cTsiY7hTw0QgOB/woM1IEZSiBOaU78r93CJLe
+        9qHCub2lO29dy/XYOog0pa3ltlXKoOnZ5hJipRzAUQ==
+X-Google-Smtp-Source: AGHT+IFCGAq9uOJ74nOCEa1XdXbPO22Qfscitoj00Gqwgxzjx8UkOGK6WexDGU679wSnRWP4OZnOBw==
+X-Received: by 2002:a9d:6f16:0:b0:6b7:36af:1937 with SMTP id n22-20020a9d6f16000000b006b736af1937mr7501364otq.0.1699577923984;
+        Thu, 09 Nov 2023 16:58:43 -0800 (PST)
+Received: from octopus ([2400:4050:c3e1:100:f2ee:7d90:a86d:610])
+        by smtp.gmail.com with ESMTPSA id s4-20020a655844000000b005bdf596164fsm1746007pgr.94.2023.11.09.16.58.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Nov 2023 16:58:43 -0800 (PST)
+Date:   Fri, 10 Nov 2023 09:58:39 +0900
+From:   Takahiro Akashi <takahiro.akashi@linaro.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>, wsa@kernel.org,
-        codrin.ciubotariu@microchip.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [RFC v5 5/5] dt-bindings: firmware: arm,scmi: Add support for
+ pinctrl protocol
+Message-ID: <ZU2AP7leDcIZIN+b@octopus>
+Mail-Followup-To: Takahiro Akashi <takahiro.akashi@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
+ <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
+ <CACRpkdYW-xmejyOo9H9XSkcabvYgBqPvpjppvNe_RF6RLxyxKA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYW-xmejyOo9H9XSkcabvYgBqPvpjppvNe_RF6RLxyxKA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 9, 2023 at 10:02=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Thu, Nov 9, 2023 at 9:30=E2=80=AFPM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> > On Thu, Nov 09, 2023 at 09:04:29PM +0100, Linus Walleij wrote:
->
-> > > > After it was converted to it, the I2C bus completely stopped workin=
-g
-> > > > on Armada 3720
-> > > > if I2C recovery is enabled by making the recovery pinctrl available=
- in DTS.
-> > >
-> > > Shouldn't we just revert that patch until we can figure this out then=
-?
-> >
-> > Note that when I wrote the i2c-pxa recovery code (which was developed
-> > and tested on Armada 3720 - the uDPU) it had to work... when the
-> > suggestion came up to implement generic recovery, I stated:
-> >
-> > http://archive.lwn.net:8080/linux-kernel/20200705210942.GA1055@kunai/T/=
-#mf7f862fcd53245f14fb650d33c29cf139d41039d
->
-> Makes me even more convinced that we should just revert this. i.e.
-> commit 0b01392c18b9993a584f36ace1d61118772ad0ca
-> i2c: pxa: move to generic GPIO recovery
->
-> There is even:
-> https://lore.kernel.org/linux-i2c/20201209204645.GF3499@kunai/
->
-> "In case we missed a glitch, we can still revert the patch later."
-> Well this is later.
->
-> Robert can you see if it possible to revert, that things work after a
-> revert and send a revert patch?
+Hi Arm folks,
 
-Hi,
-Yes, a revert still applies and "fixes" things so I2C starts working as bef=
-ore.
+Do you have any comment?
+I expect that you have had some assumption when you defined
+SCMI pinctrl protocol specification.
 
-I can send the revert tomorrow, I was just hoping that there was an bug
-that could be fixed instead of reverting, but seems its more complicated.
+On Mon, Nov 06, 2023 at 02:12:36PM +0100, Linus Walleij wrote:
+> On Fri, Oct 27, 2023 at 8:28???AM Oleksii Moisieiev
+> <Oleksii_Moisieiev@epam.com> wrote:
+> 
+> > +                keys_pins: keys-pins {
+> > +                    pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+> > +                    bias-pull-up;
+> > +                };
+> 
+> This is kind of interesting and relates to my question about naming groups and
+> functions of GPIO pins.
+> 
+> Here we see four pins suspiciously named "GP_*" which I read as
+> "generic purpose"
+> and they are not muxed to *any* function, yes pulled up.
+> 
+> I would have expected something like:
+> 
+> keys_pins: keys-pins {
+>   groups = "GP_5_17_grp", "GP_5_20_grp", "GP_5_22_grp", "GP_2_1_grp";
+>   function = "gpio";
+>   pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+>   bias-pull-up;
+> };
+> 
+> I hope this illustrates what I see as a problem in not designing in
+> GPIO as an explicit
+> function, I get the impression that these pins are GPIO because it is hardware
+> default.
 
-Regards,
-Robert
->
-> > > > I then spent quite a while trying to bisect the exact change that
-> > > > causes this issue
-> > > > in the conversion as code is almost identical to what the driver wa=
-s
-> > > > doing previously,
-> > > > and have bisected it down to pinctrl_select_state(bri->pinctrl,
-> > > > bri->pins_gpio) being
-> > > > called before SDA and SCL pins are obtained via devm_gpiod_get().
-> >
-> > Yes, indeed. That's because the pinctrl internals get confused. I sent
-> > you an email about it on 6th December 2019
-> >
-> > "pinctrl states vs pinmux vs gpio (i2c bus recovery)"
->
-> I found it:
-> https://lore.kernel.org/all/20191206173343.GX25745@shell.armlinux.org.uk/
->
-> Sadly I had no good advice for any simple elegant solutions
-> to the problem, but the more complicated solution does
-> work so let's go for that.
->
-> > which is why i2c-pxa did things the way it did in my commit
-> > "i2c: pxa: implement generic i2c bus recovery".
->
-> I think we need to go back to this.
->
-> It's nice with the ambition to create generic code of course, but
-> sometimes it is better to just roll something IP-unique.
->
+If you want to stick to "explicit", we may rather introduce a pre-defined
+sub-node name, "gpio", in a device tree binding, i.e.
+
+  protocol@19 { // pinctrl protocol
+      ... // other pinmux nodes
+
+      scmi_gpio: gpio { // "gpio" is a fixed name
+          keys-pins {
+              pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+              bias-pull-up;
+              // possibly input or output
+          };
+          input-pins {
+              groups = "some group"; // any name
+              input-mode;
+          }
+          output-pins {
+              pins = "foo1", "foo2"; // any name
+              output-mode;
+          }
+      }
+  }
+
+It would indicate that all the succeeding nodes are for gpio definitions
+and *virtual* gpio pin numbers will be assigned in the order of
+appearances in "gpio" node. Then a client driver may refer to a gpio pin
+(say, GP_2_1?) like in the current manner:
+
+  foo_device {
+       ...
+       reset-gpios = <&scmi_gpio 3 ...>;
+  }
+
+-Takahiro Akashi
+
+> 
 > Yours,
 > Linus Walleij
-
-
-
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
