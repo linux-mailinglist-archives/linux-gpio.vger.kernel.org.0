@@ -2,164 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 326497E7626
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Nov 2023 01:58:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12FCE7E7EAC
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Nov 2023 18:46:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbjKJA6r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Nov 2023 19:58:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41432 "EHLO
+        id S1345269AbjKJRq4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Nov 2023 12:46:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229581AbjKJA6r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Nov 2023 19:58:47 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C610A3A91
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Nov 2023 16:58:44 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id 46e09a7af769-6d339b93423so12097a34.0
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Nov 2023 16:58:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699577924; x=1700182724; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xJVrXuXFcu3DgtWdnbXpFzASR1Czvt1UEeVrRTmaZPQ=;
-        b=V5c558bwpJbS+RsMjl+81BnZskU9iA2PziT2KM/lWdWWWu9sF61J7xxbkit5dKirS2
-         r46y3F7gdM+v0QWicY8k7FIYJb5Dw3lpnFUDM3m4L8n8WniI4rH9r8J2k99Wtdjlx3Fb
-         cwZB48T+NKxPi43z6rvgfk/gCXdrlX5dBOCqrgDLWe5aYioerEi22D0WnIYhJA53bF61
-         2Wt2HG7wPkxoF3tCC0mKbYrB8/JhenDUbnG+eH0+lc2Y4Db7+Gy38b34eL/xGguoIOwW
-         3M3hrwMEaHFE2CBRj16ppDuBnYjw4ba78bTRKl83sEIGAc3ygF8yvXkwM6qFYWp3ifyr
-         /Wxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699577924; x=1700182724;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xJVrXuXFcu3DgtWdnbXpFzASR1Czvt1UEeVrRTmaZPQ=;
-        b=vrrIaCXgaWbnJdeZx5UCswnQyaz76nXtrU+az6Tmimn90tCr/A00YXAKCZFkLdSSjc
-         3hSj9NrsLAbyafVio5UJbhSXCB3lSoy4XlJcMgPS7JMohdBsH9pBOz463pKbUAMpyDbE
-         7sdiCi7YXy3RNEBlzM3SqWe+7WhQWsS94iuojfAecCCgeE0/6iHfkd+HvphuRolUkuHR
-         oZnBcYfByuGGONSQvVqNP0cyL7r8svSQv4naWJnBGhlw0ZVpFoVXiJ1S2JUL/rOw4Kb0
-         70aKyOploBI6TZ9kGWQGKQqPkJCoAkUMDvG5yIHErupRg2Fwpu/J5GnD0l8ULO8Xn+0W
-         ptEg==
-X-Gm-Message-State: AOJu0Yyh/OUR/AqO6X6cTsiY7hTw0QgOB/woM1IEZSiBOaU78r93CJLe
-        9qHCub2lO29dy/XYOog0pa3ltlXKoOnZ5hJipRzAUQ==
-X-Google-Smtp-Source: AGHT+IFCGAq9uOJ74nOCEa1XdXbPO22Qfscitoj00Gqwgxzjx8UkOGK6WexDGU679wSnRWP4OZnOBw==
-X-Received: by 2002:a9d:6f16:0:b0:6b7:36af:1937 with SMTP id n22-20020a9d6f16000000b006b736af1937mr7501364otq.0.1699577923984;
-        Thu, 09 Nov 2023 16:58:43 -0800 (PST)
-Received: from octopus ([2400:4050:c3e1:100:f2ee:7d90:a86d:610])
-        by smtp.gmail.com with ESMTPSA id s4-20020a655844000000b005bdf596164fsm1746007pgr.94.2023.11.09.16.58.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Nov 2023 16:58:43 -0800 (PST)
-Date:   Fri, 10 Nov 2023 09:58:39 +0900
-From:   Takahiro Akashi <takahiro.akashi@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [RFC v5 5/5] dt-bindings: firmware: arm,scmi: Add support for
- pinctrl protocol
-Message-ID: <ZU2AP7leDcIZIN+b@octopus>
-Mail-Followup-To: Takahiro Akashi <takahiro.akashi@linaro.org>,
+        with ESMTP id S235181AbjKJRpz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Nov 2023 12:45:55 -0500
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17AEC5260;
+        Thu,  9 Nov 2023 22:14:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699596866; x=1731132866;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ii54i8l9M6cKrlgX+mjJdtwVkIC1gfwZhndVsG7a0/A=;
+  b=HMkNK9yiNe5UXNwY4QS79BhdAUg2cYuvZIHGUDCx+J4Eu/+wrtaDdFkD
+   mxgJOJXVH0HqDio70qFlm69C7CmsvT5HMSvaWOUJa3iQL5DQy6seSKlnc
+   YQsHXhd2lLx6noykKtzLlMMI0/B/v9/Ppui0cE500hxQYRaUqqNu/+n+t
+   MX+R2UVmjXegAfxARz82E6+gR/3R5WsoHMVwvTef6+83AgJgPuVBjIeS8
+   e9HvhYLoyK5YnyxPxYJzZlOIcmacd5oVrtkW7q5MJ5s2Xojiqc43XRKDJ
+   gv61ijEpB2HOe1CxNxMQ5I1M1T1MkhcBGrc0w4ImChe6J8TeNJPlssQXk
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="394044710"
+X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
+   d="scan'208";a="394044710"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2023 22:14:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10889"; a="1095109933"
+X-IronPort-AV: E=Sophos;i="6.03,291,1694761200"; 
+   d="scan'208";a="1095109933"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Nov 2023 22:14:23 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 239D614F; Fri, 10 Nov 2023 08:14:22 +0200 (EET)
+Date:   Fri, 10 Nov 2023 08:14:22 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
- <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
- <CACRpkdYW-xmejyOo9H9XSkcabvYgBqPvpjppvNe_RF6RLxyxKA@mail.gmail.com>
+        Paul Cercueil <paul@crapouillou.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v3 00/17] pinctrl: intel: Use NOIRQ PM helper
+Message-ID: <20231110061422.GI17433@black.fi.intel.com>
+References: <20231030120734.2831419-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYW-xmejyOo9H9XSkcabvYgBqPvpjppvNe_RF6RLxyxKA@mail.gmail.com>
+In-Reply-To: <20231030120734.2831419-1-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Arm folks,
+Hi Andy,
 
-Do you have any comment?
-I expect that you have had some assumption when you defined
-SCMI pinctrl protocol specification.
-
-On Mon, Nov 06, 2023 at 02:12:36PM +0100, Linus Walleij wrote:
-> On Fri, Oct 27, 2023 at 8:28???AM Oleksii Moisieiev
-> <Oleksii_Moisieiev@epam.com> wrote:
+On Mon, Oct 30, 2023 at 02:07:17PM +0200, Andy Shevchenko wrote:
+> Intel pin control drivers use NOIRQ variant of the PM callbacks.
+> To make them smaller and less error prone against different
+> kernel configurations (with possible defined but not used variables)
+> switch to use NOIRQ PM helper.
 > 
-> > +                keys_pins: keys-pins {
-> > +                    pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
-> > +                    bias-pull-up;
-> > +                };
+> Changelog v3:
+> - dropped applied patches
+> - dropped MediaTek patch for now
+> - split Intel patch to the series using suggection by Paul
 > 
-> This is kind of interesting and relates to my question about naming groups and
-> functions of GPIO pins.
+> Changelog v2:
+> - rewritten commit message in patch 1 (Rafael)
+> - converted non-Intel pin control drivers as well
+> - added couple of kinda related patches to use pm_ptr()
 > 
-> Here we see four pins suspiciously named "GP_*" which I read as
-> "generic purpose"
-> and they are not muxed to *any* function, yes pulled up.
+> Andy Shevchenko (17):
+>   pinctrl: intel: Provide Intel pin control wide PM ops structure
+>   pinctrl: alderlake: Switch to use Intel pin control PM ops
+>   pinctrl: broxton: Switch to use Intel pin control PM ops
+>   pinctrl: cannonlake: Switch to use Intel pin control PM ops
+>   pinctrl: cedarfork: Switch to use Intel pin control PM ops
+>   pinctrl: denverton: Switch to use Intel pin control PM ops
+>   pinctrl: elkhartlake: Switch to use Intel pin control PM ops
+>   pinctrl: emmitsburg: Switch to use Intel pin control PM ops
+>   pinctrl: geminilake: Switch to use Intel pin control PM ops
+>   pinctrl: icelake: Switch to use Intel pin control PM ops
+>   pinctrl: jasperlake: Switch to use Intel pin control PM ops
+>   pinctrl: lakefield: Switch to use Intel pin control PM ops
+>   pinctrl: lewisburg: Switch to use Intel pin control PM ops
+>   pinctrl: meteorlake: Switch to use Intel pin control PM ops
+>   pinctrl: sunrisepoint: Switch to use Intel pin control PM ops
+>   pinctrl: tigerlake: Switch to use Intel pin control PM ops
+>   pinctrl: intel: Make PM ops functions static
 > 
-> I would have expected something like:
-> 
-> keys_pins: keys-pins {
->   groups = "GP_5_17_grp", "GP_5_20_grp", "GP_5_22_grp", "GP_2_1_grp";
->   function = "gpio";
->   pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
->   bias-pull-up;
-> };
-> 
-> I hope this illustrates what I see as a problem in not designing in
-> GPIO as an explicit
-> function, I get the impression that these pins are GPIO because it is hardware
-> default.
+>  drivers/pinctrl/intel/pinctrl-alderlake.c    |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-broxton.c      |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-cannonlake.c   |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-cedarfork.c    |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-denverton.c    |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-elkhartlake.c  |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-emmitsburg.c   |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-geminilake.c   |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-icelake.c      |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-intel.c        | 14 +++++++-------
+>  drivers/pinctrl/intel/pinctrl-intel.h        | 11 +----------
+>  drivers/pinctrl/intel/pinctrl-jasperlake.c   |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-lakefield.c    |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-lewisburg.c    |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-meteorlake.c   |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-sunrisepoint.c |  5 ++---
+>  drivers/pinctrl/intel/pinctrl-tigerlake.c    |  5 ++---
+>  17 files changed, 38 insertions(+), 62 deletions(-)
 
-If you want to stick to "explicit", we may rather introduce a pre-defined
-sub-node name, "gpio", in a device tree binding, i.e.
+Nice! For the series,
 
-  protocol@19 { // pinctrl protocol
-      ... // other pinmux nodes
-
-      scmi_gpio: gpio { // "gpio" is a fixed name
-          keys-pins {
-              pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
-              bias-pull-up;
-              // possibly input or output
-          };
-          input-pins {
-              groups = "some group"; // any name
-              input-mode;
-          }
-          output-pins {
-              pins = "foo1", "foo2"; // any name
-              output-mode;
-          }
-      }
-  }
-
-It would indicate that all the succeeding nodes are for gpio definitions
-and *virtual* gpio pin numbers will be assigned in the order of
-appearances in "gpio" node. Then a client driver may refer to a gpio pin
-(say, GP_2_1?) like in the current manner:
-
-  foo_device {
-       ...
-       reset-gpios = <&scmi_gpio 3 ...>;
-  }
-
--Takahiro Akashi
-
-> 
-> Yours,
-> Linus Walleij
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
