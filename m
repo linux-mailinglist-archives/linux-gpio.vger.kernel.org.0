@@ -1,356 +1,148 @@
-Return-Path: <linux-gpio+bounces-55-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-52-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76C1E7E9C48
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 13:40:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EDA9B7E9C20
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 13:30:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B6992809DF
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 12:40:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E0CD280A9D
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 12:30:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3E321CABC;
-	Mon, 13 Nov 2023 12:40:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259351D6A1;
+	Mon, 13 Nov 2023 12:30:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IHfX4N36"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Xl2jH5lA"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336D21CAAB
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 12:40:18 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73943171F;
-	Mon, 13 Nov 2023 04:40:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699879216; x=1731415216;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=UjuuT7vwu5HyOEeJ+9HscGkad4vAsx/2d+SgD8lgWTY=;
-  b=IHfX4N36qtQ92iiKgJWgpbj7N6d1tyqNrrxiEVqDCPVYo8hOVDSoV0r8
-   2eS4+RphgumBp6h3JTCmmCZ85TIMT8/1WS047mn8fZxOMiW4XkpS94qsG
-   0htaa2cr0iKk7ZlTYUzRe0HlcVUeL1lXrwvAzlOCXDoxyWssHoK1WgLJj
-   UIwfpNb7/TySbLGc/jbuwP4l3iZBv+NR0zzmN2La2MSR4fJryrto6gvif
-   tztpJmDGiyCFO1/GZLn3L7NjTDTcTmyMaNUy0ObGFb0M6bLbLMLMvzJdw
-   7Fa6fDQmNtu94M6S+5Jd5I2MQo+UwzRKlcJ/FTUCo6k+Gi9n1sgpGVD14
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10892"; a="375454571"
-X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
-   d="scan'208";a="375454571"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 04:39:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10892"; a="767903399"
-X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
-   d="scan'208";a="767903399"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Nov 2023 04:39:56 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 4EB607F1; Mon, 13 Nov 2023 14:31:49 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Raag Jadav <raag.jadav@intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v2 2/2] pinctrl: intel: Add a generic Intel pin control platform driver
-Date: Mon, 13 Nov 2023 14:28:48 +0200
-Message-ID: <20231113123147.4075203-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20231113123147.4075203-1-andriy.shevchenko@linux.intel.com>
-References: <20231113123147.4075203-1-andriy.shevchenko@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5A11DFFC
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 12:30:12 +0000 (UTC)
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FED210FB
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 04:30:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1699878593; x=1700483393; i=wahrenst@gmx.net;
+	bh=MW2n4FXrRXZnyvbiIrZVXP37uF5JKi4ImAP7Yo+hSCo=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=Xl2jH5lAZ8ls59vOcEySbj0EM3y85R5/fK0GMk9kvZOrSrGeaLRUjdSfprXJxxwF
+	 44owc230tsQapC9GaF6Ot75nIm+wt33JA9tcxy+FCDgY9oyht8QtIHu0s3v5eHpYs
+	 3NU8F2MdafRz5SYZhN/wlLDPyVWVRAbbjhytwKmKDrOGFD0IuGykmveem5XBroh9q
+	 kR3rQbBJZ05Yhbh0oYpEnEIup9IjsV2N9i4ZnaxK+td6zfc5tQi4IO48E3827hocZ
+	 01EmesChM3UIRideFo0mz7OJF6uSSwjNndz8K/uL1JBq+VtkfrcARXmm538lEcqxW
+	 tNsYEhGVil7ru8q8hA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.129] ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mz9Ux-1rFcyw2jkB-00wEwq; Mon, 13
+ Nov 2023 13:29:53 +0100
+Message-ID: <13e7e545-06bd-439f-9031-4ab5758f809f@gmx.net>
+Date: Mon, 13 Nov 2023 13:29:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: mxc: implement get_direction callback
+Content-Language: en-US
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de,
+ Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20231112192428.6832-1-wahrenst@gmx.net>
+ <20231113070439.GL3359458@pengutronix.de>
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <20231113070439.GL3359458@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/XjJGMvlC/tbs7FQyP8ySVuVR6AtHW8bi1l9ZXMorfl+YvHyBbX
+ Vz84U3iW241IyzxoR2Q17eI6wq6EvBvUznk2efNjHvHfj7Vp73MiCeSCBB7cqz13bYzhVs2
+ kqHN95Gjd+h+lNtBh5fOz/Zw25wf1IbuRNCuUwH77VyIH/jmJ7ppyW8GrxbpgEM9zbQuOwH
+ vXS6eOVC5UCk2UX5cRtUw==
+UI-OutboundReport: notjunk:1;M01:P0:ZwSRTAxJXA8=;6FQ+8iSx1eJa2IENi1gOpySQlz+
+ MU7BlEH6Fy84yohjS1TIIqIBW/+3+FcnmYnf7TTOBk7MF8yTgjBRJ4oh1XLeHmiTzjn4tuj+Z
+ UqHNlDwO6HGCmagyIZU3Xo2y3G1vECZphacDaBRQ87ubd6oIgqRn+WfkWTl9gVzdZWQDa4UzG
+ 2nnlcadmLhrySQFjacSYdwVQKn5NJTkVFZY1rewazGrNBqu8GycUO++Oh8elX/wvHX8tYtwr8
+ KM4zh9uKWTNCGoeR9Bc5eeREuVnSlwaBJQbezaGrnbEFvULlbgOZzfTZWBiSdT0mxLtgZ1fxE
+ PYi4VyaS7wzUcoRe5iP28rFgJJPzs+QCIOKF8G3vyHm0y3jh0VnjQkRoiX0njrK0sOynRbuhi
+ HKBk4TAlJe4nL+pY6AvxVV3cHUXIQzgaKGHZ8ExMx/0KqHjplQ0TnCBxpqGBzUTLljkJl9uZQ
+ fR7JontC4jza9ip1020+vvwx7U26RzVdPupEV7tcMuSFjQFjZJgcAdSHQ/4nLlo8JWeaveKFU
+ Mj58cGL61S4AItImY57FhsiGGc8dMDvEEs0HjXpmrsdbkOk5TTBX2lMKic6hZflIflg3YYrG6
+ 2kW8HxETMtjysP+vUuKrsuMARzQDKr5tpHAn3zbnrIVtDcdUsZ0rizUHty/uuq7f33o/6pR5B
+ sUNN6yvbKQLLZUac8/3IOPj17tTezSbH8y/ybtauPu5W8DLRTBc+iM5sQB7dnSQNCcbRx9vJb
+ vACPArpoUV4lpvERMqLB5xYcmKD+yXrP9YYYXfVj/skqnE3V7gGqeI35n48YTIKM3/2TSLSYO
+ 0/I7eoG7xh5buHq3RTaBTPMru91d3dv+LWiDQGgk36ZTT2rs+QKCV+RmmmrEe8OHX13NG6QQG
+ WBR3rOtX9t+mrCHFAY+WDTMuyELz1mVBfyr3mtw3BENtDajmz8PGAm0HQLL+ZqsW0vFIC1OXn
+ /Q9uRd318GXfHnnIhdBmJjLFwrA=
 
-New generations of Intel platforms will provide better description
-of the pin control devices in the ACPI tables. Hence, we may provide
-a generic pin control platform driver to cover all of them.
-Currently the following Intel SoCs / platforms require this to be
-functional:
-- Lunar Lake
+Hi Sascha,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/intel/Kconfig                 |  10 +
- drivers/pinctrl/intel/Makefile                |   1 +
- .../pinctrl/intel/pinctrl-intel-platform.c    | 225 ++++++++++++++++++
- 3 files changed, 236 insertions(+)
- create mode 100644 drivers/pinctrl/intel/pinctrl-intel-platform.c
+Am 13.11.23 um 08:04 schrieb Sascha Hauer:
+> Hi Stefan,
+>
+> On Sun, Nov 12, 2023 at 08:24:28PM +0100, Stefan Wahren wrote:
+>> gpiolib's gpiod_get_direction() function returns an erro if
+>> .get_direction callback is not defined.
+>>
+>> The patch implements the callback for IMX platform which is useful
+>> for debugging and also the kernel docs about struct gpio_chip
+>> recommends it.
+>>
+>> Inspired by drivers/gpio/gpio-mxs.c
+>>
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> ---
+>>   drivers/gpio/gpio-mxc.c | 13 +++++++++++++
+>>   1 file changed, 13 insertions(+)
+>>
+>> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+>> index 4cb455b2bdee..ad8a4c73d47b 100644
+>> --- a/drivers/gpio/gpio-mxc.c
+>> +++ b/drivers/gpio/gpio-mxc.c
+>> @@ -418,6 +418,18 @@ static void mxc_update_irq_chained_handler(struct =
+mxc_gpio_port *port, bool enab
+>>   	}
+>>   }
+>>
+>> +static int mxc_gpio_get_direction(struct gpio_chip *gc, unsigned int o=
+ffset)
+>> +{
+>> +	struct mxc_gpio_port *port =3D gpiochip_get_data(gc);
+>> +	u32 dir;
+>> +
+>> +	dir =3D readl(port->base + GPIO_GDIR);
+>> +	if (dir & BIT(offset))
+>> +		return GPIO_LINE_DIRECTION_OUT;
+>> +
+>> +	return GPIO_LINE_DIRECTION_IN;
+>> +}
+>> +
+>>   static int mxc_gpio_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device_node *np =3D pdev->dev.of_node;
+>> @@ -490,6 +502,7 @@ static int mxc_gpio_probe(struct platform_device *p=
+dev)
+>>   	port->gc.request =3D mxc_gpio_request;
+>>   	port->gc.free =3D mxc_gpio_free;
+>>   	port->gc.to_irq =3D mxc_gpio_to_irq;
+>> +	port->gc.get_direction =3D mxc_gpio_get_direction;
+> The driver passes port->base + GPIO_GDIR as *dirout argument to
+> bgpio_init(). This should result in the .get_direction hook already
+> being set to bgpio_get_dir() in the bgpio code. Doesn't this work as
+> expected?
+oh dear, i missed that. What a shame. Sorry, for the noise and thanks
+for pointing out.
 
-diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
-index d66f4f6932d8..8c50bae85bca 100644
---- a/drivers/pinctrl/intel/Kconfig
-+++ b/drivers/pinctrl/intel/Kconfig
-@@ -37,6 +37,16 @@ config PINCTRL_INTEL
- 	select GPIOLIB
- 	select GPIOLIB_IRQCHIP
- 
-+config PINCTRL_INTEL_PLATFORM
-+	tristate "Intel pinctrl and GPIO platform driver"
-+	depends on ACPI
-+	select PINCTRL_INTEL
-+	help
-+	  This pinctrl driver provides an interface that allows configuring
-+	  of Intel PCH pins and using them as GPIOs. Currently the following
-+	  Intel SoCs / platforms require this to be functional:
-+	  - Lunar Lake
-+
- config PINCTRL_ALDERLAKE
- 	tristate "Intel Alder Lake pinctrl and GPIO driver"
- 	select PINCTRL_INTEL
-diff --git a/drivers/pinctrl/intel/Makefile b/drivers/pinctrl/intel/Makefile
-index f6d30f2d973a..96c93ed4bd58 100644
---- a/drivers/pinctrl/intel/Makefile
-+++ b/drivers/pinctrl/intel/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_PINCTRL_TANGIER)		+= pinctrl-tangier.o
- obj-$(CONFIG_PINCTRL_MERRIFIELD)	+= pinctrl-merrifield.o
- obj-$(CONFIG_PINCTRL_MOOREFIELD)	+= pinctrl-moorefield.o
- obj-$(CONFIG_PINCTRL_INTEL)		+= pinctrl-intel.o
-+obj-$(CONFIG_PINCTRL_INTEL_PLATFORM)	+= pinctrl-intel-platform.o
- obj-$(CONFIG_PINCTRL_ALDERLAKE)		+= pinctrl-alderlake.o
- obj-$(CONFIG_PINCTRL_BROXTON)		+= pinctrl-broxton.o
- obj-$(CONFIG_PINCTRL_CANNONLAKE)	+= pinctrl-cannonlake.o
-diff --git a/drivers/pinctrl/intel/pinctrl-intel-platform.c b/drivers/pinctrl/intel/pinctrl-intel-platform.c
-new file mode 100644
-index 000000000000..4a19ab3b4ba7
---- /dev/null
-+++ b/drivers/pinctrl/intel/pinctrl-intel-platform.c
-@@ -0,0 +1,225 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel PCH pinctrl/GPIO driver
-+ *
-+ * Copyright (C) 2021-2023, Intel Corporation
-+ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-+ */
-+
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/property.h>
-+#include <linux/string_helpers.h>
-+
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-intel.h"
-+
-+struct intel_platform_pins {
-+	struct pinctrl_pin_desc *pins;
-+	size_t npins;
-+};
-+
-+static int intel_platform_pinctrl_prepare_pins(struct device *dev, size_t base,
-+					       const char *name, u32 size,
-+					       struct intel_platform_pins *pins)
-+{
-+	struct pinctrl_pin_desc *descs;
-+	char **pin_names;
-+	unsigned int i;
-+
-+	pin_names = devm_kasprintf_strarray(dev, name, size);
-+	if (IS_ERR(pin_names))
-+		return PTR_ERR(pin_names);
-+
-+	descs = devm_krealloc_array(dev, pins->pins, base + size, sizeof(*descs), GFP_KERNEL);
-+	if (!descs)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < size; i++) {
-+		unsigned int pin_number = base + i;
-+		char *pin_name = pin_names[i];
-+		struct pinctrl_pin_desc *desc;
-+
-+		/* Unify delimiter for pin name */
-+		strreplace(pin_name, '-', '_');
-+
-+		desc = &descs[pin_number];
-+		desc->number = pin_number;
-+		desc->name = pin_name;
-+	}
-+
-+	pins->pins = descs;
-+	pins->npins = base + size;
-+
-+	return 0;
-+}
-+
-+static int intel_platform_pinctrl_prepare_group(struct device *dev,
-+						struct fwnode_handle *child,
-+						struct intel_padgroup *gpp,
-+						struct intel_platform_pins *pins)
-+{
-+	size_t base = pins->npins;
-+	const char *name;
-+	u32 size;
-+	int ret;
-+
-+	ret = fwnode_property_read_string(child, "intc-gpio-group-name", &name);
-+	if (ret)
-+		return ret;
-+
-+	ret = fwnode_property_read_u32(child, "intc-gpio-pad-count", &size);
-+	if (ret)
-+		return ret;
-+
-+	ret = intel_platform_pinctrl_prepare_pins(dev, base, name, size, pins);
-+	if (ret)
-+		return ret;
-+
-+	gpp->base = base;
-+	gpp->size = size;
-+	gpp->gpio_base = INTEL_GPIO_BASE_MATCH;
-+
-+	return 0;
-+}
-+
-+static int intel_platform_pinctrl_prepare_community(struct device *dev,
-+						    struct intel_community *community,
-+						    struct intel_platform_pins *pins)
-+{
-+	struct fwnode_handle *child;
-+	struct intel_padgroup *gpps;
-+	unsigned int group;
-+	size_t ngpps;
-+	u32 offset;
-+	int ret;
-+
-+	ret = device_property_read_u32(dev, "intc-gpio-pad-ownership-offset", &offset);
-+	if (ret)
-+		return ret;
-+	community->padown_offset = offset;
-+
-+	ret = device_property_read_u32(dev, "intc-gpio-pad-configuration-lock-offset", &offset);
-+	if (ret)
-+		return ret;
-+	community->padcfglock_offset = offset;
-+
-+	ret = device_property_read_u32(dev, "intc-gpio-host-software-pad-ownership-offset", &offset);
-+	if (ret)
-+		return ret;
-+	community->hostown_offset = offset;
-+
-+	ret = device_property_read_u32(dev, "intc-gpio-gpi-interrupt-status-offset", &offset);
-+	if (ret)
-+		return ret;
-+	community->is_offset = offset;
-+
-+	ret = device_property_read_u32(dev, "intc-gpio-gpi-interrupt-enable-offset", &offset);
-+	if (ret)
-+		return ret;
-+	community->ie_offset = offset;
-+
-+	ngpps = device_get_child_node_count(dev);
-+	if (!ngpps)
-+		return -ENODEV;
-+
-+	gpps = devm_kcalloc(dev, ngpps, sizeof(*gpps), GFP_KERNEL);
-+	if (!gpps)
-+		return -ENOMEM;
-+
-+	group = 0;
-+	device_for_each_child_node(dev, child) {
-+		struct intel_padgroup *gpp = &gpps[group];
-+
-+		gpp->reg_num = group;
-+
-+		ret = intel_platform_pinctrl_prepare_group(dev, child, gpp, pins);
-+		if (ret)
-+			return ret;
-+
-+		group++;
-+	}
-+
-+	community->ngpps = ngpps;
-+	community->gpps = gpps;
-+
-+	return 0;
-+}
-+
-+static int intel_platform_pinctrl_prepare_soc_data(struct device *dev,
-+						   struct intel_pinctrl_soc_data *data)
-+{
-+	struct intel_platform_pins pins = {};
-+	struct intel_community *communities;
-+	size_t ncommunities;
-+	unsigned int i;
-+	int ret;
-+
-+	/* Version 1.0 of the specification assumes only a single community per device node */
-+	ncommunities = 1,
-+	communities = devm_kcalloc(dev, ncommunities, sizeof(*communities), GFP_KERNEL);
-+	if (!communities)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < ncommunities; i++) {
-+		struct intel_community *community = &communities[i];
-+
-+		community->barno = i;
-+		community->pin_base = pins.npins;
-+
-+		ret = intel_platform_pinctrl_prepare_community(dev, community, &pins);
-+		if (ret)
-+			return ret;
-+
-+		community->npins = pins.npins - community->pin_base;
-+	}
-+
-+	data->ncommunities = ncommunities;
-+	data->communities = communities;
-+
-+	data->npins = pins.npins;
-+	data->pins = pins.pins;
-+
-+	return 0;
-+}
-+
-+static int intel_platform_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct intel_pinctrl_soc_data *data;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	ret = intel_platform_pinctrl_prepare_soc_data(dev, data);
-+	if (ret)
-+		return ret;
-+
-+	return intel_pinctrl_probe(pdev, data);
-+}
-+
-+static const struct acpi_device_id intel_platform_pinctrl_acpi_match[] = {
-+	{ "INTC105F" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, intel_platform_pinctrl_acpi_match);
-+
-+static struct platform_driver intel_platform_pinctrl_driver = {
-+	.probe = intel_platform_pinctrl_probe,
-+	.driver = {
-+		.name = "intel-pinctrl",
-+		.acpi_match_table = intel_platform_pinctrl_acpi_match,
-+		.pm = pm_sleep_ptr(&intel_pinctrl_pm_ops),
-+	},
-+};
-+module_platform_driver(intel_platform_pinctrl_driver);
-+
-+MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel PCH pinctrl/GPIO driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(PINCTRL_INTEL);
--- 
-2.43.0.rc1.1.gbec44491f096
+Regards
+Stefan
+>
+> Sascha
+>
 
 
