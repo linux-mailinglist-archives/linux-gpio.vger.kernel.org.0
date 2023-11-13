@@ -1,127 +1,133 @@
-Return-Path: <linux-gpio+bounces-41-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-42-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C7E77E96D6
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 08:05:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC24A7E99A0
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 11:00:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81B66280D3A
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 07:04:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B0171F20F0D
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 10:00:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65969F9F8;
-	Mon, 13 Nov 2023 07:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9A941C291;
+	Mon, 13 Nov 2023 10:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gxt6jNL1"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF5B468F
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 07:04:53 +0000 (UTC)
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 550BB10EB
-	for <linux-gpio@vger.kernel.org>; Sun, 12 Nov 2023 23:04:51 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1r2Qzx-0001wn-TD; Mon, 13 Nov 2023 08:04:41 +0100
-Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <sha@pengutronix.de>)
-	id 1r2Qzv-008gAp-J9; Mon, 13 Nov 2023 08:04:39 +0100
-Received: from sha by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
-	(envelope-from <sha@pengutronix.de>)
-	id 1r2Qzv-001lKu-GQ; Mon, 13 Nov 2023 08:04:39 +0100
-Date: Mon, 13 Nov 2023 08:04:39 +0100
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
-	linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: mxc: implement get_direction callback
-Message-ID: <20231113070439.GL3359458@pengutronix.de>
-References: <20231112192428.6832-1-wahrenst@gmx.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074FF1C285;
+	Mon, 13 Nov 2023 10:00:31 +0000 (UTC)
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8473010D;
+	Mon, 13 Nov 2023 02:00:27 -0800 (PST)
+Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-66d0ceba445so22074936d6.0;
+        Mon, 13 Nov 2023 02:00:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699869626; x=1700474426; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JbOR8jc4vESBCIxoa+hxCKP6qo+nQDlXSDfPg0qKWS8=;
+        b=Gxt6jNL11g8ADqbbtUUu7sfCA5TCxef+Oi9O6UCpUMz2Hl9UAcCsrVGQSAJY0rchSa
+         2fWXVq7AXmWx9ZEJFNMQFvJIZDkZIXeHv3rXTKLTInXimIL/ARnozwGG5lHaBnIYHq84
+         T+nbbCmlUVIzSwHWnuogJ6NMqKpUOmuI7tlR1e4u+1y/C9grNtO1dK5DZHv0+RK28hi/
+         RBU4Pd6DCFzy0+1+KS+0smnNeLou21/Q8HtbSTb8Mj8pOMM+xbjo3DeBsignlYjtGXvp
+         OtNJiD4Po/PezVaW5KiouZMhCgMGPbaaOxgGUf2ydmM7atI4j9IyQ76HgLPRe0c3dX+g
+         4wXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699869626; x=1700474426;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JbOR8jc4vESBCIxoa+hxCKP6qo+nQDlXSDfPg0qKWS8=;
+        b=ElWU8ncAAVEDWaTjvNLg4RUgiS5h6Ii4YjZrG6Fp0TZA6A7rlO0+9c7LCWHQ58dXU8
+         8aPKc5TmZgdo/2ijwqylqewCBXF0IvLWEizVWEXR/HaEDefp2y/HFjWOzCZ9Hzi9EGl6
+         dcOJ1yy5tF7xNafy7b4GKJ4GSle1SezSbSfXV9uq4SK+p8tNak1ot4oiaxumVobG8IFc
+         6VUqBknm52oIehzckjwpEogdj29+Wl0WUQH9tnGQiuWCiZQI1k7okfN8XMdq+BWFD+Fe
+         eeTDZCEWofJ83zSGwU7U0qY/eEtE62BAXsCw4ipi1iLWqwKHaBrpCJ4uds2yvq3hl3xf
+         JcZw==
+X-Gm-Message-State: AOJu0YxuqSIsvehFjH2URJaMUnmivfdqyzd4fIxT8nYTH7/rk1hhChTU
+	CnRgg+Z0zB9QUrJasWU8NFjMsuXzsm0L7XKc7jM=
+X-Google-Smtp-Source: AGHT+IGCUr7PujFC+poPa2QrZRvWL4HOk1bJVQMa23HsF2MY33M5q50/7KY3Uea2911BZ50MrpHn+FMZq5R37QecRrw=
+X-Received: by 2002:ad4:45b4:0:b0:658:1eec:408a with SMTP id
+ y20-20020ad445b4000000b006581eec408amr4664228qvu.40.1699869626386; Mon, 13
+ Nov 2023 02:00:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231112192428.6832-1-wahrenst@gmx.net>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+ <20230605-ep93xx-v3-14-3d63a5f1103e@maquefel.me> <ZLq0Z0QgBdCoDpV+@smile.fi.intel.com>
+ <80ed91bb971516638fa1793d648939815eba7630.camel@gmail.com>
+In-Reply-To: <80ed91bb971516638fa1793d648939815eba7630.camel@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 13 Nov 2023 11:59:49 +0200
+Message-ID: <CAHp75VeYHscM-r94kTrpH44W=OGVq+qoNNQZoVrR5_n-_K_Xsw@mail.gmail.com>
+Subject: Re: [PATCH v3 14/42] power: reset: Add a driver for the ep93xx reset
+To: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, nikita.shubin@maquefel.me, 
+	Hartley Sweeten <hsweeten@visionengravers.com>, Lennert Buytenhek <kernel@wantstofly.org>, 
+	Russell King <linux@armlinux.org.uk>, Lukasz Majewski <lukma@denx.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Sebastian Reichel <sre@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Vinod Koul <vkoul@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, soc@kernel.org, 
+	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Michael Peters <mpeters@embeddedts.com>, Kris Bahnsen <kris@embeddedts.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, netdev@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
+	alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Stefan,
+On Sat, Nov 11, 2023 at 8:18=E2=80=AFPM Alexander Sverdlin
+<alexander.sverdlin@gmail.com> wrote:
+> On Fri, 2023-07-21 at 19:37 +0300, Andy Shevchenko wrote:
 
-On Sun, Nov 12, 2023 at 08:24:28PM +0100, Stefan Wahren wrote:
-> gpiolib's gpiod_get_direction() function returns an erro if
-> .get_direction callback is not defined.
-> 
-> The patch implements the callback for IMX platform which is useful
-> for debugging and also the kernel docs about struct gpio_chip
-> recommends it.
-> 
-> Inspired by drivers/gpio/gpio-mxs.c
-> 
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> ---
->  drivers/gpio/gpio-mxc.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index 4cb455b2bdee..ad8a4c73d47b 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -418,6 +418,18 @@ static void mxc_update_irq_chained_handler(struct mxc_gpio_port *port, bool enab
->  	}
->  }
-> 
-> +static int mxc_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct mxc_gpio_port *port = gpiochip_get_data(gc);
-> +	u32 dir;
-> +
-> +	dir = readl(port->base + GPIO_GDIR);
-> +	if (dir & BIT(offset))
-> +		return GPIO_LINE_DIRECTION_OUT;
-> +
-> +	return GPIO_LINE_DIRECTION_IN;
-> +}
-> +
->  static int mxc_gpio_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np = pdev->dev.of_node;
-> @@ -490,6 +502,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
->  	port->gc.request = mxc_gpio_request;
->  	port->gc.free = mxc_gpio_free;
->  	port->gc.to_irq = mxc_gpio_to_irq;
-> +	port->gc.get_direction = mxc_gpio_get_direction;
+...
 
-The driver passes port->base + GPIO_GDIR as *dirout argument to
-bgpio_init(). This should result in the .get_direction hook already
-being set to bgpio_get_dir() in the bgpio code. Doesn't this work as
-expected?
+> > > +       mdelay(1000);
+> >
+> > Atomic?! Such a huge delay must be explained, esp. why it's atomic.
+>
+> atomic or not, SoC is supposed to reset itself here.
+> However there is an errata [1] and the SoC can lockup instead.
 
-Sascha
+Good, and what I'm saying is that this piece of code must have a
+comment explaining this.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> So even pr_emerg() makes sense to me.
+
+This is irrelevant to the comment.
+
+> > > +       pr_emerg("Unable to restart system\n");
+> > > +       return NOTIFY_DONE;
+>
+> [1] http://web.archive.org/web/20161130230727/http://www.cirrus.com/en/pu=
+bs/appNote/AN258REV2.pdf
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
