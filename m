@@ -1,134 +1,118 @@
-Return-Path: <linux-gpio+bounces-39-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-40-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05D377E923F
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Nov 2023 20:25:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 975D37E9512
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 03:34:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 39BBDB2080B
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Nov 2023 19:25:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 508A12811B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 02:34:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D62BF171AB;
-	Sun, 12 Nov 2023 19:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 747CF1FAE;
+	Mon, 13 Nov 2023 02:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Bc0Yp2uc"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JuygbspN"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1647A14294
-	for <linux-gpio@vger.kernel.org>; Sun, 12 Nov 2023 19:25:04 +0000 (UTC)
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB0C1BEC
-	for <linux-gpio@vger.kernel.org>; Sun, 12 Nov 2023 11:25:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1699817087; x=1700421887; i=wahrenst@gmx.net;
-	bh=bMwh/GFKRT3KTYXS4ogxMoKSBce3E3EizqgjsmyVGNo=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=Bc0Yp2ucDMCvu3UVX4a9kVIhMigs9A8Qk5hEu2O4Wyuthy73WSoEDRVF25ZjhXzZ
-	 VY2ofeACT63ln+OncVfMTlWWlL/3mu5kNswyS+rwflSad1PYzTVsyj/v7KYF2b1dn
-	 zShyYJjxJm3x/elA9WNQU2Bu2T4pi7xARsFEWOLcO9xkUrpy2fiCR0uNtGJLjTncc
-	 LCV2rYCEMif5w0QFWRco8J0yF+e7VVTE/s5N4iR7EWUP3m/b7XhJDRkpRfuufIaxl
-	 16QCU2e130vkTsXC/FB8aq3/QQEVgNeslVTE7OhqDbE9/j+cJozEOIZNYz+LuIRwM
-	 1QWrK2/qwfv/PnpmOg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MrhUE-1rh4WZ1SYG-00nlWV; Sun, 12
- Nov 2023 20:24:47 +0100
-From: Stefan Wahren <wahrenst@gmx.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D50848A
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 02:34:37 +0000 (UTC)
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD124111
+	for <linux-gpio@vger.kernel.org>; Sun, 12 Nov 2023 18:34:36 -0800 (PST)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-6b7f0170d7bso3970826b3a.2
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Nov 2023 18:34:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1699842876; x=1700447676; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3x9HMy2KOCVDwBY1aKyWkU7yvsdzFHPBbEJCciD5yLQ=;
+        b=JuygbspNqMr3rkxFBnw8mb79whkOEmqHm6n3kiFY3P2wDBeVpbmJ7Sx1JfGb3fpKkh
+         Ed4CCOWtlMpKLsel6zhInjMuZgbmxT+Pq+i6gAi/tk11rgSZdfmAT6uGH9NcNxOt43dD
+         VgDB6P068mrPmOjMRE96/YWzeRueurz7TNCb9TnSW9kZoktZrtdDx1lsHC/UdllAydP+
+         AP8i0Dl3xeawdsxRiabAF9P8imei6lWig9EuXYR+HUDu7g77YPCUX1u1xKqnN5fphfAZ
+         xMu0W29Drz3xvDkTWlnZgXsrFFJ6v60OQLIc1IV+oa3gUhk0W4DwWlzjvyTqzQNUvQ+/
+         IRxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699842876; x=1700447676;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3x9HMy2KOCVDwBY1aKyWkU7yvsdzFHPBbEJCciD5yLQ=;
+        b=Vp8n39+wXjug6oLTExbMfBDDEeHRfxlDpCDm7kNJGs/U72azzIhpN+L0aSj2h88/ZU
+         vO1gath45WS5FvS4cxpe1mvnIMqGxJWBLlsXYOGb5vtuDdcoWqSDUhYmMW/xZRT+ZOhF
+         ORE85k0hl/eBokeOGMkMpnRhtTfW+NBsoDh4IPF/Mn1N6HXX9zTavdvcRHOU0Mn76MH6
+         GTl0VFUpKzY6ZHmnFLTUhZhVSmNDCt7vjAm88rGxC5dG9CFOn2E1WX4G1PArBwdB+U+V
+         yYFZnnwcL4YWKWW+37vB+Tnv5jfpSpnDod4IrdBATpJ3H0P4IL3Ib9jRbbv/01ef6afg
+         CvxA==
+X-Gm-Message-State: AOJu0YxOmU9RffplaR0+eT8TQEi53iX1dBxk3ZslDBkcamlDFPjvq8i0
+	8ZLrz7iytLz+MwHFZNgYqhQmntcUtzTdglB/rnXdoQ==
+X-Google-Smtp-Source: AGHT+IEnZh+aR0sLWPKOFMs80myLNe8uYYzars/PhN40NDuSuCYLfhLw30h/2jkP74tE/0IvSzLuEA==
+X-Received: by 2002:a05:6a00:800c:b0:6c3:5f49:6da5 with SMTP id eg12-20020a056a00800c00b006c35f496da5mr7110474pfb.34.1699842876238;
+        Sun, 12 Nov 2023 18:34:36 -0800 (PST)
+Received: from sw06.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id hy12-20020a056a006a0c00b0068fb8080939sm3015184pfb.65.2023.11.12.18.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Nov 2023 18:34:35 -0800 (PST)
+From: Samuel Holland <samuel.holland@sifive.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	kernel@pengutronix.de,
-	Fabio Estevam <festevam@gmail.com>
-Cc: linux-imx@nxp.com,
-	linux-arm-kernel@lists.infradead.org,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Andrei Coardos <aboutphysycs@gmail.com>,
+	Alexandru Ardelean <alex@shruggie.ro>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
 	linux-gpio@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH] gpio: mxc: implement get_direction callback
-Date: Sun, 12 Nov 2023 20:24:28 +0100
-Message-Id: <20231112192428.6832-1-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v2] gpio: sifive: remove unneeded call to platform_set_drvdata()
+Date: Sun, 12 Nov 2023 18:34:32 -0800
+Message-ID: <20231113023434.1186043-1-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KzRnWXJMJ12GpvyVuE2dGb4oXfJEh130Wf+tZWSeMo8ZDj7upbR
- P3kd3ii/ZjhU0PJ3MJkQW5SfJm7rv4NpDTOtXxv7GEw7b6V6kQLCruDfyi3bZLgBROUoCyA
- pc00o+gJApEYi29/lua3cBVQTnM01eDUZlAstT5J+NU6JNF3ynVnzENHXQEhDGhPK17hOcO
- h2C9QSNeC3hBhAb6tQCtw==
-UI-OutboundReport: notjunk:1;M01:P0:Vcvolnz6xUc=;4cthngjXRuFqjp6J40v9u1TZjvp
- Uc9QtDGZzwQ347TEt3R4VCKPrL13EJbFRbh0YPoaA3c1ww4ujntoj2TkiSeIjqXDJcTSVgRAL
- B57pYP6y4FljNYyeS2ZfoffwYPSypUfcCxci87d1UDw5iV+EGL3n7+44k4lBxLXXy12ZrcRMV
- XxlLgqHAROe2LOFfYByc+7JO6OeSwwCb28zWUOvzrov/s9TL7DvzmcvVr+8AQ8pUWs18+lqoB
- wk8SmmKezzo+kvSBk33chK1bm+3m5rUWpp/YY0A9saWnaB1T9aLE9/uq9T4xdTftYjTtijxHt
- n0MKf/YKyoKI8fS2Gm3GtwwFJBVqKVWz9u9YqwqfzTqCf6/AXZGe3pcJB6eKBc/3y3y91yqTh
- 4IFWUx8qs65ECIar7Dxl57+HW8oKLBIXmM7FFAEctu8E9VdGPDkSLw24NeTv0fi8y5i2v0aoG
- L2fu2xFp324zNgl5xl6wauyY3hsUMOBoQ8nihARVKhdzt9pNOqdZwB5/v4iMq1YwdwLTVpXxk
- izNqVaWk5tESxagAIJbatyBdq3dpZkYHqJ3fJIQXbIM5FEj0OiOIKyvb1tzTOi3b+8txIefyt
- QnCsB0hfHipmOkIYGb9HJ6b/4qJ8EwaII7b/JzwSOj3zJ3PGiBK3AX4i2qlAWifpLFSOQxE0q
- FfOhC/URwg1c1Y2Hl4XiGqpxugquvUIfllZaFpZ4GGmVUHLWWft07FQOvUS5kCJMS9ict8qEx
- Mu10KuOcRatX8dTXSg+BaD8E9l3XXBTzEKWWEzeu49GmG1P2pvJcgh6+NkWbzdNkzR+3eyMzw
- 9STcLwHfaVRa0HA3YvZn3HlIzMmxAa/j6sfmgNsTmlESbe9Rvqdd7q+RYkPMTWvoiVS5NqIkX
- A2m00XAxEiU2lvpbzDY8Fsgx/r0Jx28cS5F0MuzqKmCt5wDDjYZFQkFF62auD4FA85hQB2qCT
- AJOwqQYStQR45REJ8r0FidTANNc=
+Content-Transfer-Encoding: 8bit
 
-gpiolib's gpiod_get_direction() function returns an erro if
-.get_direction callback is not defined.
+From: Andrei Coardos <aboutphysycs@gmail.com>
 
-The patch implements the callback for IMX platform which is useful
-for debugging and also the kernel docs about struct gpio_chip
-recommends it.
+This function call was found to be unnecessary as there is no equivalent
+platform_get_drvdata() call to access the private data of the driver. Also,
+the private data is defined in this driver, so there is no risk of it being
+accessed outside of this driver file.
 
-Inspired by drivers/gpio/gpio-mxs.c
+Reviewed-by: Alexandru Ardelean <alex@shruggie.ro>
+Signed-off-by: Andrei Coardos <aboutphysycs@gmail.com>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+---
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/gpio/gpio-mxc.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Changes in v2:
+ - Rebase on v6.7-rc1
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 4cb455b2bdee..ad8a4c73d47b 100644
-=2D-- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -418,6 +418,18 @@ static void mxc_update_irq_chained_handler(struct mxc=
-_gpio_port *port, bool enab
- 	}
+ drivers/gpio/gpio-sifive.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index 8decd9b5d229..067c8edb62e2 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -250,7 +250,6 @@ static int sifive_gpio_probe(struct platform_device *pdev)
+ 	girq->handler = handle_bad_irq;
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 
+-	platform_set_drvdata(pdev, chip);
+ 	return gpiochip_add_data(&chip->gc, chip);
  }
-
-+static int mxc_gpio_get_direction(struct gpio_chip *gc, unsigned int offs=
-et)
-+{
-+	struct mxc_gpio_port *port =3D gpiochip_get_data(gc);
-+	u32 dir;
-+
-+	dir =3D readl(port->base + GPIO_GDIR);
-+	if (dir & BIT(offset))
-+		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
-+}
-+
- static int mxc_gpio_probe(struct platform_device *pdev)
- {
- 	struct device_node *np =3D pdev->dev.of_node;
-@@ -490,6 +502,7 @@ static int mxc_gpio_probe(struct platform_device *pdev=
-)
- 	port->gc.request =3D mxc_gpio_request;
- 	port->gc.free =3D mxc_gpio_free;
- 	port->gc.to_irq =3D mxc_gpio_to_irq;
-+	port->gc.get_direction =3D mxc_gpio_get_direction;
- 	port->gc.base =3D (pdev->id < 0) ? of_alias_get_id(np, "gpio") * 32 :
- 					     pdev->id * 32;
-
-=2D-
-2.34.1
+ 
+-- 
+2.42.0
 
 
