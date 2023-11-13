@@ -1,148 +1,158 @@
-Return-Path: <linux-gpio+bounces-52-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-56-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDA9B7E9C20
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 13:30:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04AEF7E9C73
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 13:53:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E0CD280A9D
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 12:30:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E648B1C2089B
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 12:53:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259351D6A1;
-	Mon, 13 Nov 2023 12:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C300E1D6A4;
+	Mon, 13 Nov 2023 12:53:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Xl2jH5lA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LzcBtBfr"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5A11DFFC
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 12:30:12 +0000 (UTC)
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FED210FB
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 04:30:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1699878593; x=1700483393; i=wahrenst@gmx.net;
-	bh=MW2n4FXrRXZnyvbiIrZVXP37uF5JKi4ImAP7Yo+hSCo=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=Xl2jH5lAZ8ls59vOcEySbj0EM3y85R5/fK0GMk9kvZOrSrGeaLRUjdSfprXJxxwF
-	 44owc230tsQapC9GaF6Ot75nIm+wt33JA9tcxy+FCDgY9oyht8QtIHu0s3v5eHpYs
-	 3NU8F2MdafRz5SYZhN/wlLDPyVWVRAbbjhytwKmKDrOGFD0IuGykmveem5XBroh9q
-	 kR3rQbBJZ05Yhbh0oYpEnEIup9IjsV2N9i4ZnaxK+td6zfc5tQi4IO48E3827hocZ
-	 01EmesChM3UIRideFo0mz7OJF6uSSwjNndz8K/uL1JBq+VtkfrcARXmm538lEcqxW
-	 tNsYEhGVil7ru8q8hA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.129] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mz9Ux-1rFcyw2jkB-00wEwq; Mon, 13
- Nov 2023 13:29:53 +0100
-Message-ID: <13e7e545-06bd-439f-9031-4ab5758f809f@gmx.net>
-Date: Mon, 13 Nov 2023 13:29:52 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BC61D694
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 12:53:38 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A662D7E;
+	Mon, 13 Nov 2023 04:53:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699880018; x=1731416018;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gBQ3rqlQpRh7qgsxRECw0OU/rnWQCddI4JFcR8EXNRU=;
+  b=LzcBtBfrPF6W6GsalUYBYl1Adzbr/EkMlY+xqO6Pi4eaTanVrDVwSTh6
+   oGNcogRCekk5l1H0gvU51iZshV9dSncT28JYcY0e1xjNRXJXxE6qN1IFM
+   k45hJT9iSo5Ke2tqp3XHLVirKGzhdQj3JzKCmjS5nPj0ICKt0fwLy6Fcb
+   B/oSog18GfnD1gbiacVJBrSqAm+mp8AJbF/QPRDX46CSK3tFGGBoS1NJC
+   +jscobfOiS4zcYFnQoqUwg1gZeOabTVLuAb2e3SeEhK+UbgCxCM5YgWlF
+   8y1TTG23O2/vuL5Zcyoc1t+f/Z12j3Gf//FBT3sW/tedJLnChWgtwuQDy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10892"; a="3513668"
+X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
+   d="scan'208";a="3513668"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2023 04:53:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10892"; a="757793492"
+X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
+   d="scan'208";a="757793492"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 13 Nov 2023 04:53:35 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 3FA3664A; Mon, 13 Nov 2023 14:53:34 +0200 (EET)
+Date: Mon, 13 Nov 2023 14:53:34 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 2/3] pinctrl: intel: Add a generic Intel pin control
+ platform driver
+Message-ID: <20231113125334.GQ17433@black.fi.intel.com>
+References: <20231030141034.3241674-1-andriy.shevchenko@linux.intel.com>
+ <20231030141034.3241674-3-andriy.shevchenko@linux.intel.com>
+ <20231103055738.GO17433@black.fi.intel.com>
+ <ZVISwHwoLpy3nGDT@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: mxc: implement get_direction callback
-Content-Language: en-US
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de,
- Fabio Estevam <festevam@gmail.com>, linux-imx@nxp.com,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-References: <20231112192428.6832-1-wahrenst@gmx.net>
- <20231113070439.GL3359458@pengutronix.de>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <20231113070439.GL3359458@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/XjJGMvlC/tbs7FQyP8ySVuVR6AtHW8bi1l9ZXMorfl+YvHyBbX
- Vz84U3iW241IyzxoR2Q17eI6wq6EvBvUznk2efNjHvHfj7Vp73MiCeSCBB7cqz13bYzhVs2
- kqHN95Gjd+h+lNtBh5fOz/Zw25wf1IbuRNCuUwH77VyIH/jmJ7ppyW8GrxbpgEM9zbQuOwH
- vXS6eOVC5UCk2UX5cRtUw==
-UI-OutboundReport: notjunk:1;M01:P0:ZwSRTAxJXA8=;6FQ+8iSx1eJa2IENi1gOpySQlz+
- MU7BlEH6Fy84yohjS1TIIqIBW/+3+FcnmYnf7TTOBk7MF8yTgjBRJ4oh1XLeHmiTzjn4tuj+Z
- UqHNlDwO6HGCmagyIZU3Xo2y3G1vECZphacDaBRQ87ubd6oIgqRn+WfkWTl9gVzdZWQDa4UzG
- 2nnlcadmLhrySQFjacSYdwVQKn5NJTkVFZY1rewazGrNBqu8GycUO++Oh8elX/wvHX8tYtwr8
- KM4zh9uKWTNCGoeR9Bc5eeREuVnSlwaBJQbezaGrnbEFvULlbgOZzfTZWBiSdT0mxLtgZ1fxE
- PYi4VyaS7wzUcoRe5iP28rFgJJPzs+QCIOKF8G3vyHm0y3jh0VnjQkRoiX0njrK0sOynRbuhi
- HKBk4TAlJe4nL+pY6AvxVV3cHUXIQzgaKGHZ8ExMx/0KqHjplQ0TnCBxpqGBzUTLljkJl9uZQ
- fR7JontC4jza9ip1020+vvwx7U26RzVdPupEV7tcMuSFjQFjZJgcAdSHQ/4nLlo8JWeaveKFU
- Mj58cGL61S4AItImY57FhsiGGc8dMDvEEs0HjXpmrsdbkOk5TTBX2lMKic6hZflIflg3YYrG6
- 2kW8HxETMtjysP+vUuKrsuMARzQDKr5tpHAn3zbnrIVtDcdUsZ0rizUHty/uuq7f33o/6pR5B
- sUNN6yvbKQLLZUac8/3IOPj17tTezSbH8y/ybtauPu5W8DLRTBc+iM5sQB7dnSQNCcbRx9vJb
- vACPArpoUV4lpvERMqLB5xYcmKD+yXrP9YYYXfVj/skqnE3V7gGqeI35n48YTIKM3/2TSLSYO
- 0/I7eoG7xh5buHq3RTaBTPMru91d3dv+LWiDQGgk36ZTT2rs+QKCV+RmmmrEe8OHX13NG6QQG
- WBR3rOtX9t+mrCHFAY+WDTMuyELz1mVBfyr3mtw3BENtDajmz8PGAm0HQLL+ZqsW0vFIC1OXn
- /Q9uRd318GXfHnnIhdBmJjLFwrA=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZVISwHwoLpy3nGDT@smile.fi.intel.com>
 
-Hi Sascha,
+On Mon, Nov 13, 2023 at 02:12:48PM +0200, Andy Shevchenko wrote:
+> On Fri, Nov 03, 2023 at 07:57:38AM +0200, Mika Westerberg wrote:
+> > On Mon, Oct 30, 2023 at 04:10:33PM +0200, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > +config PINCTRL_INTEL_PLATFORM
+> > > +	tristate "Intel pinctrl and GPIO platform driver"
+> > > +	depends on ACPI
+> > > +	select PINCTRL_INTEL
+> > > +	help
+> > > +	  This pinctrl driver provides an interface that allows configuring
+> > > +	  of Intel PCH pins and using them as GPIOs.
+> > 
+> > Add here some description that explains why this needs to be enabled,
+> > for example for Lunar Lake. Now it is all too generic for distro folks
+> > to understand if this is needed or not.
+> 
+> OK!
+> 
+> ...
+> 
+> > > + * Copyright (C) 2021-2023, Intel Corporation
+> > 
+> > That's 2023
+> 
+> As-is it is still valid and reflects the history.
+> 
+> ...
+> 
+> > > +	ngpps = device_get_child_node_count(dev);
+> > > +	if (ngpps == 0)
+> > 
+> > if (!nggps)
+> 
+> 0 is a plain number here (as count) and explicit comparison makes sense.
+> But I'm okay with another form.
+> 
+> 
+> > > +		return -ENODEV;
+> 
+> ...
+> 
+> > > +	ncommunities = 1,
+> > 
+> > Why this is 1? Can't we have more communities?
+> 
+> As for now (version 1.0 of the specification) it's assumed that it's one
+> community per device node in the ACPI, so I would leave this as is (we have
+> also drivers with single community per device node, hence this is kinda
+> pattern. Should I add a comment?
+> 
 
-Am 13.11.23 um 08:04 schrieb Sascha Hauer:
-> Hi Stefan,
->
-> On Sun, Nov 12, 2023 at 08:24:28PM +0100, Stefan Wahren wrote:
->> gpiolib's gpiod_get_direction() function returns an erro if
->> .get_direction callback is not defined.
->>
->> The patch implements the callback for IMX platform which is useful
->> for debugging and also the kernel docs about struct gpio_chip
->> recommends it.
->>
->> Inspired by drivers/gpio/gpio-mxs.c
->>
->> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
->> ---
->>   drivers/gpio/gpio-mxc.c | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
->> index 4cb455b2bdee..ad8a4c73d47b 100644
->> --- a/drivers/gpio/gpio-mxc.c
->> +++ b/drivers/gpio/gpio-mxc.c
->> @@ -418,6 +418,18 @@ static void mxc_update_irq_chained_handler(struct =
-mxc_gpio_port *port, bool enab
->>   	}
->>   }
->>
->> +static int mxc_gpio_get_direction(struct gpio_chip *gc, unsigned int o=
-ffset)
->> +{
->> +	struct mxc_gpio_port *port =3D gpiochip_get_data(gc);
->> +	u32 dir;
->> +
->> +	dir =3D readl(port->base + GPIO_GDIR);
->> +	if (dir & BIT(offset))
->> +		return GPIO_LINE_DIRECTION_OUT;
->> +
->> +	return GPIO_LINE_DIRECTION_IN;
->> +}
->> +
->>   static int mxc_gpio_probe(struct platform_device *pdev)
->>   {
->>   	struct device_node *np =3D pdev->dev.of_node;
->> @@ -490,6 +502,7 @@ static int mxc_gpio_probe(struct platform_device *p=
-dev)
->>   	port->gc.request =3D mxc_gpio_request;
->>   	port->gc.free =3D mxc_gpio_free;
->>   	port->gc.to_irq =3D mxc_gpio_to_irq;
->> +	port->gc.get_direction =3D mxc_gpio_get_direction;
-> The driver passes port->base + GPIO_GDIR as *dirout argument to
-> bgpio_init(). This should result in the .get_direction hook already
-> being set to bgpio_get_dir() in the bgpio code. Doesn't this work as
-> expected?
-oh dear, i missed that. What a shame. Sorry, for the noise and thanks
-for pointing out.
+Yes, I think it warrants a comment.
 
-Regards
-Stefan
->
-> Sascha
->
-
+> ...
+> 
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct intel_pinctrl_soc_data *data;
+> > 
+> > 
+> > Change the ordering of the above:
+> > 
+> > 	struct intel_pinctrl_soc_data *data;
+> > 	struct device *dev = &pdev->dev;
+> 
+> Sure.
+> 
+> ...
+> 
+> > > +static const struct acpi_device_id intel_platform_pinctrl_acpi_match[] = {
+> > > +	{ }
+> > 
+> > And add the _CID here in this patch as I commented in the last patch.
+> 
+> OK! I'll squash the next patch into this one.
+> 
+> > > +};
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
 
