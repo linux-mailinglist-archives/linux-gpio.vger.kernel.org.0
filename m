@@ -1,112 +1,99 @@
-Return-Path: <linux-gpio+bounces-69-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-70-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3E687E9E1E
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 15:06:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90D947E9E44
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 15:12:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B3D8280E15
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 14:06:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A0B4280DBB
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 14:12:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 518AC20B36;
-	Mon, 13 Nov 2023 14:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEDEC210E8;
+	Mon, 13 Nov 2023 14:11:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kp1NHbLM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dPhazqou"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E6120B0B
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 14:06:48 +0000 (UTC)
-Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4F8D56
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 06:06:47 -0800 (PST)
-Received: by mail-oi1-x22f.google.com with SMTP id 5614622812f47-3b6ce6fac81so1782077b6e.1
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 06:06:47 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B613208DC
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 14:11:56 +0000 (UTC)
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A40D56
+	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 06:11:55 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-dafe04717baso235231276.1
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 06:11:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699884406; x=1700489206; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1699884714; x=1700489514; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oyrc6FshW+z5U6vJqacgbhem3IFjlCautuYHlaSBfRo=;
-        b=Kp1NHbLMShO28/6rld1FHRBGeFLK3VII9fHxBbUlmeGgms7ogzJZKdaL8Z68X+kvoq
-         DoCHxOsQuAqfvg5+XfB1m0HqlO0oKAd6z/bTjjZlGybQX+vcRi8z5Qxt68HhfSk12feu
-         Aiw2Ch5Q0gMSNm9M+sHkd5puGGROrGAnLhu+jwppJ7evvcs+KzCCSajXhQoe2GlFPtV7
-         OXAaN86p+IEvWsInflTdW2l/q5oFfG0JV/KzvNioBzcqPmpsC15FwmI26gLh+coUgAQU
-         4ctAl685rknz+4XG2IKWzSwq1GT6j5HXY8Kx0O+A5rneCpBEH46wKnF3FBZ/Y+ICUOjc
-         JFzw==
+        bh=WJr1OXkuxnT03SCv+djqBRWs+VoPNnRqt/gpqMoKcS4=;
+        b=dPhazqou+ayKP4zGXmB+bzWYXpFj2na6UysngAOocfO76BBDDfHgFB+8GVn/2Lry4k
+         l0qmn+GxKZyYwtqjvecGw+Ji6JZ0bXN3uxrtoznmnRbVVcrSHHxfOaJ5mQa7dIvEX0KC
+         NDnFpoDTBJQdKiXKOKDJsAs1zzTN0pTT5XY8Cz3KT/faS2rTKgKlDUH61ntJFT8XJv8n
+         BPsZETaP6WEwiYNoVtOkqT8bvsuAJhbD/yAuKf47ZEQrL04tn1wiI7mtyTpVJ+Rf8du/
+         0HcLl2ZGTe48CmWBa/e7lFjIipbFxLT1c99vqSeo8Q+rA/oNBwelIwpkeURr68QYfBKa
+         Hq5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699884406; x=1700489206;
+        d=1e100.net; s=20230601; t=1699884714; x=1700489514;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oyrc6FshW+z5U6vJqacgbhem3IFjlCautuYHlaSBfRo=;
-        b=bHnJ+UIKDNhTpOOy/A3pN3Ab1AyOaInmflz6+Md3Ee7MShxXSQgdpVju7dB/QDXcQD
-         SiaNf6NUw8mcAsvXz3G2gQ1e+iLErt4J3YrhODqfGat3f7GJ2HD9eM7gpK6dHRvuH/FL
-         quwgN6skOUpoExXOcMj3lR+e5UhWOqfz7U7YV4qp+oIXe6a57tnPY3BTQmAKH7LZgiqC
-         4uIRU5V6kiIDN0YdZStHTn7EECSAdfyLdHQsNiYhtmYAlvO7+pQbU55I0dZ2n0i40x+g
-         gRlIMlbv7azZa0H4CbR0mdVYbzLGDcgmCWsngzcrPQPgWQ5+UUZaWr6Onfqy+6YhP4zl
-         SXug==
-X-Gm-Message-State: AOJu0YziuSeXsjgpXblvPMglaEfbLSgFbIzBDqE1QjAE4WtQGSYxZAoH
-	HBBiocliWDm4yWLHJr5mnB+LOrfRLosd4qUcF83eIA==
-X-Google-Smtp-Source: AGHT+IE4LQpkmC3gS33ZjHm+rJ8dP97RNKPJ49IFJV4V19OzOvJ1ryzjchxsRhW4RHqYW/kj+O1GDoUY74Q5mJrcJgQ=
-X-Received: by 2002:a05:6808:320b:b0:3b5:9965:2bc2 with SMTP id
- cb11-20020a056808320b00b003b599652bc2mr9568936oib.23.1699884406725; Mon, 13
- Nov 2023 06:06:46 -0800 (PST)
+        bh=WJr1OXkuxnT03SCv+djqBRWs+VoPNnRqt/gpqMoKcS4=;
+        b=ZNWle1b3/ot/7jLAcsrlcRskvrcieKRG+Vud0q9x/S/TbXI5BLVkcYKo5BDKhz0gpW
+         RiifUQqEr7AjMJErIlxmXwmnow5EvFdlL1Y0sjFQFfTeMuhGEV5zBvJWrCuke4MHJyHv
+         CiSjztkd3IQaIqeQJCnkUANGE4qf7LnxxvQ7ZO5fS072FVOgE8ooKDVJSz8335KH1dvl
+         o8fAJhcS9u4MVdbXUxbeXA2BqtS3hWwtAD+X50eRkydSHoaG7PdCOGI9GNh1ypzGmfMV
+         Xq8U9hFs3K2XoAcH/2Ej++Keif6RKJnf7PYoPo5ngE8qNlBCbCkIvkPfR1X+rICgs47q
+         ENsw==
+X-Gm-Message-State: AOJu0Yx9TOOgBZUGBnfCu9tRbTFjIISsGGyToDqIzxFlb6aL6X1im87e
+	e7Pv6mYwQ6/sJavIa2eFldFSuIlWCTnPHyU2vwXk7Q==
+X-Google-Smtp-Source: AGHT+IHOnTJi2b1Q0iw6JudAumqU6ptqzEHKAsTPQMqY6ERd/tzWqcc2NMGHeiZAy1A323D3e8TLe3gaGaKgn7ddmRc=
+X-Received: by 2002:a25:d196:0:b0:d9a:4bc3:226e with SMTP id
+ i144-20020a25d196000000b00d9a4bc3226emr5511950ybg.37.1699884713789; Mon, 13
+ Nov 2023 06:11:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231106-topic-sm8650-upstream-tlmm-v3-0-0e179c368933@linaro.org>
-In-Reply-To: <20231106-topic-sm8650-upstream-tlmm-v3-0-0e179c368933@linaro.org>
+References: <CGME20231031095014epcas2p2814fa2bb5f940ccb0d0951667df34f98@epcas2p2.samsung.com>
+ <20231031094852.118677-1-jaewon02.kim@samsung.com>
+In-Reply-To: <20231031094852.118677-1-jaewon02.kim@samsung.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 13 Nov 2023 15:06:35 +0100
-Message-ID: <CACRpkdYB7AQZ7HeNmE5d716sWz5_MHiVtAet6P5XOC1etDKNcw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] pinctrl: qcom: Introduce Pinctrl/GPIO for SM8650
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+Date: Mon, 13 Nov 2023 15:11:42 +0100
+Message-ID: <CACRpkdZRMJgWkLwKstpN_9=VGutbE1wBv+X_a15RJ=7ddNtbHw@mail.gmail.com>
+Subject: Re: [PATCH 00/10] Introduce ExynosAutov920 SoC and SADK board
+To: Jaewon Kim <jaewon02.kim@samsung.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 6, 2023 at 9:32=E2=80=AFAM Neil Armstrong <neil.armstrong@linar=
-o.org> wrote:
+Hi Jaewon,
 
-> The SM8650 Top Level Mode Multiplexer supports 211 GPIOs,
-> and the usual UFS Reset, SDC Clk/Cmd/Data special pins.
->
-> An handful of pins can have their IRQ generated by the PDC
-> module, and for this support for the new wakeup_present &
-> wakeup_enable_bit is required to allow the "wakeup" event
-> to be passed to PDC and generate an interrupt or a wakeup
-> system event.
->
-> As SM8550, it also supports the i2c_pull_bit bit to enable the
-> on-SoC load resistor for I2C busses.
->
-> Dependencies: None
->
-> For convenience, a regularly refreshed linux-next based git tree containi=
-ng
-> all the SM8650 related work is available at:
-> https://git.codelinaro.org/neil.armstrong/linux/-/tree/topic/sm8650/upstr=
-eam/integ
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+thanks for your patches!
 
-Patches applied, unless Bjorn has some last minutes regrets,
-they are in.
+On Tue, Oct 31, 2023 at 10:50=E2=80=AFAM Jaewon Kim <jaewon02.kim@samsung.c=
+om> wrote:
 
-Had to rebase the last patch manually because of Krzysztof's
-LPASS driver, check the result pls.
+>   dt-bindings: pinctrl: samsung: add exynosautov920 pinctrl binding
+>   pinctrl: samsung: add exynosautv920 pinctrl
+
+It is best if I can apply these two separately once Krzysztof is happy
+with them. I hope that would work? I don't see any specific dependencies.
 
 Yours,
 Linus Walleij
