@@ -1,114 +1,125 @@
-Return-Path: <linux-gpio+bounces-97-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-98-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65B737EB084
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 14:05:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE9157EB0A2
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 14:14:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 176B8281239
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 13:05:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 291012811CF
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 13:14:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C9883FE48;
-	Tue, 14 Nov 2023 13:05:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 129283FE43;
+	Tue, 14 Nov 2023 13:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nMk4bjzW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lc7nIMzc"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4143FE3E
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 13:05:14 +0000 (UTC)
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE9519E
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 05:05:11 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5a7af20c488so66596377b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 05:05:11 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6403FE35
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 13:13:59 +0000 (UTC)
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E5219B
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 05:13:57 -0800 (PST)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5b499b18b28so64912927b3.0
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 05:13:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699967110; x=1700571910; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1699967636; x=1700572436; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y3kLet+ZFc4FiXhXyJTUcUEX1JsMDtWsRFc0PYkqxJM=;
-        b=nMk4bjzWl2OH2sgI2kginq+JqGE7cwEcr+JGDejTGiX2niImmLs4RpluHd3H9DmyOX
-         39NxMktLxD0KR/1jO0DVPvee/GYRKvdT0NGDyOOY9mugEYri1z7tPGOuN1UaDnDslMPM
-         07KVGoolts85BnWYiBEeoDTKbfNmDvu5SMcH8fkerB/VCr7HRL3nOmT0dMFAw6psXo7L
-         PQ/yETAMDp42UEMSaZHW8fDmMccfGZ99jpCF2zkYMbjDRmxmbKkkPuIGDPaJjXwpkPJN
-         6YRQJ9NnpBeWQwKLA6iHGmEX2qiNv1VB3X4ejZsla3zyizgE0zAnjBWzAhmBMv96hrt4
-         Sceg==
+        bh=AC7zPHlfp71u7FmPMHHQXTaJtq2nEvQZ45ctd9G44Cc=;
+        b=Lc7nIMzcZuqZj+4ZCWURjauJdITA46ouGp2tGzapwA240rPlaQn3ef6HCeX8PmhSzx
+         uCx8nslVnCCBmZfeIm4SrdU2WATpdpVA1/V81D1hSpACYleXa5tVsS+s3qHrKACRS8WW
+         Gn9xhRPoaACwUdXR0dnW7eOnJgiXfO3Sla96emXlEQNsAIYzxTBI3wYAej4GP+16LqHa
+         ka+QlzuSjuEbI7xSznw4kDyE4OwtRKmdHcyjZhNii6GlWjsW6hj9fg4wjzEs84hW8DG0
+         4P4dRJIFrbrOEUxaP9Y/Y2BKumLByFRn4mYR7vKnojnBXWPUI1kmrsgKQjudvnGR16aB
+         L4ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699967110; x=1700571910;
+        d=1e100.net; s=20230601; t=1699967636; x=1700572436;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y3kLet+ZFc4FiXhXyJTUcUEX1JsMDtWsRFc0PYkqxJM=;
-        b=bJWIDdXizuinWZZX+JtPoGjk+a7BfUU2dsW0XWoM9RawK8C8Ut/NauxMVmlCK3s+od
-         0LWw/HJc2XzFRgowW8BWnQ3UirDb2PqlsvZMd7OBIbvb4pNkX2ydGDpcDwir0XJ7ctEO
-         vkGXYBJyi4RYmkqUuTqdnCSMgha2uP3e7NenqMImGX4r1u56Q5P2gknEe1Dqmf7vYfzt
-         m0+r/1eOoiUQ1FNtuUauJvq/h0/8DNx2PU7WZi3U8qnlGpq6OfYud5OFBG7gHxmMC+jE
-         0AqIkd6DZ3BnDgCqOMAvv0kj3S9rRK1TAwW+pJb6qZniZwMkQFOjdLRyqYF3MU92WgTq
-         OWgA==
-X-Gm-Message-State: AOJu0YxLYs63aco3NByDOx5cV8bxR5qBmSAfaVgrN+sfhwxjFZxVFlkw
-	t4lUi7KzuL6GKkYC94ryaG+pWQHSS33jdFPo3Wptug==
-X-Google-Smtp-Source: AGHT+IHU/EMXoR/AsvwDR5tVM/hTfhag7Py4pB8zx2h4lfdu8R1hVWGA8wCYGXEvgGG4RCO6d/pEhnbc29+P4adFbGc=
-X-Received: by 2002:a25:35d6:0:b0:daf:66f9:cfab with SMTP id
- c205-20020a2535d6000000b00daf66f9cfabmr8292993yba.9.1699967110411; Tue, 14
- Nov 2023 05:05:10 -0800 (PST)
+        bh=AC7zPHlfp71u7FmPMHHQXTaJtq2nEvQZ45ctd9G44Cc=;
+        b=LbhYEqsNGoppnyLXSZ1XS573mhEn0lBuOVqHzct+j942HfSs9pB3ZqNSaMRSwv4fYw
+         W9CnG13FH1DuNyb2NWaHIBZNe4+MPcq9mimwHXQZJBPTEjwAl/SsDz/0ftYHalurX0I6
+         EYK9vh99MenbGPlaYp/DMtimpslys2UPtQdIuUNRgc9q1bpo0nYJAc3NDxXR7R8zxBFl
+         qwVczIfg7o8lsBEN749bAlaM9rM/HYk7eRZncBeMn0phzZhlHOMDRZaDfbPSQ7tF+iim
+         4Zz+TfcDmg4ZtU00WfvZcch5zAD9mmkbOwxhTpPKPThxSDpyvzHvGwsrdWGOdcqb0KuJ
+         wqRw==
+X-Gm-Message-State: AOJu0Yz8qBwX4H9LicLPngt9a6Mcwu7KekDfylB67ybZbZbpOONdsmDb
+	E4cTL4H5WHVm7c72KoF4bIjJxA49DKdyac1jnH4iQQ==
+X-Google-Smtp-Source: AGHT+IFBYaHMZzCsW4AsGoZv9pa46ZVwMbrh03aGv7/fzr5sc0Qhx4V8IFGe0paIJ4dy0X6AbiRaIop+hJhMUG6cgDY=
+X-Received: by 2002:a05:690c:4446:b0:5c1:25f:567e with SMTP id
+ gq6-20020a05690c444600b005c1025f567emr10692579ywb.23.1699967636567; Tue, 14
+ Nov 2023 05:13:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org> <20231108104343.24192-6-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20231108104343.24192-6-krzysztof.kozlowski@linaro.org>
+References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
+ <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
+ <CACRpkdYW-xmejyOo9H9XSkcabvYgBqPvpjppvNe_RF6RLxyxKA@mail.gmail.com>
+ <ZU2AP7leDcIZIN+b@octopus> <ZU5LFC23JaEidEGZ@pluto> <2535571d-6fea-4064-8325-0f47d031c85f@arm.com>
+ <CACRpkdaRY+rU+md-r5gVyFH5ATt3Pqp9=M4=+WArYkfVLAFdpw@mail.gmail.com> <604aee95-ad46-4102-80aa-71c2c9d1729c@arm.com>
+In-Reply-To: <604aee95-ad46-4102-80aa-71c2c9d1729c@arm.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 14 Nov 2023 14:04:59 +0100
-Message-ID: <CACRpkdaSPTjjPA=TS-WbOb3E=TabtP6MFEx6Q+Dar-Mh=EtknQ@mail.gmail.com>
-Subject: Re: [PATCH 05/17] dt-bindings: pinctrl: samsung: add specific
- compatibles for existing SoC
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh+dt@kernel.org>, 
+Date: Tue, 14 Nov 2023 14:13:44 +0100
+Message-ID: <CACRpkdb-4fBSRDaXiqXWe3Yh_Z1ni4ScJHfC_bw+bm4dqT_kCA@mail.gmail.com>
+Subject: Re: [RFC v5 5/5] dt-bindings: firmware: arm,scmi: Add support for
+ pinctrl protocol
+To: Souvik Chakravarty <souvik.chakravarty@arm.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>, Takahiro Akashi <takahiro.akashi@linaro.org>, 
+	Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
-	Sylwester Nawrocki <s.nawrocki@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, Sam Protsenko <semen.protsenko@linaro.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org, 
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 8, 2023 at 11:44=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-
-> Samsung Exynos SoC reuses several devices from older designs, thus
-> historically we kept the old (block's) compatible only.  This works fine
-> and there is no bug here, however guidelines expressed in
-> Documentation/devicetree/bindings/writing-bindings.rst state that:
-> 1. Compatibles should be specific.
-> 2. We should add new compatibles in case of bugs or features.
+On Mon, Nov 13, 2023 at 3:23=E2=80=AFPM Souvik Chakravarty
+<souvik.chakravarty@arm.com> wrote:
+> On 13/11/2023 13:32, Linus Walleij wrote:
+> > Hi Souvik,
+> >
+> > thanks for looking into this!
+> >
+> > On Mon, Nov 13, 2023 at 1:56=E2=80=AFPM Souvik Chakravarty
+> > <souvik.chakravarty@arm.com> wrote:
+> >
+> >> The initial assumption always was that GPIOs can be considered as a
+> >> specific function. Note that the spec does not define the types of
+> >> function and leaves it to the DT binding (or driver) to figure out the
+> >> function descriptions/names.
+> >
+> > Does this mean that each system using pinctrl-SCMI will need
+> > to specify the available pins, groups and functions in a device tree
+> > binding? For e.g. DT validation using schema?
 >
-> Add compatibles specific to each SoC in front of all old-SoC-like
-> compatibles.
+> Sorry seems I made a typo above ("descriptions/names" should have been
+> "description from names") which resulted in turning things on its head.
 >
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> I really meant that the driver has to figure out the exact type or
+> meaning of what the function does from its name. SCMI still continues to
+> provide the list of pins/groups/functions and their names.
 
-This is more formally correct indeed.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Indeed, that's what I imagined.
+
+I think the rest of my question spurred by the phrase
+"leaves it to the DT binding (or driver) to figure out" is actually
+something Oleksii needs to look into more than a question to you.
+
+It should probably come as a review comment to the patch 5/5 itself.
+
+Oleksii, what is your take on my question about DT schema validation
+for different SoCs?
 
 Yours,
 Linus Walleij
