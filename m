@@ -1,107 +1,115 @@
-Return-Path: <linux-gpio+bounces-94-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-95-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5758B7EAFA8
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 13:11:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CECE7EB04A
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 13:52:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C6801F23B62
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 12:11:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D7891C20A76
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 12:52:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 952413E476;
-	Tue, 14 Nov 2023 12:11:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7CA73FB2F;
+	Tue, 14 Nov 2023 12:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T4n3N0Oa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IUva1w1n"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A093D984
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 12:11:28 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9208D133;
-	Tue, 14 Nov 2023 04:11:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699963885; x=1731499885;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=S7XiKn8qHd30a1CCbLm7pq6hZ0fzTbDe51PrhInjjjo=;
-  b=T4n3N0OawmRXwhvIRrsq0pi4+cy2tF+feKL41d5VsmbVu9jE1yFCZyuG
-   W8V68zBEJdgfg8cXimzgZHxa3j+3BZU77AeAxXqh+RAO6b/B+93SEt0fZ
-   oPmTcpLCmOgzACVN1dCKnoAnXaEpxKxhTOgJ2dorgWgo5WW4EbFeJufNq
-   +JTrZb8N7/7BJ9UKh2QkpKIXQC0QasPcBLdGhzcDNo2k+EnpbNCdMCPF8
-   /R1niaOMT/M7IHQQ1601Z57yFH7SNJ1uVSb8BypRE2ulV1ClMzT/ggygF
-   hAgQicGhIvoUib6tIyCKOfV+yea8dDnBERnOJxUTkCvxSfSO2Ope8vncJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="3702370"
-X-IronPort-AV: E=Sophos;i="6.03,302,1694761200"; 
-   d="scan'208";a="3702370"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 04:11:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="1011894067"
-X-IronPort-AV: E=Sophos;i="6.03,302,1694761200"; 
-   d="scan'208";a="1011894067"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2023 04:11:23 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC3)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1r2sGG-0000000Dnra-2lnA;
-	Tue, 14 Nov 2023 14:11:20 +0200
-Date: Tue, 14 Nov 2023 14:11:20 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: kernel test robot <yujie.liu@intel.com>,
-	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] pinctrl: intel: Add a generic Intel pin control
- platform driver
-Message-ID: <ZVNj6GY3Rb6Y-bqR@smile.fi.intel.com>
-References: <20231113123147.4075203-3-andriy.shevchenko@linux.intel.com>
- <202311140345.etMnKZeR-lkp@intel.com>
- <ZVNczZMruhh59Vfc@smile.fi.intel.com>
- <20231114115024.GV17433@black.fi.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B5B3FB19
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 12:52:51 +0000 (UTC)
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D791737
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 04:52:49 -0800 (PST)
+Received: by mail-yb1-xb34.google.com with SMTP id 3f1490d57ef6-d9c66e70ebdso5525148276.2
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 04:52:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1699966369; x=1700571169; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dm5tIBxlFob9g4Fl4wFAfi9oUFoS3/1CELy15DVM1mI=;
+        b=IUva1w1nEizlrvNSoUb3UCdQBfVmQ5Q4YZp7nEJb92vakCXDD3tvM56YuNFWj73t56
+         TOoZ95mU9fpkZD2KzIW51MFjmpbE6+hIE3T+so0B1GAhA59XFPmZTZSjSDtLr8mydiBn
+         Ef9QF2o6CrkfgsAZcZmj+S4j8KOM99mRlpubKhiM/m53A3QLZcc5PUzMkjqGMDY8tRdu
+         PS8vjaJPg0kpvBHmKGd8zxZQbZXG+Bwl+WJuQcx5XkAv1XEgI7/vnmvOcFgAVwjfcR2L
+         th8L1YtixZdLUKGq3erttfLhik3qL8eBf1l3jQIVwmRRUC1q/x+O6K6Hk1CZ3y4DfDHl
+         jIhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699966369; x=1700571169;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dm5tIBxlFob9g4Fl4wFAfi9oUFoS3/1CELy15DVM1mI=;
+        b=qtFdtYGF+HjUAfk3+766waLpQNMUguxW6ybEdE09X9cwS5s+6BXmuW4K6HGoiJsSmO
+         Z18QU0cumSEKv0gntiHIWrVRurlJvLgVGtIvsgHnuKiJCNdKNBLVRvWOqfgdIotsh3Vz
+         OU+uTHRu3/Z1859t3LIU/D4HNbo/RLbwFA7pG5X+BF2ZsrIVhREvWVWJfnUDZxpVhj7B
+         7lR2Q05rWF2mKQ+3w2N6Hq+ugQzSXVOw2QNqJSKHfXr3/ygFOHAY/yxf5m98r2B2+XNJ
+         nZjgli8/efgj43GBVSulVE5ZBlrKKcibA5fNzGsgXM+hM5wkMDcF8TCyuxMA/eHTP6YS
+         Q8Rg==
+X-Gm-Message-State: AOJu0Yy51PF0rw7tXYPQjn7e1BZoVVvSn0IQ5LZIb3eTZRZKHrA0BYXL
+	9w1GXDA6kfwTcHkCaSnP1wyGH6/5OghLI+o4IcMG4w==
+X-Google-Smtp-Source: AGHT+IHb5y2/nAMzpAAbpcAqsc2332J3Hl+TEbnJYw6VgROQL9pFrDJMQLjA7DxF+w42E0bHCOIHzfYDBAjoO7yaXoA=
+X-Received: by 2002:a25:6951:0:b0:da3:ab41:2fc8 with SMTP id
+ e78-20020a256951000000b00da3ab412fc8mr8347458ybc.16.1699966368706; Tue, 14
+ Nov 2023 04:52:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231114115024.GV17433@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CGME20231031095014epcas2p2814fa2bb5f940ccb0d0951667df34f98@epcas2p2.samsung.com>
+ <20231031094852.118677-1-jaewon02.kim@samsung.com> <CACRpkdZRMJgWkLwKstpN_9=VGutbE1wBv+X_a15RJ=7ddNtbHw@mail.gmail.com>
+ <15d9340a-dd4f-43fc-96c6-f6a8daf76e11@linaro.org>
+In-Reply-To: <15d9340a-dd4f-43fc-96c6-f6a8daf76e11@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 14 Nov 2023 13:52:36 +0100
+Message-ID: <CACRpkdYrJMnJLHa1+Vtga3WdYySx9ioGzqmnf1uZKGdBxEWa_Q@mail.gmail.com>
+Subject: Re: [PATCH 00/10] Introduce ExynosAutov920 SoC and SADK board
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Jaewon Kim <jaewon02.kim@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 14, 2023 at 01:50:24PM +0200, Mika Westerberg wrote:
-> On Tue, Nov 14, 2023 at 01:41:01PM +0200, Andy Shevchenko wrote:
-> > On Tue, Nov 14, 2023 at 09:46:07AM +0800, kernel test robot wrote:
-> > > Hi Andy,
-> > > 
-> > > kernel test robot noticed the following build errors:
-> > > 
-> > > [auto build test ERROR on linusw-pinctrl/devel]
-> > > [also build test ERROR on linusw-pinctrl/for-next linus/master v6.7-rc1 next-20231113]
-> > 
-> > False positive as the dependencies appeared in today's Linux Next.
-> > 
-> > $ git tag --contains 22f57707fa0c
-> > next-20231114
-> 
-> Okay thanks for checking!
-> 
-> The series looks good to me so feel free to add,
-> 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Mon, Nov 13, 2023 at 8:59=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 13/11/2023 15:11, Linus Walleij wrote:
+> > Hi Jaewon,
+> >
+> > thanks for your patches!
+> >
+> > On Tue, Oct 31, 2023 at 10:50=E2=80=AFAM Jaewon Kim <jaewon02.kim@samsu=
+ng.com> wrote:
+> >
+> >>   dt-bindings: pinctrl: samsung: add exynosautov920 pinctrl binding
+> >>   pinctrl: samsung: add exynosautv920 pinctrl
+> >
+> > It is best if I can apply these two separately once Krzysztof is happy
+> > with them. I hope that would work? I don't see any specific dependencie=
+s.
+>
+> That's fine. I might have conflicting pieces in-flight, but then I'll
+> funnel these through you as well. I can apply these to my
+> samsung-pinctrl tree and send them to you as usual, unless you prefer to
+> apply yourself.
 
-Pushed to my review and testing queue, thanks!
+Oh that's best of course, you take them when you think they are ready.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I was more referring to that we should be able to merge the two pin control
+patches apart from the rest of the series.
 
-
+Yours,
+Linus Walleij
 
