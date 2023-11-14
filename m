@@ -1,157 +1,219 @@
-Return-Path: <linux-gpio+bounces-80-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-81-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C50D7EA421
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 20:59:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBC2B7EA864
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 02:52:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 615B1B209E2
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Nov 2023 19:59:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A1B11C20899
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 01:52:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88E7C241E3;
-	Mon, 13 Nov 2023 19:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 505807484;
+	Tue, 14 Nov 2023 01:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HA/6aPX0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mLnjDK21"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EA52376E
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 19:59:43 +0000 (UTC)
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC55010D0
-	for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 11:59:40 -0800 (PST)
-Received: by mail-qv1-xf32.google.com with SMTP id 6a1803df08f44-66d76904928so29387126d6.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Nov 2023 11:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699905580; x=1700510380; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8H0DkXgfV2451pEydsizcOvgsaUMabwCpfiWuLLO2fg=;
-        b=HA/6aPX0iKqWlwQCyf2UpDiROEbv8UVvTBgDF9qXuC7km21WkV48n8n4X2J0QlvycO
-         /Y3QuAxns9DQRTQ9XrFD01bnv9yVt/PLPS5Ll2Ok+q8WvQxdTcUhLiUVUJt9ZjRHGVUq
-         fre7pNSMHkcFOBEJGAORyjCBy7pzoqwF53gbpNJMOtnhDiywqJorkQMEr3GdYzbbAS+Q
-         aqnlOk+ZSixF8nCil0mDKzgKjQyrRoj3bPa/xplLQ/Lzc59bkzh50rUpjggRQEembf5u
-         jmCzo1ikmJZocuy+sSivsFEFBiKCVo9eQ0DPgsGlw0s+rdyh6KUcBZc6dl0aJLMZTZsk
-         QqDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699905580; x=1700510380;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8H0DkXgfV2451pEydsizcOvgsaUMabwCpfiWuLLO2fg=;
-        b=gganVuwmv00mvACxCK+r9wXDMLAPKSJWclf+Yr0gjzCCDUqcwCSqjJXuCA2EPXN4L1
-         43+M4Y9BugUb3n2HcFRJ5SofWgLdrO63INLqzeECjbbS8qOM8kqYSHNS4hnw4y4PM6GM
-         ABw2A8BubHj5TuY+r70MdWlVghktxr9eOPmjOorPbMDQZl6i4SC60c8xoQwHRfpqQ4QI
-         xUZr1HeD0HTluwJVEywcA0Ez5VWjT6JoXWE8bVaG5Zg141rxgVK9Ham971CqrGoYyAa6
-         tl+7QPnlapxQZElB2zwS9HeRA9qxe7HvE9/KFfy5dNfVlQoEnL9ECnW5vWSZ9SFbRZTt
-         pM7A==
-X-Gm-Message-State: AOJu0YwCRKyV24b8/34T6CfMEOWUOVudOH6s8J2V/pOV6l7sufHG5efE
-	HrBU/lEZz+elVSariZGXrcGbE9MtzBj+rkXH5x0=
-X-Google-Smtp-Source: AGHT+IFfhzuomQKHEqd9ctWFNl7lpapQvSiH6UFBGGgw1KsFG7lFTZD+IsxDEe9weQsc2G8A234hoQ==
-X-Received: by 2002:a0c:ec81:0:b0:66d:bc21:814c with SMTP id u1-20020a0cec81000000b0066dbc21814cmr200519qvo.65.1699905579847;
-        Mon, 13 Nov 2023 11:59:39 -0800 (PST)
-Received: from [172.25.83.73] ([12.186.190.1])
-        by smtp.gmail.com with ESMTPSA id p10-20020a05620a22aa00b00777611164c6sm2105633qkh.15.2023.11.13.11.59.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Nov 2023 11:59:39 -0800 (PST)
-Message-ID: <15d9340a-dd4f-43fc-96c6-f6a8daf76e11@linaro.org>
-Date: Mon, 13 Nov 2023 20:59:38 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53206101
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 01:51:38 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F78D43;
+	Mon, 13 Nov 2023 17:51:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699926693; x=1731462693;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   mime-version;
+  bh=3ID4rrwdWAeS80sFWnAxXxHh+jePKbvmqPRZeH/XTME=;
+  b=mLnjDK215z9W1iXyFp6XGl8WpVkRVt7NaFFPbxu5ywbGvzSZ/YCvC7r9
+   XlqpEKjyFf1tMIrSwP13AHvf+CwMpMQKpZom8d5NtFtHtnP+nmi65bEKq
+   DeikFjXNHetXBhg96rxn0xmuOsu0fxS136wxHbjuwU8XlFExJL57rLSeg
+   K3kc1l+0hfvsoM0AkNeP/Go2BVoEwTne0xIJuanlMtcUN8FTTBb2a/8f6
+   rXPZdcDI9wyQ1gchSGW6RZoscmdQTC1VyDXItW8F9uCR/SOmBtM5jxYNa
+   Pc69tbRBaTrM+bs2twyaj8oL/Zg8xvXW8yPHdmNOIWktmaphOfE30DtPj
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="389409202"
+X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
+   d="scan'208";a="389409202"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP; 13 Nov 2023 17:50:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10893"; a="757995408"
+X-IronPort-AV: E=Sophos;i="6.03,299,1694761200"; 
+   d="scan'208";a="757995408"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Nov 2023 17:50:57 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Mon, 13 Nov 2023 17:50:56 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Mon, 13 Nov 2023 17:50:56 -0800
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Mon, 13 Nov 2023 17:50:56 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nivHqOElgQfGpNL7ve0HuvQGUwMRs4lsCvneVnIccxj+Rc9eP+25ncNIkVdC6U6PgIg74GTbrPKHkAjf0JSW66Vt3GJY2a8+npIBa07486aUDvnN6TUMpXhmfE2kCtCfGH1n1Fm36eWidLbCTAplqQU/s7UVapVqkHOvn9RXAB7exl7Pl/QctEdJ2cpSbQbg6n9p60JC5MTLg0LhKDcqcpZrUnFYGdWqJ8Bd9fZ2ggTEme8fnKmDwNltlsYodxOAFRVuyPetPCxKt9XHXjRSbmcOJOY7iGs/fFX+GtzAy93nFUQyimmoM2yvQeRK9a8dW8yPS8BWCh2KmBayLC+WWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UoCr5jGAHrdMab+9lzwvK0qE3mlLRa46A3570XQkYPw=;
+ b=Pnkt1FPZdjugWoM94YgDnC797pWEqmJGhq/p1sz4A7R+0+3NtQzCIxG6gJ3DFr5UK6ms9Dk/KqID2NTf996xKHCke52AFEFCgk752DQyuRQSAV9DL6ZDFBCXSW4wz8NjnYB01Zoh+rL+joFoxR+3OelQes3jk2Sc8aKALFB5j3Usyi5HmzHlP0NtisGOax2HCopQi36AULZng4K5AKY/WBCt6QkeNFCAGCTZPfDqs0KAiHGfs+fd9Zetq1dAZaSl+MJk7aCrMHUDw7S5DYEFxUT96Hgo583Xl9CjaKZgmRU4RGibVocOA9v9eOrN1/kDijSW9YTxozs+mWhZzO6j7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
+ by SA1PR11MB7699.namprd11.prod.outlook.com (2603:10b6:806:338::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6977.29; Tue, 14 Nov
+ 2023 01:50:49 +0000
+Received: from CY5PR11MB6392.namprd11.prod.outlook.com
+ ([fe80::15d3:7425:a09e:1c86]) by CY5PR11MB6392.namprd11.prod.outlook.com
+ ([fe80::15d3:7425:a09e:1c86%4]) with mapi id 15.20.6933.028; Tue, 14 Nov 2023
+ 01:50:49 +0000
+Date: Tue, 14 Nov 2023 09:46:07 +0800
+From: kernel test robot <yujie.liu@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Raag Jadav
+	<raag.jadav@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: <oe-kbuild-all@lists.linux.dev>, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/2] pinctrl: intel: Add a generic Intel pin control
+ platform driver
+Message-ID: <202311140345.etMnKZeR-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20231113123147.4075203-3-andriy.shevchenko@linux.intel.com>
+X-ClientProxiedBy: SI2PR06CA0015.apcprd06.prod.outlook.com
+ (2603:1096:4:186::7) To CY5PR11MB6392.namprd11.prod.outlook.com
+ (2603:10b6:930:37::15)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/10] Introduce ExynosAutov920 SoC and SADK board
-Content-Language: en-US
-To: Linus Walleij <linus.walleij@linaro.org>,
- Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Thierry Reding <thierry.reding@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org
-References: <CGME20231031095014epcas2p2814fa2bb5f940ccb0d0951667df34f98@epcas2p2.samsung.com>
- <20231031094852.118677-1-jaewon02.kim@samsung.com>
- <CACRpkdZRMJgWkLwKstpN_9=VGutbE1wBv+X_a15RJ=7ddNtbHw@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CACRpkdZRMJgWkLwKstpN_9=VGutbE1wBv+X_a15RJ=7ddNtbHw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|SA1PR11MB7699:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18ba1f74-f8bc-478e-e35a-08dbe4b42063
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5FMrlUsIKDb4KL8eKanL4Spi8duir7JsQZC/nW6dYL+JvcDtQcSIZlprM67vLql5yUbLrckE5ggPCfeskJJxPrZIy8ir2pmoJcX+lfSGTBfrybjQf3NqvrXMgljTxgGHwyZ7++VSPC2DrrmU4ebUPv3OjvOJ6AJ8Rf7BAvNXc3MAb6u9vboymf0lOzZCd7IOzx3UeGVKcvmrO7v+6+qfaGczwRW+dDmPDlc70NXnWwyte5hxa2jCYjDEYZJ3IBWw1nEeH/nmjukCHutKh2gQgK2Q3J5ollqKyF3RwybLbksgQo1FWBHeAqusvT77jeuyZ8lCY17FW8yg40jmWJAMHxKPPob12zFf/IDuwCKPzMCbCbMRujmhthCB7bEQ0Rcc8i8JbcyMhRSL60+EEqXZsyySugN4y2RtmQ9jGwy0D3XZHqrAqT9dtnTXmGmdhAAbnZ4v0qBQrvBqDxYOlD6ATPwGiidD0hI5+srnBjfu6MXkwPYakJcnsv25jX1/Z/nq1iXTwMiI+zAJTLh+EyShdNfwBh4vlHfn9lvurL3hkDbz9UWGzRKfu3Ck8cK2vJ/IovAk1Ie96qj0p9Ds5kl5Us8cWHRUR5eaA1zIph1fX2/0LdE1nrSxAjE7bktnT8gmzkODzO+ukvY4/q5UC5JpwA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(396003)(136003)(39860400002)(376002)(230922051799003)(64100799003)(451199024)(186009)(1800799009)(2906002)(8676002)(4326008)(8936002)(66946007)(316002)(66556008)(66476007)(110136005)(4001150100001)(41300700001)(86362001)(5660300002)(83380400001)(2616005)(82960400001)(1076003)(26005)(38100700002)(478600001)(6486002)(36756003)(6666004)(966005)(6512007)(6506007)(41533002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?N1v3jZnVqWK/GTtoRcJ5u5Z7reegq2ovuI1ATRCuoTYob/Nv4QgTRBszFmQF?=
+ =?us-ascii?Q?ZEmNOflntE2zauflVYlda3fe7HKUeMnO0bj88EhXk46qWeQ/c8F8qIBZ8oYX?=
+ =?us-ascii?Q?ON1eQOXivwT44lh8iQrlAuFqweLOIvzmB+Flbof79fU3YnSlN1iV1gLzTgw7?=
+ =?us-ascii?Q?Rpy6GBOGdXdC14sx1gtlwh4MIEHX6hQIe55ReYr9Od+EIpvqQvRyQoigDQ0f?=
+ =?us-ascii?Q?ykTfnBBtzWdaZiCL065U78xNGtLziA430Rz5UJ74vOhY5SHqBuREOww9fkh4?=
+ =?us-ascii?Q?suJ5IMZvEICkWd8/gW5ZfkNlOgxfqbMPtfzHm0+cPkzrrPYby7J85Z1oSFVr?=
+ =?us-ascii?Q?kZM2EF1YQGKX/b8hYr5Bhlei5d7L3t6iCyNtU2mhQgFN9cFVETl7vJI5AvKd?=
+ =?us-ascii?Q?lXNHpSmCUvzXI+rVdJJR1kiBZD2I07XHB8zXWBgRBoHogAOr2+vLzMAnP2tZ?=
+ =?us-ascii?Q?O7k2nlac7lipPI5kFq2978NO7Hj8jpJkwPk7WE+yZL0KlLOl2To4k6sexrw/?=
+ =?us-ascii?Q?kuXya/OZORc38WsJJOW1HfJ1PHzcpi8ORkr6ZcYw5h5qXALQkP/0HojpFC/d?=
+ =?us-ascii?Q?3HLcsjKe9FjOrsJ90owrpi3KaEz0Ph3t4TcF1mDVylntCH/1LfsjV3qBd/uK?=
+ =?us-ascii?Q?RMTdRQ3DPG8Dd17WPQp9y44xZbyhzVwJJFI7lvj8MX093OB1TlYebsLD1WE+?=
+ =?us-ascii?Q?/ZgTqPSN+ETJBjdttWSeq8VE+fSqPs+nq4sWr2Ne5a3MktXDFIX4w9eJpiL9?=
+ =?us-ascii?Q?kMSjrXXf8Z6DNgozeBQTHYGDhJXLSCLrus7K0yf2nkk/qA++QRe8dGXTqthb?=
+ =?us-ascii?Q?TGq+5d5wewWpWhNkvL46KmbpWvzKOXvRHGCB8yiw+nyQMWozKgOADxskAH3v?=
+ =?us-ascii?Q?Gj8/POFwFf/jMXAJXSyXAnj6mXVyusj4dNXT/LHcOK7+ZNsGQtxPMrz5Z+tz?=
+ =?us-ascii?Q?oVf7Eq14B9qCfSRG3OrepnLunojoFJdKW8nS+2fSwrHJ1X+T8+HVSU9K7R5I?=
+ =?us-ascii?Q?VJxacq456+ciddk/SgPhWRwpRYVlN6wHoTe4a/YJ7ynCbEZvS6oaRk5bGGhv?=
+ =?us-ascii?Q?oVdZTiL7JHJJRyQUrK6EW2r+8wKM0KthHITqE+I7D8JKMUiQzAH1BvBYp0Hr?=
+ =?us-ascii?Q?BZ6nvyca8mrKLVrp7UQ1KKv7njbSDhik3i2axlXFBE34K+RUcGPSN8fKyEbj?=
+ =?us-ascii?Q?Xv4kRdNWqqxD813A8afjeYIzf2YwVcb/vdIsgAqTGA+B1hcwsqbaO2kKWfLS?=
+ =?us-ascii?Q?yEeqcaCJSdNuT9A8OUufdk5JbgpY6FB+7LNDh+GRYd7DPZBLo6o5+ysMfFMB?=
+ =?us-ascii?Q?HcFpONM5Ao9j8+p1BVJHy+1YGhWc0KkNaxf1XcnU0nS6f0MBrn9JbWJSjDrX?=
+ =?us-ascii?Q?c/DxpG/ULwMBZ2RchTJUU0MfdsuqTi1ShOSFxRO59BLoTrGQbf3WCYbCXlaV?=
+ =?us-ascii?Q?kYSFzfbDgzRFHPmjsBExy2yjO7Qx/dH474iiTQdqshCUu/OlF4FNCjnlNbOZ?=
+ =?us-ascii?Q?yGuE0y7TnrEFvceYXYTkJ0WdRzIUnlf7swAJ4ysl2PAU0CbUg19j+iJlEuCq?=
+ =?us-ascii?Q?E+AxDetFyKEZocNCIRUxjDspoft8AmccRDe8ZjqG?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18ba1f74-f8bc-478e-e35a-08dbe4b42063
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2023 01:50:49.5335
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eqJ7TDJfyKFp+znpfiPkVrBfs5l6PCGQLSKbEFWcKrwtc0tuzf7D9jtcx4yyMYpTiO0WEeJmjdDRgJeHAPzHdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB7699
+X-OriginatorOrg: intel.com
 
-On 13/11/2023 15:11, Linus Walleij wrote:
-> Hi Jaewon,
-> 
-> thanks for your patches!
-> 
-> On Tue, Oct 31, 2023 at 10:50 AM Jaewon Kim <jaewon02.kim@samsung.com> wrote:
-> 
->>   dt-bindings: pinctrl: samsung: add exynosautov920 pinctrl binding
->>   pinctrl: samsung: add exynosautv920 pinctrl
-> 
-> It is best if I can apply these two separately once Krzysztof is happy
-> with them. I hope that would work? I don't see any specific dependencies.
+Hi Andy,
 
-That's fine. I might have conflicting pieces in-flight, but then I'll
-funnel these through you as well. I can apply these to my
-samsung-pinctrl tree and send them to you as usual, unless you prefer to
-apply yourself.
+kernel test robot noticed the following build errors:
 
-Best regards,
-Krzysztof
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next linus/master v6.7-rc1 next-20231113]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-intel-Revert-Unexport-intel_pinctrl_probe/20231113-204318
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20231113123147.4075203-3-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v2 2/2] pinctrl: intel: Add a generic Intel pin control platform driver
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20231114/202311140345.etMnKZeR-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231114/202311140345.etMnKZeR-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <yujie.liu@intel.com>
+| Closes: https://lore.kernel.org/r/202311140345.etMnKZeR-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/x86/include/asm/percpu.h:27,
+                    from arch/x86/include/asm/nospec-branch.h:14,
+                    from arch/x86/include/asm/paravirt_types.h:27,
+                    from arch/x86/include/asm/ptrace.h:97,
+                    from arch/x86/include/asm/math_emu.h:5,
+                    from arch/x86/include/asm/processor.h:13,
+                    from arch/x86/include/asm/timex.h:5,
+                    from include/linux/timex.h:67,
+                    from include/linux/time32.h:13,
+                    from include/linux/time.h:60,
+                    from include/linux/stat.h:19,
+                    from include/linux/module.h:13,
+                    from drivers/pinctrl/intel/pinctrl-intel-platform.c:10:
+>> drivers/pinctrl/intel/pinctrl-intel-platform.c:217:37: error: 'intel_pinctrl_pm_ops' undeclared here (not in a function); did you mean 'intel_pinctrl_probe'?
+     217 |                 .pm = pm_sleep_ptr(&intel_pinctrl_pm_ops),
+         |                                     ^~~~~~~~~~~~~~~~~~~~
+   include/linux/kernel.h:54:44: note: in definition of macro 'PTR_IF'
+      54 | #define PTR_IF(cond, ptr)       ((cond) ? (ptr) : NULL)
+         |                                            ^~~
+   drivers/pinctrl/intel/pinctrl-intel-platform.c:217:23: note: in expansion of macro 'pm_sleep_ptr'
+     217 |                 .pm = pm_sleep_ptr(&intel_pinctrl_pm_ops),
+         |                       ^~~~~~~~~~~~
+
+
+vim +217 drivers/pinctrl/intel/pinctrl-intel-platform.c
+
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  211  
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  212  static struct platform_driver intel_platform_pinctrl_driver = {
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  213  	.probe = intel_platform_pinctrl_probe,
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  214  	.driver = {
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  215  		.name = "intel-pinctrl",
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  216  		.acpi_match_table = intel_platform_pinctrl_acpi_match,
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13 @217  		.pm = pm_sleep_ptr(&intel_pinctrl_pm_ops),
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  218  	},
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  219  };
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  220  module_platform_driver(intel_platform_pinctrl_driver);
+5dacd710dc5f8ca8 Andy Shevchenko 2023-11-13  221  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 
