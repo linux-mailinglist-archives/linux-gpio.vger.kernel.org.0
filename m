@@ -1,125 +1,96 @@
-Return-Path: <linux-gpio+bounces-98-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-99-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE9157EB0A2
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 14:14:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D66017EB0C4
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 14:22:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 291012811CF
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 13:14:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91C022811CD
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 13:21:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 129283FE43;
-	Tue, 14 Nov 2023 13:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE413FE56;
+	Tue, 14 Nov 2023 13:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lc7nIMzc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TKK5+0hB"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6403FE35
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 13:13:59 +0000 (UTC)
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E5219B
-	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 05:13:57 -0800 (PST)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5b499b18b28so64912927b3.0
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 05:13:57 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D7D3FE46
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 13:21:54 +0000 (UTC)
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3B21AA
+	for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 05:21:53 -0800 (PST)
+Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-d9beb865a40so5748522276.1
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Nov 2023 05:21:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699967636; x=1700572436; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1699968112; x=1700572912; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AC7zPHlfp71u7FmPMHHQXTaJtq2nEvQZ45ctd9G44Cc=;
-        b=Lc7nIMzcZuqZj+4ZCWURjauJdITA46ouGp2tGzapwA240rPlaQn3ef6HCeX8PmhSzx
-         uCx8nslVnCCBmZfeIm4SrdU2WATpdpVA1/V81D1hSpACYleXa5tVsS+s3qHrKACRS8WW
-         Gn9xhRPoaACwUdXR0dnW7eOnJgiXfO3Sla96emXlEQNsAIYzxTBI3wYAej4GP+16LqHa
-         ka+QlzuSjuEbI7xSznw4kDyE4OwtRKmdHcyjZhNii6GlWjsW6hj9fg4wjzEs84hW8DG0
-         4P4dRJIFrbrOEUxaP9Y/Y2BKumLByFRn4mYR7vKnojnBXWPUI1kmrsgKQjudvnGR16aB
-         L4ug==
+        bh=5BeJ22vqMxUogoMw/G3OvqPi0ZGBXIP/Uhk54+KkFXs=;
+        b=TKK5+0hBcgjtgvC9WweXjd9ZpN6mzgcqylASHW5yBUnKOQgk0GbOHRD/l70y/XcEmH
+         liSG5saSsnYIp/hqH/gK96QsR1N5/xFQ+yCa2/yLNENdc5cBIU0Ap9/nH6aCy/vzxkBd
+         Y8CrOVkURhsLhDPze2898zBPE7JqLYExP+KUTMW3iNddetipiOE1t4dwgRX6StEdztdq
+         rAM+bRGJF1aDZWvvGPAri6IgAHXeVGwkEmEmKqCgR2QliSKwC88SvQzyLV1E/uRVOfJE
+         OKQZKlrjwN3WUpRyjL2ci/tr692m6B8K4zNAhHz1GPUmWXZP+TctrrqlM3ipWm1/QgBp
+         i+zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699967636; x=1700572436;
+        d=1e100.net; s=20230601; t=1699968112; x=1700572912;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AC7zPHlfp71u7FmPMHHQXTaJtq2nEvQZ45ctd9G44Cc=;
-        b=LbhYEqsNGoppnyLXSZ1XS573mhEn0lBuOVqHzct+j942HfSs9pB3ZqNSaMRSwv4fYw
-         W9CnG13FH1DuNyb2NWaHIBZNe4+MPcq9mimwHXQZJBPTEjwAl/SsDz/0ftYHalurX0I6
-         EYK9vh99MenbGPlaYp/DMtimpslys2UPtQdIuUNRgc9q1bpo0nYJAc3NDxXR7R8zxBFl
-         qwVczIfg7o8lsBEN749bAlaM9rM/HYk7eRZncBeMn0phzZhlHOMDRZaDfbPSQ7tF+iim
-         4Zz+TfcDmg4ZtU00WfvZcch5zAD9mmkbOwxhTpPKPThxSDpyvzHvGwsrdWGOdcqb0KuJ
-         wqRw==
-X-Gm-Message-State: AOJu0Yz8qBwX4H9LicLPngt9a6Mcwu7KekDfylB67ybZbZbpOONdsmDb
-	E4cTL4H5WHVm7c72KoF4bIjJxA49DKdyac1jnH4iQQ==
-X-Google-Smtp-Source: AGHT+IFBYaHMZzCsW4AsGoZv9pa46ZVwMbrh03aGv7/fzr5sc0Qhx4V8IFGe0paIJ4dy0X6AbiRaIop+hJhMUG6cgDY=
-X-Received: by 2002:a05:690c:4446:b0:5c1:25f:567e with SMTP id
- gq6-20020a05690c444600b005c1025f567emr10692579ywb.23.1699967636567; Tue, 14
- Nov 2023 05:13:56 -0800 (PST)
+        bh=5BeJ22vqMxUogoMw/G3OvqPi0ZGBXIP/Uhk54+KkFXs=;
+        b=O+HlDF5kUWcyDGbNWU4vValdn0arrJHf62lVN9Eew1tBp4VItHN63allf+sFZdGldg
+         LkkN9PejMwc9lK6CBOQZauFFgXUlWlwJK64FsDmQwWQ/s+6MlVG4n+m3mUu28i1h78DD
+         udzVauVPAL5kXIypkDSZCfae1pqJWgudLMAxmmJtnTtbmMhK8BNGRC5zCvQmmBmCvex1
+         P9BdobDPyBsqPStHiCdopoPmVq4gfnABL8VyY2MJt0Q+cMsl46iuvo1qBbqa2HKnV5ol
+         /CwmFZyBQIt7CgUAeAkVXb7SIJdGzxXP6W87LvnEJfbShX9aUIRDfEdoQIb7qAqNRaMy
+         X9vg==
+X-Gm-Message-State: AOJu0YzYjxMxABBFPGAkAViEKRzD6XJH1NQ5JrUNNQzjfnkwwFh/Ghnf
+	ZKIcdoglwUnIpQUF52ztZnc75++SLlDElXyLNp0MLqE6ugEC/Dqs
+X-Google-Smtp-Source: AGHT+IEC+FO5ylFXSYKgv3HSp4wJLdFuKkqOYkdrsHBgrdaa8AXrmqj63uQCDeIPHCFOfaSdTOggDS/bkVYrK6nehh0=
+X-Received: by 2002:a25:ac21:0:b0:d84:da24:96de with SMTP id
+ w33-20020a25ac21000000b00d84da2496demr9377607ybi.33.1699968112256; Tue, 14
+ Nov 2023 05:21:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1698353854.git.oleksii_moisieiev@epam.com>
- <e9285b4377242e4d888391be987cbb99caf8c573.1698353854.git.oleksii_moisieiev@epam.com>
- <CACRpkdYW-xmejyOo9H9XSkcabvYgBqPvpjppvNe_RF6RLxyxKA@mail.gmail.com>
- <ZU2AP7leDcIZIN+b@octopus> <ZU5LFC23JaEidEGZ@pluto> <2535571d-6fea-4064-8325-0f47d031c85f@arm.com>
- <CACRpkdaRY+rU+md-r5gVyFH5ATt3Pqp9=M4=+WArYkfVLAFdpw@mail.gmail.com> <604aee95-ad46-4102-80aa-71c2c9d1729c@arm.com>
-In-Reply-To: <604aee95-ad46-4102-80aa-71c2c9d1729c@arm.com>
+References: <20231114085258.2378-1-quic_aiquny@quicinc.com>
+In-Reply-To: <20231114085258.2378-1-quic_aiquny@quicinc.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 14 Nov 2023 14:13:44 +0100
-Message-ID: <CACRpkdb-4fBSRDaXiqXWe3Yh_Z1ni4ScJHfC_bw+bm4dqT_kCA@mail.gmail.com>
-Subject: Re: [RFC v5 5/5] dt-bindings: firmware: arm,scmi: Add support for
- pinctrl protocol
-To: Souvik Chakravarty <souvik.chakravarty@arm.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>, Takahiro Akashi <takahiro.akashi@linaro.org>, 
-	Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Date: Tue, 14 Nov 2023 14:21:41 +0100
+Message-ID: <CACRpkdYgyASV6ttW=AeAWSh3oiFDk9_Q1WV00=7yTxtuhpdXEg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: avoid reload of p state in interation
+To: Maria Yu <quic_aiquny@quicinc.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel@quicinc.com, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 13, 2023 at 3:23=E2=80=AFPM Souvik Chakravarty
-<souvik.chakravarty@arm.com> wrote:
-> On 13/11/2023 13:32, Linus Walleij wrote:
-> > Hi Souvik,
-> >
-> > thanks for looking into this!
-> >
-> > On Mon, Nov 13, 2023 at 1:56=E2=80=AFPM Souvik Chakravarty
-> > <souvik.chakravarty@arm.com> wrote:
-> >
-> >> The initial assumption always was that GPIOs can be considered as a
-> >> specific function. Note that the spec does not define the types of
-> >> function and leaves it to the DT binding (or driver) to figure out the
-> >> function descriptions/names.
-> >
-> > Does this mean that each system using pinctrl-SCMI will need
-> > to specify the available pins, groups and functions in a device tree
-> > binding? For e.g. DT validation using schema?
+Hi Maria,
+
+thanks for your patch!
+
+On Tue, Nov 14, 2023 at 9:54=E2=80=AFAM Maria Yu <quic_aiquny@quicinc.com> =
+wrote:
+
+> When in the list_for_each_entry interation, reload of p->state->settings
+> with a local setting from old_state will makes the list interation in a
+> infite loop.
 >
-> Sorry seems I made a typo above ("descriptions/names" should have been
-> "description from names") which resulted in turning things on its head.
->
-> I really meant that the driver has to figure out the exact type or
-> meaning of what the function does from its name. SCMI still continues to
-> provide the list of pins/groups/functions and their names.
+> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
 
-Indeed, that's what I imagined.
+This makes sense in a way, since this is a compiler-dependent problem,
+can you state in the commit message which compiler and architecture
+you see this on?
 
-I think the rest of my question spurred by the phrase
-"leaves it to the DT binding (or driver) to figure out" is actually
-something Oleksii needs to look into more than a question to you.
-
-It should probably come as a review comment to the patch 5/5 itself.
-
-Oleksii, what is your take on my question about DT schema validation
-for different SoCs?
+If it is a regression, should this also be queued for stable? (I guess so?)
 
 Yours,
 Linus Walleij
