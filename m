@@ -1,111 +1,106 @@
-Return-Path: <linux-gpio+bounces-183-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-184-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15F537EC970
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 18:11:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEA737ED1EC
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 21:23:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 99AEFB20BC3
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 17:10:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 686871F26660
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 20:23:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3EB28387;
-	Wed, 15 Nov 2023 17:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5B8D433C7;
+	Wed, 15 Nov 2023 20:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YdE9Wrlv"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UdL+QufB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DC428382
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 17:10:52 +0000 (UTC)
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90BF2196
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 09:10:51 -0800 (PST)
-Received: by mail-ot1-x329.google.com with SMTP id 46e09a7af769-6d261cb07dcso4379341a34.3
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 09:10:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1700068251; x=1700673051; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sg1GfTPZ0gor5qGEo5yfXBSN25SIukbC+PratdWXctI=;
-        b=YdE9WrlvnKLckJMGI2/3Ogo5UhEAOCw39ylnGuvkd+j/mQEm6sv4Wyp/F6HJvLPTs+
-         IB4RQsuUwxTjoWm+V95fKu2ZvyEsDD5ORnWpBHcBhe2a8pcEDeZOj6IHEJ5R6tTwol4k
-         F+He/zhUvlDRNCeC2szALc7d2jxFSMA0RAl5rhTs1njmS3sYtHZ+sA8zmxcfWrqTgMh2
-         9O9nJou/uZqL7XJgU3Zh06hbvZca9nnn+teJT28uVhTg8iOgyhcBEMFu0V76um0kNvCF
-         TVcDeEKT518a33v8WchbExHU8QLVFr15kLxq9dAQVfoD7fLtYGozVkiLhY3JW2BszV1d
-         wgmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700068251; x=1700673051;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sg1GfTPZ0gor5qGEo5yfXBSN25SIukbC+PratdWXctI=;
-        b=iF6CuzKssupIcsQmUDgsolII0f1ZztpRgwIxqiaRK6XL46QxMeW5gw50XRoI5Moa8v
-         wL4l+RnTYNE+w3wpmZKNa4RiIoph6NMilqvNGvMLf+Zw68lxqlGjn+A0It+qqJ0KlDry
-         XTg4zdV7gZMwyrZZh57Ves+HR0GjMJBtmIGXnjytUOHpcgeqbf36WYeOyutzs4nph9sl
-         VQZ0TTvIR/W51oYYDe5J42KD42dMg3YisFejESxmpw7XCTmvCTRFyjEjF1yfcq8SK2d5
-         lFGnb778YWlEmqdLL6VIOhf9PA0PRFRcGQgKyIIzpwlPMf3uVQ64zHObGHh7sJ901VVy
-         YGgQ==
-X-Gm-Message-State: AOJu0Yz5R9QsKMZmH/WD5DwHOrDqkY9n9TFpVqfwEmoHQJOxhmBFtM5/
-	I8h6/RCn9HjYrdLbinfub3sCV+oir3pCS812iZtUBg==
-X-Google-Smtp-Source: AGHT+IE9wfAwt/wzf2lwZ9u3DTaE/IqWMgQUUTbmzjOg50RV86y3/e1U35OzGvPtn/It0GKoFRfwDlpV2+FHER6Vkww=
-X-Received: by 2002:a05:6358:528a:b0:16b:c5ca:96e4 with SMTP id
- g10-20020a056358528a00b0016bc5ca96e4mr6447489rwa.2.1700068250872; Wed, 15 Nov
- 2023 09:10:50 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336D0433BA;
+	Wed, 15 Nov 2023 20:23:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50021C433C8;
+	Wed, 15 Nov 2023 20:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1700079809;
+	bh=gabJ5os+xjeNpC+/5fAtNZcqD3iV33NQ/cAdC59SDeQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UdL+QufB/iE97IKDDSJZF2KstB/Lpihw4KL0t2gZlNHJ+b2qANVNv2SCKm2esd5z1
+	 E20NuEUjVbyvsn2OeGfXqvN0KkC5nErJW6Q+G/fGULJPWJQc4xn1F02D23nDlEQvZU
+	 Cz2z7YoFN3r58FYxQ5JHOSWLkUHWGUQoafT8ohEU=
+Date: Wed, 15 Nov 2023 15:21:29 -0500
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1 1/3] device property: Implement device_is_big_endian()
+Message-ID: <2023111513-stinky-doorframe-8cd1@gregkh>
+References: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
+ <20231025184259.250588-2-andriy.shevchenko@linux.intel.com>
+ <2023102624-moonshine-duller-3043@gregkh>
+ <ZTpbMVSdKlOgLbwv@smile.fi.intel.com>
+ <ZUPBVMdi3hcTyW2n@smile.fi.intel.com>
+ <CAMRc=MeV9ZyOzuQFEE_duPTHYgfmr6UZU6bpjDPhrczZX4PHpg@mail.gmail.com>
+ <CAMRc=MdSpk_OszeDCyA5_Sp-w=sL9DHB2gGCOFP+FCiobm2cbA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231113143219.43498-1-zinger.ad@gmail.com> <CWXV8TMDNK59.WFY7K99MD7KQ@ablu-work>
- <CWYGBJ6SZ2UH.2S7NPDBHCGPIL@Kalray-lp232>
-In-Reply-To: <CWYGBJ6SZ2UH.2S7NPDBHCGPIL@Kalray-lp232>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 15 Nov 2023 18:10:40 +0100
-Message-ID: <CAMRc=MfgCTF-+0Dkw644piScYH__gcfBHL2EKW18vWt0WXeDvA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] libgpiod: Allow to gracefully exit from a wait event
-To: Adrien Zinger <zinger.ad@gmail.com>
-Cc: Erik Schilling <erik.schilling@linaro.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdSpk_OszeDCyA5_Sp-w=sL9DHB2gGCOFP+FCiobm2cbA@mail.gmail.com>
 
-On Tue, Nov 14, 2023 at 11:10=E2=80=AFAM Adrien Zinger <zinger.ad@gmail.com=
-> wrote:
->
-> > This sounds like an oddly specific API... I wonder, why does
-> > gpiod_line_request_get_fd [1] + doing the polling in your code
-> > not work
-> > for you? Since you already got a file descriptor for the
-> > notification that seems like little extra work. Or
-> > did you consider that but find
-> > it too verbose?
->
-> Until now it works like you said and it's not so verbose.
->
-> Actually I had the issue some weeks ago. And before digging inside the
-> library I have searched in the documentation and also asked on
-> stackoverflow [1] for a suggestion. Despite everything me and other
-> developers were not able to guess how to cancel a wait event from
-> another thread, without reading the code of the library. I thought
-> that it could be a good thing to provide that feature.
->
-> [1]
-> https://stackoverflow.com/questions/77222869/how-to-gracefully-cancel-gpi=
-od-line-event-wait
->
-> Best regards,
-> Adrien
->
->
+On Wed, Nov 15, 2023 at 03:58:54PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Nov 3, 2023 at 10:08 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > On Thu, Nov 2, 2023 at 4:33 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Thu, Oct 26, 2023 at 03:27:30PM +0300, Andy Shevchenko wrote:
+> > > > On Thu, Oct 26, 2023 at 07:25:35AM +0200, Greg Kroah-Hartman wrote:
+> > > > > On Wed, Oct 25, 2023 at 09:42:57PM +0300, Andy Shevchenko wrote:
+> > > > > > Some users want to use the struct device pointer to see if the
+> > > > > > device is big endian in terms of Open Firmware specifications,
+> > > > > > i.e. if it has a "big-endian" property, or if the kernel was
+> > > > > > compiled for BE *and* the device has a "native-endian" property.
+> > > > > >
+> > > > > > Provide inline helper for the users.
+> > > > >
+> > > > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > >
+> > > > Thank you, Greg.
+> > > >
+> > > > Bart, would it be still possible to take this into next?
+> > > > I would like to have at least this patch applied (with the first user)
+> > > > to allow conversion of others (I have some more users of new API).
+> > >
+> > > Okay, seems we missed v6.7 with this, can you then prepare an immutable
+> > > branch / tag with this, so other maintainers can pull in case it's needed?
+> > > (I have something against tty already and perhaps something else, let's
+> > >  see.)
+> > >
+> >
+> > It arrived too late in the cycle, I needed to send my PR earlier this
+> > time as I was OoO this week.
+> >
+> > Bart
+> 
+> Greg, will you take this patch through your tree and provide me with
+> an immutable tag for this cycle?
 
-I agree with Erik, this looks like a very specific (obscure?) use-case
-that's best implemented in-place using the fd getter. I try to keep
-the library minimal and simple and this doesn't seem like a good fit
-IMO.
+Sure, let me catch up with patches after I return from Plumbers next
+week.
 
-Bart
+greg k-h
 
