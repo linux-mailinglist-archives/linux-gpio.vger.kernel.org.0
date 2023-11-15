@@ -1,62 +1,72 @@
-Return-Path: <linux-gpio+bounces-176-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-177-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3E97EC88C
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 17:29:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D73397EC892
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 17:29:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B9431C208FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 16:29:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 905052813FD
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 16:29:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F3339FE4;
-	Wed, 15 Nov 2023 16:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765CD3BB24;
+	Wed, 15 Nov 2023 16:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="EXFpqtsC"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uNGX4SLQ"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E236A930
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 16:29:00 +0000 (UTC)
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B322B11D
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 08:28:57 -0800 (PST)
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3AF6ecXV007857;
-	Wed, 15 Nov 2023 10:28:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=j
-	uEDWpGdWhhlILpWsIBos3D2RftNdzYxHRwKpaV6HLg=; b=EXFpqtsCOHN8TcP4D
-	z1iKpn4uVijtRk1cevsNG3Mer40S0HmVYl69l1YrgePJ2v5jIUszO3818Oo4f/mK
-	hvFpFshMyao0KwI0xO3kxF4c22lXOcOHy0HDIWBlvvVrXRvyafFgcZeb7+qbnF9v
-	dSk7tUCjNdBI1DXzwcudxNkuo6S35I0AeEEjrhnzdszH/sDoATWnQ41POWPnbdiY
-	I72z7NngAoLaUkA+WYlmTvXiDljjYCFD7j+d0SudltfI4S+/AymKgr+I5W4TiGx9
-	L92SZK/MVE/WchGloB0YRAz9C8e2QOLBAhFBlb1X+4eJgcgAa/M2Fy/p9j2Ay3p3
-	FMg5Q==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3ua7w2mxmj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Nov 2023 10:28:56 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Wed, 15 Nov
- 2023 16:28:53 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.39 via Frontend Transport; Wed, 15 Nov 2023 16:28:53 +0000
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 9D5503563;
-	Wed, 15 Nov 2023 16:28:53 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <linus.walleij@linaro.org>
-CC: <linux-gpio@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH] pinctrl: lochnagar: Don't build on MIPS
-Date: Wed, 15 Nov 2023 16:28:53 +0000
-Message-ID: <20231115162853.1891940-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B8E3BB28
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 16:29:09 +0000 (UTC)
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70A18E
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 08:29:07 -0800 (PST)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-41feb963f60so9387331cf.1
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 08:29:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1700065747; x=1700670547; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zWfB6Pfx3SaiRXKdJrtjr1wBtGr3UGnibkVdLL5HdSY=;
+        b=uNGX4SLQZ3SqWe0BBeXTLRHw1X5RmIPM2HKEK1heYbj2zMwIZIvST+LKeq6j7zIOph
+         iHH06GEb6Jyd/DFIcmIFAHm+599OXeimIYzMouUGPOqXtagZU1GRomDJYd6X2clT9fio
+         Fm/CTcOL1Hy/iBp3d5N/EArWppcQlqDaE0/TIH6O84569Q/z5RDb/iqrtNR3PpzexzYA
+         i+ISakhpbXEUjeSQ0zsvRUaYGjWlPAQDPm66rLhrjMabYMEq7PZcdzcdlV6IjyP03UJl
+         kDYf5fUnqmgVQJadaveruAIqH30wkq2kGys5UNiQADBAG4zkbWNWj4t8TPgg/fyk+S7B
+         KwCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700065747; x=1700670547;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zWfB6Pfx3SaiRXKdJrtjr1wBtGr3UGnibkVdLL5HdSY=;
+        b=jBgfFe2o9IMLRVKHJq7kiPV6rhYcj45BTCFehy1+0x4+VX8YqRbjRjtJoyiFcbz5Ok
+         9WW3VrU6qRvoXiZ9AmGaHej8HZ3Cw8LxJFLig6yMqinzuLGIivIL8PI1HFJXTeNODcrE
+         c2BWuWLOiqsZQ1eH1a44GrGmhlS+9G6hsFJuezj9VeC37l/uJaFtjfvxMWp0jCyWezKA
+         ZkbVYO5G03ad6YqJzI0mojyKznCCc1oXhKL2ED22EuHbkmROpEEQY2pERwtft74sWpOs
+         HxnfggRoRVO3N4Pmxz8d9QZijW01QL/tVaNuVCqv6mSqX8/KFZOx6WHgI+L14TSvlQfg
+         6Ccw==
+X-Gm-Message-State: AOJu0Yx5QwAdUyMvpHy0RzIUWnEbYIHZfKt/cTuMxOlrGFb6pZgnk4rC
+	GGmlyEN18zWO9kSe0p9rHvJpzQ==
+X-Google-Smtp-Source: AGHT+IGbQpcw6KBTm98RikYpu9miHWjOeCRL5OJ7iTqf/uU0fxIkVuFIIbP5+Gm3dZbTwjRb7khCDQ==
+X-Received: by 2002:a05:622a:18a9:b0:403:a662:a3c1 with SMTP id v41-20020a05622a18a900b00403a662a3c1mr10578328qtc.29.1700065747040;
+        Wed, 15 Nov 2023 08:29:07 -0800 (PST)
+Received: from brgl-uxlite.. ([12.186.190.1])
+        by smtp.gmail.com with ESMTPSA id d22-20020ac86696000000b0041818df8a0dsm3645419qtp.36.2023.11.15.08.29.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Nov 2023 08:29:06 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: mockup: initialize a managed pointer in place
+Date: Wed, 15 Nov 2023 17:29:01 +0100
+Message-Id: <20231115162901.2575969-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,39 +74,40 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: EYlcQCkHpFYHMJdm2U4x0uCDz1VKWcy1
-X-Proofpoint-GUID: EYlcQCkHpFYHMJdm2U4x0uCDz1VKWcy1
-X-Proofpoint-Spam-Reason: safe
 
-MIPS appears to define a RST symbol at a high level, which clashes
-with some register naming in the driver. Since there is currently
-no case for running this driver on MIPS devices simply cut off the
-build of this driver on MIPS.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202311071303.JJMAOjy4-lkp@intel.com/
-Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+The preferred pattern for autopointers is to initialize them when they're
+declared unless it doesn't make sense. Move the declaration of the
+managed device pointer to where it's initialized.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pinctrl/cirrus/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-mockup.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/cirrus/Kconfig b/drivers/pinctrl/cirrus/Kconfig
-index d6318cb57aff2..c56220e05f57e 100644
---- a/drivers/pinctrl/cirrus/Kconfig
-+++ b/drivers/pinctrl/cirrus/Kconfig
-@@ -12,7 +12,8 @@ config PINCTRL_CS42L43
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 4870e267a402..455eecf6380e 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -354,7 +354,6 @@ static const struct file_operations gpio_mockup_debugfs_ops = {
+ static void gpio_mockup_debugfs_setup(struct device *dev,
+ 				      struct gpio_mockup_chip *chip)
+ {
+-	struct device *child __free(put_device) = NULL;
+ 	struct gpio_mockup_dbgfs_private *priv;
+ 	struct gpio_chip *gc;
+ 	const char *devname;
+@@ -367,7 +366,7 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
+ 	 * There can only be a single GPIO device per platform device in
+ 	 * gpio-mockup so using device_find_any_child() is OK.
+ 	 */
+-	child = device_find_any_child(dev);
++	struct device *child __free(put_device) = device_find_any_child(dev);
+ 	if (!child)
+ 		return;
  
- config PINCTRL_LOCHNAGAR
- 	tristate "Cirrus Logic Lochnagar pinctrl driver"
--	depends on MFD_LOCHNAGAR
-+# Avoid clash caused by MIPS defining RST, which is used in the driver
-+	depends on MFD_LOCHNAGAR && !MIPS
- 	select GPIOLIB
- 	select PINMUX
- 	select PINCONF
 -- 
-2.39.2
+2.40.1
 
 
