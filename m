@@ -1,257 +1,100 @@
-Return-Path: <linux-gpio+bounces-130-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-134-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC6357EBFDF
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 10:59:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DAC77EBFE5
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 10:59:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07D7FB20BB3
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 09:59:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ECAE0B20B23
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 09:59:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C256F9FE;
-	Wed, 15 Nov 2023 09:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 066AF947F;
+	Wed, 15 Nov 2023 09:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VTQvtkhI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RrLiRV+F"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7AF3C154
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 09:59:07 +0000 (UTC)
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64C511AD
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 01:59:04 -0800 (PST)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231115095858epoutp025621896cc42957d310802d52239e3c2f~Xw3-QaBZ90279502795epoutp02E
-	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 09:58:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231115095858epoutp025621896cc42957d310802d52239e3c2f~Xw3-QaBZ90279502795epoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1700042338;
-	bh=t5IrulBEYs/pAFYmxibKmCqgtb1DKb9WLtc5ml9R97Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VTQvtkhIzzFuRkcH1y7RGB6SnNKrAHeYT2J9IFLzs8X8Tbe6CFKnjPmjzEfmjBGAY
-	 nUvkvVGqzUnPHFNSif92Zn5+eCO9584Qi4Uko46NIFbSwWIfRZsz6uwoNQmKH/h9fW
-	 fQ/IeWL5QQm7Bn6l6sRVk6Nv/o9vsOz8bh2SOUcc=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-	20231115095857epcas2p465687eaa11fd45b71f5552e2697d14ac~Xw3_2QNBg0464704647epcas2p41;
-	Wed, 15 Nov 2023 09:58:57 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.68]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4SVdss0Kblz4x9Q6; Wed, 15 Nov
-	2023 09:58:57 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-	B7.0D.09622.06694556; Wed, 15 Nov 2023 18:58:56 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20231115095856epcas2p189ef50d3e97656a92df6fef64414690c~Xw395_vIO0734707347epcas2p1R;
-	Wed, 15 Nov 2023 09:58:56 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20231115095856epsmtrp27a1fbbf4c2addad9c7a808eea63526ce~Xw394kGge2585825858epsmtrp2s;
-	Wed, 15 Nov 2023 09:58:56 +0000 (GMT)
-X-AuditID: b6c32a46-5d04aa8000002596-b7-6554966063cc
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	07.F6.08755.06694556; Wed, 15 Nov 2023 18:58:56 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.55]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20231115095856epsmtip232c3ccc608c345f749a2f8215284d513~Xw39cuzZe2498624986epsmtip2g;
-	Wed, 15 Nov 2023 09:58:56 +0000 (GMT)
-From: Jaewon Kim <jaewon02.kim@samsung.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester
-	Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>, Uwe Kleine-K?nig
-	<u.kleine-koenig@pengutronix.de>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-serial@vger.kernel.org, Jaewon Kim <jaewon02.kim@samsung.com>
-Subject: [PATCH v2 12/12] arm64: dts: exynos: add minimal support for
- exynosautov920 sadk board
-Date: Wed, 15 Nov 2023 18:56:08 +0900
-Message-ID: <20231115095609.39883-13-jaewon02.kim@samsung.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231115095609.39883-1-jaewon02.kim@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450E9FBEC
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 09:59:12 +0000 (UTC)
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C009E1A3
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 01:59:10 -0800 (PST)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-d9cbba16084so6565998276.1
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 01:59:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700042350; x=1700647150; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yMYbJ2pYyOF1bQRIseaOIgNKpTkxL2DUlV+Adcdxow0=;
+        b=RrLiRV+F5TKUSeWyyD7BgqiwEFAcdNAMot6tUi/wm3wOKKCKwfGMUhPMWaupE0GsEt
+         W2TxZgIrnh5k0frUnB+6eeWdjQ2He1h6RfE52T9eMJ7mtInxw0YQh49M3/OaKUshio0k
+         2r1GKhIsuH3SWEo90k4hauylgWU24iWkYF5YIYjB1ps7C8/2j/9YxvigGj5rszOoqza2
+         olbx6Y23QAVEbwWF7ejTot7wwrUZYWUQq67l+dIUOBGOfPXbXxQjATAAYLXz2Xko6w97
+         ma519hHrtQjGjQhbAWd6KUHFtb9IINh0ocVWnMRvKdan6TvNAaenVN7WYIJ2Yw89ESUJ
+         rh7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700042350; x=1700647150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yMYbJ2pYyOF1bQRIseaOIgNKpTkxL2DUlV+Adcdxow0=;
+        b=St3VP4Dhnh3blpAfQUkZoitvHawNCey12qeH2iC5gJuIB1xuzYAhn82UhRMDrZHOCk
+         1xMj0FD79Dun87095+kr6Tlsl6LnnIUUpZjyfGVHo+TLs+Lx7oZ/zr44vV4tLWFkj2UL
+         W6vrujNee/qK/R6s4060ND1X3FBREkl9FwTFXE+YzCIg3PnyXF7DS9MUAldypMnWLvkP
+         xQacc4ZnoRiiLD2Ms6gh5hi/faG0DunZ9Sy4oNTrHG/oJTHoNSB1I5RVtg7xcgONRWfD
+         bXJg8gFEx3wjWffbzg09zaoD5WBF5MPe5yVBVLB7qHXUGmIl+stUyOUM9Q0O/F9UWgGr
+         GgrA==
+X-Gm-Message-State: AOJu0YwrmntKqT9C0YGDtHxUwXxR8qaNQQ9WcOk3q9QekjowWycMfY90
+	MLzuObqJMSmVrL2x4zLdIMiL/K/s1lgZ8cdiVMCeAg==
+X-Google-Smtp-Source: AGHT+IFIi2V7s4Jk14pZAM7pqhWmLZYA7ebEMthP/5WmyIYDlMdlE/vDv+mOO97GJHHKq2nsoZVf3yhHI/ZXUDn1P7M=
+X-Received: by 2002:a25:3d81:0:b0:da3:b814:2500 with SMTP id
+ k123-20020a253d81000000b00da3b8142500mr11637353yba.18.1700042349793; Wed, 15
+ Nov 2023 01:59:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAJsWRmVeSWpSXmKPExsWy7bCmmW7CtJBUg2vXrS0ezNvGZrFm7zkm
-	i/lHzrFaNC9ez2axo+EIq8W7uTIWe19vZbeY8mc5k8Wmx9dYLTbP/8NocXnXHDaLu3dXMVrM
-	OL+PyeLM4l52i9a9R9gtDr9pZ7X4uWsei8WqXUB1tydOZnQQ9tg56y67x6ZVnWwed67tYfPY
-	P3cNu8fmJfUe/X8NPPq2rGL0+LxJLoAjKtsmIzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX
-	0NLCXEkhLzE31VbJxSdA1y0zB+gdJYWyxJxSoFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6B
-	eYFecWJucWleul5eaomVoYGBkSlQYUJ2xpv3zYwFN8UrXnY8ZWtgnC/cxcjJISFgInF98yGm
-	LkYuDiGBHYwSTy+fZoRwPjFK7Hh8Fsr5xiixoL8VqIwDrKXpmTtIt5DAXkaJ3c1eEDUfGSU2
-	/bjMApJgE9CW+L5+MSuILSJwn1nidVs1SBGzQDuTxLxvL1lABgkLJEq0nQ4AqWERUJXYcf8a
-	E4jNK2An8enfGxaI8+Ql9iz6DraXEyjeel4LokRQ4uTMJ2AlzEAlzVtnM0OU3+CQuDXJDMJ2
-	kWjZsYYdwhaWeHV8C5QtJfH53V42CDtbon36H1YIu0Li4obZUHFjiVnP2hlB1jILaEqs36UP
-	8bmyxJFbUFv5JDoO/2WHCPNKdLQJQTSqSdyfeg5qiIzEpCMrmSBsD4mJe3dDA3Mio8TGtb3M
-	ExgVZiF5ZhaSZ2YhLF7AyLyKUSy1oDg3PbXYqMAIHrvJ+bmbGMFJW8ttB+OUtx/0DjEycTAe
-	YpTgYFYS4TWXC0kV4k1JrKxKLcqPLyrNSS0+xGgKDOmJzFKiyfnAvJFXEm9oYmlgYmZmaG5k
-	amCuJM57r3VuipBAemJJanZqakFqEUwfEwenVAOTkrsNa14x229BK5Xc3P/2PPdZGab5c629
-	f1IjOaTwYPKjOw+nX1Tr6hWWEp3Oks7yqFbp2YvE6uj/6wyLTvRtzmEMOZIgcZtlWXyIXKPr
-	M5XH31NXFi00fXFX7pb7IS2vygM7GX/df9kt2rXw6odPBq+51+5IjWG7usKMuYlzu+O6Ldx7
-	ZIWYc7Q2BDawWdja39x5/02TxUre6dvn3c86+cHiS8uumrU83bpdWgmnrl7pWJKv/eDnqTcR
-	ktra+zoze/Zcakrcy3V0c0O4hYZ1183PjgLnHjG1azBJTzu+4t5Wv9n7n9z9/C3zn3H8D/2z
-	c/zvsmrVOn8VmbRV+Zoyv5Fx54UlF4wMyy3V9+kqsRRnJBpqMRcVJwIAngHRvGMEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplkeLIzCtJLcpLzFFi42LZdlhJXjdhWkiqwZHTUhYP5m1js1iz9xyT
-	xfwj51gtmhevZ7PY0XCE1eLdXBmLva+3sltM+bOcyWLT42usFpvn/2G0uLxrDpvF3burGC1m
-	nN/HZHFmcS+7ReveI+wWh9+0s1r83DWPxWLVLqC62xMnMzoIe+ycdZfdY9OqTjaPO9f2sHns
-	n7uG3WPzknqP/r8GHn1bVjF6fN4kF8ARxWWTkpqTWZZapG+XwJXx5n0zY8FN8YqXHU/ZGhjn
-	C3cxcnBICJhIND1z72Lk4hAS2M0oseDNP9YuRk6guIzE8md9bBC2sMT9liOsEEXvGSXOv93M
-	DJJgE9CW+L5+MVhCROA5s8TZP4/AEswC/UwS1zclgGwQFoiXeHdREiTMIqAqseP+NSYQm1fA
-	TuLTvzcsEAvkJfYs+s4EUs4JFG89rwUSFhKwlWjd/YMZolxQ4uTMJywQ0+UlmrfOZp7AKDAL
-	SWoWktQCRqZVjJKpBcW56bnFhgWGeanlesWJucWleel6yfm5mxjBMaaluYNx+6oPeocYmTgY
-	DzFKcDArifCay4WkCvGmJFZWpRblxxeV5qQWH2KU5mBREucVf9GbIiSQnliSmp2aWpBaBJNl
-	4uCUamCq3eBy5bJfmnhma/SDOUdY+jjOTpWyWs13U2/VxONr7b4zbZkv33dBqNXqfb2w4c01
-	nX//bl1z9u1K8/szKz88WJ2RGScWNnOPZlPZ4x3c2RM+VC7+//sDA7PO3xqWvc4sARv26p0o
-	FmJtYNl6O+zPad7Xteor728v/jFrdUu7yJe7bTc/1XzW27amRFnr5QTmx+8v8ogkdlntftLv
-	xHJo0fs2mfX1inXyQdcmLc27pOgfO61d8ZnZzXeNq+LEGJKvlW7ODHu5cePfZYYL/9axJa4K
-	1krPP3Q4ePX35R35v1Q27p5m8+uYr4SX84GrsuYLeZeUdJd9O3JwZqrYnuRde5fN3bRgroTR
-	27VLj7CIXlZiKc5INNRiLipOBADm9AgPIAMAAA==
-X-CMS-MailID: 20231115095856epcas2p189ef50d3e97656a92df6fef64414690c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231115095856epcas2p189ef50d3e97656a92df6fef64414690c
-References: <20231115095609.39883-1-jaewon02.kim@samsung.com>
-	<CGME20231115095856epcas2p189ef50d3e97656a92df6fef64414690c@epcas2p1.samsung.com>
+References: <20231115010906.35357-1-quic_aiquny@quicinc.com>
+In-Reply-To: <20231115010906.35357-1-quic_aiquny@quicinc.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 15 Nov 2023 10:58:58 +0100
+Message-ID: <CACRpkdbmw=goFFiSYOC4_ybiHiiBJJqmVv2Gh=v5nuTnQ1Z1Gg@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: avoid reload of p state in list iteration
+To: Maria Yu <quic_aiquny@quicinc.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel@quicinc.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ExynosAutov920 SADK is ExynosAutov920 SoC based SADK(Samsung Automotive
-Development Kit) board. It has 16GB(8GB + 8GB) LPDDR5 RAM and 256GB
-(128GB + 128GB) UFS.
+Hi Maria,
 
-This is minimal support board device-tree.
- * Serial console
- * GPIO Key
- * PWM FAN
+On Wed, Nov 15, 2023 at 2:13=E2=80=AFAM Maria Yu <quic_aiquny@quicinc.com> =
+wrote:
 
-Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
----
- arch/arm64/boot/dts/exynos/Makefile           |  3 +-
- .../boot/dts/exynos/exynosautov920-sadk.dts   | 88 +++++++++++++++++++
- 2 files changed, 90 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+> When in the list_for_each_entry iteration, reload of p->state->settings
+> with a local setting from old_state will makes the list iteration in a
+> infinite loop.
+> The typical issue happened, it will frequently have printk message like:
+>   "not freeing pin xx (xxx) as part of deactivating group xxx - it is
+> already used for some other setting".
+> This is a compiler-dependent problem, one instance was got using Clang
+> version 10.0 plus arm64 architecture.
+>
+> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
+> Cc: stable@vger.kernel.org
 
-diff --git a/arch/arm64/boot/dts/exynos/Makefile b/arch/arm64/boot/dts/exynos/Makefile
-index 6e4ba69268e5..da06e1a9456c 100644
---- a/arch/arm64/boot/dts/exynos/Makefile
-+++ b/arch/arm64/boot/dts/exynos/Makefile
-@@ -5,4 +5,5 @@ dtb-$(CONFIG_ARCH_EXYNOS) += \
- 	exynos7-espresso.dtb		\
- 	exynos7885-jackpotlte.dtb	\
- 	exynos850-e850-96.dtb		\
--	exynosautov9-sadk.dtb
-+	exynosautov9-sadk.dtb		\
-+	exynosautov920-sadk.dtb
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
-new file mode 100644
-index 000000000000..e250b5594b58
---- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Samsung's ExynosAutov920 SADK board device tree source
-+ *
-+ * Copyright (c) 2023 Samsung Electronics Co., Ltd.
-+ *
-+ */
-+
-+/dts-v1/;
-+#include "exynosautov920.dtsi"
-+#include "exynos-pinctrl.h"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Samsung ExynosAutov920 SADK board";
-+	compatible = "samsung,exynosautov920-sadk", "samsung,exynosautov920";
-+
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	aliases {
-+		serial0 = &serial_0;
-+	};
-+
-+	chosen {
-+		stdout-path = &serial_0;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x70000000>,
-+		      <0x8 0x80000000 0x1 0xfba00000>,
-+		      <0xa 0x00000000 0x2 0x00000000>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&key_wakeup &key_back>;
-+
-+		key-wakeup {
-+			label = "KEY_WAKEUP";
-+			linux,code = <KEY_WAKEUP>;
-+			gpios = <&gpa0 0 GPIO_ACTIVE_LOW>;
-+			wakeup-source;
-+		};
-+
-+		key-back {
-+			label = "KEY_BACK";
-+			linux,code = <KEY_BACK>;
-+			gpios = <&gpp6 3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&pinctrl_alive {
-+	key_wakeup: key-wakeup-pins {
-+		samsung,pins = "gpa0-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+	};
-+};
-+
-+&pinctrl_peric1 {
-+	key_back: key-back-pins {
-+		samsung,pins = "gpp6-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
-+	};
-+};
-+
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm_tout0>;
-+	status = "okay";
-+};
-+
-+&serial_0 {
-+	status = "okay";
-+};
-+
-+&usi_0 {
-+	samsung,clkreq-on; /* needed for UART mode */
-+	status = "okay";
-+};
-+
-+&xtcxo {
-+	clock-frequency = <38400000>;
-+};
--- 
-2.42.0
+Thanks, very much to the point.
 
+Can you please send a v3 and add the info Andy requested too,
+and I will apply it!
+
+Yours,
+Linus Walleij
 
