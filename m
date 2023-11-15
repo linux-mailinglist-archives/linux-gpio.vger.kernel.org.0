@@ -1,42 +1,42 @@
-Return-Path: <linux-gpio+bounces-152-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-156-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A1357EC5B0
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 15:41:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 332227EC5C0
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 15:41:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D98D1F2690F
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 14:41:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92BF5B20D0F
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 14:41:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9022618C27;
-	Wed, 15 Nov 2023 14:40:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FCFC41A97;
+	Wed, 15 Nov 2023 14:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F8jgT8lA"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mgVCAJ61"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140FC33CF1;
-	Wed, 15 Nov 2023 14:40:43 +0000 (UTC)
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ADAB173E;
-	Wed, 15 Nov 2023 06:40:30 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPA id 6916CFF820;
-	Wed, 15 Nov 2023 14:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E050235EED;
+	Wed, 15 Nov 2023 14:40:46 +0000 (UTC)
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27F2DD41;
+	Wed, 15 Nov 2023 06:40:31 -0800 (PST)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 1ED09FF806;
+	Wed, 15 Nov 2023 14:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1700059229;
+	t=1700059230;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TbBlqCeNrZy6PhV/R9epk+t9XJ3OdgYkqrPc5YpLg7o=;
-	b=F8jgT8lAPKXcyPFzLLW6if6nqwx09xLI3vwuPUKc53E0anAfDsVMDwhaC4MBlBLthBvEB7
-	gti0LfKwRBHxFE9PVn+frjJVDtSgnpQyUfdLMHlyWX6t3OZbqdGZ6ErXkLZwvxd/iCreE7
-	e8Q9dzWh01eVci1znQdPLUL5C4oWXB9ouB0cLYgDGU/h76U5fZbZqTnkjQLn1+AVJoDw+Y
-	DmsERmP6F3aDPCfs4zSPh2y7a+BzkeIiZV4/3zlFNaWU40SDz/fvQRlr9IM4PltZptqzPB
-	4vsA/8J/SpoH72Ji+PtnnjTCp+7EOrWCtXzzP2PGmDEWqgnUFNGyW3fwbsSUfg==
+	bh=daBaX2nOfcBqffmMooshUw4wUFqmDO5ms4CR0skya7c=;
+	b=mgVCAJ61AqFQIr6QF7RiXK3F6Cxg5EMIeCpU6X2gv8ZzhZmf98Hg4ERhvuQ3K26IuhY77O
+	ZruaKb44yCnT5dcdR29YFri3+bibE1spS21Q+X9SzqZ1QhqjgDBi84ke0p3FCw7tB25YNZ
+	qcJTZSUFwHHGl99GQhxK8xtPF+mP+F5YT0stnRyunVL5lunl/bvmdfHntKHrq2kbqlSA/U
+	B2jIPrMT8dwvUbH86ASqO9+aswVHDF+Rg2rxfIM5b6Ss97DvO9NOMAahArp09mAlXiz0Cr
+	SP32UQ4h4Wtn7oK6KDKOo/i6GvA8jGgeRkU2LI41x0V9omEijgzNrFT8RGQihg==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -71,9 +71,9 @@ Cc: netdev@vger.kernel.org,
 	Simon Horman <horms@kernel.org>,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v9 08/27] MAINTAINERS: Add the Freescale QMC HDLC driver entry
-Date: Wed, 15 Nov 2023 15:39:44 +0100
-Message-ID: <20231115144007.478111-9-herve.codina@bootlin.com>
+Subject: [PATCH v9 09/27] soc: fsl: cpm1: qmc: Introduce available timeslots masks
+Date: Wed, 15 Nov 2023 15:39:45 +0100
+Message-ID: <20231115144007.478111-10-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231115144007.478111-1-herve.codina@bootlin.com>
 References: <20231115144007.478111-1-herve.codina@bootlin.com>
@@ -86,32 +86,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-After contributing the driver, add myself as the maintainer for the
-Freescale QMC HDLC driver.
+Available timeslots masks define timeslots available for the related
+channel. These timeslots are defined by the QMC binding.
+
+Timeslots used are initialized to available timeslots but can be a
+subset of available timeslots.
+This prepares the dynamic timeslots management (ie. changing timeslots
+at runtime).
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/soc/fsl/qe/qmc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 97f51d5ec1cf..82d9afa8c083 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8524,6 +8524,13 @@ F:	Documentation/devicetree/bindings/soc/fsl/cpm_qe/fsl,cpm1-scc-qmc.yaml
- F:	drivers/soc/fsl/qe/qmc.c
- F:	include/soc/fsl/qe/qmc.h
+diff --git a/drivers/soc/fsl/qe/qmc.c b/drivers/soc/fsl/qe/qmc.c
+index e716f13669a0..0413e25d4c67 100644
+--- a/drivers/soc/fsl/qe/qmc.c
++++ b/drivers/soc/fsl/qe/qmc.c
+@@ -177,7 +177,9 @@ struct qmc_chan {
+ 	struct qmc *qmc;
+ 	void __iomem *s_param;
+ 	enum qmc_mode mode;
++	u64	tx_ts_mask_avail;
+ 	u64	tx_ts_mask;
++	u64	rx_ts_mask_avail;
+ 	u64	rx_ts_mask;
+ 	bool is_reverse_data;
  
-+FREESCALE QUICC ENGINE QMC HDLC DRIVER
-+M:	Herve Codina <herve.codina@bootlin.com>
-+L:	netdev@vger.kernel.org
-+L:	linuxppc-dev@lists.ozlabs.org
-+S:	Maintained
-+F:	drivers/net/wan/fsl_qmc_hdlc.c
-+
- FREESCALE QUICC ENGINE TSA DRIVER
- M:	Herve Codina <herve.codina@bootlin.com>
- L:	linuxppc-dev@lists.ozlabs.org
+@@ -875,7 +877,8 @@ static int qmc_of_parse_chans(struct qmc *qmc, struct device_node *np)
+ 			of_node_put(chan_np);
+ 			return ret;
+ 		}
+-		chan->tx_ts_mask = ts_mask;
++		chan->tx_ts_mask_avail = ts_mask;
++		chan->tx_ts_mask = chan->tx_ts_mask_avail;
+ 
+ 		ret = of_property_read_u64(chan_np, "fsl,rx-ts-mask", &ts_mask);
+ 		if (ret) {
+@@ -884,7 +887,8 @@ static int qmc_of_parse_chans(struct qmc *qmc, struct device_node *np)
+ 			of_node_put(chan_np);
+ 			return ret;
+ 		}
+-		chan->rx_ts_mask = ts_mask;
++		chan->rx_ts_mask_avail = ts_mask;
++		chan->rx_ts_mask = chan->rx_ts_mask_avail;
+ 
+ 		mode = "transparent";
+ 		ret = of_property_read_string(chan_np, "fsl,operational-mode", &mode);
 -- 
 2.41.0
 
