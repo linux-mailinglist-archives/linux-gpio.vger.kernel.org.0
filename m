@@ -1,145 +1,116 @@
-Return-Path: <linux-gpio+bounces-114-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-115-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 397057EB864
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 22:18:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 330527EBAB8
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 01:56:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E838B2813DC
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Nov 2023 21:18:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C68751F25136
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 00:56:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF09B2FC44;
-	Tue, 14 Nov 2023 21:18:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F1FB396;
+	Wed, 15 Nov 2023 00:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PX+BSrgF"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TUZl27QD"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED3B33066;
-	Tue, 14 Nov 2023 21:18:29 +0000 (UTC)
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8F9CB;
-	Tue, 14 Nov 2023 13:18:27 -0800 (PST)
-Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-66d13ac2796so35356536d6.2;
-        Tue, 14 Nov 2023 13:18:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699996707; x=1700601507; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XB1eCxoA2vuTUBTuM8vj0+SNQVnxi+8b0Lh3KPIadtw=;
-        b=PX+BSrgFgDaPvyd6dzA2OLCvc72/9iW/wJZNo04ou7jVvjjkSER9HqIkjquckM8k0a
-         DjZ7DFo5fTJ0vGKz3DOxAVmX2/kHap2ECLsBj2g97hJ3abg/7rpeGri06aq1cS+AoGyJ
-         dAOnOCTj8uNuH7nsSjBt9qMnWDfbBy1CTflv99C/GDqetLZExMdlRzK038YWfSmzaKUG
-         aFRie79wvq3pHFeU3qMDdzwd5G9N38nknZfogUKyqAXQtT2P+tV0418DggdH8tB46LEy
-         ig99ulunTlSJ7fXCRUAn0r5S5n/TFCmbrpW/C8Rldb5X8Tr6difi4GeynWgBi2L8bFGS
-         VQYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699996707; x=1700601507;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XB1eCxoA2vuTUBTuM8vj0+SNQVnxi+8b0Lh3KPIadtw=;
-        b=izJ2Mk1MBenw8dAO0nzmOhgXK10/c+hViNbeyTHTmzElcTdcaGdJ3VbGLTGfQODZ5B
-         M5FsmzaylPT+CYp8DKOYlWLH811EMtOT58DUKsO7ffGZeAy0w7M70/5d2pCZLwzAEKV6
-         Yinb82yvMua/SOprF+hbN3VVK4AtjckX70a+RTpzHyGWpW9Ub7hUcGd3i6Lu/2JQ+o2l
-         K18w98UNyHfbMlla6LB7j53EmLKTVezhZbNgG16rUjMcZ05hbyxKOyJTlL2Fqlc73cku
-         lDCeRhYexd2UY5Ue83aA1d0nvKsJePizTwArNxIlmQOeX/6qC7/lFL+ore13t2kzCyMt
-         XvNQ==
-X-Gm-Message-State: AOJu0Yx40854Jj65kWfQh3v2yCiBWud5SPXfQfxDScF/OkBwhVOrA+FJ
-	y/A0LYm7cFdz1RAEWYuGbaA=
-X-Google-Smtp-Source: AGHT+IH5Oq9UPb4/sO5jkuaNKXwe9VywpTHHEQwboO5a7h25qwx6cGqHh+uzwICD8euB8Gjz7yadJg==
-X-Received: by 2002:ad4:498d:0:b0:677:a207:8770 with SMTP id u13-20020ad4498d000000b00677a2078770mr3432190qvx.0.1699996706739;
-        Tue, 14 Nov 2023 13:18:26 -0800 (PST)
-Received: from google.com ([12.186.190.2])
-        by smtp.gmail.com with ESMTPSA id m10-20020a0cee4a000000b0066cf2423c79sm3217723qvs.139.2023.11.14.13.18.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Nov 2023 13:18:26 -0800 (PST)
-Date: Tue, 14 Nov 2023 21:18:24 +0000
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ferry Toth <ftoth@exalondelft.nl>
-Subject: Re: [PATCH v1 2/3] gpiolib: Fix debug messaging in
- gpiod_find_and_request()
-Message-ID: <ZVPkIOk6gvnwkp9F@google.com>
-References: <20231019173457.2445119-1-andriy.shevchenko@linux.intel.com>
- <20231019173457.2445119-3-andriy.shevchenko@linux.intel.com>
- <ZTGBqEUzgGCcZP1B@google.com>
- <ZVOSd62yCz4lFIP1@smile.fi.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57046394
+	for <linux-gpio@vger.kernel.org>; Wed, 15 Nov 2023 00:56:47 +0000 (UTC)
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2868FE4;
+	Tue, 14 Nov 2023 16:56:45 -0800 (PST)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AF0uhpw003700;
+	Wed, 15 Nov 2023 00:56:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=OZhcjbz2HQ/QZtD8XrsoT733l56Lr8KKufKLGmGFN40=;
+ b=TUZl27QDrhnL+nT980GR1xOcdif/xfxuvcqEziYRo+eCy5FaFz85cnSxp37OJBzyy1Tf
+ cnxNY1sS9UOBo1g/V8Fxt38eljw9LU1ph7Hvf7g9so4WwpuW4LqgqjPJX4UaxoEo5uYT
+ A/DGPcosdsgcmJl98LkeGqvv0OOmAH+MxwahiyV4DSVfJutiuJrlazJhCNY3dZ4P8Z9H
+ FzYDpoPPS2awHgjkT0gmYcasVKcugEhCYkyfd3UNjof+8Oy/2Fm4k0+jcX1v7VwCynVc
+ LInxA0NRUFNchQJ9bQZwM0aylJZGkN3uPmCDl78C9f7nSRoetrsfJ60aC7FGUUYAKVCU dA== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ucfka8h81-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Nov 2023 00:56:43 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3AF0uhmN021165
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Nov 2023 00:56:43 GMT
+Received: from [10.239.133.73] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 14 Nov
+ 2023 16:56:37 -0800
+Message-ID: <94de6d83-d181-4a04-875a-377fb5e10b25@quicinc.com>
+Date: Wed, 15 Nov 2023 08:56:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZVOSd62yCz4lFIP1@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: avoid reload of p state in interation
+To: Linus Walleij <linus.walleij@linaro.org>
+CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, <stable@vger.kernel.org>
+References: <20231114085258.2378-1-quic_aiquny@quicinc.com>
+ <CACRpkdYgyASV6ttW=AeAWSh3oiFDk9_Q1WV00=7yTxtuhpdXEg@mail.gmail.com>
+From: "Aiqun(Maria) Yu" <quic_aiquny@quicinc.com>
+In-Reply-To: <CACRpkdYgyASV6ttW=AeAWSh3oiFDk9_Q1WV00=7yTxtuhpdXEg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: uZFTKSBSghaYmd4jEbbX-RQVPAHnAZoa
+X-Proofpoint-GUID: uZFTKSBSghaYmd4jEbbX-RQVPAHnAZoa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-14_24,2023-11-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 clxscore=1015 spamscore=0 bulkscore=0
+ phishscore=0 mlxscore=0 mlxlogscore=688 priorityscore=1501 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311150006
 
-On Tue, Nov 14, 2023 at 05:29:59PM +0200, Andy Shevchenko wrote:
-> On Thu, Oct 19, 2023 at 12:21:12PM -0700, Dmitry Torokhov wrote:
-> > On Thu, Oct 19, 2023 at 08:34:56PM +0300, Andy Shevchenko wrote:
-> > > When consolidating GPIO lookups in ACPI code, the debug messaging
-> > > had been broken and hence lost a bit of sense. Restore debug
-> > > messaging in gpiod_find_and_request() when configuring the GPIO
-> > > line via gpiod_configure_flags().
-> > 
-> > Could you give an example of the before/after messages to show exavtly
-> > what is being improved?
+On 11/14/2023 9:21 PM, Linus Walleij wrote:
+> Hi Maria,
 > 
-> Before your patch:
+> thanks for your patch!
 > 
-> [    5.266823] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
-> [   14.182994] gpio-40 (?): no flags found for gpios
+> On Tue, Nov 14, 2023 at 9:54 AM Maria Yu <quic_aiquny@quicinc.com> wrote:
 > 
-> After your patch:
+>> When in the list_for_each_entry interation, reload of p->state->settings
+>> with a local setting from old_state will makes the list interation in a
+>> infite loop.
+>>
+>> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
 > 
-> [    5.085048] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
-> [   13.401402] gpio-40 (?): no flags found for (null)
+> This makes sense in a way, since this is a compiler-dependent problem,
+> can you state in the commit message which compiler and architecture
+> you see this on?
+I have a crash dump which caused by this issue which is using Clang 
+10.0, arm64, Linux Version 4.19.
+Thx for your suggestion, I will put this information in the commit message.
 > 
-> After this patch:
+> If it is a regression, should this also be queued for stable? (I guess so?)
+This is a corner case which is very hard to reproduce in product, I 
+suggest this fix to be queued for stable.
 > 
-> [    3.871185] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
-> [   12.491998] gpio-40 (?): no flags found for gpios
-> 
-> ...
-> 
-> Looking at this it's definitely a fix.
-
-If this ("(null)" vs static "gpios" string) is important, can we reduce
-the patch to:
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 76e0c38026c3..b868c016a9be 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4151,7 +4151,7 @@ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
- 
- 	/* No particular flag request, return here... */
- 	if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
--		gpiod_dbg(desc, "no flags found for %s\n", con_id);
-+		gpiod_dbg(desc, "no flags found for %s\n", con_id ?: "gpios");
- 		return 0;
- 	}
- 
-
-instead of plumbing the names through?
-
-Although this (and the original fix patch) are losing information, in
-the sense that "(null)" explicitly communicates that caller used
-default/NULL conn_id, and not something like "gpios-gpios".
-
-Thanks.
+> Yours,
+> Linus Walleij
 
 -- 
-Dmitry
+Thx and BRs,
+Aiqun(Maria) Yu
+
 
