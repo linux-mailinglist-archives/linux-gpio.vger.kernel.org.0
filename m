@@ -1,42 +1,42 @@
-Return-Path: <linux-gpio+bounces-162-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-164-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C0787EC5DD
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 15:42:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE4A37EC5EC
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 15:42:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB1A61F2772C
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 14:42:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 33110B20CF4
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Nov 2023 14:42:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E5239FF0;
-	Wed, 15 Nov 2023 14:41:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 620A041759;
+	Wed, 15 Nov 2023 14:41:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ds8aX/2a"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YIovTjR6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699FE39FEF;
-	Wed, 15 Nov 2023 14:41:00 +0000 (UTC)
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 784671A1;
-	Wed, 15 Nov 2023 06:40:46 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPA id 7CB69FF80F;
-	Wed, 15 Nov 2023 14:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E146733CEB;
+	Wed, 15 Nov 2023 14:41:03 +0000 (UTC)
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C5E51994;
+	Wed, 15 Nov 2023 06:40:48 -0800 (PST)
+Received: by mail.gandi.net (Postfix) with ESMTPA id 38F37FF821;
+	Wed, 15 Nov 2023 14:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1700059245;
+	t=1700059246;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xrONI359XUSSSWTsnWUC/Z1/MsIumk+sm8QSdIX4Vog=;
-	b=Ds8aX/2a4PMrNHcZ+hZiG2CINeOYjj0nhkqc+0vCCY6jFcp41C3rsrXPhbVkfpXxizM8nh
-	U3j5dxMwkF7ZrqWoZsAa8zNMmFLPYPWekTtIEUt2YRMCc02tvFfjrVVaGyb11s9puxPUZK
-	ufefZrvXJ57QOSaBKRgMhxnuyO30UOcHAU14LAPCJwJa0QAh8OF0eQseECYjhXg0zptmOc
-	NUb/OdniA74XMzW5FyZImjfbGCYzJ5hwRQaQHdYsayWRxWQxcEjkEqpuENJLolhM244OEN
-	d51HlfTvWUcNAivSFL/Vm85YXgGHcvS9ohMtuD+sCAMsbPVCui1g3pxm/hqJGw==
+	bh=Lmi371X8x5jONZdY02Hgc0h3cbtYVrOzGwTzevjo8JI=;
+	b=YIovTjR6KDKFeKbj1xQjlGXKXNBC4nJeWOnKVu1UIzk3NJXa1epixEqeIDb/f3+CtWMojN
+	fmKbcxsAIyxvnwtCZuryiLJao0k7ddmCGsa+oBw38NWmrm9YpLafSPUVn1EWrw1Rc94tw3
+	S0UtH33KmnimJ2BbQtp/dP22bG3dy2Kg4mBXZWOzPlZzyoV94vg72YlmcEiO90H3z6hW9k
+	xRPhigqOMszakE/Ei5WtQa5SZt7t1fPbAcGRcIyo5cE3eQA8uRY/S9kspXeKuB43N4ZbN7
+	/fMomjCvKkoaxoo+XPgcWjIgyCNfca9tCpl9NvdpjAa+syMRPDcqkLHciPdGgQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Herve Codina <herve.codina@bootlin.com>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -71,9 +71,9 @@ Cc: netdev@vger.kernel.org,
 	Simon Horman <horms@kernel.org>,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v9 18/27] soc: fsl: cpm1: qmc: Remove timeslots handling from setup_chan()
-Date: Wed, 15 Nov 2023 15:39:54 +0100
-Message-ID: <20231115144007.478111-19-herve.codina@bootlin.com>
+Subject: [PATCH v9 19/27] soc: fsl: cpm1: qmc: Introduce functions to change timeslots at runtime
+Date: Wed, 15 Nov 2023 15:39:55 +0100
+Message-ID: <20231115144007.478111-20-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231115144007.478111-1-herve.codina@bootlin.com>
 References: <20231115144007.478111-1-herve.codina@bootlin.com>
@@ -86,63 +86,104 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-Timeslots setting is done at channel start() and stop().
-There is no more need to do that during setup_chan().
+Introduce qmc_chan_{get,set}_ts_info() function to allow timeslots
+modification at runtime.
 
-Simply remove timeslot setting from setup_chan().
+The modification is provided using qmc_chan_set_ts_info() and will be
+applied on next qmc_chan_start().
+qmc_chan_set_ts_info() must be called with the channel rx and/or tx
+stopped.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- drivers/soc/fsl/qe/qmc.c | 28 ----------------------------
- 1 file changed, 28 deletions(-)
+ drivers/soc/fsl/qe/qmc.c | 51 ++++++++++++++++++++++++++++++++++++++++
+ include/soc/fsl/qe/qmc.h | 10 ++++++++
+ 2 files changed, 61 insertions(+)
 
 diff --git a/drivers/soc/fsl/qe/qmc.c b/drivers/soc/fsl/qe/qmc.c
-index e56aea5803bf..73903ce31695 100644
+index 73903ce31695..79fe79b9464f 100644
 --- a/drivers/soc/fsl/qe/qmc.c
 +++ b/drivers/soc/fsl/qe/qmc.c
-@@ -723,30 +723,6 @@ static int qmc_chan_setup_tsa_rx(struct qmc_chan *chan, bool enable)
- 	return qmc_chan_setup_tsa_32rx(chan, &info, enable);
+@@ -290,6 +290,57 @@ int qmc_chan_get_info(struct qmc_chan *chan, struct qmc_chan_info *info)
  }
+ EXPORT_SYMBOL(qmc_chan_get_info);
  
--static int qmc_chan_setup_tsa(struct qmc_chan *chan, bool enable)
--{
--	struct tsa_serial_info info;
--	int ret;
--
--	/* Retrieve info from the TSA related serial */
--	ret = tsa_serial_get_info(chan->qmc->tsa_serial, &info);
--	if (ret)
--		return ret;
--
--	/*
--	 * Setup one common 64 entries table or two 32 entries (one for Tx
--	 * and one for Tx) according to assigned TS numbers.
--	 */
--	if (chan->qmc->is_tsa_64rxtx)
--		return qmc_chan_setup_tsa_64rxtx(chan, &info, enable);
--
--	ret = qmc_chan_setup_tsa_32rx(chan, &info, enable);
--	if (ret)
--		return ret;
--
--	return qmc_chan_setup_tsa_32tx(chan, &info, enable);
--}
--
- static int qmc_chan_command(struct qmc_chan *chan, u8 qmc_opcode)
++int qmc_chan_get_ts_info(struct qmc_chan *chan, struct qmc_chan_ts_info *ts_info)
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&chan->ts_lock, flags);
++
++	ts_info->rx_ts_mask_avail = chan->rx_ts_mask_avail;
++	ts_info->tx_ts_mask_avail = chan->tx_ts_mask_avail;
++	ts_info->rx_ts_mask = chan->rx_ts_mask;
++	ts_info->tx_ts_mask = chan->tx_ts_mask;
++
++	spin_unlock_irqrestore(&chan->ts_lock, flags);
++
++	return 0;
++}
++EXPORT_SYMBOL(qmc_chan_get_ts_info);
++
++int qmc_chan_set_ts_info(struct qmc_chan *chan, const struct qmc_chan_ts_info *ts_info)
++{
++	unsigned long flags;
++	int ret;
++
++	/* Only a subset of available timeslots is allowed */
++	if ((ts_info->rx_ts_mask & chan->rx_ts_mask_avail) != ts_info->rx_ts_mask)
++		return -EINVAL;
++	if ((ts_info->tx_ts_mask & chan->tx_ts_mask_avail) != ts_info->tx_ts_mask)
++		return -EINVAL;
++
++	/* In case of common rx/tx table, rx/tx masks must be identical */
++	if (chan->qmc->is_tsa_64rxtx) {
++		if (ts_info->rx_ts_mask != ts_info->tx_ts_mask)
++			return -EINVAL;
++	}
++
++	spin_lock_irqsave(&chan->ts_lock, flags);
++
++	if ((chan->tx_ts_mask != ts_info->tx_ts_mask && !chan->is_tx_stopped) ||
++	    (chan->rx_ts_mask != ts_info->rx_ts_mask && !chan->is_rx_stopped)) {
++		dev_err(chan->qmc->dev, "Channel rx and/or tx not stopped\n");
++		ret = -EBUSY;
++	} else {
++		chan->tx_ts_mask = ts_info->tx_ts_mask;
++		chan->rx_ts_mask = ts_info->rx_ts_mask;
++		ret = 0;
++	}
++	spin_unlock_irqrestore(&chan->ts_lock, flags);
++
++	return ret;
++}
++EXPORT_SYMBOL(qmc_chan_set_ts_info);
++
+ int qmc_chan_set_param(struct qmc_chan *chan, const struct qmc_chan_param *param)
  {
- 	return cpm_command(chan->id << 2, (qmc_opcode << 4) | 0x0E);
-@@ -1323,10 +1299,6 @@ static int qmc_setup_chan(struct qmc *qmc, struct qmc_chan *chan)
+ 	if (param->mode != chan->mode)
+diff --git a/include/soc/fsl/qe/qmc.h b/include/soc/fsl/qe/qmc.h
+index 166484bb4294..2a333fc1ea81 100644
+--- a/include/soc/fsl/qe/qmc.h
++++ b/include/soc/fsl/qe/qmc.h
+@@ -40,6 +40,16 @@ struct qmc_chan_info {
  
- 	chan->qmc = qmc;
+ int qmc_chan_get_info(struct qmc_chan *chan, struct qmc_chan_info *info);
  
--	ret = qmc_chan_setup_tsa(chan, true);
--	if (ret)
--		return ret;
--
- 	/* Set channel specific parameter base address */
- 	chan->s_param = qmc->dpram + (chan->id * 64);
- 	/* 16 bd per channel (8 rx and 8 tx) */
++struct qmc_chan_ts_info {
++	u64 rx_ts_mask_avail;
++	u64 tx_ts_mask_avail;
++	u64 rx_ts_mask;
++	u64 tx_ts_mask;
++};
++
++int qmc_chan_get_ts_info(struct qmc_chan *chan, struct qmc_chan_ts_info *ts_info);
++int qmc_chan_set_ts_info(struct qmc_chan *chan, const struct qmc_chan_ts_info *ts_info);
++
+ struct qmc_chan_param {
+ 	enum qmc_mode mode;
+ 	union {
 -- 
 2.41.0
 
