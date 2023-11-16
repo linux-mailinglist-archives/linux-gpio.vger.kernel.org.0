@@ -1,298 +1,172 @@
-Return-Path: <linux-gpio+bounces-208-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-209-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FFD17EE362
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Nov 2023 15:54:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 164AA7EE477
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Nov 2023 16:34:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3ED51F278E2
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Nov 2023 14:54:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 427D51C20997
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Nov 2023 15:34:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA2B333061;
-	Thu, 16 Nov 2023 14:54:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D38734565;
+	Thu, 16 Nov 2023 15:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KcdbNvGC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TWBX3+dF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DADA5B4
-	for <linux-gpio@vger.kernel.org>; Thu, 16 Nov 2023 06:54:15 -0800 (PST)
-Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-1f060e059a3so451738fac.1
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Nov 2023 06:54:15 -0800 (PST)
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E7519B
+	for <linux-gpio@vger.kernel.org>; Thu, 16 Nov 2023 07:34:30 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-9e62f903e88so127636966b.2
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Nov 2023 07:34:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700146455; x=1700751255; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=93PcyiUm7i6Lhh8QjR/CsFJhap/PqPkL9V3uDMBpzNk=;
-        b=KcdbNvGCttnGUcfaonftizypnL0NddBJULzQEoyQepl7d1Jmglc66XJORvBAXf3LBh
-         nNdc5in9/RQdaLzZsjUcee9Ul2uqIBEXI+SPO+v7EKwdjpP+g1/CSosFjVcl3UFLTBWi
-         bXM2xgsoU6WLwZM/+QmcmEvVC4TtQwJNaVs8Rig7CX4XudFCukoYOxMZlwc2EbJc+iI6
-         wUK5J/ywZgpgLhgCmfVzXvfsL0/cffQZsBI5acaAa8spOT7wUsmeRnZUK5uVB5//kgoV
-         1u7ljzkAivgbbUqKjlukVle8NMqIlrzONvpggHnDgBrzTsl04FyExRrNtV0NBc4nz18i
-         H+ig==
+        d=google.com; s=20230601; t=1700148869; x=1700753669; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PVNPAkisoMvkTyEW/8SK0tYA7Rxlmav3LfVvFoFHM20=;
+        b=TWBX3+dFKB6YDGnBNNRGVJsl1S5ajnnZVcPODjnz5+0EnYsMt0l12mH9Pr+eRfXaS0
+         HJOSnoNEtSNYX5hMHEd6Hkg/3DuV0C8srrxjzV/FTQgS5Dz/y2RubeGZukn0i1cBTFws
+         Gt1j26x+Jy21AAXtTqPE19RbWB9zCwjO9kwV45o69i09K2cIWi6/v2/DZw5Iz8CctgRK
+         1jkYg5QkuLlBQwplsYv4TMV7eXGY/i1Dmk11zB3bOUAcp/P4m7gpw5OLbHzmgXw6EbQN
+         pb6P8b8pa3XWwdaApSx5oqk0UUmXGaVPLiu9+2NKkpZmo8VuR6kG8I9aJaRgzfASmL4q
+         zmPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700146455; x=1700751255;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=93PcyiUm7i6Lhh8QjR/CsFJhap/PqPkL9V3uDMBpzNk=;
-        b=nTpoG5ejQJfGEXq+8C0psZXKaN5ocJr1373tyRqwC53kvAwUnyHoE/AgWrdOkEfy5J
-         0T+5QpxeOlwkCmand/Vva1lcO1kx0tQUakglXUNpgmq678eNCCjTWmRqhxM6RQAqbkYj
-         QDUKo4Rm2nsUnmCPlEk1dnyJcpOi9IV2tTB7R9tNMZvxLejF7hIVgVwZrHFxZqo/JtnF
-         KPqJLjA4DItX9WO3Q8XFW4iR3CeMD0UziLnCmIHdhxoqw9y4GDDkInUvyl2j+u1amqEg
-         CYvqqltVSp7RMF4ZpgdR53phibvjBzdlXyB0XeUdJn1auJyksZ9/yGaA3i/IAnt4Ku+U
-         A+MA==
-X-Gm-Message-State: AOJu0YzBp7yVUjea4zP7DVSzF9Ae5us78YPoPqWNkXsWHixFlPbagaf2
-	b23Mu7mYsycj2hAfMsPg2nMzKw==
-X-Google-Smtp-Source: AGHT+IHjbCHaJKX3PdF73fwcO+EzDwid40+JkzVeS221EfypzRQvtAkY5iDfQPKAEY233wRXGikU5A==
-X-Received: by 2002:a05:6871:b1e:b0:1f4:b55c:46b4 with SMTP id fq30-20020a0568710b1e00b001f4b55c46b4mr20421181oab.43.1700146455172;
-        Thu, 16 Nov 2023 06:54:15 -0800 (PST)
-Received: from [10.50.4.74] ([50.201.115.146])
-        by smtp.gmail.com with ESMTPSA id g13-20020a05620a278d00b00767d8e12ce3sm4358648qkp.49.2023.11.16.06.54.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Nov 2023 06:54:14 -0800 (PST)
-Message-ID: <44cfcd9a-f139-479b-85ff-5fd23c9714b2@linaro.org>
-Date: Thu, 16 Nov 2023 15:54:13 +0100
+        d=1e100.net; s=20230601; t=1700148869; x=1700753669;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PVNPAkisoMvkTyEW/8SK0tYA7Rxlmav3LfVvFoFHM20=;
+        b=fIQQra0k8jYJ+nIJovajvticmnIBqHz4M8k2xQ7Nf+maxmqfAat2lSPQWG8GpA3CJ4
+         MARf6PowtfqeUAxCmDaJ+0g7vsdXWXlWrql7Px/XriGm04CjbsPGNmFqnHw+OT2hIJ9W
+         CbwyMxs9LLiYlExs+opNFI9+wSW7rWf/87k/m0VvAb1C88gTP15caYzsw7SI11y4cRA4
+         UO7/0LynQRT0ZEW737P7t1JBpdapASuUw+lyprnGDOWXzRFXQUSohDTzTXRl8tZSX6bO
+         HiQLtqaFFyWR9+4S4IxqRqp2brdTPvk6Hl1sKM9yXdZlVlKeTct6WkcBlH6utQckM35N
+         adwg==
+X-Gm-Message-State: AOJu0YwMf2N2e0RL9Lhl5tXfT4Ol2qBQckpY9z7OP6m/Wnp96Rn9zOV3
+	alpTeVGYiLAzQm5oaIAdSslgbeX9wRZjfEKA/h8IzUeFweyDFTjxuQME2w==
+X-Google-Smtp-Source: AGHT+IGU8LjTyWo7/9a7JJdcmY7OssfjuZLP7hCvG5OsrxE9r6+CaW//NaZNOOaBBhBG0Oezv/75uldG2UfPdUmoR4M=
+X-Received: by 2002:a17:906:2348:b0:9d0:51d4:4d87 with SMTP id
+ m8-20020a170906234800b009d051d44d87mr12024787eja.62.1700148868828; Thu, 16
+ Nov 2023 07:34:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: adc: add AD7173
-Content-Language: en-US
-To: mitrutzceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
- =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
- Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Conor Dooley <conor.dooley@microchip.com>
-References: <20231116134655.21052-1-user@HYB-hhAwRlzzMZb>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231116134655.21052-1-user@HYB-hhAwRlzzMZb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20231110102054.1393570-1-joychakr@google.com> <CACRpkdZ9RHcHh4o5g62ywK0eQHpLZuGUF0Ud6jogk9Sfqe4krA@mail.gmail.com>
+ <ZVQkLqDB3KtOlIpK@surfacebook.localdomain>
+In-Reply-To: <ZVQkLqDB3KtOlIpK@surfacebook.localdomain>
+From: Joy Chakraborty <joychakr@google.com>
+Date: Thu, 16 Nov 2023 21:04:15 +0530
+Message-ID: <CAOSNQF3QeFd857RCJE8wfJ=__-K7Bi4vfMeTVP-+O+LJ7y9SmQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] PM: runtime: Apply pinctrl settings if defined
+To: andy.shevchenko@gmail.com
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	manugautam@google.com, aniketmaurya@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16/11/2023 14:46, mitrutzceclan wrote:
-> From: Dumitru Ceclan <mitrutzceclan@gmail.com>
-> 
-> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> which can be used in high precision, low noise single channel applications
-> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
-> primarily for measurement of signals close to DC but also delivers
-> outstanding performance with input bandwidths out to ~10kHz.
-> 
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com> # except reference_select
+On Wed, Nov 15, 2023 at 7:21=E2=80=AFAM <andy.shevchenko@gmail.com> wrote:
+>
+> Tue, Nov 14, 2023 at 02:01:48PM +0100, Linus Walleij kirjoitti:
+> > On Fri, Nov 10, 2023 at 11:21=E2=80=AFAM Joy Chakraborty <joychakr@goog=
+le.com> wrote:
+> >
+> > > Apply pinctrl state from  runtime framework device state transtion.
+> > >
+> > > Pinctrl states if defined in DT are bookmarked in device structures
+> > > but they need to be explicitly applied from device driver callbacks
+> > > which is boiler plate code and also not present in many drivers.
+> > >
+> > > If there is a specific order of setting pinctrl state with other driv=
+er
+> > > actions then the device driver can choose to do it from its pm callba=
+cks,
+> > > in such a case this call will be a no-op from the pinctrl core framew=
+ork
+> > > since the desired pinctrl state would already be set.
+> > >
+> > > We could also add a Kconfig knob to enable/disable this, but I do not
+> > > see a need to.
+>
+> Besides questionable code style (inline functions in the C file)...
 
-Please drop the tag. You clearly did not test it, so it must be
-re-reviewed. Do not send code which was not tested.
+Sure, I can change that.
 
-> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
-> ---
-> V3 -> V4
->  - include supply attributes
->  - add channel attribute for selecting conversion reference
-> 
->  .../bindings/iio/adc/adi,ad7173.yaml          | 166 ++++++++++++++++++
->  1 file changed, 166 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-> new file mode 100644
-> index 000000000000..92aa352b6653
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-> @@ -0,0 +1,166 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2023 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7173 ADC device driver
+>
+> > It has a certain beauty to it does it not!
+> >
+> > The reason it wasn't done like this from the start was, if I recall cor=
+rectly,
+> > that in some cases a device needs to do the pin control state switching
+> > in a special sequence with other operations, that can not be reordered,
+> > i.e.:
+> >
+> > 1. The pin control state change is not context-free.
+> >
+> > 2. The order of events, i.e. context, does not necessarily match the
+> >      order that Linux subsystems happen to do things.
+> >
+> > When looking through the kernel tree I don't see that people use
+> > the sleep state and idle state much, so we could very well go
+> > with this, and then expect people that need special-casing to name
+> > their states differently.
+> >
+> > What do people thing about that?
+>
+> ...I think the patch is incomplete(?) due to misterious ways of PM runtim=
+e
+> calls. For example, in some cases we force runtime PM during system suspe=
+nd
+> which may have an undesired effect of the switching pin control states
+> (hence glitches or some real issues with the hardware, up to hanging the
+> system). Some pins may be critical to work with and shuffling their state=
+s
+> in an unappropriate time can lead to a disaster.
+>
+> So, I would consider this change okay if and only if it will have a detai=
+led
+> research for all existing users to prove there will be no changes in the =
+whole
+> set of possible scenarious (of system sleep / resume, runtime, runtime wi=
+th a
+> custom ->prepare callback and so on).
+>
 
-Drop: device driver
+I tried to place the calls to set the pinctrl states after driver/user
+callback  based on my understanding of runtime code so that existing
+users do get a chance to set the state with any special sequence that
+needs to be performed post which doing another call to set the state
+would be ignored in the pinctrl framework.
 
-Bindings are for hardware.
+But this only would be possible with the assumption that even in any
+special sequences executed by users they set nothing but "default"
+state in runtime_resume, "idle" state in runtime_idle and "'sleep"
+state in their runtime suspend callbacks.
+And like Andy mentions about "->prepare callback", if there are
+drivers that are setting pinctrl state "default", "sleep" or "idle"
+from any callback but
+...
+int (*runtime_suspend)(struct device *dev);
+int (*runtime_resume)(struct device *dev);
+int (*runtime_idle)(struct device *dev);
+...
+it could indeed be a problem.
+I'll dig into users of pinctrl_select_sleep/default/idle and see if
+there are such cases or if it could be done in some other way.
 
-> +
-> +maintainers:
-> +  - Ceclan Dumitru <dumitru.ceclan@analog.com>
-> +
-> +description: |
-> +  Bindings for the Analog Devices AD717X ADC's. Datasheets for supported chips:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-2.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7173-8.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7175-2.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7176-2.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7172-2
-> +      - adi,ad7173-8
-> +      - adi,ad7175-2
-> +      - adi,ad7176-2
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  spi-max-frequency:
-> +    maximum: 20000000
-> +
-> +  refin-supply:
-> +    description: external reference supply, can be used as reference for conversion.
-> +
-> +  refin2-supply:
-> +    description: external reference supply, can be used as reference for conversion.
-> +
-> +  avdd-supply:
-> +    description: avdd supply, can be used as reference for conversion.
-> +
-> +  dependencies:
+Thanks
+Joy
 
-Nope, needs testing... See also example-schema.
-
-
-> +    refin2-supply:
-> +      properties:
-> +        compatible:
-> +          adi,ad7173-8
-> +
-> +  required:
-
-Please open example schema and put it in similar place.
-
-> +    - compatible
-> +    - reg
-> +    - interrupts
-> +
-> +patternProperties:
-> +  "^channel@[0-9a-f]$":
-> +    type: object
-> +    $ref: adc.yaml
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 15
-> +
-> +      diff-channels:
-> +        items:
-> +          minimum: 0
-> +          maximum: 31
-> +
-> +      adi,reference-select:
-> +        description: |
-> +          Select the reference source to use when converting on
-> +          the specific channel. Valid values are:
-> +          0: REFIN(+)/REFIN(−).
-> +          1: REFIN2(+)/REFIN2(−)
-> +          2: REFOUT/AVSS (Internal reference)
-> +          3: AVDD
-> +
-> +          External reference 2 only available on ad7173-8.
-> +          If not specified, internal reference used.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        enum: [0, 1, 2, 3]
-> +        default: 2
-> +
-> +      bipolar:
-> +        type: boolean
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: adi,ad7173-8
-> +    then:
-
-??? Maybe you want to use "not"?
-
-> +    else:
-
-> +      patternProperties:
-> +        "^channel@[0-9a-f]$":
-> +          properties:
-> +            enum: [0, 2, 3]
-> +
-> +unevaluatedProperties: false
-> +
-
-Best regards,
-Krzysztof
-
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
