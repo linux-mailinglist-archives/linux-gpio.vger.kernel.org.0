@@ -1,61 +1,60 @@
-Return-Path: <linux-gpio+bounces-224-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-225-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53A897EF153
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Nov 2023 12:01:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9C907EF383
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Nov 2023 14:09:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 76E071C20AA4
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Nov 2023 11:01:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95341281346
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Nov 2023 13:09:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B0651947E;
-	Fri, 17 Nov 2023 11:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19C153175C;
+	Fri, 17 Nov 2023 13:09:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W0uNR290"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vxwRiPya"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37081A1
-	for <linux-gpio@vger.kernel.org>; Fri, 17 Nov 2023 03:01:01 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-32f9268bf8cso1315542f8f.0
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Nov 2023 03:01:01 -0800 (PST)
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EF5126
+	for <linux-gpio@vger.kernel.org>; Fri, 17 Nov 2023 05:09:44 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-40a46ea95f0so16046365e9.2
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Nov 2023 05:09:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700218860; x=1700823660; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=gBWkWs6StiOKfZQ+gAI/eCLlmHQRf4tCCrVpnJkf8qc=;
-        b=W0uNR290x1Ntnui7K7UmUFehZfs9YCbOHy08yjZeg6e3Rkh3piwN3o19Lzno8LaPMt
-         /YVCXnFxGPfdBrIrk6a2RuJuGVy7QXePRcNj2RnkGE/l7LI/2D+RA36WKNi2sVWV3THQ
-         fdSePkMBuPOztyQIZGUJQGotOVxSgBvdn1xpmEvuXeHY88f6UncLbUDmXoe+GMXHfpIJ
-         MtTwX07n2C50WriWjJ1J+RuZOiyfH2+9O8c6F8DfePU4Ddk/DaAyr8SPVb4yBGYctrJA
-         kpScAChJo7x/ee3mvCrikUkJgz1HCRf3b0Yissmy0Q+RIKo++j33LRWava+3pkyPsnBV
-         2owA==
+        d=linaro.org; s=google; t=1700226582; x=1700831382; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RZ861qPhmcYLNIPpFrmLJFMqjIODRETy69SyllrTHqQ=;
+        b=vxwRiPyaS3h2h4HTsgARVjVfAMwQz2AD5sQp0cMqYNkRIRlIVab9YakRTPHZHjqJwr
+         l+S4KBc1XTKTJtCtoue4mdstKStsANlp1JEyqAZ/H+U9B0mo2+OvY08jpBBoZzHj/vnQ
+         QLgpC6nTe2uLT8z8NMT4dh+2q3cCHEBgVanc9GHa68LsS6bSsT+fvL9FQGejPhZCeiTa
+         iP1zbVBZsXchfQilHSf793Yc4V2e2/feHORAEW9NB+L00JZtGYJLLjtSNUv/dmK0tEkm
+         DRH8KVJKrN4zbzQ9Z1kSolzCKhMdMkoQ7jUtA8VAq58zJnR/pWBk/QqMZ69uBIn8+dv2
+         YzCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700218860; x=1700823660;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gBWkWs6StiOKfZQ+gAI/eCLlmHQRf4tCCrVpnJkf8qc=;
-        b=g5eNICRVx0yNLmM9UpXlkB4cQJKr90gah8Yyx8RE1iKDa05jChMYknT0JDHPCH1BlI
-         rDatE8vBuqXOSBMd19/GtqYczSleORa3nT5tG4Yzn6u/zjvAROLeiZM8xBWjf5cWec7c
-         ABTqtnQGJrMe/CRFTN4zBygzugZoTSTz86ARQMFdQkf3SCBvnGZQl6alRN7YCHNfMW28
-         u2KrPMkbiRj2Qx/fb+wy12e/wdh74nu+jWoxb1qf3crwc1lL+A5uvlk5NT6YztFPae3I
-         6/03wapX1BnuFRxx+OjKUhuAgx/jBJcTXMb/WqJ7QKmhCKuWq6IqckrZB54fVByNjR5N
-         iAPQ==
-X-Gm-Message-State: AOJu0YxzZFiOTSaDY2rQeKowWbV0VqlrJ6qniEW6ONOJD6bgYTtJykLu
-	chX/6X0xuT31Q/5qCuhDDyBoQQ==
-X-Google-Smtp-Source: AGHT+IGd8YPlZqn1eCwDFIOssIZfG00UFoHhXUsgBkImO7mtVQMHzM/KiiylOUJ/af6wFmBcGBqOhw==
-X-Received: by 2002:a5d:6e01:0:b0:32f:d88b:2245 with SMTP id h1-20020a5d6e01000000b0032fd88b2245mr13415500wrz.19.1700218859958;
-        Fri, 17 Nov 2023 03:00:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700226582; x=1700831382;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RZ861qPhmcYLNIPpFrmLJFMqjIODRETy69SyllrTHqQ=;
+        b=fXI/Fgb16HzIbUMc4XVgCvK9Le9Qov4Md3RXKCbCqs7h6LtSquT8LixavVd0MVbfmb
+         xy4cMV54ZBJFscLBy6mVo3rTtljbpLW4wfxa9tJ6Zyfk9BqMnqHmdtW7VWCSloPwffV9
+         mZIDMPTGKVEjckdI35NYSgRoG+M6t6EZYRLBhlaUdKTPrQ3oXjXAx6LJEpZyoAY8tGX6
+         4Xy7vPiLPMxJzOWH+THtL2oUz6GXGryIB3R8qY3r2Tz2DbmTuQMZNJZnmsjhHRKrh1Q9
+         ZS6+vWbDRif+H2M/0ASYHFul1JlJ7w+RYwYYAwYtWW3XlTXDM7E4OeR0bY+bDD6FPwgQ
+         w3IA==
+X-Gm-Message-State: AOJu0YyL13LAUtalf9D0S6iWo8Ec/0OF20d6Je4TSyn6ZKo2CLu3YCbi
+	5aO3jtKi7ldGzVn613wu1llaNQ==
+X-Google-Smtp-Source: AGHT+IFSYsD8mfV/aod6CYLaYG6GTod1TTdOQpxt/uCTP6yIBkKg9enjuJlCoWHYfmvxtPYno8wSxw==
+X-Received: by 2002:a1c:4b0d:0:b0:40a:48af:4821 with SMTP id y13-20020a1c4b0d000000b0040a48af4821mr15767333wma.31.1700226582412;
+        Fri, 17 Nov 2023 05:09:42 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id x11-20020a5d60cb000000b00331697bbcf5sm1770892wrt.94.2023.11.17.03.00.56
+        by smtp.gmail.com with ESMTPSA id p13-20020a05600c358d00b0040841e79715sm2734381wmq.27.2023.11.17.05.09.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Nov 2023 03:00:57 -0800 (PST)
-Message-ID: <d565624f-0cb2-4c42-bcfc-eebef3b7b26c@linaro.org>
-Date: Fri, 17 Nov 2023 12:00:53 +0100
+        Fri, 17 Nov 2023 05:09:37 -0800 (PST)
+Message-ID: <9c025d37-50c5-4951-9b50-ef11ab2e2351@linaro.org>
+Date: Fri, 17 Nov 2023 14:09:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,31 +62,18 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/12] Introduce ExynosAutov920 SoC and SADK board
+Subject: Re: [PATCH V2 1/2] dt-bindings: pinctrl: qcom: Add X1E80100 pinctrl
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Jaewon Kim <jaewon02.kim@samsung.com>,
- Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Thierry Reding <thierry.reding@gmail.com>,
- Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+To: Sibi Sankar <quic_sibis@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org
+Cc: agross@kernel.org, conor+dt@kernel.org, quic_rjendra@quicinc.com,
+ abel.vesa@linaro.org, linux-arm-msm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-serial@vger.kernel.org
-References: <CGME20231115095852epcas2p21e067efe75275c6abd2aebf04c5c6166@epcas2p2.samsung.com>
- <20231115095609.39883-1-jaewon02.kim@samsung.com>
- <170005362858.21132.4200897251821879805.b4-ty@linaro.org>
- <6e69df6c-10fa-404a-ac02-4880723b8c50@linaro.org>
- <55a0f27c-ea46-40ae-b1e5-e650802b89a8@linaro.org>
- <d6f3d451-6a53-46b6-2263-cc071a9dc44c@samsung.com>
- <d8fbd100-2351-4dbe-ae7f-d98a84432589@linaro.org>
- <af102ef7-aa34-1b9d-c39c-228729fef015@samsung.com>
- <2febc62c-c763-42ae-b649-2ca284543cc0@linaro.org>
+ linux-gpio@vger.kernel.org, quic_tsoni@quicinc.com, neil.armstrong@linaro.org
+References: <20231117093921.31968-1-quic_sibis@quicinc.com>
+ <20231117093921.31968-2-quic_sibis@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -132,56 +118,25 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <2febc62c-c763-42ae-b649-2ca284543cc0@linaro.org>
+In-Reply-To: <20231117093921.31968-2-quic_sibis@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 17/11/2023 11:57, Krzysztof Kozlowski wrote:
->>>>>> And dropped. You did not test it. Please read Samsung SoC maintainer
->>>>>> profile:
->>>>>> https://www.kernel.org/doc/html/latest/process/maintainers.html#arm-samsung-s3c-s5p-and-exynos-arm-architectures
->>>>>>
->>>>>> I also made announcements on the lists and on social.kernel.org. I don't
->>>>>> know where to announce it more...
->>>>>>
->>>>> To clarify, I dropped only DTS and kept bindings. Let me know if
->>>>> bindings are problematic here...
->>>>>
->>>>> I also repeated the announcement:
->>>>> https://social.kernel.org/notice/AbqJkj9gOZJ3sG8eCu
->>>>> Please share internally within Samsung, so there will be no surprises.
->>>>>
->>>>> Best regards,
->>>>> Krzysztof
->>>>>
->>>>>
->>>> I already checked and there were no warnings or errors as shown below.
->>>>
->>>> Did I miss something??
->>> It's not what is written in maintainer profile. Where do you see the
->>> result of dtc W=1?
->>>
->>
->> Sorry, Krzysztof I miss W=1.
->>
->> I haven`t been active in mainline for a long time, so I`m missing out on 
->> a lot of things.
+On 17/11/2023 10:39, Sibi Sankar wrote:
+> From: Rajendra Nayak <quic_rjendra@quicinc.com>
 > 
-> If you (plural you, Samsung) ever gave me an email address where I can
-> send notifications I would gladly forward them to you.
+> Add device tree binding Documentation details for Qualcomm X1E80100 TLMM
+> device.
 > 
-> Over the time I sent few of them, like the one about deprecation of
-> platforms or changing some rules, feedback for common solution for
-> minidump (to remind: Samsung decided to skip it so we go with Qualcomm
-> idea and you will not be able to come with your own later) etc. I was
-> even contacting some addresses in Samsung LSI, but there was never a
-> response, except the one about minidump.
+> Signed-off-by: Rajendra Nayak <quic_rjendra@quicinc.com>
+> Co-developed-by: Sibi Sankar <quic_sibis@quicinc.com>
+> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+> ---
 > 
-> There was like never a chance to really get to Samsung, so sorry, now it
-> is Samsung's fault it does not follow announcements.
 
-Heh, my post on social.kernel.org is pinned (pinned!) for four months!
-Four months is still not enough...
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
