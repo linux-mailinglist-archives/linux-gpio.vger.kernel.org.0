@@ -1,450 +1,165 @@
-Return-Path: <linux-gpio+bounces-221-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-222-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F5347EEFDD
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Nov 2023 11:13:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F52D7EF0F9
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Nov 2023 11:49:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D772C2812EA
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Nov 2023 10:13:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FA941C208B2
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Nov 2023 10:49:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66F4718658;
-	Fri, 17 Nov 2023 10:13:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 037811A29D;
+	Fri, 17 Nov 2023 10:49:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ls8H9Jay"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J0/qLKyL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D1CC1
-	for <linux-gpio@vger.kernel.org>; Fri, 17 Nov 2023 02:13:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700215993; x=1731751993;
-  h=date:from:to:cc:subject:message-id;
-  bh=qoIyECRC0zldvgJKcvvcLCktxQPlycA2h40icNKp01Y=;
-  b=ls8H9JaybDIxFPv5erWlXb50/h/wN/8zOkxFQ+iFE7GyDUKCE961weV/
-   +uCljGpxjbf9XHap8gUZ34p7tzl89BO09hHJ6IC4eJ7xEWrbBnd0UH21C
-   QUSwYUTN99/8wa/4WGG2D92JPifsOOShlp+aF+dM9MpfKTl4tV7GFMW/s
-   Na9NYHQD40FDMGHx+SLuFLTgY1OlByifAf37f1F1A0yf2vC0s1MZEYUZg
-   ALrj2D6bt9w9/Oo7DqgJ5p3Nhnj7WHU//95BlO7B7V0+KUlFzUqxCjjWE
-   yRR36i0U7F5v8TbtfqGKNXQDcRk2axDjdIyBdg4EqtaNzKBO7+wUtHUFD
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10896"; a="371455280"
-X-IronPort-AV: E=Sophos;i="6.04,206,1695711600"; 
-   d="scan'208";a="371455280"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2023 02:13:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,206,1695711600"; 
-   d="scan'208";a="13449486"
-Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 17 Nov 2023 02:13:12 -0800
-Received: from kbuild by b8de5498638e with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1r3vq1-0002aE-1l;
-	Fri, 17 Nov 2023 10:12:53 +0000
-Date: Fri, 17 Nov 2023 18:11:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:b4/cy8c95x0-doc] BUILD SUCCESS
- e01be5d0b42676827126b85d6c532b3d16cac80b
-Message-ID: <202311171813.FYnpEhwz-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658E8127
+	for <linux-gpio@vger.kernel.org>; Fri, 17 Nov 2023 02:49:00 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-32faea0fa1fso1072127f8f.1
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Nov 2023 02:49:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700218139; x=1700822939; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Bhenn9IKT7TwskDCocVudlhYlBdJEbpo2U+d7IObKBA=;
+        b=J0/qLKyLEt3pedjWWrQaqBZu6emQHVMlafxnBLItVT/xxp3YNb8iLMzV9VMEWTkEes
+         2M8ay+rKxSfBsHBkSK2CFzMhMOQ7Ka1GeQGHSUejq2hy8XzxbVV4xAV7EQJjpWFUu6np
+         6iF7NYPH6fKEBy+1gPvMfwNpo/4oDd2WIuk/A2CjgrbM7+G2iWS3+tJB54Ndyqaic9aR
+         U3DU3XbQMfVKPqV4zpA2uF2F/8dpkZAVDWPSCX0cFUoWCoqzwzO9oaqqWi3akkTiCu2x
+         EqHaWQ5uTxSTdMbrn4Ij9954jhJK0fIyXvEO+9Y4GonizHq1GTayV/SGBwhCnhY1YrHC
+         FT0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700218139; x=1700822939;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bhenn9IKT7TwskDCocVudlhYlBdJEbpo2U+d7IObKBA=;
+        b=tnQ2oxEFj8tcaav6qxWKR63vk/XBx68SPJIrsUun2kppcsRHZrr3K4KpYAQ6tRRco1
+         FFHh4MIn+K+7nqPZOZHmRRdJ6i0TMcNMPW3+8ee5kHv1V3dSrFc5slhPhEHdoTwoKSVn
+         LAidzncQ3Vrb9ayzEZIxgkUfd2oq9Z3JCLZLSMG9aIaFtA5o4UnD64yadCTaKs7zFUzm
+         5X4ilmVBc1oM746O/ueV/USDa5p1cBxib/iaP4UJwvDy3tiDE8d0M60s6ig5Pty3kasf
+         faRKN1RgeAxbsnyJz8ofpfRn2SCTMjnHR8SzQ+n8oIL+R4PCrrgVOxktIkYYSwh+t7c1
+         D79w==
+X-Gm-Message-State: AOJu0YxvXJQTeaQq3vK8xF4/FO+kTNk6+w/7WPJyIPwaiOktMjQf4qdw
+	RdSbej1NaptpGDBWC20f2YRtVA==
+X-Google-Smtp-Source: AGHT+IGo+PukfuCNVNAkc0l6jmzjCMg98c/NOMRgnlBVW55svPUXhViVPo8sN9rJ6wU1IZzTUa/0lg==
+X-Received: by 2002:a5d:64cd:0:b0:32d:cb21:4e99 with SMTP id f13-20020a5d64cd000000b0032dcb214e99mr4647184wri.13.1700218138833;
+        Fri, 17 Nov 2023 02:48:58 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.126])
+        by smtp.gmail.com with ESMTPSA id v8-20020adff688000000b0032daf848f68sm1936165wrp.59.2023.11.17.02.48.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Nov 2023 02:48:58 -0800 (PST)
+Message-ID: <0fdb7bec-9ea4-454f-a0fb-d450f27ebc6b@linaro.org>
+Date: Fri, 17 Nov 2023 11:48:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/12] pinctrl: samsung: add exynosautov920 pinctrl
+Content-Language: en-US
+To: Jaewon Kim <jaewon02.kim@samsung.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-serial@vger.kernel.org
+References: <20231115095609.39883-1-jaewon02.kim@samsung.com>
+ <CGME20231115095856epcas2p1c3ee85750828bec2ee4ab0adeaeaff28@epcas2p1.samsung.com>
+ <20231115095609.39883-11-jaewon02.kim@samsung.com>
+ <62b7176d-f99c-49f6-a287-17a6b3604c1c@linaro.org>
+ <f0f6a7af-2170-89a2-1eea-dfb9d8440321@samsung.com>
+ <6a5610e0-e60d-4ab7-8708-6f77a38527b7@linaro.org>
+ <926ea5c5-20ac-5e63-16ea-6f0c20e2db0a@samsung.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <926ea5c5-20ac-5e63-16ea-6f0c20e2db0a@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git b4/cy8c95x0-doc
-branch HEAD: e01be5d0b42676827126b85d6c532b3d16cac80b  pinctrl: cy8c95x0: Fix doc warning
+On 17/11/2023 08:36, Jaewon Kim wrote:
+>>> The reason why I chose variable name 'combine' is that EINT registers was
+>>> separated from gpio control address. However, in exynosautov920 EINT
+>>> registers combined with GPx group. So I chose "combine" word.
+>> What does it mean "the GPx group"? Combined means the same place, the
+>> same register. I could imagine offset is 0x4, what I wrote last time.
+>>
+>> Is the offset 0x4?
+>>
+>>
+>>> Is another reasonable word, I will change it.
+>>
+>> Why you cannot store the offset?
+>>
+>>> EINT registers related to the entire group(e.g SVC) were at the end of
+>>> the GPIO block and are now moved to 0xf000.
+>> So not in the same register, not combined?
+>>
+> Okay,
+> 
+> Instead of the word combine, I will think of a better word in next version.
 
-elapsed time: 4044m
+I want to know answer to:
 
-configs tested: 371
-configs skipped: 4
+"Why you cannot store the offset?"
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Best regards,
+Krzysztof
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                 nsimosci_hs_smp_defconfig   gcc  
-arc                   randconfig-001-20231115   gcc  
-arc                   randconfig-001-20231116   gcc  
-arc                   randconfig-001-20231117   gcc  
-arc                   randconfig-002-20231115   gcc  
-arc                   randconfig-002-20231116   gcc  
-arc                   randconfig-002-20231117   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                            dove_defconfig   clang
-arm                           h3600_defconfig   gcc  
-arm                           imxrt_defconfig   gcc  
-arm                        multi_v7_defconfig   gcc  
-arm                          pxa168_defconfig   clang
-arm                          pxa3xx_defconfig   gcc  
-arm                   randconfig-001-20231115   gcc  
-arm                   randconfig-001-20231116   gcc  
-arm                   randconfig-001-20231117   gcc  
-arm                   randconfig-002-20231115   gcc  
-arm                   randconfig-002-20231116   gcc  
-arm                   randconfig-002-20231117   gcc  
-arm                   randconfig-003-20231115   gcc  
-arm                   randconfig-003-20231116   gcc  
-arm                   randconfig-003-20231117   gcc  
-arm                   randconfig-004-20231115   gcc  
-arm                   randconfig-004-20231116   gcc  
-arm                   randconfig-004-20231117   gcc  
-arm                         vf610m4_defconfig   gcc  
-arm                         wpcm450_defconfig   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20231115   gcc  
-arm64                 randconfig-001-20231116   gcc  
-arm64                 randconfig-001-20231117   gcc  
-arm64                 randconfig-002-20231115   gcc  
-arm64                 randconfig-002-20231116   gcc  
-arm64                 randconfig-002-20231117   gcc  
-arm64                 randconfig-003-20231115   gcc  
-arm64                 randconfig-003-20231116   gcc  
-arm64                 randconfig-003-20231117   gcc  
-arm64                 randconfig-004-20231115   gcc  
-arm64                 randconfig-004-20231116   gcc  
-arm64                 randconfig-004-20231117   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20231115   gcc  
-csky                  randconfig-001-20231116   gcc  
-csky                  randconfig-001-20231117   gcc  
-csky                  randconfig-002-20231115   gcc  
-csky                  randconfig-002-20231116   gcc  
-csky                  randconfig-002-20231117   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20231115   gcc  
-i386         buildonly-randconfig-001-20231116   gcc  
-i386         buildonly-randconfig-001-20231117   gcc  
-i386         buildonly-randconfig-002-20231115   gcc  
-i386         buildonly-randconfig-002-20231116   gcc  
-i386         buildonly-randconfig-002-20231117   gcc  
-i386         buildonly-randconfig-003-20231115   gcc  
-i386         buildonly-randconfig-003-20231116   gcc  
-i386         buildonly-randconfig-003-20231117   gcc  
-i386         buildonly-randconfig-004-20231115   gcc  
-i386         buildonly-randconfig-004-20231116   gcc  
-i386         buildonly-randconfig-004-20231117   gcc  
-i386         buildonly-randconfig-005-20231115   gcc  
-i386         buildonly-randconfig-005-20231116   gcc  
-i386         buildonly-randconfig-005-20231117   gcc  
-i386         buildonly-randconfig-006-20231115   gcc  
-i386         buildonly-randconfig-006-20231116   gcc  
-i386         buildonly-randconfig-006-20231117   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231115   gcc  
-i386                  randconfig-001-20231116   gcc  
-i386                  randconfig-001-20231117   gcc  
-i386                  randconfig-002-20231115   gcc  
-i386                  randconfig-002-20231116   gcc  
-i386                  randconfig-002-20231117   gcc  
-i386                  randconfig-003-20231115   gcc  
-i386                  randconfig-003-20231116   gcc  
-i386                  randconfig-003-20231117   gcc  
-i386                  randconfig-004-20231115   gcc  
-i386                  randconfig-004-20231116   gcc  
-i386                  randconfig-004-20231117   gcc  
-i386                  randconfig-005-20231115   gcc  
-i386                  randconfig-005-20231116   gcc  
-i386                  randconfig-005-20231117   gcc  
-i386                  randconfig-006-20231115   gcc  
-i386                  randconfig-006-20231116   gcc  
-i386                  randconfig-006-20231117   gcc  
-i386                  randconfig-011-20231115   gcc  
-i386                  randconfig-011-20231116   gcc  
-i386                  randconfig-011-20231117   gcc  
-i386                  randconfig-012-20231115   gcc  
-i386                  randconfig-012-20231116   gcc  
-i386                  randconfig-012-20231117   gcc  
-i386                  randconfig-013-20231115   gcc  
-i386                  randconfig-013-20231116   gcc  
-i386                  randconfig-013-20231117   gcc  
-i386                  randconfig-014-20231115   gcc  
-i386                  randconfig-014-20231116   gcc  
-i386                  randconfig-014-20231117   gcc  
-i386                  randconfig-015-20231115   gcc  
-i386                  randconfig-015-20231116   gcc  
-i386                  randconfig-015-20231117   gcc  
-i386                  randconfig-016-20231115   gcc  
-i386                  randconfig-016-20231116   gcc  
-i386                  randconfig-016-20231117   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231115   gcc  
-loongarch             randconfig-001-20231116   gcc  
-loongarch             randconfig-001-20231117   gcc  
-loongarch             randconfig-002-20231115   gcc  
-loongarch             randconfig-002-20231116   gcc  
-loongarch             randconfig-002-20231117   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                       bvme6000_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5307c3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   clang
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                 decstation_r4k_defconfig   gcc  
-mips                           jazz_defconfig   gcc  
-mips                malta_qemu_32r6_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20231115   gcc  
-nios2                 randconfig-001-20231116   gcc  
-nios2                 randconfig-001-20231117   gcc  
-nios2                 randconfig-002-20231115   gcc  
-nios2                 randconfig-002-20231116   gcc  
-nios2                 randconfig-002-20231117   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                       virt_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc                randconfig-001-20231115   gcc  
-parisc                randconfig-001-20231116   gcc  
-parisc                randconfig-001-20231117   gcc  
-parisc                randconfig-002-20231115   gcc  
-parisc                randconfig-002-20231116   gcc  
-parisc                randconfig-002-20231117   gcc  
-parisc64                            defconfig   gcc  
-powerpc                      acadia_defconfig   clang
-powerpc                    adder875_defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                      arches_defconfig   gcc  
-powerpc                     asp8347_defconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                     mpc512x_defconfig   clang
-powerpc                 mpc8313_rdb_defconfig   clang
-powerpc                 mpc837x_rdb_defconfig   gcc  
-powerpc                      pasemi_defconfig   gcc  
-powerpc               randconfig-001-20231115   gcc  
-powerpc               randconfig-001-20231116   gcc  
-powerpc               randconfig-001-20231117   gcc  
-powerpc               randconfig-002-20231115   gcc  
-powerpc               randconfig-002-20231116   gcc  
-powerpc               randconfig-002-20231117   gcc  
-powerpc               randconfig-003-20231115   gcc  
-powerpc               randconfig-003-20231116   gcc  
-powerpc               randconfig-003-20231117   gcc  
-powerpc                     tqm8540_defconfig   clang
-powerpc                     tqm8548_defconfig   gcc  
-powerpc                      tqm8xx_defconfig   gcc  
-powerpc                      walnut_defconfig   clang
-powerpc64             randconfig-001-20231115   gcc  
-powerpc64             randconfig-001-20231116   gcc  
-powerpc64             randconfig-001-20231117   gcc  
-powerpc64             randconfig-002-20231115   gcc  
-powerpc64             randconfig-002-20231116   gcc  
-powerpc64             randconfig-002-20231117   gcc  
-powerpc64             randconfig-003-20231115   gcc  
-powerpc64             randconfig-003-20231116   gcc  
-powerpc64             randconfig-003-20231117   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                    nommu_k210_defconfig   gcc  
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                 randconfig-001-20231115   gcc  
-riscv                 randconfig-001-20231116   gcc  
-riscv                 randconfig-001-20231117   gcc  
-riscv                 randconfig-002-20231115   gcc  
-riscv                 randconfig-002-20231116   gcc  
-riscv                 randconfig-002-20231117   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231115   gcc  
-s390                  randconfig-001-20231116   gcc  
-s390                  randconfig-001-20231117   gcc  
-s390                  randconfig-002-20231115   gcc  
-s390                  randconfig-002-20231116   gcc  
-s390                  randconfig-002-20231117   gcc  
-s390                       zfcpdump_defconfig   gcc  
-sh                               alldefconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                         ap325rxa_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                          kfr2r09_defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                    randconfig-001-20231115   gcc  
-sh                    randconfig-001-20231116   gcc  
-sh                    randconfig-001-20231117   gcc  
-sh                    randconfig-002-20231115   gcc  
-sh                    randconfig-002-20231116   gcc  
-sh                    randconfig-002-20231117   gcc  
-sh                   rts7751r2dplus_defconfig   gcc  
-sh                          sdk7786_defconfig   gcc  
-sh                           se7712_defconfig   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20231115   gcc  
-sparc64               randconfig-001-20231116   gcc  
-sparc64               randconfig-001-20231117   gcc  
-sparc64               randconfig-002-20231115   gcc  
-sparc64               randconfig-002-20231116   gcc  
-sparc64               randconfig-002-20231117   gcc  
-um                               allmodconfig   clang
-um                               allmodconfig   gcc  
-um                                allnoconfig   gcc  
-um                               allyesconfig   gcc  
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20231115   gcc  
-um                    randconfig-001-20231116   gcc  
-um                    randconfig-001-20231117   gcc  
-um                    randconfig-002-20231115   gcc  
-um                    randconfig-002-20231116   gcc  
-um                    randconfig-002-20231117   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20231115   gcc  
-x86_64       buildonly-randconfig-001-20231116   gcc  
-x86_64       buildonly-randconfig-001-20231117   gcc  
-x86_64       buildonly-randconfig-002-20231115   gcc  
-x86_64       buildonly-randconfig-002-20231116   gcc  
-x86_64       buildonly-randconfig-002-20231117   gcc  
-x86_64       buildonly-randconfig-003-20231115   gcc  
-x86_64       buildonly-randconfig-003-20231116   gcc  
-x86_64       buildonly-randconfig-003-20231117   gcc  
-x86_64       buildonly-randconfig-004-20231115   gcc  
-x86_64       buildonly-randconfig-004-20231116   gcc  
-x86_64       buildonly-randconfig-004-20231117   gcc  
-x86_64       buildonly-randconfig-005-20231115   gcc  
-x86_64       buildonly-randconfig-005-20231116   gcc  
-x86_64       buildonly-randconfig-005-20231117   gcc  
-x86_64       buildonly-randconfig-006-20231115   gcc  
-x86_64       buildonly-randconfig-006-20231116   gcc  
-x86_64       buildonly-randconfig-006-20231117   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231115   gcc  
-x86_64                randconfig-001-20231116   gcc  
-x86_64                randconfig-001-20231117   gcc  
-x86_64                randconfig-002-20231115   gcc  
-x86_64                randconfig-002-20231116   gcc  
-x86_64                randconfig-002-20231117   gcc  
-x86_64                randconfig-003-20231115   gcc  
-x86_64                randconfig-003-20231116   gcc  
-x86_64                randconfig-003-20231117   gcc  
-x86_64                randconfig-004-20231115   gcc  
-x86_64                randconfig-004-20231116   gcc  
-x86_64                randconfig-004-20231117   gcc  
-x86_64                randconfig-005-20231115   gcc  
-x86_64                randconfig-005-20231116   gcc  
-x86_64                randconfig-005-20231117   gcc  
-x86_64                randconfig-006-20231115   gcc  
-x86_64                randconfig-006-20231116   gcc  
-x86_64                randconfig-006-20231117   gcc  
-x86_64                randconfig-011-20231115   gcc  
-x86_64                randconfig-011-20231116   gcc  
-x86_64                randconfig-011-20231117   gcc  
-x86_64                randconfig-012-20231115   gcc  
-x86_64                randconfig-012-20231116   gcc  
-x86_64                randconfig-012-20231117   gcc  
-x86_64                randconfig-013-20231115   gcc  
-x86_64                randconfig-013-20231116   gcc  
-x86_64                randconfig-013-20231117   gcc  
-x86_64                randconfig-014-20231115   gcc  
-x86_64                randconfig-014-20231116   gcc  
-x86_64                randconfig-014-20231117   gcc  
-x86_64                randconfig-015-20231115   gcc  
-x86_64                randconfig-015-20231116   gcc  
-x86_64                randconfig-015-20231117   gcc  
-x86_64                randconfig-016-20231115   gcc  
-x86_64                randconfig-016-20231116   gcc  
-x86_64                randconfig-016-20231117   gcc  
-x86_64                randconfig-071-20231115   gcc  
-x86_64                randconfig-071-20231116   gcc  
-x86_64                randconfig-071-20231117   gcc  
-x86_64                randconfig-072-20231115   gcc  
-x86_64                randconfig-072-20231116   gcc  
-x86_64                randconfig-072-20231117   gcc  
-x86_64                randconfig-073-20231115   gcc  
-x86_64                randconfig-073-20231116   gcc  
-x86_64                randconfig-073-20231117   gcc  
-x86_64                randconfig-074-20231115   gcc  
-x86_64                randconfig-074-20231116   gcc  
-x86_64                randconfig-074-20231117   gcc  
-x86_64                randconfig-075-20231115   gcc  
-x86_64                randconfig-075-20231116   gcc  
-x86_64                randconfig-075-20231117   gcc  
-x86_64                randconfig-076-20231115   gcc  
-x86_64                randconfig-076-20231116   gcc  
-x86_64                randconfig-076-20231117   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                              defconfig   gcc  
-xtensa                generic_kc705_defconfig   gcc  
-xtensa                randconfig-001-20231115   gcc  
-xtensa                randconfig-001-20231116   gcc  
-xtensa                randconfig-001-20231117   gcc  
-xtensa                randconfig-002-20231115   gcc  
-xtensa                randconfig-002-20231116   gcc  
-xtensa                randconfig-002-20231117   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
