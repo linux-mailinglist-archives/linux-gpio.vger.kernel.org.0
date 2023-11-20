@@ -1,349 +1,114 @@
-Return-Path: <linux-gpio+bounces-260-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-261-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3F557F13DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 14:01:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 89E767F146D
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 14:30:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E4AF2821B0
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 13:01:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B54D28178F
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 13:30:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C0DC18E1D;
-	Mon, 20 Nov 2023 13:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C4EF1A731;
+	Mon, 20 Nov 2023 13:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Adn5+nCR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282119C;
-	Mon, 20 Nov 2023 05:00:53 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6600,9927,10899"; a="4794400"
-X-IronPort-AV: E=Sophos;i="6.04,213,1695711600"; 
-   d="scan'208";a="4794400"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 05:00:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10899"; a="801163675"
-X-IronPort-AV: E=Sophos;i="6.04,213,1695711600"; 
-   d="scan'208";a="801163675"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 05:00:46 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1r53tK-0000000FYIP-0fKV;
-	Mon, 20 Nov 2023 15:00:42 +0200
-Date: Mon, 20 Nov 2023 15:00:41 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: mitrutzceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240981A5A8;
+	Mon, 20 Nov 2023 13:30:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD7EC433C8;
+	Mon, 20 Nov 2023 13:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700487020;
+	bh=PHdu57Wzp+xZqOVNY9Pteh5+H3/OUfTVYEQwZtnjgaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Adn5+nCRh7+2esCt06PpWOJ6Q7Sf9wGWzyL8OZ3xQ4KTuGsVYCl41uUSDvoZM1Qgh
+	 xYH9OzH46SDNykHqua+lZM2VDAFNJNwAhIazL4+HhuPw4y+ePFT4d4rp8a2u9mWmRp
+	 PnCbz5w1ll14XS8VhdWdJuOuFS0/ORhBUxPN9LZrU5nM5XwUgSrSc4kXfWDjHIHbGB
+	 JT3utmOA0eqk2DInnearZCiHRLiXuzkgmY4JBzfMGPTQF/bM9Mo53CgDyCMs/E4vK7
+	 vEYpztDFwP8Cf9bC1VZuImptYoTJCr3dqt3i1A+skz+dJKGH7DjDkXQ+BECL8kWBh6
+	 +vMaV+mcY9SLg==
+Date: Mon, 20 Nov 2023 13:30:08 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Herve Codina <herve.codina@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>,
-	ChiaEn Wu <chiaen_wu@richtek.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <ZVtYeWZmcDZ_SMPo@smile.fi.intel.com>
-References: <20231116134655.21052-1-user@HYB-hhAwRlzzMZb>
- <20231116134655.21052-2-user@HYB-hhAwRlzzMZb>
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+	Simon Horman <horms@kernel.org>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v9 00/27] Add support for QMC HDLC, framer infrastructure
+ and PEF2256 framer
+Message-ID: <573c9ca1-a560-4f7a-ba21-80673a2e162e@sirena.org.uk>
+References: <20231115144007.478111-1-herve.codina@bootlin.com>
+ <20231117164746.0589e955@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HuVabfiR1A06kEJd"
+Content-Disposition: inline
+In-Reply-To: <20231117164746.0589e955@kernel.org>
+X-Cookie: <Manoj> I *like* the chicken
+
+
+--HuVabfiR1A06kEJd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231116134655.21052-2-user@HYB-hhAwRlzzMZb>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-
-On Thu, Nov 16, 2023 at 03:46:55PM +0200, mitrutzceclan wrote:
-> From: Dumitru Ceclan <mitrutzceclan@gmail.com>
-> 
-> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> which can be used in high precision, low noise single channel
-> applications or higher speed multiplexed applications. The Sigma-Delta
-> ADC is intended primarily for measurement of signals close to DC but also
-> delivers outstanding performance with input bandwidths out to ~10kHz.
-
-...
-
-> +	help
-> +	  Say yes here to build support for Analog Devices AD7173 and similar ADC
-> +	  (currently supported: AD7172-2, AD7173-8, AD7175-2, AD7176-2).
-
-This is hard to maintain, list it one model per a single line.
-
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called ad7173.
-
-...
-
-+ array_size.h
-
-> +#include <linux/bitfield.h>
-> +#include <linux/bitmap.h>
-
-> +#include <linux/bits.h>
-
-This is guaranteed to be included by one from the above (don't remember
-by heart which one or even both).
-
-+ container_of.h
-
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-
-> +#include <linux/kernel.h>
-
-How is this being used (as not a proxy)?
-
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
-> +#include <linux/gpio/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
-> +#include <linux/spi/spi.h>
-> +#include <linux/units.h>
-
-...
-
-> +#define AD7173_CH_ADDRESS(pos, neg) \
-> +	(FIELD_PREP(AD7173_CH_SETUP_AINPOS_MASK, pos) |\
-
-Space before \ here and everywhere else in multi-line definitions.
-
-> +	 FIELD_PREP(AD7173_CH_SETUP_AINNEG_MASK, neg))
-
-...
-
-> +#define AD7173_VOLTAGE_INT_REF_MICROV	2500000
-
-MICROV --> uV (yes, with small letter), it's a common use for Amperes, Volts,
-etc.
-
-...
-
-> +struct ad7173_channel_config {
-> +	bool live;
-> +	u8 cfg_slot;
-> +	/* Following fields are used to compare equality. Bipolar must be first */
-> +	bool bipolar;
-> +	bool input_buf;
-> +	u8 odr;
-> +	u8 ref_sel;
-
-If you group better by types, it might save a few bytes on the architectures /
-compilers where bool != byte.
-
-> +};
-
-...
-
-> +	st->reg_gpiocon_regmap = devm_regmap_init_spi(st->sd.spi, &ad7173_regmap_config);
-> +	if (IS_ERR(st->reg_gpiocon_regmap)) {
-> +		return dev_err_probe(dev, PTR_ERR(st->reg_gpiocon_regmap),
-> +				     "Unable to init regmap\n");
-> +	}
-
-{} are not needed, can also be written as
-
-	st->reg_gpiocon_regmap = devm_regmap_init_spi(st->sd.spi, &ad7173_regmap_config);
-	ret = PTR_ERR_OR_ZERO(st->reg_gpiocon_regmap);
-	if (ret)
-		return dev_err_probe(dev, ret, "Unable to init regmap\n");
-
-...
-
-> +	st->gpio_regmap = devm_gpio_regmap_register(dev, &gpio_regmap);
-> +	if (IS_ERR(st->gpio_regmap)) {
-> +		return dev_err_probe(dev, PTR_ERR(st->gpio_regmap),
-> +				     "Unable to init gpio-regmap\n");
-> +	}
-
-Ditto.
-
-...
-
-> +static struct ad7173_channel_config *ad7173_find_live_config
-> +	(struct ad7173_state *st, struct ad7173_channel_config *cfg)
-
-This is strange indentation.
-
-Perhaps
-
-static struct ad7173_channel_config *
-ad7173_find_live_config(struct ad7173_state *st, struct ad7173_channel_config *cfg)
-
-?
-
-...
-
-> +	offset = offsetof(struct ad7173_channel_config, cfg_slot) +
-> +		 sizeof(cfg->cfg_slot);
-
-Isn't it a offsetofend() from stddef.h?
-
-> +	cmp_size = sizeof(*cfg) - offset;
-
-sizeof_field() from the above mentioned header?
-
-...
-
-> +	for (i = 0; i < st->num_channels; i++) {
-> +		cfg_aux = &st->channels[i].cfg;
-> +
-> +		if (cfg_aux->live && !memcmp(&cfg->bipolar, &cfg_aux->bipolar,
-> +					     cmp_size))
-
-I would split this on logic operator, it will be easier to read.
-
-> +			return cfg_aux;
-> +	}
-
-...
-
-> +	free_cfg_slot = find_first_zero_bit(st->cfg_slots_status,
-> +					    st->info->num_configs);
-> +	if (free_cfg_slot == st->info->num_configs)
-> +		free_cfg_slot = ad7173_free_config_slot_lru(st);
-> +
-> +	set_bit(free_cfg_slot, st->cfg_slots_status);
-> +	cfg->cfg_slot = free_cfg_slot;
-
-Looks like reinvention of IDA.
-
-...
-
-> +	struct ad7173_state *st = iio_priv(indio_dev);
-> +	unsigned int id;
-> +	u8 buf[AD7173_RESET_LENGTH];
-> +	int ret;
-
-Reversed xmas tree order?
-
-	struct ad7173_state *st = iio_priv(indio_dev);
-	u8 buf[AD7173_RESET_LENGTH];
-	unsigned int id;
-	int ret;
-
-...
-
-> +	return vref / (MICRO/MILLI);
-
-What does the denominator mean and why you can't simply use MILL?
-
-...
-
-> +			if (ch->cfg.bipolar)
-> +				/* (1<<31) is UB for a 32bit channel */
-> +				*val = (chan->scan_type.realbits == 32) ?
-> +					INT_MIN :
-> +					-(1 << (chan->scan_type.realbits - 1));
-
-So, what's the issue to use BIT() which has no such issue with UB?
-
-> +			else
-> +				*val = 0;
-
-...
-
-> +		*val = st->info->sinc5_data_rates[reg] / (MICRO/MILLI);
-> +		*val2 = (st->info->sinc5_data_rates[reg] % MILLI) * (MICRO/MILLI);
-
-Same Q about denominator.
-
-...
-
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		freq = val * MILLI + val2 / MILLI;
-
-> +
-
-Unneeded blank line.
-
-> +		for (i = 0; i < st->info->num_sinc5_data_rates - 1; i++) {
-> +			if (freq >= st->info->sinc5_data_rates[i])
-> +				break;
-> +		}
-> +
-> +		cfg = &st->channels[chan->address].cfg;
-> +		cfg->odr = i;
-> +
-> +		if (!cfg->live)
-> +			break;
-> +
-> +		ret = ad_sd_read_reg(&st->sd, AD7173_REG_FILTER(cfg->cfg_slot), 2, &reg);
-> +		if (ret)
-> +			break;
-> +		reg &= ~AD7173_FILTER_ODR0_MASK;
-> +		reg |= FIELD_PREP(AD7173_FILTER_ODR0_MASK, i);
-> +		ret = ad_sd_write_reg(&st->sd, AD7173_REG_FILTER(cfg->cfg_slot), 2, reg);
-> +		break;
-
-...
-
-> +static int ad7173_update_scan_mode(struct iio_dev *indio_dev,
-> +				   const unsigned long *scan_mask)
-> +{
-> +	struct ad7173_state *st = iio_priv(indio_dev);
-
-> +	int i, ret = 0;
-
-Use the 0 directly...
-
-> +
-> +	for (i = 0; i < indio_dev->num_channels; i++) {
-> +		if (test_bit(i, scan_mask))
-> +			ret = ad7173_set_channel(&st->sd, i);
-> +		else
-> +			ret = ad_sd_write_reg(&st->sd, AD7173_REG_CH(i), 2, 0);
-> +
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return ret;
-
-...here.
-
-> +}
-
-> +	chan_arr = devm_kcalloc(dev, sizeof(*chan_arr), num_channels,
-> +				GFP_KERNEL);
-
-One line.
-
-> +	if (!chan_arr)
-> +		return -ENOMEM;
-
-...
-
-> +		if (fwnode_property_read_u32(child, "adi,reference-select", &ref_sel))
-> +			ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-
-if is redundant.
-
-		ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-		fwnode_property_read_u32(child, "adi,reference-select", &ref_sel);
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Nov 17, 2023 at 04:47:46PM -0800, Jakub Kicinski wrote:
+> On Wed, 15 Nov 2023 15:39:36 +0100 Herve Codina wrote:
+> >    - Removed Patches 6, 7 and 8 (patches applied)
+> >=20
+> >    - Patches 7, 20, 21, 23 (patches 10, 23, 24, 26 in v8)
+> >      Add 'Acked-by: Jakub Kicinski <kuba@kernel.org>'
+
+> I thought someone (Mark?) asked for the networking stuff to be put=20
+> on a branch. If that's still the preference - is it possible to factor
+> these out as a standalone series, too?  Will they build on their own?
+
+Yes, can we *please* at least get the generic non-driver bits of this
+series moving - they seem uncontroversial as far as I can see and are a
+tiny portion of the overall 20 patches.  Patches 21-23 look like they
+can go on a branch in the net tree?
+
+--HuVabfiR1A06kEJd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVbX18ACgkQJNaLcl1U
+h9BhUQf/Y8e+dECLekhRMQLy8O0p4YRvMtVtYbyazFL0PEJyvuI93CnL/nqRzW/7
+x6zzsmJn2uab1/SmDbu8m5yE2PQDQs448v2ZAIcvu9SOQoH9ph+y/Li1dsCx0MQS
+b+VU0vl6YJcBmn8ycRkgBldpLgOoc6HU2tss4FQBAlR2R0Aw6KG97Smd+Py70Yyg
+ewedo+nXh+OkOHdJiG3Fbcbw6GwLEoQB+jj2MFy4QA3VilnEu+NBvRxIoegctggc
+mPB4GWRQNg9fb57iy6IqsME7oUq1hUb4SJ55O7s88qko3hFJ4ediuncLVP25kbl/
+HNP87K6I1Mebqh5LHTcVOvfo8zM/BQ==
+=n/vU
+-----END PGP SIGNATURE-----
+
+--HuVabfiR1A06kEJd--
 
