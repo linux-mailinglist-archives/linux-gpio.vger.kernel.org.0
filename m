@@ -1,125 +1,122 @@
-Return-Path: <linux-gpio+bounces-252-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-253-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D904D7F0DD8
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 09:44:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 412487F0E3C
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 09:56:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D46B281A35
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 08:44:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F175428209F
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 08:56:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF59ACA4D;
-	Mon, 20 Nov 2023 08:44:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F1E2F503;
+	Mon, 20 Nov 2023 08:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="yJY4c/z4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QSLFSYbo"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="SJexwnN9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C6CA2;
-	Mon, 20 Nov 2023 00:44:28 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.nyi.internal (Postfix) with ESMTP id C93F55803A1;
-	Mon, 20 Nov 2023 03:44:25 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 20 Nov 2023 03:44:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1700469865; x=1700477065; bh=gf
-	FgJZ50InRlxA1bXQ5aRh+dZLzQhN0FPLPbgFDX9v8=; b=yJY4c/z49wu6OVpuBT
-	3vrAuNBqGx/HJh0CxqiWKIthY1AlXlOQjAYzcts97tbP3Ex2GGPQQnXTtmrB5Vhz
-	woHAtqMnkGd4WiBPUTrulr/h+k4WVwA9z9/cKMcle0aiA/drai6rbsntsIHuR5Wn
-	1Ya7DsMYWbsHYCNlGVJfmyqxp1uQgRNmYfgmh9l8z0+5KjR8a2D7HJ1oNO4dMxgo
-	zhk79szjzuCFuW7X+x3WeeD/23HoubJcgAeEuR9VaST0H1/3oI+Fhqv05mU6nOyi
-	Q94vDFCnHNjpgnV2ODYbANb45IAexy3h2GuRXe9+WqFXcyjo4/bQ4yA0ABFK7UoM
-	p3Ag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1700469865; x=1700477065; bh=gfFgJZ50InRlx
-	A1bXQ5aRh+dZLzQhN0FPLPbgFDX9v8=; b=QSLFSYboW8mIu3dJ5DjlbwdMObuuN
-	kPd20GyFcMT9IcXzoaduqkfNG+IQWUeZXiPs+y6S2qDT6ob3ePqPvz/mMrwQ4ZbQ
-	FFbbbzHtjVRoD1c84wG2ErsQFxg5Ne3cfCE3O3rYyasOgF6fcG7LDMDm7W9jP1mn
-	bYFf6HyiS8d7s449+/4J4hD1SZT5CJqQNvJuP2gIs6fCyk+2lyvhXJ7kepp3hbPY
-	WNpYe70r/TKJyzsIkrfg7RkcN654pS/aUIb38XeR+BswLivSm6W4Ri3zBbSvJUtq
-	XeyCNBpFC6rzdYEjwQABacq7mB7MLA9jTr2nv8gov/MNdI7Joepn6xPIw==
-X-ME-Sender: <xms:ZxxbZSjBS8ra_sObY5jpHOgzkteFSOyuM5dj_Cv8PUZRLyRqjwyUmw>
-    <xme:ZxxbZTBKoTp0rH1NMZo4pfUDsV7YsaTm0JFXz4ZOMsofDPOEgKmK6_aqKyuG7NNxr
-    h7GEGQzOTIeP4Ugx90>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudeghedguddvvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:ZxxbZaEO9Np9FB7qMx9p2aGgFYghtTBdl6qb3umOSdjyh8o3z7CnPQ>
-    <xmx:ZxxbZbRMXt7VlWjH7F8ieB3Pg-61rVM08ZKBfsNCIwg5MGKQyoXfGw>
-    <xmx:ZxxbZfwkRHHzpjJjPJnLXY42gxyhTY4mWs8sp4iZW7920ijqVIwv0w>
-    <xmx:aRxbZY8Pfk7Y5L9tx8y9q5icA1GrErC01q3EpZ9X8WYKxu4Y42GBSQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 1C2F9B60089; Mon, 20 Nov 2023 03:44:23 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1108-g3a29173c6d-fm-20231031.005-g3a29173c
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0671DB9
+	for <linux-gpio@vger.kernel.org>; Mon, 20 Nov 2023 00:56:43 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-5079f3f3d7aso5778885e87.1
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Nov 2023 00:56:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1700470601; x=1701075401; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=59pC2LHry6cb5cqfhMULcVrIqT91aTViztLNNnCSwLA=;
+        b=SJexwnN9N8EtVhSOmDkJ7iuayuk/jKb9c+hTmYuFJdOLgRUwC0z1NMjytqjVMSn22t
+         P80s2THPuHwmZ4AylvN0Buzo3ww9FTdHo4EdVuJRFUDYXcwLerhnF9BPraw/5+5wcDtz
+         Qa9a8e+Zeifsb++AT64Nu1ShyqxcTLpniH0+m58ff3YSyZNnXMPAwHZzEO3bNRpuXwnD
+         JZX4dEci0bba0m2pKB1L3eHA4WKPe7896e4cBf3H8kNnp4x8pw2g19mNjmjhadBkG4Iw
+         cv35LqzWWS/X3EE5yfqiMl1yAs3zdKsqplF+xnARBl5+8tYAvpx5OJX1InLHuLzoUkY3
+         /38g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700470601; x=1701075401;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=59pC2LHry6cb5cqfhMULcVrIqT91aTViztLNNnCSwLA=;
+        b=Vz9An4zEeuJ7wp70Ye8PX0tAI3c6ZjrTeekC5+KyZ05pMUa6svHSVcG7gDILpaA8fA
+         +r6jgcUUodfN89cCGmWXqQum7rLCrnusfvtNcy9VL4DfwsHWzEkWo97Pytl6eHKPfzIc
+         LzDvJR3MsP++wOWnXbU6/U1UOjIp7zjqN1byW8BCJwr6qZUOTVs4IKze2T6GPes8W6YS
+         LReE8XStiU7Qkon3sgJQwwIPF3ffoRXHS3SuKd+Bq4XlFvSUsrHrewDLlKskWBNWSQrQ
+         mfPPIAEt+QRMgzo5vA+e7qk7PFw2VJn8Q3Y72kntT9s3lD8ZmyAYrGHrjI9XBtMxMhxd
+         uX6A==
+X-Gm-Message-State: AOJu0YyjySNITIlBJzzIUjYPS4mQYgvp74P5vVEKTiKYNcNzenGwkuVt
+	QK4sRbiElnbW3zFc8V6u4Vvx1A==
+X-Google-Smtp-Source: AGHT+IHE45wQIbvUvBpnUSKuVGaK0HGXYQLdyDOslaoOuSDIijD+KTDxVgVYHkC9GH3JKKQYbqNBGQ==
+X-Received: by 2002:ac2:532f:0:b0:50a:a337:1f42 with SMTP id f15-20020ac2532f000000b0050aa3371f42mr4869740lfh.36.1700470601250;
+        Mon, 20 Nov 2023 00:56:41 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.183])
+        by smtp.gmail.com with ESMTPSA id f10-20020adfdb4a000000b0032da35baf7bsm10422832wrj.113.2023.11.20.00.56.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Nov 2023 00:56:40 -0800 (PST)
+Message-ID: <0272299f-40b5-4840-887a-3d017e3f77bb@tuxon.dev>
+Date: Mon, 20 Nov 2023 10:56:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <bd25377b-b191-4d81-b144-2936cb5139d9@app.fastmail.com>
-In-Reply-To: <20231120070024.4079344-15-claudiu.beznea.uj@bp.renesas.com>
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
- <20231120070024.4079344-15-claudiu.beznea.uj@bp.renesas.com>
-Date: Mon, 20 Nov 2023 09:44:02 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
- "Sergey Shtylyov" <s.shtylyov@omp.ru>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Rob Herring" <robh+dt@kernel.org>,
- krzysztof.kozlowski+dt@linaro.org, "Conor Dooley" <conor+dt@kernel.org>,
- "Russell King" <linux@armlinux.org.uk>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Magnus Damm" <magnus.damm@gmail.com>,
- "Michael Turquette" <mturquette@baylibre.com>,
- "Stephen Boyd" <sboyd@kernel.org>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Philipp Zabel" <p.zabel@pengutronix.de>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>,
- "Andrew Davis" <afd@ti.com>, "Mark Brown" <broonie@kernel.org>,
- "Alexander Stein" <alexander.stein@ew.tq-group.com>,
- eugen.hristev@collabora.com, sergei.shtylyov@gmail.com, "Lad,
- Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- "Biju Das" <biju.das.jz@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 14/14] arm: multi_v7_defconfig: Enable CONFIG_RAVB
+Content-Language: en-US
+To: Arnd Bergmann <arnd@arndb.de>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ krzysztof.kozlowski+dt@linaro.org, Conor Dooley <conor+dt@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Andrew Davis <afd@ti.com>,
+ Mark Brown <broonie@kernel.org>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ eugen.hristev@collabora.com, sergei.shtylyov@gmail.com,
+ "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Biju Das <biju.das.jz@bp.renesas.com>
 Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
  Netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-clk@vger.kernel.org,
  "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Claudiu Beznea" <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH 14/14] arm: multi_v7_defconfig: Enable CONFIG_RAVB
-Content-Type: text/plain
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
+ <20231120070024.4079344-15-claudiu.beznea.uj@bp.renesas.com>
+ <bd25377b-b191-4d81-b144-2936cb5139d9@app.fastmail.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <bd25377b-b191-4d81-b144-2936cb5139d9@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 20, 2023, at 08:00, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> ravb driver is used by RZ/G1H. Enable it in multi_v7_defconfig.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-We have a mix of =y and =m for ethernet drivers, and usually
-only have drivers built-in when they are frequently tested
-with NFS root booting.
 
-Do you need this as well, or could it be =m instead?
+On 20.11.2023 10:44, Arnd Bergmann wrote:
+> On Mon, Nov 20, 2023, at 08:00, Claudiu wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>
+>> ravb driver is used by RZ/G1H. Enable it in multi_v7_defconfig.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> We have a mix of =y and =m for ethernet drivers, and usually
+> only have drivers built-in when they are frequently tested
+> with NFS root booting.
+> 
+> Do you need this as well, or could it be =m instead?
 
-    Arnd
+I would prefer to have it =y as internal testing infrastructure is using NFS.
+
+Thank you,
+Claudiu Beznea
+
+> 
+>     Arnd
 
