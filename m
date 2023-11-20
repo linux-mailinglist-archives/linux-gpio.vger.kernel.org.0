@@ -1,106 +1,303 @@
-Return-Path: <linux-gpio+bounces-269-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-270-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEC577F1CC8
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 19:39:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF25A7F1D6E
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 20:41:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9638282196
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 18:39:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 639BE2825FF
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 19:41:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E057730CFB;
-	Mon, 20 Nov 2023 18:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 092C4358B2;
+	Mon, 20 Nov 2023 19:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DNMpM+4L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFECB10C0;
-	Mon, 20 Nov 2023 10:39:35 -0800 (PST)
-Received: from [192.168.1.103] (178.176.77.202) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 20 Nov
- 2023 21:39:30 +0300
-Subject: Re: [PATCH 09/14] dt-bindings: net: renesas,etheravb: Document RZ/G3S
- support
-To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <linux@armlinux.org.uk>, <geert+renesas@glider.be>,
-	<magnus.damm@gmail.com>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<linus.walleij@linaro.org>, <p.zabel@pengutronix.de>, <arnd@arndb.de>,
-	<m.szyprowski@samsung.com>, <alexandre.torgue@foss.st.com>, <afd@ti.com>,
-	<broonie@kernel.org>, <alexander.stein@ew.tq-group.com>,
-	<eugen.hristev@collabora.com>, <sergei.shtylyov@gmail.com>,
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, <biju.das.jz@bp.renesas.com>
-CC: <linux-renesas-soc@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
- <20231120070024.4079344-10-claudiu.beznea.uj@bp.renesas.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <c3813f98-3d11-bbf2-7510-c22f7610df62@omp.ru>
-Date: Mon, 20 Nov 2023 21:39:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60ED391;
+	Mon, 20 Nov 2023 11:41:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700509268; x=1732045268;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cwIrP8xSl17q1ERD81V8W8TIDeksLzSBAeCjh3kGnLY=;
+  b=DNMpM+4Lkw3KYtjcBvsTV9Ht0vAU4044QxcTBkJ8YAz0M2Wd3bMMyRUx
+   N5smE6/GxVnaUJ3/g5ENeSf6p4iHIdQO8CC/KKc8AKkg+OTktQ469HwFo
+   pmqwJzY/buxTeat/X3Ir6aVhzD13m9f9qL9nFaMLoV5mqYmjcb6Z5Gdsn
+   8fdO6kxIcvBWWMQq1o3HW0TcasHvhswsSSg+3/M34oyTcjIBBDWM2+S9Y
+   S8g6yJImf6j0paWr5dbjouiKGFEh4LwMT8LKOllOhYyMscvI3+5xOgM+F
+   HkHCmByMmKe3EOp4Dv58qTQufvHzqPpHVNAB+OvbWh++0e8y/dE3fMSr3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="376727999"
+X-IronPort-AV: E=Sophos;i="6.04,214,1695711600"; 
+   d="scan'208";a="376727999"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 11:41:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="795562857"
+X-IronPort-AV: E=Sophos;i="6.04,214,1695711600"; 
+   d="scan'208";a="795562857"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 20 Nov 2023 11:41:05 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D21936B; Mon, 20 Nov 2023 21:33:54 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [rft, PATCH v1 1/1] pinctrl: qcom: lpass-lpi: Remove unused member in struct lpi_pingroup
+Date: Mon, 20 Nov 2023 21:26:08 +0200
+Message-ID: <20231120193353.1670732-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231120070024.4079344-10-claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [178.176.77.202]
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.0.0, Database issued on: 11/20/2023 18:21:05
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 181488 [Nov 20 2023]
-X-KSE-AntiSpam-Info: Version: 6.0.0.2
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.77.202
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 11/20/2023 18:25:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 11/20/2023 4:24:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Transfer-Encoding: 8bit
 
-On 11/20/23 10:00 AM, Claudiu wrote:
+The group is not used anywhere, remove it. And if needed, it should be
+struct pingroup anyway.
 
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Document Ethernet RZ/G3S support. Ethernet IP is similar to the one
-> available on RZ/G2L devices.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+While at it, replace kernel.h with what exactly being used.
 
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-[...]
+_Seems_ like this (I only read the code), hence rft.
 
-MBR, Sergey
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.h      |  6 +----
+ .../pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c   | 16 -------------
+ .../pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c | 20 ----------------
+ .../pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c   | 20 ----------------
+ .../pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c   | 15 ------------
+ .../pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c   | 16 -------------
+ .../pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c   | 24 -------------------
+ 7 files changed, 1 insertion(+), 116 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+index 206b2c0ca828..a9b2f65c1ebe 100644
+--- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
++++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+@@ -6,8 +6,8 @@
+ #ifndef __PINCTRL_LPASS_LPI_H__
+ #define __PINCTRL_LPASS_LPI_H__
+ 
++#include <linux/array_size.h>
+ #include <linux/bits.h>
+-#include <linux/kernel.h>
+ 
+ #include "../core.h"
+ 
+@@ -45,11 +45,8 @@ struct pinctrl_pin_desc;
+ 
+ #define LPI_PINGROUP(id, soff, f1, f2, f3, f4)		\
+ 	{						\
+-		.group.name = "gpio" #id,			\
+-		.group.pins = gpio##id##_pins,		\
+ 		.pin = id,				\
+ 		.slew_offset = soff,			\
+-		.group.num_pins = ARRAY_SIZE(gpio##id##_pins),	\
+ 		.funcs = (int[]){			\
+ 			LPI_MUX_gpio,			\
+ 			LPI_MUX_##f1,			\
+@@ -67,7 +64,6 @@ struct pinctrl_pin_desc;
+ #define LPI_FLAG_SLEW_RATE_SAME_REG			BIT(0)
+ 
+ struct lpi_pingroup {
+-	struct group_desc group;
+ 	unsigned int pin;
+ 	/* Bit offset in slew register for SoundWire pins only */
+ 	int slew_offset;
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+index 99156217c6a5..6bb39812e1d8 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+@@ -36,22 +36,6 @@ enum lpass_lpi_functions {
+ 	LPI_MUX__,
+ };
+ 
+-static int gpio0_pins[] = { 0 };
+-static int gpio1_pins[] = { 1 };
+-static int gpio2_pins[] = { 2 };
+-static int gpio3_pins[] = { 3 };
+-static int gpio4_pins[] = { 4 };
+-static int gpio5_pins[] = { 5 };
+-static int gpio6_pins[] = { 6 };
+-static int gpio7_pins[] = { 7 };
+-static int gpio8_pins[] = { 8 };
+-static int gpio9_pins[] = { 9 };
+-static int gpio10_pins[] = { 10 };
+-static int gpio11_pins[] = { 11 };
+-static int gpio12_pins[] = { 12 };
+-static int gpio13_pins[] = { 13 };
+-static int gpio14_pins[] = { 14 };
+-
+ static const struct pinctrl_pin_desc sc7280_lpi_pins[] = {
+ 	PINCTRL_PIN(0, "gpio0"),
+ 	PINCTRL_PIN(1, "gpio1"),
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
+index b33483056f42..c0369baf3398 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
+@@ -45,26 +45,6 @@ enum lpass_lpi_functions {
+ 	LPI_MUX__,
+ };
+ 
+-static int gpio0_pins[] = { 0 };
+-static int gpio1_pins[] = { 1 };
+-static int gpio2_pins[] = { 2 };
+-static int gpio3_pins[] = { 3 };
+-static int gpio4_pins[] = { 4 };
+-static int gpio5_pins[] = { 5 };
+-static int gpio6_pins[] = { 6 };
+-static int gpio7_pins[] = { 7 };
+-static int gpio8_pins[] = { 8 };
+-static int gpio9_pins[] = { 9 };
+-static int gpio10_pins[] = { 10 };
+-static int gpio11_pins[] = { 11 };
+-static int gpio12_pins[] = { 12 };
+-static int gpio13_pins[] = { 13 };
+-static int gpio14_pins[] = { 14 };
+-static int gpio15_pins[] = { 15 };
+-static int gpio16_pins[] = { 16 };
+-static int gpio17_pins[] = { 17 };
+-static int gpio18_pins[] = { 18 };
+-
+ static const struct pinctrl_pin_desc sc8280xp_lpi_pins[] = {
+ 	PINCTRL_PIN(0, "gpio0"),
+ 	PINCTRL_PIN(1, "gpio1"),
+diff --git a/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
+index e8a6f6f6af54..316d6fc69131 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
+@@ -36,26 +36,6 @@ enum lpass_lpi_functions {
+ 	LPI_MUX__,
+ };
+ 
+-static int gpio0_pins[] = { 0 };
+-static int gpio1_pins[] = { 1 };
+-static int gpio2_pins[] = { 2 };
+-static int gpio3_pins[] = { 3 };
+-static int gpio4_pins[] = { 4 };
+-static int gpio5_pins[] = { 5 };
+-static int gpio6_pins[] = { 6 };
+-static int gpio7_pins[] = { 7 };
+-static int gpio8_pins[] = { 8 };
+-static int gpio9_pins[] = { 9 };
+-static int gpio10_pins[] = { 10 };
+-static int gpio11_pins[] = { 11 };
+-static int gpio12_pins[] = { 12 };
+-static int gpio13_pins[] = { 13 };
+-static int gpio14_pins[] = { 14 };
+-static int gpio15_pins[] = { 15 };
+-static int gpio16_pins[] = { 16 };
+-static int gpio17_pins[] = { 17 };
+-static int gpio18_pins[] = { 18 };
+-
+ static const struct pinctrl_pin_desc sm6115_lpi_pins[] = {
+ 	PINCTRL_PIN(0, "gpio0"),
+ 	PINCTRL_PIN(1, "gpio1"),
+diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
+index cb10ce8d5d28..9791d9ba5087 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
+@@ -36,21 +36,6 @@ enum lpass_lpi_functions {
+ 	LPI_MUX__,
+ };
+ 
+-static int gpio0_pins[] = { 0 };
+-static int gpio1_pins[] = { 1 };
+-static int gpio2_pins[] = { 2 };
+-static int gpio3_pins[] = { 3 };
+-static int gpio4_pins[] = { 4 };
+-static int gpio5_pins[] = { 5 };
+-static int gpio6_pins[] = { 6 };
+-static int gpio7_pins[] = { 7 };
+-static int gpio8_pins[] = { 8 };
+-static int gpio9_pins[] = { 9 };
+-static int gpio10_pins[] = { 10 };
+-static int gpio11_pins[] = { 11 };
+-static int gpio12_pins[] = { 12 };
+-static int gpio13_pins[] = { 13 };
+-
+ static const struct pinctrl_pin_desc sm8250_lpi_pins[] = {
+ 	PINCTRL_PIN(0, "gpio0"),
+ 	PINCTRL_PIN(1, "gpio1"),
+diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
+index 297cc95ac3c0..5b9a2cb216bd 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
+@@ -36,22 +36,6 @@ enum lpass_lpi_functions {
+ 	LPI_MUX__,
+ };
+ 
+-static int gpio0_pins[] = { 0 };
+-static int gpio1_pins[] = { 1 };
+-static int gpio2_pins[] = { 2 };
+-static int gpio3_pins[] = { 3 };
+-static int gpio4_pins[] = { 4 };
+-static int gpio5_pins[] = { 5 };
+-static int gpio6_pins[] = { 6 };
+-static int gpio7_pins[] = { 7 };
+-static int gpio8_pins[] = { 8 };
+-static int gpio9_pins[] = { 9 };
+-static int gpio10_pins[] = { 10 };
+-static int gpio11_pins[] = { 11 };
+-static int gpio12_pins[] = { 12 };
+-static int gpio13_pins[] = { 13 };
+-static int gpio14_pins[] = { 14 };
+-
+ static const struct pinctrl_pin_desc sm8350_lpi_pins[] = {
+ 	PINCTRL_PIN(0, "gpio0"),
+ 	PINCTRL_PIN(1, "gpio1"),
+diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
+index 2e7896791fc0..a028cbb49947 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
++++ b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
+@@ -52,30 +52,6 @@ enum lpass_lpi_functions {
+ 	LPI_MUX__,
+ };
+ 
+-static int gpio0_pins[] = { 0 };
+-static int gpio1_pins[] = { 1 };
+-static int gpio2_pins[] = { 2 };
+-static int gpio3_pins[] = { 3 };
+-static int gpio4_pins[] = { 4 };
+-static int gpio5_pins[] = { 5 };
+-static int gpio6_pins[] = { 6 };
+-static int gpio7_pins[] = { 7 };
+-static int gpio8_pins[] = { 8 };
+-static int gpio9_pins[] = { 9 };
+-static int gpio10_pins[] = { 10 };
+-static int gpio11_pins[] = { 11 };
+-static int gpio12_pins[] = { 12 };
+-static int gpio13_pins[] = { 13 };
+-static int gpio14_pins[] = { 14 };
+-static int gpio15_pins[] = { 15 };
+-static int gpio16_pins[] = { 16 };
+-static int gpio17_pins[] = { 17 };
+-static int gpio18_pins[] = { 18 };
+-static int gpio19_pins[] = { 19 };
+-static int gpio20_pins[] = { 20 };
+-static int gpio21_pins[] = { 21 };
+-static int gpio22_pins[] = { 22 };
+-
+ static const struct pinctrl_pin_desc sm8450_lpi_pins[] = {
+ 	PINCTRL_PIN(0, "gpio0"),
+ 	PINCTRL_PIN(1, "gpio1"),
+-- 
+2.43.0.rc1.1.gbec44491f096
+
 
