@@ -1,287 +1,106 @@
-Return-Path: <linux-gpio+bounces-268-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-269-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 470907F199C
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 18:18:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEC577F1CC8
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 19:39:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72D4B1C210CE
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 17:18:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9638282196
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 18:39:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C57172032D;
-	Mon, 20 Nov 2023 17:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FPo5yJrU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E057730CFB;
+	Mon, 20 Nov 2023 18:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885D0BA;
-	Mon, 20 Nov 2023 09:18:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700500684; x=1732036684;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=UC5hPVWUnGTOtRCW9QVVFZlDvGId3Mtjmo1Ght7VoyE=;
-  b=FPo5yJrUKJVfAzyGp9enSsHaWqFl6fp9inMNmxgnqcUNw+PuLEs5cUQt
-   XLNXnlW+a047pH+AEiewjTqIOQ1J43ddt3/mhwUMk36EaTL1T15n4Jr6r
-   NCDv/1O1LKmj9+aP1GAhZSpvNHJyNxvx/hL6SKGLkDFF5eJXTjNieQ1y/
-   yA0fLf76EaBMAk8u89H1Osl1Gqs26OJiLv6aSy47jpIi0WoZStyX9Yiix
-   bNsapBvTQzivo/tBJQcaquLwNTEPVFcDNNhKUwX1KeB0BfsUefZynMcNB
-   4+JWutKojxqedGmAM/GEm1pC9Gpyh2z/QkUr+DWfmaDLG6VnEUelwSZw5
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="391443956"
-X-IronPort-AV: E=Sophos;i="6.04,214,1695711600"; 
-   d="scan'208";a="391443956"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 09:18:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="836782614"
-X-IronPort-AV: E=Sophos;i="6.04,214,1695711600"; 
-   d="scan'208";a="836782614"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Nov 2023 09:18:01 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 09F946B; Mon, 20 Nov 2023 19:17:59 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-mediatek@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v3 1/1] pinctrl: mediatek: Switch to use no-IRQ PM helpers
-Date: Mon, 20 Nov 2023 19:15:31 +0200
-Message-ID: <20231120171754.1665539-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFECB10C0;
+	Mon, 20 Nov 2023 10:39:35 -0800 (PST)
+Received: from [192.168.1.103] (178.176.77.202) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 20 Nov
+ 2023 21:39:30 +0300
+Subject: Re: [PATCH 09/14] dt-bindings: net: renesas,etheravb: Document RZ/G3S
+ support
+To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+	<conor+dt@kernel.org>, <linux@armlinux.org.uk>, <geert+renesas@glider.be>,
+	<magnus.damm@gmail.com>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+	<linus.walleij@linaro.org>, <p.zabel@pengutronix.de>, <arnd@arndb.de>,
+	<m.szyprowski@samsung.com>, <alexandre.torgue@foss.st.com>, <afd@ti.com>,
+	<broonie@kernel.org>, <alexander.stein@ew.tq-group.com>,
+	<eugen.hristev@collabora.com>, <sergei.shtylyov@gmail.com>,
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>, <biju.das.jz@bp.renesas.com>
+CC: <linux-renesas-soc@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>
+References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
+ <20231120070024.4079344-10-claudiu.beznea.uj@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <c3813f98-3d11-bbf2-7510-c22f7610df62@omp.ru>
+Date: Mon, 20 Nov 2023 21:39:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231120070024.4079344-10-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [178.176.77.202]
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.0.0, Database issued on: 11/20/2023 18:21:05
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 181488 [Nov 20 2023]
+X-KSE-AntiSpam-Info: Version: 6.0.0.2
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.77.202
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 11/20/2023 18:25:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 11/20/2023 4:24:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Since pm.h provides a helper for system no-IRQ PM callbacks,
-switch the driver to use it instead of open coded variant.
+On 11/20/23 10:00 AM, Claudiu wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Document Ethernet RZ/G3S support. Ethernet IP is similar to the one
+> available on RZ/G2L devices.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-v3:
-- used EXPORT_... helper and pm_sleep_ptr() (Paul)
-- dropped renaming (Paul, Angelo, Jonathan)
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 
- drivers/pinctrl/mediatek/pinctrl-mt2701.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt2712.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt6795.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8167.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8173.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8183.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8186.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8188.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8192.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8195.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8365.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mt8516.c     | 2 +-
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 5 ++---
- drivers/pinctrl/mediatek/pinctrl-paris.c      | 5 ++---
- 14 files changed, 16 insertions(+), 18 deletions(-)
+[...]
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt2701.c b/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-index 5fb377c1668b..6b1c7122b0fb 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-@@ -533,7 +533,7 @@ static struct platform_driver mtk_pinctrl_driver = {
- 	.driver = {
- 		.name = "mediatek-mt2701-pinctrl",
- 		.of_match_table = mt2701_pctrl_match,
--		.pm = &mtk_eint_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_eint_pm_ops),
- 	},
- };
- 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt2712.c b/drivers/pinctrl/mediatek/pinctrl-mt2712.c
-index 8a6daa0db54b..bb7394ae252b 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt2712.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt2712.c
-@@ -581,7 +581,7 @@ static struct platform_driver mtk_pinctrl_driver = {
- 	.driver = {
- 		.name = "mediatek-mt2712-pinctrl",
- 		.of_match_table = mt2712_pctrl_match,
--		.pm = &mtk_eint_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_eint_pm_ops),
- 	},
- };
- 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6795.c b/drivers/pinctrl/mediatek/pinctrl-mt6795.c
-index 01e855ccd4dd..ee3ae3d2fa7e 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt6795.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt6795.c
-@@ -612,7 +612,7 @@ static struct platform_driver mt6795_pinctrl_driver = {
- 	.driver = {
- 		.name = "mt6795-pinctrl",
- 		.of_match_table = mt6795_pctrl_match,
--		.pm = &mtk_paris_pinctrl_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops),
- 	},
- 	.probe = mtk_paris_pinctrl_probe,
- };
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8167.c b/drivers/pinctrl/mediatek/pinctrl-mt8167.c
-index ba7f30c3296f..143c26622272 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8167.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8167.c
-@@ -334,7 +334,7 @@ static struct platform_driver mtk_pinctrl_driver = {
- 	.driver = {
- 		.name = "mediatek-mt8167-pinctrl",
- 		.of_match_table = mt8167_pctrl_match,
--		.pm = &mtk_eint_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_eint_pm_ops),
- 	},
- };
- 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8173.c b/drivers/pinctrl/mediatek/pinctrl-mt8173.c
-index 455eec018f93..b214deeafbf1 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8173.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8173.c
-@@ -347,7 +347,7 @@ static struct platform_driver mtk_pinctrl_driver = {
- 	.driver = {
- 		.name = "mediatek-mt8173-pinctrl",
- 		.of_match_table = mt8173_pctrl_match,
--		.pm = &mtk_eint_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_eint_pm_ops),
- 	},
- };
- 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8183.c b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-index ddc48b725c22..93e482c6b5fd 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-@@ -576,7 +576,7 @@ static struct platform_driver mt8183_pinctrl_driver = {
- 	.driver = {
- 		.name = "mt8183-pinctrl",
- 		.of_match_table = mt8183_pinctrl_of_match,
--		.pm = &mtk_paris_pinctrl_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops),
- 	},
- 	.probe = mtk_paris_pinctrl_probe,
- };
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8186.c b/drivers/pinctrl/mediatek/pinctrl-mt8186.c
-index a02f7c326970..7be591591cce 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8186.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8186.c
-@@ -1255,7 +1255,7 @@ static struct platform_driver mt8186_pinctrl_driver = {
- 	.driver = {
- 		.name = "mt8186-pinctrl",
- 		.of_match_table = mt8186_pinctrl_of_match,
--		.pm = &mtk_paris_pinctrl_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops),
- 	},
- 	.probe = mtk_paris_pinctrl_probe,
- };
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8188.c b/drivers/pinctrl/mediatek/pinctrl-mt8188.c
-index c067e043e619..3975e99d9cf4 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8188.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8188.c
-@@ -1658,7 +1658,7 @@ static struct platform_driver mt8188_pinctrl_driver = {
- 	.driver = {
- 		.name = "mt8188-pinctrl",
- 		.of_match_table = mt8188_pinctrl_of_match,
--		.pm = &mtk_paris_pinctrl_pm_ops
-+		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops)
- 	},
- 	.probe = mtk_paris_pinctrl_probe,
- };
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8192.c b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-index dee1b3aefd36..e3a76381f7f4 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8192.c
-@@ -1420,7 +1420,7 @@ static struct platform_driver mt8192_pinctrl_driver = {
- 	.driver = {
- 		.name = "mt8192-pinctrl",
- 		.of_match_table = mt8192_pinctrl_of_match,
--		.pm = &mtk_paris_pinctrl_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops),
- 	},
- 	.probe = mtk_paris_pinctrl_probe,
- };
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8195.c b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-index 09c4dcef9338..83345c52b2fa 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-@@ -968,7 +968,7 @@ static struct platform_driver mt8195_pinctrl_driver = {
- 	.driver = {
- 		.name = "mt8195-pinctrl",
- 		.of_match_table = mt8195_pinctrl_of_match,
--		.pm = &mtk_paris_pinctrl_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops),
- 	},
- 	.probe = mtk_paris_pinctrl_probe,
- };
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8365.c b/drivers/pinctrl/mediatek/pinctrl-mt8365.c
-index 1db04bbdb423..e3e0d66cfbbf 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8365.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8365.c
-@@ -484,7 +484,7 @@ static struct platform_driver mtk_pinctrl_driver = {
- 	.driver = {
- 		.name = "mediatek-mt8365-pinctrl",
- 		.of_match_table = mt8365_pctrl_match,
--		.pm = &mtk_eint_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_eint_pm_ops),
- 	},
- };
- 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8516.c b/drivers/pinctrl/mediatek/pinctrl-mt8516.c
-index 950275c47122..abda75d4354e 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8516.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8516.c
-@@ -334,7 +334,7 @@ static struct platform_driver mtk_pinctrl_driver = {
- 	.driver = {
- 		.name = "mediatek-mt8516-pinctrl",
- 		.of_match_table = mt8516_pctrl_match,
--		.pm = &mtk_eint_pm_ops,
-+		.pm = pm_sleep_ptr(&mtk_eint_pm_ops),
- 	},
- };
- 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index e79d66a04194..66381e67a5e5 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -914,9 +914,8 @@ static int mtk_eint_resume(struct device *device)
- 	return mtk_eint_do_resume(pctl->eint);
- }
- 
--const struct dev_pm_ops mtk_eint_pm_ops = {
--	.suspend_noirq = mtk_eint_suspend,
--	.resume_noirq = mtk_eint_resume,
-+EXPORT_GPL_DEV_PM_OPS(mtk_eint_pm_ops) = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_eint_suspend, mtk_eint_resume)
- };
- 
- static int mtk_pctrl_build_state(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 6392f1e05d02..780fdca6bc81 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -1131,9 +1131,8 @@ static int mtk_paris_pinctrl_resume(struct device *device)
- 	return mtk_eint_do_resume(pctl->eint);
- }
- 
--const struct dev_pm_ops mtk_paris_pinctrl_pm_ops = {
--	.suspend_noirq = mtk_paris_pinctrl_suspend,
--	.resume_noirq = mtk_paris_pinctrl_resume,
-+EXPORT_GPL_DEV_PM_OPS(mtk_paris_pinctrl_pm_ops) = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_paris_pinctrl_suspend, mtk_paris_pinctrl_resume)
- };
- 
- MODULE_LICENSE("GPL v2");
--- 
-2.43.0.rc1.1.gbec44491f096
-
+MBR, Sergey
 
