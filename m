@@ -1,63 +1,59 @@
-Return-Path: <linux-gpio+bounces-270-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-271-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF25A7F1D6E
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 20:41:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 278A87F1D94
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 20:56:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 639BE2825FF
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 19:41:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 88AEBB2196F
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 19:56:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 092C4358B2;
-	Mon, 20 Nov 2023 19:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E445837146;
+	Mon, 20 Nov 2023 19:56:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DNMpM+4L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EUDN8S+c"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60ED391;
-	Mon, 20 Nov 2023 11:41:08 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC39AA;
+	Mon, 20 Nov 2023 11:56:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700509268; x=1732045268;
+  t=1700510185; x=1732046185;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=cwIrP8xSl17q1ERD81V8W8TIDeksLzSBAeCjh3kGnLY=;
-  b=DNMpM+4Lkw3KYtjcBvsTV9Ht0vAU4044QxcTBkJ8YAz0M2Wd3bMMyRUx
-   N5smE6/GxVnaUJ3/g5ENeSf6p4iHIdQO8CC/KKc8AKkg+OTktQ469HwFo
-   pmqwJzY/buxTeat/X3Ir6aVhzD13m9f9qL9nFaMLoV5mqYmjcb6Z5Gdsn
-   8fdO6kxIcvBWWMQq1o3HW0TcasHvhswsSSg+3/M34oyTcjIBBDWM2+S9Y
-   S8g6yJImf6j0paWr5dbjouiKGFEh4LwMT8LKOllOhYyMscvI3+5xOgM+F
-   HkHCmByMmKe3EOp4Dv58qTQufvHzqPpHVNAB+OvbWh++0e8y/dE3fMSr3
+  bh=zb7vywnY5jyenAxj9sbtLt+bBMaQnCZHqRqsqRdZ/10=;
+  b=EUDN8S+caPxE19UesPiGzk6D3eROcb+BsscwTMzynqbDsarMWljf3mZH
+   2KahXLKtGWhw4JSuvJoGY1KZOSbgeYqmNg1g5uOm5W3sGEInSkjwsw7xZ
+   i6Xtty00VFnLFrtVabqqcDYPtp81yvKFJmlYkLXKiwYBfKHiyOXUiVrQ3
+   g5Y/TQ27YDWwM8MEvBvj+0i6BbMqwdm8Ab5vZu9P0dldtVzsVlnDkefFL
+   Y1/E/fgDDrM+wHSLiSpL8LfgTxwmCuu/0wdC603qSHeBuxHha4QVcsvb2
+   ydtmnFBd/cuOSkJR2bk7giRKXKYXq5+2qLRptSiGi/B8VV5F+/xmQJyrW
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="376727999"
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="395622098"
 X-IronPort-AV: E=Sophos;i="6.04,214,1695711600"; 
-   d="scan'208";a="376727999"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 11:41:07 -0800
+   d="scan'208";a="395622098"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 11:56:07 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="795562857"
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="801298590"
 X-IronPort-AV: E=Sophos;i="6.04,214,1695711600"; 
-   d="scan'208";a="795562857"
+   d="scan'208";a="801298590"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 20 Nov 2023 11:41:05 -0800
+  by orsmga001.jf.intel.com with ESMTP; 20 Nov 2023 11:56:05 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D21936B; Mon, 20 Nov 2023 21:33:54 +0200 (EET)
+	id 184E813A; Mon, 20 Nov 2023 21:48:05 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org,
+To: openbmc@lists.ozlabs.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [rft, PATCH v1 1/1] pinctrl: qcom: lpass-lpi: Remove unused member in struct lpi_pingroup
-Date: Mon, 20 Nov 2023 21:26:08 +0200
-Message-ID: <20231120193353.1670732-1-andriy.shevchenko@linux.intel.com>
+Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: nuvoton: Convert to use struct pingroup and PINCTRL_PINGROUP()
+Date: Mon, 20 Nov 2023 21:48:02 +0200
+Message-ID: <20231120194802.1675239-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -67,236 +63,48 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The group is not used anywhere, remove it. And if needed, it should be
-struct pingroup anyway.
-
-While at it, replace kernel.h with what exactly being used.
+The pin control header provides struct pingroup and PINCTRL_PINGROUP() macro.
+Utilize them instead of open coded variants in the driver.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
+ drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-_Seems_ like this (I only read the code), hence rft.
-
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.h      |  6 +----
- .../pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c   | 16 -------------
- .../pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c | 20 ----------------
- .../pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c   | 20 ----------------
- .../pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c   | 15 ------------
- .../pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c   | 16 -------------
- .../pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c   | 24 -------------------
- 7 files changed, 1 insertion(+), 116 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-index 206b2c0ca828..a9b2f65c1ebe 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-@@ -6,8 +6,8 @@
- #ifndef __PINCTRL_LPASS_LPI_H__
- #define __PINCTRL_LPASS_LPI_H__
- 
-+#include <linux/array_size.h>
- #include <linux/bits.h>
--#include <linux/kernel.h>
- 
- #include "../core.h"
- 
-@@ -45,11 +45,8 @@ struct pinctrl_pin_desc;
- 
- #define LPI_PINGROUP(id, soff, f1, f2, f3, f4)		\
- 	{						\
--		.group.name = "gpio" #id,			\
--		.group.pins = gpio##id##_pins,		\
- 		.pin = id,				\
- 		.slew_offset = soff,			\
--		.group.num_pins = ARRAY_SIZE(gpio##id##_pins),	\
- 		.funcs = (int[]){			\
- 			LPI_MUX_gpio,			\
- 			LPI_MUX_##f1,			\
-@@ -67,7 +64,6 @@ struct pinctrl_pin_desc;
- #define LPI_FLAG_SLEW_RATE_SAME_REG			BIT(0)
- 
- struct lpi_pingroup {
--	struct group_desc group;
- 	unsigned int pin;
- 	/* Bit offset in slew register for SoundWire pins only */
- 	int slew_offset;
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-index 99156217c6a5..6bb39812e1d8 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-@@ -36,22 +36,6 @@ enum lpass_lpi_functions {
- 	LPI_MUX__,
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+index 0cff44b07b29..4589900244c7 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+@@ -474,9 +474,8 @@ enum {
+ #undef WPCM450_GRP
  };
  
--static int gpio0_pins[] = { 0 };
--static int gpio1_pins[] = { 1 };
--static int gpio2_pins[] = { 2 };
--static int gpio3_pins[] = { 3 };
--static int gpio4_pins[] = { 4 };
--static int gpio5_pins[] = { 5 };
--static int gpio6_pins[] = { 6 };
--static int gpio7_pins[] = { 7 };
--static int gpio8_pins[] = { 8 };
--static int gpio9_pins[] = { 9 };
--static int gpio10_pins[] = { 10 };
--static int gpio11_pins[] = { 11 };
--static int gpio12_pins[] = { 12 };
--static int gpio13_pins[] = { 13 };
--static int gpio14_pins[] = { 14 };
--
- static const struct pinctrl_pin_desc sc7280_lpi_pins[] = {
- 	PINCTRL_PIN(0, "gpio0"),
- 	PINCTRL_PIN(1, "gpio1"),
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
-index b33483056f42..c0369baf3398 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc8280xp-lpass-lpi.c
-@@ -45,26 +45,6 @@ enum lpass_lpi_functions {
- 	LPI_MUX__,
+-static struct group_desc wpcm450_groups[] = {
+-#define WPCM450_GRP(x) { .name = #x, .pins = x ## _pins, \
+-			.num_pins = ARRAY_SIZE(x ## _pins) }
++static struct pingroup wpcm450_groups[] = {
++#define WPCM450_GRP(x) PINCTRL_PINGROUP(#x, x ## _pins, ARRAY_SIZE(x ## _pins))
+ 	WPCM450_GRPS
+ #undef WPCM450_GRP
  };
+@@ -852,7 +851,7 @@ static int wpcm450_get_group_pins(struct pinctrl_dev *pctldev,
+ 				  const unsigned int **pins,
+ 				  unsigned int *npins)
+ {
+-	*npins = wpcm450_groups[selector].num_pins;
++	*npins = wpcm450_groups[selector].npins;
+ 	*pins  = wpcm450_groups[selector].pins;
  
--static int gpio0_pins[] = { 0 };
--static int gpio1_pins[] = { 1 };
--static int gpio2_pins[] = { 2 };
--static int gpio3_pins[] = { 3 };
--static int gpio4_pins[] = { 4 };
--static int gpio5_pins[] = { 5 };
--static int gpio6_pins[] = { 6 };
--static int gpio7_pins[] = { 7 };
--static int gpio8_pins[] = { 8 };
--static int gpio9_pins[] = { 9 };
--static int gpio10_pins[] = { 10 };
--static int gpio11_pins[] = { 11 };
--static int gpio12_pins[] = { 12 };
--static int gpio13_pins[] = { 13 };
--static int gpio14_pins[] = { 14 };
--static int gpio15_pins[] = { 15 };
--static int gpio16_pins[] = { 16 };
--static int gpio17_pins[] = { 17 };
--static int gpio18_pins[] = { 18 };
--
- static const struct pinctrl_pin_desc sc8280xp_lpi_pins[] = {
- 	PINCTRL_PIN(0, "gpio0"),
- 	PINCTRL_PIN(1, "gpio1"),
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
-index e8a6f6f6af54..316d6fc69131 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6115-lpass-lpi.c
-@@ -36,26 +36,6 @@ enum lpass_lpi_functions {
- 	LPI_MUX__,
- };
+ 	return 0;
+@@ -901,7 +900,7 @@ static int wpcm450_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ 	struct wpcm450_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
  
--static int gpio0_pins[] = { 0 };
--static int gpio1_pins[] = { 1 };
--static int gpio2_pins[] = { 2 };
--static int gpio3_pins[] = { 3 };
--static int gpio4_pins[] = { 4 };
--static int gpio5_pins[] = { 5 };
--static int gpio6_pins[] = { 6 };
--static int gpio7_pins[] = { 7 };
--static int gpio8_pins[] = { 8 };
--static int gpio9_pins[] = { 9 };
--static int gpio10_pins[] = { 10 };
--static int gpio11_pins[] = { 11 };
--static int gpio12_pins[] = { 12 };
--static int gpio13_pins[] = { 13 };
--static int gpio14_pins[] = { 14 };
--static int gpio15_pins[] = { 15 };
--static int gpio16_pins[] = { 16 };
--static int gpio17_pins[] = { 17 };
--static int gpio18_pins[] = { 18 };
--
- static const struct pinctrl_pin_desc sm6115_lpi_pins[] = {
- 	PINCTRL_PIN(0, "gpio0"),
- 	PINCTRL_PIN(1, "gpio1"),
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
-index cb10ce8d5d28..9791d9ba5087 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
-@@ -36,21 +36,6 @@ enum lpass_lpi_functions {
- 	LPI_MUX__,
- };
+ 	wpcm450_setfunc(pctrl->gcr_regmap, wpcm450_groups[group].pins,
+-			wpcm450_groups[group].num_pins, function);
++			wpcm450_groups[group].npins, function);
  
--static int gpio0_pins[] = { 0 };
--static int gpio1_pins[] = { 1 };
--static int gpio2_pins[] = { 2 };
--static int gpio3_pins[] = { 3 };
--static int gpio4_pins[] = { 4 };
--static int gpio5_pins[] = { 5 };
--static int gpio6_pins[] = { 6 };
--static int gpio7_pins[] = { 7 };
--static int gpio8_pins[] = { 8 };
--static int gpio9_pins[] = { 9 };
--static int gpio10_pins[] = { 10 };
--static int gpio11_pins[] = { 11 };
--static int gpio12_pins[] = { 12 };
--static int gpio13_pins[] = { 13 };
--
- static const struct pinctrl_pin_desc sm8250_lpi_pins[] = {
- 	PINCTRL_PIN(0, "gpio0"),
- 	PINCTRL_PIN(1, "gpio1"),
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
-index 297cc95ac3c0..5b9a2cb216bd 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8350-lpass-lpi.c
-@@ -36,22 +36,6 @@ enum lpass_lpi_functions {
- 	LPI_MUX__,
- };
- 
--static int gpio0_pins[] = { 0 };
--static int gpio1_pins[] = { 1 };
--static int gpio2_pins[] = { 2 };
--static int gpio3_pins[] = { 3 };
--static int gpio4_pins[] = { 4 };
--static int gpio5_pins[] = { 5 };
--static int gpio6_pins[] = { 6 };
--static int gpio7_pins[] = { 7 };
--static int gpio8_pins[] = { 8 };
--static int gpio9_pins[] = { 9 };
--static int gpio10_pins[] = { 10 };
--static int gpio11_pins[] = { 11 };
--static int gpio12_pins[] = { 12 };
--static int gpio13_pins[] = { 13 };
--static int gpio14_pins[] = { 14 };
--
- static const struct pinctrl_pin_desc sm8350_lpi_pins[] = {
- 	PINCTRL_PIN(0, "gpio0"),
- 	PINCTRL_PIN(1, "gpio1"),
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
-index 2e7896791fc0..a028cbb49947 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8450-lpass-lpi.c
-@@ -52,30 +52,6 @@ enum lpass_lpi_functions {
- 	LPI_MUX__,
- };
- 
--static int gpio0_pins[] = { 0 };
--static int gpio1_pins[] = { 1 };
--static int gpio2_pins[] = { 2 };
--static int gpio3_pins[] = { 3 };
--static int gpio4_pins[] = { 4 };
--static int gpio5_pins[] = { 5 };
--static int gpio6_pins[] = { 6 };
--static int gpio7_pins[] = { 7 };
--static int gpio8_pins[] = { 8 };
--static int gpio9_pins[] = { 9 };
--static int gpio10_pins[] = { 10 };
--static int gpio11_pins[] = { 11 };
--static int gpio12_pins[] = { 12 };
--static int gpio13_pins[] = { 13 };
--static int gpio14_pins[] = { 14 };
--static int gpio15_pins[] = { 15 };
--static int gpio16_pins[] = { 16 };
--static int gpio17_pins[] = { 17 };
--static int gpio18_pins[] = { 18 };
--static int gpio19_pins[] = { 19 };
--static int gpio20_pins[] = { 20 };
--static int gpio21_pins[] = { 21 };
--static int gpio22_pins[] = { 22 };
--
- static const struct pinctrl_pin_desc sm8450_lpi_pins[] = {
- 	PINCTRL_PIN(0, "gpio0"),
- 	PINCTRL_PIN(1, "gpio1"),
+ 	return 0;
+ }
 -- 
 2.43.0.rc1.1.gbec44491f096
 
