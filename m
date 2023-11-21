@@ -1,276 +1,205 @@
-Return-Path: <linux-gpio+bounces-330-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-331-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A13067F353A
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 18:48:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C29F7F3552
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 18:52:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5003E28297C
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 17:48:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B643F282A1D
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 17:52:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AD7020DC9;
-	Tue, 21 Nov 2023 17:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17C2F20DFC;
+	Tue, 21 Nov 2023 17:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kGIlfsuW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q+9e2Isq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE527D52
-	for <linux-gpio@vger.kernel.org>; Tue, 21 Nov 2023 09:48:40 -0800 (PST)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5c210e34088so3163343a12.2
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Nov 2023 09:48:40 -0800 (PST)
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FBE197
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Nov 2023 09:52:47 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-2851c0569acso2352923a91.1
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Nov 2023 09:52:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700588920; x=1701193720; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700589167; x=1701193967; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EAK/ItuSDRPVMNR15AwNhdUvFP+x071LcAQ3w3yTJs0=;
-        b=kGIlfsuWV9pc67/zTpkfc8YdnXt2hAE3qr+ewTild/gLqpQ9CS9/PsmFolWYr0Re20
-         baGlZQTup9TPCYqBz2blkdq7pSK2JrFq6643iRt+jfyw1R/jU798ExGNdjQXWkJtUOc+
-         qJnOczBjgR6QdFJFMGCdoA+BEVkKXTRoWaMW/G4wWJimH1PmmJllb4EBPaJ4HdT/rB3w
-         feCv3oNiWOGIeuLqszBBQ/1EzYEuPo6unTnYDCBMkMCP5apxWosN8AjWCGqNfRhObimy
-         uOPX0fJ8KpyF0HfQ+M4Ub5D875vEt23/jIXPzBu9mL0he8lpXtR+EGB8ZiIM5FrlHbli
-         Pprw==
+        bh=8wpqGVbIK3WplCROjVemwcSWLjI6+dgvA3XaSrJo6hc=;
+        b=q+9e2Isqnn7/iG9+bmRD1I1gZK5To2KQfV63Legm//cSS3PBgUm4/apoJWkn/FUUvG
+         43R7RBI/NS1eEPNCu7LsZR44jvBy1KliSTCuqIJc/TAgtaYIC8/MUr9sxITcTOMUkD4F
+         g6vX3jLo72yPoSJlPPkLqG9rRbmO3PJU+38h44xbmfi5Az1/KAb/eU26d+cfNupZWt/f
+         c+ajD4IC2NoHdFp65jl+sG/MaDggQ7F6YCczx7MVWPxauNQAnt1+kunkYgqbtB8URqIq
+         v+L/y5XU8jJt1EEbq6CV5LkbSB2VoQSgd/d5Aa8jyqJSdnwWMVD1mZ1tpfkIkvx1kmZ7
+         UnDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700588920; x=1701193720;
+        d=1e100.net; s=20230601; t=1700589167; x=1701193967;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EAK/ItuSDRPVMNR15AwNhdUvFP+x071LcAQ3w3yTJs0=;
-        b=UNyhNDFFHUBlk60FQgcrbOvpFn8KWzoAjjolu8WFTCul9ie1vkjPTmDtLPV+el42dU
-         +88N9tgyfFd0rO5NyH1MVH5EXg4Q4K9GlboJSSb7DtYnFl6dHdY3nLv1YFjzbKZL0rLq
-         Mcf808smlpgUzZHDnG5jeVuGIO0NyZm4dzh/ZWu1wqMGXGwOACC1dE+BlAEP43rthe+/
-         kJoCKJ1Z2YARHSer8pQn4Fqq9nXs0Gli4Yx2XxiStrkwNMi219lZzabzTSEaYeAtAsGB
-         Q5/dV99L0YCsWWHMCvBUFoWpVBDTgPnYsUve4el+ixv4ElTkUbF/+z/okkQXFWOYZ4dW
-         cxRg==
-X-Gm-Message-State: AOJu0Yzbs3Us5gAQCUEgtI3h9S1CN3mAANiy3hhaJiEo38ngNnJz7FZU
-	qSVrMN9xRBJYmJulu4DaqBKQ0+tXHinFOrtRw8j92g==
-X-Google-Smtp-Source: AGHT+IGsVYAziCjXoCBHiftycTLKlFRj+F3xZDSfXKxIguYqxWX7xqT/er/I16AqY0h4UFWzZ5qHqodRZyjJQpRXSA8=
-X-Received: by 2002:a05:6a20:4306:b0:187:5be4:67e2 with SMTP id
- h6-20020a056a20430600b001875be467e2mr16406256pzk.53.1700588920073; Tue, 21
- Nov 2023 09:48:40 -0800 (PST)
+        bh=8wpqGVbIK3WplCROjVemwcSWLjI6+dgvA3XaSrJo6hc=;
+        b=OQwDvxvnMEzlAVyu4tfjwybVkiRVmaye/MTMGWIvNez4yu+2inrufWmxddHuwqS5zE
+         qP3XTCmW2yoV4o+mwLhd6iCBeILb9wHIm2Vs4JfnVesu/UwiA2yF/GmrWfLERCCTDVAj
+         XTWLScOmjm6vZ7vHT698DVLhJQ/XNtQowrljAa86i4FiXBnIXhyvqvxOaBoWWeJn5XMB
+         y/CjiirrQT/YQz9tk00L6e4pe+lr819ljzWeq048XXnW9IfPlgQD0YgIZvpOEvReWIJb
+         9t0j7gVPfLGmdnP9S5kNjeIQIPnmxeEzgJBNfXwSlpumNs17VC+5TwL9ShdgQdUEABbw
+         9kyQ==
+X-Gm-Message-State: AOJu0YzozDTyokUd6IjnoaVMUSQ2DKVih/zK4AKw3pIXXcMK87a9ywbZ
+	nI4u0bjBlr5lutbJO+DZPair3yTl9Fwl14cUUS65bw==
+X-Google-Smtp-Source: AGHT+IEdZp5NTxf9oR3LSlmESZBZSQbkEXjEj7cCwEl5eMeZY9Ha2tcsIk9FWPcD9OV0TPHekxd5b3NDVOKW++TOaBw=
+X-Received: by 2002:a17:90b:1c83:b0:27d:b3d:5c33 with SMTP id
+ oo3-20020a17090b1c8300b0027d0b3d5c33mr13567253pjb.28.1700589167121; Tue, 21
+ Nov 2023 09:52:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org> <20231108104343.24192-17-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20231108104343.24192-17-krzysztof.kozlowski@linaro.org>
+References: <20231120212037.911774-1-peter.griffin@linaro.org> <20231120212037.911774-16-peter.griffin@linaro.org>
+In-Reply-To: <20231120212037.911774-16-peter.griffin@linaro.org>
 From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Tue, 21 Nov 2023 11:48:29 -0600
-Message-ID: <CAPLW+4nkrMwc9GiQyn7ojaPz_50NQ3vAcMt9+tOzpHfq7G7+Tg@mail.gmail.com>
-Subject: Re: [PATCH 16/17] arm64: dts: exynos850: add specific compatibles to
- several blocks
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, 
-	Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaehoon Chung <jh80.chung@samsung.com>, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Date: Tue, 21 Nov 2023 11:52:36 -0600
+Message-ID: <CAPLW+4m+vG62V++izkycRYEhcTpoT+G=g+3Y4j8vqEpeX2uEPw@mail.gmail.com>
+Subject: Re: [PATCH v4 15/19] watchdog: s3c2410_wdt: Add support for WTCON
+ register DBGACK_MASK bit
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
+	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
+	tudor.ambarus@linaro.org, andre.draszik@linaro.org, saravanak@google.com, 
+	willmcvicker@google.com, soc@kernel.org, devicetree@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-serial@vger.kernel.org, alsa-devel@alsa-project.org, 
-	linux-sound@vger.kernel.org
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
+	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 8, 2023 at 4:44=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On Mon, Nov 20, 2023 at 3:21=E2=80=AFPM Peter Griffin <peter.griffin@linaro=
+.org> wrote:
 >
-> Exynos850 reuses several devices from older designs, thus historically
-> we kept the old (block's) compatible only.  This works fine and there is
-> no bug here, however guidelines expressed in
-> Documentation/devicetree/bindings/writing-bindings.rst state that:
-> 1. Compatibles should be specific.
-> 2. We should add new compatibles in case of bugs or features.
+> The WDT uses the CPU core signal DBGACK to determine whether the SoC
+> is running in debug mode or not. If the DBGACK signal is asserted and
+> DBGACK_MASK is enabled, then WDT output and interrupt is masked.
 >
-> Add compatibles specific to Exynos850 in front of all old-SoC-like
-> compatibles.  This will also help reviews of new code using existing
-> DTS as template.  No functional impact on Linux drivers behavior.
+> Presence of the DBGACK_MASK bit is determined by adding a new
+> QUIRK_HAS_DBGACK_BIT quirk. Currently only gs101 SoC is known to have
+> the DBGACK_MASK bit so add the quirk to drv_data_gs101_cl1 and
+> drv_data_gs101_cl1 quirks.
 >
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
+>  drivers/watchdog/s3c2410_wdt.c | 32 +++++++++++++++++++++++++++-----
+>  1 file changed, 27 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wd=
+t.c
+> index 08b8c57dd812..ed561deeeed9 100644
+> --- a/drivers/watchdog/s3c2410_wdt.c
+> +++ b/drivers/watchdog/s3c2410_wdt.c
+> @@ -34,9 +34,10 @@
+>
+>  #define S3C2410_WTCNT_MAXCNT   0xffff
+>
+> -#define S3C2410_WTCON_RSTEN    (1 << 0)
+> -#define S3C2410_WTCON_INTEN    (1 << 2)
+> -#define S3C2410_WTCON_ENABLE   (1 << 5)
+> +#define S3C2410_WTCON_RSTEN            (1 << 0)
+> +#define S3C2410_WTCON_INTEN            (1 << 2)
+> +#define S3C2410_WTCON_ENABLE           (1 << 5)
+> +#define S3C2410_WTCON_DBGACK_MASK      (1 << 16)
+>
+>  #define S3C2410_WTCON_DIV16    (0 << 3)
+>  #define S3C2410_WTCON_DIV32    (1 << 3)
+> @@ -107,12 +108,16 @@
+>   * %QUIRK_HAS_PMU_CNT_EN: PMU block has some register (e.g. CLUSTERx_NON=
+CPU_OUT)
+>   * with "watchdog counter enable" bit. That bit should be set to make wa=
+tchdog
+>   * counter running.
+> + *
+> + * %QUIRK_HAS_DBGACK_BIT: WTCON register has DBGACK_MASK bit. Enables ma=
+sking
+> + * WDT interrupt and reset request according to CPU core DBGACK signal.
+>   */
+>  #define QUIRK_HAS_WTCLRINT_REG                 (1 << 0)
+>  #define QUIRK_HAS_PMU_MASK_RESET               (1 << 1)
+>  #define QUIRK_HAS_PMU_RST_STAT                 (1 << 2)
+>  #define QUIRK_HAS_PMU_AUTO_DISABLE             (1 << 3)
+>  #define QUIRK_HAS_PMU_CNT_EN                   (1 << 4)
+> +#define QUIRK_HAS_DBGACK_BIT                   (1 << 5)
+>
+>  /* These quirks require that we have a PMU register map */
+>  #define QUIRKS_HAVE_PMUREG \
+> @@ -279,7 +284,7 @@ static const struct s3c2410_wdt_variant drv_data_gs10=
+1_cl0 =3D {
+>         .cnt_en_reg =3D GS_CLUSTER0_NONCPU_OUT,
+>         .cnt_en_bit =3D 8,
+>         .quirks =3D QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | Q=
+UIRK_HAS_PMU_CNT_EN |
+> -                 QUIRK_HAS_WTCLRINT_REG,
+> +                 QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT,
+>  };
+>
+>  static const struct s3c2410_wdt_variant drv_data_gs101_cl1 =3D {
+> @@ -291,7 +296,7 @@ static const struct s3c2410_wdt_variant drv_data_gs10=
+1_cl1 =3D {
+>         .cnt_en_reg =3D GS_CLUSTER1_NONCPU_OUT,
+>         .cnt_en_bit =3D 7,
+>         .quirks =3D QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | Q=
+UIRK_HAS_PMU_CNT_EN |
+> -                 QUIRK_HAS_WTCLRINT_REG,
+> +                 QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT,
+>  };
+>
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+This patch states it's adding the feature, but in fact it's also
+enabling this feature for gs101. Suggest moving this patch before the
+one enabling gs101 wdt. This way, one patch will only add the feature,
+and another patch will enable gs101 entirely (with this feature used).
+At least it seems like more atomic approach to me.
 
->  arch/arm64/boot/dts/exynos/exynos850.dtsi | 34 +++++++++++++----------
->  1 file changed, 20 insertions(+), 14 deletions(-)
+>  static const struct of_device_id s3c2410_wdt_match[] =3D {
+> @@ -408,6 +413,21 @@ static int s3c2410wdt_enable(struct s3c2410_wdt *wdt=
+, bool en)
+>         return 0;
+>  }
 >
-> diff --git a/arch/arm64/boot/dts/exynos/exynos850.dtsi b/arch/arm64/boot/=
-dts/exynos/exynos850.dtsi
-> index 53104e65b9c6..df5ea43ebcad 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> @@ -396,7 +396,7 @@ pinctrl_aud: pinctrl@14a60000 {
->                 };
+> +static void s3c2410wdt_mask_dbgack(struct s3c2410_wdt *wdt, bool mask)
+> +{
+> +       unsigned long wtcon;
+> +
+> +       if (!(wdt->drv_data->quirks & QUIRK_HAS_DBGACK_BIT))
+> +               return;
+> +
+> +       wtcon =3D readl(wdt->reg_base + S3C2410_WTCON);
+> +       if (mask)
+> +               wtcon |=3D S3C2410_WTCON_DBGACK_MASK;
+> +       else
+> +               wtcon &=3D ~S3C2410_WTCON_DBGACK_MASK;
+> +       writel(wtcon, wdt->reg_base + S3C2410_WTCON);
+> +}
+> +
+>  static int s3c2410wdt_keepalive(struct watchdog_device *wdd)
+>  {
+>         struct s3c2410_wdt *wdt =3D watchdog_get_drvdata(wdd);
+> @@ -737,6 +757,8 @@ static int s3c2410wdt_probe(struct platform_device *p=
+dev)
+>         wdt->wdt_device.bootstatus =3D s3c2410wdt_get_bootstatus(wdt);
+>         wdt->wdt_device.parent =3D dev;
 >
->                 rtc: rtc@11a30000 {
-> -                       compatible =3D "samsung,s3c6410-rtc";
-> +                       compatible =3D "samsung,exynos850-rtc", "samsung,=
-s3c6410-rtc";
->                         reg =3D <0x11a30000 0x100>;
->                         interrupts =3D <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
->                                      <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -406,7 +406,8 @@ rtc: rtc@11a30000 {
->                 };
->
->                 mmc_0: mmc@12100000 {
-> -                       compatible =3D "samsung,exynos7-dw-mshc-smu";
-> +                       compatible =3D "samsung,exynos850-dw-mshc-smu",
-> +                                    "samsung,exynos7-dw-mshc-smu";
->                         reg =3D <0x12100000 0x2000>;
->                         interrupts =3D <GIC_SPI 452 IRQ_TYPE_LEVEL_HIGH>;
->                         #address-cells =3D <1>;
-> @@ -419,7 +420,7 @@ mmc_0: mmc@12100000 {
->                 };
->
->                 i2c_0: i2c@13830000 {
-> -                       compatible =3D "samsung,s3c2440-i2c";
-> +                       compatible =3D "samsung,exynos850-i2c", "samsung,=
-s3c2440-i2c";
->                         reg =3D <0x13830000 0x100>;
->                         interrupts =3D <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>;
->                         #address-cells =3D <1>;
-> @@ -432,7 +433,7 @@ i2c_0: i2c@13830000 {
->                 };
->
->                 i2c_1: i2c@13840000 {
-> -                       compatible =3D "samsung,s3c2440-i2c";
-> +                       compatible =3D "samsung,exynos850-i2c", "samsung,=
-s3c2440-i2c";
->                         reg =3D <0x13840000 0x100>;
->                         interrupts =3D <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
->                         #address-cells =3D <1>;
-> @@ -445,7 +446,7 @@ i2c_1: i2c@13840000 {
->                 };
->
->                 i2c_2: i2c@13850000 {
-> -                       compatible =3D "samsung,s3c2440-i2c";
-> +                       compatible =3D "samsung,exynos850-i2c", "samsung,=
-s3c2440-i2c";
->                         reg =3D <0x13850000 0x100>;
->                         interrupts =3D <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>;
->                         #address-cells =3D <1>;
-> @@ -458,7 +459,7 @@ i2c_2: i2c@13850000 {
->                 };
->
->                 i2c_3: i2c@13860000 {
-> -                       compatible =3D "samsung,s3c2440-i2c";
-> +                       compatible =3D "samsung,exynos850-i2c", "samsung,=
-s3c2440-i2c";
->                         reg =3D <0x13860000 0x100>;
->                         interrupts =3D <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>;
->                         #address-cells =3D <1>;
-> @@ -471,7 +472,7 @@ i2c_3: i2c@13860000 {
->                 };
->
->                 i2c_4: i2c@13870000 {
-> -                       compatible =3D "samsung,s3c2440-i2c";
-> +                       compatible =3D "samsung,exynos850-i2c", "samsung,=
-s3c2440-i2c";
->                         reg =3D <0x13870000 0x100>;
->                         interrupts =3D <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
->                         #address-cells =3D <1>;
-> @@ -485,7 +486,7 @@ i2c_4: i2c@13870000 {
->
->                 /* I2C_5 (also called CAM_PMIC_I2C in TRM) */
->                 i2c_5: i2c@13880000 {
-> -                       compatible =3D "samsung,s3c2440-i2c";
-> +                       compatible =3D "samsung,exynos850-i2c", "samsung,=
-s3c2440-i2c";
->                         reg =3D <0x13880000 0x100>;
->                         interrupts =3D <GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH>;
->                         #address-cells =3D <1>;
-> @@ -499,7 +500,7 @@ i2c_5: i2c@13880000 {
->
->                 /* I2C_6 (also called MOTOR_I2C in TRM) */
->                 i2c_6: i2c@13890000 {
-> -                       compatible =3D "samsung,s3c2440-i2c";
-> +                       compatible =3D "samsung,exynos850-i2c", "samsung,=
-s3c2440-i2c";
->                         reg =3D <0x13890000 0x100>;
->                         interrupts =3D <GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>;
->                         #address-cells =3D <1>;
-> @@ -640,7 +641,8 @@ usi_hsi2c_0: usi@138a00c0 {
->                         status =3D "disabled";
->
->                         hsi2c_0: i2c@138a0000 {
-> -                               compatible =3D "samsung,exynosautov9-hsi2=
-c";
-> +                               compatible =3D "samsung,exynos850-hsi2c",
-> +                                            "samsung,exynosautov9-hsi2c"=
-;
->                                 reg =3D <0x138a0000 0xc0>;
->                                 interrupts =3D <GIC_SPI 193 IRQ_TYPE_LEVE=
-L_HIGH>;
->                                 #address-cells =3D <1>;
-> @@ -668,7 +670,8 @@ usi_hsi2c_1: usi@138b00c0 {
->                         status =3D "disabled";
->
->                         hsi2c_1: i2c@138b0000 {
-> -                               compatible =3D "samsung,exynosautov9-hsi2=
-c";
-> +                               compatible =3D "samsung,exynos850-hsi2c",
-> +                                            "samsung,exynosautov9-hsi2c"=
-;
->                                 reg =3D <0x138b0000 0xc0>;
->                                 interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVE=
-L_HIGH>;
->                                 #address-cells =3D <1>;
-> @@ -696,7 +699,8 @@ usi_hsi2c_2: usi@138c00c0 {
->                         status =3D "disabled";
->
->                         hsi2c_2: i2c@138c0000 {
-> -                               compatible =3D "samsung,exynosautov9-hsi2=
-c";
-> +                               compatible =3D "samsung,exynos850-hsi2c",
-> +                                            "samsung,exynosautov9-hsi2c"=
-;
->                                 reg =3D <0x138c0000 0xc0>;
->                                 interrupts =3D <GIC_SPI 195 IRQ_TYPE_LEVE=
-L_HIGH>;
->                                 #address-cells =3D <1>;
-> @@ -738,7 +742,8 @@ usi_cmgp0: usi@11d000c0 {
->                         status =3D "disabled";
->
->                         hsi2c_3: i2c@11d00000 {
-> -                               compatible =3D "samsung,exynosautov9-hsi2=
-c";
-> +                               compatible =3D "samsung,exynos850-hsi2c",
-> +                                            "samsung,exynosautov9-hsi2c"=
-;
->                                 reg =3D <0x11d00000 0xc0>;
->                                 interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL=
-_HIGH>;
->                                 #address-cells =3D <1>;
-> @@ -778,7 +783,8 @@ usi_cmgp1: usi@11d200c0 {
->                         status =3D "disabled";
->
->                         hsi2c_4: i2c@11d20000 {
-> -                               compatible =3D "samsung,exynosautov9-hsi2=
-c";
-> +                               compatible =3D "samsung,exynos850-hsi2c",
-> +                                            "samsung,exynosautov9-hsi2c"=
-;
->                                 reg =3D <0x11d20000 0xc0>;
->                                 interrupts =3D <GIC_SPI 63 IRQ_TYPE_LEVEL=
-_HIGH>;
->                                 #address-cells =3D <1>;
+> +       s3c2410wdt_mask_dbgack(wdt, true);
+> +
+>         /*
+>          * If "tmr_atboot" param is non-zero, start the watchdog right no=
+w. Also
+>          * set WDOG_HW_RUNNING bit, so that watchdog core can kick the wa=
+tchdog.
 > --
-> 2.34.1
+> 2.43.0.rc1.413.gea7ed67945-goog
 >
 
