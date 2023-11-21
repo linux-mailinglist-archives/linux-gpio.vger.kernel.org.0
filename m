@@ -1,81 +1,102 @@
-Return-Path: <linux-gpio+bounces-325-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-326-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 057237F33AE
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 17:29:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 728D67F33B4
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 17:29:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6B0C5B21C83
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 16:29:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D3764B21E16
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 16:29:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0A1B5A112;
-	Tue, 21 Nov 2023 16:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="akn0TQ1t"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1B895A11B;
+	Tue, 21 Nov 2023 16:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7670A51C39;
-	Tue, 21 Nov 2023 16:29:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 914BEC433C7;
-	Tue, 21 Nov 2023 16:29:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700584148;
-	bh=I7rTz58KR+S4gPSJUCHMuvvrAgbVHDd5w5snGcC6fmI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=akn0TQ1tx9tIwVVjKiVUiShOxIyrgDS6HtWnmTgRUnnSklSjnfnhzl6+GuCsg5RjU
-	 9SptLlLrBWaCEUXZt0ADSJ8CEKkqk2wF9KzP8cpzH4Gx09Owg9SZqDfyLEIg5QoKtl
-	 yQghzy2Lc/VM67gqmGXGWcz4FaVbhGzQPssRmIrwgDrV26t4om/KFBJPyKHznpDeiP
-	 wuqu+EX+sVaxwVH4N3+S5L9cHSc3CZb/Ev9j42UeMW/BbZmfG/VtCndmMqUDv495E7
-	 YkCJYcWckqEaSJD5gcvnhn23OD3MEoSCXL9FZ8InCUW36S86FsgcPUYQUVaL1QHMTK
-	 eeh5PRJrW3VzQ==
-Date: Tue, 21 Nov 2023 08:29:06 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Mark Brown <broonie@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li
- Yang <leoyang.li@nxp.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
- <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liam
- Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li
- <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, Nicolin Chen
- <nicoleotsuka@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, Simon
- Horman <horms@kernel.org>, Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v9 00/27] Add support for QMC HDLC, framer
- infrastructure and PEF2256 framer
-Message-ID: <20231121082906.354c9a7e@kernel.org>
-In-Reply-To: <20231121084330.4064bf14@bootlin.com>
-References: <20231115144007.478111-1-herve.codina@bootlin.com>
-	<20231117164746.0589e955@kernel.org>
-	<573c9ca1-a560-4f7a-ba21-80673a2e162e@sirena.org.uk>
-	<20231121084330.4064bf14@bootlin.com>
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D5B197;
+	Tue, 21 Nov 2023 08:29:35 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5cbf946a6f3so4159597b3.2;
+        Tue, 21 Nov 2023 08:29:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700584175; x=1701188975;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mxHuohagQtGVaCTwDHZT0rRlGCapRZ5dBubyNC4XBAI=;
+        b=wD3rjvABqZ0mEfUikMZgxtCgX+Y12GROjaRorORq4C4LRfLoOyqIlJ3YiBpBpkmM1j
+         UenQLDqUt7EdApTW5Q79wdvzdf3tw8X/OogzlXydiFCgjmtmPj/r7uyJPqzTG6ez16AA
+         LwB2XFzFGBOjr+8w1hi9TNAlCOPkfoTSU+G4IjjaMFWGLeCu9yqPKZLEQ9boMHceUG0t
+         kwvRk/6cxKLOZOMR6EODlnPiPWqKSrZjBQLolwMwbGHXF2kfC1Fp2M4y5zYQ6rOjQEBS
+         2PxurnsjEQcb2eKGQPDphc20QhM/XjCB45Bb3DQsoNSlR1Lso5zC7O9VcDWTXIsFFu78
+         yuhQ==
+X-Gm-Message-State: AOJu0YwSTWcSfcPlechKhl5kWcJGmOXUdnzXWrcbAozL8VJ3hjQj4g1t
+	EyO4ODLkD4a+MJCb51kpmhxKA+gTN1o3aeMq
+X-Google-Smtp-Source: AGHT+IETDdt4IEzFwkdNwFBhLqICCRw+X+4jp5GQEa4bi3FLMJAqg+VD6URF53k4RGJ1wQzCLW3Miw==
+X-Received: by 2002:a81:c246:0:b0:5b3:23f7:4254 with SMTP id t6-20020a81c246000000b005b323f74254mr12006517ywg.25.1700584174938;
+        Tue, 21 Nov 2023 08:29:34 -0800 (PST)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id n3-20020a0dfd03000000b005a7bb193b37sm3106395ywf.27.2023.11.21.08.29.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Nov 2023 08:29:33 -0800 (PST)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5cb96ef7ac6so8835107b3.3;
+        Tue, 21 Nov 2023 08:29:31 -0800 (PST)
+X-Received: by 2002:a81:b149:0:b0:5ca:c5e9:938b with SMTP id
+ p70-20020a81b149000000b005cac5e9938bmr5565031ywh.1.1700584171136; Tue, 21 Nov
+ 2023 08:29:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com> <20231120070024.4079344-10-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20231120070024.4079344-10-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 21 Nov 2023 17:29:18 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUr8bqQvJE78zMHb2sqQCnTZSZhcMef1x6DgXmUhdTWqg@mail.gmail.com>
+Message-ID: <CAMuHMdUr8bqQvJE78zMHb2sqQCnTZSZhcMef1x6DgXmUhdTWqg@mail.gmail.com>
+Subject: Re: [PATCH 09/14] dt-bindings: net: renesas,etheravb: Document RZ/G3S support
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, linux@armlinux.org.uk, 
+	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, 
+	linus.walleij@linaro.org, p.zabel@pengutronix.de, arnd@arndb.de, 
+	m.szyprowski@samsung.com, alexandre.torgue@foss.st.com, afd@ti.com, 
+	broonie@kernel.org, alexander.stein@ew.tq-group.com, 
+	eugen.hristev@collabora.com, sergei.shtylyov@gmail.com, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
+	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 21 Nov 2023 08:43:30 +0100 Herve Codina wrote:
-> I plan to send the v10 with the patch 23 fixed.
-> Based on that v10, some patches (21 to 25 at least) could be applied and
-> I will remove them for the future v11.
-> I think it will be easier to follow if I iterate on the series removing
-> patches as soon as they are applied.
+On Mon, Nov 20, 2023 at 8:01=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Document Ethernet RZ/G3S support. Ethernet IP is similar to the one
+> available on RZ/G2L devices.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-It'd be helpful if you only reposted the patches you expect
-to be applied, as a standalone series.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
