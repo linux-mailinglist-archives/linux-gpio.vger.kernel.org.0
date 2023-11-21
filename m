@@ -1,118 +1,111 @@
-Return-Path: <linux-gpio+bounces-323-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-324-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CD487F3221
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 16:16:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 803BD7F334F
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 17:11:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 545B0282D1A
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 15:16:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B129C1C21C2C
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 16:11:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B16B5676C;
-	Tue, 21 Nov 2023 15:16:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 763B35917F;
+	Tue, 21 Nov 2023 16:11:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642ABDD;
-	Tue, 21 Nov 2023 07:16:35 -0800 (PST)
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-359343e399fso15592825ab.0;
-        Tue, 21 Nov 2023 07:16:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700579794; x=1701184594;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MHBJbcTYAJFzd8BQozdA+OUJ8WFFDeZmUm9glBYXWMY=;
-        b=XMFfMNWGezswcSMFIRgJPHxeTNGDRVREXwioKmCOZ8Uv8cmK+eeL5p11X/TGPwzHLV
-         LsWq8njDA0khhQUO7BGMjPQBR+iBfwh5ZXdrep8yd+y5yIke9/Sf9PyY8ox4pBogimC6
-         rPUem/RO2jAlwICWzfg4MTqoJDEtpSgnoXVeVVxq4ICyD1p6HnpbuMYfvS2Ve0c4A0UD
-         0jv1PCU0pM3TfnTugL6PXbH9gCjhFcEjz/W/Jmh1keJfItofz3JmdeGF1NNI2/YhmXfB
-         M2m6hkUjYbqc2c2Jd8IgP9NrR3VrXOSuu4Gvyhrl+Q0sUTKD/E9/pYH9rKkn4Ahz/GpZ
-         ZBDw==
-X-Gm-Message-State: AOJu0Yx4K+G+7pVmdGGpkSl+2kTELWIw3aH9SJy19zk3gsOggsAzxRQ9
-	c7joqsBzdASgkUPPDyI7Jw==
-X-Google-Smtp-Source: AGHT+IGs+KFHExCqkcg3K0j2WE48eh5fwSy6aeVyBcCWydv816/PY/81hpz3b4X9rc/LANFLxc7uYA==
-X-Received: by 2002:a92:c90e:0:b0:35b:4b9:7883 with SMTP id t14-20020a92c90e000000b0035b04b97883mr6859544ilp.25.1700579794614;
-        Tue, 21 Nov 2023 07:16:34 -0800 (PST)
-Received: from herring.priv ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s16-20020a02cf30000000b0046676167055sm170383jar.129.2023.11.21.07.16.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Nov 2023 07:16:33 -0800 (PST)
-Received: (nullmailer pid 1791730 invoked by uid 1000);
-	Tue, 21 Nov 2023 15:16:30 -0000
-Date: Tue, 21 Nov 2023 08:16:30 -0700
-From: Rob Herring <robh@kernel.org>
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, tudor.ambarus@linaro.org, andre.draszik@linaro.org, semen.protsenko@linaro.org, saravanak@google.com, willmcvicker@google.com, soc@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, kernel-team@android.com, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v4 09/19] dt-bindings: serial: samsung: Make
- samsung,uart-fifosize required property
-Message-ID: <20231121151630.GA1692178-robh@kernel.org>
-References: <20231120212037.911774-1-peter.griffin@linaro.org>
- <20231120212037.911774-10-peter.griffin@linaro.org>
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8328BC
+	for <linux-gpio@vger.kernel.org>; Tue, 21 Nov 2023 08:11:18 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r5TLF-0004Kx-Ae; Tue, 21 Nov 2023 17:11:13 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r5TLE-00Aciy-Bv; Tue, 21 Nov 2023 17:11:12 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r5TLE-0053IE-2M; Tue, 21 Nov 2023 17:11:12 +0100
+Date: Tue, 21 Nov 2023 17:11:11 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
+Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <20231121161111.zphi7pn77ns7sgu2@pengutronix.de>
+References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
+ <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
+ <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2bkicqqkj5zxhgqq"
 Content-Disposition: inline
-In-Reply-To: <20231120212037.911774-10-peter.griffin@linaro.org>
+In-Reply-To: <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Mon, Nov 20, 2023 at 09:20:27PM +0000, Peter Griffin wrote:
-> Specifying samsung,uart-fifosize in both DT and driver static data is error
-> prone and relies on driver probe order and dt aliases to be correct.
-> 
-> Additionally on many Exynos platforms these are (USI) universal serial
-> interfaces which can be uart, spi or i2c, so it can change per board.
-> 
-> For google,gs101-uart and exynosautov9-uart make samsung,uart-fifosize a
-> required property. For these platforms fifosize now *only* comes from DT.
-> 
-> It is hoped other Exynos platforms will also switch over time.
 
-Then allow the property on them.
+--2bkicqqkj5zxhgqq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  .../bindings/serial/samsung_uart.yaml           | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> index ccc3626779d9..22a1edadc4fe 100644
-> --- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
-> @@ -133,6 +133,23 @@ allOf:
->              - const: uart
->              - const: clk_uart_baud0
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - google,gs101-uart
-> +              - samsung,exynosautov9-uart
-> +    then:
-> +      properties:
-> +        samsung,uart-fifosize:
-> +          description: The fifo size supported by the UART channel.
-> +          $ref: /schemas/types.yaml#/definitions/uint32
-> +          enum: [16, 64, 256]
+Hello Bart,
 
-We already have 'fifo-size' in several drivers. Use that. Please move 
-its type/description definitions to serial.yaml and make drivers just do 
-'fifo-size: true' if they use it.
+On Tue, Nov 21, 2023 at 03:02:39PM +0100, Bartosz Golaszewski wrote:
+> Eh... I had a talk at LPC where I explained why I really dislike this
+> approach but I guess this ship has sailed now and it's not a subsystem
+> where I have any say anyway.
 
-> +
-> +      required:
-> +       - samsung,uart-fifosize
+Is there a record of your talk? I'm open to hear your arguments.
+=20
+> It's not clear in the cover letter - are these patches supposed to go
+> through their respective subsystem trees?
 
-A new required property is an ABI break. Please explain why that is okay 
-in the commit message.
+This patch can only go in once patch #37 is in. So for now the options
+are:
 
-Rob
+ - Wait until devm_pwmchip_alloc() is in the mainline and apply this
+   patch then via the gpio tree
+ - Ack it and let it go in via the pwm tree with the other patches.
+=20
+I'm not sure how quick this series will go in, so there is no rush.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2bkicqqkj5zxhgqq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVc1p8ACgkQj4D7WH0S
+/k5PBQgAujymUNLy+qfU2/Pxtc8/Sf/S74wq9YJGCVqpeVPwMzcwHXj+TPDw47/l
+kR8QDiXAlEnvpTOpEKfRLXBeHkWOCHQZYEBMqVQz6dK7ujVAxlaoqZ0IrWlwdamG
+byqTjBhQ9STXUZUfv73UDOg84pkuzPmdpAZlTJMwu9EoRh8rqIPFw4DXi8bjpvby
+n5MvXkSeFemaAtlhvJZ7KDYWBqTPfu/+dsb1a0NG8B0mhCg5Pw9bVQppa2/OKaT4
+aCeyzK/HC6JVmfb4xWbW6CUUX2JkNxZPEq9/hOh0HKhjncjc4SFLeT5GR/q23U5w
+s1wKQZMBwIFAjEpOW0NQBqfpn+BV9Q==
+=plBG
+-----END PGP SIGNATURE-----
+
+--2bkicqqkj5zxhgqq--
 
