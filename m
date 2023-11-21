@@ -1,116 +1,96 @@
-Return-Path: <linux-gpio+bounces-306-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 036BA7F2690
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 08:43:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01C277F278D
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 09:34:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96B7028264F
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 07:43:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B479E1F24859
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 08:34:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B69B03219C;
-	Tue, 21 Nov 2023 07:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dT42X7ba"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 034CD101EC;
+	Tue, 21 Nov 2023 08:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::225])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77A53BE;
-	Mon, 20 Nov 2023 23:43:37 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B32381C0015;
-	Tue, 21 Nov 2023 07:43:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1700552615;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t3xCJjkxWbDTmhyET+JWYTIEBodqcC4r6MWWY/ifhBQ=;
-	b=dT42X7baSXiBorHZH4H94BtPqndNDcp8eqbqRa5/266PjA697mrwQZuiFMOFV3bqC+LFYf
-	JD9t8zFm7iJBbo/uCf/mKJjOP3PTC3GmJI37eI7GTOjuJ8ITZp/wQUz3EpxNLl97kL/Ydd
-	npP0GpYKiS9dmO5mpmTMbiXDcLLjlmnLf9w/QSqE/jx7Nk+ez5MHwmRVfmhMUj3fQVPeVf
-	1mjEET4IRfcoEu+gEy02lqEJPcaybC3vZ0djc8RWppQTbNOLGdI5ALeXmq/2hlPmpc12Dm
-	w/HPmiPybkosUJleovl4ltfmbt1SZUteSF/8l7z5wxKTA+iJ8rqKQbSTnAEgQg==
-Date: Tue, 21 Nov 2023 08:43:30 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Mark Brown <broonie@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>, Li
- Yang <leoyang.li@nxp.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liam
- Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi
- Iwai <tiwai@suse.com>, Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li
- <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, Nicolin Chen
- <nicoleotsuka@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
- Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, Simon
- Horman <horms@kernel.org>, Christophe JAILLET
- <christophe.jaillet@wanadoo.fr>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v9 00/27] Add support for QMC HDLC, framer
- infrastructure and PEF2256 framer
-Message-ID: <20231121084330.4064bf14@bootlin.com>
-In-Reply-To: <573c9ca1-a560-4f7a-ba21-80673a2e162e@sirena.org.uk>
-References: <20231115144007.478111-1-herve.codina@bootlin.com>
-	<20231117164746.0589e955@kernel.org>
-	<573c9ca1-a560-4f7a-ba21-80673a2e162e@sirena.org.uk>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3B0F9;
+	Tue, 21 Nov 2023 00:34:03 -0800 (PST)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5cb9407e697so3705217b3.3;
+        Tue, 21 Nov 2023 00:34:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700555642; x=1701160442;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zvU52/Ubi+bAinyzeHT0A3LXlb5oIMheUWuwfdkOyZY=;
+        b=C/on8yQX7kZPtIc5OpWv6TzAu/ruGEaOq9+yblp2NcZRaG8zuJUVcUB6M23iDGNbF3
+         7sMtrUjpNec54dNHlqReXuNOoXHhqZQPlNvAr9dgM14yCfFhSVEbfhHBMBzEoxtRoDqM
+         L5dZggtqoVmxRFwp8EFoHe/rYI+YvS44WMhGmbcDpne/2f96kgkL+Y1FcM2c2Dpq9R3X
+         0X2BYK8HUbmcdDF/tzNsUohqwkMwjPXfY85DPuSE/U5c4kKsGzzzi1xY6Ugfq+ram7PD
+         dfBpSe54J+L3fw5pzdd/wrUSLSso9QPNbPvKIVdI9F/vUHIH78DpgBiDW8tF00Pj4fp1
+         fCZg==
+X-Gm-Message-State: AOJu0YxFauLejfNB8/wbEUhnqKDYjaHnT35J6Ukb0E1HZe8uema7X05p
+	JeycguuSS0oZ8jTZhoEgkrO5qFB/s3fKqqvp
+X-Google-Smtp-Source: AGHT+IHLjYFUuhPifhgp6Y9NCeDp99nZPXeZZfv3+u5PRuIuMoywYGK9jtbOBY9xXCUOyODzuFFTAg==
+X-Received: by 2002:a81:d512:0:b0:5a7:d461:a2b7 with SMTP id i18-20020a81d512000000b005a7d461a2b7mr4551069ywj.43.1700555642235;
+        Tue, 21 Nov 2023 00:34:02 -0800 (PST)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
+        by smtp.gmail.com with ESMTPSA id k186-20020a0dfac3000000b00559f1cb8444sm2926023ywf.70.2023.11.21.00.34.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Nov 2023 00:34:01 -0800 (PST)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-daf7ed42ea6so5134789276.0;
+        Tue, 21 Nov 2023 00:34:01 -0800 (PST)
+X-Received: by 2002:a25:16c5:0:b0:d9a:6831:ec1c with SMTP id
+ 188-20020a2516c5000000b00d9a6831ec1cmr8151483ybw.53.1700555641181; Tue, 21
+ Nov 2023 00:34:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+References: <20231011195923.67404-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20231011195923.67404-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 21 Nov 2023 09:33:47 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU7558Acdi5jQp2JpHwatVtJGKOLq+VhQz5u6MYyhktaA@mail.gmail.com>
+Message-ID: <CAMuHMdU7558Acdi5jQp2JpHwatVtJGKOLq+VhQz5u6MYyhktaA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Enhance driver to support
+ interrupt affinity setting
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mark, Jakub, Qiang, Li,
+On Wed, Oct 11, 2023 at 10:00=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.=
+com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Implement irq_set_affinity callback so that we can set affinity
+> for GPIO IRQs.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Mon, 20 Nov 2023 13:30:08 +0000
-Mark Brown <broonie@kernel.org> wrote:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v6.8.
 
-> On Fri, Nov 17, 2023 at 04:47:46PM -0800, Jakub Kicinski wrote:
-> > On Wed, 15 Nov 2023 15:39:36 +0100 Herve Codina wrote:  
-> > >    - Removed Patches 6, 7 and 8 (patches applied)
-> > > 
-> > >    - Patches 7, 20, 21, 23 (patches 10, 23, 24, 26 in v8)
-> > >      Add 'Acked-by: Jakub Kicinski <kuba@kernel.org>'  
-> 
-> > I thought someone (Mark?) asked for the networking stuff to be put 
-> > on a branch. If that's still the preference - is it possible to factor
-> > these out as a standalone series, too?  Will they build on their own?  
-> 
-> Yes, can we *please* at least get the generic non-driver bits of this
-> series moving - they seem uncontroversial as far as I can see and are a
-> tiny portion of the overall 20 patches.  Patches 21-23 look like they
-> can go on a branch in the net tree?
+Gr{oetje,eeting}s,
 
-Patch 21 is the framer infrastructure.
-Patches 22-25 are the driver for the PEF2256 framer.
-Note that patch 24 is the pinmux part of the framer and, IHMO, can be
-taken too.
-Patch 23 need to be fixed (kernel test robot). The fix will be quite
-minor (depends on HAS_IOMEM on the Kconfig file).
+                        Geert
 
-For the SoC part (QUICC ENGINE QMC and TSA), what will be the plan ? 
-Qiang, Li, any opinion ?
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-I plan to send the v10 with the patch 23 fixed.
-Based on that v10, some patches (21 to 25 at least) could be applied and
-I will remove them for the future v11.
-I think it will be easier to follow if I iterate on the series removing
-patches as soon as they are applied.
-
-Of course, please, let me know if this is not the right way to do.
-
-Best regards,
-Hervé
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
