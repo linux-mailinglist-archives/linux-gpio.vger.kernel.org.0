@@ -1,66 +1,65 @@
-Return-Path: <linux-gpio+bounces-301-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-302-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A4BB7F2183
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 00:40:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C5D57F24B6
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 04:48:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E425B209A5
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Nov 2023 23:40:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA3AD2828EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Nov 2023 03:48:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1FED3B2AD;
-	Mon, 20 Nov 2023 23:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAF8B171AB;
+	Tue, 21 Nov 2023 03:48:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fGFMBUKz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ORHcT4p/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E4792;
-	Mon, 20 Nov 2023 15:40:03 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A55CF;
+	Mon, 20 Nov 2023 19:48:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700523603; x=1732059603;
+  t=1700538494; x=1732074494;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=gp1wbrJ6oJSN+w/KtUYVHSAUTDc/TxqBc/emsqqKEac=;
-  b=fGFMBUKzr6ec7LpqylyDOZten3trAofUqIM2jYmI5Hy1NPYYNX2Hr1ZY
-   NEuifPCY3xbAXZQBnFDZ28NihKuYPG6/RgxaDPYhB2r2AxsAzjjVnnZSm
-   qhIxZoy9chHpdweLxjpzi3ccOeUoRV5DSI0jnNrf3MHNayPy0ACoCo8Kx
-   iQJ3+gVi0FVPCNNYurGDWLft9FLUrKPY90KMH3LiVG9vJ5Ub088SWiPeC
-   c1bsbFFpvJu5tEYkyNcw1jx/FgaaLjFmojpZr+x3kVa8Wr75tTYSL573g
-   320AX7/j5RSJ1v16b/0/jYIrHrjaI64UhZNJrHYw8/liFg60JYOOmwVB6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="371067854"
-X-IronPort-AV: E=Sophos;i="6.04,214,1695711600"; 
-   d="scan'208";a="371067854"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 15:40:03 -0800
+  bh=857oIuq2ljv3IEo8BGH4JiHu1HpPQme7iJ2C6peyXC4=;
+  b=ORHcT4p/kHEGEFpHZNmmVHl9wlPdOfH7qi+GmFo6HH9Arj6aUGnbVHWd
+   69BjYJ9fAea3UpnP+QDTmzNrAM11ub415bT4sEsLn0wCnB9qiDASTSZKk
+   DjD8yZy0F5L9ehMBEPIdDFGmTKpi/gD1Ci4ANFRlO4FgOJED+5aizEgyy
+   C2CPv+mplilYP1m9rnXsEroHKPwpRO4eT1euaDv8CY4mdvk2Nx6fEyuQN
+   hma1RB7ScNGgr9053XPyOJxQTZRG6Aln/AjIBjs3s7EeAj9W0qM8jV8yC
+   /0lq+EWpOk+YR13Hd3ugixz9o1b8NRG7CT9lnOWNszIILurKqi1zWU+5e
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="10426058"
+X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
+   d="scan'208";a="10426058"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2023 19:48:14 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="910279769"
-X-IronPort-AV: E=Sophos;i="6.04,214,1695711600"; 
-   d="scan'208";a="910279769"
+X-IronPort-AV: E=McAfee;i="6600,9927,10900"; a="857207899"
+X-IronPort-AV: E=Sophos;i="6.04,215,1695711600"; 
+   d="scan'208";a="857207899"
 Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Nov 2023 15:40:00 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Nov 2023 19:48:10 -0800
 Received: from kbuild by b8de5498638e with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r5Drx-00074E-16;
-	Mon, 20 Nov 2023 23:39:57 +0000
-Date: Tue, 21 Nov 2023 07:39:54 +0800
+	id 1r5Hk8-0007Fq-0p;
+	Tue, 21 Nov 2023 03:48:08 +0000
+Date: Tue, 21 Nov 2023 11:47:25 +0800
 From: kernel test robot <lkp@intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Krzysztof Kozlowski <krzk@kernel.org>,
 	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
 	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Andy Gross <agross@kernel.org>,
+Cc: oe-kbuild-all@lists.linux.dev, Andy Gross <agross@kernel.org>,
 	Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [rft, PATCH v1 1/1] pinctrl: qcom: lpass-lpi: Remove unused
  member in struct lpi_pingroup
-Message-ID: <202311210748.H9kflJ6K-lkp@intel.com>
+Message-ID: <202311211148.TRaoiPGX-lkp@intel.com>
 References: <20231120193353.1670732-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -86,161 +85,159 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-q
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
 patch link:    https://lore.kernel.org/r/20231120193353.1670732-1-andriy.shevchenko%40linux.intel.com
 patch subject: [rft, PATCH v1 1/1] pinctrl: qcom: lpass-lpi: Remove unused member in struct lpi_pingroup
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20231121/202311210748.H9kflJ6K-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231121/202311210748.H9kflJ6K-lkp@intel.com/reproduce)
+config: x86_64-buildonly-randconfig-001-20231121 (https://download.01.org/0day-ci/archive/20231121/202311211148.TRaoiPGX-lkp@intel.com/config)
+compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231121/202311211148.TRaoiPGX-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311210748.H9kflJ6K-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311211148.TRaoiPGX-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:55:12: warning: unused variable 'gpio0_pins' [-Wunused-variable]
-   static int gpio0_pins[] = { 0 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:56:12: warning: unused variable 'gpio1_pins' [-Wunused-variable]
-   static int gpio1_pins[] = { 1 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:57:12: warning: unused variable 'gpio2_pins' [-Wunused-variable]
-   static int gpio2_pins[] = { 2 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:58:12: warning: unused variable 'gpio3_pins' [-Wunused-variable]
-   static int gpio3_pins[] = { 3 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:59:12: warning: unused variable 'gpio4_pins' [-Wunused-variable]
-   static int gpio4_pins[] = { 4 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:60:12: warning: unused variable 'gpio5_pins' [-Wunused-variable]
-   static int gpio5_pins[] = { 5 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:61:12: warning: unused variable 'gpio6_pins' [-Wunused-variable]
-   static int gpio6_pins[] = { 6 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:62:12: warning: unused variable 'gpio7_pins' [-Wunused-variable]
-   static int gpio7_pins[] = { 7 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:63:12: warning: unused variable 'gpio8_pins' [-Wunused-variable]
-   static int gpio8_pins[] = { 8 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:64:12: warning: unused variable 'gpio9_pins' [-Wunused-variable]
-   static int gpio9_pins[] = { 9 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:65:12: warning: unused variable 'gpio10_pins' [-Wunused-variable]
-   static int gpio10_pins[] = { 10 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:66:12: warning: unused variable 'gpio11_pins' [-Wunused-variable]
-   static int gpio11_pins[] = { 11 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:67:12: warning: unused variable 'gpio12_pins' [-Wunused-variable]
-   static int gpio12_pins[] = { 12 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:68:12: warning: unused variable 'gpio13_pins' [-Wunused-variable]
-   static int gpio13_pins[] = { 13 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:69:12: warning: unused variable 'gpio14_pins' [-Wunused-variable]
-   static int gpio14_pins[] = { 14 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:70:12: warning: unused variable 'gpio15_pins' [-Wunused-variable]
-   static int gpio15_pins[] = { 15 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:71:12: warning: unused variable 'gpio16_pins' [-Wunused-variable]
-   static int gpio16_pins[] = { 16 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:72:12: warning: unused variable 'gpio17_pins' [-Wunused-variable]
-   static int gpio17_pins[] = { 17 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:73:12: warning: unused variable 'gpio18_pins' [-Wunused-variable]
-   static int gpio18_pins[] = { 18 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:74:12: warning: unused variable 'gpio19_pins' [-Wunused-variable]
-   static int gpio19_pins[] = { 19 };
-              ^
-   drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:75:12: warning: unused variable 'gpio20_pins' [-Wunused-variable]
-   static int gpio20_pins[] = { 20 };
-              ^
-   drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:76:12: warning: unused variable 'gpio21_pins' [-Wunused-variable]
-   static int gpio21_pins[] = { 21 };
-              ^
-   drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:77:12: warning: unused variable 'gpio22_pins' [-Wunused-variable]
-   static int gpio22_pins[] = { 22 };
-              ^
-   23 warnings generated.
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:77:12: warning: 'gpio22_pins' defined but not used [-Wunused-variable]
+      77 | static int gpio22_pins[] = { 22 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:76:12: warning: 'gpio21_pins' defined but not used [-Wunused-variable]
+      76 | static int gpio21_pins[] = { 21 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:75:12: warning: 'gpio20_pins' defined but not used [-Wunused-variable]
+      75 | static int gpio20_pins[] = { 20 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:74:12: warning: 'gpio19_pins' defined but not used [-Wunused-variable]
+      74 | static int gpio19_pins[] = { 19 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:73:12: warning: 'gpio18_pins' defined but not used [-Wunused-variable]
+      73 | static int gpio18_pins[] = { 18 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:72:12: warning: 'gpio17_pins' defined but not used [-Wunused-variable]
+      72 | static int gpio17_pins[] = { 17 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:71:12: warning: 'gpio16_pins' defined but not used [-Wunused-variable]
+      71 | static int gpio16_pins[] = { 16 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:70:12: warning: 'gpio15_pins' defined but not used [-Wunused-variable]
+      70 | static int gpio15_pins[] = { 15 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:69:12: warning: 'gpio14_pins' defined but not used [-Wunused-variable]
+      69 | static int gpio14_pins[] = { 14 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:68:12: warning: 'gpio13_pins' defined but not used [-Wunused-variable]
+      68 | static int gpio13_pins[] = { 13 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:67:12: warning: 'gpio12_pins' defined but not used [-Wunused-variable]
+      67 | static int gpio12_pins[] = { 12 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:66:12: warning: 'gpio11_pins' defined but not used [-Wunused-variable]
+      66 | static int gpio11_pins[] = { 11 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:65:12: warning: 'gpio10_pins' defined but not used [-Wunused-variable]
+      65 | static int gpio10_pins[] = { 10 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:64:12: warning: 'gpio9_pins' defined but not used [-Wunused-variable]
+      64 | static int gpio9_pins[] = { 9 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:63:12: warning: 'gpio8_pins' defined but not used [-Wunused-variable]
+      63 | static int gpio8_pins[] = { 8 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:62:12: warning: 'gpio7_pins' defined but not used [-Wunused-variable]
+      62 | static int gpio7_pins[] = { 7 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:61:12: warning: 'gpio6_pins' defined but not used [-Wunused-variable]
+      61 | static int gpio6_pins[] = { 6 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:60:12: warning: 'gpio5_pins' defined but not used [-Wunused-variable]
+      60 | static int gpio5_pins[] = { 5 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:59:12: warning: 'gpio4_pins' defined but not used [-Wunused-variable]
+      59 | static int gpio4_pins[] = { 4 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:58:12: warning: 'gpio3_pins' defined but not used [-Wunused-variable]
+      58 | static int gpio3_pins[] = { 3 };
+         |            ^~~~~~~~~~
+   drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:57:12: warning: 'gpio2_pins' defined but not used [-Wunused-variable]
+      57 | static int gpio2_pins[] = { 2 };
+         |            ^~~~~~~~~~
+   drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:56:12: warning: 'gpio1_pins' defined but not used [-Wunused-variable]
+      56 | static int gpio1_pins[] = { 1 };
+         |            ^~~~~~~~~~
+   drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c:55:12: warning: 'gpio0_pins' defined but not used [-Wunused-variable]
+      55 | static int gpio0_pins[] = { 0 };
+         |            ^~~~~~~~~~
 --
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:57:12: warning: unused variable 'gpio0_pins' [-Wunused-variable]
-   static int gpio0_pins[] = { 0 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:58:12: warning: unused variable 'gpio1_pins' [-Wunused-variable]
-   static int gpio1_pins[] = { 1 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:59:12: warning: unused variable 'gpio2_pins' [-Wunused-variable]
-   static int gpio2_pins[] = { 2 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:60:12: warning: unused variable 'gpio3_pins' [-Wunused-variable]
-   static int gpio3_pins[] = { 3 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:61:12: warning: unused variable 'gpio4_pins' [-Wunused-variable]
-   static int gpio4_pins[] = { 4 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:62:12: warning: unused variable 'gpio5_pins' [-Wunused-variable]
-   static int gpio5_pins[] = { 5 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:63:12: warning: unused variable 'gpio6_pins' [-Wunused-variable]
-   static int gpio6_pins[] = { 6 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:64:12: warning: unused variable 'gpio7_pins' [-Wunused-variable]
-   static int gpio7_pins[] = { 7 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:65:12: warning: unused variable 'gpio8_pins' [-Wunused-variable]
-   static int gpio8_pins[] = { 8 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:66:12: warning: unused variable 'gpio9_pins' [-Wunused-variable]
-   static int gpio9_pins[] = { 9 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:67:12: warning: unused variable 'gpio10_pins' [-Wunused-variable]
-   static int gpio10_pins[] = { 10 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:68:12: warning: unused variable 'gpio11_pins' [-Wunused-variable]
-   static int gpio11_pins[] = { 11 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:69:12: warning: unused variable 'gpio12_pins' [-Wunused-variable]
-   static int gpio12_pins[] = { 12 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:70:12: warning: unused variable 'gpio13_pins' [-Wunused-variable]
-   static int gpio13_pins[] = { 13 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:71:12: warning: unused variable 'gpio14_pins' [-Wunused-variable]
-   static int gpio14_pins[] = { 14 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:72:12: warning: unused variable 'gpio15_pins' [-Wunused-variable]
-   static int gpio15_pins[] = { 15 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:73:12: warning: unused variable 'gpio16_pins' [-Wunused-variable]
-   static int gpio16_pins[] = { 16 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:74:12: warning: unused variable 'gpio17_pins' [-Wunused-variable]
-   static int gpio17_pins[] = { 17 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:75:12: warning: unused variable 'gpio18_pins' [-Wunused-variable]
-   static int gpio18_pins[] = { 18 };
-              ^
->> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:76:12: warning: unused variable 'gpio19_pins' [-Wunused-variable]
-   static int gpio19_pins[] = { 19 };
-              ^
-   drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:77:12: warning: unused variable 'gpio20_pins' [-Wunused-variable]
-   static int gpio20_pins[] = { 20 };
-              ^
-   drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:78:12: warning: unused variable 'gpio21_pins' [-Wunused-variable]
-   static int gpio21_pins[] = { 21 };
-              ^
-   drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:79:12: warning: unused variable 'gpio22_pins' [-Wunused-variable]
-   static int gpio22_pins[] = { 22 };
-              ^
-   23 warnings generated.
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:79:12: warning: 'gpio22_pins' defined but not used [-Wunused-variable]
+      79 | static int gpio22_pins[] = { 22 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:78:12: warning: 'gpio21_pins' defined but not used [-Wunused-variable]
+      78 | static int gpio21_pins[] = { 21 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:77:12: warning: 'gpio20_pins' defined but not used [-Wunused-variable]
+      77 | static int gpio20_pins[] = { 20 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:76:12: warning: 'gpio19_pins' defined but not used [-Wunused-variable]
+      76 | static int gpio19_pins[] = { 19 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:75:12: warning: 'gpio18_pins' defined but not used [-Wunused-variable]
+      75 | static int gpio18_pins[] = { 18 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:74:12: warning: 'gpio17_pins' defined but not used [-Wunused-variable]
+      74 | static int gpio17_pins[] = { 17 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:73:12: warning: 'gpio16_pins' defined but not used [-Wunused-variable]
+      73 | static int gpio16_pins[] = { 16 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:72:12: warning: 'gpio15_pins' defined but not used [-Wunused-variable]
+      72 | static int gpio15_pins[] = { 15 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:71:12: warning: 'gpio14_pins' defined but not used [-Wunused-variable]
+      71 | static int gpio14_pins[] = { 14 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:70:12: warning: 'gpio13_pins' defined but not used [-Wunused-variable]
+      70 | static int gpio13_pins[] = { 13 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:69:12: warning: 'gpio12_pins' defined but not used [-Wunused-variable]
+      69 | static int gpio12_pins[] = { 12 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:68:12: warning: 'gpio11_pins' defined but not used [-Wunused-variable]
+      68 | static int gpio11_pins[] = { 11 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:67:12: warning: 'gpio10_pins' defined but not used [-Wunused-variable]
+      67 | static int gpio10_pins[] = { 10 };
+         |            ^~~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:66:12: warning: 'gpio9_pins' defined but not used [-Wunused-variable]
+      66 | static int gpio9_pins[] = { 9 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:65:12: warning: 'gpio8_pins' defined but not used [-Wunused-variable]
+      65 | static int gpio8_pins[] = { 8 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:64:12: warning: 'gpio7_pins' defined but not used [-Wunused-variable]
+      64 | static int gpio7_pins[] = { 7 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:63:12: warning: 'gpio6_pins' defined but not used [-Wunused-variable]
+      63 | static int gpio6_pins[] = { 6 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:62:12: warning: 'gpio5_pins' defined but not used [-Wunused-variable]
+      62 | static int gpio5_pins[] = { 5 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:61:12: warning: 'gpio4_pins' defined but not used [-Wunused-variable]
+      61 | static int gpio4_pins[] = { 4 };
+         |            ^~~~~~~~~~
+>> drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:60:12: warning: 'gpio3_pins' defined but not used [-Wunused-variable]
+      60 | static int gpio3_pins[] = { 3 };
+         |            ^~~~~~~~~~
+   drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:59:12: warning: 'gpio2_pins' defined but not used [-Wunused-variable]
+      59 | static int gpio2_pins[] = { 2 };
+         |            ^~~~~~~~~~
+   drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:58:12: warning: 'gpio1_pins' defined but not used [-Wunused-variable]
+      58 | static int gpio1_pins[] = { 1 };
+         |            ^~~~~~~~~~
+   drivers/pinctrl/qcom/pinctrl-sm8650-lpass-lpi.c:57:12: warning: 'gpio0_pins' defined but not used [-Wunused-variable]
+      57 | static int gpio0_pins[] = { 0 };
+         |            ^~~~~~~~~~
 
 
-vim +/gpio0_pins +55 drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
+vim +/gpio22_pins +77 drivers/pinctrl/qcom/pinctrl-sm8550-lpass-lpi.c
 
 5a6ca1f240d6a2 Krzysztof Kozlowski 2023-02-03  54  
 5a6ca1f240d6a2 Krzysztof Kozlowski 2023-02-03 @55  static int gpio0_pins[] = { 0 };
