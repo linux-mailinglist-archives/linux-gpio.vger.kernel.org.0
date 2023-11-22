@@ -1,88 +1,117 @@
-Return-Path: <linux-gpio+bounces-349-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-350-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 568D57F445A
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 11:54:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DC5A7F44DC
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 12:23:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10BCB2814D6
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 10:54:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BFBF1F21DAA
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 11:23:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA341BDF6;
-	Wed, 22 Nov 2023 10:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R701NI3F"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89F023D98F;
+	Wed, 22 Nov 2023 11:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0700ED8;
-	Wed, 22 Nov 2023 02:54:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700650453; x=1732186453;
-  h=from:to:cc:subject:date:message-id;
-  bh=L6bHYCHdpbaSIiykCkw+XvZL0tDlt0dAm6zfnBSOkH4=;
-  b=R701NI3FN2a/a53VP7VD5zOpFbAB2cPL4WBcvOlBOrKYcWlfE6rgIfja
-   13myN08Xj0sbAP8W09WXVZY7f3bSnXALrBsS+RD717sof98JtMy+jcQwA
-   O+DWBV6q6i63ol/HWHp/q9MMa0Qu3TCGyWk7rUNw+5DPqzekrjUVD1u1a
-   fc8QNQcxXhaWWZHcF++9mUiG7j3nVJQiybS849k5Ulob4AVkgDH+FSnvk
-   xlq0svEzeikqmbhZLv9aj+nxdWPkk0pGuHA2eLB1lv7qHxJbWQ3VGG5qj
-   6eG+9OaDzAghZAc0+Ye/kjXr6DTRv1WO5ZuCoc3gxRLSotyH9FuCO5MrO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="372207210"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06AF312A;
+	Wed, 22 Nov 2023 03:23:10 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="5226945"
 X-IronPort-AV: E=Sophos;i="6.04,218,1695711600"; 
-   d="scan'208";a="372207210"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 02:54:12 -0800
+   d="scan'208";a="5226945"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 03:23:10 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="857687253"
 X-IronPort-AV: E=Sophos;i="6.04,218,1695711600"; 
-   d="scan'208";a="8393146"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by fmviesa002.fm.intel.com with ESMTP; 22 Nov 2023 02:54:10 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1] pinctrl: intel: use the correct _PM_OPS() export macro
-Date: Wed, 22 Nov 2023 16:24:01 +0530
-Message-Id: <20231122105401.11006-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="857687253"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 03:23:07 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1r5lJv-0000000G4f6-40Kl;
+	Wed, 22 Nov 2023 13:23:03 +0200
+Date: Wed, 22 Nov 2023 13:23:03 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Nikita Shubin <nikita.shubin@maquefel.me>
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Lukasz Majewski <lukma@denx.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v5 01/39] gpio: ep93xx: split device in multiple
+Message-ID: <ZV3kl6spXpF5c6Bg@smile.fi.intel.com>
+References: <20231122-ep93xx-v5-0-d59a76d5df29@maquefel.me>
+ <20231122-ep93xx-v5-1-d59a76d5df29@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231122-ep93xx-v5-1-d59a76d5df29@maquefel.me>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Since we don't have runtime PM handles here, we should be using
-EXPORT_NS_GPL_DEV_SLEEP_PM_OPS() macro, so that the compiler can
-discard it in case CONFIG_PM_SLEEP=n.
+On Wed, Nov 22, 2023 at 11:59:39AM +0300, Nikita Shubin wrote:
+> Prepare ep93xx SOC gpio to convert into device tree driver:
+> - dropped banks and legacy defines
+> - split AB IRQ and make it shared
+> 
+> We are relying on IRQ number information A, B ports have single shared
+> IRQ, while F port have dedicated IRQ for each line.
+> 
+> Also we had to split single ep93xx platform_device into multiple, one
+> for each port, without this we can't do a full working transition from
+> legacy platform code into device tree capable. All GPIO_LOOKUP were
+> change to match new chip namings.
 
-Fixes: b10a74b5c0c1 ("pinctrl: intel: Provide Intel pin control wide PM ops structure")
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 2367c2747a83..d6f29e6faab7 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1879,7 +1879,7 @@ static int intel_pinctrl_resume_noirq(struct device *dev)
- 	return 0;
- }
- 
--EXPORT_NS_GPL_DEV_PM_OPS(intel_pinctrl_pm_ops, PINCTRL_INTEL) = {
-+EXPORT_NS_GPL_DEV_SLEEP_PM_OPS(intel_pinctrl_pm_ops, PINCTRL_INTEL) = {
- 	NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend_noirq, intel_pinctrl_resume_noirq)
- };
- 
+> @@ -335,9 +430,9 @@ static struct gpiod_lookup_table ep93xx_i2c_gpiod_table = {
+>  	.dev_id		= "i2c-gpio.0",
+>  	.table		= {
+>  		/* Use local offsets on gpiochip/port "G" */
+> -		GPIO_LOOKUP_IDX("G", 1, NULL, 0,
+> +		GPIO_LOOKUP_IDX("gpio-ep93xx.6", 1, NULL, 0,
+>  				GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
+> -		GPIO_LOOKUP_IDX("G", 0, NULL, 1,
+> +		GPIO_LOOKUP_IDX("gpio-ep93xx.6", 0, NULL, 1,
+>  				GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN),
+>  	},
 
-base-commit: c5860e4a2737a8b29dc426c800d01c5be6aad811
+Before doing this patch, please fix the bug, i.e. missing terminator entry here.
+If elsewhere the same, fix all of them at once.
+
+>  };
+
+...
+
+> +	gc->label = dev_name(&pdev->dev);
+> +	if (platform_irq_count(pdev) > 0) {
+> +		dev_dbg(&pdev->dev, "setting up irqs for %s\n", dev_name(&pdev->dev));
+> +		ret = ep93xx_setup_irqs(pdev, egc);
+> +		if (ret)
+> +			dev_err_probe(&pdev->dev, ret, "setup irqs failed");
+
+Non-fatal?
+
+>  	}
+
+...
+
+This change LGTM (assuming the bug is fixed),
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
 
