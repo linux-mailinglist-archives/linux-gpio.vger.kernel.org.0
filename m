@@ -1,140 +1,88 @@
-Return-Path: <linux-gpio+bounces-348-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-349-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14EA27F4456
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 11:53:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 568D57F445A
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 11:54:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46C3E1C2084F
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 10:53:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10BCB2814D6
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 10:54:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 851E91E516;
-	Wed, 22 Nov 2023 10:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA341BDF6;
+	Wed, 22 Nov 2023 10:54:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pGJH4qjN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R701NI3F"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D8018D
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 02:53:10 -0800 (PST)
-Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7bae0c07086so2031395241.1
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 02:53:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1700650389; x=1701255189; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GY/bD1zv5fBxrgEs0eGY+QzOkiSJamFow82Mh0ii4pY=;
-        b=pGJH4qjNGy8tzarESB9kqaX+JODPjVDPAwqFrhYOm1QjIThTfZtUQfhJrTRSaSypb6
-         PDZIKzjHIluy+rVmq6aHmM01H3O1LC2HUK3R4H2Uy/AjM6gkHEFpyviII2h+91Ncuua7
-         yE0fqt7zUcR8DM4oqIrSA0fC4Sz6DHbWwOngHEXdfxpAVmMtFi50ENW+DIZOinyaCy/o
-         8iCvqvtLwMwx3pNaw+cscMOpSEGxSBSbJl5jm+yyF++ahIu4NLbF6BSR5xlop76f68cM
-         C/LXdcwWj4Py6xnwP7QOsJ6HtHPamHcyLkb0AT423DEjqslpGXtXMphFooW6gcXR5QVS
-         kSJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700650389; x=1701255189;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GY/bD1zv5fBxrgEs0eGY+QzOkiSJamFow82Mh0ii4pY=;
-        b=r+VN+otl+0NbVKe4sxsqfCwtoP7hp44nwRolAIHF7KjuGNmozR69MphMpZ7izo3cEL
-         iSwywG+jkcrtH0+4lLa7/hZayGdf1kV2d5gXbbn5ZapnVyKo+AN3WvAkCU5fJqN5oDkV
-         rTIqpnA1AWbOuHMjccscth26CAElet0+s3oKib1iEgVmpDMP9mocLG51YZDlJM/6wMEC
-         tLcP99kVxfEcUJ8GRGqF+kHQOvgZY3eYuioNasuXVPd5KEkp6DvZb+4qARHLO/+4nuSp
-         p1sqLiC9OVLmIiMJF0ySGnnAzIzph355YIskuRyJ4wIB0A8/5bABOr90KbZ/LCcFJOvr
-         18JQ==
-X-Gm-Message-State: AOJu0Yw4nheJl58F9sLRQNU43E0ZfffU59RZrQ/vwfg/3a1rRX+YBdWZ
-	DJZjnNL2MGZgvzDe4Ou4Mlz/GG2aBO5qLZQO7GsTyw==
-X-Google-Smtp-Source: AGHT+IFrGwDqG3W/gOl3K6hItbrKeM3qSDO4HmAniT5FrTtOn6+XNuiLQkTNPhkh9WZT/WBnFYSQqwhC2drSjGagJZQ=
-X-Received: by 2002:a67:ec45:0:b0:45f:654a:f3b with SMTP id
- z5-20020a67ec45000000b0045f654a0f3bmr2028426vso.19.1700650389731; Wed, 22 Nov
- 2023 02:53:09 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0700ED8;
+	Wed, 22 Nov 2023 02:54:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700650453; x=1732186453;
+  h=from:to:cc:subject:date:message-id;
+  bh=L6bHYCHdpbaSIiykCkw+XvZL0tDlt0dAm6zfnBSOkH4=;
+  b=R701NI3FN2a/a53VP7VD5zOpFbAB2cPL4WBcvOlBOrKYcWlfE6rgIfja
+   13myN08Xj0sbAP8W09WXVZY7f3bSnXALrBsS+RD717sof98JtMy+jcQwA
+   O+DWBV6q6i63ol/HWHp/q9MMa0Qu3TCGyWk7rUNw+5DPqzekrjUVD1u1a
+   fc8QNQcxXhaWWZHcF++9mUiG7j3nVJQiybS849k5Ulob4AVkgDH+FSnvk
+   xlq0svEzeikqmbhZLv9aj+nxdWPkk0pGuHA2eLB1lv7qHxJbWQ3VGG5qj
+   6eG+9OaDzAghZAc0+Ye/kjXr6DTRv1WO5ZuCoc3gxRLSotyH9FuCO5MrO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10901"; a="372207210"
+X-IronPort-AV: E=Sophos;i="6.04,218,1695711600"; 
+   d="scan'208";a="372207210"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 02:54:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,218,1695711600"; 
+   d="scan'208";a="8393146"
+Received: from inlubt0316.iind.intel.com ([10.191.20.213])
+  by fmviesa002.fm.intel.com with ESMTP; 22 Nov 2023 02:54:10 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v1] pinctrl: intel: use the correct _PM_OPS() export macro
+Date: Wed, 22 Nov 2023 16:24:01 +0530
+Message-Id: <20231122105401.11006-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231118124252.14838-1-wahrenst@gmx.net> <20231118124252.14838-2-wahrenst@gmx.net>
- <ZVtHZWYl2skpn1Bg@smile.fi.intel.com> <9a9486bb-e737-4384-a581-76880b709758@gmx.net>
- <ZVtS4phUMmDD9ztz@smile.fi.intel.com>
-In-Reply-To: <ZVtS4phUMmDD9ztz@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 22 Nov 2023 11:52:58 +0100
-Message-ID: <CAMRc=MdpegfNrjWkeGSh8NhT_Go+q5MxueASxrLo18XBJaBsjA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] leds: gpio: Add kernel log if devm_fwnode_gpiod_get
- fails
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Stefan Wahren <wahrenst@gmx.net>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Pavel Machek <pavel@ucw.cz>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Lee Jones <lee@kernel.org>, 
-	bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 20, 2023 at 1:36=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Nov 20, 2023 at 01:02:55PM +0100, Stefan Wahren wrote:
-> > Am 20.11.23 um 12:47 schrieb Andy Shevchenko:
-> > > On Sat, Nov 18, 2023 at 01:42:51PM +0100, Stefan Wahren wrote:
-> > > > In case leds-gpio fails to get the GPIO from the DT (e.g. the GPIO =
-is
-> > > > already requested) the driver doesn't provide any helpful error log=
-:
-> > > >
-> > > >      leds-gpio: probe of leds failed with error -16
-> > > >
-> > > > So add a new error log in case devm_fwnode_gpiod_get() fails.
->
-> ...
->
-> > > >                   led.gpiod =3D devm_fwnode_gpiod_get(dev, child, N=
-ULL, GPIOD_ASIS,
-> > > >                                                     NULL);
-> > > >                   if (IS_ERR(led.gpiod)) {
-> > > > +                 dev_err_probe(dev, PTR_ERR(led.gpiod), "Failed to=
- get gpio '%pfw'\n",
-> > > > +                               child);
-> > > >                           fwnode_handle_put(child);
-> > > >                           return ERR_CAST(led.gpiod);
-> > > >                   }
-> > > Thinking more about it. GPIO library already issues bunch of messages=
-.
-> > >
-> > >     "using DT ... for ... GPIO lookup"
-> > >     "using lookup tables for GPIO lookup"
-> > >     "No GPIO consumer ... found"
-> > are these errors or debug messages?
->
-> Indeed they are on debug level.
->
-> > I cannot remember that i saw any of them on info level in my case of an
-> > already allocated pin (see patch 2).
-> >
-> > I'm open to place the log within gpiolib, if this a better place.
->
-> I'm not sure, let's hear GPIO maintainers for that.
->
+Since we don't have runtime PM handles here, we should be using
+EXPORT_NS_GPL_DEV_SLEEP_PM_OPS() macro, so that the compiler can
+discard it in case CONFIG_PM_SLEEP=n.
 
-Hard to tell which method is preferred among all the subsystems.
-Personally I'm more inclined towards letting drivers decide whether to
-emit an error message and only emit our own when an error cannot be
-propagated down the stack.
+Fixes: b10a74b5c0c1 ("pinctrl: intel: Provide Intel pin control wide PM ops structure")
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Linus: Any thoughts?
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 2367c2747a83..d6f29e6faab7 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1879,7 +1879,7 @@ static int intel_pinctrl_resume_noirq(struct device *dev)
+ 	return 0;
+ }
+ 
+-EXPORT_NS_GPL_DEV_PM_OPS(intel_pinctrl_pm_ops, PINCTRL_INTEL) = {
++EXPORT_NS_GPL_DEV_SLEEP_PM_OPS(intel_pinctrl_pm_ops, PINCTRL_INTEL) = {
+ 	NOIRQ_SYSTEM_SLEEP_PM_OPS(intel_pinctrl_suspend_noirq, intel_pinctrl_resume_noirq)
+ };
+ 
 
-Bart
+base-commit: c5860e4a2737a8b29dc426c800d01c5be6aad811
+-- 
+2.17.1
 
-> > > Isn't it enough?
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
 
