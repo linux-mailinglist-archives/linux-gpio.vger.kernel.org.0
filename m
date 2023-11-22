@@ -1,54 +1,54 @@
-Return-Path: <linux-gpio+bounces-338-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-339-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 178DD7F3FFD
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 09:22:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13F027F4071
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 09:43:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7494281059
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 08:22:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3EFD8B20F15
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 08:42:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7E52D60F;
-	Wed, 22 Nov 2023 08:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A148522305;
+	Wed, 22 Nov 2023 08:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="odLvzRyw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pOb7ge+y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166FE110
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 00:20:58 -0800 (PST)
-Received: by mail-vs1-xe2a.google.com with SMTP id ada2fe7eead31-462ad2ae044so713143137.0
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 00:20:58 -0800 (PST)
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE987F9
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 00:42:50 -0800 (PST)
+Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-677a12f1362so25111176d6.1
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 00:42:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700641257; x=1701246057; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700642570; x=1701247370; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4I8dRODFUwv8GNo/5lVqWf42DaYrEmmY1wMx98kbsuI=;
-        b=odLvzRywKLvkWkcm6Z/Zy1hDwAhXTPapvw0AO3ePOU9vFYzD5xRmy1pmPaHdBZxCmL
-         Bw23TKP8axRvPHBytCL0Qytuo22fqU+3ybY/W28GC24sKp7lFYYIA+5XGjQXEnYZlId3
-         bgrCckS/u5FjCmuZtm+Z7e6a6PvvnBvvWAIB4YYnXAmfMT7V1R2zhw9uVae08eouX9og
-         dEkpFzxfuMRJyb5Dmidd5Pv/0OlqGR6fvAEtisT2EW2USLA2SoGXNC/EPmo686C76JZ9
-         4SL6z6yurV5/5EOxWf36sKEiec7eputDfissmYYn3EcvUno+xGGyIfY3V7GdxBwofTuJ
-         Ljlg==
+        bh=xJJJ00lRDiFcS8bTCcGfNaw9iOLVdZbPikVW1utuBzM=;
+        b=pOb7ge+ywADMyIl8ockp0/0pynZQ1sVBaimjIE8076IWRN7QyE5g2BjrCqLYJ50CAr
+         kZ76L46uKbP7DOtn6EEdJsmyXGNJgSAqghyZTycAZsLMThvPfacnMdtrJ3opq4B7DPC0
+         q82xh3EyZXkwNHV9JSMDR25dBz78dCfp/3QsT1aomxNPd/5ka6PKxunW8g94vYuxouxT
+         NAMjIlLVt0dI+NiK1/mjxxX2XBjI+pDGLP3qnbI7SOgOupJWWPpaWN/hhIjerZViGRXS
+         EhsYqx4TkoyZx5Zhd08/PNeJsPzxJLp9Vt6i4yA6LnWYaq+BhadXjbvbEvCouPosNuTz
+         7lHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700641257; x=1701246057;
+        d=1e100.net; s=20230601; t=1700642570; x=1701247370;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4I8dRODFUwv8GNo/5lVqWf42DaYrEmmY1wMx98kbsuI=;
-        b=TX3lhzqCx+nIjo7tTowO88M+193nDWboMopGCEgUreabI7IvgCLC8wXGEZtE7c5gxl
-         9MxjNZnsrzDYXBzor9AMJWoF5UVmnkfMV5JmoFlF6IFAhk+a/mEKlETJeuywqqeV82y6
-         WBaDGl+d1JGq/5A49yVrqicIIz6WJ1rUOJT7gYcsZQsttknlPVhbniDZXMI7tyECE7Y0
-         m0W1PdXhesUejbE4debulBnz/vx+/auwvWJwZlAZSFZM567LEgJcon/gURqgUVIRK/eE
-         kNMYQQTtkrLBpVDSvS1CeEzhtC3kSauXjqIaAkhVPRJayyvIbdAILlWXoek1z1xa3vWB
-         TPIQ==
-X-Gm-Message-State: AOJu0YyX5QAhSbILptQ1KXz67/nqTBYsA7UIVaTjnutKZNKwEZBrli19
-	PU2wAzleWBgjNPx669amP3JoOAkXZlSDKG5hghzXAQ==
-X-Google-Smtp-Source: AGHT+IH6MXRD7recCukd9ZPlXrdn9+l+K/d0U/kF9HaOQ28/JOjYehYeGW3YeHAn90fSzCuc3t+BUm1b6U6nd0pNRfU=
-X-Received: by 2002:a05:6102:108a:b0:462:7f9d:d263 with SMTP id
- s10-20020a056102108a00b004627f9dd263mr1596382vsr.8.1700641256954; Wed, 22 Nov
- 2023 00:20:56 -0800 (PST)
+        bh=xJJJ00lRDiFcS8bTCcGfNaw9iOLVdZbPikVW1utuBzM=;
+        b=Jy4yTqwoTlBwl7oRWvc3YTh/TosxIQEpknf7OPIsrMNzi50mlRU1RZEACpKjDM8O3+
+         Isg3A+MeF+vAouaABTwuNoLcK+BmjFfJ2x8bbREz+4XgwnYxQ0gojew4k/Su2uWS6Fi+
+         G4SWKAWKYgt2mElXcW5wEXAz5RT5pnHttke/MiAEEjkEmkjSXFrudQke8Beot2iS7EPW
+         ndf6bmgO/YH3Qls7Jzze1XCoAaU35e4pJ7oZpbBZehN4DnuQKwbAZmPAYAYf8CKZ9Kz1
+         a+I6shEo21vey+VhPeJ+1drA4nvkMeoR2qMfbwa3vICqiMWI/VeBetlsBnA2mrURUU+M
+         /56A==
+X-Gm-Message-State: AOJu0YzKMYbRHhpYRkhKP5VkCQnkHswiGe4+7JkOgXFCHX7/vQJ5+gYS
+	bJJcS750DSoy46guJ3WLVtOtIjgfqLD7uuSXeBQy3w==
+X-Google-Smtp-Source: AGHT+IGuE4s7BTtl86J4aY1Nuyr+QChlQ+/ghmDxMJ+Qpji0VOMTRWww7BDliDBXUH4jhsBEXFzcxCwrF5hxCi4U9KY=
+X-Received: by 2002:a05:6214:f6c:b0:64f:92af:9080 with SMTP id
+ iy12-20020a0562140f6c00b0064f92af9080mr1950970qvb.21.1700642569839; Wed, 22
+ Nov 2023 00:42:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,69 +56,145 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20231120212037.911774-1-peter.griffin@linaro.org>
- <20231120212037.911774-16-peter.griffin@linaro.org> <CAPLW+4m+vG62V++izkycRYEhcTpoT+G=g+3Y4j8vqEpeX2uEPw@mail.gmail.com>
- <8d838a0b-6a13-4538-8dd6-e044ebfabca7@roeck-us.net> <82df32ea-9ca9-44ac-b1ca-719f68d4f58b@linaro.org>
-In-Reply-To: <82df32ea-9ca9-44ac-b1ca-719f68d4f58b@linaro.org>
+ <20231120212037.911774-10-peter.griffin@linaro.org> <20231121151630.GA1692178-robh@kernel.org>
+ <CADrjBPo4qw4eJLuGsv7aK4V7QjGR_n_MQ+W-Rrq92iATSLFHZQ@mail.gmail.com> <35990cd2-a4d3-473e-893e-aa16c1c63289@linaro.org>
+In-Reply-To: <35990cd2-a4d3-473e-893e-aa16c1c63289@linaro.org>
 From: Peter Griffin <peter.griffin@linaro.org>
-Date: Wed, 22 Nov 2023 08:20:43 +0000
-Message-ID: <CADrjBPpjMtF36rA3_5NmKk8iw1vEoBZVCTw1auowWte8KGie8g@mail.gmail.com>
-Subject: Re: [PATCH v4 15/19] watchdog: s3c2410_wdt: Add support for WTCON
- register DBGACK_MASK bit
+Date: Wed, 22 Nov 2023 08:42:37 +0000
+Message-ID: <CADrjBPr6t16Ypdg-M-r73PNiGe0XAdeCPs6Tk=iHsU3pPA9=4w@mail.gmail.com>
+Subject: Re: [PATCH v4 09/19] dt-bindings: serial: samsung: Make
+ samsung,uart-fifosize required property
 To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Sam Protsenko <semen.protsenko@linaro.org>, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com, 
-	conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com, 
-	s.nawrocki@samsung.com, linus.walleij@linaro.org, wim@linux-watchdog.org, 
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, olof@lixom.net, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, cw00.choi@samsung.com, 
-	alim.akhtar@samsung.com, tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
-	saravanak@google.com, willmcvicker@google.com, soc@kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	kernel-team@android.com, linux-serial@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
+	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
+	tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
+	semen.protsenko@linaro.org, saravanak@google.com, willmcvicker@google.com, 
+	soc@kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
+	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Krzysztof / Guenter / Sam,
+Hi Krzysztof,
 
-On Wed, 22 Nov 2023 at 07:53, Krzysztof Kozlowski
+On Wed, 22 Nov 2023 at 07:49, Krzysztof Kozlowski
 <krzysztof.kozlowski@linaro.org> wrote:
 >
-> On 21/11/2023 19:10, Guenter Roeck wrote:
->
-> >>>   static const struct s3c2410_wdt_variant drv_data_gs101_cl1 = {
-> >>> @@ -291,7 +296,7 @@ static const struct s3c2410_wdt_variant drv_data_gs101_cl1 = {
-> >>>          .cnt_en_reg = GS_CLUSTER1_NONCPU_OUT,
-> >>>          .cnt_en_bit = 7,
-> >>>          .quirks = QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET | QUIRK_HAS_PMU_CNT_EN |
-> >>> -                 QUIRK_HAS_WTCLRINT_REG,
-> >>> +                 QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT,
-> >>>   };
-> >>>
+> On 21/11/2023 18:15, Peter Griffin wrote:
+> > Hi Rob,
+> >
+> > Thanks for your review.
+> >
+> > On Tue, 21 Nov 2023 at 15:16, Rob Herring <robh@kernel.org> wrote:
 > >>
-> >> This patch states it's adding the feature, but in fact it's also
-> >> enabling this feature for gs101. Suggest moving this patch before the
-> >> one enabling gs101 wdt. This way, one patch will only add the feature,
-> >> and another patch will enable gs101 entirely (with this feature used).
-> >> At least it seems like more atomic approach to me.
+> >> On Mon, Nov 20, 2023 at 09:20:27PM +0000, Peter Griffin wrote:
+> >>> Specifying samsung,uart-fifosize in both DT and driver static data is error
+> >>> prone and relies on driver probe order and dt aliases to be correct.
+> >>>
+> >>> Additionally on many Exynos platforms these are (USI) universal serial
+> >>> interfaces which can be uart, spi or i2c, so it can change per board.
+> >>>
+> >>> For google,gs101-uart and exynosautov9-uart make samsung,uart-fifosize a
+> >>> required property. For these platforms fifosize now *only* comes from DT.
+> >>>
+> >>> It is hoped other Exynos platforms will also switch over time.
+> >>
+> >> Then allow the property on them.
+> >
+> > Not sure I fully understand your comment. Can you elaborate? Do you
+> > mean leave the 'samsung,uart-fifosize' as an optional property like it
+> > is currently even for the platforms that now require it to be present
+> > to function correctly?
+> >
+> > I deliberately restricted the yaml change to only require this
+> > property for the SoCs that already set the 'samsung,uart-fifosize'  dt
+> > property. As setting the property and having the driver use what is
+> > specified in DT also requires a corresponding driver update (otherwise
+> > fifosize gets overwritten by the driver static data, and then becomes
+> > dependent on probe order, dt aliases etc). The rationale was drivers
+> > 'opt in' and add themselves to the compatibles in this patch as they
+> > migrate away from obtaining fifo size from driver static data to
+> > obtaining it from DT.
+>
+> Your code diff looks like you are adding the property only to these models.
+
+OK, I intended to only make it a required DT property for these
+models. Presumably there is a better way to achieve that.
+
+>
+> >
+> >>
+> >>>
+> >>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> >>> ---
+> >>>  .../bindings/serial/samsung_uart.yaml           | 17 +++++++++++++++++
+> >>>  1 file changed, 17 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> >>> index ccc3626779d9..22a1edadc4fe 100644
+> >>> --- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> >>> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> >>> @@ -133,6 +133,23 @@ allOf:
+> >>>              - const: uart
+> >>>              - const: clk_uart_baud0
+> >>>
+> >>> +  - if:
+> >>> +      properties:
+> >>> +        compatible:
+> >>> +          contains:
+> >>> +            enum:
+> >>> +              - google,gs101-uart
+> >>> +              - samsung,exynosautov9-uart
+> >>> +    then:
+> >>> +      properties:
+> >>> +        samsung,uart-fifosize:
+> >>> +          description: The fifo size supported by the UART channel.
+> >>> +          $ref: /schemas/types.yaml#/definitions/uint32
+> >>> +          enum: [16, 64, 256]
+> >>
+> >> We already have 'fifo-size' in several drivers. Use that. Please move
+> >> its type/description definitions to serial.yaml and make drivers just do
+> >> 'fifo-size: true' if they use it.
+> >
+> > What do you suggest we do for the samsung,uart-fifosize property that
+> > is being used upstream?
+>
+> Nothing, your diff is just wrong. Or at least nothing needed. Just drop
+> all this properties: here and only make it required for Google GS101.
+
+OK, so your happy with the approach just not the implementation/patch
+and you don't want it updated to use fifo-size instead of
+samsung,uart-fifosize
+
+>
+>
+> >
+> >>
+> >>> +
+> >>> +      required:
+> >>> +       - samsung,uart-fifosize
+> >>
+> >> A new required property is an ABI break. Please explain why that is okay
+> >> in the commit message.
 > >>
 > >
-> > Both approaches have their merits and their downsides. I for my part am not
-> > even sure if DBGACK_MASK should be enabled unconditionally if supported.
-> > With your approach, it would be impossible (or at least more difficult) to
-> > revert if it turns out to be broken and/or have unexpected side effects.
-> > That seems less desirable to me than the current approach.
->
-> Reversing the patches does not change this. It is enabled
-> unconditionally in current order as well.
->
-> Sam's idea is correct here - first you add support for new quirk, then
-> you add new SoC which will use this quirk. Doing the other way - first
-> SoC and then new quirk - looks like SoC was added incomplete.
+> > I can update the commit message to make clear there is an ABI break.
+> > As mentioned above the platforms where this is now required are either
+> > already setting the property or are new in this series. Is that
+> > sufficient justification?
+> Yes, but only first case. You need to order your patches correctly -
+> first is ABI break expecting ExynopsAutov9 to provide FIFO size in DTS
+> with its explanation. Second commit is adding GS101 where there is no
+> ABI break.
 
-Sure I can swap the order around if that's what you prefer.
-
-I ordered it this way so it was clear who the user of the new debug feature was.
+OK, I'll drop the ExynopsAutov9 part then. I don't want to complicate
+this series by introducing an ABI breakage on some other unrelated
+Exynos platform.
 
 Peter
 
