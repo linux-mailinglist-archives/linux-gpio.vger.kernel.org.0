@@ -1,60 +1,61 @@
-Return-Path: <linux-gpio+bounces-380-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-381-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 709F47F5048
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 20:11:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2263D7F5062
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 20:15:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D2025B20E32
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 19:11:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C74C4281592
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 19:15:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BB7E5C90F;
-	Wed, 22 Nov 2023 19:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1B7A1F188;
+	Wed, 22 Nov 2023 19:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lQPJpjka"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DcgD/LXX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A27D8
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 11:11:26 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-40859dee28cso775315e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 11:11:26 -0800 (PST)
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEFFDD43
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 11:15:05 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-5098e423ba2so63117e87.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 11:15:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700680285; x=1701285085; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rS0IeuQymTPunLEjIK3ignhoNL0mPtFkpErGaI1EAfM=;
-        b=lQPJpjka0bo9Yo2snmMhpyXlsjg+hxPpl0K+aMsziib1KKYY0fbZsSC5i042VvVB0i
-         wbYWCfL5ek7PfL5haAOBThjcgMZfzCTMLFrmeAsrbUytWJtzNC60jp82okG4hddXfJuk
-         8KetAeZoX0RZwYIW3CRTI0F0I+/qxXqiIjbE4vFppNQ3I6i3MaBitdVKqEsfgESbF5Tr
-         QitxcbwtJ+Q/r7MHM7tRLSWcsMjPV14Y6wgUqv3CFSpBfNgP/iU9rJ9tC44q3IjZso6f
-         d3BgyWBJ6f+nC5tToI8xw1eaBVg/JyqYndk0w5gd246z0L3HVlQcc3p8fpSfZjaCKIfL
-         rh1Q==
+        d=linaro.org; s=google; t=1700680504; x=1701285304; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=1f84WpdM/CjxjwlNo95/tVsIuMsst5GZtDL6YED4Mjo=;
+        b=DcgD/LXXITznKFuvUTm/43UFuQZx5pQrkvm+Jcldc/YkHtMmtgGdzqRdvU7ohy2Yv+
+         FdBuaWQ2pZnveG3E8uVh2yWgrnwZWGWqdF9G8hvE4d7uaL3ih7S9innX+O2xQ/VVAFOY
+         b7QmNQkNNwmJdQ12Jk8+MoXt28TAaU/rKi/NQL8BmBGhw6WW4fzGQc3DJAx73+wdIQGZ
+         KSbou+qoR4cQ5UzJuJdYlJE6B8sDR++2ExzWIKXqCF0Idtnyhuq/J6wOPOQiCGJbQSbu
+         dkpk8TqVMnZQmF57n+RxCbQaOAZFMbADIdGBisWDV0lEKZE1P/Vxu3/mWW1KF8SYv/Vk
+         Sd5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700680285; x=1701285085;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rS0IeuQymTPunLEjIK3ignhoNL0mPtFkpErGaI1EAfM=;
-        b=gwZZyILPxmGPA1ctHS5Ft1tgs3m+n8+kO7J1OsWc+uaWqzhaiGhldqHd2H1ALgKgy2
-         zGRsYayhSybVaVVJBq0qTCt8GP/nmbjuzckBZvVlRcE8nRbUvMGtDU+SpWyswZ2hTKBV
-         q04E24RsIJK9neBt6q+qn1YBnY0Vbfhbzhr8TfWVGxbUg/o96lrQGpwo7ix94bNguv3R
-         XH9braLcTdyKvYgZcL5F21FC3tkkOfoPz6Vchme+zTa4Nt8q4/YXp9S0DPFKGrY6Eqfj
-         WxluJrS7C5rkl0d9MwZYzrSjhC19zKYktbiw2/R3kg6byrtknbCQ0i54I/l1uXdh0jXR
-         dvTg==
-X-Gm-Message-State: AOJu0Yybk2GCBZFaPE5wZ/wbxBNk7dKJRIwLfUXduYA62DzDhSKdvrP1
-	hR0BvdJL/wlNm8DgOHm63PG1Sw==
-X-Google-Smtp-Source: AGHT+IESYOaIHBU6Qw/A8q5haZ+lQJXM4TMaa1eu5v2o7Pgh67SyojzHoOc1p/r3F+XRfAN4c+VwLQ==
-X-Received: by 2002:a05:600c:4ec8:b0:40b:26d9:2351 with SMTP id g8-20020a05600c4ec800b0040b26d92351mr1114997wmq.32.1700680284909;
-        Wed, 22 Nov 2023 11:11:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700680504; x=1701285304;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1f84WpdM/CjxjwlNo95/tVsIuMsst5GZtDL6YED4Mjo=;
+        b=ICeS5QWl2IL2sguRS6r/XuFhsgWsj3A++cEjeBxOfLJwAGJxARj52b25dnCzxuxMWQ
+         3lGkXKcgs8QDJqF2pz/ICXg91yY418MmMRqKhPuLwsrWu6FLqvWaFrgFYK9i7TE8hCJX
+         iBYfmN4CvV8NCqDEle9alTeYXh2fJqUYJG3TdBCoGpipWbPWa4SPPodzOIIdnkwM3Us0
+         D0sEcGSql0xUgRzLIzca/uIso0T3Kf6Au1XO3cS1zr98ROoFFM+JLdn5HR4AwCfftWKd
+         QA+vJVDoUDaIQ3J+BHIeW3fGV1rghDr7PJbW9ZhbtPefz6IU+96vBQqDtUP9WMvQRe4a
+         e2Yw==
+X-Gm-Message-State: AOJu0Yz+I+H5Vn7v0oZJGttBpCOrGB3eNm/92BHtfNCWBAb8ifCwDgNP
+	/yOkfNJWTlPPtCqSRf8azx+2FQ==
+X-Google-Smtp-Source: AGHT+IE5boTbHE+iPfZgyHgCfVrrZ1ZcsEDAON5unG7sQH/8wIEeyEeMZvULEKYtoUj00NoXjAvuxQ==
+X-Received: by 2002:ac2:5a11:0:b0:505:6cc7:e0f7 with SMTP id q17-20020ac25a11000000b005056cc7e0f7mr2063966lfn.44.1700680504111;
+        Wed, 22 Nov 2023 11:15:04 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.100])
-        by smtp.gmail.com with ESMTPSA id p34-20020a05600c1da200b00406408dc788sm335519wms.44.2023.11.22.11.11.22
+        by smtp.gmail.com with ESMTPSA id lt18-20020a170906fa9200b00a04431e5a44sm111730ejb.16.2023.11.22.11.15.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 11:11:24 -0800 (PST)
-Message-ID: <21d1996d-de03-40b5-a6ca-74203c775f76@linaro.org>
-Date: Wed, 22 Nov 2023 20:11:21 +0100
+        Wed, 22 Nov 2023 11:15:03 -0800 (PST)
+Message-ID: <e98577e9-88c1-4715-82ce-d3eb0ad3b156@linaro.org>
+Date: Wed, 22 Nov 2023 20:15:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,6 +66,7 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 07/19] dt-bindings: pinctrl: samsung: add
  gs101-wakeup-eint compatible
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org,
  krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
  conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com,
@@ -81,7 +83,7 @@ Cc: tudor.ambarus@linaro.org, andre.draszik@linaro.org,
  linux-serial@vger.kernel.org
 References: <20231120212037.911774-1-peter.griffin@linaro.org>
  <20231120212037.911774-8-peter.griffin@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ <21d1996d-de03-40b5-a6ca-74203c775f76@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -126,35 +128,40 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231120212037.911774-8-peter.griffin@linaro.org>
+In-Reply-To: <21d1996d-de03-40b5-a6ca-74203c775f76@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/11/2023 22:20, Peter Griffin wrote:
-> gs101 is similar to newer Exynos SoCs like Exynos850 and ExynosAutov9
-> where more than one pin controller can do external wake-up interrupt.
-> So add a dedicated compatible for it.
+On 22/11/2023 20:11, Krzysztof Kozlowski wrote:
+> On 20/11/2023 22:20, Peter Griffin wrote:
+>> gs101 is similar to newer Exynos SoCs like Exynos850 and ExynosAutov9
+>> where more than one pin controller can do external wake-up interrupt.
+>> So add a dedicated compatible for it.
+>>
+>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+>> ---
+>>  .../bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml      | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+>> index 1b75abebb953..41f3a2f2992e 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+>> @@ -30,6 +30,7 @@ properties:
+>>    compatible:
+>>      oneOf:
+>>        - enum:
+>> +          - google,gs101-wakeup-eint
+>>            - samsung,s3c2410-wakeup-eint
+>>            - samsung,s3c2412-wakeup-eint
+>>            - samsung,s3c64xx-wakeup-eint
 > 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  .../bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml      | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-> index 1b75abebb953..41f3a2f2992e 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-> @@ -30,6 +30,7 @@ properties:
->    compatible:
->      oneOf:
->        - enum:
-> +          - google,gs101-wakeup-eint
->            - samsung,s3c2410-wakeup-eint
->            - samsung,s3c2412-wakeup-eint
->            - samsung,s3c64xx-wakeup-eint
+> This looks compatible with Exynos7. If true, then please add it to
+> proper items few lines below. This part changed ~2 weeks ago.
 
-This looks compatible with Exynos7. If true, then please add it to
-proper items few lines below. This part changed ~2 weeks ago.
+Ah, not entirely. Exynos7 still has multiplexed interrupts, but GS,
+Exynos850 and autov9 do not have, so the compatibility is a bit
+different. I'll send an idea.
 
 Best regards,
 Krzysztof
