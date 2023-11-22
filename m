@@ -1,157 +1,140 @@
-Return-Path: <linux-gpio+bounces-347-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-348-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BE447F4400
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 11:36:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14EA27F4456
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 11:53:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4573A28155F
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 10:36:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 46C3E1C2084F
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 10:53:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABAC200D4;
-	Wed, 22 Nov 2023 10:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 851E91E516;
+	Wed, 22 Nov 2023 10:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ieMzyl7T"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pGJH4qjN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9410CE7
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 02:36:31 -0800 (PST)
-Received: by mail-vk1-xa2a.google.com with SMTP id 71dfb90a1353d-4acf9dd3d35so2334903e0c.0
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 02:36:31 -0800 (PST)
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D8018D
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 02:53:10 -0800 (PST)
+Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7bae0c07086so2031395241.1
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 02:53:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1700649390; x=1701254190; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1700650389; x=1701255189; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V9RyNwxUxAvjA0TdUC6Ufzxi+Ut58Ntu1Up0AV6WgKU=;
-        b=ieMzyl7TAhyKFXSmDYqD5vkpxRPq8wOgOrvht8W4YJPXccaCYXBorw1AWtnQtAteBb
-         V3MbZbw2/kaCwG8TwPhITHMzHaXT/RFgmVE2UeA7a/7sTGPdZc+c/7TAjhULVWKQXUoD
-         ifHrQWE9Q1Y53aGDnsMugvmD7lA2UQiuXd9PLA84l4qe6BPIhuUHnPU8ZtQCG4UBImtZ
-         W6c2atutvPGfRVLo96SJrUuApSPE+LstKe/mxFZBt4bRmTgpNxrXzBsVkMithztvWiyy
-         AX2g2joqTT6/gJ+DRMtXM7pTxv5oj2kkfVbo9CPOotVMYtBnh+uMXlUhU69r0wbKkgO6
-         wDhw==
+        bh=GY/bD1zv5fBxrgEs0eGY+QzOkiSJamFow82Mh0ii4pY=;
+        b=pGJH4qjNGy8tzarESB9kqaX+JODPjVDPAwqFrhYOm1QjIThTfZtUQfhJrTRSaSypb6
+         PDZIKzjHIluy+rVmq6aHmM01H3O1LC2HUK3R4H2Uy/AjM6gkHEFpyviII2h+91Ncuua7
+         yE0fqt7zUcR8DM4oqIrSA0fC4Sz6DHbWwOngHEXdfxpAVmMtFi50ENW+DIZOinyaCy/o
+         8iCvqvtLwMwx3pNaw+cscMOpSEGxSBSbJl5jm+yyF++ahIu4NLbF6BSR5xlop76f68cM
+         C/LXdcwWj4Py6xnwP7QOsJ6HtHPamHcyLkb0AT423DEjqslpGXtXMphFooW6gcXR5QVS
+         kSJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700649390; x=1701254190;
+        d=1e100.net; s=20230601; t=1700650389; x=1701255189;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V9RyNwxUxAvjA0TdUC6Ufzxi+Ut58Ntu1Up0AV6WgKU=;
-        b=UoctaAu+cegEuihlDL0c5XKZYfldHNBftk8iOFQFih6b2b+mM6Ik49tav6bjBu89dn
-         EPwcnjFOsUuuelQiigfI9makrUy2XgSbD0TiAiPuOVqxnOYeMNSZvjQZrVowcybiNus7
-         mBoQvUm4MiwB9ZVlXcXDK7qNDwd8gaXxk5D6QhJ9Ix6xHk6r2Bpl47NuJnj5zMXrq0kA
-         CY8j00vSr8ONUPKfwAzTcWZloiBKFS55el0ynkJhE/uMOf3ATIiH+1O11XihNvF1BOLq
-         ykkCyZoJQBpbEDZ3S5JZILSv0aLuW695xAjGsEd8rerz4RNQB846/UTzQ/1xqNYUDe0A
-         aeOg==
-X-Gm-Message-State: AOJu0YxPjcQX34nHeNa1m4QsWtN7e1hv8Qeudr+CvKwM2Bl6Ok/nPKGS
-	wVZr1x6n1FgXIUyui11OPN1LheWuidLTfKV678yGmA==
-X-Google-Smtp-Source: AGHT+IGBmf9hKkcw0T0mIrzTDLT0xt+Rd6Nod7NHY12KYAvmvBBQlY44CbfzsUYMzXlVL26LHzu7CyU/JturzSt0+Vs=
-X-Received: by 2002:a1f:ed01:0:b0:499:dec9:e1a8 with SMTP id
- l1-20020a1fed01000000b00499dec9e1a8mr2060220vkh.14.1700649390653; Wed, 22 Nov
- 2023 02:36:30 -0800 (PST)
+        bh=GY/bD1zv5fBxrgEs0eGY+QzOkiSJamFow82Mh0ii4pY=;
+        b=r+VN+otl+0NbVKe4sxsqfCwtoP7hp44nwRolAIHF7KjuGNmozR69MphMpZ7izo3cEL
+         iSwywG+jkcrtH0+4lLa7/hZayGdf1kV2d5gXbbn5ZapnVyKo+AN3WvAkCU5fJqN5oDkV
+         rTIqpnA1AWbOuHMjccscth26CAElet0+s3oKib1iEgVmpDMP9mocLG51YZDlJM/6wMEC
+         tLcP99kVxfEcUJ8GRGqF+kHQOvgZY3eYuioNasuXVPd5KEkp6DvZb+4qARHLO/+4nuSp
+         p1sqLiC9OVLmIiMJF0ySGnnAzIzph355YIskuRyJ4wIB0A8/5bABOr90KbZ/LCcFJOvr
+         18JQ==
+X-Gm-Message-State: AOJu0Yw4nheJl58F9sLRQNU43E0ZfffU59RZrQ/vwfg/3a1rRX+YBdWZ
+	DJZjnNL2MGZgvzDe4Ou4Mlz/GG2aBO5qLZQO7GsTyw==
+X-Google-Smtp-Source: AGHT+IFrGwDqG3W/gOl3K6hItbrKeM3qSDO4HmAniT5FrTtOn6+XNuiLQkTNPhkh9WZT/WBnFYSQqwhC2drSjGagJZQ=
+X-Received: by 2002:a67:ec45:0:b0:45f:654a:f3b with SMTP id
+ z5-20020a67ec45000000b0045f654a0f3bmr2028426vso.19.1700650389731; Wed, 22 Nov
+ 2023 02:53:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
- <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
- <20231121161111.zphi7pn77ns7sgu2@pengutronix.de> <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
-In-Reply-To: <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
+References: <20231118124252.14838-1-wahrenst@gmx.net> <20231118124252.14838-2-wahrenst@gmx.net>
+ <ZVtHZWYl2skpn1Bg@smile.fi.intel.com> <9a9486bb-e737-4384-a581-76880b709758@gmx.net>
+ <ZVtS4phUMmDD9ztz@smile.fi.intel.com>
+In-Reply-To: <ZVtS4phUMmDD9ztz@smile.fi.intel.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 22 Nov 2023 11:36:19 +0100
-Message-ID: <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
-Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc() function
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
+Date: Wed, 22 Nov 2023 11:52:58 +0100
+Message-ID: <CAMRc=MdpegfNrjWkeGSh8NhT_Go+q5MxueASxrLo18XBJaBsjA@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] leds: gpio: Add kernel log if devm_fwnode_gpiod_get
+ fails
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Stefan Wahren <wahrenst@gmx.net>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Pavel Machek <pavel@ucw.cz>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Lee Jones <lee@kernel.org>, 
+	bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 22, 2023 at 10:05=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Mon, Nov 20, 2023 at 1:36=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Hello Bart,
+> On Mon, Nov 20, 2023 at 01:02:55PM +0100, Stefan Wahren wrote:
+> > Am 20.11.23 um 12:47 schrieb Andy Shevchenko:
+> > > On Sat, Nov 18, 2023 at 01:42:51PM +0100, Stefan Wahren wrote:
+> > > > In case leds-gpio fails to get the GPIO from the DT (e.g. the GPIO =
+is
+> > > > already requested) the driver doesn't provide any helpful error log=
+:
+> > > >
+> > > >      leds-gpio: probe of leds failed with error -16
+> > > >
+> > > > So add a new error log in case devm_fwnode_gpiod_get() fails.
 >
-> On Tue, Nov 21, 2023 at 05:11:11PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > On Tue, Nov 21, 2023 at 03:02:39PM +0100, Bartosz Golaszewski wrote:
-> > > Eh... I had a talk at LPC where I explained why I really dislike this
-> > > approach but I guess this ship has sailed now and it's not a subsyste=
-m
-> > > where I have any say anyway.
+> ...
+>
+> > > >                   led.gpiod =3D devm_fwnode_gpiod_get(dev, child, N=
+ULL, GPIOD_ASIS,
+> > > >                                                     NULL);
+> > > >                   if (IS_ERR(led.gpiod)) {
+> > > > +                 dev_err_probe(dev, PTR_ERR(led.gpiod), "Failed to=
+ get gpio '%pfw'\n",
+> > > > +                               child);
+> > > >                           fwnode_handle_put(child);
+> > > >                           return ERR_CAST(led.gpiod);
+> > > >                   }
+> > > Thinking more about it. GPIO library already issues bunch of messages=
+.
+> > >
+> > >     "using DT ... for ... GPIO lookup"
+> > >     "using lookup tables for GPIO lookup"
+> > >     "No GPIO consumer ... found"
+> > are these errors or debug messages?
+>
+> Indeed they are on debug level.
+>
+> > I cannot remember that i saw any of them on info level in my case of an
+> > already allocated pin (see patch 2).
 > >
-> > Is there a record of your talk? I'm open to hear your arguments.
+> > I'm open to place the log within gpiolib, if this a better place.
 >
-> I found your slides at
-> https://lpc.events/event/17/contributions/1627/attachments/1258/2725/Linu=
-x%20Plumbers%20Conference%202023.pdf
+> I'm not sure, let's hear GPIO maintainers for that.
 >
 
-My talk is here: https://www.youtube.com/watch?v=3DVxaAorwL89c&t=3D29310s
+Hard to tell which method is preferred among all the subsystems.
+Personally I'm more inclined towards letting drivers decide whether to
+emit an error message and only emit our own when an error cannot be
+propagated down the stack.
 
-> The main critic as I understand it about the "alloc_foo() +
-> register_foo()" approach is: "Breaks life-time logic - the driver
-> allocates the object but is not responsible for freeing it".
->
-> Yes, the driver allocates the object (via a subsystem helper). It is not
-> responsible for freeing the object, but the driver must drop its
-> reference to this object when going away. So foo_alloc() is paired by
-> foo_put().
->
-
-Is it though? I don't see any pwmchip_put() being called in this
-patch. I assume it's done implicitly but that's just confusing and
-does break the scope.
-
-> The solution you present as the good way has the struct device in the
-> foo_wrapper. In GPIO land that's struct gpio_device, right?
-
-Exactly.
-
-> gpiochip_add_data_with_key() allocates that using kzalloc() and "frees"
-> it with gpio_device_put() right? So your approach suffers from the same
-
-No, the structure is allocated by kzalloc() but it's life-time is tied
-with the struct device embedded in it and it's freed in the device's
-.release() callback when the last reference is dropped.
-
-> inconsistency, the only upside is that you do that once at the subsystem
-> level instead of in each driver. (And in return you have two allocations
-> (priv + foo_wrapper) while the "alloc_foo() + register_foo()" approach
-> only needs one.)
-
-Memory is cheap and this is not a hot path, so it isn't a big deal.
-
->
-> Let's just rename foo_alloc() to foo_get_new() and the problem is gone?
->
-
-Nope, because from a quick glance at PWM code, I'm convinced it will
-suffer from the same hot-unplug problem I described in my talk. In
-which case this rework will not fix all the issues.
-
-> In the implementation of foo_get_new() kzalloc() is still paired with
-> put_device() in foo_put(), but IMHO that's fine. The responsibility to
-> kfree() is traded to the struct device with device_initialize() in
-> return for a reference to the device. That's something you won't get rid
-> of while keeping the concept of reference counting.
->
-
-But if the PWM driver is unbound with users still holding references -
-do you have a mechanism to handle that?
+Linus: Any thoughts?
 
 Bart
 
-> Best regards
-> Uwe
+> > > Isn't it enough?
 >
 > --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
