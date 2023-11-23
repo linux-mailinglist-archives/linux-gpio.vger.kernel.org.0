@@ -1,358 +1,381 @@
-Return-Path: <linux-gpio+bounces-421-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-422-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A4DB7F6448
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 17:43:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD3767F645B
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 17:47:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2AC8B20F1D
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 16:42:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EEB9FB20FEC
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 16:47:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C9E33FB2B;
-	Thu, 23 Nov 2023 16:42:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7C3033CEC;
+	Thu, 23 Nov 2023 16:47:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1544F10CE;
-	Thu, 23 Nov 2023 08:42:52 -0800 (PST)
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6b709048d8eso985955b3a.2;
-        Thu, 23 Nov 2023 08:42:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700757771; x=1701362571;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pQRJZMvnwWQRNg5FA4wJF1eV8mAIW4nnY5zQ1fqyCUs=;
-        b=NDcRg95+uMdoQrLY/5btIpUo8GIE6foDhYOa8VUV8As40d/5PcPet0Gkkxz88wbDgL
-         LPbB7oo13bfGP6+f8wA69g1VwB1aOcdxIug/AeBX8qwVgekcrYi0Aqq1GY7UlqPzoGCO
-         ptoaCK3VmmpfSpbQ5Ug9est7SIR8LUgpGQ82kurqitRdv1ab5FrFw/xj4DOWdZ/lk6+2
-         /sQRpYIDA67jYSZWWeqSnpxPq2MrFOZr9LAn23aL+W4+yxwX01s8z95zDc30anjvy0c2
-         JWPKXdLcyTxTXqyBbzVeant4xDuOW5lnRntnhQSxMrnbi5AVbEEb0pQ5rtcgClG21LpP
-         FIoA==
-X-Gm-Message-State: AOJu0Yx4nDknSk8bHY66fDFsR7VEoQ8WUrcEu1lIP9snapGp7OwL8h2H
-	U0jgOO5EFHmZ/dnxsG4IXi/LwbKxM/4Q6A==
-X-Google-Smtp-Source: AGHT+IHvjDEs4oY10So/aGY63Ft08Vfqw+g9/8T045qlJ14hyCXXOCosSgJM72MukvO4QoxOAAhUpw==
-X-Received: by 2002:a05:6a20:7f98:b0:188:290d:17dc with SMTP id d24-20020a056a207f9800b00188290d17dcmr170158pzj.60.1700757771167;
-        Thu, 23 Nov 2023 08:42:51 -0800 (PST)
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com. [209.85.210.170])
-        by smtp.gmail.com with ESMTPSA id t43-20020aa78fab000000b006c9c0705b5csm1419206pfs.48.2023.11.23.08.42.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Nov 2023 08:42:50 -0800 (PST)
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6b709048d8eso985941b3a.2;
-        Thu, 23 Nov 2023 08:42:50 -0800 (PST)
-X-Received: by 2002:a25:5f4b:0:b0:d9b:417:139c with SMTP id
- h11-20020a255f4b000000b00d9b0417139cmr5509937ybm.60.1700757346993; Thu, 23
- Nov 2023 08:35:46 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB098AD;
+	Thu, 23 Nov 2023 08:47:37 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="423430454"
+X-IronPort-AV: E=Sophos;i="6.04,222,1695711600"; 
+   d="scan'208";a="423430454"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 08:47:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="802018855"
+X-IronPort-AV: E=Sophos;i="6.04,222,1695711600"; 
+   d="scan'208";a="802018855"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 08:47:31 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1r6CrO-0000000GPw7-3xQR;
+	Thu, 23 Nov 2023 18:47:26 +0200
+Date: Thu, 23 Nov 2023 18:47:26 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: mitrutzceclan <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>,
+	ChiaEn Wu <chiaen_wu@richtek.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] iio: adc: ad7173: add AD7173 driver
+Message-ID: <ZV-CHima8bpXcopc@smile.fi.intel.com>
+References: <20231123152331.5751-1-user@HYB-hhAwRlzzMZb>
+ <20231123152331.5751-2-user@HYB-hhAwRlzzMZb>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com> <20231120070024.4079344-4-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20231120070024.4079344-4-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 23 Nov 2023 17:35:35 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVMpKVY8WX7dbtHfgnwgePH+i9+2BAumb37sFmqccb44g@mail.gmail.com>
-Message-ID: <CAMuHMdVMpKVY8WX7dbtHfgnwgePH+i9+2BAumb37sFmqccb44g@mail.gmail.com>
-Subject: Re: [PATCH 03/14] clk: renesas: rzg2l-cpg: Add support for MSTOP
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, linux@armlinux.org.uk, 
-	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, 
-	linus.walleij@linaro.org, p.zabel@pengutronix.de, arnd@arndb.de, 
-	m.szyprowski@samsung.com, alexandre.torgue@foss.st.com, afd@ti.com, 
-	broonie@kernel.org, alexander.stein@ew.tq-group.com, 
-	eugen.hristev@collabora.com, sergei.shtylyov@gmail.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
-	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231123152331.5751-2-user@HYB-hhAwRlzzMZb>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Claudiu,
+On Thu, Nov 23, 2023 at 05:23:22PM +0200, mitrutzceclan wrote:
+> From: Dumitru Ceclan <mitrutzceclan@gmail.com>
 
-On Mon, Nov 20, 2023 at 8:01=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> RZ/{G2L, V2L, G3S} based CPG versions have support for saving extra
-> power when clocks are disabled by activating module standby. This is done
-> though MSTOP specific registers that are part of CPG. Each individual
-> module have one or more bits associated in one MSTOP register (see table
-> "Registers for Module Standby Mode" from HW manuals). Hardware manual
-> associates modules' clocks to one or more MSTOP bits. There are 3 mapping=
-s
-> available (identified by researching RZ/G2L, RZ/G3S, RZ/V2L HW manuals):
->
-> case 1: N clocks mapped to N MSTOP bits (with N=3D{0, ..., X})
-> case 2: N clocks mapped to 1 MSTOP bit  (with N=3D{0, ..., X})
-> case 3: N clocks mapped to M MSTOP bits (with N=3D{0, ..., X}, M=3D{0, ..=
-., Y})
->
-> Case 3 has been currently identified on RZ/V2L for VCPL4 module.
->
-> To cover all 3 cases the individual platform drivers will provide to
-> clock driver MSTOP register offset and associated bits in this register
-> as a bitmask and the clock driver will apply this bitmask to proper
-> MSTOP register.
->
-> As most of the modules have more than one clock and these clocks are
-> mapped to 1 MSTOP bitmap that need to be applied to MSTOP registers,
-> to avoid switching the module to/out of standby when the module has
-> enabled/disabled clocks a counter has been associated to each module
-> (though struct mstop::count) which is incremented/decremented every
-> time a module's clock is enabled/disabled and the settings to MSTOP
-> register are applied only when the counter reaches zero (counter zero
-> means either 1st clock of the module is going to be enabled or all clocks
-> of the module are going to be disabled).
+Thank you for the update!
+My comments below.
 
-Thanks for your patch!
+> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+> which can be used in high precision, low noise single channel
+> applications or higher speed multiplexed applications. The Sigma-Delta
+> ADC is intended primarily for measurement of signals close to DC but also
+> delivers outstanding performance with input bandwidths out to ~10kHz.
+> 
+> 
 
-> The MSTOP functionality has been instantiated at the moment for RZ/G3S.
+One blank line is enough here.
 
-Do you plan to add support for the other SoCs, too?
+> Reviewed-by: Michael Walle <michael@walle.cc> # for gpio-regmap
+> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+...
 
-> --- a/drivers/clk/renesas/r9a08g045-cpg.c
-> +++ b/drivers/clk/renesas/r9a08g045-cpg.c
-> @@ -187,23 +187,39 @@ static const struct cpg_core_clk r9a08g045_core_clk=
-s[] __initconst =3D {
->  };
->
->  static const struct rzg2l_mod_clk r9a08g045_mod_clks[] =3D {
-> -       DEF_MOD("gic_gicclk",           R9A08G045_GIC600_GICCLK, R9A08G04=
-5_CLK_P1, 0x514, 0),
-> -       DEF_MOD("ia55_clk",             R9A08G045_IA55_CLK, R9A08G045_CLK=
-_P1, 0x518, 1),
-> -       DEF_MOD("dmac_aclk",            R9A08G045_DMAC_ACLK, R9A08G045_CL=
-K_P3, 0x52c, 0),
-> -       DEF_MOD("sdhi0_imclk",          R9A08G045_SDHI0_IMCLK, CLK_SD0_DI=
-V4, 0x554, 0),
-> -       DEF_MOD("sdhi0_imclk2",         R9A08G045_SDHI0_IMCLK2, CLK_SD0_D=
-IV4, 0x554, 1),
-> -       DEF_MOD("sdhi0_clk_hs",         R9A08G045_SDHI0_CLK_HS, R9A08G045=
-_CLK_SD0, 0x554, 2),
-> -       DEF_MOD("sdhi0_aclk",           R9A08G045_SDHI0_ACLK, R9A08G045_C=
-LK_P1, 0x554, 3),
-> -       DEF_MOD("sdhi1_imclk",          R9A08G045_SDHI1_IMCLK, CLK_SD1_DI=
-V4, 0x554, 4),
-> -       DEF_MOD("sdhi1_imclk2",         R9A08G045_SDHI1_IMCLK2, CLK_SD1_D=
-IV4, 0x554, 5),
-> -       DEF_MOD("sdhi1_clk_hs",         R9A08G045_SDHI1_CLK_HS, R9A08G045=
-_CLK_SD1, 0x554, 6),
-> -       DEF_MOD("sdhi1_aclk",           R9A08G045_SDHI1_ACLK, R9A08G045_C=
-LK_P1, 0x554, 7),
-> -       DEF_MOD("sdhi2_imclk",          R9A08G045_SDHI2_IMCLK, CLK_SD2_DI=
-V4, 0x554, 8),
-> -       DEF_MOD("sdhi2_imclk2",         R9A08G045_SDHI2_IMCLK2, CLK_SD2_D=
-IV4, 0x554, 9),
-> -       DEF_MOD("sdhi2_clk_hs",         R9A08G045_SDHI2_CLK_HS, R9A08G045=
-_CLK_SD2, 0x554, 10),
-> -       DEF_MOD("sdhi2_aclk",           R9A08G045_SDHI2_ACLK, R9A08G045_C=
-LK_P1, 0x554, 11),
-> -       DEF_MOD("scif0_clk_pck",        R9A08G045_SCIF0_CLK_PCK, R9A08G04=
-5_CLK_P0, 0x584, 0),
-> -       DEF_MOD("gpio_hclk",            R9A08G045_GPIO_HCLK, R9A08G045_OS=
-CCLK, 0x598, 0),
-> +       DEF_MOD("gic_gicclk",           R9A08G045_GIC600_GICCLK, R9A08G04=
-5_CLK_P1, 0x514, 0,
-> +                                       MSTOP(ACPU, BIT(3))),
+> V5->V6
+>  - No changes
 
-According to Rev. 1.00 of the Hardware User's Manual, bit 3 of the
-CPG_BUS_ACPU_MSTOP register is reserved?
+Don't issue patches too often (minimum gap between versions is 24h).
 
-Also, gic_gicclk is a critical module clock, so I guess this module
-must never be put into standby?
+...
 
-> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> @@ -1177,6 +1177,17 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_=
-clk *core,
->                 core->name, PTR_ERR(clk));
->  }
->
-> +/**
-> + * struct mstop - MSTOP specific data structure
-> + * @count: reference counter for MSTOP settings (when zero the settings
-> + *        are applied to register)
-> + * @conf: MSTOP configuration (register offset, setup bits)
-> + */
-> +struct mstop {
-> +       u32 count;
-> +       u32 conf;
+> +	help
+> +	  Say yes here to build support for Analog Devices AD7173 and similar ADC
+> +	  Currently supported models:
+> +	    AD7172-2,
+> +	    AD7173-8,
+> +	    AD7175-2,
+> +	    AD7176-2
+
+I would use
+
+ - FOO
+ - BAR
+
+style that will reduce amount of potential churn if you need to add an entry at
+the end of this list.
+
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called ad7173.
+
+...
+
+> +#include <linux/stddef.h>
+
+You probably meant types.h here (it will include stddef, at least most of
+the code relies on that), which is currently absent.
+
+...
+
+> +struct ad7173_device_info {
+> +	char *name;
+> +	unsigned int id;
+> +	unsigned int num_inputs;
+> +	unsigned int num_configs;
+> +	unsigned int num_channels;
+
+> +	unsigned char num_gpios;
+
+I would use u8 as you have done for cfg_slot, for example. As it holds a number
+and not a real character.
+
+> +	bool has_temp;
+> +	unsigned int clock;
+> +
+> +	const unsigned int *sinc5_data_rates;
+> +	unsigned int num_sinc5_data_rates;
 > +};
+
+...
+
+> +struct ad7173_channel_config {
+> +	u8 cfg_slot;
+> +	bool live;
+
+Perhaps a blank line?
+
+> +	/* Following fields are used to compare equality. */
+> +	struct_group(config_props,
+> +		bool bipolar;
+> +		bool input_buf;
+> +		u8 odr;
+> +		u8 ref_sel;
+> +	);
+> +};
+
+...
+
+> +struct ad7173_state {
+> +	const struct ad7173_device_info *info;
+> +	struct ad_sigma_delta sd;
+
+It might be better to embed that struct first. In any case you always can
+consult with `pahole` tool for data structure layouts.
+
+> +	struct ad7173_channel *channels;
+> +	struct regulator_bulk_data regulators[3];
+> +	unsigned int adc_mode;
+> +	unsigned int interface_mode;
+> +	unsigned int num_channels;
+> +	struct ida cfg_slots_status;
+> +	unsigned long long config_usage_counter;
+> +	unsigned long long *config_cnts;
+> +#if IS_ENABLED(CONFIG_GPIOLIB)
+> +	struct regmap *reg_gpiocon_regmap;
+> +	struct gpio_regmap *gpio_regmap;
+> +#endif
+> +};
+
+...
+
+> +static const char *const ad7173_ref_sel_str[] = {
+> +	[AD7173_SETUP_REF_SEL_EXT_REF]    = "refin",
+> +	[AD7173_SETUP_REF_SEL_EXT_REF2]   = "refin2",
+> +	[AD7173_SETUP_REF_SEL_INT_REF]    = "refout-avss",
+
+> +	[AD7173_SETUP_REF_SEL_AVDD1_AVSS] = "avdd"
+
+Leave trailing comma here as well.
+
+> +};
+
+...
+
+> +	struct device *dev = &st->sd.spi->dev;
+
+For example, here st->sd become a no-op at compile time (see above about
+placing sd to be the first member). The code generation can be checked
+(for the size) by bloat-o-meter.
+
+...
+
+> +static int ad7173_free_config_slot_lru(struct ad7173_state *st)
+
+> +static int ad7173_load_config(struct ad7173_state *st,
+> +			      struct ad7173_channel_config *cfg)
+
+Have you checked, btw, list_lru.h? Maybe all this can be simply changed by
+using existing library?
+
+...
+
+> +	return vref / (MICRO/MILLI);
+
+Wouldn't MILLI in the denominator just suffice?
+
+...
+
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		reg = st->channels[chan->address].cfg.odr;
 > +
->  /**
->   * struct mstp_clock - MSTP gating clock
->   *
-> @@ -1186,6 +1197,7 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_c=
-lk *core,
->   * @enabled: soft state of the clock, if it is coupled with another cloc=
-k
->   * @priv: CPG/MSTP private data
->   * @sibling: pointer to the other coupled clock
-> + * @mstop: MSTOP configuration
->   */
->  struct mstp_clock {
->         struct clk_hw hw;
-> @@ -1194,10 +1206,46 @@ struct mstp_clock {
->         bool enabled;
->         struct rzg2l_cpg_priv *priv;
->         struct mstp_clock *sibling;
-> +       struct mstop *mstop;
->  };
->
->  #define to_mod_clock(_hw) container_of(_hw, struct mstp_clock, hw)
->
-> +/* Need to be called with a lock held to avoid concurent access to mstop=
-->count. */
+> +		*val = st->info->sinc5_data_rates[reg] / MILLI;
+> +		*val2 = (st->info->sinc5_data_rates[reg] % MILLI) * (MICRO/MILLI);
+> +
+> +		return IIO_VAL_INT_PLUS_MICRO;
+> +	}
 
-concurrent
+> +	return -EINVAL;
 
-> +static void rzg2l_mod_clock_module_set_standby(struct mstp_clock *clock,
-> +                                              bool standby)
+Make this 'default' case.
+
+...
+
+> +static int ad7173_update_scan_mode(struct iio_dev *indio_dev,
+> +				   const unsigned long *scan_mask)
 > +{
-> +       struct rzg2l_cpg_priv *priv =3D clock->priv;
-> +       struct mstop *mstop =3D clock->mstop;
-> +       bool update =3D false;
-> +       u32 value;
+> +	struct ad7173_state *st = iio_priv(indio_dev);
+> +	int i, ret;
 > +
-> +       if (!mstop)
-> +               return;
-> +
-> +       value =3D MSTOP_MASK(mstop->conf) << 16;
-> +
-> +       if (standby) {
-> +               value |=3D MSTOP_MASK(mstop->conf);
-> +               /* Avoid overflow. */
-> +               if (mstop->count > 0)
-> +                       mstop->count--;
-
-Should we add a WARN() here, or is it sufficient to rely on the WARN()
-in drivers/clk/clk.c:clk_core_disable()?
+> +	for (i = 0; i < indio_dev->num_channels; i++) {
+> +		if (test_bit(i, scan_mask))
+> +			ret = ad7173_set_channel(&st->sd, i);
+> +		else
+> +			ret = ad_sd_write_reg(&st->sd, AD7173_REG_CH(i), 2, 0);
 
 > +
-> +               if (!mstop->count)
-> +                       update =3D true;
-> +       } else {
-> +               if (!mstop->count)
-> +                       update =3D true;
-> +
-> +               /* Avoid overflow. */
-> +               if (mstop->count + 1 !=3D 0)
-> +                       mstop->count++;
 
-Trying to avoid an overflow won't help much here.  The counter
-will be wrong afterwards anyway, and when decrementing again later, the
-module will be put in standby too soon...
+Unneeded blank line.
 
-> +       }
+> +		if (ret < 0)
+> +			return ret;
+> +	}
 > +
-> +       if (update)
-> +               writel(value, priv->base + MSTOP_OFF(mstop->conf));
+> +	return 0;
 > +}
-> +
->  static int rzg2l_mod_clock_endisable(struct clk_hw *hw, bool enable)
->  {
->         struct mstp_clock *clock =3D to_mod_clock(hw);
 
-> @@ -1401,6 +1474,37 @@ rzg2l_cpg_register_mod_clk(const struct rzg2l_mod_=
-clk *mod,
->                 }
->         }
->
-> +       if (mod->mstop_conf) {
-> +               struct mstop *mstop =3D rzg2l_mod_clock_get_mstop(priv, m=
-od->mstop_conf);
-> +
-> +               if (mstop) {
-> +                       clock->mstop =3D mstop;
+> +static int ad7173_debug(struct iio_dev *indio_dev, unsigned int reg,
+> +			unsigned int writeval, unsigned int *readval)
 
-Please move the common assignment after the if/else block...
+Hmm... The function suggests it debugs something or helps with debugging
+something. Without actual description is hard to understand the purpose.
+Can you add a top comment on this function with explanations?
 
-> +               } else {
+...
 
-... so this can just become "if (!mstop) {".
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(st->regulators),
+> +				      st->regulators);
 
-> +                       mstop =3D devm_kzalloc(dev, sizeof(*mstop), GFP_K=
-ERNEL);
-> +                       if (!mstop) {
-> +                               clk_unregister(clk);
-> +                               goto fail;
+One line?
 
-Please use "goto unregister", and call clk_unregister() after the new
-unregister label.
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
 
-> +                       }
-> +
-> +                       mstop->conf =3D mod->mstop_conf;
-> +                       clock->mstop =3D mstop;
-> +               }
-> +
-> +               if (rzg2l_mod_clock_is_enabled(&clock->hw)) {
-> +                       if (clock->sibling)
-> +                               clock->mstop->count =3D 1;
-> +                       else
-> +                               clock->mstop->count++;
-> +               }
-> +
-> +               /*
-> +                * Out of reset all modules are enabled. Set module to st=
-andby
-> +                * in case associated clocks are disabled at probe.
+...
 
-Is that always true?
-What about kexec and crashdump kernels?
+> +			return dev_err_probe(dev, -EINVAL,
+> +				"Input pin number out of range for pair (%d %d).", ain[0], ain[1]);
 
-> +                */
-> +               if (!clock->mstop->count)
-> +                       rzg2l_mod_clock_module_set_standby(clock, true);
-> +       }
-> +
->         return;
->
->  fail:
-> diff --git a/drivers/clk/renesas/rzg2l-cpg.h b/drivers/clk/renesas/rzg2l-=
-cpg.h
-> index 6e38c8fc888c..10ee8aa4a5da 100644
-> --- a/drivers/clk/renesas/rzg2l-cpg.h
-> +++ b/drivers/clk/renesas/rzg2l-cpg.h
+Seems broken indentation.
 
-> @@ -68,6 +73,10 @@
->  #define SEL_PLL6_2     SEL_PLL_PACK(CPG_PL6_ETH_SSEL, 0, 1)
->  #define SEL_GPU2       SEL_PLL_PACK(CPG_PL6_SSEL, 12, 1)
->
-> +#define MSTOP(name, bitmask)   ((CPG_##name##_MSTOP) << 16 | (bitmask))
+...
 
-I believe the bitmask is always a single bit.
-So perhaps let MSTOP() take the bit number instead of the bitmaskl?
-You can still store BIT(bit) inside the macro.
+> +		ret = fwnode_property_read_string(child, "adi,reference-select", &ref_label);
+> +		if (!ret) {
+> +			for (i = 0; i < ARRAY_SIZE(ad7173_ref_sel_str); i++)
+> +				if (strcmp(ref_label, ad7173_ref_sel_str[i]) == 0) {
+> +					ref_sel = i;
+> +					break;
+> +				}
 
-> +#define MSTOP_OFF(conf)                ((conf) >> 16)
-> +#define MSTOP_MASK(conf)       ((conf) & GENMASK(15, 0))
-> +
->  #define EXTAL_FREQ_IN_MEGA_HZ  (24)
->
->  /**
+> +			if (i == ARRAY_SIZE(ad7173_ref_sel_str))
+> +				return dev_err_probe(dev, -EINVAL, "Invalid channel reference name %s", ref_label);
 
-Gr{oetje,eeting}s,
+Too long line.
 
-                        Geert
+> +		} else if (ret != -EINVAL) {
+> +			return dev_err_probe(dev, ret, "Invalid channel reference value");
+> +		}
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Use standard pattern and it will be easier to see that 'else' is redundant.
+
+		if (ret == -EINVAL) // However I don't like this handling of
+				    // properties, but up to you and maintainer
+			ret = 0;
+		if (ret)
+			return dev_err_probe(...);
+
+
+BUT. Isn't it a home grown variant of fwnode_property_match_property_string()?
+
+...
+
+> +		ret = ad7173_get_ref_voltage_milli(st, (u8)ref_sel);
+
+Why casting?
+
+> +		if (ret < 0)
+> +			return dev_err_probe(dev, ret,
+> +					     "Cannot use reference %u", ref_sel);
+
+...
+
+> +			return dev_err_probe(dev, -EINVAL, "External reference 2 is only available on ad7173-8");
+
+Missing \n. Check all your messages that they are terminated with \n.
+
+...
+
+> +	struct ad7173_state *st;
+> +	struct iio_dev *indio_dev;
+> +	struct device *dev = &spi->dev;
+> +	int ret;
+
+Reversed xmas tree order?
+
+	struct device *dev = &spi->dev;
+	struct iio_dev *indio_dev;
+	struct ad7173_state *st;
+	int ret;
+
+...
+
+> +static const struct of_device_id ad7173_of_match[] = {
+> +	{ .compatible = "adi,ad7172-2",
+> +	  .data = &ad7173_device_info[ID_AD7172_2], },
+> +	{ .compatible = "adi,ad7173-8",
+> +	  .data = &ad7173_device_info[ID_AD7173_8], },
+> +	{ .compatible = "adi,ad7175-2",
+> +	  .data = &ad7173_device_info[ID_AD7175_2], },
+> +	{ .compatible = "adi,ad7176-2",
+> +	  .data = &ad7173_device_info[ID_AD7176_2], },
+
+Last inner commas are not needed.
+
+> +	{ }
+> +};
+
+...
+
+> +static const struct spi_device_id ad7173_id_table[] = {
+> +	{ "ad7172-2", (kernel_ulong_t)&ad7173_device_info[ID_AD7172_2], },
+> +	{ "ad7173-8", (kernel_ulong_t)&ad7173_device_info[ID_AD7173_8], },
+> +	{ "ad7175-2", (kernel_ulong_t)&ad7173_device_info[ID_AD7175_2], },
+> +	{ "ad7176-2", (kernel_ulong_t)&ad7173_device_info[ID_AD7176_2], },
+
+Ditto.
+
+> +	{ }
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
