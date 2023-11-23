@@ -1,184 +1,135 @@
-Return-Path: <linux-gpio+bounces-419-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-420-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0081E7F635F
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 16:53:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 567297F63AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 17:09:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5920281AEF
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 15:53:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7598E1C20D4D
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 16:09:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA3183D99C;
-	Thu, 23 Nov 2023 15:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13E73E490;
+	Thu, 23 Nov 2023 16:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NabupWQT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCACAD41;
-	Thu, 23 Nov 2023 07:53:32 -0800 (PST)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-d9beb865a40so918933276.1;
-        Thu, 23 Nov 2023 07:53:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700754812; x=1701359612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+4a8muWVJERlW0eLxhsAPKkg7UICmbIYUzNpVBBHRwc=;
-        b=XYfzrHsa0W0DAj70+yfUOMJO6hqVmc58/a2AkSqPqbQBqFb1PLGGeclV4YYb75+vvl
-         ugN26NOFhUlNivOGlewDIcFh1RgwLq/iVwHvI4M9AcDUDdM2lYekfvc+nNcto4TzxIus
-         XLM/mQXnzfVzVmWpd9AoCXKiLAbCN8iCg6ZE2SpDU+6r6kyCrEIZYmd80T64KFl8i8Qu
-         JkE8i+zGErTamwLSjGhWbmE07csu53DSiHxrk3V15cbudipccVs1MOSKChqJzLYvuWhx
-         YvcEJ0+FGiZL+q98yPEXwcLr3REvC0FDRWJCMxiWOfUY0OLfmDLyVTtlPBWF6Y2rAA45
-         Uaag==
-X-Gm-Message-State: AOJu0YwIh1Td87oWrLXWPHalpbss6hGFs6WNjKkLmbHE/ARmTioJ4TXb
-	ey2SGFyuPRiWhXEH1MUTM/PYn7mCh0AAwg==
-X-Google-Smtp-Source: AGHT+IESv+mekVU042XyNpJBoa7y814zndA1PZSmoRYZqLTLb8YwWyEgu3HqeKRyd5ijcLw1Tsb/kQ==
-X-Received: by 2002:a25:c094:0:b0:d9c:7d48:3020 with SMTP id c142-20020a25c094000000b00d9c7d483020mr5514911ybf.20.1700754811733;
-        Thu, 23 Nov 2023 07:53:31 -0800 (PST)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id 123-20020a250b81000000b00db3fca90d6esm378661ybl.2.2023.11.23.07.53.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Nov 2023 07:53:31 -0800 (PST)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5cc5988f85eso10390567b3.2;
-        Thu, 23 Nov 2023 07:53:30 -0800 (PST)
-X-Received: by 2002:a0d:fe43:0:b0:5cb:95e8:16ba with SMTP id
- o64-20020a0dfe43000000b005cb95e816bamr6373455ywf.46.1700754810638; Thu, 23
- Nov 2023 07:53:30 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD2A9D6C;
+	Thu, 23 Nov 2023 08:09:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700755762; x=1732291762;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=fI5I6aNI+wBDXkBFPmA1tH6IH8G5H7oF7TFedUg2UCA=;
+  b=NabupWQTZlJqMWeoBE8u9FBPz5l4sGTmdL+FBqkvdWuHupdsqrXzVqWj
+   SJdjx4mc+yVarcyP37/4rnIwsmY0sDotV03+2BK2+zbAmKjduicuLYX0N
+   MIVO/tgV4hJOTLlBEmDuJi8y9BO/BVZyWkqk+1yYPJo8Tchjb2GFOtROg
+   ceu02BVTr8XJQuzhpnaCeu3+JvRPFJmPZ4KN6uFOekwuuYP9WZbcd71F8
+   +p3w2egb7kNSfkEFoWB7DYD/JGzPEO1gWIZL8OwpN431jF+x/1q8MYn2J
+   44TRFWNFtutjC1c8B4NewBQ21GXVtka1BmEZC7zoXzlVF6WbhcJI0P1Ju
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="423422204"
+X-IronPort-AV: E=Sophos;i="6.04,222,1695711600"; 
+   d="scan'208";a="423422204"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 08:09:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="771023284"
+X-IronPort-AV: E=Sophos;i="6.04,222,1695711600"; 
+   d="scan'208";a="771023284"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 08:09:13 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1r6CGL-0000000GPTF-1VsT;
+	Thu, 23 Nov 2023 18:09:09 +0200
+Date: Thu, 23 Nov 2023 18:09:09 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Sean Wang <sean.wang@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Andy Gross <agross@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Subject: Re: [PATCH v1 00/17] pinctrl: Convert struct group_desc to use
+ struct pingroup
+Message-ID: <ZV95JewcPbh_eKYh@smile.fi.intel.com>
+References: <20231122164040.2262742-1-andriy.shevchenko@linux.intel.com>
+ <ZV8zQZyT4Kwom-m_@probook>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com> <20231120070024.4079344-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20231120070024.4079344-3-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 23 Nov 2023 16:53:17 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXTO+cteN7fW+n3=Vzpa5Nk7oxj+sF2vBMLf2gwS=aNGw@mail.gmail.com>
-Message-ID: <CAMuHMdXTO+cteN7fW+n3=Vzpa5Nk7oxj+sF2vBMLf2gwS=aNGw@mail.gmail.com>
-Subject: Re: [PATCH 02/14] clk: renesas: rzg2l-cpg: Check reset monitor registers
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, linux@armlinux.org.uk, 
-	geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com, 
-	sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de, 
-	arnd@arndb.de, m.szyprowski@samsung.com, alexandre.torgue@foss.st.com, 
-	afd@ti.com, broonie@kernel.org, alexander.stein@ew.tq-group.com, 
-	eugen.hristev@collabora.com, sergei.shtylyov@gmail.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
-	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZV8zQZyT4Kwom-m_@probook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Claudiu,
+On Thu, Nov 23, 2023 at 12:10:57PM +0100, J. Neuschäfer wrote:
+> On Wed, Nov 22, 2023 at 06:35:32PM +0200, Andy Shevchenko wrote:
+> > The struct group_desc has a lot of duplication with struct pingroup.
+> > Deduplicate that by embeddind the latter in the former and convert
+> > users.
+> 
+> It is strange to me that struct pingroup was introduced without any
+> reference to the pre-existing struct group_desc, but it's good to see
+> them unified at last.
 
-On Mon, Nov 20, 2023 at 8:01=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Hardware manual of both RZ/G2L and RZ/G3S specifies that reset monitor
-> registers need to be interrogated when the reset signals are toggled
-> (chapters "Procedures for Supplying and Stopping Reset Signals" and
-> "Procedure for Activating Modules"). Without this there is a chance that
-> different modules (e.g. Ethernet) to not be ready after reset signal is
-> toggled leading to failures (on probe or resume from deep sleep states).
->
-> Fixes: ef3c613ccd68 ("clk: renesas: Add CPG core wrapper for RZ/G2L SoC")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Yep!
 
-Thanks for your patch!
+> Even better might be to move the definitions next to each other in the
+> same file, so that anyone who finds one, also finds the other.
 
-> In case you apply this patch and patch 1/13 as is, please add a Depend-on
-> tag on this patch to point to patch 1/13 for proper backporting.
+group_desc is a private to pin control generic implementation, pingroup is
+generic for any pin control driver. Their current split is a right thing
+to do, so no action required in this sense.
 
-There is no such Depend-on tag? Anyway, this patch won't apply if 1/13
-is not backported...
+Thank you for review!
 
-> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> @@ -1416,12 +1416,23 @@ static int rzg2l_cpg_assert(struct reset_controll=
-er_dev *rcdev,
->         struct rzg2l_cpg_priv *priv =3D rcdev_to_priv(rcdev);
->         const struct rzg2l_cpg_info *info =3D priv->info;
->         unsigned int reg =3D info->resets[id].off;
-> -       u32 value =3D BIT(info->resets[id].bit) << 16;
-> +       u32 dis =3D BIT(info->resets[id].bit);
-> +       u32 value =3D dis << 16;
-> +       int ret =3D 0;
->
->         dev_dbg(rcdev->dev, "assert id:%ld offset:0x%x\n", id, CLK_RST_R(=
-reg));
->
->         writel(value, priv->base + CLK_RST_R(reg));
-> -       return 0;
-> +
-> +       if (info->has_clk_mon_regs) {
-> +               ret =3D readl_poll_timeout_atomic(priv->base + CLK_MRST_R=
-(reg), value,
-> +                                               value & dis, 10, 200);
-> +       } else {
-> +               /* Wait for at least one cycle of the RCLK clock (@ ca. 3=
-2 kHz) */
-> +               udelay(35);
-> +       }
+> > Linus, assuming everything is fine, I can push this to my tree.
+> > Or you can apply it (assumming all CIs and people are happy with
+> > the series).
+> > 
+> > NB. This series contains previously sent patches for Qualcomm and
+> > Nuovoton. Here the updated version for Qualcomm that splits previous
+> > patch to two and fixes compilation warnings.
+> > 
+> > NB. The function_desc is in plan to follow the similar deduplication.
 
-I think this should also take into account CPG_RST_MON on RZ/V2M,
-cfr. rzg2l_cpg_status().
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> +
-> +       return ret;
->  }
->
->  static int rzg2l_cpg_deassert(struct reset_controller_dev *rcdev,
-> @@ -1432,12 +1443,22 @@ static int rzg2l_cpg_deassert(struct reset_contro=
-ller_dev *rcdev,
->         unsigned int reg =3D info->resets[id].off;
->         u32 dis =3D BIT(info->resets[id].bit);
->         u32 value =3D (dis << 16) | dis;
-> +       int ret =3D 0;
->
->         dev_dbg(rcdev->dev, "deassert id:%ld offset:0x%x\n", id,
->                 CLK_RST_R(reg));
->
->         writel(value, priv->base + CLK_RST_R(reg));
-> -       return 0;
-> +
-> +       if (info->has_clk_mon_regs) {
-> +               ret =3D readl_poll_timeout_atomic(priv->base + CLK_MRST_R=
-(reg), value,
-> +                                               !(value & dis), 10, 200);
-> +       } else {
-> +               /* Wait for at least one cycle of the RCLK clock (@ ca. 3=
-2 kHz) */
-> +               udelay(35);
-> +       }
 
-Likewise.
-
-> +
-> +       return ret;
->  }
->
->  static int rzg2l_cpg_reset(struct reset_controller_dev *rcdev,
-
-The rest LGTM.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
