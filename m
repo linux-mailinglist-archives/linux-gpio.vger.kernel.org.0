@@ -1,144 +1,290 @@
-Return-Path: <linux-gpio+bounces-401-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-402-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C97117F60F1
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 15:02:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7A2C7F60F7
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 15:03:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 59A46B21424
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 14:02:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DA52B1C210A4
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 14:03:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D154C2E825;
-	Thu, 23 Nov 2023 14:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B489B2E85C;
+	Thu, 23 Nov 2023 14:03:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e7ZSSgH6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jf2tLJm/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D679F;
-	Thu, 23 Nov 2023 06:02:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700748162; x=1732284162;
-  h=from:to:cc:subject:date:message-id;
-  bh=/aSaJpluUpfz8zIYINYmmKw/+Sgyp3i8cMgmajwYojc=;
-  b=e7ZSSgH6pl9GeaEj0TsJmUvcrfwV1CIf4PBOH1B1fau3xU/enbQNuSy+
-   fL/tuGxOfIRLew0OAdK/UTbu7ZiS9C8W0Nj2KkxxrFKg3xUjn2gTiJniJ
-   PNAHPyo2qlGE7FBvtxKdfWz8anMcTi1i4XnEFaImScb6MZlU5I1kemmuv
-   6hi9N6Iie6iXyV4+6vVFDT3BPnWrBnw0eLNsDt8S8IIe2aWsbSYOwz75j
-   h+t+k+Piwz6sBVd8+cdtj8ksqUcupqwKIupBeh7dlYeNUz5kgErv8fcgg
-   nngbnbAn35QdhWRhF2UlkE1I22Pjra6/YeaJbfwym/hlofAE3NsHq3bQV
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="423401635"
-X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="423401635"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 06:02:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="771004938"
-X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="771004938"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Nov 2023 06:02:26 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	linus.walleij@linaro.org
-Cc: linux-gpio@vger.kernel.org,
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448DCB9;
+	Thu, 23 Nov 2023 06:03:41 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-5440f25dcc7so1280537a12.0;
+        Thu, 23 Nov 2023 06:03:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700748220; x=1701353020; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RsVQHQgkmGnmkp/8Pi5Iy/1xJuykXLLuCKbsn14yEl4=;
+        b=jf2tLJm/0jSkRKS31mZnzpOXPLUO8HbMwUpOWZi7LaxswMu7J/pgVTE/3t4zk7/8St
+         TDhlwbGpcnGqfVp41WDrpqUSw+cwPej1S7jDmtsfvciHeSuvIXmbmktVCIOXdfGba5ao
+         rAn6OULBJFmczbURxMNpIL5f720KRgHagucbM/CyR/stp5Fg8ZsmONBACPPlYABIP2TL
+         R5ClCWjjPRTtMyQfdSHITrXhAlCl7EJ0eRYb6qsr3l4qqBuRwWAL9/QZj0JS82xuhp6D
+         yrmORHDXq7q00RDpvZaT8SLVTX/Eb4tN7ydXbWBC5Ud2b+AX1J26WE8Ju8y8lio8wtdc
+         W5TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700748220; x=1701353020;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RsVQHQgkmGnmkp/8Pi5Iy/1xJuykXLLuCKbsn14yEl4=;
+        b=jGPpKOKtmBaaVUeT3PCz/dlpeg78DEaUkDYnGSRTT5XoZ0FaiOJcC8VswM9okm1IkA
+         UGrRnB6eGXUphNphqO/m6ZdGxey9eeIlMV4aW1s4b0MGViqJskBOlymydpLjHSSxnqz1
+         QevykvgnPB2v3SLMC8DZc2t3MkI2caxhXq0JDj42xcFkCEojciFpRckSaJEtCqwBvvc/
+         ib92B06QlAgFkb0e5rYVYcjRVOxSzTDSkkv6GSJDxpCk8VLKJhX+ZAsYXFLr7UlsXPTn
+         PFyDoWB3LWCGZ1UfwaATvLp8g3UNnKSFnrJc9JlT6O5gxym2jbVZOivUVNXfWi6Mas1Y
+         fTbA==
+X-Gm-Message-State: AOJu0YwxhTP/0tkOCgFEm79abEY5v/mvsMyJ5dhMqe8nKPlUCm7MR0ii
+	97Q+9dmX/4KTlMc2wY/N6bI=
+X-Google-Smtp-Source: AGHT+IEBdLrrqIFZid4k3hO5NBiGT4WuxXSRg5sgzPaCRaYX3sRhKvrHQlrjem3TuOVmnbCYqIBEHg==
+X-Received: by 2002:a17:906:9d0b:b0:9e6:7e6c:4de4 with SMTP id fn11-20020a1709069d0b00b009e67e6c4de4mr3244649ejc.35.1700748219229;
+        Thu, 23 Nov 2023 06:03:39 -0800 (PST)
+Received: from HYB-hhAwRlzzMZb.ad.analog.com ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id z2-20020a170906074200b009d268e3b801sm823125ejb.37.2023.11.23.06.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Nov 2023 06:03:38 -0800 (PST)
+From: mitrutzceclan <mitrutzceclan@gmail.com>
+X-Google-Original-From: mitrutzceclan <CeclanDumitru>
+To: 
+Cc: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andy@kernel.org,
+	linux-gpio@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Walle <michael@walle.cc>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	ChiaEn Wu <chiaen_wu@richtek.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1] pinctrl: tangier: simplify locking using cleanup helpers
-Date: Thu, 23 Nov 2023 19:32:12 +0530
-Message-Id: <20231123140212.12135-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.17.1
+	Dumitru Ceclan <mitrutzceclan@gmail.com>
+Subject: [PATCH v5 1/2] dt-bindings: adc: add AD7173
+Date: Thu, 23 Nov 2023 16:02:55 +0200
+Message-ID: <20231123140320.30409-1-user@HYB-hhAwRlzzMZb>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Use lock guards from cleanup.h to simplify locking.
+From: Dumitru Ceclan <mitrutzceclan@gmail.com>
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+which can be used in high precision, low noise single channel applications
+or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+primarily for measurement of signals close to DC but also delivers
+outstanding performance with input bandwidths out to ~10kHz.
+
+Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
 ---
- drivers/pinctrl/intel/pinctrl-tangier.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+V4 -> V5
+ - Use string enum instead of integers for "adi,reference-select"
+ - Fix conditional checking in regards to compatible
 
-diff --git a/drivers/pinctrl/intel/pinctrl-tangier.c b/drivers/pinctrl/intel/pinctrl-tangier.c
-index 26e34ec0a972..2cb0b4758269 100644
---- a/drivers/pinctrl/intel/pinctrl-tangier.c
-+++ b/drivers/pinctrl/intel/pinctrl-tangier.c
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/bits.h>
-+#include <linux/cleanup.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/errno.h>
-@@ -220,7 +221,6 @@ static int tng_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 	const struct intel_pingroup *grp = &tp->groups[group];
- 	u32 bits = grp->mode << BUFCFG_PINMODE_SHIFT;
- 	u32 mask = BUFCFG_PINMODE_MASK;
--	unsigned long flags;
- 	unsigned int i;
- 
- 	/*
-@@ -232,11 +232,11 @@ static int tng_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 			return -EBUSY;
- 	}
- 
-+	guard(raw_spinlock_irqsave)(&tp->lock);
-+
- 	/* Now enable the mux setting for each pin in the group */
--	raw_spin_lock_irqsave(&tp->lock, flags);
- 	for (i = 0; i < grp->grp.npins; i++)
- 		tng_update_bufcfg(tp, grp->grp.pins[i], bits, mask);
--	raw_spin_unlock_irqrestore(&tp->lock, flags);
- 
- 	return 0;
- }
-@@ -248,14 +248,13 @@ static int tng_gpio_request_enable(struct pinctrl_dev *pctldev,
- 	struct tng_pinctrl *tp = pinctrl_dev_get_drvdata(pctldev);
- 	u32 bits = BUFCFG_PINMODE_GPIO << BUFCFG_PINMODE_SHIFT;
- 	u32 mask = BUFCFG_PINMODE_MASK;
--	unsigned long flags;
- 
- 	if (!tng_buf_available(tp, pin))
- 		return -EBUSY;
- 
--	raw_spin_lock_irqsave(&tp->lock, flags);
-+	guard(raw_spinlock_irqsave)(&tp->lock);
-+
- 	tng_update_bufcfg(tp, pin, bits, mask);
--	raw_spin_unlock_irqrestore(&tp->lock, flags);
- 
- 	return 0;
- }
-@@ -360,7 +359,6 @@ static int tng_config_set_pin(struct tng_pinctrl *tp, unsigned int pin,
- 	unsigned int param = pinconf_to_config_param(config);
- 	unsigned int arg = pinconf_to_config_argument(config);
- 	u32 mask, term, value = 0;
--	unsigned long flags;
- 
- 	switch (param) {
- 	case PIN_CONFIG_BIAS_DISABLE:
-@@ -432,9 +430,9 @@ static int tng_config_set_pin(struct tng_pinctrl *tp, unsigned int pin,
- 		return -EINVAL;
- 	}
- 
--	raw_spin_lock_irqsave(&tp->lock, flags);
-+	guard(raw_spinlock_irqsave)(&tp->lock);
-+
- 	tng_update_bufcfg(tp, pin, value, mask);
--	raw_spin_unlock_irqrestore(&tp->lock, flags);
- 
- 	return 0;
- }
+ .../bindings/iio/adc/adi,ad7173.yaml          | 169 ++++++++++++++++++
+ 1 file changed, 169 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
 
-base-commit: e58e519b80ba79cd73abb1d631d429b7322ac9cb
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+new file mode 100644
+index 000000000000..32a59a2f2e91
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+@@ -0,0 +1,169 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2023 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7173 ADC
++
++maintainers:
++  - Ceclan Dumitru <dumitru.ceclan@analog.com>
++
++description: |
++  Bindings for the Analog Devices AD717X ADC's. Datasheets for supported chips:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-2.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7173-8.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7175-2.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7176-2.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7172-2
++      - adi,ad7173-8
++      - adi,ad7175-2
++      - adi,ad7176-2
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  spi-max-frequency:
++    maximum: 20000000
++
++  refin-supply:
++    description: external reference supply, can be used as reference for conversion.
++
++  refin2-supply:
++    description: external reference supply, can be used as reference for conversion.
++
++  avdd-supply:
++    description: avdd supply, can be used as reference for conversion.
++
++  required:
++    - compatible
++    - reg
++    - interrupts
++
++patternProperties:
++  "^channel@[0-9a-f]$":
++    type: object
++    $ref: adc.yaml
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 15
++
++      diff-channels:
++        items:
++          minimum: 0
++          maximum: 31
++
++      adi,reference-select:
++        description: |
++          Select the reference source to use when converting on
++          the specific channel. Valid values are:
++          refin      : REFIN(+)/REFIN(−).
++          refin2     : REFIN2(+)/REFIN2(−)
++          refout-avss: REFOUT/AVSS (Internal reference)
++          avdd       : AVDD
++
++          External reference refin2 only available on ad7173-8.
++          If not specified, internal reference used.
++        enum:
++          - refin
++          - refin2
++          - refout-avss
++          - avdd
++        default: refout-avss
++
++      bipolar:
++        type: boolean
++
++    required:
++      - reg
++      - diff-channels
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++  - if:
++      properties:
++        compatible:
++          not:
++            contains:
++              const: adi,ad7173-8
++    then:
++      properties:
++        refin2-supply: false
++      patternProperties:
++        "^channel@[0-9a-f]$":
++          properties:
++            adi,reference-select:
++              enum:
++                - refin
++                - refout-avss
++                - avdd
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      adc@0 {
++        compatible = "adi,ad7173-8";
++        reg = <0>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++        interrupt-parent = <&gpio>;
++        spi-max-frequency = <5000000>;
++
++        channel@0 {
++          reg = <0>;
++          bipolar;
++          diff-channels = <0 1>;
++        };
++
++        channel@1 {
++          reg = <1>;
++          diff-channels = <2 3>;
++        };
++
++        channel@2 {
++          reg = <2>;
++          bipolar;
++          diff-channels = <4 5>;
++        };
++
++        channel@3 {
++          reg = <3>;
++          bipolar;
++          diff-channels = <6 7>;
++        };
++
++        channel@4 {
++          reg = <4>;
++          diff-channels = <8 9>;
++        };
++      };
++    };
 -- 
-2.17.1
+2.42.0
 
 
