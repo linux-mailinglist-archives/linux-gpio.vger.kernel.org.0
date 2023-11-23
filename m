@@ -1,224 +1,139 @@
-Return-Path: <linux-gpio+bounces-393-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-394-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 980377F58DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 08:09:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 443E57F5947
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 08:33:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0F2F1C20C93
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 07:09:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BF781C20AC6
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 07:33:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75E5C1401C;
-	Thu, 23 Nov 2023 07:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8651D168D1;
+	Thu, 23 Nov 2023 07:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DbrZOEfw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="axc1djUy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8EB583
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 23:08:53 -0800 (PST)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231123070850epoutp027cfaaf6efd5c48b8c2f2572865c851d6~aLtu1jpc60470204702epoutp029
-	for <linux-gpio@vger.kernel.org>; Thu, 23 Nov 2023 07:08:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231123070850epoutp027cfaaf6efd5c48b8c2f2572865c851d6~aLtu1jpc60470204702epoutp029
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1700723330;
-	bh=UlOYtqsg8VMxZjHuFShtASMAUieEGsDmiXuu5nvaCBE=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=DbrZOEfwVXiW3t8kiHJ0Ir3nOvhOgGfsOrPRAk3MGgchpoEuXwrSwUstvflCFNzDH
-	 eCn/tT4vNC5XpdqWPXdyivQ3zYDIRpS30dNB/DhFvM0rgh8tW3bryCPo+iN4gk1B6T
-	 DMDrXEwImF4jsXJqbiEQJpJ+e9MERIe6bjCG0Hos=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-	20231123070849epcas2p4e8ae1cbfb86050455bc92f169aa21d64~aLtuOFxJw2905729057epcas2p4G;
-	Thu, 23 Nov 2023 07:08:49 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.100]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4SbTjs2Kyzz4x9Pw; Thu, 23 Nov
-	2023 07:08:49 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6B.F2.10006.18AFE556; Thu, 23 Nov 2023 16:08:49 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20231123070848epcas2p13b713349f30d3cfe72b3e343ab8cc90b~aLttLcVqm0047900479epcas2p1O;
-	Thu, 23 Nov 2023 07:08:48 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231123070848epsmtrp1a819f9d784eb01230de11b0b817e7cab~aLttKZ7vZ2630226302epsmtrp1S;
-	Thu, 23 Nov 2023 07:08:48 +0000 (GMT)
-X-AuditID: b6c32a45-179ff70000002716-05-655efa81e90a
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D1.8C.08755.08AFE556; Thu, 23 Nov 2023 16:08:48 +0900 (KST)
-Received: from [10.229.8.168] (unknown [10.229.8.168]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20231123070848epsmtip22a7d454dc0fdf545d76c49c97aca6629~aLts8Nhwj1175411754epsmtip2S;
-	Thu, 23 Nov 2023 07:08:48 +0000 (GMT)
-Message-ID: <45b0f9e2-f97a-1b60-b40f-d84831027d00@samsung.com>
-Date: Thu, 23 Nov 2023 16:06:00 +0900
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C0A1D43
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 23:33:48 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-3316a4bc37dso378202f8f.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 23:33:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700724827; x=1701329627; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+TTfN9bAtlKsP3TW9IyrlMffcAKSHql3YK8jNHi2wag=;
+        b=axc1djUyS1iPjJR8DRAZd3atzp7sWKBJ6HhN4IkvEUKZJD2yWu5zplTq6kTiM2HPu2
+         tSnr0Xc5TB78A+iIz+t+l43wIYhl318H0qpgy5S1kwa/d3nvi/Cd+3CjwZdrcaWPPPfG
+         u2OoxBTjKFoHsR2bxwiu8nJ1f4u7xqCo4uiG8Q7AzD59IaMlloNRql84uDEArxmJd3J4
+         ZPnW0Tk+iWtWA5Fwr+O90j20LYBKJy/yHnB+DROFGAo5FMnH9jV1fCZNvtbbi3j6wXo5
+         QSwzY1cMw6OnK0Hq7/8q2h/hHo78RPURydLwzeJKknqTZU1aE81EuWscreA9pBXrJlbb
+         mbFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700724827; x=1701329627;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+TTfN9bAtlKsP3TW9IyrlMffcAKSHql3YK8jNHi2wag=;
+        b=wEb+4Mkf/42+jpiXM3gFVmyTYWHpDI5YxLaMNd9TlkexRNF7PxjyHgEBlQc7zPrf/n
+         V1wkLDFpyP99m+hP2kFNpLXnAQlpUFsHNf84VtZKfLcbQ/gvV7j0geDCy7aylZbZTFOp
+         MSlt/3oSQcjoCVetEf+xrUW/1yIEkrH+VDYjsqVpjVt4wn4aN7GMggtftmJBci00t/Dg
+         YDEVa4Bof17u9obVBLWooYgXygrVG5b9ff87JNiOyk+Ibp4f3A0luhU0/8MZhC4GFteH
+         d+pRDxFkpx+zTE77UjKP+p94bySALXep5IrNUVT95ky1Ty0cP/fw9ZOr8gIK7kMzSswd
+         MHpg==
+X-Gm-Message-State: AOJu0YxFSVfmaz7aaM5xT/vdO3AiGUhShNtqj0J23/unSHpNuvpmWvvu
+	98T7E51sWzBz2l1PEebdO27OHA==
+X-Google-Smtp-Source: AGHT+IGfe7SHylgAjsIsVSPpdK8iRSyq6xn9vEa2+jFpaXUanSgPkq8ux+rptnZVS1yOzUdX0iyKBg==
+X-Received: by 2002:adf:e98b:0:b0:332:c80c:495a with SMTP id h11-20020adfe98b000000b00332c80c495amr3118185wrm.20.1700724826768;
+        Wed, 22 Nov 2023 23:33:46 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.100])
+        by smtp.gmail.com with ESMTPSA id d11-20020adfa40b000000b003142e438e8csm816828wra.26.2023.11.22.23.33.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Nov 2023 23:33:46 -0800 (PST)
+Message-ID: <71236a2d-52cd-4545-8737-4bb5070beb7c@linaro.org>
+Date: Thu, 23 Nov 2023 08:33:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
-	Thunderbird/102.11.0
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: samsung: use Exynos7
- fallbacks for newer wake-up controllers
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas: drop unneeded quotes
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Tomasz Figa
-	<tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim
-	Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Peter Griffin <peter.griffin@linaro.org>, semen.protsenko@linaro.org
-From: Jaewon Kim <jaewon02.kim@samsung.com>
-In-Reply-To: <20231122200407.423264-1-krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231122224409.2808999-1-robh@kernel.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231122224409.2808999-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHJsWRmVeSWpSXmKPExsWy7bCmqW7jr7hUg0s3OS0ezNvGZrFm7zkm
-	i/lHzrFa7H29ld1iyp/lTBabHl9jtdg8/w+jxeVdc9gsZpzfx2SxYcY/FovWvUfYLQ6/aWe1
-	eN4HFFu16w+jA5/Hzll32T02repk87hzbQ+bx+Yl9R59W1YxenzeJBfAFpVtk5GamJJapJCa
-	l5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQN0rZJCWWJOKVAoILG4WEnf
-	zqYov7QkVSEjv7jEVim1ICWnwLxArzgxt7g0L10vL7XEytDAwMgUqDAhO+Psun62gmMyFXMb
-	ljM2ML4Q6WLk5JAQMJHo/dTF3MXIxSEksINRYtf9VUwQzidGiUkbnkBlvjFKTJx/jLGLkQOs
-	5c4cqPheRolLCx+zQDivGSVWPH/BBDKXV8BO4tPKecwgNouAqsTurU8ZIeKCEidnPmEBsUUF
-	oiVal91nA7GFBXIlls1rB6thFhCXuPVkPtgZIgJnmCVmrbsNlfCQWPWmF8xmE9CW+L5+MSuI
-	zSngKrGl/ywTRI28xPa3EOdJCJzgkHi65QUjxKcuEhd/zYeyhSVeHd/CDmFLSbzsb4OysyXa
-	p/9hhbArJC5umM0GYRtLzHrWDvY+s4CmxPpd+pCQUJY4cosFYi2fRMfhv+wQYV6JjjYhiEY1
-	iftTz0ENkZGYdGQlE4TtITHv4GK2CYyKs5BCZRaS72cheWYWwt4FjCyrGMVSC4pz01OLjQoM
-	4ZGdnJ+7iRGckLVcdzBOfvtB7xAjEwfjIUYJDmYlEd4t7DGpQrwpiZVVqUX58UWlOanFhxhN
-	gXEzkVlKNDkfmBPySuINTSwNTMzMDM2NTA3MlcR577XOTRESSE8sSc1OTS1ILYLpY+LglGpg
-	YtgzY9dFp75IqRpWxjyThs1HPxbU/PIPWaWl4TqhxZ1ZefkWUxkfL5mWecfV5xedmfor1SD7
-	vULIxf5WLqk3JyWf36qfVCJSsnzHsrlW05n0tH4X2hkuqk/8dej1jzl2x63ut1pcMLnwd/ZU
-	yTqZI5JWAidFqk5Nev+dJelfTlC1bFuWp33qI96NBQ59aSe79CJuM80UalD2vFB0XXOOr8yL
-	yNL9nDf7pR8d2vYmyTRX/xBzdpWPJ6O1Cqtk5SqWLNXABT6qnIxis6s2vTgV8Wf21pf68zYf
-	NX+oLL9V8dD+m23iOdsPbOPf+KLt2qoJTSHPFjV5H7N6vLJ1+qq+wt3z+lZzHtnusSw2Kfus
-	EktxRqKhFnNRcSIAKo57nlEEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsWy7bCSvG7Dr7hUg0VNqhYP5m1js1iz9xyT
-	xfwj51gt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7LYMOMfi0Xr3iPsFofftLNa
-	PO8Diq3a9YfRgc9j56y77B6bVnWyedy5tofNY/OSeo++LasYPT5vkgtgi+KySUnNySxLLdK3
-	S+DKOLuun63gmEzF3IbljA2ML0S6GDk4JARMJO7MYe5i5OIQEtjNKLHkQiNbFyMnUFxGYvmz
-	PihbWOJ+yxFWiKKXjBJXtj5nAknwCthJfFo5jxnEZhFQldi99SkjRFxQ4uTMJywgtqhAtMTq
-	zxdYQWxhgVyJp+3dYPXMAuISt57MZwIZKiJwjlli+4Qv7BAJD4lVb3oZIbbNYJRYMeUcWAeb
-	gLbE9/WLwSZxCrhKbOk/ywTRYCbRtbWLEcKWl9j+dg7zBEahWUgOmYVk4SwkLbOQtCxgZFnF
-	KJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREch1qaOxi3r/qgd4iRiYPxEKMEB7OSCO8W
-	9phUId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rziL3pThATSE0tSs1NTC1KLYLJMHJxSDUzzTQzf
-	/5MT9zgduOCdSiT7uRVHzQOtDm5dcaBqlvH79EMqDfNeLjpTwWc3vfbL20Os2RZrane82rgk
-	vf+l14KyyacaZm3U2vbS/W6RgZh/25pew3ANGfaQHYe6nrddvrFQ5paFTFTdtY2bH/TPD1Rr
-	7HFos3z/ccaKGUV7784+7OS6gKk+9tnMm6pPVi+Zpb3QUXrK/Pk73LndhU74fxV43XZht5yG
-	d/XyHZ/Dwi9ttA30dI5+/C3UzutR/bKnh0oXGZ2YfrQrXUZH53LfKwnNdKbEA9ElEtcsqw5M
-	MDF2eeT9Q0delvNe2ZSH10Ji/1esD+Jb6B1hZCn8MnN+8qx9Ypt3HLJUm1c153l9R4OJEktx
-	RqKhFnNRcSIA16p7uTIDAAA=
-X-CMS-MailID: 20231123070848epcas2p13b713349f30d3cfe72b3e343ab8cc90b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231122200609epcas2p1da5f138359da3a0be4af4fbc25f2a8f5
-References: <CGME20231122200609epcas2p1da5f138359da3a0be4af4fbc25f2a8f5@epcas2p1.samsung.com>
-	<20231122200407.423264-1-krzysztof.kozlowski@linaro.org>
 
-
-On 23. 11. 23. 05:04, Krzysztof Kozlowski wrote:
-> Older ARM8 SoCs like Exynos5433, Exynos7 and Exynos7885 have the pin
-> controller with wake-up interrupts muxed, thus the wake-up interrupt
-> controller device node has interrupts property, while its pin banks
-> might not (because they are muxed by the wake-up controller).
->
-> Newer SoCs like Exynos850 and ExynosAutov9 do not used muxed wake-up
-> interrupts:
-> 1. Wake-up interrupt controller device node has no interrupts,
-> 2. Its pin banks have interrupts (since there is no muxing).
->
-> Their programming interface is however still compatible with Exynos7,
-> thus change the bindings to express this: retain compatibility with
-> Exynos7 and add new compatibility fallback of Exynos850 in newer
-> designs.
->
-> No driver changes are needed.  This is necessary only to properly
-> describe DTS.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Acked-by: Jaewon Kim <jaewon02.kim@samsung.com>
-
-
-I will also apply it to ExynosAutov920 DT patch.
-
-
-Thanks
-
-Jaewon Kim
-
-
->
+On 22/11/2023 23:44, Rob Herring wrote:
+> Drop unneeded quotes over simple string values to fix a soon to be
+> enabled yamllint warning:
+> 
+>   [error] string value is redundantly quoted with any quotes (quoted-strings)
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->
-> Cc: Peter Griffin <peter.griffin@linaro.org>
-> Cc: semen.protsenko@linaro.org
-> Cc: Jaewon Kim <jaewon02.kim@samsung.com>
-> ---
->   .../samsung,pinctrl-wakeup-interrupt.yaml     | 25 +++++++++++--------
->   1 file changed, 15 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-> index 1b75abebb953..2bafa867aea2 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
-> @@ -36,13 +36,17 @@ properties:
->             - samsung,s5pv210-wakeup-eint
->             - samsung,exynos4210-wakeup-eint
->             - samsung,exynos7-wakeup-eint
-> -          - samsung,exynos850-wakeup-eint
-> -          - samsung,exynosautov9-wakeup-eint
-> -          - samsung,exynosautov920-wakeup-eint
->         - items:
->             - enum:
->                 - samsung,exynos5433-wakeup-eint
->                 - samsung,exynos7885-wakeup-eint
-> +              - samsung,exynos850-wakeup-eint
-> +          - const: samsung,exynos7-wakeup-eint
-> +      - items:
-> +          - enum:
-> +              - samsung,exynosautov9-wakeup-eint
-> +              - samsung,exynosautov920-wakeup-eint
-> +          - const: samsung,exynos850-wakeup-eint
->             - const: samsung,exynos7-wakeup-eint
->   
->     interrupts:
-> @@ -86,11 +90,14 @@ allOf:
->     - if:
->         properties:
->           compatible:
-> -          contains:
-> -            enum:
-> -              - samsung,s5pv210-wakeup-eint
-> -              - samsung,exynos4210-wakeup-eint
-> -              - samsung,exynos7-wakeup-eint
-> +          # Match without "contains", to skip newer variants which are still
-> +          # compatible with samsung,exynos7-wakeup-eint
-> +          enum:
-> +            - samsung,s5pv210-wakeup-eint
-> +            - samsung,exynos4210-wakeup-eint
-> +            - samsung,exynos5433-wakeup-eint
-> +            - samsung,exynos7-wakeup-eint
-> +            - samsung,exynos7885-wakeup-eint
->       then:
->         properties:
->           interrupts:
-> @@ -105,8 +112,6 @@ allOf:
->             contains:
->               enum:
->                 - samsung,exynos850-wakeup-eint
-> -              - samsung,exynosautov9-wakeup-eint
-> -              - samsung,exynosautov920-wakeup-eint
->       then:
->         properties:
->           interrupts: false
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
 
