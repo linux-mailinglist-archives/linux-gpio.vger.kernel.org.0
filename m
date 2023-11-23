@@ -1,211 +1,197 @@
-Return-Path: <linux-gpio+bounces-388-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-390-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E708A7F54E6
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 00:40:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A3D07F56E3
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 04:12:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24D841C20C12
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Nov 2023 23:40:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 112222819D7
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 03:12:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EB9921370;
-	Wed, 22 Nov 2023 23:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C66F8BFC;
+	Thu, 23 Nov 2023 03:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QdGxucWE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A810719E
-	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 15:40:02 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r5wp1-0006dY-OW; Thu, 23 Nov 2023 00:39:55 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r5wp0-00AuuC-Qz; Thu, 23 Nov 2023 00:39:54 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r5wp0-00668f-HT; Thu, 23 Nov 2023 00:39:54 +0100
-Date: Thu, 23 Nov 2023 00:39:54 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E169D46;
+	Wed, 22 Nov 2023 19:12:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700709140; x=1732245140;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YK+QY6r4HYFA8JXtUB/EwU57HdbWk25Z4Y1AtkcDu58=;
+  b=QdGxucWEo9QkWm3laWeKuFhbL1gCgjrcUb3KrDUga/95+MoszsDK3Wr3
+   EZTnNruCfTLf/H1EaiRwKjvdMVlr1P/hMyLfnnXOjW/1O66OazcD70X8h
+   +zilcaaPM+jl2psjvEmM3Ockw28C8hK/LClKkht9e2xjVihCo0Ao/4kl5
+   wK0P5x6rPsUbtpxJUQ4ApoIMG5HcCt/hZfIqKthKVs05b58MoaoUIfIZ9
+   ctoMocgps8pAjwrEodd+0fZQZpq8P6DebCWtfMGIdls8tuXy5z0wHhf75
+   ZL4aNxjjxdlRtey30g/y3xcRiLFaGlLW5VlHRs3Kv/q1NBzSj4A+gp3yy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="458685584"
+X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
+   d="scan'208";a="458685584"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 19:12:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="716933915"
+X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
+   d="scan'208";a="716933915"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 22 Nov 2023 19:12:12 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r608P-00019u-2S;
+	Thu, 23 Nov 2023 03:12:09 +0000
+Date: Thu, 23 Nov 2023 11:11:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
-Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc()
- function
-Message-ID: <20231122233954.crq7jr5lv2c5piik@pengutronix.de>
-References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
- <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
- <20231121161111.zphi7pn77ns7sgu2@pengutronix.de>
- <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
- <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Sean Wang <sean.wang@kernel.org>,
+	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v1 08/17] pinctrl: core: Embed struct pingroup into
+ struct group_desc
+Message-ID: <202311230849.YPJuLoNP-lkp@intel.com>
+References: <20231122164040.2262742-9-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z2qlqaxh74j6nlxe"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <20231122164040.2262742-9-andriy.shevchenko@linux.intel.com>
+
+Hi Andy,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next next-20231122]
+[cannot apply to geert-renesas-drivers/renesas-pinctrl pinctrl-samsung/for-next linus/master v6.7-rc2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-equilibrium-Convert-to-use-struct-pingroup/20231123-005932
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20231122164040.2262742-9-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v1 08/17] pinctrl: core: Embed struct pingroup into struct group_desc
+config: i386-buildonly-randconfig-004-20231123 (https://download.01.org/0day-ci/archive/20231123/202311230849.YPJuLoNP-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231123/202311230849.YPJuLoNP-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311230849.YPJuLoNP-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/pinctrl/mediatek/pinctrl-moore.h:21,
+                    from drivers/pinctrl/mediatek/pinctrl-mt7981.c:9:
+>> drivers/pinctrl/mediatek/../core.h:217:21: error: initializer element is not constant
+     217 | (struct group_desc) {                                           \
+         |                     ^
+   drivers/pinctrl/mediatek/pinctrl-moore.h:41:9: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+      41 |         PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), id##_funcs)
+         |         ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/pinctrl-mt7981.c:795:9: note: in expansion of macro 'PINCTRL_PIN_GROUP'
+     795 |         PINCTRL_PIN_GROUP("wa_aice1", mt7981_wa_aice1),
+         |         ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/../core.h:217:21: note: (near initialization for 'mt7981_groups')
+     217 | (struct group_desc) {                                           \
+         |                     ^
+   drivers/pinctrl/mediatek/pinctrl-moore.h:41:9: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+      41 |         PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), id##_funcs)
+         |         ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/pinctrl-mt7981.c:795:9: note: in expansion of macro 'PINCTRL_PIN_GROUP'
+     795 |         PINCTRL_PIN_GROUP("wa_aice1", mt7981_wa_aice1),
+         |         ^~~~~~~~~~~~~~~~~
+--
+   In file included from drivers/pinctrl/mediatek/pinctrl-moore.h:21,
+                    from drivers/pinctrl/mediatek/pinctrl-mt7623.c:11:
+>> drivers/pinctrl/mediatek/../core.h:217:21: error: initializer element is not constant
+     217 | (struct group_desc) {                                           \
+         |                     ^
+   drivers/pinctrl/mediatek/pinctrl-moore.h:41:9: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+      41 |         PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), id##_funcs)
+         |         ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/pinctrl-mt7623.c:1079:9: note: in expansion of macro 'PINCTRL_PIN_GROUP'
+    1079 |         PINCTRL_PIN_GROUP("aud_ext_clk0", mt7623_aud_ext_clk0),
+         |         ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/../core.h:217:21: note: (near initialization for 'mt7623_groups')
+     217 | (struct group_desc) {                                           \
+         |                     ^
+   drivers/pinctrl/mediatek/pinctrl-moore.h:41:9: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+      41 |         PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), id##_funcs)
+         |         ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/pinctrl-mt7623.c:1079:9: note: in expansion of macro 'PINCTRL_PIN_GROUP'
+    1079 |         PINCTRL_PIN_GROUP("aud_ext_clk0", mt7623_aud_ext_clk0),
+         |         ^~~~~~~~~~~~~~~~~
+--
+   In file included from drivers/pinctrl/mediatek/pinctrl-moore.h:21,
+                    from drivers/pinctrl/mediatek/pinctrl-mt7629.c:9:
+>> drivers/pinctrl/mediatek/../core.h:217:21: error: initializer element is not constant
+     217 | (struct group_desc) {                                           \
+         |                     ^
+   drivers/pinctrl/mediatek/pinctrl-moore.h:41:9: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+      41 |         PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), id##_funcs)
+         |         ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/pinctrl-mt7629.c:312:9: note: in expansion of macro 'PINCTRL_PIN_GROUP'
+     312 |         PINCTRL_PIN_GROUP("ephy_leds", mt7629_ephy_leds),
+         |         ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/../core.h:217:21: note: (near initialization for 'mt7629_groups')
+     217 | (struct group_desc) {                                           \
+         |                     ^
+   drivers/pinctrl/mediatek/pinctrl-moore.h:41:9: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+      41 |         PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), id##_funcs)
+         |         ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/mediatek/pinctrl-mt7629.c:312:9: note: in expansion of macro 'PINCTRL_PIN_GROUP'
+     312 |         PINCTRL_PIN_GROUP("ephy_leds", mt7629_ephy_leds),
+         |         ^~~~~~~~~~~~~~~~~
 
 
---z2qlqaxh74j6nlxe
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+vim +217 drivers/pinctrl/mediatek/../core.h
 
-Hello Bart,
+c7059c5ac70aea1 Tony Lindgren   2016-12-27  214  
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22  215  /* Convenience macro to define a generic pin group descriptor */
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22  216  #define PINCTRL_GROUP_DESC(_name, _pins, _num_pins, _data)	\
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22 @217  (struct group_desc) {						\
+4930128932e4e5e Andy Shevchenko 2023-11-22  218  	.grp = PINCTRL_PINGROUP(_name, _pins, _num_pins),	\
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22  219  	.name = _name,						\
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22  220  	.pins = _pins,						\
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22  221  	.num_pins = _num_pins,					\
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22  222  	.data = _data,						\
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22  223  }
+3bea9da5ae4cf43 Andy Shevchenko 2023-11-22  224  
 
-On Wed, Nov 22, 2023 at 11:36:19AM +0100, Bartosz Golaszewski wrote:
-> On Wed, Nov 22, 2023 at 10:05=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Nov 21, 2023 at 05:11:11PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Tue, Nov 21, 2023 at 03:02:39PM +0100, Bartosz Golaszewski wrote:
-> > > > Eh... I had a talk at LPC where I explained why I really dislike th=
-is
-> > > > approach but I guess this ship has sailed now and it's not a subsys=
-tem
-> > > > where I have any say anyway.
-> > >
-> > > Is there a record of your talk? I'm open to hear your arguments.
-> >
-> > I found your slides at
-> > https://lpc.events/event/17/contributions/1627/attachments/1258/2725/Li=
-nux%20Plumbers%20Conference%202023.pdf
-> >
->=20
-> My talk is here: https://www.youtube.com/watch?v=3DVxaAorwL89c&t=3D29310s
->=20
-> > The main critic as I understand it about the "alloc_foo() +
-> > register_foo()" approach is: "Breaks life-time logic - the driver
-> > allocates the object but is not responsible for freeing it".
-> >
-> > Yes, the driver allocates the object (via a subsystem helper). It is not
-> > responsible for freeing the object, but the driver must drop its
-> > reference to this object when going away. So foo_alloc() is paired by
-> > foo_put().
-> >
->=20
-> Is it though? I don't see any pwmchip_put() being called in this
-> patch.
-
-It's not in this patch. Up to patch #103 I'm preparing drivers and the
-code that is moved into the core isn't better than what was done before
-in each driver.
-
-Look at patch #106 which does the relevant conversion in
-pwmchip_alloc(). When unbinding the mvebu gpio driver the necessary
-pwmchip_put() is triggered by the devm cleanup registered in
-devm_pwmchip_alloc().
-
-> I assume it's done implicitly but that's just confusing and
-> does break the scope.
->=20
-> > The solution you present as the good way has the struct device in the
-> > foo_wrapper. In GPIO land that's struct gpio_device, right?
->=20
-> Exactly.
->=20
-> > gpiochip_add_data_with_key() allocates that using kzalloc() and "frees"
-> > it with gpio_device_put() right? So your approach suffers from the same
->=20
-> No, the structure is allocated by kzalloc() but it's life-time is tied
-> with the struct device embedded in it and it's freed in the device's
-> .release() callback when the last reference is dropped.
-
-With the complete series applied a pwmchip is allocated by
-pwmchip_alloc() and it's life-time is tied with the struct device
-embedded in it and it's freed in the device's .release() callback when
-the last reference is dropped.
-
-In this respect I see a certain similarity between your gpio approach
-and mine for pwm. So either I don't understand your critic on my patch
-set, or I don't see why it shouldn't apply to your approach, too.
-
-Yes, gpio drivers look fine having only ..._alloc() paired with
-=2E.._free() and ..._get() with ..._put(). But that's only because you
-moved that "inconsistency" of kzalloc() <-> put_device() into the gpio
-core, while I kept it in the drivers.
-
-Renaming pwmchip_alloc() to pwmchip_get_new() was a honest suggestion
-that moves that inconsistency to the core, too.
-
-> > inconsistency, the only upside is that you do that once at the subsystem
-> > level instead of in each driver. (And in return you have two allocations
-> > (priv + foo_wrapper) while the "alloc_foo() + register_foo()" approach
-> > only needs one.)
->=20
-> Memory is cheap and this is not a hot path, so it isn't a big deal.
-
-It's not only about wasting memory and the time needed to dereference
-pointers. It's also about complexity that has to be grasped by humans.
-Also not being in a hot path doesn't mean it's bad to pick the faster
-approach. Having said that I'm not sure if the hot paths (e.g.
-gpiod_set_value()) really don't suffer from having two separate
-allocations.
-
-But I guess we're both biased here to our own approach because that's
-what each of us thought about in detail.
-
-> > Let's just rename foo_alloc() to foo_get_new() and the problem is gone?
->=20
-> Nope, because from a quick glance at PWM code, I'm convinced it will
-> suffer from the same hot-unplug problem I described in my talk. In
-> which case this rework will not fix all the issues.
-
-Please look at the state after patch #107. If you spot an issue there,
-please tell me.
-
-> > In the implementation of foo_get_new() kzalloc() is still paired with
-> > put_device() in foo_put(), but IMHO that's fine. The responsibility to
-> > kfree() is traded to the struct device with device_initialize() in
-> > return for a reference to the device. That's something you won't get rid
-> > of while keeping the concept of reference counting.
->=20
-> But if the PWM driver is unbound with users still holding references -
-> do you have a mechanism to handle that?
-
-Yes, should be fine starting with patch #107. In my tests (on top of
-patch #108) it works fine. I held /dev/pwmchipX open and unbound the
-lowlevel driver. The ioctls are caught in the core then and yield an
-error and the kfree of the pwmchip struct is delayed until /dev/pwmchipX
-is closed.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---z2qlqaxh74j6nlxe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVekUkACgkQj4D7WH0S
-/k78tAf6AzTX5s1Y+yVF12beh2v9YbM02qCT0k9nv7VyHhXFDrE4D+C4e7rmoLeL
-8YtqoWz66jRT9QAPURLP87viuumj36KowhgmQoaZan5FSlOZWqXHSPKzWL27jlkX
-4pwLEMfsctan6Vq4LBMCT7/3iaZVtqXAknYdW7054df1QtsSsEgu0q2zcJGDNTpN
-IHmPZCkCBgk7985UtEKI6V0oQNNSFFT+47gQBaLm8cNIgWCKo8jHKOLvvNCS6IEi
-esF/7RtXi1RcKTMr0SJT/NdnDVoiWXUUMmZAMzDQEHRzhamoeFLcn3qyGsTXGQVy
-M5/aULGp+mrxnChQ+Oxj1fgGj6hoXQ==
-=Vpvj
------END PGP SIGNATURE-----
-
---z2qlqaxh74j6nlxe--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
