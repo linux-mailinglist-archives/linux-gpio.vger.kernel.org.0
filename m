@@ -1,210 +1,217 @@
-Return-Path: <linux-gpio+bounces-389-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-392-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 288977F56E2
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 04:12:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B29B97F582D
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 07:25:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BD0FBB20FBE
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 03:12:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66E8F28175C
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 06:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DF678833;
-	Thu, 23 Nov 2023 03:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62378F9F1;
+	Thu, 23 Nov 2023 06:25:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HkDkgejS"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ht+Cbf1i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166A31A4;
-	Wed, 22 Nov 2023 19:12:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700709139; x=1732245139;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3sBlfJImwRaqa6aryIZaVq3UckHfBRFnYA7tVrAvU28=;
-  b=HkDkgejSTaKHw0KrfZzucjWPtINUcXlHo85Zfuh6vyo0ndxkUvzr0UUI
-   q6qQACLh1E22hnbms7xxvohwvkPnC4Jl3RAgQTVRHwLjdWQPMlm1K14Cb
-   vmjD9ftI3+Wo6WTQB4W8aTwPfk3cu1QRXOYO8FsdPae/YErv9QmIgX0lG
-   x4ldtN1ReiTmF8MwEwMUM9WmpZ+yvcOzeFclFAfAw5D2UD8uIqTdNCuHS
-   Crahd8QZkX9ImMkXRN+4gDWby532nPkAEYHxcRyVvdXuQdEp9hRSdfvyl
-   Tm2L0Pq8ehsOSRhMsGK0jrbnnDw7fnM6u0AH5uheCHWVEosZmkCABYzjF
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="13744904"
-X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="13744904"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2023 19:12:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,220,1695711600"; 
-   d="scan'208";a="8712749"
-Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 22 Nov 2023 19:12:11 -0800
-Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1r608P-00019r-1j;
-	Thu, 23 Nov 2023 03:12:09 +0000
-Date: Thu, 23 Nov 2023 11:11:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH v1 01/17] pinctrl: equilibrium: Convert to use struct
- pingroup
-Message-ID: <202311230820.MGDyVHJW-lkp@intel.com>
-References: <20231122164040.2262742-2-andriy.shevchenko@linux.intel.com>
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C9E7D40
+	for <linux-gpio@vger.kernel.org>; Wed, 22 Nov 2023 22:25:38 -0800 (PST)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20231123062535epoutp015efba6c88003fde01bfe2453ac9f30c9~aLH_DZQ9h0639806398epoutp01k
+	for <linux-gpio@vger.kernel.org>; Thu, 23 Nov 2023 06:25:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20231123062535epoutp015efba6c88003fde01bfe2453ac9f30c9~aLH_DZQ9h0639806398epoutp01k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1700720735;
+	bh=GJrAs6iFIsJav6Xylce3kT+oM93Qos0V4uOMkTsSCdA=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=Ht+Cbf1iKdsmQaLbD7RXNn7W3cUgIasWpnot6p4mxK/5oc18Og0YWHb8YfQdZgTiN
+	 XpbGr8J9bJ4Rs5bMZJsqajLY8weB7WMP78YNHHzg5Gjq0KbuLXKeAQs2cQLWB5MgGt
+	 CY9jbr+WvrpMoXPIU3j7DY1HfSI3mJ5QCUp2Tw48=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20231123062534epcas2p422dbbbed9578619788f36e5a0efffc59~aLH9bCXFg2378423784epcas2p4o;
+	Thu, 23 Nov 2023 06:25:34 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.88]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4SbSly3PCKz4x9QD; Thu, 23 Nov
+	2023 06:25:34 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	5C.BB.10006.E50FE556; Thu, 23 Nov 2023 15:25:34 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20231123062533epcas2p3e00ede8234985d615fce4f8b45885baa~aLH8l9aD80915409154epcas2p34;
+	Thu, 23 Nov 2023 06:25:33 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231123062533epsmtrp1928ccc5fd83dee38d191caa3ab27b711~aLH8k5CLi3275132751epsmtrp1n;
+	Thu, 23 Nov 2023 06:25:33 +0000 (GMT)
+X-AuditID: b6c32a45-179ff70000002716-ee-655ef05eed1a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	0E.33.08817.D50FE556; Thu, 23 Nov 2023 15:25:33 +0900 (KST)
+Received: from [10.229.8.168] (unknown [10.229.8.168]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20231123062533epsmtip160917009d955fe1deb7cb493968c99e3~aLH8PutH70841408414epsmtip15;
+	Thu, 23 Nov 2023 06:25:33 +0000 (GMT)
+Message-ID: <f49b77f8-a30d-0923-feba-07c8945f334e@samsung.com>
+Date: Thu, 23 Nov 2023 15:22:45 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231122164040.2262742-2-andriy.shevchenko@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+	Thunderbird/102.11.0
+Subject: Re: [PATCH v2 10/12] pinctrl: samsung: add exynosautov920 pinctrl
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar
+	<alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester
+	Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
+	Thierry Reding <thierry.reding@gmail.com>, Uwe Kleine-K?nig
+	<u.kleine-koenig@pengutronix.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Content-Language: en-US
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+In-Reply-To: <8d4e3fcb-2e4a-4580-9aa2-5acbed961c3f@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFJsWRmVeSWpSXmKPExsWy7bCmuW7ch7hUgyc9EhYP5m1js1iz9xyT
+	xfwj51gtmhevZ7N4N1fGYu/rrewWU/4sZ7LY9Pgaq8Xm+X8YLS7vmsNmcffuKkaLGef3MVmc
+	WdzLbtG69wi7xeE37awWP3fNY7FYtQuo7vbEyYwOQh47Z91l99i0qpPN4861PWwe++euYffY
+	vKTeo/+vgUffllWMHp83yQVwRGXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp
+	5CXmptoqufgE6Lpl5gB9oqRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkpMC/QK07M
+	LS7NS9fLSy2xMjQwMDIFKkzIzti0+x57wT6BinvzH7I0MH7i6WLk5JAQMJHYMnsfWxcjF4eQ
+	wA5Giearr5kgnE+MEu3nrkI53xglns1fwAzT0rjlGTtEYi+jxOKNB5khnNeMEj3vehlBqngF
+	7CQufQCZxcnBIqAqsWfLLmaIuKDEyZlPWEBsUYFoidZl99lAbGEBL4lTO/ewgtgiAveZJV63
+	VYMMZRZ4wCgx99xXsKHMAuISt57MBxvKJqAt8X39YqAGDg5OoGU3pthBlMhLNG+dDXaQhMAb
+	Doknj26yQ5ztIrFl83kmCFtY4tXxLVBxKYmX/W1QdrZE+/Q/rBB2hcTFDbPZIGxjiVnP2hlB
+	djELaEqs36UPYkoIKEscucUCsZZPouPwX3aIMK9ER5sQRKOaxP2p56CGyEhMOrIS6gAPiebJ
+	09kmMCrOQgqUWUh+nIXkmVkIexcwsqxiFEstKM5NTy02KjCER3Zyfu4mRnAi13LdwTj57Qe9
+	Q4xMHIyHGCU4mJVEeLewx6QK8aYkVlalFuXHF5XmpBYfYjQFRs1EZinR5HxgLskriTc0sTQw
+	MTMzNDcyNTBXEue91zo3RUggPbEkNTs1tSC1CKaPiYNTqoEpptzhwovlbj8NQ78VvpjVwG7i
+	/H6hqfyvZVMC2DZe/Xj7gU8Dcwh/87pY523P/9W58vJVLmzecE9C5ZSna8Chiv0tQTxeM84p
+	97+Ovnhy0waHHOEHZsqBbfXqsbx+Fkqf/0W6+e/5dGBOqXmk+MG/B2ex109VlnZ+9CD/3oLT
+	UTGbLp/mub46pviL1WuuTftcN+y+yliQ2p3Unn/c1DHJ2cV5l++k/v/HtuoVXpDynbL26OZF
+	28o2rZ7j3mm9fpN1IVe5x0+Vkp+MDzoyOK3d+Ar31St9YFzHc7RrR5HwyQUvPl185Oe69/Ws
+	OI7rpefDjzzdF5Vn+sbbv7nzvuivcxrzU1zmPhGeMv3/u8/rlFiKMxINtZiLihMBr0wwjW0E
+	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsWy7bCSnG7sh7hUg+7fuhYP5m1js1iz9xyT
+	xfwj51gtmhevZ7N4N1fGYu/rrewWU/4sZ7LY9Pgaq8Xm+X8YLS7vmsNmcffuKkaLGef3MVmc
+	WdzLbtG69wi7xeE37awWP3fNY7FYtQuo7vbEyYwOQh47Z91l99i0qpPN4861PWwe++euYffY
+	vKTeo/+vgUffllWMHp83yQVwRHHZpKTmZJalFunbJXBlbNp9j71gn0DFvfkPWRoYP/F0MXJy
+	SAiYSDRuecbexcjFISSwm1Hi6owzjBAJGYnlz/rYIGxhifstR1ghil4yShxYf4gFJMErYCdx
+	6cNrJhCbRUBVYs+WXcwQcUGJkzOfgNWICkRLrP58gRXEFhbwkji1cw/YIBGBx8wSD6f+ZwZx
+	mAUeMEosn/QIasVWFonJF7aD3cEsIC5x68l8sBVsAtoS39cvBiri4OAEWn1jih1EiZlE19Yu
+	qHJ5ieats5knMArNQnLILCSTZiFpmYWkZQEjyypGydSC4tz03GLDAqO81HK94sTc4tK8dL3k
+	/NxNjOAI1tLawbhn1Qe9Q4xMHIyHGCU4mJVEeLewx6QK8aYkVlalFuXHF5XmpBYfYpTmYFES
+	5/32ujdFSCA9sSQ1OzW1ILUIJsvEwSnVwOTAzLfy2O0zdnNtn1efzJtzzkLIb4WN9x+5Aw2f
+	r3N/S1v94B5v+aHtH/8d9swVPnmm3lrxxqUtdzwtqxmP1VtFlIbGe2+8YixjIzp9261N+pNf
+	Off4q+1eH71ptdDSPAcBN+mHH45MiukSyd5aMJ/dRih/5+VJz7VeO9We0vPi2vZgitWf7zPz
+	y9TXqjD/nCy576njcfGjYisnqXNzhi91r7Sw14rsZPFkyl3588a6sFMqsXsVUn0qijJY9Wdd
+	kX298CH//b6VFTWZHP3pBauNJOJ9tKZ4rq3RYNLx5Jv42DhZrSRgmt3jzoqJ9v5zhb6wr+L4
+	IHLszo3E/r8Mpe29xwTr7Fekp90/uepBthJLcUaioRZzUXEiACeeSixPAwAA
+X-CMS-MailID: 20231123062533epcas2p3e00ede8234985d615fce4f8b45885baa
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231115095856epcas2p1c3ee85750828bec2ee4ab0adeaeaff28
+References: <20231115095609.39883-1-jaewon02.kim@samsung.com>
+	<CGME20231115095856epcas2p1c3ee85750828bec2ee4ab0adeaeaff28@epcas2p1.samsung.com>
+	<20231115095609.39883-11-jaewon02.kim@samsung.com>
+	<62b7176d-f99c-49f6-a287-17a6b3604c1c@linaro.org>
+	<f0f6a7af-2170-89a2-1eea-dfb9d8440321@samsung.com>
+	<6a5610e0-e60d-4ab7-8708-6f77a38527b7@linaro.org>
+	<926ea5c5-20ac-5e63-16ea-6f0c20e2db0a@samsung.com>
+	<0fdb7bec-9ea4-454f-a0fb-d450f27ebc6b@linaro.org>
+	<ab17d61e-f645-9b76-962c-4ba2849c5f42@samsung.com>
+	<8d4e3fcb-2e4a-4580-9aa2-5acbed961c3f@linaro.org>
 
-Hi Andy,
 
-kernel test robot noticed the following build warnings:
+On 23. 11. 21. 22:51, Krzysztof Kozlowski wrote:
+> On 18/11/2023 08:43, Jaewon Kim wrote:
+>> On 23. 11. 17. 19:48, Krzysztof Kozlowski wrote:
+>>> On 17/11/2023 08:36, Jaewon Kim wrote:
+>>>>>> The reason why I chose variable name 'combine' is that EINT registers was
+>>>>>> separated from gpio control address. However, in exynosautov920 EINT
+>>>>>> registers combined with GPx group. So I chose "combine" word.
+>>>>> What does it mean "the GPx group"? Combined means the same place, the
+>>>>> same register. I could imagine offset is 0x4, what I wrote last time.
+>>>>>
+>>>>> Is the offset 0x4?
+>> If you are asking about the offset of GPIO control register and EINT
+>> control register, 0x4 is correct.
+>>
+>> There is no empty space between the two register.
+>>
+>>
+>> 0x0 CON
+>>
+>> 0x4 DAT
+>>
+>> 0x8 PUD
+>>
+>> 0xc DRV
+>>
+>> 0x10 CONPDN
+>>
+>> 0x14 PUDPDN
+>>
+>> 0x18 EINT_CON
+>>
+>> 0x1c EINT_FLTCON
+>>
+>> 0x20 or 0x24 EINT_MASK (The size of FLTCON register depending on the
+>> number of gpio)
+>>
+>> 0x24 or 0x28 EINT_PEND
+>>
+>>
+>>>>>
+>>>>>> Is another reasonable word, I will change it.
+>>>>> Why you cannot store the offset?
+>>>>>
+>>>>>> EINT registers related to the entire group(e.g SVC) were at the end of
+>>>>>> the GPIO block and are now moved to 0xf000.
+>>>>> So not in the same register, not combined?
+>>>>>
+>>>> Okay,
+>>>>
+>>>> Instead of the word combine, I will think of a better word in next version.
+>>> I want to know answer to:
+>>>
+>>> "Why you cannot store the offset?"
+>>>
+>> I did not understand exactly what you said, but if i guess,,
+>>
+>> you want to get rid of the offs because the value of the offs is always
+>> the same?
+>>
+>> #define EXYNOSV920_PIN_BANK_EINTG(pins, reg, id, offs, mask_offs, pend_offs)
+> I meant that it looks possible to store the offset and use it directly,
+> instead of storing bool telling that offset is different.
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next geert-renesas-drivers/renesas-pinctrl pinctrl-samsung/for-next linus/master v6.7-rc2 next-20231122]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for your feedback. We can use offset instead of bool.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-equilibrium-Convert-to-use-struct-pingroup/20231123-005932
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20231122164040.2262742-2-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v1 01/17] pinctrl: equilibrium: Convert to use struct pingroup
-config: i386-randconfig-001-20231123 (https://download.01.org/0day-ci/archive/20231123/202311230820.MGDyVHJW-lkp@intel.com/config)
-compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231123/202311230820.MGDyVHJW-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311230820.MGDyVHJW-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/pinctrl/pinctrl-equilibrium.c: In function 'eqbr_build_groups':
-   drivers/pinctrl/pinctrl-equilibrium.c:750:17: error: assignment of read-only location '*(grp->pins + (sizetype)((unsigned int)j * 4))'
-     750 |    grp->pins[j] = pin_id;
-         |                 ^
-   drivers/pinctrl/pinctrl-equilibrium.c:761:23: error: 'struct pingroup' has no member named 'num_pins'; did you mean 'npins'?
-     761 |       grp->pins, grp->num_pins,
-         |                       ^~~~~~~~
-         |                       npins
->> drivers/pinctrl/pinctrl-equilibrium.c:761:10: warning: passing argument 3 of 'pinctrl_generic_add_group' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-     761 |       grp->pins, grp->num_pins,
-         |       ~~~^~~~~~
-   In file included from drivers/pinctrl/pinctrl-equilibrium.c:16:
-   drivers/pinctrl/core.h:225:15: note: expected 'int *' but argument is of type 'const unsigned int *'
-     225 |          int *gpins, int ngpins, void *data);
-         |          ~~~~~^~~~~
+I will make v3 patch using new variable 'eint_con_offset' instead of 
+'combine'.
 
 
-vim +761 drivers/pinctrl/pinctrl-equilibrium.c
+Thanks
 
-   702	
-   703	static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
-   704	{
-   705		struct device *dev = drvdata->dev;
-   706		struct device_node *node = dev->of_node;
-   707		unsigned int *pinmux, pin_id, pinmux_id;
-   708		struct pingroup group, *grp = &group;
-   709		struct device_node *np;
-   710		struct property *prop;
-   711		int j, err;
-   712	
-   713		for_each_child_of_node(node, np) {
-   714			prop = of_find_property(np, "groups", NULL);
-   715			if (!prop)
-   716				continue;
-   717	
-   718			grp->npins = of_property_count_u32_elems(np, "pins");
-   719			if (grp->npins < 0) {
-   720				dev_err(dev, "No pins in the group: %s\n", prop->name);
-   721				of_node_put(np);
-   722				return -EINVAL;
-   723			}
-   724			grp->name = prop->value;
-   725			grp->pins = devm_kcalloc(dev, grp->npins, sizeof(*grp->pins), GFP_KERNEL);
-   726			if (!grp->pins) {
-   727				of_node_put(np);
-   728				return -ENOMEM;
-   729			}
-   730	
-   731			pinmux = devm_kcalloc(dev, grp->npins, sizeof(*pinmux), GFP_KERNEL);
-   732			if (!pinmux) {
-   733				of_node_put(np);
-   734				return -ENOMEM;
-   735			}
-   736	
-   737			for (j = 0; j < grp->npins; j++) {
-   738				if (of_property_read_u32_index(np, "pins", j, &pin_id)) {
-   739					dev_err(dev, "Group %s: Read intel pins id failed\n",
-   740						grp->name);
-   741					of_node_put(np);
-   742					return -EINVAL;
-   743				}
-   744				if (pin_id >= drvdata->pctl_desc.npins) {
-   745					dev_err(dev, "Group %s: Invalid pin ID, idx: %d, pin %u\n",
-   746						grp->name, j, pin_id);
-   747					of_node_put(np);
-   748					return -EINVAL;
-   749				}
-   750				grp->pins[j] = pin_id;
-   751				if (of_property_read_u32_index(np, "pinmux", j, &pinmux_id)) {
-   752					dev_err(dev, "Group %s: Read intel pinmux id failed\n",
-   753						grp->name);
-   754					of_node_put(np);
-   755					return -EINVAL;
-   756				}
-   757				pinmux[j] = pinmux_id;
-   758			}
-   759	
-   760			err = pinctrl_generic_add_group(drvdata->pctl_dev, grp->name,
- > 761							grp->pins, grp->num_pins,
-   762							pinmux);
-   763			if (err < 0) {
-   764				dev_err(dev, "Failed to register group %s\n", grp->name);
-   765				of_node_put(np);
-   766				return err;
-   767			}
-   768			memset(&group, 0, sizeof(group));
-   769			pinmux = NULL;
-   770		}
-   771	
-   772		return 0;
-   773	}
-   774	
+Jaewon Kim
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+
+
+
+
 
