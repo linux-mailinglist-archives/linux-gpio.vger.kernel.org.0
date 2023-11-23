@@ -1,128 +1,126 @@
-Return-Path: <linux-gpio+bounces-426-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-427-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1FFF7F65E6
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 19:03:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E154B7F66F5
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 20:09:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BF14B2125A
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 18:03:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BF6D281D5A
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Nov 2023 19:09:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6ED64AF95;
-	Thu, 23 Nov 2023 18:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 609F24B5D5;
+	Thu, 23 Nov 2023 19:09:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PJ61VMyv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDfcvTch"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7354AF76;
-	Thu, 23 Nov 2023 18:03:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBCA9C433C8;
-	Thu, 23 Nov 2023 18:03:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FB63210;
+	Thu, 23 Nov 2023 19:09:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C706C433C7;
+	Thu, 23 Nov 2023 19:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700762585;
-	bh=nuppog5gHM5PDdmOf0v6VeS1jwQuAhpresQvggmV4bQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PJ61VMyvko7QS9/SGSXmW+7k2SIUFTWVAOhWXRnNDB29CULQ3Sl73hQSpDFcm/HU4
-	 dLIeOY6KaNugid4myURGXb8kVIoELKiWeY8W/wUAYTZLBK7PBSfo98/bObspjxb/U0
-	 UdIbyLVQN0fBW25Ekbn9YfA8t6lSAAl2wabSHpth68uRqfw+nB0cpRO1r/IoRPKKh2
-	 MHAhtYfYFFTSGa8PrgdvL1kfpopFX1ZvTEDG5ql2g3+sjl9zpsDs1IeDjmUc8mrwMt
-	 rbziIftMB094bNgVretH/dzHYVgAKDxl+gQ/F/rAuctAfrHgDuUGKKSNV5ZYl0Q4Pk
-	 1zCMY7vqNE8yQ==
-Date: Thu, 23 Nov 2023 18:02:58 +0000
-From: Conor Dooley <conor@kernel.org>
-To: mitrutzceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: adc: add AD7173
-Message-ID: <20231123-ninth-joylessly-89e8531cf756@spud>
+	s=k20201202; t=1700766588;
+	bh=H31tYMRMi9KqwFq+p39ksYkA9U91as7rK22EFXyG874=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cDfcvTch5RfNfxfF5D79XFdoatrLc/szYurTXztwWV/Dqw2WfIvQRbT1ly1TJRkr1
+	 JdnTlb4EQGY1DiK2wriv9OEDl28V0vdl7Dtcbl3phz7B9SzdMCTD9ePpKgjNPVah4c
+	 J7EkAjCek5sBU/ZDkej90SIeovaVGGEpOIBo4NfyAJHgVqVjkdMP/gla45kzs7imCv
+	 z5TGPafyWpBEln7Ci39ksTkqTtO1jWWOQFRlmIh9BT7ntLm7JigCIZN/E04Y3wN2eq
+	 v3f6L4nGQ2mtNfDRqsaYJtCDCEoKOqE5udKhRbKrXsyvn4yCz8FWKHHacSNJMpo/CN
+	 9yf6M2Tk+P45g==
+Date: Thu, 23 Nov 2023 19:09:36 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: mitrutzceclan <mitrutzceclan@gmail.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, linux-gpio@vger.kernel.org, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
+ <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
+ =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, Mike Looijmans
+ <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] iio: adc: ad7173: add AD7173 driver
+Message-ID: <20231123190936.51f61b8d@jic23-huawei>
+In-Reply-To: <ZV-CHima8bpXcopc@smile.fi.intel.com>
 References: <20231123152331.5751-1-user@HYB-hhAwRlzzMZb>
+	<20231123152331.5751-2-user@HYB-hhAwRlzzMZb>
+	<ZV-CHima8bpXcopc@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="K9w0PSfQdN+TWI+G"
-Content-Disposition: inline
-In-Reply-To: <20231123152331.5751-1-user@HYB-hhAwRlzzMZb>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 
---K9w0PSfQdN+TWI+G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> 
+> ...
+> 
+> > +	return vref / (MICRO/MILLI);  
+> 
+> Wouldn't MILLI in the denominator just suffice?
 
-Yo,
+Just a quick comment here. Given this is converting from micro to milli units
+I'd consider the maths here be acting as documentation of that which would be lost if
+/MILLI only used.  Need spaces around the / though
 
-This looks a lot better IMO, thanks.
 
-On Thu, Nov 23, 2023 at 05:23:21PM +0200, mitrutzceclan wrote:
-> +patternProperties:
-> +  "^channel@[0-9a-f]$":
-> +    type: object
-> +    $ref: adc.yaml
-> +    unevaluatedProperties: false
+> 
+> ...
+> 
+> > +	case IIO_CHAN_INFO_SAMP_FREQ:
+> > +		reg = st->channels[chan->address].cfg.odr;
+> > +
+> > +		*val = st->info->sinc5_data_rates[reg] / MILLI;
+> > +		*val2 = (st->info->sinc5_data_rates[reg] % MILLI) * (MICRO/MILLI);
+> > +
+> > +		return IIO_VAL_INT_PLUS_MICRO;
+> > +	}  
+> 
+> > +		ret = fwnode_property_read_string(child, "adi,reference-select", &ref_label);
+> > +		if (!ret) {
+> > +			for (i = 0; i < ARRAY_SIZE(ad7173_ref_sel_str); i++)
+> > +				if (strcmp(ref_label, ad7173_ref_sel_str[i]) == 0) {
+> > +					ref_sel = i;
+> > +					break;
+> > +				}  
+> 
+> > +			if (i == ARRAY_SIZE(ad7173_ref_sel_str))
+> > +				return dev_err_probe(dev, -EINVAL, "Invalid channel reference name %s", ref_label);  
+> 
+> Too long line.
+> 
+> > +		} else if (ret != -EINVAL) {
+> > +			return dev_err_probe(dev, ret, "Invalid channel reference value");
+> > +		}  
+> 
+> 
+> Use standard pattern and it will be easier to see that 'else' is redundant.
+> 
+> 		if (ret == -EINVAL) // However I don't like this handling of
+> 				    // properties, but up to you and maintainer
 
-> +      bipolar:
-> +        type: boolean
+Personally I'd check for existence of property first and only try reading if it
+exists.  Avoid dance with resetting ret to 0.
 
-This should be defined in adc.yaml, so duping it here is not needed?
+> 			ret = 0;
+> 		if (ret)
+> 			return dev_err_probe(...);
+> 
+> 
+> BUT. Isn't it a home grown variant of fwnode_property_match_property_string()?
 
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          not:
-> +            contains:
-> +              const: adi,ad7173-8
-> +    then:
-> +      properties:
-> +        refin2-supply: false
-> +      patternProperties:
-> +        "^channel@[0-9a-f]$":
-> +          properties:
-> +            adi,reference-select:
-> +              enum:
-> +                - refin
-> +                - refout-avss
-> +                - avdd
+true enough...  I'd still add an existence check first given this one is optional.
 
-I assume you tested that this restriction works as intended?
-
-Cheers,
-Conor.
-
---K9w0PSfQdN+TWI+G
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZV+T0gAKCRB4tDGHoIJi
-0ps9AP9/++/sCN1dTPtbBoPrxYvOvaRbVFVVoZdi0QouNZ+uQQEAqTtA7VnxEYk0
-sIL+bDAZpJIzJU7lUWDbroIR91pOjAU=
-=Re9o
------END PGP SIGNATURE-----
-
---K9w0PSfQdN+TWI+G--
+Jonathan
 
