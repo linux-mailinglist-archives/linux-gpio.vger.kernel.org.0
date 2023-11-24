@@ -1,166 +1,338 @@
-Return-Path: <linux-gpio+bounces-500-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-501-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 563A27F8697
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 00:21:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEFFB7F8699
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 00:22:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09F852815B9
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 23:21:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2CFF3281642
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 23:22:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFAE13BB2A;
-	Fri, 24 Nov 2023 23:21:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7109A3C471;
+	Fri, 24 Nov 2023 23:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qazBRhiv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cl5+6xww"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 280A91735
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 15:21:02 -0800 (PST)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5ce4b3f138eso8575537b3.2
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 15:21:02 -0800 (PST)
+Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7BE1735
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 15:22:44 -0800 (PST)
+Received: by mail-qv1-xf36.google.com with SMTP id 6a1803df08f44-67a1c826bb6so4262016d6.1
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 15:22:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700868061; x=1701472861; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=832S1f2Xwx2zLdOice0oOrUzqvYUU/GTrx3blD3lxiY=;
-        b=qazBRhivtjdkP4YfKiqIJpG/+XMxXRcEkMXpMUl+HvHU6xDMYQLLeKQOiix16R4bvu
-         XU4BAeoqMMOZVPeiTYcPqFR7wK/nMJW0mzBYw28e8+BwONZmTaPgChYz0S7vjSrobVJ9
-         bWQpskqZl7nnmt2QvMEl2ZSpfZ4Gx7foPEY6PapHrmEmBxvU+NxCqEN5z05AR4PpSPGY
-         OF0kkBlECn4PUnLaQOIdunWET+a9O9Y96Aj1pF4ZbNFcRlopk7AFkcbLj3sN+wy6vVB/
-         oREpRFb7HUQwu8u/NGNbUbMnnfBHqTkSSuJVJy/yxI+wpNcPdQZ+Vr3iaFmagBlU2hqd
-         b5gQ==
+        d=linaro.org; s=google; t=1700868164; x=1701472964; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=E5nMDTtOQLcgHcYf3AhjJfRtmN2DqrR45HtW3cVWOzw=;
+        b=Cl5+6xwwJaSOmHmiHbDXWr3REY54kfd6frgsHZTnE5nzvqHWgDeRuRHk318yOCivuS
+         3tLgKm3zJdH5N2JvR7zPfroSKsY0NNz2coyAB4HMs11vDfqYiURVHSj+uA6skQvEBQkj
+         YfXhe/IsBlUu16IaqVgWlPas55W4j9Jq9Z8CbkBcDiT4efe3XQg2zW6HECH7OtZbaLi+
+         9egvU3MPOaujpsIKJNscWvI6QZB8YhaIqmXRHrrpIazF3dNE0og5ChErWlHIjQCNLn0Q
+         cGOk5YBA3Q0hQbGAdFNMrZXz3MhTe2tl+/LpBVXBsKjSkgOdCqbp+uNkluwu3WFAryZ+
+         sQEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700868061; x=1701472861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=832S1f2Xwx2zLdOice0oOrUzqvYUU/GTrx3blD3lxiY=;
-        b=Ey7CN58Hy1zaZYO4YNcKoa2cuVXQjvRaDw/zs8jn9ic4c0KsZ5CFXNMvscloEbzqls
-         PpteaZnQgwnTIgzs6P21z/cUTcdrRKaYIfrSgEHIpcuQukbi7WSnEqXx92dsmy6iLatL
-         dIaUZzv9d4nbszAWAj+ogcSM2R1c8rGLWCSRgyIwLfCsH07/iigCbtB4bF0uWoKmfmXq
-         +Wq6qQ7ci+tYqULmUSjeMZ6zdEm3jc1u6SxDfiZ0XeVvbNEl2FIqDBaHQMuuWBTCqF9V
-         3gS3x35jlePsT//pLGikGoCzCnZotwD2sdA1aojXJBNq4nciSKgsw8yt3ZcWTxp3m2q6
-         qgnA==
-X-Gm-Message-State: AOJu0Ywludepob/SahZmZS87mJFRJ9ZKFiOQA7ELz99gUZBddjzdmnF7
-	EXYeFPtTMWAWio9oun7x+RgGHtP8fLBZtVCN5fJQSxfvsRmOCXaV7fk=
-X-Google-Smtp-Source: AGHT+IFnKIHCM2+6sKxBbaunPlgos10y3oJI9IgpcaWwZnPVGb+1pvpl5sQpqI88g2tR1KtMJ2amQwH6ec0zYCv1d7Q=
-X-Received: by 2002:a0d:e20a:0:b0:5cc:3963:ff69 with SMTP id
- l10-20020a0de20a000000b005cc3963ff69mr4774855ywe.8.1700868061272; Fri, 24 Nov
- 2023 15:21:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700868164; x=1701472964;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E5nMDTtOQLcgHcYf3AhjJfRtmN2DqrR45HtW3cVWOzw=;
+        b=JqVPtfCzqif9YiFZrmmaU2x1YZ3nJ5SbYvFeRUg36BKitaABP6YhDjHac/2nSeWZTU
+         ITqaybRkYrkdfoGQDoxsZ3xA4pwOgHot0S6s9SqsiT9UxW9Gy1CnWQ1h2QmyeSvQj6Fb
+         zRE/s7UhflaFngk94bocWM0MBIJQLJsDQtmngi/aFMEmmGQWMKUBFHVidB7g0H6r5qqE
+         UB1gMR3w2Xx0NkBIei6HgeBy8KVDy8CGI6nMzrA5HyOQ/lpHrMJODI7UWkY9grfyoUkf
+         tGD33lthHkdwKuzL4iqqwysW1F81U/9D8M+qqnk0P6b2M/UVYCD4hxIz7/N5toP0W9+V
+         FYig==
+X-Gm-Message-State: AOJu0YynwQxgTI5DYFHc7bVyRxX1JT4+L+OqaTUm6ByOulO4C3PbEapg
+	3Uxg8k0juDTXsuP2zF9endHMvRlf189GIhVn3pp3sg==
+X-Google-Smtp-Source: AGHT+IEjuQLNaGggFU8MosnNJZXuB+cB3Jfd3qXypDWwUEWP4Auhl766yikOfki9VYXPb7XM9tRstFp8E9Md9JPAQ/M=
+X-Received: by 2002:a05:6214:2aa2:b0:67a:2554:28c6 with SMTP id
+ js2-20020a0562142aa200b0067a255428c6mr839328qvb.26.1700868163786; Fri, 24 Nov
+ 2023 15:22:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
-In-Reply-To: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 25 Nov 2023 00:20:49 +0100
-Message-ID: <CACRpkdapj9jdSC0bsoaLxrYKy3aB5ui5c3pAg+Zr0acP9umG=A@mail.gmail.com>
-Subject: Re: GPIOLIB locking is broken and how to fix it
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Kent Gibson <warthog618@gmail.com>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20231011184823.443959-1-peter.griffin@linaro.org>
+ <20231011184823.443959-18-peter.griffin@linaro.org> <33fe3e2e-9d09-42ee-9472-25d3be09baf4@linaro.org>
+In-Reply-To: <33fe3e2e-9d09-42ee-9472-25d3be09baf4@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Fri, 24 Nov 2023 23:22:32 +0000
+Message-ID: <CADrjBPrh19YzB45hM4xaELn67uf3iBQo++T-8+2Uenq6-fDzKg@mail.gmail.com>
+Subject: Re: [PATCH v3 17/20] arm64: dts: google: Add initial Google gs101 SoC support
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
+	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
+	cw00.choi@samsung.com, tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
+	semen.protsenko@linaro.org, saravanak@google.com, willmcvicker@google.com, 
+	soc@kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
+	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 24, 2023 at 5:00=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+Hi Krzysztof,
 
-> There are more instances of this pattern. This seems to be a way to
-> work around the fact that we have GPIO API functions that can be
-> called from atomic context (gpiod_set/get_value(),
-> gpiod_direction_input/output(), etc.) that in their implementation
-> call driver callbacks that may as well sleep (gc->set(),
-> gc->direction_output(), etc.).
-
-Correct, AFAIK this is why this looks like it does.
-
-> Protecting the list of GPIO devices is simple. It should be a mutex as
-> the list should never be modified from atomic context.
-
-If you are referring to gpio_lock then go back and look how that
-got where it is today:
-
-git checkout d2876d08d86f2 (initial gpiolib commit 2008)
-
-The ultimately confusing thing is that:
-
-1. Yes it is protecting the list of gpio chips
-2. The struct holding items in the list of the gpio chips is
-  called gpio_desc...
-
-Then this comment:
-
-/* gpio_lock prevents conflicts during gpio_desc[] table updates.
- * While any GPIO is requested, its gpio_chip is not removable;
- * each GPIO's "requested" flag serves as a lock and refcount.
- */
-
-Is cargo-culted to present day and is talking about gpio_desc, but
-nowadays gpio_desc means something completely different...
-
-OK I'll send a patch just deleting this comment, it looks insane.
-
-> This can be easily factored out right now.
-
-JustDoIt :)
-
-> Protecting GPIO descriptors is
-> trickier. If we use a spinlock for that, we'll run into problems with
-> GPIO drivers that can sleep. If we use a mutex, we'll have a problem
-> with users calling GPIO functions from atomic context.
+On Thu, 12 Oct 2023 at 07:40, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> One idea I have is introducing a strict limit on which functions can
-> be used from atomic context (we don't enforce anything ATM in
-> functions that don't have the _cansleep suffix in their names) and
-> check which parts of the descriptor struct they modify. Then protect
-> these parts with a spinlock in very limited critical sections. Have a
-> mutex for everything else that can only be accessed from process
-> context.
+> On 11/10/2023 20:48, Peter Griffin wrote:
 >
-> Another one is introducing strict APIs like gpiod_set_value_atomic()
-> that'll be designed to be called from atomic context exclusively and
-> be able to handle it. Everything else must only be called from process
-> context. This of course would be a treewide change as we'd need to
-> modify all GPIO calls in interrupt handlers.
+> ...
+>
+> > diff --git a/arch/arm64/boot/dts/google/gs101.dtsi b/arch/arm64/boot/dts/google/gs101.dtsi
+> > new file mode 100644
+> > index 000000000000..37fb0a4dc8d3
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/google/gs101.dtsi
+> > @@ -0,0 +1,504 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * GS101 SoC
+> > + *
+> > + * Copyright 2019-2023 Google LLC
+> > + *
+> > + */
+> > +
+> > +#include <dt-bindings/clock/google,gs101.h>
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +/ {
+> > +     compatible = "google,gs101";
+> > +     #address-cells = <2>;
+> > +     #size-cells = <1>;
+> > +
+> > +     interrupt-parent = <&gic>;
+> > +
+> > +     aliases {
+> > +             pinctrl0 = &pinctrl_0;
+> > +             pinctrl1 = &pinctrl_1;
+> > +             pinctrl2 = &pinctrl_2;
+> > +             pinctrl3 = &pinctrl_3;
+> > +             pinctrl4 = &pinctrl_4;
+> > +             pinctrl5 = &pinctrl_5;
+> > +             pinctrl6 = &pinctrl_6;
+> > +             pinctrl7 = &pinctrl_7;
+> > +             serial0 = &serial_0;
+> > +     };
+> > +
+> > +     arm-pmu {
+>
+> pmu-0
 
-This is a much harder problem.
+will fix
+>
+> > +             compatible = "arm,armv8-pmuv3";
+> > +             interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+> > +     };
+> > +
+> > +     dsu-pmu-0 {
+>
+> pmu-1
 
-Many of the current API functions can be called from atomic and
-nonatomic contexts alike :/ this has historical reasons of course.
-Back in 2008 most GPIO chips were just on-SoC and resulted in
-a register write: no problem. Now we have quite a bunch of GPIOs
-on I2C, SPI ... and the API looks the same.
+will fix
 
-The _cansleep functions were supposed to be used explicitly in
-places where it is OK that the GPIO can sleep (as in: I don't care
-if you sleep or not), and every other site using the non-_cansleep
-versions should be where it has to be atomic.
+>
+>
+> > +             compatible = "arm,dsu-pmu";
+> > +             interrupts = <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
+> > +             cpus = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>,
+> > +                    <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
+> > +     };
+> > +
+> > +     /* TODO replace with CCF clock */
+> > +     dummy_clk: oscillator {
+> > +             compatible = "fixed-clock";
+> > +             #clock-cells = <0>;
+> > +             clock-frequency = <12345>;
+> > +             clock-output-names = "pclk";
+> > +     };
+> > +
+> > +     cpus {
+> > +             #address-cells = <2>;
+> > +             #size-cells = <0>;
+> > +
+> > +             cpu-map {
+> > +                     cluster0 {
+> > +                             core0 {
+> > +                                     cpu = <&cpu0>;
+> > +                             };
+> > +                             core1 {
+> > +                                     cpu = <&cpu1>;
+> > +                             };
+> > +                             core2 {
+> > +                                     cpu = <&cpu2>;
+> > +                             };
+> > +                             core3 {
+> > +                                     cpu = <&cpu3>;
+> > +                             };
+> > +                     };
+> > +
+> > +                     cluster1 {
+> > +                             core0 {
+> > +                                     cpu = <&cpu4>;
+> > +                             };
+> > +                             core1 {
+> > +                                     cpu = <&cpu5>;
+> > +                             };
+> > +                     };
+> > +
+> > +                     cluster2 {
+> > +                             core0 {
+> > +                                     cpu = <&cpu6>;
+> > +                             };
+> > +                             core1 {
+> > +                                     cpu = <&cpu7>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +
+> > +             cpu0: cpu@0 {
+> > +                     device_type = "cpu";
+> > +                     compatible = "arm,armv8";
+> > +                     reg = <0x0 0x0000>;
+> > +                     enable-method = "psci";
+> > +                     cpu-idle-states =  <&ANANKE_CPU_SLEEP>;
+> > +                     capacity-dmips-mhz = <250>;
+> > +                     dynamic-power-coefficient = <70>;
+> > +             };
+> > +
+> > +             cpu1: cpu@100 {
+> > +                     device_type = "cpu";
+> > +                     compatible = "arm,armv8";
+> > +                     reg = <0x0 0x0100>;
+> > +                     enable-method = "psci";
+> > +                     cpu-idle-states =  <&ANANKE_CPU_SLEEP>;
+> > +                     capacity-dmips-mhz = <250>;
+> > +                     dynamic-power-coefficient = <70>;
+> > +             };
+> > +
+> > +             cpu2: cpu@200 {
+> > +                     device_type = "cpu";
+> > +                     compatible = "arm,armv8";
+> > +                     reg = <0x0 0x0200>;
+> > +                     enable-method = "psci";
+> > +                     cpu-idle-states =  <&ANANKE_CPU_SLEEP>;
+> > +                     capacity-dmips-mhz = <250>;
+> > +                     dynamic-power-coefficient = <70>;
+> > +             };
+> > +
+> > +             cpu3: cpu@300 {
+> > +                     device_type = "cpu";
+> > +                     compatible = "arm,armv8";
+> > +                     reg = <0x0 0x0300>;
+> > +                     enable-method = "psci";
+> > +                     cpu-idle-states =  <&ANANKE_CPU_SLEEP>;
+> > +                     capacity-dmips-mhz = <250>;
+> > +                     dynamic-power-coefficient = <70>;
+> > +             };
+> > +
+> > +             cpu4: cpu@400 {
+> > +                     device_type = "cpu";
+> > +                     compatible = "arm,armv8";
+> > +                     reg = <0x0 0x0400>;
+> > +                     enable-method = "psci";
+> > +                     cpu-idle-states =  <&ENYO_CPU_SLEEP>;
+> > +                     capacity-dmips-mhz = <620>;
+> > +                     dynamic-power-coefficient = <284>;
+> > +             };
+> > +
+> > +             cpu5: cpu@500 {
+> > +                     device_type = "cpu";
+> > +                     compatible = "arm,armv8";
+> > +                     reg = <0x0 0x0500>;
+> > +                     enable-method = "psci";
+> > +                     cpu-idle-states =  <&ENYO_CPU_SLEEP>;
+> > +                     capacity-dmips-mhz = <620>;
+> > +                     dynamic-power-coefficient = <284>;
+> > +             };
+> > +
+> > +             cpu6: cpu@600 {
+> > +                     device_type = "cpu";
+> > +                     compatible = "arm,armv8";
+> > +                     reg = <0x0 0x0600>;
+> > +                     enable-method = "psci";
+> > +                     cpu-idle-states =  <&HERA_CPU_SLEEP>;
+> > +                     capacity-dmips-mhz = <1024>;
+> > +                     dynamic-power-coefficient = <650>;
+> > +             };
+> > +
+> > +             cpu7: cpu@700 {
+> > +                     device_type = "cpu";
+> > +                     compatible = "arm,armv8";
+> > +                     reg = <0x0 0x0700>;
+> > +                     enable-method = "psci";
+> > +                     cpu-idle-states =  <&HERA_CPU_SLEEP>;
+> > +                     capacity-dmips-mhz = <1024>;
+> > +                     dynamic-power-coefficient = <650>;
+> > +             };
+> > +
+> > +             idle-states {
+> > +                     entry-method = "psci";
+> > +
+> > +                     ANANKE_CPU_SLEEP: cpu-ananke-sleep {
+> > +                             idle-state-name = "c2";
+> > +                             compatible = "arm,idle-state";
+> > +                             arm,psci-suspend-param = <0x0010000>;
+> > +                             entry-latency-us = <70>;
+> > +                             exit-latency-us = <160>;
+> > +                             min-residency-us = <2000>;
+> > +                     };
+> > +
+> > +                     ENYO_CPU_SLEEP: cpu-enyo-sleep {
+> > +                             idle-state-name = "c2";
+> > +                             compatible = "arm,idle-state";
+> > +                             arm,psci-suspend-param = <0x0010000>;
+> > +                             entry-latency-us = <150>;
+> > +                             exit-latency-us = <190>;
+> > +                             min-residency-us = <2500>;
+> > +                     };
+> > +
+> > +                     HERA_CPU_SLEEP: cpu-hera-sleep {
+> > +                             idle-state-name = "c2";
+> > +                             compatible = "arm,idle-state";
+> > +                             arm,psci-suspend-param = <0x0010000>;
+> > +                             entry-latency-us = <235>;
+> > +                             exit-latency-us = <220>;
+> > +                             min-residency-us = <3500>;
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> > +     /* bootloader requires ect node */
+> > +     ect {
+>
+> This needs bindings.
 
-Every call where non-_cansleep is called but it doesn't matter is
-essentially a bug, they should be using _cansleep versions.
-(Oh boy ... such much bug.)
+I experimented a bit more and the minimum I need is an empty dt node
+called ect, otherwise the bootloader will boot loop and we can't boot
+the kernel
+[   2.977870] [E] [BOOT] fdt /ect path not found -1
 
-In 2008 when it was introduced, *_cansleep had one single user:
-drivers/leds/led-gpio.c because it was assumed that users of
-that driver would not care if LEDs are on GPIO expanders or
-on SoC-resident GPIOs. Ironically that driver now keeps track
-of whether the GPIO is sleepable or not...
+Apart from a comment indicating that the bootloader requires this
+empty ect dt node, what other bindings documentation would you like to
+see? Something in google.yaml?
 
-So if you propose turning this on it's head by creating *_atomic
-and opt-in to atomic behaviour instead of opting out of it, I'd say
-yes, but only if we delete all uses of _cansleep at the same time
-and that means the default behaviour becomes _cansleep.
+>
+> > +             parameter_address = <0x90000000>;
+>
+> No underscores in property names. Use hyphen.
+>
+> > +             parameter_size = <0x53000>;
+>
+> No underscores.
 
-Keeping both around at the same time is going to be
-a complete mess.
+Fortunately I can remove parameter_address and parameter_size and
+still boot, so I will remove these in the next version.
 
-Yours,
-Linus Walleij
+Thanks,
+
+Peter.
 
