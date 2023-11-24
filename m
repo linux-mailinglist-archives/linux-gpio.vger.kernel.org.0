@@ -1,107 +1,91 @@
-Return-Path: <linux-gpio+bounces-473-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-474-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8B0F7F70D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 11:07:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E58AF7F70DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 11:09:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 059A21C20E9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 10:07:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21C791C20E3C
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 10:09:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 086F6171CE;
-	Fri, 24 Nov 2023 10:07:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09CA318049;
+	Fri, 24 Nov 2023 10:09:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qxN5ioYE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IOsL5Yn/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 438F01AB
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 02:07:02 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-db3fd3e971cso1623161276.3
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 02:07:02 -0800 (PST)
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 205841716
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 02:09:19 -0800 (PST)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-5cc5988f85eso17224707b3.2
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 02:09:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700820421; x=1701425221; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700820558; x=1701425358; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PWcP6gQgrwmdsnOkpH93ij3XRZvKw3Rujab02fsHwiU=;
-        b=qxN5ioYEcENuAMn/Jxr8Kcg+5ZM9glWmzc3x2Wi4S+x6rIHteCtrlCsNYbUfjdtyne
-         BOdb9FO72GTlLtiezDwv7z4FSZeDqFsIqJv3K7V9Er47Gp1Kz630X58BdnwoGtrxcEpe
-         1tvf9tPCzQGzUdh2tt2cnuSUV/TJi8E1wS6stwjJMQBwVvYT8hxvgDAhSopsGd12KbZh
-         QP2nKDWokcgtUjPWANTtF/8dgHgQlYDF6SwKsPZHxvKYIAma9EnC1co9CQ0vtrD4NJrS
-         P1CSCaqZd17kLEjuFbJESHzg++yLR3jYXQ3HozJxQFwMyl1Ep+MNrCZnxXFBGc5LBp/A
-         sSUw==
+        bh=Y7d06b6G7ORlrNQJU6TvzYJsppMO/COUWuckfBOPugA=;
+        b=IOsL5Yn/2ONsRx3AZY/b37Bgaf/iyqpidxgZj6rw7NYkgqy5vAPljchwXUoAE3lGHG
+         ZtQ5INVkDN6krE0PJdIfU7iGgdd1Q3T8z+OyF4DvIJ3g1+1GZ2bdB5FxVaIJJ/+GP+6i
+         6ouSe4MuFwLBR2IXDibvZis2sXd4n/ptZX8gSX8lBSfM+CrC0VCdSb7/Ecl6H6Fqv41j
+         jacYAw9yNZxJ2NLhp1ZeSYH/NnVRtyP3NiSOOEk5/+r5P944J8p0C/+E42F7wPPFjwQm
+         bKUbbHv9h/TSt2OqOdwSztMGOnO8cbytFPoLPgxUNghRTcjxJMUQMtDqiQj9xm/3ACyh
+         NoIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700820421; x=1701425221;
+        d=1e100.net; s=20230601; t=1700820558; x=1701425358;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PWcP6gQgrwmdsnOkpH93ij3XRZvKw3Rujab02fsHwiU=;
-        b=JJ+Nx61bwytSrbDV88OwOv9LaSZD0lWpHEI5UyI76SoNNR38O88aNIpMY3fNLJJlP+
-         m2i6j/FdJvP9O4TAXc4oC6kbI+FPApxq0E/8poTAnWFC5+QJz6GlHp7vtRn1UMewRmSl
-         zyjY/fB+WP12YDy1ri9SbBvU5HerCkhVkzzsSyUjX4MxTuXphCPagD7Kywaju92CTpH2
-         mmp6dLL7GlB7XhWVIK/Az5mC00EPweScyk2Qm3YOlHQgMBatWwVAk/uaOxX4c9GEI3hg
-         oYMXhmScdyKpBowp91UxMQHloT+IKqHT+XTWjvkkXorPB+EPXxyq2lwT3bUtsW5bzjiQ
-         5sZw==
-X-Gm-Message-State: AOJu0YwunDoRQbY0Fc5kPvbqAfc0SFgb835MFdkGExTbl4Eu3dpN3MjU
-	hWdOMKV9wdoRUJHfXl0pqByLWh8TzP7Y1g+ZxYumcA==
-X-Google-Smtp-Source: AGHT+IFSnAJD8pB6XNkHS4v3hhDyUz8bMnLEKTFJgyUyBO5NiU10+s0sV8dxVVUWj46P6kffDmIbWY6kXKt507dXHqo=
-X-Received: by 2002:a81:e950:0:b0:59b:c805:de60 with SMTP id
- e16-20020a81e950000000b0059bc805de60mr2174447ywm.45.1700820421368; Fri, 24
- Nov 2023 02:07:01 -0800 (PST)
+        bh=Y7d06b6G7ORlrNQJU6TvzYJsppMO/COUWuckfBOPugA=;
+        b=Y9fZm/x9fekSgh1FE3/kA/YvNRVDwpO26XMD0QURDFW+Jqt/z2fQWOv4NPHnGee1P8
+         MmC/WrMp+vzZYt4uW4dqp2C3uT3LQjjF8nG9MOeR3nar2DCYVbbWje4yCNFgJGJWIl3C
+         o2MotGSUpy8pc4LS/0PG02G8cJtuVVAh2a1coQ43cCeq9/8D4OPUGnVleU/9s/6ZVTuC
+         3oUsAXvtf/DgKrt1p2kxLvjG20jimN4AvUziBX4+UUbr6b+Vyazx1ThwWON4zuB5AHmD
+         yGJZZco1g3FTkptVnaceIFjRAmtSFYwh0OluN9A2r94oazdiWubpECDlUq65GYxCVHkX
+         gqIQ==
+X-Gm-Message-State: AOJu0YwBu6wphg8k1OK7rZS7FkX8hHJN10hkD0qqWERTqMBGxKS03/Nz
+	opUldVKhFO4pIccP7g5W9n0QR5vWGeB4eXJ9NnuCuA==
+X-Google-Smtp-Source: AGHT+IFZDOwR7JExk+WTPrKofyiSPhESOa5Ty4+gyeA49vmY5GeURfJ5lGSFWgjatvyDMJJIGKpHsSimm4ZZ6CjLiag=
+X-Received: by 2002:a0d:fa01:0:b0:5c5:b0f7:1087 with SMTP id
+ k1-20020a0dfa01000000b005c5b0f71087mr1855847ywf.40.1700820558337; Fri, 24 Nov
+ 2023 02:09:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231120222832.4063882-1-masahiroy@kernel.org>
- <20231120222832.4063882-2-masahiroy@kernel.org> <CAK7LNATK3BVDZ88v7MWjzOk3Kv8CR4Tz_k77yi1OO=zc+71j=g@mail.gmail.com>
-In-Reply-To: <CAK7LNATK3BVDZ88v7MWjzOk3Kv8CR4Tz_k77yi1OO=zc+71j=g@mail.gmail.com>
+References: <20231120194802.1675239-1-andriy.shevchenko@linux.intel.com> <ZVzy227f3cIiTmtE@smile.fi.intel.com>
+In-Reply-To: <ZVzy227f3cIiTmtE@smile.fi.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 24 Nov 2023 11:06:50 +0100
-Message-ID: <CACRpkdaMBrWUR8OYLPiQNNJ64mfenFyQa9f4iB+w5kZ44WjSeQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: pinconf-generic: resize the pin config array directly
-To: Masahiro Yamada <masahiroy@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 24 Nov 2023 11:09:07 +0100
+Message-ID: <CACRpkdZi5uW7saBFFA=VWDYpj_MCw3he2k-CLh__zJzUOOEkyw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: nuvoton: Convert to use struct pingroup
+ and PINCTRL_PINGROUP()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Tomer Maimon <tmaimon77@gmail.com>
+Cc: openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Masahiro,
+On Tue, Nov 21, 2023 at 7:11=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Mon, Nov 20, 2023 at 09:48:02PM +0200, Andy Shevchenko wrote:
 
-On Tue, Nov 21, 2023 at 11:21=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.=
-org> wrote:
-> On Tue, Nov 21, 2023 at 7:28=E2=80=AFAM Masahiro Yamada <masahiroy@kernel=
-.org> wrote:
-> >
-> > pinconf_generic_parse_dt_config() allocates memory that is large enough
-> > to contain all the config parameters. Then, kmemdup() copies the found
-> > configs to the memory with the exact size.
-> >
-> > There is no need to allocate memory twice; you can directly resize the
-> > initial memory using krealloc_array().
-> >
-> > I also changed kcalloc() to kmalloc_array() to keep the consistency wit=
-h
-> > krealloc_array(). This change has no impact because you do not need to
-> > zero out the 'cfg' array.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > The pin control header provides struct pingroup and PINCTRL_PINGROUP() =
+macro.
+> > Utilize them instead of open coded variants in the driver.
 >
-> Sorry, I retract this patch set.
->
-> krealloc() does not save any memory
-> when the new_size is smaller than the current size.
+> Linus, I dunno if you are going to apply this sooner (assuming Jonathan i=
+s okay
+> with the change), but I have a bigger pending series where this will be a
+> prerequisite. So, when I will be ready and if it's not being applied (yet=
+),
+> I'll include it into the bigger series as well.
 
-But the first part where you switch to kmalloc_array() is still a nice chan=
-ge.
-
-The fact that we use kmemdup to be able to also shrink the allocation is a
-bit of an oddity I guess, but let's run this patch by Andy Shevchenko, and
-ask what he thinks about simply introducing kmemdup_array() or if he
-has other ideas for this.
+No answer from Jonathan but I just applied another Nuvoton patch from
+Tomer, so maybe Tomer can look at/test this patch?
 
 Yours,
 Linus Walleij
