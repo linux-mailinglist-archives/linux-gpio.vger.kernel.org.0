@@ -1,299 +1,197 @@
-Return-Path: <linux-gpio+bounces-486-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-487-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4941D7F7468
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 13:57:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD1E57F74D2
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 14:21:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B401CB2150A
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 12:57:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80E7928150A
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 13:21:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0012511F;
-	Fri, 24 Nov 2023 12:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53A9928DBF;
+	Fri, 24 Nov 2023 13:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="blACIZ3Q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HYqx8wXc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B269C10F4
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 04:56:53 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-28598035301so187853a91.0
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 04:56:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700830613; x=1701435413; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xujb6kFqtC8wI/nMx0LNn7gwzfv+MW7wEFOovE+DY6o=;
-        b=blACIZ3QRLV4orCzTsKNlr5kMj0PofjTxGfkbkt4led0mTZz5+jcnU1DOeDNhoraYt
-         nJcHLML0OFRHQWuRAXgfVWKfBawkhXTbkuvS7uofIxxDkXZvzLeOefYswLpAFP1UKC8E
-         CWe/3Oz1Brzn/FtvL88xF84fuziiC5nQka97w6OZuck4mWM/hTyqx9XC7XW0MmDTWSTq
-         NiYPEfgH2J2bQ3h6P10MsQVhJTq/xYimdzIx+KpS7c0eKoZBpfbfN9//Mkp8lszZgT9x
-         Po/SRhfyj4hhyadsu/HhSfaOlL0/Kj5M9RD9UGRwn1VLl2Qtps75xnrbL/03v2KfXz6n
-         znxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700830613; x=1701435413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xujb6kFqtC8wI/nMx0LNn7gwzfv+MW7wEFOovE+DY6o=;
-        b=hjk5LBCZCQI9t2L5WcloNTg48ibeANB6YUVP1NW7C02CNevooXB+ordxBUznB1Hjgb
-         woZyNgOvw3o+Hxzv06feceDLmtJFi+TegdCPw77aAIAfW5uiTdQcwypeoMNvZQ1u/AJp
-         zmaMjNWOFPfh9bKU9OYuUva6Ic7ky5y3BtzRQnFvP+/QbY5054XH4lQKp7vZxsXiRl0F
-         i4x/gR4ILNb6APLwX/P/xvA8+diHPqOWX5Y4y9BkOpenei86dTd8xkL+JM10fIOf8+04
-         e63LBLZL/t2Y+zutm1yIZTB/lNezQ+WwGk1I+Bt3cW6smBdKH5DDV6ZuwDDEiLZ7Um1H
-         x8rA==
-X-Gm-Message-State: AOJu0Yy+PUwxREkU1JEM/7di0X0tCXj4xAy6a5oEK6B/8wv/fpTjHgmD
-	4SLztsALerPHXW1ATVozJ20z3gQoGKClbYtgymQcug==
-X-Google-Smtp-Source: AGHT+IF9MkghMnGcmPZ6oKymMT/UpH3kadFQgleGNgpxXbEPR8je/OfgN9q1rqitSot59grj0w/EKrcRA8d+7uuBhfg=
-X-Received: by 2002:a17:90b:1c0c:b0:280:c0:9d3f with SMTP id
- oc12-20020a17090b1c0c00b0028000c09d3fmr3019628pjb.34.1700830613137; Fri, 24
- Nov 2023 04:56:53 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB11172D;
+	Fri, 24 Nov 2023 05:21:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700832080; x=1732368080;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oS8G9RbkHOAGAKexG7oDoBknf5c2EZYgB9loDAbntcE=;
+  b=HYqx8wXcA92WquS+RiF+n51fUu4itig07M6YPyCGpUn1y+oBFQIkq5iC
+   1JSRbRV927sfR1H3RNgDTdKt8S29gqI4ou4vhUAkA4khdQQHPLXtwIYBu
+   P2rk4ZTjt9lFeZzdb7ziKoyFevMPJAQqpAD5XxckfDFUmLoUVRpBKnjhm
+   Dpsw2xDSwi6ZPITjGjQQrGgRcHnirX0AltBVb1lGGptzyyj9BSpXB2Ng4
+   6a6iZCyQ96Zfjho6hrGibL0xgIrjb+U6zFMWMxK0cnP4RRBnu+s407nt5
+   m1ltDBvnw8mMmT1wLwDVNBhKbDAC52ZZIMx0cK92PO63WLWva+xLMYmGJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="456765147"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="456765147"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 05:20:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="767477118"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="767477118"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 24 Nov 2023 05:20:25 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r6W6Z-0002nt-14;
+	Fri, 24 Nov 2023 13:20:23 +0000
+Date: Fri, 24 Nov 2023 21:19:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Sean Wang <sean.wang@kernel.org>
+Subject: Re: [PATCH v2 06/21] pinctrl: equilibrium: Convert to use struct
+ pingroup
+Message-ID: <202311241401.ZPILPdov-lkp@intel.com>
+References: <20231123193355.3400852-7-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20231119085440epcas2p375fa3b2999e1a3ceeff9949136db7e28@epcas2p3.samsung.com>
- <20231119092909.3018578-1-youngmin.nam@samsung.com> <CAPLW+4kO4wYP=5Sx7dPXU17b_CHBJKN_93GhWtZ60vKgNRTKwQ@mail.gmail.com>
- <ZWAn+XzseBTB+KE1@perf>
-In-Reply-To: <ZWAn+XzseBTB+KE1@perf>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Fri, 24 Nov 2023 06:56:41 -0600
-Message-ID: <CAPLW+4=4SDaw512hzUKscyu0RphKL7fKqVMcuQNEhz0UJ9smGw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: samsung: add irq_set_affinity() for non wake up
- external gpio interrupt
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: tomasz.figa@gmail.com, krzysztof.kozlowski@linaro.org, 
-	s.nawrocki@samsung.com, alim.akhtar@samsung.com, linus.walleij@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231123193355.3400852-7-andriy.shevchenko@linux.intel.com>
 
-On Thu, Nov 23, 2023 at 10:00=E2=80=AFPM Youngmin Nam <youngmin.nam@samsung=
-.com> wrote:
->
-> On Tue, Nov 21, 2023 at 12:33:51PM -0600, Sam Protsenko wrote:
-> > On Sun, Nov 19, 2023 at 2:54=E2=80=AFAM Youngmin Nam <youngmin.nam@sams=
-ung.com> wrote:
-> > >
-> > > To support affinity setting for non wake up external gpio interrupt,
-> > > we add a new irq_set_affinity callback using irq number which is in p=
-inctrl
-> > > driver data.
-> > >
-> > > Before applying this patch, we couldn't change irq affinity of gpio i=
-nterrupt.
-> > > * before
-> > > erd9945:/proc/irq/418 # cat smp_affinity
-> > > 3ff
-> > > erd9945:/proc/irq/418 # echo 00f > smp_affinity
-> > > erd9945:/proc/irq/418 # cat smp_affinity
-> > > 3ff
-> > > erd9945:/proc/irq/418 # cat /proc/interrupts
-> > >            CPU0       CPU1       CPU2       CPU3       CPU4       CPU=
-5       CPU6       CPU7       CPU8       CPU9
-> > > 418:       3631          0          0          0          0          =
-0          0          0          0          0      gpg2   0 Edge      19100=
-000.drmdecon
-> > >
-> > > After applying this patch, we can change irq affinity of gpio interru=
-pt as below.
-> > > * after
-> > > erd9945:/proc/irq/418 # cat smp_affinity
-> > > 3ff
-> > > erd9945:/proc/irq/418 # echo 00f > smp_affinity
-> > > erd9945:/proc/irq/418 # cat smp_affinity
-> > > 00f
-> > > erd9945:/proc/irq/418 # cat /proc/interrupts
-> > >            CPU0       CPU1       CPU2       CPU3       CPU4       CPU=
-5       CPU6       CPU7       CPU8       CPU9
-> > > 418:       3893        201        181        188          0          =
-0          0          0          0          0      gpg2   0 Edge      19100=
-000.drmdecon
-> > >
-> >
-> > Suggest formatting the commit message as follows, to make it more reada=
-ble:
-> >
-> > 8<---------------------------------------------------------------------=
------>8
-> > To support affinity setting for non wake up external gpio interrupt,
-> > add irq_set_affinity callback using irq number from pinctrl driver
-> > data.
-> >
-> > Before this patch, changing the irq affinity of gpio interrupt is not
-> > possible:
-> >
-> >     # cat /proc/irq/418/smp_affinity
-> >     3ff
-> >     # echo 00f > /proc/irq/418/smp_affinity
-> >     # cat /proc/irq/418/smp_affinity
-> >     3ff
-> >     # cat /proc/interrupts
-> >                CPU0       CPU1       CPU2       CPU3    ...
-> >     418:       3631          0          0          0    ...
-> >
-> > With this patch applied, it's possible to change irq affinity of gpio
-> > interrupt:
-> >
-> >     # cat /proc/irq/418/smp_affinity
-> >     3ff
-> >     # echo 00f > /proc/irq/418/smp_affinity
-> >     # cat /proc/irq/418/smp_affinity
-> >     00f
-> >     # cat /proc/interrupts
-> >                CPU0       CPU1       CPU2       CPU3      ...
-> >     418:       3893        201        181        188      ...
-> > 8<---------------------------------------------------------------------=
------>8
-> >
->
-> Thanks for your suggestion. I'll modify it.
->
-> > > Signed-off-by: Youngmin Nam <youngmin.nam@samsung.com>
-> > > ---
-> > >  drivers/pinctrl/samsung/pinctrl-exynos.c | 14 ++++++++++++++
-> > >  1 file changed, 14 insertions(+)
-> > >
-> > > diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinct=
-rl/samsung/pinctrl-exynos.c
-> > > index 6b58ec84e34b..5d7b788282e9 100644
-> > > --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-> > > +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> > > @@ -147,6 +147,19 @@ static int exynos_irq_set_type(struct irq_data *=
-irqd, unsigned int type)
-> > >         return 0;
-> > >  }
-> > >
-> > > +static int exynos_irq_set_affinity(struct irq_data *irqd,
-> > > +                                  const struct cpumask *dest, bool f=
-orce)
-> > > +{
-> > > +       struct samsung_pin_bank *bank =3D irq_data_get_irq_chip_data(=
-irqd);
-> > > +       struct samsung_pinctrl_drv_data *d =3D bank->drvdata;
-> > > +       struct irq_data *parent =3D irq_get_irq_data(d->irq);
-> >
-> > I'm probably missing something, but: why not just use "irqd" parameter
-> > and avoid declaring "bank" and "d"? Is "d->irq" somehow different from
-> > "irqd"?
-> >
->
-> Yes, irqd->irq is different from d->irq as below.
->
-> [  188.230707] irqd->irq is 417
-> [  188.230837] d->irq is 133
->
-> We have to use d->irq(133) instead of irqd->irq(417) because d->irq has G=
-ICv3 as a IRQ chip.
-> To use set_affinity() call back of GICv3, d->irq is needed.
->
-> IRQ  HWIRQ  Type   Affinity    IRQ_DESC             CPU0    CPU1    CPU2 =
-   CPU3 ... Chip   Name
-> 133    603  Level  0x3ff       0xffffff883b25d800  52260       0       0 =
-      0 ... GICv3  11030000.pinctrl
-> 417      0  Edge   0xffffffff  0xffffff883b68a800  52259       0       0 =
-      0 ... gpg2   19100000.drmdecon
->
-> erd9945: # cat /proc/interrupts | grep gpg2
-> 417:       9250         48         45         45 ...  gpg2   0 Edge      =
-19100000.drmdecon
->
-> erd9945: # cat /proc/interrupts | grep 11030000
-> 133:       9250         48         45         45 ...  GICv3 603 Level    =
- 11030000.pinctrl
->
+Hi Andy,
 
-Thanks for the explanation! Apart from my suggestion for the commit message=
-:
+kernel test robot noticed the following build warnings:
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next next-20231124]
+[cannot apply to geert-renesas-drivers/renesas-pinctrl pinctrl-samsung/for-next linus/master v6.7-rc2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> > > +
-> > > +       if (parent)
-> > > +               return parent->chip->irq_set_affinity(parent, dest, f=
-orce);
-> > > +
-> >
-> > Why not use irq_chip_set_affinity_parent() API?
-> >
-> > > +       return -EINVAL;
-> >
-> > Maybe use something like this instead:
-> >
-> >     if (!irqd->parent_data)
-> >             return -EINVAL;
-> >
-> >     return irq_chip_set_affinity_parent(irqd, dest, force);
-> >
-> > Can you please test if this code works?
-> >
->
-> I tested as you suggested as below.
->
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/s=
-amsung/pinctrl-exynos.c
-> index bf8dd5e3c3d2..593320b408ce 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> @@ -153,14 +153,12 @@ static int exynos_irq_set_type(struct irq_data *irq=
-d, unsigned int type)
->  static int exynos_irq_set_affinity(struct irq_data *irqd,
->                                    const struct cpumask *dest, bool force=
-)
->  {
-> -       struct samsung_pin_bank *bank =3D irq_data_get_irq_chip_data(irqd=
-);
-> -       struct samsung_pinctrl_drv_data *d =3D bank->drvdata;
-> -       struct irq_data *parent =3D irq_get_irq_data(d->irq);
-> -
-> -       if (parent)
-> -               return parent->chip->irq_set_affinity(parent, dest, force=
-);
-> +       if (!irqd->parent_data) {
-> +               pr_err("irqd->parent_data is null!!\n");
-> +               return -EINVAL;
-> +       }
->
-> -       return -EINVAL;
-> +       return irq_chip_set_affinity_parent(irqd, dest, force);
->  }
->
-> [  149.658395] irqd->parent_data is null!!
->
-> Currently, irqd->paranet_data is null.
->
-> > > +}
-> > > +
-> > >  static int exynos_irq_request_resources(struct irq_data *irqd)
-> > >  {
-> > >         struct samsung_pin_bank *bank =3D irq_data_get_irq_chip_data(=
-irqd);
-> > > @@ -212,6 +225,7 @@ static const struct exynos_irq_chip exynos_gpio_i=
-rq_chip __initconst =3D {
-> > >                 .irq_mask =3D exynos_irq_mask,
-> > >                 .irq_ack =3D exynos_irq_ack,
-> > >                 .irq_set_type =3D exynos_irq_set_type,
-> > > +               .irq_set_affinity =3D exynos_irq_set_affinity,
-> >
-> > What happens if we just assign irq_chip_set_affinity_parent() here?
-> > Would it work, or Exynos case is more complicated than this?
-> >
->
-> Yes, I couldn't find how to use irq_chip_set_affinity_parent() directly y=
-et.
->
-> > >                 .irq_request_resources =3D exynos_irq_request_resourc=
-es,
-> > >                 .irq_release_resources =3D exynos_irq_release_resourc=
-es,
-> > >         },
-> > > --
-> > > 2.39.2
-> > >
-> >
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-qcom-lpass-lpi-Remove-unused-member-in-struct-lpi_pingroup/20231124-043212
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20231123193355.3400852-7-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v2 06/21] pinctrl: equilibrium: Convert to use struct pingroup
+config: i386-randconfig-141-20231124 (https://download.01.org/0day-ci/archive/20231124/202311241401.ZPILPdov-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce: (https://download.01.org/0day-ci/archive/20231124/202311241401.ZPILPdov-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311241401.ZPILPdov-lkp@intel.com/
+
+smatch warnings:
+drivers/pinctrl/pinctrl-equilibrium.c:719 eqbr_build_groups() warn: unsigned 'grp->npins' is never less than zero.
+
+vim +719 drivers/pinctrl/pinctrl-equilibrium.c
+
+   702	
+   703	static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
+   704	{
+   705		struct device *dev = drvdata->dev;
+   706		struct device_node *node = dev->of_node;
+   707		unsigned int *pins, *pinmux, pin_id, pinmux_id;
+   708		struct pingroup group, *grp = &group;
+   709		struct device_node *np;
+   710		struct property *prop;
+   711		int j, err;
+   712	
+   713		for_each_child_of_node(node, np) {
+   714			prop = of_find_property(np, "groups", NULL);
+   715			if (!prop)
+   716				continue;
+   717	
+   718			grp->npins = of_property_count_u32_elems(np, "pins");
+ > 719			if (grp->npins < 0) {
+   720				dev_err(dev, "No pins in the group: %s\n", prop->name);
+   721				of_node_put(np);
+   722				return -EINVAL;
+   723			}
+   724			grp->name = prop->value;
+   725			pins = devm_kcalloc(dev, grp->npins, sizeof(*pins), GFP_KERNEL);
+   726			if (!pins) {
+   727				of_node_put(np);
+   728				return -ENOMEM;
+   729			}
+   730			grp->pins = pins;
+   731	
+   732			pinmux = devm_kcalloc(dev, grp->npins, sizeof(*pinmux), GFP_KERNEL);
+   733			if (!pinmux) {
+   734				of_node_put(np);
+   735				return -ENOMEM;
+   736			}
+   737	
+   738			for (j = 0; j < grp->npins; j++) {
+   739				if (of_property_read_u32_index(np, "pins", j, &pin_id)) {
+   740					dev_err(dev, "Group %s: Read intel pins id failed\n",
+   741						grp->name);
+   742					of_node_put(np);
+   743					return -EINVAL;
+   744				}
+   745				if (pin_id >= drvdata->pctl_desc.npins) {
+   746					dev_err(dev, "Group %s: Invalid pin ID, idx: %d, pin %u\n",
+   747						grp->name, j, pin_id);
+   748					of_node_put(np);
+   749					return -EINVAL;
+   750				}
+   751				pins[j] = pin_id;
+   752				if (of_property_read_u32_index(np, "pinmux", j, &pinmux_id)) {
+   753					dev_err(dev, "Group %s: Read intel pinmux id failed\n",
+   754						grp->name);
+   755					of_node_put(np);
+   756					return -EINVAL;
+   757				}
+   758				pinmux[j] = pinmux_id;
+   759			}
+   760	
+   761			err = pinctrl_generic_add_group(drvdata->pctl_dev,
+   762							grp->name, grp->pins, grp->npins,
+   763							pinmux);
+   764			if (err < 0) {
+   765				dev_err(dev, "Failed to register group %s\n", grp->name);
+   766				of_node_put(np);
+   767				return err;
+   768			}
+   769			memset(&group, 0, sizeof(group));
+   770			pinmux = NULL;
+   771		}
+   772	
+   773		return 0;
+   774	}
+   775	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
