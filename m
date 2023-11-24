@@ -1,138 +1,103 @@
-Return-Path: <linux-gpio+bounces-492-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-493-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC74D7F7A72
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 18:34:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE2937F84CB
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 20:38:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE4771C2089A
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 17:34:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF8DB1C27449
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 19:38:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EE17381BE;
-	Fri, 24 Nov 2023 17:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACCA3307D;
+	Fri, 24 Nov 2023 19:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WAYVFt9b"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Ux+2bQwC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 349F71725
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 09:33:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700847234; x=1732383234;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3GK09VbKNMRqgmh594szcvFVeEw6vByyVBH7sZjRE6g=;
-  b=WAYVFt9brUp/gPs0UKat3KaxFGEcNNxyD22nHQWwjuEQ/3VR835bpsUq
-   v70hfcyuXOFFDWZ2LKCdM6noTGXt1R830och3dkSXEcq/pV5qE6JKaIvo
-   hJGtId70OYsnYZUpeiRHB8B6+jk1h0exJbad/A6/f0S7WzaPWq7nBJ+pF
-   IS6d+2FK/qhmkoQnV2aSsvRPTDtxoqiHeepECZavp2sPVPaDlVehxLL+/
-   SYxrZCRFrvtLMuligxp+MRyOleUKwvFwTgSfnRuJtvsv1nNWKZhaoM3rL
-   NTsONlYiaJ6kNf4gy+F7aOVbY8Pq4j2+6QRspcv4Ccca3D61eATExYEfQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="478662606"
-X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
-   d="scan'208";a="478662606"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 09:33:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="761007506"
-X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
-   d="scan'208";a="761007506"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 09:33:52 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1r6a3p-0000000Gn4Q-1Jf8;
-	Fri, 24 Nov 2023 19:33:49 +0200
-Date: Fri, 24 Nov 2023 19:33:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: GPIOLIB locking is broken and how to fix it
-Message-ID: <ZWDefaWfhNfFjBPA@smile.fi.intel.com>
-References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
- <ZWDdGa-Zf06bteld@smile.fi.intel.com>
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CDCB1B6
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 11:38:23 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-40b2c8e91afso16562955e9.3
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 11:38:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1700854702; x=1701459502; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oo29Pg6VNXcoZW2fzTe3Exl4UruvYkYsRFBRPzTu39Q=;
+        b=Ux+2bQwCt6O3XZb+roPLnnpioroTIGqzNBkZVJ/dbl1IIv5fQTWg+tBIpBuealOs+4
+         3jWxmcWADfpQ9a2l1/MkW/F92BSwbOk3QFW8w1Fm2J6+cSfcgsZ9kyWdxjpd1oZJ3sru
+         ldebIBLFmaemjB0qgOS6sbxKoeC+Z23fWMVAidqIhMa/Ll0ArF8wV0ZxrXbp9dvcDtak
+         Jz9Yiri+MH1SeHnBGilVlXDj6td+88CPp0GgWad37Vm3YTD7u4ubCayagVeVU3F8ttU0
+         dFpnODiE3Ez8V7iZYC3A3mn4ZVG8iTTZ14OHyyiMJyDC54wtmprXMiQDLIicNgB1WqMj
+         hYvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700854702; x=1701459502;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Oo29Pg6VNXcoZW2fzTe3Exl4UruvYkYsRFBRPzTu39Q=;
+        b=YbRWZyMMhyVWbxZwro3kclrBB0xoKdxsoogLtBuNjkf/rN+dSfIOECuDchi59LL8Cg
+         62IoYtn/Djo99N7AQJRbu/d0A9OeoUlhmttfCQukvAGvjRonPQbCm2cQg5fpziuq1fBE
+         U/2PdgDNJbvf0LChzptvUR3H9kw68/DUcK0ZEAig1XMKxlnmTa7bpm2EMnLS8N3HBZ3K
+         HRJUOlxnj+QRBZStNv09dDwar4xwT2hsB/agRVW4BZl8HDcn8758YOnZXOul9k8Bfi9i
+         MhN+3nQGmP3uiEdrTxBHIJH1lNVaP3PdRLYqgqbVAUBYN3NZGGIcoAXVL641r2oBJ5gL
+         v8gQ==
+X-Gm-Message-State: AOJu0YziWoiUJN2L+rSNQdHc1kZPdSIb3qJQK25iUVP6H0YTwX6HX4pk
+	fFFtDG6IlebvLHf1XqA/3P5LVA==
+X-Google-Smtp-Source: AGHT+IGfl+OyZpDfH2xQ9iX9WVmKJbwY+46/sluTw97DybZiS6lCSpXeGR3tYuA0CS+9zYqPo+CwoA==
+X-Received: by 2002:a05:600c:1384:b0:409:19a0:d247 with SMTP id u4-20020a05600c138400b0040919a0d247mr3176861wmf.18.1700854701875;
+        Fri, 24 Nov 2023 11:38:21 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e3fd:5fc1:c04:51df])
+        by smtp.gmail.com with ESMTPSA id n28-20020a05600c3b9c00b0040772934b12sm6599320wms.7.2023.11.24.11.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Nov 2023 11:38:21 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: immutable branch between GPIO and pinctrl trees for v6.8-rc1
+Date: Fri, 24 Nov 2023 20:38:16 +0100
+Message-Id: <20231124193816.30412-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZWDdGa-Zf06bteld@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 24, 2023 at 07:27:54PM +0200, Andy Shevchenko wrote:
-> On Fri, Nov 24, 2023 at 05:00:36PM +0100, Bartosz Golaszewski wrote:
-> > Hi!
-> > 
-> > I've been scratching my head over it for a couple days and I wanted to
-> > pick your brains a bit.
-> > 
-> > The existing locking in GPIOLIB is utterly broken. We have a global
-> > spinlock that "protects" the list of GPIO devices but also the
-> > descriptor objects (and who knows what else). I put "protects" in
-> > quotation marks because the spinlock is released and re-acquired in
-> > several places where the code needs to call functions that can
-> > possibly sleep. I don't have to tell you it makes the spinlock useless
-> > and doesn't protect anything.
-> > 
-> > An example of that is gpiod_request_commit() where in the time between
-> > releasing the lock in order to call gc->request() and acquiring it
-> > again, gpiod_free_commit() can be called, thus undoing a part of the
-> > changes we just introduced in the first part of this function. We'd
-> > then return from gc->request() and continue acting like we've just
-> > requested the GPIO leading to undefined behavior.
-> > 
-> > There are more instances of this pattern. This seems to be a way to
-> > work around the fact that we have GPIO API functions that can be
-> > called from atomic context (gpiod_set/get_value(),
-> > gpiod_direction_input/output(), etc.) that in their implementation
-> > call driver callbacks that may as well sleep (gc->set(),
-> > gc->direction_output(), etc.).
-> > 
-> > Protecting the list of GPIO devices is simple. It should be a mutex as
-> > the list should never be modified from atomic context. This can be
-> > easily factored out right now. Protecting GPIO descriptors is
-> > trickier. If we use a spinlock for that, we'll run into problems with
-> > GPIO drivers that can sleep. If we use a mutex, we'll have a problem
-> > with users calling GPIO functions from atomic context.
-> > 
-> > One idea I have is introducing a strict limit on which functions can
-> > be used from atomic context (we don't enforce anything ATM in
-> > functions that don't have the _cansleep suffix in their names) and
-> > check which parts of the descriptor struct they modify. Then protect
-> > these parts with a spinlock in very limited critical sections. Have a
-> > mutex for everything else that can only be accessed from process
-> > context.
-> > 
-> > Another one is introducing strict APIs like gpiod_set_value_atomic()
-> > that'll be designed to be called from atomic context exclusively and
-> > be able to handle it. Everything else must only be called from process
-> > context. This of course would be a treewide change as we'd need to
-> > modify all GPIO calls in interrupt handlers.
-> > 
-> > I'd like to hear your ideas as this change is vital before we start
-> > protecting gdev->chip with SRCU in all API calls.
-> 
-> Brief side note: If we can really fix something (partially) right now,
-> do it, otherwise technical debt kills us.
-> 
-> (Most likely I refer to the list of the GPIO devices.)
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Another brief note is to look at irq_get_desc_lock() / irq_put_desc_unlock()
-and related APIs. Yet you might probably not need all the complications and
-esp. raw spinlock, but perhaps you can get the idea.
+Linus,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Here's the immutable branch for you to pull into the pinctrl tree that
+provides the new gpio_device_get_label() getter.
 
+Bart
 
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
+
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-device-get-label-for-v6.8-rc1
+
+for you to fetch changes up to d1f7728259ef02ac20b7afb6e7eb5a9eb1696c25:
+
+  gpiolib: provide gpio_device_get_label() (2023-11-24 20:27:37 +0100)
+
+----------------------------------------------------------------
+gpiolib: provide gpio_device_get_label()
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      gpiolib: provide gpio_device_get_label()
+
+ drivers/gpio/gpiolib.c      | 14 ++++++++++++++
+ include/linux/gpio/driver.h |  1 +
+ 2 files changed, 15 insertions(+)
 
