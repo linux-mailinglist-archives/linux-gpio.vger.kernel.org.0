@@ -1,142 +1,82 @@
-Return-Path: <linux-gpio+bounces-469-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-470-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48A277F706C
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 10:49:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74C2F7F709F
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 10:58:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DD1D8B21160
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 09:49:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB314B20ED9
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 09:58:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69EA317756;
-	Fri, 24 Nov 2023 09:49:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3051E17998;
+	Fri, 24 Nov 2023 09:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QJje4ZPg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i9/t2S6i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C2B10E7;
-	Fri, 24 Nov 2023 01:49:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700819354; x=1732355354;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OP/cCaco1RCdcFyVZXX4kd8okOpF/N7a+QQ1IHCxz4g=;
-  b=QJje4ZPgWRfH4tBmM0aI8W9DANEpRFfyuRWrXJTUejnj2DIi99Ll1fUc
-   St+yqSx8vvn7SMnysBF6bANalEyHZKI9K137P2FTbn8MMEnRcvK8WaXiJ
-   ki348KT4gzwyEuWsgFvbBXPctufXWIPZ6LhODrzvlJDnFLUP7QyDuvCYi
-   K/4yS/2JPehGUCowp7FsE9Lh3gQQRHo8P4JtBOqINiRpIr+Wa4RSWO6NV
-   dpWDKVplItVw2AkgTfM3OmkAHybDGjTiUT9KxeiyCsFZ7Z2OY8z1H/bf6
-   RzA4GxSPIKbSfA63bA6OPwzBp85ttcartvf1QkE4F22GTSP42YrWHokzZ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="423534658"
-X-IronPort-AV: E=Sophos;i="6.04,223,1695711600"; 
-   d="scan'208";a="423534658"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 01:49:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="717327111"
-X-IronPort-AV: E=Sophos;i="6.04,223,1695711600"; 
-   d="scan'208";a="717327111"
-Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 24 Nov 2023 01:49:08 -0800
-Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1r6So6-0002LA-0K;
-	Fri, 24 Nov 2023 09:49:06 +0000
-Date: Fri, 24 Nov 2023 17:49:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: mitrutzceclan <mitrutzceclan@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>
-Subject: Re: [PATCH v6 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <202311241251.qDeS0ZtB-lkp@intel.com>
-References: <20231123152331.5751-2-user@HYB-hhAwRlzzMZb>
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22062D4E
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 01:58:11 -0800 (PST)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-5cce5075bd6so13378817b3.0
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 01:58:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1700819890; x=1701424690; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s0r2ovNNQUwpmQosy3XQrJzCSVmmCu/fIH4I8jzx2+0=;
+        b=i9/t2S6iEh35bC8YQH0hgGJv+9qpTo0syhdxpLBtU6suiW5mugBso0Wztrt6NJctZI
+         qN3TIau9emPeq8q7S+Cm89lbaAKvT2VsGitV7EC0mgPVpXxfI6cj0Em4/fQCCC1pasfP
+         MVfJzNy2h48/jf33MCFaBbmtq82Dr/mPYwCZwzZiZ9bbIIRceX9+IbqRZf9TB1FRmM06
+         M+ozdIzSRaq1wONKXJ0YcaqGKLUv2WcH6nl1oLACA5aUYI+LUOBMC0K1e3FL6jdXdwWr
+         hss8l/vCKIn3/n7SYmWzJvTtqpSH3QNvG/MJJRKMbH5UwwRYAM22+9KHX+sqispLW7Gw
+         u27g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700819890; x=1701424690;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s0r2ovNNQUwpmQosy3XQrJzCSVmmCu/fIH4I8jzx2+0=;
+        b=aPCohYRea8Sppr4wyiIfGhhzzjblQG9vgiz/9IZ3lGNeXPVF4D3v9BxjmuMcAwlVpI
+         powNykM2hintOc1PT2WFV7Oax1eBJE0hdGVs6/6Q57ALSRSYp8qbi1k2Q4CKprx1IfNI
+         ez2FF5D5bmrgKikTG6uWfenOJObFmm95XeRED7bVtjC69wT3eNdtsReZNxQB3+YLSXZa
+         Fg6XdyV4tQSwS6g/69Tn2m70sqf0kyJujZL66ldQfioADO6UpEB0wN1IiG//w4bhQH9x
+         KTxTJyLjWKkGPcRINd1Csepu557/AM3tB2GK3igNKNEAyA6Lq0IDu48T3TtCWhI7qH1O
+         DRSA==
+X-Gm-Message-State: AOJu0Yz5iO3xv7E9Ru27uO8DDK70zQRenmWMiU/nsPR+P5dr5WRT46Vr
+	F8pGaL8PXUfSKunRwRuq1twUlL2Jfn7hy7yHtvWaN/5s4V8KJA+m
+X-Google-Smtp-Source: AGHT+IH3bPUgrfuFQLes8tecktD2wXSd8PJOzNH0dAaOMXtiZNeJPc+iVFWvKlDdSg+qekI3fv5dBHwrzlEH3fIx8NM=
+X-Received: by 2002:a0d:d904:0:b0:5cc:5421:e4e6 with SMTP id
+ b4-20020a0dd904000000b005cc5421e4e6mr4391983ywe.16.1700819890357; Fri, 24 Nov
+ 2023 01:58:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231123152331.5751-2-user@HYB-hhAwRlzzMZb>
+References: <20231116223045.274211-1-afd@ti.com>
+In-Reply-To: <20231116223045.274211-1-afd@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 24 Nov 2023 10:57:59 +0100
+Message-ID: <CACRpkdaf9krpNkd-ZeGtaLS+UzM9Z7zSFtqFYdQk=TGLuUeB-Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: as3722: Use devm_gpiochip_add_data() to simplify
+ remove path
+To: Andrew Davis <afd@ti.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi mitrutzceclan,
+On Thu, Nov 16, 2023 at 11:30=E2=80=AFPM Andrew Davis <afd@ti.com> wrote:
 
-kernel test robot noticed the following build warnings:
+> Use devm version of gpiochip add function to handle removal for us.
+>
+> Signed-off-by: Andrew Davis <afd@ti.com>
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on linus/master v6.7-rc2 next-20231124]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Patch applied!
 
-url:    https://github.com/intel-lab-lkp/linux/commits/mitrutzceclan/iio-adc-ad7173-add-AD7173-driver/20231123-233012
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20231123152331.5751-2-user%40HYB-hhAwRlzzMZb
-patch subject: [PATCH v6 2/2] iio: adc: ad7173: add AD7173 driver
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20231124/202311241251.qDeS0ZtB-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231124/202311241251.qDeS0ZtB-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311241251.qDeS0ZtB-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/iio/adc/ad7173.c:329:22: warning: variable 'offset' set but not used [-Wunused-but-set-variable]
-           ptrdiff_t cmp_size, offset;
-                               ^
-   1 warning generated.
-
-
-vim +/offset +329 drivers/iio/adc/ad7173.c
-
-   324	
-   325	static struct ad7173_channel_config *
-   326	ad7173_find_live_config(struct ad7173_state *st, struct ad7173_channel_config *cfg)
-   327	{
-   328		struct ad7173_channel_config *cfg_aux;
- > 329		ptrdiff_t cmp_size, offset;
-   330		int i;
-   331	
-   332		offset = offsetofend(struct ad7173_channel_config, live);
-   333		cmp_size = sizeof_field(struct ad7173_channel_config, config_props);
-   334	
-   335		for (i = 0; i < st->num_channels; i++) {
-   336			cfg_aux = &st->channels[i].cfg;
-   337	
-   338			if (cfg_aux->live &&
-   339			    !memcmp(&cfg->bipolar, &cfg_aux->bipolar, cmp_size))
-   340				return cfg_aux;
-   341		}
-   342		return NULL;
-   343	}
-   344	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yours,
+Linus Walleij
 
