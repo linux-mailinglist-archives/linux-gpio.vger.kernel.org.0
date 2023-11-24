@@ -1,118 +1,984 @@
-Return-Path: <linux-gpio+bounces-504-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-505-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF3F37F86B5
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 00:29:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A00737F86D2
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 00:39:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 12B5C1C20F25
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 23:29:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05D761F20F77
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 23:39:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CF593C699;
-	Fri, 24 Nov 2023 23:29:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0807A3DB84;
+	Fri, 24 Nov 2023 23:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GTf5m98E"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LSXGLvlg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378F71735
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 15:29:13 -0800 (PST)
-Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d9c66e70ebdso2052364276.2
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 15:29:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700868552; x=1701473352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NsOhbxgo0w5vrLvqlyS+CI33FHpY1D06+ACp6sG/31M=;
-        b=GTf5m98EgD+7w8yCztkXm+JckLfmdHG/JnmNR7ekvYqlqepF4pr7CUR3+tUK1G2bVg
-         C8ptJVn8r/OnNcXlatY5uAxu24QA7Y80sPYDJgBqNrIYZapZyfDkKD3R40pI5xui5cQc
-         cgFYra6+httF6E9KykWs048rdKSayCjKG3LxAwjJ/swZcdQzEB3WNfBF548ZAvxaSdy2
-         7XoIW14ofBR0zwXuTr5OsN+vSQwn2shytnT1mGYogW5VmQeR4Mf3s4XF1OxS9GKU+9/M
-         4v68LXpVLPaA+PBJav/oz7+DTp3cemLmhsFZbVJo2ZTQhZKC0w1UQGvQ0eEU4JRiMDF2
-         LZ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700868552; x=1701473352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NsOhbxgo0w5vrLvqlyS+CI33FHpY1D06+ACp6sG/31M=;
-        b=jL/b8KJBYOWhePA4SlSduDzp0hiy95lpwCEkDm3K0z/TaMyVvhJM45/MLtmXpruocC
-         aWS3Ev9w/EnLOpMG8HM37ilj9R24H870RwyHyFAgnkZtoJwf6Mf4bGgYVCoTjGYch+ky
-         uHyE17KsgY0H3W4qCgmp/3g15AhDh9s481IekzrQ01V8HCgxVYICEwVnImW76uYvn5B6
-         /uom1aXJll8Qj8caVKe1jEB4Pfu3FVGLxkIus+a4YustiS4212czKhruO4PGymR3uNMl
-         4cvSTsw1RYaUYwsQ41tnwZjY8zY4ZHz58kIHbaxv/vZef1SjBwBpiVfRFPMJyLShaiuT
-         vVig==
-X-Gm-Message-State: AOJu0Yw2W7znxI2eyDUDhC6bDVJfFRxhjlSQWEZV0ndY+rQGEOyVTIIA
-	ycfwBqeJhehv5/PPngKAcZSnXa7bRXzifjlF9F6Vnw==
-X-Google-Smtp-Source: AGHT+IHacgXTdMc3t9a8/JgK7vOiOb1nS+bmjqs0kfUuGY+kRG1kBJzz1yGjDpKpKdgkAOs/hXTjEcKqqFgReOEYS9g=
-X-Received: by 2002:a25:400b:0:b0:d80:4533:9556 with SMTP id
- n11-20020a25400b000000b00d8045339556mr3605329yba.63.1700868552394; Fri, 24
- Nov 2023 15:29:12 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2986B10F6;
+	Fri, 24 Nov 2023 15:39:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700869168; x=1732405168;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=i+u3ktGe5zN5QBmfkK29yDvJuJLgaXA/mYBLUauJqcE=;
+  b=LSXGLvlgqh5Bo8Gh/HXpkhUum4TsLpwd1Ywud0rcT/TZOqMs2S2Q2nvt
+   j3U7GSzRSDnpKCR87cVZjMtIZzS2x3lWZBT4YvPmpERMswKSmSTL5dSUR
+   ty6zV2UBiMxMEjj0nE8DkuvELjtIYzHt2oQnHkHLP/f6KfNmdc/RqrUR7
+   gdJhN+q1HzdApdlXMwVSxq4viooCZAbu+EPK8OqEacUkBStqDQtrEMRBy
+   pN5kKXMbkz8W1roujODIkoIkeVrWgIUgqST0sun3CrY4nDMy6AqjlWqx8
+   6anrg7fBenE3QEbCJmZxF5TlNg1DWdivb3yqzCst0KzEeZqwMKxNWkDy2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="11170294"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="11170294"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2023 15:39:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="833793170"
+X-IronPort-AV: E=Sophos;i="6.04,224,1695711600"; 
+   d="scan'208";a="833793170"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Nov 2023 15:39:19 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r6flV-0003O6-0f;
+	Fri, 24 Nov 2023 23:39:17 +0000
+Date: Sat, 25 Nov 2023 07:39:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Sean Wang <sean.wang@kernel.org>
+Subject: Re: [PATCH v2 12/21] pinctrl: core: Embed struct pingroup into
+ struct group_desc
+Message-ID: <202311250448.uz5Yom3N-lkp@intel.com>
+References: <20231123193355.3400852-13-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231115165001.2932350-1-brgl@bgdev.pl> <CACRpkdbDny8X3WB_qJ4h_vbwrjno5ytAtNMgTeXg4jpegdUH2w@mail.gmail.com>
- <CAMRc=McZJzdj04Ckf_ygDhWNN2JcbTfY+yefOZSYx_nTE_Jpjg@mail.gmail.com>
- <CACRpkdb7QwWcq=mDa4y8bh_QLAFU+X9LCr0chrGVL-_9YE5P9A@mail.gmail.com> <CAMRc=Md+5N_u0QkL+OTc2xVQuxP0dZY-1GbrdGQqwhdJrv4Cbg@mail.gmail.com>
-In-Reply-To: <CAMRc=Md+5N_u0QkL+OTc2xVQuxP0dZY-1GbrdGQqwhdJrv4Cbg@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 25 Nov 2023 00:29:01 +0100
-Message-ID: <CACRpkdadxCYg-z5qqp_h+8NhPUy6H4x5Ev06Q_bi_fL16e95OQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] pinctrl: don't use gpiod_to_chip()
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231123193355.3400852-13-andriy.shevchenko@linux.intel.com>
 
-On Fri, Nov 24, 2023 at 8:40=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Fri, Nov 24, 2023 at 11:01=E2=80=AFAM Linus Walleij <linus.walleij@lin=
-aro.org> wrote:
-> >
-> > On Mon, Nov 20, 2023 at 4:06=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
-> > > On Thu, Nov 16, 2023 at 2:43=E2=80=AFPM Linus Walleij <linus.walleij@=
-linaro.org> wrote:
-> > > > On Wed, Nov 15, 2023 at 5:50=E2=80=AFPM Bartosz Golaszewski <brgl@b=
-gdev.pl> wrote:
-> > > >
-> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > > >
-> > > > > Let's start working towards removing gpiod_to_chip() from the ker=
-nel.
-> > > > > Start with pinctrl. The first patch should go through the GPIO tr=
-ee
-> > > > > and become available through an immutable tag so that we can get =
-more
-> > > > > conversions in this cycle elsewhere.
-> > > >
-> > > > Fair enough, maybe an immutable branch with all three patches?
-> > > > Probably best to merga all three into both subsystems I think.
-> > > >
-> > >
-> > > Nah, I don't think I need to pollute the GPIO tree with every pinctrl
-> > > patch. It's enough to just merge the first one into GPIO and you do
-> > > the same in pinctrl.
-> >
-> > Fair enough, but I need that immutable branch for patch 1 so I
-> > can merge the rest on top.
-> >
-> > Yours,
-> > Linus Walleij
->
-> I applied the first patch (after fixing the typo in the commit
-> message) and sent you the immutable branch to pull. Please apply the
-> remaining patches to the pinctrl tree directly.
+Hi Andy,
 
-Pulled it and applied the other two patches on top, thanks!
+kernel test robot noticed the following build errors:
 
-Yours,
-Linus Walleij
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next next-20231124]
+[cannot apply to geert-renesas-drivers/renesas-pinctrl pinctrl-samsung/for-next linus/master v6.7-rc2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-qcom-lpass-lpi-Remove-unused-member-in-struct-lpi_pingroup/20231124-043212
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20231123193355.3400852-13-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v2 12/21] pinctrl: core: Embed struct pingroup into struct group_desc
+config: i386-buildonly-randconfig-006-20231125 (https://download.01.org/0day-ci/archive/20231125/202311250448.uz5Yom3N-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231125/202311250448.uz5Yom3N-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311250448.uz5Yom3N-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:21: error: initializer element is not constant
+    (struct group_desc) {      \
+                        ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:200:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-1bit", jz4730_mmc_1bit, 1),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:21: note: (near initialization for 'jz4730_groups')
+    (struct group_desc) {      \
+                        ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:200:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-1bit", jz4730_mmc_1bit, 1),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:21: error: initializer element is not constant
+    (struct group_desc) {      \
+                        ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:296:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-1bit", jz4740_mmc_1bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:21: note: (near initialization for 'jz4740_groups')
+    (struct group_desc) {      \
+                        ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:296:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-1bit", jz4740_mmc_1bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:297:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:297:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:297:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit, 0),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:297:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].grp.name')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:297:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:297:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].grp.name')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:297:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("mmc-4bit", jz4740_mmc_4bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:298:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-data", jz4740_uart0_data, 1),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:298:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-data", jz4740_uart0_data, 1),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:298:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-data", jz4740_uart0_data, 1),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:298:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-data", jz4740_uart0_data, 1),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].grp.pins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:298:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-data", jz4740_uart0_data, 1),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:298:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-data", jz4740_uart0_data, 1),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].grp.pins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:298:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-data", jz4740_uart0_data, 1),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:299:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-hwflow", jz4740_uart0_hwflow, 1),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:299:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-hwflow", jz4740_uart0_hwflow, 1),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:299:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-hwflow", jz4740_uart0_hwflow, 1),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: warning: initialization makes integer from pointer without a cast [-Wint-conversion]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:299:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-hwflow", jz4740_uart0_hwflow, 1),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].grp.npins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:299:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-hwflow", jz4740_uart0_hwflow, 1),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:299:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-hwflow", jz4740_uart0_hwflow, 1),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].grp.npins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:299:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart0-hwflow", jz4740_uart0_hwflow, 1),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:300:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart1-data", jz4740_uart1_data, 2),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:300:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart1-data", jz4740_uart1_data, 2),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:300:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart1-data", jz4740_uart1_data, 2),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:300:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart1-data", jz4740_uart1_data, 2),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].name')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:300:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart1-data", jz4740_uart1_data, 2),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:300:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart1-data", jz4740_uart1_data, 2),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].name')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:300:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("uart1-data", jz4740_uart1_data, 2),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:301:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-8bit", jz4740_lcd_8bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:301:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-8bit", jz4740_lcd_8bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:301:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-8bit", jz4740_lcd_8bit, 0),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:301:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-8bit", jz4740_lcd_8bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].pins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:301:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-8bit", jz4740_lcd_8bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:301:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-8bit", jz4740_lcd_8bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].pins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:301:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-8bit", jz4740_lcd_8bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:302:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-16bit", jz4740_lcd_16bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:302:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-16bit", jz4740_lcd_16bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:302:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-16bit", jz4740_lcd_16bit, 0),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: warning: initialization makes integer from pointer without a cast [-Wint-conversion]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:302:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-16bit", jz4740_lcd_16bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].num_pins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:302:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-16bit", jz4740_lcd_16bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:302:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-16bit", jz4740_lcd_16bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].num_pins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:302:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-16bit", jz4740_lcd_16bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:303:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-18bit", jz4740_lcd_18bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:303:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-18bit", jz4740_lcd_18bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:303:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-18bit", jz4740_lcd_18bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:303:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-18bit", jz4740_lcd_18bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:303:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-18bit", jz4740_lcd_18bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[1].data')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:303:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-18bit", jz4740_lcd_18bit, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:304:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-special", jz4740_lcd_special, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:304:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-special", jz4740_lcd_special, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:304:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-special", jz4740_lcd_special, 0),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:304:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-special", jz4740_lcd_special, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[2].grp.name')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:304:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-special", jz4740_lcd_special, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:304:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-special", jz4740_lcd_special, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[2].grp.name')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:304:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-special", jz4740_lcd_special, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:305:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-generic", jz4740_lcd_generic, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:305:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-generic", jz4740_lcd_generic, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:305:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-generic", jz4740_lcd_generic, 0),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:305:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-generic", jz4740_lcd_generic, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[2].grp.pins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:305:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-generic", jz4740_lcd_generic, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:305:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-generic", jz4740_lcd_generic, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[2].grp.pins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:305:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("lcd-generic", jz4740_lcd_generic, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:306:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs1", jz4740_nand_cs1, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:306:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs1", jz4740_nand_cs1, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:306:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs1", jz4740_nand_cs1, 0),
+     ^~~~~~~~~~~~~~~~~
+>> drivers/pinctrl/core.h:217:1: warning: initialization makes integer from pointer without a cast [-Wint-conversion]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:306:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs1", jz4740_nand_cs1, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[2].grp.npins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:306:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs1", jz4740_nand_cs1, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:306:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs1", jz4740_nand_cs1, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[2].grp.npins')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:306:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs1", jz4740_nand_cs1, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+>> include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:307:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:307:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:307:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:307:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[2].name')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:307:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: error: initializer element is not constant
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:307:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2, 0),
+     ^~~~~~~~~~~~~~~~~
+   drivers/pinctrl/core.h:217:1: note: (near initialization for 'jz4740_groups[2].name')
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:307:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from include/linux/gpio/driver.h:13:0,
+                    from drivers/pinctrl/pinctrl-ingenic.c:11:
+   include/linux/pinctrl/pinctrl.h:43:1: error: initialization from incompatible pointer type [-Werror=incompatible-pointer-types]
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:308:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs3", jz4740_nand_cs3, 0),
+     ^~~~~~~~~~~~~~~~~
+   include/linux/pinctrl/pinctrl.h:43:1: note: (near initialization for '(anonymous).grp.name')
+    (struct pingroup) {    \
+    ^
+   drivers/pinctrl/core.h:218:9: note: in expansion of macro 'PINCTRL_PINGROUP'
+     .grp = PINCTRL_PINGROUP(_name, _pins, _num_pins), \
+            ^~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+     PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), (void *)(func))
+     ^~~~~~~~~~~~~~~~~~
+   drivers/pinctrl/pinctrl-ingenic.c:308:2: note: in expansion of macro 'INGENIC_PIN_GROUP'
+     INGENIC_PIN_GROUP("nand-cs3", jz4740_nand_cs3, 0),
+     ^~~~~~~~~~~~~~~~~
+   In file included from drivers/pinctrl/pinctrl-ingenic.c:29:0:
+   drivers/pinctrl/core.h:217:1: warning: missing braces around initializer [-Wmissing-braces]
+    (struct group_desc) {      \
+    ^
+   drivers/pinctrl/pinctrl-ingenic.c:89:2: note: in expansion of macro 'PINCTRL_GROUP_DESC'
+
+
+vim +43 include/linux/pinctrl/pinctrl.h
+
+003cbe04617159 Basavaraj Natikar 2022-06-01  40  
+003cbe04617159 Basavaraj Natikar 2022-06-01  41  /* Convenience macro to define a single named or anonymous pingroup */
+003cbe04617159 Basavaraj Natikar 2022-06-01  42  #define PINCTRL_PINGROUP(_name, _pins, _npins)	\
+003cbe04617159 Basavaraj Natikar 2022-06-01 @43  (struct pingroup) {				\
+003cbe04617159 Basavaraj Natikar 2022-06-01  44  	.name = _name,				\
+003cbe04617159 Basavaraj Natikar 2022-06-01  45  	.pins = _pins,				\
+003cbe04617159 Basavaraj Natikar 2022-06-01  46  	.npins = _npins,			\
+003cbe04617159 Basavaraj Natikar 2022-06-01  47  }
+003cbe04617159 Basavaraj Natikar 2022-06-01  48  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
