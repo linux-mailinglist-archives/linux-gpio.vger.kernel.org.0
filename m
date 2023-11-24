@@ -1,89 +1,85 @@
-Return-Path: <linux-gpio+bounces-464-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-465-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37D867F7018
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 10:39:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C49207F7021
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 10:40:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 693381C20AA6
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 09:39:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 805BA281C65
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 09:40:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 106FA15AD5;
-	Fri, 24 Nov 2023 09:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E501B154A8;
+	Fri, 24 Nov 2023 09:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="etL+CSQr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uEVLiLTr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C888D72
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 01:38:54 -0800 (PST)
-Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-db048181cd3so1603886276.3
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 01:38:54 -0800 (PST)
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65191D53
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 01:39:57 -0800 (PST)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5c85e8fdd2dso15772577b3.2
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 01:39:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700818733; x=1701423533; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700818796; x=1701423596; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=geI8GtZzgpBXL5dK3wkA+z2fxGZtMOBQC6A7G59OA2k=;
-        b=etL+CSQrBatydm0PGGfHEH9tq/QRETNazIDKmg5AesapV+i2MRq+fnshfUTJaUaYjZ
-         Jyd9CBHN0nS8g0fGSRgwu79Fct7LDyMn7ni50M8TqPB2TfPiYqcn8Yix2Xh1Hp7EyZZ5
-         I8ZuJdcJMMSRA/stKrj3j2aqvygpb+COFwkh1JSn11nOI/cfd0MypYJmTS9ot0fV0oA7
-         lZIBBV59VHdZ92Ej2DppxxKY/Dm3sfSp+QfmL7SJctQVLCZaBViSQVZzJ8Dyeogzlb4F
-         SiNtn7aq/8k5Cl+hGYGsM/bJdUvezST/pU6OJSptuMPbDsfuQSbunzlVocT+K+2HbSdZ
-         nUuQ==
+        bh=S8H5wgkG7B5BzheZ4ZvCgLtyGDS/xoXFDJfUCvqhL0U=;
+        b=uEVLiLTrQQm2ABtQxxbZHX/oaIT1H7v3NBxWp8DymXauXBftnscQqfVGXQxhSomCWB
+         E/5cYEiAwxnwL+vY1ECJNOQTTcE8mb8kDH5+2RuJCrqRybpRq3nqk5R8sInwpxrNNqtL
+         S9/M/Arl2O2Jr6tz4AQdFzDw8PfSuuY19P2vTUVDVppqR9urVWjiWX8xHdTy626293aj
+         Au0CuTiVFtbZVAmmREm9hOTbojET/Ficmor/dfsPfNblSHQqjfKojjJzTWU17XlESjo2
+         R2CEGReh44zKpzUkiXYdHzL8it5jGL2JE7Nocr5VsFcwjYoe8vIgB/eBZnL7NgXQeF80
+         KbQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700818733; x=1701423533;
+        d=1e100.net; s=20230601; t=1700818796; x=1701423596;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=geI8GtZzgpBXL5dK3wkA+z2fxGZtMOBQC6A7G59OA2k=;
-        b=mVxFL3MbHyoEQ8hMLji2ogCHQAuumyUHuWfWZPudGqJJfJ7jDoYAcwgUrcwAtCFwuV
-         BnCkW1IbnZFeTMyCY+RhdAZvNCCpiYPuyEM3Idip2/i5rh+aaNMRx+Xsw9IUcKofF+b6
-         GlW+qHekCnie57Q6m/VX/ILLraqcftldcCXaW33DbH3LIhj4Rq0ATVjcLWLwjAHamaFq
-         5hY0xJi+7og6DVJqM3vKY148e8crHQcePUee+e/pL6YH3tbmGPKi52kjGBtuZ1wVRDSu
-         04EJBQM+EYPH3OOnqA1BClHx/bmMc72DGZnFyESEA8IgzRbzKjgNSBUM7HtS1SOjp1Yz
-         343w==
-X-Gm-Message-State: AOJu0YzjKcI9tLj0rWZkGUnwKIJDDUdx6ok1Q2S8NnuwUBDNJwqY/HdB
-	0zQXaqHvMTpO19yQzKU0W96RnUOt9oghDkx27j7x0A==
-X-Google-Smtp-Source: AGHT+IEXXvMFd13QXsC43cgyzVVZZH5cHNcXyPv3BXDDLd7/Rf5DZugdNE2BTv/Vm4WYLEoYNSUMRpCXrTwn21upVX4=
-X-Received: by 2002:a05:6902:49:b0:d9a:cd50:b99a with SMTP id
- m9-20020a056902004900b00d9acd50b99amr1760789ybh.12.1700818733666; Fri, 24 Nov
- 2023 01:38:53 -0800 (PST)
+        bh=S8H5wgkG7B5BzheZ4ZvCgLtyGDS/xoXFDJfUCvqhL0U=;
+        b=flgYqTV63vavkr/CN85O0kFBtsE9TPftvmCzzxrOMQ9bJZThIC2Fu9i1lvLqqi+3JD
+         85jtK9rFVfXUlMv5qLL2uFCHBA5UHCZzwBC69k6rVZXybWuyPg0lZqFjrIbiFYSBmAdk
+         b10n4T9s4p5uR3aHi1sQ1+OfQoB5l+C0lyh6N6S4JUTpM1wvCGNovEGyzKsbiPuH2y28
+         iXGRaGqSyaWTUqDmLuQN2p/o1HIhtLRVRA/cp7XHgrta6y/bVIqTcRlOEQDBeaV7RP8r
+         TjsqB+g3hYVkYAr1mbb0zr2wCvzWE7YRiE53HE3d6J/O5m2zyYHurZ7hxXBh6X7cfogj
+         3PUw==
+X-Gm-Message-State: AOJu0Ywv31JyACBJRQxQ0YF+IEmwPKNF+GOf2Xri+lItEo44RO+XaRy3
+	5pCxrhX8UCZUjT7fwdqF2FRxdSSwZXsDlRAO5pkrgA==
+X-Google-Smtp-Source: AGHT+IEs8cx8lksji9t2UQyL1PgEJlFxBFm7HDAYWPcKRjlRLhlZ6tpGb/ezhVwDiSZJ2LIESImZUSsgaTgbJZDjhtI=
+X-Received: by 2002:a05:690c:2c0b:b0:5c6:4de5:168f with SMTP id
+ eo11-20020a05690c2c0b00b005c64de5168fmr1651678ywb.10.1700818796617; Fri, 24
+ Nov 2023 01:39:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231116111441.2339-1-tychang@realtek.com> <20231116111441.2339-3-tychang@realtek.com>
-In-Reply-To: <20231116111441.2339-3-tychang@realtek.com>
+References: <20231121091107.5564-1-tychang@realtek.com>
+In-Reply-To: <20231121091107.5564-1-tychang@realtek.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 24 Nov 2023 10:38:42 +0100
-Message-ID: <CACRpkdZTFWnH1iwLCeJy02OXJAgTSSVTomzDNEQ3ebWocwkgPA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] Add GPIO support for Realtek DHC(Digital Home
- Center) RTD SoCs.
+Date: Fri, 24 Nov 2023 10:39:45 +0100
+Message-ID: <CACRpkdZpie+ccu0AoTOVvV0fA5C2u3hdorFVjbKEPT16RyifXw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: realtek: Fix logical error when finding descriptor
 To: Tzuyi Chang <tychang@realtek.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, linux-gpio@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Tzuyi,
-
-On Thu, Nov 16, 2023 at 12:14=E2=80=AFPM Tzuyi Chang <tychang@realtek.com> =
+On Tue, Nov 21, 2023 at 10:11=E2=80=AFAM Tzuyi Chang <tychang@realtek.com> =
 wrote:
 
-> This driver enables configuration of GPIO direction, GPIO values, GPIO
-> debounce settings and handles GPIO interrupts.
+> The pin descriptor should be returned if the name has been found in the
+> descriptor table. Remove the negation in the if statement for accurate
+> retrieval.
 >
+> Fixes: e99ce78030db ("pinctrl: realtek: Add common pinctrl driver for Rea=
+ltek DHC RTD SoCs")
 > Signed-off-by: Tzuyi Chang <tychang@realtek.com>
 
-Apart from the missing kerneldoc that the autobuilder is complaining about
-this looks good to me. If you fix the kerneldoc:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied for fixes!
 
 Yours,
 Linus Walleij
