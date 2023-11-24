@@ -1,103 +1,144 @@
-Return-Path: <linux-gpio+bounces-495-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-496-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D490F7F854D
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 21:56:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C23467F8563
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 22:17:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11B7A1C25EA6
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 20:56:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7216428A618
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Nov 2023 21:16:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634D2381D6;
-	Fri, 24 Nov 2023 20:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D01463BB20;
+	Fri, 24 Nov 2023 21:16:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="L+BTNSDh"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pHAgV2s7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2484812B
-	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 12:55:56 -0800 (PST)
-Received: by mail-vk1-xa29.google.com with SMTP id 71dfb90a1353d-4ac985ea4bbso742806e0c.2
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 12:55:56 -0800 (PST)
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8442F19A4
+	for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 13:16:52 -0800 (PST)
+Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-7c44b09f9f9so1234917241.0
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Nov 2023 13:16:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1700859355; x=1701464155; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1700860611; x=1701465411; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DkHq276wBIZJF42T7edYR58TpHdTxmoC8MZexHWaDek=;
-        b=L+BTNSDhnOWQFGlDzq6yzaxsLtL+G96FVJlqkXCdxQvHK94gmg19OXAe+lzpfjAMUk
-         ytfgSH0JLhHl9MBko5D1YEUscY4uku/BLNGM1Gjkz3kUzMEMe3thRlj20BM9qCPL4igm
-         53Aw6ZdSgfNmHFX0IgO+kwmOOVtUQhPGjQiCVDx71c+DCI4OV7sghtxiBqiHv0QA8hFM
-         chOneN9LLKiiBd5ugWgx0vRcMhi7scgT62RzJqkOMywoyDHR220jlkbq+vyrF+kGwGNh
-         YkCX18SQizTUW7Sza4qYmfqBoBod1Cc1negVmPoyEf6XbwjE0xspLaJt1v4kB99cnQYc
-         /AAw==
+        bh=bYhutocak3//Pg1G4wFBgqO46Xp/I/GtsLaBMsY5cbI=;
+        b=pHAgV2s7QwdkOMsegyiY4qtQk2qr6OdmFLsFUTVUWuK2JK/GTiryI7J18xGLlbbkwY
+         B7tLxSQDsCy8J0LUHUnHJ6tg7aFwmUEF5aAxDlDigyTqibaFx5NgAWfDGnKIFsehGJK/
+         iN3fPccFFsBlugGlft172WuoKxZ0ifzD3nJXhFrFdORiqioSIxx+3BQTJO1euvKps6bL
+         w72y2HiwI0SSJKCER8y7PmGXijvBnYURUmuyCj4Y6JQzWT4mTLGsboIo4q2ahs7lb+E9
+         JcskoY7zwRZGceeZIOKuw4SkKPzJ7phpXpPCMzwJetMIA0stlSfNV19DkoMbR5mpFPb/
+         AHdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700859355; x=1701464155;
+        d=1e100.net; s=20230601; t=1700860611; x=1701465411;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DkHq276wBIZJF42T7edYR58TpHdTxmoC8MZexHWaDek=;
-        b=igkpseUWoCl+3brT3m538jmE01wqB9ObChcWK5bx3CrRer0TPnUg/loMM18Jv1sKTa
-         IfVFHBgxHUv6tpjOVe0E1SEt6C3S4syXDjg2PybBmcS8dhsKkGKiETK7FRhQmzBpQFVo
-         X//V1X6Y+BEXg7uOPWDnKIguTbXS7HPlrJ9gK0wS6kFu8cFcDVvvE3tHjUg+9hxLtJZ+
-         gUOrzBK4uvZ2MbYwliffLpubw6Cv7oPhXkezop9X/qW0N8hGdcuqzOKAaVYwDdN6RWrR
-         lxGeZcZkm6LlCofecCGGBDD1wTyP0ueNz6eLz+cU1m47vd4VX3kUHHozZ/OrpJurHTrX
-         VC6A==
-X-Gm-Message-State: AOJu0YwBti8++/jgEXkaUeXP0mY5/n+hz1LeJWXFxet+kjmPVTzzxbDp
-	S+HRoFNXwtjAUFeNb3I+QK3gGzcC3zk4vdnok1DXAA==
-X-Google-Smtp-Source: AGHT+IGyMdCS127hCfRuELIeiuKJJlRWy7zB1fLtO/z70biQOC7A9rJzvNeCJQc3kdlZAemSoi5T2jUmhPGUwwl0D2Y=
-X-Received: by 2002:ac5:cde1:0:b0:4ab:fbff:a811 with SMTP id
- v1-20020ac5cde1000000b004abfbffa811mr4130200vkn.14.1700859354954; Fri, 24 Nov
- 2023 12:55:54 -0800 (PST)
+        bh=bYhutocak3//Pg1G4wFBgqO46Xp/I/GtsLaBMsY5cbI=;
+        b=T6lX+J0bFgiVZGMo2rpVz8RXJx/zlB+8M4lEtiu6bG7cIOqG9pIzyJzhGSi1ybLh4B
+         f0hhP3GFbu3vAPG5GV80IYbosObCf45bSn3UEy9WzvolYo3WydPVXMFgs+blyXVe7Nfw
+         eV9lgFidjtS89FX8RY7s1KT67ZsZ/PnoAqg+omwxbJzjKzhc+rkHI72hYQyhSHNJyQm5
+         ahOUS67vcygHLrnOd1wgLQSSs0b9jNSY2VMh3C3tYmyUebvwKWEUq8S+U5MoVVPVi7rv
+         /Vtg7ekzTqm7kaetQT5fB6fNvFjj6murZfJhf6DVBwfxz5sjXEHByqdwHMhyXcTv7HPv
+         3TKg==
+X-Gm-Message-State: AOJu0Yya4iKuklS6BaPWjw2KvgW7uv6oEt2pXEQocmj7yypdYc5ghwhS
+	Rf1aZ0np2mWQpgw+wuaQb/kiN25BBPQumHfN/W+eFFgcs6pE7+Zz
+X-Google-Smtp-Source: AGHT+IF2A3Iq2AAFxfronJOCca98BKBeT5s7n0a5WHJualZvZxGxHwHx82rWmZW8bPxqThk+VKsVk295YKFfOCeHzoI=
+X-Received: by 2002:a1f:4845:0:b0:49a:9855:2fbb with SMTP id
+ v66-20020a1f4845000000b0049a98552fbbmr5087862vka.5.1700860611429; Fri, 24 Nov
+ 2023 13:16:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
- <ZWDdGa-Zf06bteld@smile.fi.intel.com>
-In-Reply-To: <ZWDdGa-Zf06bteld@smile.fi.intel.com>
+References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
+ <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
+ <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
+ <20231121161111.zphi7pn77ns7sgu2@pengutronix.de> <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
+ <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com> <ZWCTtPVkTUQNLVoa@orome.fritz.box>
+In-Reply-To: <ZWCTtPVkTUQNLVoa@orome.fritz.box>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 24 Nov 2023 21:55:44 +0100
-Message-ID: <CAMRc=Mdfe9caGuJxNfL2jFT6_NKAno5bpskhUn=jNSR=Kd0THg@mail.gmail.com>
-Subject: Re: GPIOLIB locking is broken and how to fix it
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Kent Gibson <warthog618@gmail.com>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date: Fri, 24 Nov 2023 22:16:40 +0100
+Message-ID: <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
+Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc() function
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	kernel@pengutronix.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 24, 2023 at 6:28=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Nov 24, 2023 at 1:14=E2=80=AFPM Thierry Reding <thierry.reding@gmai=
+l.com> wrote:
 >
-> On Fri, Nov 24, 2023 at 05:00:36PM +0100, Bartosz Golaszewski wrote:
-> > Hi!
+> On Wed, Nov 22, 2023 at 11:36:19AM +0100, Bartosz Golaszewski wrote:
+> > On Wed, Nov 22, 2023 at 10:05=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > >
+> > > Hello Bart,
+> > >
+> > > On Tue, Nov 21, 2023 at 05:11:11PM +0100, Uwe Kleine-K=C3=B6nig wrote=
+:
+> > > > On Tue, Nov 21, 2023 at 03:02:39PM +0100, Bartosz Golaszewski wrote=
+:
+> > > > > Eh... I had a talk at LPC where I explained why I really dislike =
+this
+> > > > > approach but I guess this ship has sailed now and it's not a subs=
+ystem
+> > > > > where I have any say anyway.
+> > > >
+> > > > Is there a record of your talk? I'm open to hear your arguments.
+> > >
+> > > I found your slides at
+> > > https://lpc.events/event/17/contributions/1627/attachments/1258/2725/=
+Linux%20Plumbers%20Conference%202023.pdf
+> > >
 > >
-
-[snip]
-
-> >
-> > I'd like to hear your ideas as this change is vital before we start
-> > protecting gdev->chip with SRCU in all API calls.
+> > My talk is here: https://www.youtube.com/watch?v=3DVxaAorwL89c&t=3D2931=
+0s
 >
-> Brief side note: If we can really fix something (partially) right now,
-> do it, otherwise technical debt kills us.
+> I've been watching this along with Laurent's talk from last year (and I
+> guess I should probably also go through Wolfram's patch from earlier
+> this year) and I really like what you presented. It also sounds like
+> there was a lot of support across various audience members, so I think
+> it'd be good to rally around such a common pattern so we can start to
+> improve things on a more wide basis.
 >
-> (Most likely I refer to the list of the GPIO devices.)
+> Given that this wasn't very long ago, I wouldn't expect that much work
+> has happened yet on the resmgr library. However, I think it would fit
+> very well both with how PWM works today and with what Uwe has in mind
+> for the character device support.
+>
+> Thierry
 
-I will do it but I wanted to already start the discussion on the wider pict=
-ure.
+Hi Thierry,
+
+Thanks for the kind words. No work has been done so far other than
+thinking about the possible API. I'm currently in the process of
+trying to fix the object life-time and concurrent access in GPIO -
+mostly improving the dire locking situation. My goal is to implement
+all I spoke about in GPIO first and then try to generalize it to some
+other subsystem like what Greg KH suggested.
+
+I've already got support from Wolfram on that and we of course could
+use any help we can get.
+
+I admit I've been quite busy but I do plan on going through Uwe's
+series next week and maybe running tests similar to what I have for
+GPIO on it. I'm quite certain (correct me if I'm wrong) that this
+series doesn't improve the locking (specifically hot-unplug events
+during API calls). I think that my proposal has the advantage of
+having the pointer to the implementation in the "wrapper" which can be
+easily protected with RCU.
+
+Uwe: do you have a solution for device removal concurrent with API
+calls when using your approach?
 
 Bart
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
->
 
