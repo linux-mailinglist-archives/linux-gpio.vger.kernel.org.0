@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-519-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-518-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDFAE7F8F5E
+	by mail.lfdr.de (Postfix) with ESMTPS id 386F87F8F5C
 	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 22:00:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A52E1C20CC4
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 21:00:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BFE81C20B30
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 21:00:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E15B230F89;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C23430F84;
 	Sat, 25 Nov 2023 20:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MRfcG7vn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZvcFKI2f"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117C8127
-	for <linux-gpio@vger.kernel.org>; Sat, 25 Nov 2023 12:59:50 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F264E11F
+	for <linux-gpio@vger.kernel.org>; Sat, 25 Nov 2023 12:59:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700945990; x=1732481990;
+  t=1700945989; x=1732481989;
   h=date:from:to:cc:subject:message-id;
-  bh=nRT1EQORPUgVn80IURtyUq3+MnwV7ve/MFge1VlU39Y=;
-  b=MRfcG7vnEooXuoSrVSpQt/BLkhY1PkQoPRZcZJwX/mMVzsoMTKlBKXfR
-   uWGJWU2FQPY3JZPUsnIcPqmZLNaOAxmjTIc4hpztA/+NFf3qRepkcxE9o
-   KY0xVVduVCpvT2A01GxT049GzZxVF3ldFfZcueYxsCw4TqAHr3Ojz96ya
-   xcJFsy3/ppWdFTgGjAX9MW+TYbeQ5/0vuhK5IVAEhOYg0LkoFE+yawPSs
-   4WkZKfrvczqUTpiyWovYx5+csMFrCUejdy1UEXqyhi/xCvsLsVtFx0bj+
-   QiU+Tx7Jpf+YmJsXJ1QM36zFjcjI/cLCzGlqMHvoj1AP87QhWuyfU8OSk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10905"; a="372691571"
+  bh=WZINN4teLYhWORXLya2mXbFhczK/YRt4wU0wlYu5gSY=;
+  b=ZvcFKI2f+n6cP/kybQEnbvnQtJFyBYMBOeLruqKOQ75Co9gyRWu6ULJ5
+   RBGgtuFigK7ZrEXaLBd8CwqjidIrt16fa5JBrhFq/TLSqzUowTPu1yrgJ
+   VBv36NZ/FSs243r0sNjuK6jB2uC8R9nM4MDRnheSgad/z2cQJlvK0x061
+   58jak/BcjrqtHfh/0vzxnuW+ZCiyfQFBT/hHSSPBCd2NDm9Isld3dOBZi
+   3lXqHGrr9d/zJLdXeJNv8IXLDyxSQaeIkzoJjjzeQC3Y3xPXRb8GbT2s2
+   NsvywN2ZYwFQ/Z5L0ub3lOPmf9XywQMRTvg9WcWJFkeRAbQndXVV34kyb
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10905"; a="372691566"
 X-IronPort-AV: E=Sophos;i="6.04,227,1695711600"; 
-   d="scan'208";a="372691571"
+   d="scan'208";a="372691566"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2023 12:59:48 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,227,1695711600"; 
-   d="scan'208";a="16246111"
+   d="scan'208";a="16246109"
 Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
   by fmviesa001.fm.intel.com with ESMTP; 25 Nov 2023 12:59:47 -0800
 Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r6zkf-0004Qc-1t;
+	id 1r6zkf-0004QW-0n;
 	Sat, 25 Nov 2023 20:59:45 +0000
-Date: Sun, 26 Nov 2023 04:59:19 +0800
+Date: Sun, 26 Nov 2023 04:59:38 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/device_get_label_for_pinctrl] BUILD SUCCESS
- d1f7728259ef02ac20b7afb6e7eb5a9eb1696c25
-Message-ID: <202311260417.janyWTO2-lkp@intel.com>
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ e6d71c7878bc6140d1b0b527116af8fd8376d3d5
+Message-ID: <202311260435.Rro9XIQR-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -58,13 +58,13 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/device_get_label_for_pinctrl
-branch HEAD: d1f7728259ef02ac20b7afb6e7eb5a9eb1696c25  gpiolib: provide gpio_device_get_label()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: e6d71c7878bc6140d1b0b527116af8fd8376d3d5  dt-bindings: gpio: brcmstb: drop unneeded quotes
 
 elapsed time: 1449m
 
-configs tested: 205
-configs skipped: 2
+configs tested: 221
+configs skipped: 3
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -84,7 +84,9 @@ arc                   randconfig-001-20231125   gcc
 arc                   randconfig-002-20231125   gcc  
 arc                           tb10x_defconfig   gcc  
 arc                    vdk_hs38_smp_defconfig   gcc  
+arm                              allmodconfig   gcc  
 arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
 arm                         at91_dt_defconfig   gcc  
 arm                        clps711x_defconfig   gcc  
 arm                      footbridge_defconfig   gcc  
@@ -105,7 +107,9 @@ arm64                 randconfig-001-20231125   gcc
 arm64                 randconfig-002-20231125   gcc  
 arm64                 randconfig-003-20231125   gcc  
 arm64                 randconfig-004-20231125   gcc  
+csky                             allmodconfig   gcc  
 csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
 csky                                defconfig   gcc  
 csky                  randconfig-001-20231125   gcc  
 csky                  randconfig-002-20231125   gcc  
@@ -114,7 +118,19 @@ hexagon                          allyesconfig   clang
 i386                             allmodconfig   clang
 i386                              allnoconfig   clang
 i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20231125   gcc  
+i386         buildonly-randconfig-002-20231125   gcc  
+i386         buildonly-randconfig-003-20231125   gcc  
+i386         buildonly-randconfig-004-20231125   gcc  
+i386         buildonly-randconfig-005-20231125   gcc  
+i386         buildonly-randconfig-006-20231125   gcc  
 i386                                defconfig   gcc  
+i386                  randconfig-001-20231125   gcc  
+i386                  randconfig-002-20231125   gcc  
+i386                  randconfig-003-20231125   gcc  
+i386                  randconfig-004-20231125   gcc  
+i386                  randconfig-005-20231125   gcc  
+i386                  randconfig-006-20231125   gcc  
 i386                  randconfig-011-20231125   clang
 i386                  randconfig-011-20231126   gcc  
 i386                  randconfig-012-20231125   clang
