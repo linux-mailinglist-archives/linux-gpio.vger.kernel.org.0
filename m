@@ -1,57 +1,57 @@
-Return-Path: <linux-gpio+bounces-510-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-511-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7BF37F8A75
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 13:04:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A73F27F8A76
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 13:04:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10D431C20A82
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 12:04:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1A98BB211E8
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Nov 2023 12:04:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BB99E566;
-	Sat, 25 Nov 2023 12:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BB31E569;
+	Sat, 25 Nov 2023 12:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H9xglie4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M53gU+Sc"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41181D72
-	for <linux-gpio@vger.kernel.org>; Sat, 25 Nov 2023 04:04:47 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 951C510E4
+	for <linux-gpio@vger.kernel.org>; Sat, 25 Nov 2023 04:04:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700913887; x=1732449887;
+  t=1700913888; x=1732449888;
   h=date:from:to:cc:subject:message-id;
-  bh=DD1XmB+qEGIT6+twHGMAwl851TsGV1PC0uJmuLOJ2uc=;
-  b=H9xglie4vR6ApuzTMJ9mgXkAwrookzLLwSrZo+TIwwpVSDpVv3z31qz0
-   ctuVPdzpZqfi9ZptnG/zIhsYpdeGBdcOSH67BxSkMrjTO6aWF4uQDyUTq
-   BhhbnAWdfCTnGGUf2PcJxOsawVucWI9nAh7tSDyoUreWGk28QdA1wnFOb
-   fQVmR3wKJfVBfnhdTy4TzeS5Xju//X4OeWgK+IPLR+MAAG3NuKnnc1WfX
-   M9ymTOvdA91hoEXPWfh1aLwyHZRHrgO1SoSo89mE+h2DYIY2JCCkonMdU
-   KUCI56GsxI/4H0asYPw45sdFHELknhAPeiTbCmodeZ8rSPrlPpswp1bqn
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="395330867"
+  bh=vkBYm6FI3IKP/+tScIbM3KajOAd+1WLpBgoyfhxgPVU=;
+  b=M53gU+Scxl3g+7KvH5CqIB0uJeIDM/wTv23/I9ZxxI90ahIZ6U8TMlSA
+   qtadNjAG/KN6wXZhQuCOSwhTL0548TkeUS0yK7N3km2FRO6sfCWFfidjb
+   yKa+SMGRF/7yeo6HfYaIvUoIJ2A6FYyAE9Hq1T0cc+cZ0qKrW7sbSJtPl
+   C2V/nrlWdFLlRb3k6+fnlbLHPIWb6lUv3HkexLkark3sg+rodtnKabfXM
+   fUKha5QAwpZLgB6LtPbEKNI20LBThcg80ZtgUkfCB1OdtcwAwqR76qKlS
+   VB6/mOBVRcq14P63Bcr/aDBBjJzk2h3ff5vQDtCl3pIzdU4xy3xNiYW2F
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="395330870"
 X-IronPort-AV: E=Sophos;i="6.04,226,1695711600"; 
-   d="scan'208";a="395330867"
+   d="scan'208";a="395330870"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2023 04:04:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="858580358"
+X-IronPort-AV: E=McAfee;i="6600,9927,10904"; a="858580375"
 X-IronPort-AV: E=Sophos;i="6.04,226,1695711600"; 
-   d="scan'208";a="858580358"
+   d="scan'208";a="858580375"
 Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Nov 2023 04:04:06 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Nov 2023 04:04:14 -0800
 Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r6rOF-0003xR-37;
-	Sat, 25 Nov 2023 12:04:03 +0000
-Date: Sat, 25 Nov 2023 20:03:07 +0800
+	id 1r6rOO-0003xm-0B;
+	Sat, 25 Nov 2023 12:04:12 +0000
+Date: Sat, 25 Nov 2023 20:03:39 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- ccdd55384156634ab51c1103b3011e71a3f7d505
-Message-ID: <202311252003.ArbyxY7B-lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ c3c63e66527c18b598bbf9d77f0849852cd32ff9
+Message-ID: <202311252037.QxUBK1Ei-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -59,12 +59,12 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: ccdd55384156634ab51c1103b3011e71a3f7d505  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: c3c63e66527c18b598bbf9d77f0849852cd32ff9  pinctrl: as3722: Use devm_gpiochip_add_data() to simplify remove path
 
-elapsed time: 1447m
+elapsed time: 1451m
 
-configs tested: 270
+configs tested: 258
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -78,7 +78,6 @@ arc                              allmodconfig   gcc
 arc                               allnoconfig   gcc  
 arc                              allyesconfig   gcc  
 arc                                 defconfig   gcc  
-arc                        nsim_700_defconfig   gcc  
 arc                   randconfig-001-20231124   gcc  
 arc                   randconfig-001-20231125   gcc  
 arc                   randconfig-002-20231124   gcc  
@@ -88,11 +87,8 @@ arm                              allmodconfig   gcc
 arm                               allnoconfig   gcc  
 arm                              allyesconfig   gcc  
 arm                        clps711x_defconfig   gcc  
-arm                     davinci_all_defconfig   clang
 arm                                 defconfig   clang
-arm                           imxrt_defconfig   gcc  
 arm                      integrator_defconfig   gcc  
-arm                          moxart_defconfig   clang
 arm                        mvebu_v7_defconfig   gcc  
 arm                          pxa3xx_defconfig   gcc  
 arm                            qcom_defconfig   gcc  
@@ -104,6 +100,7 @@ arm                   randconfig-003-20231124   clang
 arm                   randconfig-003-20231125   gcc  
 arm                   randconfig-004-20231124   clang
 arm                   randconfig-004-20231125   gcc  
+arm                        spear3xx_defconfig   clang
 arm64                            allmodconfig   clang
 arm64                             allnoconfig   gcc  
 arm64                               defconfig   gcc  
@@ -170,7 +167,6 @@ m68k                              allnoconfig   gcc
 m68k                             allyesconfig   gcc  
 m68k                          amiga_defconfig   gcc  
 m68k                                defconfig   gcc  
-m68k                       m5249evb_defconfig   gcc  
 m68k                       m5475evb_defconfig   gcc  
 m68k                        stmark2_defconfig   gcc  
 m68k                           virt_defconfig   gcc  
@@ -183,12 +179,8 @@ mips                             allyesconfig   gcc
 mips                        bcm47xx_defconfig   gcc  
 mips                         cobalt_defconfig   gcc  
 mips                      fuloong2e_defconfig   gcc  
-mips                            gpr_defconfig   gcc  
-mips                      loongson3_defconfig   gcc  
 mips                  maltasmvp_eva_defconfig   gcc  
-mips                        omega2p_defconfig   clang
-mips                          rb532_defconfig   gcc  
-nios2                            alldefconfig   gcc  
+mips                      pic32mzda_defconfig   clang
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -205,7 +197,6 @@ parisc                           allmodconfig   gcc
 parisc                            allnoconfig   gcc  
 parisc                           allyesconfig   gcc  
 parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
 parisc                randconfig-001-20231124   gcc  
 parisc                randconfig-001-20231125   gcc  
 parisc                randconfig-002-20231124   gcc  
@@ -215,8 +206,8 @@ powerpc                          allmodconfig   clang
 powerpc                           allnoconfig   gcc  
 powerpc                          allyesconfig   clang
 powerpc                     asp8347_defconfig   gcc  
+powerpc                   bluestone_defconfig   clang
 powerpc                       holly_defconfig   gcc  
-powerpc                      makalu_defconfig   gcc  
 powerpc                 mpc834x_itx_defconfig   gcc  
 powerpc                       ppc64_defconfig   gcc  
 powerpc               randconfig-001-20231124   clang
@@ -254,7 +245,6 @@ sh                               allyesconfig   gcc
 sh                         ap325rxa_defconfig   gcc  
 sh                                  defconfig   gcc  
 sh                         ecovec24_defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
 sh                          kfr2r09_defconfig   gcc  
 sh                          landisk_defconfig   gcc  
 sh                    randconfig-001-20231124   gcc  
@@ -262,8 +252,6 @@ sh                    randconfig-001-20231125   gcc
 sh                    randconfig-002-20231124   gcc  
 sh                    randconfig-002-20231125   gcc  
 sh                      rts7751r2d1_defconfig   gcc  
-sh                           se7206_defconfig   gcc  
-sh                           se7343_defconfig   gcc  
 sh                           se7722_defconfig   gcc  
 sh                           se7724_defconfig   gcc  
 sparc                            alldefconfig   gcc  
