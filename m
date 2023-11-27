@@ -1,97 +1,115 @@
-Return-Path: <linux-gpio+bounces-530-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-531-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01E027FA284
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 15:22:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DA997FA407
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 16:05:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF91C2817D1
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 14:22:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 063E7281693
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 15:05:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F40531721;
-	Mon, 27 Nov 2023 14:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBD3731739;
+	Mon, 27 Nov 2023 15:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8LJpZ51"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F46198;
-	Mon, 27 Nov 2023 06:22:03 -0800 (PST)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5cca68f6e01so42530557b3.2;
-        Mon, 27 Nov 2023 06:22:03 -0800 (PST)
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42A6AA;
+	Mon, 27 Nov 2023 07:05:31 -0800 (PST)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-da819902678so4007564276.1;
+        Mon, 27 Nov 2023 07:05:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701097531; x=1701702331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A14//g2UoXkLcdPQSx/k3Kefdj+ue5KGp8TIARcBONU=;
+        b=I8LJpZ51Rmd3GLFTKtuVTrpb/fOvwIcetGBllIJx13uJcV4gkZ6j4cfiJ2djUtf1ld
+         l+iaBWUM4K52tU99JjAhC+vVVfBQrtg7mAGVJta1alH3cf7IG72dE4yupewETfH12P8d
+         QZZsOoyd0VVlqC07cgGh1sJhPnOzIzC/Ff44jatsHXEsU4ixJdJs7BtbVWEkgDXYa4xN
+         W0IEB5oqXG9wMnqYr26jo5zhhOga2GMSXsggOuAhMkdP4kTsgge5LszoWJeaaAcjuxMJ
+         uhH37eMgR+RzVYOWwcsIe/zdg0eGhOKrnwUQrFDNhLYinSt0Q1c81ebZvkvfuUm5kHxU
+         e8Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701094922; x=1701699722;
+        d=1e100.net; s=20230601; t=1701097531; x=1701702331;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=834pVqsGyG/ThloFCq4Fg8uGigDw1US55aPZgUr69AE=;
-        b=hZgxPAobZDD2wyA6PCv3abu3HYrdfeTdF3Y+Kjwkzx1BfAUIq0SXTU3FPSQoS5+G+s
-         lPF8r9g3h07Rk9sret3Zs3/qhcPzZH8q0Swm2Ruves73yq0jxjWHiGBHmtzCXU4ySWS6
-         hbBWIJAAKAqCAj66cq5Fs329tAxx9F1DCcdqg/qiHayf2LGenx5Yd2KG/H5oa2OXoJvK
-         fWu9OdhBut4NGzU7RLwWQCNTFTzZHw1nY60O+xNn4NltRFP1rYZDjczI7+hlrL0sXv17
-         9ao6uBHyxeeOFrFbRCl0oUudlihSIhgjlXcxuW5+CLC3Mmo9v4+R1YMLgsdjrrQ+i35w
-         iNRQ==
-X-Gm-Message-State: AOJu0YwT8soz50xGXB4jQ3HTJ0zUI8D9VpIWFvPZOHao3bFXqDbX3raY
-	V5wdiTIyX+l5QfmeCwOjgy9DSnIk5Y8Fag==
-X-Google-Smtp-Source: AGHT+IHIry33GnwZYxjABz1zje1OAyuJ5yzdqY1RHUsCssQtdGrmsmjetxCAOQFmRXv717eoprhxog==
-X-Received: by 2002:a81:a507:0:b0:5cb:d645:8cdf with SMTP id u7-20020a81a507000000b005cbd6458cdfmr11688215ywg.48.1701094922153;
-        Mon, 27 Nov 2023 06:22:02 -0800 (PST)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
-        by smtp.gmail.com with ESMTPSA id y66-20020a81a145000000b005b4501cb71csm3231244ywg.29.2023.11.27.06.22.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Nov 2023 06:22:01 -0800 (PST)
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-daf26d84100so3819090276.3;
-        Mon, 27 Nov 2023 06:22:01 -0800 (PST)
-X-Received: by 2002:a25:6cc5:0:b0:d9a:6b1e:ef51 with SMTP id
- h188-20020a256cc5000000b00d9a6b1eef51mr10902367ybc.2.1701094921451; Mon, 27
- Nov 2023 06:22:01 -0800 (PST)
+        bh=A14//g2UoXkLcdPQSx/k3Kefdj+ue5KGp8TIARcBONU=;
+        b=PG8BOIohJf+FW7qVL0Us8Km4tzlbPFQwuutre7kYvqfSnDNo2cCLovwVMzJvyCE4vd
+         JUxNGOGQ6R0wFX4B7ZaYY9re3t/e2EBgr6KsiIraav++Jf1OyyfxFFl/8Z0VPnIS+T+u
+         u6w3/yGo+x9vfFdRIKyobUF6Y13hnTJhw2HRZRJFaygc7+CRewc1nv5L1mSwX7huWmS5
+         GUFkPy0mKBJRGRHPLQgMsugiciZBz8f3w9CMjVy0kVuZIRR7y6N95a9L+m23FTuiIrxf
+         KHsx5uMHdV1KleNixzH197pPuUXszT1Yon0HP0QsMbit8MMcUDJA/5Y37O7tOA5/h5lb
+         8UNg==
+X-Gm-Message-State: AOJu0YyVoodxCEJglDmac5IVNJPulKFKP7AUHRQPmQPzGXUz3Ag5917r
+	DDYomaJK+7HJZZaP3/upQxeZLFoblO0DEZNxWw0=
+X-Google-Smtp-Source: AGHT+IFD5Yhlfu1wvzt/S0Z6RQjPCozzczGVg6VzXL32NvqafhWv5m2ewDPmpfJRhWrDAzc1Y5Sk8oPfeca2QTWxtBk=
+X-Received: by 2002:a5b:201:0:b0:d9a:3bee:2eeb with SMTP id
+ z1-20020a5b0201000000b00d9a3bee2eebmr12061112ybl.60.1701097530941; Mon, 27
+ Nov 2023 07:05:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231124092121.16866-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20231124092121.16866-1-krzysztof.kozlowski@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 27 Nov 2023 15:21:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU7cs_DCwkbD4FGy=OgxsfLe4poU0916dM1xUB62ahqqg@mail.gmail.com>
-Message-ID: <CAMuHMdU7cs_DCwkbD4FGy=OgxsfLe4poU0916dM1xUB62ahqqg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: correct white-spaces in examples
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org
+References: <20231120194802.1675239-1-andriy.shevchenko@linux.intel.com>
+ <ZVzy227f3cIiTmtE@smile.fi.intel.com> <CACRpkdZi5uW7saBFFA=VWDYpj_MCw3he2k-CLh__zJzUOOEkyw@mail.gmail.com>
+ <ZWCJP48WopQdCp6h@smile.fi.intel.com>
+In-Reply-To: <ZWCJP48WopQdCp6h@smile.fi.intel.com>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Mon, 27 Nov 2023 17:05:19 +0200
+Message-ID: <CAP6Zq1jrX+Mg70mWA3hEQDBYBU5PmDPdLPPEOZ5o+fSKw053rA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: nuvoton: Convert to use struct pingroup
+ and PINCTRL_PINGROUP()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, openbmc@lists.ozlabs.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 24, 2023 at 10:21=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> Use only one and exactly one space around '=3D' in DTS example.
+Hi Linus,
+
+On Fri, 24 Nov 2023 at 13:30, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> On Fri, Nov 24, 2023 at 11:09:07AM +0100, Linus Walleij wrote:
+> > On Tue, Nov 21, 2023 at 7:11=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Mon, Nov 20, 2023 at 09:48:02PM +0200, Andy Shevchenko wrote:
+> >
+> > > > The pin control header provides struct pingroup and PINCTRL_PINGROU=
+P() macro.
+> > > > Utilize them instead of open coded variants in the driver.
+> > >
+> > > Linus, I dunno if you are going to apply this sooner (assuming Jonath=
+an is okay
+> > > with the change), but I have a bigger pending series where this will =
+be a
+> > > prerequisite. So, when I will be ready and if it's not being applied =
+(yet),
+> > > I'll include it into the bigger series as well.
+> >
+> > No answer from Jonathan but I just applied another Nuvoton patch from
+> > Tomer, so maybe Tomer can look at/test this patch?
+Sorry, but I do not have wpcm450 board to test this patch.
+In general, the patch looks fine.
+>
+> Jonathan acked it  in the reincarnation in the series (see my big one).
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
->  .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml           | 6 +++---
+Sorry I couldn't help.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Best regards,
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Tomer
 
