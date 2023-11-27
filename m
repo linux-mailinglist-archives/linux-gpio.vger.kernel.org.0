@@ -1,115 +1,116 @@
-Return-Path: <linux-gpio+bounces-531-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-532-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DA997FA407
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 16:05:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6791E7FA5C3
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 17:10:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 063E7281693
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 15:05:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0177281632
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 16:10:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBD3731739;
-	Mon, 27 Nov 2023 15:05:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E538D358B5;
+	Mon, 27 Nov 2023 16:10:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8LJpZ51"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMqhFRWt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42A6AA;
-	Mon, 27 Nov 2023 07:05:31 -0800 (PST)
-Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-da819902678so4007564276.1;
-        Mon, 27 Nov 2023 07:05:31 -0800 (PST)
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914A61A7;
+	Mon, 27 Nov 2023 08:10:45 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-332e40315bdso2764854f8f.1;
+        Mon, 27 Nov 2023 08:10:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701097531; x=1701702331; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A14//g2UoXkLcdPQSx/k3Kefdj+ue5KGp8TIARcBONU=;
-        b=I8LJpZ51Rmd3GLFTKtuVTrpb/fOvwIcetGBllIJx13uJcV4gkZ6j4cfiJ2djUtf1ld
-         l+iaBWUM4K52tU99JjAhC+vVVfBQrtg7mAGVJta1alH3cf7IG72dE4yupewETfH12P8d
-         QZZsOoyd0VVlqC07cgGh1sJhPnOzIzC/Ff44jatsHXEsU4ixJdJs7BtbVWEkgDXYa4xN
-         W0IEB5oqXG9wMnqYr26jo5zhhOga2GMSXsggOuAhMkdP4kTsgge5LszoWJeaaAcjuxMJ
-         uhH37eMgR+RzVYOWwcsIe/zdg0eGhOKrnwUQrFDNhLYinSt0Q1c81ebZvkvfuUm5kHxU
-         e8Fg==
+        d=gmail.com; s=20230601; t=1701101444; x=1701706244; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g+lF3QgCwvWnbjfqhJEMa7OoaEHoxVxVETL2faHDack=;
+        b=SMqhFRWtRXFUUW0aQqRS7CFlvhBuTwPPO4sEscfBdfaUdWRHI8r4Y7RxtfW30D8RuW
+         9Q4V+Or0/TWhBrTHN4KOO2lF3Y7DbYDzZAR4KX2axqgl4B3FxZKEWr8DJIereGJhFi+I
+         Gn8ou6H1IVjTzN/6LO+B8AOmIwK5YQM7f6nDgiHSforpXyLkdekwFjPLrFk2J08Qrjxt
+         LAUAvCjpeuTCNF2YSadPA/kU+u8j5ok3nEwgYo8nxY5zoIERblxVUsWt16Y8lJfrbOJK
+         t98qhQmJ9y1jED3BgYBqunUx5pv2cOMlcmZE4pi1+b6dVLmtcg++UFelhETpAjrbXdf0
+         norw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701097531; x=1701702331;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A14//g2UoXkLcdPQSx/k3Kefdj+ue5KGp8TIARcBONU=;
-        b=PG8BOIohJf+FW7qVL0Us8Km4tzlbPFQwuutre7kYvqfSnDNo2cCLovwVMzJvyCE4vd
-         JUxNGOGQ6R0wFX4B7ZaYY9re3t/e2EBgr6KsiIraav++Jf1OyyfxFFl/8Z0VPnIS+T+u
-         u6w3/yGo+x9vfFdRIKyobUF6Y13hnTJhw2HRZRJFaygc7+CRewc1nv5L1mSwX7huWmS5
-         GUFkPy0mKBJRGRHPLQgMsugiciZBz8f3w9CMjVy0kVuZIRR7y6N95a9L+m23FTuiIrxf
-         KHsx5uMHdV1KleNixzH197pPuUXszT1Yon0HP0QsMbit8MMcUDJA/5Y37O7tOA5/h5lb
-         8UNg==
-X-Gm-Message-State: AOJu0YyVoodxCEJglDmac5IVNJPulKFKP7AUHRQPmQPzGXUz3Ag5917r
-	DDYomaJK+7HJZZaP3/upQxeZLFoblO0DEZNxWw0=
-X-Google-Smtp-Source: AGHT+IFD5Yhlfu1wvzt/S0Z6RQjPCozzczGVg6VzXL32NvqafhWv5m2ewDPmpfJRhWrDAzc1Y5Sk8oPfeca2QTWxtBk=
-X-Received: by 2002:a5b:201:0:b0:d9a:3bee:2eeb with SMTP id
- z1-20020a5b0201000000b00d9a3bee2eebmr12061112ybl.60.1701097530941; Mon, 27
- Nov 2023 07:05:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701101444; x=1701706244;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g+lF3QgCwvWnbjfqhJEMa7OoaEHoxVxVETL2faHDack=;
+        b=LuRcgnfPc+l+D5hf8h/X9EhRyEND4VMSYExi2lkk1UDcAeYgu0jUVhynU8t8CHKEId
+         28IOtb8EAL3eI/gj/y2pI9kEixU2OGzvky0P0g9C8XoUlxSY/nYZihLXZsvGUPofriAp
+         Z8uWiavRwJ06k+utN9GlnjGtD38LnB4+ZybI3/Ur6XuqbmcKG+WVIQrrPsTvOFQ1SRwk
+         UkYJ55mhPdaCrM5UtFo2tBM/ZFFOclw9TxF3ckfbjK4pDIghqeCwGgW2hgS/CDoQtHUn
+         t3h7veZoFkNcktYP4jGzVO7X0uWKMVqPLH5E1pG4RiBm8C9ctzDdoyGGoKBmBO6hbUiE
+         yawQ==
+X-Gm-Message-State: AOJu0Yx6RC54bHD7dovwTn2tPc6phgrHE/7MyT8k34MEDM0RcLfi7Xfu
+	rUf5WvCIRyaGRvyWTBDUmGU=
+X-Google-Smtp-Source: AGHT+IFGREU7mhh8Zy+vus2qLVxZ7UEZYtWvBcxMMrydr3j/3AjBv6ioEJwShSAq6Sb8x3TtsHo1YA==
+X-Received: by 2002:a5d:6a91:0:b0:333:2f2:33c7 with SMTP id s17-20020a5d6a91000000b0033302f233c7mr2471080wru.41.1701101443549;
+        Mon, 27 Nov 2023 08:10:43 -0800 (PST)
+Received: from [172.25.98.130] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id s16-20020a5d69d0000000b00332cddd7468sm12386974wrw.40.2023.11.27.08.10.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Nov 2023 08:10:42 -0800 (PST)
+Message-ID: <0002141e-4605-414d-9baf-84bc794ee66b@gmail.com>
+Date: Mon, 27 Nov 2023 18:10:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231120194802.1675239-1-andriy.shevchenko@linux.intel.com>
- <ZVzy227f3cIiTmtE@smile.fi.intel.com> <CACRpkdZi5uW7saBFFA=VWDYpj_MCw3he2k-CLh__zJzUOOEkyw@mail.gmail.com>
- <ZWCJP48WopQdCp6h@smile.fi.intel.com>
-In-Reply-To: <ZWCJP48WopQdCp6h@smile.fi.intel.com>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Mon, 27 Nov 2023 17:05:19 +0200
-Message-ID: <CAP6Zq1jrX+Mg70mWA3hEQDBYBU5PmDPdLPPEOZ5o+fSKw053rA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: nuvoton: Convert to use struct pingroup
- and PINCTRL_PINGROUP()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, openbmc@lists.ozlabs.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] dt-bindings: adc: add AD7173
+To: Conor Dooley <conor@kernel.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+ Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231123152331.5751-1-user@HYB-hhAwRlzzMZb>
+ <20231123-ninth-joylessly-89e8531cf756@spud>
+Content-Language: en-US
+From: Ceclan Dumitru <mitrutzceclan@gmail.com>
+In-Reply-To: <20231123-ninth-joylessly-89e8531cf756@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
 
-On Fri, 24 Nov 2023 at 13:30, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Nov 24, 2023 at 11:09:07AM +0100, Linus Walleij wrote:
-> > On Tue, Nov 21, 2023 at 7:11=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Mon, Nov 20, 2023 at 09:48:02PM +0200, Andy Shevchenko wrote:
-> >
-> > > > The pin control header provides struct pingroup and PINCTRL_PINGROU=
-P() macro.
-> > > > Utilize them instead of open coded variants in the driver.
-> > >
-> > > Linus, I dunno if you are going to apply this sooner (assuming Jonath=
-an is okay
-> > > with the change), but I have a bigger pending series where this will =
-be a
-> > > prerequisite. So, when I will be ready and if it's not being applied =
-(yet),
-> > > I'll include it into the bigger series as well.
-> >
-> > No answer from Jonathan but I just applied another Nuvoton patch from
-> > Tomer, so maybe Tomer can look at/test this patch?
-Sorry, but I do not have wpcm450 board to test this patch.
-In general, the patch looks fine.
->
-> Jonathan acked it  in the reincarnation in the series (see my big one).
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
 
-Sorry I couldn't help.
+On 11/23/23 20:02, Conor Dooley wrote:
+> On Thu, Nov 23, 2023 at 05:23:21PM +0200, mitrutzceclan wrote:
+>> +allOf:
+>> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          not:
+>> +            contains:
+>> +              const: adi,ad7173-8
+>> +    then:
+>> +      properties:
+>> +        refin2-supply: false
+>> +      patternProperties:
+>> +        "^channel@[0-9a-f]$":
+>> +          properties:
+>> +            adi,reference-select:
+>> +              enum:
+>> +                - refin
+>> +                - refout-avss
+>> +                - avdd
+> 
+> I assume you tested that this restriction works as intended?
+> 
 
-Best regards,
-
-Tomer
+Yes, for both reference and reference-select
 
