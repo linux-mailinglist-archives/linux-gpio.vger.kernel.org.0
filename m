@@ -1,286 +1,139 @@
-Return-Path: <linux-gpio+bounces-525-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-526-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1421B7F9B0D
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 08:37:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AACEB7F9CC7
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 10:37:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 316A61C20928
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 07:37:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 38213B20D6C
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 09:37:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79B3F2591;
-	Mon, 27 Nov 2023 07:37:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 251BD16433;
+	Mon, 27 Nov 2023 09:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="DjeYRCld"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CetYnMam"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EDB5137
-	for <linux-gpio@vger.kernel.org>; Sun, 26 Nov 2023 23:37:36 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-a06e59384b6so482366566b.1
-        for <linux-gpio@vger.kernel.org>; Sun, 26 Nov 2023 23:37:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1701070655; x=1701675455; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=scHiT0Xo/KLWsBCLyWjvRQ5uVQcQfMVVyC6A152Vb/c=;
-        b=DjeYRCldpxx4QjpEftRKp7OFMnhUrm1/De0s6kHU/Wjxa0YyhWcf6n0KB7ww0JnRfw
-         oxWK0BW2xc5PwWvapo7kRp6AvaysdsIEQJWXSltjVIKG0a5ogwsT/+eJuGLHWOl09Rr3
-         JphJKqhX0qyVTzfOKG69ZAzS8yGau/OQkStugZUmipy0LHOTcj7OG9y/qraWxYE/99kg
-         iWrRg8gjMvqROn+lCMK9oTDzu2thXZxbOPrboCCx/rGJ6FKGv0mosYPGHMSCZj+OHiYj
-         IbNFJf4XzMagnLOdp9yo/jUN/0q9LREJ1rX+c5u9S8LcrX0hKN81c23CD2eKqWJfpa3b
-         18RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701070655; x=1701675455;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=scHiT0Xo/KLWsBCLyWjvRQ5uVQcQfMVVyC6A152Vb/c=;
-        b=cJuxX4FbNLi883ceRULfky2+mNJDSDHuHkTVSL1Fl8bevi8Mrro9XVtHc3/urWdZIA
-         cpNItZjGZ7bhpJqSsSdfXxGu9WW9D3fFoIMPI8qeFvLQA/I9ABVZqD1u2jujc5JHzgPX
-         tQz8Lep9ZUxbvo/irg58KuV2latnVtX2GQrCgHU0ZRLFpFgEmwPNpNd0rObnJ0RmW52N
-         0PNi2so96P87ONrXAf7SjqtmNq/5uvWBzPNGAnbILGA3y8ZulFJUlr9h+MM+f8beXngD
-         bm6vHU1IUFc6rnj+hFmv14Fqq6J0GFPH8sXSRPTV/zWUmUdzO31xmO21u3ltNP72Ckyq
-         S0vA==
-X-Gm-Message-State: AOJu0Yy0CkOcvkykH/OjUF4AzlbWxKfqcZyg7T0jk1mZDhFgSSZtJ2OY
-	hkny4s3WXYbGa1HruDigA+HwZg==
-X-Google-Smtp-Source: AGHT+IFUHRZrWVKXHlqz5bmA/5BdGKLgt9BLh5gYYMZivaNLtxnVAdSXgaVpZJ/zGe8IZJJLh7JXsQ==
-X-Received: by 2002:a17:906:10d7:b0:a0c:85f8:c1f4 with SMTP id v23-20020a17090610d700b00a0c85f8c1f4mr3850762ejv.56.1701070654693;
-        Sun, 26 Nov 2023 23:37:34 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.125])
-        by smtp.gmail.com with ESMTPSA id r22-20020a170906351600b00a0c01560bdfsm2579128eja.139.2023.11.26.23.37.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Nov 2023 23:37:34 -0800 (PST)
-Message-ID: <55a0048a-7fa1-49cd-a70f-8f7d948adf27@tuxon.dev>
-Date: Mon, 27 Nov 2023 09:37:31 +0200
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AA113AEB;
+	Mon, 27 Nov 2023 09:37:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CBBFC433C8;
+	Mon, 27 Nov 2023 09:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701077871;
+	bh=FR/to59+EYS4LPaU5QDZLcTso2dRiNMSCNN4xJ+xCL0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CetYnMamkqCDJwOzWIgP0MT9mgSh7aa+oh1OdsGvljfTzpvEqeekfaSYbjfTD8bXB
+	 6NRa4i3kBwK4b/PGeT/28r28i+zG9mvGO6p1B7XKzApmOwgfT+vE4d5F7Lk3abJ0os
+	 NOSiVGlAnsjkQXYuRcr3MPZNDpKGOKCZeajgS89Jaj6RXWGXzUS5soMtzbwurUL7W3
+	 CwhXnZaQjIUZ6rrrF/TQXh+lVvXK1PdfqLjjJy/8WXRaMLhBN5kYsXYcQBwz9S3Q1M
+	 vRr32CVKMNWkjdbOmCizOk7WzptMINlcGAXkwsJ13DtuQ6yXvMjrm5cD2lleZlKVXe
+	 p9+0nLLkxsSXw==
+Date: Mon, 27 Nov 2023 09:37:46 +0000
+From: Lee Jones <lee@kernel.org>
+To: GaryWang =?utf-8?B?5rGq5LmL6YC4?= <GaryWang@aaeon.com.tw>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"larry.lai" <larry.lai@yunjingtech.com>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"pavel@ucw.cz" <pavel@ucw.cz>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+	"musa.lin@yunjingtech.com" <musa.lin@yunjingtech.com>,
+	"jack.chang@yunjingtech.com" <jack.chang@yunjingtech.com>,
+	"noah.hung@yunjingtech.com" <noah.hung@yunjingtech.com>
+Subject: Re: [PATCH V7 1/3] mfd: Add support for UP board CPLD/FPGA
+Message-ID: <20231127093746.GG1470173@google.com>
+References: <20231031015119.29756-1-larry.lai@yunjingtech.com>
+ <20231031015119.29756-2-larry.lai@yunjingtech.com>
+ <ZVOABz35C8KmGrrk@smile.fi.intel.com>
+ <SI2PR02MB56825A2D306E4358E33FBEC5EEB8A@SI2PR02MB5682.apcprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/14] clk: renesas: rzg2l-cpg: Add support for MSTOP
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- linux@armlinux.org.uk, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
- arnd@arndb.de, m.szyprowski@samsung.com, alexandre.torgue@foss.st.com,
- afd@ti.com, broonie@kernel.org, alexander.stein@ew.tq-group.com,
- eugen.hristev@collabora.com, sergei.shtylyov@gmail.com,
- prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com,
- linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
- <20231120070024.4079344-4-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdVMpKVY8WX7dbtHfgnwgePH+i9+2BAumb37sFmqccb44g@mail.gmail.com>
- <CAMuHMdVWvVtFMUe+J9R2ZU8Hi5CGs0NQfwUxitganM85183KkA@mail.gmail.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdVWvVtFMUe+J9R2ZU8Hi5CGs0NQfwUxitganM85183KkA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <SI2PR02MB56825A2D306E4358E33FBEC5EEB8A@SI2PR02MB5682.apcprd02.prod.outlook.com>
 
-Hi, Geert,
+On Fri, 24 Nov 2023, GaryWang 汪之逸 wrote:
 
-On 24.11.2023 11:08, Geert Uytterhoeven wrote:
-> Hi Claudiu,
+> Hi Andy,
 > 
-> On Thu, Nov 23, 2023 at 5:35 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> On Mon, Nov 20, 2023 at 8:01 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>
->>> RZ/{G2L, V2L, G3S} based CPG versions have support for saving extra
->>> power when clocks are disabled by activating module standby. This is done
->>> though MSTOP specific registers that are part of CPG. Each individual
->>> module have one or more bits associated in one MSTOP register (see table
->>> "Registers for Module Standby Mode" from HW manuals). Hardware manual
->>> associates modules' clocks to one or more MSTOP bits. There are 3 mappings
->>> available (identified by researching RZ/G2L, RZ/G3S, RZ/V2L HW manuals):
->>>
->>> case 1: N clocks mapped to N MSTOP bits (with N={0, ..., X})
->>> case 2: N clocks mapped to 1 MSTOP bit  (with N={0, ..., X})
->>> case 3: N clocks mapped to M MSTOP bits (with N={0, ..., X}, M={0, ..., Y})
->>>
->>> Case 3 has been currently identified on RZ/V2L for VCPL4 module.
->>>
->>> To cover all 3 cases the individual platform drivers will provide to
->>> clock driver MSTOP register offset and associated bits in this register
->>> as a bitmask and the clock driver will apply this bitmask to proper
->>> MSTOP register.
->>>
->>> As most of the modules have more than one clock and these clocks are
->>> mapped to 1 MSTOP bitmap that need to be applied to MSTOP registers,
->>> to avoid switching the module to/out of standby when the module has
->>> enabled/disabled clocks a counter has been associated to each module
->>> (though struct mstop::count) which is incremented/decremented every
->>> time a module's clock is enabled/disabled and the settings to MSTOP
->>> register are applied only when the counter reaches zero (counter zero
->>> means either 1st clock of the module is going to be enabled or all clocks
->>> of the module are going to be disabled).
->>
->> Thanks for your patch!
->>
->>> The MSTOP functionality has been instantiated at the moment for RZ/G3S.
->>>
->>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
->>> --- a/drivers/clk/renesas/rzg2l-cpg.c
->>> +++ b/drivers/clk/renesas/rzg2l-cpg.c
->>> @@ -1177,6 +1177,17 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
->>>                 core->name, PTR_ERR(clk));
->>>  }
->>>
->>> +/**
->>> + * struct mstop - MSTOP specific data structure
->>> + * @count: reference counter for MSTOP settings (when zero the settings
->>> + *        are applied to register)
->>> + * @conf: MSTOP configuration (register offset, setup bits)
->>> + */
->>> +struct mstop {
->>> +       u32 count;
->>> +       u32 conf;
->>> +};
->>> +
->>>  /**
->>>   * struct mstp_clock - MSTP gating clock
->>>   *
->>> @@ -1186,6 +1197,7 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
->>>   * @enabled: soft state of the clock, if it is coupled with another clock
->>>   * @priv: CPG/MSTP private data
->>>   * @sibling: pointer to the other coupled clock
->>> + * @mstop: MSTOP configuration
->>>   */
->>>  struct mstp_clock {
->>>         struct clk_hw hw;
->>> @@ -1194,10 +1206,46 @@ struct mstp_clock {
->>>         bool enabled;
->>>         struct rzg2l_cpg_priv *priv;
->>>         struct mstp_clock *sibling;
->>> +       struct mstop *mstop;
->>>  };
->>>
->>>  #define to_mod_clock(_hw) container_of(_hw, struct mstp_clock, hw)
->>>
->>> +/* Need to be called with a lock held to avoid concurent access to mstop->count. */
->>
->> concurrent
->>
->>> +static void rzg2l_mod_clock_module_set_standby(struct mstp_clock *clock,
->>> +                                              bool standby)
->>> +{
->>> +       struct rzg2l_cpg_priv *priv = clock->priv;
->>> +       struct mstop *mstop = clock->mstop;
->>> +       bool update = false;
->>> +       u32 value;
->>> +
->>> +       if (!mstop)
->>> +               return;
->>> +
->>> +       value = MSTOP_MASK(mstop->conf) << 16;
->>> +
->>> +       if (standby) {
->>> +               value |= MSTOP_MASK(mstop->conf);
->>> +               /* Avoid overflow. */
->>> +               if (mstop->count > 0)
->>> +                       mstop->count--;
->>
->> Should we add a WARN() here, or is it sufficient to rely on the WARN()
->> in drivers/clk/clk.c:clk_core_disable()?
->>
->>> +
->>> +               if (!mstop->count)
->>> +                       update = true;
->>> +       } else {
->>> +               if (!mstop->count)
->>> +                       update = true;
->>> +
->>> +               /* Avoid overflow. */
->>> +               if (mstop->count + 1 != 0)
->>> +                       mstop->count++;
->>
->> Trying to avoid an overflow won't help much here.  The counter
->> will be wrong afterwards anyway, and when decrementing again later, the
->> module will be put in standby too soon...
->>
->>> +       }
->>> +
->>> +       if (update)
->>> +               writel(value, priv->base + MSTOP_OFF(mstop->conf));
->>> +}
-> 
-> After giving this some more thought, it feels odd to derive the standby
-> state of a module from the state of its module clocks, while the latter
-> are already controlled through Runtime PM and a Clock Domain.
+>         Thank you for review the V7 patch and sorry for my poor English, for your question, please kindly to check our comments with ">>" beginning.
 
-Thanks for sharing this.
+Please fix your mail client instead.  Or use a different one.
 
-> 
-> A first alternative solution could be to drop the GENPD_FLAG_PM_CLK
-> flag from the RZ/G2L CPG clock domain, and provide your own
-> gpd_dev_ops.start() and .stop() callbacks that take care of both
-> module standby and clocks (through pm_clk_{resume,suspend}().
-> (See https://elixir.bootlin.com/linux/v6.7-rc2/source/drivers/base/power/domain.c#L2093
-> for the GENPD_FLAG_PM_CLK case).
-> That still leaves you with a need to associate an MSTOP register and
-> bitmask with a device through its module clocks.
-> 
-> A second alternative solution could be to increase #power-domain-cells
-> from zero to one, and register individual PM Domains for each module,
-> and control module standby from the generic_pm_domain.power_{on,off}()
-> callbacks.  Devices would specify the module using the power-domains =
-> <&cpg <id> > property in DT, with <id> one of the to-be-added list of
-> modules in include/dt-bindings/clock/r9a08g045-cpg.h.  The RZ/G2L CPG
-> driver can handle the mapping from <id> to MSTOP register and bitmask.
-> This solution requires updates to DT, but you can keep compatibility
-> with old DTBs by only registering the new PM Domains when
-> #power-domain-cells is one.
-> The extra power saving would only be applicable with new DTBs, though.
+> -----Original Message-----
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sent: Tuesday, November 14, 2023 10:11 PM
+> To: larry.lai <larry.lai@yunjingtech.com>
+> Cc: lee@kernel.org; linus.walleij@linaro.org; pavel@ucw.cz; linux-kernel@vger.kernel.org; linux-gpio@vger.kernel.org; linux-leds@vger.kernel.org; GaryWang 汪之逸 <GaryWang@aaeon.com.tw>; musa.lin@yunjingtech.com; jack.chang@yunjingtech.com; noah.hung@yunjingtech.com
+> Subject: Re: [PATCH V7 1/3] mfd: Add support for UP board CPLD/FPGA
 
-I prefer this alternative even though it cannot be applied for old DTBs, it
-looks to me that is more modular. What do you think?
+No headers in the body please.
 
-The only thing is that MSTOP is not really a power off/on switch (if it
-would be implemented with generic_pm_domain.power_{on, off}) but is more
-like a clock disable/enable functionality (it should not be an issue
-though, just saying)... According to manual (I'm referring to Figure 41.4
-Block Connection Overview for Module Standby Mode of HW manula of RZ/G3S),
-it disables/enables the module's bus clock.
+> On Tue, Oct 31, 2023 at 09:51:17AM +0800, larry.lai wrote:
+> > The UP Squared board
+> > <http://www.upboard.com/> implements certain features (pin control, onboard LEDs or CEC) through an on-board CPLD/FPGA.
+> >
+> > This driver implements the line protocol to read and write registers
+> > from the FPGA through regmap. The register address map is also included.
+> >
+> > The UP Boards provide a few I/O pin headers (for both GPIO and
+> > functions), including a 40-pin Raspberry Pi compatible header.
+> >
+> > This patch implements support for the FPGA-based pin controller that
+> 
+> s/This patch implements/Implement/
+> 
+> > manages direction and enable state for those header pins.
+> >
+> > Partial support UP boards:
+> 
+> "for UP" or "supported" (choose one).
+> 
+> > * UP core + CREX
+> > * UP core + CRST02
+> 
+> > Reported-by: kernel test robot <lkp@intel.com>
+> 
+> No, this tag can't be applied to the new code.
+> 
+> > Signed-off-by: Gary Wang <garywang@aaeon.com.tw>
+> > Signed-off-by: larry.lai <larry.lai@yunjingtech.com>
+> 
+> Missing Co-developed-by?
+> >> larry is our consultant for upstream
 
-Thank you,
-Claudiu Beznea
+This is confusing.  More '>'s usually means deeper quotes.
 
+Your reply should be up against the left wall, like this one.
+
+> ...
 > 
-> Thoughts?
+> > +config MFD_INTEL_UPBOARD_FPGA
 > 
->>> --- a/drivers/clk/renesas/rzg2l-cpg.h
->>> +++ b/drivers/clk/renesas/rzg2l-cpg.h
->>
->>> @@ -68,6 +73,10 @@
->>>  #define SEL_PLL6_2     SEL_PLL_PACK(CPG_PL6_ETH_SSEL, 0, 1)
->>>  #define SEL_GPU2       SEL_PLL_PACK(CPG_PL6_SSEL, 12, 1)
->>>
->>> +#define MSTOP(name, bitmask)   ((CPG_##name##_MSTOP) << 16 | (bitmask))
->>
->> I believe the bitmask is always a single bit.
->> So perhaps let MSTOP() take the bit number instead of the bitmaskl?
->> You can still store BIT(bit) inside the macro.
+> I believe Intel has nothing to do with this one. The Intel SoC is accompanied with OEM FPGA, right?
+> >> we used Intel CPLD Altera MAX V/X for pin mux and provide more driving power for Raspberry Pi compatible HAT pins, will remove "INTEL"
+
+Please enable line-wrap.
+
+> > +     tristate "Support for the Intel platform foundation kit UP board FPGA"
 > 
-> I was wrong, the N->N or N->M cases need a bitmask.
-> 
->>> +#define MSTOP_OFF(conf)                ((conf) >> 16)
->>> +#define MSTOP_MASK(conf)       ((conf) & GENMASK(15, 0))
->>> +
->>>  #define EXTAL_FREQ_IN_MEGA_HZ  (24)
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+> Depends on the above this most likely to be updated.
+> >> ok
+
+If you agree with a comment, please trim it from your reply.
+
+[...]
+
+-- 
+Lee Jones [李琼斯]
 
