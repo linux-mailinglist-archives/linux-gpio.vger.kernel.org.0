@@ -1,118 +1,112 @@
-Return-Path: <linux-gpio+bounces-528-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-529-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CEBE7F9D1C
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 11:08:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CFA77F9E04
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 11:58:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F07CF281415
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 10:08:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB1672813CC
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Nov 2023 10:58:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 729461803F;
-	Mon, 27 Nov 2023 10:08:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CF8F18C1B;
+	Mon, 27 Nov 2023 10:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDE6C0;
-	Mon, 27 Nov 2023 02:08:16 -0800 (PST)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1fa4b632198so464242fac.1;
-        Mon, 27 Nov 2023 02:08:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701079695; x=1701684495;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/VnyBshkvXGTRRsL4y6lDrPgLjR5JtfcTMrPcPvPYA4=;
-        b=QUtqLED33HtNG437p14zBWcM4SfHTEF9znRZwISMeRQvYo7yCMS7p7EU2/l0OCne7p
-         +9EcGlUUuBNCcXMqvHwDx7Bx6jjDnniA57CkWogSYadvHFBhflw93VezeEDRoE7FWuNl
-         Si+fNaqMWyTjM6xBqbiEsMPKZw2MR3pVwSbF7fhRqf5Kb5+KaTOBS1V25n1/Ic4U+88R
-         PtDiiutjumpFHvDuCIyrva2Oge9zheG7Y+g6/VYhkurpPZCnZsTguFMw0t7bqCuVgDWu
-         gYi3GLO4dV9rrfavnNdQK8ZGcbJx9T6DAqFX4GJf+g++tTOXl+zWclhUfeL04dTehjdH
-         zC7A==
-X-Gm-Message-State: AOJu0YzZ8pWa/DIuXFshRDQGxdxFhztJsBiiMqGnQ4cmxMARMKPCNLcv
-	tKrZgYQarAERahy7SPNyHYWp2/kT4nKNAQ==
-X-Google-Smtp-Source: AGHT+IHBatFEKsPQJkcu6tgxnyooX+qUGzUREsYOnQk4kiyIbtLawY1X7SUpYwr5DJByTKNNmyvkhQ==
-X-Received: by 2002:a05:6870:4d08:b0:1e9:9179:4c6f with SMTP id pn8-20020a0568704d0800b001e991794c6fmr14319770oab.49.1701079695133;
-        Mon, 27 Nov 2023 02:08:15 -0800 (PST)
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com. [209.85.160.47])
-        by smtp.gmail.com with ESMTPSA id gb10-20020a056870670a00b001dd8c46ed49sm1525052oab.8.2023.11.27.02.08.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Nov 2023 02:08:14 -0800 (PST)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1eb39505ba4so2654872fac.0;
-        Mon, 27 Nov 2023 02:08:14 -0800 (PST)
-X-Received: by 2002:a0d:eb0b:0:b0:5cc:d0bc:fc31 with SMTP id
- u11-20020a0deb0b000000b005ccd0bcfc31mr10889619ywe.24.1701079330823; Mon, 27
- Nov 2023 02:02:10 -0800 (PST)
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F087D113
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 02:58:50 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r7ZK9-0005pS-Ne; Mon, 27 Nov 2023 11:58:45 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r7ZK9-00BvCn-8H; Mon, 27 Nov 2023 11:58:45 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r7ZK8-009HRJ-V0; Mon, 27 Nov 2023 11:58:44 +0100
+Date: Mon, 27 Nov 2023 11:58:44 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <20231127105844.kpu5ori6o6umfynh@pengutronix.de>
+References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
+ <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
+ <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
+ <20231121161111.zphi7pn77ns7sgu2@pengutronix.de>
+ <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
+ <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
+ <ZWCTtPVkTUQNLVoa@orome.fritz.box>
+ <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
- <20231120070024.4079344-15-claudiu.beznea.uj@bp.renesas.com>
- <bd25377b-b191-4d81-b144-2936cb5139d9@app.fastmail.com> <CAMuHMdUkVO7cXpsHd_oGvEpZdJpP6GP+VC8H5GAZ94KJf2joLA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUkVO7cXpsHd_oGvEpZdJpP6GP+VC8H5GAZ94KJf2joLA@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 27 Nov 2023 11:01:59 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUWHMgA8EAhYk1DUx0P85D5=K26aUoBrLsCMr4=Uw4Qrg@mail.gmail.com>
-Message-ID: <CAMuHMdUWHMgA8EAhYk1DUx0P85D5=K26aUoBrLsCMr4=Uw4Qrg@mail.gmail.com>
-Subject: Re: [PATCH 14/14] arm: multi_v7_defconfig: Enable CONFIG_RAVB
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>, 
-	krzysztof.kozlowski+dt@linaro.org, Conor Dooley <conor+dt@kernel.org>, 
-	Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Andrew Davis <afd@ti.com>, Mark Brown <broonie@kernel.org>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, eugen.hristev@collabora.com, 
-	sergei.shtylyov@gmail.com, 
-	"Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kgngfnshdocqqbbp"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+
+
+--kgngfnshdocqqbbp
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 20, 2023 at 9:58=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
-> On Mon, Nov 20, 2023 at 9:44=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wro=
-te:
-> > On Mon, Nov 20, 2023, at 08:00, Claudiu wrote:
-> > > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > >
-> > > ravb driver is used by RZ/G1H. Enable it in multi_v7_defconfig.
->
-> Used by:
->   - iWave-RZ/G1M/G1N Qseven carrier board,
->   - iWave-RZ/G1H Qseven board,
->   - iWave-RZG1E SODIMM carrier board,
->   - iWave-RZ/G1C single board computer.
->
-> So I'd write "used by various iWave RZ/G1 development boards".
+Hello Bartosz,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.8, with the above updated.
+On Fri, Nov 24, 2023 at 10:16:40PM +0100, Bartosz Golaszewski wrote:
+> I admit I've been quite busy but I do plan on going through Uwe's
+> series next week and maybe running tests similar to what I have for
+> GPIO on it.
 
-Gr{oetje,eeting}s,
+That's great. If you want to do that on my tree that already saw a few
+improvements compared to what I sent out, get it at
 
-                        Geert
+	https://git.pengutronix.de/git/ukl/linux pwm-lifetime-tracking
+
+=2E The improvements are only on the driver level, so unless you're using
+one of the improved drivers, the difference wouldn't be that big I
+guess. For (maybe) quicker feedback loops, you can find me on irc (e.g.
+on libera's #linux-pwm) if that's a communication channel you like.
+
+I look forward to your findings,
+Uwe
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--kgngfnshdocqqbbp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVkdmQACgkQj4D7WH0S
+/k59QQf/ctQ226cNV+XiF5RcgVUjG41vpAVTl3OC5HhRm9JYfW2YxMTa1z8R7k0q
+cvLMD+OxkK8cNUP+67XP9nYFnMdC6wm2ONNfKUM43zyi8taFI9zkOoHvxPcR8t4D
+eXm7CAi1cS79JKrP88bR4+a7XMYolGHBznB0iWGvIeb7UnCguSypbZDGj4rapere
+wDTnuNmt74IZ0dP92qpXxJyPdCasp8z3a7TnmB4uhGKmY2MxBF8bBGHyL5I11jZW
+yEnwQVdCD0ZMi1f9lrq1taQClXvAxwsOroHx+ZGKYt5RyMyUOGyPes8Yuz0cmrCy
+8w/f4O0w1WmvPSi4Sxq8c4I9gts8KQ==
+=1wQu
+-----END PGP SIGNATURE-----
+
+--kgngfnshdocqqbbp--
 
