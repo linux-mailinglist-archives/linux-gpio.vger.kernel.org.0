@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-566-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-567-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74EBC7FB8D8
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 12:03:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40E8F7FB8EB
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 12:05:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2E287282C0A
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 11:03:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A189FB20D87
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 11:05:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B7B94D599;
-	Tue, 28 Nov 2023 11:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86A6D4D5AD;
+	Tue, 28 Nov 2023 11:05:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJYoXiRZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QPrxbe86"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB961D6
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 03:03:51 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-54afd43c83cso5262874a12.0
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 03:03:51 -0800 (PST)
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082651BF5
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 03:05:04 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-5079f6efd64so7141604e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 03:05:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701169430; x=1701774230; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701169502; x=1701774302; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HWRsBn5qeXYZK0dqyIrjfskLjKYHZFEhVAQpU6KhZkY=;
-        b=BJYoXiRZy03ru3b8MCHTH+scIyvjec8NGc0R+goqgU0fydpIWQtI2aPrnE9nHukgCG
-         cy9s2tES6Wn61flLpBWiuxFLmSRBh9I/NAHYQCmYLhMlMJTN5VDkN0Y2DPVz96y/Wgvq
-         EiZhTRA/+g3H5Jj4a7zuNlSUyDmEG1OfHUAnDep2/u+tbwo2TwvpTzFnlLcRzShTDSoO
-         GdyoUz4QFN9KYfsvkFPJ+abrdgDrjW3Rf5S2UVKlK+oHgdKoVG100Eo4wdG8P1LTZfnj
-         0hpomM3N+KHqlMMs3kk+EZXnFdQFRvlEjcWiaTH1rfv2/7zRgztG1PzKqIru0+EfOcxZ
-         H+2Q==
+        bh=GW7Aq0XS9FBIxdRdvMRbL/dglCh8zSHXJWyjnEjNNZs=;
+        b=QPrxbe86NHumyWUedNchVlYAywO0glim8tsnIw67dX3ANgoUH1BhzbVtsAHG3JLgxV
+         ChEI1jF3kOIoFIUxdIi6RLXcrzjlblSqIyem6v1jdXLnbUydCBMacEUJwK7hEk7XeoCB
+         a8oK/iQqQYGTByp1yuGGcWBVWuE3ZLgxdHRBM5O4Jxv3pTbjN0O3NVS7PRbevLJqivfL
+         4RfsM06GfwfMUkwatV+I7hpsDcQKUP4tQqHfRPUsSSs8FoZ3lj3UaZQvpVMvreG/8kja
+         RwFTNy1/f1tB6+jUhSkGvk8xlYFINBhxGTWZedOD5yB2jaRCpL2glgZ9yRAKA+JOaMpE
+         0gow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701169430; x=1701774230;
+        d=1e100.net; s=20230601; t=1701169502; x=1701774302;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HWRsBn5qeXYZK0dqyIrjfskLjKYHZFEhVAQpU6KhZkY=;
-        b=nD6WiGDUDmG/MZZDn8sxQrkMtr6iQoPXIC6To2x0oC0HWQTKMSFCTa4wvOSW0eDjkH
-         N5Ep+Vsp6lYjc1VAIug0Q80pQw+WKiNV/FK+k93La2usVNd0Mm+SqH/vlBzf287r6ulq
-         1JSG/TBrJQaMPYDvzLKCzFlupZuO5GaLB8HSGjBdJYf1pFOzi7H0W584Wo+qTm9rnoVf
-         0kO7bIlqeIttLkiuWOlQp915Ja/t3hs+XFThWGPrXW+smb4Qdk/jm3w8n0N50+NUiin9
-         PnGkX5nB91ASZIxxYsLa798akjWEvQDThlwRoczzaACfJjM0rZgOtt7AmIUrfkHkgSQc
-         LVgw==
-X-Gm-Message-State: AOJu0Yye+cb9TRp4wQTYIi2oNRGpezvj4dP3QctRIDAV0LxwhHNyq5O2
-	ybVpRNUYl03kAD5V1EdF8niV4Q==
-X-Google-Smtp-Source: AGHT+IE2l3ssYF+cfF6gzXfHWbTL3gDX5mgDAWKg+eLiK9MRBh13C8IOyWvVfc1qGnQRi6eHH9VuVg==
-X-Received: by 2002:a05:6402:350c:b0:54b:2b21:7e81 with SMTP id b12-20020a056402350c00b0054b2b217e81mr9352580edd.24.1701169430292;
-        Tue, 28 Nov 2023 03:03:50 -0800 (PST)
+        bh=GW7Aq0XS9FBIxdRdvMRbL/dglCh8zSHXJWyjnEjNNZs=;
+        b=oUax4pOVS2uEU4Igai+sY6mXj+uLEVkLIq01BU69c0SSmYG3fa9r4v+ruvrR/VBvCP
+         EshXEUsUqGiwhEyFikEKOUmARHq9eOLLjTGSzsfIbQ5eTIb5VTtVzCoLkufQWBcAOnVc
+         oYnAEswt1RWFnDBStd2runHxjr6oJWAFPil5GESCkUJkau0kl0ruU1ek58TrpdV7JQ5Z
+         iwljHKJOlrP/tR8Q19BtdAshAfvWK7kgM2IzFxfLXeS1/bcgVaHumQqdfied3zvsBrXu
+         xt+DgTyqFNrr/7zqtofiPF71Cix0Fvkd7t+l34M+TyKhMW4jAp4/BxnWfqUvf50DJhuY
+         3YDA==
+X-Gm-Message-State: AOJu0YzFmXOdgSfIhNJkNIJ315I6xi6tct+EkuFLywcaos7rCIUjcw98
+	MfKadkV9KlcpFj8ub48cMrkypA==
+X-Google-Smtp-Source: AGHT+IFE3Nnba2ZegiCn5hMLD44a9M2fVXQZiMXYJFGx3hNTSdem79gbKlZo8JvQvbHd4zuD4O6U5A==
+X-Received: by 2002:a05:6512:31c6:b0:50b:a801:dce6 with SMTP id j6-20020a05651231c600b0050ba801dce6mr8673450lfe.66.1701169501476;
+        Tue, 28 Nov 2023 03:05:01 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.109])
-        by smtp.gmail.com with ESMTPSA id e28-20020a50d4dc000000b0054b9c98b852sm833294edj.55.2023.11.28.03.03.48
+        by smtp.gmail.com with ESMTPSA id e28-20020a50d4dc000000b0054b9c98b852sm833294edj.55.2023.11.28.03.04.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Nov 2023 03:03:49 -0800 (PST)
-Message-ID: <18276c95-26e8-4b07-8351-7555d7595f7c@linaro.org>
-Date: Tue, 28 Nov 2023 12:03:47 +0100
+        Tue, 28 Nov 2023 03:05:00 -0800 (PST)
+Message-ID: <90413a39-e393-4020-a137-4398b1af97a5@linaro.org>
+Date: Tue, 28 Nov 2023 12:04:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -123,42 +123,11 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 28/11/2023 07:11, Jacky Huang wrote:
-> From: Jacky Huang <ychuang3@nuvoton.com>
-> 
+> +			gpioi: gpio@40040200 {
+> +				reg = <0x200 0x40>;
+> +				interrupts = <GIC_SPI  77 IRQ_TYPE_LEVEL_HIGH>;
 
-...
-
->  
->  		sys: system-management@40460000 {
-> -			compatible = "nuvoton,ma35d1-reset";
-> +			compatible = "nuvoton,ma35d1-reset", "syscon";
->  			reg = <0x0 0x40460000 0x0 0x200>;
->  			#reset-cells = <1>;
->  		};
-> @@ -95,6 +96,162 @@ clk: clock-controller@40460200 {
->  			clocks = <&clk_hxt>;
->  		};
->  
-> +		pinctrl: pinctrl@40040000 {
-> +			compatible = "nuvoton,ma35d1-pinctrl";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			nuvoton,sys = <&sys>;
-> +			ranges = <0x0 0x0 0x40040000 0xc00>;
-> +
-> +			gpioa: gpio@40040000 {
-> +				reg = <0x0 0x40>;
-
-Your unit address does not match reg.
-
-You must test your DTS with `dtbs_check W=1`.
-
-
-> +				interrupts = <GIC_SPI  14 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&clk GPA_GATE>;
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-
+One space after GIC_SPI, not two.
 
 Best regards,
 Krzysztof
