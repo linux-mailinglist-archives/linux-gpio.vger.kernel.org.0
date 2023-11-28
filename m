@@ -1,84 +1,62 @@
-Return-Path: <linux-gpio+bounces-592-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-593-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9141C7FBEC4
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 16:59:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A66A7FBEEF
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 17:06:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C22861C20EB0
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 15:59:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7D012827BB
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 16:06:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A7393529B;
-	Tue, 28 Nov 2023 15:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EB554D127;
+	Tue, 28 Nov 2023 16:06:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SU5xqc/t"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fW/qwdbm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DB190;
-	Tue, 28 Nov 2023 07:59:02 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8587D12A;
+	Tue, 28 Nov 2023 08:06:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701187142; x=1732723142;
+  t=1701187588; x=1732723588;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=aFGhnhLBctAxdXmqRzubiIeJfbC6+H1rRvtasuLMDp8=;
-  b=SU5xqc/tolCPmRhRaW+96fpfD4SZJfmY05hz8cmwIwmXLRjJrI+3oif4
-   bd3FfCIFqnlyEyrqjKoIt6umUz+GAy8VY86w4UJQ83CzenYSuZ1Q6fraA
-   C4K0CmlR/QdCAXv0+/L0i9Mh+57wCmY5cCvIEbTlqhXy9q5YtgBM6Thd2
-   FH2gqVYAUr4pVDNWebe292PrTG0txN0+GChhC0BCvNlN0xpDzxpR9kM0b
-   xlK4Qe6OxyJUVu0nHj1nYjelSWnL/dpDbmwtzhSHfsY/k1kt8X563JI/b
-   TzpXu/Y6XXOcZ4uqXjtOkqwW7n7E5sbY4od2P7qRyfkRmxu7isRs/Jmg/
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="372324490"
+  bh=bwo7ggHdQ8ZPC43AT1LI2aW1ivPm7/3+xNO0T21w5Gs=;
+  b=fW/qwdbmdT3sqiqU2yOcJ8Ei/gaeuWTQGnFvCYBMH+ed/JSfPzvx5Ujj
+   CwhID1jQFnWVZU8xm9uWSyoS11WHIC8UOid2BnlXcSEfUUUoCtxzj0rWh
+   OH1r+WBKpYduXi2v62Fsr3/IHXMXDCBhEb3RHaqJeCaVbTvopnCzcD3/0
+   JMiLcRX7p0nwFNlSp8je331mM2k3c3PNy6/u56GvaRoggWQPvwb8zFNnj
+   R7xRWRJlxtUoNmk5czySFVCXOaNOYKirfhk2V4jGqUr6BAu89ZLY4Fls5
+   xGkZp/sag/4RxqnuhHaP0lxIEjfKGTr5MDVJD+IyZ8JE4Nrn87miSwx42
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="457281923"
 X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="372324490"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 07:59:01 -0800
+   d="scan'208";a="457281923"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 08:06:26 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="802984915"
+X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="839104227"
 X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="802984915"
+   d="scan'208";a="839104227"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 07:58:53 -0800
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 08:06:25 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1r80U5-00000000Cdt-1MWE;
-	Tue, 28 Nov 2023 17:58:49 +0200
-Date: Tue, 28 Nov 2023 17:58:49 +0200
+	id 1r80bO-00000000CjM-2Wuh;
+	Tue, 28 Nov 2023 18:06:22 +0200
+Date: Tue, 28 Nov 2023 18:06:22 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev, Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH v2 12/21] pinctrl: core: Embed struct pingroup into
- struct group_desc
-Message-ID: <ZWYOOW0KojJSTROj@smile.fi.intel.com>
-References: <20231123193355.3400852-13-andriy.shevchenko@linux.intel.com>
- <202311250448.uz5Yom3N-lkp@intel.com>
- <ZWYM8Pjl-S-8CMPu@smile.fi.intel.com>
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 1/2] gpio: sysfs: fix forward declaration of struct
+ gpio_device
+Message-ID: <ZWYP_uRWps9W0cVn@smile.fi.intel.com>
+References: <20231127193716.63143-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -87,23 +65,17 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZWYM8Pjl-S-8CMPu@smile.fi.intel.com>
+In-Reply-To: <20231127193716.63143-1-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Nov 28, 2023 at 05:53:21PM +0200, Andy Shevchenko wrote:
-> On Sat, Nov 25, 2023 at 07:39:02AM +0800, kernel test robot wrote:
-> > Hi Andy,
-> > 
-> > kernel test robot noticed the following build errors:
+On Mon, Nov 27, 2023 at 08:37:15PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> > [also build test ERROR on linusw-pinctrl/for-next next-20231124]
-> 
-> Hmm... I have compiled tested on Linux Next it several times, I can't reproduce
-> this neither with GCC nor with LLVM.
+> The forward declaration for struct gpio_device should be provided for
+> both branches of the #ifdef.
 
-Actually it rings a bell that some versions of GCC have a bug (?) that they may
-not identify initializations like this to be converted to constants as we are
-using compound literal it should make no difference.
+Oh, right.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
 With Best Regards,
