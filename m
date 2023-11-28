@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-548-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-549-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9EE17FB2BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 08:29:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 911107FB2C7
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 08:32:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94C5C281E46
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 07:29:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 563CB281E32
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 07:32:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34D3134D6;
-	Tue, 28 Nov 2023 07:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA2613AC0;
+	Tue, 28 Nov 2023 07:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ftkc4t92"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fgCs+u9D"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20047182
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 23:29:34 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-54bb9024378so64916a12.3
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 23:29:34 -0800 (PST)
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 032A9182
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 23:32:19 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-9fa45e75ed9so697654366b.1
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 23:32:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701156572; x=1701761372; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701156737; x=1701761537; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8HhAg3HGx+dCrzaldRtNF0z0A4KKZODNNDBUQrJGE4c=;
-        b=Ftkc4t92tNZTjjfCaIPy6RUhSL7NDdPSJrrcgA7rPQka9gqNbGJVO0jdUNENbl3JkX
-         l2HzCA5Bib0evleN68sijzITuEUU3sYMjekU5oXN/AJpPKQh64k4kCwnecOlmk6Fl3PX
-         sIBgYQnvKexmET9f55zDZyewItOo+tSjThZ91LKiKMuF3gu3wRhLl08ImxDPyl27SZnw
-         GdFpSaocp4HJssYENRtpYha5iU1xpNDcQiQYtdQ/vFrxDppB6YV81FM3izRNhm2pjEdt
-         1dYHQbGNgJS3XIHVNdsWAwjwZndEfnb61vXpGaMj3S5ihUE8iXU58g5Ot2oEyucMwNFM
-         FaiA==
+        bh=QVmDKLnjgMvzt0v2Mm83VY+hDZMHwEGAGNUJ3XXPIO0=;
+        b=fgCs+u9DnbSnswdfvZUZfDFpHSvj4aLdKB28B3LijNfPxQZ6Nt1S28NXDoCiNQe6bL
+         I1v3B6R1ijreetbt6wz3tjI+jSpgt+HbRPM0XckGsdj2Q+UL6Ixt1RboHNHWUmMVdih6
+         6GNzAnpiNDfXc3xwEdLyKonIBe7Z6kw8dwM72PwQ71+s3FZBb6CurqOcEJ9xndAOFCLj
+         qYz+QhVEjgqa8v5WgF035JT/uUOUYwkVtJ0/WrQu83ksZBxUByQJMY/S2aMYmHnuHxPX
+         qE4ITF2TYkWuNNlbmki5vjxxxlBw8nHjSXjSkpoKYs2XBgkSqbN6b0PzhlUGOWaUXPdQ
+         WfYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701156572; x=1701761372;
+        d=1e100.net; s=20230601; t=1701156737; x=1701761537;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8HhAg3HGx+dCrzaldRtNF0z0A4KKZODNNDBUQrJGE4c=;
-        b=Uh4MMhBQZCBeXiEUhRfC5U049j/BSmWd7I6V6cNGMz4bb/2p1rT8bQBx4H2XVaFERJ
-         8NigySgWIuWZRoL6jj6aecAVx7gTwYkxGWsyDXeMHqtfQypq9TTDW5qalAg4DxXb3b16
-         hEM1XZ+AUxOXl8fJv4RXPgsk4YkIHoqlCjxm3uXEW4Qsgzg+/DQfOoGpxTqo1GaQhZIa
-         HqqN4vQ5f9nitAOpr+GecwHFTKdXlL8MyWwMklytLeZlaG9xJp413OrLdg35L863hCLC
-         vIghFMfKj5rT9fff6JZ5ti25+Ycf0cqwqnO6tWKLoDxAfdWvuwdq4oj9iP42Nf+YSnOR
-         vi3A==
-X-Gm-Message-State: AOJu0Ywh2IImkKp4Wvb/IO0/qdBXU2oupqy7KOwCVw2/xUrWybN97Qhk
-	uCKnLEfNLAwnFo/YGZs4YWJFRg==
-X-Google-Smtp-Source: AGHT+IHDTd+j++C59qIQGKF0egEm45p5caSoaodLsq6Y3IPB41RPjR1l++I/9svYgkhuhB3ehzoAXw==
-X-Received: by 2002:a50:8d03:0:b0:548:656c:5371 with SMTP id s3-20020a508d03000000b00548656c5371mr12508831eds.16.1701156572583;
-        Mon, 27 Nov 2023 23:29:32 -0800 (PST)
+        bh=QVmDKLnjgMvzt0v2Mm83VY+hDZMHwEGAGNUJ3XXPIO0=;
+        b=DWvtlzEBfc5Jujy0mwFIlAFwp8exic8pORd3W+ognSXLdWxiz/9PhmkM3cC9zEUFUA
+         XmGOeZRp38vslLr5+9pETMsRrZCzmsMuyxkFnvXW81tOoooCdCy2KlF9zyMrAiFQHWrj
+         PTviA5ihHrsh01sdJDgb9DpbSoTOU3dLDmC5vQgJez/feLdOQIilfjRSw1oGujMRjqmq
+         GuxiIDszq6oviMO62P8W28Y+SHt4zN1RytM857VJNgvj+RYIOLc8qy6YMykebK3jOI0Q
+         qb40KkgVm3kB5AORiDW/vXDZyy7IF1TxLyE9LC0OGUEgCJFDHcDKXlVkbtH9+XNJBcBX
+         DBcw==
+X-Gm-Message-State: AOJu0YxfPSlY3ny25A9o589yQqTiWeznFCw5EG/GOOauQP8UKxKMEOK9
+	XEnc1Yu0ZhlYdImEXmQ5b/E3ug==
+X-Google-Smtp-Source: AGHT+IH8uot6HPGQdkHS66ZfPJHgWJ+JzMgtwFQkzgAno8EOxdj+XfozYykudFVGEBJFA5+1wkvkQQ==
+X-Received: by 2002:a17:907:3101:b0:9c5:844f:a7f4 with SMTP id wl1-20020a170907310100b009c5844fa7f4mr9425064ejb.35.1701156737372;
+        Mon, 27 Nov 2023 23:32:17 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.109])
-        by smtp.gmail.com with ESMTPSA id b9-20020a056402350900b0054b7e312b97sm1432048edd.38.2023.11.27.23.29.31
+        by smtp.gmail.com with ESMTPSA id ci11-20020a170906c34b00b00a0d672bfbb0sm2942163ejb.142.2023.11.27.23.32.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Nov 2023 23:29:32 -0800 (PST)
-Message-ID: <1fd55b36-0837-4bf7-9fde-e573d6cb214a@linaro.org>
-Date: Tue, 28 Nov 2023 08:29:30 +0100
+        Mon, 27 Nov 2023 23:32:16 -0800 (PST)
+Message-ID: <00636ba7-c0f0-4142-98be-d0449c838821@linaro.org>
+Date: Tue, 28 Nov 2023 08:32:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,17 +62,17 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: samsung: add irq_set_affinity() for non wake
- up external gpio interrupt
+Subject: Re: [PATCH v2 1/4] dt-bindings: reset: Add syscon to nuvoton ma35d1
+ system-management node
 Content-Language: en-US
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: tomasz.figa@gmail.com, s.nawrocki@samsung.com, alim.akhtar@samsung.com,
- linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, semen.protsenko@linaro.org
-References: <CGME20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38@epcas2p4.samsung.com>
- <20231126094618.2545116-1-youngmin.nam@samsung.com>
- <bb738a6b-815d-4fad-b73f-559f1ba8cd68@linaro.org> <ZWU75VtJ/mXpMyQr@perf>
+To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ychuang3@nuvoton.com, schung@nuvoton.com
+References: <20231128061118.575847-1-ychuang570808@gmail.com>
+ <20231128061118.575847-2-ychuang570808@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -118,65 +118,21 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZWU75VtJ/mXpMyQr@perf>
+In-Reply-To: <20231128061118.575847-2-ychuang570808@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/11/2023 02:01, Youngmin Nam wrote:
-> On Mon, Nov 27, 2023 at 10:54:56AM +0100, Krzysztof Kozlowski wrote:
->> On 26/11/2023 10:46, Youngmin Nam wrote:
->>> To support affinity setting for non wake up external gpio interrupt,
->>> add irq_set_affinity callback using irq number from pinctrl driver data.
->>>
->>> Before this patch, changing the irq affinity of gpio interrupt is not possible:
->>>
->>>     # cat /proc/irq/418/smp_affinity
->>>     3ff
->>>     # echo 00f > /proc/irq/418/smp_affinity
->>
->> Does this command succeed on your board?
->>
-> Yes.
-
-Hm, fails all the time one mine.
-
+On 28/11/2023 07:11, Jacky Huang wrote:
+> From: Jacky Huang <ychuang3@nuvoton.com>
 > 
->>>     # cat /proc/irq/418/smp_affinity
->>>     3ff
->>>     # cat /proc/interrupts
->>>                CPU0       CPU1       CPU2       CPU3    ...
->>>     418:       3631          0          0          0    ...
->>>
->>> With this patch applied, it's possible to change irq affinity of gpio interrupt:
->>
->> ...
->>
->> On which board did you test it?
->>
->>
-> I tested on S5E9945 ERD(Exynos Reference Development) board.
-
-There is no such board upstream. How can we reproduce this issue? I am
-afraid we cannot test neither the bug nor the fix.
-
+> Add a compatible 'syscon' to the system management node since the system
+> control registers are mapped by this driver. The other driver must access
+> the system control registers through 'regmap' using a phandle that
+> references this node.
 > 
->>> +	if (parent)
->>> +		return parent->chip->irq_set_affinity(parent, dest, force);
->>> +
->>
->> I think there is a  helper for it: irq_chip_set_affinity_parent().
->>
->>
-> 
-> The irq_chip_set_affinity_parent() requires parent_data of irq_data.
+> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
 
-Hm, so now I wonder why do we not have parent_data...
-
-> But when I tested as below, exynos's irqd->parent_data was null.
-> So we should use irqchip's affinity function instead of the helper function.
-> 
-
-
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
